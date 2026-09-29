@@ -44,7 +44,7 @@
 					"inflectionalFeatures": null,
 					"language": "he",
 					"normalizedSurface": "תל אביב",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "he",

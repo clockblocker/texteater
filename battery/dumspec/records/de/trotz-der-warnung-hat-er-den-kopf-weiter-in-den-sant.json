@@ -52,7 +52,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "hat den Kopf in den Sand gesteckt",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

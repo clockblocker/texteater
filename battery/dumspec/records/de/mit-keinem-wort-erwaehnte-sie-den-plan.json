@@ -52,7 +52,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "keinem",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"gender": "Neut",

@@ -52,7 +52,7 @@
 						}
 					},
 					"normalizedSurface": "nich",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Regional" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "nich", "orthography": "Standard" }],

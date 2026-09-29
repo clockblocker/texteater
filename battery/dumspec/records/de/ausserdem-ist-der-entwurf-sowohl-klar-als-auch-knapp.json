@@ -49,7 +49,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "sowohl als auch",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

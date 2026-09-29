@@ -38,7 +38,7 @@
 					},
 					"language": "en",
 					"normalizedSurface": "e-mail",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",

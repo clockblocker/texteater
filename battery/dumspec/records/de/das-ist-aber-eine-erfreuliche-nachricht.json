@@ -48,7 +48,7 @@
 						}
 					},
 					"normalizedSurface": "aber",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "aber", "orthography": "Standard" }],

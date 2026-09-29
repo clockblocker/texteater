@@ -64,7 +64,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer A sagt muß auch B sagen",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Historical" },
 					"surfaceFeatures": null
 				},
 				"members": [

@@ -48,7 +48,7 @@
 						}
 					},
 					"normalizedSurface": "für",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "für", "orthography": "Standard" }],

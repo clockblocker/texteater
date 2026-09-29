@@ -45,7 +45,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "ohhh",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Expressive" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "ohhh", "orthography": "Standard" }],

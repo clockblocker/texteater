@@ -59,7 +59,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "hat die Katze im Sack gekauft",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

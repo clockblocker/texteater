@@ -83,7 +83,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Einem geschenkten Gaul schaut man nicht ins Maul",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

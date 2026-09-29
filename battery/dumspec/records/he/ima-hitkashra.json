@@ -27,7 +27,7 @@
 					"inflectionalFeatures": null,
 					"language": "he",
 					"normalizedSurface": "אמא",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "he",

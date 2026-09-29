@@ -52,7 +52,7 @@
 						}
 					},
 					"normalizedSurface": "nedd",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Regional" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "nedd", "orthography": "Standard" }],

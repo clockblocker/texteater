@@ -45,7 +45,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "ehe",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "ehe", "orthography": "Standard" }],

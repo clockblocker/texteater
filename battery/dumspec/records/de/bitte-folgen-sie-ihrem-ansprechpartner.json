@@ -48,7 +48,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Ihrem",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"gender": "Masc",

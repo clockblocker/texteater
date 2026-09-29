@@ -52,7 +52,7 @@
 						}
 					},
 					"normalizedSurface": "bloß",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "bloß", "orthography": "Standard" }],

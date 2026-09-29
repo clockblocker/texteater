@@ -70,7 +70,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "wartet",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

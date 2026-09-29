@@ -39,7 +39,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "treffen Entscheidungen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

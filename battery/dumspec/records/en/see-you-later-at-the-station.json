@@ -37,7 +37,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "see you later",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",

@@ -54,7 +54,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "abgestimmte",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"degree": null,

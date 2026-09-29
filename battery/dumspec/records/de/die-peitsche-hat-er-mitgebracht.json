@@ -62,7 +62,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Peitsche",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -94,7 +94,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "hat mitgebracht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -135,7 +135,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "er",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -170,7 +170,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "und",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -215,7 +215,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "nimmt in acht",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Historical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -243,7 +243,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "sie",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -291,7 +291,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "sorglich",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -325,7 +325,7 @@
 					"inflectionalFeatures": { "degree": "Pos" },
 					"language": "de",
 					"normalizedSurface": "sehr",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

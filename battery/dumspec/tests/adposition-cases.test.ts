@@ -49,7 +49,7 @@ function adpAttestation(
 			unitKind: "Surface",
 			language: "de",
 			normalizedSurface: canonicalForm,
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
 			lemma: adposition(canonicalForm, adpType),
 		},
@@ -252,7 +252,7 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 				unitKind: "Surface",
 				language: "de",
 				normalizedSurface: "Angst hat",
-				spelling: "Canonical",
+				spelling: { kind: "Canonical" },
 				surfaceFeatures: null,
 				inflectionalFeatures: null,
 				lemma: {

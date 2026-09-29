@@ -43,7 +43,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "verheiratet",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",

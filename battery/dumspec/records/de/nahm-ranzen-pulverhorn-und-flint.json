@@ -64,7 +64,7 @@
 						}
 					},
 					"normalizedSurface": "lief hinaus",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -106,7 +106,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "geschwind",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": null,
 						"degree": "Pos",

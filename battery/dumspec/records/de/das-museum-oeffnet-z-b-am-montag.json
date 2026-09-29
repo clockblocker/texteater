@@ -45,7 +45,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "zum Beispiel",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "z.B.", "orthography": "Shorthand" }],

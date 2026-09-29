@@ -89,7 +89,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Was du nicht willst das man dir tu das füg auch keinem andern zu",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

@@ -65,7 +65,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "ließ die Katze aus dem Sack",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

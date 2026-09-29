@@ -48,7 +48,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "fühlte auf den Zahn",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

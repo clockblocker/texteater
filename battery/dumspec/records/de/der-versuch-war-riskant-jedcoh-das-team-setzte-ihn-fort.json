@@ -49,7 +49,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "jedoch",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "jedcoh", "orthography": "Typo" }],

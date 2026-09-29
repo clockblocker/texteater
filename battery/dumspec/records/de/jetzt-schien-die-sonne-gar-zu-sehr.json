@@ -57,7 +57,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "da",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -94,7 +94,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "ward",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

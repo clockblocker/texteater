@@ -45,7 +45,7 @@
 						}
 					},
 					"normalizedSurface": "starken",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Gen",

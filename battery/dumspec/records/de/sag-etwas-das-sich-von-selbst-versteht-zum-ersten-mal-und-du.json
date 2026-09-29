@@ -62,7 +62,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Sag etwas das sich von selbst versteht zum ersten Mal und du bist unsterblich",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

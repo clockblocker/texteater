@@ -51,7 +51,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Mantel",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Acc",
 						"gender": null,

@@ -55,7 +55,7 @@
 						}
 					},
 					"normalizedSurface": "muß",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Historical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

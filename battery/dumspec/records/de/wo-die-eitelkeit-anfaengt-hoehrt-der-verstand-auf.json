@@ -48,7 +48,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wo die Eitelkeit anfängt hört der Verstand auf",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

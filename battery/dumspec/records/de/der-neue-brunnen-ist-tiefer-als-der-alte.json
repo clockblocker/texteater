@@ -47,7 +47,7 @@
 						"coreFeatures": { "conjType": "Comp" }
 					},
 					"normalizedSurface": "als",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "als", "orthography": "Standard" }],
@@ -79,7 +79,7 @@
 						}
 					},
 					"normalizedSurface": "alte",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",

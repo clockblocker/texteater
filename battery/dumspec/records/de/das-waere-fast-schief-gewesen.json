@@ -52,7 +52,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "wäre gewesen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Sub",
 						"number": "Sing",
@@ -96,7 +96,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "fast",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

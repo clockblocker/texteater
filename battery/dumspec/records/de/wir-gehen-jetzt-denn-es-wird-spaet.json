@@ -46,7 +46,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "denn",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "denn", "orthography": "Standard" }],

@@ -52,7 +52,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "unter anderem",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

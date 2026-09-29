@@ -49,7 +49,7 @@
 						}
 					},
 					"normalizedSurface": "dreizehn",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
@@ -79,7 +79,7 @@
 						"coreFeatures": { "gender": null, "hyph": null }
 					},
 					"normalizedSurface": "Reisende",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",

@@ -50,7 +50,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "interessierter",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"degree": "Pos",

@@ -68,7 +68,7 @@
 						}
 					},
 					"normalizedSurface": "hätt bestellt",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Sub",

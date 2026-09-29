@@ -52,7 +52,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "lachende",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"degree": null,

@@ -67,7 +67,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Ende gut alles gut",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

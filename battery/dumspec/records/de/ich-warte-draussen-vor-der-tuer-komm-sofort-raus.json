@@ -63,7 +63,7 @@
 						}
 					},
 					"normalizedSurface": "komm heraus",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Imp",

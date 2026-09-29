@@ -41,7 +41,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "hat Anerkennung gefunden",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

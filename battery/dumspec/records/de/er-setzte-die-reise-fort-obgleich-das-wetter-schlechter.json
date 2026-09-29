@@ -49,7 +49,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "obgleich",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

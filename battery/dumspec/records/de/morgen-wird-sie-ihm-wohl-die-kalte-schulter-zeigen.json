@@ -46,7 +46,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "wird die kalte Schulter zeigen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

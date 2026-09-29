@@ -39,7 +39,7 @@
 						"coreFeatures": { "gender": "Masc", "hyph": null }
 					},
 					"normalizedSurface": "Umstieg",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",

@@ -52,7 +52,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "בית",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"definite": "Def",
 						"number": "Sing"

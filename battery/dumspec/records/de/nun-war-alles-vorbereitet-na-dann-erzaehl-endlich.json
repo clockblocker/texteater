@@ -49,7 +49,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "na",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "na", "orthography": "Standard" }],

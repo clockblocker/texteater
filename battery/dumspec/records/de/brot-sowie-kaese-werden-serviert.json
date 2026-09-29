@@ -38,7 +38,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "sowie",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "sowie", "orthography": "Standard" }],

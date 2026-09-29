@@ -63,7 +63,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer anderen eine Grube gräbt",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

@@ -37,7 +37,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "guten Tag",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

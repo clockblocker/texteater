@@ -45,7 +45,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "will",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"verbForm": "Fin",
 						"mood": null,

@@ -52,7 +52,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "es",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -96,7 +96,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "zog an",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -145,7 +145,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Jägersmann",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,

@@ -43,7 +43,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "huch",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "huch", "orthography": "Standard" }],

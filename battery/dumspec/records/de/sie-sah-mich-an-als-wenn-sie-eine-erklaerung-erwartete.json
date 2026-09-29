@@ -49,7 +49,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "als wenn",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

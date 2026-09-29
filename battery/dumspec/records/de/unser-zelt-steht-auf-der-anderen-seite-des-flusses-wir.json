@@ -70,7 +70,7 @@
 						}
 					},
 					"normalizedSurface": "müssen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -118,7 +118,7 @@
 						}
 					},
 					"normalizedSurface": "hinüber",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

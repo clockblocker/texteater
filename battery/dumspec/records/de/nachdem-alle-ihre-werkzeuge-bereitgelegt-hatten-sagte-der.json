@@ -58,7 +58,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "dann wollen wir mal",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

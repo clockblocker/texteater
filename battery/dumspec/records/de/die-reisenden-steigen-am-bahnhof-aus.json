@@ -46,7 +46,7 @@
 						"coreFeatures": { "gender": null, "hyph": null }
 					},
 					"normalizedSurface": "Reisenden",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",

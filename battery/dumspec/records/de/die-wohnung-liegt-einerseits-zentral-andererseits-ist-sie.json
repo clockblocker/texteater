@@ -50,7 +50,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "einerseits andererseits",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

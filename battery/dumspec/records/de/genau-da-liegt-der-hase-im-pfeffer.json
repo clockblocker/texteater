@@ -80,7 +80,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "da liegt der Hase im Pfeffer",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

@@ -62,7 +62,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "schönen guten Tag",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

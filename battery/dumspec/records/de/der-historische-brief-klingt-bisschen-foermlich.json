@@ -47,7 +47,7 @@
 						}
 					},
 					"normalizedSurface": "bißchen",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Historical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

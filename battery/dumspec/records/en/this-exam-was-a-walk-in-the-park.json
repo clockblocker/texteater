@@ -39,7 +39,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "walk in the park",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",

@@ -40,7 +40,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "tut mir leid",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

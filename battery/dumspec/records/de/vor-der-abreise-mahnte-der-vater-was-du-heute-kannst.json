@@ -67,7 +67,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Was du heute kannst besorgen das verschiebe nicht auf morgen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

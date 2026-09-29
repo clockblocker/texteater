@@ -51,7 +51,7 @@
 						}
 					},
 					"normalizedSurface": "zween",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": { "historicalStatus": "Archaic" },
 					"inflectionalFeatures": {
 						"case": "Nom",

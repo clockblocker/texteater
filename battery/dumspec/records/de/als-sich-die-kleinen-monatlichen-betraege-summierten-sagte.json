@@ -60,7 +60,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Kleinvieh macht auch Mist",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

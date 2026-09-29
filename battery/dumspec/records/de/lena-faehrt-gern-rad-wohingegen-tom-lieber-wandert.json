@@ -45,7 +45,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "wohingegen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

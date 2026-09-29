@@ -69,7 +69,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wes Brot ich ess des Lied ich sing",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

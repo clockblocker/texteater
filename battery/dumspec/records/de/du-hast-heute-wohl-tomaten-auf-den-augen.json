@@ -44,7 +44,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "hast Tomaten auf den Augen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

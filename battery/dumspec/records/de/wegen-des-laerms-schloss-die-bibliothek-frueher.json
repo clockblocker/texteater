@@ -49,7 +49,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Lärms",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Gen",
 						"gender": null,

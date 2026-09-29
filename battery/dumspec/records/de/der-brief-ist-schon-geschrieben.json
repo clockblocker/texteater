@@ -47,7 +47,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "geschrieben",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",

@@ -40,7 +40,7 @@
 						"coreFeatures": { "gender": "Neut", "hyph": null }
 					},
 					"normalizedSurface": "Kinderbücher",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",

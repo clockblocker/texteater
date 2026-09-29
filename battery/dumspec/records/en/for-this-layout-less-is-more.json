@@ -38,7 +38,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "Less is more",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",

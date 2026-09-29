@@ -58,7 +58,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "es",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -98,7 +98,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "ganze",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"degree": null,
@@ -137,7 +137,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "sogar",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

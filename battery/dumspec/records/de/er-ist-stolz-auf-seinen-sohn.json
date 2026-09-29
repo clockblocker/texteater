@@ -98,7 +98,7 @@
 						}
 					},
 					"normalizedSurface": "stolz",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,
@@ -170,7 +170,7 @@
 						}
 					},
 					"normalizedSurface": "ist",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

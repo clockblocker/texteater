@@ -29,7 +29,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "גדולים",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"gender": "Masc",
 						"number": "Plur",

@@ -46,7 +46,7 @@
 						}
 					},
 					"normalizedSurface": "unter",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "Unter", "orthography": "Typo" }],

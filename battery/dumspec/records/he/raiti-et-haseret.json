@@ -28,7 +28,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "את",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "he",

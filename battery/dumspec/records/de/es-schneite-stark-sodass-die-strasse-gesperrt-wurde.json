@@ -45,7 +45,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "sodass",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

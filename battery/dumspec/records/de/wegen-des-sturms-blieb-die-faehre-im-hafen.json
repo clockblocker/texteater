@@ -54,7 +54,7 @@
 						}
 					},
 					"normalizedSurface": "wegen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "Wegen", "orthography": "Standard" }],

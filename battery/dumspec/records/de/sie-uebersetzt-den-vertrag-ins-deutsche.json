@@ -53,7 +53,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "übersetzt",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -112,7 +112,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Deutsche",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Acc",
 						"gender": null,

@@ -36,7 +36,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "pfui",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -60,7 +60,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "pfui",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

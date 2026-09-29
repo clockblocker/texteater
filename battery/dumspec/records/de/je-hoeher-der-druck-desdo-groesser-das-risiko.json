@@ -45,7 +45,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "je desto",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

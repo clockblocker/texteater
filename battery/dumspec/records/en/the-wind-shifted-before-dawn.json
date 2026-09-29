@@ -38,7 +38,7 @@
 					},
 					"language": "en",
 					"normalizedSurface": "wind",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",

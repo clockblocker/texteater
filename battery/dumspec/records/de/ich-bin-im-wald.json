@@ -58,7 +58,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "in",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -110,7 +110,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Wald",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"gender": null,

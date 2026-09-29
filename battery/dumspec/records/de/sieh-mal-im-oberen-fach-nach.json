@@ -49,7 +49,7 @@
 						}
 					},
 					"normalizedSurface": "mal",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "mal", "orthography": "Standard" }],

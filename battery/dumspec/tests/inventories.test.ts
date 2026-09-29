@@ -27,7 +27,7 @@ function pronounSurface(
 		language: "de",
 		lemma,
 		normalizedSurface: spelled,
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 		inflectionalFeatures: {
 			case: null,

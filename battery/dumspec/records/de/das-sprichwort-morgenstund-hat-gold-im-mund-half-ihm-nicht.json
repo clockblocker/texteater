@@ -68,7 +68,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "schwebt auf Wolke sieben",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

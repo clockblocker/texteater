@@ -46,7 +46,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Angestellten",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,

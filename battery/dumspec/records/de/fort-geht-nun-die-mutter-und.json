@@ -141,7 +141,7 @@
 						}
 					},
 					"normalizedSurface": "fort geht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
@@ -187,7 +187,7 @@
 						}
 					},
 					"normalizedSurface": "wupp",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

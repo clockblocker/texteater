@@ -75,7 +75,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Nicht jene die streiten sind zu fürchten sondern jene die ausweichen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

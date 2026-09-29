@@ -59,7 +59,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "verbrannt ist",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -107,7 +107,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "ganz und gar",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -140,7 +140,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "mit Haut und Haar",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

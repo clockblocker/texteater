@@ -84,7 +84,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Der frühe Vogel fängt den Wurm",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

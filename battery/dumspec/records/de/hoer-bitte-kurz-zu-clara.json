@@ -47,7 +47,7 @@
 						}
 					},
 					"normalizedSurface": "Clara",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": { "case": null, "number": "Sing" }
 				},

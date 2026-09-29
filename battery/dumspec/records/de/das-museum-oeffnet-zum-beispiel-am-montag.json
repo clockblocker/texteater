@@ -54,7 +54,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "zum Beispiel",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

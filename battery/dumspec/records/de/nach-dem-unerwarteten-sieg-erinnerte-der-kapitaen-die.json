@@ -63,7 +63,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer zuletzt lacht lacht am besten",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

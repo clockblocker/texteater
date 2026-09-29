@@ -43,7 +43,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "sondern",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "sonedrn", "orthography": "Typo" }],

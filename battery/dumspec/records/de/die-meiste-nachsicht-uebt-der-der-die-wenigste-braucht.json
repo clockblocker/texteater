@@ -47,7 +47,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Die meiste Nachsicht übt der der die wenigste braucht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

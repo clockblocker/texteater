@@ -86,7 +86,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Doppelt gemoppelt hält besser",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

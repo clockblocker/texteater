@@ -62,7 +62,7 @@
 						}
 					},
 					"normalizedSurface": "schaut hinunter",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

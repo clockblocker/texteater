@@ -59,7 +59,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Hüte dich vor der Tugend die zu besitzen ein Mensch von sich selber rühmt",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

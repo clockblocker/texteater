@@ -44,7 +44,7 @@
 						}
 					},
 					"normalizedSurface": "1987",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

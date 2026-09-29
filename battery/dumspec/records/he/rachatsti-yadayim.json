@@ -26,7 +26,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "ידיים",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"number": "Dual",
 						"definite": null

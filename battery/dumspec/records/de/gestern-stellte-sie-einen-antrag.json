@@ -38,7 +38,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "stellte einen Antrag",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

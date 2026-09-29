@@ -39,7 +39,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "hurra",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "huraa", "orthography": "Typo" }],

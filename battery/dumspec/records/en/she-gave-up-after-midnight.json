@@ -34,7 +34,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "gave up",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": null,
 						"number": null,

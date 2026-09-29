@@ -42,7 +42,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "zum Teil",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "z.T.", "orthography": "Shorthand" }],

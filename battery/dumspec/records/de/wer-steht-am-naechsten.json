@@ -43,7 +43,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "am nächsten",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": null,
 						"degree": "Sup",

@@ -38,7 +38,7 @@
 						"coreFeatures": { "gender": "Fem", "hyph": "Yes" }
 					},
 					"normalizedSurface": "E-Mail",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",

@@ -50,7 +50,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "wäre gewesen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Sub",
 						"number": "Sing",

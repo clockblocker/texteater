@@ -47,7 +47,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "teils teils",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

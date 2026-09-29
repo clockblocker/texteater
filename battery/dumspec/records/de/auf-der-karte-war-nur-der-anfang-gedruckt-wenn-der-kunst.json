@@ -68,7 +68,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wenn der Kunst kein Tempel mehr offen steht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

@@ -111,7 +111,7 @@
 						}
 					},
 					"normalizedSurface": "Mister",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -149,7 +149,7 @@
 						}
 					},
 					"normalizedSurface": "Missis",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
@@ -190,7 +190,7 @@
 						}
 					},
 					"normalizedSurface": "in",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [
@@ -248,7 +248,7 @@
 						}
 					},
 					"normalizedSurface": "Fliederweg",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Dat",

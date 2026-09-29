@@ -50,7 +50,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "da",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "da", "orthography": "Standard" }],

@@ -73,7 +73,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer anderen eine Grube gräbt fällt selbst hinein",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

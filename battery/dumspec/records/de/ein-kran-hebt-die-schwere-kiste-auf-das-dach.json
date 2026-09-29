@@ -53,7 +53,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Kran",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,

@@ -56,7 +56,7 @@
 						}
 					},
 					"normalizedSurface": "da für",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
@@ -90,7 +90,7 @@
 						}
 					},
 					"normalizedSurface": "kann",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

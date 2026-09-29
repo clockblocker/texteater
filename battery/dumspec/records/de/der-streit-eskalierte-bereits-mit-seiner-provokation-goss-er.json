@@ -83,7 +83,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "goss Öl ins Feuer",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

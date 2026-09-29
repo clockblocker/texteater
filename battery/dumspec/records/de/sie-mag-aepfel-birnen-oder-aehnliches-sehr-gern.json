@@ -55,7 +55,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "oder Ähnliches",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

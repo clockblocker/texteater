@@ -64,7 +64,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Die Menschen denen wir eine Stütze sind die geben uns den Halt im Leben",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

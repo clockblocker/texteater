@@ -42,7 +42,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "hmm",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "hmm", "orthography": "Standard" }],

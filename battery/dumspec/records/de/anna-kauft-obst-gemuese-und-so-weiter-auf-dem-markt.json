@@ -59,7 +59,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "und so weiter",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

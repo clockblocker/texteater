@@ -60,7 +60,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "geschriebene",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"degree": null,

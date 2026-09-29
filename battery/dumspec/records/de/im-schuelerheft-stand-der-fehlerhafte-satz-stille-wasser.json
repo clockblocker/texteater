@@ -54,7 +54,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Stille Wasser sind tief",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

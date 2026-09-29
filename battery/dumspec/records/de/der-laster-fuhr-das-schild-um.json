@@ -53,7 +53,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "fuhr um",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

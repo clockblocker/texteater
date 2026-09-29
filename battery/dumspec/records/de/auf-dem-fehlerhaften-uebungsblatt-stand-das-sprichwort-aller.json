@@ -55,7 +55,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Aller Anfang ist schwer",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

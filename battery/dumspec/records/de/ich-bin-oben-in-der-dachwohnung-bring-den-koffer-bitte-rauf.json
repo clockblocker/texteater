@@ -67,7 +67,7 @@
 						}
 					},
 					"normalizedSurface": "bring herauf",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Imp",

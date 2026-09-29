@@ -50,7 +50,7 @@
 						}
 					},
 					"normalizedSurface": "zwo",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

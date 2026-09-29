@@ -52,7 +52,7 @@
 						}
 					},
 					"normalizedSurface": "da hin",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
@@ -86,7 +86,7 @@
 						}
 					},
 					"normalizedSurface": "gehe",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

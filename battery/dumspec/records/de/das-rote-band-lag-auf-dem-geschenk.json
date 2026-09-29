@@ -60,7 +60,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Band",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -89,7 +89,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "lag",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -143,7 +143,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "auf",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

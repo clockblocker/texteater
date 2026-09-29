@@ -47,7 +47,7 @@
 						"coreFeatures": { "conjType": "Comp" }
 					},
 					"normalizedSurface": "wie",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "wie", "orthography": "Standard" }],

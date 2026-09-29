@@ -94,7 +94,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wie man sich bettet so liegt man",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

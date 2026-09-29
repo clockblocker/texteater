@@ -87,7 +87,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wenn zwei brave Menschen über Grundsätze streiten haben immer beide recht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

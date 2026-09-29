@@ -39,7 +39,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "muss",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -86,7 +86,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "arbeiten",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": null,
 						"number": null,

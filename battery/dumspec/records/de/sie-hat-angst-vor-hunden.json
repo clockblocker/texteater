@@ -65,7 +65,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "hat Angst",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

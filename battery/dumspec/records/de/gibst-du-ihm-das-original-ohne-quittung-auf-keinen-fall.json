@@ -59,7 +59,7 @@
 					},
 					"inflectionalFeatures": null,
 					"normalizedSurface": "auf keinen Fall",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

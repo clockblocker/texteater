@@ -63,7 +63,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Andere Länder andere Sitten",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

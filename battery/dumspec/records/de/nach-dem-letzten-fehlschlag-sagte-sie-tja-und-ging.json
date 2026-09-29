@@ -46,7 +46,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "tja",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "tja", "orthography": "Standard" }],

@@ -45,7 +45,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "damit",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "damit", "orthography": "Standard" }],

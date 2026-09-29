@@ -41,7 +41,7 @@
 						}
 					},
 					"normalizedSurface": "kamen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

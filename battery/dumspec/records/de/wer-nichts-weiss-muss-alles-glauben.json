@@ -44,7 +44,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer nichts weiß muß alles glauben",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Historical" },
 					"surfaceFeatures": null
 				},
 				"members": [

@@ -47,7 +47,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Die meisten Nachahmer lockt das Unnachahmliche",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

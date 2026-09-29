@@ -72,7 +72,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "es tut mir leid",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

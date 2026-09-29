@@ -27,7 +27,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "איזה",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"gender": "Masc",
 						"number": "Sing",

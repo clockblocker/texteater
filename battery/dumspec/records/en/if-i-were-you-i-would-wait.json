@@ -36,7 +36,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "were",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Sub",
 						"tense": "Past",

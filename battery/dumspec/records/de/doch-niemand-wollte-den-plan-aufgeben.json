@@ -40,7 +40,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "doch",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "Doch", "orthography": "Standard" }],

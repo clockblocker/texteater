@@ -60,7 +60,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Übung macht den Meister",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

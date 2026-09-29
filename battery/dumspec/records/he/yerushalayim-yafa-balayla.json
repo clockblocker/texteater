@@ -31,7 +31,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "ירושלים",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": { "number": "Sing" },
 					"lemma": {
 						"unitKind": "Lemma",

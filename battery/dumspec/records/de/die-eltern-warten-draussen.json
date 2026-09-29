@@ -36,7 +36,7 @@
 						"coreFeatures": { "gender": null, "hyph": null }
 					},
 					"normalizedSurface": "Eltern",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",

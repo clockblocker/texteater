@@ -47,7 +47,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Die Leidenschaft ist immer ein Leiden auch die befriedigte",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

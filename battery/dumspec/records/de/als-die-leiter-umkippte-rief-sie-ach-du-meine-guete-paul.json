@@ -58,7 +58,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "ach du meine Güte",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

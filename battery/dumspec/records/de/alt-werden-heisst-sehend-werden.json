@@ -44,7 +44,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Alt werden heißt sehend werden",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

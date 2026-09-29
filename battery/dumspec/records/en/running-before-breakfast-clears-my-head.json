@@ -35,7 +35,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "running",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"verbForm": "Ger",
 						"mood": null,

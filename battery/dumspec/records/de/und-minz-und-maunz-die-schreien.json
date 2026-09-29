@@ -52,7 +52,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "die",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -91,7 +91,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "gar",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -127,7 +127,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "jämmerlich",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": null,
 						"degree": "Pos",
@@ -177,7 +177,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "zu",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -213,7 +213,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "zweien",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"gender": null,

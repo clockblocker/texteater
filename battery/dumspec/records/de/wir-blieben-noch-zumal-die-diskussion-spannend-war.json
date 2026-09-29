@@ -45,7 +45,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "zumal",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "zumal", "orthography": "Standard" }],

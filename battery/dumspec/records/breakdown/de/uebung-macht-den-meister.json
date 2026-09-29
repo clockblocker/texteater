@@ -40,7 +40,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Übung",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,
@@ -71,7 +71,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "macht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -116,7 +116,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Meister",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Acc",
 						"gender": null,

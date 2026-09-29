@@ -42,7 +42,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "pfui Teufel",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

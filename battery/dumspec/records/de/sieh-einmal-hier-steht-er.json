@@ -114,7 +114,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "sieh",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Imp",
 						"number": "Sing",
@@ -162,7 +162,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "einmal",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -197,7 +197,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "hier",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -233,7 +233,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "steht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -279,7 +279,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "er",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
@@ -325,7 +325,7 @@
 						}
 					},
 					"normalizedSurface": "pfui",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [
@@ -362,7 +362,7 @@
 						}
 					},
 					"normalizedSurface": "Struwwelpeter",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",

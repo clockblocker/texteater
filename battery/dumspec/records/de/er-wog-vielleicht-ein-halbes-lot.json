@@ -60,7 +60,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "wog",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -108,7 +108,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Lot",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Acc",
 						"gender": null,
@@ -142,7 +142,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "war",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -189,7 +189,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "fünften",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"degree": null,
@@ -231,7 +231,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "tot",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

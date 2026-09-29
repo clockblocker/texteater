@@ -58,7 +58,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "so daß",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Historical" },
 					"surfaceFeatures": null
 				},
 				"members": [

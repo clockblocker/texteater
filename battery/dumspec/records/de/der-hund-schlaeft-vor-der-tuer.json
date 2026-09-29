@@ -47,7 +47,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Hund",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,

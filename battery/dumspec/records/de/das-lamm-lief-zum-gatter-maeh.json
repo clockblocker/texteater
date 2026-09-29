@@ -42,7 +42,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "mäh",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "mäh", "orthography": "Standard" }],

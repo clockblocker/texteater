@@ -49,7 +49,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "einst",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -80,7 +80,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "ging",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -134,7 +134,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "an",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -169,7 +169,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Ufers",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Gen",
 						"gender": null,
@@ -208,7 +208,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Rand",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

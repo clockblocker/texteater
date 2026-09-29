@@ -56,7 +56,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Gelegenheit macht Diebe",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

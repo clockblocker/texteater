@@ -55,7 +55,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Die verstehen sehr wenig",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

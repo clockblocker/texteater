@@ -41,7 +41,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "beziehungsweise",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "bzw.", "orthography": "Shorthand" }],

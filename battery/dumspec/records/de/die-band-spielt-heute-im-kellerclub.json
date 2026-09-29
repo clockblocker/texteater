@@ -55,7 +55,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Band",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

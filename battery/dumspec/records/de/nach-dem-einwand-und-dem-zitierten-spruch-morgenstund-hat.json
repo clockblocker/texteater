@@ -87,7 +87,7 @@
 					},
 					"inflectionalFeatures": null,
 					"normalizedSurface": "wie dem auch sei",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

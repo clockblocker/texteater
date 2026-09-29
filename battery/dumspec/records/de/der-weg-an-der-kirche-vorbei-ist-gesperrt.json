@@ -52,7 +52,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "an vorbei",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

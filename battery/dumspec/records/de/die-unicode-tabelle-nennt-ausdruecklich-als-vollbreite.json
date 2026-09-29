@@ -48,7 +48,7 @@
 						"coreFeatures": { "foreign": null, "numType": null }
 					},
 					"normalizedSurface": "＋",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

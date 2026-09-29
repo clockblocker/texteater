@@ -93,7 +93,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Nur was für die Gegenwart zu gut ist ist gut genug für die Zukunft",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

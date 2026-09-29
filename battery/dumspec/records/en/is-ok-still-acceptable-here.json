@@ -31,7 +31,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "OK",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",

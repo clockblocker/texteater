@@ -44,7 +44,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "verlor den Faden",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

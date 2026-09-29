@@ -61,7 +61,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "darf ich bitten",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

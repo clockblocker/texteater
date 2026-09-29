@@ -49,7 +49,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "weil",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "weil", "orthography": "Standard" }],

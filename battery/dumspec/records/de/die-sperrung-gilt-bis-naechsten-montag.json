@@ -46,7 +46,7 @@
 						}
 					},
 					"normalizedSurface": "bis",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "bis", "orthography": "Standard" }],

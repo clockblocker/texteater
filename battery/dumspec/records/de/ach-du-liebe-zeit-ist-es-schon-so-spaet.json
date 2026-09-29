@@ -50,7 +50,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "ach du liebe Zeit",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

@@ -46,7 +46,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Gebrannte Kinder fürchten das Feuer oder vernarren sich darein",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

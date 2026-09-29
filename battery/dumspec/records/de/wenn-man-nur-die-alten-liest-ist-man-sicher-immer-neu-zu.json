@@ -58,7 +58,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wenn man nur die Alten liest ist man sicher immer neu zu bleiben",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

@@ -40,7 +40,7 @@
 					},
 					"language": "en",
 					"normalizedSurface": "saw",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "en",

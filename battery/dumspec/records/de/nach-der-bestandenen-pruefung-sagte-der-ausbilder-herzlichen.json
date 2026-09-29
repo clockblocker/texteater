@@ -55,7 +55,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "herzlichen Glückwunsch",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

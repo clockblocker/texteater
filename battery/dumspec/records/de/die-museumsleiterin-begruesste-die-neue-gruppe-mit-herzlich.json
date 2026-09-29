@@ -52,7 +52,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "herzlich willkommen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

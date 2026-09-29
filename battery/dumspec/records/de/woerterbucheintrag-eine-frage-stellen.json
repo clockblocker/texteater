@@ -39,7 +39,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "eine Frage stellen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

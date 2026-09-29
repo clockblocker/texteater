@@ -42,7 +42,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "und",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "und", "orthography": "Standard" }],

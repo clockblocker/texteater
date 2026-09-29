@@ -42,7 +42,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "um willen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

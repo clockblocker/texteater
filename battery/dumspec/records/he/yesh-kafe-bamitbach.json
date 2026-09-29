@@ -29,7 +29,7 @@
 					"inflectionalFeatures": null,
 					"language": "he",
 					"normalizedSurface": "יש",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "he",

@@ -77,7 +77,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Man kann viele Dinge kaufen die unbezahlbar sind",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

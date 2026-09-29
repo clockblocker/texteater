@@ -33,7 +33,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "does",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

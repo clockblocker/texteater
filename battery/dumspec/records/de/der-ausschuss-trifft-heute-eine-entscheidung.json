@@ -40,7 +40,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "trifft eine Entscheidung",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

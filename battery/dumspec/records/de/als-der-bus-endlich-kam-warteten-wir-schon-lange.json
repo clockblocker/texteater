@@ -47,7 +47,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "als",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "Als", "orthography": "Standard" }],

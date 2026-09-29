@@ -46,7 +46,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "entweder oder",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

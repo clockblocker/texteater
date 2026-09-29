@@ -66,7 +66,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "danke",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "Danke", "orthography": "Standard" }],
@@ -89,7 +89,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "danke",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "danke", "orthography": "Standard" }],

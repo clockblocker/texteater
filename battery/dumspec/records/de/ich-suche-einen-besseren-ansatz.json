@@ -54,7 +54,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "besseren",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Acc",
 						"degree": "Cmp",

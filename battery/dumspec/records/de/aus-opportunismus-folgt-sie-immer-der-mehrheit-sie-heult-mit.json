@@ -59,7 +59,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "heult mit den Wölfen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

@@ -54,7 +54,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Leiter",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

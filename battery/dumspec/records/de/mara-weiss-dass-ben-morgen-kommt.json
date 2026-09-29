@@ -41,7 +41,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "dass",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "dass", "orthography": "Standard" }],

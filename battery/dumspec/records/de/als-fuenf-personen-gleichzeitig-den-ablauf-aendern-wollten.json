@@ -64,7 +64,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Viele Köche verderben den Brei",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

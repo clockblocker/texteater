@@ -43,7 +43,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "oder",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "oder", "orthography": "Standard" }],

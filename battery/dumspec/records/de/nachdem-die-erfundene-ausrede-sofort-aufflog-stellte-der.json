@@ -60,7 +60,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Lügen haben kurze Beine",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

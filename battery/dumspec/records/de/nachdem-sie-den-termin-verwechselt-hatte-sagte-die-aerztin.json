@@ -64,7 +64,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "ich bitte um Verzeihung",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

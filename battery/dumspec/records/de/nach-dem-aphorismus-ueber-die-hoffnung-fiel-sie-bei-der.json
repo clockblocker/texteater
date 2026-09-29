@@ -56,7 +56,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "fiel aus allen Wolken",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

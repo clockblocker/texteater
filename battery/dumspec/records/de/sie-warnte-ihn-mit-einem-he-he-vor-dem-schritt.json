@@ -48,7 +48,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "he he",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Expressive" },
 					"surfaceFeatures": null
 				},
 				"members": [

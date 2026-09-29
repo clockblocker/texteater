@@ -58,7 +58,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "triffst den Nagel auf den Kopf",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

@@ -76,7 +76,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Die Liebe hat nicht nur Rechte sie hat auch immer recht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

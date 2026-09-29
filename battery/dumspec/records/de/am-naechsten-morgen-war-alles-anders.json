@@ -79,7 +79,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "an",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -128,7 +128,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Morgen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"gender": null,
@@ -167,7 +167,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "nächsten",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"degree": null,
@@ -209,7 +209,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "anders",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

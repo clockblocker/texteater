@@ -54,7 +54,7 @@
 						}
 					},
 					"normalizedSurface": "pos",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "pos", "orthography": "Standard" }],

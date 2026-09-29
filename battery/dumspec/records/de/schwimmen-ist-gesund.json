@@ -51,7 +51,7 @@
 					},
 					"language": "de",
 					"normalizedSurface": "Schwimmen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

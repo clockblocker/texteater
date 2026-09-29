@@ -38,7 +38,7 @@
 						"coreFeatures": { "gender": "Fem", "hyph": null }
 					},
 					"normalizedSurface": "Haustür",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",

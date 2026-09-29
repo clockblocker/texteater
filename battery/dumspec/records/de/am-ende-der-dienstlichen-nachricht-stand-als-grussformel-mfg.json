@@ -53,7 +53,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "MfG",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "MfG", "orthography": "Standard" }],

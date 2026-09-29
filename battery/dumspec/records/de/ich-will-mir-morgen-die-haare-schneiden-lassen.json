@@ -41,7 +41,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "lassen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"verbForm": "Inf",
 						"mood": null,

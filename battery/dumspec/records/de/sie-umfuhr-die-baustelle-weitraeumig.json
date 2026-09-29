@@ -46,7 +46,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "umfuhr",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

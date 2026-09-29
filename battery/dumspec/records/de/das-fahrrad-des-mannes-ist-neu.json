@@ -40,7 +40,7 @@
 						"coreFeatures": { "gender": "Masc", "hyph": null }
 					},
 					"normalizedSurface": "Mannes",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Gen",

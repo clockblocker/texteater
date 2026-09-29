@@ -34,7 +34,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "books",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"number": "Plur"
 					},

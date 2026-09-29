@@ -41,7 +41,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "verstehe nur Bahnhof",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

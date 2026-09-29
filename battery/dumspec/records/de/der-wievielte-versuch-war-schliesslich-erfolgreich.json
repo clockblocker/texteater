@@ -55,7 +55,7 @@
 						}
 					},
 					"normalizedSurface": "wievielte",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",

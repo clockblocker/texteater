@@ -38,7 +38,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Wer zuerst kommt mahlt zuerst",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

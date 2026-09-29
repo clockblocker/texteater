@@ -31,7 +31,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "best",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": { "degree": "Sup" },
 					"lemma": {
 						"unitKind": "Lemma",

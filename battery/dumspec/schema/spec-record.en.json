@@ -322,10 +322,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -1202,10 +1235,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -1699,10 +1765,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -2117,10 +2216,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -2611,10 +2743,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -3111,10 +3276,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -3557,10 +3755,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -4004,10 +4235,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -4913,10 +5177,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -5569,10 +5866,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -5983,10 +6313,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -6534,10 +6897,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -7204,10 +7600,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -7861,10 +8290,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -8262,10 +8724,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -8663,10 +9158,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -9110,10 +9638,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -9778,10 +10339,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -10164,10 +10758,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -10565,10 +11192,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -10934,10 +11594,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -11525,10 +12218,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -11894,10 +12620,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -12562,10 +13321,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -12931,10 +13723,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -13300,10 +14125,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -13669,10 +14527,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -14038,10 +14929,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -14407,10 +15331,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -14776,10 +15733,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -15145,10 +16135,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -15514,10 +16537,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -15883,10 +16939,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {
@@ -16252,10 +17341,43 @@
 												"minLength": 1
 											},
 											"spelling": {
-												"type": "string",
-												"enum": [
-													"Canonical",
-													"Variant"
+												"anyOf": [
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Canonical"
+															}
+														},
+														"required": [
+															"kind"
+														],
+														"additionalProperties": false
+													},
+													{
+														"type": "object",
+														"properties": {
+															"kind": {
+																"type": "string",
+																"const": "Variant"
+															},
+															"variantType": {
+																"type": "string",
+																"enum": [
+																	"Licensed",
+																	"Historical",
+																	"Regional",
+																	"Expressive"
+																]
+															}
+														},
+														"required": [
+															"kind",
+															"variantType"
+														],
+														"additionalProperties": false
+													}
 												]
 											},
 											"surfaceFeatures": {

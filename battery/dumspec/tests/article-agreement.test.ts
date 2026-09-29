@@ -36,7 +36,7 @@ const germanNoun = (
 	unitKind: "Surface",
 	language: "de",
 	normalizedSurface,
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 	surfaceFeatures: null,
 	lemma: {
 		unitKind: "Lemma",
@@ -172,7 +172,7 @@ test("any Head that stands in for an elided noun owns its article", () => {
 			unitKind: "Surface",
 			language: "de",
 			normalizedSurface: "roten",
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
 			lemma: {
 				unitKind: "Lemma",
@@ -206,7 +206,7 @@ test("any Head that stands in for an elided noun owns its article", () => {
 			unitKind: "Surface",
 			language: "de",
 			normalizedSurface: "Berlin",
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
 			lemma: {
 				unitKind: "Lemma",
@@ -252,7 +252,7 @@ test("English a or an takes no plural Head, the takes any", () => {
 		unitKind: "Surface",
 		language: "en",
 		normalizedSurface: "books",
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 		lemma: {
 			unitKind: "Lemma",

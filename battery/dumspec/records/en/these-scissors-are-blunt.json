@@ -32,7 +32,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "scissors",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"number": "Ptan"
 					},

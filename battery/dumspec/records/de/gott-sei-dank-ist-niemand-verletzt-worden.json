@@ -44,7 +44,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Gott sei Dank",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",

@@ -61,7 +61,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "es tut mir",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

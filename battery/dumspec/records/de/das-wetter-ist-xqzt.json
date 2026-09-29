@@ -39,7 +39,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Wetter",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,
@@ -74,7 +74,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "ist",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

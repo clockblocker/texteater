@@ -64,7 +64,7 @@
 						}
 					},
 					"normalizedSurface": "auf Grund",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"surfaceFeatures": null
 				},
 				"members": [

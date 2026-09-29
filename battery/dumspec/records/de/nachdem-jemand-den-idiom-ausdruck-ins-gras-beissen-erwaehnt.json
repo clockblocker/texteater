@@ -78,7 +78,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "um Himmels willen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

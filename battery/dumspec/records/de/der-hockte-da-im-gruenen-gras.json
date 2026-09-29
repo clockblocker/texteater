@@ -57,7 +57,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "floß",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Historical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -111,7 +111,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "auf",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

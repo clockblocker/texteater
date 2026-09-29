@@ -63,7 +63,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wo Rauch ist ist auch Feuer",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

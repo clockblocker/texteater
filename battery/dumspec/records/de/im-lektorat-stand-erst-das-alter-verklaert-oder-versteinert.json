@@ -69,7 +69,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Das Alter verklärt oder versteinert",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

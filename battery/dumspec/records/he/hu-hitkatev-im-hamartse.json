@@ -30,7 +30,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "התכתב",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"gender": "Masc",
 						"number": "Sing",

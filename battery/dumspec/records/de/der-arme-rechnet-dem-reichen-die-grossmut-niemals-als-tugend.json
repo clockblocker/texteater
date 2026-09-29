@@ -50,7 +50,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Der Arme rechnet dem Reichen die Großmut niemals als Tugend an",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

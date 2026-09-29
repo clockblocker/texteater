@@ -49,7 +49,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Hand und Fuß hätte",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Sub",

@@ -60,7 +60,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Wer rastet der rostet",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

@@ -53,7 +53,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Seen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,
@@ -89,7 +89,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "eingezeichnet",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",

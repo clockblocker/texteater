@@ -43,7 +43,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "haben",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,

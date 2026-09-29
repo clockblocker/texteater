@@ -29,7 +29,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "כתבה",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"gender": "Fem",
 						"number": "Sing",

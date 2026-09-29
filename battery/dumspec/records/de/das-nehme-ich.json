@@ -47,7 +47,7 @@
 						}
 					},
 					"normalizedSurface": "das",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

@@ -47,7 +47,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "oh",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "oh", "orthography": "Standard" }],

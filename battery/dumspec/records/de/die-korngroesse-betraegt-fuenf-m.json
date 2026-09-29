@@ -39,7 +39,7 @@
 						"coreFeatures": { "foreign": null, "numType": null }
 					},
 					"normalizedSurface": "µ",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

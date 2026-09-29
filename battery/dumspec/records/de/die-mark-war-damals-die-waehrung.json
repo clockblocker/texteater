@@ -43,7 +43,7 @@
 						"coreFeatures": { "gender": "Fem", "hyph": null }
 					},
 					"normalizedSurface": "Mark",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",

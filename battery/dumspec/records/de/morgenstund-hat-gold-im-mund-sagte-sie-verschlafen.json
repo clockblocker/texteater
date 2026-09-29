@@ -68,7 +68,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Morgenstund hat Gold im Mund",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

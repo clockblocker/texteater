@@ -49,7 +49,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Ärztin",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Nom",
 						"gender": null,

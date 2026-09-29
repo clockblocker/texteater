@@ -52,7 +52,7 @@
 						}
 					},
 					"normalizedSurface": "sehr",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "sehr", "orthography": "Standard" }],

@@ -49,7 +49,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "obwohl",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "obwhol", "orthography": "Typo" }],

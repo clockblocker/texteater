@@ -50,7 +50,7 @@
 						"coreFeatures": { "conjType": null }
 					},
 					"normalizedSurface": "allein",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

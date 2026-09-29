@@ -37,7 +37,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "ach",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -61,7 +61,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "je",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

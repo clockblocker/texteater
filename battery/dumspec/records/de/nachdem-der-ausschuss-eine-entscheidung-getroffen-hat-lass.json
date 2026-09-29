@@ -56,7 +56,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "lass die Kirche im Dorf",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Imp",

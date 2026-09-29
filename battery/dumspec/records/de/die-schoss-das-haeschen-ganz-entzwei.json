@@ -78,7 +78,7 @@
 					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "entzwei",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -114,7 +114,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "o wei",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -144,7 +144,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "o wei",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

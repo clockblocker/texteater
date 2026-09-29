@@ -12,7 +12,7 @@ export type AuthoredRealization = {
 	/** The cell a stem Lemma's Surface marks with this spelling (system ADR 0032). */
 	readonly inflection?: Readonly<Record<string, string | null>>;
 };
-/** Licensed alternate spellings of authored determiners, keyed by Canonical Form. */
+/** Other spellings of authored determiners, keyed by Canonical Form. */
 // Free clitic article forms (fusion Entry table) and the comparative of
 // uninflected wenig.
 const determinerAliases: Readonly<Record<string, readonly string[]>> = {
@@ -141,7 +141,7 @@ const pronounAliases: Readonly<Record<string, readonly string[]>> = {
 	es: ["s"],
 };
 /**
- * Licensed alternate spellings of one pronoun Lemma rather than of every Lemma
+ * Other spellings of one pronoun Lemma rather than of every Lemma
  * spelled alike. Relative derer (die Opfer, derer wir gedenken) is nonstandard;
  * Duden prescribes deren, so it is a Variant of standalone relative deren.
  */
@@ -158,8 +158,8 @@ function pronounAliasesOf(lemma: Dumling.Lemma<"de">): readonly string[] {
 
 /**
  * Every spelling that realizes an authored DET, PRON or AUX member: a stem's
- * spellings with the cell each marks, a pillar's own spelling, the licensed
- * aliases, and every form of an auxiliary. No spelling realizes the
+ * spellings with the cell each marks, a pillar's own spelling, the other
+ * spellings, and every form of an auxiliary. No spelling realizes the
  * reflexivity unit: a free sich is an Acc or Dat cell, and only drill-down
  * reaches the unit.
  */

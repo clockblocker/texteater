@@ -49,7 +49,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "tanzte auf der Nase herum",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

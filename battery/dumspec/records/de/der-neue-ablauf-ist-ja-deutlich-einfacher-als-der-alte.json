@@ -56,7 +56,7 @@
 						}
 					},
 					"normalizedSurface": "ja",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "ja", "orthography": "Standard" }],

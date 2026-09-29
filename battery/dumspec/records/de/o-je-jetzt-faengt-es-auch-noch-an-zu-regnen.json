@@ -50,7 +50,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "o je",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

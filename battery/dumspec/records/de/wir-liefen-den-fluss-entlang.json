@@ -51,7 +51,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "liefen entlang",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Plur",

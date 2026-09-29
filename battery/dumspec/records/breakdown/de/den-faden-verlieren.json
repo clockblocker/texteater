@@ -41,7 +41,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Faden",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Acc",
 						"gender": null,
@@ -75,7 +75,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "verlieren",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": null,
 						"number": null,

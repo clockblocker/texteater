@@ -39,7 +39,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Mitleid ist Liebe im Négligé",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

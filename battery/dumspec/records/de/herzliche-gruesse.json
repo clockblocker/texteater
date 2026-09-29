@@ -29,7 +29,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "herzliche Grüße",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

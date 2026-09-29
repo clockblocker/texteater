@@ -46,7 +46,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Ein Aphorismus ist der letzte Ring einer langen Gedankenkette",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

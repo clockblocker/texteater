@@ -52,7 +52,7 @@
 						}
 					},
 					"normalizedSurface": "mit",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "mit", "orthography": "Standard" }],

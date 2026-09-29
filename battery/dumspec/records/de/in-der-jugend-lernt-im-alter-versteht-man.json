@@ -46,7 +46,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "In der Jugend lernt im Alter versteht man",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

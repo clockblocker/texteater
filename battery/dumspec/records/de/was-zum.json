@@ -39,7 +39,7 @@
 						"coreFeatures": { "comparable": null }
 					},
 					"normalizedSurface": "zum",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

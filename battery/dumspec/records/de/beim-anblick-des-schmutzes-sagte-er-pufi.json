@@ -43,7 +43,7 @@
 						"coreFeatures": { "partType": null }
 					},
 					"normalizedSurface": "pfui",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "pufi", "orthography": "Typo" }],

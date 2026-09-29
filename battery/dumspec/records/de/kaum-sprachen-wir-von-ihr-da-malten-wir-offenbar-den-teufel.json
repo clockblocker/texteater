@@ -57,7 +57,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "malten den Teufel an die Wand",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",

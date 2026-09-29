@@ -48,7 +48,7 @@
 						}
 					},
 					"normalizedSurface": "halt",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "halt", "orthography": "Standard" }],

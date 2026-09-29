@@ -55,7 +55,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "vielen herzlichen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

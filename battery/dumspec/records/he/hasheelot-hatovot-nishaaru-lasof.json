@@ -58,7 +58,7 @@
 					"unitKind": "Surface",
 					"language": "he",
 					"normalizedSurface": "טובות",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"definite": "Def",
 						"gender": "Fem",

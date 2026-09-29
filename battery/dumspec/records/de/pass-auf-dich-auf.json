@@ -68,7 +68,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "pass auf",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Imp",
 						"number": "Sing",
@@ -115,7 +115,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "dich",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": null,
 						"gender": null,

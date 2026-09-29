@@ -50,7 +50,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Die Güte die nicht grenzenlos ist verdient den Namen nicht",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

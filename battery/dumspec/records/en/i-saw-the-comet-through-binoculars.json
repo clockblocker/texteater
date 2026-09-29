@@ -33,7 +33,7 @@
 					"unitKind": "Surface",
 					"language": "en",
 					"normalizedSurface": "saw",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"tense": "Past",
 						"verbForm": "Fin",

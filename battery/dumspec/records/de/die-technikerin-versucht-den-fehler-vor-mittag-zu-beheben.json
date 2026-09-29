@@ -52,7 +52,7 @@
 						}
 					},
 					"normalizedSurface": "zu",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "zu", "orthography": "Standard" }],

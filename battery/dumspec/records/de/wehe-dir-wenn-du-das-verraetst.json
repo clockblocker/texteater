@@ -39,7 +39,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "wehe",
-					"spelling": "Variant",
+					"spelling": { "kind": "Variant", "variantType": "Licensed" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -64,7 +64,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "dir",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

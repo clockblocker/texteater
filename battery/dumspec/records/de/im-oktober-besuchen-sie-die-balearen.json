@@ -46,7 +46,7 @@
 						}
 					},
 					"normalizedSurface": "Balearen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": { "case": "Acc", "number": "Plur" }
 				},

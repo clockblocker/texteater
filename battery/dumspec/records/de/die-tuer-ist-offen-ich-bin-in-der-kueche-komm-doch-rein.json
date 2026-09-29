@@ -70,7 +70,7 @@
 						}
 					},
 					"normalizedSurface": "komm herein",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Imp",

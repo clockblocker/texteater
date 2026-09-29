@@ -53,7 +53,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [

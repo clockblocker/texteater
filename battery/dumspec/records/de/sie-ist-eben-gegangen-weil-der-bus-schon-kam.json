@@ -55,7 +55,7 @@
 						}
 					},
 					"normalizedSurface": "eben",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [{ "attested": "eben", "orthography": "Standard" }],

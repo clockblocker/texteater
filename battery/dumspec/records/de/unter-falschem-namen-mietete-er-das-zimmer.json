@@ -48,7 +48,7 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "Namen",
-					"spelling": "Canonical",
+					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"case": "Dat",
 						"gender": null,
