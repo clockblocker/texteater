@@ -28,15 +28,18 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0039"],
+		"rules": [
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" },
+			{ "rule": "de/routine-formula-is-intj", "hash": "183ce2fe684b1a37" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 18],
 			"notes": {
-				"rationale": "The licensed contracted spelling is preserved on the Surface and maps to the current full Lemma wording."
+				"rationale": "auf Wiedersehen is a farewell formula, a Locution INTJ (de/routine-formula-is-intj). Wiedersehn is Wiedersehen with its unstressed e dropped, as it is spoken, and stands alone, so it is a Shorthand member and the Surface spells the full auf Wiedersehen, Canonical (de/member-orthography). The capital of Auf opens the quoted greeting and stays Standard."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -51,13 +54,13 @@
 						"canonicalForm": "auf Wiedersehen",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "auf Wiedersehn",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"normalizedSurface": "auf Wiedersehen",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
 				"members": [
 					{ "attested": "Auf", "orthography": "Standard" },
-					{ "attested": "Wiedersehn", "orthography": "Standard" }
+					{ "attested": "Wiedersehn", "orthography": "Shorthand" }
 				],
 				"realizationCoverage": "Full"
 			}
