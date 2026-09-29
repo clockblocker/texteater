@@ -842,6 +842,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen",
 			"de/nach-der-winterpause-begann-die-laufgruppe-wieder-zu",
 			"de/wer-zuerst-kommt-mahlt-zuerst",
+			"de/es-gilt-der-weg-ist-das-ziel",
 		],
 	},
 	{

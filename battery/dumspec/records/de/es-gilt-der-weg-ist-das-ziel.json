@@ -22,11 +22,58 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: der Weg ist das Ziel",
+				"url": "https://www.dwds.de/wb/der%20Weg%20ist%20das%20Ziel",
+				"supports": "Target 0, Der Weg ist das Ziel (sprichwörtlich)"
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [5, 7, 9, 11, 13],
+			"reading": { "emojiDescription": "🛤🎯" },
+			"notes": {
+				"rationale": "Der Weg ist das Ziel is a proverb DWDS lists, one Saying target over all its words; the lead-in Es gilt stays outside."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Der", "orthography": "Standard" },
+					{ "attested": "Weg", "orthography": "Standard" },
+					{ "attested": "ist", "orthography": "Standard" },
+					{ "attested": "das", "orthography": "Standard" },
+					{ "attested": "Ziel", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Der Weg ist das Ziel",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Der Weg ist das Ziel",
+						"family": "Saying",
+						"kind": "Saying",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
