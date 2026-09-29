@@ -27,13 +27,21 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "4813f1cbb1b7828a"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
+			"notes": {
+				"rationale": "＋ (U+FF0B) is a code point of its own, not a spelling of +: a Variant is a spelling that a standard accepts or once accepted, a dialect uses, or that stretches letters for effect, and a fullwidth form is none of these (de/variant-and-historical-status). It is a SYM Lemma of its own, Canonical, as the minus sign − (U+2212) is apart from the hyphen-minus."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -44,11 +52,11 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "SYM",
-						"canonicalForm": "+",
+						"canonicalForm": "＋",
 						"coreFeatures": { "foreign": null, "numType": null }
 					},
 					"normalizedSurface": "＋",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
