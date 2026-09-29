@@ -1023,7 +1023,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "open: finding B6. ein wenig ('a little', DWDS: ein (klein) wenig = etwas) is invariant and adverbial. ein agrees with nothing, so it can be no article of wenig; the two words are read as a Locution ADV with no comparison forms."
+				"rationale": "open: #734. ein wenig ('a little', DWDS: ein (klein) wenig = etwas) is invariant and adverbial. ein agrees with nothing, so it can be no article of wenig; the two words are read as a Locution ADV with no comparison forms."
 			}
 		},
 		{
@@ -1672,7 +1672,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "open: finding B7. sich erhalten here is 'stay in place, hold on' (Duden erhalten 2: Bestand haben, sich halten), an anticausative with no object role for sich: *die Bettdecke erhielt die Decke. So sich is a lexical reflexive and a member (de/verb-owns-its-scattered-members). The infinitive is its own VERB target under konnte (de/modal-is-a-verb)."
+				"rationale": "Ruled on #743 (VP-B7, A4). sich erhalten here is 'stay in place, hold on' (Duden erhalten 2: Bestand haben, sich halten), an anticausative with no object role for sich: *die Bettdecke erhielt die Decke. So sich is a lexical reflexive and a member (de/verb-owns-its-scattered-members). The infinitive is its own VERB target under konnte (de/modal-is-a-verb)."
 			}
 		},
 		{

@@ -419,7 +419,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "open: finding B9. K. is how the novel names its hero: an initial that is the name's usual form, so its own PROPN with abbr Yes, like BVG (de/abbreviation-is-one-segment)."
+				"rationale": "Ruled on #743 (VP-B9, A8). K. is how the novel names its hero: an initial that is the name's usual form, so its own PROPN with abbr Yes, like BVG (de/abbreviation-is-one-segment)."
 			}
 		},
 		{
@@ -1432,7 +1432,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "open: finding B3. The degree word ganz ('quite, very'; Duden lists ganz as an Adverb in this sense) is read as an ADV like sehr, though the adjective ganz inflects; see finding A2."
+				"rationale": "open: #734. The degree word ganz ('quite, very'; Duden lists ganz as an Adverb in this sense) is read as an ADV like sehr, though the adjective ganz inflects; see finding A2."
 			}
 		},
 		{
@@ -1611,7 +1611,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "open: finding B11. Adversative aber after the first constituent (dann aber … läutete er); Duden's Konjunktion aber may stand inside the clause (er aber sagte). UD tags this position ADV."
+				"rationale": "open: #734. Adversative aber after the first constituent (dann aber … läutete er); Duden's Konjunktion aber may stand inside the clause (er aber sagte). UD tags this position ADV."
 			}
 		},
 		{

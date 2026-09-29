@@ -337,7 +337,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "open: finding B10. Frau is a title before a name, a common NOUN of its own (de/title-before-a-name). With an article the title is the phrase's Head and inflects while the name does not (des Herrn Müller), so Frau owns der."
+				"rationale": "Ruled on #743 (VP-B10). Frau is a title before a name, a common NOUN of its own (de/title-before-a-name). With an article the title is the phrase's Head and inflects while the name does not (des Herrn Müller), so Frau owns der."
 			}
 		},
 		{
@@ -853,7 +853,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "open: finding B3. früh after a clock time means 'in the morning' (Duden has früh as an Adverb: heute früh, Dienstag früh). In that sense it neither inflects nor compares, so it is read as a non-comparable ADV, against the letter of de/adjective-stays-adj; see finding A2."
+				"rationale": "open: #734. früh after a clock time means 'in the morning' (Duden has früh as an Adverb: heute früh, Dienstag früh). In that sense it neither inflects nor compares, so it is read as a non-comparable ADV, against the letter of de/adjective-stays-adj; see finding A2."
 			}
 		},
 		{
