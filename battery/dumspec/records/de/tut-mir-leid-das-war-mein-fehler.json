@@ -26,7 +26,7 @@
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"notes": {
-				"rationale": "Tut mir leid is one Locution/INTJ, not a literal finite-verb attestation. Its apology role is Reading Knowledge, not part of the Lemma."
+				"rationale": "Tut mir leid is the clipped form of the apology formula es tut mir leid (Duden, under leidtun), a Locution INTJ, not a finite verb. The fixed es is left out, so the Attestation is Partial and its members are Tut, mir and leid. Its apology role is Reading Knowledge, not part of the Lemma."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -35,7 +35,7 @@
 					{ "attested": "mir", "orthography": "Standard" },
 					{ "attested": "leid", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full",
+				"realizationCoverage": "Partial",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
@@ -44,7 +44,7 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "tut mir leid",
+						"canonicalForm": "es tut mir leid",
 						"family": "Locution",
 						"kind": "INTJ",
 						"coreFeatures": {}

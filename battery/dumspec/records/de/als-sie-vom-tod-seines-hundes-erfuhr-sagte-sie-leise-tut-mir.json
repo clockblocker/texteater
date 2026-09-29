@@ -46,7 +46,7 @@
 		{
 			"memberSegmentIndices": [24, 26, 28],
 			"notes": {
-				"rationale": "The speaker expresses sympathy rather than an apology. It is the same Lemma tut mir leid as the apology; sympathy and apology are two Readings, told apart by their Formula Role in Reading Knowledge (ADR 0039)."
+				"rationale": "The speaker expresses sympathy rather than an apology. It is the same Lemma es tut mir leid as the apology, clipped without the fixed es, so the Attestation is Partial; sympathy and apology are two Readings, told apart by their Formula Role in Reading Knowledge (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -58,7 +58,7 @@
 						"language": "de",
 						"family": "Locution",
 						"kind": "INTJ",
-						"canonicalForm": "tut mir leid",
+						"canonicalForm": "es tut mir leid",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "tut mir leid",
@@ -70,7 +70,7 @@
 					{ "attested": "mir", "orthography": "Standard" },
 					{ "attested": "leid", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Partial"
 			}
 		}
 	],

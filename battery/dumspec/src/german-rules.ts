@@ -713,6 +713,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
 			"de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
 			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
 		],
 	},
 	{
@@ -761,7 +762,11 @@ const locutionsAndSayings: Rule[] = [
 			"A deliberate change of wording still attests the unit, with Partial coverage: the kept words are its members, the missing ones are absent, and the replacing words resolve on their own. A Saying accepts any modification, a shortened one included: Kaffee oder Tee, das ist hier die Frage attests Sein oder Nichtsein, das ist hier die Frage over [oder, das, ist, hier, die, Frage], and Wer rastet, rostet attests Wer rastet, der rostet. A Locution accepts only a fixed word expanded into a compound that the fixed word heads: Er biss ins Kunstgras attests ins Gras beißen over [biss, in, s], Kunstgras is a NOUN of its own, and the fused article stays with the Locution. A Locution whose fixed es only fills the subject slot also takes a pronoun in its place: das tut mir leid gives [das] PRON das and [tut, mir, leid] Locution INTJ es tut mir leid, Partial. Any other replacement breaks the Locution, and its words resolve on their own (in den Rasen beißen). A Locution whose dictionary entry marks a fixed word as optional still attests it, Partial, when that word is left out, and so does a routine formula's conventional clipped form: Duden cites guten Morgen as [guten] Morgen!, so Morgen, Frau Schulz! gives [Morgen] Locution INTJ guten Morgen, and Tut mir leid! gives [Tut, mir, leid] Locution INTJ es tut mir leid.",
 		adrs: ["ADR-0039", "ADR-0003"],
 		routes: everyMultiword,
-		records: ["de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst"],
+		records: [
+			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
+			"de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
+		],
 	},
 ];
 
