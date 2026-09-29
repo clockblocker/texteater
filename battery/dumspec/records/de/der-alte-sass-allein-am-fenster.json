@@ -1,0 +1,70 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Der Alte saß allein am Fenster.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Der" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Alte" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "saß" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "allein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Fenster" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0036", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" },
+			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" }
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"notes": {
+				"rationale": "Alte is a substantivized adjective, a NOUN, capitalized and owning its article Der. As an adjectival noun for a person it is one Lemma, Alte, with gender null; its singular Surface marks Masc, and Der agrees."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Alte",
+						"coreFeatures": { "gender": null, "hyph": null }
+					},
+					"normalizedSurface": "Alte",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{ "attested": "Der", "orthography": "Standard" },
+					{ "attested": "Alte", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

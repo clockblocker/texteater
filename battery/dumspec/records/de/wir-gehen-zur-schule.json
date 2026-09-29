@@ -15,14 +15,69 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
+	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
+			"memberSegmentIndices": [4],
+			"notes": {
+				"rationale": "The preposition piece zu is a single-member ADP: gehen does not govern it, and zur Schule is no fixed expression."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "zur",
+							"components": [
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "r", "surface": "der" }
+							]
+						},
+						"component": 0
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "zu",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "zu",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"foreign": null,
+							"partType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
 			"memberSegmentIndices": [5, 7],
+			"notes": {
+				"rationale": "zur is zu and r (der). Outside a fixed expression the article piece r belongs to the Head of its phrase, Schule, as its owned Fused article."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

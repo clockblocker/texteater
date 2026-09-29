@@ -23,7 +23,7 @@
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "b86703d3f7281f0a"
 			},
-			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" },
+			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "5cf586fc49528ead"

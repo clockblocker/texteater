@@ -22,16 +22,12 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
+	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 6],
 			"notes": {
-				"rationale": "Two supplied members enclose one dative complement and remain positionally aligned."
+				"rationale": "Von diesem Tag an is one constituent before the finite verb, so an is no particle of anführen: von … an is a circumposition, a Locution ADP."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

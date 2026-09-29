@@ -22,10 +22,55 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [12],
+			"notes": {
+				"rationale": "gelassen is a lexicalized participle, no form of lassen here, so it is a single-member ADJ, predicative after the copula blieb."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "gelassen",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": "Yes",
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "gelassen",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"members": [
+					{ "attested": "gelassen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

@@ -19,16 +19,12 @@
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
+	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 8, 9, 11],
 			"notes": {
-				"rationale": "Every canonical member present in the sentence is marked, while the external object remains context; the Surface is Full."
+				"rationale": "zur Verfügung stellen is a Collocation, a fixed expression, so both pieces of zur are its members; the free object die Daten stays outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

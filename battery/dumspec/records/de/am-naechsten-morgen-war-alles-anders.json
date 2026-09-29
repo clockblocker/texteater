@@ -23,7 +23,7 @@
 		"adrs": ["ADR-0035", "ADR-0040", "ADR-0042"],
 		"rules": [
 			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" },
+			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
 			{
 				"rule": "de/attributive-adjective-stands-alone",
 				"hash": "293eb180d6782c36"

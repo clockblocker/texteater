@@ -26,7 +26,7 @@
 		"adrs": [],
 		"rules": [
 			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
-			{ "rule": "de/participial-adjective", "hash": "64019b2928263509" }
+			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" }
 		],
 		"references": []
 	},

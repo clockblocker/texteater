@@ -1,0 +1,110 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er ist ein starker Raucher.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ist" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "starker" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Raucher" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "c2ddde608e957137"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [6],
+			"notes": {
+				"rationale": "starker Raucher is a weak collocation with a literal meaning, someone who smokes a lot, so starker is an ADJ of its own and no member of a Locution."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "stark",
+						"coreFeatures": {
+							"comparable": "Yes",
+							"abbr": null,
+							"foreign": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "starker",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{ "attested": "starker", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		{
+			"memberSegmentIndices": [4, 8],
+			"notes": {
+				"rationale": "Raucher is a NOUN of its own that owns its article ein across the adjective."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Raucher",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"normalizedSurface": "Raucher",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{ "attested": "ein", "orthography": "Standard" },
+					{ "attested": "Raucher", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

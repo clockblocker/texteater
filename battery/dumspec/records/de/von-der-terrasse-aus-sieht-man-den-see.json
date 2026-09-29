@@ -27,7 +27,7 @@
 		"rules": [
 			{
 				"rule": "de/bracket-particle-or-circumposition",
-				"hash": "01c41fadbcfbdc56"
+				"hash": "9d116db0de61b6dd"
 			}
 		],
 		"references": []
@@ -35,6 +35,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 6],
+			"notes": {
+				"rationale": "Von der Terrasse aus is one constituent before the finite verb, so aus is no particle of aussehen: von … aus is a circumposition, a Locution ADP."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

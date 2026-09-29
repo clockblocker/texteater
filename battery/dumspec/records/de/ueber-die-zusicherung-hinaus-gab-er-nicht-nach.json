@@ -1,0 +1,114 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Über die Zusicherung hinaus gab er nicht nach.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Über" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zusicherung" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hinaus" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gab" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "er" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nach" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "9d116db0de61b6dd"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 6],
+			"notes": {
+				"rationale": "Über die Zusicherung hinaus is one constituent before the finite verb, outside the bracket, so über … hinaus is a circumposition, a Locution ADP, and hinaus no particle."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADP",
+						"canonicalForm": "über … hinaus",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "über hinaus",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [
+					{ "attested": "Über", "orthography": "Standard" },
+					{ "attested": "hinaus", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [8, 14],
+			"notes": {
+				"rationale": "nach in the right bracket is the separable particle of nachgeben."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "nachgeben",
+						"coreFeatures": {
+							"hasSepPrefix": "nach",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "gab nach",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{ "attested": "gab", "orthography": "Standard" },
+					{ "attested": "nach", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

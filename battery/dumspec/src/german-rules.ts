@@ -149,7 +149,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/bracket-particle-or-circumposition",
 		statement:
-			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition, and so do reicht über … hinaus (hinausreichen) and kommt um … nicht herum (herumkommen). A directional word coordinated with a free directional phrase under one shared verb is an ADV, and the shared verb is its base verb: lief erst nach links und dann hinaus gives [lief] VERB laufen and [hinaus] ADV hinaus. Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket (Über die Zusicherung hinaus gab er nach, der Weg an der Kirche vorbei gives [an, vorbei] an … vorbei) or when no such particle verb exists: um … willen, von … an, Von der Terrasse aus sieht man den See (not aussehen). The hin or her of a split dahin, wohin or woher (Wo gehst du hin?) and the preposition of a split pronominal adverb (Da weiß ich nichts von) belong to the adverb instead (de/split-adverb-is-one-target).",
+			"A directional word (vorbei, hinaus, herum, entlang, an, aus) in the verbal bracket is the verb's separable particle when verb and word form a dictionary particle verb in this sense, also after a prepositional phrase: führt an der Schule vorbei gives [führt, an, vorbei] VERB vorbeiführen, with an as its governed preposition. Coordinated with a free directional phrase under one shared verb, it is an ADV, and the verb its base verb. Preposition and word form a circumposition, a Locution ADP, only as one constituent outside the bracket or when no such particle verb exists (um … willen).",
 		adrs: ["ADR-0003", "ADR-0022", "ADR-0034", "ADR-0039"],
 		routes: [...lexeme("VERB"), ...locution("ADP")],
 		records: [
@@ -168,6 +168,8 @@ const verbs: Rule[] = [
 			"de/nahm-ranzen-pulverhorn-und-flint",
 			"de/wir-liefen-den-fluss-entlang",
 			"de/den-fluss-entlang-standen-alte-weiden",
+			"de/um-diese-frage-kommt-er-nicht-herum",
+			"de/ueber-die-zusicherung-hinaus-gab-er-nicht-nach",
 		],
 	},
 	{
@@ -314,7 +316,7 @@ const participles: Rule[] = [
 	{
 		id: "de/participial-adjective",
 		statement:
-			"A participle outside a perfect or passive is a single-member ADJ: attributive (die gebratenen Zwiebeln), adverbial (ging pfeifend davon) or predicative (wirkte erschöpft). Lexicalized participles such as überzeugend and gelassen are ADJ too. The participle's own objects, adverbs, agents and prepositional phrases are free words: in der von allen gelobte Koch, only gelobte is the target. A substantivized participle or adjective is a NOUN, capitalized and owning its article like any noun: der Reisende, der Alte, das Gute, die Reichen. Its ending follows the determiner (der Alte, ein Alter), and the Surface's letters record it. A participle or adjective whose noun is elided stays lowercase and ADJ, and it owns the article as the Head of its phrase: der alte in tiefer als der alte gives [der, alte] ADJ.",
+			"A participle outside a perfect or passive is a single-member ADJ, attributive, adverbial or predicative: die gebratenen Zwiebeln. Its own objects, adverbs, agents and prepositional phrases are free words. A substantivized participle or adjective is a NOUN, capitalized and owning its article like any noun (der Reisende). A participle or adjective whose noun is elided stays lowercase and ADJ, and owns the article as the Head of its phrase.",
 		adrs: ["ADR-0036", "ADR-0040"],
 		routes: lexeme("ADJ", "NOUN"),
 		records: [
@@ -340,6 +342,8 @@ const participles: Rule[] = [
 			"de/ein-interessierter-leser-fragte-nach",
 			"de/die-angestellten-streikten-gestern",
 			"de/ein-verletzter-lag-am-strassenrand",
+			"de/trotz-der-hektik-blieb-sie-ganz-gelassen",
+			"de/der-alte-sass-allein-am-fenster",
 		],
 	},
 ];
@@ -414,6 +418,7 @@ const nouns: Rule[] = [
 			"de/auf-dem-bahnsteig-warten-dreizehn-reisende",
 			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
 			"de/der-reisende-haendler-wartete-draussen",
+			"de/der-alte-sass-allein-am-fenster",
 		],
 	},
 	{
@@ -476,7 +481,7 @@ const fusedWords: Rule[] = [
 	{
 		id: "de/fused-word-pieces",
 		statement:
-			"A fused word is one Segment per word it holds, and each piece belongs to the unit of the word it stands for: im is i (in) and m (dem), zur is zu and r (der), geht's is geht and 's (es). Outside a fixed expression, a preposition piece is a single-member ADP and an article piece belongs to the noun its phrase opens onto: Ich bin im Wald gives [i] ADP and [m, Wald] NOUN, and in Er wartet aufs Ende, auf joins wartet and s joins Ende. Inside a fixed expression (Öl ins Feuer gießen, zur Verfügung stellen) both pieces are members. A click on a piece opens the unit that owns that piece, never the whole written word, and a fused article piece is its noun's one article: [s, Ende]. am before a superlative is no fused word: it stands for no other words, so it is one Segment and a member of the word whose degree it marks: Mina reist am liebsten gives [am, liebsten] ADV gern, and Wer steht am nächsten? gives [am, nächsten] ADJ nah. Before a noun phrase am still splits: Am nächsten Morgen gives [A] ADP an and [m, Morgen] NOUN.",
+			"A fused word is one Segment per word it holds, and each piece belongs to the unit of the word it stands for: im is i (in) and m (dem). Outside a fixed expression a preposition piece is a single-member ADP unless a word governs it, and an article piece belongs to the Head of its phrase: Ich bin im Wald gives [i] ADP and [m, Wald] NOUN. Inside a fixed expression both pieces are members. A click on a piece opens the unit that owns it, never the whole written word. am before a superlative with no noun after it is one Segment and a member of the word whose degree it marks.",
 		adrs: ["ADR-0027", "ADR-0035", "ADR-0040", "dumgen/ADR-0004"],
 		routes: lexeme("ADP", "NOUN", "ADJ", "ADV"),
 		records: [
@@ -487,6 +492,11 @@ const fusedWords: Rule[] = [
 			"de/am-naechsten-morgen-war-alles-anders",
 			"de/genau-da-liegt-der-hase-im-pfeffer",
 			"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen",
+			"de/wir-gehen-zur-schule",
+			"de/das-radio-geht-s-wieder",
+			"de/er-wartet-aufs-ende",
+			"de/der-streit-eskalierte-bereits-mit-seiner-provokation-goss-er",
+			"de/wir-stellen-die-daten-zur-verfuegung",
 		],
 	},
 	{
@@ -735,7 +745,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/funktionsverbgefuege-are-collocations",
 		statement:
-			"A Collocation is a Locution VERB whose verb only supports its noun or adjective predicate: a Funktionsverbgefüge (zur Verfügung stellen, in Frage kommen, eine Entscheidung treffen, Angst haben, Bescheid wissen) or a verb with an adjective predicate (geltend machen, ernst nehmen). Its members are the verb, the noun or adjective, the noun's own article or both pieces of its fused word, and a preposition the noun or the expression governs. Free arguments and adverbs stay outside: stellt den Schülern Material zur Verfügung gives [stellt, zu, r, Verfügung]. A weak collocation whose meaning is literal (starker Raucher, Zähne putzen) and an ordinary verb with a free object (eine Cola bringen) are separate Lexemes. Collocation is the Reading's Locution Type, never part of the Lemma.",
+			"A Collocation is a Locution VERB whose verb only supports its noun or adjective predicate: a Funktionsverbgefüge (zur Verfügung stellen) or a verb with an adjective predicate (ernst nehmen). Its members are the verb, the predicate, the noun's own article or both pieces of its fused word, and a preposition the noun or the expression governs; free arguments and adverbs stay outside. A weak collocation with a literal meaning is separate Lexemes. Collocation is the Reading's Locution Type, never part of the Lemma.",
 		adrs: ["ADR-0039", "ADR-0034", "dumgen/ADR-0007"],
 		routes: locution("VERB"),
 		records: [
@@ -744,6 +754,10 @@ const locutionsAndSayings: Rule[] = [
 			"de/die-ausschuesse-treffen-entscheidungen",
 			"de/er-weiss-bescheid-ueber-die-plaene",
 			"de/die-peitsche-hat-er-mitgebracht",
+			"de/sie-hat-angst-vor-hunden",
+			"de/sie-macht-ihre-ansprueche-geltend",
+			"de/er-ist-ein-starker-raucher",
+			"de/der-kellner-bringt-eine-cola",
 		],
 	},
 	{

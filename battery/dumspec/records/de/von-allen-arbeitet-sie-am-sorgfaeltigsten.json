@@ -21,7 +21,7 @@
 	"sources": {
 		"adrs": ["ADR-0040", "ADR-0042"],
 		"rules": [
-			{ "rule": "de/fused-word-pieces", "hash": "324792c72053f63b" }
+			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" }
 		],
 		"references": []
 	},

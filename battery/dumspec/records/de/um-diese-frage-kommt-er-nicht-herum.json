@@ -1,46 +1,40 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Trotz des Zeitdrucks nahm Lea stets Rücksicht auf ihre Kollegen.",
+	"sentence": "Um diese Frage kommt er nicht herum.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Trotz" },
+		{ "kind": "ResolvableText", "text": "Um" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "des" },
+		{ "kind": "ResolvableText", "text": "diese" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Zeitdrucks" },
+		{ "kind": "ResolvableText", "text": "Frage" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "nahm" },
+		{ "kind": "ResolvableText", "text": "kommt" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Lea" },
+		{ "kind": "ResolvableText", "text": "er" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "stets" },
+		{ "kind": "ResolvableText", "text": "nicht" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Rücksicht" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "auf" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "ihre" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Kollegen" },
+		{ "kind": "ResolvableText", "text": "herum" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0039"],
+		"adrs": [],
 		"rules": [
 			{
-				"rule": "de/funktionsverbgefuege-are-collocations",
-				"hash": "c2ddde608e957137"
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "9d116db0de61b6dd"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 12, 14],
+			"memberSegmentIndices": [0, 6, 12],
 			"notes": {
-				"rationale": "Rücksicht nehmen is a Funktionsverbgefüge: nehmen only supports the noun Rücksicht, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. Rücksicht governs auf with the accusative inside the expression, so auf is a member but stays out of the Surface (ADR 0034). The adverb stets and the object ihre Kollegen are free."
+				"rationale": "herum stands in the right bracket, and herumkommen um + Acc is a dictionary particle verb in this sense, to avoid, so herum is its separable particle and Um its governed preposition, though the prepositional phrase opens the clause."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -50,19 +44,23 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
+						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "Rücksicht nehmen",
-						"coreFeatures": {}
+						"canonicalForm": "herumkommen",
+						"coreFeatures": {
+							"hasSepPrefix": "herum",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
 					},
-					"normalizedSurface": "nahm Rücksicht",
+					"normalizedSurface": "kommt herum",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
 						"person": "3",
-						"tense": "Past",
+						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
@@ -72,15 +70,15 @@
 					}
 				},
 				"members": [
-					{ "attested": "nahm", "orthography": "Standard" },
-					{ "attested": "Rücksicht", "orthography": "Standard" },
-					{ "attested": "auf", "orthography": "Standard" }
+					{ "attested": "Um", "orthography": "Standard" },
+					{ "attested": "kommt", "orthography": "Standard" },
+					{ "attested": "herum", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [
 					{
-						"member": 2,
+						"member": 0,
 						"complement": {
 							"kind": "Preposition",
 							"preposition": {
@@ -88,7 +86,7 @@
 								"language": "de",
 								"family": "Lexeme",
 								"kind": "ADP",
-								"canonicalForm": "auf",
+								"canonicalForm": "um",
 								"coreFeatures": {
 									"abbr": null,
 									"adpType": "Prep",
@@ -98,7 +96,7 @@
 								}
 							},
 							"case": "Acc",
-							"referent": "Someone"
+							"referent": "Either"
 						},
 						"realizedCase": "Acc"
 					}
