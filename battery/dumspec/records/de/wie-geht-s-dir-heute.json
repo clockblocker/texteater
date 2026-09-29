@@ -4,75 +4,151 @@
 	"segments": [
 		{ "kind": "ResolvableText", "text": "Wie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "geht" },
-		{ "kind": "ResolvableText", "text": "'s" },
+		{ "kind": "ResolvableText", "text": "geht", "surface": "geht" },
+		{ "kind": "ResolvableText", "text": "'s", "surface": "es" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "dir" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "heute" },
 		{ "kind": "Punctuation", "text": "?" }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0039"],
+		"rules": [
+			{ "rule": "de/routine-formula-is-intj", "hash": "183ce2fe684b1a37" }
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
-			"caseId": "sentence-de-klitik",
-			"case": {
-				"input": {
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Wie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geht" },
-						{ "kind": "ResolvableText", "text": "'s" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "dir" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heute" },
-						{ "kind": "Punctuation", "text": "?" }
-					]
-				},
-				"idealOutput": {
-					"targets": [
-						{
-							"kind": "ADV",
-							"members": [{ "offset": 0 }]
-						},
-						{
-							"kind": "VERB",
-							"members": [
-								{ "offset": 4, "role": "Head" },
-								{ "offset": 8, "role": "Expletive" }
+			"memberSegmentIndices": [0, 2, 3],
+			"notes": {
+				"rationale": "Wie geht's is the greeting formula, a Locution INTJ (de/routine-formula-is-intj). Its three words are members, the Fused 's included; the formula's wording has no dative, and Wie geht's Ihnen? swaps the word, so dir is free.",
+				"knownMistakes": [
+					"Making dir a member of the formula.",
+					"Resolving geht's as the verb gehen with an expletive 's."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Wie", "orthography": "Standard" },
+					{
+						"attested": "geht",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "geht's",
+							"components": [
+								{ "span": "geht", "surface": "geht" },
+								{ "span": "'s", "surface": "es" }
 							]
 						},
-						{
-							"kind": "PRON",
-							"members": [{ "offset": 11 }],
-							"identity": "PRON:dir"
+						"component": 0
+					},
+					{
+						"attested": "'s",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "geht's",
+							"components": [
+								{ "span": "geht", "surface": "geht" },
+								{ "span": "'s", "surface": "es" }
+							]
 						},
-						{
-							"kind": "ADV",
-							"members": [{ "offset": 15 }]
-						}
-					],
-					"phrasemes": [
-						{
-							"kind": "DiscourseFormula",
-							"words": [0, 4, 11]
-						}
-					]
-				},
-				"explanation": "The apostrophe stays inside its Segment (ADR 0035): `'s` is one Fused piece of geht's standing for `es`, the expletive of `es geht`; the greeting Wie geht's dir is a DiscourseFormula over the words Wie, geht (holding `'s`) and dir."
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "wie geht's",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "wie geht's",
+						"family": "Locution",
+						"kind": "INTJ",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		},
+		{
+			"memberSegmentIndices": [5],
+			"notes": {
+				"rationale": "dir is the free dative of the person asked and resolves on its own."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "dir",
+						"coreFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"extPos": null,
+							"foreign": null,
+							"person": "2",
+							"polite": "Infm",
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "dir",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "dir", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		{
+			"memberSegmentIndices": [7],
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "heute",
+						"coreFeatures": {
+							"comparable": null,
+							"foreign": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"normalizedSurface": "heute",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "heute", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": [],
+	"legacy": [
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/draft-translations/source-data.json",
 			"caseId": "draft-translation-discourse-formula",
@@ -88,9 +164,7 @@
 						"canonicalForm": "wie geht's dir",
 						"coreFeatures": { "discourseFormulaRole": "Greeting" }
 					},
-					"request": {
-						"translations": { "en": null, "ru": null }
-					}
+					"request": { "translations": { "en": null, "ru": null } }
 				},
 				"idealOutput": {
 					"translations": { "en": "how are you", "ru": "как дела" }
@@ -106,10 +180,7 @@
 							"как у тебя дела"
 						]
 					},
-					"rejected": {
-						"en": [],
-						"ru": ["как поживать"]
-					}
+					"rejected": { "en": [], "ru": ["как поживать"] }
 				}
 			}
 		}

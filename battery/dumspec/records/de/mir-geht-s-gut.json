@@ -1,0 +1,112 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Mir geht's gut.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Mir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "geht", "surface": "geht" },
+		{ "kind": "ResolvableText", "text": "'s", "surface": "es" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gut" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"status": "Draft",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0022", "ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 3],
+			"notes": {
+				"rationale": "es geht jemandem gut selects an es that refers to nothing, so 's is the expletive member of gehen, exactly as a full es would be (de/expletive-es-joins-its-verb). geht's is two Segments, and both Fused pieces are members of the one target: a click on either opens gehen.",
+				"knownMistakes": [
+					"Making 's a PRON es target of its own, as in Das Radio? Geht's wieder?"
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "gehen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "geht es",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "geht",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "geht's",
+							"components": [
+								{ "span": "geht", "surface": "geht" },
+								{ "span": "'s", "surface": "es" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "'s",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "geht's",
+							"components": [
+								{ "span": "geht", "surface": "geht" },
+								{ "span": "'s", "surface": "es" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": {
+					"attested": "'s",
+					"orthography": "Fused",
+					"fusion": {
+						"spelling": "geht's",
+						"components": [
+							{ "span": "geht", "surface": "geht" },
+							{ "span": "'s", "surface": "es" }
+						]
+					},
+					"component": 1
+				},
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

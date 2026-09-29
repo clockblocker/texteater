@@ -4,8 +4,7 @@
 	"segments": [
 		{ "kind": "ResolvableText", "text": "Wenn" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "'" },
-		{ "kind": "ResolvableText", "text": "s" },
+		{ "kind": "ResolvableText", "text": "'s" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "morgen" },
 		{ "kind": "Whitespace", "text": " " },
@@ -29,15 +28,20 @@
 	"status": "Draft",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0035"],
+		"rules": [
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "a5fb49a3b3ef1cb3"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [3],
+			"memberSegmentIndices": [0],
 			"notes": {
-				"rationale": "Apostrophe outside member. Contracted es remains full."
+				"rationale": "Wenn opens the conditional clause and is an SCONJ of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -48,31 +52,70 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "es",
+						"kind": "SCONJ",
+						"canonicalForm": "wenn",
+						"coreFeatures": { "conjType": null }
+					},
+					"normalizedSurface": "wenn",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "Wenn", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2, 6],
+			"notes": {
+				"rationale": "Weather es refers to nothing, so 's is the expletive member of regnen, across the free adverb morgen (de/expletive-es-joins-its-verb). The clitic is only a way of writing es: it stands apart from any word, so the member is Shorthand, its apostrophe stays in its Segment, and the Surface is es regnet, spelled Canonical.",
+				"knownMistakes": [
+					"Making 's a PRON es target of its own.",
+					"Making 's a Variant spelling of es, or splitting off the apostrophe as punctuation."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "regnen",
 						"coreFeatures": {
-							"case": "Nom",
-							"number": "Sing",
-							"extPos": null,
-							"foreign": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": "Neut"
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
 						}
 					},
-					"normalizedSurface": "s",
-					"spelling": {
-						"kind": "Variant",
-						"variantTags": ["Licensed"]
-					},
+					"normalizedSurface": "es regnet",
+					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": "Subject",
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
-				"members": [{ "attested": "s", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "'s", "orthography": "Shorthand" },
+					{ "attested": "regnet", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"expletiveEvidence": {
+					"attested": "'s",
+					"orthography": "Shorthand"
+				},
+				"valencyEvidence": []
 			}
 		}
 	],

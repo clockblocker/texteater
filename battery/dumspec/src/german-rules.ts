@@ -123,6 +123,9 @@ const verbs: Rule[] = [
 		records: [
 			"de/es-brennt-die-hand-es-brennt-das-haar",
 			"de/es-zog-der-wilde-jaegersmann",
+			"de/mir-geht-s-gut",
+			"de/wenn-s-morgen-regnet-bleibt-das-turnier-in-der-halle",
+			"de/das-radio-geht-s-wieder",
 		],
 	},
 	{
@@ -749,6 +752,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
 			"de/guten-tag-ich-habe-einen-termin",
 			"de/na-ja-ganz-ueberzeugt-bin-ich-nicht",
+			"de/wie-geht-s-dir-heute",
 		],
 	},
 	{
