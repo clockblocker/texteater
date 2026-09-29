@@ -25,7 +25,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"notes": {
-				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). ward is the archaic third person singular past indicative of werden, the old preterite that wurde replaced (Duden: veraltet, noch dichterisch). The form itself is archaic beside the current wurde of the same Lemma, so the Surface is Archaic (de/variant-and-historical-status)."
+				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). ward is the archaic third person singular past indicative of werden, the old preterite that wurde replaced (Duden: veraltet, noch dichterisch). It is an old inflected form, not another spelling of wurde, so the spelling is Canonical; the form itself is archaic beside the current wurde of the same Lemma, so the Surface is Archaic (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -41,7 +41,7 @@
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "ward",
-					"spelling": "Variant",
+					"spelling": "Canonical",
 					"surfaceFeatures": { "historicalStatus": "Archaic" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
