@@ -35,7 +35,11 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0042"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
@@ -292,8 +296,9 @@
 		},
 		{
 			"memberSegmentIndices": [18],
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
-				"rationale": "Sehr functions as an intensifying adverb here; dumling does not currently split German degree particles away from ADV."
+				"rationale": "sehr is an intensifying ADV. Duden gives the suppletive mehr and am meisten, so it is comparable and marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -301,7 +306,7 @@
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": null,
+					"inflectionalFeatures": { "degree": "Pos" },
 					"language": "de",
 					"normalizedSurface": "sehr",
 					"spelling": "Canonical",
@@ -312,6 +317,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"foreign": null,
 							"numType": null,
 							"pronType": null

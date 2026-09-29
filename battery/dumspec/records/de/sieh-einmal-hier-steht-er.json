@@ -334,6 +334,7 @@
 		},
 		{
 			"memberSegmentIndices": [15, 17],
+			"reading": { "emojiDescription": "🧒🪮" },
 			"notes": {
 				"rationale": "Struwwelpeter is a name canonically cited with its article (der Struwwelpeter), so it is a PROPN with Core article Definite and owns der as its first member, like a common noun owns its article."
 			},

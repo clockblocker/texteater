@@ -39,8 +39,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "⚪" },
 			"notes": {
-				"rationale": "I treated sentence-initial `Es` as the personal pronoun lemma `es` with nominative neuter singular inflection. In this poetic inversion it may function as expletive or presentational `es`, but the current schema has no dedicated expletive feature, so plain PRON is the closest Dumling fit."
+				"rationale": "Es only fills the first position before the postponed subject der wilde Jägersmann: with anything else in front it disappears (Der wilde Jägersmann zog … an). So it is positional es, which refers to nothing and is a PRON target of its own (de/expletive-es-joins-its-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

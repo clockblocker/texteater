@@ -41,14 +41,15 @@
 	"sources": { "adrs": [], "rules": [], "references": [] },
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
+			"memberSegmentIndices": [0, 2],
 			"notes": {
-				"rationale": "I treated Verbrannt as the participial verb form of verbrennen rather than as a plain adjective. A predicative-adjective reading is possible in German, but dumling-wise the learner-facing meaning here still points most directly to the lexical verb and its result-state participle."
+				"rationale": "Verbrannt ist is the sein-perfect of intransitive verbrennen. de/sein-perfect-or-copula counts it as a perfect because Alles verbrannte ganz und gar reports the same event, which the verse has just narrated. A result-state reading (everything is in a burnt state) is also possible; this record takes the completed event. The fronted participle and ist are one VERB target (de/verbal-participle, de/verb-owns-its-scattered-members), and the Surface records the whole perfect, with tense from ist (de/verbal-surface-is-whole)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "Verbrannt", "orthography": "Standard" }
+					{ "attested": "Verbrannt", "orthography": "Standard" },
+					{ "attested": "ist", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -56,17 +57,16 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "verbrannt",
+					"normalizedSurface": "verbrannt ist",
 					"spelling": "Canonical",
 					"inflectionalFeatures": {
-						"participleForm": "Past",
-						"verbForm": "Part",
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
 						"expletive": null,
-						"perfect": null,
+						"perfect": "Yes",
 						"future": null,
 						"voice": null,
 						"passive": null
@@ -119,101 +119,32 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [21],
+			"memberSegmentIndices": [19, 21, 23, 25],
 			"notes": {
-				"rationale": "Haut is classified word-by-word here because this occurrence is used literally, not idiomatically. The noun is dative singular after mit, even though the attested form is identical to the citation form.",
-				"knownMistakes": [
-					"Do not keep a literally used idiom as a Locution. The earlier mistake here was classifying Haut as a Partial attestation of the idiom mit Haut und Haar instead of as the standalone noun Haut in dative singular."
-				]
+				"rationale": "Duden lists mit Haut und Haar[en] as an idiom meaning completely (ganz und gar, völlig), and the stanza supports that reading: the line continues Verbrannt ist alles ganz und gar. That the child also burns literally, skin and hair, does not exclude it. With the idiomatic reading established, the four words are one Locution ADV (de/idiom), and a click on any of them selects it (de/largest-fixed-unit); Haut and Haar stay reachable through its Breakdown. The Canonical Form keeps the attested Haar, because Haaren is another inflected form, not a Variant."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "Haut", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "Haut",
-					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Sing"
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "Haut",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [23],
-			"notes": {
-				"rationale": "Und is classified word-by-word here because the phrase is being used literally, not as an idiom. In this line it is the ordinary coordinating conjunction linking the two literal nouns Haut and Haar.",
-				"knownMistakes": [
-					"Do not keep a literally used idiom as a Locution. The earlier mistake here was classifying und as a Partial attestation of the idiom mit Haut und Haar instead of as the standalone coordinating conjunction und."
-				]
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "mit", "orthography": "Standard" },
+					{ "attested": "Haut", "orthography": "Standard" },
+					{ "attested": "und", "orthography": "Standard" },
+					{ "attested": "Haar", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
-					"normalizedSurface": "und",
+					"normalizedSurface": "mit Haut und Haar",
 					"spelling": "Canonical",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "und",
-						"family": "Lexeme",
-						"kind": "CCONJ",
-						"coreFeatures": { "conjType": null }
-					},
-					"surfaceFeatures": null
-				}
-			}
-		},
-		{
-			"memberSegmentIndices": [25],
-			"notes": {
-				"rationale": "Haar is classified word-by-word here because the line uses the body-part phrase literally. The noun is dative singular after mit, although the surface form is syncretic with the citation form.",
-				"knownMistakes": [
-					"Do not keep a literally used idiom as a Locution. The earlier mistake here was classifying Haar as a Partial attestation of the idiom mit Haut und Haar instead of as the standalone noun Haar in dative singular."
-				]
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"members": [{ "attested": "Haar", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"normalizedSurface": "Haar",
-					"spelling": "Canonical",
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"gender": null,
-						"number": "Sing"
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "Haar",
-						"family": "Lexeme",
-						"kind": "NOUN",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"canonicalForm": "mit Haut und Haar",
+						"family": "Locution",
+						"kind": "ADV",
+						"coreFeatures": { "comparable": null }
 					},
 					"surfaceFeatures": null
 				}

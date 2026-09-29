@@ -45,8 +45,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
+			"reading": { "emojiDescription": "⚪" },
 			"notes": {
-				"rationale": "Sentence-initial Es is capitalized in clicked Text but normalizedSurface stays lowercase. I treated it as nominative personal-pronoun es in an expletive or presentational use with a postponed nominative subject, rather than as a referential neuter pronoun."
+				"rationale": "Es only fills the first position before the postponed subject die Hand: with anything else in front it disappears (Die Hand brennt). So it is positional es, which refers to nothing and is a PRON target of its own (de/expletive-es-joins-its-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -152,7 +152,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"notes": {
-				"rationale": "`Ufers` is genitive singular of `Ufer`. In this poetic noun phrase, the genitive depends on `Rand` (`Ufers Rand`), not directly on the preposition `an`."
+				"rationale": "Ufers is the genitive singular of Ufer, the same form as in des Ufers, and it depends on Rand, not on an. What is archaic here is the construction: a common-noun genitive with no article before its head. That is this occurrence's syntax, not the form, so the reusable Surface carries no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

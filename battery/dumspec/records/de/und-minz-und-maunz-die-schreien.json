@@ -32,7 +32,7 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0032", "ADR-0033", "ADR-0044"],
+		"adrs": ["ADR-0032", "ADR-0042", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/pron-or-det-by-use",
@@ -83,6 +83,7 @@
 		},
 		{
 			"memberSegmentIndices": [13],
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
 				"rationale": "Gar functions as an intensifier here. Dumling does not currently split German focus or degree particles into a separate subtype, so I classified it as ADV rather than PART."
 			},

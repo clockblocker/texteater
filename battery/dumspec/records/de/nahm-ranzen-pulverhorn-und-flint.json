@@ -35,7 +35,7 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0033"],
+		"adrs": [],
 		"rules": [
 			{
 				"rule": "de/bracket-particle-or-circumposition",
