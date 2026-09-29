@@ -122,7 +122,12 @@ const spellingSchema = z.union([
 	z.strictObject({ kind: z.literal("Canonical") }),
 	z.strictObject({
 		kind: z.literal("Variant"),
-		variantType: z.enum(["Licensed", "Historical", "Regional", "Expressive"]),
+		variantType: z.enum([
+			"Licensed",
+			"Historical",
+			"Regional",
+			"Expressive",
+		]),
 	}),
 ]);
 const surfaceFeaturesSchema = z
