@@ -39,7 +39,17 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [{"rule":"de/variant-and-historical-status","hash":"4813f1cbb1b7828a"},{"rule":"de/member-orthography","hash":"972266d21119b126"}], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "cd88b4b0f864fa34"
+			},
+			{ "rule": "de/member-orthography", "hash": "972266d21119b126" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
@@ -57,7 +67,10 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "floß",
-					"spelling": { "kind": "Variant", "variantType": "Historical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Historical"]
+					},
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",

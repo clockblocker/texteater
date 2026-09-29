@@ -33,7 +33,17 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0003", "ADR-0035"],
-		"rules": [{"rule":"de/expletive-es-joins-its-verb","hash":"33eaf0627366c786"},{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/noun-owns-its-article","hash":"d7ab8e0ed8c0a5f4"}],
+		"rules": [
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "33eaf0627366c786"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "d7ab8e0ed8c0a5f4" }
+		],
 		"references": []
 	},
 	"targets": [

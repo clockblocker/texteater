@@ -113,7 +113,16 @@
 	},
 	"sources": {
 		"adrs": [],
-		"rules": [{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/interjection-counts-its-words","hash":"5ffe0189ecd8ae5a"}],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "5ffe0189ecd8ae5a"
+			}
+		],
 		"references": []
 	},
 	"targets": [

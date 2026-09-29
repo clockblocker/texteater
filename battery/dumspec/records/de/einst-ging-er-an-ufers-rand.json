@@ -35,7 +35,24 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [{"rule":"de/empty-inflection-is-structural","hash":"2fc1eac4f11ccea0"},{"rule":"de/variant-and-historical-status","hash":"4813f1cbb1b7828a"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2fc1eac4f11ccea0"
+			},
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "cd88b4b0f864fa34"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],

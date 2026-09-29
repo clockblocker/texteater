@@ -39,7 +39,10 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "wehe",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",

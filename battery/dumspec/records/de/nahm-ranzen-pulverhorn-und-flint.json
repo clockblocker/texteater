@@ -36,7 +36,21 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0042"],
-		"rules": [{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/bracket-particle-or-circumposition","hash":"01c41fadbcfbdc56"},{"rule":"de/adjective-stays-adj","hash":"9b5fe154ed54d6dc"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{
+				"rule": "de/bracket-particle-or-circumposition",
+				"hash": "01c41fadbcfbdc56"
+			},
+			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [

@@ -63,7 +63,10 @@
 						}
 					},
 					"normalizedSurface": "s",
-					"spelling": { "kind": "Variant", "variantType": "Licensed" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

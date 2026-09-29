@@ -38,7 +38,28 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": [], "rules": [{"rule":"de/sein-perfect-or-copula","hash":"507adc4e3e41031f"},{"rule":"de/verbal-participle","hash":"8783a18791f95718"},{"rule":"de/verbal-surface-is-whole","hash":"974139977fd040ca"},{"rule":"de/auxiliary-joins-the-verb-it-serves","hash":"17cec6bff2108a22"},{"rule":"de/verb-owns-its-scattered-members","hash":"4e09a3e722ab1c82"},{"rule":"de/idiom","hash":"c05df428b3a42079"},{"rule":"de/largest-fixed-unit","hash":"9a404db30f2b7c82"}], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" },
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "974139977fd040ca"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "4e09a3e722ab1c82"
+			},
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" }
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],

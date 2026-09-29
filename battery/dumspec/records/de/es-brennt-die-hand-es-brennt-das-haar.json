@@ -41,7 +41,20 @@
 		"author": "Heinrich Hoffmann",
 		"year": 1845
 	},
-	"sources": { "adrs": ["ADR-0042"], "rules": [{"rule":"de/expletive-es-joins-its-verb","hash":"33eaf0627366c786"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "33eaf0627366c786"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],

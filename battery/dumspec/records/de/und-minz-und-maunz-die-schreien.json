@@ -33,7 +33,14 @@
 	},
 	"sources": {
 		"adrs": ["ADR-0032", "ADR-0042", "ADR-0044"],
-		"rules": [{"rule":"de/pron-or-det-by-use","hash":"bc1096b61ad7294d"},{"rule":"de/adjective-stays-adj","hash":"9b5fe154ed54d6dc"},{"rule":"de/comparability-is-lexical","hash":"5cf586fc49528ead"}],
+		"rules": [
+			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "5cf586fc49528ead"
+			}
+		],
 		"references": []
 	},
 	"targets": [

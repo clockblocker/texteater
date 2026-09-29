@@ -59,7 +59,10 @@
 						"coreFeatures": { "gender": "Fem", "hyph": null }
 					},
 					"normalizedSurface": "Photographie",
-					"spelling": { "kind": "Variant", "variantType": "Historical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Historical"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
