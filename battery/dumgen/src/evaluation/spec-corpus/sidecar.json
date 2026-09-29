@@ -1,0 +1,90 @@
+{
+	"slices": {},
+	"explanations": {},
+	"exclusions": {
+		"de/am-selben-morgen-fiel-erneut-der-strom-aus": {
+			"reason": "Whether the fused m of am selben belongs to derselbe or to the noun waits on grilling #618: the target DET derselbe [selben] may become [m, selben].",
+			"issue": 618
+		},
+		"de/der-antrag-ist-gestern-genehmigt-worden": {
+			"reason": "Target 0, AUX [worden], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/der-bote-ward-freundlich-empfangen": {
+			"reason": "Target 0, AUX [ward], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/der-kurier-ist-puenktlich-gegangen": {
+			"reason": "Target 0, AUX [ist], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/der-saal-muss-heute-gereinigt-werden": {
+			"reason": "Target 0, AUX [werden], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/der-zeuge-sagt-die-frau-sei-frueh-gegangen": {
+			"reason": "Target 0, AUX [sei], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/die-bruecke-wird-im-sommer-repariert": {
+			"reason": "Target 0, AUX [wird], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/die-gaeste-waren-schon-gegangen": {
+			"reason": "Target 0, AUX [waren], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/die-helfer-wurden-sofort-gerufen": {
+			"reason": "Target 0, AUX [wurden], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/die-strasse-wurde-gestern-gesperrt": {
+			"reason": "Target 0, AUX [wurde], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/er-brach-das": {
+			"reason": "Which unit the article of a cut-off noun phrase (Er brach das…) belongs to, PRON or Unresolved, waits on grilling #626.",
+			"issue": 626
+		},
+		"de/er-hat-die-tuer-geschlossen": {
+			"reason": "Whether haben + participle is always a perfect (Er hat die Tür geschlossen, imported case participle-boundary-geschlossen-verb-perfect) waits on grilling #653.",
+			"issue": 653
+		},
+		"de/er-kriegt-alles-erklaert": {
+			"reason": "Target 0, AUX [kriegt], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/mara-wird-morgen-abreisen": {
+			"reason": "Target 0, AUX [wird], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/mira-wird-laengst-angekommen-sein": {
+			"reason": "Target 0, AUX [sein], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/mit-mehr-zeit-haette-er-das-ziel-erreicht": {
+			"reason": "Target 0, AUX [hätte], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/nora-hat-bereits-gegessen": {
+			"reason": "Target 0, AUX [hat], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/ohne-den-anruf-waeren-sie-laenger-geblieben": {
+			"reason": "Target 0, AUX [wären], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/sie-bekommt-das-paket-geliefert": {
+			"reason": "Target 0, AUX [bekommt], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/sie-koennte-den-zug-verpasst-haben": {
+			"reason": "Target 0, AUX [haben], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		},
+		"de/wir-werden-am-freitag-abreisen": {
+			"reason": "Target 0, AUX [werden], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
+			"issue": 700
+		}
+	}
+}

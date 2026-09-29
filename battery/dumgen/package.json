@@ -63,6 +63,7 @@
 		"validate": "bun ../../tooling/validate-package.ts",
 		"validate:catalog": "bun codegen/validate-authored-catalog.ts",
 		"evaluate": "bun --env-file=../../.env.local cli/evaluate.ts",
+		"spec-coverage": "bun cli/spec-coverage.ts",
 		"typesafe:dummy": "bun cli/typesafe-dummy.ts"
 	},
 	"dependencies": {
