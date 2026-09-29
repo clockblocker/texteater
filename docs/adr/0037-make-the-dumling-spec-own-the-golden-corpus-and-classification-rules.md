@@ -139,6 +139,14 @@ route's Knowledge policy. `legacy` keeps an imported Knowledge payload only
 until it is converted there
 ([#700](https://github.com/clockblocker/texteater/issues/700)).
 
+Amended on 2026-09-29: a Rule states a principle: what decides, in a few
+sentences, with at most one example of the core case. Boundary cases are
+records, linked from the Rule, whose rationale says in a line or two why the
+principle lands where it does. A new boundary case adds a record, not a
+clause. A Rule is reworded only when the principle itself changes, since every
+rewording reopens the Reviewed records that cite it. `bun test` warns about a
+statement over 600 characters unless the Rule states why it needs the length.
+
 ## Considered Options
 
 - The spec renders a curated subset of Dumgen's corpus. Rejected: the spec

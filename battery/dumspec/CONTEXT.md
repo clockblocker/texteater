@@ -78,7 +78,9 @@ _Avoid_: Unresolved, skipped Segment
 A classification rule written for people: a statement, the ADRs it rests on,
 the routes it applies to and the Spec Records that show it, minimal pairs
 included. Dumgen's prompts implement Rules and cite them; they do not share
-their wording.
+their wording. A Rule states a principle in a few sentences; its boundary
+cases are the records it links, each rationale saying why the principle lands
+there.
 _Avoid_: criterion, judgment, prompt paragraph
 
 **Rule Citation**:
