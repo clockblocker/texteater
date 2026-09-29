@@ -34,6 +34,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [18],
+			"notes": {
+				"rationale": "doch answers the negated question Kommst du nicht? by contradicting it: a response particle, partType Res."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -28,6 +28,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
+			"notes": {
+				"rationale": "miau imitates the cat's call, an onomatopoeic INTJ Lexeme with no partType."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

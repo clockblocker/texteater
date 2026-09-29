@@ -31,6 +31,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
+			"notes": {
+				"rationale": "aha marks sudden understanding. It reacts, but it is no response particle answering a question, so its partType is null."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -41,7 +41,7 @@
 		{
 			"memberSegmentIndices": [14],
 			"notes": {
-				"rationale": "Nein danke is compositional: the answer particle nein and the thanks formula danke, each an INTJ target of its own."
+				"rationale": "No punctuation stands between Nein and danke, but an answer before a formula keeps its own target: nein is the response particle, partType Res, and danke the thanks formula, each an INTJ target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

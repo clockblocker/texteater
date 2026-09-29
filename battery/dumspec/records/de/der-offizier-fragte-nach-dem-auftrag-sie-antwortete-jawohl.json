@@ -33,6 +33,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
+			"notes": {
+				"rationale": "jawohl is an emphatic yes answering the officer: a response particle, partType Res."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
