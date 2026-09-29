@@ -117,7 +117,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/expletive-es-joins-its-verb",
 		statement:
-			"A subject es that the verb selects and that refers to nothing belongs to the verb's target: es gibt (Lemma geben), es regnet, es geht um, es handelt sich um. It stays a member across word order changes and free words in between. Referential es, positional es (Es kamen Gäste), anticipatory es (Es freut mich, dass du kommst) and object es (Sie meint es gut mit dir) are PRON targets of their own. An omitted es is never added.",
+			"A subject es that the verb selects and that refers to nothing belongs to the verb's target: es gibt (Lemma geben), es regnet, es geht um, es handelt sich um. It stays a member across word order changes and free words in between. Referential es, positional es (Es kamen Gäste), anticipatory es (Es freut mich, dass du kommst) and object es (Sie meint es gut mit dir) are PRON targets of their own. A clitic 's takes the same test as es: it joins the verb when it refers to nothing (Mir geht's gut gives [geht, 's] gehen) and stands alone otherwise. An omitted es is never added.",
 		adrs: ["ADR-0022"],
 		routes: lexeme("VERB", "PRON"),
 		records: [
