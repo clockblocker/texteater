@@ -53,7 +53,7 @@
 		{
 			"memberSegmentIndices": [19],
 			"notes": {
-				"rationale": "Duden lists random (beliebig, zufällig) as an indeclinable colloquial adjective, so it is ADJ random, even with wie im Englischen pointing at its source. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
+				"rationale": "Duden lists random (beliebig, zufällig) as an indeclinable colloquial adjective, so it is ADJ random. Wie im Englischen marks this use as English, so it is marked foreign. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -75,7 +75,7 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
+							"foreign": "Yes",
 							"numType": null,
 							"variant": null
 						}

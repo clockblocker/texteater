@@ -38,21 +38,21 @@
 		{
 			"memberSegmentIndices": [10],
 			"notes": {
-				"rationale": "Duden lists low key, written apart, as an adjective (low key in jemanden verliebt sein), so this is ADJ low key used adverbially. Duden has no hyphenated spelling, so the member low-key is a Typo. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
+				"rationale": "Duden lists low key, written apart, as an adjective (low key in jemanden verliebt sein). The hyphenated low-key is the English spelling, not a mistake, so it is its own ADJ Lemma low-key, used adverbially, next to low key. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "low-key", "orthography": "Typo" }],
+				"members": [{ "attested": "low-key", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "low key",
+					"normalizedSurface": "low-key",
 					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "low key",
+						"canonicalForm": "low-key",
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
