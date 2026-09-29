@@ -132,7 +132,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/verb-owns-its-scattered-members",
 		statement:
-			"A verb's target includes its separable particle, its inherently required reflexive and the auxiliaries of its own perfect, future and passive, wherever they stand: zog … an gives [zog, an] VERB anziehen. An optional reflexive object is a PRON target of its own.",
+			"A verb's target includes its separable particle, its lexical reflexive and the auxiliaries of its own perfect, future and passive, wherever they stand: zog … an gives [zog, an] VERB anziehen. The reflexive is lexical when this sense needs it coreferent with the subject and a non-reflexive object would change the sense. A reflexive that alternates with other objects in the same sense is a PRON target of its own.",
 		adrs: ["ADR-0003", "ADR-0022", "ADR-0039"],
 		routes: lexeme("VERB"),
 		records: [
@@ -154,7 +154,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/expletive-es-joins-its-verb",
 		statement:
-			"A subject es that the verb selects and that refers to nothing belongs to the verb's target: es gibt (Lemma geben), es regnet, es geht um, es handelt sich um. It stays a member across word order changes and free words in between. Referential es, positional es (Es kamen Gäste), anticipatory es (Es freut mich, dass du kommst) and object es (Sie meint es gut mit dir) are PRON targets of their own. A clitic 's takes the same test as es: it joins the verb when it refers to nothing (Mir geht's gut gives [geht, 's] gehen) and stands alone otherwise. An omitted es is never added.",
+			"A subject es that the verb selects and that refers to nothing belongs to the verb's target, across word order changes and free words in between: es gibt (Lemma geben), es regnet. The es of weather or time is such an es with sein too: Es war gegen halb zwölf gives [Es, war] VERB sein. Referential es, positional es (Es kamen Gäste) and anticipatory es (Es freut mich, dass du kommst) are PRON targets of their own; an object es is a member only as de/fixed-member-test says. A clitic 's takes the same test as es: Mir geht's gut gives [geht, 's] gehen. An omitted es is never added.",
 		adrs: ["ADR-0022"],
 		routes: lexeme("VERB", "PRON"),
 		records: [
@@ -296,8 +296,8 @@ const verbs: Rule[] = [
 	{
 		id: "de/copula-stays-apart",
 		statement:
-			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ.",
-		adrs: ["ADR-0026", "ADR-0034", "ADR-0036"],
+			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ. The one exception is a copula expression that fixes a reflexive, which neither copula nor predicate takes alone (sich schlüssig werden, sich im Klaren sein): copula, reflexive and predicate form one Locution VERB, not a Collocation.",
+		adrs: ["ADR-0026", "ADR-0034", "ADR-0036", "ADR-0039"],
 		routes: [...lexeme("VERB", "ADJ"), ...locution("VERB")],
 		records: [
 			"de/das-wetter-ist-xqzt",
@@ -770,7 +770,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/fixed-member-test",
 		statement:
-			"A word is a fixed member of an expression when the expression needs this word, or one of a narrow set, in its slot: an ordinary synonym would break it. A fixed article or preposition counts through the word that carries it (ins Feuer, zur Verfügung). A preposition the expression governs for a free complement (weiß Bescheid über die Pläne) is valency, not a fixed member.",
+			"A word is a fixed member of an expression when the expression needs this word, or one of a narrow set, in its slot: an ordinary synonym would break it. A fixed article or preposition counts through the word that carries it (ins Feuer, zur Verfügung). A preposition the expression governs for a free complement (weiß Bescheid über die Pläne) is valency, not a fixed member. A non-referential object es is fixed when das cannot replace it: es gut meinen.",
 		adrs: ["ADR-0034", "dumgen/ADR-0007"],
 		routes: everyMultiword,
 		records: [

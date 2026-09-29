@@ -36,11 +36,11 @@
 		"rules": [
 			{
 				"rule": "de/expletive-es-joins-its-verb",
-				"hash": "a5fb49a3b3ef1cb3"
+				"hash": "99bff23563b49716"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			},
 			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" }
 		],

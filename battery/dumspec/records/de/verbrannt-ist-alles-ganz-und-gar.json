@@ -53,7 +53,7 @@
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
-				"hash": "4e09a3e722ab1c82"
+				"hash": "e80bf8cd47615452"
 			},
 			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" }

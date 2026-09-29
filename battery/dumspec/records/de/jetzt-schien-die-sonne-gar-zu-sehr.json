@@ -43,7 +43,7 @@
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0042"],
 		"rules": [
-			{ "rule": "de/copula-stays-apart", "hash": "eddf44f6760331c0" },
+			{ "rule": "de/copula-stays-apart", "hash": "6ca524a6390a5c0e" },
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"

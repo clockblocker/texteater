@@ -66,6 +66,8 @@ import { member as m62 } from "./members/lexeme/pronoun/personal/dich-second-per
 import { member as m63 } from "./members/lexeme/pronoun/personal/dir-second-person-informal-singular-dative.js";
 import { member as m61 } from "./members/lexeme/pronoun/personal/du-second-person-informal-singular-nominative.js";
 import { member as m65 } from "./members/lexeme/pronoun/personal/er-third-person-masculine-singular-nominative.js";
+import { member as objectCorrelateEs } from "./members/lexeme/pronoun/personal/es-object-correlate.js";
+import { member as subjectCorrelateEs } from "./members/lexeme/pronoun/personal/es-subject-correlate.js";
 import { member as subjectEs } from "./members/lexeme/pronoun/personal/es-subject-expletive.js";
 import { member as m75 } from "./members/lexeme/pronoun/personal/es-third-person-neuter-singular-accusative.js";
 import { member as m74 } from "./members/lexeme/pronoun/personal/es-third-person-neuter-singular-nominative.js";
@@ -245,6 +247,8 @@ export const authoredMembers = [
 	m168,
 	m169,
 	subjectEs,
+	subjectCorrelateEs,
+	objectCorrelateEs,
 	...reviewedDeterminers.map(({ member }) => member),
 	...reviewedPronouns.map(({ member }) => member),
 	...pronominalAdverbs,
