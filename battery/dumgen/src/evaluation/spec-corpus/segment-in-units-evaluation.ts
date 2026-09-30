@@ -1,7 +1,8 @@
 /**
  * Scores a `segment.inUnits` answer against its Spec Record. Only ResolvableText
  * Segments are scored; whether a unit also lists whitespace or punctuation
- * does not count.
+ * does not count. Membership comes first and the route second, tolerating
+ * the Kind confusions of Dumgen ADR 0008.
  */
 import type * as Dumspec from "dumspec/types";
 import type {
@@ -11,6 +12,10 @@ import type {
 	SegmentInUnitsOutput,
 	Unit,
 } from "./segment-in-units.js";
+import {
+	sameRoute,
+	tolerableRoute,
+} from "./segment-in-units-route-tolerance.js";
 
 /**
  * `Stub`: the gold unit is `Unresolved` or foreign material, which is not
@@ -25,8 +30,10 @@ export type UnitVerdict =
 	| "Stub";
 
 /**
- * One gold unit and the returned units that share a Segment with it. It
- * matches when exactly one does, with the same Segments and route.
+ * One gold unit and the returned units that share a Segment with it. Its
+ * membership holds when exactly one does, with the same Segments (`Match`
+ * or `WrongRoute`); it matches strictly when that unit's route is the same
+ * too. A `WrongRoute` says whether ADR 0008 tolerates the returned route.
  */
 export type UnitCheck = {
 	readonly source: GoldUnitSource;
@@ -34,8 +41,20 @@ export type UnitCheck = {
 	readonly text: string;
 	readonly expected: Unit;
 	readonly returned: readonly Unit[];
-	readonly verdict: UnitVerdict;
-};
+} & UnitJudgment;
+
+type UnitJudgment =
+	| { readonly verdict: Exclude<UnitVerdict, "WrongRoute"> }
+	| { readonly verdict: "WrongRoute"; readonly tolerated: boolean };
+
+/** The gold unit's Segment set came back exactly, whatever its route. */
+export const hasMembership = (check: UnitCheck) =>
+	check.verdict === "Match" || check.verdict === "WrongRoute";
+
+/** Membership with a route that is the same or a tolerated confusion. */
+export const tolerantMatch = (check: UnitCheck) =>
+	check.verdict === "Match" ||
+	(check.verdict === "WrongRoute" && check.tolerated);
 
 /**
  * A Full record's whole Sentence: every ResolvableText Segment in exactly one
@@ -52,12 +71,20 @@ export type SentenceCheck = {
 
 export type SegmentInUnitsEvaluation = {
 	/**
-	 * A Partial record passes when every scored gold unit matches; a Full
-	 * record also needs its Sentence check. Absent when nothing is scored,
-	 * so promptsmith counts the case Unscored.
+	 * Membership, the headline of ADR 0008: a Partial record passes when
+	 * every scored gold unit's Segment set comes back exactly, whatever its
+	 * route; a Full record also needs its Sentence check, which is about
+	 * membership only. Route misses show in `tolerantMatched` and `matched`
+	 * instead. Absent when nothing is scored, so promptsmith counts the case
+	 * Unscored.
 	 */
 	readonly contractPass?: boolean;
 	readonly coverage: Dumspec.Coverage;
+	/** Scored gold units whose Segment set came back exactly. */
+	readonly membership: number;
+	/** Of those, the units whose route is the same or a tolerated confusion. */
+	readonly tolerantMatched: number;
+	/** Of those, the units whose route is the same: the strict match. */
 	readonly matched: number;
 	readonly scored: number;
 	readonly stubbed: number;
@@ -69,25 +96,20 @@ function awaitsForeignScoring(route: Unit["route"]): boolean {
 	return route === "Unresolved" || route.family === "Foreign";
 }
 
-function sameRoute(left: Unit["route"], right: Unit["route"]): boolean {
-	if (left === "Unresolved" || right === "Unresolved") return left === right;
-	return (
-		left.language === right.language &&
-		left.family === right.family &&
-		left.kind === right.kind
-	);
-}
-
 function verdictOf(
 	expected: Unit,
 	touching: readonly { unit: Unit; scored: readonly number[] }[],
-): UnitVerdict {
-	if (awaitsForeignScoring(expected.route)) return "Stub";
+): UnitJudgment {
+	if (awaitsForeignScoring(expected.route)) return { verdict: "Stub" };
 	const [only, ...more] = touching;
-	if (!only) return "Missing";
+	if (!only) return { verdict: "Missing" };
 	if (more.length > 0 || !sameSegments(only.scored, expected.segments))
-		return "WrongSegments";
-	return sameRoute(only.unit.route, expected.route) ? "Match" : "WrongRoute";
+		return { verdict: "WrongSegments" };
+	if (sameRoute(expected.route, only.unit.route)) return { verdict: "Match" };
+	return {
+		verdict: "WrongRoute",
+		tolerated: tolerableRoute(expected.route, only.unit.route),
+	};
 }
 
 const sameSegments = (left: readonly number[], right: readonly number[]) =>
@@ -131,7 +153,6 @@ export function evaluateSegmentInUnits(
 						expected.segments.includes(segment),
 					),
 				);
-				const verdict = verdictOf(expected, touching);
 				return {
 					source,
 					text: expected.segments
@@ -139,11 +160,13 @@ export function evaluateSegmentInUnits(
 						.join(" "),
 					expected,
 					returned: touching.map(({ unit }) => unit),
-					verdict,
+					...verdictOf(expected, touching),
 				};
 			},
 		);
 		const scoredUnits = units.filter(({ verdict }) => verdict !== "Stub");
+		const membership = scoredUnits.filter(hasMembership).length;
+		const tolerantMatched = scoredUnits.filter(tolerantMatch).length;
 		const matched = scoredUnits.filter(
 			({ verdict }) => verdict === "Match",
 		).length;
@@ -156,7 +179,7 @@ export function evaluateSegmentInUnits(
 						args.output.units,
 					)
 				: undefined;
-		const unitsPass = matched === scoredUnits.length;
+		const unitsPass = membership === scoredUnits.length;
 		const contractPass = sentence
 			? sentence.pass && unitsPass
 			: scoredUnits.length > 0
@@ -165,6 +188,8 @@ export function evaluateSegmentInUnits(
 		return {
 			...(contractPass === undefined ? {} : { contractPass }),
 			coverage: caseFacts.coverage,
+			membership,
+			tolerantMatched,
 			matched,
 			scored: scoredUnits.length,
 			stubbed: units.length - scoredUnits.length,

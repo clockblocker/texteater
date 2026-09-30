@@ -125,7 +125,7 @@ export async function exportPolicy(args: {
 		},
 		experimentId: `segment-in-units-lab/${run.arm}`,
 		operationVersion: `${run.arm}:${policy}:${stableJson(run.options)}`,
-		evaluatorVersion: "731",
+		evaluatorVersion: "757",
 		// The commit alone does not name the code that ran; the manifest's code hash does.
 		sourceRevision: run.codeHash
 			? `${run.gitHead}${run.dirty ? "+dirty" : ""}#${run.codeHash.slice(0, 16)}`
