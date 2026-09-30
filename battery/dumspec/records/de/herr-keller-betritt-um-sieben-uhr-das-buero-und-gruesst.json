@@ -53,7 +53,7 @@
 				"rule": "de/modification-attests-partially",
 				"hash": "8b165ead281f0462"
 			},
-			{ "rule": "de/partial-coverage", "hash": "e5a5c73f7672ad44" },
+			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" },
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "b86703d3f7281f0a"

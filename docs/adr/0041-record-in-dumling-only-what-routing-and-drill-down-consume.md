@@ -140,3 +140,13 @@ Past, third person singular, `perfect: Yes`, while its members and
 `normalizedSurface` hold only `aufgespannt`. A finite lexical verb shared by two
 particle verbs (*Er stieg aus und gleich wieder ein*) is not an auxiliary and
 stays open in [#724](https://github.com/clockblocker/texteater/issues/724).
+
+Amended on 2026-09-30: a finite lexical verb shared by two particle verbs is a
+shared word too ([#724](https://github.com/clockblocker/texteater/issues/724)).
+In *Er stieg aus und gleich wieder ein*, `stieg` belongs to the coordinated
+verb nearer to it, `[stieg, aus]` VERB `aussteigen` with Full coverage, and
+`einsteigen` is `[ein]`, Partial, with no evidence field. As with the shared
+auxiliary, `stieg` still counts toward the Partial unit's features: the
+Surface of `ein` is finite Past, third person singular. Which verb owns the
+shared word in other word orders is settled by paired gold, not by a
+first-conjunct rule.

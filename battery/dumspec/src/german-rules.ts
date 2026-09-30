@@ -1176,12 +1176,13 @@ const attestations: Rule[] = [
 	{
 		id: "de/partial-coverage",
 		statement:
-			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, a verb sharing the auxiliary a coordinated verb nearer to it owns, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). The shared word still counts toward the Partial unit's features, though not its members: aufgespannt in hatte … aufgesetzt und … aufgespannt is pluperfect. A split target, or one with free words between its members, is still Full.",
+			"An Attestation is Partial only when fixed material is really missing from the sentence and the whole identity is still clear: a noun sharing another noun's article, a verb sharing the auxiliary or finite verb a coordinated verb nearer to it owns, or a Locution or Saying with a fixed word left out or deliberately changed (Rule de/modification-attests-partially). The shared word counts toward the Partial unit's features, not its members: in stieg aus und wieder ein, [ein] einsteigen is Past. A split target, or one with free words between its members, is still Full.",
 		adrs: ["ADR-0003", "ADR-0039", "ADR-0041", "ADR-0022"],
 		routes: [...lexeme("NOUN", "VERB"), ...everyMultiword],
 		records: [
 			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
 			"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
+			"de/er-stieg-aus-und-gleich-wieder-ein",
 		],
 	},
 ];
