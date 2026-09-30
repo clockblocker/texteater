@@ -4,6 +4,7 @@ import { oracleArm, singletonArm } from "./baselines.js";
 import { candidatesArm } from "./candidates.js";
 import { candidates2Arm } from "./candidates2.js";
 import { candidates4Arm } from "./candidates4.js";
+import { envelopesArm } from "./envelopes.js";
 import { lunaArm } from "./luna.js";
 import { ownershipArm } from "./ownership.js";
 import { anchoredArm, pairwiseArm } from "./pairs.js";
@@ -17,6 +18,7 @@ export const arms: Readonly<Record<string, Arm>> = Object.fromEntries(
 		anchoredArm,
 		attachArm,
 		ownershipArm,
+		envelopesArm,
 		proposalsArm,
 		candidatesArm,
 		candidates2Arm,

@@ -307,3 +307,50 @@ test("a same-length source rewrite cannot count as exact member ownership", () =
 		fullPass: false,
 	});
 });
+
+test("forged offsets cannot give moved source words exact membership or route credit", () => {
+	const expected: SegmentInUnitsInput = {
+		language: "de",
+		segments: [
+			{ kind: "ResolvableText", text: "A" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "B" },
+		],
+	};
+	const actual: SegmentInUnitsInput = {
+		...expected,
+		segments: [...expected.segments].reverse(),
+	};
+	const output: SegmentInUnitsOutput = {
+		units: [
+			{
+				segments: [0],
+				route: { language: "de", family: "Lexeme", kind: "NOUN" },
+			},
+			{
+				segments: [2],
+				route: { language: "de", family: "Lexeme", kind: "NOUN" },
+			},
+		],
+	};
+	const source: GermanSource = {
+		input: actual,
+		spans: [...sourceSpans(expected.segments)].reverse(),
+		unresolved: [],
+	};
+	const score = evaluateSourceAndUnits(
+		expected,
+		output,
+		source,
+		output,
+		"Full",
+	);
+	expect(score.segmentMapping).toEqual([null, 1, null]);
+	expect(score.source.textPreserved).toBe(false);
+	expect(score.units).toMatchObject({
+		groupingMatches: 0,
+		routeMatches: 0,
+		unmappable: 2,
+		fullPass: false,
+	});
+});

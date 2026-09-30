@@ -1,0 +1,855 @@
+[
+  {
+    "scope": "representative",
+    "id": "de/das-sprichwort-morgenstund-hat-gold-im-mund-half-ihm-nicht",
+    "text": "Das Sprichwort Morgenstund hat Gold im Mund half ihm nicht; seit der Zusage schwebt er trotzdem auf Wolke sieben.",
+    "failures": [
+      {
+        "gold": "schwebt auf Wolke sieben",
+        "goldRoute": {
+          "language": "de",
+          "family": "Locution",
+          "kind": "VERB"
+        },
+        "hits": [
+          {
+            "text": "schwebt",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          },
+          {
+            "text": "auf",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADP"
+            }
+          },
+          {
+            "text": "Wolke sieben",
+            "route": {
+              "language": "de",
+              "family": "Locution",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "representative",
+    "id": "de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+    "text": "Es kam auch vor, daß ihn mitten im Sprechen eine Welle der Scham überflutete, so daß er rot wurde, zu stottern begann, sich abwenden mußte ...",
+    "failures": [
+      {
+        "gold": "dem Sprechen",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "hits": [
+          {
+            "text": "dem",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "Sprechen",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "eine Welle",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "hits": [
+          {
+            "text": "eine der",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "Welle",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "der Scham",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "hits": [
+          {
+            "text": "eine der",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "Scham",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "so daß",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "SCONJ"
+        },
+        "hits": [
+          {
+            "text": "so daß",
+            "route": {
+              "language": "de",
+              "family": "Locution",
+              "kind": "SCONJ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "representative",
+    "id": "de/neben-dem-werbeslogan-liebe-lohnt-sich-stand-der-aphorismus",
+    "text": "Neben dem Werbeslogan „Liebe lohnt sich“ stand der Aphorismus: „Die Liebe hat nicht nur Rechte, sie hat auch immer recht.“",
+    "failures": [
+      {
+        "gold": "Die Liebe hat nicht nur Rechte sie hat auch immer recht",
+        "goldRoute": {
+          "language": "de",
+          "family": "Saying",
+          "kind": "Saying"
+        },
+        "hits": [
+          {
+            "text": "Die Liebe hat hat",
+            "route": {
+              "language": "de",
+              "family": "Saying",
+              "kind": "Saying"
+            }
+          },
+          {
+            "text": "nicht",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "PART"
+            }
+          },
+          {
+            "text": "nur",
+            "route": {
+              "language": "de",
+              "family": "Locution",
+              "kind": "CCONJ"
+            }
+          },
+          {
+            "text": "Rechte",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "sie",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "PRON"
+            }
+          },
+          {
+            "text": "auch",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          },
+          {
+            "text": "immer",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          },
+          {
+            "text": "recht",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "representative",
+    "id": "de/der-fonds-investiert-eine-million-euro",
+    "text": "Der Fonds investiert eine Million Euro.",
+    "failures": [
+      {
+        "gold": "Million",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NUM"
+        },
+        "hits": [
+          {
+            "text": "Million",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die",
+    "text": "Die Köchin der Frau Grubach, seiner Zimmervermieterin, die ihm jeden Tag gegen acht Uhr früh das Frühstück brachte, kam diesmal nicht.",
+    "failures": [
+      {
+        "gold": "der Frau",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "hits": [
+          {
+            "text": "der Frau Grubach",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "PROPN"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "Grubach",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "PROPN"
+        },
+        "hits": [
+          {
+            "text": "der Frau Grubach",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "PROPN"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/sie-blickt-auf-die-uhr-und-steht-danach-auf",
+    "text": "Sie blickt auf die Uhr und steht danach auf.",
+    "failures": [
+      {
+        "gold": "auf",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "ADP"
+        },
+        "hits": [
+          {
+            "text": "auf",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/wie-geht-s-dir-heute",
+    "text": "Wie geht's dir heute?",
+    "failures": [
+      {
+        "gold": "Wie geht es",
+        "goldRoute": {
+          "language": "de",
+          "family": "Locution",
+          "kind": "INTJ"
+        },
+        "hits": [
+          {
+            "text": "Wie",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          },
+          {
+            "text": "geht es",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/nachdem-der-ausschuss-eine-entscheidung-getroffen-hat-lass",
+    "text": "Nachdem der Ausschuss eine Entscheidung getroffen hat, lass bitte die Kirche im Dorf!",
+    "failures": [
+      {
+        "gold": "lass die Kirche in dem Dorf",
+        "goldRoute": {
+          "language": "de",
+          "family": "Locution",
+          "kind": "VERB"
+        },
+        "hits": [
+          {
+            "text": "lass",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          },
+          {
+            "text": "die Kirche",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "in",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADP"
+            }
+          },
+          {
+            "text": "dem",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "Dorf",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
+    "text": "Als das Gespräch lauter wurde, fragte die Vorsitzende: „Darf ich um Ruhe bitten?“",
+    "failures": [
+      {
+        "gold": "Darf ich bitten",
+        "goldRoute": {
+          "language": "de",
+          "family": "Locution",
+          "kind": "INTJ"
+        },
+        "hits": [
+          {
+            "text": "Darf ich Ruhe bitten",
+            "route": {
+              "language": "de",
+              "family": "Locution",
+              "kind": "INTJ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/das-wetter-nimmt-einfluss-auf-die-planung",
+    "text": "Das Wetter nimmt Einfluss auf die Planung.",
+    "failures": [
+      {
+        "gold": "nimmt Einfluss",
+        "goldRoute": {
+          "language": "de",
+          "family": "Locution",
+          "kind": "VERB"
+        },
+        "hits": [
+          {
+            "text": "nimmt Einfluss auf",
+            "route": {
+              "language": "de",
+              "family": "Locution",
+              "kind": "VERB"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert",
+    "text": "Im Lektorat stand erst „Das Alter verklärt oder versteinert“; später wiederholte sie: „Das Alter verklärt oder versteinert.“",
+    "failures": [
+      {
+        "gold": "Das Alter verklärt oder versteinert",
+        "goldRoute": {
+          "language": "de",
+          "family": "Saying",
+          "kind": "Saying"
+        },
+        "hits": [
+          {
+            "text": "Das",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "Alter",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "verklärt",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          },
+          {
+            "text": "oder",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "CCONJ"
+            }
+          },
+          {
+            "text": "versteinert",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADJ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/der-arme-rechnet-dem-reichen-die-grossmut-niemals-als-tugend",
+    "text": "Der Arme rechnet dem Reichen die Großmut niemals als Tugend an.",
+    "failures": [
+      {
+        "gold": "Der Arme rechnet dem Reichen die Großmut niemals als Tugend an",
+        "goldRoute": {
+          "language": "de",
+          "family": "Saying",
+          "kind": "Saying"
+        },
+        "hits": [
+          {
+            "text": "Der Arme",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "rechnet an",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          },
+          {
+            "text": "dem Reichen",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "die Großmut",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "niemals",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          },
+          {
+            "text": "als",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADP"
+            }
+          },
+          {
+            "text": "Tugend",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt",
+    "text": "Sie warnte ihn mit einem he he vor dem Schritt.",
+    "failures": [
+      {
+        "gold": "he he",
+        "goldRoute": {
+          "language": "de",
+          "family": "Locution",
+          "kind": "INTJ"
+        },
+        "hits": [
+          {
+            "text": "he",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "INTJ"
+            }
+          },
+          {
+            "text": "he",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "INTJ"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+    "text": "K. wartete noch ein Weilchen, sah von seinem Kopfkissen aus die alte Frau, die ihm gegenüber wohnte und die ihn mit einer an ihr ganz ungewöhnlichen Neugierde beobachtete, dann aber, gleichzeitig befremdet und hungrig, läutete er.",
+    "failures": [
+      {
+        "gold": "von aus",
+        "goldRoute": {
+          "language": "de",
+          "family": "Locution",
+          "kind": "ADP"
+        },
+        "hits": [
+          {
+            "text": "von",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADP"
+            }
+          },
+          {
+            "text": "aus",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "ihr",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "PRON"
+        },
+        "hits": [
+          {
+            "text": "ihr",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "DET"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "gleichzeitig",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "ADJ"
+        },
+        "hits": [
+          {
+            "text": "gleichzeitig",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+    "text": "Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das trifft bei Odradek nicht zu.",
+    "failures": [
+      {
+        "gold": "eine Art",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "hits": [
+          {
+            "text": "eine Art Ziel",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "Ziel",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "hits": [
+          {
+            "text": "eine Art Ziel",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "eine Art",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "hits": [
+          {
+            "text": "eine",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "DET"
+            }
+          },
+          {
+            "text": "Art",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "hat sich zerrieben",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "VERB"
+        },
+        "hits": [
+          {
+            "text": "hat es sich zerrieben",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          }
+        ]
+      },
+      {
+        "gold": "es",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "PRON"
+        },
+        "hits": [
+          {
+            "text": "hat es sich zerrieben",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "VERB"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/die-seiten-des-kinder-und-jugendbuchs-fehlen",
+    "text": "Die Seiten des Kinder‐ und Jugendbuchs fehlen.",
+    "failures": [
+      {
+        "gold": "des Kinder‐",
+        "goldRoute": {
+          "language": "de",
+          "family": "Lexeme",
+          "kind": "NOUN"
+        },
+        "hits": [
+          {
+            "text": "Die Seiten des",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          },
+          {
+            "text": "Kinder‐",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "NOUN"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "scope": "challenge",
+    "id": "de/anna-kauft-obst-gemuese-brot-usw",
+    "text": "Anna kauft Obst, Gemüse, Brot usw.",
+    "failures": [
+      {
+        "gold": "usw.",
+        "goldRoute": {
+          "language": "de",
+          "family": "Locution",
+          "kind": "ADV"
+        },
+        "hits": [
+          {
+            "text": "usw.",
+            "route": {
+              "language": "de",
+              "family": "Lexeme",
+              "kind": "ADV"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -75,16 +75,22 @@ export class Luna {
 			["maxOutputTokens", args.maxOutputTokens, 1],
 			["timeoutMs", args.timeoutMs, 1],
 		] as const)
-			if (value !== undefined && (!Number.isSafeInteger(value) || value < minimum))
+			if (
+				value !== undefined &&
+				(!Number.isSafeInteger(value) || value < minimum)
+			)
 				throw Error(`Invalid Luna ${name}`);
 		const settings = {
 			...lunaConfiguration.settings,
 			reasoning: { effort: args.effort ?? "none" },
-			...(args.maxOutputTokens === undefined ? {} : { max_output_tokens: args.maxOutputTokens }),
+			...(args.maxOutputTokens === undefined
+				? {}
+				: { max_output_tokens: args.maxOutputTokens }),
 		};
 		const key = hashOf({
 			configuration:
-				(args.effort === undefined || args.effort === "none") && args.maxOutputTokens === undefined
+				(args.effort === undefined || args.effort === "none") &&
+				args.maxOutputTokens === undefined
 					? lunaConfiguration
 					: { model: lunaConfiguration.model, settings },
 			systemPrompt: args.systemPrompt,
@@ -130,7 +136,9 @@ export class Luna {
 							model: lunaConfiguration.model,
 							settings,
 						},
-						...(args.timeoutMs === undefined ? {} : { signal: AbortSignal.timeout(args.timeoutMs) }),
+						...(args.timeoutMs === undefined
+							? {}
+							: { signal: AbortSignal.timeout(args.timeoutMs) }),
 					});
 					const usage = ((
 						response.metadata as { usage?: OpenAIUsage } | undefined

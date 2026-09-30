@@ -78,7 +78,10 @@ export async function judgeUnitGroups(
 	const closed = context.options.closed === "1";
 	for (const group of groups) {
 		const routeId = `r_${group.join("_")}`;
-		if (group.length === 1 && context.options.singletonRoutes === "all")
+		if (
+			group.length === 1 &&
+			context.options.singletonRoutes !== "restricted"
+		)
 			finalQuestions[routeId] = choice(
 				`In \`sentence\`, the attested member ${joinRefs(sentence, finalState.ref, group)} forms one biggest unit. Which route does that whole unit take? A single member may attest a Partial Locution or Saying when other fixed material is genuinely missing, shared, or replaced; an abbreviation may also stand for a whole Locution. Judge the whole unit in context, including that possibility.`,
 				routeCriteria(allRoutes, context.options.routes !== "state"),
@@ -129,7 +132,8 @@ export async function judgeUnitGroups(
 	});
 	const read = readRoutes(identitySentence, groups, finalAnswers);
 	const routes = new Map(read.open);
-	const inventoryDecisions: UnitGroupJudgments["inventoryDecisions"][number][] = [];
+	const inventoryDecisions: UnitGroupJudgments["inventoryDecisions"][number][] =
+		[];
 	for (const [key, inferred] of read.identity) {
 		const open = read.open.get(key);
 		if (!open) continue;
@@ -203,17 +207,18 @@ export async function judgeUnitGroups(
 					proposedRoute: chosen,
 					applied,
 				});
-				if (applied) closedRoutes.set(groupKey(group), {
-					group,
-					choice: chosen,
-					confidence:
-						answer?.type === "choice" ? answer.confidence : 1,
-					share:
-						answer?.type === "choice"
-							? (answer.probabilities[answer.choice] ?? 0)
-							: 1,
-					source: "identity",
-				});
+				if (applied)
+					closedRoutes.set(groupKey(group), {
+						group,
+						choice: chosen,
+						confidence:
+							answer?.type === "choice" ? answer.confidence : 1,
+						share:
+							answer?.type === "choice"
+								? (answer.probabilities[answer.choice] ?? 0)
+								: 1,
+						source: "identity",
+					});
 			}
 		}
 	return {

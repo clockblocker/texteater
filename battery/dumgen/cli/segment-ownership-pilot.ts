@@ -461,6 +461,11 @@ function summarize(selected: Row[], policy: string) {
 		sourceBoundaryExact = 0,
 		sourceAnnotatedRecoveryExact = 0;
 	let contractPass = 0;
+	let completedOnlyOutputVariation = 0,
+		completedOnlyMembershipVariation = 0,
+		completedOnlyVariationBase = 0,
+		completedOnlyKnownUnitPassFailFlips = 0,
+		serviceCompletedAttempts = 0;
 	let allGoldUnits = 0,
 		stubGoldUnits = 0,
 		stubGroupingMatches = 0,
@@ -478,6 +483,10 @@ function summarize(selected: Row[], policy: string) {
 			members = new Set<string>();
 		const knownPasses = new Set<boolean>(),
 			partitionPasses = new Set<boolean>();
+		const completeOutputs = new Set<string>(),
+			completeMembers = new Set<string>(),
+			completeKnownPasses = new Set<boolean>();
+		let completed = 0;
 		for (const rep of row.repetitions) {
 			if (casesById.get(row.id)?.facts.coverage === "Full") fullBase++;
 			for (const call of rep.calls) {
@@ -506,6 +515,8 @@ function summarize(selected: Row[], policy: string) {
 				continue;
 			}
 			const counts = ev.known.units;
+			completed++;
+			serviceCompletedAttempts++;
 			gold += counts.gold;
 			allGoldUnits += ev.all.units.gold;
 			stubGoldUnits += ev.all.units.gold - counts.gold;
@@ -529,27 +540,34 @@ function summarize(selected: Row[], policy: string) {
 				counts.gold > 0 && counts.routeMatches === counts.gold;
 			knownUnitCasePass += Number(knownPass);
 			knownPasses.add(knownPass);
+			completeKnownPasses.add(knownPass);
 			partitionPasses.add(ev.all.units.contractPass);
 			if (casesById.get(row.id)?.facts.coverage === "Full")
 				fullPass += Number(ev.all.units.fullPass);
-			outputs.add(
-				JSON.stringify({
-					source: rep.source?.input,
-					units: output.units,
-				}),
-			);
-			members.add(
-				JSON.stringify({
-					source: rep.source?.spans,
-					kinds: rep.source?.input.segments.map(({ kind }) => kind),
-					units: output.units.map(({ segments }) => segments),
-				}),
-			);
+			const serializedOutput = JSON.stringify({
+				source: rep.source?.input,
+				units: output.units,
+			});
+			outputs.add(serializedOutput);
+			completeOutputs.add(serializedOutput);
+			const serializedMembership = JSON.stringify({
+				source: rep.source?.spans,
+				kinds: rep.source?.input.segments.map(({ kind }) => kind),
+				units: output.units.map(({ segments }) => segments),
+			});
+			members.add(serializedMembership);
+			completeMembers.add(serializedMembership);
 		}
 		exactOutputChanges += Number(outputs.size > 1);
 		exactMembershipChanges += Number(members.size > 1);
 		knownUnitPassFailFlips += Number(knownPasses.size > 1);
 		partitionContractPassFailFlips += Number(partitionPasses.size > 1);
+		completedOnlyVariationBase += Number(completed >= 2);
+		completedOnlyOutputVariation += Number(completeOutputs.size > 1);
+		completedOnlyMembershipVariation += Number(completeMembers.size > 1);
+		completedOnlyKnownUnitPassFailFlips += Number(
+			completeKnownPasses.size > 1,
+		);
 	}
 	return {
 		policy,
@@ -576,6 +594,11 @@ function summarize(selected: Row[], policy: string) {
 		resolvedOutputUnitCoverage: ratio(predicted - unresolved, predicted),
 		exactOutputChanges,
 		exactMembershipChanges,
+		completedOnlyOutputVariation,
+		completedOnlyMembershipVariation,
+		completedOnlyVariationBase,
+		completedOnlyKnownUnitPassFailFlips,
+		serviceCompletedAttempts,
 		knownUnitCasePass,
 		knownUnitPassFailFlips,
 		partitionContractPassFailFlips,
@@ -623,6 +646,10 @@ const summary = {
 			"Every explicitly annotated known gold unit has exact membership and route; excludes Foreign/Unresolved stubs and does not require unannotated units or Full extra-unit checks",
 		knownUnitPassFailFlips:
 			"Cases whose knownUnitCasePass boolean changes between repetitions; distinct from exact output or membership variation",
+		completedOnlyOutputVariation:
+			"Cases with different complete output values among at least two successful attempts; transport failures are excluded as output values",
+		exactOutputChanges:
+			"Cases with different complete output values or an error-as-output among repetitions; consult completedOnlyOutputVariation for semantic noise",
 		contractPass:
 			"Structural source ownership partition: every clickable source segment is owned exactly once, with no empty units or invalid indices; not semantic correctness",
 		stubRouteMatches:

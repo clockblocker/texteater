@@ -294,7 +294,7 @@ test("selected authored identity groups survive with their source Segment coordi
 	});
 });
 
-test("one member can route to a Partial Locution when all singleton routes are available", async () => {
+test("a default singleton can route to a Partial Locution without a special option", async () => {
 	const { result, requests } = await run(
 		{
 			language: "de",
@@ -307,7 +307,7 @@ test("one member can route to a Partial Locution when all singleton routes are a
 			routes: { "2_3_4": "Locution/VERB", "8": "Locution/VERB" },
 		},
 		[],
-		{ singletonRoutes: "all" },
+		{},
 	);
 	expect(
 		result.outputs[result.primary]?.units.find((unit) =>
@@ -321,6 +321,22 @@ test("one member can route to a Partial Locution when all singleton routes are a
 		type: "choice",
 		criteria: { "Saying/Saying": expect.any(String) },
 	});
+});
+
+test("restricted singleton routes require an explicit legacy diagnostic option", async () => {
+	const { requests } = await run(
+		{ language: "de", segments: segmentsOf("vor") },
+		{},
+		[],
+		{ singletonRoutes: "restricted" },
+	);
+	const question = requests[1]?.questions.r_1;
+	expect(question?.type).toBe("choice");
+	if (question?.type === "choice") {
+		expect(question.criteria).not.toHaveProperty("Locution/VERB");
+		expect(question.criteria).not.toHaveProperty("Saying/Saying");
+		expect(question.criteria).toHaveProperty("Unresolved");
+	}
 });
 
 test("a speculative singleton Locution route cannot bypass failed complete-membership support", async () => {
@@ -382,7 +398,13 @@ test("a recovered pronoun selects authored identity by surface while preserving 
 });
 
 test("authored pronoun identity preserves Partial Locution, Saying, Foreign and Unresolved interpretations", async () => {
-	for (const route of ["Locution/VERB", "Saying/Saying", "Foreign/Foreign", "Unresolved", "Lexeme/ADV"]) {
+	for (const route of [
+		"Locution/VERB",
+		"Saying/Saying",
+		"Foreign/Foreign",
+		"Unresolved",
+		"Lexeme/ADV",
+	]) {
 		const { result } = await run(
 			{ language: "de", segments: segmentsOf("es") },
 			{ identity: { 1: "c0" }, routes: { "1": route } },
@@ -390,7 +412,15 @@ test("authored pronoun identity preserves Partial Locution, Saying, Foreign and 
 			{ singletonRoutes: "all" },
 		);
 		expect(result.routes?.[0]?.choice).toBe(route);
-		expect(result.inventoryDecisions).toEqual([{ group: [1], source: "identity", openRoute: route, proposedRoute: "Lexeme/PRON", applied: false }]);
+		expect(result.inventoryDecisions).toEqual([
+			{
+				group: [1],
+				source: "identity",
+				openRoute: route,
+				proposedRoute: "Lexeme/PRON",
+				applied: false,
+			},
+		]);
 	}
 });
 
@@ -404,14 +434,29 @@ test("authored identity may refine Kind within an independently selected DET or 
 });
 
 test("optional function-word uses preserve non-Lexeme interpretations and expose disagreement", async () => {
-	for (const route of ["Locution/VERB", "Saying/Saying", "Foreign/Foreign", "Unresolved"]) {
+	for (const route of [
+		"Locution/VERB",
+		"Saying/Saying",
+		"Foreign/Foreign",
+		"Unresolved",
+	]) {
 		const { result } = await run(
 			{ language: "de", segments: segmentsOf("doch") },
 			{ closed: { 1: "answer" }, routes: { "1": route } },
 			[],
 			{ singletonRoutes: "all", closed: "1" },
 		);
-		expect(result.outputs["raw+closed"]?.units).toEqual(result.outputs.raw?.units);
-		expect(result.inventoryDecisions).toEqual([{ group: [1], source: "closed", openRoute: route, proposedRoute: "Lexeme/INTJ", applied: false }]);
+		expect(result.outputs["raw+closed"]?.units).toEqual(
+			result.outputs.raw?.units,
+		);
+		expect(result.inventoryDecisions).toEqual([
+			{
+				group: [1],
+				source: "closed",
+				openRoute: route,
+				proposedRoute: "Lexeme/INTJ",
+				applied: false,
+			},
+		]);
 	}
 });

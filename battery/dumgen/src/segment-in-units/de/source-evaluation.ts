@@ -66,12 +66,16 @@ const overlaps = (a: SourceSpan, b: SourceSpan) =>
 
 function aligned(input: SegmentInUnitsInput, source: GermanSource) {
 	const goldSpans = sourceSpans(input.segments);
+	const actualSpans = sourceSpans(source.input.segments);
 	const goldBySpan = new Map(
 		goldSpans.map((span, index) => [spanKey(span), index]),
 	);
-	const boundaryMapping = source.spans.map(
-		(span) => goldBySpan.get(spanKey(span)) ?? null,
-	);
+	const boundaryMapping = source.spans.map((span, index) => {
+		const actual = actualSpans[index];
+		return actual?.start === span.start && actual.end === span.end
+			? (goldBySpan.get(spanKey(span)) ?? null)
+			: null;
+	});
 	const mapping = boundaryMapping.map((gold, index) =>
 		gold !== null &&
 		input.segments[gold]?.kind === source.input.segments[index]?.kind &&

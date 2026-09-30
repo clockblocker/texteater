@@ -72,7 +72,7 @@ const whole = (text: string): Plan => ({
 	key: "AsWritten",
 	segments: [spelled(text)],
 	description:
-		"One complete word as written, with no omitted words to recover",
+		"One intact word, name, initialism, literal spelling or Foreign word as written, with no German Fusion or shortened spelling to expand",
 });
 
 function plansFor(text: string): readonly Plan[] {
@@ -81,7 +81,8 @@ function plansFor(text: string): readonly Plan[] {
 		const plan: Plan = {
 			key: "Fusion",
 			segments: fusion.map(({ text, surface }) => spelled(text, surface)),
-			description: "The written word holds a preposition and its article",
+			description:
+				"The German written word holds a preposition and its article",
 		};
 		if (text.toLowerCase() === "am")
 			return [
@@ -89,20 +90,24 @@ function plansFor(text: string): readonly Plan[] {
 				{
 					...whole(text),
 					description:
-						"am marks a superlative degree with no noun after the superlative; it stands for no preposition or article (am schönsten, am liebsten)",
+						"am marks a superlative degree with no noun after the superlative (am schönsten, am liebsten), or is an intact name, literal spelling or Foreign word; it stands for no German preposition or article",
 				},
 			];
-		// An all-capital spelling can be an initialism instead of this fusion.
-		return text === text.toUpperCase() ? [plan, whole(text)] : [plan];
+		// A table entry supplies a possible German recovery; its spelling alone
+		// cannot exclude a name, literal mention or Foreign interpretation.
+		return [plan, whole(text)];
 	}
 
 	const abbreviated = abbreviationEntry(germanFusionTable, text);
 	if (abbreviated)
-		return values(abbreviated.surface).map((surface, index) => ({
-			key: `Expansion${index}`,
-			segments: [spelled(text, surface)],
-			description: `One abbreviated word standing for ${surface}`,
-		}));
+		return [
+			...values(abbreviated.surface).map((surface, index) => ({
+				key: `Expansion${index}`,
+				segments: [spelled(text, surface)],
+				description: `One German abbreviated word standing for ${surface}`,
+			})),
+			whole(text),
+		];
 
 	const attached = splitClitic(germanFusionTable, text);
 	const free = cliticEntry(germanFusionTable, text);
@@ -121,8 +126,9 @@ function plansFor(text: string): readonly Plan[] {
 				description: `The shortened part ${suffix} stands for ${surface}`,
 			}),
 		);
-		// Open apostrophe hosts may instead be lexical names or foreign words.
-		return plans.length > 1 ? [...plans, whole(text)] : plans;
+		// Even a suffix with one German expansion can be part of an intact
+		// Foreign word (I'm), name or quoted spelling in a German sentence.
+		return [...plans, whole(text)];
 	}
 
 	return [whole(text)];
@@ -131,7 +137,8 @@ function plansFor(text: string): readonly Plan[] {
 /**
  * Scans exact written runs, then supplies complete authored alternatives.
  * No gold boundaries, expansions, generated text or language parser enter the request.
- * Ordinary words and unambiguous table entries need no semantic question.
+ * Ordinary words need no semantic question. Authored recovery entries retain
+ * an intact alternative: matching the table is evidence, not interpretation.
  */
 export function prepareGermanSource(text: string): PreparedGermanSource {
 	if (text.length === 0) throw Error("A source Sentence must be non-empty");

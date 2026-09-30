@@ -32,7 +32,7 @@ export type OwnershipResult = ArmResult & {
 		readonly group: readonly number[];
 		readonly probability: number;
 	}[];
-	/** A selected authored candidate group; later resolution may refine its cell. */
+	/** Raw diagnostic candidate groups before route/support acceptance and later cell refinement. */
 	readonly identityHints?: readonly {
 		readonly sourceSegment: number;
 		readonly candidateGroup: string;

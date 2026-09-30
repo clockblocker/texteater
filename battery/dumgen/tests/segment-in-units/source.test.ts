@@ -30,8 +30,8 @@ function choose(
 	);
 }
 
-test("unambiguous runs preserve all source characters and UTF-16 offsets without a call", async () => {
-	const text = "Im\tWald 👩‍💻 und fu\u0308rs Haus.\n";
+test("ordinary runs preserve all source characters and UTF-16 offsets without a call", async () => {
+	const text = "Ein\tWald 👩‍💻 und fu\u0308r Haus.\n";
 	const source = await segmentGermanSource(text, {
 		jev: {
 			ask: async () => {
@@ -43,14 +43,13 @@ test("unambiguous runs preserve all source characters and UTF-16 offsets without
 	});
 	expect(source.input.segments.map(({ text }) => text).join("")).toBe(text);
 	expect(source.input.segments.slice(0, 3)).toEqual([
-		{ kind: "ResolvableText", text: "I", surface: "in" },
-		{ kind: "ResolvableText", text: "m", surface: "dem" },
+		{ kind: "ResolvableText", text: "Ein" },
 		{ kind: "Whitespace", text: "\t" },
+		{ kind: "ResolvableText", text: "Wald" },
 	]);
 	expect(source.input.segments).toContainEqual({
 		kind: "ResolvableText",
 		text: "fu\u0308r",
-		surface: "für",
 	});
 	expect(source.unresolved).toEqual([]);
 	for (const [index, segment] of source.input.segments.entries()) {
@@ -100,10 +99,14 @@ test("clitics and abbreviations select complete authored plans, keeping apostrop
 	const source = resolveGermanSource(
 		prepared,
 		choose(prepared, (word) =>
-			word === "Geht’s" ? "Clitic0" : "Expansion1",
+			word === "i.A."
+				? "Expansion1"
+				: word === "z.B."
+					? "Expansion0"
+					: "Clitic0",
 		),
 	);
-	expect(Object.keys(prepared.questions)).toHaveLength(2);
+	expect(Object.keys(prepared.questions)).toHaveLength(5);
 	expect(source.input.segments).toContainEqual({
 		kind: "ResolvableText",
 		text: "’s",
@@ -130,6 +133,78 @@ test("clitics and abbreviations select complete authored plans, keeping apostrop
 		surface: "im Auftrag",
 	});
 	expect(source.input.segments.map(({ text }) => text).join("")).toBe(text);
+});
+
+test("authored Fusion recovery still preserves original Unicode spans after a contextual choice", async () => {
+	const text = "Im\tWald und fu\u0308rs Haus 👩‍💻.\n";
+	const prepared = prepareGermanSource(text);
+	let calls = 0;
+	const source = await segmentGermanSource(text, {
+		jev: {
+			ask: async () => {
+				calls++;
+				return choose(prepared, () => "Fusion");
+			},
+		},
+		repetition: 0,
+		calls: [],
+	});
+	expect(calls).toBe(1);
+	expect(Object.keys(prepared.questions)).toHaveLength(2);
+	expect(source.input.segments.slice(0, 3)).toEqual([
+		{ kind: "ResolvableText", text: "I", surface: "in" },
+		{ kind: "ResolvableText", text: "m", surface: "dem" },
+		{ kind: "Whitespace", text: "\t" },
+	]);
+	expect(source.input.segments).toContainEqual({
+		kind: "ResolvableText",
+		text: "fu\u0308r",
+		surface: "für",
+	});
+	for (const [index, segment] of source.input.segments.entries()) {
+		const span = source.spans[index];
+		expect(text.slice(span?.start, span?.end)).toBe(segment.text);
+	}
+	expect(source.input.segments.map(({ text }) => text).join("")).toBe(text);
+});
+
+test("table spellings retain intact name, Foreign and literal-abbreviation alternatives", () => {
+	const text =
+		"Im schrieb: „I'm late“, dann blieb er im Wald; „z.B.“ stand auf dem Schild.";
+	const prepared = prepareGermanSource(text);
+	expect(Object.keys(prepared.questions)).toHaveLength(4);
+	for (const run of prepared.runs.filter((run) =>
+		["Im", "I'm", "im", "z.B."].includes(run.text),
+	))
+		expect(run.plans.map((plan) => plan.key)).toContain("AsWritten");
+	const source = resolveGermanSource(
+		prepared,
+		choose(prepared, (word) => (word === "im" ? "Fusion" : "AsWritten")),
+	);
+	expect(source.input.segments[0]).toEqual({
+		kind: "ResolvableText",
+		text: "Im",
+	});
+	expect(source.input.segments).toContainEqual({
+		kind: "ResolvableText",
+		text: "I'm",
+	});
+	expect(source.input.segments).toContainEqual({
+		kind: "ResolvableText",
+		text: "z.B.",
+	});
+	expect(source.input.segments).toContainEqual({
+		kind: "ResolvableText",
+		text: "i",
+		surface: "in",
+	});
+	expect(source.input.segments).toContainEqual({
+		kind: "ResolvableText",
+		text: "m",
+		surface: "dem",
+	});
+	expect(source.input.segments.map(({ text }) => text).join("")).toBe(text);
+	expect(source.unresolved).toEqual([]);
 });
 
 test("unsupported recovery abstains while an intact apostrophe name keeps its spelling", () => {
