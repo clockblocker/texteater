@@ -1,6 +1,8 @@
-/** A bounded experiment; defaults to preparation only, and never refetches its baseline. */
-import { execFileSync } from "node:child_process";
-import { createHash } from "node:crypto";
+/**
+ * A bounded experiment; defaults to preparation only, and never refetches its
+ * baseline. Each run writes the lab's run manifest beside its configuration,
+ * requests and results under `.runs/segment-in-units-lab/pilot/runs/<runId>/`.
+ */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -26,15 +28,24 @@ import {
 	sourceSpans,
 } from "../src/segment-in-units/de/source-evaluation.js";
 import { type LabCase, loadSet } from "../src/segment-in-units/lab/corpus.js";
+import {
+	runDirectory,
+	writeManifest,
+} from "../src/segment-in-units/lab/evidence.js";
 import type { CallRecord } from "../src/segment-in-units/lab/jev.js";
 import { modeledLatency } from "../src/segment-in-units/lab/metrics.js";
 import { PilotBudget } from "../src/segment-in-units/lab/pilot-budget.js";
 import { PilotJev } from "../src/segment-in-units/lab/pilot-jev.js";
+import {
+	provenanceOf,
+	type RunManifest,
+} from "../src/segment-in-units/lab/provenance.js";
 import { loadLabRun } from "../src/segment-in-units/lab/run.js";
 
 const packageRoot = resolve(import.meta.dir, "..");
+const repository = resolve(packageRoot, "../..");
 const labRoot = join(packageRoot, ".runs", "segment-in-units-lab");
-const experimentRoot = "/private/tmp/segment-in-units-investigation-20260930";
+const pilotRoot = join(labRoot, "pilot");
 const model = "jev-1.13.0";
 const baselineId =
 	"20260929T074903--candidates2--routes-question_tests-1_gen-3--dev--all";
@@ -48,11 +59,17 @@ const { values } = parseArgs({
 		arm: { type: "string", default: "ownership" },
 		manifest: {
 			type: "string",
-			default: join(experimentRoot, "pilot32.json"),
+			default: join(
+				packageRoot,
+				"evidence",
+				"segment-in-units-investigation-20260930",
+				"pilot32.json",
+			),
 		},
 		limit: { type: "string", default: "32" },
 		reps: { type: "string", default: "3" },
-		budget: { type: "string", default: "1" },
+		"budget-tokens": { type: "string", default: "23800000" },
+		"allow-dirty": { type: "boolean", default: false },
 		"prior-run": { type: "string" },
 		help: { type: "boolean", default: false },
 		opt: { type: "string", multiple: true, default: [] },
@@ -60,7 +77,7 @@ const { values } = parseArgs({
 });
 if (values.help) {
 	console.log(
-		"Segmentation pilot: defaults to preparation only. --arm ownership|envelopes; --live | --offline; --mode gold|source|both; --limit 1..32; --reps 1..3; --budget <=1; --prior-run <completed run.json>; --manifest <pilot manifest>; --opt key=value",
+		"Segmentation pilot: defaults to preparation only. --arm ownership|envelopes; --live | --offline; --mode gold|source|both; --limit 1..32; --reps 1..3; --budget-tokens <=25000000 fresh jev input tokens; --allow-dirty; --prior-run <completed run.json>; --manifest <pilot manifest>; --opt key=value",
 	);
 	process.exit(0);
 }
@@ -131,56 +148,46 @@ for (const id of selectedIds) {
 const priorRun = values["prior-run"]
 	? (JSON.parse(await readFile(values["prior-run"], "utf8")) as {
 			budget: {
-				capUsd: number;
-				knownUsd: number;
-				unknownUsageReservedUsd: number;
-				pendingReservedUsd: number;
+				capTokens: number;
+				knownTokens: number;
+				unknownUsageReservedTokens: number;
+				pendingReservedTokens: number;
 			};
 		})
 	: undefined;
 if (
 	priorRun &&
-	(priorRun.budget.pendingReservedUsd !== 0 ||
-		priorRun.budget.capUsd !== Number(values.budget))
+	(priorRun.budget.pendingReservedTokens !== 0 ||
+		priorRun.budget.capTokens !== Number(values["budget-tokens"]))
 )
 	throw Error(
 		"A prior run must have settled reservations and the same cumulative cap",
 	);
-const budget = new PilotBudget(Number(values.budget), priorRun?.budget);
+const budget = new PilotBudget(
+	Number(values["budget-tokens"]),
+	priorRun?.budget,
+);
 const modes =
 	values.mode === "both"
 		? (["gold", "source"] as const)
 		: [values.mode as "gold" | "source"];
 const runId = `${values.arm}-${new Date().toISOString().replaceAll(":", "-")}`;
-const outputDirectory = join(experimentRoot, runId);
+const outputDirectory = runDirectory(pilotRoot, runId);
 await mkdir(outputDirectory, { recursive: true });
-const cacheDirectory = join(experimentRoot, "ownership-cache");
-const gitHead = execFileSync("git", ["rev-parse", "HEAD"], {
-	cwd: packageRoot,
-	encoding: "utf8",
-}).trim();
-const sourcePaths = execFileSync(
-	"rg",
-	[
-		"--files",
-		"src/segment-in-units",
-		"src/evaluation/spec-corpus/segment-in-units.ts",
-		"cli/segment-ownership-pilot.ts",
-		"tsconfig.segment-in-units.json",
-	],
-	{ cwd: packageRoot, encoding: "utf8" },
-)
-	.trim()
-	.split("\n")
-	.sort();
-const sourceHashes: Record<string, string> = {};
-for (const path of sourcePaths) {
-	const contents = await readFile(join(packageRoot, path));
-	sourceHashes[path] = createHash("sha256").update(contents).digest("hex");
-	const copyPath = join(outputDirectory, "provenance", path);
-	await mkdir(dirname(copyPath), { recursive: true });
-	await writeFile(copyPath, contents);
-}
+const cacheDirectory = join(labRoot, "cache");
+const { patch, ...provenance } = await provenanceOf({
+	packageRoot,
+	repository,
+	cli: "cli/segment-ownership-pilot.ts",
+});
+if (provenance.dirty && values.live && !values["allow-dirty"])
+	throw Error(
+		`Uncommitted changes in the pilot's sources:\n${provenance.dirtyFiles.join("\n")}\nCommit them first, or pass --allow-dirty to record a diff.patch.`,
+	);
+if (provenance.dirty)
+	console.warn(
+		"\n*** DIRTY TREE: the manifest records dirty: true and a diff.patch.\n",
+	);
 const configuration = {
 	runId,
 	arm: values.arm,
@@ -190,11 +197,8 @@ const configuration = {
 	options,
 	setHash: set.hash,
 	setGitHead: set.gitHead,
-	gitHead,
-	sourceHashes,
-	sourceHash: createHash("sha256")
-		.update(JSON.stringify(sourceHashes))
-		.digest("hex"),
+	gitHead: provenance.gitHead,
+	codeHash: provenance.codeHash,
 	manifest: values.manifest,
 	selection: manifest.selection,
 	ids: selectedIds,
@@ -207,13 +211,12 @@ const configuration = {
 		refetched: false,
 		input: "Gold Segments and recovery",
 	},
-	budgetCapUsd: budget.capUsd,
+	budgetCapTokens: budget.capTokens,
 	priorRun: values["prior-run"] ?? null,
 	priorBudget: priorRun?.budget ?? null,
 	requestReservationTokens: budget.requestTokenLimit,
 	packing:
 		"UTF-8 serialized bytes plus 4096 framing allowance; 32K state+question and 64K full request, sequential chunks, no option truncation",
-	priceSource: "https://docs.typesafe.ai/models",
 	evaluationRevision:
 		"Explicit gold surface assertions compare to actual.surface ?? actual.text; redundant identity copies have equivalent meaning. Older immutable runs retain original explicit-field scores.",
 	notes: [
@@ -227,6 +230,29 @@ await writeFile(
 	join(outputDirectory, "configuration.json"),
 	`${JSON.stringify(configuration, null, 2)}\n`,
 );
+const jevRef: { current?: PilotJev } = {};
+const pilotManifest = (): RunManifest => ({
+	runId,
+	kind: "pilot",
+	createdAt: new Date().toISOString(),
+	parent: baselineId,
+	hypothesis: null,
+	...provenance,
+	promptHashes: jevRef.current?.promptHashes() ?? {},
+	modelRequested: model,
+	modelResolved: [...(jevRef.current?.resolvedModels ?? [])].sort(),
+	arm: values.arm,
+	options,
+	primary: "",
+	set: { name: set.name, hash: set.hash },
+	subset: manifest.selection,
+	limit,
+	cases: cases.length,
+	repetitions,
+	repetitionOffset: 0,
+	extra: { modes, baseline: baselineId, baselinePolicy },
+});
+await writeManifest(pilotRoot, pilotManifest(), patch);
 console.log(
 	JSON.stringify(
 		{
@@ -284,6 +310,7 @@ const jev = new PilotJev({
 	offline: !values.live,
 	executor,
 });
+jevRef.current = jev;
 
 type Evaluation = {
 	known: SourceUnitEvaluation;
@@ -404,7 +431,7 @@ for (const labCase of cases) {
 			);
 		}
 		console.log(
-			`${rows.length}/${cases.length * modes.length} ${mode}: ${labCase.id}; known spend $${budget.snapshot.knownUsd.toFixed(4)}`,
+			`${rows.length}/${cases.length * modes.length} ${mode}: ${labCase.id}; known spend ${budget.snapshot.knownTokens} tokens`,
 		);
 	}
 }
@@ -694,6 +721,7 @@ const summary = {
 		]),
 	),
 };
+await writeManifest(pilotRoot, pilotManifest(), patch);
 await writeFile(
 	join(outputDirectory, "summary.json"),
 	`${JSON.stringify(summary, null, 2)}\n`,

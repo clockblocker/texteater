@@ -21,7 +21,6 @@ import {
 import { keyOf } from "../de/routes.js";
 import type { LabCase } from "./corpus.js";
 import type { CallRecord } from "./jev.js";
-import { jevUsdPerToken } from "./ledger.js";
 import type { LabRun, RepetitionRecord } from "./run.js";
 
 export type Tally = {
@@ -195,7 +194,6 @@ export type PolicySummary = {
 
 export type CostSummary = {
 	readonly jevInputTokensPerSentence: number;
-	readonly usdPerSentence: number;
 	readonly jevCallsPerSentence: number;
 	readonly jevQuestionsPerSentence: number;
 	readonly lunaCallsPerSentence: number;
@@ -301,12 +299,10 @@ export function summarizeCost(
 		calls: readonly CallRecord[],
 		key: "inputTokens" | "outputTokens" | "questions",
 	) => calls.reduce((total, call) => total + call[key], 0);
-	const jevInputTokensPerSentence = mean((entry) =>
-		sum(entry.jev, "inputTokens"),
-	);
 	return {
-		jevInputTokensPerSentence,
-		usdPerSentence: jevInputTokensPerSentence * jevUsdPerToken,
+		jevInputTokensPerSentence: mean((entry) =>
+			sum(entry.jev, "inputTokens"),
+		),
 		jevCallsPerSentence: mean((entry) => entry.jev.length),
 		jevQuestionsPerSentence: mean((entry) => sum(entry.jev, "questions")),
 		lunaCallsPerSentence: mean((entry) => entry.luna.length),
@@ -586,109 +582,6 @@ export function confusions(
 		}
 	}
 	return counts;
-}
-
-/**
- * Paired comparison per gold unit: its majority verdict over repetitions on
- * each side. Counts units only one side matches, for a McNemar-style read.
- */
-export function pairedUnits(
-	left: { run: LabRun; policy: string },
-	right: { run: LabRun; policy: string },
-	cases: ReadonlyMap<string, LabCase>,
-	only?: ReadonlySet<string>,
-): {
-	both: number;
-	neither: number;
-	leftOnly: { id: string; text: string; bucket: string }[];
-	rightOnly: { id: string; text: string; bucket: string }[];
-	buckets: Record<
-		string,
-		{
-			units: number;
-			left: number;
-			right: number;
-			leftOnly: number;
-			rightOnly: number;
-		}
-	>;
-} {
-	const majority = (run: LabRun, policy: string) => {
-		const result = new Map<string, boolean>();
-		for (const caseRun of run.cases) {
-			if (only && !only.has(caseRun.id)) continue;
-			const labCase = cases.get(caseRun.id);
-			if (!labCase) continue;
-			const votes = new Map<number, number>();
-			for (const repetition of caseRun.repetitions) {
-				const { evaluation } = scoreCase(labCase, repetition, policy);
-				labCase.idealOutput.units.forEach((_, index) => {
-					if (evaluation?.units[index]?.verdict === "Match")
-						votes.set(index, (votes.get(index) ?? 0) + 1);
-				});
-			}
-			labCase.idealOutput.units.forEach((unit, index) => {
-				if (
-					unit.route === "Unresolved" ||
-					unit.route.family === "Foreign"
-				)
-					return;
-				result.set(
-					`${caseRun.id}#${index}`,
-					(votes.get(index) ?? 0) * 2 > caseRun.repetitions.length,
-				);
-			});
-		}
-		return result;
-	};
-	const a = majority(left.run, left.policy);
-	const b = majority(right.run, right.policy);
-	const summary = {
-		both: 0,
-		neither: 0,
-		leftOnly: [] as { id: string; text: string; bucket: string }[],
-		rightOnly: [] as { id: string; text: string; bucket: string }[],
-		buckets: {} as Record<
-			string,
-			{
-				units: number;
-				left: number;
-				right: number;
-				leftOnly: number;
-				rightOnly: number;
-			}
-		>,
-	};
-	for (const [key, leftMatch] of a) {
-		const rightMatch = b.get(key);
-		if (rightMatch === undefined) continue;
-		const [id = "", index = "0"] = key.split("#");
-		const labCase = cases.get(id);
-		const unit = labCase?.idealOutput.units[Number(index)];
-		const text = `${unit?.segments.map((segment) => labCase?.input.segments[segment]?.text).join(" ")} ${unit ? keyOf(unit.route) : ""}`;
-		const bucket = labCase && unit ? bucketOf(labCase, unit) : "?";
-		const tally = summary.buckets[bucket] ?? {
-			units: 0,
-			left: 0,
-			right: 0,
-			leftOnly: 0,
-			rightOnly: 0,
-		};
-		summary.buckets[bucket] = tally;
-		tally.units++;
-		if (leftMatch) tally.left++;
-		if (rightMatch) tally.right++;
-		if (leftMatch && rightMatch) summary.both++;
-		else if (!leftMatch && !rightMatch) summary.neither++;
-		else if (leftMatch) {
-			tally.leftOnly++;
-			summary.leftOnly.push({ id, text, bucket });
-		} else {
-			tally.rightOnly++;
-			summary.rightOnly.push({ id, text, bucket });
-		}
-	}
-	return summary;
 }
 
 const lassenForms = new Set([

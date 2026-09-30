@@ -102,7 +102,6 @@
  ],
  "cost": {
   "jevInputTokensPerSentence": 6585.483333333334,
-  "usdPerSentence": 0.00027659030000000005,
   "jevCallsPerSentence": 1,
   "jevQuestionsPerSentence": 9.93,
   "lunaCallsPerSentence": 0,

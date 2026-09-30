@@ -1,24 +1,29 @@
 /**
  * The German `segment.inUnits` lab: freezes the case sets, runs an arm with
- * repetitions, reports and compares runs, and keeps the cost ledger.
+ * repetitions, reports and compares runs, measures the noise floor and keeps
+ * the ledger and the iteration table.
  *
  *   bun run segment-in-units-lab freeze [--force]
  *   bun run segment-in-units-lab run --arm pairwise --subset smoke --reps 1 [--opt render=tagged]
+ *       [--parent <runId>] [--hypothesis "<one line>"] [--allow-dirty] [--model jev-1.13.0]
  *   bun run segment-in-units-lab report --run <runId> [--subset slice300]
  *   bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:policy]
- *   bun run segment-in-units-lab ledger
+ *       [--noise <noiseRunId>] [--record [--verdict "<text>"]]
+ *   bun run segment-in-units-lab noise --run <runId> [--reps 3] [--offset 1000]
+ *   bun run segment-in-units-lab ledger [--table]
  *
- * Runs, frozen sets and the answer cache live under `.runs/segment-in-units-lab/`
- * (gitignored); the ledger and run summaries under
- * `evidence/segment-in-units-lab/`.
+ * Frozen sets, raw runs and the answer cache live under
+ * `.runs/segment-in-units-lab/` (gitignored). Each run's manifest, outcomes
+ * and summary, and the ledger, live under `evidence/segment-in-units-lab/`.
  */
-import { execFileSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { stableJson } from "promptsmith";
 import { compareRuns, loadRun } from "promptsmith/storage";
 import { arms } from "../src/segment-in-units/de/arms/index.js";
+import { deltaBetween, loadSide } from "../src/segment-in-units/lab/compare.js";
 import {
 	freezeSets,
 	type LabCase,
@@ -27,11 +32,22 @@ import {
 	setPath,
 	subset,
 } from "../src/segment-in-units/lab/corpus.js";
+import {
+	readManifest,
+	readManifests,
+	readOutcomes,
+	readSummary,
+	summaryPath,
+	writeManifest,
+	writeNoise,
+	writeOutcomes,
+	writeSummary,
+} from "../src/segment-in-units/lab/evidence.js";
 import { exportPolicy } from "../src/segment-in-units/lab/export.js";
-import { Jev } from "../src/segment-in-units/lab/jev.js";
+import { type CallRecord, Jev } from "../src/segment-in-units/lab/jev.js";
 import {
 	appendLedger,
-	jevUsdPerToken,
+	type CompareEntry,
 	ledgerTotals,
 	readLedger,
 	spendOf,
@@ -44,15 +60,24 @@ import {
 	byPhenomenon,
 	byRule,
 	byShape,
+	type CostSummary,
 	calibration,
 	confusions,
-	mcnemar,
-	pairedUnits,
+	type PolicySummary,
 	policiesOf,
 	primaryOf,
 	summarizeCost,
 	summarizePolicy,
 } from "../src/segment-in-units/lab/metrics.js";
+import { noiseFloor } from "../src/segment-in-units/lab/noise.js";
+import {
+	outcomePolicies,
+	outcomesOf,
+} from "../src/segment-in-units/lab/outcomes.js";
+import {
+	provenanceOf,
+	type RunManifest,
+} from "../src/segment-in-units/lab/provenance.js";
 import {
 	conformTo734,
 	rerouted,
@@ -62,17 +87,23 @@ import {
 	runArm,
 	saveLabRun,
 } from "../src/segment-in-units/lab/run.js";
+import {
+	formatP,
+	type IterationRow,
+	iterationTable,
+} from "../src/segment-in-units/lab/table.js";
 
 const packageRoot = resolve(import.meta.dir, "..");
 const repository = resolve(packageRoot, "../..");
+const cli = "cli/segment-in-units-lab.ts";
 const labRoot = join(packageRoot, ".runs", "segment-in-units-lab");
 const evidenceRoot = join(packageRoot, "evidence", "segment-in-units-lab");
 const ledgerPath = join(evidenceRoot, "ledger.jsonl");
 /**
- * The jev stop line. Round 1 stopped at $9 of $10 and spent $7.92; round 2
- * adds about $7 and stops at $6.50 more.
+ * The jev stop line in fresh input tokens over the whole ledger, as set for
+ * rounds 1 and 2 of #744; `--token-budget` moves it for a new round.
  */
-const budgetUsd = 7.922 + 6.5;
+const defaultTokenBudget = 343_000_000;
 
 const { positionals, values } = parseArgs({
 	args: Bun.argv.slice(2),
@@ -81,7 +112,7 @@ const { positionals, values } = parseArgs({
 		arm: { type: "string" },
 		set: { type: "string", default: "dev" },
 		subset: { type: "string" },
-		reps: { type: "string", default: "3" },
+		reps: { type: "string" },
 		concurrency: { type: "string", default: "12" },
 		opt: { type: "string", multiple: true, default: [] },
 		limit: { type: "string" },
@@ -95,11 +126,20 @@ const { positionals, values } = parseArgs({
 		tag: { type: "string" },
 		sizes: { type: "string", default: "25,100,400,2000" },
 		relabel: { type: "string" },
+		parent: { type: "string" },
+		hypothesis: { type: "string" },
+		"allow-dirty": { type: "boolean", default: false },
+		"allow-drift": { type: "boolean", default: false },
+		model: { type: "string" },
+		"allow-floating-model": { type: "boolean", default: false },
+		"token-budget": { type: "string" },
+		offset: { type: "string" },
+		noise: { type: "string" },
+		record: { type: "boolean", default: false },
+		verdict: { type: "string" },
+		table: { type: "boolean", default: false },
 	},
 });
-
-const git = (args: readonly string[]) =>
-	execFileSync("git", args, { cwd: repository, encoding: "utf8" }).trim();
 
 const percent = (value: number) =>
 	Number.isNaN(value) ? "–" : `${(100 * value).toFixed(1)}`;
@@ -111,6 +151,9 @@ function casesOf(cases: readonly LabCase[]): Map<string, LabCase> {
 	return new Map(cases.map((labCase) => [labCase.id, read(labCase)]));
 }
 
+const plainCases = (cases: readonly LabCase[]) =>
+	new Map(cases.map((labCase) => [labCase.id, labCase]));
+
 async function freeze() {
 	for (const name of ["dev", "heldout"] as const)
 		if (existsSync(setPath(labRoot, name)) && !values.force)
@@ -121,38 +164,76 @@ async function freeze() {
 		);
 }
 
-async function run() {
-	const arm = arms[values.arm ?? ""];
-	if (!arm)
-		throw Error(`--arm must be one of ${Object.keys(arms).join(", ")}`);
-	const setName = values.set as SetName;
-	const set = await loadSet(labRoot, setName);
-	const subsetName = values.subset ?? "smoke";
-	let cases = subset(set, subsetName);
-	if (values.limit) cases = cases.slice(0, Number(values.limit));
-	const options = Object.fromEntries(
-		(values.opt ?? []).map((entry) => {
+function optionsOf(entries: readonly string[]): Record<string, string> {
+	return Object.fromEntries(
+		entries.map((entry) => {
 			const [key, ...rest] = entry.split("=");
 			return [key ?? "", rest.join("=")];
 		}),
 	);
-	const repetitions = Number(values.reps);
-	const spentBefore = ledgerTotals(await readLedger(ledgerPath)).jevUsd;
+}
+
+type Provenance = Awaited<ReturnType<typeof provenanceOf>>;
+
+/** Refuses a dirty tree unless `--allow-dirty`, and then says so loudly. */
+function guardDirty(provenance: Provenance) {
+	if (!provenance.dirty) return;
+	const files = provenance.dirtyFiles.map((line) => `  ${line}`).join("\n");
+	if (!values["allow-dirty"])
+		throw Error(
+			`Uncommitted changes in the lab's sources:\n${files}\nCommit them first, or pass --allow-dirty to record the run as dirty with a diff.patch.`,
+		);
+	console.warn(
+		`\n*** DIRTY TREE: this run records dirty: true and a diff.patch; gitHead alone does not name its code.\n${files}\n`,
+	);
+}
+
+/**
+ * Runs an arm and writes everything a run leaves: the raw run, the
+ * manifest, the outcomes, the ledger line and the summary.
+ */
+async function execute(args: {
+	readonly kind: "run" | "noise";
+	readonly armId: string;
+	readonly options: Readonly<Record<string, string>>;
+	readonly setName: SetName;
+	readonly subsetName: string;
+	readonly limit: number | null;
+	readonly repetitions: number;
+	readonly repetitionOffset: number;
+	readonly parent: string | null;
+	readonly hypothesis: string | null;
+	readonly baseline?: string;
+	readonly provenance: Provenance;
+	readonly model?: string;
+}) {
+	const arm = arms[args.armId];
+	if (!arm)
+		throw Error(`--arm must be one of ${Object.keys(arms).join(", ")}`);
+	const set = await loadSet(labRoot, args.setName);
+	let cases = subset(set, args.subsetName);
+	if (args.limit !== null) cases = cases.slice(0, args.limit);
+	const tokenBudget = Number(values["token-budget"] ?? defaultTokenBudget);
+	const spentBefore = ledgerTotals(
+		await readLedger(ledgerPath),
+	).jevFreshInputTokens;
 	let spentNow = 0;
 	const beforeSpend = () => {
-		if (spentBefore + spentNow >= budgetUsd)
+		if (spentBefore + spentNow >= tokenBudget)
 			throw Error(
-				`jev budget line reached: $${(spentBefore + spentNow).toFixed(2)}`,
+				`jev token budget line reached: ${spentBefore + spentNow} of ${tokenBudget} fresh input tokens`,
 			);
 	};
 	const jev = new Jev({
 		cacheDirectory: join(labRoot, "cache"),
 		concurrency: Number(values.concurrency),
 		...(values.qpc ? { questionsPerCall: Number(values.qpc) } : {}),
+		...(args.model ? { model: args.model } : {}),
+		allowFloatingModel: values["allow-floating-model"],
 		offline: values.offline,
 		beforeSpend,
 		onSpend: (tokens) => {
-			spentNow += tokens * jevUsdPerToken;
+			spentNow += tokens;
 		},
 	});
 	const luna = arm.usesLuna
@@ -162,30 +243,41 @@ async function run() {
 				offline: values.offline,
 			})
 		: undefined;
-	const slug = Object.entries(options)
+	const slug = Object.entries(args.options)
 		.map(([key, value]) => `${key}-${value}`)
 		.join("_")
 		.replace(/[^a-zA-Z0-9_-]/gu, "-");
 	const stamp = new Date().toISOString().replace(/[-:]/gu, "").slice(0, 15);
-	const runId = [stamp, arm.id, slug, set.name, subsetName, values.tag]
+	const runId = [
+		stamp,
+		arm.id,
+		slug,
+		set.name,
+		args.subsetName,
+		args.kind === "noise" ? `noise${args.repetitionOffset}` : undefined,
+		values.tag,
+	]
 		.filter(Boolean)
 		.join("--");
 	console.log(
-		`${runId}: ${cases.length} cases × ${repetitions}, ledger so far $${spentBefore.toFixed(3)}`,
+		`${runId}: ${cases.length} cases × ${args.repetitions} (repetitions from ${args.repetitionOffset}), model ${jev.model}, ledger so far ${spentBefore} fresh jev input tokens`,
 	);
 	let last = 0;
 	const labRun = await runArm({
 		runId,
 		arm,
-		options,
+		options: args.options,
 		set,
-		subset: subsetName,
+		subset: args.subsetName,
 		cases,
-		repetitions,
+		repetitions: args.repetitions,
+		repetitionOffset: args.repetitionOffset,
 		jev,
 		...(luna ? { luna } : {}),
 		concurrency: Number(values.concurrency),
-		gitHead: git(["rev-parse", "HEAD"]),
+		gitHead: args.provenance.gitHead,
+		codeHash: args.provenance.codeHash,
+		dirty: args.provenance.dirty,
 		onProgress(done, total) {
 			if (
 				done - last >= Math.max(1, Math.floor(total / 10)) ||
@@ -193,12 +285,51 @@ async function run() {
 			) {
 				last = done;
 				process.stderr.write(
-					`  ${done}/${total} ($${spentNow.toFixed(3)} fresh)\n`,
+					`  ${done}/${total} (${spentNow} fresh tokens)\n`,
 				);
 			}
 		},
 	});
 	await saveLabRun(labRoot, labRun);
+	const { patch, ...provenance } = args.provenance;
+	const promptHashes = {
+		...Object.fromEntries(
+			Object.entries(jev.promptHashes()).map(([stage, hash]) => [
+				`jev/${stage}`,
+				hash,
+			]),
+		),
+		...Object.fromEntries(
+			Object.entries(luna?.promptHashes() ?? {}).map(([stage, hash]) => [
+				`luna/${stage}`,
+				hash,
+			]),
+		),
+	};
+	const manifest: RunManifest = {
+		runId,
+		kind: args.kind,
+		createdAt: labRun.startedAt,
+		parent: args.parent,
+		hypothesis: args.hypothesis,
+		...provenance,
+		promptHashes,
+		modelRequested: jev.model,
+		modelResolved: [...jev.resolvedModels].sort(),
+		arm: arm.id,
+		options: args.options,
+		primary: primaryOf(labRun),
+		set: { name: set.name, hash: set.hash },
+		subset: args.subsetName,
+		limit: args.limit,
+		cases: cases.length,
+		repetitions: args.repetitions,
+		repetitionOffset: args.repetitionOffset,
+		...(args.baseline ? { baseline: args.baseline } : {}),
+	};
+	await writeManifest(evidenceRoot, manifest, patch);
+	const outcomes = outcomesOf(labRun, plainCases(set.cases));
+	await writeOutcomes(evidenceRoot, runId, outcomes);
 	const calls = labRun.cases.flatMap((caseRun) =>
 		caseRun.repetitions.flatMap((repetition) => repetition.calls),
 	);
@@ -206,22 +337,132 @@ async function run() {
 	await appendLedger(ledgerPath, {
 		runId,
 		at: new Date().toISOString(),
-		command: "run",
+		command: args.kind,
 		arm: arm.id,
-		options,
+		options: args.options,
 		set: set.name,
 		setHash: set.hash,
-		subset: subsetName,
+		subset: args.subsetName,
 		cases: cases.length,
-		repetitions,
-		gitHead: labRun.gitHead,
+		repetitions: args.repetitions,
+		gitHead: manifest.gitHead,
+		dirty: manifest.dirty,
+		codeHash: manifest.codeHash,
+		model: manifest.modelResolved.join(",") || manifest.modelRequested,
+		parent: args.parent,
+		hypothesis: args.hypothesis,
 		...spend,
 	});
 	console.log(
-		`jev fresh ${spend.jev.freshInputTokens} tokens ($${spend.jev.usd.toFixed(4)}), luna fresh ${spend.luna.freshInputTokens}/${spend.luna.freshOutputTokens} tokens`,
+		`jev fresh ${spend.jev.freshInputTokens} input tokens, luna fresh ${spend.luna.freshInputTokens}/${spend.luna.freshOutputTokens} tokens`,
 	);
 	await report(runId);
+	return { manifest, outcomes };
 }
+
+async function run() {
+	const provenance = await provenanceOf({ packageRoot, repository, cli });
+	guardDirty(provenance);
+	if (values.parent && !(await readManifest(evidenceRoot, values.parent)))
+		console.warn(
+			`--parent ${values.parent} has no committed manifest; the table cannot compare against it`,
+		);
+	await execute({
+		kind: "run",
+		armId: values.arm ?? "",
+		options: optionsOf(values.opt ?? []),
+		setName: values.set as SetName,
+		subsetName: values.subset ?? "smoke",
+		limit: values.limit ? Number(values.limit) : null,
+		repetitions: Number(values.reps ?? "3"),
+		repetitionOffset: 0,
+		parent: values.parent ?? null,
+		hypothesis: values.hypothesis ?? null,
+		provenance,
+		...(values.model ? { model: values.model } : {}),
+	});
+}
+
+/**
+ * Reruns a baseline's exact configuration at fresh repetition indices and
+ * records the per-bucket flip rate against it for every policy.
+ */
+async function noise() {
+	const baselineId = values.run ?? "";
+	const baseline = await readManifest(evidenceRoot, baselineId);
+	const baselineRows = await readOutcomes(evidenceRoot, baselineId);
+	if (!baseline || !baselineRows)
+		throw Error(
+			`--run ${baselineId} needs a committed manifest and outcomes; runs made before manifests cannot be rerun exactly`,
+		);
+	const provenance = await provenanceOf({ packageRoot, repository, cli });
+	guardDirty(provenance);
+	const drift = [
+		provenance.codeHash !== baseline.codeHash ? "code" : "",
+		provenance.dumspecHash !== baseline.dumspecHash ? "dumspec" : "",
+	].filter(Boolean);
+	if (drift.length > 0 && !values["allow-drift"])
+		throw Error(
+			`The ${drift.join(" and ")} changed since ${baselineId}; a rerun would not measure its noise. Pass --allow-drift to rerun anyway.`,
+		);
+	const earlier = (await readManifests(evidenceRoot)).filter(
+		(manifest) => manifest.baseline === baselineId,
+	).length;
+	// Fresh indices miss every cached answer of the baseline and earlier reruns.
+	const repetitionOffset = Number(values.offset ?? 1000 * (earlier + 1));
+	if (
+		!Number.isInteger(repetitionOffset) ||
+		repetitionOffset < baseline.repetitionOffset + baseline.repetitions
+	)
+		throw Error("--offset must lie past the baseline's repetitions");
+	const { manifest, outcomes } = await execute({
+		kind: "noise",
+		armId: baseline.arm,
+		options: baseline.options,
+		setName: baseline.set.name as SetName,
+		subsetName: baseline.subset,
+		limit: baseline.limit,
+		repetitions: Number(values.reps ?? baseline.repetitions),
+		repetitionOffset,
+		parent: baselineId,
+		hypothesis: `noise floor of ${baselineId}`,
+		baseline: baselineId,
+		provenance,
+		model: baseline.modelRequested,
+	});
+	const promptsMatch =
+		stableJson(manifest.promptHashes) === stableJson(baseline.promptHashes);
+	const floors = Object.fromEntries(
+		outcomePolicies(baselineRows).map((policy) => [
+			policy,
+			noiseFloor(baselineRows, outcomes, policy),
+		]),
+	);
+	await writeNoise(evidenceRoot, {
+		baseline: baselineId,
+		rerun: manifest.runId,
+		promptsMatch,
+		floors,
+	});
+	if (!promptsMatch)
+		console.warn(
+			"\n*** The rerun sent different prompts than the baseline; its flips measure a changed configuration, not noise.\n",
+		);
+	const floor = floors[baseline.primary] ?? {};
+	console.log(`noise floor of ${baselineId} (${baseline.primary}):`);
+	for (const [bucket, rate] of Object.entries(floor).sort(
+		(a, b) => b[1].units - a[1].units,
+	))
+		console.log(
+			`  ${bucket.padEnd(24)} units ${String(rate.units).padStart(5)}  flips ${String(rate.flips).padStart(4)}  ${percent(rate.rate).padStart(5)}%`,
+		);
+}
+
+type RunSummary = {
+	readonly primary: string;
+	readonly policies: readonly PolicySummary[];
+	readonly cost: CostSummary;
+};
 
 async function report(runId: string) {
 	const labRun = await loadLabRun(labRoot, runId);
@@ -272,7 +513,7 @@ async function report(runId: string) {
 		);
 	}
 	console.log(
-		`cost: ${cost.jevInputTokensPerSentence.toFixed(0)} jev input tokens/sentence ($${cost.usdPerSentence.toFixed(6)}), ${cost.jevCallsPerSentence.toFixed(2)} calls, ${cost.jevQuestionsPerSentence.toFixed(1)} questions; luna ${cost.lunaCallsPerSentence.toFixed(2)} calls ${cost.lunaInputTokensPerSentence.toFixed(0)}/${cost.lunaOutputTokensPerSentence.toFixed(0)} tokens; latency p50 ${cost.latencyP50.toFixed(0)} ms p95 ${cost.latencyP95.toFixed(0)} ms; ${cost.errors} errors`,
+		`cost: ${cost.jevInputTokensPerSentence.toFixed(0)} jev input tokens/sentence, ${cost.jevCallsPerSentence.toFixed(2)} calls, ${cost.jevQuestionsPerSentence.toFixed(1)} questions; luna ${cost.lunaCallsPerSentence.toFixed(2)} calls ${cost.lunaInputTokensPerSentence.toFixed(0)}/${cost.lunaOutputTokensPerSentence.toFixed(0)} tokens; latency p50 ${cost.latencyP50.toFixed(0)} ms p95 ${cost.latencyP95.toFixed(0)} ms; ${cost.errors} errors`,
 	);
 	const routeBreakdown = breakdown(labRun, cases, primary, byGoldRoute, only);
 	const shapeBreakdown = breakdown(labRun, cases, primary, byShape, only);
@@ -330,106 +571,166 @@ async function report(runId: string) {
 			`link probability vs truly linked (${calibrated.linkCount})`,
 			calibrated.links,
 		);
-	await mkdir(join(evidenceRoot, "summaries"), { recursive: true });
-	await writeFile(
-		join(
-			evidenceRoot,
-			"summaries",
-			`${runId}${values.subset && values.run ? `--${values.subset}` : ""}${values.relabel ? `--relabel-${values.relabel}` : ""}.json`,
-		),
-		`${JSON.stringify(
-			{
-				runId,
-				arm: labRun.arm,
-				options: labRun.options,
-				set: labRun.set,
-				setHash: labRun.setHash,
-				setGitHead: labRun.setGitHead,
-				subset:
-					values.subset && values.run ? values.subset : labRun.subset,
-				gitHead: labRun.gitHead,
-				repetitions: labRun.repetitions,
-				model: labRun.model,
-				primary,
-				policies: rows,
-				cost,
-				breakdowns: {
-					phenomenon: phenomenonBreakdown,
-					route: routeBreakdown,
-					shape: shapeBreakdown,
-					rule: ruleBreakdown,
-				},
-				calibration: calibrated,
-			},
-			null,
-			1,
-		)}\n`,
-	);
+	const variant = [
+		values.subset && values.run ? values.subset : "",
+		values.relabel ? `relabel-${values.relabel}` : "",
+	]
+		.filter(Boolean)
+		.join("--");
+	const summary = {
+		runId,
+		arm: labRun.arm,
+		options: labRun.options,
+		set: labRun.set,
+		setHash: labRun.setHash,
+		setGitHead: labRun.setGitHead,
+		subset: values.subset && values.run ? values.subset : labRun.subset,
+		gitHead: labRun.gitHead,
+		repetitions: labRun.repetitions,
+		model: labRun.model,
+		primary,
+		policies: rows,
+		cost,
+		breakdowns: {
+			phenomenon: phenomenonBreakdown,
+			route: routeBreakdown,
+			shape: shapeBreakdown,
+			rule: ruleBreakdown,
+		},
+		calibration: calibrated,
+	};
+	if (await readManifest(evidenceRoot, runId))
+		await writeSummary(summaryPath(evidenceRoot, runId, variant), summary);
+	else {
+		// A run made before manifests keeps its summary beside the historical ones.
+		await mkdir(join(evidenceRoot, "summaries"), { recursive: true });
+		await writeSummary(
+			join(
+				evidenceRoot,
+				"summaries",
+				`${runId}${variant ? `--${variant}` : ""}.json`,
+			),
+			summary,
+		);
+	}
 }
 
 async function compare() {
-	const [leftId, leftPolicy] = (values.left ?? "").split(":");
-	const [rightId, rightPolicy] = (values.right ?? "").split(":");
+	const [leftId = "", leftPolicy] = (values.left ?? "").split(":");
+	const [rightId = "", rightPolicy] = (values.right ?? "").split(":");
 	if (!leftId || !rightId) throw Error("--left and --right name runs");
-	const directory = join(labRoot, "promptsmith");
-	const exported = [];
-	for (const [runId, policy] of [
-		[leftId, leftPolicy],
-		[rightId, rightPolicy],
-	] as const) {
-		const labRun = await loadLabRun(labRoot, runId);
-		const set = await loadSet(labRoot, labRun.set as SetName);
-		const only = values.subset
-			? new Set(subset(set, values.subset).map(({ id }) => id))
-			: undefined;
-		const cases = new Map(
-			[...casesOf(set.cases)].filter(([id]) => !only || only.has(id)),
-		);
-		const evaluation = await exportPolicy({
-			run: labRun,
-			cases,
-			policy: policy ?? primaryOf(labRun),
-			directory,
+	const setCases = async (setName: string) =>
+		casesOf((await loadSet(labRoot, setName as SetName)).cases);
+	const side = (runId: string, policy: string | undefined) =>
+		loadSide({
+			labRoot,
+			evidenceRoot,
+			runId,
+			...(policy ? { policy } : {}),
+			casesOf: setCases,
+			relabeled: values.relabel !== undefined,
 		});
-		exported.push(await loadRun(directory, evaluation.manifest.runId));
-	}
-	const [left, right] = exported;
-	if (!left || !right) return;
-	const leftRun = await loadLabRun(labRoot, leftId);
-	const rightRun = await loadLabRun(labRoot, rightId);
-	const pairedSet = await loadSet(labRoot, leftRun.set as SetName);
-	const pairedOnly = values.subset
-		? new Set(subset(pairedSet, values.subset).map(({ id }) => id))
+	const left = await side(leftId, leftPolicy);
+	const right = await side(rightId, rightPolicy);
+	for (const entry of [left, right])
+		if (!entry.raw)
+			console.log(
+				`${entry.runId}: raw run missing; comparing its committed outcomes`,
+			);
+	const only = values.subset
+		? new Set(
+				subset(
+					await loadSet(labRoot, left.setName as SetName),
+					values.subset,
+				).map(({ id }) => id),
+			)
 		: undefined;
-	const paired = pairedUnits(
-		{ run: leftRun, policy: leftPolicy ?? primaryOf(leftRun) },
-		{ run: rightRun, policy: rightPolicy ?? primaryOf(rightRun) },
-		casesOf(pairedSet.cases),
-		pairedOnly,
+	const { paired, noise, all, buckets } = await deltaBetween(
+		evidenceRoot,
+		left,
+		right,
+		{
+			...(only ? { only } : {}),
+			...(values.noise ? { noiseRun: values.noise } : {}),
+		},
+	);
+	const floorText = (floor: number | null, beyond: boolean | null) =>
+		floor === null
+			? ""
+			: `  floor ${floor.toFixed(1)} ${beyond ? "BEYOND NOISE" : "within noise"}`;
+	console.log(
+		`gold units by majority verdict: both match ${paired.both}, neither ${paired.neither}, left only ${all.lost}, right only ${all.gained}`,
 	);
 	console.log(
-		`gold units by majority verdict: both match ${paired.both}, neither ${paired.neither}, left only ${paired.leftOnly.length}, right only ${paired.rightOnly.length}`,
+		`McNemar p = ${formatP(all.p)}${floorText(all.floor, all.beyondNoise)}`,
 	);
 	console.log(
-		`McNemar p = ${mcnemar(paired.leftOnly.length, paired.rightOnly.length).toPrecision(2)}`,
+		noise
+			? `noise floor from ${noise.record.rerun} (rerun of ${noise.record.baseline})${noise.record.promptsMatch ? "" : ", WHOSE PROMPTS DIFFERED"}`
+			: `no noise floor; measure one with: noise --run ${left.runId}`,
 	);
-	for (const [bucket, tally] of Object.entries(paired.buckets).sort(
+	for (const [bucket, delta] of Object.entries(buckets).sort(
 		(a, b) => b[1].units - a[1].units,
-	))
+	)) {
+		const tally = paired.buckets[bucket];
+		if (!tally) continue;
 		console.log(
-			`  ${bucket.padEnd(24)} units ${String(tally.units).padStart(4)}  left ${percent(tally.left / tally.units).padStart(5)}  right ${percent(tally.right / tally.units).padStart(5)}  +${tally.rightOnly} −${tally.leftOnly}  p ${mcnemar(tally.leftOnly, tally.rightOnly).toPrecision(2)}`,
+			`  ${bucket.padEnd(24)} units ${String(delta.units).padStart(4)}  left ${percent(tally.left / tally.units).padStart(5)}  right ${percent(tally.right / tally.units).padStart(5)}  +${delta.gained} −${delta.lost}  p ${formatP(delta.p)}${floorText(delta.floor, delta.beyondNoise)}`,
 		);
-	for (const [side, list] of [
+	}
+	for (const [sideName, list] of [
 		["left only", paired.leftOnly],
 		["right only", paired.rightOnly],
 	] as const)
 		console.log(
-			`  ${side}: ${list
+			`  ${sideName}: ${list
 				.slice(0, Number(values.limit ?? 25))
 				.map((entry) => entry.text)
 				.join(" | ")}`,
 		);
-	const comparison = compareRuns(left, right);
+	if (left.raw && right.raw) await compareCases(left, right, only);
+	if (values.record) {
+		const entry: CompareEntry = {
+			at: new Date().toISOString(),
+			command: "compare",
+			left: { runId: left.runId, policy: left.policy },
+			right: { runId: right.runId, policy: right.policy },
+			subset: values.subset ?? null,
+			noiseRun: noise?.record.rerun ?? null,
+			verdict: values.verdict ?? null,
+			...all,
+			buckets,
+		};
+		await appendLedger(ledgerPath, entry);
+		console.log("recorded in the ledger");
+	}
+}
+
+/** Case verdicts through promptsmith's `compareRuns`; needs both raw runs. */
+async function compareCases(
+	left: Awaited<ReturnType<typeof loadSide>>,
+	right: Awaited<ReturnType<typeof loadSide>>,
+	only: ReadonlySet<string> | undefined,
+) {
+	const directory = join(labRoot, "promptsmith");
+	const exported = [];
+	for (const entry of [left, right]) {
+		if (!entry.raw) return;
+		const set = await loadSet(labRoot, entry.raw.set as SetName);
+		const cases = new Map(
+			[...casesOf(set.cases)].filter(([id]) => !only || only.has(id)),
+		);
+		const evaluation = await exportPolicy({
+			run: entry.raw,
+			cases,
+			policy: entry.policy,
+			directory,
+		});
+		exported.push(await loadRun(directory, evaluation.manifest.runId));
+	}
+	const [leftRun, rightRun] = exported;
+	if (!leftRun || !rightRun) return;
+	const comparison = compareRuns(leftRun, rightRun);
 	const verdicts = comparison.cases.filter((entry) => entry.verdictChanged);
 	const count = (side: "left" | "right", verdict: string) =>
 		comparison.cases.filter((entry) => entry.verdict[side] === verdict)
@@ -441,11 +742,9 @@ async function compare() {
 	console.log(
 		`same corpus: ${comparison.sameCorpus}; changed verdicts ${verdicts.length}; changed outputs ${comparison.changedOutputs.length}`,
 	);
-	const set = await loadSet(
-		labRoot,
-		(await loadLabRun(labRoot, leftId)).set as SetName,
+	const cases = casesOf(
+		(await loadSet(labRoot, left.setName as SetName)).cases,
 	);
-	const cases = casesOf(set.cases);
 	for (const entry of verdicts.slice(0, Number(values.limit ?? 40))) {
 		const labCase = cases.get(entry.caseId);
 		const text =
@@ -458,10 +757,75 @@ async function compare() {
 
 async function ledger() {
 	const entries = await readLedger(ledgerPath);
+	if (values.table) {
+		process.stdout.write(iterationTable(await iterationRows(entries)));
+		return;
+	}
 	const totals = ledgerTotals(entries);
 	console.log(
-		`${entries.length} entries; jev fresh input ${totals.jevFreshInputTokens} tokens = $${totals.jevUsd.toFixed(3)} (round 1 $7.922, round 2 $${(totals.jevUsd - 7.922).toFixed(3)} of ~$7; stop at $${budgetUsd.toFixed(2)}); luna fresh ${totals.lunaFreshCalls} calls, ${totals.lunaFreshInputTokens} input / ${totals.lunaFreshOutputTokens} output tokens`,
+		`${entries.length} entries; jev fresh input ${totals.jevFreshInputTokens} tokens (stop line ${values["token-budget"] ?? defaultTokenBudget}); luna fresh ${totals.lunaFreshCalls} calls, ${totals.lunaFreshInputTokens} input / ${totals.lunaFreshOutputTokens} output tokens`,
 	);
+}
+
+/**
+ * One row per run with a manifest (noise reruns left out). The delta against
+ * the parent comes from the latest recorded compare, else from the committed
+ * outcomes of both primaries.
+ */
+async function iterationRows(
+	entries: Awaited<ReturnType<typeof readLedger>>,
+): Promise<IterationRow[]> {
+	const compares = entries.filter(
+		(entry): entry is CompareEntry => entry.command === "compare",
+	);
+	const rows: IterationRow[] = [];
+	for (const manifest of await readManifests(evidenceRoot)) {
+		if (manifest.kind !== "run") continue;
+		const summary = await readSummary<RunSummary>(
+			summaryPath(evidenceRoot, manifest.runId),
+		);
+		const primary = summary?.policies.find(
+			(policy) => policy.policy === summary.primary,
+		);
+		const recorded = compares.findLast(
+			(entry) =>
+				entry.left.runId === manifest.parent &&
+				entry.right.runId === manifest.runId,
+		);
+		let delta: IterationRow["delta"] = recorded ?? null;
+		if (!delta && manifest.parent) {
+			try {
+				const sides = {
+					labRoot,
+					evidenceRoot,
+				};
+				const left = await loadSide({
+					...sides,
+					runId: manifest.parent,
+				});
+				const right = await loadSide({
+					...sides,
+					runId: manifest.runId,
+				});
+				delta = (await deltaBetween(evidenceRoot, left, right)).all;
+			} catch {
+				delta = null;
+			}
+		}
+		rows.push({
+			runId: manifest.runId,
+			parent: manifest.parent,
+			hypothesis: manifest.hypothesis,
+			unitAccuracy: primary?.rates.unitAccuracy ?? null,
+			flips: primary?.flips ?? null,
+			flipBase: primary?.flipBase ?? null,
+			jevInputTokensPerSentence:
+				summary?.cost.jevInputTokensPerSentence ?? null,
+			delta,
+			verdict: recorded?.verdict ?? null,
+		});
+	}
+	return rows;
 }
 
 async function limitQuestionsPerCall() {
@@ -473,13 +837,20 @@ async function limitQuestionsPerCall() {
 	const cases = [...set.cases]
 		.sort((a, b) => pieces(b) - pieces(a))
 		.slice(0, Number(values.limit ?? 12));
-	const spentBefore = ledgerTotals(await readLedger(ledgerPath)).jevUsd;
-	if (spentBefore >= budgetUsd) throw Error("jev budget line reached");
-	const calls: import("../src/segment-in-units/lab/jev.js").CallRecord[] = [];
+	const tokenBudget = Number(values["token-budget"] ?? defaultTokenBudget);
+	if (
+		ledgerTotals(await readLedger(ledgerPath)).jevFreshInputTokens >=
+		tokenBudget
+	)
+		throw Error("jev token budget line reached");
+	const provenance = await provenanceOf({ packageRoot, repository, cli });
+	const calls: CallRecord[] = [];
 	let fresh = 0;
 	const jev = new Jev({
 		cacheDirectory: join(labRoot, "cache"),
 		concurrency: Number(values.concurrency),
+		...(values.model ? { model: values.model } : {}),
+		allowFloatingModel: values["allow-floating-model"],
 		onSpend: (tokens) => {
 			fresh += tokens;
 		},
@@ -516,6 +887,7 @@ async function limitQuestionsPerCall() {
 		join(evidenceRoot, "summaries", `${runId}.json`),
 		`${JSON.stringify({ runId, set: set.name, setHash: set.hash, cases: cases.map(({ id }) => id), results }, null, 1)}\n`,
 	);
+	const spend = spendOf(calls);
 	await appendLedger(ledgerPath, {
 		runId,
 		at: new Date().toISOString(),
@@ -523,14 +895,12 @@ async function limitQuestionsPerCall() {
 		set: set.name,
 		setHash: set.hash,
 		cases: cases.length,
-		gitHead: git(["rev-parse", "HEAD"]),
-		...spendOf(calls),
-		jev: {
-			...spendOf(calls).jev,
-			freshCalls: 0,
-			freshInputTokens: fresh,
-			usd: fresh * jevUsdPerToken,
-		},
+		gitHead: provenance.gitHead,
+		dirty: provenance.dirty,
+		codeHash: provenance.codeHash,
+		model: [...jev.resolvedModels].join(",") || jev.model,
+		...spend,
+		jev: { ...spend.jev, freshCalls: 0, freshInputTokens: fresh },
 	});
 }
 
@@ -539,6 +909,7 @@ if (command === "freeze") await freeze();
 else if (command === "run") await run();
 else if (command === "report") await report(values.run ?? "");
 else if (command === "compare") await compare();
+else if (command === "noise") await noise();
 else if (command === "ledger") await ledger();
 else if (command === "limit-qpc") await limitQuestionsPerCall();
-else throw Error("Commands: freeze, run, report, compare, ledger");
+else throw Error("Commands: freeze, run, report, compare, noise, ledger");

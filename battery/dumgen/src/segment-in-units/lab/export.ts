@@ -126,10 +126,16 @@ export async function exportPolicy(args: {
 		experimentId: `segment-in-units-lab/${run.arm}`,
 		operationVersion: `${run.arm}:${policy}:${stableJson(run.options)}`,
 		evaluatorVersion: "731",
-		sourceRevision: run.gitHead,
+		// The commit alone does not name the code that ran; the manifest's code hash does.
+		sourceRevision: run.codeHash
+			? `${run.gitHead}${run.dirty ? "+dirty" : ""}#${run.codeHash.slice(0, 16)}`
+			: run.gitHead,
 		configurations: {
 			generation: { model: "gpt-5.6-luna", settings: {} },
-			judgment: { model: run.model, settings: { ...run.options } },
+			judgment: {
+				model: run.modelResolved?.join(",") || run.model,
+				settings: { ...run.options },
+			},
 		},
 		runId: `${run.runId}--${policy.replace(/[^a-zA-Z0-9_-]/gu, "_")}`,
 		repetitions: run.repetitions,

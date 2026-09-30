@@ -44,7 +44,15 @@ export type LabRun = {
 	readonly startedAt: string;
 	readonly finishedAt: string;
 	readonly repetitions: number;
+	/** Added to each repetition index sent to the judge; nonzero for a noise rerun. */
+	readonly repetitionOffset?: number;
+	/** The model requested. */
 	readonly model: string;
+	/** The models that answered; absent in runs made before pinning. */
+	readonly modelResolved?: readonly string[];
+	/** The manifest's code identity; absent in runs made before manifests. */
+	readonly codeHash?: string;
+	readonly dirty?: boolean;
 	readonly cases: readonly CaseRun[];
 };
 
@@ -73,6 +81,9 @@ export async function runArm(args: {
 	readonly luna?: Luna;
 	readonly concurrency: number;
 	readonly gitHead: string;
+	readonly repetitionOffset?: number;
+	readonly codeHash?: string;
+	readonly dirty?: boolean;
 	readonly onProgress?: (done: number, total: number) => void;
 }): Promise<LabRun> {
 	const startedAt = new Date().toISOString();
@@ -101,7 +112,8 @@ export async function runArm(args: {
 							const result = await args.arm.run(labCase.input, {
 								jev: args.jev,
 								...(args.luna ? { luna: args.luna } : {}),
-								repetition,
+								repetition:
+									repetition + (args.repetitionOffset ?? 0),
 								calls,
 								options: args.options,
 								noise: noise.filter(
@@ -158,7 +170,11 @@ export async function runArm(args: {
 		startedAt,
 		finishedAt: new Date().toISOString(),
 		repetitions: args.repetitions,
+		repetitionOffset: args.repetitionOffset ?? 0,
 		model: args.jev.model,
+		modelResolved: [...args.jev.resolvedModels].sort(),
+		...(args.codeHash === undefined ? {} : { codeHash: args.codeHash }),
+		...(args.dirty === undefined ? {} : { dirty: args.dirty }),
 		cases,
 	};
 }

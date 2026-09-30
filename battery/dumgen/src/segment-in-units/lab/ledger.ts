@@ -1,32 +1,18 @@
 /**
- * The cost ledger: one JSON line per lab command that called a model, with
- * the fresh (uncached) tokens it spent. jev bills input tokens only, at
- * $0.042 per million. Luna's price is not known here, so only its tokens
- * are kept. The ledger is committed with the lab doc.
+ * The lab ledger: one JSON line per lab command that called a model, with
+ * the fresh (uncached) tokens it spent, and one per recorded comparison.
+ * The repository tracks tokens only. The ledger is committed with the run
+ * evidence.
  */
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { CallRecord } from "./jev.js";
 
-export const jevUsdPerToken = 0.042 / 1_000_000;
-
-export type LedgerEntry = {
-	readonly runId: string;
-	readonly at: string;
-	readonly command: string;
-	readonly arm?: string;
-	readonly options?: Readonly<Record<string, string>>;
-	readonly set?: string;
-	readonly setHash?: string;
-	readonly subset?: string;
-	readonly cases?: number;
-	readonly repetitions?: number;
-	readonly gitHead: string;
+export type Spend = {
 	readonly jev: {
 		readonly calls: number;
 		readonly freshCalls: number;
 		readonly freshInputTokens: number;
-		readonly usd: number;
 		/** Input tokens of every call, cached ones included: what the arm costs. */
 		readonly allInputTokens: number;
 	};
@@ -38,7 +24,57 @@ export type LedgerEntry = {
 	};
 };
 
-export function spendOf(calls: readonly CallRecord[]) {
+/** A command that called models: `run`, `noise` or `limit-qpc`. */
+export type SpendEntry = Spend & {
+	readonly runId: string;
+	readonly at: string;
+	readonly command: "run" | "noise" | "limit-qpc";
+	readonly arm?: string;
+	readonly options?: Readonly<Record<string, string>>;
+	readonly set?: string;
+	readonly setHash?: string;
+	readonly subset?: string;
+	readonly cases?: number;
+	readonly repetitions?: number;
+	readonly gitHead: string;
+	readonly dirty?: boolean;
+	readonly codeHash?: string;
+	readonly model?: string;
+	readonly parent?: string | null;
+	readonly hypothesis?: string | null;
+};
+
+export type ComparedSide = { readonly runId: string; readonly policy: string };
+
+/** Paired gold units of one bucket: `gained` only the right side matches, `lost` only the left. */
+export type BucketDelta = {
+	readonly units: number;
+	readonly gained: number;
+	readonly lost: number;
+	readonly p: number;
+	/** The |gained − lost| a rerun of the left side reaches by noise alone; null without a noise run. */
+	readonly floor: number | null;
+	readonly beyondNoise: boolean | null;
+};
+
+/** `compare --record`: the paired delta of right against left. */
+export type CompareEntry = BucketDelta & {
+	readonly at: string;
+	readonly command: "compare";
+	readonly left: ComparedSide;
+	readonly right: ComparedSide;
+	readonly subset: string | null;
+	readonly noiseRun: string | null;
+	readonly verdict: string | null;
+	readonly buckets: Readonly<Record<string, BucketDelta>>;
+};
+
+export type LedgerEntry = SpendEntry | CompareEntry;
+
+export const isSpend = (entry: LedgerEntry): entry is SpendEntry =>
+	entry.command !== "compare";
+
+export function spendOf(calls: readonly CallRecord[]): Spend {
 	const jev = calls.filter((call) => call.executor === "jev");
 	const luna = calls.filter((call) => call.executor === "luna");
 	const freshJev = jev.filter((call) => !call.cached);
@@ -47,13 +83,11 @@ export function spendOf(calls: readonly CallRecord[]) {
 		records: readonly CallRecord[],
 		key: "inputTokens" | "outputTokens",
 	) => records.reduce((total, call) => total + call[key], 0);
-	const freshInputTokens = sum(freshJev, "inputTokens");
 	return {
 		jev: {
 			calls: jev.length,
 			freshCalls: freshJev.length,
-			freshInputTokens,
-			usd: freshInputTokens * jevUsdPerToken,
+			freshInputTokens: sum(freshJev, "inputTokens"),
 			allInputTokens: sum(jev, "inputTokens"),
 		},
 		luna: {
@@ -85,11 +119,10 @@ export async function appendLedger(
 }
 
 export function ledgerTotals(entries: readonly LedgerEntry[]) {
-	return entries.reduce(
+	return entries.filter(isSpend).reduce(
 		(total, entry) => ({
 			jevFreshInputTokens:
 				total.jevFreshInputTokens + entry.jev.freshInputTokens,
-			jevUsd: total.jevUsd + entry.jev.usd,
 			lunaFreshInputTokens:
 				total.lunaFreshInputTokens + entry.luna.freshInputTokens,
 			lunaFreshOutputTokens:
@@ -98,7 +131,6 @@ export function ledgerTotals(entries: readonly LedgerEntry[]) {
 		}),
 		{
 			jevFreshInputTokens: 0,
-			jevUsd: 0,
 			lunaFreshInputTokens: 0,
 			lunaFreshOutputTokens: 0,
 			lunaFreshCalls: 0,
