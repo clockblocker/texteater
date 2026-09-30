@@ -6,7 +6,7 @@ export type KnowledgeSettings = {
 	morphologicalTree?: boolean | undefined;
 	valency?: boolean | undefined;
 	participleSource?: boolean | undefined;
-	pluralPattern?: boolean | undefined;
+	plural?: boolean | undefined;
 	conjugationClass?: boolean | undefined;
 	locutionType?: boolean | undefined;
 	sayingType?: boolean | undefined;
@@ -35,7 +35,7 @@ export type KnowledgeRequestMask = {
 	morphologicalTree?: null | undefined;
 	valency?: null | undefined;
 	participleSource?: null | undefined;
-	pluralPattern?: null | undefined;
+	plural?: null | undefined;
 	conjugationClass?: null | undefined;
 	locutionType?: null | undefined;
 	sayingType?: null | undefined;
@@ -1902,7 +1902,7 @@ export type ReadingKnowledge = {
 	semanticRelations?: SemanticRelations | undefined;
 	valency?: Array<ValencySlot> | undefined;
 	participleSource?: ParticipleSource | undefined;
-	pluralPattern?: NounPlural | undefined;
+	plural?: NounPlural | undefined;
 	conjugationClass?: ConjugationClasses | undefined;
 	locutionType?: LocutionType | undefined;
 	sayingType?: SayingType | undefined;
@@ -2170,12 +2170,8 @@ export type KnowledgeChange =
 			value: ParticipleSource;
 	  }
 	| { kind: "Retract"; aspect: "participleSource" }
-	| {
-			kind: "Contribute" | "Correct";
-			aspect: "pluralPattern";
-			value: NounPlural;
-	  }
-	| { kind: "Retract"; aspect: "pluralPattern" }
+	| { kind: "Contribute" | "Correct"; aspect: "plural"; value: NounPlural }
+	| { kind: "Retract"; aspect: "plural" }
 	| {
 			kind: "Contribute" | "Correct";
 			aspect: "conjugationClass";
@@ -3353,7 +3349,7 @@ export type PluralPattern =
 	| "En"
 	| "S"
 	| "Other";
-export type NounPlural = Array<PluralPattern> | ("NoPlural" | "PluralOnly");
+export type NounPlural = Array<string> | ("NoPlural" | "PluralOnly");
 export type ConjugationClass = "Strong" | "Weak" | "Mixed";
 export type ConjugationClasses = Array<ConjugationClass>;
 export type LocutionType = "Idiom" | "Collocation";

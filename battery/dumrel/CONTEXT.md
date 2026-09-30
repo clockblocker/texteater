@@ -80,10 +80,11 @@ _Avoid_: lexicalized (lexicalized `gebildet` is still Verbal), etymology
 
 **Plural Pattern**:
 how a German noun forms its plural from its singular: no ending, umlaut only,
-`-e`, umlaut + `-e`, `-er`, umlaut + `-er`, `-(e)n`, `-s`, or another way. A
-NOUN Reading's Knowledge stores every pattern its plurals attest (`Pizza`:
-`-(e)n`, `-s`), or a NoPlural or PluralOnly marker. It never splits a Lemma:
-`Mutter` 👩 `Mütter` and 🔩 `Muttern` are two Readings of one Lemma.
+`-e`, umlaut + `-e`, `-er`, umlaut + `-er`, `-(e)n`, `-s`, or another way. It
+is derived from a plural form, never stored: a NOUN Reading's Knowledge stores
+its plural forms (`Pizza`: `Pizzen`, `Pizzas`), or a NoPlural or PluralOnly
+marker. It never splits a Lemma: `Mutter` 👩 `Mütter` and 🔩 `Muttern` are two
+Readings of one Lemma.
 _Avoid_: plural class, declension class (declension covers the singular too)
 
 **Conjugation Class**:

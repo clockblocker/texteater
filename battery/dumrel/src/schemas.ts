@@ -148,15 +148,17 @@ export const participleSourceSchema = z.strictObject({
 	meaning: participleMeaningSchema,
 });
 
+/** A Plural Pattern, derived from a stored plural form, never stored itself (#657). */
 export const pluralPatternSchema = z.enum(pluralPatternValues);
 /**
- * A German noun Reading's plural (#597): every Plural Pattern its plurals
- * attest, each listed once (`Pizza`: `En`, `S`), or a marker for a noun with
- * no plural (`Milch`) or no singular (`Leute`). Homonyms that differ only in
+ * A German noun Reading's plural (#657): the nominative plural forms of its
+ * sense, each listed once (`Pizza`: `Pizzen`, `Pizzas`), or a marker for a
+ * noun with no plural (`Milch`) or no singular (`Leute`). Each form's Plural
+ * Pattern is derived by `germanPluralPattern`. Homonyms that differ only in
  * plural (`Mütter`, `Muttern`) share one Lemma and differ here, per Reading.
  */
 export const nounPluralSchema = z.union([
-	z.array(pluralPatternSchema).min(1),
+	nonEmptyStringsSchema,
 	z.enum(pluralMarkerValues),
 ]);
 
@@ -256,7 +258,7 @@ export const readingKnowledgeSchema = z.strictObject({
 	semanticRelations: semanticRelationsSchema.optional(),
 	valency: valencyFrameSchema.optional(),
 	participleSource: participleSourceSchema.optional(),
-	pluralPattern: nounPluralSchema.optional(),
+	plural: nounPluralSchema.optional(),
 	conjugationClass: conjugationClassesSchema.optional(),
 	locutionType: locutionTypeSchema.optional(),
 	sayingType: sayingTypeSchema.optional(),
@@ -334,12 +336,12 @@ export const knowledgeChangeSchema = z.union([
 	}),
 	z.strictObject({
 		kind: setKinds,
-		aspect: z.literal("pluralPattern"),
+		aspect: z.literal("plural"),
 		value: nounPluralSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Retract"),
-		aspect: z.literal("pluralPattern"),
+		aspect: z.literal("plural"),
 	}),
 	z.strictObject({
 		kind: setKinds,

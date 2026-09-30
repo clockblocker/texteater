@@ -72,3 +72,17 @@ class, as for plurals.
   `germanConjugationClass` followed in
   [#656](https://github.com/clockblocker/texteater/issues/656); producing and
   attesting the class waits for the Dumgen rewrite.
+
+Amended on 2026-09-30 ([#657](https://github.com/clockblocker/texteater/issues/657)):
+a German NOUN Reading stores the plural forms of its sense, not their patterns.
+The aspect is `plural`: its nominative plural forms, each listed once
+(`Pizza`: `Pizzen`, `Pizzas`), or the explicit NoPlural or PluralOnly marker.
+Code derives each form's Plural Pattern from the Canonical Form with
+`germanPluralPattern`, so the form is the one source of truth. A pattern
+can't give its form back: `En` covers `Muttern`, `Frauen`, `Lehrerinnen` and
+`Pizzen`, an umlaut pattern doesn't say which vowel changes, and `Other`
+(`Visa`) has no form at all. An attested plural Contributes its form instead
+of its pattern, under the same case and marker rules. Forms are never
+rebuilt from pattern labels, and never pooled across a Lemma's Readings:
+`Mutter` 👩 stores `Mütter` and 🔩 stores `Muttern`. How the Note shows the
+plural is [#726](https://github.com/clockblocker/texteater/issues/726).

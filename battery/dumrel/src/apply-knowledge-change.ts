@@ -6,7 +6,6 @@ import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 import type {
 	ConjugationClasses,
 	KnowledgeChange,
-	NounPlural,
 	ReadingKnowledge,
 	SemanticRelations,
 	ValencyComplement,
@@ -14,7 +13,7 @@ import type {
 	ValencySlot,
 } from "./types.js";
 import { parseChangeShape } from "./validation.js";
-import { conjugationClassValues, pluralPatternValues } from "./vocabulary.js";
+import { conjugationClassValues } from "./vocabulary.js";
 
 /**
  * Applies one source-aware change atomically. Contribute adds absent atomic
@@ -23,8 +22,9 @@ import { conjugationClassValues, pluralPatternValues } from "./vocabulary.js";
  * including retractions. The Valency Frame: Contribute appends the Slots whose
  * complement the frame lacks, Correct replaces the frame, and Retract removes
  * the frame or, given a complement, that one Slot. A Participle Source,
- * Locution Type, Saying Type and Formula Role are atomic like a definition. A noun's plural: Contribute adds the Plural
- * Patterns it lacks, and a NoPlural or PluralOnly marker is atomic. A verb's
+ * Locution Type, Saying Type and Formula Role are atomic like a definition.
+ * A noun's plural: Contribute adds the plural forms it lacks, and a NoPlural
+ * or PluralOnly marker is atomic. A verb's
  * conjugation classes: Contribute adds the classes it lacks. Failure returns
  * ParsingError without a partial value.
  */
@@ -67,7 +67,7 @@ function apply<R extends Dumling.Reading>(
 		case "valency":
 			applyValency(knowledge, canonical);
 			return;
-		case "pluralPattern":
+		case "plural":
 			return applyPlural(knowledge, canonical);
 		case "conjugationClass":
 			applyConjugation(knowledge, canonical);
@@ -130,20 +130,20 @@ function applyValency<R extends Dumling.Reading>(
 }
 
 /**
- * Plural Patterns accumulate: `Pizzen` then `Pizzas` store `En`, `S`, always
- * in vocabulary order. A marker never merges with patterns; replacing one with
- * the other takes Correct.
+ * Plural forms accumulate in the order they arrive: `Pizzen` then `Pizzas`
+ * store both. A marker never merges with forms; replacing one with the other
+ * takes Correct.
  */
 function applyPlural<R extends Dumling.Reading>(
 	knowledge: ReadingKnowledge<R>,
-	change: Extract<KnowledgeChange, { aspect: "pluralPattern" }>,
+	change: Extract<KnowledgeChange, { aspect: "plural" }>,
 ): ParsingError | undefined {
 	if (change.kind === "Retract") {
-		delete knowledge.pluralPattern;
+		delete knowledge.plural;
 		return;
 	}
 	const existing =
-		change.kind === "Contribute" ? knowledge.pluralPattern : undefined;
+		change.kind === "Contribute" ? knowledge.plural : undefined;
 	if (
 		existing !== undefined &&
 		(typeof existing === "string" || typeof change.value === "string") &&
@@ -153,23 +153,19 @@ function applyPlural<R extends Dumling.Reading>(
 			["change", "value"],
 			"Contribute conflicts with the existing plural; use Correct to replace it",
 		);
-	if (typeof change.value === "string") {
-		knowledge.pluralPattern = change.value;
-		return;
-	}
-	const patterns = new Set([
-		...(Array.isArray(existing) ? existing : []),
-		...change.value,
-	]);
-	knowledge.pluralPattern = pluralPatternValues.filter((pattern) =>
-		patterns.has(pattern),
-	) as NounPlural;
+	knowledge.plural =
+		typeof change.value === "string"
+			? change.value
+			: unique([
+					...(Array.isArray(existing) ? existing : []),
+					...change.value,
+				]);
 }
 
 /**
- * Conjugation classes accumulate like Plural Patterns: `sandte` then
- * `sendete` store `Weak`, `Mixed`, always in vocabulary order. Correct
- * replaces the set.
+ * Conjugation classes accumulate like plural forms, but always in vocabulary
+ * order: `sandte` then `sendete` store `Weak`, `Mixed`. Correct replaces the
+ * set.
  */
 function applyConjugation<R extends Dumling.Reading>(
 	knowledge: ReadingKnowledge<R>,

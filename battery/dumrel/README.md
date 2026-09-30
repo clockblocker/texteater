@@ -46,10 +46,10 @@ form comes from and whether the Reading's meaning is a sense of it
 from the verb's Lemma for Verbal Readings, so a verb lists its participial
 adjectives without storing them.
 
-`pluralPattern` records how a German NOUN Reading forms its plural: the Plural
-Patterns its plurals attest, or `NoPlural` or `PluralOnly`. `Contribute` adds
-the patterns it lacks, and a marker is atomic. `germanPluralPattern` derives a
-pattern from a singular and a plural (`Mutter`, `Muttern` → `En`).
+`plural` records a German NOUN Reading's plural forms (`Pizzen`, `Pizzas`),
+or `NoPlural` or `PluralOnly`. `Contribute` adds the forms it lacks, and a
+marker is atomic. `germanPluralPattern` derives a form's Plural Pattern from
+the singular (`Mutter`, `Muttern` → `En`); patterns are never stored.
 
 `conjugationClass` records how a German VERB Reading forms its Präteritum: the
 Strong, Weak and Mixed classes its Präteritum forms attest. `Contribute` adds

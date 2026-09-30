@@ -12,8 +12,8 @@ const select = (
 const framed = { valency: null } as const;
 /** An adjectival participle names its source verb: `gekocht` from `kochen` (ADR 0036). */
 const participial = { ...framed, participleSource: null } as const;
-/** A noun records how it forms its plural: `Mutter` 👩 `Mütter`, 🔩 `Muttern` (#597). */
-const nominal = { ...framed, pluralPattern: null } as const;
+/** A noun records its plural forms: `Mutter` 👩 `Mütter`, 🔩 `Muttern` (#657). */
+const nominal = { ...framed, plural: null } as const;
 /** A verb records how it conjugates: `wiegen` ⚖️ `wog`, `wiegte` for rocking (ADR 0038). */
 const verbal = { ...framed, conjugationClass: null } as const;
 
@@ -28,7 +28,7 @@ function request(
 		KnowledgeRequestMask,
 		| "valency"
 		| "participleSource"
-		| "pluralPattern"
+		| "plural"
 		| "conjugationClass"
 		| "locutionType"
 		| "sayingType"

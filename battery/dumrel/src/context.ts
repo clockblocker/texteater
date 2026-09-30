@@ -263,8 +263,8 @@ function parseParticipleSource<R extends Dumling.Reading>(
 }
 
 /**
- * A plural belongs to a German NOUN Reading, and each Plural Pattern appears
- * once (#597).
+ * A plural belongs to a German NOUN Reading, and each plural form appears
+ * once (#657).
  */
 function parseNounPlural<R extends Dumling.Reading>(
 	source: R,
@@ -275,7 +275,7 @@ function parseNounPlural<R extends Dumling.Reading>(
 	if (language !== "de" || family !== "Lexeme" || kind !== "NOUN")
 		return issue(path, "Only a German NOUN Reading has a plural");
 	if (typeof value !== "string" && new Set(value).size !== value.length)
-		return issue(path, "A plural lists each Plural Pattern once");
+		return issue(path, "A plural lists each form once");
 	return value;
 }
 
@@ -319,10 +319,10 @@ export function contextualizeKnowledge<R extends Dumling.Reading>(
 		]);
 		if (failure) return failure;
 	}
-	if (result.pluralPattern) {
-		const plural = parseNounPlural(source, result.pluralPattern, [
+	if (result.plural) {
+		const plural = parseNounPlural(source, result.plural, [
 			"knowledge",
-			"pluralPattern",
+			"plural",
 		]);
 		if (plural instanceof ParsingError) return plural;
 	}
@@ -396,7 +396,7 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		]);
 		if (failure) return failure;
 	}
-	if (change.aspect === "pluralPattern" && change.kind !== "Retract") {
+	if (change.aspect === "plural" && change.kind !== "Retract") {
 		const plural = parseNounPlural(source, change.value, [
 			"change",
 			"value",

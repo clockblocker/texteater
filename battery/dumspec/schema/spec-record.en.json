@@ -4115,14 +4115,10 @@
 										],
 										"additionalProperties": false
 									},
-									"pluralPattern": {
+									"plural": {
 										"anyOf": [
 											{
-												"minItems": 1,
-												"type": "array",
-												"items": {
-													"$ref": "#/$defs/__schema518"
-												}
+												"$ref": "#/$defs/__schema244"
 											},
 											{
 												"type": "string",
@@ -4137,7 +4133,7 @@
 										"minItems": 1,
 										"type": "array",
 										"items": {
-											"$ref": "#/$defs/__schema519"
+											"$ref": "#/$defs/__schema518"
 										}
 									},
 									"locutionType": {
@@ -16089,20 +16085,6 @@
 			]
 		},
 		"__schema518": {
-			"type": "string",
-			"enum": [
-				"NoEnding",
-				"UmlautOnly",
-				"E",
-				"UmlautE",
-				"Er",
-				"UmlautEr",
-				"En",
-				"S",
-				"Other"
-			]
-		},
-		"__schema519": {
 			"type": "string",
 			"enum": [
 				"Strong",
