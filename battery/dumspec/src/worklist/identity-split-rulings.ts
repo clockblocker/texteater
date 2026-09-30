@@ -174,12 +174,6 @@ export const germanOpenSplits: readonly OpenSplit[] = [
 			"PART, ADV or INTJ for degree, modal, focus and answer words; must every PART name its type?",
 	},
 	{
-		forms: ["anstatt", "ohne", "sodass", "so dass"],
-		issue: 735,
-		question:
-			"Are the X dass conjunctions Locution SCONJ; does ADP keep extPos SCONJ?",
-	},
-	{
 		forms: ["ihm"],
 		issue: 743,
 		findings: ["K-A1"],
