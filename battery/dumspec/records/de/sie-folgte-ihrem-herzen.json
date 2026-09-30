@@ -20,7 +20,7 @@
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/only-der-and-ein-are-articles",
-				"hash": "7651166ee526ad94"
+				"hash": "9f44b34f99bd5145"
 			}
 		],
 		"references": []

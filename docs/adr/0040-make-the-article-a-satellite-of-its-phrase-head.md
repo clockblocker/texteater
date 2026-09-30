@@ -146,3 +146,14 @@ whether noun `definite` survives beyond the construct state.
 - Every change under `battery/dumgen/src` recompiles the relation verdict.
 
 Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md): the article is identified by `articleEvidence`, not a Member Role, and the agreement check and DET-cell derivation live in dumspec.
+
+Amended on 2026-09-30: the `der-` part of `derselbe` and `derjenige` belongs
+to the word, not an article
+([#618](https://github.com/clockblocker/texteater/issues/618)). Both are DETs
+written with their article inside (`demselben`, `desselben`), so the article
+rule above never splits them, and their noun gets no article from them. A
+fused piece counts the same way: in *am selben Morgen*, `am` is still `a`
+(`an`) and `m` (`dem`), but `m` is the `dem-` of `demselben`, so `[m, selben]`
+attests DET `derselbe` with Full coverage and `Morgen` has no Article member.
+DET Attestations carry no article evidence, so the Fused piece creates no
+article identity inside `derselbe`.

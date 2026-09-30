@@ -115,7 +115,8 @@ for (const [stem, ipa, definition, en, ru] of [
 	);
 
 // Both parts decline: article + weak ending, including plural denjenigen/denselben.
-// selbe/selben remain after a fused article (am selben, ins selbe): Partial coverage.
+// After a fused piece (am selben, ins selbe), selbe/selben spell the rest of the
+// cell: derselbe owns the piece too, with Full coverage (#618).
 for (const [tail, ipa, definition, en, ru] of [
 	[
 		"jenig",

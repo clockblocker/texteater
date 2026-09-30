@@ -1,16 +1,10 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Am selben Morgen fiel erneut der Strom aus.",
+	"sentence": "An demselben Morgen fiel erneut der Strom aus.",
 	"segments": [
 		{
 			"kind": "ResolvableText",
-			"text": "A",
-			"surface": "an"
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "m",
-			"surface": "dem"
+			"text": "An"
 		},
 		{
 			"kind": "Whitespace",
@@ -18,7 +12,7 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "selben"
+			"text": "demselben"
 		},
 		{
 			"kind": "Whitespace",
@@ -85,13 +79,7 @@
 				"hash": "9f44b34f99bd5145"
 			}
 		],
-		"references": [
-			{
-				"title": "clockblocker/texteater#503",
-				"url": "https://github.com/clockblocker/texteater/issues/503",
-				"supports": "Target 0, selben"
-			}
-		]
+		"references": []
 	},
 	"targets": [
 		{
@@ -104,28 +92,14 @@
 				"emojiDescription": "📅"
 			},
 			"notes": {
-				"rationale": "Am splits into A (an) and m (dem): A is the ADP an, whose complement took the dative."
+				"rationale": "An is the ADP an, whose complement took the dative."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
 					{
-						"attested": "A",
-						"orthography": "Fused",
-						"fusion": {
-							"spelling": "Am",
-							"components": [
-								{
-									"span": "A",
-									"surface": "an"
-								},
-								{
-									"span": "m",
-									"surface": "dem"
-								}
-							]
-						},
-						"component": 0
+						"attested": "An",
+						"orthography": "Standard"
 					}
 				],
 				"realizationCoverage": "Full",
@@ -166,7 +140,7 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [1, 3],
+			"memberSegmentIndices": [2],
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
@@ -175,34 +149,13 @@
 				"emojiDescription": "👉"
 			},
 			"notes": {
-				"rationale": "am selben is an demselben: the m stands for the dem- of demselben, which is part of the word, not an article (ADR 0040, amended on #618). derselbe owns both pieces with Full coverage. selber is the invariant emphatic and never declines (ticket 503).",
-				"knownMistakes": [
-					"Giving m to Morgen as its article and attesting derselbe over [selben] with Partial coverage."
-				]
+				"rationale": "demselben is one word, the DET derselbe: its dem- is part of the word, not an article. The control for am selben Morgen, which attests the same Surface over [m, selben] (#618)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
 					{
-						"attested": "m",
-						"orthography": "Fused",
-						"fusion": {
-							"spelling": "Am",
-							"components": [
-								{
-									"span": "A",
-									"surface": "an"
-								},
-								{
-									"span": "m",
-									"surface": "dem"
-								}
-							]
-						},
-						"component": 1
-					},
-					{
-						"attested": "selben",
+						"attested": "demselben",
 						"orthography": "Standard"
 					}
 				],
@@ -247,7 +200,7 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [5],
+			"memberSegmentIndices": [4],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
@@ -256,7 +209,7 @@
 				"emojiDescription": "🌅"
 			},
 			"notes": {
-				"rationale": "Morgen gets no article from the contraction: the m belongs to derselbe, so the noun has no Article member, as in an demselben Morgen."
+				"rationale": "Morgen has no article of its own: demselben is a determiner, not an article."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

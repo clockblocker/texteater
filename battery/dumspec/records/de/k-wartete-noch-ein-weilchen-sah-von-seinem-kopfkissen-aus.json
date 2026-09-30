@@ -335,7 +335,7 @@
 			},
 			{
 				"rule": "de/only-der-and-ein-are-articles",
-				"hash": "7651166ee526ad94"
+				"hash": "9f44b34f99bd5145"
 			},
 			{
 				"rule": "de/abbreviation-is-one-segment",

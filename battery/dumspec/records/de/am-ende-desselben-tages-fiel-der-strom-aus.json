@@ -1,6 +1,6 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Am selben Morgen fiel erneut der Strom aus.",
+	"sentence": "Am Ende desselben Tages fiel der Strom aus.",
 	"segments": [
 		{
 			"kind": "ResolvableText",
@@ -18,7 +18,7 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "selben"
+			"text": "Ende"
 		},
 		{
 			"kind": "Whitespace",
@@ -26,7 +26,15 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "Morgen"
+			"text": "desselben"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Tages"
 		},
 		{
 			"kind": "Whitespace",
@@ -35,14 +43,6 @@
 		{
 			"kind": "ResolvableText",
 			"text": "fiel"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "erneut"
 		},
 		{
 			"kind": "Whitespace",
@@ -83,15 +83,13 @@
 			{
 				"rule": "de/only-der-and-ein-are-articles",
 				"hash": "9f44b34f99bd5145"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
 			}
 		],
-		"references": [
-			{
-				"title": "clockblocker/texteater#503",
-				"url": "https://github.com/clockblocker/texteater/issues/503",
-				"supports": "Target 0, selben"
-			}
-		]
+		"references": []
 	},
 	"targets": [
 		{
@@ -104,7 +102,7 @@
 				"emojiDescription": "📅"
 			},
 			"notes": {
-				"rationale": "Am splits into A (an) and m (dem): A is the ADP an, whose complement took the dative."
+				"rationale": "Am splits into A (an) and m (dem): A is the ADP an, whose complement dem Ende took the dative."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -169,16 +167,10 @@
 			"memberSegmentIndices": [1, 3],
 			"route": {
 				"family": "Lexeme",
-				"kind": "DET"
-			},
-			"reading": {
-				"emojiDescription": "👉"
+				"kind": "NOUN"
 			},
 			"notes": {
-				"rationale": "am selben is an demselben: the m stands for the dem- of demselben, which is part of the word, not an article (ADR 0040, amended on #618). derselbe owns both pieces with Full coverage. selber is the invariant emphatic and never declines (ticket 503).",
-				"knownMistakes": [
-					"Giving m to Morgen as its article and attesting derselbe over [selben] with Partial coverage."
-				]
+				"rationale": "Here m is an article: it opens the phrase dem Ende, whose Head Ende owns it. Contrast am selben Morgen, where m belongs to derselbe (#618)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -202,7 +194,60 @@
 						"component": 1
 					},
 					{
-						"attested": "selben",
+						"attested": "Ende",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Ende",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Ende",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": {
+							"gender": "Neut",
+							"hyph": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [5],
+			"route": {
+				"family": "Lexeme",
+				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "👉"
+			},
+			"notes": {
+				"rationale": "desselben is the genitive of the DET derselbe; its des- is part of the word, not an article (#618)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "desselben",
 						"orthography": "Standard"
 					}
 				],
@@ -210,12 +255,12 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "demselben",
+					"normalizedSurface": "desselben",
 					"spelling": {
 						"kind": "Canonical"
 					},
 					"inflectionalFeatures": {
-						"case": "Dat",
+						"case": "Gen",
 						"degree": null,
 						"gender": "Masc",
 						"gender[psor]": null,
@@ -247,22 +292,19 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [5],
+			"memberSegmentIndices": [7],
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": {
-				"emojiDescription": "🌅"
-			},
 			"notes": {
-				"rationale": "Morgen gets no article from the contraction: the m belongs to derselbe, so the noun has no Article member, as in an demselben Morgen."
+				"rationale": "Tages has no article of its own: desselben is a determiner, not an article."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
 					{
-						"attested": "Morgen",
+						"attested": "Tages",
 						"orthography": "Standard"
 					}
 				],
@@ -272,19 +314,19 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "Morgen",
+					"normalizedSurface": "Tages",
 					"spelling": {
 						"kind": "Canonical"
 					},
 					"inflectionalFeatures": {
-						"case": "Dat",
+						"case": "Gen",
 						"gender": null,
 						"number": "Sing"
 					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "Morgen",
+						"canonicalForm": "Tag",
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"coreFeatures": {

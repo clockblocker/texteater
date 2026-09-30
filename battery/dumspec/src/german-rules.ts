@@ -508,7 +508,7 @@ const nouns: Rule[] = [
 	{
 		id: "de/only-der-and-ein-are-articles",
 		statement:
-			"Only forms of der, die, das and ein are articles, including the article piece of a fused word (m in im) and a shortened article ('ne, 'nen). mein, dieser, kein and other determiners are DETs of their own: kein Haus gives [kein] DET and [Haus] NOUN.",
+			"Only forms of der, die, das and ein are articles, including the article piece of a fused word (m in im) and a shortened article ('ne, 'nen). mein, dieser, kein and other determiners are DETs of their own: kein Haus gives [kein] DET and [Haus] NOUN. The der- part of derselbe and derjenige belongs to the word, not an article, fused piece included: am selben Morgen gives [m, selben] DET derselbe with Full coverage, and Morgen no article.",
 		adrs: ["ADR-0035", "ADR-0040"],
 		routes: lexeme("NOUN", "DET"),
 		records: [
@@ -520,6 +520,9 @@ const nouns: Rule[] = [
 			"de/bitte-folgen-sie-ihrem-ansprechpartner",
 			"de/er-vergass-seinen-schluessel-im-buero",
 			"de/mit-keinem-wort-erwaehnte-sie-den-plan",
+			"de/am-selben-morgen-fiel-erneut-der-strom-aus",
+			"de/an-demselben-morgen-fiel-erneut-der-strom-aus",
+			"de/am-ende-desselben-tages-fiel-der-strom-aus",
 		],
 	},
 	{
