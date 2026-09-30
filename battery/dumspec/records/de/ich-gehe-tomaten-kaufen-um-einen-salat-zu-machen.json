@@ -28,7 +28,7 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [
-			{ "rule": "de/correlator-anchors", "hash": "677fbf6666284e28" },
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
 			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
 			{
 				"rule": "de/canonical-form-is-the-headword",

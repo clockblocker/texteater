@@ -25,36 +25,44 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/dass-conjunction", "hash": "a5c671021813034c" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [7, 9],
-			"route": { "family": "Locution", "kind": "SCONJ" },
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"notes": {
+				"rationale": "Adjacent so dass is Duden's other spelling of the one conjunction sodass, a Lexeme SCONJ: the Surface is a Licensed Variant with two members, as auf Grund is of aufgrund (de/dass-conjunction, #735). so and dass apart around a word would be the correlator so … dass."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Locution",
-						"kind": "SCONJ",
-						"canonicalForm": "so dass",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "so dass",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
 				"members": [
 					{ "attested": "so", "orthography": "Standard" },
 					{ "attested": "dass", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "so dass",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"canonicalForm": "sodass",
+						"coreFeatures": { "conjType": null }
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

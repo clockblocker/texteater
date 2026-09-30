@@ -21,45 +21,41 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/dass-conjunction", "hash": "a5c671021813034c" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Locution", "kind": "SCONJ" },
 			"notes": {
-				"rationale": "Fixed ADP route keeps lexical identity while clause use supplies ExtPos SCONJ."
+				"rationale": "anstatt dass is one subordinator, a Locution SCONJ over both words; the clause it opens resolves on its own. It is a Lemma apart from statt dass, related to it as a synonym (de/dass-conjunction, #735). ADP anstatt with extPos SCONJ is retired."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Anstatt", "orthography": "Standard" },
+					{ "attested": "dass", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "anstatt dass",
+					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "anstatt",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": "SCONJ",
-							"foreign": null,
-							"partType": null
-						}
+						"family": "Locution",
+						"kind": "SCONJ",
+						"canonicalForm": "anstatt dass",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "anstatt",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [
-					{ "attested": "Anstatt", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"valencyEvidence": []
+				}
 			}
 		}
 	],

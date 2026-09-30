@@ -804,7 +804,7 @@ const conjunctionsAndParticles: Rule[] = [
 	{
 		id: "de/correlator-anchors",
 		statement:
-			"A fixed correlator is one Locution made of its anchors only, never the words they connect, and its Kind is the part of speech of the whole unit, not of the clicked anchor: entweder … oder, weder … noch, sowohl … als auch and nicht nur … sondern auch are CCONJ; je … desto, je … umso and je … je are SCONJ, since the je clause is verb-final, and so are um … zu, ohne … zu, statt … zu and so … dass; einerseits … andererseits and teils … teils are ADV. je … desto, je … umso (with its pre-1996 Variant je … um so) and je … je are three Lemmas, related as synonyms.",
+			"A fixed correlator is one Locution made of its anchors only, never the words they connect, and its Kind is the part of speech of the whole unit, not of the clicked anchor: entweder … oder, weder … noch, sowohl … als auch and nicht nur … sondern auch are CCONJ; je … desto, je … umso and je … je are SCONJ, as the je clause is verb-final, and so are so … dass and the zu-infinitive conjunctions in germanConjunctionLocutions (um … zu); einerseits … andererseits and teils … teils are ADV. je … desto, je … umso (pre-1996 Variant je … um so) and je … je are three Lemmas, related as synonyms.",
 		adrs: ["ADR-0039"],
 		routes: locution("CCONJ", "SCONJ", "ADV"),
 		records: [
@@ -821,6 +821,26 @@ const conjunctionsAndParticles: Rule[] = [
 			"de/sie-trinkt-weder-tee-noch-kaffee",
 			"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen",
 			"de/der-plan-ist-einerseits-guenstig-andererseits-riskant",
+			"de/mara-telefonierte-anstatt-den-bericht-sorgfaeltig-zu",
+			"de/lina-schwieg-statt-offen-zu-widersprechen",
+			"de/er-ging-ohne-sich-zu-verabschieden",
+		],
+	},
+	{
+		id: "de/dass-conjunction",
+		statement:
+			"A preposition that joins dass into one subordinator is one Locution SCONJ over both words, and the clause it opens resolves on its own: ohne dass jemand es bemerkte gives [ohne, dass] SCONJ ohne dass. dumspec lists which ones are in germanConjunctionLocutions. statt and anstatt forms are two Lemmas, related as synonyms, here and in the zu-infinitive conjunctions. sodass is a Lexeme SCONJ, and so dass is its Licensed Variant spelling over two members; so and dass apart are the correlator so … dass (de/correlator-anchors).",
+		adrs: ["ADR-0039", "ADR-0041"],
+		routes: [...lexeme("SCONJ"), ...locution("SCONJ")],
+		records: [
+			"de/sie-ging-ohne-dass-jemand-es-bemerkte",
+			"de/anstatt-dass-er-klagte-half-er-sofort",
+			"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er",
+			"de/es-schneite-stark-sodass-die-strasse-gesperrt-wurde",
+			"de/es-schneite-stark-so-dass-die-strasse-gesperrt-wurde",
+			"de/die-tuer-klemmte-so-dass-wir-warten-mussten",
+			"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+			"de/im-alten-druck-stand-er-sprach-so-leise-dass-ihn-niemand",
 		],
 	},
 	{

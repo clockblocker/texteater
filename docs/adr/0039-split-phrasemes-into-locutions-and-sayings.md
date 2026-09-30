@@ -199,3 +199,17 @@ Amended on 2026-09-29 (#662): the apology and sympathy formula is the Lemma
 *Es tut mir leid* gives `[Es]` PRON `es` and `[tut, mir, leid]`. DWDS, which
 gives many proverbs an entry of their own, joins the reference collections a
 Reviewed Saying record may cite.
+
+Amended on 2026-09-30 ([#735](https://github.com/clockblocker/texteater/issues/735)):
+`so dass` is no Locution, so the SCONJ example in the table and the Locution
+Type example above read `ohne dass` instead. Adjacent `so dass` is Duden's
+other spelling of the Lexeme SCONJ `sodass`, a Licensed Variant with two
+members, as `auf Grund` is of `aufgrund`. Apart around a word, `so … dass`
+stays a correlator Locution. A preposition that joins `dass` into one
+subordinator (`ohne dass`, `statt dass`, `anstatt dass`) is one Locution
+SCONJ, and `statt` and `anstatt` forms are separate Lemmas, related as
+synonyms, as `je … desto` and `je … umso` are. dumspec lists this family and
+the zu-infinitive one (`um … zu`, `ohne … zu`, `statt … zu`, `anstatt … zu`),
+and its Rules cite the list instead of naming them inline. A German ADP never
+takes `extPos: SCONJ`: `anstatt dass` is not the ADP `anstatt` used as a
+subordinator, so the value leaves Dumling's German ADP schema.

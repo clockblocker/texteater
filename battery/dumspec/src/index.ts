@@ -23,6 +23,7 @@ export {
 	germanAdpositionCases,
 	germanArticleCell,
 	germanArticleSpellings,
+	germanConjunctionLocutions,
 	type ReviewedMember,
 	reflexiveDrillDown,
 	reflexivityUnit,
