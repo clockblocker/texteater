@@ -90,3 +90,18 @@ does not build still has none (*verlegen*). The Participle Meaning, `Verbal` or
 *verschieden* ↔️ 'different', *gelassen*, *bekannt*, *verwandt*, *besessen*
 'obsessed' and *spannend* are Drifted. A Drifted Reading keeps its link, shown
 as "historically the participle of", and gets no inverse.
+
+Amended on 2026-09-30: the event test covers `haben` as well as `sein`
+([#653](https://github.com/clockblocker/texteater/issues/653)). `haben` plus a
+participle is a perfect, one VERB target, only when the clause reports the
+verb's own event: *Der Laden hat heute erst um 8 geöffnet*, *Er hat plötzlich
+die Augen geschlossen*. When it reports a state, `haben` is a VERB of its own
+and the participle a Participial Adjective with its Participle Source: *Der
+Laden hat bis 20 Uhr geöffnet* is VERB `haben` plus ADJ `geöffnet` from
+`öffnen`, and *Er hat die ganze Zeit die Augen geschlossen* is VERB `haben`
+plus ADJ `geschlossen`. For both verbs the context decides, and a simple past
+that says the same is supporting evidence, not a mechanical test. *\*Der Laden
+öffnete bis 20 Uhr* is no sentence, so the stative reading has no simple past.
+A bare *Er hat die Augen geschlossen* can mean either; what segmentation
+returns for a sentence that can't decide is
+[#725](https://github.com/clockblocker/texteater/issues/725).

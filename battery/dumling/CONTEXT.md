@@ -258,9 +258,10 @@ _Avoid_: argument, valent, complement slot, Ergänzung
 A participle in a perfect (`hat gekocht`, `ist gekommen`) or a passive
 (`wurde gekocht`, `bekam geschenkt`), which joins its auxiliary in one VERB
 target. Its Canonical Form is the infinitive, and its Surface records Partizip
-I or II with no agreement. `sein` with a participle outside the perfect is the
-copula, not an auxiliary: `Die Tür ist geschlossen` holds a Participial
-Adjective.
+I or II with no agreement. `sein` or `haben` with a participle outside the
+perfect is no auxiliary: `sein` is the copula and `haben` a VERB of its own, so
+`Die Tür ist geschlossen` and `Der Laden hat bis 20 Uhr geöffnet` hold a
+Participial Adjective.
 _Avoid_: state passive, as a verbal construction
 
 **Modal Verb**:
@@ -274,15 +275,17 @@ _Avoid_: Modal auxiliary, modal AUX
 modal-passive, obligation or progressive composition, or `bekommen`, `kriegen`
 and `erhalten` serving its recipient passive. An AUX Lexeme is one such
 grammatical use with its own Reading; the same verb standing alone is a VERB
-Lexeme. `sein` before a Participial Adjective is the copula VERB.
+Lexeme. `sein` before a Participial Adjective is the copula VERB, and `haben`
+before one is the VERB `haben`.
 _Avoid_: lone auxiliary, copula AUX, per-form AUX Lemma
 
 **Participial Adjective**:
 A participle used as an adjective, which is an ADJ Lexeme whether it is
 lexicalized or not: attributive (`die gekochten Kartoffeln`), adverbial (`kam
-lachend herein`) or predicative after `sein` (`Die Tür ist geschlossen`, `Er
-ist verliebt`). Its Canonical Form is the uninflected participle (`gekocht`,
-`lachend`), and its Reading names its verb as Participle Source (Dumrel).
+lachend herein`) or predicative after `sein` or `haben` (`Die Tür ist
+geschlossen`, `Er ist verliebt`, `Der Laden hat bis 20 Uhr geöffnet`). Its
+Canonical Form is the uninflected participle (`gekocht`, `lachend`), and its
+Reading names its verb as Participle Source (Dumrel).
 _Avoid_: productive participle and lexicalized participle, as a Kind contrast
 
 **Collocation**:

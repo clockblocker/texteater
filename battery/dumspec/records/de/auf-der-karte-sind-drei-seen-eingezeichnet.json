@@ -28,7 +28,7 @@
 				"rule": "de/comparability-is-lexical",
 				"hash": "be68bba1666ed2cc"
 			},
-			{ "rule": "de/sein-perfect-or-copula", "hash": "507adc4e3e41031f" },
+			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "240b45072e01295e"

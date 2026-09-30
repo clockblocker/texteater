@@ -371,7 +371,7 @@ const participles: Rule[] = [
 	{
 		id: "de/sein-perfect-or-copula",
 		statement:
-			"sein with a participle is a perfect only when the clause reports the verb's own event, so the simple past says the same: ist abgefahren is fuhr ab. Otherwise sein is the copula and the participle an ADJ describing a state, the state passive included: Das Fenster ist geöffnet gives [ist] VERB and [geöffnet] ADJ, and Sie ist verärgert gives verärgert ADJ with no reflexive.",
+			"sein or haben with a participle is a perfect only when the clause reports the verb's own event. The context decides, and a simple past that says the same supports it: ist abgefahren is fuhr ab, hat um 8 geöffnet is öffnete um 8. Otherwise the participle is an ADJ describing a state and the verb stays apart: copular sein, the state passive included (Das Fenster ist geöffnet gives [ist] VERB and [geöffnet] ADJ; Sie ist verärgert gives verärgert ADJ with no reflexive), or the VERB haben (Der Laden hat bis 20 Uhr geöffnet gives [hat] VERB and [geöffnet] ADJ).",
 		adrs: ["ADR-0036"],
 		routes: lexeme("VERB", "ADJ"),
 		records: [
@@ -381,6 +381,10 @@ const participles: Rule[] = [
 			"de/auf-der-karte-sind-drei-seen-eingezeichnet",
 			"de/sie-ist-verheiratet",
 			"de/verbrannt-ist-alles-ganz-und-gar",
+			"de/der-laden-hat-bis-20-uhr-geoeffnet",
+			"de/der-laden-hat-heute-erst-um-8-geoeffnet",
+			"de/er-hat-die-ganze-zeit-die-augen-geschlossen",
+			"de/er-hat-ploetzlich-die-augen-geschlossen",
 		],
 	},
 	{
