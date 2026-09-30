@@ -364,7 +364,12 @@ const verbs: Rule[] = [
 			"bekommen, kriegen or erhalten with a Partizip II that adds nothing lexical is the recipient passive and joins the participle's verb: bekommt … geliefert is one VERB target. Lexical bekommen with an object (Sie bekommt ein Paket) and resultative bekommen (Sie bekommt das Glas geöffnet, she manages to open it) are the VERB, and the participle stays outside.",
 		adrs: ["ADR-0026", "ADR-0036"],
 		routes: lexeme("VERB", "AUX"),
-		records: [],
+		records: [
+			"de/sie-bekommt-das-paket-geliefert-2",
+			"de/der-preistraeger-erhielt-die-urkunde-ueberreicht",
+			"de/sie-bekommt-ein-paket",
+			"de/sie-bekommt-das-glas-endlich-geoeffnet",
+		],
 	},
 ];
 
@@ -551,7 +556,11 @@ const nouns: Rule[] = [
 			"In coordinated nouns that agree, only the closest noun owns the article: der Aufstieg und Abstieg gives [der, Aufstieg] and [Abstieg], and Abstieg records der as a shared article with Partial coverage. Closest counts Segments within that noun phrase, nested phrases aside, and a tie is Unresolved. Nearness alone never licenses sharing, and another article or a clause boundary ends it.",
 		adrs: ["ADR-0003", "ADR-0035", "ADR-0040"],
 		routes: lexeme("NOUN"),
-		records: [],
+		records: [
+			"de/der-aufstieg-und-abstieg",
+			"de/der-aufstieg-und-abstieg-und-umstieg",
+			"de/der-aufstieg-und-der-abstieg",
+		],
 	},
 	{
 		id: "de/proper-noun-article",
@@ -1182,7 +1191,12 @@ const attestations: Rule[] = [
 			"A fragment with a trailing hyphen is completed only in a two-part und or oder coordination with a full compound that shares its literal ending: in Ein- und Ausgang, Ein- is completed to Eingang, with Full coverage.",
 		adrs: ["ADR-0003"],
 		routes: lexeme("NOUN"),
-		records: [],
+		records: [
+			"de/kinder-und-jugendbuecher-sind-beliebt",
+			"de/sie-verkauft-kinder-und-jugendbuecher",
+			"de/sie-kauft-ein-kinder-oder-jugendbuch",
+			"de/auf-dem-zettel-steht-kinder",
+		],
 	},
 	{
 		id: "de/verbal-surface-is-whole",
