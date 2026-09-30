@@ -5,7 +5,9 @@ import { candidatesArm } from "./candidates.js";
 import { candidates2Arm } from "./candidates2.js";
 import { candidates4Arm } from "./candidates4.js";
 import { lunaArm } from "./luna.js";
+import { ownershipArm } from "./ownership.js";
 import { anchoredArm, pairwiseArm } from "./pairs.js";
+import { proposalsArm } from "./proposals.js";
 
 export const arms: Readonly<Record<string, Arm>> = Object.fromEntries(
 	[
@@ -14,6 +16,8 @@ export const arms: Readonly<Record<string, Arm>> = Object.fromEntries(
 		pairwiseArm,
 		anchoredArm,
 		attachArm,
+		ownershipArm,
+		proposalsArm,
 		candidatesArm,
 		candidates2Arm,
 		candidates4Arm,

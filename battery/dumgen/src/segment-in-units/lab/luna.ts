@@ -47,11 +47,13 @@ export class Luna {
 		readonly concurrency?: number;
 		readonly beforeSpend?: () => void;
 		readonly offline?: boolean;
+		readonly executor?: EvaluationExecutor;
 	}) {
 		this.#cacheDirectory = options.cacheDirectory;
 		this.#semaphore = new Semaphore(options.concurrency ?? 6);
 		this.#beforeSpend = options.beforeSpend;
 		this.#offline = options.offline ?? false;
+		this.#executor = options.executor;
 	}
 
 	async generate(args: {
@@ -63,14 +65,26 @@ export class Luna {
 		readonly calls: CallRecord[];
 		/** Reasoning effort; Dumgen's default is none. */
 		readonly effort?: string;
+		/** Explicit bounds for a new experiment; historical calls retain their defaults. */
+		readonly maxRetries?: number;
+		readonly maxOutputTokens?: number;
+		readonly timeoutMs?: number;
 	}): Promise<unknown> {
+		for (const [name, value, minimum] of [
+			["maxRetries", args.maxRetries, 0],
+			["maxOutputTokens", args.maxOutputTokens, 1],
+			["timeoutMs", args.timeoutMs, 1],
+		] as const)
+			if (value !== undefined && (!Number.isSafeInteger(value) || value < minimum))
+				throw Error(`Invalid Luna ${name}`);
 		const settings = {
 			...lunaConfiguration.settings,
 			reasoning: { effort: args.effort ?? "none" },
+			...(args.maxOutputTokens === undefined ? {} : { max_output_tokens: args.maxOutputTokens }),
 		};
 		const key = hashOf({
 			configuration:
-				args.effort === undefined || args.effort === "none"
+				(args.effort === undefined || args.effort === "none") && args.maxOutputTokens === undefined
 					? lunaConfiguration
 					: { model: lunaConfiguration.model, settings },
 			systemPrompt: args.systemPrompt,
@@ -116,6 +130,7 @@ export class Luna {
 							model: lunaConfiguration.model,
 							settings,
 						},
+						...(args.timeoutMs === undefined ? {} : { signal: AbortSignal.timeout(args.timeoutMs) }),
 					});
 					const usage = ((
 						response.metadata as { usage?: OpenAIUsage } | undefined
@@ -137,7 +152,7 @@ export class Luna {
 						/HTTP (429|5\d\d)|fetch failed|ECONNRESET|timeout/iu.test(
 							message,
 						);
-					if (!retryable || attempt >= 5) {
+					if (!retryable || attempt >= (args.maxRetries ?? 5)) {
 						args.calls.push({
 							executor: "luna",
 							stage: args.stage,

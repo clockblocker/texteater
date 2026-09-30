@@ -108,6 +108,8 @@ export type JevOptions = {
 	/** Questions per request; larger batches are split. */
 	readonly questionsPerCall?: number;
 	readonly concurrency?: number;
+	/** Transport retries; the historical lab defaults to six. Set zero for a bounded pilot. */
+	readonly maxRetries?: number;
 	/** Called before every fresh request; throw to stop spending. */
 	readonly beforeSpend?: () => void;
 	readonly executor?: TypeSafeExecutor;
@@ -201,7 +203,7 @@ export class Jev {
 				try {
 					const response = await this.#executor(
 						{ model: this.model, state: args.state, questions },
-						{ timeout: 120_000 },
+						{ timeout: 120_000, retry: { maxRetries: 0 } },
 					);
 					return {
 						model: response.model,
@@ -219,7 +221,10 @@ export class Jev {
 						status === 429 ||
 						status === 529 ||
 						status >= 500;
-					if (!retryable || attempt >= 6) {
+					if (
+						!retryable ||
+						attempt >= (this.#options.maxRetries ?? 6)
+					) {
 						args.calls.push({
 							executor: "jev",
 							stage: args.stage,
