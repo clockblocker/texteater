@@ -559,7 +559,7 @@ test("the iteration table shows each run against its parent", () => {
 	).toBe("within noise");
 });
 
-test("the lab tracks tokens only: no USD in its code or committed evidence", () => {
+test("the lab tracks tokens only: no USD in its code, committed evidence or doc", () => {
 	const filesUnder = (path: string): string[] =>
 		statSync(path).isDirectory()
 			? readdirSync(path).flatMap((name) => filesUnder(join(path, name)))
@@ -571,7 +571,11 @@ test("the lab tracks tokens only: no USD in its code or committed evidence", () 
 	].map((path) => resolve(packageRoot, path));
 	const evidence = filesUnder(
 		join(packageRoot, "evidence/segment-in-units-lab"),
-	).filter((path) => !path.endsWith(".gz"));
+	)
+		.filter((path) => !path.endsWith(".gz"))
+		.concat(
+			join(packageRoot, "docs/reference/segment-in-units-jev-lab.md"),
+		);
 	// `usd` opening a word, `Usd` inside a camelCase name, or `USD`; not `Ausdruck`.
 	const usd = /\busd|Usd|USD/u;
 	const offenders = [
