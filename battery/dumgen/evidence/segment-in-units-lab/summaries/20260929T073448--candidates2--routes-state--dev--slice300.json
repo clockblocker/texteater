@@ -1,0 +1,1036 @@
+{
+ "runId": "20260929T073448--candidates2--routes-state--dev--slice300",
+ "arm": "candidates2",
+ "options": {
+  "routes": "state"
+ },
+ "set": "dev",
+ "setHash": "90c1afa7a4df706d",
+ "setGitHead": "c7176459d38e42ca0a5ccb4c8d465195d937e083",
+ "subset": "slice300",
+ "gitHead": "38e0feb42ecc238a7fc204f3fccdeae98f85c3da",
+ "repetitions": 3,
+ "model": "jev-latest",
+ "primary": "full",
+ "policies": [
+  {
+   "policy": "sat",
+   "cases": 300,
+   "repetitions": 3,
+   "tally": {
+    "scored": 2619,
+    "match": 2095,
+    "wrongSegments": 369,
+    "wrongRoute": 155,
+    "missing": 0,
+    "stub": 27,
+    "multiScored": 741,
+    "multiSegments": 443,
+    "multiMatch": 400,
+    "singleScored": 1878,
+    "singleSegments": 1807,
+    "singleMatch": 1695,
+    "contractCases": 882,
+    "contractPass": 502,
+    "fullCases": 141,
+    "fullPass": 41,
+    "errors": 0
+   },
+   "rates": {
+    "unitAccuracy": 0.7999236349751814,
+    "segmentAccuracy": 0.8591065292096219,
+    "routeGivenSegments": 0.9311111111111111,
+    "multiSegmentAccuracy": 0.5978407557354926,
+    "multiUnitAccuracy": 0.5398110661268556,
+    "singleSegmentAccuracy": 0.9621938232161874,
+    "singleUnitAccuracy": 0.902555910543131,
+    "casePass": 0.5691609977324263,
+    "fullPass": 0.2907801418439716
+   },
+   "unitAccuracyByRepetition": [
+    0.7983963344788088,
+    0.7972508591065293,
+    0.8041237113402062
+   ],
+   "flips": 3,
+   "flipBase": 294,
+   "varyingOutputs": 47
+  },
+  {
+   "policy": "sat+idiom",
+   "cases": 300,
+   "repetitions": 3,
+   "tally": {
+    "scored": 2619,
+    "match": 2100,
+    "wrongSegments": 350,
+    "wrongRoute": 169,
+    "missing": 0,
+    "stub": 27,
+    "multiScored": 741,
+    "multiSegments": 468,
+    "multiMatch": 411,
+    "singleScored": 1878,
+    "singleSegments": 1801,
+    "singleMatch": 1689,
+    "contractCases": 882,
+    "contractPass": 521,
+    "fullCases": 141,
+    "fullPass": 41,
+    "errors": 0
+   },
+   "rates": {
+    "unitAccuracy": 0.8018327605956472,
+    "segmentAccuracy": 0.8663612065673921,
+    "routeGivenSegments": 0.9255178492728074,
+    "multiSegmentAccuracy": 0.631578947368421,
+    "multiUnitAccuracy": 0.5546558704453441,
+    "singleSegmentAccuracy": 0.9589989350372737,
+    "singleUnitAccuracy": 0.8993610223642172,
+    "casePass": 0.590702947845805,
+    "fullPass": 0.2907801418439716
+   },
+   "unitAccuracyByRepetition": [
+    0.8018327605956472,
+    0.7983963344788088,
+    0.8052691867124857
+   ],
+   "flips": 4,
+   "flipBase": 294,
+   "varyingOutputs": 52
+  },
+  {
+   "policy": "sat+idiom+expr",
+   "cases": 300,
+   "repetitions": 3,
+   "tally": {
+    "scored": 2619,
+    "match": 2141,
+    "wrongSegments": 303,
+    "wrongRoute": 175,
+    "missing": 0,
+    "stub": 27,
+    "multiScored": 741,
+    "multiSegments": 543,
+    "multiMatch": 480,
+    "singleScored": 1878,
+    "singleSegments": 1773,
+    "singleMatch": 1661,
+    "contractCases": 882,
+    "contractPass": 581,
+    "fullCases": 141,
+    "fullPass": 41,
+    "errors": 0
+   },
+   "rates": {
+    "unitAccuracy": 0.817487590683467,
+    "segmentAccuracy": 0.8843069873997709,
+    "routeGivenSegments": 0.9244386873920553,
+    "multiSegmentAccuracy": 0.7327935222672065,
+    "multiUnitAccuracy": 0.6477732793522267,
+    "singleSegmentAccuracy": 0.9440894568690096,
+    "singleUnitAccuracy": 0.8844515441959532,
+    "casePass": 0.6587301587301587,
+    "fullPass": 0.2907801418439716
+   },
+   "unitAccuracyByRepetition": [
+    0.8178694158075601,
+    0.8132875143184422,
+    0.8213058419243986
+   ],
+   "flips": 4,
+   "flipBase": 294,
+   "varyingOutputs": 48
+  },
+  {
+   "policy": "full",
+   "cases": 300,
+   "repetitions": 3,
+   "tally": {
+    "scored": 2619,
+    "match": 2134,
+    "wrongSegments": 310,
+    "wrongRoute": 175,
+    "missing": 0,
+    "stub": 27,
+    "multiScored": 741,
+    "multiSegments": 536,
+    "multiMatch": 473,
+    "singleScored": 1878,
+    "singleSegments": 1773,
+    "singleMatch": 1661,
+    "contractCases": 882,
+    "contractPass": 574,
+    "fullCases": 141,
+    "fullPass": 41,
+    "errors": 0
+   },
+   "rates": {
+    "unitAccuracy": 0.8148148148148148,
+    "segmentAccuracy": 0.8816342115311188,
+    "routeGivenSegments": 0.924209614551754,
+    "multiSegmentAccuracy": 0.7233468286099866,
+    "multiUnitAccuracy": 0.6383265856950068,
+    "singleSegmentAccuracy": 0.9440894568690096,
+    "singleUnitAccuracy": 0.8844515441959532,
+    "casePass": 0.6507936507936508,
+    "fullPass": 0.2907801418439716
+   },
+   "unitAccuracyByRepetition": [
+    0.8155784650630011,
+    0.8098510882016037,
+    0.8190148911798396
+   ],
+   "flips": 5,
+   "flipBase": 294,
+   "varyingOutputs": 47
+  },
+  {
+   "policy": "full-noabsorb",
+   "cases": 300,
+   "repetitions": 3,
+   "tally": {
+    "scored": 2619,
+    "match": 2131,
+    "wrongSegments": 316,
+    "wrongRoute": 172,
+    "missing": 0,
+    "stub": 27,
+    "multiScored": 741,
+    "multiSegments": 530,
+    "multiMatch": 470,
+    "singleScored": 1878,
+    "singleSegments": 1773,
+    "singleMatch": 1661,
+    "contractCases": 882,
+    "contractPass": 571,
+    "fullCases": 141,
+    "fullPass": 41,
+    "errors": 0
+   },
+   "rates": {
+    "unitAccuracy": 0.8136693394425353,
+    "segmentAccuracy": 0.8793432607865598,
+    "routeGivenSegments": 0.9253148067737733,
+    "multiSegmentAccuracy": 0.7152496626180836,
+    "multiUnitAccuracy": 0.6342780026990553,
+    "singleSegmentAccuracy": 0.9440894568690096,
+    "singleUnitAccuracy": 0.8844515441959532,
+    "casePass": 0.6473922902494331,
+    "fullPass": 0.2907801418439716
+   },
+   "unitAccuracyByRepetition": [
+    0.8144329896907216,
+    0.8087056128293242,
+    0.8178694158075601
+   ],
+   "flips": 5,
+   "flipBase": 294,
+   "varyingOutputs": 47
+  },
+  {
+   "policy": "full@0.7",
+   "cases": 300,
+   "repetitions": 3,
+   "tally": {
+    "scored": 2619,
+    "match": 2170,
+    "wrongSegments": 281,
+    "wrongRoute": 168,
+    "missing": 0,
+    "stub": 27,
+    "multiScored": 741,
+    "multiSegments": 549,
+    "multiMatch": 493,
+    "singleScored": 1878,
+    "singleSegments": 1789,
+    "singleMatch": 1677,
+    "contractCases": 882,
+    "contractPass": 587,
+    "fullCases": 141,
+    "fullPass": 41,
+    "errors": 0
+   },
+   "rates": {
+    "unitAccuracy": 0.8285605192821688,
+    "segmentAccuracy": 0.8927071401298206,
+    "routeGivenSegments": 0.9281437125748503,
+    "multiSegmentAccuracy": 0.7408906882591093,
+    "multiUnitAccuracy": 0.6653171390013495,
+    "singleSegmentAccuracy": 0.9526091586794462,
+    "singleUnitAccuracy": 0.8929712460063898,
+    "casePass": 0.6655328798185941,
+    "fullPass": 0.2907801418439716
+   },
+   "unitAccuracyByRepetition": [
+    0.8258877434135166,
+    0.8281786941580757,
+    0.8316151202749141
+   ],
+   "flips": 4,
+   "flipBase": 294,
+   "varyingOutputs": 47
+  },
+  {
+   "policy": "full@0.3",
+   "cases": 300,
+   "repetitions": 3,
+   "tally": {
+    "scored": 2619,
+    "match": 2137,
+    "wrongSegments": 310,
+    "wrongRoute": 172,
+    "missing": 0,
+    "stub": 27,
+    "multiScored": 741,
+    "multiSegments": 539,
+    "multiMatch": 476,
+    "singleScored": 1878,
+    "singleSegments": 1770,
+    "singleMatch": 1661,
+    "contractCases": 882,
+    "contractPass": 577,
+    "fullCases": 141,
+    "fullPass": 41,
+    "errors": 0
+   },
+   "rates": {
+    "unitAccuracy": 0.8159602901870943,
+    "segmentAccuracy": 0.8816342115311188,
+    "routeGivenSegments": 0.9255088783022953,
+    "multiSegmentAccuracy": 0.7273954116059379,
+    "multiUnitAccuracy": 0.6423751686909581,
+    "singleSegmentAccuracy": 0.9424920127795527,
+    "singleUnitAccuracy": 0.8844515441959532,
+    "casePass": 0.6541950113378685,
+    "fullPass": 0.2907801418439716
+   },
+   "unitAccuracyByRepetition": [
+    0.8155784650630011,
+    0.8132875143184422,
+    0.8190148911798396
+   ],
+   "flips": 6,
+   "flipBase": 294,
+   "varyingOutputs": 47
+  }
+ ],
+ "cost": {
+  "jevInputTokensPerSentence": 8821.866666666667,
+  "usdPerSentence": 0.00037051840000000005,
+  "jevCallsPerSentence": 2.3022222222222224,
+  "jevQuestionsPerSentence": 29.595555555555556,
+  "lunaCallsPerSentence": 0,
+  "lunaInputTokensPerSentence": 0,
+  "lunaOutputTokensPerSentence": 0,
+  "latencyP50": 614.2910419999971,
+  "latencyP95": 975.5260419999977,
+  "errors": 0
+ },
+ "breakdowns": {
+  "route": {
+   "Lexeme/NOUN": {
+    "scored": 357,
+    "segments": 319,
+    "match": 318
+   },
+   "Lexeme/VERB": {
+    "scored": 477,
+    "segments": 392,
+    "match": 392
+   },
+   "Lexeme/PRON": {
+    "scored": 408,
+    "segments": 395,
+    "match": 378
+   },
+   "Locution/ADP": {
+    "scored": 18,
+    "segments": 9,
+    "match": 0
+   },
+   "Lexeme/ADV": {
+    "scored": 228,
+    "segments": 225,
+    "match": 210
+   },
+   "Lexeme/ADJ": {
+    "scored": 264,
+    "segments": 251,
+    "match": 187
+   },
+   "Locution/INTJ": {
+    "scored": 39,
+    "segments": 27,
+    "match": 24
+   },
+   "Lexeme/CCONJ": {
+    "scored": 105,
+    "segments": 105,
+    "match": 99
+   },
+   "Locution/VERB": {
+    "scored": 69,
+    "segments": 45,
+    "match": 28
+   },
+   "Locution/SCONJ": {
+    "scored": 24,
+    "segments": 18,
+    "match": 12
+   },
+   "Lexeme/PART": {
+    "scored": 69,
+    "segments": 69,
+    "match": 49
+   },
+   "Lexeme/ADP": {
+    "scored": 123,
+    "segments": 107,
+    "match": 105
+   },
+   "Lexeme/DET": {
+    "scored": 93,
+    "segments": 87,
+    "match": 87
+   },
+   "Locution/NOUN": {
+    "scored": 3,
+    "segments": 0,
+    "match": 0
+   },
+   "Lexeme/SCONJ": {
+    "scored": 63,
+    "segments": 63,
+    "match": 60
+   },
+   "Lexeme/PROPN": {
+    "scored": 84,
+    "segments": 75,
+    "match": 75
+   },
+   "Locution/ADV": {
+    "scored": 39,
+    "segments": 21,
+    "match": 12
+   },
+   "Lexeme/NUM": {
+    "scored": 18,
+    "segments": 18,
+    "match": 15
+   },
+   "Lexeme/INTJ": {
+    "scored": 30,
+    "segments": 30,
+    "match": 30
+   },
+   "Locution/NUM": {
+    "scored": 6,
+    "segments": 0,
+    "match": 0
+   },
+   "Saying/Saying": {
+    "scored": 69,
+    "segments": 23,
+    "match": 23
+   },
+   "Locution/CCONJ": {
+    "scored": 12,
+    "segments": 12,
+    "match": 12
+   },
+   "Lexeme/SYM": {
+    "scored": 21,
+    "segments": 18,
+    "match": 18
+   }
+  },
+  "shape": {
+   "contiguous": {
+    "scored": 462,
+    "segments": 337,
+    "match": 302
+   },
+   "discontinuous": {
+    "scored": 279,
+    "segments": 199,
+    "match": 171
+   },
+   "one piece": {
+    "scored": 1878,
+    "segments": 1773,
+    "match": 1661
+   }
+  },
+  "rule": {
+   "de/adjective-stays-adj": {
+    "scored": 885,
+    "segments": 814,
+    "match": 747
+   },
+   "de/bracket-particle-or-circumposition": {
+    "scored": 324,
+    "segments": 292,
+    "match": 273
+   },
+   "de/comparability-is-lexical": {
+    "scored": 1662,
+    "segments": 1490,
+    "match": 1405
+   },
+   "de/fixed-member-test": {
+    "scored": 417,
+    "segments": 361,
+    "match": 329
+   },
+   "de/noun-owns-its-article": {
+    "scored": 1479,
+    "segments": 1337,
+    "match": 1268
+   },
+   "de/verb-owns-its-scattered-members": {
+    "scored": 933,
+    "segments": 807,
+    "match": 779
+   },
+   "de/routine-formula-is-intj": {
+    "scored": 24,
+    "segments": 21,
+    "match": 21
+   },
+   "de/largest-fixed-unit": {
+    "scored": 555,
+    "segments": 494,
+    "match": 473
+   },
+   "de/locutions-and-sayings-are-made-of-lexemes": {
+    "scored": 111,
+    "segments": 86,
+    "match": 83
+   },
+   "de/pron-or-det-by-use": {
+    "scored": 714,
+    "segments": 628,
+    "match": 594
+   },
+   "de/canonical-form-is-the-headword": {
+    "scored": 465,
+    "segments": 438,
+    "match": 412
+   },
+   "de/correlator-anchors": {
+    "scored": 135,
+    "segments": 111,
+    "match": 89
+   },
+   "de/fixed-members-only": {
+    "scored": 225,
+    "segments": 197,
+    "match": 183
+   },
+   "de/member-orthography": {
+    "scored": 258,
+    "segments": 244,
+    "match": 224
+   },
+   "de/pronominal-adverb-stands-alone": {
+    "scored": 243,
+    "segments": 198,
+    "match": 188
+   },
+   "de/verb-core-features": {
+    "scored": 384,
+    "segments": 348,
+    "match": 335
+   },
+   "de/attributive-adjective-stands-alone": {
+    "scored": 846,
+    "segments": 753,
+    "match": 722
+   },
+   "de/idiom": {
+    "scored": 174,
+    "segments": 149,
+    "match": 137
+   },
+   "de/modal-is-a-verb": {
+    "scored": 840,
+    "segments": 785,
+    "match": 738
+   },
+   "de/only-der-and-ein-are-articles": {
+    "scored": 858,
+    "segments": 767,
+    "match": 733
+   },
+   "de/participial-adjective": {
+    "scored": 732,
+    "segments": 659,
+    "match": 619
+   },
+   "de/copula-stays-apart": {
+    "scored": 594,
+    "segments": 552,
+    "match": 518
+   },
+   "de/core-features-are-identity": {
+    "scored": 342,
+    "segments": 302,
+    "match": 284
+   },
+   "de/fused-word-pieces": {
+    "scored": 522,
+    "segments": 469,
+    "match": 429
+   },
+   "de/auxiliary-joins-the-verb-it-serves": {
+    "scored": 489,
+    "segments": 431,
+    "match": 413
+   },
+   "de/expletive-es-joins-its-verb": {
+    "scored": 471,
+    "segments": 405,
+    "match": 395
+   },
+   "de/nicht-is-part": {
+    "scored": 453,
+    "segments": 415,
+    "match": 399
+   },
+   "de/title-before-a-name": {
+    "scored": 132,
+    "segments": 122,
+    "match": 115
+   },
+   "de/variant-and-historical-status": {
+    "scored": 594,
+    "segments": 541,
+    "match": 509
+   },
+   "de/verbal-participle": {
+    "scored": 465,
+    "segments": 421,
+    "match": 409
+   },
+   "de/verbal-surface-is-whole": {
+    "scored": 483,
+    "segments": 433,
+    "match": 418
+   },
+   "de/funktionsverbgefuege-are-collocations": {
+    "scored": 204,
+    "segments": 167,
+    "match": 155
+   },
+   "de/governed-preposition-joins-its-governor": {
+    "scored": 552,
+    "segments": 474,
+    "match": 452
+   },
+   "de/modification-attests-partially": {
+    "scored": 81,
+    "segments": 47,
+    "match": 47
+   },
+   "de/proper-noun-article": {
+    "scored": 285,
+    "segments": 239,
+    "match": 236
+   },
+   "de/relative-w-adverb-fills-a-slot": {
+    "scored": 249,
+    "segments": 200,
+    "match": 186
+   },
+   "de/sein-perfect-or-copula": {
+    "scored": 117,
+    "segments": 96,
+    "match": 89
+   },
+   "de/partial-coverage": {
+    "scored": 96,
+    "segments": 86,
+    "match": 77
+   },
+   "de/shared-article-in-coordination": {
+    "scored": 51,
+    "segments": 45,
+    "match": 45
+   },
+   "de/empty-inflection-is-structural": {
+    "scored": 90,
+    "segments": 90,
+    "match": 84
+   },
+   "de/abbreviation-is-one-segment": {
+    "scored": 138,
+    "segments": 127,
+    "match": 121
+   },
+   "de/adjectival-noun-lemma": {
+    "scored": 48,
+    "segments": 43,
+    "match": 43
+   },
+   "de/bare-infinitive-zu": {
+    "scored": 189,
+    "segments": 166,
+    "match": 154
+   },
+   "de/foreign-unless-duden-or-german-grammar": {
+    "scored": 12,
+    "segments": 12,
+    "match": 6
+   },
+   "de/no-target": {
+    "scored": 54,
+    "segments": 35,
+    "match": 35
+   },
+   "de/interjection-counts-its-words": {
+    "scored": 18,
+    "segments": 18,
+    "match": 15
+   },
+   "de/substantivized-infinitive-is-a-noun": {
+    "scored": 162,
+    "segments": 149,
+    "match": 145
+   },
+   "(no Rule cited)": {
+    "scored": 642,
+    "segments": 539,
+    "match": 478
+   },
+   "de/saying-needs-uptake": {
+    "scored": 3,
+    "segments": 0,
+    "match": 0
+   },
+   "de/r-adverb-is-her-or-hin-shorthand": {
+    "scored": 24,
+    "segments": 24,
+    "match": 22
+   },
+   "de/possessive-after-article": {
+    "scored": 3,
+    "segments": 3,
+    "match": 0
+   },
+   "de/split-adverb-is-one-target": {
+    "scored": 9,
+    "segments": 9,
+    "match": 9
+   },
+   "de/relative-wo-place-or-time": {
+    "scored": 3,
+    "segments": 3,
+    "match": 0
+   }
+  }
+ },
+ "calibration": {
+  "routes": {
+   "bins": [
+    {
+     "from": 0,
+     "to": 0.2,
+     "count": 4,
+     "correct": 4
+    },
+    {
+     "from": 0.2,
+     "to": 0.4,
+     "count": 33,
+     "correct": 11
+    },
+    {
+     "from": 0.4,
+     "to": 0.5,
+     "count": 48,
+     "correct": 25
+    },
+    {
+     "from": 0.5,
+     "to": 0.6,
+     "count": 76,
+     "correct": 46
+    },
+    {
+     "from": 0.6,
+     "to": 0.7,
+     "count": 94,
+     "correct": 63
+    },
+    {
+     "from": 0.7,
+     "to": 0.8,
+     "count": 119,
+     "correct": 99
+    },
+    {
+     "from": 0.8,
+     "to": 0.9,
+     "count": 227,
+     "correct": 212
+    },
+    {
+     "from": 0.9,
+     "to": 0.95,
+     "count": 167,
+     "correct": 158
+    },
+    {
+     "from": 0.95,
+     "to": 1,
+     "count": 1633,
+     "correct": 1605
+    }
+   ],
+   "riskCoverage": [
+    {
+     "floor": 0,
+     "kept": 1,
+     "accuracy": 0.9258642232403166
+    },
+    {
+     "floor": 0.3,
+     "kept": 0.9962515618492295,
+     "accuracy": 0.9264214046822743
+    },
+    {
+     "floor": 0.5,
+     "kept": 0.9645980841316119,
+     "accuracy": 0.9425734024179621
+    },
+    {
+     "floor": 0.6,
+     "kept": 0.9329446064139941,
+     "accuracy": 0.9540178571428571
+    },
+    {
+     "floor": 0.7,
+     "kept": 0.8937942523948355,
+     "accuracy": 0.9664492078285182
+    },
+    {
+     "floor": 0.8,
+     "kept": 0.844231570179092,
+     "accuracy": 0.9743463246176616
+    },
+    {
+     "floor": 0.9,
+     "kept": 0.7496876301541024,
+     "accuracy": 0.9794444444444445
+    },
+    {
+     "floor": 0.95,
+     "kept": 0.6801332778009163,
+     "accuracy": 0.9828536436007348
+    }
+   ]
+  },
+  "routeShare": {
+   "bins": [
+    {
+     "from": 0,
+     "to": 0.2,
+     "count": 0,
+     "correct": 0
+    },
+    {
+     "from": 0.2,
+     "to": 0.4,
+     "count": 11,
+     "correct": 2
+    },
+    {
+     "from": 0.4,
+     "to": 0.5,
+     "count": 37,
+     "correct": 16
+    },
+    {
+     "from": 0.5,
+     "to": 0.6,
+     "count": 75,
+     "correct": 39
+    },
+    {
+     "from": 0.6,
+     "to": 0.7,
+     "count": 88,
+     "correct": 59
+    },
+    {
+     "from": 0.7,
+     "to": 0.8,
+     "count": 110,
+     "correct": 85
+    },
+    {
+     "from": 0.8,
+     "to": 0.9,
+     "count": 224,
+     "correct": 205
+    },
+    {
+     "from": 0.9,
+     "to": 0.95,
+     "count": 144,
+     "correct": 134
+    },
+    {
+     "from": 0.95,
+     "to": 1,
+     "count": 1712,
+     "correct": 1683
+    }
+   ],
+   "riskCoverage": [
+    {
+     "floor": 0,
+     "kept": 1,
+     "accuracy": 0.9258642232403166
+    },
+    {
+     "floor": 0.3,
+     "kept": 1,
+     "accuracy": 0.9258642232403166
+    },
+    {
+     "floor": 0.5,
+     "kept": 0.9800083298625573,
+     "accuracy": 0.9371015724606885
+    },
+    {
+     "floor": 0.6,
+     "kept": 0.948771345272803,
+     "accuracy": 0.9508340649692713
+    },
+    {
+     "floor": 0.7,
+     "kept": 0.9121199500208247,
+     "accuracy": 0.9621004566210045
+    },
+    {
+     "floor": 0.8,
+     "kept": 0.8663057059558518,
+     "accuracy": 0.9721153846153846
+    },
+    {
+     "floor": 0.9,
+     "kept": 0.7730112453144523,
+     "accuracy": 0.9789870689655172
+    },
+    {
+     "floor": 0.95,
+     "kept": 0.7130362349021241,
+     "accuracy": 0.9830607476635514
+    }
+   ]
+  },
+  "links": {
+   "bins": [
+    {
+     "from": 0,
+     "to": 0.2,
+     "count": 718,
+     "correct": 13
+    },
+    {
+     "from": 0.2,
+     "to": 0.4,
+     "count": 336,
+     "correct": 108
+    },
+    {
+     "from": 0.4,
+     "to": 0.5,
+     "count": 191,
+     "correct": 99
+    },
+    {
+     "from": 0.5,
+     "to": 0.6,
+     "count": 189,
+     "correct": 116
+    },
+    {
+     "from": 0.6,
+     "to": 0.7,
+     "count": 208,
+     "correct": 167
+    },
+    {
+     "from": 0.7,
+     "to": 0.8,
+     "count": 234,
+     "correct": 199
+    },
+    {
+     "from": 0.8,
+     "to": 0.9,
+     "count": 203,
+     "correct": 197
+    },
+    {
+     "from": 0.9,
+     "to": 0.95,
+     "count": 46,
+     "correct": 46
+    },
+    {
+     "from": 0.95,
+     "to": 1,
+     "count": 27,
+     "correct": 27
+    }
+   ],
+   "riskCoverage": [
+    {
+     "floor": 0,
+     "kept": 1,
+     "accuracy": 0.4516728624535316
+    },
+    {
+     "floor": 0.3,
+     "kept": 0.5887546468401487,
+     "accuracy": 0.7198105761641673
+    },
+    {
+     "floor": 0.5,
+     "kept": 0.42146840148698883,
+     "accuracy": 0.8291069459757442
+    },
+    {
+     "floor": 0.6,
+     "kept": 0.3336431226765799,
+     "accuracy": 0.8857938718662952
+    },
+    {
+     "floor": 0.7,
+     "kept": 0.23698884758364314,
+     "accuracy": 0.9196078431372549
+    },
+    {
+     "floor": 0.8,
+     "kept": 0.12825278810408922,
+     "accuracy": 0.9782608695652174
+    },
+    {
+     "floor": 0.9,
+     "kept": 0.03392193308550186,
+     "accuracy": 1
+    },
+    {
+     "floor": 0.95,
+     "kept": 0.01254646840148699,
+     "accuracy": 1
+    }
+   ]
+  },
+  "linkCount": 2152
+ }
+}
