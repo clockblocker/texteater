@@ -153,7 +153,6 @@ const readingKnowledgeValidator = v.object({
 		}),
 	),
 	morphologicalTree: v.optional(v.any()),
-	lexicalBreakdown: v.optional(v.array(unitShadowProjectionValidator)),
 	valency: v.optional(v.array(valencySlotValidator)),
 	participleSource: v.optional(
 		v.object({

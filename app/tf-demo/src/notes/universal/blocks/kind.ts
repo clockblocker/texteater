@@ -9,7 +9,7 @@ export const noteBlockKindSchema = z.enum([
 	"PersonalAnnotation",
 	"Relations",
 	"MorphologicalTree",
-	"LexicalBreakdown",
+	"Fusion",
 	"Routes",
 ]);
 

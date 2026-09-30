@@ -44,7 +44,6 @@ export function generationRequestFor(
 	}
 	const {
 		morphologicalTree: _morphologicalTree,
-		lexicalBreakdown: _lexicalBreakdown,
 		participleSource: _participleSource,
 		...request
 	} = applicable;

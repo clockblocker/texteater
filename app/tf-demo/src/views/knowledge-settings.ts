@@ -6,7 +6,6 @@ export type KnowledgeSettingPath =
 	| "definition"
 	| `translations.${Dumrel.TranslationLanguage}`
 	| "morphologicalTree"
-	| "lexicalBreakdown"
 	| `semanticRelations.${Dumrel.DirectSemanticRelation}`;
 
 export function withKnowledgeSetting(
@@ -26,7 +25,7 @@ export function withKnowledgeSetting(
 			translations: { ...settings.translations, [language]: enabled },
 		};
 	}
-	if (path === "morphologicalTree" || path === "lexicalBreakdown") {
+	if (path === "morphologicalTree") {
 		return { ...settings, [path]: enabled };
 	}
 	const relation = path.slice(
@@ -64,8 +63,6 @@ export function knowledgeSettingValue(
 			return settings.definition;
 		case "morphologicalTree":
 			return settings.morphologicalTree;
-		case "lexicalBreakdown":
-			return settings.lexicalBreakdown;
 	}
 	throw new Error(`Unsupported Knowledge setting: ${path}`);
 }

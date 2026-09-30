@@ -77,7 +77,6 @@ const KNOWLEDGE_SETTING_LABELS: ReadonlyArray<{
 	{ path: "translations.en", label: "English translations" },
 	{ path: "translations.ru", label: "Russian translations" },
 	{ path: "morphologicalTree", label: "Morphological tree" },
-	{ path: "lexicalBreakdown", label: "Lexical breakdown" },
 	...directSemanticRelationValues.map((relation) => ({
 		path: `semanticRelations.${relation}` as const,
 		label: relationLabel(relation),

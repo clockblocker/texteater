@@ -44,6 +44,20 @@ const verbShadow = {
 	kind: "VERB",
 } as const;
 
+function shadowTree(...unitShadows: readonly object[]) {
+	return {
+		morphologicalTree: {
+			root: {
+				nodeKind: "structure",
+				children: unitShadows.map((unitShadow) => ({
+					nodeKind: "unitShadow",
+					unitShadow,
+				})),
+			},
+		},
+	};
+}
+
 function structuralKnowledge() {
 	return {
 		morphologicalTree: {
@@ -60,7 +74,6 @@ function structuralKnowledge() {
 				],
 			},
 		},
-		lexicalBreakdown: [nounShadow, nounShadow],
 	};
 }
 
@@ -192,15 +205,13 @@ describe("Shadow descriptor and storage seam", () => {
 		).toEqual([
 			"morphologicalTree:root.children[0]",
 			"morphologicalTree:root.children[1].children[0]",
-			"lexicalBreakdown:[0]",
-			"lexicalBreakdown:[1]",
 		]);
 	});
 
 	test("atomically replaces structural projection, keeps dormant rows, and reuses the same Shadow ID", async () => {
 		const t = createTestConvex();
 		await replaceKnowledge(t, "reading-source", structuralKnowledge());
-		expect(await rows(t, "structuralShadowReferences")).toHaveLength(4);
+		expect(await rows(t, "structuralShadowReferences")).toHaveLength(2);
 		const shadows = await rows(t, "shadows");
 		expect(shadows).toHaveLength(1);
 		const shadowId = shadows[0]?._id;
@@ -219,9 +230,11 @@ describe("Shadow descriptor and storage seam", () => {
 			shadowId,
 		]);
 
-		await replaceKnowledge(t, "reading-source", {
-			lexicalBreakdown: [nounShadow, verbShadow],
-		});
+		await replaceKnowledge(
+			t,
+			"reading-source",
+			shadowTree(nounShadow, verbShadow),
+		);
 		expect(
 			(await rows(t, "shadows")).find(
 				({ shadowKey }) => shadowKey === shadowKeyFor(nounShadow),
@@ -231,9 +244,11 @@ describe("Shadow descriptor and storage seam", () => {
 
 	test("rejects a malformed replacement before changing authoritative or projected state", async () => {
 		const t = createTestConvex();
-		await replaceKnowledge(t, "reading-source", {
-			lexicalBreakdown: [nounShadow, verbShadow],
-		});
+		await replaceKnowledge(
+			t,
+			"reading-source",
+			shadowTree(nounShadow, verbShadow),
+		);
 		const snapshot = async () => ({
 			accumulatedKnowledge: await rows(t, "accumulatedKnowledge"),
 			definitionTexts: await rows(t, "definitionTexts"),
@@ -249,9 +264,11 @@ describe("Shadow descriptor and storage seam", () => {
 		// before validation would commit and show up in the snapshot.
 		const failure = await t.run(async (ctx) => {
 			try {
-				await replaceAccumulatedKnowledge(ctx, "reading-source", {
-					lexicalBreakdown: [nounShadow, { family: "Lexeme" }],
-				});
+				await replaceAccumulatedKnowledge(
+					ctx,
+					"reading-source",
+					shadowTree(nounShadow, { family: "Lexeme" }),
+				);
 				return null;
 			} catch (error) {
 				return error instanceof Error ? error.message : String(error);
@@ -333,7 +350,7 @@ describe("Shadow backfills and presentation", () => {
 			malformed: 0,
 		});
 		expect(await rows(t, "shadows")).toHaveLength(1);
-		expect(await rows(t, "structuralShadowReferences")).toHaveLength(4);
+		expect(await rows(t, "structuralShadowReferences")).toHaveLength(2);
 
 		expect(await backfillPending()).toMatchObject({ changed: 0 });
 		expect(await backfillStructural()).toMatchObject({ changed: 0 });
@@ -361,9 +378,11 @@ describe("Shadow backfills and presentation", () => {
 
 	test("groups exact pending and structural references by referring Unit Reading Note and hides dormancy", async () => {
 		const t = createTestConvex();
-		await replaceKnowledge(t, "reading-source", {
-			lexicalBreakdown: [nounShadow, nounShadow],
-		});
+		await replaceKnowledge(
+			t,
+			"reading-source",
+			shadowTree(nounShadow, nounShadow),
+		);
 		const shadowId = await t.run(async (ctx) => {
 			await insertSourceReading(ctx);
 			const record = pendingRecord();
@@ -580,12 +599,16 @@ describe("Shadow backfills and presentation", () => {
 describe("Shadow reset lifecycle", () => {
 	async function lifecycleDb() {
 		const t = createTestConvex();
-		await replaceKnowledge(t, "reading-doomed", {
-			lexicalBreakdown: [nounShadow, nounShadow],
-		});
-		await replaceKnowledge(t, "reading-survivor", {
-			lexicalBreakdown: [nounShadow, nounShadow],
-		});
+		await replaceKnowledge(
+			t,
+			"reading-doomed",
+			shadowTree(nounShadow, nounShadow),
+		);
+		await replaceKnowledge(
+			t,
+			"reading-survivor",
+			shadowTree(nounShadow, nounShadow),
+		);
 		const { activeShadowId, dormantShadowId } = await t.run(async (ctx) => {
 			const pending = pendingRecord("reading-doomed");
 			const active = await attachPendingShadowReference(ctx, pending);

@@ -11,7 +11,6 @@ export const READING_BLOCK_KIND_VALUES = [
 	"Relations",
 	"PersonalAnnotation",
 	"MorphologicalTree",
-	"LexicalBreakdown",
 ] as const;
 
 /** @layoutdormant See {@link https://github.com/clockblocker/texteater/issues/408}. */

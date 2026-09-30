@@ -66,8 +66,8 @@ function noteFixture(): ShadowNote {
 					],
 					structuralReferences: [
 						{
-							aspect: "lexicalBreakdown",
-							path: "lexicalBreakdown[0]",
+							aspect: "morphologicalTree",
+							path: "root.children[0]",
 						},
 					],
 				},

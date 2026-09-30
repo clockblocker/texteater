@@ -129,7 +129,6 @@ export const segmentResolutionStateValidator = v.union(
  */
 export const structuralShadowAspectValidator = v.union(
 	v.literal("morphologicalTree"),
-	v.literal("lexicalBreakdown"),
 	v.literal("participleSource"),
 );
 export type StructuralShadowAspect = Infer<
@@ -457,7 +456,6 @@ export const knowledgeSettingsValidator = v.object({
 	definition: v.boolean(),
 	translations: v.object({ en: v.boolean(), ru: v.boolean() }),
 	morphologicalTree: v.boolean(),
-	lexicalBreakdown: v.boolean(),
 	semanticRelations: v.object({
 		synonym: v.boolean(),
 		nearSynonym: v.boolean(),

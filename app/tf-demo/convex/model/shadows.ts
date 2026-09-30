@@ -201,27 +201,6 @@ export function collectStructuralShadowReferences(
 		);
 		visitMorphologicalNode(tree.root, "root", references);
 	}
-	if (knowledge.lexicalBreakdown !== undefined) {
-		if (!Array.isArray(knowledge.lexicalBreakdown)) {
-			throw new Error("Lexical Breakdown must be an array.");
-		}
-		for (const [
-			index,
-			descriptor,
-		] of knowledge.lexicalBreakdown.entries()) {
-			const normalized = normalizeShadowDescriptor(descriptor);
-			if (normalized.family !== "Lexeme") {
-				throw new Error(
-					`Lexical Breakdown Unit Shadow at [${index}] must be a Lexeme.`,
-				);
-			}
-			references.push({
-				descriptor: normalized,
-				aspect: "lexicalBreakdown",
-				path: `[${index}]`,
-			});
-		}
-	}
 	const verb = participleSourceVerb(knowledge);
 	if (verb !== undefined) {
 		const descriptor = normalizeShadowDescriptor({

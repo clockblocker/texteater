@@ -90,7 +90,7 @@ const LEMMA_ROUTE = {
 const ATTESTATION_ROUTE = {
 	Header: renderDefaultAttestationHeader,
 	SourceContexts: renderDefaultAttestationSource,
-	LexicalBreakdown: renderDefaultAttestationFusion,
+	Fusion: renderDefaultAttestationFusion,
 	Routes: renderDefaultAttestationRoutes,
 };
 const SHADOW_ROUTE = {
