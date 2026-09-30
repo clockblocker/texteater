@@ -4560,8 +4560,7 @@
 						{
 							"type": "string",
 							"enum": [
-								"ADV",
-								"SCONJ"
+								"ADV"
 							]
 						},
 						{

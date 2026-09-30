@@ -369,7 +369,7 @@ export interface UnitMap {
 								coreFeatures: {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
+									extPos: "ADV" | null;
 									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
@@ -391,7 +391,7 @@ export interface UnitMap {
 			coreFeatures: {
 				abbr: "Yes" | null;
 				adpType: ("Circ" | "Post" | "Prep") | null;
-				extPos: ("ADV" | "SCONJ") | null;
+				extPos: "ADV" | null;
 				foreign: "Yes" | null;
 				partType: "Vbp" | null;
 			};
@@ -408,7 +408,7 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					adpType: ("Circ" | "Post" | "Prep") | null;
-					extPos: ("ADV" | "SCONJ") | null;
+					extPos: "ADV" | null;
 					foreign: "Yes" | null;
 					partType: "Vbp" | null;
 				};
@@ -446,7 +446,7 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					adpType: ("Circ" | "Post" | "Prep") | null;
-					extPos: ("ADV" | "SCONJ") | null;
+					extPos: "ADV" | null;
 					foreign: "Yes" | null;
 					partType: "Vbp" | null;
 				};
@@ -467,7 +467,7 @@ export interface UnitMap {
 					coreFeatures: {
 						abbr: "Yes" | null;
 						adpType: ("Circ" | "Post" | "Prep") | null;
-						extPos: ("ADV" | "SCONJ") | null;
+						extPos: "ADV" | null;
 						foreign: "Yes" | null;
 						partType: "Vbp" | null;
 					};
@@ -554,7 +554,7 @@ export interface UnitMap {
 								coreFeatures: {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
+									extPos: "ADV" | null;
 									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
@@ -1103,7 +1103,7 @@ export interface UnitMap {
 								coreFeatures: {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
+									extPos: "ADV" | null;
 									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
@@ -1867,7 +1867,7 @@ export interface UnitMap {
 								coreFeatures: {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
+									extPos: "ADV" | null;
 									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
@@ -3623,7 +3623,7 @@ export interface UnitMap {
 								coreFeatures: {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
+									extPos: "ADV" | null;
 									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
@@ -3796,7 +3796,7 @@ export interface UnitMap {
 								coreFeatures: {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
+									extPos: "ADV" | null;
 									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
@@ -4641,7 +4641,7 @@ export interface UnitMap {
 								coreFeatures: {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
+									extPos: "ADV" | null;
 									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
@@ -5446,7 +5446,7 @@ export interface UnitMap {
 								coreFeatures: {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: ("ADV" | "SCONJ") | null;
+									extPos: "ADV" | null;
 									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
