@@ -90,6 +90,22 @@ export const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
 		"geworden",
 		"worden",
 	],
+	// Causative lassen (ADR 0026, Rule de/causative-lassen).
+	lassen: [
+		"lassen",
+		"lasse",
+		"lässt",
+		"lasst",
+		"ließ",
+		"ließest",
+		"ließt",
+		"ließen",
+		"lassest",
+		"lasset",
+		"ließe",
+		"ließet",
+		"lass",
+	],
 	// Recipient passive: three verbs share one AUX Lemma and Reading (ADR 0026).
 	bekommen: [
 		"bekommen",

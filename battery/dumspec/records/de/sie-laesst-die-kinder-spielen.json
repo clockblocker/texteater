@@ -1,22 +1,16 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Ich will mir morgen die Haare schneiden lassen.",
+	"sentence": "Sie lässt die Kinder spielen.",
 	"segments": [
-		{ "kind": "ResolvableText", "text": "Ich" },
+		{ "kind": "ResolvableText", "text": "Sie" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "will" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "mir" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "morgen" },
+		{ "kind": "ResolvableText", "text": "lässt" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "die" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Haare" },
+		{ "kind": "ResolvableText", "text": "Kinder" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "schneiden" },
-		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "lassen" },
+		{ "kind": "ResolvableText", "text": "spielen" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -24,9 +18,7 @@
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0026"],
 		"rules": [
-			{ "rule": "de/causative-lassen", "hash": "88a0940ea4f8c1b6" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
+			{ "rule": "de/causative-lassen", "hash": "88a0940ea4f8c1b6" }
 		],
 		"references": []
 	},
@@ -35,23 +27,23 @@
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "will is the modal VERB wollen, and the infinitive it governs is a target of its own (de/modal-is-a-verb)."
+				"rationale": "Permissive lassen, 'let': die Kinder are the ones who play, so lassen is the VERB lassen and spielen a target of its own (de/causative-lassen, #721)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "will", "orthography": "Standard" }],
+				"members": [{ "attested": "lässt", "orthography": "Standard" }],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "will",
+					"normalizedSurface": "lässt",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
-						"person": "1",
+						"person": "3",
 						"tense": "Pres",
 						"verbForm": "Fin",
 						"expletive": null,
@@ -63,13 +55,13 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "wollen",
+						"canonicalForm": "lassen",
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
 							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"verbType": null
 						}
 					},
 					"surfaceFeatures": null
@@ -77,16 +69,15 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [12, 14],
+			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Nobody who does the cutting is named, so causative lassen joins schneiden, an infinitive with voice Cau under the modal (de/causative-lassen, #721)."
+				"rationale": "The infinitive under VERB lassen is a target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "schneiden", "orthography": "Standard" },
-					{ "attested": "lassen", "orthography": "Standard" }
+					{ "attested": "spielen", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
@@ -94,7 +85,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "schneiden lassen",
+					"normalizedSurface": "spielen",
 					"spelling": { "kind": "Canonical" },
 					"inflectionalFeatures": {
 						"mood": null,
@@ -105,13 +96,13 @@
 						"expletive": null,
 						"perfect": null,
 						"future": null,
-						"voice": "Cau",
+						"voice": null,
 						"passive": null
 					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "schneiden",
+						"canonicalForm": "spielen",
 						"family": "Lexeme",
 						"kind": "VERB",
 						"coreFeatures": {

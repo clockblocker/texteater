@@ -51,3 +51,18 @@ Amended on 2026-09-25 by [ADR 0036](./0036-make-adjectival-german-participles-ad
 `sein` with a participle outside the perfect is the copula VERB and the
 participle an ADJ, so the Zustandspassiv AUX Reading is retired and `passive`
 has no `State` value.
+
+Amended on 2026-09-30 ([#721](https://github.com/clockblocker/texteater/issues/721),
+[#722](https://github.com/clockblocker/texteater/issues/722)): causative
+`lassen` joins AUX the way the recipient passive did. When the clause names
+nobody who does the action and has no `sich` with `lassen`, `lassen` joins the
+infinitive's target as one authored grammar Reading, and German `voice` gains
+`Cau` beside `Pass`, with `passive` null: *Ich lasse mir die Haare schneiden*
+gives `[lasse, schneiden]` VERB `schneiden` with `voice: Cau`, and *Sie hat den
+Zaun reparieren lassen* gives `[hat, reparieren, lassen]`. Everything else is
+the VERB `lassen` with the infinitive as a target of its own: a doer in any
+form (*lässt ihn reparieren*, *lässt es von ihm reparieren*), permissive
+*lässt die Kinder spielen*, *sich lassen* and *lass uns*. The line above that
+names `sich lassen` among the VERBs with a meaning of their own stands.
+Lexicalized combinations (*liegen lassen*, *fallen lassen*) are
+[#723](https://github.com/clockblocker/texteater/issues/723).

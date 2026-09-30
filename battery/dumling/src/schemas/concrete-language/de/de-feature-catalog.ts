@@ -46,7 +46,10 @@ const DeTenseSchema = UNIVERSAL_FEATURE_SCHEMA.tense.extract([
 	Tense.Past,
 	Tense.Pres,
 ]);
-const DeVoiceSchema = UNIVERSAL_FEATURE_SCHEMA.voice.extract([Voice.Pass]);
+const DeVoiceSchema = UNIVERSAL_FEATURE_SCHEMA.voice.extract([
+	Voice.Pass,
+	Voice.Cau,
+]);
 const DeFiniteFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
 	VerbForm.Fin,
 ]);
@@ -173,8 +176,15 @@ export const DeVerbalInflectionalFeatureBagSchema = z.union(
 		z.strictObject({
 			...form,
 			...composition,
-			voice: DE_FEATURE_SCHEMA.voice,
+			voice: DE_FEATURE_SCHEMA.voice.extract([Voice.Pass]),
 			passive: UNIVERSAL_FEATURE_SCHEMA.passive,
+		}),
+		// Causative lassen (ADR 0026): a voice with no passive subtype.
+		z.strictObject({
+			...form,
+			...composition,
+			voice: DE_FEATURE_SCHEMA.voice.extract([Voice.Cau]),
+			passive: z.null(),
 		}),
 	]),
 );

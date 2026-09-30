@@ -2,6 +2,7 @@ import { reviewedDeterminers } from "./determiner-paradigms.js";
 import { member as aux6 } from "./members/lexeme/auxiliary/bekommen-rezipientenpassiv.js";
 import { member as aux8 } from "./members/lexeme/auxiliary/haben-obligation.js";
 import { member as aux2 } from "./members/lexeme/auxiliary/haben-perfekt.js";
+import { member as aux10 } from "./members/lexeme/auxiliary/lassen-kausativ.js";
 import { member as aux7 } from "./members/lexeme/auxiliary/sein-modalpassiv.js";
 import { member as aux0 } from "./members/lexeme/auxiliary/sein-perfekt.js";
 import { member as aux9 } from "./members/lexeme/auxiliary/sein-verlaufsform.js";
@@ -174,6 +175,7 @@ export const authoredMembers = [
 	aux7,
 	aux8,
 	aux9,
+	aux10,
 	m57,
 	m58,
 	m59,

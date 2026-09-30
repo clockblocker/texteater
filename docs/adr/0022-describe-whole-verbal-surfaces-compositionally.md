@@ -43,3 +43,7 @@ and object `es` remain outside this composition rule. Word order does not change
 these boundaries. Person and number remain verbal features; existential meaning
 belongs to a Reading. The derived pronoun uses an exact authored nonreferential
 Reading of the existing nominative `es` Lemma.
+
+Amended on 2026-09-30 ([#722](https://github.com/clockblocker/texteater/issues/722)):
+`voice` names the causative (`Cau`, causative `lassen`) as well as the passive,
+on the whole verbal unit, and stays null on the auxiliary's own Surface.

@@ -326,6 +326,22 @@ const verbs: Rule[] = [
 		],
 	},
 	{
+		id: "de/causative-lassen",
+		statement:
+			"lassen with an infinitive joins that infinitive's target as its causative, voice Cau on the Surface, only when the clause names nobody who does the action and has no sich with lassen: Ich lasse mir die Haare schneiden gives [lasse, schneiden] VERB schneiden, and Sie hat den Zaun reparieren lassen gives [hat, reparieren, lassen]. Everything else is VERB lassen with the infinitive as a target of its own: a doer in any form (lässt ihn reparieren, lässt es von ihm reparieren), permissive let (lässt die Kinder spielen), sich lassen (lässt sich öffnen) and lass uns.",
+		adrs: ["ADR-0026", "ADR-0022"],
+		routes: lexeme("VERB", "AUX"),
+		records: [
+			"de/ich-lasse-mir-morgen-die-haare-schneiden",
+			"de/ich-will-mir-morgen-die-haare-schneiden-lassen",
+			"de/sie-hat-den-zaun-reparieren-lassen",
+			"de/ich-lasse-ihn-das-auto-reparieren",
+			"de/ich-lasse-das-auto-von-ihm-reparieren",
+			"de/sie-laesst-die-kinder-spielen",
+			"de/lass-uns-gehen",
+		],
+	},
+	{
 		id: "de/copula-stays-apart",
 		statement:
 			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ. The one exception is a copula expression that fixes a reflexive, which neither copula nor predicate takes alone (sich schlüssig werden, sich im Klaren sein): copula, reflexive and predicate form one Locution VERB, not a Collocation.",
@@ -1171,7 +1187,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/verbal-surface-is-whole",
 		statement:
-			"A verbal Surface describes its whole target. Perfect, future and passive belong to the whole verbal unit and stay empty on an auxiliary's own Surface, and tense describes the finite verb only.",
+			"A verbal Surface describes its whole target. Perfect, future, passive and causative belong to the whole verbal unit and stay empty on an auxiliary's own Surface, and tense describes the finite verb only.",
 		adrs: ["ADR-0022", "ADR-0026"],
 		routes: lexeme("VERB", "AUX"),
 		records: [

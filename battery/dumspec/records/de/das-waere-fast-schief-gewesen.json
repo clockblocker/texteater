@@ -26,7 +26,7 @@
 			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
 			{
 				"rule": "de/verbal-surface-is-whole",
-				"hash": "974139977fd040ca"
+				"hash": "ab79bbe68ce12d4c"
 			},
 			{ "rule": "de/copula-stays-apart", "hash": "6ca524a6390a5c0e" }
 		],

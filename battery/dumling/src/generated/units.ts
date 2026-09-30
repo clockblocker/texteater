@@ -794,6 +794,18 @@ export interface UnitMap {
 								passive: "Process" | "Recipient";
 						  }
 						| {
+								mood: ("Ind" | "Sub") | null;
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: ("Past" | "Pres") | null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
+						  }
+						| {
 								mood: "Imp";
 								number: ("Plur" | "Sing") | null;
 								person: ("1" | "2" | "3") | null;
@@ -816,6 +828,18 @@ export interface UnitMap {
 								future: "Yes" | null;
 								voice: "Pass";
 								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
 						  }
 						| {
 								mood: null;
@@ -846,6 +870,18 @@ export interface UnitMap {
 								number: null;
 								person: null;
 								tense: null;
+								verbForm: "Inf";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
 								expletive: "Subject" | null;
@@ -866,6 +902,19 @@ export interface UnitMap {
 								future: "Yes" | null;
 								voice: "Pass";
 								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
 						  }
 				  )
 				| null;
@@ -943,6 +992,18 @@ export interface UnitMap {
 									passive: "Process" | "Recipient";
 							  }
 							| {
+									mood: ("Ind" | "Sub") | null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: ("Past" | "Pres") | null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
+							  }
+							| {
 									mood: "Imp";
 									number: ("Plur" | "Sing") | null;
 									person: ("1" | "2" | "3") | null;
@@ -965,6 +1026,18 @@ export interface UnitMap {
 									future: "Yes" | null;
 									voice: "Pass";
 									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
 							  }
 							| {
 									mood: null;
@@ -995,6 +1068,18 @@ export interface UnitMap {
 									number: null;
 									person: null;
 									tense: null;
+									verbForm: "Inf";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
 									expletive: "Subject" | null;
@@ -1015,6 +1100,19 @@ export interface UnitMap {
 									future: "Yes" | null;
 									voice: "Pass";
 									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
 							  }
 					  )
 					| null;
@@ -3306,6 +3404,18 @@ export interface UnitMap {
 								passive: "Process" | "Recipient";
 						  }
 						| {
+								mood: ("Ind" | "Sub") | null;
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: ("Past" | "Pres") | null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
+						  }
+						| {
 								mood: "Imp";
 								number: ("Plur" | "Sing") | null;
 								person: ("1" | "2" | "3") | null;
@@ -3328,6 +3438,18 @@ export interface UnitMap {
 								future: "Yes" | null;
 								voice: "Pass";
 								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
 						  }
 						| {
 								mood: null;
@@ -3358,6 +3480,18 @@ export interface UnitMap {
 								number: null;
 								person: null;
 								tense: null;
+								verbForm: "Inf";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
 								expletive: "Subject" | null;
@@ -3378,6 +3512,19 @@ export interface UnitMap {
 								future: "Yes" | null;
 								voice: "Pass";
 								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
 						  }
 				  )
 				| null;
@@ -3463,6 +3610,18 @@ export interface UnitMap {
 									passive: "Process" | "Recipient";
 							  }
 							| {
+									mood: ("Ind" | "Sub") | null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: ("Past" | "Pres") | null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
+							  }
+							| {
 									mood: "Imp";
 									number: ("Plur" | "Sing") | null;
 									person: ("1" | "2" | "3") | null;
@@ -3485,6 +3644,18 @@ export interface UnitMap {
 									future: "Yes" | null;
 									voice: "Pass";
 									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
 							  }
 							| {
 									mood: null;
@@ -3515,6 +3686,18 @@ export interface UnitMap {
 									number: null;
 									person: null;
 									tense: null;
+									verbForm: "Inf";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
 									expletive: "Subject" | null;
@@ -3535,6 +3718,19 @@ export interface UnitMap {
 									future: "Yes" | null;
 									voice: "Pass";
 									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
 							  }
 					  )
 					| null;
@@ -5137,6 +5333,18 @@ export interface UnitMap {
 								passive: "Process" | "Recipient";
 						  }
 						| {
+								mood: ("Ind" | "Sub") | null;
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: ("Past" | "Pres") | null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
+						  }
+						| {
 								mood: "Imp";
 								number: ("Plur" | "Sing") | null;
 								person: ("1" | "2" | "3") | null;
@@ -5159,6 +5367,18 @@ export interface UnitMap {
 								future: "Yes" | null;
 								voice: "Pass";
 								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: "Imp";
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								tense: null;
+								verbForm: "Fin";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
 						  }
 						| {
 								mood: null;
@@ -5189,6 +5409,18 @@ export interface UnitMap {
 								number: null;
 								person: null;
 								tense: null;
+								verbForm: "Inf";
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
 								verbForm: "Part";
 								participleForm: ("Present" | "Past") | null;
 								expletive: "Subject" | null;
@@ -5209,6 +5441,19 @@ export interface UnitMap {
 								future: "Yes" | null;
 								voice: "Pass";
 								passive: "Process" | "Recipient";
+						  }
+						| {
+								mood: null;
+								number: null;
+								person: null;
+								tense: null;
+								verbForm: "Part";
+								participleForm: ("Present" | "Past") | null;
+								expletive: "Subject" | null;
+								perfect: "Yes" | null;
+								future: "Yes" | null;
+								voice: "Cau";
+								passive: null;
 						  }
 				  )
 				| null;
@@ -5286,6 +5531,18 @@ export interface UnitMap {
 									passive: "Process" | "Recipient";
 							  }
 							| {
+									mood: ("Ind" | "Sub") | null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: ("Past" | "Pres") | null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
+							  }
+							| {
 									mood: "Imp";
 									number: ("Plur" | "Sing") | null;
 									person: ("1" | "2" | "3") | null;
@@ -5308,6 +5565,18 @@ export interface UnitMap {
 									future: "Yes" | null;
 									voice: "Pass";
 									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: "Imp";
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									tense: null;
+									verbForm: "Fin";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
 							  }
 							| {
 									mood: null;
@@ -5338,6 +5607,18 @@ export interface UnitMap {
 									number: null;
 									person: null;
 									tense: null;
+									verbForm: "Inf";
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
 									verbForm: "Part";
 									participleForm: ("Present" | "Past") | null;
 									expletive: "Subject" | null;
@@ -5358,6 +5639,19 @@ export interface UnitMap {
 									future: "Yes" | null;
 									voice: "Pass";
 									passive: "Process" | "Recipient";
+							  }
+							| {
+									mood: null;
+									number: null;
+									person: null;
+									tense: null;
+									verbForm: "Part";
+									participleForm: ("Present" | "Past") | null;
+									expletive: "Subject" | null;
+									perfect: "Yes" | null;
+									future: "Yes" | null;
+									voice: "Cau";
+									passive: null;
 							  }
 					  )
 					| null;

@@ -7,8 +7,8 @@ import {
 } from "../../../universal/index.js";
 import { DeVerbalInflectionalFeatureBagSchema } from "../de-feature-catalog.js";
 
-// AUX is sein, haben and werden, and recipient-passive bekommen, in
-// grammatical function only. Modals are VERBs, so AUX records no verbType
+// AUX is sein, haben and werden, recipient-passive bekommen and causative
+// lassen, in grammatical function only. Modals are VERBs, so AUX records no verbType
 // (ADR 0026).
 export const DeAuxiliaryFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({}),
