@@ -85,9 +85,61 @@ export function longStatements(rules: readonly Rule[]): LongStatement[] {
 		.toSorted((a, b) => b.length - a.length);
 }
 
-/** The Rules no Spec Record shows yet. */
-export function rulesNeedingRecords(rules: readonly Rule[]): RuleId[] {
+/**
+ * A Rule allowed to show no record for now, and the issue that has to act
+ * first. `showing` lists records already checked against the statement, for
+ * the Rule to link. Remove the entry when the Rule gets its records.
+ */
+export interface RuleAwaitingRecords {
+	rule: RuleId;
+	issue: number;
+	/** The issue's finding ids, where it numbers them. */
+	findings?: readonly string[];
+	why: string;
+	showing?: readonly SpecRecordId[];
+}
+
+/** The Rules no Spec Record shows yet and no `awaiting` entry excuses. */
+export function rulesNeedingRecords(
+	rules: readonly Rule[],
+	awaiting: readonly RuleAwaitingRecords[] = [],
+): RuleId[] {
+	const excused = new Set(awaiting.map((entry) => entry.rule));
 	return rules
-		.filter((rule) => rule.records.length === 0)
+		.filter((rule) => rule.records.length === 0 && !excused.has(rule.id))
 		.map((rule) => rule.id);
+}
+
+/**
+ * Fails an `awaiting` entry that names no Rule, names a Rule that lists a
+ * record now, or names a showing record that doesn't exist.
+ */
+export function checkRulesAwaitingRecords(
+	rules: readonly Rule[],
+	awaiting: readonly RuleAwaitingRecords[],
+	recordIds: readonly SpecRecordId[],
+): RuleIssue[] {
+	const rulesById = new Map(rules.map((rule) => [rule.id, rule]));
+	const records = new Set(recordIds);
+	return awaiting.flatMap((entry) => {
+		const rule = rulesById.get(entry.rule);
+		if (!rule) return [{ rule: entry.rule, message: "No such Rule" }];
+		return [
+			...(rule.records.length > 0
+				? [
+						{
+							rule: entry.rule,
+							message:
+								"The Rule lists records now; remove its awaiting entry",
+						},
+					]
+				: []),
+			...(entry.showing ?? [])
+				.filter((record) => !records.has(record))
+				.map((record) => ({
+					rule: entry.rule,
+					message: `No Spec Record ${record}`,
+				})),
+		];
+	});
 }

@@ -9,8 +9,9 @@
  */
 import { longStatements, rulesNeedingRecords } from "../src/check-rules.js";
 import { annotationLayers, layerRank } from "../src/layers.js";
-import { loadSpecWorklist } from "../src/load.js";
+import { loadSpecRecords, loadSpecWorklist } from "../src/load.js";
 import { rules } from "../src/rules.js";
+import { rulesAwaitingRecords } from "../src/rules-awaiting-records.js";
 import { uncitedRecordsByStatus } from "../src/worklist/evidence-gaps.js";
 import {
 	germanOpenSplits,
@@ -23,7 +24,13 @@ import {
 	sortSplit,
 	splitsFamilyOrKind,
 } from "../src/worklist/identity-splits.js";
+import { germanKeptValues } from "../src/worklist/kept-values.js";
 import { readRecordFiles } from "../src/worklist/record-files.js";
+import {
+	loadSchemaValues,
+	reviewedValueKeys,
+	unkeptValues,
+} from "../src/worklist/schema-values.js";
 
 const worklist = loadSpecWorklist();
 const perSource = new Map<string, number>();
@@ -124,4 +131,43 @@ console.log(
 );
 const needing = rulesNeedingRecords(rules);
 console.log(`${needing.length} Rules list no record:`);
-for (const rule of needing) console.log(`  ${rule}`);
+for (const rule of needing) {
+	const awaiting = rulesAwaitingRecords.find((entry) => entry.rule === rule);
+	console.log(
+		`  ${rule}${
+			awaiting
+				? ` (awaits #${awaiting.issue}${
+						awaiting.findings
+							? ` ${awaiting.findings.join(", ")}`
+							: ""
+					}: ${awaiting.why}${
+						awaiting.showing
+							? ` Showing: ${awaiting.showing.join(", ")}`
+							: ""
+					})`
+				: ""
+		}`,
+	);
+}
+
+const schemaValues = await loadSchemaValues("de");
+const unkept = unkeptValues(
+	schemaValues,
+	reviewedValueKeys(
+		loadSpecRecords().filter((record) => record.language === "de"),
+	),
+	germanKeptValues,
+);
+console.log(
+	`\nSchema values nothing keeps: ${unkept.length} of the ${schemaValues.length} Core and inflectional values German routes allow; no record reviewed through Attestation uses them and no keep-list entry (${germanKeptValues.length}) keeps them`,
+);
+const unkeptByRoute = Map.groupBy(unkept, (value) => value.route);
+for (const [route, values] of unkeptByRoute)
+	console.log(
+		`  ${route} (${values.length}): ${values
+			.map(
+				(value) =>
+					`${value.bag === "Core" ? "" : "infl. "}${value.feature}=${value.value}`,
+			)
+			.join(", ")}`,
+	);

@@ -1,10 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import {
 	checkRules,
+	checkRulesAwaitingRecords,
 	longStatements,
 	rulesNeedingRecords,
 } from "../src/check-rules.js";
 import { loadSpecRecords, rules } from "../src/index.js";
+import { rulesAwaitingRecords } from "../src/rules-awaiting-records.js";
 import type { Rule } from "../src/types.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
 
@@ -21,12 +23,11 @@ describe("the Rules", () => {
 		expect(checks(rules)).toEqual([]);
 	});
 
-	test("report the Rules that still need a showing record, without failing", () => {
-		const needing = rulesNeedingRecords(rules);
-		if (needing.length > 0)
-			console.info(
-				`${needing.length} of ${rules.length} Rules need a showing record:\n${needing.join("\n")}`,
-			);
+	test("each show a record, unless an entry names the issue it awaits", () => {
+		expect(rulesNeedingRecords(rules, rulesAwaitingRecords)).toEqual([]);
+		expect(
+			checkRulesAwaitingRecords(rules, rulesAwaitingRecords, recordIds),
+		).toEqual([]);
 	});
 
 	test("warn about statements past 600 characters, without failing", () => {
@@ -49,9 +50,39 @@ describe("the Rule checks", () => {
 		records: ["de/ich-bin-im-wald"],
 	};
 
-	test("name a Rule without records as needing one", () => {
+	test("name a Rule without records as needing one, unless an entry excuses it", () => {
 		const waiting = { ...rule, id: "de/waiting", records: [] };
 		expect(rulesNeedingRecords([rule, waiting])).toEqual(["de/waiting"]);
+		expect(
+			rulesNeedingRecords(
+				[rule, waiting],
+				[{ rule: "de/waiting", issue: 1, why: "Blocked" }],
+			),
+		).toEqual([]);
+	});
+
+	test("fail an awaiting entry for no Rule, a Rule with records or a missing record", () => {
+		const waiting = { ...rule, id: "de/waiting", records: [] };
+		expect(
+			checkRulesAwaitingRecords(
+				[rule, waiting],
+				[
+					{ rule: "de/gone", issue: 1, why: "Blocked" },
+					{ rule: rule.id, issue: 1, why: "Blocked" },
+					{
+						rule: "de/waiting",
+						issue: 1,
+						why: "Linking",
+						showing: ["de/ich-bin-im-wald", "de/no-such-record"],
+					},
+				],
+				["de/ich-bin-im-wald"],
+			).map((issue) => `${issue.rule}: ${issue.message}`),
+		).toEqual([
+			"de/gone: No such Rule",
+			"de/noun-owns-its-article: The Rule lists records now; remove its awaiting entry",
+			"de/waiting: No Spec Record de/no-such-record",
+		]);
 	});
 
 	test("warn about a long statement unless it gives a reason", () => {
