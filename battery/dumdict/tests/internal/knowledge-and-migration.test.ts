@@ -58,12 +58,6 @@ describe("Reading Knowledge Changes", () => {
 				},
 			},
 			{ kind: "Retract", aspect: "morphologicalTree" },
-			{
-				kind: "Contribute",
-				aspect: "lexicalBreakdown",
-				value: [shadow, shadow],
-			},
-			{ kind: "Retract", aspect: "lexicalBreakdown" },
 		] as const satisfies readonly Dumrel.KnowledgeChange[];
 
 		for (const existing of [undefined, {}] as const) {

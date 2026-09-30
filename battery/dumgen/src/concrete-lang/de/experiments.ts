@@ -129,10 +129,6 @@ import { corpusSource as p37 } from "./knowledge-production/draft-translations/c
 import { evaluationCaseIds as e37 } from "./knowledge-production/draft-translations/evaluation-ids.js";
 import { corpusSource as p23 } from "./knowledge-production/lexeme/corpus.js";
 import { evaluationCaseIds as e23 } from "./knowledge-production/lexeme/evaluation-ids.js";
-import { evaluationCaseIds as e30 } from "./knowledge-production/lexical-breakdown/resolution/evaluation-ids.js";
-import { promptSource as p30 } from "./knowledge-production/lexical-breakdown/resolution/prompt.js";
-import { evaluationCaseIds as e31 } from "./knowledge-production/lexical-breakdown/segmentation/evaluation-ids.js";
-import { promptSource as p31 } from "./knowledge-production/lexical-breakdown/segmentation/prompt.js";
 import { corpusSource as p24 } from "./knowledge-production/morpheme/corpus.js";
 import { evaluationCaseIds as e24 } from "./knowledge-production/morpheme/evaluation-ids.js";
 import { evaluationCaseIds as e32 } from "./knowledge-production/morphological-tree/resolution/evaluation-ids.js";
@@ -185,8 +181,6 @@ export const corpusRegistrations = [
 	{ source: p28, evaluationCaseIds: e28 },
 	{ source: p29, evaluationCaseIds: e29 },
 	{ source: p35, evaluationCaseIds: e35 },
-	{ source: p30, evaluationCaseIds: e30 },
-	{ source: p31, evaluationCaseIds: e31 },
 	{ source: p32, evaluationCaseIds: e32 },
 	{ source: p33, evaluationCaseIds: e33 },
 	{ source: p34, evaluationCaseIds: e34 },

@@ -305,7 +305,7 @@ test("Knowledge carries a supplied encounter and code-owned target language and 
 			dumgen.produceKnowledge({
 				encounter,
 				reading,
-				request: { lexicalBreakdown: null },
+				request: { locutionType: null },
 			}),
 		),
 	).toBe("InvalidInput");

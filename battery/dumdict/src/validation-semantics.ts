@@ -101,13 +101,9 @@ function knowledgeUsesLanguage(
 	)
 		return false;
 	if (!valencyUsesLanguage(knowledge.valency ?? [], language)) return false;
-	if (
-		knowledge.participleSource !== undefined &&
-		!lemmaUsesLanguage(knowledge.participleSource.verb, language)
-	)
-		return false;
-	return (knowledge.lexicalBreakdown ?? []).every(
-		(shadow) => shadow.language === language,
+	return (
+		knowledge.participleSource === undefined ||
+		lemmaUsesLanguage(knowledge.participleSource.verb, language)
 	);
 }
 
@@ -126,8 +122,6 @@ function knowledgeChangeUsesLanguage(
 			{ morphologicalTree: change.value },
 			language,
 		);
-	if (change.aspect === "lexicalBreakdown" && "value" in change)
-		return change.value.every((shadow) => shadow.language === language);
 	if (change.aspect === "valency")
 		return "value" in change
 			? valencyUsesLanguage(change.value, language)

@@ -106,9 +106,7 @@ export function listExperiments() {
 		...registrations.map(({ source }) => source.route),
 		...phaseEntries.map(({ id }) => id),
 	].map((id) => {
-		const deferred =
-			id.includes("lexical-breakdown") ||
-			id.includes("morphological-tree");
+		const deferred = id.includes("morphological-tree");
 		const definition = deferred ? getExperiment(id) : null;
 		const operation = deferred
 			? null

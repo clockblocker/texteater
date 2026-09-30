@@ -2,7 +2,6 @@ import {
 	directSemanticRelationSchema,
 	governedCaseSchema,
 	knowledgeRequestMaskSchema,
-	lexicalBreakdownSchema,
 	nounPluralSchema,
 	participleMeaningSchema,
 	valencyReferentSchema,
@@ -117,7 +116,6 @@ export const valencySlotDraftSchema = z.strictObject({
 	]),
 });
 export const knowledgeOutputSchema = z.strictObject({
-	lexicalBreakdown: lexicalBreakdownSchema.nullable().optional(),
 	transcription: z.string().min(1).nullable().optional(),
 	definition: z.string().min(1).nullable().optional(),
 	translations: z

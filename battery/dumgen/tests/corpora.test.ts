@@ -61,11 +61,6 @@ test("all development selections are disjoint and production assembly uses only 
 		demonstrationCount: 34,
 		evaluationCount: 318,
 	});
-	expect(
-		Object.keys(prompts).some((route) =>
-			route.includes("lexical-breakdown"),
-		),
-	).toBe(false);
 });
 test("canonical target corpus survives compact representation round-trips", () => {
 	for (const golden of Object.values(targetCases)) {

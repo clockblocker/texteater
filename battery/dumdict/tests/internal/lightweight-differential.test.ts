@@ -171,12 +171,6 @@ describe("lightweight Dumdict parser differential", () => {
 				},
 			},
 			{ kind: "Retract", aspect: "morphologicalTree" },
-			{
-				kind: "Contribute",
-				aspect: "lexicalBreakdown",
-				value: [shadow, shadow],
-			},
-			{ kind: "Retract", aspect: "lexicalBreakdown" },
 		] as const;
 
 		for (const input of branchInputs) {

@@ -40,8 +40,6 @@ export function knowledgeComparison(
 					);
 	for (const change of production.changes) {
 		if (change.kind !== "Contribute") continue;
-		if (change.aspect === "lexicalBreakdown")
-			result.lexicalBreakdown = change.value;
 		if (change.aspect === "definition" || change.aspect === "transcription")
 			result[change.aspect] = change.value;
 		if (change.aspect === "valency")

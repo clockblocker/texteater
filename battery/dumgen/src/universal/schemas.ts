@@ -143,7 +143,6 @@ export const knowledgeFailureSchema = z.strictObject({
 		"participleSource",
 		"pluralPattern",
 		"morphologicalTree",
-		"lexicalBreakdown",
 	]),
 	leaf: z.string().optional(),
 	candidate: z.string().optional(),

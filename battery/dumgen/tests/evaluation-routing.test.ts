@@ -15,11 +15,7 @@ const offline = {
 };
 test("every in-scope catalog route resolves to its production operation", () => {
 	for (const { id } of listExperiments()) {
-		if (
-			id.includes("lexical-breakdown") ||
-			id.includes("morphological-tree")
-		)
-			continue;
+		if (id.includes("morphological-tree")) continue;
 		const operation = operationExperiment(id, offline);
 		expect(operation.corpus.route).toBe(id.split(":")[0] ?? id);
 		expect(Object.keys(operation.corpus.cases).length).toBeGreaterThan(0);

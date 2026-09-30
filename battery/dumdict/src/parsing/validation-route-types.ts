@@ -35,14 +35,12 @@ export type InternalDumdictOwnedValidationRouteKey =
 	| "internal:knowledge-change"
 	| `internal:knowledge-change:bucket:${
 			| "definition"
-			| "lexical-breakdown"
 			| "morphological-tree"
 			| "semantic-relations"
 			| "transcription"
 			| "translations"}`
 	| `internal:knowledge-change:retract:${
 			| "definition"
-			| "lexical-breakdown"
 			| "morphological-tree"
 			| "semantic-relations"
 			| "transcription"
@@ -60,10 +58,6 @@ export type InternalDumdictValidationRouteOutputMap = {
 	"internal:knowledge-change:bucket:definition": Extract<
 		Dumrel.KnowledgeChange,
 		{ aspect: "definition"; kind: "Contribute" | "Correct" }
-	>;
-	"internal:knowledge-change:bucket:lexical-breakdown": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "lexicalBreakdown"; kind: "Contribute" | "Correct" }
 	>;
 	"internal:knowledge-change:bucket:morphological-tree": Extract<
 		Dumrel.KnowledgeChange,
@@ -84,10 +78,6 @@ export type InternalDumdictValidationRouteOutputMap = {
 	"internal:knowledge-change:retract:definition": Extract<
 		Dumrel.KnowledgeChange,
 		{ aspect: "definition"; kind: "Retract" }
-	>;
-	"internal:knowledge-change:retract:lexical-breakdown": Extract<
-		Dumrel.KnowledgeChange,
-		{ aspect: "lexicalBreakdown"; kind: "Retract" }
 	>;
 	"internal:knowledge-change:retract:morphological-tree": Extract<
 		Dumrel.KnowledgeChange,
