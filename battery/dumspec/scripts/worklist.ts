@@ -7,10 +7,23 @@
  *
  *   bun run worklist
  */
-import { longStatements } from "../src/check-rules.js";
+import { longStatements, rulesNeedingRecords } from "../src/check-rules.js";
 import { annotationLayers, layerRank } from "../src/layers.js";
 import { loadSpecWorklist } from "../src/load.js";
 import { rules } from "../src/rules.js";
+import { uncitedRecordsByStatus } from "../src/worklist/evidence-gaps.js";
+import {
+	germanOpenSplits,
+	germanSplitRulings,
+} from "../src/worklist/identity-split-rulings.js";
+import {
+	formatIdentity,
+	identitySplits,
+	type SplitSort,
+	sortSplit,
+	splitsFamilyOrKind,
+} from "../src/worklist/identity-splits.js";
+import { readRecordFiles } from "../src/worklist/record-files.js";
 
 const worklist = loadSpecWorklist();
 const perSource = new Map<string, number>();
@@ -51,3 +64,64 @@ if (long.length > 0) {
 	);
 	for (const { rule, length } of long) console.log(`${length}\t${rule}`);
 }
+
+const germanFiles = readRecordFiles("de");
+const splits = identitySplits(germanFiles).map((split) => ({
+	split,
+	sorted: sortSplit(split, germanSplitRulings, germanOpenSplits),
+}));
+const sorts: SplitSort["sort"][] = ["Decided", "Open", "Unexplained"];
+console.log(
+	`\nIdentity splits: ${splits.length} German Canonical Forms have more than one identity, ${
+		splits.filter(({ split }) => splitsFamilyOrKind(split)).length
+	} of them in Family or Kind; ${sorts
+		.map(
+			(sort) =>
+				`${sort} ${splits.filter(({ sorted }) => sorted.sort === sort).length}`,
+		)
+		.join(", ")}`,
+);
+const because = (sorted: SplitSort): string => {
+	if (sorted.sort === "Decided")
+		return [
+			...new Set(
+				sorted.rulings.flatMap((ruling) => [
+					...ruling.adrs,
+					...ruling.rules,
+				]),
+			),
+		].join(", ");
+	if (sorted.sort === "Open")
+		return `#${sorted.open.issue}${
+			sorted.open.findings ? ` ${sorted.open.findings.join(", ")}` : ""
+		}: ${sorted.open.question}`;
+	return "no ADR, Rule or open issue names it";
+};
+for (const sort of sorts) {
+	console.log(`\n${sort}:`);
+	for (const { split, sorted } of splits.filter(
+		({ sorted }) => sorted.sort === sort,
+	)) {
+		console.log(`${split.form} (${because(sorted)})`);
+		for (const { identity, uses } of split.identities) {
+			console.log(`  ${formatIdentity(identity)}`);
+			for (const use of uses)
+				console.log(
+					`    ${use.record} (${use.reviewDepth ? `reviewed through ${use.reviewDepth}` : "Draft"}; ${
+						use.rules.length > 0 ? use.rules.join(", ") : "no Rule"
+					})`,
+				);
+		}
+	}
+}
+const uncited = uncitedRecordsByStatus(germanFiles);
+console.log(
+	`\nEvidence gaps: ${uncited.reduce((sum, [, count]) => sum + count, 0)} of ${
+		germanFiles.length
+	} German records cite no Rule (${uncited
+		.map(([status, count]) => `${status} ${count}`)
+		.join(", ")})`,
+);
+const needing = rulesNeedingRecords(rules);
+console.log(`${needing.length} Rules list no record:`);
+for (const rule of needing) console.log(`  ${rule}`);
