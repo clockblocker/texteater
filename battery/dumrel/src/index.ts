@@ -26,7 +26,6 @@ export type {
 	KnowledgeRequestMask,
 	KnowledgeSelectionInput,
 	KnowledgeSettings,
-	LexicalBreakdown,
 	LocutionType,
 	MorphologicalTree,
 	MorphologicalTreeNode,

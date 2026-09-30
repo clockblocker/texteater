@@ -21,13 +21,6 @@ test("published schema composition retains the structured Knowledge types", asyn
 			backend: "typescript7",
 		}),
 	).toBe('type ReadingFamily = "Morpheme"');
-	expect(
-		await inferredType(schemas, {
-			name: "BreakdownFamily",
-			full: true,
-			backend: "typescript7",
-		}),
-	).toBe('type BreakdownFamily = "Lexeme"');
 }, 30_000);
 
 // Lexeme and Locution share one relation space (ADR 0039).
@@ -79,16 +72,6 @@ test("recursive Reading leaves can be consumed as Dumling Readings", async () =>
 			backend: "typescript7",
 		}),
 	).toBe("type MorphemeReadingCompatible = true");
-}, 30_000);
-
-test("Lexical Breakdown inference admits only Lexeme shadows", async () => {
-	expect(
-		await inferredType(consumer, {
-			name: "BreakdownFamily",
-			full: true,
-			backend: "typescript7",
-		}),
-	).toBe('type BreakdownFamily = "Lexeme"');
 }, 30_000);
 
 test("source-specific retractions have no inferred value branch", async () => {

@@ -4,7 +4,6 @@ export type KnowledgeSettings = {
 	transcription?: boolean | undefined;
 	definition?: boolean | undefined;
 	morphologicalTree?: boolean | undefined;
-	lexicalBreakdown?: boolean | undefined;
 	valency?: boolean | undefined;
 	participleSource?: boolean | undefined;
 	pluralPattern?: boolean | undefined;
@@ -34,7 +33,6 @@ export type KnowledgeRequestMask = {
 	transcription?: null | undefined;
 	definition?: null | undefined;
 	morphologicalTree?: null | undefined;
-	lexicalBreakdown?: null | undefined;
 	valency?: null | undefined;
 	participleSource?: null | undefined;
 	pluralPattern?: null | undefined;
@@ -555,11 +553,6 @@ export type LexemeUnitShadow =
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "SCONJ" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "SYM" }
 	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "VERB" };
-export type LexicalBreakdown = [
-	LexemeUnitShadow,
-	LexemeUnitShadow,
-	...Array<LexemeUnitShadow>,
-];
 export type MorphologicalTree = {
 	root: { nodeKind: "structure"; children: Array<MorphologicalTreeNode> };
 };
@@ -1906,7 +1899,6 @@ export type ReadingKnowledge = {
 		| { en?: Array<string> | undefined; ru?: Array<string> | undefined }
 		| undefined;
 	morphologicalTree?: MorphologicalTree | undefined;
-	lexicalBreakdown?: LexicalBreakdown | undefined;
 	semanticRelations?: SemanticRelations | undefined;
 	valency?: Array<ValencySlot> | undefined;
 	participleSource?: ParticipleSource | undefined;
@@ -2211,12 +2203,7 @@ export type KnowledgeChange =
 			aspect: "morphologicalTree";
 			value: MorphologicalTree;
 	  }
-	| {
-			kind: "Contribute" | "Correct";
-			aspect: "lexicalBreakdown";
-			value: LexicalBreakdown;
-	  }
-	| { kind: "Retract"; aspect: "morphologicalTree" | "lexicalBreakdown" };
+	| { kind: "Retract"; aspect: "morphologicalTree" };
 export type SemanticRelation =
 	| "synonym"
 	| "nearSynonym"

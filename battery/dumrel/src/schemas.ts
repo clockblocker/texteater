@@ -218,10 +218,6 @@ export const morphologicalTreeSchema = z.strictObject({
 		children: z.array(morphologicalTreeNodeSchema).min(1),
 	}),
 });
-export const lexicalBreakdownSchema = z.tuple(
-	[lexemeUnitShadowSchema, lexemeUnitShadowSchema],
-	lexemeUnitShadowSchema,
-);
 
 const lemmaRelationsSchema = z.strictObject({
 	targetKind: z.literal("lemma").optional(),
@@ -257,7 +253,6 @@ export const readingKnowledgeSchema = z.strictObject({
 		})
 		.optional(),
 	morphologicalTree: morphologicalTreeSchema.optional(),
-	lexicalBreakdown: lexicalBreakdownSchema.optional(),
 	semanticRelations: semanticRelationsSchema.optional(),
 	valency: valencyFrameSchema.optional(),
 	participleSource: participleSourceSchema.optional(),
@@ -270,10 +265,6 @@ export const readingKnowledgeSchema = z.strictObject({
 
 const setKinds = z.enum(["Contribute", "Correct"]);
 const atomicAspectSchema = z.enum(["transcription", "definition"]);
-const structuredAspectSchema = z.enum([
-	"morphologicalTree",
-	"lexicalBreakdown",
-]);
 const readingRelationSetSchema = z.strictObject({
 	kind: setKinds,
 	aspect: z.literal("semanticRelations"),
@@ -384,13 +375,8 @@ export const knowledgeChangeSchema = z.union([
 		value: morphologicalTreeSchema,
 	}),
 	z.strictObject({
-		kind: setKinds,
-		aspect: z.literal("lexicalBreakdown"),
-		value: lexicalBreakdownSchema,
-	}),
-	z.strictObject({
 		kind: z.literal("Retract"),
-		aspect: structuredAspectSchema,
+		aspect: z.literal("morphologicalTree"),
 	}),
 ]);
 

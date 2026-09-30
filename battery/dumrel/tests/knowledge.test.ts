@@ -78,25 +78,6 @@ describe("parseReadingKnowledge", () => {
 				},
 			},
 		],
-		[
-			"nonexistent Lexical Breakdown routes",
-			{
-				lexicalBreakdown: [
-					{
-						language: "de",
-						canonicalForm: "x",
-						family: "Missing",
-						kind: "Missing",
-					},
-					{
-						language: "de",
-						canonicalForm: "y",
-						family: "Missing",
-						kind: "Missing",
-					},
-				],
-			},
-		],
 	] as const)(
 		"rejects structured Knowledge containing %s",
 		(_, knowledge) => {

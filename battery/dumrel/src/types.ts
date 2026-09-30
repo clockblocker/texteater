@@ -19,7 +19,6 @@ export type {
 	GovernmentRelation,
 	HebrewValencyComplement,
 	LexemeUnitShadow,
-	LexicalBreakdown,
 	LocutionType,
 	MorphologicalTree,
 	MorphologicalTreeNode,

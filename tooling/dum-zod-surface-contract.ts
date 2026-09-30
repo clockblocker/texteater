@@ -14,7 +14,6 @@ export const DUM_PUBLIC_ZOD_SURFACES = {
 		"knowledgeSelectionInputSchema",
 		"knowledgeSettingsSchema",
 		"lexemeUnitShadowSchema",
-		"lexicalBreakdownSchema",
 		"morphologicalTreeNodeSchema",
 		"morphologicalTreeSchema",
 		"nounPluralSchema",

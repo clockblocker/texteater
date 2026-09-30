@@ -14,7 +14,7 @@ test("Knowledge settings default to enabled and filter only applicable aspects",
 	expect(all.value).toHaveProperty("definition", null);
 	expect(all.value).toHaveProperty("translations.en", null);
 	expect(all.value).toHaveProperty("translations.ru", null);
-	expect(all.value).not.toHaveProperty("lexicalBreakdown");
+	expect(all.value).not.toHaveProperty("locutionType");
 	const filtered = selectKnowledge({
 		route,
 		settings: {

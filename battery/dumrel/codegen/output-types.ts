@@ -11,7 +11,6 @@ export const dumrelOutputTypeExports = {
 	TranslationLanguage: "translationLanguage",
 	UnitShadow: "unitShadow",
 	LexemeUnitShadow: "lexemeUnitShadow",
-	LexicalBreakdown: "lexicalBreakdown",
 	MorphologicalTree: "morphologicalTree",
 	MorphologicalTreeNode: "morphologicalTreeNode",
 	PendingSemanticRelation: "pendingSemanticRelation",

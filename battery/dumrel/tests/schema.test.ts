@@ -36,13 +36,15 @@ test("Knowledge change schemas correlate structured aspects with their values", 
 	expect(
 		knowledgeChangeSchema.safeParse({
 			kind: "Contribute",
-			aspect: "lexicalBreakdown",
-			value: {
-				root: {
-					nodeKind: "structure",
-					children: [{ nodeKind: "morphemeReading", reading: {} }],
+			aspect: "morphologicalTree",
+			value: [
+				{
+					language: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+					canonicalForm: "Haus",
 				},
-			},
+			],
 		}).success,
 	).toBe(false);
 });

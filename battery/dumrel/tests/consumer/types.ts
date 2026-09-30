@@ -56,7 +56,6 @@ type SuffixReading = Extract<
 >;
 // @ts-expect-error An empty Feature Bag is an object, never a primitive.
 const invalidSuffixCore: SuffixReading["lemma"]["coreFeatures"] = 123;
-export type BreakdownFamily = Dumrel.LexicalBreakdown[number]["family"];
 export type RetractSynonym = Extract<
 	Dumrel.KnowledgeChange<NounReading>,
 	{
@@ -72,15 +71,6 @@ export type RetractionCarriesValue =
 const invalidReading: MorphemeReading = 123;
 // @ts-expect-error A Lexeme Reading is not a Morpheme Reading.
 const invalidReadingFamily: MorphemeReading = source;
-const prefixShadow = {
-	language: "de",
-	family: "Morpheme",
-	kind: "Prefix",
-	canonicalForm: "un-",
-} as const;
-declare const morphemeBreakdown: [typeof prefixShadow, typeof prefixShadow];
-// @ts-expect-error Lexical Breakdown admits only Lexeme shadows.
-const invalidBreakdown: Dumrel.LexicalBreakdown = morphemeBreakdown;
 const invalidRetract: Dumrel.KnowledgeChange<NounReading> = {
 	kind: "Retract",
 	aspect: "semanticRelations",
@@ -103,19 +93,13 @@ const validRetract: Dumrel.KnowledgeChange<NounReading> = {
 	aspect: "semanticRelations",
 	relation: "synonym",
 };
-const validBreakdown: Dumrel.LexicalBreakdown = [
-	{ language: "de", family: "Lexeme", kind: "NOUN", canonicalForm: "Haus" },
-	{ language: "de", family: "Lexeme", kind: "VERB", canonicalForm: "bauen" },
-];
 void [
 	invalidSuffixCore,
 	invalidReading,
 	invalidReadingFamily,
-	invalidBreakdown,
 	invalidRetract,
 	invalidTarget,
 	validRetract,
-	validBreakdown,
 ];
 
 const projected = projectSemanticRelations([

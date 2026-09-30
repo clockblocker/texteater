@@ -75,7 +75,6 @@ function apply<R extends Dumling.Reading>(
 		case "transcription":
 		case "definition":
 		case "morphologicalTree":
-		case "lexicalBreakdown":
 		case "participleSource":
 		case "locutionType":
 		case "sayingType":
@@ -248,7 +247,6 @@ type AtomicChange = Extract<
 			| "transcription"
 			| "definition"
 			| "morphologicalTree"
-			| "lexicalBreakdown"
 			| "participleSource"
 			| "locutionType"
 			| "sayingType"

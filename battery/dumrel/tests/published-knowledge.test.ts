@@ -13,18 +13,6 @@ const nounShadow = {
 	kind: "NOUN",
 	canonicalForm: "Haus",
 } as const;
-const verbShadow = {
-	language: "de",
-	family: "Lexeme",
-	kind: "VERB",
-	canonicalForm: "bauen",
-} as const;
-const prefixShadow = {
-	language: "de",
-	family: "Morpheme",
-	kind: "Prefix",
-	canonicalForm: "un-",
-} as const;
 
 test("published schemas and runtime agree on normalized, structured Knowledge", () => {
 	const knowledge = {
@@ -47,7 +35,6 @@ test("published schemas and runtime agree on normalized, structured Knowledge", 
 				],
 			},
 		},
-		lexicalBreakdown: [nounShadow, verbShadow],
 		semanticRelations: { nearSynonym: [berlinLemma] },
 	} satisfies Dumrel.ReadingKnowledge;
 	const expected = {
@@ -74,10 +61,6 @@ test.each([
 				},
 			},
 		},
-	],
-	[
-		"Morpheme shadows in Lexical Breakdown",
-		{ lexicalBreakdown: [prefixShadow, prefixShadow] },
 	],
 ])("published schemas and runtime reject %s", (_, knowledge) => {
 	expect(readingKnowledgeSchema.safeParse(knowledge).success).toBe(false);

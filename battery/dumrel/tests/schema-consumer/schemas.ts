@@ -13,7 +13,3 @@ type Reading = Extract<
 	{ nodeKind: "morphemeReading" }
 >["reading"];
 export type ReadingFamily = Reading["lemma"]["family"];
-const breakdown = readingKnowledgeSchema.shape.lexicalBreakdown
-	.unwrap()
-	.parse(input);
-export type BreakdownFamily = (typeof breakdown)[number]["family"];
