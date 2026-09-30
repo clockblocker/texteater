@@ -41,6 +41,7 @@ export class Luna {
 	readonly #semaphore: Semaphore;
 	readonly #beforeSpend: (() => void) | undefined;
 	readonly #offline: boolean;
+	readonly #requests = new Map<string, Set<string>>();
 	#executor: EvaluationExecutor | undefined;
 	constructor(options: {
 		readonly cacheDirectory: string;
@@ -54,6 +55,15 @@ export class Luna {
 		this.#beforeSpend = options.beforeSpend;
 		this.#offline = options.offline ?? false;
 		this.#executor = options.executor;
+	}
+
+	/** Per stage, one hash over the distinct requests generated so far, as `Jev.promptHashes`. */
+	promptHashes(): Record<string, string> {
+		return Object.fromEntries(
+			[...this.#requests]
+				.sort(([a], [b]) => a.localeCompare(b))
+				.map(([stage, hashes]) => [stage, hashOf([...hashes].sort())]),
+		);
 	}
 
 	async generate(args: {
@@ -87,6 +97,16 @@ export class Luna {
 				? {}
 				: { max_output_tokens: args.maxOutputTokens }),
 		};
+		const stageRequests = this.#requests.get(args.stage) ?? new Set();
+		this.#requests.set(args.stage, stageRequests);
+		stageRequests.add(
+			hashOf({
+				settings,
+				systemPrompt: args.systemPrompt,
+				input: args.input,
+				outputSchema: args.outputSchema,
+			}),
+		);
 		const key = hashOf({
 			configuration:
 				(args.effort === undefined || args.effort === "none") &&

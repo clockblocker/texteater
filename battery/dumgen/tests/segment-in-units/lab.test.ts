@@ -134,7 +134,7 @@ const goldJudge: TypeSafeExecutor = async (request) => {
 		}),
 	);
 	return {
-		model: "fake",
+		model: request.model,
 		answers,
 		usage: { input_tokens: 100, output_tokens: 0 },
 	} as never;

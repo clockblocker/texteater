@@ -70,7 +70,7 @@ async function run(
 		}
 		// The executor's generic mapped response cannot infer dynamic test IDs.
 		return {
-			model: "fake",
+			model: request.model,
 			answers,
 			usage: { input_tokens: 100, output_tokens: 0 },
 		} as never;

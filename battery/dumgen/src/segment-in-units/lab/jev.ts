@@ -3,7 +3,11 @@
  * every answer cached on disk by (model, state, questions, repetition), so a
  * re-score or a threshold sweep never calls jev again, and each fresh call
  * recorded for the cost ledger. Repetition `r` of a request is its own cache
- * entry: repeated runs measure the judge's run-to-run noise.
+ * entry: a noise rerun offsets its repetitions to miss the cache.
+ *
+ * The model is pinned: the client requests a jev version, refuses an answer
+ * from any other, and so keys the cache by the model that answered. A
+ * floating alias (`jev-latest`) needs `allowFloatingModel`.
  */
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -102,9 +106,20 @@ function statusOf(error: unknown): number | undefined {
 	return undefined;
 }
 
+/** The jev version lab runs request unless told otherwise. */
+export const pinnedJevModel = "jev-1.13.0";
+
+/** Cache entries written before pinning were keyed by this alias. */
+const legacyAlias = "jev-latest";
+
+const isFloating = (model: string) => model.endsWith("-latest");
+
 export type JevOptions = {
 	readonly cacheDirectory: string;
+	/** A pinned jev version; defaults to `pinnedJevModel`. */
 	readonly model?: string;
+	/** Allow an alias such as `jev-latest`, whose answers may come from any version. */
+	readonly allowFloatingModel?: boolean;
 	/** Questions per request; larger batches are split. */
 	readonly questionsPerCall?: number;
 	readonly concurrency?: number;
@@ -122,15 +137,35 @@ export type JevOptions = {
 export class Jev {
 	readonly model: string;
 	readonly questionsPerCall: number;
+	/** Every model an answer came from, cached ones included. */
+	readonly resolvedModels = new Set<string>();
 	readonly #options: JevOptions;
 	readonly #semaphore: Semaphore;
+	readonly #requests = new Map<string, Set<string>>();
 	#executor: TypeSafeExecutor | undefined;
 	constructor(options: JevOptions) {
 		this.#options = options;
-		this.model = options.model ?? "jev-latest";
+		this.model = options.model ?? pinnedJevModel;
+		if (isFloating(this.model) && !options.allowFloatingModel)
+			throw Error(
+				`${this.model} floats between jev versions; pin a version or allow a floating model`,
+			);
 		this.questionsPerCall = options.questionsPerCall ?? 300;
 		this.#semaphore = new Semaphore(options.concurrency ?? 12);
 		this.#executor = options.executor;
+	}
+
+	/**
+	 * Per stage, one hash over the distinct requests (state and questions)
+	 * asked so far. Repetition and model are left out: a noise rerun of the
+	 * same configuration sends the same prompts.
+	 */
+	promptHashes(): Record<string, string> {
+		return Object.fromEntries(
+			[...this.#requests]
+				.sort(([a], [b]) => a.localeCompare(b))
+				.map(([stage, hashes]) => [stage, hashOf([...hashes].sort())]),
+		);
 	}
 
 	/**
@@ -147,6 +182,11 @@ export class Jev {
 	}): Promise<Answers> {
 		const entries = Object.entries(args.questions);
 		if (entries.length === 0) return {};
+		const stageRequests = this.#requests.get(args.stage) ?? new Set();
+		this.#requests.set(args.stage, stageRequests);
+		stageRequests.add(
+			hashOf({ state: args.state, questions: args.questions }),
+		);
 		const size = args.questionsPerCall ?? this.questionsPerCall;
 		const chunks: [string, Question][][] = [];
 		for (let start = 0; start < entries.length; start += size)
@@ -168,20 +208,33 @@ export class Jev {
 		},
 		questions: Questions,
 	): Promise<Answers> {
-		const key = hashOf({
-			model: this.model,
-			state: args.state,
-			questions,
-			repetition: args.repetition,
-		});
-		const path = join(
-			this.#options.cacheDirectory,
-			"jev",
-			key.slice(0, 2),
-			`${key}.json`,
-		);
-		const hit = await readCache<Cached>(path);
+		const pathOf = (model: string) => {
+			const key = hashOf({
+				model,
+				state: args.state,
+				questions,
+				repetition: args.repetition,
+			});
+			return join(
+				this.#options.cacheDirectory,
+				"jev",
+				key.slice(0, 2),
+				`${key}.json`,
+			);
+		};
+		const path = pathOf(this.model);
+		let hit = await readCache<Cached>(path);
+		if (!hit && !isFloating(this.model)) {
+			// Before pinning, entries were keyed by the alias; reuse one only
+			// when the version that answered it is the pinned one.
+			const legacy = await readCache<Cached>(pathOf(legacyAlias));
+			if (legacy?.model === this.model) {
+				hit = legacy;
+				await writeCache(path, legacy);
+			}
+		}
 		if (hit) {
+			this.resolvedModels.add(hit.model);
 			args.calls.push({
 				executor: "jev",
 				stage: args.stage,
@@ -244,6 +297,22 @@ export class Jev {
 				}
 			}
 		});
+		this.#options.onSpend?.(result.usage.input_tokens);
+		this.resolvedModels.add(result.model);
+		if (!isFloating(this.model) && result.model !== this.model) {
+			const error = `Expected pinned ${this.model}, jev answered as ${result.model}`;
+			args.calls.push({
+				executor: "jev",
+				stage: args.stage,
+				questions: Object.keys(questions).length,
+				inputTokens: result.usage.input_tokens,
+				outputTokens: result.usage.output_tokens,
+				latencyMs: result.latencyMs,
+				cached: false,
+				error,
+			});
+			throw Error(error);
+		}
 		const missing = Object.keys(questions).filter(
 			(id) => !(id in result.answers),
 		);
@@ -252,7 +321,6 @@ export class Jev {
 				`jev answered without ${missing.slice(0, 3).join(", ")}`,
 			);
 		await writeCache(path, result);
-		this.#options.onSpend?.(result.usage.input_tokens);
 		args.calls.push({
 			executor: "jev",
 			stage: args.stage,

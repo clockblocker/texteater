@@ -14,7 +14,7 @@ test("token-aware batches preserve every question without truncating options", a
 	const executor: TypeSafeExecutor = async (request) => {
 		requestSizes.push(Buffer.byteLength(JSON.stringify(request), "utf8"));
 		return {
-			model: "fake",
+			model: request.model,
 			answers: Object.fromEntries(
 				Object.keys(request.questions).map((key) => [
 					key,
