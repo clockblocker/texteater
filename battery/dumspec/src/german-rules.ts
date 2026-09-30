@@ -84,8 +84,8 @@ const units: Rule[] = [
 	{
 		id: "de/no-target",
 		statement:
-			"A word has no target when no route for it is defensible: unintelligible text or a nonce word that no German or foreign word, name or plausible typo fits (xqzt, glorpen), a word broken off (trans…), or a suspended-compound fragment with no right conjunct to complete it. The classifier answers Unresolved for it.",
-		adrs: ["ADR-0037", "ADR-0045"],
+			"A word has no target when no route for it is defensible: unintelligible text or a nonce word that no German or foreign word, name or plausible typo fits (xqzt, glorpen), a word broken off (trans…), an article whose noun phrase breaks off before its Head (das in Er brach das…), or a suspended-compound fragment with no right conjunct to complete it. The context must show the break, not an ellipsis alone, and no noun or demonstrative reading is made up: a complete Er brach das. gives das PRON. The classifier answers Unresolved for it.",
+		adrs: ["ADR-0037", "ADR-0040", "ADR-0045"],
 		routes: [],
 		records: [
 			"de/das-wetter-ist-xqzt",
@@ -94,6 +94,7 @@ const units: Rule[] = [
 			"de/das-glossar-fuehrte-den-nicht-weiter-bestimmten-eintrag",
 			"de/die-aufnahme-brach-mitten-im-begonnenen-wort-nach-trans",
 			"de/die-sprecherin-begann-mit-unver-und-brach-das-wort-hoerbar",
+			"de/er-brach-das",
 		],
 	},
 	{

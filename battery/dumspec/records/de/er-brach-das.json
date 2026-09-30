@@ -9,63 +9,101 @@
 		{ "kind": "ResolvableText", "text": "das" },
 		{ "kind": "Punctuation", "text": "…" }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0040", "ADR-0045"],
+		"rules": [{ "rule": "de/no-target", "hash": "0ebbe79f51e5e685" }],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-robust-partial-click-brach",
-			"memberSegmentIndices": [2],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 2,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "brach" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Punctuation", "text": "…" }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [2]
-				},
-				"explanation": "The IDS idiom study establishes literal and figurative das Eis brechen, but the truncated Er brach das… realizes neither complete expression. Issue #82's conservative partial-occurrence policy maps brach as Lexeme/VERB [2] or das as Lexeme/DET [4] rather than guessing fixed membership. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/7790/file/Harras_Idiome_1997.pdf"
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "Er", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "er",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "er",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"person": "3",
+							"pronType": "Prs",
+							"extPos": null,
+							"foreign": null,
+							"polite": null,
+							"poss": null,
+							"case": "Nom",
+							"number": "Sing",
+							"gender": "Masc"
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		},
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-robust-partial-click-das",
-			"memberSegmentIndices": [4],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 4,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "brach" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Punctuation", "text": "…" }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "DET",
-					"memberSegmentIndices": [4]
-				},
-				"explanation": "The IDS idiom study establishes literal and figurative das Eis brechen, but the truncated Er brach das… realizes neither complete expression. Issue #82's conservative partial-occurrence policy maps brach as Lexeme/VERB [2] or das as Lexeme/DET [4] rather than guessing fixed membership. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/7790/file/Harras_Idiome_1997.pdf"
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "brach is the verb brechen on its own. The sentence breaks off before its object is complete, so it realizes no fixed expression such as das Eis brechen, and none is guessed."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "brach", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "brach",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "brechen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
+		}
+	],
+	"noTarget": [
+		{
+			"segment": 4,
+			"reason": "A noun phrase broken off before its Head: the text is cut off after the article, so das has no Head to belong to (ADR 0040), and neither a noun nor a demonstrative reading is made up for it. A complete Er brach das. would give das PRON."
 		}
 	]
 }

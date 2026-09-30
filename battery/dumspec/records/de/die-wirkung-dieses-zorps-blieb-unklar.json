@@ -19,7 +19,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0037", "ADR-0045"],
-		"rules": [{ "rule": "de/no-target", "hash": "22a485a80500436e" }],
+		"rules": [{ "rule": "de/no-target", "hash": "0ebbe79f51e5e685" }],
 		"references": []
 	},
 	"targets": [],
