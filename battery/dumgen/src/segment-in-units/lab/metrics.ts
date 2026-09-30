@@ -1,16 +1,22 @@
 /**
  * Scores a stored lab run with the harness evaluator (#731) and summarizes
- * it per assembly policy: unit verdicts, segment and route accuracy (all,
- * one-piece and multi-piece gold units), Full-record sentence passes, flips
- * between repetitions, cost and latency, plus breakdowns by gold route and
- * cited Rule and the calibration of route and membership judgments.
+ * it per assembly policy the way ADR 0008 ranks it: membership first (all,
+ * one-piece and multi-piece gold units, and the shape of each miss), then
+ * its consistency across repetitions, then the route, tolerant and strict.
+ * Also Full-record sentence passes, case flips, cost and latency, and
+ * breakdowns by gold route and cited Rule and the calibration of route and
+ * membership judgments.
  */
 import { stableJson } from "promptsmith";
 import type { Unit } from "../../evaluation/spec-corpus/segment-in-units.js";
 import {
 	evaluateSegmentInUnits,
+	hasMembership,
 	type SegmentInUnitsEvaluation,
+	tolerantMatch,
+	type UnitCheck,
 } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
+import { toleratedPairOf } from "../../evaluation/spec-corpus/segment-in-units-route-tolerance.js";
 import {
 	expletiveForms,
 	isAdposition,
@@ -27,14 +33,21 @@ export type Tally = {
 	scored: number;
 	match: number;
 	wrongSegments: number;
+	/** Every WrongRoute, tolerated ones included. */
 	wrongRoute: number;
+	/** The WrongRoutes ADR 0008 tolerates. */
+	toleratedRoute: number;
 	missing: number;
 	stub: number;
+	/** WrongSegments by shape: see `membershipMiss`. */
+	split: number;
+	merged: number;
+	crossed: number;
 	multiScored: number;
-	multiSegments: number;
+	multiMembership: number;
 	multiMatch: number;
 	singleScored: number;
-	singleSegments: number;
+	singleMembership: number;
 	singleMatch: number;
 	contractCases: number;
 	contractPass: number;
@@ -48,13 +61,17 @@ const emptyTally = (): Tally => ({
 	match: 0,
 	wrongSegments: 0,
 	wrongRoute: 0,
+	toleratedRoute: 0,
 	missing: 0,
 	stub: 0,
+	split: 0,
+	merged: 0,
+	crossed: 0,
 	multiScored: 0,
-	multiSegments: 0,
+	multiMembership: 0,
 	multiMatch: 0,
 	singleScored: 0,
-	singleSegments: 0,
+	singleMembership: 0,
 	singleMatch: 0,
 	contractCases: 0,
 	contractPass: 0,
@@ -88,15 +105,46 @@ export function scoreCase(
 	};
 }
 
+export type MembershipMiss = "split" | "merged" | "crossed";
+
+/**
+ * How a WrongSegments unit missed its gold Segment set, over scored
+ * Segments: `split` into several returned units each inside it, `merged`
+ * into one returned unit that holds it and more, or `crossed` otherwise.
+ */
+export function membershipMiss(
+	labCase: LabCase,
+	check: UnitCheck,
+): MembershipMiss | undefined {
+	if (check.verdict !== "WrongSegments") return undefined;
+	const gold = new Set(check.expected.segments);
+	const scored = check.returned.map((unit) =>
+		unit.segments.filter(
+			(index) => labCase.input.segments[index]?.kind === "ResolvableText",
+		),
+	);
+	if (
+		scored.length > 1 &&
+		scored.every((segments) => segments.every((index) => gold.has(index)))
+	)
+		return "split";
+	const [only] = scored;
+	if (
+		scored.length === 1 &&
+		only &&
+		[...gold].every((index) => only.includes(index))
+	)
+		return "merged";
+	return "crossed";
+}
+
 function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 	const { evaluation } = score;
 	if (!evaluation) {
 		tally.errors++;
 		// A failed case counts every scored gold unit as Missing.
 		for (const unit of labCase.idealOutput.units) {
-			const stub =
-				unit.route === "Unresolved" || unit.route.family === "Foreign";
-			if (stub) {
+			if (isStub(unit)) {
 				tally.stub++;
 				continue;
 			}
@@ -115,19 +163,25 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 			continue;
 		}
 		tally.scored++;
-		const segmentsOk =
-			check.verdict === "Match" || check.verdict === "WrongRoute";
+		const membership = hasMembership(check);
 		if (check.verdict === "Match") tally.match++;
-		if (check.verdict === "WrongSegments") tally.wrongSegments++;
-		if (check.verdict === "WrongRoute") tally.wrongRoute++;
+		if (check.verdict === "WrongSegments") {
+			tally.wrongSegments++;
+			const miss = membershipMiss(labCase, check);
+			if (miss) tally[miss]++;
+		}
+		if (check.verdict === "WrongRoute") {
+			tally.wrongRoute++;
+			if (check.tolerated) tally.toleratedRoute++;
+		}
 		if (check.verdict === "Missing") tally.missing++;
 		if (check.expected.segments.length > 1) {
 			tally.multiScored++;
-			if (segmentsOk) tally.multiSegments++;
+			if (membership) tally.multiMembership++;
 			if (check.verdict === "Match") tally.multiMatch++;
 		} else {
 			tally.singleScored++;
-			if (segmentsOk) tally.singleSegments++;
+			if (membership) tally.singleMembership++;
 			if (check.verdict === "Match") tally.singleMatch++;
 		}
 	}
@@ -144,14 +198,33 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 
 const ratio = (a: number, b: number) => (b === 0 ? Number.NaN : a / b);
 
+/** Unresolved and Foreign gold units, which the evaluator does not score. */
+export const isStub = (unit: Unit) =>
+	unit.route === "Unresolved" || unit.route.family === "Foreign";
+
+/**
+ * Rates over scored gold units, summed over repetitions. `membership` is
+ * the headline (ADR 0008); `tolerantUnitAccuracy` adds a same or tolerated
+ * route; `unitAccuracy` is the strict match, kept for comparison. The route
+ * rates read only units whose membership holds.
+ */
 export function rates(tally: Tally) {
+	const membership = tally.match + tally.wrongRoute;
 	return {
+		membership: ratio(membership, tally.scored),
+		multiMembership: ratio(tally.multiMembership, tally.multiScored),
+		singleMembership: ratio(tally.singleMembership, tally.singleScored),
+		tolerantUnitAccuracy: ratio(
+			tally.match + tally.toleratedRoute,
+			tally.scored,
+		),
+		tolerantRouteGivenMembership: ratio(
+			tally.match + tally.toleratedRoute,
+			membership,
+		),
 		unitAccuracy: ratio(tally.match, tally.scored),
-		segmentAccuracy: ratio(tally.match + tally.wrongRoute, tally.scored),
-		routeGivenSegments: ratio(tally.match, tally.match + tally.wrongRoute),
-		multiSegmentAccuracy: ratio(tally.multiSegments, tally.multiScored),
+		routeGivenMembership: ratio(tally.match, membership),
 		multiUnitAccuracy: ratio(tally.multiMatch, tally.multiScored),
-		singleSegmentAccuracy: ratio(tally.singleSegments, tally.singleScored),
 		singleUnitAccuracy: ratio(tally.singleMatch, tally.singleScored),
 		casePass: ratio(tally.contractPass, tally.contractCases),
 		fullPass: ratio(tally.fullPass, tally.fullCases),
@@ -185,8 +258,17 @@ export type PolicySummary = {
 	/** Summed over repetitions. */
 	readonly tally: Tally;
 	readonly rates: ReturnType<typeof rates>;
-	/** Unit accuracy of each repetition. */
+	/** Membership of each repetition. */
+	readonly membershipByRepetition: readonly number[];
+	/** Strict unit accuracy of each repetition. */
 	readonly unitAccuracyByRepetition: readonly number[];
+	/**
+	 * Consistency: scored gold units whose membership holds in some
+	 * repetitions and not others, of those with more than one repetition.
+	 */
+	readonly membershipFlips: number;
+	readonly membershipFlipBase: number;
+	/** Cases whose contract verdict (membership) differs between repetitions. */
 	readonly flips: number;
 	readonly flipBase: number;
 	readonly varyingOutputs: number;
@@ -230,6 +312,8 @@ export function summarizePolicy(
 	const byRepetition = Array.from({ length: run.repetitions }, emptyTally);
 	let flips = 0;
 	let flipBase = 0;
+	let membershipFlips = 0;
+	let membershipFlipBase = 0;
 	let varyingOutputs = 0;
 	let counted = 0;
 	for (const caseRun of run.cases) {
@@ -239,9 +323,19 @@ export function summarizePolicy(
 		counted++;
 		const passes: boolean[] = [];
 		const outputs = new Set<string>();
+		const unitMembership = labCase.idealOutput.units.map(
+			(): boolean[] => [],
+		);
 		for (const [index, repetition] of caseRun.repetitions.entries()) {
 			const score = scoreCase(labCase, repetition, policy);
 			add(tally, labCase, score);
+			labCase.idealOutput.units.forEach((unit, unitIndex) => {
+				if (isStub(unit)) return;
+				const check = score.evaluation?.units[unitIndex];
+				unitMembership[unitIndex]?.push(
+					check ? hasMembership(check) : false,
+				);
+			});
 			const repetitionTally = byRepetition[index];
 			if (repetitionTally) add(repetitionTally, labCase, score);
 			outputs.add(stableJson(repetition.outputs?.[policy] ?? null));
@@ -252,6 +346,12 @@ export function summarizePolicy(
 			flipBase++;
 			if (passes.some(Boolean) && passes.some((pass) => !pass)) flips++;
 		}
+		for (const held of unitMembership) {
+			if (held.length < 2) continue;
+			membershipFlipBase++;
+			if (held.some(Boolean) && held.some((entry) => !entry))
+				membershipFlips++;
+		}
 		if (outputs.size > 1) varyingOutputs++;
 	}
 	return {
@@ -260,9 +360,14 @@ export function summarizePolicy(
 		repetitions: run.repetitions,
 		tally,
 		rates: rates(tally),
+		membershipByRepetition: byRepetition.map(
+			(entry) => rates(entry).membership,
+		),
 		unitAccuracyByRepetition: byRepetition.map(
 			(entry) => rates(entry).unitAccuracy,
 		),
+		membershipFlips,
+		membershipFlipBase,
 		flips,
 		flipBase,
 		varyingOutputs,
@@ -324,9 +429,10 @@ export function summarizeCost(
 	};
 }
 
+/** Per key: scored gold units, their membership, tolerant and strict matches. */
 export type Breakdown = Record<
 	string,
-	{ scored: number; segments: number; match: number }
+	{ scored: number; membership: number; tolerant: number; match: number }
 >;
 
 /**
@@ -350,25 +456,18 @@ export function breakdown(
 			labCase.idealOutput.units.forEach((unit, index) => {
 				const check = evaluation?.units[index];
 				if (evaluation && check?.verdict === "Stub") return;
-				if (
-					!evaluation &&
-					(unit.route === "Unresolved" ||
-						unit.route.family === "Foreign")
-				)
-					return;
+				if (!evaluation && isStub(unit)) return;
 				for (const key of keysOf(labCase, unit)) {
 					const entry = result[key] ?? {
 						scored: 0,
-						segments: 0,
+						membership: 0,
+						tolerant: 0,
 						match: 0,
 					};
 					result[key] = entry;
 					entry.scored++;
-					if (
-						check?.verdict === "Match" ||
-						check?.verdict === "WrongRoute"
-					)
-						entry.segments++;
+					if (check && hasMembership(check)) entry.membership++;
+					if (check && tolerantMatch(check)) entry.tolerant++;
 					if (check?.verdict === "Match") entry.match++;
 				}
 			});
@@ -558,14 +657,23 @@ export function unitVerdicts(
 	return result;
 }
 
-/** Route confusions over units whose segments matched: gold → returned. */
+export type Confusion = {
+	readonly count: number;
+	/** The ADR 0008 Kind pair it confuses, as `PART/ADV`; absent when it stays an error. */
+	readonly tolerated?: string;
+};
+
+/**
+ * Route confusions over units whose membership holds, keyed gold →
+ * returned, each marked with the tolerated Kind pair it falls on.
+ */
 export function confusions(
 	run: LabRun,
 	cases: ReadonlyMap<string, LabCase>,
 	policy: string,
 	only?: ReadonlySet<string>,
-): Map<string, number> {
-	const counts = new Map<string, number>();
+): Map<string, Confusion> {
+	const counts = new Map<string, Confusion>();
 	for (const caseRun of run.cases) {
 		if (only && !only.has(caseRun.id)) continue;
 		const labCase = cases.get(caseRun.id);
@@ -577,7 +685,14 @@ export function confusions(
 				const [returned] = check.returned;
 				if (!returned) continue;
 				const key = `${keyOf(check.expected.route)} → ${keyOf(returned.route)}`;
-				counts.set(key, (counts.get(key) ?? 0) + 1);
+				const pair = toleratedPairOf(
+					check.expected.route,
+					returned.route,
+				);
+				counts.set(key, {
+					count: (counts.get(key)?.count ?? 0) + 1,
+					...(pair ? { tolerated: pair.join("/") } : {}),
+				});
 			}
 		}
 	}

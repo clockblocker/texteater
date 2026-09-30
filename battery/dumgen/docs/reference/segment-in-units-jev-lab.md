@@ -66,15 +66,25 @@ The pilot writes its manifest, configuration, requests and results to
 
 ## Scoring
 
-- The #731 evaluator scores every unit. **unit%** counts Match, and
-  **seg%** counts Match plus WrongRoute. Rates are summed over
-  repetitions. **flips** counts cases whose contract verdict differs
-  between repetitions. `Unresolved` and Foreign gold units are Stubs and go
-  unscored.
-- `compare` pairs gold units by their majority verdict over repetitions.
-  `+a −b` means a units gained and b lost from left to right, with an exact
-  McNemar p per bucket (one piece, Lexeme multi-piece, contiguous or
-  discontinuous Locution, Saying).
+- The #731 evaluator scores every unit, and reports lead in the order of
+  [ADR 0008](../adr/0008-judge-segment-in-units-by-membership-before-route.md).
+  **mem%** (membership) counts units whose gold Segment set came back
+  exactly, whatever the route; the contract verdict is membership.
+  **memFlips** (consistency) counts units whose membership differs between
+  repetitions. **tol%** adds a route that is the same or one of the five
+  tolerated Kind confusions (PART/ADV, CCONJ/ADV, ADJ/ADV, NOUN/PROPN,
+  PRON/DET, within Lexeme, either way), defined once in
+  `src/evaluation/spec-corpus/segment-in-units-route-tolerance.ts`.
+  **strict%** is the exact match, kept for comparison. Rates are summed
+  over repetitions. **caseFlips** counts cases whose contract verdict
+  differs between repetitions. `Unresolved` and Foreign gold units are
+  Stubs and go unscored. Outcome letters mark a tolerated route `A` and
+  any other route miss `R`.
+- `compare` pairs gold units by their majority over repetitions, on
+  membership first, then prints each side's consistency and the tolerant
+  and strict deltas. `+a −b` means a units gained and b lost from left to
+  right, with an exact McNemar p per bucket (one piece, Lexeme multi-piece,
+  contiguous or discontinuous Locution, Saying).
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   committed outcomes otherwise. Outcomes are scored against the frozen
   gold, so `--relabel` needs the raw run.
@@ -86,7 +96,8 @@ The pilot writes its manifest, configuration, requests and results to
   or dumspec changed since the baseline, unless `--allow-drift` is passed.
   It also flags a rerun whose prompts differ from the baseline's.
 - `ledger --table` prints the Markdown iteration table for the active lab
-  ticket. Each row shows a run with its parent, hypothesis, unit%, delta
-  against the parent, flips, jev input tokens per sentence and verdict. A
+  ticket. Each row shows a run with its parent, hypothesis, membership%,
+  membership delta against the parent, membership flips, tolerant%,
+  strict%, jev input tokens per sentence and verdict. A
   `compare --record` line supplies the delta and verdict. Without one, the
   delta comes from the committed outcomes.

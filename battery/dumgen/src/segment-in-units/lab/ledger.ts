@@ -57,7 +57,7 @@ export type BucketDelta = {
 	readonly beyondNoise: boolean | null;
 };
 
-/** `compare --record`: the paired delta of right against left. */
+/** `compare --record`: the paired membership delta of right against left (ADR 0008). */
 export type CompareEntry = BucketDelta & {
 	readonly at: string;
 	readonly command: "compare";

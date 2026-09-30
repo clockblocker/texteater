@@ -29,7 +29,10 @@ import {
 	pinnedJevModel,
 	writeCache,
 } from "../../src/segment-in-units/lab/jev.js";
-import { summarizePolicy } from "../../src/segment-in-units/lab/metrics.js";
+import {
+	confusions,
+	summarizePolicy,
+} from "../../src/segment-in-units/lab/metrics.js";
 import {
 	allBuckets,
 	deltaOf,
@@ -37,12 +40,15 @@ import {
 	noiseFloor,
 } from "../../src/segment-in-units/lab/noise.js";
 import {
+	accuracyOf,
 	decodeOutcomes,
 	encodeOutcomes,
+	majorityHit,
+	measures,
+	membershipFlipsOf,
 	type OutcomeRow,
 	outcomesOf,
 	pairOutcomes,
-	unitAccuracyOf,
 } from "../../src/segment-in-units/lab/outcomes.js";
 import {
 	codeHashOf,
@@ -70,6 +76,7 @@ const input: SegmentInUnitsInput = {
 const pron = { language: "de", family: "Lexeme", kind: "PRON" } as const;
 const verb = { language: "de", family: "Lexeme", kind: "VERB" } as const;
 const adj = { language: "de", family: "Lexeme", kind: "ADJ" } as const;
+const det = { language: "de", family: "Lexeme", kind: "DET" } as const;
 const gold: SegmentInUnitsOutput = {
 	units: [
 		{ segments: [0], route: pron },
@@ -104,7 +111,20 @@ const labRun: LabRun = {
 		{
 			id: labCase.id,
 			repetitions: [
-				{ outputs: { p: gold }, primary: "p", calls: [], wallMs: 0 },
+				{
+					// PRON returned as DET: a route ADR 0008 tolerates.
+					outputs: {
+						p: {
+							units: [
+								{ segments: [0], route: det },
+								{ segments: [2, 4, 6], route: verb },
+							],
+						},
+					},
+					primary: "p",
+					calls: [],
+					wallMs: 0,
+				},
 				{
 					outputs: {
 						p: {
@@ -124,7 +144,7 @@ const labRun: LabRun = {
 	],
 };
 
-test("outcomes keep a verdict letter per repetition and round-trip through gzip", () => {
+test("outcomes keep a verdict letter per repetition, A for a tolerated route, and round-trip through gzip", () => {
 	const rows = outcomesOf(labRun, cases);
 	expect(rows).toEqual([
 		{
@@ -134,7 +154,7 @@ test("outcomes keep a verdict letter per repetition and round-trip through gzip"
 			gold: "Lexeme/PRON",
 			text: "Er",
 			stub: false,
-			policies: { p: { v: "MME" } },
+			policies: { p: { v: "AME", r: ["Lexeme/DET", null, null] } },
 		},
 		{
 			case: labCase.id,
@@ -147,10 +167,57 @@ test("outcomes keep a verdict letter per repetition and round-trip through gzip"
 		},
 	]);
 	expect(decodeOutcomes(encodeOutcomes(rows))).toEqual(rows);
-	// The committed outcomes reproduce the summary's unit accuracy.
-	expect(unitAccuracyOf(rows, "p")).toBe(
-		summarizePolicy(labRun, cases, "p").rates.unitAccuracy,
+	// The committed outcomes reproduce the summary's membership, tolerant
+	// and strict rates and its membership flips.
+	const summary = summarizePolicy(labRun, cases, "p");
+	expect(summary.rates).toMatchObject({
+		membership: 4 / 6,
+		tolerantUnitAccuracy: 3 / 6,
+		unitAccuracy: 2 / 6,
+		routeGivenMembership: 2 / 4,
+		tolerantRouteGivenMembership: 3 / 4,
+	});
+	expect(summary.tally).toMatchObject({ wrongRoute: 2, toleratedRoute: 1 });
+	expect(accuracyOf(rows, "p", "membership")).toBe(summary.rates.membership);
+	expect(accuracyOf(rows, "p", "tolerant")).toBe(
+		summary.rates.tolerantUnitAccuracy,
 	);
+	expect(accuracyOf(rows, "p", "strict")).toBe(summary.rates.unitAccuracy);
+	// Both units hold membership in two repetitions and fail the errored one.
+	expect(membershipFlipsOf(rows, "p")).toEqual({ flips: 2, base: 2 });
+	expect(summary).toMatchObject({
+		membershipFlips: 2,
+		membershipFlipBase: 2,
+	});
+	// The contract verdict is membership: both answered repetitions pass.
+	expect(summary.tally).toMatchObject({ contractCases: 3, contractPass: 2 });
+	expect(Object.fromEntries(confusions(labRun, cases, "p"))).toEqual({
+		"Lexeme/PRON → Lexeme/DET": { count: 1, tolerated: "PRON/DET" },
+		"Lexeme/VERB → Lexeme/ADJ": { count: 1 },
+	});
+});
+
+test("each measure counts its own hits by majority", () => {
+	const outcome = { v: "ARS" };
+	expect(measures.map((measure) => majorityHit(outcome, measure))).toEqual([
+		true,
+		false,
+		false,
+	]);
+	expect(majorityHit({ v: "MAS" }, "tolerant")).toBe(true);
+	expect(majorityHit({ v: "MAS" }, "strict")).toBe(false);
+	const left = [row(0, "one piece", "RRR"), row(1, "one piece", "SSS")];
+	const right = [row(0, "one piece", "MMM"), row(1, "one piece", "AAM")];
+	// Membership gains unit 1 only, the tolerant score both, strict unit 0 only.
+	const gained = measures.map((measure) =>
+		pairOutcomes(
+			{ rows: left, policy: "p" },
+			{ rows: right, policy: "p" },
+			undefined,
+			measure,
+		).rightOnly.map((unit) => unit.id),
+	);
+	expect(gained).toEqual([["case-1"], ["case-0", "case-1"], ["case-0"]]);
 });
 
 test("source hashes change with any file, and the git state sees only its scope", async () => {
@@ -497,9 +564,11 @@ test("the iteration table shows each run against its parent", () => {
 			runId: "r1",
 			parent: null,
 			hypothesis: null,
+			membership: 0.905,
+			membershipFlips: 31,
+			membershipFlipBase: 1773,
+			tolerantUnitAccuracy: 0.872,
 			unitAccuracy: 0.851,
-			flips: 27,
-			flipBase: 1166,
 			jevInputTokensPerSentence: 11_800,
 			delta: null,
 			verdict: null,
@@ -508,9 +577,11 @@ test("the iteration table shows each run against its parent", () => {
 			runId: "r2",
 			parent: "r1",
 			hypothesis: "Saying Choice | maxim",
+			membership: 0.912,
+			membershipFlips: 24,
+			membershipFlipBase: 1773,
+			tolerantUnitAccuracy: 0.88,
 			unitAccuracy: 0.86,
-			flips: 20,
-			flipBase: 1166,
 			jevInputTokensPerSentence: 950,
 			delta: deltaOf(1773, 24, 2, {
 				units: 1773,
@@ -523,9 +594,11 @@ test("the iteration table shows each run against its parent", () => {
 			runId: "r3",
 			parent: "r2",
 			hypothesis: "trim Noul",
+			membership: null,
+			membershipFlips: null,
+			membershipFlipBase: null,
+			tolerantUnitAccuracy: null,
 			unitAccuracy: null,
-			flips: null,
-			flipBase: null,
 			jevInputTokensPerSentence: null,
 			delta: deltaOf(968, 4, 14, undefined),
 			verdict: "killed",
@@ -533,16 +606,16 @@ test("the iteration table shows each run against its parent", () => {
 	]);
 	const lines = table.trimEnd().split("\n");
 	expect(lines[0]).toBe(
-		"| runId | parent | hypothesis | unit% | Δ vs parent (+a −b, p) | flips | jev input tokens/sentence | verdict |",
+		"| runId | parent | hypothesis | membership% | Δ membership vs parent (+a −b, p) | membership flips | tolerant% | strict% | jev input tokens/sentence | verdict |",
 	);
 	expect(lines[2]).toBe(
-		"| `r1` | – | – | 85.1 | – | 27/1166 | 11.8k | root |",
+		"| `r1` | – | – | 90.5 | – | 31/1773 | 87.2 | 85.1 | 11.8k | root |",
 	);
 	expect(lines[3]).toBe(
-		"| `r2` | `r1` | Saying Choice \\| maxim | 86.0 | +24 −2, p 1.0e-5 | 20/1166 | 950 | better beyond noise |",
+		"| `r2` | `r1` | Saying Choice \\| maxim | 91.2 | +24 −2, p 1.0e-5 | 24/1773 | 88.0 | 86.0 | 950 | better beyond noise |",
 	);
 	expect(lines[4]).toBe(
-		"| `r3` | `r2` | trim Noul | – | +4 −14, p 0.031 | – | – | killed |",
+		"| `r3` | `r2` | trim Noul | – | +4 −14, p 0.031 | – | – | – | – | killed |",
 	);
 	expect(
 		derivedVerdict({ parent: "r2", delta: deltaOf(968, 4, 14, undefined) }),

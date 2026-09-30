@@ -1,13 +1,19 @@
 /**
  * The run-to-run noise floor. A noise rerun repeats a baseline's exact
  * configuration at fresh repetition indices; pairing the two by majority
- * verdict counts the gold units that flip with nothing changed. A compare
+ * verdict under a measure (membership unless said otherwise) counts the
+ * gold units that flip with nothing changed. A compare
  * delta is beyond noise only when McNemar agrees (p < 0.05) and the net
  * |gained − lost| exceeds what that flip rate reaches by chance.
  */
 import type { BucketDelta } from "./ledger.js";
 import { mcnemar } from "./metrics.js";
-import { type OutcomeRow, type Paired, pairOutcomes } from "./outcomes.js";
+import {
+	type Measure,
+	type OutcomeRow,
+	type Paired,
+	pairOutcomes,
+} from "./outcomes.js";
 
 /** The bucket name that sums every bucket. */
 export const allBuckets = "all";
@@ -26,10 +32,13 @@ export function noiseFloor(
 	baseline: readonly OutcomeRow[],
 	rerun: readonly OutcomeRow[],
 	policy: string,
+	measure: Measure = "membership",
 ): NoiseFloor {
 	const paired = pairOutcomes(
 		{ rows: baseline, policy },
 		{ rows: rerun, policy },
+		undefined,
+		measure,
 	);
 	const floor: Record<string, FlipRate> = {};
 	let units = 0;

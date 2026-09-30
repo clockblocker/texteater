@@ -1,8 +1,9 @@
 /**
  * The iteration table `ledger --table` prints: one row per run with a
- * manifest, its parent and hypothesis, its headline numbers and its paired
- * delta against the parent. It is Markdown, for a comment on the active
- * lab ticket.
+ * manifest, its parent and hypothesis, its headline numbers in the order
+ * ADR 0008 ranks them (membership, its paired delta against the parent,
+ * consistency, the tolerant route score, then the strict score) and its
+ * cost. It is Markdown, for a comment on the active lab ticket.
  */
 import type { BucketDelta } from "./ledger.js";
 
@@ -10,12 +11,16 @@ export type IterationRow = {
 	readonly runId: string;
 	readonly parent: string | null;
 	readonly hypothesis: string | null;
-	/** The primary policy's unit accuracy; null when the run has no summary. */
+	/** The primary policy's rates; null when the run's summary lacks them. */
+	readonly membership: number | null;
+	/** Gold units whose membership flips between repetitions, of `membershipFlipBase`. */
+	readonly membershipFlips: number | null;
+	readonly membershipFlipBase: number | null;
+	readonly tolerantUnitAccuracy: number | null;
+	/** The strict unit accuracy. */
 	readonly unitAccuracy: number | null;
-	readonly flips: number | null;
-	readonly flipBase: number | null;
 	readonly jevInputTokensPerSentence: number | null;
-	/** Against the parent, from a recorded compare or the committed outcomes. */
+	/** The membership delta against the parent, from a recorded compare or the committed outcomes. */
 	readonly delta: BucketDelta | null;
 	/** A recorded compare's verdict, which wins over the derived one. */
 	readonly verdict: string | null;
@@ -51,10 +56,13 @@ export function derivedVerdict(
 		: "worse beyond noise";
 }
 
+const percentCell = (value: number | null) =>
+	value === null || Number.isNaN(value) ? "–" : (100 * value).toFixed(1);
+
 export function iterationTable(rows: readonly IterationRow[]): string {
 	const lines = [
-		"| runId | parent | hypothesis | unit% | Δ vs parent (+a −b, p) | flips | jev input tokens/sentence | verdict |",
-		"| --- | --- | --- | --- | --- | --- | --- | --- |",
+		"| runId | parent | hypothesis | membership% | Δ membership vs parent (+a −b, p) | membership flips | tolerant% | strict% | jev input tokens/sentence | verdict |",
+		"| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
 	];
 	for (const row of rows)
 		lines.push(
@@ -62,13 +70,13 @@ export function iterationTable(rows: readonly IterationRow[]): string {
 				`\`${row.runId}\``,
 				row.parent ? `\`${row.parent}\`` : "–",
 				cell(row.hypothesis ?? "–"),
-				row.unitAccuracy === null || Number.isNaN(row.unitAccuracy)
-					? "–"
-					: (100 * row.unitAccuracy).toFixed(1),
+				percentCell(row.membership),
 				deltaCell(row.delta),
-				row.flips === null
+				row.membershipFlips === null
 					? "–"
-					: `${row.flips}/${row.flipBase ?? "?"}`,
+					: `${row.membershipFlips}/${row.membershipFlipBase ?? "?"}`,
+				percentCell(row.tolerantUnitAccuracy),
+				percentCell(row.unitAccuracy),
 				row.jevInputTokensPerSentence === null
 					? "–"
 					: tokens(row.jevInputTokensPerSentence),

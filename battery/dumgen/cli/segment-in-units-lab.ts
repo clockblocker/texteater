@@ -71,6 +71,9 @@ import {
 } from "../src/segment-in-units/lab/metrics.js";
 import { noiseFloor } from "../src/segment-in-units/lab/noise.js";
 import {
+	accuracyOf,
+	membershipFlipsOf,
+	type OutcomeRow,
 	outcomePolicies,
 	outcomesOf,
 } from "../src/segment-in-units/lab/outcomes.js";
@@ -485,33 +488,40 @@ async function report(runId: string) {
 	console.log(
 		`\n${runId} (${rows[0]?.cases ?? 0} cases × ${labRun.repetitions}, set ${labRun.set}@${labRun.setHash})`,
 	);
+	// ADR 0008: membership first, then its consistency, then the route.
 	console.log(
-		"policy        unit%  seg%  route|seg%  multiSeg% multiUnit% single% case%  full%   flips  varying  M/WS/WR/Mi/Stub (summed over reps)  unit% by rep",
+		`${"policy".padEnd(30)}   mem% multiMem% singleMem%  memFlips   tol% route|mem tol%  strict% route|mem%   case%     full% caseFlips varying  M/A/R/S/Mi/Stub  split/merged/crossed  mem% by rep`,
 	);
 	for (const row of rows) {
 		const { rates, tally } = row;
 		console.log(
 			[
-				row.policy.padEnd(12),
-				percent(rates.unitAccuracy).padStart(6),
-				percent(rates.segmentAccuracy).padStart(5),
-				percent(rates.routeGivenSegments).padStart(10),
-				percent(rates.multiSegmentAccuracy).padStart(9),
-				percent(rates.multiUnitAccuracy).padStart(10),
-				percent(rates.singleUnitAccuracy).padStart(7),
-				percent(rates.casePass).padStart(6),
+				row.policy.padEnd(30),
+				percent(rates.membership).padStart(6),
+				percent(rates.multiMembership).padStart(9),
+				percent(rates.singleMembership).padStart(10),
+				`${row.membershipFlips}/${row.membershipFlipBase}`.padStart(9),
+				percent(rates.tolerantUnitAccuracy).padStart(6),
+				percent(rates.tolerantRouteGivenMembership).padStart(13),
+				percent(rates.unitAccuracy).padStart(8),
+				percent(rates.routeGivenMembership).padStart(10),
+				percent(rates.casePass).padStart(7),
 				`${percent(rates.fullPass)}(${tally.fullCases / row.repetitions})`.padStart(
 					9,
 				),
-				`${row.flips}/${row.flipBase}`.padStart(8),
+				`${row.flips}/${row.flipBase}`.padStart(9),
 				String(row.varyingOutputs).padStart(7),
-				`  ${tally.match}/${tally.wrongSegments}/${tally.wrongRoute}/${tally.missing}/${tally.stub}`.padEnd(
-					36,
+				` ${tally.match}/${tally.toleratedRoute}/${tally.wrongRoute - tally.toleratedRoute}/${tally.wrongSegments}/${tally.missing}/${tally.stub}`.padEnd(
+					17,
 				),
-				row.unitAccuracyByRepetition.map(percent).join(" "),
+				`${tally.split}/${tally.merged}/${tally.crossed}`.padEnd(21),
+				row.membershipByRepetition.map(percent).join(" "),
 			].join(" "),
 		);
 	}
+	console.log(
+		"mem%: gold Segment set exact, any route; memFlips: units whose membership differs between repetitions; tol%: membership with a same or tolerated route (ADR 0008); strict%: same route too; case%: contract (membership) passes",
+	);
 	console.log(
 		`cost: ${cost.jevInputTokensPerSentence.toFixed(0)} jev input tokens/sentence, ${cost.jevCallsPerSentence.toFixed(2)} calls, ${cost.jevQuestionsPerSentence.toFixed(1)} questions; luna ${cost.lunaCallsPerSentence.toFixed(2)} calls ${cost.lunaInputTokensPerSentence.toFixed(0)}/${cost.lunaOutputTokensPerSentence.toFixed(0)} tokens; latency p50 ${cost.latencyP50.toFixed(0)} ms p95 ${cost.latencyP95.toFixed(0)} ms; ${cost.errors} errors`,
 	);
@@ -530,12 +540,12 @@ async function report(runId: string) {
 		table: ReturnType<typeof breakdown>,
 		minimum = 1,
 	) => {
-		console.log(`${title} (${primary}): key scored seg% unit%`);
+		console.log(`${title} (${primary}): key scored mem% tol% strict%`);
 		for (const [key, entry] of Object.entries(table)
 			.filter(([, entry]) => entry.scored >= minimum)
 			.sort((a, b) => b[1].scored - a[1].scored))
 			console.log(
-				`  ${key.padEnd(48)} ${String(entry.scored).padStart(5)} ${percent(entry.segments / entry.scored).padStart(6)} ${percent(entry.match / entry.scored).padStart(6)}`,
+				`  ${key.padEnd(48)} ${String(entry.scored).padStart(5)} ${percent(entry.membership / entry.scored).padStart(6)} ${percent(entry.tolerant / entry.scored).padStart(6)} ${percent(entry.match / entry.scored).padStart(6)}`,
 			);
 	};
 	show("by gold route", routeBreakdown);
@@ -543,12 +553,37 @@ async function report(runId: string) {
 	show("by cited Rule", ruleBreakdown, 9);
 	show("by phenomenon", phenomenonBreakdown, 3);
 	const confused = [...confusions(labRun, cases, primary, only)].sort(
-		(a, b) => b[1] - a[1],
+		(a, b) => b[1].count - a[1].count,
+	);
+	const routeErrors = confused.reduce(
+		(total, [, entry]) => total + entry.count,
+		0,
+	);
+	const byPair = new Map<string, number>();
+	for (const [, entry] of confused)
+		if (entry.tolerated)
+			byPair.set(
+				entry.tolerated,
+				(byPair.get(entry.tolerated) ?? 0) + entry.count,
+			);
+	const tolerated = [...byPair.values()].reduce(
+		(total, count) => total + count,
+		0,
 	);
 	console.log(
-		`route confusions (${primary}, summed over reps): ${confused
+		`route errors given membership (${primary}, summed over reps): ${routeErrors}, tolerated ${tolerated} (${[
+			...byPair,
+		]
+			.map(([pair, count]) => `${pair} ${count}`)
+			.join(", ")})`,
+	);
+	console.log(
+		`route confusions, ~ marks a tolerated pair: ${confused
 			.slice(0, 18)
-			.map(([key, count]) => `${key} ${count}`)
+			.map(
+				([key, entry]) =>
+					`${entry.tolerated ? "~" : ""}${key} ${entry.count}`,
+			)
 			.join("; ")}`,
 	);
 	const calibrated = calibration(labRun, cases, only);
@@ -591,6 +626,13 @@ async function report(runId: string) {
 		primary,
 		policies: rows,
 		cost,
+		routeErrors: {
+			policy: primary,
+			total: routeErrors,
+			tolerated,
+			byPair: Object.fromEntries(byPair),
+			confusions: Object.fromEntries(confused),
+		},
 		breakdowns: {
 			phenomenon: phenomenonBreakdown,
 			route: routeBreakdown,
@@ -645,25 +687,45 @@ async function compare() {
 				).map(({ id }) => id),
 			)
 		: undefined;
+	const deltaOptions = {
+		...(only ? { only } : {}),
+		...(values.noise ? { noiseRun: values.noise } : {}),
+	};
+	// ADR 0008: membership leads; the route scores follow.
 	const { paired, noise, all, buckets } = await deltaBetween(
 		evidenceRoot,
 		left,
 		right,
-		{
-			...(only ? { only } : {}),
-			...(values.noise ? { noiseRun: values.noise } : {}),
-		},
+		deltaOptions,
 	);
 	const floorText = (floor: number | null, beyond: boolean | null) =>
 		floor === null
 			? ""
 			: `  floor ${floor.toFixed(1)} ${beyond ? "BEYOND NOISE" : "within noise"}`;
 	console.log(
-		`gold units by majority verdict: both match ${paired.both}, neither ${paired.neither}, left only ${all.lost}, right only ${all.gained}`,
+		`membership, gold units by majority over repetitions: both hold ${paired.both}, neither ${paired.neither}, left only ${all.lost}, right only ${all.gained}`,
 	);
 	console.log(
-		`McNemar p = ${formatP(all.p)}${floorText(all.floor, all.beyondNoise)}`,
+		`  McNemar p = ${formatP(all.p)}${floorText(all.floor, all.beyondNoise)}`,
 	);
+	const scopedRows = (rows: readonly OutcomeRow[]) =>
+		only ? rows.filter((row) => only.has(row.case)) : rows;
+	const consistency = [left, right].map((entry) =>
+		membershipFlipsOf(scopedRows(entry.rows), entry.policy),
+	);
+	console.log(
+		`consistency, units whose membership flips between repetitions: left ${consistency[0]?.flips}/${consistency[0]?.base}, right ${consistency[1]?.flips}/${consistency[1]?.base}`,
+	);
+	for (const measure of ["tolerant", "strict"] as const) {
+		const delta = await deltaBetween(evidenceRoot, left, right, {
+			...deltaOptions,
+			measure,
+		});
+		console.log(
+			`${measure === "tolerant" ? "tolerant route (ADR 0008)" : "strict (route equal)"}: left ${percent(accuracyOf(scopedRows(left.rows), left.policy, measure))}%, right ${percent(accuracyOf(scopedRows(right.rows), right.policy, measure))}%; +${delta.all.gained} −${delta.all.lost}, p ${formatP(delta.all.p)}${floorText(delta.all.floor, delta.all.beyondNoise)}`,
+		);
+	}
+	console.log("membership by bucket:");
 	console.log(
 		noise
 			? `noise floor from ${noise.record.rerun} (rerun of ${noise.record.baseline})${noise.record.promptsMatch ? "" : ", WHOSE PROMPTS DIFFERED"}`
@@ -816,9 +878,11 @@ async function iterationRows(
 			runId: manifest.runId,
 			parent: manifest.parent,
 			hypothesis: manifest.hypothesis,
+			membership: primary?.rates.membership ?? null,
+			membershipFlips: primary?.membershipFlips ?? null,
+			membershipFlipBase: primary?.membershipFlipBase ?? null,
+			tolerantUnitAccuracy: primary?.rates.tolerantUnitAccuracy ?? null,
 			unitAccuracy: primary?.rates.unitAccuracy ?? null,
-			flips: primary?.flips ?? null,
-			flipBase: primary?.flipBase ?? null,
 			jevInputTokensPerSentence:
 				summary?.cost.jevInputTokensPerSentence ?? null,
 			delta,

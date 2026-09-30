@@ -1,7 +1,8 @@
 /**
  * What `compare` and `ledger --table` pair: each side's outcomes, scored from
  * the raw run when `.runs/` still has it and read from the committed
- * `outcomes.jsonl.gz` otherwise, and the noise floor that judges the delta.
+ * `outcomes.jsonl.gz` otherwise, and the noise floor that judges the delta
+ * under each measure, membership first (ADR 0008).
  */
 import { existsSync } from "node:fs";
 import type { LabCase } from "./corpus.js";
@@ -13,8 +14,13 @@ import {
 	readOutcomes,
 } from "./evidence.js";
 import { primaryOf } from "./metrics.js";
-import { deltasOf, type NoiseFloor } from "./noise.js";
-import { type OutcomeRow, outcomesOf, pairOutcomes } from "./outcomes.js";
+import { deltasOf, type NoiseFloor, noiseFloor } from "./noise.js";
+import {
+	type Measure,
+	type OutcomeRow,
+	outcomesOf,
+	pairOutcomes,
+} from "./outcomes.js";
 import { type LabRun, loadLabRun, runPath } from "./run.js";
 
 export type Side = {
@@ -67,13 +73,17 @@ export async function loadSide(args: {
 
 /**
  * The noise floor for a comparison: `noiseRun` when named, else the latest
- * noise rerun of the left run, else of the right one, for that side's policy.
+ * noise rerun of the left run, else of the right one, for that side's
+ * policy. The floor under `measure` comes from the committed outcomes of
+ * the baseline and its rerun; without them, `noise.json` holds the
+ * membership floor only.
  */
 export async function findNoise(
 	evidenceRoot: string,
 	left: Pick<Side, "runId" | "policy">,
 	right: Pick<Side, "runId" | "policy">,
 	noiseRun?: string,
+	measure: Measure = "membership",
 ): Promise<
 	{ readonly record: NoiseRecord; readonly floor: NoiseFloor } | undefined
 > {
@@ -100,13 +110,23 @@ export async function findNoise(
 			record.baseline === right.runId && record.baseline !== left.runId
 				? right.policy
 				: left.policy;
-		const floor = record.floors[policy];
+		const baselineRows = await readOutcomes(evidenceRoot, record.baseline);
+		const rerunRows = await readOutcomes(evidenceRoot, record.rerun);
+		const floor =
+			baselineRows && rerunRows
+				? noiseFloor(baselineRows, rerunRows, policy, measure)
+				: measure === "membership"
+					? record.floors[policy]
+					: undefined;
 		if (floor) return { record, floor };
 	}
 	return undefined;
 }
 
-/** The overall delta of right against left, judged against the noise floor when one exists. */
+/**
+ * The delta of right against left under `measure` (membership by default),
+ * judged against the noise floor when one exists.
+ */
 export async function deltaBetween(
 	evidenceRoot: string,
 	left: Side,
@@ -114,10 +134,18 @@ export async function deltaBetween(
 	options: {
 		readonly only?: ReadonlySet<string>;
 		readonly noiseRun?: string;
+		readonly measure?: Measure;
 	} = {},
 ) {
-	const paired = pairOutcomes(left, right, options.only);
-	const noise = await findNoise(evidenceRoot, left, right, options.noiseRun);
+	const measure = options.measure ?? "membership";
+	const paired = pairOutcomes(left, right, options.only, measure);
+	const noise = await findNoise(
+		evidenceRoot,
+		left,
+		right,
+		options.noiseRun,
+		measure,
+	);
 	const deltas = deltasOf(paired, noise?.floor);
 	return { paired, noise, ...deltas };
 }

@@ -5,30 +5,58 @@
  * without the gitignored raw runs.
  */
 import { gunzipSync, gzipSync } from "node:zlib";
-import type { Unit } from "../../evaluation/spec-corpus/segment-in-units.js";
+import type { UnitCheck } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
 import { keyOf } from "../de/routes.js";
 import type { LabCase } from "./corpus.js";
-import { bucketOf, mcnemar, policiesOf, scoreCase } from "./metrics.js";
+import { bucketOf, isStub, mcnemar, policiesOf, scoreCase } from "./metrics.js";
 import type { LabRun } from "./run.js";
 
 /**
- * One letter per repetition: Match, wrong Segments, wrong Route, missing
- * (X), sTub, or E when the repetition failed.
+ * One letter per repetition: Match, a route ADR 0008 Accepts (a tolerated
+ * WrongRoute), a wrong Route it does not, wrong Segments, missing (X),
+ * sTub, or E when the repetition failed. Rows written before #757 read
+ * every WrongRoute as R.
  */
-export type VerdictLetter = "M" | "S" | "R" | "X" | "T" | "E";
+export type VerdictLetter = "M" | "A" | "R" | "S" | "X" | "T" | "E";
 
-const letters = {
-	Match: "M",
-	WrongSegments: "S",
-	WrongRoute: "R",
-	Missing: "X",
-	Stub: "T",
-} as const satisfies Record<string, VerdictLetter>;
+function letterOf(check: UnitCheck): VerdictLetter {
+	switch (check.verdict) {
+		case "Match":
+			return "M";
+		case "WrongRoute":
+			return check.tolerated ? "A" : "R";
+		case "WrongSegments":
+			return "S";
+		case "Missing":
+			return "X";
+		case "Stub":
+			return "T";
+	}
+}
+
+/**
+ * What a paired comparison counts as a hit, in the order ADR 0008 ranks
+ * them: membership whatever the route, membership with a same or tolerated
+ * route, or the strict match.
+ */
+export type Measure = "membership" | "tolerant" | "strict";
+
+export const measures = [
+	"membership",
+	"tolerant",
+	"strict",
+] as const satisfies readonly Measure[];
+
+const hitLetters: Readonly<Record<Measure, string>> = {
+	membership: "MAR",
+	tolerant: "MA",
+	strict: "M",
+};
 
 export type PolicyOutcome = {
 	/** One `VerdictLetter` per repetition. */
 	readonly v: string;
-	/** Per repetition, the route returned for a WrongRoute unit, else null; absent when no repetition was WrongRoute. */
+	/** Per repetition, the route returned for a WrongRoute unit (A or R), else null; absent when no repetition was one. */
 	readonly r?: readonly (string | null)[];
 };
 
@@ -43,9 +71,6 @@ export type OutcomeRow = {
 	readonly stub: boolean;
 	readonly policies: Readonly<Record<string, PolicyOutcome>>;
 };
-
-const isStub = (unit: Unit) =>
-	unit.route === "Unresolved" || unit.route.family === "Foreign";
 
 /** Scores every repetition of every policy per gold unit. */
 export function outcomesOf(
@@ -72,7 +97,7 @@ export function outcomesOf(
 					checks[repetition] === undefined
 						? "E"
 						: check
-							? letters[check.verdict]
+							? letterOf(check)
 							: "X",
 				);
 				const routes = units.map((check) => {
@@ -121,11 +146,16 @@ export const outcomePolicies = (rows: readonly OutcomeRow[]) => [
 	...new Set(rows.flatMap((row) => Object.keys(row.policies))),
 ];
 
-/** Whether a unit matches in more than half of its repetitions. */
-export function majorityMatch(outcome: PolicyOutcome | undefined): boolean {
+/** Whether a unit is a hit under `measure` in more than half of its repetitions. */
+export function majorityHit(
+	outcome: PolicyOutcome | undefined,
+	measure: Measure,
+): boolean {
 	if (!outcome) return false;
-	const matches = [...outcome.v].filter((letter) => letter === "M").length;
-	return matches * 2 > outcome.v.length;
+	const hits = [...outcome.v].filter((letter) =>
+		hitLetters[measure].includes(letter),
+	).length;
+	return hits * 2 > outcome.v.length;
 }
 
 export type PairedUnit = {
@@ -151,14 +181,16 @@ export type Paired = {
 };
 
 /**
- * Paired comparison per scored gold unit present on both sides: its
- * majority verdict over repetitions, for a McNemar read. `only` restricts
+ * Paired comparison per scored gold unit present on both sides: whether
+ * its majority over repetitions is a hit under `measure` (membership by
+ * default, the ADR 0008 headline), for a McNemar read. `only` restricts
  * the cases.
  */
 export function pairOutcomes(
 	left: { readonly rows: readonly OutcomeRow[]; readonly policy: string },
 	right: { readonly rows: readonly OutcomeRow[]; readonly policy: string },
 	only?: ReadonlySet<string>,
+	measure: Measure = "membership",
 ): Paired {
 	const keyOfRow = (row: OutcomeRow) => `${row.case}#${row.unit}`;
 	const rights = new Map(right.rows.map((row) => [keyOfRow(row), row]));
@@ -171,8 +203,8 @@ export function pairOutcomes(
 		if (row.stub || (only && !only.has(row.case))) continue;
 		const other = rights.get(keyOfRow(row));
 		if (!other) continue;
-		const leftMatch = majorityMatch(row.policies[left.policy]);
-		const rightMatch = majorityMatch(other.policies[right.policy]);
+		const leftMatch = majorityHit(row.policies[left.policy], measure);
+		const rightMatch = majorityHit(other.policies[right.policy], measure);
 		const tally = buckets[row.bucket] ?? {
 			units: 0,
 			left: 0,
@@ -202,22 +234,49 @@ export function pairOutcomes(
 	return { both, neither, leftOnly, rightOnly, buckets };
 }
 
-/** The unit accuracy of one policy, summed over repetitions, as `summarizePolicy` counts it. */
-export function unitAccuracyOf(
+/**
+ * One policy's rate under `measure`, summed over repetitions, as
+ * `summarizePolicy` counts membership, tolerant and strict unit accuracy.
+ */
+export function accuracyOf(
 	rows: readonly OutcomeRow[],
 	policy: string,
+	measure: Measure,
 ): number {
 	let scored = 0;
-	let match = 0;
+	let hits = 0;
 	for (const row of rows) {
 		if (row.stub) continue;
 		for (const letter of row.policies[policy]?.v ?? "") {
 			if (letter === "T") continue;
 			scored++;
-			if (letter === "M") match++;
+			if (hitLetters[measure].includes(letter)) hits++;
 		}
 	}
-	return scored === 0 ? Number.NaN : match / scored;
+	return scored === 0 ? Number.NaN : hits / scored;
+}
+
+/**
+ * Consistency, as `summarizePolicy` counts it: scored gold units whose
+ * membership holds in some repetitions and not in others, of the units
+ * with more than one repetition.
+ */
+export function membershipFlipsOf(
+	rows: readonly OutcomeRow[],
+	policy: string,
+): { readonly flips: number; readonly base: number } {
+	let flips = 0;
+	let base = 0;
+	for (const row of rows) {
+		const letters = row.policies[policy]?.v ?? "";
+		if (row.stub || letters.length < 2) continue;
+		base++;
+		const held = [...letters].map((letter) =>
+			hitLetters.membership.includes(letter),
+		);
+		if (held.some(Boolean) && held.some((entry) => !entry)) flips++;
+	}
+	return { flips, base };
 }
 
 export const pairedP = (paired: Paired) =>
