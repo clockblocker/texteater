@@ -155,14 +155,28 @@ export const focusPath = join(
 	"membership-focus.json",
 );
 
+/** A frozen set's identity, as a run, its manifest or the set itself records it. */
+export type SetIdentity = { readonly name: string; readonly hash: string };
+
+const readFocus = () => JSON.parse(readFileSync(focusPath, "utf8")) as FocusSet;
+
+const takenFrom = (focus: FocusSet, set: SetIdentity) =>
+	focus.set.name === set.name && focus.set.hash === set.hash;
+
 /** The focus set, refused when `set` is not the frozen set it was taken from. */
-export function loadFocus(set: LabSet): FocusSet {
-	const focus = JSON.parse(readFileSync(focusPath, "utf8")) as FocusSet;
-	if (focus.set.name !== set.name || focus.set.hash !== set.hash)
+export function loadFocus(set: SetIdentity): FocusSet {
+	const focus = readFocus();
+	if (!takenFrom(focus, set))
 		throw Error(
 			`The membership focus set was taken from ${focus.set.name}@${focus.set.hash}, not ${set.name}@${set.hash}`,
 		);
 	return focus;
+}
+
+/** The focus set when it was taken from `set`; undefined for any other set. */
+export function focusOf(set: SetIdentity): FocusSet | undefined {
+	const focus = readFocus();
+	return takenFrom(focus, set) ? focus : undefined;
 }
 
 const multi = (labCase: LabCase) =>

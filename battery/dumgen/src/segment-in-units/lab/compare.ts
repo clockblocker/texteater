@@ -5,7 +5,7 @@
  * under each measure, membership first (ADR 0008).
  */
 import { existsSync } from "node:fs";
-import type { LabCase } from "./corpus.js";
+import { focusOf, type LabCase } from "./corpus.js";
 import {
 	type NoiseRecord,
 	readManifest,
@@ -13,6 +13,7 @@ import {
 	readNoise,
 	readOutcomes,
 } from "./evidence.js";
+import { compareFocus, type FocusComparison } from "./focus.js";
 import { primaryOf } from "./metrics.js";
 import { deltasOf, type NoiseFloor, noiseFloor } from "./noise.js";
 import {
@@ -27,6 +28,7 @@ export type Side = {
 	readonly runId: string;
 	readonly policy: string;
 	readonly setName: string;
+	readonly setHash: string;
 	readonly rows: readonly OutcomeRow[];
 	/** The raw run, when `.runs/` has it. */
 	readonly raw?: LabRun;
@@ -49,6 +51,7 @@ export async function loadSide(args: {
 			runId: args.runId,
 			policy: args.policy ?? primaryOf(raw),
 			setName: raw.set,
+			setHash: raw.setHash,
 			rows: outcomesOf(raw, await args.casesOf(raw.set)),
 			raw,
 		};
@@ -67,6 +70,7 @@ export async function loadSide(args: {
 		runId: args.runId,
 		policy: args.policy ?? manifest.primary,
 		setName: manifest.set.name,
+		setHash: manifest.set.hash,
 		rows,
 	};
 }
@@ -148,4 +152,24 @@ export async function deltaBetween(
 	);
 	const deltas = deltasOf(paired, noise?.floor);
 	return { paired, noise, ...deltas };
+}
+
+/**
+ * The focus reading of a comparison (#761): when both sides ran on the set
+ * the membership focus set was taken from, what changed on its units and
+ * on the guardrail. Undefined for any other set.
+ */
+export function focusBetween(
+	left: Side,
+	right: Side,
+	only?: ReadonlySet<string>,
+): FocusComparison | undefined {
+	const focus = focusOf({ name: left.setName, hash: left.setHash });
+	if (
+		!focus ||
+		right.setName !== left.setName ||
+		right.setHash !== left.setHash
+	)
+		return undefined;
+	return compareFocus(left, right, focus, only);
 }

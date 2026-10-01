@@ -6,6 +6,7 @@
  */
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import type { FocusDelta } from "./focus.js";
 import type { CallRecord } from "./jev.js";
 
 export type Spend = {
@@ -67,6 +68,8 @@ export type CompareEntry = BucketDelta & {
 	readonly noiseRun: string | null;
 	readonly verdict: string | null;
 	readonly buckets: Readonly<Record<string, BucketDelta>>;
+	/** On the membership focus set's source set: what changed on its units and the guardrail (#761). */
+	readonly focus?: FocusDelta;
 };
 
 export type LedgerEntry = SpendEntry | CompareEntry;

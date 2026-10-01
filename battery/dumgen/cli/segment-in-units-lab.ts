@@ -23,8 +23,13 @@ import { parseArgs } from "node:util";
 import { stableJson } from "promptsmith";
 import { compareRuns, loadRun } from "promptsmith/storage";
 import { arms } from "../src/segment-in-units/de/arms/index.js";
-import { deltaBetween, loadSide } from "../src/segment-in-units/lab/compare.js";
 import {
+	deltaBetween,
+	focusBetween,
+	loadSide,
+} from "../src/segment-in-units/lab/compare.js";
+import {
+	focusOf,
 	freezeSets,
 	type LabCase,
 	loadSet,
@@ -44,6 +49,16 @@ import {
 	writeSummary,
 } from "../src/segment-in-units/lab/evidence.js";
 import { exportPolicy } from "../src/segment-in-units/lab/export.js";
+import {
+	type Change,
+	type FocusComparison,
+	type FocusScore,
+	focusGroupLabel,
+	focusGroups,
+	rateOf,
+	scoreFocus,
+	type UnitTally,
+} from "../src/segment-in-units/lab/focus.js";
 import { type CallRecord, Jev } from "../src/segment-in-units/lab/jev.js";
 import {
 	appendLedger,
@@ -91,6 +106,8 @@ import {
 	saveLabRun,
 } from "../src/segment-in-units/lab/run.js";
 import {
+	type FocusIterationRow,
+	focusIterationTable,
 	formatP,
 	type IterationRow,
 	iterationTable,
@@ -522,6 +539,11 @@ async function report(runId: string) {
 	console.log(
 		"mem%: gold Segment set exact, any route; memFlips: units whose membership differs between repetitions; tol%: membership with a same or tolerated route (ADR 0008); strict%: same route too; case%: contract (membership) passes",
 	);
+	const focus = focusOf({ name: labRun.set, hash: labRun.setHash });
+	const focusScore = focus
+		? scoreFocus(outcomesOf(labRun, cases), primary, focus, only)
+		: undefined;
+	if (focusScore) printFocusScore(focusScore);
 	console.log(
 		`cost: ${cost.jevInputTokensPerSentence.toFixed(0)} jev input tokens/sentence, ${cost.jevCallsPerSentence.toFixed(2)} calls, ${cost.jevQuestionsPerSentence.toFixed(1)} questions; luna ${cost.lunaCallsPerSentence.toFixed(2)} calls ${cost.lunaInputTokensPerSentence.toFixed(0)}/${cost.lunaOutputTokensPerSentence.toFixed(0)} tokens; latency p50 ${cost.latencyP50.toFixed(0)} ms p95 ${cost.latencyP95.toFixed(0)} ms; ${cost.errors} errors`,
 	);
@@ -625,6 +647,7 @@ async function report(runId: string) {
 		model: labRun.model,
 		primary,
 		policies: rows,
+		...(focusScore ? { focus: focusScore } : {}),
 		cost,
 		routeErrors: {
 			policy: primary,
@@ -655,6 +678,114 @@ async function report(runId: string) {
 			summary,
 		);
 	}
+}
+
+const focusLine = (label: string, cells: readonly string[]) =>
+	console.log(`  ${label.padEnd(44)} ${cells.join(" ")}`);
+
+/** The focus block of a report (#761): the focus units, by #755 cause, and the guardrail. */
+function printFocusScore(score: FocusScore) {
+	console.log(
+		`focus units (${score.focusSet}, ${score.policy}): held and wrong by majority, membership flips; mem% and tol% summed over repetitions`,
+	);
+	focusLine("", ["units", " held", "wrong", "flips", "  mem%", "  tol%"]);
+	const line = (label: string, tally: UnitTally) =>
+		focusLine(label, [
+			String(tally.units).padStart(5),
+			String(tally.held).padStart(5),
+			String(tally.units - tally.held).padStart(5),
+			String(tally.flips).padStart(5),
+			percent(rateOf(tally, "membership")).padStart(6),
+			percent(rateOf(tally, "tolerant")).padStart(6),
+		]);
+	line("focus", score.focus);
+	for (const group of focusGroups)
+		line(`  ${focusGroupLabel(group)}`, score.groups[group]);
+	line("guardrail: other units of the focus cases", score.guardrail);
+	if (score.otherCases.units > 0)
+		line("guardrail: units of other cases", score.otherCases);
+}
+
+/** The focus block of a comparison (#761): per unit, what changed from left to right. */
+function printFocusComparison(comparison: FocusComparison) {
+	const { left, right, delta } = comparison;
+	console.log(
+		`focus units (${left.focusSet}), membership by majority, left → right; fixed: wrong → held, broken: held → wrong, stabilised: flipping → not`,
+	);
+	focusLine("", [
+		"units",
+		"  held L → R",
+		" flips L → R",
+		"   tol% L → R",
+		"fixed",
+		"broken",
+		"stabilised",
+		"destabilised",
+		"p",
+	]);
+	const arrow = (a: string, b: string, width: number) =>
+		`${a} → ${b}`.padStart(width);
+	const line = (
+		label: string,
+		[l, r]: readonly [UnitTally, UnitTally],
+		change: (typeof delta)["focus"],
+	) =>
+		focusLine(label, [
+			String(change.units).padStart(5),
+			arrow(String(l.held), String(r.held), 12),
+			arrow(String(l.flips), String(r.flips), 12),
+			arrow(
+				percent(rateOf(l, "tolerant")),
+				percent(rateOf(r, "tolerant")),
+				14,
+			),
+			String(change.fixed).padStart(5),
+			String(change.broken).padStart(6),
+			String(change.stabilised).padStart(10),
+			String(change.destabilised).padStart(12),
+			formatP(change.p),
+		]);
+	line("focus", [left.focus, right.focus], delta.focus);
+	for (const group of focusGroups)
+		line(
+			`  ${focusGroupLabel(group)}`,
+			[left.groups[group], right.groups[group]],
+			delta.groups[group],
+		);
+	line(
+		"guardrail: other units of the focus cases",
+		[left.guardrail, right.guardrail],
+		delta.guardrail,
+	);
+	if (delta.otherCases.units > 0)
+		line(
+			"guardrail: units of other cases",
+			[left.otherCases, right.otherCases],
+			delta.otherCases,
+		);
+	for (const scope of ["focus", "guardrail"] as const)
+		for (const change of [
+			"fixed",
+			"broken",
+			"stabilised",
+			"destabilised",
+		] as const satisfies readonly Change[]) {
+			const units = comparison.changed.filter(
+				(unit) =>
+					(scope === "focus") === (unit.scope === "focus") &&
+					unit.changes.includes(change),
+			);
+			if (units.length > 0)
+				console.log(
+					`  ${scope} ${change}: ${units
+						.slice(0, Number(values.limit ?? 25))
+						.map(
+							(unit) =>
+								`${unit.text} ${unit.gold}${unit.group ? ` (${unit.group})` : ""}`,
+						)
+						.join(" | ")}`,
+				);
+		}
 }
 
 async function compare() {
@@ -725,6 +856,8 @@ async function compare() {
 			`${measure === "tolerant" ? "tolerant route (ADR 0008)" : "strict (route equal)"}: left ${percent(accuracyOf(scopedRows(left.rows), left.policy, measure))}%, right ${percent(accuracyOf(scopedRows(right.rows), right.policy, measure))}%; +${delta.all.gained} −${delta.all.lost}, p ${formatP(delta.all.p)}${floorText(delta.all.floor, delta.all.beyondNoise)}`,
 		);
 	}
+	const focus = focusBetween(left, right, only);
+	if (focus) printFocusComparison(focus);
 	console.log("membership by bucket:");
 	console.log(
 		noise
@@ -762,6 +895,7 @@ async function compare() {
 			verdict: values.verdict ?? null,
 			...all,
 			buckets,
+			...(focus ? { focus: focus.delta } : {}),
 		};
 		await appendLedger(ledgerPath, entry);
 		console.log("recorded in the ledger");
@@ -821,6 +955,9 @@ async function ledger() {
 	const entries = await readLedger(ledgerPath);
 	if (values.table) {
 		process.stdout.write(iterationTable(await iterationRows(entries)));
+		const focusRows = await focusIterationRows(entries);
+		if (focusRows.length > 0)
+			process.stdout.write(`\n${focusIterationTable(focusRows)}`);
 		return;
 	}
 	const totals = ledgerTotals(entries);
@@ -887,6 +1024,53 @@ async function iterationRows(
 				summary?.cost.jevInputTokensPerSentence ?? null,
 			delta,
 			verdict: recorded?.verdict ?? null,
+		});
+	}
+	return rows;
+}
+
+/**
+ * One row per run with a manifest on the membership focus set's source set
+ * (#761). The delta against the parent comes from the latest recorded
+ * compare that carries one, else from the committed outcomes of both.
+ */
+async function focusIterationRows(
+	entries: Awaited<ReturnType<typeof readLedger>>,
+): Promise<FocusIterationRow[]> {
+	const compares = entries.filter(
+		(entry): entry is CompareEntry => entry.command === "compare",
+	);
+	const rows: FocusIterationRow[] = [];
+	for (const manifest of await readManifests(evidenceRoot)) {
+		if (manifest.kind !== "run") continue;
+		const focus = focusOf(manifest.set);
+		const outcomes =
+			focus && (await readOutcomes(evidenceRoot, manifest.runId));
+		if (!focus || !outcomes) continue;
+		const recorded = compares.findLast(
+			(entry) =>
+				entry.left.runId === manifest.parent &&
+				entry.right.runId === manifest.runId &&
+				entry.focus !== undefined,
+		);
+		let delta = recorded?.focus ?? null;
+		if (!delta && manifest.parent) {
+			try {
+				const sides = { labRoot, evidenceRoot };
+				delta =
+					focusBetween(
+						await loadSide({ ...sides, runId: manifest.parent }),
+						await loadSide({ ...sides, runId: manifest.runId }),
+					)?.delta ?? null;
+			} catch {
+				delta = null;
+			}
+		}
+		rows.push({
+			runId: manifest.runId,
+			parent: manifest.parent,
+			score: scoreFocus(outcomes, manifest.primary, focus),
+			delta,
 		});
 	}
 	return rows;

@@ -85,6 +85,19 @@ The pilot writes its manifest, configuration, requests and results to
   and strict deltas. `+a −b` means a units gained and b lost from left to
   right, with an exact McNemar p per bucket (one piece, Lexeme multi-piece,
   contiguous or discontinuous Locution, Saying).
+- On the set `evidence/segment-in-units-lab/membership-focus.json` was
+  taken from (dev), `report`, `compare` and `ledger --table` add a
+  **focus** block (#761). It reads the focus units on their own (held and
+  wrong by majority, memFlips, mem%, tol%), split by #755 cause, with the
+  units of records in review (#739) apart. `compare` counts per focus unit
+  **fixed** (wrong → held by majority), **broken** (held → wrong),
+  **stabilised** (flipping → not) and **destabilised**. Every other unit
+  is the **guardrail**, counted the same way: the rest of the focus cases,
+  and the other cases when a run covers more of dev. `compare --record`
+  keeps these counts in the ledger. `scoreFocus` and `compareFocus` in
+  `lab/focus.ts` read outcome rows, so a variant scored in memory compares
+  the same way. The focus set is fixed: never re-derive it from a later
+  run.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   committed outcomes otherwise. Outcomes are scored against the frozen
   gold, so `--relabel` needs the raw run.

@@ -3,9 +3,22 @@
  * manifest, its parent and hypothesis, its headline numbers in the order
  * ADR 0008 ranks them (membership, its paired delta against the parent,
  * consistency, the tolerant route score, then the strict score) and its
- * cost. It is Markdown, for a comment on the active lab ticket.
+ * cost. Runs on the membership focus set's source set get a second table
+ * (#761): the focus units, by cause, and the guardrail. Both are Markdown,
+ * for a comment on the active lab ticket.
  */
+import {
+	type FocusDelta,
+	type FocusScore,
+	focusGroupLabel,
+	focusGroups,
+	rateOf,
+	sumTallies,
+	type UnitChange,
+	type UnitTally,
+} from "./focus.js";
 import type { BucketDelta } from "./ledger.js";
+import { mcnemar } from "./metrics.js";
 
 export type IterationRow = {
 	readonly runId: string;
@@ -83,5 +96,72 @@ export function iterationTable(rows: readonly IterationRow[]): string {
 				cell(row.verdict ?? derivedVerdict(row)),
 			].join(" | ")} |`,
 		);
+	return `${lines.join("\n")}\n`;
+}
+
+/** A run on the set the membership focus set was taken from (#761). */
+export type FocusIterationRow = {
+	readonly runId: string;
+	readonly parent: string | null;
+	readonly score: FocusScore;
+	/** Against the parent, from a recorded compare or the committed outcomes; null when neither has it. */
+	readonly delta: FocusDelta | null;
+};
+
+const heldCell = (tally: UnitTally) => `${tally.held}/${tally.units}`;
+
+function changeCell(change: UnitChange | null): string {
+	if (!change) return "–";
+	return `fixed ${change.fixed}, broken ${change.broken}, stabilised ${change.stabilised}, destabilised ${change.destabilised}`;
+}
+
+/** The guardrail and the cases outside the focus set: every non-focus unit. */
+function sumChanges(a: UnitChange, b: UnitChange): UnitChange {
+	const fixed = a.fixed + b.fixed;
+	const broken = a.broken + b.broken;
+	return {
+		units: a.units + b.units,
+		fixed,
+		broken,
+		stabilised: a.stabilised + b.stabilised,
+		destabilised: a.destabilised + b.destabilised,
+		p: mcnemar(fixed, broken),
+	};
+}
+
+/**
+ * Per run: the focus units held by majority, their membership flips and
+ * rates, the units held per #755 cause (those in review apart), and every
+ * other unit as the guardrail, each against the parent.
+ */
+export function focusIterationTable(
+	rows: readonly FocusIterationRow[],
+): string {
+	const lines = [
+		`| runId | focus held | focus mem% | focus flips | focus tol% | ${focusGroups.map(focusGroupLabel).join(" | ")} | Δ focus vs parent | guardrail held | guardrail mem% | guardrail flips | Δ guardrail vs parent |`,
+		`|${" --- |".repeat(10 + focusGroups.length)}`,
+	];
+	for (const { runId, score, delta } of rows) {
+		const guardrail = sumTallies(score.guardrail, score.otherCases);
+		lines.push(
+			`| ${[
+				`\`${runId}\``,
+				heldCell(score.focus),
+				percentCell(rateOf(score.focus, "membership")),
+				String(score.focus.flips),
+				percentCell(rateOf(score.focus, "tolerant")),
+				...focusGroups.map((group) => heldCell(score.groups[group])),
+				changeCell(delta?.focus ?? null),
+				heldCell(guardrail),
+				percentCell(rateOf(guardrail, "membership")),
+				String(guardrail.flips),
+				changeCell(
+					delta
+						? sumChanges(delta.guardrail, delta.otherCases)
+						: null,
+				),
+			].join(" | ")} |`,
+		);
+	}
 	return `${lines.join("\n")}\n`;
 }

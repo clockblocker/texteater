@@ -53,6 +53,10 @@ const hitLetters: Readonly<Record<Measure, string>> = {
 	strict: "M",
 };
 
+/** Whether one repetition's verdict letter is a hit under `measure`. */
+export const isHit = (letter: string, measure: Measure) =>
+	hitLetters[measure].includes(letter);
+
 export type PolicyOutcome = {
 	/** One `VerdictLetter` per repetition. */
 	readonly v: string;
@@ -153,9 +157,17 @@ export function majorityHit(
 ): boolean {
 	if (!outcome) return false;
 	const hits = [...outcome.v].filter((letter) =>
-		hitLetters[measure].includes(letter),
+		isHit(letter, measure),
 	).length;
 	return hits * 2 > outcome.v.length;
+}
+
+/** Whether a unit's membership holds in some repetitions and not in others. */
+export function membershipFlipped(outcome: PolicyOutcome | undefined): boolean {
+	const held = [...(outcome?.v ?? "")].map((letter) =>
+		isHit(letter, "membership"),
+	);
+	return held.some(Boolean) && held.some((entry) => !entry);
 }
 
 export type PairedUnit = {
@@ -250,7 +262,7 @@ export function accuracyOf(
 		for (const letter of row.policies[policy]?.v ?? "") {
 			if (letter === "T") continue;
 			scored++;
-			if (hitLetters[measure].includes(letter)) hits++;
+			if (isHit(letter, measure)) hits++;
 		}
 	}
 	return scored === 0 ? Number.NaN : hits / scored;
@@ -268,13 +280,10 @@ export function membershipFlipsOf(
 	let flips = 0;
 	let base = 0;
 	for (const row of rows) {
-		const letters = row.policies[policy]?.v ?? "";
-		if (row.stub || letters.length < 2) continue;
+		const outcome = row.policies[policy];
+		if (row.stub || (outcome?.v.length ?? 0) < 2) continue;
 		base++;
-		const held = [...letters].map((letter) =>
-			hitLetters.membership.includes(letter),
-		);
-		if (held.some(Boolean) && held.some((entry) => !entry)) flips++;
+		if (membershipFlipped(outcome)) flips++;
 	}
 	return { flips, base };
 }
