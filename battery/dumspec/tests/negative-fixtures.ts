@@ -361,4 +361,26 @@ export const negativeFixtures: {
 			slot.realizedCase = "Gen";
 		},
 	},
+	{
+		// No unlisted adposition takes "any oblique case" (#652).
+		name: "an ADP the ADP Case Table does not list",
+		seed: "de/das-buch-liegt-auf-dem-tisch",
+		check: "AdpositionCase",
+		edit: (record) => {
+			const { surface } = record.targets[0].attestation;
+			surface.lemma.canonicalForm = "à";
+			surface.normalizedSurface = "à";
+		},
+	},
+	{
+		name: "a governed preposition the ADP Case Table does not list",
+		seed: "de/auf-ihn-bin-ich-stolz",
+		check: "AdpositionCase",
+		edit: (record) => {
+			const [slot] = record.targets[0].attestation.valencyEvidence;
+			// Named by no member, so only the table can object.
+			slot.member = null;
+			slot.complement.preposition.canonicalForm = "à";
+		},
+	},
 ];

@@ -7,14 +7,6 @@ import type { KeptValue } from "./schema-values.js";
  */
 export const germanKeptValues: readonly KeptValue[] = [
 	{
-		route: "Lexeme/ADP",
-		bag: "Core",
-		feature: "adpType",
-		value: "Circ",
-		keptBy: { issue: 733 },
-		why: "Its one use, a Draft, contradicts de/bracket-particle-or-circumposition; #733 decides whether adpType stays Core and Circ stays on Lexeme ADP.",
-	},
-	{
 		route: "Lexeme/PART",
 		bag: "Core",
 		feature: "polarity",

@@ -57,7 +57,7 @@ const noRecord = (gap: string, issue?: number): SttsGap => ({
 /**
  * The STTS crosswalk for German: each of the 54 STTS tags, the Dumling
  * representation of each of its uses, and the records showing each. A
- * ruling on #733, #734 or #735 updates the rows it touches. The #679
+ * ruling on #734 or #735 updates the rows it touches. The #679
  * coverage table is regenerated from it with `bun run stts-table`.
  */
 export const germanSttsCrosswalk: readonly SttsRow[] = [
@@ -161,7 +161,8 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "APPR",
 		stts: "preposition, left part of a circumposition",
 		dumling:
-			"Lexeme ADP adpType Prep; the first member of a circumposition Locution ADP; a member of the word governing it",
+			"Lexeme ADP; the first member of a circumposition Locution ADP; a member of the word governing it",
+		loss: "Position: no Lemma or Attestation records that the adposition stands before its complement, since the sentence shows it; the ADP Case Table lists the positions each adposition takes (ADR 0032)",
 		mappings: [
 			{
 				use: "preposition",
@@ -190,12 +191,10 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		rules: [
 			"de/governed-preposition-joins-its-governor",
 			"de/bracket-particle-or-circumposition",
+			"de/core-features-are-identity",
 		],
-		adrs: ["ADR-0029", "ADR-0041"],
-		model: partial({
-			gap: "adpType is Core, so a preposition that also stands after its noun is two Lemmas",
-			issue: 733,
-		}),
+		adrs: ["ADR-0029", "ADR-0032", "ADR-0041"],
+		model: modeled,
 		gold: "Partial",
 		pipeline: waitsOnDumgen,
 	},
@@ -229,7 +228,9 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "APPO",
 		stts: "postposition",
-		dumling: "Lexeme ADP adpType Post",
+		dumling:
+			"Lexeme ADP, the same Lemma as the adposition standing before its complement",
+		loss: "Position: no Lemma or Attestation records that the adposition stands after its complement, since the sentence shows it; the ADP Case Table lists the positions each adposition takes (ADR 0032)",
 		mappings: [
 			{
 				use: "postposition",
@@ -243,12 +244,9 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 				],
 			},
 		],
-		rules: [],
-		adrs: [],
-		model: partial({
-			gap: "adpType is Core, so wegen and entlang are two Lemmas each by position",
-			issue: 733,
-		}),
+		rules: ["de/core-features-are-identity"],
+		adrs: ["ADR-0032"],
+		model: modeled,
 		gold: "Yes",
 		pipeline: waitsOnDumgen,
 	},

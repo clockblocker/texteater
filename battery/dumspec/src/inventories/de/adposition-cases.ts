@@ -1,9 +1,17 @@
 /** A case a German adposition assigns to its complement. */
 export type GermanAdpositionCase = "Acc" | "Dat" | "Gen";
 
-/** What the ADP Case Table records for one German adposition. */
+/**
+ * Where a German adposition stands: before its complement (`wegen des
+ * Sturms`) or after it (`des Nebels wegen`). These are the table's own
+ * labels: no Lemma or Attestation records the position, since the sentence
+ * shows it (ADR 0032).
+ */
+export type GermanAdpositionPosition = "Prep" | "Post";
+
+/** The cases a German adposition takes in one position, or a Locution ADP's. */
 export type GermanAdpositionCases = {
-	/** Every case the adposition takes, a colloquial one included. */
+	/** Every case it takes there, a colloquial one included. */
 	readonly allowed: readonly GermanAdpositionCase[];
 	/** The normative case when another allowed case is colloquial (`wegen` Gen), else null. */
 	readonly preferred: GermanAdpositionCase | null;
@@ -11,10 +19,25 @@ export type GermanAdpositionCases = {
 	readonly twoWay: boolean;
 };
 
-type AdpType = "Prep" | "Post" | "Circ";
-type Entry =
-	| GermanAdpositionCases
-	| { readonly byAdpType: Partial<Record<AdpType, GermanAdpositionCases>> };
+/**
+ * Each position a Lexeme ADP takes, with that position's cases. A position
+ * it doesn't list isn't allowed.
+ */
+export type GermanAdpositionPositions = Readonly<
+	Partial<Record<GermanAdpositionPosition, GermanAdpositionCases>>
+>;
+
+/**
+ * One ADP Case Table entry: a Lexeme ADP's positions, or a Locution ADP's one
+ * case set. A Locution ADP has no position, since its words are its
+ * Canonical Form (`um … willen`, `im Vergleich zu`).
+ */
+export type GermanAdpositionEntry =
+	| {
+			readonly family: "Lexeme";
+			readonly positions: GermanAdpositionPositions;
+	  }
+	| { readonly family: "Locution"; readonly cases: GermanAdpositionCases };
 
 const only = (
 	grammaticalCase: GermanAdpositionCase,
@@ -40,143 +63,166 @@ const genitiveOrDative: GermanAdpositionCases = {
 	twoWay: false,
 };
 
+/** A preposition: it stands only before its complement. */
+const prep = (cases: GermanAdpositionCases): GermanAdpositionPositions => ({
+	Prep: cases,
+});
+/** A postposition: it stands only after its complement (`der Ordnung halber`). */
+const post = (cases: GermanAdpositionCases): GermanAdpositionPositions => ({
+	Post: cases,
+});
+/** Either side of its complement, with the same cases (`gemäß den Regeln`, `den Regeln gemäß`). */
+const prepOrPost = (
+	cases: GermanAdpositionCases,
+): GermanAdpositionPositions => ({ Prep: cases, Post: cases });
+
 /**
- * The ADP Case Table: the closed, authored list of German adpositions with
- * the cases each takes, keyed by Canonical Form and, where position changes
- * the case, by `adpType` (`den Fluss entlang` Acc, `entlang des Flusses` Gen).
- * It covers the standard adpositions, checked against Duden, the governable
- * prepositions and every adposition Grammatical Resolution produces in its
- * reviewed cases. `preferred` marks only a split between the written norm and
- * colloquial or regional use; an elevated or rare second case leaves it null.
- * Case is grammar, not Lemma identity (ADR 0034): no two German ADPs differ
- * by case alone. It is a fact about German, so it lives here and not in
- * Dumling (ADR 0041).
+ * The German Lexeme ADPs, keyed by Canonical Form, each with the positions it
+ * takes and the cases for each. It covers the standard adpositions, checked
+ * against Duden and grammis, the governable prepositions and every adposition
+ * Grammatical Resolution produces in its reviewed cases. `preferred` marks
+ * only a split between the written norm and colloquial or regional use; an
+ * elevated or rare second case leaves it null. Case is grammar, not Lemma
+ * identity (ADR 0034): no two German ADPs differ by case alone. It is a fact
+ * about German, so it lives here and not in Dumling (ADR 0041).
  */
-const germanAdpositionCaseTable: Readonly<Record<string, Entry>> = {
+const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	// Two-way prepositions.
-	an: twoWay,
-	auf: twoWay,
-	hinter: twoWay,
-	in: twoWay,
-	neben: twoWay,
-	über: twoWay,
-	unter: twoWay,
-	vor: twoWay,
-	zwischen: twoWay,
+	an: prep(twoWay),
+	auf: prep(twoWay),
+	hinter: prep(twoWay),
+	in: prep(twoWay),
+	neben: prep(twoWay),
+	über: prep(twoWay),
+	unter: prep(twoWay),
+	vor: prep(twoWay),
+	zwischen: prep(twoWay),
 	// Accusative.
-	betreffend: only("Acc"), // Post: den Vorfall betreffend.
-	bis: only("Acc"),
-	contra: only("Acc"),
-	durch: only("Acc"),
-	für: only("Acc"),
-	gegen: only("Acc"),
-	je: only("Acc"), // je erwachsenen Teilnehmer.
-	kontra: only("Acc"),
-	ohne: only("Acc"),
-	per: only("Acc"),
-	pro: only("Acc"),
-	um: only("Acc"),
-	versus: only("Acc"),
-	via: only("Acc"),
-	wider: only("Acc"),
+	betreffend: post(only("Acc")), // den Vorfall betreffend.
+	bis: prep(only("Acc")),
+	contra: prep(only("Acc")),
+	durch: prep(only("Acc")),
+	für: prep(only("Acc")),
+	gegen: prep(only("Acc")),
+	je: prep(only("Acc")), // je erwachsenen Teilnehmer.
+	kontra: prep(only("Acc")),
+	ohne: prep(only("Acc")),
+	per: prep(only("Acc")),
+	pro: prep(only("Acc")),
+	um: prep(only("Acc")),
+	versus: prep(only("Acc")),
+	via: prep(only("Acc")),
+	wider: prep(only("Acc")),
 	// Dative.
-	aus: only("Dat"),
-	außer: only("Dat"),
-	bei: only("Dat"),
-	entgegen: only("Dat"),
-	entsprechend: only("Dat"),
-	gegenüber: only("Dat"),
-	gemäß: only("Dat"),
-	getreu: only("Dat"),
-	gleich: only("Dat"), // Elevated: einem Adler gleich.
-	mit: only("Dat"),
-	mitsamt: only("Dat"),
-	nach: only("Dat"),
-	nahe: only("Dat"),
-	nächst: only("Dat"), // Elevated, as is zunächst.
-	nebst: only("Dat"),
-	samt: only("Dat"),
-	seit: only("Dat"),
-	von: only("Dat"),
-	zu: only("Dat"),
-	zuliebe: only("Dat"),
-	zunächst: only("Dat"),
-	zuwider: only("Dat"), // Post: dem Gesetz zuwider.
+	aus: prep(only("Dat")),
+	außer: prep(only("Dat")),
+	bei: prep(only("Dat")),
+	entgegen: prep(only("Dat")),
+	entsprechend: prep(only("Dat")),
+	gegenüber: prepOrPost(only("Dat")),
+	gemäß: prepOrPost(only("Dat")),
+	getreu: prep(only("Dat")),
+	gleich: prep(only("Dat")), // Elevated: einem Adler gleich.
+	mit: prep(only("Dat")),
+	mitsamt: prep(only("Dat")),
+	nach: prepOrPost(only("Dat")), // meiner Meinung nach.
+	nahe: prep(only("Dat")),
+	nächst: prep(only("Dat")), // Elevated, as is zunächst.
+	nebst: prep(only("Dat")),
+	samt: prep(only("Dat")),
+	seit: prep(only("Dat")),
+	von: prep(only("Dat")),
+	zu: prep(only("Dat")),
+	zuliebe: post(only("Dat")), // den Kindern zuliebe.
+	zunächst: prep(only("Dat")),
+	zuwider: post(only("Dat")), // dem Gesetz zuwider.
 	// Dative, with an accusative for dates and amounts (ab ersten Mai).
-	ab: { allowed: ["Dat", "Acc"], preferred: null, twoWay: false },
+	ab: prep({ allowed: ["Dat", "Acc"], preferred: null, twoWay: false }),
 	// Dative, with an elevated genitive (binnen eines Jahres).
-	binnen: { allowed: ["Dat", "Gen"], preferred: null, twoWay: false },
+	binnen: prep({ allowed: ["Dat", "Gen"], preferred: null, twoWay: false }),
 	// Genitive.
-	abseits: only("Gen"),
-	abzüglich: only("Gen"),
-	angesichts: only("Gen"),
-	anhand: only("Gen"),
-	anlässlich: only("Gen"),
-	anstelle: only("Gen"),
-	aufgrund: only("Gen"),
-	aufseiten: only("Gen"),
-	behufs: only("Gen"),
-	beiderseits: only("Gen"),
-	betreffs: only("Gen"),
-	bezüglich: only("Gen"),
-	diesseits: only("Gen"),
-	halber: only("Gen"), // Post: der Ordnung halber.
-	hinsichtlich: only("Gen"),
-	infolge: only("Gen"),
-	inmitten: only("Gen"),
-	jenseits: only("Gen"),
-	kraft: only("Gen"),
-	mangels: only("Gen"),
-	namens: only("Gen"),
-	ob: only("Gen"),
-	oberhalb: only("Gen"),
-	seitens: only("Gen"),
-	ungeachtet: only("Gen"), // Prep and Post: ungeachtet der Warnung, der Warnung ungeachtet.
-	unterhalb: only("Gen"),
-	unweit: only("Gen"),
-	vermöge: only("Gen"),
-	vorbehaltlich: only("Gen"),
-	zugunsten: only("Gen"),
-	zulasten: only("Gen"),
-	zuungunsten: only("Gen"),
-	zuzüglich: only("Gen"),
-	zwecks: only("Gen"),
+	abseits: prep(only("Gen")),
+	abzüglich: prep(only("Gen")),
+	angesichts: prep(only("Gen")),
+	anhand: prep(only("Gen")),
+	anlässlich: prep(only("Gen")),
+	anstelle: prep(only("Gen")),
+	aufgrund: prep(only("Gen")),
+	aufseiten: prep(only("Gen")),
+	behufs: prep(only("Gen")),
+	beiderseits: prep(only("Gen")),
+	betreffs: prep(only("Gen")),
+	bezüglich: prep(only("Gen")),
+	diesseits: prep(only("Gen")),
+	eingedenk: prepOrPost(only("Gen")), // eingedenk der Gefahr, der Gefahr eingedenk.
+	halber: post(only("Gen")), // der Ordnung halber.
+	hinsichtlich: prep(only("Gen")),
+	infolge: prep(only("Gen")),
+	inmitten: prep(only("Gen")),
+	jenseits: prep(only("Gen")),
+	kraft: prep(only("Gen")),
+	mangels: prep(only("Gen")),
+	namens: prep(only("Gen")),
+	ob: prep(only("Gen")),
+	oberhalb: prep(only("Gen")),
+	seitens: prep(only("Gen")),
+	unbeschadet: prepOrPost(only("Gen")), // unbeschadet seiner Rechte, seiner Rechte unbeschadet.
+	ungeachtet: prepOrPost(only("Gen")), // ungeachtet der Warnung, der Warnung ungeachtet.
+	unterhalb: prep(only("Gen")),
+	unweit: prep(only("Gen")),
+	vermöge: prep(only("Gen")),
+	vorbehaltlich: prep(only("Gen")),
+	zugunsten: prep(only("Gen")),
+	zulasten: prep(only("Gen")),
+	zuungunsten: prep(only("Gen")),
+	zuzüglich: prep(only("Gen")),
+	zwecks: prep(only("Gen")),
 	// Genitive in the written norm, dative in colloquial or regional use;
 	// Duden marks trotz + Dat as southern German, Swiss and Austrian.
-	anstatt: genitiveColloquialDative,
-	außerhalb: genitiveColloquialDative,
-	innerhalb: genitiveColloquialDative,
-	statt: genitiveColloquialDative,
-	trotz: genitiveColloquialDative,
-	während: genitiveColloquialDative,
-	wegen: genitiveColloquialDative,
-	// Genitive or dative, neither preferred: the dative where the genitive is
-	// unmarked (einschließlich Getränken), or as an equal or rarer alternative
-	// (laut dem Bericht).
-	ausschließlich: genitiveOrDative,
-	dank: genitiveOrDative,
-	einschließlich: genitiveOrDative,
-	exklusive: genitiveOrDative,
-	fern: genitiveOrDative, // Dat rarer.
-	"inkl.": genitiveOrDative,
-	inklusive: genitiveOrDative,
-	laut: genitiveOrDative,
-	längs: genitiveOrDative,
-	mittels: genitiveOrDative,
-	// By position.
+	anstatt: prep(genitiveColloquialDative),
+	außerhalb: prep(genitiveColloquialDative),
+	innerhalb: prep(genitiveColloquialDative),
+	statt: prep(genitiveColloquialDative),
+	trotz: prep(genitiveColloquialDative),
+	während: prep(genitiveColloquialDative),
+	// wegen des Sturms, wegen dem Regen; postposed only with the
+	// genitive, which Duden labels elevated (des Nebels wegen).
+	wegen: { Prep: genitiveColloquialDative, Post: only("Gen") },
+	// Genitive or dative, neither preferred: the dative where the genitive
+	// is unmarked (einschließlich Getränken), or as an equal or rarer
+	// alternative (laut dem Bericht).
+	ausschließlich: prep(genitiveOrDative),
+	dank: prep(genitiveOrDative),
+	einschließlich: prep(genitiveOrDative),
+	exklusive: prep(genitiveOrDative),
+	fern: prep(genitiveOrDative), // Dat rarer.
+	"inkl.": prep(genitiveOrDative),
+	inklusive: prep(genitiveOrDative),
+	laut: prep(genitiveOrDative),
+	längs: prep(genitiveOrDative),
+	mittels: prep(genitiveOrDative),
+	// Case by position.
 	entlang: {
-		byAdpType: {
-			// Duden: Dat is Swiss, elsewhere rare.
-			Post: { allowed: ["Acc", "Dat"], preferred: "Acc", twoWay: false },
-			Prep: genitiveOrDative,
-		},
+		// den Fluss entlang; Duden: Dat is Swiss, elsewhere rare.
+		Post: { allowed: ["Acc", "Dat"], preferred: "Acc", twoWay: false },
+		// entlang des Flusses, entlang dem Fluss.
+		Prep: genitiveOrDative,
 	},
-	zufolge: { byAdpType: { Post: only("Dat"), Prep: only("Gen") } },
-	// Circumpositions: Locution ADPs (ADR 0039), found by Canonical Form. No
-	// check reads them while a Locution ADP records no case (#652).
+	zufolge: { Post: only("Dat"), Prep: only("Gen") }, // dem Bericht zufolge.
+};
+
+/**
+ * The German Locution ADPs, keyed by Canonical Form, each with one case set:
+ * the circumpositions (ADR 0039) and the complex prepositions
+ * (de/complex-preposition).
+ */
+const germanLocutionAdpositions: Readonly<
+	Record<string, GermanAdpositionCases>
+> = {
 	"an … entlang": only("Dat"),
 	"an … vorbei": only("Dat"),
 	"auf … hin": only("Acc"),
+	"im Vergleich zu": only("Dat"),
 	"über … hinaus": only("Acc"),
 	"über … hinweg": only("Acc"),
 	"um … herum": only("Acc"),
@@ -188,40 +234,75 @@ const germanAdpositionCaseTable: Readonly<Record<string, Entry>> = {
 	"zu … hin": only("Dat"),
 };
 
+/**
+ * A Canonical Form as the table keys it: without letter case, as Lemma
+ * identity compares it (ADR 0002), and with a circumposition's open slot as
+ * `…`, so an unparsed Lemma's ASCII `...` finds it too.
+ */
+const tableKey = (canonicalForm: string) =>
+	canonicalForm.replaceAll("...", "…").toLocaleLowerCase("de");
+const byKey = <T>(table: Readonly<Record<string, T>>) =>
+	new Map(
+		Object.entries(table).map(([form, value]) => [tableKey(form), value]),
+	);
+const lexemeEntries = byKey(germanAdpositions);
+const locutionEntries = byKey(germanLocutionAdpositions);
+
+/** What the table looks up: an ADP Lemma's Family and Canonical Form. */
 type AdpositionLemma = {
+	readonly family: string;
 	readonly canonicalForm: string;
-	readonly coreFeatures: { readonly adpType?: string | null };
 };
 
 /**
- * The cases a German ADP Lemma takes, or null when the ADP Case Table does not
- * list it (a foreign or rare adposition, or `entlang` with no `adpType`). A
- * circumposition's open slot is `…`; an unparsed Lemma's ASCII `...` finds it
- * too, as Dumling normalizes it.
+ * The ADP Case Table entry for a German ADP Lemma: a Lexeme ADP's positions
+ * with their cases, or a Locution ADP's case set. Null when the table does
+ * not list it, which dumspec reports as a missing entry; it never stands for
+ * "any case".
  */
-export function germanAdpositionCases(
+export function germanAdpositionEntry(
 	lemma: AdpositionLemma,
-): GermanAdpositionCases | null {
-	const key = lemma.canonicalForm.replaceAll("...", "…");
-	const entry = Object.hasOwn(germanAdpositionCaseTable, key)
-		? germanAdpositionCaseTable[key]
-		: undefined;
-	if (!entry) return null;
-	if (!("byAdpType" in entry)) return entry;
-	const adpType = lemma.coreFeatures.adpType;
-	return (adpType && entry.byAdpType[adpType as AdpType]) || null;
+): GermanAdpositionEntry | null {
+	const key = tableKey(lemma.canonicalForm);
+	if (lemma.family === "Lexeme") {
+		const positions = lexemeEntries.get(key);
+		return positions ? { family: "Lexeme", positions } : null;
+	}
+	if (lemma.family === "Locution") {
+		const cases = locutionEntries.get(key);
+		return cases ? { family: "Locution", cases } : null;
+	}
+	return null;
 }
 
 /**
- * Whether a German ADP Lemma can take this case. An adposition the table does
- * not list takes any oblique case.
+ * Every case an entry allows: a Lexeme ADP's across all its positions, in
+ * table order, or a Locution ADP's.
+ */
+export function germanAdpositionAllowedCases(
+	entry: GermanAdpositionEntry,
+): readonly GermanAdpositionCase[] {
+	if (entry.family === "Locution") return entry.cases.allowed;
+	return [
+		...new Set(
+			Object.values(entry.positions).flatMap((cases) => cases.allowed),
+		),
+	];
+}
+
+/**
+ * Whether the table lists a German ADP Lemma and one of its positions, or its
+ * Locution case set, takes this case. An unlisted ADP takes none.
  */
 export function germanAdpositionAllows(
 	lemma: AdpositionLemma,
 	grammaticalCase: string,
 ): boolean {
-	const cases = germanAdpositionCases(lemma);
-	return cases
-		? (cases.allowed as readonly string[]).includes(grammaticalCase)
-		: ["Acc", "Dat", "Gen"].includes(grammaticalCase);
+	const entry = germanAdpositionEntry(lemma);
+	return (
+		entry !== null &&
+		(germanAdpositionAllowedCases(entry) as readonly string[]).includes(
+			grammaticalCase,
+		)
+	);
 }

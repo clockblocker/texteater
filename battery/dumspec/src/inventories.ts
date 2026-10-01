@@ -3,8 +3,8 @@
  * each with its Reading and reviewed Reading Knowledge. German holds the AUX
  * Readings, the PRON and DET pillar cells and stems, the reflexivity unit a
  * reflexive drills down to, the pronominal adverbs, and the interrogative and
- * relative w-adverbs (wo, wann, wie, warum). It also holds the
- * German ADP Case Table, the cases each adposition takes, the list of
+ * relative w-adverbs (wo, wann, wie, warum). It also holds the German ADP
+ * Case Table, the positions and cases each adposition takes, the list of
  * conjunction Locutions its Rules cite, and derives an article's der or ein
  * cell from its spelling and its Head's agreement.
  *
@@ -16,8 +16,12 @@
 export {
 	type GermanAdpositionCase,
 	type GermanAdpositionCases,
+	type GermanAdpositionEntry,
+	type GermanAdpositionPosition,
+	type GermanAdpositionPositions,
+	germanAdpositionAllowedCases,
 	germanAdpositionAllows,
-	germanAdpositionCases,
+	germanAdpositionEntry,
 } from "./inventories/de/adposition-cases.js";
 export {
 	type ArticleAgreement,

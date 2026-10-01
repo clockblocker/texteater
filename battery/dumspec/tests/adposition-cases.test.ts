@@ -6,51 +6,54 @@ import type * as Dumrel from "dumrel/types";
 import {
 	attestationAdpositionCaseIssues,
 	frameAdpositionCaseIssues,
-	germanAdpositionCases,
+	germanAdpositionAllowedCases,
+	germanAdpositionAllows,
+	germanAdpositionEntry,
 } from "../src/index.js";
 
-const adposition = (canonicalForm: string, adpType = "Prep") => ({
+const adposition = (canonicalForm: string) => ({
 	unitKind: "Lemma",
 	language: "de",
 	family: "Lexeme",
 	kind: "ADP",
 	canonicalForm,
-	coreFeatures: {
-		abbr: null,
-		adpType,
-		extPos: null,
-		partType: null,
-	},
+	coreFeatures: { abbr: null },
 });
 
-/** A free ADP occurrence with the case its complement took, as Dumling parses it. */
+const caseSlot = (realizedCase: string) => ({
+	member: null,
+	complement: { kind: "Case", case: realizedCase, referent: "Either" },
+	realizedCase,
+});
+
+/** An ADP occurrence with the case its complement took, as Dumling parses it. */
 function adpAttestation(
 	canonicalForm: string,
-	realizedCase: string,
-	adpType = "Prep",
+	realizedCase: string | null,
+	family: "Lexeme" | "Locution" = "Lexeme",
 ): Dumling.Attestation {
 	const parsed = parseUnit({
 		unitKind: "Attestation",
 		members: [{ attested: canonicalForm, orthography: "Standard" }],
 		realizationCoverage: "Full",
-		valencyEvidence: [
-			{
-				member: null,
-				complement: {
-					kind: "Case",
-					case: realizedCase,
-					referent: "Either",
-				},
-				realizedCase,
-			},
-		],
+		valencyEvidence: realizedCase === null ? [] : [caseSlot(realizedCase)],
 		surface: {
 			unitKind: "Surface",
 			language: "de",
 			normalizedSurface: canonicalForm,
 			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
-			lemma: adposition(canonicalForm, adpType),
+			lemma:
+				family === "Lexeme"
+					? adposition(canonicalForm)
+					: {
+							unitKind: "Lemma",
+							language: "de",
+							family,
+							kind: "ADP",
+							canonicalForm,
+							coreFeatures: {},
+						},
 		},
 	});
 	if (!parsed.success || parsed.chain.unitKind !== "Attestation")
@@ -58,26 +61,30 @@ function adpAttestation(
 	return parsed.chain.value;
 }
 
-test("an ADP occurrence takes a case the ADP Case Table allows", () => {
-	for (const [canonicalForm, realizedCase, adpType] of [
-		["auf", "Dat", "Prep"],
-		["auf", "Acc", "Prep"],
-		["wegen", "Dat", "Prep"],
-		["wegen", "Gen", "Prep"],
-		["entlang", "Acc", "Post"],
-		["entlang", "Gen", "Prep"],
-		["versus", "Acc", "Prep"],
-		// Unlisted, so any oblique case until #652 decides.
-		["à", "Dat", "Prep"],
+test("an ADP occurrence takes a case one of its positions allows", () => {
+	for (const [canonicalForm, realizedCase] of [
+		["auf", "Dat"],
+		["auf", "Acc"],
+		["wegen", "Dat"],
+		["wegen", "Gen"],
+		// Post entlang takes Acc and Dat, Prep entlang Gen and Dat; the
+		// occurrence records no position, so any of them passes.
+		["entlang", "Acc"],
+		["entlang", "Dat"],
+		["entlang", "Gen"],
+		["zufolge", "Dat"],
+		["zufolge", "Gen"],
+		["versus", "Acc"],
+		["versus", null],
 	] as const)
 		expect(
 			attestationAdpositionCaseIssues(
-				adpAttestation(canonicalForm, realizedCase, adpType),
+				adpAttestation(canonicalForm, realizedCase),
 			),
 		).toEqual([]);
 });
 
-test("a case the table does not allow passes Dumling and fails dumspec", () => {
+test("a case none of its positions takes passes Dumling and fails dumspec", () => {
 	expect(
 		attestationAdpositionCaseIssues(adpAttestation("auf", "Gen")),
 	).toEqual([
@@ -86,17 +93,33 @@ test("a case the table does not allow passes Dumling and fails dumspec", () => {
 			message: "auf does not take Gen",
 		},
 	]);
-	for (const [canonicalForm, realizedCase, adpType] of [
-		["für", "Dat", "Prep"],
-		["mit", "Acc", "Prep"],
-		["entlang", "Gen", "Post"],
-		["entlang", "Acc", "Prep"],
+	for (const [canonicalForm, realizedCase] of [
+		["für", "Dat"],
+		["mit", "Acc"],
+		["zufolge", "Acc"],
+		["halber", "Dat"],
 	] as const)
 		expect(
 			attestationAdpositionCaseIssues(
-				adpAttestation(canonicalForm, realizedCase, adpType),
+				adpAttestation(canonicalForm, realizedCase),
 			),
 		).toHaveLength(1);
+});
+
+test("an adposition the table does not list fails and names the missing entry", () => {
+	// Dumling takes à with any oblique case or none; dumspec reports the gap
+	// instead of accepting any case.
+	for (const realizedCase of ["Dat", null])
+		expect(
+			attestationAdpositionCaseIssues(adpAttestation("à", realizedCase)),
+		).toEqual([
+			{
+				path: "surface.lemma",
+				message: "The ADP Case Table does not list à",
+			},
+		]);
+	expect(germanAdpositionAllows(adposition("à"), "Dat")).toBe(false);
+	expect(germanAdpositionEntry(adposition("à"))).toBeNull();
 });
 
 const frame = (canonicalForm: string, grammaticalCase: string) =>
@@ -112,7 +135,7 @@ const frame = (canonicalForm: string, grammaticalCase: string) =>
 		},
 	] as unknown as Dumrel.ValencyFrame;
 
-test("a Valency Frame's preposition takes a case the table allows", () => {
+test("a Valency Frame's preposition is listed and takes the slot's case", () => {
 	const warten = {
 		unitKind: "Reading",
 		emojiDescription: "⏳",
@@ -129,8 +152,12 @@ test("a Valency Frame's preposition takes a case the table allows", () => {
 			},
 		},
 	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
-	// Dumrel checks the frame's shape only, so `für` + Dat parses there.
-	for (const valency of [frame("auf", "Acc"), frame("für", "Dat")])
+	// Dumrel checks the frame's shape only, so für + Dat and à parse there.
+	for (const valency of [
+		frame("auf", "Acc"),
+		frame("für", "Dat"),
+		frame("à", "Dat"),
+	])
 		expect(
 			parseReadingKnowledge({ source: warten, knowledge: { valency } })
 				.success,
@@ -140,30 +167,44 @@ test("a Valency Frame's preposition takes a case the table allows", () => {
 	expect(frameAdpositionCaseIssues(frame("für", "Dat"))).toEqual([
 		{ path: "0.complement.case", message: "für does not take Dat" },
 	]);
+	expect(frameAdpositionCaseIssues(frame("à", "Dat"))).toEqual([
+		{
+			path: "0.complement.preposition",
+			message: "The ADP Case Table does not list à",
+		},
+	]);
 });
 
-test("the table keys a position-dependent case by adpType", () => {
-	const entlang = (adpType: string) =>
-		germanAdpositionCases({
-			canonicalForm: "entlang",
-			coreFeatures: { adpType },
-		})?.allowed;
-	expect(entlang("Post")).toEqual(["Acc", "Dat"]);
-	expect(entlang("Prep")).toEqual(["Gen", "Dat"]);
-	// Duden gives à no case; what an unlisted adposition records is #652.
-	expect(
-		germanAdpositionCases({ canonicalForm: "à", coreFeatures: {} }),
-	).toBeNull();
+test("the table lists each Lexeme ADP's positions with a case set each", () => {
+	const positions = (canonicalForm: string) => {
+		const entry = germanAdpositionEntry(adposition(canonicalForm));
+		if (entry?.family !== "Lexeme")
+			throw Error(`${canonicalForm} unlisted`);
+		return Object.fromEntries(
+			Object.entries(entry.positions).map(([position, cases]) => [
+				position,
+				cases.allowed,
+			]),
+		);
+	};
+	expect(positions("entlang")).toEqual({
+		Post: ["Acc", "Dat"],
+		Prep: ["Gen", "Dat"],
+	});
+	expect(positions("wegen")).toEqual({ Prep: ["Gen", "Dat"], Post: ["Gen"] });
+	expect(positions("zufolge")).toEqual({ Post: ["Dat"], Prep: ["Gen"] });
+	expect(positions("halber")).toEqual({ Post: ["Gen"] });
+	expect(positions("für")).toEqual({ Prep: ["Acc"] });
+	expect(positions("auf")).toEqual({ Prep: ["Acc", "Dat"] });
+	const wegen = germanAdpositionEntry(adposition("wegen"));
+	if (!wegen) throw Error("wegen unlisted");
+	expect(germanAdpositionAllowedCases(wegen)).toEqual(["Gen", "Dat"]);
 });
 
-test("laut, ab, zufolge and binnen take the cases the table lists", () => {
-	const passes = (
-		canonicalForm: string,
-		realizedCase: string,
-		adpType = "Prep",
-	) =>
+test("laut, ab and binnen take the cases the table lists", () => {
+	const passes = (canonicalForm: string, realizedCase: string) =>
 		attestationAdpositionCaseIssues(
-			adpAttestation(canonicalForm, realizedCase, adpType),
+			adpAttestation(canonicalForm, realizedCase),
 		).length === 0;
 	// laut dem Bericht, laut des Berichts; not laut + Acc.
 	expect(passes("laut", "Dat")).toBe(true);
@@ -173,15 +214,11 @@ test("laut, ab, zufolge and binnen take the cases the table lists", () => {
 	expect(passes("ab", "Dat")).toBe(true);
 	expect(passes("ab", "Acc")).toBe(true);
 	expect(passes("ab", "Gen")).toBe(false);
-	// dem Bericht zufolge; Post zufolge + Gen fails, Prep zufolge takes it.
-	expect(passes("zufolge", "Dat", "Post")).toBe(true);
-	expect(passes("zufolge", "Gen", "Post")).toBe(false);
-	expect(passes("zufolge", "Gen", "Prep")).toBe(true);
 	// binnen einer Woche.
 	expect(passes("binnen", "Dat")).toBe(true);
 });
 
-test("the table lists the new circumpositions with …", () => {
+test("the table gives each Locution ADP one case set", () => {
 	for (const [canonicalForm, allowed] of [
 		["von … her", ["Dat"]],
 		["um … herum", ["Acc"]],
@@ -190,13 +227,22 @@ test("the table lists the new circumpositions with …", () => {
 		["über … hinweg", ["Acc"]],
 		["von … wegen", ["Gen"]],
 		["an … entlang", ["Dat"]],
-	] as const)
-		expect(
-			germanAdpositionCases({
-				canonicalForm,
-				coreFeatures: { adpType: "Circ" },
-			})?.allowed,
-		).toEqual(allowed);
+		["im Vergleich zu", ["Dat"]],
+	] as const) {
+		const entry = germanAdpositionEntry({
+			family: "Locution",
+			canonicalForm,
+		});
+		expect(entry?.family).toBe("Locution");
+		expect(entry && germanAdpositionAllowedCases(entry)).toEqual(allowed);
+	}
+	// A Lexeme ADP and a Locution ADP never share an entry.
+	expect(
+		germanAdpositionEntry({
+			family: "Lexeme",
+			canonicalForm: "um … willen",
+		}),
+	).toBeNull();
 });
 
 test("the table finds a circumposition, a Locution ADP, written with … or ASCII ...", () => {
@@ -215,22 +261,68 @@ test("the table finds a circumposition, a Locution ADP, written with … or ASCI
 	};
 	const ascii = circumposition("um ... willen");
 	expect(ascii).toEqual(circumposition("um … willen"));
-	expect(germanAdpositionCases(ascii)?.allowed).toEqual(["Gen"]);
+	expect(germanAdpositionEntry(ascii)).toEqual({
+		family: "Locution",
+		cases: { allowed: ["Gen"], preferred: null, twoWay: false },
+	});
 	expect(
-		germanAdpositionCases({
-			canonicalForm: "um ... willen",
-			coreFeatures: {},
-		})?.allowed,
-	).toEqual(["Gen"]);
+		germanAdpositionAllows(
+			{ family: "Locution", canonicalForm: "um ... willen" },
+			"Gen",
+		),
+	).toBe(true);
+	// Identity ignores letter case (ADR 0002), and so does the table.
+	expect(
+		germanAdpositionAllows(
+			{ family: "Locution", canonicalForm: "Um … willen" },
+			"Gen",
+		),
+	).toBe(true);
+});
+
+test("a Locution ADP occurrence is checked against its case set", () => {
+	expect(
+		attestationAdpositionCaseIssues(
+			adpAttestation("um … willen", "Gen", "Locution"),
+		),
+	).toEqual([]);
+	expect(
+		attestationAdpositionCaseIssues(
+			adpAttestation("von … an", null, "Locution"),
+		),
+	).toEqual([]);
+	expect(
+		attestationAdpositionCaseIssues(
+			adpAttestation("um … willen", "Dat", "Locution"),
+		),
+	).toEqual([
+		{
+			path: "valencyEvidence.0.realizedCase",
+			message: "um … willen does not take Dat",
+		},
+	]);
+	expect(
+		attestationAdpositionCaseIssues(
+			adpAttestation("in Bezug auf", "Acc", "Locution"),
+		),
+	).toEqual([
+		{
+			path: "surface.lemma",
+			message: "The ADP Case Table does not list in Bezug auf",
+		},
+	]);
 });
 
 test("a Locution governor's preposition slot is checked like a Lexeme's", () => {
-	const locution = (grammaticalCase: string): Dumling.Attestation => {
+	const locution = (
+		preposition: string,
+		grammaticalCase: string,
+	): Dumling.Attestation => {
 		const parsed = parseUnit({
 			unitKind: "Attestation",
 			members: [
 				{ attested: "Angst", orthography: "Standard" },
-				{ attested: "vor", orthography: "Standard" },
+				{ attested: preposition, orthography: "Standard" },
 				{ attested: "hat", orthography: "Standard" },
 			],
 			realizationCoverage: "Full",
@@ -240,7 +332,7 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 					member: 1,
 					complement: {
 						kind: "Preposition",
-						preposition: adposition("vor"),
+						preposition: adposition(preposition),
 						case: grammaticalCase,
 						referent: "Either",
 					},
@@ -265,14 +357,23 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 			},
 		});
 		if (!parsed.success || parsed.chain.unitKind !== "Attestation")
-			throw Error(`Dumling rejects Angst haben vor + ${grammaticalCase}`);
+			throw Error(
+				`Dumling rejects Angst haben ${preposition} + ${grammaticalCase}`,
+			);
 		return parsed.chain.value;
 	};
-	expect(attestationAdpositionCaseIssues(locution("Dat"))).toEqual([]);
-	expect(attestationAdpositionCaseIssues(locution("Gen"))).toEqual([
+	expect(attestationAdpositionCaseIssues(locution("vor", "Dat"))).toEqual([]);
+	expect(attestationAdpositionCaseIssues(locution("vor", "Gen"))).toEqual([
 		{
 			path: "valencyEvidence.0.complement.case",
 			message: "vor does not take Gen",
+		},
+	]);
+	// A slot that relies on an entry the table lacks fails too.
+	expect(attestationAdpositionCaseIssues(locution("à", "Dat"))).toEqual([
+		{
+			path: "valencyEvidence.0.complement.preposition",
+			message: "The ADP Case Table does not list à",
 		},
 	]);
 });

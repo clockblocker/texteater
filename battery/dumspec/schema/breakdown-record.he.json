@@ -10486,54 +10486,10 @@
 									"type": "null"
 								}
 							]
-						},
-						"adpType": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Circ",
-										"Post",
-										"Prep"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
-						},
-						"extPos": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"ADV"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
-						},
-						"partType": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Vbp"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
 						}
 					},
 					"required": [
-						"abbr",
-						"adpType",
-						"extPos",
-						"partType"
+						"abbr"
 					],
 					"additionalProperties": false
 				}

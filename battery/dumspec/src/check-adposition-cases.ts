@@ -1,14 +1,20 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import { germanAdpositionAllows } from "./inventories/de/adposition-cases.js";
+import {
+	germanAdpositionAllowedCases,
+	germanAdpositionEntry,
+} from "./inventories/de/adposition-cases.js";
 
-/** A case the ADP Case Table does not allow, at a path inside the checked unit. */
+/**
+ * An adposition the ADP Case Table does not list, or a case it does not
+ * allow, at a path inside the checked unit.
+ */
 export type AdpositionCaseIssue = {
 	readonly path: string;
 	readonly message: string;
 };
 
-type AdpositionLemma = Parameters<typeof germanAdpositionAllows>[0];
+type AdpositionLemma = Parameters<typeof germanAdpositionEntry>[0];
 type Complement =
 	| { readonly kind: "Case"; readonly case: string }
 	| {
@@ -23,71 +29,99 @@ const isPreposition = (
 ): complement is Extract<Complement, { kind: "Preposition" }> =>
 	complement.kind === "Preposition";
 
+/**
+ * The issue for an ADP the table lacks, at `lemmaPath`, or for a case none
+ * of its positions takes, at `casePath`. Position is never checked: the
+ * table states what German allows, and no record states where an adposition
+ * stood (ADR 0032).
+ */
+function caseIssue(
+	lemma: AdpositionLemma,
+	grammaticalCase: string | undefined,
+	paths: { lemma: string; case: string },
+): AdpositionCaseIssue[] {
+	const entry = germanAdpositionEntry(lemma);
+	if (!entry)
+		return [
+			{
+				path: paths.lemma,
+				message: `The ADP Case Table does not list ${lemma.canonicalForm}`,
+			},
+		];
+	if (
+		grammaticalCase === undefined ||
+		(germanAdpositionAllowedCases(entry) as readonly string[]).includes(
+			grammaticalCase,
+		)
+	)
+		return [];
+	return [
+		{
+			path: paths.case,
+			message: `${lemma.canonicalForm} does not take ${grammaticalCase}`,
+		},
+	];
+}
+
 function prepositionIssue(
 	complement: Complement,
 	path: string,
 ): AdpositionCaseIssue[] {
 	if (!isPreposition(complement) || complement.case === undefined) return [];
-	const { preposition, case: grammaticalCase } = complement;
-	return germanAdpositionAllows(preposition, grammaticalCase)
-		? []
-		: [
-				{
-					path: `${path}.case`,
-					message: `${preposition.canonicalForm} does not take ${grammaticalCase}`,
-				},
-			];
+	return caseIssue(complement.preposition, complement.case, {
+		lemma: `${path}.preposition`,
+		case: `${path}.case`,
+	});
 }
 
 /**
- * Where a German Attestation takes a case the ADP Case Table does not allow:
- * a governor's Preposition slot (`für` + Dat) or an ADP occurrence's realized
- * case (`auf` + Gen). Dumling checks only the evidence's shape (ADR 0041).
- * Hebrew and English mark no case.
+ * Where a German Attestation relies on what the ADP Case Table lacks. An ADP
+ * occurrence, Lexeme or Locution, fails when the table doesn't list it, and
+ * when its realized case is one none of its positions takes (`auf` + Gen). A
+ * governor's Preposition slot fails when the table doesn't list its
+ * preposition or the preposition doesn't take the slot's case (`für` + Dat).
+ * Dumling checks only the evidence's shape (ADR 0041). Hebrew and English
+ * mark no case.
  */
 export function attestationAdpositionCaseIssues(
 	attestation: Dumling.Attestation,
 ): AdpositionCaseIssue[] {
-	if (
-		attestation.surface.language !== "de" ||
-		!("valencyEvidence" in attestation)
-	)
-		return [];
+	if (attestation.surface.language !== "de") return [];
 	const { lemma } = attestation.surface;
-	const slots = attestation.valencyEvidence as readonly {
+	// A Kind never implies its Family (ADR 0039), and both ADP Families record
+	// their complement's case.
+	const adposition =
+		lemma.kind === "ADP" &&
+		(lemma.family === "Lexeme" || lemma.family === "Locution");
+	const slots = (
+		"valencyEvidence" in attestation ? attestation.valencyEvidence : []
+	) as readonly {
 		readonly complement: Complement;
 		readonly realizedCase: string;
 	}[];
+	if (adposition) {
+		const unlisted = caseIssue(lemma, undefined, {
+			lemma: "surface.lemma",
+			case: "",
+		});
+		if (unlisted.length > 0) return unlisted;
+	}
 	return slots.flatMap(({ complement, realizedCase }, index) => {
 		const path = `valencyEvidence.${index}`;
-		// Only a Lexeme ADP records its complement's case. A circumposition
-		// (`um … willen`) is a Locution ADP and records none until #652, so
-		// the table's circumposition entries have no occurrence to check yet;
-		// a Kind never implies its Family (ADR 0039).
-		if (
-			lemma.family === "Lexeme" &&
-			lemma.kind === "ADP" &&
-			complement.kind === "Case"
-		)
-			return germanAdpositionAllows(
-				lemma as AdpositionLemma,
-				realizedCase,
-			)
-				? []
-				: [
-						{
-							path: `${path}.realizedCase`,
-							message: `${lemma.canonicalForm} does not take ${realizedCase}`,
-						},
-					];
+		if (adposition && complement.kind === "Case")
+			return caseIssue(lemma, realizedCase, {
+				lemma: "surface.lemma",
+				case: `${path}.realizedCase`,
+			});
 		return prepositionIssue(complement, `${path}.complement`);
 	});
 }
 
 /**
- * Where a German Reading's Valency Frame gives a governed preposition a case
- * the ADP Case Table does not allow: `warten` `auf` + Acc and `bestehen`
- * `auf` + Dat pass, `für` + Dat fails. Dumrel checks only the frame's shape.
+ * Where a German Reading's Valency Frame relies on what the ADP Case Table
+ * lacks: `warten` `auf` + Acc and `bestehen` `auf` + Dat pass, `für` + Dat
+ * fails, and so does a preposition the table doesn't list. Dumrel checks only
+ * the frame's shape.
  */
 export function frameAdpositionCaseIssues(
 	frame: Dumrel.ValencyFrame,

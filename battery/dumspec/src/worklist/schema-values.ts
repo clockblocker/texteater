@@ -27,7 +27,7 @@ export interface KeptValue extends SchemaValue {
 	why: string;
 }
 
-/** A value's key for lookups: `Lexeme/ADP Core adpType=Circ`. */
+/** A value's key for lookups: `Lexeme/PART Core polarity=Pos`. */
 export function schemaValueKey(value: SchemaValue): string {
 	return `${value.route} ${value.bag} ${value.feature}=${value.value}`;
 }

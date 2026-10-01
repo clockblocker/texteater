@@ -172,12 +172,6 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 /** The German forms whose split an open grilling decides. */
 export const germanOpenSplits: readonly OpenSplit[] = [
 	{
-		forms: ["wegen", "entlang", "gegenüber"],
-		issue: 733,
-		question:
-			"Is adpType identity when the adposition stands before or after its noun?",
-	},
-	{
 		forms: [
 			"sehr",
 			"gar",
