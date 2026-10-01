@@ -33,7 +33,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Attestation",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -55,11 +55,143 @@
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/degree-word-is-adv",
+				"hash": "b27dedd36b0a24bb"
 			}
 		],
 		"references": []
 	},
 	"targets": [
+		{
+			"memberSegmentIndices": [8],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
+			"notes": {
+				"rationale": "gar intensifies zu sehr. Degree words standing together stay apart, so gar zu sehr is three ADV targets (de/degree-word-is-adv); gar is not comparable."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "gar",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "gar",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "gar",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"comparable": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
+			"notes": {
+				"rationale": "zu 'too' grades sehr. Excess is no Degree value, so degree zu is a single-member ADV, no DegreeMarker, and not comparable (de/degree-word-is-adv)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "zu",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "zu",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"comparable": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [12],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
+			"notes": {
+				"rationale": "sehr is the degree word graded by gar zu: a single-member ADV (de/degree-word-is-adv). It is comparable (mehr, am meisten), so its Surface marks Pos (de/comparability-is-lexical)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "sehr",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": {
+						"degree": "Pos"
+					},
+					"language": "de",
+					"normalizedSurface": "sehr",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "sehr",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"comparable": "Yes",
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "ADV" },
@@ -139,6 +271,48 @@
 						}
 					},
 					"surfaceFeatures": { "historicalStatus": "Archaic" }
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [25],
+			"route": {
+				"family": "Lexeme",
+				"kind": "ADV"
+			},
+			"notes": {
+				"rationale": "zu 'too' grades schwer, which stays its own word: degree zu is a single-member ADV, not comparable (de/degree-word-is-adv)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "zu",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "zu",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": {
+							"comparable": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"surfaceFeatures": null
 				}
 			}
 		}

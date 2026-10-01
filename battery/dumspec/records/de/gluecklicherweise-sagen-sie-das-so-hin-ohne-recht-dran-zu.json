@@ -107,7 +107,7 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "9b5fe154ed54d6dc"
+				"hash": "8ef3db1fe0214e40"
 			},
 			{
 				"rule": "de/bracket-particle-or-circumposition",
@@ -539,7 +539,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "recht in ohne recht … zu glauben is 'really, properly' (DWDS: nicht recht wissen, glauben), an adverbial use of the adjective recht, so ADJ (de/adjective-stays-adj). DWDS gives rechter, am rechtesten, so it marks Pos (de/comparability-is-lexical)."
+				"rationale": "recht in ohne recht … zu glauben is Duden's recht 2a 'so, wie es sein soll; richtig, wirklich' (nicht recht klug aus jemandem werden), not the degree word recht 'fairly' (recht gut). The same sense stands inflected before a noun (keine rechte Lust haben), so the within-sense test keeps it ADJ (de/adjective-stays-adj). DWDS gives rechter, am rechtesten, so it marks Pos (de/comparability-is-lexical)."
 			}
 		},
 		{

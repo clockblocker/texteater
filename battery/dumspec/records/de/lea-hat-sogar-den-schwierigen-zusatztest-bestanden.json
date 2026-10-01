@@ -21,31 +21,37 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/focus-word-is-adv",
+				"hash": "d38200289df9682c"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "The supplied focus-particle route is authoritative even though the form can be analyzed differently elsewhere."
+				"rationale": "sogar is a focus word on den schwierigen Zusatztest. A focus word is a single-member ADV, never PART, and has no comparison forms (de/focus-word-is-adv)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PART",
+						"kind": "ADV",
 						"canonicalForm": "sogar",
 						"coreFeatures": {
-							"abbr": null,
-							"partType": null,
-							"polarity": null
+							"comparable": null,
+							"numType": null,
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "sogar",

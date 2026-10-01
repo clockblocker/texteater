@@ -88,6 +88,10 @@
 			{
 				"rule": "de/modal-is-a-verb",
 				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/aber-is-cconj",
+				"hash": "ec4489f45536f6d5"
 			}
 		],
 		"references": [
@@ -179,7 +183,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Contrastive aber standing after the first constituent. DWDS files this position under the Konjunktion (morgen früh aber bin ich bereit); its Adverb aber is the archaic 'again'. So CCONJ, against STTS/UD ADV. open: #734."
+				"rationale": "Contrastive aber standing after the first constituent (Bald aber lernte er). aber 'but' is CCONJ wherever it stands in its clause, since it never fills the position before the finite verb by itself (de/aber-is-cconj); DWDS files this position under the Konjunktion. STTS and UD tag it ADV."
 			}
 		},
 		{

@@ -187,7 +187,7 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "9b5fe154ed54d6dc"
+				"hash": "8ef3db1fe0214e40"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -224,6 +224,14 @@
 			{
 				"rule": "de/variant-and-historical-status",
 				"hash": "9e2c6c25c942a570"
+			},
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			},
+			{
+				"rule": "de/aber-is-cconj",
+				"hash": "ec4489f45536f6d5"
 			}
 		],
 		"references": [
@@ -374,8 +382,11 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "⚖"
+			},
 			"notes": {
-				"rationale": "ja is the unstressed modal particle marking the statement as known, not the answer particle, so a PART. open: #734."
+				"rationale": "ja is the unstressed modal particle conceding a point that aber then qualifies (Duden: ja 3c, einschränkend, meist in Korrelation mit aber): PART ja with partType Mod (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -401,7 +412,7 @@
 						"canonicalForm": "ja",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},
@@ -413,10 +424,10 @@
 			"memberSegmentIndices": [6],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADJ"
+				"kind": "ADV"
 			},
 			"notes": {
-				"rationale": "offenbar is the sentence adverb 'apparently'. de/adjective-stays-adj makes a word that inflects attributively an ADJ, and DWDS files this use as an adverbial sense of the adjective with offenbarer, am offenbarsten; Duden has a separate Adverb headword for it. Ruled on #743 (SZ-B5, A2)."
+				"rationale": "offenbar 'apparently' is a sentence adverb commenting on the whole statement; Duden has it as an Adverb headword apart from the adjective. A sentence adverb is a non-comparable ADV (de/adjective-stays-adj), so its Surface has no inflection."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -427,8 +438,6 @@
 					}
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
@@ -436,23 +445,17 @@
 					"spelling": {
 						"kind": "Canonical"
 					},
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "ADV",
 						"canonicalForm": "offenbar",
 						"coreFeatures": {
-							"abbr": null,
-							"comparable": "Yes",
+							"comparable": null,
 							"numType": null,
-							"variant": null
+							"pronType": null
 						}
 					},
 					"surfaceFeatures": null

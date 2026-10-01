@@ -19,15 +19,23 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": {
+				"emojiDescription": "😲"
+			},
 			"notes": {
-				"rationale": "The supplied emphatic particle use is PART, not the clause-linking CCONJ homograph."
+				"rationale": "aber in the exclamation is the modal particle of the speaker's emotional involvement (Duden: aber, Partikel b), not the conjunction: PART aber with partType Mod (de/modal-particle-is-part, de/aber-is-cconj)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,7 +50,7 @@
 						"canonicalForm": "aber",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

@@ -30,7 +30,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
+			}
+		],
 		"references": []
 	},
 	"targets": [

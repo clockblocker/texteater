@@ -130,18 +130,32 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 					),
 				],
 			},
+			{
+				use: "sentence adverb or degree word spelled like an adjective (offenbar, ganz 'quite', früh 'in the morning')",
+				becomes: alone(lexeme("ADV")),
+				records: [
+					show(
+						"er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass",
+						"offenbar",
+						"offenbar",
+					),
+					show(
+						"k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+						"ganz",
+						"ganz",
+					),
+				],
+			},
 		],
 		rules: [
 			"de/adjective-stays-adj",
 			"de/comparability-is-lexical",
 			"de/sein-perfect-or-copula",
+			"de/degree-word-is-adv",
 		],
 		adrs: ["ADR-0036", "ADR-0042"],
-		model: partial({
-			gap: "Sentence adverbs and degree words spelled like adjectives (ganz 'quite', früh 'in the morning', offenbar) are ADJ or ADV by sense",
-			issue: 734,
-		}),
-		gold: "Yes",
+		model: modeled,
+		gold: "Partial",
 		pipeline: waitsOnDumgen,
 	},
 	{
@@ -161,14 +175,63 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 					),
 				],
 			},
+			{
+				use: "degree word (sehr, gar)",
+				becomes: alone(lexeme("ADV")),
+				records: [
+					show("jetzt-schien-die-sonne-gar-zu-sehr", "gar", "gar"),
+					show(
+						"das-ergebnis-ist-sehr-viel-besser-als-erwartet",
+						"sehr",
+						"sehr",
+					),
+				],
+			},
+			{
+				use: "focus word (nur, sogar)",
+				becomes: alone(lexeme("ADV")),
+				records: [
+					show(
+						"fuer-die-reparatur-braucht-sie-nur-einen-schraubendreher",
+						"nur",
+						"nur",
+					),
+					show(
+						"lea-hat-sogar-den-schwierigen-zusatztest-bestanden",
+						"sogar",
+						"sogar",
+					),
+				],
+			},
+			{
+				use: "modal particle (ja, doch, halt)",
+				becomes: alone(lexeme("PART")),
+				records: [
+					show("du-kennst-den-weg-ja-bereits", "ja", "ja"),
+					show("dann-warten-wir-halt-bis-montag", "halt", "halt"),
+				],
+			},
+			{
+				use: "aber after the first phrase (Bald aber lernte er)",
+				becomes: alone(lexeme("CCONJ")),
+				records: [
+					show(
+						"bald-aber-lernte-er-es-richtiger-schaetzen",
+						"aber",
+						"aber",
+					),
+				],
+			},
 		],
-		rules: [],
+		rules: [
+			"de/degree-word-is-adv",
+			"de/focus-word-is-adv",
+			"de/modal-particle-is-part",
+			"de/aber-is-cconj",
+		],
 		adrs: [],
-		model: partial({
-			gap: "Degree, focus and sentence adverbs (sehr, nur, offenbar) are split between ADV, PART and ADJ in the gold",
-			issue: 734,
-		}),
-		gold: "Yes",
+		model: modeled,
+		gold: "Partial",
 		pipeline: waitsOnDumgen,
 	},
 	{
@@ -467,12 +530,9 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 				],
 			},
 		],
-		rules: [],
+		rules: ["de/aber-is-cconj"],
 		adrs: [],
-		model: partial({
-			gap: "aber after the first position is CCONJ or ADV",
-			issue: 734,
-		}),
+		model: modeled,
 		gold: "Yes",
 		pipeline: waitsOnDumgen,
 	},
@@ -672,16 +732,17 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 				],
 			},
 			{
-				use: "ein wenig before a noun (ein wenig Wasser)",
-				becomes: member(locution("DET")),
-				records: [],
-				missing: noRecord("No record has ein wenig before a noun", 734),
+				use: "wenig of ein wenig before a noun (ein wenig Wasser)",
+				becomes: head(lexeme("PRON")),
+				records: [
+					show("gib-mir-ein-wenig-zucker", "wenig", "ein wenig"),
+				],
 			},
 		],
 		rules: ["de/quantifier-by-use"],
 		adrs: [],
 		model: partial({
-			gap: "#734 proposes ADJ for die beiden and a Locution DET for ein wenig Wasser; not yet applied",
+			gap: "#734's ruling maps die beiden to ADJ, but no Rule states it and the gold has DET beide",
 			issue: 734,
 		}),
 		gold: "No",
@@ -978,10 +1039,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		],
 		rules: ["de/bare-infinitive-zu", "de/correlator-anchors"],
 		adrs: ["ADR-0039"],
-		model: partial({
-			gap: "Untyped PART: partType Inf isn't required",
-			issue: 734,
-		}),
+		model: modeled,
 		gold: "Yes",
 		pipeline: waitsOnDumgen,
 	},
@@ -1033,13 +1091,21 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 					show("sie-fragte-ob-er-komme-er-antwortete-ja", "Ja", "ja"),
 				],
 			},
+			{
+				use: "answer quoted or embedded in a clause (antwortete mit ja)",
+				becomes: alone(lexeme("INTJ")),
+				records: [
+					show(
+						"auf-die-kontrollfrage-antwortete-sie-klar-mit-ja",
+						"ja",
+						"ja",
+					),
+				],
+			},
 		],
 		rules: ["de/interjection-counts-its-words"],
 		adrs: [],
-		model: partial({
-			gap: "Three Drafts have answer ja or doch as PART polarity Pos, which German PART still allows",
-			issue: 734,
-		}),
+		model: modeled,
 		gold: "No",
 		pipeline: waitsOnDumgen,
 	},
@@ -1047,7 +1113,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "PTKA",
 		stts: "particle with an adjective or adverb",
 		dumling:
-			"am before a superlative is a DegreeMarker member of the ADJ or ADV target; zu schnell has no Rule",
+			"am before a superlative is a DegreeMarker member of the ADJ or ADV target; degree zu is a single-member ADV",
 		mappings: [
 			{
 				use: "am before a superlative",
@@ -1063,20 +1129,16 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 			{
 				use: "zu grading an adjective (zu schnell)",
 				becomes: alone(lexeme("ADV")),
-				records: [],
-				missing: noRecord(
-					"No Rule covers degree zu; the one record leaves it untargeted",
-					734,
-				),
+				records: [
+					show("das-kleid-ist-zu-gross", "zu", "zu"),
+					show("jetzt-schien-die-sonne-gar-zu-sehr", "zu", "zu", 2),
+				],
 			},
 		],
-		rules: ["de/fused-word-pieces"],
+		rules: ["de/fused-word-pieces", "de/degree-word-is-adv"],
 		adrs: ["ADR-0040"],
-		model: partial({
-			gap: "No Rule covers degree zu (zu schnell)",
-			issue: 734,
-		}),
-		gold: "No",
+		model: modeled,
+		gold: "Partial",
 		pipeline: waitsOnDumgen,
 	},
 	{

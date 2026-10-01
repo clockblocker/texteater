@@ -19,15 +19,23 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": {
+				"emojiDescription": "🤷"
+			},
 			"notes": {
-				"rationale": "Repair the omitted letter while recording the supplied member as Typo."
+				"rationale": "ebn is a Typo for eben. Read as the unstressed modal particle confirming what was said (Duden: eben, Partikel 1: das ist eben so), it is PART eben with partType Mod (de/modal-particle-is-part). Stressed, as 'precisely, exactly that', it would be the focus word, ADV eben (de/focus-word-is-adv); the written sentence doesn't show stress, and the unstressed reading is taken (#748)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,7 +50,7 @@
 						"canonicalForm": "eben",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

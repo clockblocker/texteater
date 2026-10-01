@@ -23,31 +23,37 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/focus-word-is-adv",
+				"hash": "d38200289df9682c"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "The supplied focus particle is PART, not the later temporal ADV vormittags."
+				"rationale": "bloß is the restrictive focus word 'only' on vormittags: a single-member ADV, not comparable (de/focus-word-is-adv). The modal particle bloß and the adjective bloß are other words."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PART",
+						"kind": "ADV",
 						"canonicalForm": "bloß",
 						"coreFeatures": {
-							"abbr": null,
-							"partType": null,
-							"polarity": null
+							"comparable": null,
+							"numType": null,
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "bloß",

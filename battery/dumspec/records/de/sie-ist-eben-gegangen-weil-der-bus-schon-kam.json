@@ -26,31 +26,37 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "The marked modal particle is PART; the unmarked weil remains SCONJ context."
+				"rationale": "eben is temporal 'just now' (Duden: eben, Adverb, soeben): she has just left. The same spelling as a modal particle is PART; this one is an ADV with no comparison forms (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PART",
+						"kind": "ADV",
 						"canonicalForm": "eben",
 						"coreFeatures": {
-							"abbr": null,
-							"partType": null,
-							"polarity": null
+							"comparable": null,
+							"numType": null,
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "eben",

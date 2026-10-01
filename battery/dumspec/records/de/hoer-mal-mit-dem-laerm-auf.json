@@ -19,15 +19,23 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": {
+				"emojiDescription": "🤏"
+			},
 			"notes": {
-				"rationale": "mal softens the request. It is Duden's own particle mal, which lends an utterance a certain casualness (hör mal zu), not a shortened einmal, so the target is PART mal and its member is Standard."
+				"rationale": "mal softens the request. It is Duden's own particle mal, which lends an utterance a certain casualness (hör mal zu), not a shortened einmal: PART mal with partType Mod (de/modal-particle-is-part), its member Standard."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,7 +50,7 @@
 						"canonicalForm": "mal",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

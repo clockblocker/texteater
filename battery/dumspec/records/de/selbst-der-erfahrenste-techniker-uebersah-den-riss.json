@@ -21,28 +21,37 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/focus-word-is-adv",
+				"hash": "d38200289df9682c"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "Selbst is the focus word 'even' on der erfahrenste Techniker and stands before the finite verb together with it. A focus word is a single-member ADV that never joins its phrase (de/focus-word-is-adv); not comparable."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PART",
+						"kind": "ADV",
 						"canonicalForm": "selbst",
 						"coreFeatures": {
-							"abbr": null,
-							"partType": null,
-							"polarity": null
+							"comparable": null,
+							"numType": null,
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "selbst",

@@ -19,15 +19,20 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "740bfc8b0cfe812b"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "ADV" },
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
-				"rationale": "The licensed pre-reform spelling is Standard occurrence evidence and a Variant Surface."
+				"rationale": "Quantity bisschen is one Lexeme PRON bisschen in every use, here grading förmlich without an article (de/quantifier-by-use, #734's 2026-09-30 decision; Duden: indeklinables Indefinitpronomen). bißchen is its pre-1996 spelling, a Historical Variant; the degree use marks no case."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -38,11 +43,17 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADV",
+						"kind": "PRON",
 						"canonicalForm": "bisschen",
 						"coreFeatures": {
-							"numType": null,
-							"pronType": "Ind"
+							"case": null,
+							"number": null,
+							"extPos": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Ind",
+							"gender": null
 						}
 					},
 					"normalizedSurface": "bißchen",
@@ -56,7 +67,8 @@
 				"members": [
 					{ "attested": "bißchen", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			}
 		}
 	],

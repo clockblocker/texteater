@@ -365,7 +365,15 @@
 				"rule": "de/pron-or-det-by-use",
 				"hash": "bc1096b61ad7294d"
 			},
-			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" },
+			{
+				"rule": "de/degree-word-is-adv",
+				"hash": "b27dedd36b0a24bb"
+			},
+			{
+				"rule": "de/aber-is-cconj",
+				"hash": "ec4489f45536f6d5"
+			}
 		],
 		"references": [
 			{
@@ -1417,7 +1425,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "open: #734. The degree word ganz ('quite, very'; Duden lists ganz as an Adverb in this sense) is read as an ADV like sehr, though the adjective ganz inflects; see finding A2."
+				"rationale": "The degree word ganz 'quite, very' (Duden lists ganz as an Adverb in this sense) grades ungewöhnlichen. Attributive ganze means 'whole', not 'quite', so the use is a single-member ADV, not comparable (de/degree-word-is-adv, de/adjective-stays-adj)."
 			}
 		},
 		{
@@ -1594,7 +1602,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "open: #734. Adversative aber after the first constituent (dann aber … läutete er); Duden's Konjunktion aber may stand inside the clause (er aber sagte). UD tags this position ADV."
+				"rationale": "Adversative aber after the first constituent (dann aber … läutete er) is CCONJ wherever it stands in its clause (de/aber-is-cconj); Duden's Konjunktion aber may stand inside the clause (er aber sagte). UD tags this position ADV."
 			}
 		},
 		{

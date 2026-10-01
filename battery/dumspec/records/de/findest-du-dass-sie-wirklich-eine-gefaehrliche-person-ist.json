@@ -295,7 +295,7 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "9b5fe154ed54d6dc"
+				"hash": "8ef3db1fe0214e40"
 			},
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -344,6 +344,10 @@
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
+			},
+			{
+				"rule": "de/focus-word-is-adv",
+				"hash": "d38200289df9682c"
 			}
 		],
 		"references": [
@@ -592,7 +596,7 @@
 			"memberSegmentIndices": [9],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADJ"
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -603,13 +607,12 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "ADV",
 						"canonicalForm": "wirklich",
 						"coreFeatures": {
-							"abbr": null,
-							"comparable": "Yes",
+							"comparable": null,
 							"numType": null,
-							"variant": null
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "wirklich",
@@ -617,12 +620,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{
@@ -630,12 +628,10 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "wirklich 'really, in fact' is the adverbial use of the adjective wirklich (DWDS, Adjektiv, sense 3 adverbiell), so ADJ (de/adjective-stays-adj); DWDS gives wirklicher, am wirklichsten, so it marks Pos. open: #734."
+				"rationale": "wirklich 'really, in fact' is a sentence adverb here: it asks whether it is true that she is dangerous. A sentence adverb is a non-comparable ADV (de/adjective-stays-adj), so its Surface has no inflection."
 			}
 		},
 		{
@@ -1483,7 +1479,7 @@
 			"memberSegmentIndices": [53],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADJ"
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1494,13 +1490,12 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "ADV",
 						"canonicalForm": "eigentlich",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
-							"variant": null
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "eigentlich",
@@ -1516,12 +1511,10 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "eigentlich 'in reality, at bottom' is the adverbial use of the adjective eigentlich (DWDS: Adjektiv, ohne Komparativ; sense 2 in Wirklichkeit), so ADJ with no Degree (de/adjective-stays-adj, de/comparability-is-lexical). open: #734."
+				"rationale": "eigentlich 'in reality, at bottom' is the sentence adverb (Duden: eigentlich, Adverb b, im Grunde), not the modal particle of questions. A sentence adverb is a non-comparable ADV (de/adjective-stays-adj)."
 			}
 		},
 		{
@@ -1563,7 +1556,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "nur is the restrictive focus word before bloße Marotte; it cannot inflect, so ADV, not comparable. open: #734."
+				"rationale": "nur is the restrictive focus word before bloße Marotte: a single-member ADV, not comparable (de/focus-word-is-adv)."
 			}
 		},
 		{

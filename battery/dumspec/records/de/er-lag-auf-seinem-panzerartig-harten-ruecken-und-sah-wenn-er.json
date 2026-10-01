@@ -409,6 +409,10 @@
 			{
 				"rule": "de/substantivized-infinitive-is-a-noun",
 				"hash": "24bb91c7f80c0f5f"
+			},
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "740bfc8b0cfe812b"
 			}
 		],
 		"references": [
@@ -974,8 +978,8 @@
 		{
 			"memberSegmentIndices": [27, 29],
 			"route": {
-				"family": "Locution",
-				"kind": "ADV"
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -985,11 +989,18 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "ADV",
+						"family": "Lexeme",
+						"kind": "PRON",
 						"canonicalForm": "ein wenig",
 						"coreFeatures": {
-							"comparable": null
+							"case": null,
+							"number": null,
+							"extPos": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Ind",
+							"gender": null
 						}
 					},
 					"normalizedSurface": "ein wenig",
@@ -1009,10 +1020,11 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "open: #734. ein wenig ('a little', DWDS: ein (klein) wenig = etwas) is invariant and adverbial. ein agrees with nothing, so it can be no article of wenig; the two words are read as a Locution ADV with no comparison forms."
+				"rationale": "ein wenig 'a little' is one Lexeme PRON ein wenig in every use, here adverbial (den Kopf ein wenig hob). Its ein is fixed lexical material that never inflects (mit ein wenig Geduld), so it gives no Article evidence, and the adverbial use marks no case (de/quantifier-by-use, #734's 2026-09-30 decision)."
 			}
 		},
 		{

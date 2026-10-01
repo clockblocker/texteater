@@ -27,15 +27,23 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": {
+				"emojiDescription": "🤝"
+			},
 			"notes": {
-				"rationale": "The embedded supplied modal particle is PART with null polarity, not a standalone INTJ answer."
+				"rationale": "ja is the unstressed modal particle presenting the statement as known, not the answer particle: PART ja with partType Mod (de/modal-particle-is-part), Duden's ja 3a."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -50,7 +58,7 @@
 						"canonicalForm": "ja",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

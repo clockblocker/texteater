@@ -19,13 +19,24 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"notes": {
+				"rationale": "eigentlich in a question adds the speaker's interest (Duden: eigentlich, Partikel a), not the sentence adverb 'actually': PART eigentlich with partType Mod (de/modal-particle-is-part)."
+			},
+			"reading": {
+				"emojiDescription": "🧐"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -39,7 +50,7 @@
 						"canonicalForm": "eigentlich",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

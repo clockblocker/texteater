@@ -19,15 +19,23 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": {
+				"emojiDescription": "🤝"
+			},
 			"notes": {
-				"rationale": "Modal ja is clause-dependent and therefore has null polarity, unlike an affirmative answer particle."
+				"rationale": "Modal ja marks the statement as something both know (Duden's ja 3a). A modal particle is PART with partType Mod, never the answer INTJ (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,7 +50,7 @@
 						"canonicalForm": "ja",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

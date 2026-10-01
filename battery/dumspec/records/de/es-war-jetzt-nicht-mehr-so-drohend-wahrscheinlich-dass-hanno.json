@@ -240,6 +240,10 @@
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
+			},
+			{
+				"rule": "de/focus-word-is-adv",
+				"hash": "d38200289df9682c"
 			}
 		],
 		"references": [

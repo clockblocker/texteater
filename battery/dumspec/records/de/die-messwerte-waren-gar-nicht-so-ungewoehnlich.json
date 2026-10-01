@@ -21,28 +21,37 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/degree-word-is-adv",
+				"hash": "b27dedd36b0a24bb"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "gar intensifies the negation in gar nicht. A degree word is a single-member ADV that never joins the word it grades (de/degree-word-is-adv); not comparable."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PART",
+						"kind": "ADV",
 						"canonicalForm": "gar",
 						"coreFeatures": {
-							"abbr": null,
-							"partType": null,
-							"polarity": null
+							"comparable": null,
+							"numType": null,
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "gar",

@@ -22,7 +22,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/aber-is-cconj",
+				"hash": "ec4489f45536f6d5"
+			}
+		],
 		"references": []
 	},
 	"targets": [

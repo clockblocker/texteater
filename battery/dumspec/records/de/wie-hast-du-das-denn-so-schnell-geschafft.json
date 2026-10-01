@@ -23,13 +23,24 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"notes": {
+				"rationale": "denn in a w-question is the modal particle of interest (Duden: denn, verstärkende Partikel 1a): PART denn with partType Mod (de/modal-particle-is-part)."
+			},
+			"reading": {
+				"emojiDescription": "❓"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -43,7 +54,7 @@
 						"canonicalForm": "denn",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

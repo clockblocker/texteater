@@ -98,6 +98,10 @@
 			{
 				"rule": "de/modal-is-a-verb",
 				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
 			}
 		],
 		"references": []
@@ -251,8 +255,11 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "😠"
+			},
 			"notes": {
-				"rationale": "Route tentative: modal particle doch."
+				"rationale": "doch is the unstressed modal particle of the exclamation, voicing the speaker's surprise or indignation (Duden: doch, Partikel 2): PART doch with partType Mod (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -267,7 +274,7 @@
 						"canonicalForm": "doch",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

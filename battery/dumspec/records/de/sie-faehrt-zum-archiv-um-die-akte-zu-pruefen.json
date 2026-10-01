@@ -27,39 +27,54 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/correlator-anchors",
+				"hash": "18606bad03311909"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"memberSegmentIndices": [10, 16],
+			"route": {
+				"family": "Locution",
+				"kind": "SCONJ"
+			},
 			"notes": {
-				"rationale": "The marked infinitive particle remains PART; the earlier fusion zum is only context, not ADP membership."
+				"rationale": "um … zu is a correlator, a Locution SCONJ made of its anchors um and zu; die Akte and prüfen belong to the clause it opens and stay outside (de/correlator-anchors). The zu is no single-member PART here."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "um",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "zu",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "um zu",
+					"spelling": {
+						"kind": "Canonical"
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "PART",
-						"canonicalForm": "zu",
-						"coreFeatures": {
-							"abbr": null,
-							"partType": "Inf",
-							"polarity": null
-						}
+						"canonicalForm": "um … zu",
+						"family": "Locution",
+						"kind": "SCONJ",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "zu",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "zu", "orthography": "Standard" }],
-				"realizationCoverage": "Full"
+				}
 			}
 		}
 	],

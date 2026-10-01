@@ -52,6 +52,10 @@
 			{
 				"rule": "de/verb-core-features",
 				"hash": "bcb53b5333fa8af4"
+			},
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
 			}
 		],
 		"references": [
@@ -182,8 +186,11 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "❓"
+			},
 			"notes": {
-				"rationale": "denn in a question is the modal particle of interest or doubt (Duden: denn, verstärkende Partikel), not the causal conjunction. It is a PART, as the Reviewed einmal and the authored mal are; no Rule states this. open: #734."
+				"rationale": "denn in a question is the modal particle of interest or doubt (Duden: denn, verstärkende Partikel 1a), not the causal conjunction: PART denn with partType Mod (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -209,7 +216,7 @@
 						"canonicalForm": "denn",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

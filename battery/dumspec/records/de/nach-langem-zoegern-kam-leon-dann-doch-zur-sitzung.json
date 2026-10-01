@@ -26,7 +26,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -34,7 +39,7 @@
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "Target Classification fixed ADV; the contrastive adverb is not the homographic modal-particle route."
+				"rationale": "Stressed doch 'after all, contrary to expectation' (Duden: doch, Adverb 1, dennoch): Leon came in the end. The same spelling as a modal particle is PART; this one is an ADV with no comparison forms (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

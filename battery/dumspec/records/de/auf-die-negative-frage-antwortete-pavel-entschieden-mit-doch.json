@@ -25,13 +25,21 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"notes": {
+				"rationale": "doch is the contradicting answer to the negative question, embedded in mit doch. An answer word stays INTJ with partType Res when a clause embeds it; German PART has no polarity Pos (de/interjection-counts-its-words)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -41,12 +49,10 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PART",
+						"kind": "INTJ",
 						"canonicalForm": "doch",
 						"coreFeatures": {
-							"abbr": null,
-							"partType": null,
-							"polarity": "Pos"
+							"partType": "Res"
 						}
 					},
 					"normalizedSurface": "doch",

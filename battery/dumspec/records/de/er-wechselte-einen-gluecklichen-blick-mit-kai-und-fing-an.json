@@ -219,7 +219,11 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" }
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "740bfc8b0cfe812b"
+			}
 		],
 		"references": [
 			{
@@ -710,8 +714,8 @@
 		{
 			"memberSegmentIndices": [25, 27],
 			"route": {
-				"family": "Locution",
-				"kind": "ADV"
+				"family": "Lexeme",
+				"kind": "PRON"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -726,6 +730,7 @@
 					}
 				],
 				"realizationCoverage": "Full",
+				"articleEvidence": null,
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
@@ -738,17 +743,24 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"canonicalForm": "ein wenig",
-						"family": "Locution",
-						"kind": "ADV",
+						"family": "Lexeme",
+						"kind": "PRON",
 						"coreFeatures": {
-							"comparable": null
+							"case": null,
+							"number": null,
+							"extPos": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Ind",
+							"gender": null
 						}
 					},
 					"surfaceFeatures": null
 				}
 			},
 			"notes": {
-				"rationale": "ein wenig 'a little' is a fixed pair: its ein never inflects (mit ein wenig Geduld, DWDS ⟨ein (klein) wenig (= etwas)⟩), so it is no article and wenig no Head owning one. The pair acts as a degree adverbial here, so Locution ADV. open: #734."
+				"rationale": "ein wenig 'a little' is one Lexeme PRON ein wenig in every use, here grading abzuspannen. Its ein is fixed lexical material that never inflects, so it gives no Article evidence, and the adverbial use marks no case (de/quantifier-by-use, #734's 2026-09-30 decision)."
 			}
 		},
 		{

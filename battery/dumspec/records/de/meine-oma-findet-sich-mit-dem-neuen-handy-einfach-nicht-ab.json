@@ -126,6 +126,10 @@
 			{
 				"rule": "de/noun-owns-its-article",
 				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
 			}
 		],
 		"references": [
@@ -423,8 +427,11 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "🤷"
+			},
 			"notes": {
-				"rationale": "Route tentative: modal particle einfach, PART per the #734 ruling; its partType waits on #746."
+				"rationale": "einfach is the modal particle saying there is nothing more to it (Duden: einfach, Partikel 1: ich kann es mir einfach nicht vorstellen), not the adjective 'simple': PART einfach with partType Mod (de/modal-particle-is-part, de/adjective-stays-adj)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -439,7 +446,7 @@
 						"canonicalForm": "einfach",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

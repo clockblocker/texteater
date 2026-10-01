@@ -24,13 +24,24 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"notes": {
+				"rationale": "wohl marks the statement as the speaker's assumption (Duden: wohl, Partikel 1, vermutlich): PART wohl with partType Mod (de/modal-particle-is-part)."
+			},
+			"reading": {
+				"emojiDescription": "🤔"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -44,7 +55,7 @@
 						"canonicalForm": "wohl",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

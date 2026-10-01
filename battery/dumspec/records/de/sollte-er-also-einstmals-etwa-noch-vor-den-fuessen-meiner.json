@@ -200,6 +200,10 @@
 			{
 				"rule": "de/verb-core-features",
 				"hash": "bcb53b5333fa8af4"
+			},
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
 			}
 		],
 		"references": [
@@ -434,8 +438,11 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "😨"
+			},
 			"notes": {
-				"rationale": "etwa in a yes-no question is the modal particle of apprehension ('by any chance'), not 'approximately', so a PART like denn. open: #734."
+				"rationale": "etwa in a yes-no question is the modal particle of apprehension ('by any chance'; Duden: etwa, Partikel 1a), not 'approximately': PART etwa with partType Mod (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -461,7 +468,7 @@
 						"canonicalForm": "etwa",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

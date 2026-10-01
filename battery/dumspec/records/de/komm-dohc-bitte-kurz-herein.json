@@ -17,13 +17,24 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"notes": {
+				"rationale": "dohc is a Typo for the modal particle doch urging the request: PART doch with partType Mod (de/modal-particle-is-part), Duden's doch 1."
+			},
+			"reading": {
+				"emojiDescription": "👉"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -37,7 +48,7 @@
 						"canonicalForm": "doch",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

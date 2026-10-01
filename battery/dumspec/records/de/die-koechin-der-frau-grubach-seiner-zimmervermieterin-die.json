@@ -842,7 +842,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "open: #734. früh after a clock time means 'in the morning' (Duden has früh as an Adverb: heute früh, Dienstag früh). In that sense it neither inflects nor compares, so it is read as a non-comparable ADV, against the letter of de/adjective-stays-adj; see finding A2."
+				"rationale": "früh after a clock time means 'in the morning' (Duden has früh as an Adverb: heute früh, Dienstag früh). The attributive frühe has no such sense, so the use is ADV, not ADJ, and neither inflects nor compares (de/adjective-stays-adj)."
 			}
 		},
 		{

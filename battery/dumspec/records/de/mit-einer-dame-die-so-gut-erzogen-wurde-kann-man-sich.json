@@ -176,6 +176,14 @@
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
+			},
+			{
+				"rule": "de/degree-word-is-adv",
+				"hash": "b27dedd36b0a24bb"
+			},
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
 			}
 		],
 		"references": [
@@ -693,7 +701,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'). It does not inflect, so ADV, not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way. open: #734."
+				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'), as gar does in gar nicht. German PART is only nicht, infinitive zu and the authored modal particles (de/modal-particle-is-part), so it is a single-member degree ADV (de/degree-word-is-adv), not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way."
 			}
 		},
 		{

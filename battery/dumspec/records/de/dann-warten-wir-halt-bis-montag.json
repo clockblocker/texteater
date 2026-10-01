@@ -19,15 +19,23 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": {
+				"emojiDescription": "🤷"
+			},
 			"notes": {
-				"rationale": "The modal particle is an uninflected Citation Surface; the codec has no modal PartType value."
+				"rationale": "halt presents waiting as the unchangeable way things are (Duden: halt, Partikel 1): PART halt with partType Mod (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,7 +50,7 @@
 						"canonicalForm": "halt",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

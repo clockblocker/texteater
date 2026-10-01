@@ -181,6 +181,100 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 			{ key: "polite", onlyWith: "person" },
 		],
 	},
+	// German PART is closed: nicht, infinitive zu and the authored modal
+	// particles (#734). The same spelling used otherwise is another word.
+	{
+		split: "A modal particle is PART Mod; the same spelling as a focus, degree, temporal or sentence adverb is ADV, as an adjective ADJ, joining clauses CCONJ and answering INTJ",
+		adrs: ["ADR-0021"],
+		rules: [
+			"de/modal-particle-is-part",
+			"de/focus-word-is-adv",
+			"de/aber-is-cconj",
+			"de/adjective-stays-adj",
+			"de/interjection-counts-its-words",
+		],
+		forms: [
+			"aber",
+			"auch",
+			"bloß",
+			"denn",
+			"doch",
+			"eben",
+			"eigentlich",
+			"einfach",
+			"einmal",
+			"etwa",
+			"halt",
+			"ja",
+			"mal",
+			"nur",
+			"ruhig",
+			"schon",
+			"vielleicht",
+			"wohl",
+		],
+		both: { kind: ["PART", "ADV", "ADJ", "CCONJ", "INTJ"] },
+		varies: [
+			{ key: "kind", values: ["PART", "ADV", "ADJ", "CCONJ", "INTJ"] },
+			{ key: "partType", values: [null, "Mod", "Res"], onlyWith: "kind" },
+			{ key: "comparable", onlyWith: "kind" },
+		],
+	},
+	{
+		split: "A sense no attributive form has is ADV apart from the ADJ: degree ganz, früh 'in the morning' and the sentence adverbs",
+		adrs: ["ADR-0036"],
+		rules: ["de/adjective-stays-adj", "de/degree-word-is-adv"],
+		forms: [
+			"ganz",
+			"früh",
+			"recht",
+			"offenbar",
+			"wahrscheinlich",
+			"natürlich",
+			"wirklich",
+			"eigentlich",
+		],
+		both: { kind: ["ADV", "ADJ"] },
+		varies: [
+			{ key: "kind", values: ["ADV", "ADJ"] },
+			{ key: "comparable", onlyWith: "kind" },
+		],
+	},
+	{
+		split: "zu is ADP as a preposition, PART Inf before an infinitive and ADV as a degree word",
+		adrs: [],
+		rules: ["de/bare-infinitive-zu", "de/degree-word-is-adv"],
+		forms: ["zu"],
+		varies: [
+			{ key: "kind", values: ["ADP", "PART", "ADV"] },
+			{ key: "partType", values: [null, "Inf"], onlyWith: "kind" },
+		],
+	},
+	{
+		split: "viel, wenig, mehr and meist are ADJ after a determiner, PRON for a noun phrase, DET before a noun and ADV used adverbially",
+		adrs: ["ADR-0042"],
+		rules: ["de/quantifier-by-use"],
+		forms: ["viel", "wenig", "meist"],
+		both: { kind: ["ADJ", "PRON", "DET", "ADV"] },
+		varies: [
+			{ key: "kind", values: ["ADJ", "PRON", "DET", "ADV"] },
+			{ key: "pronType", values: [null, "Ind"], onlyWith: "kind" },
+			{ key: "comparable", onlyWith: "kind" },
+		],
+	},
+	// #743 settled mehr 'any longer' after a negation (nicht mehr so drohend,
+	// BT-B5) as Duden's Adverb mehr, a word apart from the quantifier.
+	{
+		split: "Quantifier mehr for a noun phrase is PRON; mehr 'any longer' after a negation is Duden's Adverb mehr",
+		adrs: [],
+		rules: ["de/quantifier-by-use"],
+		forms: ["mehr"],
+		both: { kind: ["PRON", "ADV"] },
+		varies: [
+			{ key: "kind", values: ["PRON", "ADV"] },
+			{ key: "pronType", values: [null, "Ind"], onlyWith: "kind" },
+		],
+	},
 ];
 
 /** The German forms whose split an open grilling decides. */
