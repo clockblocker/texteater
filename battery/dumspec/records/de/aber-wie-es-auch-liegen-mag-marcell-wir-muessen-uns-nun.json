@@ -860,7 +860,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "uns is the reflexive object of machen. With machen and a predicative adjective the reflexive is accusative (sich bereit, verständlich machen), so the accusative cell. Ruled on #743 (JT-B4, A4)."
+				"rationale": "uns is the ordinary accusative object of machen 'make', a free PRON, not a fixed reflexive: in this sense machen takes any object (jemanden bereit machen), so the reflexive test leaves uns free (de/verb-owns-its-scattered-members). Ruled by the user on #739 (2026-10-01), keeping #743 JT-B4."
 			}
 		},
 		{
@@ -984,7 +984,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "schlüssig is the predicative adjective in the 'resolved, decided' sense DWDS gives for sich (über etw.) schlüssig sein/werden. DWDS lists no comparison forms, so it marks no Degree. Ruled on #743 (JT-B4, A4)."
+				"rationale": "schlüssig is the predicative adjective of machen's object, an ADJ whose Reading carries 'decided, having made up one's mind', the sense DWDS gives for sich (über etw.) schlüssig sein/werden. DWDS lists no comparison forms, so it marks no Degree. Ruled by the user on #739 (2026-10-01), keeping #743 JT-B4."
 			}
 		},
 		{
@@ -1038,7 +1038,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "machen is the infinitive under müssen. It is no copula, so the Locution that a fixed reflexive makes of sich schlüssig werden, sein does not reach it (de/copula-stays-apart). sich schlüssig machen is no dictionary Locution (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially), so it resolves word by word. Ruled on #743 (JT-B4, JT-A3, A4)."
+				"rationale": "machen is 'make', the infinitive under müssen: we must make ourselves decided, with uns its object and schlüssig the object's predicate, so the three resolve word by word. machen is no copula, so the Locution sich schlüssig werden, sein does not reach it (de/copula-stays-apart). No dictionary lists sich schlüssig machen (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially). Ruled by the user on #739 (2026-10-01), keeping #743 JT-B4."
 			}
 		},
 		{
