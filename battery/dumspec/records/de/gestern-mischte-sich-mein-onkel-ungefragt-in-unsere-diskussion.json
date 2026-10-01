@@ -84,6 +84,7 @@
 		}
 	],
 	"coverage": "Full",
+	"reviewDepth": "Segmentation",
 	"provenance": {
 		"kind": "Authored"
 	},
