@@ -40,12 +40,7 @@ const adposition = (canonicalForm: string) =>
 		family: "Lexeme",
 		kind: "ADP",
 		canonicalForm,
-		coreFeatures: {
-			abbr: null,
-			adpType: "Prep",
-			extPos: null,
-			partType: null,
-		},
+		coreFeatures: { abbr: null },
 	}) as const satisfies Dumling.Lemma<"de", "Lexeme", "ADP">;
 
 /** Two-way preposition: the construction supplies the case. */
