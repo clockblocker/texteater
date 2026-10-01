@@ -41,9 +41,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "geschlossen",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "geschlossene",

@@ -66,7 +66,9 @@
 						"canonicalForm": "See",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"surfaceFeatures": null
 				}
@@ -100,9 +102,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null

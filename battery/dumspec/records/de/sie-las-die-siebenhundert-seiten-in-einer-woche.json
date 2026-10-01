@@ -29,9 +29,9 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
-				"rationale": "Route fixed ADJ, not NUM. Cardinal identity. Invariant Surface."
+				"rationale": "A cardinal is NUM whatever its size, so siebenhundert is NUM like fünf. It does not inflect, so its Surface marks nothing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,30 +42,20 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "NUM",
 						"canonicalForm": "siebenhundert",
-						"coreFeatures": {
-							"comparable": null,
-							"numType": "Card",
-							"variant": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "siebenhundert",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Acc",
-						"degree": null,
-						"gender": "Fem",
-						"number": "Plur"
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{ "attested": "siebenhundert", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+				"articleEvidence": null
 			}
 		}
 	],

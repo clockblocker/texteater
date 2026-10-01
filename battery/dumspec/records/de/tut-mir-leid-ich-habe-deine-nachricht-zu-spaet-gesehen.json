@@ -343,11 +343,8 @@
 						"canonicalForm": "dein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "2",
 							"polite": null,
 							"poss": "Yes",
@@ -395,8 +392,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Nachricht",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Nachricht",
@@ -443,7 +439,6 @@
 						"canonicalForm": "zu",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -481,9 +476,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "spät",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "spät",

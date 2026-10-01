@@ -450,7 +450,6 @@
 						"canonicalForm": "wie",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Rel"
 						}
 					},
@@ -540,7 +539,6 @@
 						"canonicalForm": "auch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -890,7 +888,6 @@
 						"canonicalForm": "nun",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -932,7 +929,6 @@
 						"canonicalForm": "darüber",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Dem"
 						}
 					},
@@ -973,9 +969,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "schlüssig",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "schlüssig",
@@ -1072,7 +1066,6 @@
 						"canonicalForm": "wie",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Int"
 						}
 					},
@@ -1239,11 +1232,8 @@
 						"canonicalForm": "dieser",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -1294,9 +1284,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "ganz",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "ganzen",
@@ -1343,8 +1331,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Tragikomödie",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Tragikomödie",

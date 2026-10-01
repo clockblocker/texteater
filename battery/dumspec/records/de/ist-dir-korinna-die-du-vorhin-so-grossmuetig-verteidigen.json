@@ -427,7 +427,6 @@
 						"canonicalForm": "vorhin",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -469,7 +468,6 @@
 						"canonicalForm": "so",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -510,9 +508,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "großmütig",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "großmütig",
@@ -662,9 +658,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "verleidet",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "verleidet",

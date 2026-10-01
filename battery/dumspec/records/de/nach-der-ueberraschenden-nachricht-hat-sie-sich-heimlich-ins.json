@@ -124,8 +124,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Nachricht",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Nachricht",
@@ -164,9 +163,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "überraschend",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "überraschenden",
@@ -307,9 +304,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "heimlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "heimlich",

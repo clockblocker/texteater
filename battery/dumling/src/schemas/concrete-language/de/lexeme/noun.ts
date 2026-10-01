@@ -7,7 +7,6 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 export const DeNounFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
-		hyph: DE_FEATURE_SCHEMA.hyph,
 	}),
 	// A noun Surface is the noun's own form; its article is an attested
 	// member, not a feature (ADR 0040). A noun whose Lemma has no gender,

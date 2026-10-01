@@ -37,9 +37,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "siebenachtel",
-						"coreFeatures": {
-							"numType": "Frac"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "siebenachtel",
 					"spelling": { "kind": "Canonical" },

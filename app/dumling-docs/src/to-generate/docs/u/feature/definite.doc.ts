@@ -43,7 +43,7 @@ For Hebrew construct state, use \`Cons\` rather than \`Def\`. The construct form
 			body: `
 The abstract feature enum follows UD and includes all five values above. Current concrete Dumling schemas expose narrower subsets:
 
-- English and German [\`DET\`](/u/entity/lemma/lexeme/det/) Lemmas currently use \`Def\` and \`Ind\` in \`Lemma.coreFeatures\`.
+- English [\`DET\`](/u/entity/lemma/lexeme/det/) Lemmas currently use \`Def\` and \`Ind\` in \`Lemma.coreFeatures\`.
 - Hebrew concrete schemas currently use \`Cons\` and \`Def\` in \`surface.inflectionalFeatures\` for several lexeme subtypes, including [\`NOUN\`](/u/entity/lemma/lexeme/noun/) and [\`DET\`](/u/entity/lemma/lexeme/det/).
 - Hebrew [\`PRON\`](/u/entity/lemma/lexeme/pron/) Lemmas currently expose only core \`Def\`.
 

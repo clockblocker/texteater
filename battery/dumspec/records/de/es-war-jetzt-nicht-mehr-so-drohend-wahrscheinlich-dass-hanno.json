@@ -391,7 +391,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -473,7 +472,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -515,7 +513,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -558,9 +555,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -607,9 +602,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null
@@ -894,7 +887,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -936,7 +928,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1038,8 +1029,7 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"surfaceFeatures": null
@@ -1086,9 +1076,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null

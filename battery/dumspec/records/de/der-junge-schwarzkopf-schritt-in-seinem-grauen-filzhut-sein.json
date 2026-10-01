@@ -337,9 +337,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "jung",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "junge",
@@ -490,11 +488,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -542,9 +537,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "grau",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "grauen",
@@ -588,8 +581,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Filzhut",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Filzhut",
@@ -636,11 +628,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -691,8 +680,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Buch",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Buch",
@@ -783,8 +771,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Hand",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Hand",
@@ -1064,7 +1051,6 @@
 						"canonicalForm": "manchmal",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1150,8 +1136,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Seite",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Seite",

@@ -8,11 +8,8 @@ const lemma = {
 	canonicalForm: "des",
 	coreFeatures: {
 		case: "Gen",
-		definite: "Def",
-		extPos: null,
 		gender: "Neut",
 		number: "Sing",
-		numType: null,
 		person: null,
 		polite: null,
 		poss: null,

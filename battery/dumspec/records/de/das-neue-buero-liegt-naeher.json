@@ -36,9 +36,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "nah",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "näher",

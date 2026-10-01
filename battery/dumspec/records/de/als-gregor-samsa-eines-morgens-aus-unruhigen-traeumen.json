@@ -333,8 +333,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Morgen",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Morgens",
@@ -435,9 +434,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "unruhig",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "unruhigen",
@@ -484,8 +481,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Traum",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Träumen",
@@ -779,11 +775,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -834,8 +827,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Bett",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Bett",
@@ -878,8 +870,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Ungeziefer",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Ungeziefer",
@@ -929,9 +920,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "ungeheuer",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "ungeheueren",
@@ -978,9 +967,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "verwandelt",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "verwandelt",

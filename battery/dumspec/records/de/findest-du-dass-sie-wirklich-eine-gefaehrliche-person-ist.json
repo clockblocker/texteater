@@ -608,7 +608,6 @@
 						"canonicalForm": "wirklich",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -649,8 +648,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Person",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Person",
@@ -703,9 +701,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "gefährlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "gefährliche",
@@ -806,9 +802,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "voll",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "voll",
@@ -855,8 +849,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Oberflächlichkeit",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Oberflächlichkeit",
@@ -936,8 +929,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Eitelkeit",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Eitelkeit",
@@ -1247,7 +1239,6 @@
 						"canonicalForm": "so",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1288,9 +1279,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "schlimm",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "schlimm",
@@ -1371,9 +1360,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "ernsthaft",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "ernsthaft",
@@ -1475,7 +1462,6 @@
 						"canonicalForm": "eigentlich",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1517,7 +1503,6 @@
 						"canonicalForm": "nur",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1558,9 +1543,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "bloß",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "bloße",
@@ -1607,8 +1590,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Marotte",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Marotte",

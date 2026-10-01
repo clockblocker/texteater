@@ -40,9 +40,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "lang",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "langer",

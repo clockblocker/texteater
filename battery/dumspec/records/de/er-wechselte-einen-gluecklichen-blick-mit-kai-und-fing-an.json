@@ -401,8 +401,7 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"surfaceFeatures": null
@@ -449,9 +448,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null
@@ -640,11 +637,8 @@
 						"kind": "DET",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -694,8 +688,7 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"surfaceFeatures": null

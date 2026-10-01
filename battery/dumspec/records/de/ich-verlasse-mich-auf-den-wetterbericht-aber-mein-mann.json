@@ -300,8 +300,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Wetterbericht",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Wetterbericht",
@@ -386,11 +385,8 @@
 						"canonicalForm": "mein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -438,8 +434,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Mann",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Mann",
@@ -559,7 +554,6 @@
 						"canonicalForm": "nie",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Neg"
 						}
 					},
@@ -598,7 +592,6 @@
 						"canonicalForm": "darauf",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Dem"
 						}
 					},

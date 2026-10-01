@@ -38,9 +38,9 @@ German has richer inflectional coverage than English for nouns and adjectives.
 
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
-| \`NOUN\` | \`gender\`, \`hyph\` | \`case\`, \`gender\`, \`number\` |
+| \`NOUN\` | \`gender\` | \`case\`, \`gender\`, \`number\` |
 | \`VERB\` | \`hasSepPrefix\`, \`lexicallyReflexive\` | \`aspect\`, \`gender\`, \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
-| \`ADJ\` | \`numType\`, \`variant\` | \`case\`, \`degree\`, \`gender\`, \`number\` |
+| \`ADJ\` | \`comparable\` | \`case\`, \`degree\`, \`gender\`, \`number\` |
 
 German noun \`gender\` supports \`Fem\`, \`Masc\`, and \`Neut\`. An adjectival noun for a person (\`Angestellte\`, \`Reisende\`) has no Lemma gender, since its gender is the referent's; its singular Surface marks the gender its form shows (\`der Reisende\` and \`ein Verletzter\` are \`Masc\`), and no other noun Surface marks gender. German nominal and adjectival \`case\` supports \`Nom\`, \`Acc\`, \`Dat\`, and \`Gen\`.
 
@@ -85,7 +85,6 @@ const seeLemma = {
 \tkind: "NOUN",
 \tcoreFeatures: {
 \t\tgender: "Masc",
-\t\thyph: null,
 \t},
 } satisfies Dumling.Lemma<"de", "Lexeme", "NOUN">;
 

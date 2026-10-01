@@ -47,9 +47,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "früh",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "am frühesten",

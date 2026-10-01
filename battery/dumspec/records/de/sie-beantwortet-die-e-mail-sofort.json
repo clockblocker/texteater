@@ -35,7 +35,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "E-Mail",
-						"coreFeatures": { "gender": "Fem", "hyph": "Yes" }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "E-Mail",
 					"spelling": { "kind": "Canonical" },

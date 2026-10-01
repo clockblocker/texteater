@@ -41,11 +41,8 @@
 						"canonicalForm": "beide",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": "Card",
 							"person": null,
 							"polite": null,
 							"poss": null,

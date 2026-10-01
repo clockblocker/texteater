@@ -41,7 +41,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Chef",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"normalizedSurface": "Chef",
 					"spelling": { "kind": "Canonical" },

@@ -128,7 +128,9 @@
 						"canonicalForm": "Lot",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"surfaceFeatures": null
 				}
@@ -212,9 +214,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": "Ord",
-							"variant": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -247,9 +247,7 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null

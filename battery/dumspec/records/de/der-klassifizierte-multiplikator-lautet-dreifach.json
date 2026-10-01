@@ -35,9 +35,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "dreifach",
-						"coreFeatures": {
-							"numType": "Mult"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "dreifach",
 					"spelling": { "kind": "Canonical" },

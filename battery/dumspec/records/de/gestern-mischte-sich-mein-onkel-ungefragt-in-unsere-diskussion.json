@@ -144,7 +144,6 @@
 						"canonicalForm": "gestern",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -267,11 +266,8 @@
 						"canonicalForm": "mein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -319,8 +315,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Onkel",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Onkel",
@@ -363,9 +358,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "ungefragt",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "ungefragt",
@@ -405,11 +398,8 @@
 						"canonicalForm": "unser",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -457,8 +447,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Diskussion",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Diskussion",

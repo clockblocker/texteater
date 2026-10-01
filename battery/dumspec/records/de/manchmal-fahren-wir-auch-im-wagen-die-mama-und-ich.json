@@ -159,7 +159,6 @@
 						"canonicalForm": "manchmal",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -303,7 +302,6 @@
 						"canonicalForm": "auch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -433,8 +431,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Wagen",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"surfaceFeatures": null
@@ -487,8 +484,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Mama",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"surfaceFeatures": null

@@ -87,11 +87,8 @@
 						"canonicalForm": "viel",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -129,8 +126,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Bewohner",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Bewohner",
@@ -269,8 +265,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Monat",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Monaten",
@@ -308,9 +303,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "voller",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "voller",
@@ -344,8 +337,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Lärm",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Lärm",
@@ -382,11 +374,8 @@
 						"canonicalForm": "etwas",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -417,8 +406,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Ruhe",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Ruhe",
@@ -475,9 +463,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "verlässlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "verlässlichen",
@@ -513,8 +499,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Nacht",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Nächten",

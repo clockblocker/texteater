@@ -46,9 +46,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "gelegen",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "gelegene",

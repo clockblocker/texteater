@@ -39,9 +39,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "stark",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "starker",
@@ -79,7 +77,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Regen",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"normalizedSurface": "Regen",
 					"spelling": { "kind": "Canonical" },

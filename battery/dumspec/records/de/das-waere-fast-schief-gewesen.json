@@ -106,7 +106,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},

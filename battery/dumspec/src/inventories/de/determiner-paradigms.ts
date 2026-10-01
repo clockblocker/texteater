@@ -232,7 +232,7 @@ add(
 add(
 	weak("wievielt", "viˈfiːlt"),
 	description(
-		{ pronType: "Int", numType: "Ord" },
+		{ pronType: "Int" },
 		"❓🔢",
 		"Der interrogative Determinierer „wievielte“ fragt nach der Stelle in einer Reihenfolge.",
 		["which numbered"],
@@ -588,7 +588,7 @@ add(
 		],
 	},
 	description(
-		{ pronType: "Tot", numType: "Card" },
+		{ pronType: "Tot" },
 		"2⃣",
 		"Der totalisierende Determinierer „beide“ erfasst die bezeichnete Menge vollständig.",
 		["both"],

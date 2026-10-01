@@ -66,9 +66,7 @@ export const negativeFixtures: {
 		seed: "de/das-wetter-ist-xqzt",
 		check: "Attestation",
 		edit: (record) => {
-			record.targets[0].attestation.surface.lemma.coreFeatures = {
-				hyph: null,
-			};
+			record.targets[0].attestation.surface.lemma.coreFeatures = {};
 		},
 	},
 	{

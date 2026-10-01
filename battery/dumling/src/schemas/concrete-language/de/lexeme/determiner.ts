@@ -19,11 +19,8 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 const DeDeterminerCoreFeatureBagSchema = z
 	.strictObject({
 		case: DE_FEATURE_SCHEMA.case.nullable(),
-		definite: DE_FEATURE_SCHEMA.definite.nullable(),
-		extPos: DE_FEATURE_SCHEMA.determinerExtPos.nullable(),
 		gender: DE_FEATURE_SCHEMA.gender.nullable(),
 		number: DE_FEATURE_SCHEMA.number.nullable(),
-		numType: DE_FEATURE_SCHEMA.determinerNumType.nullable(),
 		person: DE_FEATURE_SCHEMA.person.nullable(),
 		polite: DE_FEATURE_SCHEMA.polite.nullable(),
 		poss: DE_FEATURE_SCHEMA.poss.nullable(),

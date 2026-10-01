@@ -33,7 +33,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Eltern",
-						"coreFeatures": { "gender": null, "hyph": null }
+						"coreFeatures": {
+							"gender": null
+						}
 					},
 					"normalizedSurface": "Eltern",
 					"spelling": { "kind": "Canonical" },

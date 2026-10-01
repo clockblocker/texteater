@@ -15,11 +15,8 @@ export type ReviewedDeterminer = ReviewedMember;
 
 const emptyCore: Core = {
 	case: null,
-	definite: null,
-	extPos: null,
 	gender: null,
 	number: null,
-	numType: null,
 	person: null,
 	polite: null,
 	poss: null,

@@ -27,7 +27,7 @@
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"notes": {
-				"rationale": "The classified word-form cardinal is invariant and uses Citation with NumType Card."
+				"rationale": "The classified word-form cardinal is invariant and uses Citation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -40,9 +40,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "vier",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "vier",
 					"spelling": { "kind": "Canonical" },

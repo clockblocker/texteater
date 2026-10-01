@@ -59,9 +59,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "positiv",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "positiv",

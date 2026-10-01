@@ -47,9 +47,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "umgestürzt",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "umgestürzten",

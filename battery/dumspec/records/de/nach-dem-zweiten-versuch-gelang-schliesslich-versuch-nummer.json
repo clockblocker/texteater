@@ -46,9 +46,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "drei",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "drei",
 					"spelling": { "kind": "Canonical" },

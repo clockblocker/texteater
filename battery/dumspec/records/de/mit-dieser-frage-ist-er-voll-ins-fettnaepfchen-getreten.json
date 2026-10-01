@@ -188,11 +188,8 @@
 						"canonicalForm": "dieser",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -240,8 +237,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Frage",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Frage",
@@ -428,7 +424,6 @@
 						"canonicalForm": "voll",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},

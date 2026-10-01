@@ -160,11 +160,8 @@
 						"canonicalForm": "mein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -212,8 +209,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Oma",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Oma",
@@ -340,8 +336,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Handy",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Handy",
@@ -391,9 +386,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "neu",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "neuen",

@@ -113,7 +113,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Ende",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Ende",
 					"spelling": { "kind": "Canonical" },

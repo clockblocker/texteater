@@ -98,7 +98,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -140,7 +139,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -184,7 +182,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -217,7 +214,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -307,7 +303,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},

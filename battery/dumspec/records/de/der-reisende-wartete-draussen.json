@@ -60,7 +60,9 @@
 						"canonicalForm": "Reisende",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": null, "hyph": null }
+						"coreFeatures": {
+							"gender": null
+						}
 					},
 					"surfaceFeatures": null
 				}

@@ -35,7 +35,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Bibliothek",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "Bibliothek",
 					"spelling": { "kind": "Canonical" },

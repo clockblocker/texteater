@@ -187,9 +187,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "vergeblich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null

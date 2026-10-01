@@ -138,11 +138,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "ADJ";
 			canonicalForm: string;
-			coreFeatures: {
-				comparable: "Yes" | null;
-				numType: ("Card" | "Ord") | null;
-				variant: "Short" | null;
-			};
+			coreFeatures: { comparable: "Yes" | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -153,11 +149,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "ADJ";
 				canonicalForm: string;
-				coreFeatures: {
-					comparable: "Yes" | null;
-					numType: ("Card" | "Ord") | null;
-					variant: "Short" | null;
-				};
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			normalizedSurface: string;
 			spelling:
@@ -195,11 +187,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "ADJ";
 				canonicalForm: string;
-				coreFeatures: {
-					comparable: "Yes" | null;
-					numType: ("Card" | "Ord") | null;
-					variant: "Short" | null;
-				};
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			emojiDescription: string;
 		};
@@ -214,11 +202,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "ADJ";
 					canonicalForm: string;
-					coreFeatures: {
-						comparable: "Yes" | null;
-						numType: ("Card" | "Ord") | null;
-						variant: "Short" | null;
-					};
+					coreFeatures: { comparable: "Yes" | null };
 				};
 				normalizedSurface: string;
 				spelling:
@@ -531,7 +515,6 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				comparable: "Yes" | null;
-				numType: ("Card" | "Mult") | null;
 				pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
 			};
 		};
@@ -546,7 +529,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					comparable: "Yes" | null;
-					numType: ("Card" | "Mult") | null;
 					pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
 				};
 			};
@@ -585,7 +567,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					comparable: "Yes" | null;
-					numType: ("Card" | "Mult") | null;
 					pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
 				};
 			};
@@ -604,7 +585,6 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						comparable: "Yes" | null;
-						numType: ("Card" | "Mult") | null;
 						pronType:
 							| ("Dem" | "Ind" | "Int" | "Neg" | "Rel")
 							| null;
@@ -1300,11 +1280,8 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-				definite: ("Def" | "Ind") | null;
-				extPos: ("ADV" | "DET") | null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 				number: ("Plur" | "Sing") | null;
-				numType: ("Card" | "Ord") | null;
 				person: ("1" | "2" | "3") | null;
 				polite: ("Form" | "Infm") | null;
 				poss: "Yes" | null;
@@ -1335,11 +1312,8 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-					definite: ("Def" | "Ind") | null;
-					extPos: ("ADV" | "DET") | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
-					numType: ("Card" | "Ord") | null;
 					person: ("1" | "2" | "3") | null;
 					polite: ("Form" | "Infm") | null;
 					poss: "Yes" | null;
@@ -1407,11 +1381,8 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-					definite: ("Def" | "Ind") | null;
-					extPos: ("ADV" | "DET") | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
-					numType: ("Card" | "Ord") | null;
 					person: ("1" | "2" | "3") | null;
 					polite: ("Form" | "Infm") | null;
 					poss: "Yes" | null;
@@ -1446,11 +1417,8 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
-						definite: ("Def" | "Ind") | null;
-						extPos: ("ADV" | "DET") | null;
 						gender: ("Fem" | "Masc" | "Neut") | null;
 						number: ("Plur" | "Sing") | null;
-						numType: ("Card" | "Ord") | null;
 						person: ("1" | "2" | "3") | null;
 						polite: ("Form" | "Infm") | null;
 						poss: "Yes" | null;
@@ -1690,10 +1658,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "NOUN";
 			canonicalForm: string;
-			coreFeatures: {
-				gender: ("Fem" | "Masc" | "Neut") | null;
-				hyph: "Yes" | null;
-			};
+			coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -1704,10 +1669,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "NOUN";
 				canonicalForm: string;
-				coreFeatures: {
-					gender: ("Fem" | "Masc" | "Neut") | null;
-					hyph: "Yes" | null;
-				};
+				coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
 			};
 			normalizedSurface: string;
 			spelling:
@@ -1744,10 +1706,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "NOUN";
 				canonicalForm: string;
-				coreFeatures: {
-					gender: ("Fem" | "Masc" | "Neut") | null;
-					hyph: "Yes" | null;
-				};
+				coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
 			};
 			emojiDescription: string;
 		};
@@ -1762,10 +1721,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "NOUN";
 					canonicalForm: string;
-					coreFeatures: {
-						gender: ("Fem" | "Masc" | "Neut") | null;
-						hyph: "Yes" | null;
-					};
+					coreFeatures: { gender: ("Fem" | "Masc" | "Neut") | null };
 				};
 				normalizedSurface: string;
 				spelling:
@@ -1920,9 +1876,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "NUM";
 			canonicalForm: string;
-			coreFeatures: {
-				numType: ("Card" | "Frac" | "Mult" | "Range") | null;
-			};
+			coreFeatures: Record<string, never>;
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -1933,9 +1887,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "NUM";
 				canonicalForm: string;
-				coreFeatures: {
-					numType: ("Card" | "Frac" | "Mult" | "Range") | null;
-				};
+				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
 			spelling:
@@ -1972,9 +1924,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "NUM";
 				canonicalForm: string;
-				coreFeatures: {
-					numType: ("Card" | "Frac" | "Mult" | "Range") | null;
-				};
+				coreFeatures: Record<string, never>;
 			};
 			emojiDescription: string;
 		};
@@ -1989,9 +1939,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "NUM";
 					canonicalForm: string;
-					coreFeatures: {
-						numType: ("Card" | "Frac" | "Mult" | "Range") | null;
-					};
+					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
 				spelling:
@@ -2771,21 +2719,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "PUNCT";
 			canonicalForm: string;
-			coreFeatures: {
-				punctType:
-					| (
-							| "Brck"
-							| "Colo"
-							| "Comm"
-							| "Dash"
-							| "Elip"
-							| "Excl"
-							| "Peri"
-							| "Qest"
-							| "Quot"
-					  )
-					| null;
-			};
+			coreFeatures: Record<string, never>;
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -2796,21 +2730,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "PUNCT";
 				canonicalForm: string;
-				coreFeatures: {
-					punctType:
-						| (
-								| "Brck"
-								| "Colo"
-								| "Comm"
-								| "Dash"
-								| "Elip"
-								| "Excl"
-								| "Peri"
-								| "Qest"
-								| "Quot"
-						  )
-						| null;
-				};
+				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
 			spelling:
@@ -2842,21 +2762,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "PUNCT";
 				canonicalForm: string;
-				coreFeatures: {
-					punctType:
-						| (
-								| "Brck"
-								| "Colo"
-								| "Comm"
-								| "Dash"
-								| "Elip"
-								| "Excl"
-								| "Peri"
-								| "Qest"
-								| "Quot"
-						  )
-						| null;
-				};
+				coreFeatures: Record<string, never>;
 			};
 			emojiDescription: string;
 		};
@@ -2871,21 +2777,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "PUNCT";
 					canonicalForm: string;
-					coreFeatures: {
-						punctType:
-							| (
-									| "Brck"
-									| "Colo"
-									| "Comm"
-									| "Dash"
-									| "Elip"
-									| "Excl"
-									| "Peri"
-									| "Qest"
-									| "Quot"
-							  )
-							| null;
-					};
+					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
 				spelling:
@@ -3091,7 +2983,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "SYM";
 			canonicalForm: string;
-			coreFeatures: { numType: ("Card" | "Range") | null };
+			coreFeatures: Record<string, never>;
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -3102,7 +2994,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "SYM";
 				canonicalForm: string;
-				coreFeatures: { numType: ("Card" | "Range") | null };
+				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
 			spelling:
@@ -3139,7 +3031,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "SYM";
 				canonicalForm: string;
-				coreFeatures: { numType: ("Card" | "Range") | null };
+				coreFeatures: Record<string, never>;
 			};
 			emojiDescription: string;
 		};
@@ -3154,7 +3046,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "SYM";
 					canonicalForm: string;
-					coreFeatures: { numType: ("Card" | "Range") | null };
+					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
 				spelling:

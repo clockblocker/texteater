@@ -168,7 +168,9 @@
 						"canonicalForm": "Jägersmann",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"surfaceFeatures": null
 				}

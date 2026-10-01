@@ -583,7 +583,6 @@
 						"canonicalForm": "vorher",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -637,8 +636,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Art",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"surfaceFeatures": null
@@ -684,8 +682,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Ziel",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"surfaceFeatures": null
@@ -738,8 +735,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Art",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"surfaceFeatures": null
@@ -785,8 +781,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Tätigkeit",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"surfaceFeatures": null
@@ -864,7 +859,6 @@
 						"canonicalForm": "daran",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Dem"
 						}
 					},

@@ -157,8 +157,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Hupen",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Hupen",
@@ -208,9 +207,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "laut",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "laute",
@@ -302,8 +299,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Haus",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Haus",
@@ -461,9 +457,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "langsam",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "langsam",

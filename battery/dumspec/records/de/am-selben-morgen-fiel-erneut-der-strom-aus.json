@@ -224,11 +224,8 @@
 						"canonicalForm": "derselbe",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -281,8 +278,7 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"surfaceFeatures": null

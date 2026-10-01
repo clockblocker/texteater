@@ -500,7 +500,6 @@
 						"canonicalForm": "noch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -538,8 +537,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Weilchen",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Weilchen",
@@ -696,11 +694,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -748,8 +743,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Kopfkissen",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Kopfkissen",
@@ -792,8 +786,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Frau",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Frau",
@@ -843,9 +836,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "alt",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "alte",
@@ -1250,8 +1241,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Neugierde",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Neugierde",
@@ -1398,7 +1388,6 @@
 						"canonicalForm": "ganz",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1439,9 +1428,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "ungewöhnlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "ungewöhnlichen",
@@ -1537,7 +1524,6 @@
 						"canonicalForm": "dann",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1612,9 +1598,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "gleichzeitig",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "gleichzeitig",
@@ -1656,9 +1640,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "befremdet",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "befremdet",
@@ -1737,9 +1719,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "hungrig",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "hungrig",

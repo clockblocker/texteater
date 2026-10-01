@@ -37,7 +37,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Mann",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"normalizedSurface": "Mannes",
 					"spelling": { "kind": "Canonical" },

@@ -223,8 +223,7 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"surfaceFeatures": null

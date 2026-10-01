@@ -46,7 +46,7 @@ partial realization belongs to
 			body: `
 The abstract feature enum follows UD and exposes only \`Yes\`.
 
-Current concrete Dumling schemas expose \`hyph\` only as a core feature on German [\`NOUN\`](/u/entity/lemma/lexeme/noun/) lexemes.
+No current concrete Dumling route uses it: a hyphen in a Canonical Form is part of its spelling.
 `,
 		},
 	],

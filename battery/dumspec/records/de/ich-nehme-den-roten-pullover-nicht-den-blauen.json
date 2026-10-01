@@ -224,8 +224,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Pullover",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Pullover",
@@ -275,9 +274,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "rot",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "roten",
@@ -361,9 +358,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "blau",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "blauen",

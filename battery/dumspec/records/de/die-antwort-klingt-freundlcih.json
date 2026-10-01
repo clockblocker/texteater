@@ -37,9 +37,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "freundlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "freundlich",

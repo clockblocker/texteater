@@ -35,8 +35,6 @@ const verliebtReading = {
 		canonicalForm: "verliebt",
 		coreFeatures: {
 			comparable: "Yes",
-			numType: null,
-			variant: null,
 		},
 	},
 	emojiDescription: "💘",

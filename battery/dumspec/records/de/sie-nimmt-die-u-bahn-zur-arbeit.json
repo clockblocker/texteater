@@ -38,7 +38,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "U-Bahn",
-						"coreFeatures": { "gender": "Fem", "hyph": "Yes" }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "U-Bahn",
 					"spelling": { "kind": "Canonical" },

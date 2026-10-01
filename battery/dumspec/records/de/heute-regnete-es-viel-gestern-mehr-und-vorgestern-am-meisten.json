@@ -37,7 +37,7 @@
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "The explicit degree contrast establishes Degree Pos; the indefinite ADV identity carries PronType Ind without adding NumType from quantity meaning alone."
+				"rationale": "The explicit degree contrast establishes Degree Pos; the indefinite ADV identity carries PronType Ind."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -52,7 +52,6 @@
 						"canonicalForm": "viel",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"numType": null,
 							"pronType": "Ind"
 						}
 					},

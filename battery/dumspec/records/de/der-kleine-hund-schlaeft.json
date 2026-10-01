@@ -37,9 +37,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "klein",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "kleine",

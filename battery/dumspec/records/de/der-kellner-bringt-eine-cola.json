@@ -89,7 +89,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Cola",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "Cola",
 					"spelling": { "kind": "Canonical" },

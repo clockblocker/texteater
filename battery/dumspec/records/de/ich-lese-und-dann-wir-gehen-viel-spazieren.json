@@ -316,7 +316,6 @@
 						"canonicalForm": "dann",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -463,7 +462,6 @@
 						"canonicalForm": "viel",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"numType": null,
 							"pronType": null
 						}
 					},

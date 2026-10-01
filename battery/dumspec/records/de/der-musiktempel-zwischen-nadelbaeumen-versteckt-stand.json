@@ -268,8 +268,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Musiktempel",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Musiktempel",
@@ -364,8 +363,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Nadelbaum",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Nadelbäumen",
@@ -411,9 +409,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "versteckt",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "versteckt",
@@ -513,9 +509,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "schweigend",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "schweigend",
@@ -554,8 +548,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Kurhaus",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Kurhaus",
@@ -605,8 +598,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Konditorei",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Konditorei",
@@ -693,8 +685,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Schweizerhaus",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Schweizerhäusern",
@@ -748,11 +739,8 @@
 						"canonicalForm": "beide",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": "Card",
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -848,8 +836,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Zwischengebäude",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Zwischengebäude",
@@ -899,9 +886,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "lang",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "langes",
@@ -949,7 +934,6 @@
 						"canonicalForm": "miteinander",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -990,9 +974,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "verbunden",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "verbundenen",

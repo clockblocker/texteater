@@ -452,7 +452,6 @@
 						"canonicalForm": "offenbar",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -598,8 +597,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Vorstellung",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"surfaceFeatures": null
@@ -774,7 +772,6 @@
 						"canonicalForm": "auch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -816,7 +813,6 @@
 						"canonicalForm": "noch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1081,9 +1077,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "schmerzlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null
@@ -1124,7 +1118,6 @@
 						"canonicalForm": "fast",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},

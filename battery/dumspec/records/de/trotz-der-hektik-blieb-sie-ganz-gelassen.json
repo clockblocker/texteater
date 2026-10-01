@@ -45,9 +45,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "gelassen",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "gelassen",

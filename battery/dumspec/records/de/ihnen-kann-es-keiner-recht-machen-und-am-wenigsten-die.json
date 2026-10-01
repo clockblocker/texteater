@@ -466,7 +466,6 @@
 						"canonicalForm": "wenig",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -511,8 +510,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Kind",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Kinder",

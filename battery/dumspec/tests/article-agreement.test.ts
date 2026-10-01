@@ -44,7 +44,7 @@ const germanNoun = (
 		family: "Lexeme",
 		kind: "NOUN",
 		canonicalForm,
-		coreFeatures: { gender, hyph: null },
+		coreFeatures: { gender },
 	},
 	inflectionalFeatures: { gender: null, ...inflectionalFeatures },
 });
@@ -182,8 +182,6 @@ test("any Head that stands in for an elided noun owns its article", () => {
 				canonicalForm: "rot",
 				coreFeatures: {
 					comparable: "Yes",
-					numType: null,
-					variant: null,
 				},
 			},
 			inflectionalFeatures: {

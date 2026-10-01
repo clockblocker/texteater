@@ -39,7 +39,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Kind",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Kindern",
 					"spelling": { "kind": "Canonical" },

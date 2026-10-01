@@ -36,9 +36,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "gut",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "beste",

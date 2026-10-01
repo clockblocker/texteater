@@ -43,9 +43,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "sorgfältig",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "am sorgfältigsten",

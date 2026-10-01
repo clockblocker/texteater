@@ -107,8 +107,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Zeitdruck",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Zeitdrucks",
@@ -244,7 +243,6 @@
 						"canonicalForm": "stets",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -273,11 +271,8 @@
 						"canonicalForm": "ihr",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -315,8 +310,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Kollege",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Kollegen",

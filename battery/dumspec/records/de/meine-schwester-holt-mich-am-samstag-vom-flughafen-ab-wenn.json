@@ -190,11 +190,8 @@
 						"canonicalForm": "mein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -242,8 +239,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Schwester",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Schwester",
@@ -451,8 +447,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Samstag",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Samstag",
@@ -578,8 +573,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Flughafen",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Flughafen",
@@ -678,11 +672,8 @@
 						"canonicalForm": "mein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -730,8 +721,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Flug",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Flug",
@@ -774,9 +764,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "pünktlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "pünktlich",

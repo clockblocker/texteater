@@ -28,8 +28,6 @@ const lemma = {
 	kind: "ADJ",
 	coreFeatures: {
 		comparable: null,
-		numType: null,
-		variant: null,
 	},
 } satisfies Dumling.Lemma<"de", "Lexeme", "ADJ">;
 ```

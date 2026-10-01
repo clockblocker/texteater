@@ -255,9 +255,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "drei",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "drei",
 					"spelling": {
@@ -294,8 +292,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Kunde",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Kunden",
@@ -383,8 +380,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Tür",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Tür",

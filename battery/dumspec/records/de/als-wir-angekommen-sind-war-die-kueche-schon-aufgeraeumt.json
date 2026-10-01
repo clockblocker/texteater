@@ -323,8 +323,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Küche",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Küche",
@@ -378,7 +377,6 @@
 						"canonicalForm": "schon",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -416,9 +414,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "aufgeräumt",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "aufgeräumt",

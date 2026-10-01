@@ -36,9 +36,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "rot",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "rote",

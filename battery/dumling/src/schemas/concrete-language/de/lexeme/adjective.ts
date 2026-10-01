@@ -11,8 +11,6 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 export const DeAdjectiveFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		comparable: DE_FEATURE_SCHEMA.comparable,
-		numType: DE_FEATURE_SCHEMA.numType.extract(["Card", "Ord"]),
-		variant: DE_FEATURE_SCHEMA.variant,
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

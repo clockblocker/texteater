@@ -72,9 +72,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "alt",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "alte",

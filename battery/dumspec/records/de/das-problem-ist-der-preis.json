@@ -40,7 +40,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Problem",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Problem",
 					"spelling": { "kind": "Canonical" },
@@ -77,7 +79,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Preis",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"normalizedSurface": "Preis",
 					"spelling": { "kind": "Canonical" },

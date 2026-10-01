@@ -60,7 +60,9 @@
 						"canonicalForm": "Kind",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"surfaceFeatures": null
 				}

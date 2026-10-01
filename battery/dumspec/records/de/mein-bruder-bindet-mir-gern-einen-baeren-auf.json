@@ -122,11 +122,8 @@
 						"canonicalForm": "mein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -174,8 +171,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Bruder",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Bruder",
@@ -327,7 +323,6 @@
 						"canonicalForm": "gern",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"numType": null,
 							"pronType": null
 						}
 					},

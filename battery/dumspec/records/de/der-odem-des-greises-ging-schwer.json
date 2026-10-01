@@ -40,7 +40,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Odem",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"normalizedSurface": "Odem",
 					"spelling": { "kind": "Canonical" },

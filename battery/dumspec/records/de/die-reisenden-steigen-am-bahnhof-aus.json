@@ -44,7 +44,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Reisende",
-						"coreFeatures": { "gender": null, "hyph": null }
+						"coreFeatures": {
+							"gender": null
+						}
 					},
 					"normalizedSurface": "Reisenden",
 					"spelling": { "kind": "Canonical" },

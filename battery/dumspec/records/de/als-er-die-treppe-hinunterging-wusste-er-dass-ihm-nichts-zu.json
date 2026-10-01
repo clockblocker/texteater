@@ -334,8 +334,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Treppe",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Treppe",

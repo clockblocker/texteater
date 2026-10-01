@@ -21,7 +21,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/digits-spell-the-numeral",
+				"hash": "ae8bd58519856b20"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -29,7 +34,7 @@
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "The cardinal ADV identity follows the official UD German-GSD train-s562 2x analysis; the sentence is minimally adapted."
+				"rationale": "2x is zweimal written with a digit, so the target is ADV zweimal and the digit spelling a Licensed Variant (de/digits-spell-the-numeral)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -41,15 +46,17 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"canonicalForm": "2x",
+						"canonicalForm": "zweimal",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": "Card",
 							"pronType": null
 						}
 					},
 					"normalizedSurface": "2x",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

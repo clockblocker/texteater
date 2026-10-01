@@ -413,11 +413,8 @@
 						"canonicalForm": "alle",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -468,8 +465,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Zweifel",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Zweifel",
@@ -617,9 +613,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "entschieden",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "entschieden",
@@ -706,9 +700,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "gemächlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "gemächlich",
@@ -755,9 +747,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "schlendernd",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "schlendernd",
@@ -844,8 +834,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Frühlingstag",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Frühlingstag",
@@ -898,9 +887,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "schmeichelnd",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "schmeichelnden",
@@ -1141,8 +1128,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Schlummer",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Schlummer",
@@ -1209,9 +1195,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "ersehnt",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "ersehnten",
@@ -1303,8 +1287,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Nacht",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Nacht",
@@ -1357,9 +1340,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "wüst",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "wüsten",

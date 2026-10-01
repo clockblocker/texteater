@@ -57,7 +57,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Straße",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "Strasse",
 					"spelling": {

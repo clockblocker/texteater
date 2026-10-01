@@ -38,9 +38,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "stark",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "starken",

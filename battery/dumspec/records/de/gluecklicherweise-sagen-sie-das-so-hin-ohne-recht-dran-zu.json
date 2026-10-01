@@ -231,7 +231,6 @@
 						"canonicalForm": "glücklicherweise",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -427,7 +426,6 @@
 						"canonicalForm": "so",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -509,9 +507,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "recht",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "recht",
@@ -559,7 +555,6 @@
 						"canonicalForm": "daran",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Dem"
 						}
 					},

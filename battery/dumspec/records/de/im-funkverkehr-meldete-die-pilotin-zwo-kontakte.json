@@ -43,9 +43,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "zwei",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "zwo",
 					"spelling": {

@@ -44,7 +44,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Angestellte",
-						"coreFeatures": { "gender": null, "hyph": null }
+						"coreFeatures": {
+							"gender": null
+						}
 					},
 					"normalizedSurface": "Angestellte",
 					"spelling": { "kind": "Canonical" },

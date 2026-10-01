@@ -330,7 +330,6 @@
 						"canonicalForm": "darum",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Dem"
 						}
 					},
@@ -372,7 +371,6 @@
 						"canonicalForm": "auch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -416,7 +414,6 @@
 						"canonicalForm": "viel",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -518,8 +515,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Sonne",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"surfaceFeatures": null
@@ -684,8 +680,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Arzt",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"surfaceFeatures": null

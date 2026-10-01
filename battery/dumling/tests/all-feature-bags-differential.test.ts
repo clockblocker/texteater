@@ -33,9 +33,12 @@ function setsForeign(input: unknown): boolean {
 const retiredGermanFeatures: Readonly<Record<string, readonly string[]>> = {
 	"de/lexeme/adposition.ts": ["abbr", "adpType", "extPos", "partType"],
 	"de/lexeme/coordinating-conjunction.ts": ["conjType"],
-	"de/lexeme/numeral.ts": ["abbr"],
+	"de/lexeme/determiner.ts": ["definite", "extPos", "numType"],
+	"de/lexeme/numeral.ts": ["abbr", "numType"],
 	"de/lexeme/particle.ts": ["abbr"],
+	"de/lexeme/punctuation.ts": ["punctType"],
 	"de/lexeme/subordinating-conjunction.ts": ["conjType"],
+	"de/lexeme/symbol.ts": ["numType"],
 };
 function setsRetiredGermanFeature(route: string, input: unknown): boolean {
 	const retired = retiredGermanFeatures[route];

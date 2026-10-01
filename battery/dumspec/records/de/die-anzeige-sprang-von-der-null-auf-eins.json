@@ -44,9 +44,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "eins",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "eins",
 					"spelling": { "kind": "Canonical" },

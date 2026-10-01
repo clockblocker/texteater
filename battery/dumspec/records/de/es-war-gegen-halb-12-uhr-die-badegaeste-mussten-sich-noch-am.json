@@ -323,9 +323,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "halb",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "halb",
@@ -366,9 +364,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "zwölf",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "12",
 					"spelling": {
@@ -409,8 +405,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Uhr",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Uhr",
@@ -453,8 +448,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Badegast",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Badegäste",
@@ -618,7 +612,6 @@
 						"canonicalForm": "noch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -721,8 +714,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Strand",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Strande",

@@ -38,7 +38,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Kinderbuch",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Kinderbücher",
 					"spelling": { "kind": "Canonical" },
@@ -71,7 +73,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Jugendbuch",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Jugendbücher",
 					"spelling": { "kind": "Canonical" },

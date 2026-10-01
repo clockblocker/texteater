@@ -323,8 +323,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Dame",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Dame",
@@ -426,7 +425,6 @@
 						"canonicalForm": "so",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -467,9 +465,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "gut",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "gut",
@@ -677,7 +673,6 @@
 						"canonicalForm": "überhaupt",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},

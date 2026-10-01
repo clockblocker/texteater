@@ -9,9 +9,7 @@ import {
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
 export const DeSymbolFeatureBagsSchema = z.strictObject({
-	[FeatureBagKind.Core]: featureBagSchema({
-		numType: DE_FEATURE_SCHEMA.numType.extract(["Card", "Range"]),
-	}),
+	[FeatureBagKind.Core]: featureBagSchema({}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
 			case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),

@@ -37,7 +37,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Bank",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "Banken",
 					"spelling": { "kind": "Canonical" },

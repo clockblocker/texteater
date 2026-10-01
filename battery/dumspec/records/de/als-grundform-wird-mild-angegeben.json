@@ -42,9 +42,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "mild",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "mild",

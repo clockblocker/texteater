@@ -538,8 +538,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Kurgarten",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Kurgarten",
@@ -640,9 +639,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "stumm",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "stumm",
@@ -718,9 +715,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "schattenlos",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "schattenlos",
@@ -808,11 +803,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -860,8 +852,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Kiesweg",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Kieswegen",
@@ -938,8 +929,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Rosenanlage",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Rosenanlagen",

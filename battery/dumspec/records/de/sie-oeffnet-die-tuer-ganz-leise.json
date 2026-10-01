@@ -37,7 +37,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Tür",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "Tür",
 					"spelling": { "kind": "Canonical" },

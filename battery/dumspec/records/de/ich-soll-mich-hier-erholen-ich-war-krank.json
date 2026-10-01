@@ -301,7 +301,6 @@
 						"canonicalForm": "hier",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -451,9 +450,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "krank",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null

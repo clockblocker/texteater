@@ -36,7 +36,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Antlitz",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Antlitz",
 					"spelling": { "kind": "Canonical" },

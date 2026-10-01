@@ -269,7 +269,6 @@ function pronominalAdverb(
 		// A pronominal adverb has no comparison forms (ADR 0042).
 		coreFeatures: {
 			comparable: null,
-			numType: null,
 			pronType: entry.pronType,
 		},
 	} satisfies Dumling.Lemma<"de", "Lexeme", "ADV">;

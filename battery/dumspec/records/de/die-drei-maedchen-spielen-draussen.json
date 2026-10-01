@@ -38,7 +38,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Mädchen",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Mädchen",
 					"spelling": { "kind": "Canonical" },

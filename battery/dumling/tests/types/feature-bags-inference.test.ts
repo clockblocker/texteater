@@ -21,7 +21,7 @@ describe("Feature Bag inference", () => {
 				backend: "typescript7",
 			}),
 		).toMatchInlineSnapshot(
-			`"type DeNounFeatureBags = { core: { gender: "Fem" | "Masc" | "Neut" | null; hyph: "Yes" | null; }; inflectional: { case: "Acc" | "Dat" | "Gen" | "Nom" | null; gender: "Fem" | "Masc" | "Neut" | null; number: "Plur" | "Sing" | null; }; }"`,
+			`"type DeNounFeatureBags = { core: { gender: "Fem" | "Masc" | "Neut" | null; }; inflectional: { case: "Acc" | "Dat" | "Gen" | "Nom" | null; gender: "Fem" | "Masc" | "Neut" | null; number: "Plur" | "Sing" | null; }; }"`,
 		);
 	}, 30_000);
 

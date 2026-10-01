@@ -70,7 +70,9 @@
 						"canonicalForm": "Morgenstunde",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"surfaceFeatures": null
 				}
@@ -143,7 +145,9 @@
 						"canonicalForm": "Gold",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"surfaceFeatures": null
 				}
@@ -239,7 +243,9 @@
 						"canonicalForm": "Mund",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"surfaceFeatures": null
 				}

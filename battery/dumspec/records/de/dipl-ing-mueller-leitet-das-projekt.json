@@ -38,7 +38,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Diplom-Ingenieur",
-						"coreFeatures": { "gender": "Masc", "hyph": "Yes" }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"normalizedSurface": "Diplom-Ingenieur",
 					"spelling": { "kind": "Canonical" },

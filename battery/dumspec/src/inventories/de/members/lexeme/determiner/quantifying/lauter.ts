@@ -8,11 +8,8 @@ const lemma = {
 	canonicalForm: "lauter",
 	coreFeatures: {
 		case: null,
-		definite: null,
-		extPos: null,
 		gender: null,
 		number: null,
-		numType: null,
 		person: null,
 		polite: null,
 		poss: null,

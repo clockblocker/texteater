@@ -37,9 +37,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "lachend",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "lachend",

@@ -49,9 +49,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "sieben",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "7",
 					"spelling": {

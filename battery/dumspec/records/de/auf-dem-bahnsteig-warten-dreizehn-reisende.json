@@ -43,9 +43,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "dreizehn",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "dreizehn",
 					"spelling": { "kind": "Canonical" },
@@ -76,7 +74,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Reisende",
-						"coreFeatures": { "gender": null, "hyph": null }
+						"coreFeatures": {
+							"gender": null
+						}
 					},
 					"normalizedSurface": "Reisende",
 					"spelling": { "kind": "Canonical" },

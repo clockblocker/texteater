@@ -41,11 +41,8 @@
 						"canonicalForm": "dein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "2",
 							"polite": null,
 							"poss": "Yes",

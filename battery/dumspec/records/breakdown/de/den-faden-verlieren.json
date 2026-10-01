@@ -53,7 +53,9 @@
 						"canonicalForm": "Faden",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"surfaceFeatures": null
 				}

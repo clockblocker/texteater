@@ -40,7 +40,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Mark",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "Mark",
 					"spelling": { "kind": "Canonical" },

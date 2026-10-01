@@ -91,9 +91,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "stolz",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "stolz",

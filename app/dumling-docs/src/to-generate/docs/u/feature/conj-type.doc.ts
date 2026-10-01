@@ -31,7 +31,7 @@ Use \`conjType\` when a conjunction Lemma needs a stable subtype beyond the coar
 		{
 			heading: "Current Dumling support",
 			body: `
-The current abstract enum exposes only \`Comp\` and \`Oper\`, even though the broader UD documentation lists additional subtype inventories. Current concrete Dumling schemas expose \`ConjType\` only on German conjunction Lemmas, and only the value \`Comp\` is currently encodable there.
+The current abstract enum exposes only \`Comp\` and \`Oper\`, even though the broader UD documentation lists additional subtype inventories. No current concrete Dumling route uses it: German comparison \`als\` and \`wie\` are Readings of the one \`als\` and \`wie\`.
 `,
 		},
 	],

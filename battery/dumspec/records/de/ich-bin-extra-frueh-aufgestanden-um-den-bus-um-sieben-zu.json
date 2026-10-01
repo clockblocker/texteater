@@ -265,7 +265,6 @@
 						"canonicalForm": "extra",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -303,9 +302,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "früh",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "früh",
@@ -390,8 +387,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Bus",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Bus",
@@ -488,9 +484,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "sieben",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "sieben",
 					"spelling": {

@@ -69,8 +69,9 @@ on its Surface.
 
 A pillar fixes its cell coordinates in Core. A stem leaves them null in Core
 and marks them on each Surface, and Dumling rejects a coordinate marked in
-both. Among Lemmas authored per cell, no two of one Kind share all Core
-Features.
+both. Among Lemmas authored per cell, no two of one pillar share all Core
+Features. The `der` and `ein` article tables are two pillars with the same
+cells, and their spellings tell them apart.
 
 **The routes decided so far:**
 
@@ -118,7 +119,8 @@ Lemma `der` Dat.Fem.Sg.
 navigation over Core Features
 ([ADR 0019](./0019-select-grammatical-alternatives-from-reviewed-members.md)),
 never through semantic relation claims. Navigation stays among pillars: a
-stem's forms are its own Surfaces, so `diesem` never reaches `jenem`. A cell
+stem's forms are its own Surfaces, so `diesem` never reaches `jenem`. It stays
+inside the pillar it starts from, so `dem` never reaches `einem`. A cell
 is reached only when both ends mark every varied feature, and a plural cell's
 unmarked gender counts as marked. Navigation compares Core values literally,
 and no Core value is a set. ADR 0044 makes one exception on that precedent: a
@@ -148,6 +150,16 @@ because the text uses the letters as the name, and their Surfaces keep them.
 How an abbreviation expands is a relation
 ([#763](https://github.com/clockblocker/texteater/issues/763)), not identity.
 Decided on [#766](https://github.com/clockblocker/texteater/issues/766).
+
+Amended on 2026-10-01: the article cells carried `definite` (Def in the `der`
+table, Ind in the `ein` table), and German DET also carried `numType` and
+`extPos`. None split a Lemma or told a learner anything the spelling does
+not, and dumspec derives an article's cell from its spelling and its Head
+(ADR 0040), so they left with the other pure labels: `numType` on ADJ, ADV,
+NUM and SYM, ADJ `variant`, NOUN `hyph` and PUNCT `punctType`. The two
+article tables now share their coordinates, so per-cell uniqueness and
+navigation hold inside one pillar. Decided on
+[#766](https://github.com/clockblocker/texteater/issues/766).
 
 ## Considered Options
 

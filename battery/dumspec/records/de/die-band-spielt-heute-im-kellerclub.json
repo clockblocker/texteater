@@ -63,7 +63,9 @@
 						"canonicalForm": "Band",
 						"family": "Lexeme",
 						"kind": "NOUN",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"surfaceFeatures": null
 				}

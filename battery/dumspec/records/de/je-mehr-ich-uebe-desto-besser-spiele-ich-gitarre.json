@@ -182,7 +182,6 @@
 						"canonicalForm": "viel",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -318,9 +317,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "gut",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "besser",
@@ -463,8 +460,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Gitarre",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Gitarre",

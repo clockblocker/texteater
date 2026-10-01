@@ -36,9 +36,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "leise",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "leise",

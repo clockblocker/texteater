@@ -398,8 +398,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Haupt",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Haupt",
@@ -452,9 +451,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "leer",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "leer",
@@ -501,9 +498,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "lächelnd",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "lächelnd",
@@ -644,8 +639,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Einverständnis",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Einverständnis",
@@ -767,11 +761,8 @@
 						"canonicalForm": "ihr",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -822,8 +813,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Hand",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Hände",
@@ -910,7 +900,6 @@
 						"canonicalForm": "mehr",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -1047,9 +1036,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "entfremdet",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "entfremdet",

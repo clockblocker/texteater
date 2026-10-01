@@ -6,7 +6,7 @@ export const houseLemma = {
 	family: "Lexeme",
 	kind: "NOUN",
 	canonicalForm: "Haus",
-	coreFeatures: { gender: "Neut", hyph: null },
+	coreFeatures: { gender: "Neut" },
 } as const satisfies Dumling.Lemma<"de", "Lexeme", "NOUN">;
 
 export const houseReading = {

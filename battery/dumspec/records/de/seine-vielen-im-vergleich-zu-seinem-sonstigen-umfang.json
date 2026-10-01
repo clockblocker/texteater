@@ -236,11 +236,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -288,9 +285,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "viel",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "vielen",
@@ -426,11 +421,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -478,9 +470,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "sonstig",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "sonstigen",
@@ -524,8 +514,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Umfang",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Umfang",
@@ -568,9 +557,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "kläglich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "kläglich",
@@ -617,9 +604,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "dünn",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "dünnen",
@@ -663,8 +648,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Bein",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Beine",
@@ -812,9 +796,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "hilflos",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "hilflos",
@@ -898,8 +880,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Auge",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Augen",

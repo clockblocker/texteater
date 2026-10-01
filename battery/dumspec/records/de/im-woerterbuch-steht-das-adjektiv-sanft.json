@@ -42,9 +42,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "sanft",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "sanft",

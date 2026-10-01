@@ -37,9 +37,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "Million",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "Million",
 					"spelling": { "kind": "Canonical" },

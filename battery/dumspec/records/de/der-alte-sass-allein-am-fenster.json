@@ -45,7 +45,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Alte",
-						"coreFeatures": { "gender": null, "hyph": null }
+						"coreFeatures": {
+							"gender": null
+						}
 					},
 					"normalizedSurface": "Alte",
 					"spelling": { "kind": "Canonical" },

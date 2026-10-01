@@ -269,8 +269,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Wort",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Wort",

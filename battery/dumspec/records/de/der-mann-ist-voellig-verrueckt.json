@@ -39,9 +39,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "verrückt",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "verrückt",

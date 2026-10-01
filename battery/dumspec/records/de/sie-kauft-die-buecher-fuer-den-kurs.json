@@ -39,7 +39,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Buch",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Bücher",
 					"spelling": { "kind": "Canonical" },

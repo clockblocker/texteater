@@ -8,11 +8,8 @@ const lemma = {
 	canonicalForm: "manch",
 	coreFeatures: {
 		case: null,
-		definite: null,
-		extPos: null,
 		gender: null,
 		number: null,
-		numType: null,
 		person: null,
 		polite: null,
 		poss: null,

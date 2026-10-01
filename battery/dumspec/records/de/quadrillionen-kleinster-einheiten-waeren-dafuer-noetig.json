@@ -37,9 +37,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "Quadrillion",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "quadrillionen",
 					"spelling": { "kind": "Canonical" },

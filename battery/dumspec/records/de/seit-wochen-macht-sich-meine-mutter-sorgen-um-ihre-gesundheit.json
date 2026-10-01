@@ -181,8 +181,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Woche",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Wochen",
@@ -307,11 +306,8 @@
 						"canonicalForm": "mein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -359,8 +355,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Mutter",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Mutter",
@@ -404,11 +399,8 @@
 						"canonicalForm": "ihr",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -456,8 +448,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Gesundheit",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Gesundheit",

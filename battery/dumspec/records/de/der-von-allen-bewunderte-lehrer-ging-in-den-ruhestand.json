@@ -115,9 +115,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "bewundert",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "bewunderte",

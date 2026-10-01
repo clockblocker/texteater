@@ -268,7 +268,6 @@
 						"canonicalForm": "morgen",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -365,8 +364,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Bahnhof",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Bahnhof",

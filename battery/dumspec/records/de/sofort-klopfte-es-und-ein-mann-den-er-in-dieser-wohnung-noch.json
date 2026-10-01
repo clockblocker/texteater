@@ -222,7 +222,6 @@
 						"canonicalForm": "sofort",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -355,8 +354,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Mann",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Mann",
@@ -542,11 +540,8 @@
 						"canonicalForm": "dieser",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -594,8 +589,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Wohnung",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Wohnung",
@@ -639,7 +633,6 @@
 						"canonicalForm": "noch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -678,7 +671,6 @@
 						"canonicalForm": "niemals",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Neg"
 						}
 					},

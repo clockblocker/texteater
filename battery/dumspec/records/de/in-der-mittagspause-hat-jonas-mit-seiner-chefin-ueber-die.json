@@ -207,8 +207,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Mittagspause",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Mittagspause",
@@ -403,11 +402,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -455,8 +451,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Chefin",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Chefin",
@@ -499,8 +494,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Gehaltserhöhung",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Gehaltserhöhung",

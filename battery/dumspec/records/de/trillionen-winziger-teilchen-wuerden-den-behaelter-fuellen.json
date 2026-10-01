@@ -42,9 +42,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "Trillion",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "trillionen",
 					"spelling": { "kind": "Canonical" },

@@ -37,7 +37,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Leute",
-						"coreFeatures": { "gender": null, "hyph": null }
+						"coreFeatures": {
+							"gender": null
+						}
 					},
 					"normalizedSurface": "Leute",
 					"spelling": { "kind": "Canonical" },

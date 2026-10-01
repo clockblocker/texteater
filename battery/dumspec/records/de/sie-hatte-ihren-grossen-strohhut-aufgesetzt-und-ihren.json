@@ -363,11 +363,8 @@
 						"canonicalForm": "ihr",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -415,9 +412,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "groß",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "großen",
@@ -461,8 +456,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Strohhut",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Strohhut",
@@ -540,11 +534,8 @@
 						"canonicalForm": "ihr",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -592,8 +583,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Sonnenschirm",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Sonnenschirm",
@@ -863,8 +853,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Seewind",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Seewind",
@@ -917,9 +906,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "klein",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "kleiner",
@@ -1017,9 +1004,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "heftig",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "heftige",
@@ -1063,8 +1048,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Hitze",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Hitze",

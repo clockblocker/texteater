@@ -36,9 +36,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "zweit",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": "Ord",
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "zweite",

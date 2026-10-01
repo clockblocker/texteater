@@ -44,9 +44,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "viel",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "meisten",

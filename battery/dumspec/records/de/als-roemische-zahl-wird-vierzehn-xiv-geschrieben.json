@@ -39,9 +39,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "XIV",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "XIV",
 					"spelling": { "kind": "Canonical" },

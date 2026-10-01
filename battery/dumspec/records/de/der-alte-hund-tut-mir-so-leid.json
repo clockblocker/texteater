@@ -108,8 +108,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Hund",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Hund",
@@ -159,9 +158,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "alt",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "alte",
@@ -312,7 +309,6 @@
 						"canonicalForm": "so",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},

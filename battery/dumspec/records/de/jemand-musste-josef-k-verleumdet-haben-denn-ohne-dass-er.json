@@ -637,8 +637,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Böse",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Böses",
@@ -845,8 +844,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Morgen",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Morgens",

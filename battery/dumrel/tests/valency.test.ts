@@ -46,8 +46,6 @@ const stolzReading = {
 		canonicalForm: "stolz",
 		coreFeatures: {
 			comparable: "Yes",
-			numType: null,
-			variant: null,
 		},
 	},
 	emojiDescription: "🦚",

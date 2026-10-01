@@ -8,11 +8,8 @@ const lemma = {
 	canonicalForm: "eine",
 	coreFeatures: {
 		case: "Acc",
-		definite: "Ind",
-		extPos: null,
 		gender: "Fem",
 		number: "Sing",
-		numType: "Card",
 		person: null,
 		polite: null,
 		poss: null,

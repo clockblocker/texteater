@@ -55,12 +55,11 @@ test("concrete schemas retain object composition and nested refinements", () => 
 	expect(
 		model.parse({
 			canonicalForm: " Cafe\u0301 ",
-			coreFeatures: { gender: "Masc", hyph: null },
+			coreFeatures: { gender: "Masc" },
 		}).canonicalForm,
 	).toBe("Café");
 	expect(
-		lemmaSchema.shape.coreFeatures.safeParse({ gender: "Com", hyph: null })
-			.success,
+		lemmaSchema.shape.coreFeatures.safeParse({ gender: "Com" }).success,
 	).toBe(false);
 	expect(
 		surfaceSchema.shape.inflectionalFeatures.safeParse({

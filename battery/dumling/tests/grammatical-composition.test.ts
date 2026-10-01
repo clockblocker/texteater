@@ -13,7 +13,7 @@ const noun = {
 		family: "Lexeme",
 		kind: "NOUN",
 		canonicalForm: "Haus",
-		coreFeatures: { gender: "Neut", hyph: null },
+		coreFeatures: { gender: "Neut" },
 	},
 	inflectionalFeatures: { case: "Dat", gender: null, number: "Sing" },
 } as const;
@@ -77,7 +77,7 @@ test("a genderless noun marks the gender its singular form shows", () => {
 		lemma: {
 			...noun.lemma,
 			canonicalForm: "Reisende",
-			coreFeatures: { gender: null, hyph: null },
+			coreFeatures: { gender: null },
 		},
 		inflectionalFeatures: { case: "Nom", gender: "Masc", number: "Sing" },
 	} as const;
@@ -260,7 +260,7 @@ const wald = {
 		lemma: {
 			...noun.lemma,
 			canonicalForm: "Wald",
-			coreFeatures: { gender: "Masc", hyph: null },
+			coreFeatures: { gender: "Masc" },
 		},
 	},
 	realizationCoverage: "Full",
@@ -311,7 +311,7 @@ test("a fused article is an owned Fused member of its noun", () => {
 			lemma: {
 				...wald.surface.lemma,
 				canonicalForm: "Feld",
-				coreFeatures: { gender: "Neut", hyph: null },
+				coreFeatures: { gender: "Neut" },
 			},
 		},
 		realizationCoverage: "Partial",
@@ -355,7 +355,7 @@ test("a shortened article is a Shorthand member of its noun", () => {
 				lemma: {
 					...noun.lemma,
 					canonicalForm: "Frage",
-					coreFeatures: { gender: "Fem", hyph: null },
+					coreFeatures: { gender: "Fem" },
 				},
 				inflectionalFeatures: {
 					case: "Acc",
@@ -457,8 +457,6 @@ test("the Head standing in for an elided noun owns the article", () => {
 				canonicalForm: "rot",
 				coreFeatures: {
 					comparable: "Yes",
-					numType: null,
-					variant: null,
 				},
 			},
 			inflectionalFeatures: {
@@ -1119,8 +1117,6 @@ test("an adjective or noun Attestation names its owned governed preposition like
 				canonicalForm: "stolz",
 				coreFeatures: {
 					comparable: "Yes",
-					numType: null,
-					variant: null,
 				},
 			},
 			inflectionalFeatures: {
@@ -1159,7 +1155,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 			lemma: {
 				...noun.lemma,
 				canonicalForm: "Angst",
-				coreFeatures: { gender: "Fem", hyph: null },
+				coreFeatures: { gender: "Fem" },
 			},
 			inflectionalFeatures: { case: "Nom", gender: null, number: "Sing" },
 		},

@@ -98,8 +98,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Training",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Training",
@@ -260,8 +259,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Hand",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Hände",

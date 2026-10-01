@@ -251,8 +251,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Handy",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Handy",
@@ -347,8 +346,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Tisch",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Tisch",
@@ -535,9 +533,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "aufmerksam",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "aufmerksam",

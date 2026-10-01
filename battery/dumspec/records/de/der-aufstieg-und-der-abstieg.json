@@ -34,7 +34,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Abstieg",
-						"coreFeatures": { "gender": "Masc", "hyph": null }
+						"coreFeatures": {
+							"gender": "Masc"
+						}
 					},
 					"normalizedSurface": "Abstieg",
 					"spelling": { "kind": "Canonical" },

@@ -186,7 +186,6 @@
 						"canonicalForm": "morgen",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -365,8 +364,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Rad",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Rad",
@@ -475,8 +473,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Arbeit",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Arbeit",

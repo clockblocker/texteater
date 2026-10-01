@@ -347,9 +347,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "ewig",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "ewig",
@@ -391,8 +389,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Spötter",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Spötter",

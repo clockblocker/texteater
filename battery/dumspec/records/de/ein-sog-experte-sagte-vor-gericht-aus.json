@@ -53,9 +53,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "sogenannt",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "sogenannter",

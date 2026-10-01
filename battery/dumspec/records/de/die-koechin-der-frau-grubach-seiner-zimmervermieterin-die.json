@@ -254,8 +254,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Köchin",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Köchin",
@@ -305,8 +304,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Frau",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Frau",
@@ -406,11 +404,8 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -458,8 +453,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Zimmervermieterin",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Zimmervermieterin",
@@ -596,11 +590,8 @@
 						"canonicalForm": "jeder",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -648,8 +639,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Tag",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Tag",
@@ -736,9 +726,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "acht",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "acht",
 					"spelling": {
@@ -775,8 +763,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Uhr",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Uhr",
@@ -820,7 +807,6 @@
 						"canonicalForm": "früh",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -861,8 +847,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Frühstück",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Frühstück",
@@ -1015,7 +1000,6 @@
 						"canonicalForm": "diesmal",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},

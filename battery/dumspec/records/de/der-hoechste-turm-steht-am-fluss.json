@@ -39,9 +39,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "hoch",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "höchste",

@@ -34,9 +34,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "deutlich",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "deutlich",

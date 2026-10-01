@@ -41,9 +41,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "spannend",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "spannende",

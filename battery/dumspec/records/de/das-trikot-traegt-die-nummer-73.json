@@ -45,9 +45,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "dreiundsiebzig",
-						"coreFeatures": {
-							"numType": "Card"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "73",
 					"spelling": {

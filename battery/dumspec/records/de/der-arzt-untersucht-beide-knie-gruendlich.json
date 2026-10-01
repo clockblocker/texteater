@@ -40,7 +40,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Knie",
-						"coreFeatures": { "gender": "Neut", "hyph": null }
+						"coreFeatures": {
+							"gender": "Neut"
+						}
 					},
 					"normalizedSurface": "Knie",
 					"spelling": { "kind": "Canonical" },

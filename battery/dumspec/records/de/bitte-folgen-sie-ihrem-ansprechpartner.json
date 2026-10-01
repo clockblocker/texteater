@@ -71,10 +71,7 @@
 							"person": "3",
 							"polite": "Form",
 							"poss": "Yes",
-							"pronType": "Prs",
-							"definite": null,
-							"extPos": null,
-							"numType": null
+							"pronType": "Prs"
 						}
 					},
 					"surfaceFeatures": null

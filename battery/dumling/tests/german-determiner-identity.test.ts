@@ -7,11 +7,8 @@ import {
 
 const core = {
 	case: null,
-	definite: null,
-	extPos: null,
 	gender: null,
 	number: null,
-	numType: null,
 	person: null,
 	polite: null,
 	poss: null,
@@ -30,7 +27,7 @@ function lemma(
 		coreFeatures: { ...core, ...features },
 	};
 }
-const article = { pronType: "Art", definite: "Def" };
+const article = { pronType: "Art" };
 
 test("each definite article cell is its own Lemma", () => {
 	const nominative = lemma("der", {
@@ -160,7 +157,7 @@ test("a stem Lemma's Grundform is its Nom.Masc.Sg or plural-cited Surface", () =
 			}),
 		),
 	).toEqual({ success: true, value: false });
-	const beide = lemma("beide", { pronType: "Tot", numType: "Card" });
+	const beide = lemma("beide", { pronType: "Tot" });
 	expect(
 		grundform(stemSurface("beide", { case: "Nom", number: "Plur" }, beide)),
 	).toEqual({ success: true, value: true });

@@ -23,7 +23,7 @@
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
-				"rationale": "Ordinal ADJ. Keep agreement. Lemma NumType Ord."
+				"rationale": "Ordinal ADJ. Keep agreement."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -37,9 +37,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "erst",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": "Ord",
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "erste",

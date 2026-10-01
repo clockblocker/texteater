@@ -128,8 +128,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Vater",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Vater",
@@ -233,8 +232,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Kind",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Kind",
@@ -284,9 +282,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "weinend",
 						"coreFeatures": {
-							"comparable": null,
-							"numType": null,
-							"variant": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "weinende",
@@ -375,8 +371,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Arm",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Arm",

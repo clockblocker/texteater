@@ -36,7 +36,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Frage",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "Frage",
 					"spelling": { "kind": "Canonical" },

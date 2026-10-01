@@ -208,7 +208,6 @@
 						"canonicalForm": "noch",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -247,7 +246,6 @@
 						"canonicalForm": "niemals",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Neg"
 						}
 					},

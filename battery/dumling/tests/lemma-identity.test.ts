@@ -66,7 +66,7 @@ describe("Lemma identity (system ADR 0002)", () => {
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Morgen",
-			coreFeatures: { gender: "Masc", hyph: null },
+			coreFeatures: { gender: "Masc" },
 		} satisfies Lemma<"de", "Lexeme", "NOUN">;
 		const adverb = {
 			unitKind: "Lemma",
@@ -74,7 +74,7 @@ describe("Lemma identity (system ADR 0002)", () => {
 			family: "Lexeme",
 			kind: "ADV",
 			canonicalForm: "morgen",
-			coreFeatures: { comparable: null, numType: null, pronType: null },
+			coreFeatures: { comparable: null, pronType: null },
 		} satisfies Lemma<"de", "Lexeme", "ADV">;
 		expect(sameLemma(noun, adverb)).toBe(false);
 	});

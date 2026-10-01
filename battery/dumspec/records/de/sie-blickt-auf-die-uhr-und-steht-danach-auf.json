@@ -192,8 +192,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Uhr",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Uhr",
@@ -307,7 +306,6 @@
 						"canonicalForm": "danach",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": "Dem"
 						}
 					},

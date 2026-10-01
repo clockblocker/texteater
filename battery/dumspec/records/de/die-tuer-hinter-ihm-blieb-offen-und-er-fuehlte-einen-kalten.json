@@ -187,8 +187,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Tür",
 						"coreFeatures": {
-							"gender": "Fem",
-							"hyph": null
+							"gender": "Fem"
 						}
 					},
 					"normalizedSurface": "Tür",
@@ -391,9 +390,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "offen",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "offen",
@@ -570,8 +567,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Hauch",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Hauch",
@@ -624,9 +620,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "kalt",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"numType": null,
-							"variant": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "kalten",
@@ -735,8 +729,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Nacken",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Nacken",

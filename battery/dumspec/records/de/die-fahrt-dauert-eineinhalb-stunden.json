@@ -38,9 +38,7 @@
 						"family": "Lexeme",
 						"kind": "NUM",
 						"canonicalForm": "eineinhalb",
-						"coreFeatures": {
-							"numType": "Frac"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "eineinhalb",
 					"spelling": { "kind": "Canonical" },

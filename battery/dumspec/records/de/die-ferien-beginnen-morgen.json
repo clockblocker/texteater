@@ -33,7 +33,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Ferien",
-						"coreFeatures": { "gender": null, "hyph": null }
+						"coreFeatures": {
+							"gender": null
+						}
 					},
 					"normalizedSurface": "Ferien",
 					"spelling": { "kind": "Canonical" },

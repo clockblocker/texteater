@@ -374,7 +374,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "CARD",
 		stts: "cardinal number",
 		dumling:
-			"Lexeme NUM numType Card, in words or digits; digits spell the numeral word",
+			"Lexeme NUM, in words or digits; digits spell the numeral word",
 		mappings: [
 			{
 				use: "numeral in words",
@@ -1541,7 +1541,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "$,",
 		stts: "comma",
 		dumling:
-			"A Punctuation Segment, never a target; Lexeme PUNCT punctType Comm exists but no record targets it",
+			"A Punctuation Segment, never a target; Lexeme PUNCT exists but no record targets it",
 		mappings: [
 			{
 				use: "comma",
@@ -1561,8 +1561,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "$.",
 		stts: "sentence-final punctuation",
-		dumling: "A Punctuation Segment; punctType Peri, Qest, Excl or Colo",
-		loss: "; has no punctType value and stays null",
+		dumling: "A Punctuation Segment",
 		mappings: [
 			{
 				use: "sentence-final punctuation",
@@ -1572,14 +1571,14 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		],
 		rules: [],
 		adrs: [],
-		model: partial({ gap: "; has no punctType value" }),
+		model: modeled,
 		gold: "Yes",
 		pipeline: waitsOnDumgen,
 	},
 	{
 		tag: "$(",
 		stts: "other punctuation within a sentence",
-		dumling: "A Punctuation Segment; punctType Brck, Dash or Quot",
+		dumling: "A Punctuation Segment",
 		mappings: [
 			{
 				use: "quotation mark, bracket or dash",

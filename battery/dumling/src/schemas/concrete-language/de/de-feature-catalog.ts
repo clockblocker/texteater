@@ -3,13 +3,10 @@ import { UNIVERSAL_FEATURE_SCHEMA } from "../../universal/features/catalog.js";
 import {
 	Aspect,
 	Case,
-	Definite,
 	Degree,
-	ExtPos,
 	Gender,
 	GrammaticalNumber,
 	Mood,
-	NumType,
 	Person,
 	Polite,
 	PronType,
@@ -67,22 +64,10 @@ const DeCaseSchema = UNIVERSAL_FEATURE_SCHEMA.case.extract([
 	Case.Gen,
 	Case.Nom,
 ]);
-const DeDefiniteSchema = UNIVERSAL_FEATURE_SCHEMA.definite.extract([
-	Definite.Def,
-	Definite.Ind,
-]);
 const DeDegreeSchema = UNIVERSAL_FEATURE_SCHEMA.degree.extract([
 	Degree.Cmp,
 	Degree.Pos,
 	Degree.Sup,
-]);
-const DeDeterminerExtPosSchema = UNIVERSAL_FEATURE_SCHEMA.extPos.extract([
-	ExtPos.ADV,
-	ExtPos.DET,
-]);
-const DeNumTypeSchema = UNIVERSAL_FEATURE_SCHEMA.numType.extract([
-	NumType.Card,
-	NumType.Ord,
 ]);
 const DePoliteSchema = UNIVERSAL_FEATURE_SCHEMA.polite.extract([
 	Polite.Form,
@@ -118,10 +103,7 @@ export const DE_FEATURE_SCHEMA = {
 	lexicallyReflexive: DeLexicallyReflexiveSchema,
 	comparable: DeComparableSchema,
 	case: DeCaseSchema,
-	definite: DeDefiniteSchema,
 	degree: DeDegreeSchema,
-	determinerExtPos: DeDeterminerExtPosSchema,
-	determinerNumType: DeNumTypeSchema,
 	polite: DePoliteSchema,
 	poss: UNIVERSAL_FEATURE_SCHEMA.poss,
 	determinerPronType: DeDeterminerPronTypeSchema,

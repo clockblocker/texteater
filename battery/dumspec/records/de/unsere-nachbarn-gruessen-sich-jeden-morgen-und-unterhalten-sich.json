@@ -172,11 +172,8 @@
 						"canonicalForm": "unser",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": "1",
 							"polite": null,
 							"poss": "Yes",
@@ -224,8 +221,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Nachbar",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Nachbarn",
@@ -378,11 +374,8 @@
 						"canonicalForm": "jeder",
 						"coreFeatures": {
 							"case": null,
-							"definite": null,
-							"extPos": null,
 							"gender": null,
 							"number": null,
-							"numType": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -430,8 +423,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Morgen",
 						"coreFeatures": {
-							"gender": "Masc",
-							"hyph": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "Morgen",
@@ -589,7 +581,6 @@
 						"canonicalForm": "dann",
 						"coreFeatures": {
 							"comparable": null,
-							"numType": null,
 							"pronType": null
 						}
 					},
@@ -627,8 +618,7 @@
 						"kind": "NOUN",
 						"canonicalForm": "Wetter",
 						"coreFeatures": {
-							"gender": "Neut",
-							"hyph": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "Wetter",

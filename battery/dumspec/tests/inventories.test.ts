@@ -206,9 +206,22 @@ describe("the German authored inventory", () => {
 	test("no two per-cell Lemmas of one Kind share all Core Features (system ADR 0032)", () => {
 		// A per-cell Lemma marks case, number or gender in Core. Navigation
 		// such as "the plural of dessen" lands on exactly one Lemma only while
-		// no two of them share every Core Feature. Never accept a collision
-		// here without an ADR that names it.
+		// no two of one pillar share every Core Feature. Never accept a
+		// collision here without an ADR that names it. The der and ein article
+		// tables are two pillars with the same cells, which their spellings
+		// tell apart, so each is checked on its own (ADR 0032).
 		const coordinates = ["case", "number", "gender"];
+		const pillar = ({
+			kind,
+			canonicalForm,
+			coreFeatures,
+		}: AuthoredMember["lemma"]) =>
+			kind === "DET" &&
+			(coreFeatures as { pronType?: string }).pronType === "Art"
+				? canonicalForm.startsWith("ein")
+					? "ein"
+					: "der"
+				: kind;
 		const groups = new Map<string, Set<string>>();
 		for (const { lemma } of authoredMembers) {
 			if (lemma.kind !== "PRON" && lemma.kind !== "DET") continue;
@@ -216,7 +229,7 @@ describe("the German authored inventory", () => {
 				([, value]) => value !== null,
 			);
 			if (!core.some(([key]) => coordinates.includes(key))) continue;
-			const key = `${lemma.kind} ${core
+			const key = `${pillar(lemma)} ${core
 				.map(([feature, value]) => `${feature}=${String(value)}`)
 				.sort()
 				.join(" ")}`;

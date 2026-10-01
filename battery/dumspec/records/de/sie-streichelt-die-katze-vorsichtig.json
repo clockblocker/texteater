@@ -35,7 +35,9 @@
 						"family": "Lexeme",
 						"kind": "NOUN",
 						"canonicalForm": "Katze",
-						"coreFeatures": { "gender": "Fem", "hyph": null }
+						"coreFeatures": {
+							"gender": "Fem"
+						}
 					},
 					"normalizedSurface": "Katze",
 					"spelling": { "kind": "Canonical" },
