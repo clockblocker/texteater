@@ -673,6 +673,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang",
 			"de/ich-lese-und-dann-wir-gehen-viel-spazieren",
 			"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt",
+			"de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die",
 		],
 	},
 	{

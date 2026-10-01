@@ -140,7 +140,8 @@
 			{
 				"rule": "de/pron-or-det-by-use",
 				"hash": "bc1096b61ad7294d"
-			}
+			},
+			{ "rule": "de/quantifier-by-use", "hash": "f8c5768e1ce3e526" }
 		],
 		"references": [
 			{
@@ -453,7 +454,7 @@
 			"memberSegmentIndices": [14, 16],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADJ"
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -464,13 +465,12 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "ADV",
 						"canonicalForm": "wenig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
-							"variant": null
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "am wenigsten",
@@ -478,12 +478,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Sup",
-						"gender": null,
-						"number": null
-					}
+					"inflectionalFeatures": { "degree": "Sup" }
 				},
 				"members": [
 					{
@@ -495,12 +490,10 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "open: JT-B6 ADJ vs de/quantifier-by-use ADV, awaiting ruling."
+				"rationale": "am wenigsten is used adverbially, so it is the comparable ADV wenig in the superlative, with am as its DegreeMarker member (de/quantifier-by-use, ADR 0040). Ruled on #743 (JT-B6, A3)."
 			}
 		},
 		{
