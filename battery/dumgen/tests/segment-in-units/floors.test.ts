@@ -5,8 +5,12 @@ import {
 	floorsOf,
 	referenceFloors,
 	referencePolicy,
+	runFloors,
 } from "../../src/segment-in-units/de/arms/reference.js";
-import { singleGrid } from "../../src/segment-in-units/de/arms/reference-floors.js";
+import {
+	combinedGrid,
+	singleGrid,
+} from "../../src/segment-in-units/de/arms/reference-floors.js";
 import type { Slot } from "../../src/segment-in-units/de/candidates.js";
 import type { Piece } from "../../src/segment-in-units/de/sentence.js";
 import type { FocusSet } from "../../src/segment-in-units/lab/corpus.js";
@@ -18,9 +22,8 @@ import {
 	sweepTable,
 } from "../../src/segment-in-units/lab/sweep.js";
 
-test("the reference's floors default to its run's and move by --opt", () => {
-	expect(floorsOf({})).toEqual(referenceFloors);
-	expect(referenceFloors).toEqual({
+test("the reference's floors are the run's with the floors #762 adopted", () => {
+	expect(runFloors).toEqual({
 		satellite: 0.5,
 		margin: 0,
 		idiom: 0.7,
@@ -28,21 +31,34 @@ test("the reference's floors default to its run's and move by --opt", () => {
 		fixed: 0.5,
 		saying: 0.5,
 	});
+	expect(referenceFloors).toEqual({
+		...runFloors,
+		idiom: 0.6,
+		fixed: 0.3,
+		saying: 0.4,
+	});
+	expect(floorsOf({})).toEqual(referenceFloors);
+	expect(floorsOf({ floors: "run" })).toEqual(runFloors);
 	expect(floorsOf({ expression: "0.6", grid: "single" })).toEqual({
 		...referenceFloors,
 		expression: 0.6,
 	});
 	expect(() => floorsOf({ idiom: "high" })).toThrow("is not a number");
+	expect(() => floorsOf({ floors: "755" })).toThrow(
+		"must be reference or run",
+	);
 });
 
-test("a setting is named after the floors it moves", () => {
-	expect(floorsKey(referenceFloors)).toBe(referencePolicy);
-	expect(floorsKey({ ...referenceFloors, fixed: 0.4, expression: 0.6 })).toBe(
+test("a setting is named after the floors it moves from the run's", () => {
+	expect(floorsKey(runFloors)).toBe(referencePolicy);
+	expect(floorsKey(referenceFloors)).toBe("idiom=0.6,fixed=0.3,saying=0.4");
+	expect(floorsKey({ ...runFloors, fixed: 0.4, expression: 0.6 })).toBe(
 		"expression=0.6,fixed=0.4",
 	);
-	const keys = singleGrid.map(floorsKey);
+	const keys = [...singleGrid, ...combinedGrid].map(floorsKey);
 	expect(new Set(keys).size).toBe(keys.length);
 	expect(keys).not.toContain(referencePolicy);
+	expect(keys).toContain(floorsKey(referenceFloors));
 });
 
 const piece = (id: number, text: string): Piece => ({

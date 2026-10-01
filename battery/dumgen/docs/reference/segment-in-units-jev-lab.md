@@ -44,10 +44,13 @@ bun run segment-in-units-lab ledger [--table]
   error. `--token-budget` moves the ledger's stop line in fresh jev input
   tokens.
 - The `reference` arm takes its resolver floors as options (`--opt
-  expression=0.6`; `floorsOf` in `arms/reference.ts`). The
-  `reference-floors` arm sweeps them from the same cached answers, one
-  policy per setting (`--opt grid=single|combined`), and `sweep` reads
-  every policy of such a run against its baseline (#762).
+  expression=0.6`; `floorsOf` in `arms/reference.ts`). Its default is the
+  setting #762 adopted; `--opt floors=run` replays the #755 reference run.
+  `--opt unasked=unresolved` routes groups no cached route request asked
+  about `Unresolved` instead of asking, so a setting runs offline. The
+  `reference-floors` arm sweeps the floors from the same cached answers,
+  one policy per setting (`--opt grid=single|combined`), and `sweep` reads
+  every policy of such a run against its baseline.
 
 ## Artifacts
 

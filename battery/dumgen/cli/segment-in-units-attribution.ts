@@ -16,7 +16,7 @@ import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import {
 	referencePolicy,
-	referenceStages,
+	referenceRunStages,
 } from "../src/segment-in-units/de/arms/reference.js";
 import {
 	attributeUnit,
@@ -104,7 +104,7 @@ const traced = await Promise.all(
 		) {
 			const calls: CallRecord[] = [];
 			const { output, trace } = await runStages(
-				referenceStages,
+				referenceRunStages,
 				labCase.input,
 				{
 					jev,

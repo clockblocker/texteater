@@ -19,11 +19,14 @@
  * AUX inventory is pinned to the one dumspec authored when that run was
  * made: causative `lassen` (aecec098) came later and changes v3's request.
  *
- * The resolver's floors are parameters (#762), `referenceFloors` by
- * default; `--opt` sets one (`--opt expression=0.6`). No floor changes a
- * request nomination or the historical route batches send, so a setting
- * reads the same cached answers; only groups no batch asked need a request
- * of their own.
+ * The resolver's floors are parameters (#762). `runFloors` are the
+ * reference run's, which its replay reproduces (`--opt floors=run`);
+ * `referenceFloors`, the default, are the setting the #762 sweep adopted.
+ * `--opt` moves one (`--opt expression=0.6`), and a policy is named after
+ * the floors it moves from the run's. No floor changes a request
+ * nomination or the historical route batches send, so a setting reads the
+ * same cached answers; only groups no batch asked need a request of their
+ * own (`--opt unasked=unresolved` routes them `Unresolved` instead).
  */
 import { authoredRealizations } from "dumspec";
 import type { Questions } from "promptsmith/typesafe";
@@ -95,7 +98,7 @@ import {
 	v3Options,
 } from "./candidates4.js";
 
-/** The policy of the reference run this arm reproduces. */
+/** The policy of the reference run, which `runFloors` reproduce. */
 export const referencePolicy = "step0+saying+closed";
 
 /** The AUX lemmas dumspec authored when the reference run was made. */
@@ -142,8 +145,8 @@ export type ReferenceFloors = {
 	readonly saying: number;
 };
 
-/** The reference run's floors. */
-export const referenceFloors: ReferenceFloors = {
+/** The reference run's floors (#755). */
+export const runFloors: ReferenceFloors = {
 	satellite: full07.satellite,
 	margin: 0,
 	idiom: full07.idiom ?? 0.7,
@@ -152,13 +155,33 @@ export const referenceFloors: ReferenceFloors = {
 	saying: 0.5,
 };
 
+/**
+ * The reference's floors: the run's, with the idiom, fixed and Saying
+ * floors the #762 sweep adopted. On dev they hold 9 more gold units by
+ * majority and lose 1, with 27 membership flips against 29.
+ */
+export const referenceFloors: ReferenceFloors = {
+	...runFloors,
+	idiom: 0.6,
+	fixed: 0.3,
+	saying: 0.4,
+};
+
 export const floorNames = Object.keys(
-	referenceFloors,
+	runFloors,
 ) as readonly (keyof ReferenceFloors)[];
 
-/** The floors `--opt` sets, the reference's own for the rest. */
+/**
+ * The floors `--opt` sets, over the reference's own, or over the run's
+ * with `--opt floors=run`.
+ */
 export function floorsOf(options: ArmOptions): ReferenceFloors {
-	const floors: Record<string, number> = { ...referenceFloors };
+	const base = options.floors ?? "reference";
+	if (base !== "reference" && base !== "run")
+		throw Error(`--opt floors=${base} must be reference or run`);
+	const floors: Record<string, number> = {
+		...(base === "run" ? runFloors : referenceFloors),
+	};
 	for (const name of floorNames) {
 		const value = options[name];
 		if (value === undefined) continue;
@@ -171,13 +194,11 @@ export function floorsOf(options: ArmOptions): ReferenceFloors {
 }
 
 /**
- * A setting's policy name: the floors it moves (`expression=0.6,fixed=0.4`),
- * or the reference policy when it moves none.
+ * A setting's policy name: the floors it moves from the run's
+ * (`expression=0.6,fixed=0.4`), or the reference policy when it moves none.
  */
 export function floorsKey(floors: ReferenceFloors): string {
-	const moved = floorNames.filter(
-		(name) => floors[name] !== referenceFloors[name],
-	);
+	const moved = floorNames.filter((name) => floors[name] !== runFloors[name]);
 	return moved.length === 0
 		? referencePolicy
 		: moved.map((name) => `${name}=${floors[name]}`).join(",");
@@ -194,7 +215,7 @@ function coreUnder(
 	core: CandidatesCore,
 	floors: ReferenceFloors,
 ): CandidatesCore {
-	if (floors.margin === referenceFloors.margin) return core;
+	if (floors.margin === runFloors.margin) return core;
 	return {
 		...core,
 		slotAnswers: oneSatellitePerHost(
@@ -814,59 +835,73 @@ export function routeReferenceWith(
 	};
 }
 
-/** Routing that asks a `route-extra` request for the groups no historical batch asked about. */
-async function routeReference(
-	nomination: Nomination<ReferenceEvidence>,
-	membership: Membership<ReferenceDetail>,
-	context: ArmContext,
-): Promise<Routed> {
-	const { core } = nomination.evidence;
-	const answers = await askReferenceRoutes(nomination.evidence, context);
-	const unasked = unaskedGroups(answers, membership.partition);
-	const extra = readRoutes(
-		core.sentence,
-		unasked,
-		await ask(
-			core,
-			context,
-			"route-extra",
-			routeQuestions(
-				core.sentence,
-				unasked,
-				core.ref,
-				v3Context(context),
+/**
+ * Routing that asks a `route-extra` request for the groups no historical
+ * batch asked about, or routes them `Unresolved` without asking.
+ */
+const routeReference =
+	(unasked: "ask" | "unresolved") =>
+	async (
+		nomination: Nomination<ReferenceEvidence>,
+		membership: Membership<ReferenceDetail>,
+		context: ArmContext,
+	): Promise<Routed> => {
+		const { core } = nomination.evidence;
+		const answers = await askReferenceRoutes(nomination.evidence, context);
+		if (unasked === "unresolved")
+			return routeReferenceWith(nomination, membership, answers);
+		const groups = unaskedGroups(answers, membership.partition);
+		const extra = readRoutes(
+			core.sentence,
+			groups,
+			await ask(
+				core,
+				context,
+				"route-extra",
+				routeQuestions(
+					core.sentence,
+					groups,
+					core.ref,
+					v3Context(context),
+				),
 			),
-		),
-	);
-	return routeReferenceWith(nomination, membership, answers, extra);
-}
+		);
+		return routeReferenceWith(nomination, membership, answers, extra);
+	};
 
 /** The reference's stages under a setting of its floors. */
 export function referenceStagesUnder(
 	floors: ReferenceFloors,
+	unasked: "ask" | "unresolved" = "ask",
 ): Stages<ReferenceEvidence, ReferenceDetail> {
 	return {
 		nominate: async (input, context) =>
 			nominationOf(await referenceEvidence(input, context), floors),
 		resolve: (nomination) => resolveReference(nomination, floors),
-		route: routeReference,
+		route: routeReference(unasked),
 	};
 }
 
-export const referenceStages = referenceStagesUnder(referenceFloors);
+/** The stages that replay the reference run (#755). */
+export const referenceRunStages = referenceStagesUnder(runFloors);
 
 /**
- * Replaying or re-running the reference through the lab; `--opt` moves its
- * floors, and the policy is named after the floors moved.
+ * Running the reference through the lab, or replaying its run with `--opt
+ * floors=run`; `--opt` moves its floors, and the policy is named after the
+ * floors moved from the run's. `--opt unasked=unresolved` asks nothing for
+ * groups no historical batch asked about.
  */
 export const referenceArm: Arm = {
 	id: "reference",
 	summary:
-		"The #755 candidate reference (candidates4 final=1 closed=1, step0+saying+closed) behind nomination, membership and routing stages",
+		"The #755 candidate reference (candidates4 final=1 closed=1, step0+saying+closed) behind nomination, membership and routing stages, with the floors #762 adopted",
 	async run(input, context) {
 		const floors = floorsOf(context.options);
+		const unasked = context.options.unasked ?? "ask";
+		if (unasked !== "ask" && unasked !== "unresolved")
+			throw Error(`--opt unasked=${unasked} must be ask or unresolved`);
 		const { output } = await runStages(
-			referenceStagesUnder(floors),
+			referenceStagesUnder(floors, unasked),
 			input,
 			context,
 		);

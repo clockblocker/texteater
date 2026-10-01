@@ -1,7 +1,7 @@
 /**
- * The reference's floors swept from its cached answers (#762): one policy
- * per setting, each named after the floors it moves, the reference policy
- * being the setting that moves none. Nomination and the historical route
+ * The reference run's floors swept from its cached answers (#762): one
+ * policy per setting, each named after the floors it moves, the reference
+ * policy being the run's own setting. Nomination and the historical route
  * batches are asked once and shared by every setting, so a sweep over the
  * reference run's sentences sends no request the run did not send.
  *
@@ -23,18 +23,18 @@ import {
 	type ReferenceEvidence,
 	type ReferenceFloors,
 	referenceEvidence,
-	referenceFloors,
 	referencePolicy,
 	resolveReference,
 	routeReferenceWith,
+	runFloors,
 } from "./reference.js";
 
 const moved = (changes: Partial<ReferenceFloors>): ReferenceFloors => ({
-	...referenceFloors,
+	...runFloors,
 	...changes,
 });
 
-/** One floor at a time, around the reference's own value. */
+/** One floor at a time, around the reference run's value. */
 export const singleGrid: readonly ReferenceFloors[] = [
 	...[0.3, 0.4, 0.5, 0.6, 0.8].map((expression) => moved({ expression })),
 	...[0.3, 0.4, 0.5, 0.6, 0.8].map((idiom) => moved({ idiom })),
@@ -82,7 +82,7 @@ export const referenceFloorsArm: Arm = {
 			string,
 			Awaited<ReturnType<typeof runStages>>["output"]
 		> = {};
-		for (const floors of [referenceFloors, ...grid]) {
+		for (const floors of [runFloors, ...grid]) {
 			const stages: Stages<ReferenceEvidence, ReferenceDetail> = {
 				nominate: async () => nominationOf(evidence, floors),
 				resolve: (nomination) => resolveReference(nomination, floors),
