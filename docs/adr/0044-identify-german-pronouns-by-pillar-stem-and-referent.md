@@ -73,8 +73,18 @@ the same job with its own stem. A learner meets `derer` as a fixed pattern
 before a relative clause and looks it up under that gloss. So `derer` is one
 invariant Lemma beside `derjenige`, with `pronType` Dem in Core and one
 uninflected form, as attributive `wessen` has. Duden gives it as a genitive
-plural only. Relative `derer` is nonstandard (Duden prescribes `deren`) and is
-a Variant spelling of relative `deren`.
+plural only.
+
+**Elsewhere `derer` spells `deren`.** Wherever standalone `deren` could stand
+instead, `derer` is a Licensed Variant of that `deren` cell. That covers the
+relative (*die Opfer, derer wir gedenken*) and the demonstrative pointing back
+(*Die Kartons stehen herum; wir wollen uns derer entledigen*). The test is a
+swap. If `deren` fits, the learner who clicks `derer` sees `deren`, relative
+or demonstrative, with `derer` marked as its accepted spelling. If only
+`derer` fits, they see the `derer` Lemma, *of those (who …)*. `deren` stays
+the Canonical Form, because it is the one form every pointing-back use
+accepts: before a noun or a number only `deren` stands (*deren Freundin*,
+*deren viele*). Attributive `deren` has no `derer` spelling.
 
 Amended on 2026-10-01: standalone demonstrative `derer` was a second Lemma of
 the `deren` cells, accepted as the one exception to ADR 0032's rule that no
@@ -82,6 +92,26 @@ two cell Lemmas of one Kind share all Core Features, because no UD feature
 marks the direction. The exception let navigation such as "the plural of
 `dessen`" land on two Lemmas. Decided on
 [#595](https://github.com/clockblocker/texteater/issues/595).
+
+Amended again on 2026-10-01: relative `derer` was called nonstandard and
+carried no Variant tag, and pointing-back demonstrative `derer` would have
+landed on the pointing-ahead Lemma. The "nonstandard" label rested on Duden's
+*diese Frau, deren (nicht: derer) er sich annahm*. Duden contradicts that note
+itself: its
+[usage guide](https://www.duden.de/sprachwissen/sprachratgeber/Demonstrativpronomen-deren-derer)
+says that "bei rückweisendem Anschluss (und allein stehend …) sind sowohl
+deren als auch derer korrekt" (*die Opfer, deren oder derer wir heute
+gedenken*), and its `deren` entries add *die Frist, innerhalb deren oder
+derer*, a feminine singular like the rejected example.
+[LEO](https://blog.leo.org/2018/08/24/zwei-woerter-aufgrund-derenderer-manche-ins-zweifeln-geraten/)
+calls both forms correct outside the pointing-ahead use, *sich deren/derer
+entledigen* included. It adds that the 19th-century rule reserving `derer`
+for pointing ahead never took hold. [DWDS](https://www.dwds.de/wb/derer)
+gives relative and demonstrative `derer` as synonyms of `deren` with no usage
+label, and [grammis](https://grammis.ids-mannheim.de/kontrastive-grammatik/3673)
+gives `derer` as the demonstrative's Gen.Fem.Sg and Gen.Plur form. A current
+standard accepts the spelling, so it is Licensed. Neither STTS (PDS, PRELS)
+nor UD marks the direction.
 
 UD supplies feature meanings, not this project's Lemma granularity:
 [German features](https://universaldependencies.org/de/index.html) and
@@ -113,6 +143,11 @@ UD supplies feature meanings, not this project's Lemma granularity:
 - Demonstrative `derer` as a second Lemma of the `deren` cells, kept apart by
   direction alone. Chosen first, rejected on 2026-10-01: the two shared every
   Core Feature, so navigation to either cell found two Lemmas.
+- Relative `derer` as a nonstandard Variant with no tag, and pointing-back
+  demonstrative `derer` as the pointing-ahead Lemma. Rejected on 2026-10-01:
+  Duden's usage guide, LEO and DWDS accept `derer` wherever `deren` could
+  stand. The pointing-ahead Lemma would have glossed *sich derer entledigen*
+  as *of those who*, with no relative clause in sight.
 
 ## Consequences
 
@@ -124,4 +159,5 @@ UD supplies feature meanings, not this project's Lemma granularity:
 - Decided on #420, #421, #606 and
   [#595](https://github.com/clockblocker/texteater/issues/595) between
   2026-09-25 and 2026-09-28; `derer` left the pillar on 2026-10-01, and no
-  pillar collision is accepted since.
+  pillar collision is accepted since. The same day `derer` became a Licensed
+  Variant of standalone relative and demonstrative `deren`.

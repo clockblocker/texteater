@@ -1,0 +1,89 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Opfer, derer wir heute gedenken, sind nicht vergessen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Opfer" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "derer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "heute" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "gedenken" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "sind" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "vergessen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0044"],
+		"rules": [],
+		"references": [
+			{
+				"title": "Duden Sprachratgeber: Demonstrativpronomen deren/derer",
+				"url": "https://www.duden.de/sprachwissen/sprachratgeber/Demonstrativpronomen-deren-derer",
+				"supports": "die Opfer, deren oder derer wir heute gedenken: both forms are correct when the pronoun points back and stands alone."
+			},
+			{
+				"title": "LEO, Fragen Sie Dr. Bopp: aufgrund deren/derer (2018)",
+				"url": "https://blog.leo.org/2018/08/24/zwei-woerter-aufgrund-derenderer-manche-ins-zweifeln-geraten/",
+				"supports": "Beide Formen gelten als korrekt: die Toten, deren/derer wir heute gedenken."
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "derer opens the relative clause and points back to die Opfer, so deren could stand in its place: it is the relative deren cell Gen.Plur, spelled with its Licensed Variant derer (ADR 0044)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "deren",
+						"coreFeatures": {
+							"case": "Gen",
+							"number": "Plur",
+							"extPos": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Rel",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "derer",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "derer", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"reading": { "emojiDescription": "🔗" }
+		}
+	],
+	"noTarget": []
+}

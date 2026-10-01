@@ -1,0 +1,96 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die alten Kartons stehen nur herum, deshalb wollen wir uns derer endlich entledigen.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "alten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kartons" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "stehen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nur" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "herum" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "deshalb" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wollen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "wir" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "uns" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "derer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "endlich" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "entledigen" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0044"],
+		"rules": [],
+		"references": [
+			{
+				"title": "LEO, Fragen Sie Dr. Bopp: aufgrund deren/derer (2018)",
+				"url": "https://blog.leo.org/2018/08/24/zwei-woerter-aufgrund-derenderer-manche-ins-zweifeln-geraten/",
+				"supports": "In allen anderen Fällen sind deren und derer üblich: … Sonderabfälle und wie man sich deren/derer entledigen kann."
+			},
+			{
+				"title": "Duden Sprachratgeber: Demonstrativpronomen deren/derer",
+				"url": "https://www.duden.de/sprachwissen/sprachratgeber/Demonstrativpronomen-deren-derer",
+				"supports": "Bei rückweisendem Anschluss (und allein stehend, also keinem Substantiv vorangestellt) sind sowohl deren als auch derer korrekt."
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "derer points back to die alten Kartons and announces no relative clause, so deren could stand in its place: it is the demonstrative deren cell Gen.Plur, spelled with its Licensed Variant derer (ADR 0044), not the pointing-ahead Lemma derer."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "deren",
+						"coreFeatures": {
+							"case": "Gen",
+							"number": "Plur",
+							"extPos": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "derer",
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "derer", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"reading": { "emojiDescription": "👉" }
+		}
+	],
+	"noTarget": []
+}

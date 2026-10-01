@@ -3,6 +3,7 @@ import { parseUnit } from "dumling";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { frameAdpositionCaseIssues } from "../src/check-adposition-cases.js";
+import { loadSpecRecords } from "../src/index.js";
 import {
 	type AuthoredMember,
 	authoredMembers,
@@ -227,9 +228,11 @@ describe("the German authored inventory", () => {
 		expect(collisions).toEqual([]);
 	});
 
-	test("derer is its own invariant Lemma, apart from the deren cells (system ADR 0044)", () => {
+	test("derer is its own invariant Lemma pointing ahead and spells standalone deren elsewhere (system ADR 0044)", () => {
 		// Demonstrative derer points ahead to a relative clause and has one
-		// uninflected form; relative derer is a Variant of relative deren.
+		// uninflected form. Wherever deren could stand instead, relative or
+		// demonstrative pointing back, derer is a Licensed Variant of that
+		// deren cell; attributive deren has no such spelling.
 		const spelledDerer = authoredRealizations
 			.filter(({ spelled }) => spelled === "derer")
 			.map(({ member, inflection }) => {
@@ -243,10 +246,42 @@ describe("the German authored inventory", () => {
 			})
 			.sort();
 		expect(spelledDerer).toEqual([
+			"deren Dem Gen Plur null",
+			"deren Dem Gen Sing Fem",
 			"deren Rel Gen Plur null",
 			"deren Rel Gen Sing Fem",
 			"derer Dem null null null",
 		]);
+	});
+
+	test("the records spell derer Canonical as its own Lemma and Licensed as deren (system ADR 0044)", () => {
+		const attested = loadSpecRecords().flatMap(({ id, targets }) =>
+			targets.flatMap(({ attestation: { surface } }) => {
+				if (surface.normalizedSurface !== "derer") return [];
+				const { canonicalForm, coreFeatures } = surface.lemma;
+				const tags =
+					surface.spelling.kind === "Variant"
+						? ` ${surface.spelling.variantTags.join(" ")}`
+						: "";
+				return [
+					`${id} ${canonicalForm} ${String(field(coreFeatures, "pronType"))} ${surface.spelling.kind}${tags}`,
+				];
+			}),
+		);
+		for (const line of attested)
+			expect(line).toMatch(
+				/ (derer Dem Canonical|deren (Dem|Rel) Variant Licensed)$/u,
+			);
+		// sich derer entledigen points back, so derer spells demonstrative deren.
+		expect(attested).toContain(
+			"de/die-alten-kartons-stehen-nur-herum-deshalb-wollen-wir-uns deren Dem Variant Licensed",
+		);
+		expect(attested).toContain(
+			"de/die-opfer-derer-wir-heute-gedenken-sind-nicht-vergessen deren Rel Variant Licensed",
+		);
+		expect(attested).toContain(
+			"de/wir-gedenken-derer-die-im-krieg-gestorben-sind derer Dem Canonical",
+		);
 	});
 
 	test("a stem's spellings are Surfaces Dumling accepts", () => {

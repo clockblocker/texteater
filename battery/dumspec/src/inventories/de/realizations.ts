@@ -158,14 +158,18 @@ const pronounAliases: Readonly<Record<string, readonly string[]>> = {
 };
 /**
  * Other spellings of one pronoun Lemma rather than of every Lemma
- * spelled alike. Relative derer (die Opfer, derer wir gedenken) is nonstandard;
- * Duden prescribes deren, so it is a Variant of standalone relative deren.
+ * spelled alike. Wherever standalone deren could stand, derer is its Licensed
+ * Variant (system ADR 0044), relative (die Opfer, derer wir gedenken) and
+ * demonstrative pointing back (sich derer entledigen) alike. Pointing ahead
+ * to a relative clause, only derer fits, and it is its own Lemma.
+ * https://www.duden.de/sprachwissen/sprachratgeber/Demonstrativpronomen-deren-derer
+ * https://blog.leo.org/2018/08/24/zwei-woerter-aufgrund-derenderer-manche-ins-zweifeln-geraten/
  */
 function pronounAliasesOf(lemma: Dumling.Lemma<"de">): readonly string[] {
 	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
 	if (
 		lemma.canonicalForm === "deren" &&
-		core.pronType === "Rel" &&
+		(core.pronType === "Rel" || core.pronType === "Dem") &&
 		core.extPos === null
 	)
 		return ["derer"];
