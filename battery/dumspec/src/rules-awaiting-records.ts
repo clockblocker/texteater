@@ -8,9 +8,8 @@ import type { RuleAwaitingRecords } from "./check-rules.js";
 export const rulesAwaitingRecords: readonly RuleAwaitingRecords[] = [
 	{
 		rule: "de/unresolved-over-repair",
-		issue: 743,
-		findings: ["K-A4"],
-		why: "No Target admits only unintelligible, nonce, broken-off or suspended-compound material, so no record can hold a contested unit until #743 rules.",
+		issue: 725,
+		why: "Gold always decides contested membership, and a contested unit goes to the user for a ruling (#743), so only a truly undecidable record can show this Rule; #725's haben + participle is the likely first.",
 	},
 	{
 		rule: "de/was-fuer",

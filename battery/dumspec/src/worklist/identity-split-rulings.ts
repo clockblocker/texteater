@@ -184,43 +184,4 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 ];
 
 /** The German forms whose split an open grilling decides. */
-export const germanOpenSplits: readonly OpenSplit[] = [
-	{
-		forms: [
-			"sehr",
-			"gar",
-			"ja",
-			"doch",
-			"nur",
-			"bloß",
-			"eigentlich",
-			"denn",
-			"aber",
-			"ganz",
-			"früh",
-			"wenig",
-			"zu",
-		],
-		issue: 734,
-		question:
-			"PART, ADV or INTJ for degree, modal, focus and answer words; must every PART name its type?",
-	},
-	{
-		forms: ["viel"],
-		issue: 743,
-		findings: ["K-A7"],
-		question: "viel by use: ADJ after a determiner, adverbial viel",
-	},
-	{
-		forms: ["es"],
-		issue: 743,
-		findings: ["M-A2", "K-B12"],
-		question: "Expletive, object and anticipatory es",
-	},
-	{
-		forms: ["mehr"],
-		issue: 743,
-		findings: ["M-B5"],
-		question: "nicht mehr: ADV mehr, sehr Cmp, or Locution nicht mehr",
-	},
-];
+export const germanOpenSplits: readonly OpenSplit[] = [];
