@@ -62,6 +62,12 @@ const genitiveOrDative: GermanAdpositionCases = {
 	preferred: null,
 	twoWay: false,
 };
+/** A bare complement that shows no case (`Porto inklusive`). */
+const caseless: GermanAdpositionCases = {
+	allowed: [],
+	preferred: null,
+	twoWay: false,
+};
 
 /** A preposition: it stands only before its complement. */
 const prep = (cases: GermanAdpositionCases): GermanAdpositionPositions => ({
@@ -93,7 +99,8 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	hinter: prep(twoWay),
 	in: prep(twoWay),
 	neben: prep(twoWay),
-	über: prep(twoWay),
+	// den ganzen Tag über: a time span, after an accusative.
+	über: { Prep: twoWay, Post: only("Acc") },
 	unter: prep(twoWay),
 	vor: prep(twoWay),
 	zwischen: prep(twoWay),
@@ -101,7 +108,7 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	betreffend: post(only("Acc")), // den Vorfall betreffend.
 	bis: prep(only("Acc")),
 	contra: prep(only("Acc")),
-	durch: prep(only("Acc")),
+	durch: prepOrPost(only("Acc")), // die ganze Nacht durch.
 	für: prep(only("Acc")),
 	gegen: prep(only("Acc")),
 	je: prep(only("Acc")), // je erwachsenen Teilnehmer.
@@ -118,11 +125,11 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	außer: prep(only("Dat")),
 	bei: prep(only("Dat")),
 	entgegen: prep(only("Dat")),
-	entsprechend: prep(only("Dat")),
+	entsprechend: prepOrPost(only("Dat")), // dem Antrag entsprechend.
 	gegenüber: prepOrPost(only("Dat")),
 	gemäß: prepOrPost(only("Dat")),
 	getreu: prep(only("Dat")),
-	gleich: prep(only("Dat")), // Elevated: einem Adler gleich.
+	gleich: prep(only("Dat")), // Elevated: gleich einem Ball.
 	mit: prep(only("Dat")),
 	mitsamt: prep(only("Dat")),
 	nach: prepOrPost(only("Dat")), // meiner Meinung nach.
@@ -132,9 +139,9 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	samt: prep(only("Dat")),
 	seit: prep(only("Dat")),
 	von: prep(only("Dat")),
-	zu: prep(only("Dat")),
+	zu: prepOrPost(only("Dat")), // der Stadt zu: towards it.
 	zuliebe: post(only("Dat")), // den Kindern zuliebe.
-	zunächst: prep(only("Dat")),
+	zunächst: prepOrPost(only("Dat")), // der Straße zunächst.
 	zuwider: post(only("Dat")), // dem Gesetz zuwider.
 	// Dative, with an accusative for dates and amounts (ab ersten Mai).
 	ab: prep({ allowed: ["Dat", "Acc"], preferred: null, twoWay: false }),
@@ -193,11 +200,11 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	// alternative (laut dem Bericht).
 	ausschließlich: prep(genitiveOrDative),
 	dank: prep(genitiveOrDative),
-	einschließlich: prep(genitiveOrDative),
+	einschließlich: { Prep: genitiveOrDative, Post: caseless }, // Sophia einschließlich.
 	exklusive: prep(genitiveOrDative),
 	fern: prep(genitiveOrDative), // Dat rarer.
 	"inkl.": prep(genitiveOrDative),
-	inklusive: prep(genitiveOrDative),
+	inklusive: { Prep: genitiveOrDative, Post: caseless }, // Porto inklusive.
 	laut: prep(genitiveOrDative),
 	längs: prep(genitiveOrDative),
 	mittels: prep(genitiveOrDative),

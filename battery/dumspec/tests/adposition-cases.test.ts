@@ -196,6 +196,12 @@ test("the table lists each Lexeme ADP's positions with a case set each", () => {
 	expect(positions("halber")).toEqual({ Post: ["Gen"] });
 	expect(positions("für")).toEqual({ Prep: ["Acc"] });
 	expect(positions("auf")).toEqual({ Prep: ["Acc", "Dat"] });
+	// den ganzen Tag über; Porto inklusive shows no case.
+	expect(positions("über")).toEqual({ Prep: ["Acc", "Dat"], Post: ["Acc"] });
+	expect(positions("inklusive")).toEqual({
+		Prep: ["Gen", "Dat"],
+		Post: [],
+	});
 	const wegen = germanAdpositionEntry(adposition("wegen"));
 	if (!wegen) throw Error("wegen unlisted");
 	expect(germanAdpositionAllowedCases(wegen)).toEqual(["Gen", "Dat"]);
