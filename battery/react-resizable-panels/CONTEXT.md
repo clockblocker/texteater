@@ -57,15 +57,14 @@ Create a Presentation or Card Layer from an interaction with a Subject.
 Begin a provisional gesture for a Presentation in Card form.
 
 **Expand**:
-Settle a Held Card as a Sheet while retaining its Card Layer membership.
+Settle a Held Card as a Sheet in a target Pane, or in a new Pane split off one
+of that Pane's edges, keeping its Card Layer membership. Moving a Sheet is a
+Lift followed by an Expand.
+_Avoid_: Move
 
 **Collapse**:
 Return a Sheet to Card form in its retained Card Layer, revealing the
 composition it covered.
-
-**Move**:
-Change a Presentation's placement. Moving and changing form are separate
-operations, even when one gesture does both.
 
 **Close**:
 Explicitly dismiss a Presentation or Card Layer.

@@ -9,7 +9,7 @@ definition, edge cases and examples.
 
 The [react-resizable-panels workspace context](../../battery/react-resizable-panels/CONTEXT.md)
 defines Presentation, Card, Sheet, Pane, Card Layer, Sheet Stack, Lift, Expand,
-Collapse, Move, Close, and cancellation. tf-demo uses that model in production.
+Collapse, Close, and cancellation. tf-demo uses that model in production.
 
 **Library Sheet**:
 The initial Locked Sheet containing the Library. See [tf-demo ADR 0003].
