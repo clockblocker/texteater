@@ -24,11 +24,61 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/bleiben-with-an-infinitive",
+				"hash": "71648d2fd6a2802d"
+			},
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" }
+		],
 		"references": []
 	},
 	"targets": [
+		{
+			"memberSegmentIndices": [6, 16],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "stehen bleiben in Duden's sense 2, nicht weiterlaufen, nicht weiter in Funktion sein (der Motor ist stehen geblieben): the lift never gets stuck between floors. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "bleibt", "orthography": "Standard" },
+					{ "attested": "stehen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "bleibt stehen",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "stehen bleiben",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "ADV" },

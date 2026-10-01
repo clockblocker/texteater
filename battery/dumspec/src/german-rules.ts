@@ -352,7 +352,11 @@ const verbs: Rule[] = [
 			"bleiben with an infinitive is one Locution VERB, an Idiom, over both verbs when the combination meets de/idiom and has its own Duden headword: Der Wagen ist liegen geblieben ('broke down') gives [ist, liegen, geblieben] VERB liegen bleiben. Its Canonical Form is the separate spelling Duden recommends, and the joined spelling (liegengeblieben) is a Licensed Variant split into Fused pieces (de/fused-word-pieces). Otherwise bleiben is a VERB of its own and the infinitive a separate VERB target, as in sitzen geblieben ('stayed seated').",
 		adrs: ["ADR-0039", "ADR-0035", "ADR-0026"],
 		routes: [...lexeme("VERB"), ...locution("VERB")],
-		records: [],
+		records: [
+			"de/obwohl-der-wagen-am-morgen-noch-liegen-geblieben-war-hat-die",
+			"de/der-alte-aufzug-bleibt-nie-zwischen-den-etagen-stehen",
+			"de/die-abk-blieb-stehen-obwohl-der-satz-ueberarbeitet-wurde",
+		],
 	},
 	{
 		id: "de/copula-stays-apart",

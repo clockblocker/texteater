@@ -46,70 +46,114 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036", "ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/bleiben-with-an-infinitive",
+				"hash": "71648d2fd6a2802d"
+			},
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" }
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-participle-benchmark-01-repariert-click-hat",
+			"memberSegmentIndices": [13, 15, 17],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "liegen bleiben in Duden's sense 2, mit einer Panne liegen bleiben: the car broke down. It is an Idiom over both verbs, cited apart, with its pluperfect auxiliary war (de/bleiben-with-an-infinitive). Decided on #723."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "liegen", "orthography": "Standard" },
+					{ "attested": "geblieben", "orthography": "Standard" },
+					{ "attested": "war", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "liegen geblieben war",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Past",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "liegen bleiben",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
 			"memberSegmentIndices": [20, 38],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 20,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Obwohl" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wagen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "a" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Morgen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "noch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "liegen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geblieben" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "war" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hat" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mechanikerin" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "beschädigten" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Motor" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "vor" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mittagspause" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "repariert" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [20, 38]
-				},
-				"explanation": "A productive Partizip II in a perfect, werden-passive or sein state passive is verbal (ADR 0033). The finite auxiliary and Partizip II resolve to the same Lexeme/VERB target."
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "hat is the perfect auxiliary of repariert, so the target is the whole perfect [hat, repariert]."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "hat", "orthography": "Standard" },
+					{ "attested": "repariert", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "hat repariert",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "reparieren",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }
