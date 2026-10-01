@@ -98,12 +98,16 @@
 				"hash": "1a5d9f3240c41e69"
 			},
 			{
-				"rule": "de/largest-fixed-unit",
-				"hash": "9a404db30f2b7c82"
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
 			},
 			{
-				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
-				"hash": "fdaeed620ab52c64"
+				"rule": "de/idiom",
+				"hash": "c05df428b3a42079"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
 			},
 			{
 				"rule": "de/pron-or-det-by-use",
@@ -123,17 +127,7 @@
 			{
 				"title": "Duden: spazieren gehen",
 				"url": "https://www.duden.de/rechtschreibung/spazieren_gehen",
-				"supports": "Target [gehen, spazieren]: headword spazieren gehen, 'einen Spaziergang machen'."
-			},
-			{
-				"title": "DWDS: viel",
-				"url": "https://www.dwds.de/wb/viel",
-				"supports": "Target [viel]: II.1 adverbiell 'häufig, oft' (viel lachen, schlafen, wandern); Komparativ mehr, Superlativ am meisten."
-			},
-			{
-				"title": "Duden: spazieren gehen",
-				"url": "https://www.duden.de/rechtschreibung/spazieren_gehen",
-				"supports": "Target [gehen, spazieren]: headword spazieren gehen, 'einen Spaziergang machen'."
+				"supports": "Targets [gehen] and [spazieren]: Duden's headword spazieren gehen, 'einen Spaziergang machen', is what the two words say, so it is no Idiom (de/idiom)."
 			},
 			{
 				"title": "DWDS: viel",
@@ -370,23 +364,19 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [13, 17],
+			"memberSegmentIndices": [13],
 			"route": {
-				"family": "Locution",
+				"family": "Lexeme",
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "gehen … spazieren is spazieren gehen 'go for a walk', a Duden headword (formerly spazierengehen) with two verbs as Heads, so a Locution VERB that inflects like its verb; viel between them is free. Ruled on #743 (SZ-B7)."
+				"rationale": "gehen is the finite VERB and spazieren its infinitive, a VERB of its own; viel between them is free. spazieren gehen has a Duden headword but means what its words say, 'go walking', like einkaufen gehen, so it fails de/idiom, and a verb + verb unit needs both (#723). Ruled by the user on #739 (2026-10-01), reversing #743 SZ-B7."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
 					{
 						"attested": "gehen",
-						"orthography": "Standard"
-					},
-					{
-						"attested": "spazieren",
 						"orthography": "Standard"
 					}
 				],
@@ -396,7 +386,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "gehen spazieren",
+					"normalizedSurface": "gehen",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -415,10 +405,13 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
+						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "spazieren gehen",
-						"coreFeatures": {}
+						"canonicalForm": "gehen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
 					},
 					"surfaceFeatures": null
 				}
@@ -461,6 +454,60 @@
 						"coreFeatures": {
 							"comparable": "Yes",
 							"pronType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [17],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"notes": {
+				"rationale": "spazieren is the bare infinitive under gehen, a VERB of its own, since spazieren gehen fails de/idiom (see gehen). Ruled by the user on #739 (2026-10-01), reversing #743 SZ-B7."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "spazieren",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "spazieren",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "spazieren",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
