@@ -220,14 +220,17 @@ const germanCaseSchema = z.enum(["Nom", "Acc", "Dat", "Gen"]);
 const referentSchema = z.enum(["Someone", "Something", "Either"]);
 
 /**
- * German valency complements (ADR 0034), after E-VALBU: a bare case, or a
- * preposition's ADP Lemma with the case it takes in this construction.
- * `referent` says whether the complement names a person, a thing, or either.
+ * The German valency complements an occurrence can realize (ADR 0034), after
+ * E-VALBU: a bare case, or a preposition's ADP Lemma with the case it governs
+ * in this construction. `referent` says whether the complement names a
+ * person, a thing, or either. The field is `governedCase`, since an
+ * Attestation names no Feature Pool feature (ADR 0032). Evidence takes no
+ * Adverbial, Predicative or Clause: nothing produces or reads them here.
  */
 const germanComplementSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Case"),
-		case: germanCaseSchema,
+		governedCase: germanCaseSchema,
 		referent: referentSchema,
 	}),
 	z.strictObject({
@@ -237,7 +240,7 @@ const germanComplementSchema = z.union([
 			DeAdpositionFeatureBagsSchema.shape.core,
 			undefined,
 		).Lemma,
-		case: germanCaseSchema.exclude(["Nom"]),
+		governedCase: germanCaseSchema.exclude(["Nom"]),
 		referent: referentSchema,
 	}),
 ]);

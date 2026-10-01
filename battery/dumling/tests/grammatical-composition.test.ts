@@ -774,7 +774,7 @@ test("valency evidence names the owned member realizing its preposition", () => 
 		complement: {
 			kind: "Preposition",
 			preposition: preposition("auf"),
-			case: "Acc",
+			governedCase: "Acc",
 			referent: "Something",
 		},
 		realizedCase: "Acc",
@@ -819,7 +819,11 @@ test("valency evidence names the owned member realizing its preposition", () => 
 		[
 			{
 				...slot,
-				complement: { kind: "Case", case: "Dat", referent: "Someone" },
+				complement: {
+					kind: "Case",
+					governedCase: "Dat",
+					referent: "Someone",
+				},
 			},
 		],
 	])
@@ -835,6 +839,46 @@ test("valency evidence names the owned member realizing its preposition", () => 
 			],
 		}).success,
 	).toBe(true);
+});
+// Evidence is a strict subset of the frame vocabulary, and an Attestation names
+// no Feature Pool feature (ADR 0034, ADR 0032).
+test("valency evidence names only Case and Preposition complements, by their governedCase", () => {
+	const attestation = {
+		unitKind: "Attestation",
+		surface: {
+			...verb,
+			normalizedSurface: "wartet",
+			inflectionalFeatures: {
+				...verb.inflectionalFeatures,
+				expletive: null,
+			},
+		},
+		realizationCoverage: "Full",
+		members: [{ attested: "wartet", orthography: "Standard" }],
+		expletiveEvidence: null,
+		valencyEvidence: [],
+	};
+	const evidence = (complement: unknown) => ({
+		...attestation,
+		valencyEvidence: [{ member: null, complement, realizedCase: "Nom" }],
+	});
+	expect(
+		parseUnit(
+			evidence({
+				kind: "Case",
+				governedCase: "Nom",
+				referent: "Someone",
+			}),
+		).success,
+	).toBe(true);
+	for (const complement of [
+		{ kind: "Case", case: "Nom", referent: "Someone" },
+		{ kind: "Adverbial", standIn: "Irgendwo" },
+		{ kind: "Predicative", of: "Subject", marker: "None" },
+		{ kind: "Clause", form: "Dass" },
+		{ kind: "Clause", form: "ZuInfinitive", correlate: "Optional" },
+	])
+		expect(parseUnit(evidence(complement)).success).toBe(false);
 });
 // Which cases a preposition takes, and whether the ADP Case Table lists it at
 // all, is checked in dumspec (ADR 0041): Dumling consults no table.
@@ -861,7 +905,7 @@ test("a governor's preposition slot passes Dumling in any oblique case, listed o
 				complement: {
 					kind: "Preposition",
 					preposition: preposition(canonicalForm),
-					case: grammaticalCase,
+					governedCase: grammaticalCase,
 					referent: "Either",
 				},
 				realizedCase: grammaticalCase,
@@ -893,7 +937,7 @@ const adpAttestation = (
 						member: null,
 						complement: {
 							kind: "Case",
-							case: realizedCase,
+							governedCase: realizedCase,
 							referent: "Either",
 						},
 						realizedCase,
@@ -987,7 +1031,7 @@ test("a Locution ADP Attestation records at most one bare-case slot", () => {
 							member: null,
 							complement: {
 								kind: "Case",
-								case: realizedCase,
+								governedCase: realizedCase,
 								referent: "Either",
 							},
 							realizedCase,
@@ -1034,7 +1078,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 		complement: {
 			kind: "Preposition",
 			preposition: auf,
-			case: "Acc",
+			governedCase: "Acc",
 			referent: "Someone",
 		},
 		realizedCase: "Acc",
@@ -1114,7 +1158,7 @@ test("an adjective or noun Attestation names its owned governed preposition like
 				complement: {
 					kind: "Preposition",
 					preposition: preposition("vor"),
-					case: "Dat",
+					governedCase: "Dat",
 					referent: "Something",
 				},
 				realizedCase: "Dat",
@@ -1201,7 +1245,11 @@ test("a Hebrew governor may name its governed preposition with no case", () => {
 		[
 			{
 				member: 1,
-				complement: { kind: "Case", case: "Acc", referent: "Someone" },
+				complement: {
+					kind: "Case",
+					governedCase: "Acc",
+					referent: "Someone",
+				},
 			},
 		],
 	])
@@ -1298,7 +1346,11 @@ test("an English governor may name its governed preposition with no case", () =>
 		[
 			{
 				member: 1,
-				complement: { kind: "Case", case: "Dat", referent: "Someone" },
+				complement: {
+					kind: "Case",
+					governedCase: "Dat",
+					referent: "Someone",
+				},
 			},
 		],
 	])

@@ -351,7 +351,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -364,7 +364,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
@@ -506,7 +506,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -519,7 +519,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
@@ -1143,7 +1143,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -1156,7 +1156,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
@@ -1897,7 +1897,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -1910,7 +1910,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
@@ -3717,7 +3717,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -3730,7 +3730,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
@@ -3884,7 +3884,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -3897,7 +3897,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
@@ -4039,7 +4039,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -4052,7 +4052,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
@@ -4746,7 +4746,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -4759,7 +4759,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
@@ -5643,7 +5643,7 @@ export interface UnitMap {
 				complement:
 					| {
 							kind: "Case";
-							case: "Nom" | "Acc" | "Dat" | "Gen";
+							governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  }
 					| {
@@ -5656,7 +5656,7 @@ export interface UnitMap {
 								canonicalForm: string;
 								coreFeatures: { abbr: "Yes" | null };
 							};
-							case: "Acc" | "Dat" | "Gen";
+							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
 					  };
 				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";

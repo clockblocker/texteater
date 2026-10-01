@@ -368,11 +368,11 @@ export function germanValencyAttestationError(): string {
 type ValencyEvidence = {
 	member: number | null;
 	complement:
-		| { kind: "Case"; case: string }
+		| { kind: "Case"; governedCase: string }
 		| {
 				kind: "Preposition";
 				preposition: { canonicalForm: string };
-				case: string;
+				governedCase: string;
 		  };
 	realizedCase: string;
 };
@@ -394,7 +394,7 @@ function isOwnedValencyEvidence(
 	return evidence.every(({ member: index, complement, realizedCase }) => {
 		if (complement.kind === "Case") return index === null;
 		const { canonicalForm } = complement.preposition;
-		if (realizedCase !== complement.case) return false;
+		if (realizedCase !== complement.governedCase) return false;
 		if (index === null) return true;
 		const member = members[index];
 		return (
@@ -488,7 +488,7 @@ export function isGermanAdpositionAttestation(input: unknown): boolean {
 		rest.length === 0 &&
 		slot.member === null &&
 		slot.complement.kind === "Case" &&
-		slot.complement.case === slot.realizedCase &&
+		slot.complement.governedCase === slot.realizedCase &&
 		slot.realizedCase !== "Nom"
 	);
 }
