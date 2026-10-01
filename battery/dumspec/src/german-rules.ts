@@ -926,6 +926,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/damit-triffst-du-den-nagel-auf-den-kopf",
 			"de/genau-da-liegt-der-hase-im-pfeffer",
 			"de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die",
+			"de/sie-meint-es-gut-mit-dir",
 		],
 	},
 	{

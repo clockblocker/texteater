@@ -100,11 +100,7 @@
 			"bucket": "locution",
 			"split": "held-out",
 			"change": "new",
-			"consistencySets": [],
-			"openQuestion": {
-				"issue": 759,
-				"question": 2
-			}
+			"consistencySets": []
 		},
 		{
 			"row": "L13",
@@ -112,11 +108,7 @@
 			"bucket": "locution",
 			"split": "dev",
 			"change": "fix+promote",
-			"consistencySets": ["S4"],
-			"openQuestion": {
-				"issue": 759,
-				"question": 4
-			}
+			"consistencySets": ["S4"]
 		},
 		{
 			"row": "L14",
@@ -124,11 +116,7 @@
 			"bucket": "locution",
 			"split": "dev",
 			"change": "promote",
-			"consistencySets": [],
-			"openQuestion": {
-				"issue": 759,
-				"question": 2
-			}
+			"consistencySets": []
 		},
 		{
 			"row": "L15",
@@ -152,11 +140,7 @@
 			"bucket": "overgroup-control",
 			"split": "held-out",
 			"change": "new",
-			"consistencySets": ["S2"],
-			"openQuestion": {
-				"issue": 759,
-				"question": 3
-			}
+			"consistencySets": ["S2"]
 		},
 		{
 			"row": "C3",
@@ -180,11 +164,7 @@
 			"bucket": "overgroup-control",
 			"split": "held-out",
 			"change": "new",
-			"consistencySets": ["S1", "S11"],
-			"openQuestion": {
-				"issue": 759,
-				"question": 3
-			}
+			"consistencySets": ["S1", "S11"]
 		},
 		{
 			"row": "C6",
@@ -208,11 +188,7 @@
 			"bucket": "overgroup-control",
 			"split": "dev",
 			"change": "promote",
-			"consistencySets": ["S11"],
-			"openQuestion": {
-				"issue": 759,
-				"question": 3
-			}
+			"consistencySets": ["S11"]
 		},
 		{
 			"row": "C9",
