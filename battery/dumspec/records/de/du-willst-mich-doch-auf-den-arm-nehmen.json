@@ -123,7 +123,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "2",
 							"polite": "Infm",
 							"poss": null,
@@ -221,7 +220,6 @@
 							"case": "Acc",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -268,7 +266,6 @@
 						"canonicalForm": "doch",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": null
 						}

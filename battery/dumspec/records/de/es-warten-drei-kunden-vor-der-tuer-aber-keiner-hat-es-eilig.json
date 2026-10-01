@@ -162,7 +162,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -258,7 +257,6 @@
 						"canonicalForm": "drei",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"numType": "Card"
 						}
 					},
@@ -344,7 +342,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -482,7 +479,6 @@
 							"case": null,
 							"number": null,
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
