@@ -182,14 +182,18 @@ _Avoid_: Mnemonic, Gloss, Sense ID
 
 **Valency Frame**:
 The governed complements of one Reading, stored as an ordered list of Slots
-in its Knowledge: what a learner must memorize to use the word in that sense.
-A frame never creates a Lemma or a Reading. See [ADR 0034].
+in its Knowledge: what a learner must memorize to use the word in that sense,
+including a complement whose marker is free, such as the place `wohnen`
+needs. A frame never creates a Lemma or a Reading. See [ADR 0034].
 _Avoid_: valency pattern, Satzbauplan, argument structure, governed
 prepositions
 
 **Slot**:
-One position in a Valency Frame, Required or Optional. Each language defines
-its complements, and each route chooses which it allows. See [ADR 0034].
+One position in a Valency Frame, Required or Optional, holding one complement
+or several alternatives that can replace each other in the same sense.
+Complements that can appear together take separate Slots. Each language
+defines its complements, and each route chooses which it allows. See
+[ADR 0034].
 _Avoid_: argument, valent, complement slot, Ergänzung
 
 [ADR 0002]: ../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md

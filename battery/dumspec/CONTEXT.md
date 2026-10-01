@@ -161,6 +161,26 @@ attest (Dumrel). It never splits a Lemma: `wiegen` 'weigh' (`wog`) and 'rock'
 (`wiegte`) are two Readings of one Lemma. See [ADR 0038].
 _Avoid_: verb type, irregular verb, Verbklasse
 
+**Stand-in**:
+The adverb that names a German Adverbial complement in a Valency Frame
+(Dumling), as E-VALBU substitutes it: `irgendwo` for `wohnen`, `irgendwohin`
+for `legen`, `irgendwie lange` for `dauern`. A preposition inside the
+complement it stands for is free. See [ADR 0034].
+_Avoid_: meaning (that belongs to the Reading), Kadv subclass
+
+**Predicative**:
+A German complement that describes its subject or object, such
+as `gut` in `gut aussehen` or `für dumm` in `jN für dumm halten`. Its `als` or
+`für` is a free word, not a Governed Preposition (Dumrel). See [ADR 0034].
+_Avoid_: prepositional object, for the `für` or `als` phrase
+
+**Correlate**:
+The `es` or `da(r)-` word that anticipates a German Clause complement in its
+Slot, such as `darauf` in `Ich freue mich darauf, dass du kommst`. A Reading's
+frame marks it Required or Optional. It is a unit of its own, never a member of
+the governor. See [ADR 0034].
+_Avoid_: expletive `es` (an expletive fills no Slot), placeholder
+
 [ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
 [ADR 0026]: ../../docs/adr/0026-treat-modals-as-verbs-and-confine-aux-to-grammar-readings.md
 [ADR 0029]: ../../docs/adr/0029-keep-preposition-government-out-of-lemma-identity.md

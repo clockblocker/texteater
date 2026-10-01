@@ -181,7 +181,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/governed-preposition-joins-its-governor",
 		statement:
-			"A preposition that a verb, adjective or noun selects for its complement is a member of that word's target, also when it stands apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in (aus Angst vor Hunden gives [Angst, vor] NOUN) and is never part of the Lemma. A participial ADJ governs the preposition its source verb governs in the same sense. Government is read from E-VALBU, and from Duden where E-VALBU has no entry. A free adjunct preposition (wartet im Keller) is not a member.",
+			"A preposition that a verb, adjective or noun selects for its complement is a member of that word's target, also when it stands apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in (aus Angst vor Hunden gives [Angst, vor] NOUN) and is never part of the Lemma. A participial ADJ governs the preposition its source verb governs in the same sense. Government is read from E-VALBU, and from Duden where E-VALBU has no entry. A free adjunct preposition (wartet im Keller) is not a member, and neither is the preposition inside an Adverbial complement (legt das Buch auf den Tisch, wohnt in Bonn): the verb requires a place or direction, not that preposition.",
 		adrs: ["ADR-0029", "ADR-0034", "ADR-0036"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),

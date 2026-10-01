@@ -51,10 +51,12 @@ _Avoid_: foreign name (Dumling's Foreign is the Family of foreign-language
 material), historical name (`Brüssel` is current)
 
 **Governed Preposition**:
-A preposition a Reading lexically selects: a Preposition Slot of the Reading's
-Valency Frame (Dumling), naming an ADP Lemma and, where its language marks
-case, the case it assigns (`auf` for `warten`, `on` for `depend`). An adjunct
-the sentence happens to contain is not one. See [ADR 0034].
+A preposition a Reading lexically selects: a Preposition complement in a Slot
+of the Reading's Valency Frame (Dumling), naming an ADP Lemma and, where its
+language marks case, the case it governs (`auf` for `warten`, `on` for
+`depend`). An adjunct the sentence happens to contain is not one, and neither
+is a free preposition inside a required place or direction (`wohnt in Bonn`).
+See [ADR 0034].
 _Avoid_: govPrep, prepositional object, valency note
 
 **Governor**:
