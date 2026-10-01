@@ -295,7 +295,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"case": "Acc",
+							"governedCase": "Acc",
 							"referent": "Either"
 						},
 						"realizedCase": "Acc"
@@ -697,7 +697,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"case": "Dat",
+							"governedCase": "Dat",
 							"referent": "Either"
 						},
 						"realizedCase": "Dat"

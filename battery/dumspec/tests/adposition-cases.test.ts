@@ -22,7 +22,11 @@ const adposition = (canonicalForm: string) => ({
 
 const caseSlot = (realizedCase: string) => ({
 	member: null,
-	complement: { kind: "Case", case: realizedCase, referent: "Either" },
+	complement: {
+		kind: "Case",
+		governedCase: realizedCase,
+		referent: "Either",
+	},
 	realizedCase,
 });
 
@@ -122,16 +126,22 @@ test("an adposition the table does not list fails and names the missing entry", 
 	expect(germanAdpositionEntry(adposition("à"))).toBeNull();
 });
 
+const prepositionComplement = (
+	canonicalForm: string,
+	grammaticalCase: string,
+) => ({
+	kind: "Preposition",
+	preposition: adposition(canonicalForm),
+	governedCase: grammaticalCase,
+	referent: "Either",
+});
 const frame = (canonicalForm: string, grammaticalCase: string) =>
 	[
 		{
 			status: "Optional",
-			complement: {
-				kind: "Preposition",
-				preposition: adposition(canonicalForm),
-				case: grammaticalCase,
-				referent: "Either",
-			},
+			complements: [
+				prepositionComplement(canonicalForm, grammaticalCase),
+			],
 		},
 	] as unknown as Dumrel.ValencyFrame;
 
@@ -165,12 +175,32 @@ test("a Valency Frame's preposition is listed and takes the slot's case", () => 
 	expect(frameAdpositionCaseIssues(frame("auf", "Acc"))).toEqual([]);
 	expect(frameAdpositionCaseIssues(frame("auf", "Dat"))).toEqual([]);
 	expect(frameAdpositionCaseIssues(frame("für", "Dat"))).toEqual([
-		{ path: "0.complement.case", message: "für does not take Dat" },
+		{
+			path: "0.complements.0.governedCase",
+			message: "für does not take Dat",
+		},
 	]);
 	expect(frameAdpositionCaseIssues(frame("à", "Dat"))).toEqual([
 		{
-			path: "0.complement.preposition",
+			path: "0.complements.0.preposition",
 			message: "The ADP Case Table does not list à",
+		},
+	]);
+	// Every Preposition alternative is checked, not just the first.
+	const alternatives = [
+		{
+			status: "Optional",
+			complements: [
+				prepositionComplement("über", "Acc"),
+				{ kind: "Clause", form: "Dass" },
+				prepositionComplement("von", "Acc"),
+			],
+		},
+	] as unknown as Dumrel.ValencyFrame;
+	expect(frameAdpositionCaseIssues(alternatives)).toEqual([
+		{
+			path: "0.complements.2.governedCase",
+			message: "von does not take Acc",
 		},
 	]);
 });
@@ -351,7 +381,7 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 					complement: {
 						kind: "Preposition",
 						preposition: adposition(preposition),
-						case: grammaticalCase,
+						governedCase: grammaticalCase,
 						referent: "Either",
 					},
 					realizedCase: grammaticalCase,
@@ -383,7 +413,7 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 	expect(attestationAdpositionCaseIssues(locution("vor", "Dat"))).toEqual([]);
 	expect(attestationAdpositionCaseIssues(locution("vor", "Gen"))).toEqual([
 		{
-			path: "valencyEvidence.0.complement.case",
+			path: "valencyEvidence.0.complement.governedCase",
 			message: "vor does not take Gen",
 		},
 	]);

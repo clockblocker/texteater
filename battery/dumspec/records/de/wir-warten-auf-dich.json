@@ -49,20 +49,24 @@
 					"valency": [
 						{
 							"status": "Required",
-							"complement": {
-								"kind": "Case",
-								"case": "Nom",
-								"referent": "Someone"
-							}
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
 						},
 						{
 							"status": "Optional",
-							"complement": {
-								"kind": "Preposition",
-								"preposition": "auf",
-								"case": "Acc",
-								"referent": "Either"
-							}
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": "auf",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
 						}
 					]
 				},

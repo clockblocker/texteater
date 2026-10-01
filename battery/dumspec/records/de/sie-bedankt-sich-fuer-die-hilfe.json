@@ -53,29 +53,35 @@
 					"valency": [
 						{
 							"status": "Required",
-							"complement": {
-								"kind": "Case",
-								"case": "Nom",
-								"referent": "Someone"
-							}
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
 						},
 						{
 							"status": "Optional",
-							"complement": {
-								"kind": "Preposition",
-								"preposition": "bei",
-								"case": "Dat",
-								"referent": "Someone"
-							}
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": "bei",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
 						},
 						{
 							"status": "Optional",
-							"complement": {
-								"kind": "Preposition",
-								"preposition": "für",
-								"case": "Acc",
-								"referent": "Something"
-							}
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": "für",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
 						}
 					]
 				},

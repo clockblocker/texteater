@@ -151,7 +151,7 @@
 								"canonicalForm": "mit",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Dat",
+							"governedCase": "Dat",
 							"referent": "Someone"
 						},
 						"realizedCase": "Dat"
@@ -168,7 +168,7 @@
 								"canonicalForm": "über",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Acc",
+							"governedCase": "Acc",
 							"referent": "Something"
 						},
 						"realizedCase": "Acc"

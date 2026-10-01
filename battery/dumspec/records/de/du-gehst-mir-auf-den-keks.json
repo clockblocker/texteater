@@ -49,19 +49,23 @@
 					"valency": [
 						{
 							"status": "Required",
-							"complement": {
-								"kind": "Case",
-								"case": "Nom",
-								"referent": "Either"
-							}
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
 						},
 						{
 							"status": "Required",
-							"complement": {
-								"kind": "Case",
-								"case": "Dat",
-								"referent": "Someone"
-							}
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
 						}
 					]
 				},

@@ -97,7 +97,7 @@
 								"canonicalForm": "an",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Acc",
+							"governedCase": "Acc",
 							"referent": "Something"
 						},
 						"realizedCase": "Acc"

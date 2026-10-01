@@ -102,7 +102,7 @@
 								"canonicalForm": "von",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Dat",
+							"governedCase": "Dat",
 							"referent": "Something"
 						},
 						"realizedCase": "Dat"

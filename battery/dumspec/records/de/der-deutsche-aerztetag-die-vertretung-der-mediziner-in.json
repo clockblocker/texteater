@@ -110,7 +110,7 @@
 								"canonicalForm": "für",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Acc",
+							"governedCase": "Acc",
 							"referent": "Something"
 						},
 						"realizedCase": "Acc"

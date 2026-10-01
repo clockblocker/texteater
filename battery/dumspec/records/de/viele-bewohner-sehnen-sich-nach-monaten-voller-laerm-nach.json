@@ -203,7 +203,7 @@
 								"canonicalForm": "nach",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Dat",
+							"governedCase": "Dat",
 							"referent": "Either"
 						},
 						"realizedCase": "Dat"
@@ -245,7 +245,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"case": "Dat",
+							"governedCase": "Dat",
 							"referent": "Either"
 						},
 						"realizedCase": "Dat"

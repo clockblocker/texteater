@@ -641,7 +641,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"case": "Gen",
+							"governedCase": "Gen",
 							"referent": "Either"
 						},
 						"realizedCase": "Gen"
@@ -899,7 +899,7 @@
 								"kind": "ADP",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Acc",
+							"governedCase": "Acc",
 							"referent": "Something"
 						},
 						"realizedCase": "Acc"

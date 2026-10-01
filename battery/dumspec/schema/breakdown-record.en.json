@@ -2911,7 +2911,7 @@
 										"minItems": 1,
 										"type": "array",
 										"items": {
-											"$ref": "#/$defs/__schema480"
+											"$ref": "#/$defs/__schema481"
 										}
 									},
 									"locutionType": {
@@ -13915,202 +13915,294 @@
 						"Optional"
 					]
 				},
-				"complement": {
-					"anyOf": [
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "Case"
-								},
-								"case": {
-									"type": "string",
-									"enum": [
-										"Nom",
-										"Acc",
-										"Dat",
-										"Gen"
-									]
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"case",
-								"referent"
-							],
-							"additionalProperties": false
-						},
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "Preposition"
-								},
-								"preposition": {
-									"$ref": "#/$defs/__schema409"
-								},
-								"case": {
-									"type": "string",
-									"enum": [
-										"Acc",
-										"Dat",
-										"Gen"
-									]
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"preposition",
-								"case",
-								"referent"
-							],
-							"additionalProperties": false
-						},
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "Subject"
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"referent"
-							],
-							"additionalProperties": false
-						},
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "DirectObject"
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"referent"
-							],
-							"additionalProperties": false
-						},
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "Preposition"
-								},
-								"preposition": {
-									"$ref": "#/$defs/__schema457"
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"preposition",
-								"referent"
-							],
-							"additionalProperties": false
-						},
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "Subject"
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"referent"
-							],
-							"additionalProperties": false
-						},
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "DirectObject"
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"referent"
-							],
-							"additionalProperties": false
-						},
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "IndirectObject"
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"referent"
-							],
-							"additionalProperties": false
-						},
-						{
-							"type": "object",
-							"properties": {
-								"kind": {
-									"type": "string",
-									"const": "Preposition"
-								},
-								"preposition": {
-									"$ref": "#/$defs/__schema83"
-								},
-								"referent": {
-									"$ref": "#/$defs/__schema479"
-								}
-							},
-							"required": [
-								"kind",
-								"preposition",
-								"referent"
-							],
-							"additionalProperties": false
-						}
-					]
+				"complements": {
+					"minItems": 1,
+					"type": "array",
+					"items": {
+						"$ref": "#/$defs/__schema479"
+					}
 				}
 			},
 			"required": [
 				"status",
-				"complement"
+				"complements"
 			],
 			"additionalProperties": false
 		},
 		"__schema479": {
+			"anyOf": [
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Case"
+						},
+						"governedCase": {
+							"type": "string",
+							"enum": [
+								"Nom",
+								"Acc",
+								"Dat",
+								"Gen"
+							]
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"governedCase",
+						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Preposition"
+						},
+						"preposition": {
+							"$ref": "#/$defs/__schema409"
+						},
+						"governedCase": {
+							"type": "string",
+							"enum": [
+								"Acc",
+								"Dat",
+								"Gen"
+							]
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"preposition",
+						"governedCase",
+						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Adverbial"
+						},
+						"standIn": {
+							"type": "string",
+							"enum": [
+								"Irgendwo",
+								"Irgendwohin",
+								"Irgendwie",
+								"IrgendwieLange",
+								"IrgendwieViel"
+							]
+						}
+					},
+					"required": [
+						"kind",
+						"standIn"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Predicative"
+						},
+						"of": {
+							"type": "string",
+							"enum": [
+								"Subject",
+								"Object"
+							]
+						},
+						"marker": {
+							"type": "string",
+							"enum": [
+								"None",
+								"Als",
+								"Für"
+							]
+						}
+					},
+					"required": [
+						"kind",
+						"of",
+						"marker"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Clause"
+						},
+						"form": {
+							"type": "string",
+							"enum": [
+								"ZuInfinitive",
+								"BareInfinitive",
+								"Dass",
+								"Ob",
+								"W"
+							]
+						},
+						"correlate": {
+							"type": "string",
+							"enum": [
+								"Required",
+								"Optional"
+							]
+						}
+					},
+					"required": [
+						"kind",
+						"form"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Subject"
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "DirectObject"
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Preposition"
+						},
+						"preposition": {
+							"$ref": "#/$defs/__schema457"
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"preposition",
+						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Subject"
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "DirectObject"
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "IndirectObject"
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"referent"
+					],
+					"additionalProperties": false
+				},
+				{
+					"type": "object",
+					"properties": {
+						"kind": {
+							"type": "string",
+							"const": "Preposition"
+						},
+						"preposition": {
+							"$ref": "#/$defs/__schema83"
+						},
+						"referent": {
+							"$ref": "#/$defs/__schema480"
+						}
+					},
+					"required": [
+						"kind",
+						"preposition",
+						"referent"
+					],
+					"additionalProperties": false
+				}
+			]
+		},
+		"__schema480": {
 			"type": "string",
 			"enum": [
 				"Someone",
@@ -14118,7 +14210,7 @@
 				"Either"
 			]
 		},
-		"__schema480": {
+		"__schema481": {
 			"type": "string",
 			"enum": [
 				"Strong",

@@ -51,20 +51,39 @@
 					"valency": [
 						{
 							"status": "Required",
-							"complement": {
-								"kind": "Case",
-								"case": "Nom",
-								"referent": "Someone"
-							}
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{ "kind": "Adverbial", "standIn": "Irgendwo" }
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{ "kind": "Adverbial", "standIn": "Irgendwie" }
+							]
 						}
 					]
 				},
-				"explanation": "wohnen takes in, bei or auf freely, so the location is a free-marker pattern and not a slot.",
+				"explanation": "wohnen requires a place, whether in, bei or auf marks it, so the place is a Required Adverbial irgendwo; bei ihrer Tante realizes it, and bei is free. The manner E-VALBU allows in its place (ruhig wohnen) can appear beside it, so it is a separate Optional Adverbial irgendwie.",
 				"sources": [
 					{
 						"title": "ADR 0034",
 						"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
-						"supports": "Patterns whose marker is free (wohnen in/bei/auf) are not recorded."
+						"supports": "A complement the word requires is recorded even when its marker is free: wohnen needs a place, whether in, bei or auf marks it."
+					},
+					{
+						"title": "#672 ruling 2",
+						"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
+						"supports": "E-VALBU's v is not modelled: wohnen has a Required place and an Optional manner."
 					}
 				]
 			}

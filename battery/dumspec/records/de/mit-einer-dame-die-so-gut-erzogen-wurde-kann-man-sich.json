@@ -286,7 +286,7 @@
 								"canonicalForm": "mit",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Dat",
+							"governedCase": "Dat",
 							"referent": "Someone"
 						},
 						"realizedCase": "Dat"

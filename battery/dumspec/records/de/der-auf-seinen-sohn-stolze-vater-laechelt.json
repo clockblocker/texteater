@@ -77,7 +77,7 @@
 								"canonicalForm": "auf",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Acc",
+							"governedCase": "Acc",
 							"referent": "Someone"
 						},
 						"realizedCase": "Acc"

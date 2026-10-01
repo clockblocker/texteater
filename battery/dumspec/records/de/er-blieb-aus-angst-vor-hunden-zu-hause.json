@@ -53,12 +53,14 @@
 					"valency": [
 						{
 							"status": "Optional",
-							"complement": {
-								"kind": "Preposition",
-								"preposition": "vor",
-								"case": "Dat",
-								"referent": "Either"
-							}
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": "vor",
+									"governedCase": "Dat",
+									"referent": "Either"
+								}
+							]
 						}
 					]
 				},

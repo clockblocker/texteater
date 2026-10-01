@@ -148,7 +148,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"case": "Dat",
+							"governedCase": "Dat",
 							"referent": "Either"
 						},
 						"realizedCase": "Dat"
@@ -261,7 +261,7 @@
 								"canonicalForm": "um",
 								"coreFeatures": { "abbr": null }
 							},
-							"case": "Acc",
+							"governedCase": "Acc",
 							"referent": "Either"
 						},
 						"realizedCase": "Acc"

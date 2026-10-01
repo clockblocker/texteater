@@ -16,11 +16,11 @@ export type AdpositionCaseIssue = {
 
 type AdpositionLemma = Parameters<typeof germanAdpositionEntry>[0];
 type Complement =
-	| { readonly kind: "Case"; readonly case: string }
+	| { readonly kind: "Case"; readonly governedCase: string }
 	| {
 			readonly kind: "Preposition";
 			readonly preposition: AdpositionLemma;
-			readonly case?: string;
+			readonly governedCase?: string;
 	  }
 	| { readonly kind: string };
 
@@ -67,10 +67,11 @@ function prepositionIssue(
 	complement: Complement,
 	path: string,
 ): AdpositionCaseIssue[] {
-	if (!isPreposition(complement) || complement.case === undefined) return [];
-	return caseIssue(complement.preposition, complement.case, {
+	if (!isPreposition(complement) || complement.governedCase === undefined)
+		return [];
+	return caseIssue(complement.preposition, complement.governedCase, {
 		lemma: `${path}.preposition`,
-		case: `${path}.case`,
+		case: `${path}.governedCase`,
 	});
 }
 
@@ -78,8 +79,9 @@ function prepositionIssue(
  * Where a German Attestation relies on what the ADP Case Table lacks. An ADP
  * occurrence, Lexeme or Locution, fails when the table doesn't list it, and
  * when its realized case is one none of its positions takes (`auf` + Gen). A
- * governor's Preposition slot fails when the table doesn't list its
- * preposition or the preposition doesn't take the slot's case (`für` + Dat).
+ * governor's Preposition evidence fails when the table doesn't list its
+ * preposition or the preposition doesn't take its governed case (`für` +
+ * Dat).
  * Dumling checks only the evidence's shape (ADR 0041). Hebrew and English
  * mark no case.
  */
@@ -119,14 +121,20 @@ export function attestationAdpositionCaseIssues(
 
 /**
  * Where a German Reading's Valency Frame relies on what the ADP Case Table
- * lacks: `warten` `auf` + Acc and `bestehen` `auf` + Dat pass, `für` + Dat
- * fails, and so does a preposition the table doesn't list. Dumrel checks only
- * the frame's shape.
+ * lacks, checking every Preposition complement, alternatives included:
+ * `warten` `auf` + Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails,
+ * and so does a preposition the table doesn't list. Dumrel checks only the
+ * frame's shape.
  */
 export function frameAdpositionCaseIssues(
 	frame: Dumrel.ValencyFrame,
 ): AdpositionCaseIssue[] {
 	return frame.flatMap((slot, index) =>
-		prepositionIssue(slot.complement as Complement, `${index}.complement`),
+		slot.complements.flatMap((complement, alternative) =>
+			prepositionIssue(
+				complement as Complement,
+				`${index}.complements.${alternative}`,
+			),
+		),
 	);
 }

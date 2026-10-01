@@ -51,7 +51,7 @@
 						"member": null,
 						"complement": {
 							"kind": "Case",
-							"case": "Acc",
+							"governedCase": "Acc",
 							"referent": "Either"
 						},
 						"realizedCase": "Acc"

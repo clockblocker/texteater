@@ -338,7 +338,7 @@ export const negativeFixtures: {
 		check: "AdpositionCase",
 		edit: (record) => {
 			const [slot] = record.targets[0].attestation.valencyEvidence;
-			slot.complement.case = "Gen";
+			slot.complement.governedCase = "Gen";
 			slot.realizedCase = "Gen";
 		},
 	},
@@ -357,7 +357,7 @@ export const negativeFixtures: {
 		check: "AdpositionCase",
 		edit: (record) => {
 			const [slot] = record.targets[0].attestation.valencyEvidence;
-			slot.complement.case = "Gen";
+			slot.complement.governedCase = "Gen";
 			slot.realizedCase = "Gen";
 		},
 	},

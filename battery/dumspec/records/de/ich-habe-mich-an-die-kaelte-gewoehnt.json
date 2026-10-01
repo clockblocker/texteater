@@ -55,20 +55,24 @@
 					"valency": [
 						{
 							"status": "Required",
-							"complement": {
-								"kind": "Case",
-								"case": "Nom",
-								"referent": "Someone"
-							}
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
 						},
 						{
 							"status": "Required",
-							"complement": {
-								"kind": "Preposition",
-								"preposition": "an",
-								"case": "Acc",
-								"referent": "Either"
-							}
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": "an",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
 						}
 					]
 				},
