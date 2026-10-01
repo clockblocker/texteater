@@ -42,7 +42,9 @@
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [{ "attested": "low-key", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "low-key", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
