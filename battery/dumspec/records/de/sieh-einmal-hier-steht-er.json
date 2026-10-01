@@ -90,7 +90,7 @@
 	"sources": {
 		"adrs": ["ADR-0035"],
 		"rules": [
-			{ "rule": "de/proper-noun-article", "hash": "7abeb6a67e70b96b" },
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"

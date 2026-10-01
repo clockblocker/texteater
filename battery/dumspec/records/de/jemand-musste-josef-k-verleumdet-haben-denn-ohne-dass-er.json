@@ -220,7 +220,8 @@
 			{
 				"rule": "de/neuter-adjectival-noun",
 				"hash": "a4bd8e12a664fd8e"
-			}
+			},
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
 		],
 		"references": [
 			{
@@ -362,7 +363,7 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "Josef K.",
@@ -390,7 +391,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B9, A8). The whole name is one PROPN Lexeme. K. is one Segment (de/abbreviation-is-one-segment), but the novel never expands it, so the Surface keeps its letters."
+				"rationale": "Ruled on #743 (VP-B9, A8). The whole name is one PROPN Lexeme. K. is one Segment (de/abbreviation-is-one-segment), but the novel never expands it, so the Surface keeps its letters. A full name has no Core gender, like a surname, and nothing in this sentence shows one on its Surface (de/proper-noun-article; ruled on #743, A1)."
 			}
 		},
 		{

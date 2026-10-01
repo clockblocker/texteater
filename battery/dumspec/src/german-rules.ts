@@ -570,7 +570,7 @@ const nouns: Rule[] = [
 	{
 		id: "de/proper-noun-article",
 		statement:
-			"A proper noun cited with its definite article (die Schweiz) has Core article Definite and owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Names of streets, squares, rivers, mountains and buildings are cited with it, as is a title whose article inflects. A name cited bare (Berlin) has none and still owns the article that opens its phrase. A surname or coined name, unlike other names, has no Core gender: its Surface marks the gender an owned article or agreeing adjective shows, and must where it owns one (der junge Schwarzkopf).",
+			"A proper noun cited with its definite article (die Schweiz) has Core article Definite and owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Names of streets, squares, rivers, mountains and buildings are cited with it, as is a title whose article inflects. A name cited bare (Berlin) has none but owns the article that opens its phrase. A surname, full name or coined name has no Core gender, unlike a first name: its Surface marks the gender an owned article or agreeing adjective shows, and must if it owns one (der junge Schwarzkopf).",
 		adrs: ["ADR-0035", "ADR-0040"],
 		routes: lexeme("PROPN"),
 		records: [
@@ -587,6 +587,8 @@ const nouns: Rule[] = [
 			"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die",
 			"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
 			"de/ach-treibel-sie-sind-ewig-ein-spoetter",
+			"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er",
+			"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
 		],
 	},
 	{

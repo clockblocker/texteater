@@ -225,7 +225,7 @@
 				"rule": "de/nicht-is-part",
 				"hash": "c6631f0c8009c067"
 			},
-			{ "rule": "de/proper-noun-article", "hash": "7abeb6a67e70b96b" }
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
 		],
 		"references": [
 			{

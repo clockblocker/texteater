@@ -280,7 +280,7 @@
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
 			},
-			{ "rule": "de/proper-noun-article", "hash": "7abeb6a67e70b96b" }
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
 		],
 		"references": [
 			{

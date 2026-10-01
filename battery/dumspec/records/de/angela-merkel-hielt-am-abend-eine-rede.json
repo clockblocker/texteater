@@ -22,7 +22,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -30,7 +32,7 @@
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
-				"rationale": "Both supplied members form one complete classified name; preserve their order and resolve one PROPN Surface."
+				"rationale": "Both supplied members form one complete classified name; preserve their order and resolve one PROPN Surface. A full name has no Core gender, like a surname, and nothing in this sentence shows one on its Surface (de/proper-noun-article). Ruled on #743 (A1)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -46,7 +48,7 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
-							"gender": "Fem"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "Angela Merkel",

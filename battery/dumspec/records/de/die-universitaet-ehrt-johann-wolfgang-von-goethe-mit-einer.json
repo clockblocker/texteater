@@ -27,13 +27,18 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8, 10, 12],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"notes": {
+				"rationale": "A full name is one PROPN Lexeme with no Core gender, like a surname, and nothing in this sentence shows one on its Surface (de/proper-noun-article). Ruled on #743 (A1)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -48,7 +53,7 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "Johann Wolfgang von Goethe",

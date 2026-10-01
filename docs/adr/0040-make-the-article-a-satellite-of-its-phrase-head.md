@@ -166,11 +166,14 @@ Amended on 2026-10-01: a German surname or coined name has no Core gender.
 One surname names a man and a woman alike (*der* and *die junge
 Schwarzkopf*), and a coined name such as Kafka's *Odradek* gets a gender only
 from what refers to it. An initial standing for a surname, such as *K.*,
-counts as one. The name's singular Surface marks the gender an owned article
-or an agreeing adjective shows, as an adjectival noun's does (`der
-Reisende`), and it must mark it wherever the name owns its article, so the
-agreement check never passes an unmarked gender: `der junge Schwarzkopf`
+counts as one, and so does a full name, a first name plus a surname
+(*Gregor Samsa*, *Josef K.*). The name's singular Surface marks the gender
+an owned article or an agreeing adjective shows, as an adjectival noun's does
+(`der Reisende`), and it must mark it wherever the name owns its article, so
+the agreement check never passes an unmarked gender: `der junge Schwarzkopf`
 attests PROPN `Schwarzkopf` over `[der, Schwarzkopf]` with Surface gender
-Masc. First names, places, rivers and brands keep Core gender (*Anna*, *das
-alte Berlin*, *der Rhein*, *das iPhone*). Decided on
-[#743](https://github.com/clockblocker/texteater/issues/743).
+Masc. Without such an article or adjective the Surface's gender is null.
+First names on their own, places, rivers and brands keep Core gender (*Anna*,
+*das alte Berlin*, *der Rhein*, *das iPhone*). Decided on
+[#743](https://github.com/clockblocker/texteater/issues/743); full names were
+added the same day.
