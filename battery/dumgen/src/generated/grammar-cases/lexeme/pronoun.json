@@ -7019,8 +7019,14 @@
 				"markedContext": "Im englischen Protokoll heißt es: „<TARGET>He</TARGET> signed the form.“",
 				"members": ["He"]
 			},
-			"idealOutput": { "decision": "Unresolved" },
-			"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501)."
+			"idealOutput": {
+				"route": { "family": "Foreign", "kind": "Foreign" },
+				"lemma": {
+					"canonicalForm": "he",
+					"coreFeatures": { "sourceLang": "en" }
+				}
+			},
+			"explanation": "English He opening a quoted English sentence is Foreign en (ADR 0045, ticket 687), not a German PRON, and its sentence-initial capital normalizes to he. The PRON route has no Lemma for it and must fail."
 		},
 		"grammar-de-pron-referent-sie-acc-maria": {
 			"input": {

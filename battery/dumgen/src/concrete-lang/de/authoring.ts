@@ -21,6 +21,22 @@ export const grammarInputSchema = z.strictObject({
 	/** Whether the Text has neighbouring Sentences; absent means it has. */
 	contextAvailable: z.boolean().optional(),
 });
+/**
+ * A retained grammar answer that is a Foreign Lemma (ADR 0045): the target is
+ * foreign material, so the German Lexeme route the case supplies must fail.
+ */
+export const foreignGrammarAnswerSchema = z.strictObject({
+	route: z.strictObject({
+		family: z.literal("Foreign"),
+		kind: z.literal("Foreign"),
+	}),
+	lemma: z.strictObject({
+		canonicalForm: z.string().min(1),
+		coreFeatures: z.strictObject({
+			sourceLang: z.string().regex(/^[a-z]{2,3}$/u),
+		}),
+	}),
+});
 /** Source-local schemas validate every retained answer before demonstrations are assembled. */
 export function defineLinguisticCorpus<
 	I extends z.ZodType,

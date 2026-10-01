@@ -134,10 +134,20 @@ test("all 1130 retained grammar answers project through public operations", asyn
 				target: { family, kind, memberSegmentIndices },
 			});
 			verifiedRoutes.add(route);
+			// A Foreign answer has no Lemma on this German Lexeme route
+			// (ADR 0045), so the route must fail, as when the model declines.
+			const foreign =
+				typeof golden.idealOutput === "object" &&
+				golden.idealOutput !== null &&
+				"route" in golden.idealOutput;
 			const result = await Effect.runPromise(
 				Effect.either(
 					createDumgen(
-						grammarFixture(golden.idealOutput),
+						grammarFixture(
+							foreign
+								? { decision: "Unresolved" }
+								: golden.idealOutput,
+						),
 					).resolveGrammar({
 						...encounter,
 						...(input.context ? { context: input.context } : {}),
@@ -157,15 +167,10 @@ test("all 1130 retained grammar answers project through public operations", asyn
 				expect(
 					result._tag === "Right" ? result.right : result.left,
 				).toEqual({ decision });
-			else if (decision)
+			else if (decision || foreign)
 				expect(result).toMatchObject({
 					_tag: "Left",
 					left: { _tag: "Unresolved" },
-				});
-			else if (id === "grammar-de-det-dev-foreign-the")
-				expect(result).toMatchObject({
-					_tag: "Left",
-					left: { _tag: "CatalogMiss" },
 				});
 			else {
 				if (result._tag === "Left")

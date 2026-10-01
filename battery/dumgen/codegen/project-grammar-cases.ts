@@ -16,9 +16,9 @@ const targetKey = /^(?<record>[a-z]{2}(?:\/[a-z0-9-]+)+)#(?<target>\d+)$/u;
  * A grammatical-resolution route's sidecar: Dumgen's use of Spec Record
  * targets. `cases` is keyed by target id, `<record id>#<target index>`, and
  * names the case id each target keeps. A case whose answer is not a Dumling
- * value (an Unresolved or MoreContextRequired decision, or a cell only the
- * neighbouring Sentences decide) is keyed by its case id and holds its own
- * input and answer. The order of `cases` is the order of every list the
+ * value of the route (an Unresolved or MoreContextRequired decision, a
+ * Foreign Lemma on a Lexeme route, or a cell only the neighbouring Sentences
+ * decide) is keyed by its case id and holds its own input and answer. The order of `cases` is the order of every list the
  * route projects.
  */
 const sidecarSchema = z.strictObject({

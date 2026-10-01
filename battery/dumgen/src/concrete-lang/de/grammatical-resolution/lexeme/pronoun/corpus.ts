@@ -3,12 +3,14 @@ import projected from "../../../../../generated/grammar-cases/lexeme/pronoun.jso
 import { grammarSchemas } from "../../../../../generated/schemas.js";
 import {
 	defineLinguisticCorpus,
+	foreignGrammarAnswerSchema,
 	grammarInputSchema,
 } from "../../../authoring.js";
 export const inputSchema = grammarInputSchema;
 export const outputSchema = z.union([
 	grammarSchemas["de/Lexeme/PRON"],
 	z.strictObject({ decision: z.literal("Unresolved") }),
+	foreignGrammarAnswerSchema,
 	z.strictObject({ decision: z.literal("MoreContextRequired") }),
 ]);
 export const corpusSource = defineLinguisticCorpus({

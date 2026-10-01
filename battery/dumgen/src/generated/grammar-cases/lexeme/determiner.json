@@ -1073,8 +1073,14 @@
 				"markedContext": "Im Workshop diskutierten wir <TARGET>the</TARGET> main issue zuerst.",
 				"members": ["the"]
 			},
-			"idealOutput": { "decision": "Unresolved" },
-			"explanation": "Foreign word inside a German sentence. There is no multilingual support: the grammar route resolves only German identities, so a code-switched closed-class word is Unresolved (ticket 501)."
+			"idealOutput": {
+				"route": { "family": "Foreign", "kind": "Foreign" },
+				"lemma": {
+					"canonicalForm": "the",
+					"coreFeatures": { "sourceLang": "en" }
+				}
+			},
+			"explanation": "English the inside a German sentence is Foreign en (ADR 0045, ticket 687), not a German DET. The DET route has no Lemma for it and must fail."
 		},
 		"grammar-de-det-dev-ordinal-wievielte": {
 			"input": {
