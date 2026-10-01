@@ -19,13 +19,21 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/digits-spell-the-numeral",
+				"hash": "ae8bd58519856b20"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"notes": {
+				"rationale": "1987 names a year before 2000, which German speaks in hundreds, so the target is the year Lemma neunzehnhundertsiebenundachtzig and the digit spelling a Licensed Variant (de/digits-spell-the-numeral). It takes the NUM route and numType Card that the cardinal digit records use. Ruled on #743 (A8)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -36,14 +44,17 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NUM",
-						"canonicalForm": "1987",
+						"canonicalForm": "neunzehnhundertsiebenundachtzig",
 						"coreFeatures": {
 							"abbr": null,
 							"numType": "Card"
 						}
 					},
 					"normalizedSurface": "1987",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},

@@ -1183,7 +1183,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/digits-spell-the-numeral",
 		statement:
-			"A number written in digits is the numeral word it spells, never a Lemma of its own: 12 gives NUM zwölf, its Surface a Licensed Variant spelling. Digits and letters are two ways to write one word.",
+			"A number written in digits is the numeral word it spells, never a Lemma of its own: 12 gives NUM zwölf, its Surface a Licensed Variant spelling. Digits and letters are two ways to write one word. Digits naming a year from 1100 to 1999 spell the year as it is spoken, in hundreds (neunzehnhundertsiebenundachtzig); from 2000 on they spell the cardinal.",
 		adrs: ["ADR-0041", "ADR-0002"],
 		routes: lexeme("NUM", "ADJ"),
 		records: [
@@ -1191,6 +1191,8 @@ const attestations: Rule[] = [
 			"de/das-trikot-traegt-die-nummer-73",
 			"de/auf-der-anzeigetafel-steht-7",
 			"de/die-gleichung-lautet-drei-plus-vier-gleich-7",
+			"de/die-aufnahme-entstand-1987-in-leipzig",
+			"de/die-neue-bruecke-wurde-2024-eroeffnet",
 		],
 	},
 	{

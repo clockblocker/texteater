@@ -19,13 +19,21 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/digits-spell-the-numeral",
+				"hash": "ae8bd58519856b20"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"notes": {
+				"rationale": "2024 names a year from 2000 on, which German speaks as the cardinal, so the target is NUM zweitausendvierundzwanzig and the digit spelling a Licensed Variant (de/digits-spell-the-numeral). Ruled on #743 (A8)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -36,14 +44,17 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "NUM",
-						"canonicalForm": "2024",
+						"canonicalForm": "zweitausendvierundzwanzig",
 						"coreFeatures": {
 							"abbr": null,
 							"numType": "Card"
 						}
 					},
 					"normalizedSurface": "2024",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
 				},
