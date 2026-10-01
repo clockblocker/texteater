@@ -29,7 +29,16 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "b5504b9423a22bbb"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -37,7 +46,7 @@
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"notes": {
-				"rationale": "The explicit degree contrast establishes Degree Pos; the indefinite ADV identity carries PronType Ind."
+				"rationale": "viel is used adverbially, so it is the comparable ADV viel with no pronType, and the explicit degree contrast makes its Surface Pos (de/quantifier-by-use, de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -52,7 +61,7 @@
 						"canonicalForm": "viel",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"pronType": "Ind"
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "viel",

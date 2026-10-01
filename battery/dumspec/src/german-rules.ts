@@ -671,7 +671,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/quantifier-by-use",
 		statement:
-			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides. After a determiner they are ADJ, noun elided or not; standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig. mehr 'any longer' (nicht mehr) is Duden's Adverb mehr, not a form of viel. It overrides de/pron-or-det-by-use and de/adjective-stays-adj. ein wenig and quantity bisschen are one Lexeme PRON each in every use: the ein of ein wenig is fixed, ein or der before bisschen is a satellite, and what they quantify is its own target.",
+			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides. After a determiner they are ADJ, noun elided or not; standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig, with no pronType. mehr 'any longer' (nicht mehr) is Duden's Adverb mehr, not a form of viel. It overrides de/pron-or-det-by-use and de/adjective-stays-adj. ein wenig and quantity bisschen are one Lexeme PRON each in every use: the ein of ein wenig is fixed, ein or der before bisschen is a satellite, and what they quantify is its own target.",
 		adrs: ["ADR-0040", "ADR-0042"],
 		routes: lexeme("ADJ", "PRON", "DET", "ADV"),
 		records: [
@@ -694,6 +694,8 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/sie-war-ein-wenig-muede",
 			"de/ich-will-ein-wenig-ausruhen",
 			"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+			"de/heute-regnete-es-viel-gestern-mehr-und-vorgestern-am-meisten",
+			"de/seit-dem-umbau-laermt-die-anlage-weniger-als-zuvor",
 		],
 	},
 	{
@@ -767,7 +769,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/adjective-stays-adj",
 		statement:
-			"An adjective used adverbially or compared stays ADJ, never ADV, when the same sense can stand inflected before a noun: sie singt laut gives [laut] ADJ. A use whose sense no attributive form has is another word: ganz 'quite' and früh 'in the morning' are ADV, as are degree words (de/degree-word-is-adv), and einfach and ruhig as modal particles are PART. A sentence adverb, which comments on the whole statement and mostly can answer a yes/no question alone (offenbar 'apparently', wahrscheinlich, natürlich 'of course', wirklich 'in fact', eigentlich 'actually'), is a non-comparable ADV.",
+			"An adjective used adverbially or compared stays ADJ when the same sense can stand inflected before a noun: sie singt laut gives [laut] ADJ. A use whose sense no attributive form has is another word: ganz 'quite', früh 'in the morning', lange 'for a long time' and voll 'totally' are ADV, as are degree words (de/degree-word-is-adv), and einfach and ruhig as modal particles are PART. A sentence adverb, which comments on the whole statement and mostly can answer a yes/no question alone (offenbar 'apparently', wahrscheinlich, natürlich 'of course', wirklich, eigentlich), is a non-comparable ADV.",
 		adrs: [],
 		routes: lexeme("ADJ", "ADV"),
 		records: [
@@ -785,6 +787,8 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu",
 			"de/kommt-er-wahrscheinlich",
 			"de/das-essen-war-ganz-gut",
+			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
+			"de/mit-dieser-frage-ist-er-voll-ins-fettnaepfchen-getreten",
 		],
 	},
 	{

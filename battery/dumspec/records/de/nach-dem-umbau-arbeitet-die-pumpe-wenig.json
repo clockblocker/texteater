@@ -21,7 +21,16 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "b5504b9423a22bbb"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -44,7 +53,7 @@
 						"canonicalForm": "wenig",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"pronType": "Ind"
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "wenig",

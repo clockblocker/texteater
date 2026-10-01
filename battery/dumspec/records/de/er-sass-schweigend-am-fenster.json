@@ -25,7 +25,7 @@
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
-			{ "rule": "de/adjective-stays-adj", "hash": "8ef3db1fe0214e40" }
+			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" }
 		],
 		"references": []
 	},

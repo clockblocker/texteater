@@ -25,7 +25,16 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "b5504b9423a22bbb"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -45,7 +54,7 @@
 						"canonicalForm": "wenig",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"pronType": "Ind"
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "weniger",
@@ -57,6 +66,9 @@
 					{ "attested": "weniger", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "weniger is the comparative of adverbial wenig, the comparable ADV wenig with no pronType, so its Surface marks Cmp (de/quantifier-by-use, de/comparability-is-lexical)."
 			}
 		}
 	],

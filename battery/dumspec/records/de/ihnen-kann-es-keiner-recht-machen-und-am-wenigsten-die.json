@@ -103,7 +103,7 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "8ef3db1fe0214e40"
+				"hash": "5bbd43bbbc51067f"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -141,7 +141,7 @@
 				"rule": "de/pron-or-det-by-use",
 				"hash": "c2995798ac6c735d"
 			},
-			{ "rule": "de/quantifier-by-use", "hash": "d6fb19407461c452" }
+			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" }
 		],
 		"references": [
 			{

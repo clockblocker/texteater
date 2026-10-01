@@ -116,6 +116,10 @@
 			{
 				"rule": "de/sein-perfect-or-copula",
 				"hash": "a41762ea8316b7df"
+			},
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "5bbd43bbbc51067f"
 			}
 		],
 		"references": []
@@ -408,7 +412,7 @@
 				"kind": "ADV"
 			},
 			"notes": {
-				"rationale": "Route tentative: colloquial intensifier voll."
+				"rationale": "voll 'totally' is Duden's salopp Adverb voll 'im höchsten Maße', a headword apart from the adjective voll, so this use is ADV voll, not ADJ, and it has no comparison forms (de/adjective-stays-adj). Decided on #748."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

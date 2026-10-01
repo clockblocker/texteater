@@ -234,6 +234,7 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		forms: [
 			"ganz",
 			"früh",
+			"voll",
 			"recht",
 			"offenbar",
 			"wahrscheinlich",
