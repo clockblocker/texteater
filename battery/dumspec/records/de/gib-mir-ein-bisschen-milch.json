@@ -1,0 +1,73 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Gib mir ein bisschen Milch.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Gib"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bisschen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Milch"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "740bfc8b0cfe812b"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4, 6],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"notes": {
+				"rationale": "Quantity bisschen is one Lexeme PRON bisschen in every use (de/quantifier-by-use, #734's 2026-09-30 decision), and a genuine ein is its satellite. Milch stays its own word. Its Attestation waits for the follow-up that settles article evidence, agreement and case from reviewed examples; no nominal case is invented for a degree use."
+			}
+		}
+	],
+	"noTarget": []
+}
