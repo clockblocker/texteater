@@ -42,7 +42,7 @@
 		"adrs": ["ADR-0026", "ADR-0035", "ADR-0042"],
 		"rules": [
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
-			{ "rule": "de/copula-stays-apart", "hash": "6ca524a6390a5c0e" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "be68bba1666ed2cc"

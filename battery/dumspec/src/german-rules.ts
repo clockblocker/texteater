@@ -133,9 +133,9 @@ const verbs: Rule[] = [
 	{
 		id: "de/verb-owns-its-scattered-members",
 		statement:
-			"A verb's target includes its separable particle, its lexical reflexive and the auxiliaries of its own perfect, future and passive, wherever they stand: zog … an gives [zog, an] VERB anziehen. The reflexive is lexical when this sense needs it coreferent with the subject and a non-reflexive object would change the sense. A reflexive that alternates with other objects in the same sense is a PRON target of its own.",
+			"A verb's target includes its separable particle, its lexical reflexive and the auxiliaries of its own perfect, future and passive, wherever they stand: zog … an gives [zog, an] VERB anziehen. The reflexive is lexical when this sense needs it coreferent with the subject and a non-reflexive object would change the sense. The same test decides a reflexive in Locutions of every type: sich Sorgen machen, sich ins Fäustchen lachen. A reflexive that alternates with other objects in the same sense is a PRON target of its own.",
 		adrs: ["ADR-0003", "ADR-0022", "ADR-0039"],
-		routes: lexeme("VERB"),
+		routes: [...lexeme("VERB"), ...everyLocution],
 		records: [
 			"de/es-zog-der-wilde-jaegersmann",
 			"de/pass-auf-dich-auf",
@@ -156,6 +156,8 @@ const verbs: Rule[] = [
 			"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
 			"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
 			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
+			"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit",
+			"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins",
 		],
 	},
 	{
@@ -344,7 +346,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/copula-stays-apart",
 		statement:
-			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ. The one exception is a copula expression that fixes a reflexive, which neither copula nor predicate takes alone (sich schlüssig werden, sich im Klaren sein): copula, reflexive and predicate form one Locution VERB, not a Collocation.",
+			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ. The one exception is a copula expression whose reflexive is a member by de/verb-owns-its-scattered-members (sich schlüssig werden, sich im Klaren sein): copula, reflexive and predicate form one Locution VERB, not a Collocation.",
 		adrs: ["ADR-0026", "ADR-0034", "ADR-0036", "ADR-0039"],
 		routes: [...lexeme("VERB", "ADJ"), ...locution("VERB")],
 		records: [
@@ -926,7 +928,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/funktionsverbgefuege-are-collocations",
 		statement:
-			"A Collocation is a Locution VERB whose verb only supports its noun or adjective predicate: a Funktionsverbgefüge (zur Verfügung stellen) or a verb with an adjective predicate (ernst nehmen). Its members are the verb, the predicate, the noun's own article or both pieces of its fused word, and a preposition the noun or the expression governs; free arguments and adverbs stay outside. A weak collocation with a literal meaning is separate Lexemes. Collocation is the Reading's Locution Type, never part of the Lemma.",
+			"A Collocation is a Locution VERB whose verb only supports its noun or adjective predicate: a Funktionsverbgefüge (zur Verfügung stellen) or a verb with an adjective predicate (ernst nehmen). Its members are the verb, the predicate, the noun's own article or both pieces of its fused word, a reflexive by de/verb-owns-its-scattered-members (sich Sorgen machen), and a preposition the noun or the expression governs; free arguments and adverbs stay outside. A weak collocation with a literal meaning is separate Lexemes. Collocation is the Reading's Locution Type, never part of the Lemma.",
 		adrs: ["ADR-0039", "ADR-0034", "dumgen/ADR-0007"],
 		routes: locution("VERB"),
 		records: [
@@ -939,6 +941,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/sie-macht-ihre-ansprueche-geltend",
 			"de/er-ist-ein-starker-raucher",
 			"de/der-kellner-bringt-eine-cola",
+			"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit",
 		],
 	},
 	{

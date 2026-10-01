@@ -63,7 +63,7 @@
 				"rule": "de/governed-preposition-joins-its-governor",
 				"hash": "1439391c748fbe8b"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "6ca524a6390a5c0e" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "be68bba1666ed2cc"

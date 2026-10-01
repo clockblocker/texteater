@@ -48,6 +48,10 @@
 				"hash": "c05df428b3a42079"
 			},
 			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
 				"rule": "de/fused-word-pieces",
 				"hash": "3f8fdc8a20ed9a44"
 			},
