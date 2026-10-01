@@ -347,6 +347,14 @@ const verbs: Rule[] = [
 		],
 	},
 	{
+		id: "de/bleiben-with-an-infinitive",
+		statement:
+			"bleiben with an infinitive is one Locution VERB, an Idiom, over both verbs when the combination meets de/idiom and has its own Duden headword: Der Wagen ist liegen geblieben ('broke down') gives [ist, liegen, geblieben] VERB liegen bleiben. Its Canonical Form is the separate spelling Duden recommends, and the joined spelling (liegengeblieben) is a Licensed Variant split into Fused pieces (de/fused-word-pieces). Otherwise bleiben is a VERB of its own and the infinitive a separate VERB target, as in sitzen geblieben ('stayed seated').",
+		adrs: ["ADR-0039", "ADR-0035", "ADR-0026"],
+		routes: [...lexeme("VERB"), ...locution("VERB")],
+		records: [],
+	},
+	{
 		id: "de/copula-stays-apart",
 		statement:
 			"A copula (sein, werden, bleiben, scheinen, wirken, sich zeigen) never joins its predicate: in Das Wetter ist schön, ist is a single-member VERB and schön an ADJ of its own. A copula and a predicative adjective never form a Collocation, so Er ist stolz auf seinen Sohn gives [ist] VERB and [stolz, auf] ADJ. The one exception is a copula expression whose reflexive is a member by de/verb-owns-its-scattered-members (sich schlüssig werden, sich im Klaren sein): copula, reflexive and predicate form one Locution VERB, not a Collocation.",

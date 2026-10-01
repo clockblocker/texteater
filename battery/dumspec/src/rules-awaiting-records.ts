@@ -16,4 +16,9 @@ export const rulesAwaitingRecords: readonly RuleAwaitingRecords[] = [
 		issue: 741,
 		why: "No record shows it: it needs Draft records for standalone was für einer (PRON) and was für ein before a noun (DET), one split across the sentence.",
 	},
+	{
+		rule: "de/bleiben-with-an-infinitive",
+		issue: 700,
+		why: "Three Draft records hold a verb + bleiben (der-alte-aufzug-bleibt-nie-zwischen-den-etagen-stehen, die-abk-blieb-stehen-obwohl-der-satz-ueberarbeitet-wurde, obwohl-der-wagen-am-morgen-noch-liegen-geblieben-war-hat-die) but no target for it; each gets one when #700 reshapes it, and the Rule then lists it.",
+	},
 ];
