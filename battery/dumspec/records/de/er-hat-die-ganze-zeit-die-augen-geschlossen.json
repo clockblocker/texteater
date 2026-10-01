@@ -123,7 +123,6 @@
 							"person": "3",
 							"pronType": "Prs",
 							"extPos": null,
-							"foreign": null,
 							"polite": null,
 							"poss": null,
 							"case": "Nom",
@@ -286,7 +285,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}

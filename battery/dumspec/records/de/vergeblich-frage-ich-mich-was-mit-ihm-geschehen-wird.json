@@ -189,7 +189,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -292,7 +291,6 @@
 						"canonicalForm": "ich",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -348,7 +346,6 @@
 						"canonicalForm": "was",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -404,7 +401,6 @@
 									"abbr": null,
 									"adpType": "Prep",
 									"extPos": null,
-									"foreign": null,
 									"partType": null
 								}
 							},
@@ -484,7 +480,6 @@
 						"canonicalForm": "ihm",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,

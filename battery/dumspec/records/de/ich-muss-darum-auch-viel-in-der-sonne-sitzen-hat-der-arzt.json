@@ -228,7 +228,6 @@
 						"canonicalForm": "ich",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -332,7 +331,6 @@
 						"canonicalForm": "darum",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Dem"
 						}
@@ -375,7 +373,6 @@
 						"canonicalForm": "auch",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -420,7 +417,6 @@
 						"canonicalForm": "viel",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -475,7 +471,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},

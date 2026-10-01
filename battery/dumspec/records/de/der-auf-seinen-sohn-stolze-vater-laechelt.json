@@ -44,7 +44,6 @@
 						"canonicalForm": "stolz",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -80,7 +79,6 @@
 									"abbr": null,
 									"adpType": "Prep",
 									"extPos": null,
-									"foreign": null,
 									"partType": null
 								}
 							},

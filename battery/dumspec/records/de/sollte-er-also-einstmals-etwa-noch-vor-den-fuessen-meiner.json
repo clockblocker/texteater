@@ -331,7 +331,6 @@
 						"canonicalForm": "er",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -379,7 +378,6 @@
 						"canonicalForm": "also",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -422,7 +420,6 @@
 						"canonicalForm": "einstmals",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -464,7 +461,6 @@
 						"canonicalForm": "etwa",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": null
 						}
@@ -507,7 +503,6 @@
 						"canonicalForm": "noch",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -562,7 +557,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -667,7 +661,6 @@
 							"case": null,
 							"definite": null,
 							"extPos": null,
-							"foreign": null,
 							"gender": null,
 							"number": null,
 							"numType": null,
@@ -779,7 +772,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -829,7 +821,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}

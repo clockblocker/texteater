@@ -288,7 +288,6 @@
 									"abbr": null,
 									"adpType": "Prep",
 									"extPos": null,
-									"foreign": null,
 									"partType": null
 								}
 							},
@@ -379,7 +378,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -426,7 +424,6 @@
 						"canonicalForm": "so",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -470,7 +467,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -636,7 +632,6 @@
 							"case": null,
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -683,7 +678,6 @@
 						"canonicalForm": "überhaupt",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -726,7 +720,6 @@
 						"canonicalForm": "nicht",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

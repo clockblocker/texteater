@@ -8,7 +8,6 @@ export const EnNounFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["ADV", "PROPN"]),
-		foreign: EN_FEATURE_SCHEMA.foreign,
 		numForm: EN_FEATURE_SCHEMA.numForm.extract(["Combi", "Digit", "Word"]),
 		numType: EN_FEATURE_SCHEMA.numType.extract(["Card", "Frac", "Ord"]),
 	}),

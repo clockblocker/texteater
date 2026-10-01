@@ -448,7 +448,6 @@
 						"canonicalForm": "wie",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Rel"
 						}
@@ -493,7 +492,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -540,7 +538,6 @@
 						"canonicalForm": "auch",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -694,7 +691,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
-							"foreign": null,
 							"gender": "Masc"
 						}
 					},
@@ -742,7 +738,6 @@
 							"case": "Nom",
 							"number": "Plur",
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -843,7 +838,6 @@
 							"case": "Acc",
 							"number": "Plur",
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -897,7 +891,6 @@
 						"canonicalForm": "nun",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -940,7 +933,6 @@
 						"canonicalForm": "darüber",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Dem"
 						}
@@ -984,7 +976,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -1084,7 +1075,6 @@
 						"canonicalForm": "wie",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Int"
 						}
@@ -1129,7 +1119,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "2",
 							"polite": "Infm",
 							"poss": null,
@@ -1225,7 +1214,6 @@
 									"abbr": null,
 									"adpType": "Prep",
 									"extPos": null,
-									"foreign": null,
 									"partType": null
 								}
 							},
@@ -1262,7 +1250,6 @@
 							"case": null,
 							"definite": null,
 							"extPos": null,
-							"foreign": null,
 							"gender": null,
 							"number": null,
 							"numType": null,
@@ -1318,7 +1305,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}

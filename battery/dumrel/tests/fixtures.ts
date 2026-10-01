@@ -21,7 +21,7 @@ export const berlinLemma = {
 	family: "Lexeme",
 	kind: "PROPN",
 	canonicalForm: "Berlin",
-	coreFeatures: { abbr: null, article: null, foreign: null, gender: "Neut" },
+	coreFeatures: { abbr: null, article: null, gender: "Neut" },
 } as const satisfies Dumling.Lemma<"de", "Lexeme", "PROPN">;
 
 export const prefixLemma = {
@@ -44,7 +44,6 @@ const adposition = (canonicalForm: string) =>
 			abbr: null,
 			adpType: "Prep",
 			extPos: null,
-			foreign: null,
 			partType: null,
 		},
 	}) as const satisfies Dumling.Lemma<"de", "Lexeme", "ADP">;

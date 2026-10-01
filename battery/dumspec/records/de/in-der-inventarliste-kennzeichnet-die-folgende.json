@@ -41,7 +41,7 @@
 						"family": "Lexeme",
 						"kind": "SYM",
 						"canonicalForm": "№",
-						"coreFeatures": { "foreign": null, "numType": "Card" }
+						"coreFeatures": { "numType": "Card" }
 					},
 					"normalizedSurface": "№",
 					"spelling": { "kind": "Canonical" },

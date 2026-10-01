@@ -183,7 +183,6 @@
 						"kind": "PART",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": null
 						}
@@ -219,7 +218,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -306,7 +304,6 @@
 							"person": "3",
 							"pronType": "Prs",
 							"extPos": null,
-							"foreign": null,
 							"polite": null,
 							"poss": null,
 							"case": "Nom",
@@ -374,7 +371,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": "Definite",
-							"foreign": null,
 							"gender": "Masc"
 						}
 					},

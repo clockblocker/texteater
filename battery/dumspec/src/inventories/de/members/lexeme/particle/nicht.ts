@@ -13,7 +13,6 @@ const lemma = {
 	canonicalForm: "nicht",
 	coreFeatures: {
 		abbr: null,
-		foreign: null,
 		partType: null,
 		polarity: "Neg",
 	},

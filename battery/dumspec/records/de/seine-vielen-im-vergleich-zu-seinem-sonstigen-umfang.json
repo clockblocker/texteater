@@ -238,7 +238,6 @@
 							"case": null,
 							"definite": null,
 							"extPos": null,
-							"foreign": null,
 							"gender": null,
 							"number": null,
 							"numType": null,
@@ -291,7 +290,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -420,7 +418,6 @@
 							"case": null,
 							"definite": null,
 							"extPos": null,
-							"foreign": null,
 							"gender": null,
 							"number": null,
 							"numType": null,
@@ -473,7 +470,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -565,7 +561,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -616,7 +611,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -764,7 +758,6 @@
 							"case": "Dat",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -815,7 +808,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -859,7 +851,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},

@@ -38,6 +38,9 @@ const _sourceLang: string = foreign.lemma.coreFeatures.sourceLang;
 foreign.emojiDescription;
 // @ts-expect-error Lexeme X is retired; foreign material is Foreign.
 type _RetiredX = Lemma<"de", "Lexeme", "X">;
+declare const loan: Lemma<"de", "Lexeme", "ADJ">;
+// @ts-expect-error No Lexeme route carries UD Foreign; foreign material is Foreign.
+loan.coreFeatures.foreign;
 // @ts-expect-error German noun _gender is restricted.
 const _wrongGender: "Com" = noun.coreFeatures.gender;
 declare const reading: Reading<"de", "Lexeme", "NOUN">;

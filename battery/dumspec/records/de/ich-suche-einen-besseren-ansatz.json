@@ -71,7 +71,6 @@
 						"coreFeatures": {
 							"comparable": "Yes",
 							"abbr": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}

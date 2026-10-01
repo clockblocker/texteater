@@ -449,7 +449,6 @@ function lemmaOf(text: string, use: Use | null): Lemma {
 		canonicalForm: text,
 		coreFeatures: {
 			comparable: null,
-			foreign: null,
 			numType: null,
 			pronType: use,
 		},

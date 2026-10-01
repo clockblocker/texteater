@@ -279,7 +279,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -332,7 +331,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -377,7 +375,6 @@
 						"canonicalForm": "zwölf",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"numType": "Card"
 						}
 					},
@@ -631,7 +628,6 @@
 						"canonicalForm": "noch",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -676,7 +672,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},

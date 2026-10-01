@@ -84,7 +84,6 @@
 							"person": "3",
 							"pronType": "Prs",
 							"extPos": null,
-							"foreign": null,
 							"polite": null,
 							"poss": null,
 							"case": "Nom",
@@ -129,7 +128,6 @@
 						"coreFeatures": {
 							"comparable": null,
 							"abbr": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -162,7 +160,6 @@
 						"kind": "PART",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": null
 						}

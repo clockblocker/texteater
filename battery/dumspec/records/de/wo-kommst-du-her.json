@@ -44,7 +44,6 @@
 						"canonicalForm": "woher",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Int"
 						}

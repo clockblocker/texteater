@@ -93,7 +93,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -135,7 +134,6 @@
 									"abbr": null,
 									"adpType": "Prep",
 									"extPos": null,
-									"foreign": null,
 									"partType": null
 								}
 							},

@@ -36,7 +36,6 @@
 							"kind": "NUM",
 							"coreFeatures": {
 								"abbr": null,
-								"foreign": null,
 								"numType": "Card"
 							},
 							"unitKind": "Lemma"

@@ -40,7 +40,6 @@
 						"kind": "ADV",
 						"canonicalForm": "zweimal",
 						"coreFeatures": {
-							"foreign": null,
 							"numType": "Mult",
 							"pronType": null
 						}

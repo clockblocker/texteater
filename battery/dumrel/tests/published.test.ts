@@ -41,7 +41,7 @@ test("published operations infer the source's relation space without narrowing t
 			backend: "typescript7",
 		}),
 	).toBe(
-		'type RelatedProperNoun = { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "PROPN"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; article: "Definite" | null; foreign: "Yes" | null; gender: "Fem" | "Masc" | "Neut" | null; }; }',
+		'type RelatedProperNoun = { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "PROPN"; canonicalForm: string; coreFeatures: { abbr: "Yes" | null; article: "Definite" | null; gender: "Fem" | "Masc" | "Neut" | null; }; }',
 	);
 }, 30_000);
 

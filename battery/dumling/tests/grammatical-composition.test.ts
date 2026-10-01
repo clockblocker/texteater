@@ -390,7 +390,6 @@ test("an English noun owns its article across an adjective, and its Surface stay
 				coreFeatures: {
 					abbr: null,
 					extPos: null,
-					foreign: null,
 					numForm: null,
 					numType: null,
 				},
@@ -460,7 +459,6 @@ test("the Head standing in for an elided noun owns the article", () => {
 				coreFeatures: {
 					abbr: null,
 					comparable: "Yes",
-					foreign: null,
 					numType: null,
 					variant: null,
 				},
@@ -591,7 +589,7 @@ const properNoun = (
 		family: "Lexeme",
 		kind: "PROPN",
 		canonicalForm,
-		coreFeatures: { abbr: null, article, foreign: null, gender },
+		coreFeatures: { abbr: null, article, gender },
 	},
 	inflectionalFeatures: { case: grammaticalCase, number: "Sing" },
 });
@@ -772,7 +770,6 @@ const preposition = (canonicalForm: string, adpType = "Prep") => ({
 		abbr: null,
 		adpType,
 		extPos: null,
-		foreign: null,
 		partType: null,
 	},
 });
@@ -979,7 +976,6 @@ test("an adjective or noun Attestation names its owned governed preposition like
 				coreFeatures: {
 					abbr: null,
 					comparable: "Yes",
-					foreign: null,
 					numType: null,
 					variant: null,
 				},

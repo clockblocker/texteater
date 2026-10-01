@@ -30,7 +30,6 @@ export { Deixis } from "./features/ud/deixis.js";
 export { DeixisRef } from "./features/ud/deixis-ref.js";
 export { Evident } from "./features/ud/evident.js";
 export { ExtPos } from "./features/ud/ext-pos.js";
-export { Foreign } from "./features/ud/foreign.js";
 export { Gender } from "./features/ud/gender.js";
 export { HebBinyan } from "./features/ud/heb-binyan.js";
 export { HebExistential } from "./features/ud/heb-existential.js";

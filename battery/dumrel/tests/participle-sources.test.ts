@@ -37,7 +37,6 @@ const verliebtReading = {
 		coreFeatures: {
 			abbr: null,
 			comparable: "Yes",
-			foreign: null,
 			numType: null,
 			variant: null,
 		},

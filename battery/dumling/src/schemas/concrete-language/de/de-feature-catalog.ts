@@ -126,7 +126,6 @@ export const DE_FEATURE_SCHEMA = {
 	definite: DeDefiniteSchema,
 	degree: DeDegreeSchema,
 	determinerExtPos: DeDeterminerExtPosSchema,
-	foreign: UNIVERSAL_FEATURE_SCHEMA.foreign,
 	determinerNumType: DeNumTypeSchema,
 	polite: DePoliteSchema,
 	poss: UNIVERSAL_FEATURE_SCHEMA.poss,

@@ -98,7 +98,6 @@
 						"canonicalForm": "darauf",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Dem"
 						}
@@ -193,7 +192,6 @@
 									"abbr": null,
 									"adpType": "Prep",
 									"extPos": null,
-									"foreign": null,
 									"partType": null
 								}
 							},

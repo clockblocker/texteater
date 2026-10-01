@@ -21,7 +21,6 @@ const DeDeterminerCoreFeatureBagSchema = z
 		case: DE_FEATURE_SCHEMA.case.nullable(),
 		definite: DE_FEATURE_SCHEMA.definite.nullable(),
 		extPos: DE_FEATURE_SCHEMA.determinerExtPos.nullable(),
-		foreign: DE_FEATURE_SCHEMA.foreign.nullable(),
 		gender: DE_FEATURE_SCHEMA.gender.nullable(),
 		number: DE_FEATURE_SCHEMA.number.nullable(),
 		numType: DE_FEATURE_SCHEMA.determinerNumType.nullable(),

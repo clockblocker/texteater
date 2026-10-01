@@ -29,7 +29,6 @@ const lemma = {
 	coreFeatures: {
 		abbr: null,
 		comparable: null,
-		foreign: null,
 		numType: null,
 		variant: null,
 	},

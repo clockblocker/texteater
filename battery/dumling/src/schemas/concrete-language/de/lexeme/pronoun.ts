@@ -31,7 +31,6 @@ export const DePronounFeatureBagsSchema = z.strictObject({
 		case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
 		number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
 		extPos: DE_FEATURE_SCHEMA.extPos.extract(["DET"]),
-		foreign: DE_FEATURE_SCHEMA.foreign,
 		person: DE_FEATURE_SCHEMA.person.extract(["1", "2", "3"]),
 		polite: DE_FEATURE_SCHEMA.polite.extract(["Form", "Infm"]),
 		poss: DE_FEATURE_SCHEMA.poss,

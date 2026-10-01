@@ -46,7 +46,7 @@
 						"family": "Lexeme",
 						"kind": "SYM",
 						"canonicalForm": "※",
-						"coreFeatures": { "foreign": "Yes", "numType": null }
+						"coreFeatures": { "numType": null }
 					},
 					"normalizedSurface": "※",
 					"spelling": { "kind": "Canonical" },

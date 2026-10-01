@@ -163,7 +163,6 @@
 						"canonicalForm": "er",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -210,7 +209,6 @@
 						"canonicalForm": "denn",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": null
 						}

@@ -14,7 +14,6 @@ export const DeProperNounFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: DE_FEATURE_SCHEMA.abbr,
 		article: DE_FEATURE_SCHEMA.article.extract(["Definite"]),
-		foreign: DE_FEATURE_SCHEMA.foreign,
 		gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(

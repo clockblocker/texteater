@@ -231,7 +231,6 @@
 						"canonicalForm": "glücklicherweise",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -335,7 +334,6 @@
 							"case": "Nom",
 							"number": "Plur",
 							"extPos": null,
-							"foreign": null,
 							"person": "2",
 							"polite": "Form",
 							"poss": null,
@@ -384,7 +382,6 @@
 							"case": "Acc",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -431,7 +428,6 @@
 						"canonicalForm": "so",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -516,7 +512,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -566,7 +561,6 @@
 						"canonicalForm": "daran",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Dem"
 						}
@@ -653,7 +647,6 @@
 									"abbr": null,
 									"adpType": "Prep",
 									"extPos": null,
-									"foreign": null,
 									"partType": null
 								}
 							},

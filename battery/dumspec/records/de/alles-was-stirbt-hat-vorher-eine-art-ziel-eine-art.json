@@ -369,7 +369,6 @@
 						"canonicalForm": "alle",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -425,7 +424,6 @@
 						"canonicalForm": "was",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -587,7 +585,6 @@
 						"canonicalForm": "vorher",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -871,7 +868,6 @@
 						"canonicalForm": "daran",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Dem"
 						}
@@ -978,7 +974,6 @@
 						"canonicalForm": "es",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -1027,7 +1022,6 @@
 						"canonicalForm": "das",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -1146,7 +1140,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -1193,7 +1186,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
-							"foreign": null,
 							"gender": "Masc"
 						}
 					},
@@ -1234,7 +1226,6 @@
 						"canonicalForm": "nicht",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

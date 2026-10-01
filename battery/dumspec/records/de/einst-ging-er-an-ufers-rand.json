@@ -76,7 +76,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -165,7 +164,6 @@
 							"adpType": "Prep",
 							"abbr": null,
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},

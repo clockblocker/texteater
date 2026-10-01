@@ -9,7 +9,6 @@ export const DeAdpositionFeatureBagsSchema = z.strictObject({
 		abbr: DE_FEATURE_SCHEMA.abbr,
 		adpType: DE_FEATURE_SCHEMA.adpType.extract(["Circ", "Post", "Prep"]),
 		extPos: DE_FEATURE_SCHEMA.extPos.extract(["ADV"]),
-		foreign: DE_FEATURE_SCHEMA.foreign,
 		partType: DE_FEATURE_SCHEMA.partType.extract(["Vbp"]),
 	}),
 });

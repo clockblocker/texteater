@@ -243,7 +243,6 @@
 							"case": "Dat",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "2",
 							"polite": "Infm",
 							"poss": null,
@@ -291,7 +290,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
-							"foreign": null,
 							"gender": "Fem"
 						}
 					},
@@ -339,7 +337,6 @@
 							"case": "Acc",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -388,7 +385,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "2",
 							"polite": "Infm",
 							"poss": null,
@@ -432,7 +428,6 @@
 						"canonicalForm": "vorhin",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -475,7 +470,6 @@
 						"canonicalForm": "so",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -519,7 +513,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -675,7 +668,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -756,7 +748,6 @@
 						"canonicalForm": "nicht",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

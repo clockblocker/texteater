@@ -12,7 +12,6 @@ export const DeAdjectiveFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: DE_FEATURE_SCHEMA.abbr,
 		comparable: DE_FEATURE_SCHEMA.comparable,
-		foreign: DE_FEATURE_SCHEMA.foreign,
 		numType: DE_FEATURE_SCHEMA.numType.extract(["Card", "Ord"]),
 		variant: DE_FEATURE_SCHEMA.variant,
 	}),

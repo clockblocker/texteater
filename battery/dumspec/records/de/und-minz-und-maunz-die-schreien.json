@@ -71,7 +71,6 @@
 						"coreFeatures": {
 							"pronType": "Dem",
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -109,7 +108,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -153,7 +151,6 @@
 						"coreFeatures": {
 							"comparable": "Yes",
 							"abbr": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -199,7 +196,6 @@
 							"adpType": "Prep",
 							"abbr": null,
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -239,8 +235,7 @@
 						"kind": "NUM",
 						"coreFeatures": {
 							"numType": "Card",
-							"abbr": null,
-							"foreign": null
+							"abbr": null
 						}
 					},
 					"surfaceFeatures": null

@@ -43,7 +43,6 @@
 						"canonicalForm": "warum",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": "Int"
 						}

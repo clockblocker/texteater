@@ -54,7 +54,6 @@
 									"abbr": null,
 									"adpType": "Prep",
 									"extPos": null,
-									"foreign": null,
 									"partType": null
 								}
 							},
@@ -135,7 +134,6 @@
 							"person": "2",
 							"pronType": "Prs",
 							"extPos": null,
-							"foreign": null,
 							"polite": null,
 							"poss": null,
 							"case": "Acc",

@@ -173,7 +173,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -287,7 +286,6 @@
 							"case": null,
 							"definite": null,
 							"extPos": null,
-							"foreign": null,
 							"gender": null,
 							"number": null,
 							"numType": null,
@@ -385,7 +383,6 @@
 							"case": "Acc",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -434,7 +431,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -535,7 +531,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -581,7 +576,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -624,7 +618,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}

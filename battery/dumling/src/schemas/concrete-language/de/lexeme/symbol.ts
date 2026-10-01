@@ -10,7 +10,6 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
 export const DeSymbolFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
-		foreign: DE_FEATURE_SCHEMA.foreign,
 		numType: DE_FEATURE_SCHEMA.numType.extract(["Card", "Range"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(

@@ -14,7 +14,6 @@ const lemma = {
 	canonicalForm: "sich",
 	coreFeatures: {
 		extPos: null,
-		foreign: null,
 		person: null,
 		polite: null,
 		poss: null,

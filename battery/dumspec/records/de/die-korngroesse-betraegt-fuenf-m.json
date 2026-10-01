@@ -36,7 +36,7 @@
 						"family": "Lexeme",
 						"kind": "SYM",
 						"canonicalForm": "µ",
-						"coreFeatures": { "foreign": null, "numType": null }
+						"coreFeatures": { "numType": null }
 					},
 					"normalizedSurface": "µ",
 					"spelling": { "kind": "Canonical" },

@@ -11,7 +11,6 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 export const DeAdverbFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		comparable: DE_FEATURE_SCHEMA.comparable,
-		foreign: DE_FEATURE_SCHEMA.foreign,
 		numType: DE_FEATURE_SCHEMA.numType.extract(["Card", "Mult"]),
 		pronType: DE_FEATURE_SCHEMA.pronType.extract([
 			"Dem",

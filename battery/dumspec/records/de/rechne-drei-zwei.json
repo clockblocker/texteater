@@ -34,7 +34,6 @@
 							"family": "Lexeme",
 							"kind": "SYM",
 							"coreFeatures": {
-								"foreign": null,
 								"numType": null
 							},
 							"unitKind": "Lemma"

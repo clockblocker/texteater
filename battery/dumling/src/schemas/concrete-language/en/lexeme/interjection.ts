@@ -7,7 +7,6 @@ import { EN_FEATURE_SCHEMA } from "../en-feature-catalog.js";
 export const EnInterjectionFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
-		foreign: EN_FEATURE_SCHEMA.foreign,
 		polarity: EN_FEATURE_SCHEMA.polarity.extract(["Neg", "Pos"]),
 	}),
 });

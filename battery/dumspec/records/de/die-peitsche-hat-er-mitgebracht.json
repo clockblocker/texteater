@@ -178,7 +178,6 @@
 							"person": "3",
 							"pronType": "Prs",
 							"extPos": null,
-							"foreign": null,
 							"polite": null,
 							"poss": null,
 							"case": "Nom",
@@ -292,7 +291,6 @@
 							"person": "3",
 							"pronType": "Prs",
 							"extPos": null,
-							"foreign": null,
 							"polite": null,
 							"poss": null,
 							"case": "Acc",
@@ -339,7 +337,6 @@
 						"coreFeatures": {
 							"comparable": "Yes",
 							"abbr": null,
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -373,7 +370,6 @@
 						"kind": "ADV",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}

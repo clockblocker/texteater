@@ -106,7 +106,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -162,7 +161,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": "Definite",
-							"foreign": null,
 							"gender": "Masc"
 						}
 					},

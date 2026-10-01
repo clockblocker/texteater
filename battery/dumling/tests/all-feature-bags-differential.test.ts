@@ -17,6 +17,15 @@ function setsEnglishStyle(route: string, input: unknown): boolean {
 	return typeof core === "object" && core !== null && "style" in core;
 }
 
+// No Lexeme route carries UD Foreign any more: foreign material is the
+// Foreign Family (ADR 0045, amended 2026-10-01), so a legacy sample that
+// sets it is rejected.
+function setsForeign(input: unknown): boolean {
+	if (typeof input !== "object" || input === null) return false;
+	const core = (input as { core?: unknown }).core;
+	return typeof core === "object" && core !== null && "foreign" in core;
+}
+
 for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 	if (retired.test(route)) continue;
 	// A proper noun marks its article in its Core (ADR 0035), a German noun
@@ -42,7 +51,9 @@ for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 				schema.safeParse(sample.input).success,
 				JSON.stringify(sample.input),
 			).toBe(
-				supersededShape || setsEnglishStyle(route, sample.input)
+				supersededShape ||
+					setsEnglishStyle(route, sample.input) ||
+					setsForeign(sample.input)
 					? false
 					: sample.accepted,
 			);

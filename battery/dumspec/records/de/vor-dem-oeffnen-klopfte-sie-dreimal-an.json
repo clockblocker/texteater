@@ -40,7 +40,6 @@
 						"kind": "ADV",
 						"canonicalForm": "dreimal",
 						"coreFeatures": {
-							"foreign": null,
 							"numType": "Mult",
 							"pronType": null
 						}

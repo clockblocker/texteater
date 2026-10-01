@@ -360,7 +360,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
-							"foreign": null,
 							"gender": "Fem"
 						}
 					},
@@ -408,7 +407,6 @@
 							"case": null,
 							"definite": null,
 							"extPos": null,
-							"foreign": null,
 							"gender": null,
 							"number": null,
 							"numType": null,
@@ -506,7 +504,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -552,7 +549,6 @@
 							"case": "Dat",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -601,7 +597,6 @@
 							"case": null,
 							"definite": null,
 							"extPos": null,
-							"foreign": null,
 							"gender": null,
 							"number": null,
 							"numType": null,
@@ -699,7 +694,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -748,7 +742,6 @@
 						"canonicalForm": "acht",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"numType": "Card"
 						}
 					},
@@ -832,7 +825,6 @@
 						"canonicalForm": "früh",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -1030,7 +1022,6 @@
 						"canonicalForm": "diesmal",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -1070,7 +1061,6 @@
 						"canonicalForm": "nicht",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

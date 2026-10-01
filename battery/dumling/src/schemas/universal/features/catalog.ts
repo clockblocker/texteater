@@ -24,7 +24,6 @@ import { DeixisSchema } from "./ud/deixis.js";
 import { DeixisRefSchema } from "./ud/deixis-ref.js";
 import { EvidentSchema } from "./ud/evident.js";
 import { ExtPosSchema } from "./ud/ext-pos.js";
-import { ForeignSchema } from "./ud/foreign.js";
 import { GenderSchema } from "./ud/gender.js";
 import { HebBinyanSchema } from "./ud/heb-binyan.js";
 import { HebExistentialSchema } from "./ud/heb-existential.js";
@@ -66,7 +65,6 @@ export const UNIVERSAL_FEATURE_SCHEMA = {
 	deixisRef: DeixisRefSchema,
 	evident: EvidentSchema,
 	extPos: ExtPosSchema,
-	foreign: ForeignSchema,
 	future: FutureConstructionSchema,
 	expletive: z.literal("Subject"),
 	gender: GenderSchema,

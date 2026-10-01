@@ -8,7 +8,6 @@ const lemma = {
 	canonicalForm: "wir",
 	coreFeatures: {
 		extPos: null,
-		foreign: null,
 		person: "1",
 		polite: null,
 		poss: null,

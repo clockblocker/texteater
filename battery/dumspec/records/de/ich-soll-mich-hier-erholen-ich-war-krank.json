@@ -142,7 +142,6 @@
 						"canonicalForm": "ich",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -304,7 +303,6 @@
 						"canonicalForm": "hier",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -348,7 +346,6 @@
 						"canonicalForm": "ich",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -459,7 +456,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}

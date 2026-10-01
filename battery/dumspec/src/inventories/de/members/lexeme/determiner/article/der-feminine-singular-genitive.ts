@@ -10,7 +10,6 @@ const lemma = {
 		case: "Gen",
 		definite: "Def",
 		extPos: null,
-		foreign: null,
 		gender: "Fem",
 		number: "Sing",
 		numType: null,

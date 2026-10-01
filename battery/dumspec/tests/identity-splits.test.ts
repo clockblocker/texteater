@@ -51,7 +51,6 @@ describe("identity normalization", () => {
 			file("de/c", [
 				lemma("es", "PRON", {
 					case: "Nom",
-					foreign: null,
 					gender: "Neut",
 				}),
 			]),

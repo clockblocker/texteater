@@ -43,7 +43,6 @@
 						"kind": "ADV",
 						"canonicalForm": "2x",
 						"coreFeatures": {
-							"foreign": null,
 							"numType": "Card",
 							"pronType": null
 						}

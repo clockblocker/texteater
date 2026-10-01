@@ -19,7 +19,6 @@ const adposition = (canonicalForm: string, adpType = "Prep") => ({
 		abbr: null,
 		adpType,
 		extPos: null,
-		foreign: null,
 		partType: null,
 	},
 });

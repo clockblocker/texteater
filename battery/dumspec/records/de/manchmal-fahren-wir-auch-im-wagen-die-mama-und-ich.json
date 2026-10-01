@@ -159,7 +159,6 @@
 						"canonicalForm": "manchmal",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -258,7 +257,6 @@
 						"canonicalForm": "wir",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -306,7 +304,6 @@
 						"canonicalForm": "auch",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -375,7 +372,6 @@
 							"abbr": null,
 							"adpType": "Prep",
 							"extPos": null,
-							"foreign": null,
 							"partType": null
 						}
 					},
@@ -579,7 +575,6 @@
 						"canonicalForm": "ich",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,

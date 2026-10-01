@@ -45,7 +45,8 @@ when that can't be told). Its Canonical Form fixes only position casing and
 typos (`watevr` is `whatever`) and is its one Surface. A word the text
 language's dictionary lists (Duden's `cringe`, `lol`) is a Lexeme instead,
 and so is an unlisted word showing the text's grammar in the sentence
-(`geyeetet`). It holds no Fusion: `don't` is one member.
+(`geyeetet`). No Lexeme is marked foreign. It holds no Fusion: `don't` is one
+member.
 _Avoid_: X, loanword, code-switch
 
 **Winged Word**:

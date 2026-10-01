@@ -32,7 +32,7 @@ English feature schemas are intentionally narrower than the abstract ontology.
 
 | Subkind | Inherent examples | Inflectional examples |
 | --- | --- | --- |
-| \`NOUN\` | \`abbr\`, \`foreign\`, \`numForm\`, \`numType\` | \`number\` |
+| \`NOUN\` | \`abbr\`, \`numForm\`, \`numType\` | \`number\` |
 | \`VERB\` | \`phrasal\` | \`mood\`, \`number\`, \`person\`, \`tense\`, \`verbForm\`, \`voice\` |
 | \`ADJ\` | \`abbr\`, \`numForm\`, \`numType\` | \`degree\` |
 

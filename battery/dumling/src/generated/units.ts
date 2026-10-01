@@ -141,7 +141,6 @@ export interface UnitMap {
 			coreFeatures: {
 				abbr: "Yes" | null;
 				comparable: "Yes" | null;
-				foreign: "Yes" | null;
 				numType: ("Card" | "Ord") | null;
 				variant: "Short" | null;
 			};
@@ -158,7 +157,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					comparable: "Yes" | null;
-					foreign: "Yes" | null;
 					numType: ("Card" | "Ord") | null;
 					variant: "Short" | null;
 				};
@@ -202,7 +200,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					comparable: "Yes" | null;
-					foreign: "Yes" | null;
 					numType: ("Card" | "Ord") | null;
 					variant: "Short" | null;
 				};
@@ -223,7 +220,6 @@ export interface UnitMap {
 					coreFeatures: {
 						abbr: "Yes" | null;
 						comparable: "Yes" | null;
-						foreign: "Yes" | null;
 						numType: ("Card" | "Ord") | null;
 						variant: "Short" | null;
 					};
@@ -370,7 +366,6 @@ export interface UnitMap {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: "ADV" | null;
-									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -392,7 +387,6 @@ export interface UnitMap {
 				abbr: "Yes" | null;
 				adpType: ("Circ" | "Post" | "Prep") | null;
 				extPos: "ADV" | null;
-				foreign: "Yes" | null;
 				partType: "Vbp" | null;
 			};
 		};
@@ -409,7 +403,6 @@ export interface UnitMap {
 					abbr: "Yes" | null;
 					adpType: ("Circ" | "Post" | "Prep") | null;
 					extPos: "ADV" | null;
-					foreign: "Yes" | null;
 					partType: "Vbp" | null;
 				};
 			};
@@ -447,7 +440,6 @@ export interface UnitMap {
 					abbr: "Yes" | null;
 					adpType: ("Circ" | "Post" | "Prep") | null;
 					extPos: "ADV" | null;
-					foreign: "Yes" | null;
 					partType: "Vbp" | null;
 				};
 			};
@@ -468,7 +460,6 @@ export interface UnitMap {
 						abbr: "Yes" | null;
 						adpType: ("Circ" | "Post" | "Prep") | null;
 						extPos: "ADV" | null;
-						foreign: "Yes" | null;
 						partType: "Vbp" | null;
 					};
 				};
@@ -555,7 +546,6 @@ export interface UnitMap {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: "ADV" | null;
-									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -575,7 +565,6 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				comparable: "Yes" | null;
-				foreign: "Yes" | null;
 				numType: ("Card" | "Mult") | null;
 				pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
 			};
@@ -591,7 +580,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					comparable: "Yes" | null;
-					foreign: "Yes" | null;
 					numType: ("Card" | "Mult") | null;
 					pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
 				};
@@ -631,7 +619,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					comparable: "Yes" | null;
-					foreign: "Yes" | null;
 					numType: ("Card" | "Mult") | null;
 					pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
 				};
@@ -651,7 +638,6 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						comparable: "Yes" | null;
-						foreign: "Yes" | null;
 						numType: ("Card" | "Mult") | null;
 						pronType:
 							| ("Dem" | "Ind" | "Int" | "Neg" | "Rel")
@@ -1202,7 +1188,6 @@ export interface UnitMap {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: "ADV" | null;
-									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -1356,7 +1341,6 @@ export interface UnitMap {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				definite: ("Def" | "Ind") | null;
 				extPos: ("ADV" | "DET") | null;
-				foreign: "Yes" | null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 				number: ("Plur" | "Sing") | null;
 				numType: ("Card" | "Ord") | null;
@@ -1392,7 +1376,6 @@ export interface UnitMap {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					definite: ("Def" | "Ind") | null;
 					extPos: ("ADV" | "DET") | null;
-					foreign: "Yes" | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
 					numType: ("Card" | "Ord") | null;
@@ -1465,7 +1448,6 @@ export interface UnitMap {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					definite: ("Def" | "Ind") | null;
 					extPos: ("ADV" | "DET") | null;
-					foreign: "Yes" | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
 					numType: ("Card" | "Ord") | null;
@@ -1505,7 +1487,6 @@ export interface UnitMap {
 						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 						definite: ("Def" | "Ind") | null;
 						extPos: ("ADV" | "DET") | null;
-						foreign: "Yes" | null;
 						gender: ("Fem" | "Masc" | "Neut") | null;
 						number: ("Plur" | "Sing") | null;
 						numType: ("Card" | "Ord") | null;
@@ -1966,7 +1947,6 @@ export interface UnitMap {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: "ADV" | null;
-									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -1986,7 +1966,6 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
-				foreign: "Yes" | null;
 				numType: ("Card" | "Frac" | "Mult" | "Range") | null;
 			};
 		};
@@ -2001,7 +1980,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
-					foreign: "Yes" | null;
 					numType: ("Card" | "Frac" | "Mult" | "Range") | null;
 				};
 			};
@@ -2042,7 +2020,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
-					foreign: "Yes" | null;
 					numType: ("Card" | "Frac" | "Mult" | "Range") | null;
 				};
 			};
@@ -2061,7 +2038,6 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
-						foreign: "Yes" | null;
 						numType: ("Card" | "Frac" | "Mult" | "Range") | null;
 					};
 				};
@@ -2197,7 +2173,6 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
-				foreign: "Yes" | null;
 				partType: "Inf" | null;
 				polarity: ("Neg" | "Pos") | null;
 			};
@@ -2213,7 +2188,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
-					foreign: "Yes" | null;
 					partType: "Inf" | null;
 					polarity: ("Neg" | "Pos") | null;
 				};
@@ -2250,7 +2224,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
-					foreign: "Yes" | null;
 					partType: "Inf" | null;
 					polarity: ("Neg" | "Pos") | null;
 				};
@@ -2270,7 +2243,6 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
-						foreign: "Yes" | null;
 						partType: "Inf" | null;
 						polarity: ("Neg" | "Pos") | null;
 					};
@@ -2351,7 +2323,6 @@ export interface UnitMap {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				number: ("Plur" | "Sing") | null;
 				extPos: "DET" | null;
-				foreign: "Yes" | null;
 				person: ("1" | "2" | "3") | null;
 				polite: ("Form" | "Infm") | null;
 				poss: "Yes" | null;
@@ -2383,7 +2354,6 @@ export interface UnitMap {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
 					extPos: "DET" | null;
-					foreign: "Yes" | null;
 					person: ("1" | "2" | "3") | null;
 					polite: ("Form" | "Infm") | null;
 					poss: "Yes" | null;
@@ -2452,7 +2422,6 @@ export interface UnitMap {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
 					extPos: "DET" | null;
-					foreign: "Yes" | null;
 					person: ("1" | "2" | "3") | null;
 					polite: ("Form" | "Infm") | null;
 					poss: "Yes" | null;
@@ -2488,7 +2457,6 @@ export interface UnitMap {
 						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 						number: ("Plur" | "Sing") | null;
 						extPos: "DET" | null;
-						foreign: "Yes" | null;
 						person: ("1" | "2" | "3") | null;
 						polite: ("Form" | "Infm") | null;
 						poss: "Yes" | null;
@@ -2651,7 +2619,6 @@ export interface UnitMap {
 			coreFeatures: {
 				abbr: "Yes" | null;
 				article: "Definite" | null;
-				foreign: "Yes" | null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 			};
 		};
@@ -2667,7 +2634,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					article: "Definite" | null;
-					foreign: "Yes" | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
 			};
@@ -2708,7 +2674,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					article: "Definite" | null;
-					foreign: "Yes" | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
 			};
@@ -2728,7 +2693,6 @@ export interface UnitMap {
 					coreFeatures: {
 						abbr: "Yes" | null;
 						article: "Definite" | null;
-						foreign: "Yes" | null;
 						gender: ("Fem" | "Masc" | "Neut") | null;
 					};
 				};
@@ -3181,10 +3145,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "SYM";
 			canonicalForm: string;
-			coreFeatures: {
-				foreign: "Yes" | null;
-				numType: ("Card" | "Range") | null;
-			};
+			coreFeatures: { numType: ("Card" | "Range") | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -3195,10 +3156,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "SYM";
 				canonicalForm: string;
-				coreFeatures: {
-					foreign: "Yes" | null;
-					numType: ("Card" | "Range") | null;
-				};
+				coreFeatures: { numType: ("Card" | "Range") | null };
 			};
 			normalizedSurface: string;
 			spelling:
@@ -3235,10 +3193,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "SYM";
 				canonicalForm: string;
-				coreFeatures: {
-					foreign: "Yes" | null;
-					numType: ("Card" | "Range") | null;
-				};
+				coreFeatures: { numType: ("Card" | "Range") | null };
 			};
 			emojiDescription: string;
 		};
@@ -3253,10 +3208,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "SYM";
 					canonicalForm: string;
-					coreFeatures: {
-						foreign: "Yes" | null;
-						numType: ("Card" | "Range") | null;
-					};
+					coreFeatures: { numType: ("Card" | "Range") | null };
 				};
 				normalizedSurface: string;
 				spelling:
@@ -3820,7 +3772,6 @@ export interface UnitMap {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: "ADV" | null;
-									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -3993,7 +3944,6 @@ export interface UnitMap {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: "ADV" | null;
-									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -4838,7 +4788,6 @@ export interface UnitMap {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: "ADV" | null;
-									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -5741,7 +5690,6 @@ export interface UnitMap {
 									abbr: "Yes" | null;
 									adpType: ("Circ" | "Post" | "Prep") | null;
 									extPos: "ADV" | null;
-									foreign: "Yes" | null;
 									partType: "Vbp" | null;
 								};
 							};
@@ -8478,7 +8426,6 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
-				foreign: "Yes" | null;
 				polarity: ("Neg" | "Pos") | null;
 			};
 		};
@@ -8493,7 +8440,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
-					foreign: "Yes" | null;
 					polarity: ("Neg" | "Pos") | null;
 				};
 			};
@@ -8529,7 +8475,6 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
-					foreign: "Yes" | null;
 					polarity: ("Neg" | "Pos") | null;
 				};
 			};
@@ -8548,7 +8493,6 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
-						foreign: "Yes" | null;
 						polarity: ("Neg" | "Pos") | null;
 					};
 				};
@@ -8627,7 +8571,6 @@ export interface UnitMap {
 			coreFeatures: {
 				abbr: "Yes" | null;
 				extPos: ("ADV" | "PROPN") | null;
-				foreign: "Yes" | null;
 				numForm: ("Combi" | "Digit" | "Word") | null;
 				numType: ("Card" | "Frac" | "Ord") | null;
 			};
@@ -8644,7 +8587,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					extPos: ("ADV" | "PROPN") | null;
-					foreign: "Yes" | null;
 					numForm: ("Combi" | "Digit" | "Word") | null;
 					numType: ("Card" | "Frac" | "Ord") | null;
 				};
@@ -8685,7 +8627,6 @@ export interface UnitMap {
 				coreFeatures: {
 					abbr: "Yes" | null;
 					extPos: ("ADV" | "PROPN") | null;
-					foreign: "Yes" | null;
 					numForm: ("Combi" | "Digit" | "Word") | null;
 					numType: ("Card" | "Frac" | "Ord") | null;
 				};
@@ -8706,7 +8647,6 @@ export interface UnitMap {
 					coreFeatures: {
 						abbr: "Yes" | null;
 						extPos: ("ADV" | "PROPN") | null;
-						foreign: "Yes" | null;
 						numForm: ("Combi" | "Digit" | "Word") | null;
 						numType: ("Card" | "Frac" | "Ord") | null;
 					};

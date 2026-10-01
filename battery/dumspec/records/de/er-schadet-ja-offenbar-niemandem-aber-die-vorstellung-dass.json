@@ -300,7 +300,6 @@
 						"canonicalForm": "er",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -402,7 +401,6 @@
 						"canonicalForm": "ja",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": null,
 							"polarity": null
 						}
@@ -453,7 +451,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -504,7 +501,6 @@
 						"canonicalForm": "niemand",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -686,7 +682,6 @@
 						"canonicalForm": "er",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -735,7 +730,6 @@
 						"canonicalForm": "mich",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -783,7 +777,6 @@
 						"canonicalForm": "auch",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -826,7 +819,6 @@
 						"canonicalForm": "noch",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}
@@ -1035,7 +1027,6 @@
 						"canonicalForm": "mir",
 						"coreFeatures": {
 							"extPos": null,
-							"foreign": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -1098,7 +1089,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -1141,7 +1131,6 @@
 						"canonicalForm": "fast",
 						"coreFeatures": {
 							"comparable": null,
-							"foreign": null,
 							"numType": null,
 							"pronType": null
 						}

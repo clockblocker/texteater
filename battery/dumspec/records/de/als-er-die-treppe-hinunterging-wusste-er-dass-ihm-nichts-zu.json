@@ -291,7 +291,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -502,7 +501,6 @@
 							"case": "Nom",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -591,7 +589,6 @@
 							"case": "Dat",
 							"number": "Sing",
 							"extPos": null,
-							"foreign": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -640,7 +637,6 @@
 							"case": null,
 							"number": null,
 							"extPos": null,
-							"foreign": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -687,7 +683,6 @@
 						"canonicalForm": "zu",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": "Inf",
 							"polarity": null
 						}
@@ -941,7 +936,6 @@
 						"canonicalForm": "zu",
 						"coreFeatures": {
 							"abbr": null,
-							"foreign": null,
 							"partType": "Inf",
 							"polarity": null
 						}

@@ -167,7 +167,6 @@ describe("compiled unit interface", () => {
 					abbr: null,
 					adpType: "Circ",
 					extPos: null,
-					foreign: null,
 					partType: null,
 				},
 			}) as const;

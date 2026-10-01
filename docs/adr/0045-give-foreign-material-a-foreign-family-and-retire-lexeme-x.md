@@ -87,6 +87,19 @@ part-of-speech list. What it held goes elsewhere:
 - loans → their real Kind, by the dictionary-then-grammar test above;
 - foreign names → PROPN as before (`New York`, `The Beatles`).
 
+**No Lexeme is marked foreign.** The UD `foreign` feature leaves every Lexeme
+route that carried it (German ADJ, ADP, ADV, DET, NUM, PART, PRON, PROPN and
+SYM, English NOUN and INTJ) and Dumling's feature catalog. The test above
+already sorts every word into a Lexeme of the text language or a Foreign
+Lemma, so a flag on the Lexeme would mark the same thing twice. It was also a
+Core Feature and so part of identity, which made `random` two Lemmas: one
+after *wie im Englischen* and one everywhere else. A loan (`versus`,
+`circa`), a foreign name (`New York`, `Kyjiw`) and a glyph from another
+script (`nº`, `※`, `٪`) keep their routes and lose the flag.
+
+Amended on 2026-10-01: ADR 0045 first left the feature in place, undecided.
+Decided on [#729](https://github.com/clockblocker/texteater/issues/729).
+
 ## Considered Options
 
 - **Lexeme/X at click time as well, with intake's description.** Rejected: X
@@ -108,6 +121,10 @@ part-of-speech list. What it held goes elsewhere:
 - **Loans by dictionary alone.** Rejected: dictionaries lag behind usage, and
   `geyeetet` already shows that `yeeten` is German before any dictionary lists
   it.
+- **UD `foreign` on Lexeme routes, for a listed word the sentence frames as
+  foreign** (`random, wie im Englischen`). Left open at first, rejected on
+  2026-10-01: as a Core Feature it splits one dictionary word into two
+  Lemmas, and the Foreign Family already says what is foreign.
 
 ## Consequences
 
@@ -115,10 +132,10 @@ part-of-speech list. What it held goes elsewhere:
   and [ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md):
   a Foreign Reading has no Emoji Description, and resolution has nothing to
   choose between.
-- The UD `foreign` feature stays on the Lexeme routes that carry it (German
-  ADJ, ADV, PROPN and others, English NOUN and INTJ). Whether it still means
-  anything, now that foreign material has its own Family, is not decided
-  here.
+- The UD `foreign` feature is retired from Dumling (amended 2026-10-01).
+  Dumgen's grammar stage still asks it for DET and PRON
+  ([#687](https://github.com/clockblocker/texteater/issues/687)) and stays
+  red until that stage is rewritten.
 - dumspec's X records are reshaped by these rules and stay Draft until
   reviewed.
 - Dumgen's intake still offers `Lexeme/X` and has no Foreign route. The

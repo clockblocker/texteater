@@ -44,7 +44,6 @@
 						"kind": "ADV",
 						"canonicalForm": "nie",
 						"coreFeatures": {
-							"foreign": null,
 							"numType": null,
 							"pronType": "Neg"
 						}

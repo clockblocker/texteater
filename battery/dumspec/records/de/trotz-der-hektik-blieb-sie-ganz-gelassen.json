@@ -47,7 +47,6 @@
 						"coreFeatures": {
 							"abbr": null,
 							"comparable": "Yes",
-							"foreign": null,
 							"numType": null,
 							"variant": null
 						}
@@ -88,7 +87,6 @@
 							"kind": "ADJ",
 							"coreFeatures": {
 								"abbr": null,
-								"foreign": null,
 								"numType": null,
 								"variant": null
 							},

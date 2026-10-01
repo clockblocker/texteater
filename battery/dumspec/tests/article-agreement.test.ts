@@ -183,7 +183,6 @@ test("any Head that stands in for an elided noun owns its article", () => {
 				coreFeatures: {
 					abbr: null,
 					comparable: "Yes",
-					foreign: null,
 					numType: null,
 					variant: null,
 				},
@@ -217,7 +216,6 @@ test("any Head that stands in for an elided noun owns its article", () => {
 				coreFeatures: {
 					abbr: null,
 					article: null,
-					foreign: null,
 					gender: "Neut",
 				},
 			},
@@ -263,7 +261,6 @@ test("English a or an takes no plural Head, the takes any", () => {
 			coreFeatures: {
 				abbr: null,
 				extPos: null,
-				foreign: null,
 				numForm: null,
 				numType: null,
 			},
