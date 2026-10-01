@@ -24,7 +24,18 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "hinauszulaufen"
+			"text": "hinaus",
+			"surface": "hinaus"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu",
+			"surface": "zu"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "laufen",
+			"surface": "laufen"
 		},
 		{
 			"kind": "Punctuation",
@@ -43,17 +54,19 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/bare-infinitive-zu", "hash": "839e40a7258859ad" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [5],
+			"memberSegmentIndices": [5, 7],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🏃🚪" },
 			"notes": {
-				"rationale": "hinauszulaufen is the zu-infinitive of separable hinauslaufen, with zu between the particle hinaus and the stem in one word. It is a single-member VERB target, not a directional adverb beside laufen."
+				"rationale": "hinauszulaufen is the zu-infinitive of separable hinauslaufen, written as one word with zu between the particle hinaus and the stem. The word is a Fusion of hinaus, zu and laufen: the VERB attests its particle and stem pieces, [hinaus, laufen], and the zu piece is PART zu, as a zu written apart would be (de/fused-word-pieces, de/bare-infinitive-zu). It is one VERB target, not a directional adverb beside laufen. Ruled on #743 (BT-A3, A7)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -72,7 +85,7 @@
 							"verbType": null
 						}
 					},
-					"normalizedSurface": "hinauszulaufen",
+					"normalizedSurface": "hinauslaufen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -90,13 +103,81 @@
 				},
 				"members": [
 					{
-						"attested": "hinauszulaufen",
-						"orthography": "Standard"
+						"attested": "hinaus",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "hinauszulaufen",
+							"components": [
+								{ "span": "hinaus", "surface": "hinaus" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "laufen", "surface": "laufen" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "laufen",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "hinauszulaufen",
+							"components": [
+								{ "span": "hinaus", "surface": "hinaus" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "laufen", "surface": "laufen" }
+							]
+						},
+						"component": 2
 					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": { "emojiDescription": "🔗" },
+			"notes": {
+				"rationale": "The zu inside hinauszulaufen is a Fusion piece of its own, PART zu, as the zu of versucht zu schlafen is (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PART",
+						"canonicalForm": "zu",
+						"coreFeatures": {
+							"abbr": null,
+							"partType": "Inf",
+							"polarity": null
+						}
+					},
+					"normalizedSurface": "zu",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "hinauszulaufen",
+							"components": [
+								{ "span": "hinaus", "surface": "hinaus" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "laufen", "surface": "laufen" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full"
 			}
 		}
 	],

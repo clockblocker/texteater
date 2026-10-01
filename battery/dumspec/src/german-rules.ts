@@ -606,7 +606,7 @@ const fusedWords: Rule[] = [
 	{
 		id: "de/fused-word-pieces",
 		statement:
-			"A fused word is one Segment per word it holds, and each piece belongs to the unit of the word it stands for: im is i (in) and m (dem). Outside a fixed expression a preposition piece is a single-member ADP unless a word governs it, and an article piece belongs to the Head of its phrase: Ich bin im Wald gives [i] ADP and [m, Wald] NOUN. Inside a fixed expression both pieces are members. A click on a piece opens the unit that owns it, never the whole written word. am before a superlative with no noun after it is one Segment and a member of the word whose degree it marks.",
+			"A fused word is one Segment per word it holds, and each piece belongs to the unit of the word it stands for: im is i (in) and m (dem). Outside a fixed expression a preposition piece is a single-member ADP unless a word governs it, and an article piece belongs to the Head of its phrase: Ich bin im Wald gives [i] ADP and [m, Wald] NOUN. In a fixed expression both pieces are members. A click on a piece opens its unit. An infinitive's infixed zu is a piece: abzuspannen is ab, zu and spannen. am before a superlative with no noun after it is one Segment, a member of the word whose degree it marks.",
 		adrs: ["ADR-0027", "ADR-0035", "ADR-0040", "dumgen/ADR-0004"],
 		routes: lexeme("ADP", "NOUN", "ADJ", "ADV"),
 		records: [
@@ -622,6 +622,7 @@ const fusedWords: Rule[] = [
 			"de/er-wartet-aufs-ende",
 			"de/der-streit-eskalierte-bereits-mit-seiner-provokation-goss-er",
 			"de/wir-stellen-die-daten-zur-verfuegung",
+			"de/er-versucht-hinauszulaufen",
 		],
 	},
 	{
@@ -881,10 +882,14 @@ const conjunctionsAndParticles: Rule[] = [
 	{
 		id: "de/bare-infinitive-zu",
 		statement:
-			"zu before an infinitive, without um, ohne or statt, is a single-member PART and never joins the infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB.",
+			"zu before an infinitive or infixed in it, without um, ohne or statt, is a single-member PART and never joins the infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB.",
 		adrs: [],
 		routes: lexeme("PART"),
-		records: ["de/das-ist-schwer-zu-erklaeren"],
+		records: [
+			"de/das-ist-schwer-zu-erklaeren",
+			"de/er-versucht-hinauszulaufen",
+			"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
+		],
 	},
 	{
 		id: "de/comparison-als",

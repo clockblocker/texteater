@@ -120,7 +120,18 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "abzuspannen"
+			"text": "ab",
+			"surface": "ab"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu",
+			"surface": "zu"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "spannen",
+			"surface": "spannen"
 		},
 		{
 			"kind": "Whitespace",
@@ -136,7 +147,18 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "auszuruhen"
+			"text": "aus",
+			"surface": "aus"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zu",
+			"surface": "zu"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ruhen",
+			"surface": "ruhen"
 		},
 		{
 			"kind": "Whitespace",
@@ -163,7 +185,7 @@
 			},
 			{
 				"rule": "de/bare-infinitive-zu",
-				"hash": "7462675604e5cc7f"
+				"hash": "839e40a7258859ad"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -196,7 +218,8 @@
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
-			}
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" }
 		],
 		"references": [
 			{
@@ -729,7 +752,7 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [29],
+			"memberSegmentIndices": [29, 31],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -738,8 +761,30 @@
 				"unitKind": "Attestation",
 				"members": [
 					{
-						"attested": "abzuspannen",
-						"orthography": "Standard"
+						"attested": "ab",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "abzuspannen",
+							"components": [
+								{ "span": "ab", "surface": "ab" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "spannen", "surface": "spannen" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "spannen",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "abzuspannen",
+							"components": [
+								{ "span": "ab", "surface": "ab" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "spannen", "surface": "spannen" }
+							]
+						},
+						"component": 2
 					}
 				],
 				"realizationCoverage": "Full",
@@ -748,7 +793,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "abzuspannen",
+					"normalizedSurface": "abspannen",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -780,11 +825,56 @@
 				}
 			},
 			"notes": {
-				"rationale": "zu-infinitive of separable abspannen 'relax (the limbs)', with zu inside the word: one Segment and a single-member VERB, as in the Reviewed er-versucht-hinauszulaufen. See finding A3."
+				"rationale": "zu-infinitive of separable abspannen 'relax (the limbs)', written as one word with zu between the particle and the stem. The word is a Fusion of ab, zu and spannen: the VERB attests [ab, spannen], and the zu piece is PART zu, as after anfangen a zu written apart is (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
 			}
 		},
 		{
-			"memberSegmentIndices": [31],
+			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "PART" },
+			"notes": {
+				"rationale": "The zu inside abzuspannen is a Fusion piece of its own, PART zu, the zu-infinitive marker after anfangen (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PART",
+						"canonicalForm": "zu",
+						"coreFeatures": {
+							"abbr": null,
+							"partType": "Inf",
+							"polarity": null
+						}
+					},
+					"normalizedSurface": "zu",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "abzuspannen",
+							"components": [
+								{ "span": "ab", "surface": "ab" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "spannen", "surface": "spannen" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [33],
 			"route": {
 				"family": "Lexeme",
 				"kind": "CCONJ"
@@ -823,7 +913,7 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [33],
+			"memberSegmentIndices": [35, 37],
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
@@ -832,8 +922,30 @@
 				"unitKind": "Attestation",
 				"members": [
 					{
-						"attested": "auszuruhen",
-						"orthography": "Standard"
+						"attested": "aus",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "auszuruhen",
+							"components": [
+								{ "span": "aus", "surface": "aus" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "ruhen", "surface": "ruhen" }
+							]
+						},
+						"component": 0
+					},
+					{
+						"attested": "ruhen",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "auszuruhen",
+							"components": [
+								{ "span": "aus", "surface": "aus" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "ruhen", "surface": "ruhen" }
+							]
+						},
+						"component": 2
 					}
 				],
 				"realizationCoverage": "Full",
@@ -842,7 +954,7 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "auszuruhen",
+					"normalizedSurface": "ausruhen",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -874,7 +986,52 @@
 				}
 			},
 			"notes": {
-				"rationale": "zu-infinitive of transitive ausruhen (die Glieder ausruhen), with infixed zu; the shared object keeps it non-reflexive."
+				"rationale": "zu-infinitive of transitive ausruhen (die Glieder ausruhen); the shared object keeps it non-reflexive. The word is a Fusion of aus, zu and ruhen: the VERB attests [aus, ruhen], and the zu piece is PART zu (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
+			}
+		},
+		{
+			"memberSegmentIndices": [36],
+			"route": { "family": "Lexeme", "kind": "PART" },
+			"notes": {
+				"rationale": "The zu inside auszuruhen is a Fusion piece of its own, PART zu, the zu-infinitive marker after anfangen (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PART",
+						"canonicalForm": "zu",
+						"coreFeatures": {
+							"abbr": null,
+							"partType": "Inf",
+							"polarity": null
+						}
+					},
+					"normalizedSurface": "zu",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [
+					{
+						"attested": "zu",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "auszuruhen",
+							"components": [
+								{ "span": "aus", "surface": "aus" },
+								{ "span": "zu", "surface": "zu" },
+								{ "span": "ruhen", "surface": "ruhen" }
+							]
+						},
+						"component": 1
+					}
+				],
+				"realizationCoverage": "Full"
 			}
 		}
 	],

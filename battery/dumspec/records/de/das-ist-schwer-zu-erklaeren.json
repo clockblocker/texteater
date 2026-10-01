@@ -19,7 +19,7 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/bare-infinitive-zu", "hash": "7462675604e5cc7f" }
+			{ "rule": "de/bare-infinitive-zu", "hash": "839e40a7258859ad" }
 		],
 		"references": []
 	},

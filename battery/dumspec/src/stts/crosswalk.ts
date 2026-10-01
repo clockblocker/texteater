@@ -388,7 +388,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "KOUI",
 		stts: "subordinating conjunction with zu and infinitive",
 		dumling:
-			"A member of the Locution SCONJ um … zu, ohne … zu, statt … zu or anstatt … zu",
+			"A member of the Locution SCONJ um … zu, ohne … zu, statt … zu or anstatt … zu, whose zu may be a Fusion piece of the infinitive",
 		mappings: [
 			{
 				use: "um, ohne, statt or anstatt before a zu-infinitive",
@@ -402,13 +402,9 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 				],
 			},
 		],
-		rules: ["de/correlator-anchors"],
-		adrs: ["ADR-0039"],
-		model: partial({
-			gap: "A zu infixed in the verb (ohne … abzuspannen) sits inside the VERB's Segment",
-			issue: 743,
-			findings: ["A7", "BT-A3"],
-		}),
+		rules: ["de/correlator-anchors", "de/fused-word-pieces"],
+		adrs: ["ADR-0039", "ADR-0035"],
+		model: modeled,
 		gold: "Yes",
 		pipeline: waitsOnDumgen,
 	},
@@ -1176,29 +1172,42 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "VVIZU",
 		stts: "infinitive with incorporated zu",
-		dumling: "Lexeme VERB verbForm Inf, like VVINF",
-		loss: "Nothing records the incorporated zu",
+		dumling:
+			"A Fusion of the verb's pieces and zu: Lexeme VERB verbForm Inf over its prefix and stem pieces, and the zu piece PART zu or the zu of um … zu, ohne … zu or statt … zu",
 		mappings: [
 			{
-				use: "infinitive with zu inside it",
-				becomes: head(lexeme("VERB")),
+				use: "the prefix and stem pieces of the infinitive",
+				becomes: component(lexeme("VERB")),
 				records: [
 					show(
 						"er-versucht-hinauszulaufen",
-						"hinauszulaufen",
+						"hinaus",
 						"hinauslaufen",
 					),
 				],
 			},
+			{
+				use: "the incorporated zu, without um, ohne or statt",
+				becomes: component(lexeme("PART")),
+				records: [show("er-versucht-hinauszulaufen", "zu", "zu")],
+			},
+			{
+				use: "the incorporated zu of um … zu, ohne … zu or statt … zu",
+				becomes: component(locution("SCONJ")),
+				records: [],
+				missing: noRecord(
+					"No record has a correlative whose zu is incorporated (ohne … abzuspannen)",
+				),
+			},
 		],
-		rules: ["de/verb-core-features"],
-		adrs: ["ADR-0022"],
-		model: partial({
-			gap: "The incorporated zu is hidden or a Fusion piece; a Locution's zu can sit inside the VERB's Segment",
-			issue: 743,
-			findings: ["A7", "BT-A3"],
-		}),
-		gold: "Yes",
+		rules: [
+			"de/fused-word-pieces",
+			"de/bare-infinitive-zu",
+			"de/verb-core-features",
+		],
+		adrs: ["ADR-0022", "ADR-0035"],
+		model: modeled,
+		gold: "Partial",
 		pipeline: waitsOnDumgen,
 	},
 	{

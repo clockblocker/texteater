@@ -125,6 +125,14 @@ morph.
   feature would count it a second time.
 - Moving `article` from the Surface to the Attestation. Rejected: the article
   stays a Surface inflection in German and English.
+- An infinitive's infixed `zu` as a hidden component of the verb, as in
+  `ohne … abzuspannen`. Rejected on 2026-10-01 (#743): a hidden component
+  has no letters of its own, and this `zu` has, and a correlative whose
+  every word is in the text would attest Partial.
+- An infixed `zu` folded into the verb, as STTS VVIZU and TIGER's `Infzu`
+  record it. Rejected on 2026-10-01 (#743): the spelling would decide whether
+  `zu` is a word of its own, against the `zu` written apart before every
+  other infinitive.
 
 ## Consequences
 
@@ -150,3 +158,12 @@ Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): `zu
 Amended by [ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md): German and English common nouns have no `article` feature. The article is an Article satellite of the Head of its phrase, which is the noun or, when the noun is elided, the word standing in for it (`[den, roten]`, `[the, rich]`), and a bare-cited proper noun owns the article it takes (`[das, Berlin]`). Agreement is checked on the Attestation. The rest of this ADR stands.
 
 Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md): `articleEvidence` names every article of a Head, not only a shared one: `Owned` points at the article member, `Shared` holds an article the Head does not own, and `Hidden` points at a Fusion component with no letters of its own.
+
+Amended on 2026-10-01: an infinitive's infixed `zu` is a Fusion piece.
+`abzuspannen` is the Segments `ab`, `zu` and `spannen`. The verb attests its
+prefix and stem pieces, `[ab, spannen]`, as `Fused` members, discontinuous like
+`fing … an`, and clicking either opens `abspannen`. The `zu` piece belongs where
+a `zu` written apart would: PART `zu`, or the `zu` of `um … zu`, `ohne … zu` or
+`statt … zu`, which then attests Full. Duden and LEO teach the word as the
+verb with `zu` between its prefix and stem, which is the split the Fusion
+shows. Decided on [#743](https://github.com/clockblocker/texteater/issues/743).
