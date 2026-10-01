@@ -1,0 +1,823 @@
+{
+	"runId": "20261001T135717--reference-floors--grid-single--dev--all",
+	"baseline": "step0+saying+closed",
+	"replay": {
+		"against": "20260929T193402--candidates4--final-1_closed-1--dev--all:step0+saying+closed",
+		"identical": 3621,
+		"total": 3621
+	},
+	"rows": [
+		{
+			"policy": "step0+saying+closed",
+			"membership": 0.9046813310772701,
+			"gained": 0,
+			"lost": 0,
+			"p": 1,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 0,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 0,
+				"p": 1
+			},
+			"overMerged": 285,
+			"split": 222,
+			"unrouted": 0
+		},
+		{
+			"policy": "expression=0.3",
+			"membership": 0.8950930626057529,
+			"gained": 9,
+			"lost": 27,
+			"p": 0.00393317302223295,
+			"flips": 22,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 9,
+				"broken": 4,
+				"stabilised": 11,
+				"destabilised": 1,
+				"p": 0.266845703125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 23,
+				"stabilised": 0,
+				"destabilised": 3,
+				"p": 2.384185791015625e-7
+			},
+			"overMerged": 370,
+			"split": 188,
+			"unrouted": 35
+		},
+		{
+			"policy": "expression=0.4",
+			"membership": 0.8958450836623425,
+			"gained": 8,
+			"lost": 25,
+			"p": 0.004551384132355452,
+			"flips": 23,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 8,
+				"broken": 4,
+				"stabilised": 11,
+				"destabilised": 1,
+				"p": 0.3876953125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 21,
+				"stabilised": 0,
+				"destabilised": 4,
+				"p": 9.5367431640625e-7
+			},
+			"overMerged": 359,
+			"split": 195,
+			"unrouted": 25
+		},
+		{
+			"policy": "expression=0.5",
+			"membership": 0.8988531678887008,
+			"gained": 8,
+			"lost": 19,
+			"p": 0.052238985896110535,
+			"flips": 25,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 8,
+				"broken": 4,
+				"stabilised": 10,
+				"destabilised": 1,
+				"p": 0.3876953125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 15,
+				"stabilised": 0,
+				"destabilised": 5,
+				"p": 0.00006103515625
+			},
+			"overMerged": 342,
+			"split": 196,
+			"unrouted": 4
+		},
+		{
+			"policy": "expression=0.6",
+			"membership": 0.9016732468509119,
+			"gained": 7,
+			"lost": 13,
+			"p": 0.26317596435546875,
+			"flips": 25,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 7,
+				"broken": 4,
+				"stabilised": 10,
+				"destabilised": 1,
+				"p": 0.548828125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 9,
+				"stabilised": 0,
+				"destabilised": 5,
+				"p": 0.00390625
+			},
+			"overMerged": 322,
+			"split": 201,
+			"unrouted": 11
+		},
+		{
+			"policy": "expression=0.8",
+			"membership": 0.9001692047377327,
+			"gained": 7,
+			"lost": 18,
+			"p": 0.043285250663757324,
+			"flips": 30,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 7,
+				"broken": 3,
+				"stabilised": 11,
+				"destabilised": 4,
+				"p": 0.34375
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 15,
+				"stabilised": 0,
+				"destabilised": 8,
+				"p": 0.00006103515625
+			},
+			"overMerged": 259,
+			"split": 272,
+			"unrouted": 26
+		},
+		{
+			"policy": "idiom=0.3",
+			"membership": 0.9029892836999436,
+			"gained": 6,
+			"lost": 9,
+			"p": 0.60723876953125,
+			"flips": 31,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 6,
+				"broken": 0,
+				"stabilised": 4,
+				"destabilised": 0,
+				"p": 0.03125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 9,
+				"stabilised": 0,
+				"destabilised": 6,
+				"p": 0.00390625
+			},
+			"overMerged": 313,
+			"split": 203,
+			"unrouted": 1
+		},
+		{
+			"policy": "idiom=0.4",
+			"membership": 0.9029892836999436,
+			"gained": 6,
+			"lost": 9,
+			"p": 0.60723876953125,
+			"flips": 31,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 6,
+				"broken": 0,
+				"stabilised": 4,
+				"destabilised": 0,
+				"p": 0.03125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 9,
+				"stabilised": 0,
+				"destabilised": 6,
+				"p": 0.00390625
+			},
+			"overMerged": 313,
+			"split": 203,
+			"unrouted": 1
+		},
+		{
+			"policy": "idiom=0.5",
+			"membership": 0.9029892836999436,
+			"gained": 6,
+			"lost": 9,
+			"p": 0.60723876953125,
+			"flips": 31,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 6,
+				"broken": 0,
+				"stabilised": 4,
+				"destabilised": 0,
+				"p": 0.03125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 9,
+				"stabilised": 0,
+				"destabilised": 6,
+				"p": 0.00390625
+			},
+			"overMerged": 313,
+			"split": 203,
+			"unrouted": 1
+		},
+		{
+			"policy": "idiom=0.6",
+			"membership": 0.9069373942470389,
+			"gained": 5,
+			"lost": 1,
+			"p": 0.21875,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 5,
+				"broken": 0,
+				"stabilised": 3,
+				"destabilised": 3,
+				"p": 0.0625
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 1,
+				"stabilised": 0,
+				"destabilised": 0,
+				"p": 1
+			},
+			"overMerged": 288,
+			"split": 207,
+			"unrouted": 1
+		},
+		{
+			"policy": "idiom=0.8",
+			"membership": 0.9033652942282384,
+			"gained": 1,
+			"lost": 4,
+			"p": 0.375,
+			"flips": 31,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 1,
+				"broken": 2,
+				"stabilised": 3,
+				"destabilised": 2,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 2,
+				"stabilised": 0,
+				"destabilised": 3,
+				"p": 0.5
+			},
+			"overMerged": 280,
+			"split": 234,
+			"unrouted": 8
+		},
+		{
+			"policy": "fixed=0.3",
+			"membership": 0.9056213573980072,
+			"gained": 3,
+			"lost": 0,
+			"p": 0.25,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 3,
+				"broken": 0,
+				"stabilised": 2,
+				"destabilised": 0,
+				"p": 0.25
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 2,
+				"p": 1
+			},
+			"overMerged": 288,
+			"split": 214,
+			"unrouted": 22
+		},
+		{
+			"policy": "fixed=0.4",
+			"membership": 0.9048693363414175,
+			"gained": 1,
+			"lost": 0,
+			"p": 1,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 1,
+				"broken": 0,
+				"stabilised": 2,
+				"destabilised": 0,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 2,
+				"p": 1
+			},
+			"overMerged": 287,
+			"split": 219,
+			"unrouted": 14
+		},
+		{
+			"policy": "fixed=0.6",
+			"membership": 0.9024252679075014,
+			"gained": 0,
+			"lost": 4,
+			"p": 0.125,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 0,
+				"broken": 1,
+				"stabilised": 4,
+				"destabilised": 1,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 3,
+				"stabilised": 0,
+				"destabilised": 3,
+				"p": 0.25
+			},
+			"overMerged": 284,
+			"split": 235,
+			"unrouted": 1
+		},
+		{
+			"policy": "fixed=0.7",
+			"membership": 0.9005452152660275,
+			"gained": 5,
+			"lost": 12,
+			"p": 0.143463134765625,
+			"flips": 26,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 5,
+				"broken": 3,
+				"stabilised": 6,
+				"destabilised": 2,
+				"p": 0.7265625
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 9,
+				"stabilised": 0,
+				"destabilised": 1,
+				"p": 0.00390625
+			},
+			"overMerged": 272,
+			"split": 257,
+			"unrouted": 10
+		},
+		{
+			"policy": "saying=0.2",
+			"membership": 0.8975371310396691,
+			"gained": 6,
+			"lost": 20,
+			"p": 0.009355306625366211,
+			"flips": 27,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 6,
+				"broken": 2,
+				"stabilised": 7,
+				"destabilised": 1,
+				"p": 0.2890625
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 18,
+				"stabilised": 0,
+				"destabilised": 4,
+				"p": 0.00000762939453125
+			},
+			"overMerged": 365,
+			"split": 180,
+			"unrouted": 0
+		},
+		{
+			"policy": "saying=0.3",
+			"membership": 0.902237262643354,
+			"gained": 4,
+			"lost": 10,
+			"p": 0.1795654296875,
+			"flips": 30,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 4,
+				"broken": 2,
+				"stabilised": 7,
+				"destabilised": 0,
+				"p": 0.6875
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 8,
+				"stabilised": 0,
+				"destabilised": 8,
+				"p": 0.0078125
+			},
+			"overMerged": 327,
+			"split": 193,
+			"unrouted": 0
+		},
+		{
+			"policy": "saying=0.4",
+			"membership": 0.9056213573980072,
+			"gained": 2,
+			"lost": 0,
+			"p": 0.5,
+			"flips": 26,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 2,
+				"broken": 0,
+				"stabilised": 5,
+				"destabilised": 1,
+				"p": 0.5
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 1,
+				"p": 1
+			},
+			"overMerged": 291,
+			"split": 211,
+			"unrouted": 0
+		},
+		{
+			"policy": "saying=0.6",
+			"membership": 0.9043053205489754,
+			"gained": 3,
+			"lost": 4,
+			"p": 1,
+			"flips": 26,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 3,
+				"broken": 2,
+				"stabilised": 4,
+				"destabilised": 0,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 2,
+				"stabilised": 0,
+				"destabilised": 1,
+				"p": 0.5
+			},
+			"overMerged": 272,
+			"split": 237,
+			"unrouted": 0
+		},
+		{
+			"policy": "saying=0.7",
+			"membership": 0.9037413047565331,
+			"gained": 3,
+			"lost": 5,
+			"p": 0.7265625,
+			"flips": 26,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 3,
+				"broken": 2,
+				"stabilised": 4,
+				"destabilised": 0,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 3,
+				"stabilised": 0,
+				"destabilised": 1,
+				"p": 0.25
+			},
+			"overMerged": 272,
+			"split": 240,
+			"unrouted": 0
+		},
+		{
+			"policy": "satellite=0.3",
+			"membership": 0.9046813310772701,
+			"gained": 2,
+			"lost": 2,
+			"p": 1,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 2,
+				"broken": 2,
+				"stabilised": 3,
+				"destabilised": 2,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 1,
+				"p": 1
+			},
+			"overMerged": 292,
+			"split": 215,
+			"unrouted": 42
+		},
+		{
+			"policy": "satellite=0.4",
+			"membership": 0.9044933258131228,
+			"gained": 2,
+			"lost": 2,
+			"p": 1,
+			"flips": 28,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 2,
+				"broken": 2,
+				"stabilised": 2,
+				"destabilised": 1,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 0,
+				"p": 1
+			},
+			"overMerged": 290,
+			"split": 218,
+			"unrouted": 28
+		},
+		{
+			"policy": "satellite=0.6",
+			"membership": 0.9069373942470389,
+			"gained": 10,
+			"lost": 6,
+			"p": 0.454498291015625,
+			"flips": 35,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 10,
+				"broken": 2,
+				"stabilised": 6,
+				"destabilised": 8,
+				"p": 0.03857421875
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 4,
+				"stabilised": 0,
+				"destabilised": 4,
+				"p": 0.125
+			},
+			"overMerged": 247,
+			"split": 248,
+			"unrouted": 294
+		},
+		{
+			"policy": "satellite=0",
+			"membership": 0.9048693363414175,
+			"gained": 3,
+			"lost": 2,
+			"p": 1,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 3,
+				"broken": 2,
+				"stabilised": 3,
+				"destabilised": 2,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 1,
+				"p": 1
+			},
+			"overMerged": 292,
+			"split": 214,
+			"unrouted": 43
+		},
+		{
+			"policy": "satellite=0,margin=0.1",
+			"membership": 0.9058093626621545,
+			"gained": 5,
+			"lost": 3,
+			"p": 0.7265625,
+			"flips": 35,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 5,
+				"broken": 2,
+				"stabilised": 6,
+				"destabilised": 7,
+				"p": 0.453125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 1,
+				"stabilised": 0,
+				"destabilised": 5,
+				"p": 1
+			},
+			"overMerged": 272,
+			"split": 229,
+			"unrouted": 132
+		},
+		{
+			"policy": "satellite=0,margin=0.2",
+			"membership": 0.9071253995111863,
+			"gained": 10,
+			"lost": 6,
+			"p": 0.454498291015625,
+			"flips": 36,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 10,
+				"broken": 2,
+				"stabilised": 5,
+				"destabilised": 9,
+				"p": 0.03857421875
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 4,
+				"stabilised": 0,
+				"destabilised": 3,
+				"p": 0.125
+			},
+			"overMerged": 253,
+			"split": 241,
+			"unrouted": 261
+		},
+		{
+			"policy": "satellite=0,margin=0.3",
+			"membership": 0.9076894153036285,
+			"gained": 14,
+			"lost": 9,
+			"p": 0.4048728942871094,
+			"flips": 34,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 14,
+				"broken": 3,
+				"stabilised": 8,
+				"destabilised": 7,
+				"p": 0.012725830078125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 6,
+				"stabilised": 0,
+				"destabilised": 6,
+				"p": 0.03125
+			},
+			"overMerged": 235,
+			"split": 256,
+			"unrouted": 405
+		},
+		{
+			"policy": "margin=0.1",
+			"membership": 0.9052453468697124,
+			"gained": 3,
+			"lost": 3,
+			"p": 1,
+			"flips": 34,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 3,
+				"broken": 2,
+				"stabilised": 5,
+				"destabilised": 6,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 1,
+				"stabilised": 0,
+				"destabilised": 4,
+				"p": 1
+			},
+			"overMerged": 270,
+			"split": 234,
+			"unrouted": 111
+		},
+		{
+			"policy": "margin=0.2",
+			"membership": 0.9069373942470389,
+			"gained": 9,
+			"lost": 6,
+			"p": 0.60723876953125,
+			"flips": 36,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 9,
+				"broken": 2,
+				"stabilised": 5,
+				"destabilised": 9,
+				"p": 0.0654296875
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 4,
+				"stabilised": 0,
+				"destabilised": 3,
+				"p": 0.125
+			},
+			"overMerged": 253,
+			"split": 242,
+			"unrouted": 258
+		}
+	]
+}

@@ -1,0 +1,179 @@
+{
+	"runId": "20261001T135727--reference-floors--grid-combined--dev--all",
+	"baseline": "step0+saying+closed",
+	"replay": {
+		"against": "20260929T193402--candidates4--final-1_closed-1--dev--all:step0+saying+closed",
+		"identical": 3621,
+		"total": 3621
+	},
+	"rows": [
+		{
+			"policy": "step0+saying+closed",
+			"membership": 0.9046813310772701,
+			"gained": 0,
+			"lost": 0,
+			"p": 1,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 0,
+				"p": 1
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 0,
+				"p": 1
+			},
+			"overMerged": 285,
+			"split": 222,
+			"unrouted": 0
+		},
+		{
+			"policy": "idiom=0.6,fixed=0.3",
+			"membership": 0.9078774205677759,
+			"gained": 8,
+			"lost": 1,
+			"p": 0.0390625,
+			"flips": 29,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 8,
+				"broken": 0,
+				"stabilised": 5,
+				"destabilised": 3,
+				"p": 0.0078125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 1,
+				"stabilised": 0,
+				"destabilised": 2,
+				"p": 1
+			},
+			"overMerged": 291,
+			"split": 199,
+			"unrouted": 23
+		},
+		{
+			"policy": "idiom=0.6,saying=0.4",
+			"membership": 0.9078774205677759,
+			"gained": 7,
+			"lost": 1,
+			"p": 0.0703125,
+			"flips": 26,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 7,
+				"broken": 0,
+				"stabilised": 8,
+				"destabilised": 4,
+				"p": 0.015625
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 1,
+				"stabilised": 0,
+				"destabilised": 1,
+				"p": 1
+			},
+			"overMerged": 294,
+			"split": 196,
+			"unrouted": 1
+		},
+		{
+			"policy": "fixed=0.3,saying=0.4",
+			"membership": 0.9061853731904493,
+			"gained": 4,
+			"lost": 0,
+			"p": 0.125,
+			"flips": 27,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 4,
+				"broken": 0,
+				"stabilised": 6,
+				"destabilised": 1,
+				"p": 0.125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 0,
+				"stabilised": 0,
+				"destabilised": 3,
+				"p": 1
+			},
+			"overMerged": 294,
+			"split": 205,
+			"unrouted": 20
+		},
+		{
+			"policy": "idiom=0.6,fixed=0.3,saying=0.4",
+			"membership": 0.9084414363602181,
+			"gained": 9,
+			"lost": 1,
+			"p": 0.021484375,
+			"flips": 27,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 9,
+				"broken": 0,
+				"stabilised": 9,
+				"destabilised": 4,
+				"p": 0.00390625
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 1,
+				"stabilised": 0,
+				"destabilised": 3,
+				"p": 1
+			},
+			"overMerged": 297,
+			"split": 190,
+			"unrouted": 21
+		},
+		{
+			"policy": "satellite=0,idiom=0.6,fixed=0.3,saying=0.4",
+			"membership": 0.9086294416243654,
+			"gained": 12,
+			"lost": 3,
+			"p": 0.03515625,
+			"flips": 27,
+			"flipBase": 1773,
+			"focus": {
+				"units": 185,
+				"fixed": 12,
+				"broken": 2,
+				"stabilised": 12,
+				"destabilised": 6,
+				"p": 0.012939453125
+			},
+			"guardrail": {
+				"units": 1588,
+				"fixed": 0,
+				"broken": 1,
+				"stabilised": 0,
+				"destabilised": 4,
+				"p": 1
+			},
+			"overMerged": 304,
+			"split": 182,
+			"unrouted": 62
+		}
+	]
+}
