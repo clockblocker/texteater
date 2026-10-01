@@ -16,50 +16,69 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
+			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "AUX" },
+			"memberSegmentIndices": [2, 6, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+				"rationale": "wird and sein are the future and perfect auxiliaries of angekommen, so the target is the whole future perfect [wird, angekommen, sein]."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "wird", "orthography": "Standard" },
+					{ "attested": "angekommen", "orthography": "Standard" },
+					{ "attested": "sein", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "wird angekommen sein",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": "Yes",
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "AUX",
-						"canonicalForm": "sein",
-						"coreFeatures": {}
+						"kind": "VERB",
+						"canonicalForm": "ankommen",
+						"coreFeatures": {
+							"hasSepPrefix": "an",
+							"lexicallyReflexive": null
+						}
 					},
-					"normalizedSurface": "sein",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Inf",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "sein", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

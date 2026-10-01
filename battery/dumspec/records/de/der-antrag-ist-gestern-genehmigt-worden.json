@@ -18,53 +18,64 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "AUX" },
+			"memberSegmentIndices": [4, 8, 10],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+				"rationale": "ist and worden are the perfect and passive auxiliaries of genehmigt, so the target is the whole perfect passive [ist, genehmigt, worden]."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "AUX",
-						"canonicalForm": "werden",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "worden",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"mood": null,
-						"number": null,
-						"person": null,
-						"tense": null,
-						"verbForm": "Part",
-						"participleForm": "Past",
-						"expletive": null,
-						"perfect": null,
-						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
 				"members": [
+					{ "attested": "ist", "orthography": "Standard" },
+					{ "attested": "genehmigt", "orthography": "Standard" },
 					{ "attested": "worden", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "ist genehmigt worden",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": "Pass",
+						"passive": "Process"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "genehmigen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

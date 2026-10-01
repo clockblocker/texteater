@@ -18,33 +18,42 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [10],
-			"route": { "family": "Lexeme", "kind": "AUX" },
+			"memberSegmentIndices": [8, 10],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+				"rationale": "werden is the passive auxiliary of gereinigt, so the target is the passive infinitive [gereinigt, werden]. The modal muss is a VERB of its own (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "gereinigt", "orthography": "Standard" },
+					{ "attested": "werden", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "AUX",
-						"canonicalForm": "werden",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "werden",
+					"normalizedSurface": "gereinigt werden",
 					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": null,
 						"number": null,
@@ -54,16 +63,22 @@
 						"expletive": null,
 						"perfect": null,
 						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "werden", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+						"voice": "Pass",
+						"passive": "Process"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "reinigen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

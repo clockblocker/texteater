@@ -19,33 +19,38 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "AUX" },
+			"memberSegmentIndices": [4, 11],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+				"rationale": "wird is the passive auxiliary of repariert, so the target is the whole passive [wird, repariert]."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "wird", "orthography": "Standard" },
+					{ "attested": "repariert", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "AUX",
-						"canonicalForm": "werden",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "wird",
+					"normalizedSurface": "wird repariert",
 					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -55,14 +60,22 @@
 						"expletive": null,
 						"perfect": null,
 						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "wird", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+						"voice": "Pass",
+						"passive": "Process"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "reparieren",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

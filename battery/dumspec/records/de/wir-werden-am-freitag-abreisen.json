@@ -17,33 +17,41 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0026"],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "AUX" },
+			"memberSegmentIndices": [2, 9],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026)."
+				"rationale": "werden is the future auxiliary of abreisen, so the target is the whole future [werden, abreisen]."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "werden", "orthography": "Standard" },
+					{ "attested": "abreisen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "AUX",
-						"canonicalForm": "werden",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "werden",
+					"normalizedSurface": "werden abreisen",
 					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Plur",
@@ -52,17 +60,23 @@
 						"verbForm": "Fin",
 						"expletive": null,
 						"perfect": null,
-						"future": null,
+						"future": "Yes",
 						"voice": null,
 						"passive": null
-					}
-				},
-				"members": [
-					{ "attested": "werden", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "abreisen",
+						"coreFeatures": {
+							"hasSepPrefix": "ab",
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

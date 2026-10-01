@@ -16,33 +16,45 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036", "ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "AUX" },
+			"memberSegmentIndices": [4, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Auxiliary member of a verbal Unit whose head lies outside the target. Perfect, future and passive belong to the Unit and stay null on the AUX Surface (ADR 0026). ward is the archaic third person singular past indicative of werden, the old preterite that wurde replaced (Duden: veraltet, noch dichterisch). It is an old inflected form, not another spelling of wurde, so the spelling is Canonical; the form itself is archaic beside the current wurde of the same Lemma, so the Surface is Archaic (de/variant-and-historical-status)."
+				"rationale": "ward is the passive auxiliary of empfangen, so the target is the whole passive [ward, empfangen]. ward is the archaic third person singular past indicative of werden, the old preterite that wurde replaced (Duden: veraltet, noch dichterisch). It is Canonical, and its archaic form makes the whole Surface Archaic."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "ward", "orthography": "Standard" },
+					{ "attested": "empfangen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "AUX",
-						"canonicalForm": "werden",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "ward",
+					"normalizedSurface": "ward empfangen",
 					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": { "historicalStatus": "Archaic" },
 					"inflectionalFeatures": {
 						"mood": "Ind",
 						"number": "Sing",
@@ -52,14 +64,22 @@
 						"expletive": null,
 						"perfect": null,
 						"future": null,
-						"voice": null,
-						"passive": null
-					}
-				},
-				"members": [{ "attested": "ward", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
-				"expletiveEvidence": null,
-				"valencyEvidence": []
+						"voice": "Pass",
+						"passive": "Process"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "empfangen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": { "historicalStatus": "Archaic" }
+				}
 			}
 		}
 	],
