@@ -84,7 +84,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "Kann is the modal können, a VERB with verbType Mod; the infinitive it governs is its own target (de/modal-is-a-verb)."
+				"rationale": "Kann is the modal können, a VERB of its own; the infinitive it governs is its own target (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
