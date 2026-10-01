@@ -28,7 +28,6 @@ const personal = (canonicalForm: string, polite: "Form" | null) =>
 		kind: "PRON",
 		canonicalForm,
 		coreFeatures: {
-			extPos: null,
 			person: "3",
 			polite,
 			poss: null,

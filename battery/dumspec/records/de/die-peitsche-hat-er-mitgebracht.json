@@ -178,7 +178,6 @@
 						"coreFeatures": {
 							"person": "3",
 							"pronType": "Prs",
-							"extPos": null,
 							"polite": null,
 							"poss": null,
 							"case": "Nom",
@@ -291,7 +290,6 @@
 						"coreFeatures": {
 							"person": "3",
 							"pronType": "Prs",
-							"extPos": null,
 							"polite": null,
 							"poss": null,
 							"case": "Acc",

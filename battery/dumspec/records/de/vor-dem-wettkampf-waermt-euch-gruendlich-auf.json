@@ -42,9 +42,8 @@
 						"coreFeatures": {
 							"case": "Acc",
 							"number": "Plur",
-							"extPos": null,
 							"person": "2",
-							"polite": "Infm",
+							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
 							"gender": null
@@ -53,14 +52,7 @@
 					"normalizedSurface": "euch",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "euch", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

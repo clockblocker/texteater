@@ -265,11 +265,11 @@ for (const pronType of ["Int", "Rel"] as const) {
 		}
 		const emoji = pronType === "Int" ? "❓" : "🔗";
 		// Attributive wessen is the genitive of wer: it asks for or names a
-		// possessor person. extPos DET keeps it apart from the stem, and it has
-		// one form, so it is an invariant Lemma.
+		// possessor person. It has one form, so it is an invariant Lemma, cited
+		// apart from the stem wer.
 		reviewed.push(
 			pronounMember(form("wessen", "ˈvɛsən"), {
-				core: { pronType, extPos: "DET" },
+				core: { pronType },
 				emoji,
 				definition:
 					"Bezeichnet fragend oder relativisch die Person, der das folgende Nomen zugeordnet ist.",
@@ -279,34 +279,6 @@ for (const pronType of ["Int", "Rel"] as const) {
 		);
 	}
 }
-
-// Only deren is attributive. Standalone derer is a Licensed Variant of
-// standalone deren (realizations.ts), not of these Lemmas. Bare der is not a
-// genitive PRON form. dessen serves a masculine and a neuter Bezugswort
-// alike, so it is one cell with gender unmarked: the referent may choose only
-// between cells that differ in who is meant (system ADR 0044).
-// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
-// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Demonstr/Pron-der-die-das.html?lang=de
-for (const pronType of ["Dem", "Rel"] as const)
-	for (const [text, ipa, gender, number] of [
-		["dessen", "ˈdɛsən", null, "Sing"],
-		["deren", "ˈdeːʁən", "Fem", "Sing"],
-		["deren", "ˈdeːʁən", null, "Plur"],
-	] as const)
-		reviewed.push(
-			pronounMember(
-				form(text, ipa),
-				{
-					core: { pronType, extPos: "DET" },
-					emoji: pronType === "Dem" ? "👉" : "🔗",
-					definition:
-						"Ordnet das folgende Nomen dem Bezugswort des genitivischen Pronomens zu.",
-					en: ["whose; of whom; of which"],
-					ru: ["чей; которого; которых"],
-				},
-				{ case: "Gen", gender, number },
-			),
-		);
 
 // Indefinite is not total: several and some are partial quantities.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-manch3.html?lang=de
@@ -741,7 +713,7 @@ reviewed.push(
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
 for (const [stem, ipa, person, polite, en, ru] of [
 	["mein", "ˈmaɪ̯n", "1", null, "mine", "мой"],
-	["dein", "ˈdaɪ̯n", "2", "Infm", "yours (singular informal)", "твой"],
+	["dein", "ˈdaɪ̯n", "2", null, "yours (singular informal)", "твой"],
 	["sein", "ˈzaɪ̯n", "3", null, "his, its", "его"],
 	["ihr", "ˈiːʁ", "3", null, "hers, theirs", "её; их"],
 	["unser", "ˈʊnzəʁ", "1", null, "ours", "наш"],
@@ -749,7 +721,7 @@ for (const [stem, ipa, person, polite, en, ru] of [
 		"eur",
 		"ˈɔɪ̯ʁ",
 		"2",
-		"Infm",
+		null,
 		"yours (plural informal)",
 		"ваш (несколько адресатов)",
 	],

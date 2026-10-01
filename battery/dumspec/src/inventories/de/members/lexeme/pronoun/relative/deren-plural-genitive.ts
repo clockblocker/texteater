@@ -7,7 +7,6 @@ const lemma = {
 	kind: "PRON",
 	canonicalForm: "deren",
 	coreFeatures: {
-		extPos: null,
 		person: null,
 		polite: null,
 		poss: null,
@@ -23,9 +22,12 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "🔗" }, lemma },
 	knowledge: {
 		definition:
-			"Das Relativpronomen „deren“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort.",
+			"Das Relativpronomen „deren“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort. Vor einem Nomen ordnet es dieses dem Bezugswort zu: die Geräte, deren Nummern wir notieren.",
 		transcription: "ˈdeːʁən",
-		translations: { en: ["who", "which", "that"], ru: ["которых", "чьих"] },
+		translations: {
+			en: ["whose", "who", "which", "that"],
+			ru: ["которых", "чьих"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

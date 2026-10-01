@@ -478,9 +478,8 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "2",
-							"polite": "Infm",
+							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
 							"gender": null
@@ -561,7 +560,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -1062,9 +1060,8 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "2",
-							"polite": "Infm",
+							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
 							"gender": null
@@ -1145,7 +1142,6 @@
 						"coreFeatures": {
 							"case": null,
 							"number": null,
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -1163,8 +1159,7 @@
 						"gender": "Neut",
 						"number": "Sing",
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					}
 				},
 				"members": [
@@ -1638,7 +1633,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,

@@ -87,7 +87,7 @@ cells, and their spellings tell them apart.
 - English PRON: case, number, gender and reflexivity are Core, so `I`, `me`,
   `my`, `mine` and `myself` are five Lemmas, and English PRON has no Surface
   inflection. Reflexivity is Core because `myself` is its own spelled word.
-  German keeps reflexivity on the Surface: reflexive `mich` is the Lemma
+  German marks no reflexivity on a pronoun: reflexive `mich` is the Lemma
   `mich`, and free `sich` is the Acc or Dat cell of the reflexive (ADR 0044).
 - German and English ADV and ADJ record comparability in Core, which decides
   whether their Surfaces mark Degree
@@ -160,6 +160,10 @@ NUM and SYM, ADJ `variant`, NOUN `hyph` and PUNCT `punctType`. The two
 article tables now share their coordinates, so per-cell uniqueness and
 navigation hold inside one pillar. Decided on
 [#766](https://github.com/clockblocker/texteater/issues/766).
+
+Amended on 2026-10-01: the English PRON line said German keeps reflexivity
+on the Surface. No German pronoun marks it now (ADR 0044,
+[#766](https://github.com/clockblocker/texteater/issues/766)).
 
 ## Considered Options
 

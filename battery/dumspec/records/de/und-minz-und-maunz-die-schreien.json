@@ -70,7 +70,6 @@
 						"kind": "PRON",
 						"coreFeatures": {
 							"pronType": "Dem",
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,

@@ -69,10 +69,7 @@ const DeDegreeSchema = UNIVERSAL_FEATURE_SCHEMA.degree.extract([
 	Degree.Pos,
 	Degree.Sup,
 ]);
-const DePoliteSchema = UNIVERSAL_FEATURE_SCHEMA.polite.extract([
-	Polite.Form,
-	Polite.Infm,
-]);
+const DePoliteSchema = UNIVERSAL_FEATURE_SCHEMA.polite.extract([Polite.Form]);
 const DeDeterminerPronTypeSchema = UNIVERSAL_FEATURE_SCHEMA.pronType.extract([
 	PronType.Art,
 	PronType.Dem,

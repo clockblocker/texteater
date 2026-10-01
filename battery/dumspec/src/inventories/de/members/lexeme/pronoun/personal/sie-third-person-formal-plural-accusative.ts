@@ -7,7 +7,6 @@ const lemma = {
 	kind: "PRON",
 	canonicalForm: "Sie",
 	coreFeatures: {
-		extPos: null,
 		person: "3",
 		polite: "Form",
 		poss: null,

@@ -7,7 +7,6 @@ const lemma = {
 	kind: "PRON",
 	canonicalForm: "deren",
 	coreFeatures: {
-		extPos: null,
 		person: null,
 		polite: null,
 		poss: null,
@@ -23,9 +22,9 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👉" }, lemma },
 	knowledge: {
 		definition:
-			"Das Demonstrativpronomen „deren“ verweist betont auf eine im Kontext bestimmte Person oder Sache.",
+			"Das Demonstrativpronomen „deren“ verweist betont auf eine im Kontext bestimmte Person oder Sache. Vor einem Nomen ordnet es dieses ihr zu: die Gäste und deren Kinder.",
 		transcription: "ˈdeːʁən",
-		translations: { en: ["that one", "this one"], ru: ["их"] },
+		translations: { en: ["that one", "this one", "their"], ru: ["их"] },
 	},
 	coverage: {
 		transcription: "Authored",

@@ -110,14 +110,7 @@
 					"language": "de",
 					"normalizedSurface": "dich",
 					"spelling": { "kind": "Canonical" },
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -127,7 +120,6 @@
 						"coreFeatures": {
 							"person": "2",
 							"pronType": "Prs",
-							"extPos": null,
 							"polite": null,
 							"poss": null,
 							"case": "Acc",

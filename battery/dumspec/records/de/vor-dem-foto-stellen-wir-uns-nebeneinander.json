@@ -42,7 +42,6 @@
 						"coreFeatures": {
 							"case": "Acc",
 							"number": "Plur",
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -53,14 +52,7 @@
 					"normalizedSurface": "uns",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "uns", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

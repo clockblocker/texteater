@@ -5,7 +5,6 @@ import { lemmaSchema, surfaceSchema } from "dumling/schema/de/lexeme/pronoun";
 const core = {
 	case: null,
 	number: null,
-	extPos: null,
 	person: null,
 	polite: null,
 	poss: null,
@@ -35,7 +34,6 @@ const bag = {
 	number: null,
 	"gender[psor]": null,
 	"number[psor]": null,
-	reflex: null,
 };
 function surface(
 	lemmaValue: ReturnType<typeof lemma>,
@@ -159,7 +157,6 @@ test("wer and was fix their inherent gender in Core (system ADR 0044, 0032)", ()
 		accepts(
 			lemma("wessen", {
 				pronType,
-				extPos: "DET",
 				case: "Gen",
 				gender: "Masc",
 			}),
@@ -206,15 +203,24 @@ test("retired fields are rejected", () => {
 			},
 			false,
 		);
-	acceptsSurface(
-		{
-			...surface(lemma("mir", { case: "Dat" }), { reflex: "Yes" }),
-			inflectionalFeatures: {
-				...bag,
-				reflex: "Yes",
-				referenceNumber: "Sing",
+	// Reflexivity is no pronoun feature: reflexive mir is the Lemma mir.
+	for (const [retired, value] of [
+		["reflex", "Yes"],
+		["referenceNumber", "Sing"],
+	] as const)
+		acceptsSurface(
+			{
+				...surface(lemma("mir", { case: "Dat" }), {}),
+				inflectionalFeatures: { ...bag, [retired]: value },
 			},
-		},
+			false,
+		);
+	accepts(
+		{ ...lemma("dessen", {}), coreFeatures: { ...core, extPos: "DET" } },
+		false,
+	);
+	accepts(
+		lemma("du", { pronType: "Prs", person: "2", polite: "Infm" }),
 		false,
 	);
 });

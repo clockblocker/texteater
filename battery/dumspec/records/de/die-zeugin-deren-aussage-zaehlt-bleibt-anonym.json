@@ -39,7 +39,7 @@
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔗" },
 			"notes": {
-				"rationale": "Attributive deren is the relative pillar cell Gen.Fem.Sg with extPos DET (de/pron-or-det-by-use). Its gender and number are its antecedent's, Zeugin, and Aussage is a separate target."
+				"rationale": "Attributive deren is the relative pillar cell Gen.Fem.Sg, one Lemma with standalone deren (de/pron-or-det-by-use). Its gender and number are its antecedent's, Zeugin, and Aussage is a separate target."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -60,7 +60,6 @@
 						"kind": "PRON",
 						"coreFeatures": {
 							"pronType": "Rel",
-							"extPos": "DET",
 							"person": null,
 							"polite": null,
 							"poss": null,

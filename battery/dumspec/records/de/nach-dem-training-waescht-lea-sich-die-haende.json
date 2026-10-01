@@ -219,7 +219,6 @@
 						"coreFeatures": {
 							"case": "Dat",
 							"number": null,
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -230,14 +229,7 @@
 					"normalizedSurface": "sich",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [{ "attested": "sich", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

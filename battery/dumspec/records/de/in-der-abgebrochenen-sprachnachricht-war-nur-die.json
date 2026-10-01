@@ -77,7 +77,6 @@
 						"coreFeatures": {
 							"person": "3",
 							"pronType": "Prs",
-							"extPos": null,
 							"polite": null,
 							"poss": null,
 							"case": "Nom",
@@ -157,7 +156,6 @@
 						"coreFeatures": {
 							"case": "Dat",
 							"number": "Sing",
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,

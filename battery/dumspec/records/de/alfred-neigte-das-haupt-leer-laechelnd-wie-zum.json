@@ -942,7 +942,6 @@
 						"coreFeatures": {
 							"case": "Acc",
 							"number": "Plur",
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -990,7 +989,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -1242,7 +1240,6 @@
 						"coreFeatures": {
 							"case": "Acc",
 							"number": null,
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -1255,14 +1252,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{

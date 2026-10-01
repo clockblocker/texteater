@@ -444,7 +444,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -883,7 +882,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -978,7 +976,6 @@
 						"coreFeatures": {
 							"case": null,
 							"number": null,
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -1492,7 +1489,6 @@
 						"coreFeatures": {
 							"case": "Gen",
 							"number": "Sing",
-							"extPos": "DET",
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -1517,7 +1513,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Attributive relative dessen is PRON with extPos DET, and Höhe is a separate target (de/pron-or-det-by-use). It serves a masculine and a neuter antecedent alike, so its gender is null (ADR 0044). Ruled on #743 (VP-A1, A1)."
+				"rationale": "Attributive relative dessen is the relative PRON cell Gen.Sg, one Lemma with standalone dessen, and Höhe is a separate target (de/pron-or-det-by-use). It serves a masculine and a neuter antecedent alike, so its gender is null (ADR 0044). Ruled on #743 (VP-A1, A1)."
 			}
 		},
 		{

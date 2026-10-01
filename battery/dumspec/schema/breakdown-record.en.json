@@ -1336,27 +1336,6 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema421"
-																		},
-																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema197"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma",
-																		"emojiDescription"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
 																			"$ref": "#/$defs/__schema422"
 																		},
 																		"emojiDescription": {
@@ -1420,7 +1399,28 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema427"
+																			"$ref": "#/$defs/__schema425"
+																		},
+																		"emojiDescription": {
+																			"$ref": "#/$defs/__schema197"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma",
+																		"emojiDescription"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
+																			"$ref": "#/$defs/__schema428"
 																		},
 																		"emojiDescription": {
 																			"$ref": "#/$defs/__schema197"
@@ -11030,10 +11030,10 @@
 							"$ref": "#/$defs/__schema418"
 						},
 						"poss": {
-							"$ref": "#/$defs/__schema419"
+							"$ref": "#/$defs/__schema420"
 						},
 						"pronType": {
-							"$ref": "#/$defs/__schema420"
+							"$ref": "#/$defs/__schema421"
 						}
 					},
 					"required": [
@@ -11121,11 +11121,7 @@
 		"__schema418": {
 			"anyOf": [
 				{
-					"type": "string",
-					"enum": [
-						"Form",
-						"Infm"
-					]
+					"$ref": "#/$defs/__schema419"
 				},
 				{
 					"type": "null"
@@ -11133,6 +11129,12 @@
 			]
 		},
 		"__schema419": {
+			"type": "string",
+			"enum": [
+				"Form"
+			]
+		},
+		"__schema420": {
 			"anyOf": [
 				{
 					"$ref": "#/$defs/__schema148"
@@ -11142,7 +11144,7 @@
 				}
 			]
 		},
-		"__schema420": {
+		"__schema421": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -11164,7 +11166,7 @@
 				}
 			]
 		},
-		"__schema421": {
+		"__schema422": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11216,7 +11218,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema422": {
+		"__schema423": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11270,7 +11272,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema423": {
+		"__schema424": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11305,7 +11307,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema424": {
+		"__schema425": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11328,10 +11330,10 @@
 					"type": "object",
 					"properties": {
 						"partType": {
-							"$ref": "#/$defs/__schema425"
+							"$ref": "#/$defs/__schema426"
 						},
 						"polarity": {
-							"$ref": "#/$defs/__schema426"
+							"$ref": "#/$defs/__schema427"
 						}
 					},
 					"required": [
@@ -11351,7 +11353,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema425": {
+		"__schema426": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -11365,7 +11367,7 @@
 				}
 			]
 		},
-		"__schema426": {
+		"__schema427": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -11378,7 +11380,7 @@
 				}
 			]
 		},
-		"__schema427": {
+		"__schema428": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11401,12 +11403,9 @@
 					"type": "object",
 					"properties": {
 						"case": {
-							"$ref": "#/$defs/__schema428"
-						},
-						"number": {
 							"$ref": "#/$defs/__schema429"
 						},
-						"extPos": {
+						"number": {
 							"$ref": "#/$defs/__schema430"
 						},
 						"person": {
@@ -11428,7 +11427,6 @@
 					"required": [
 						"case",
 						"number",
-						"extPos",
 						"person",
 						"polite",
 						"poss",
@@ -11448,7 +11446,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema428": {
+		"__schema429": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -11464,26 +11462,13 @@
 				}
 			]
 		},
-		"__schema429": {
+		"__schema430": {
 			"anyOf": [
 				{
 					"type": "string",
 					"enum": [
 						"Plur",
 						"Sing"
-					]
-				},
-				{
-					"type": "null"
-				}
-			]
-		},
-		"__schema430": {
-			"anyOf": [
-				{
-					"type": "string",
-					"enum": [
-						"DET"
 					]
 				},
 				{
@@ -11509,11 +11494,7 @@
 		"__schema432": {
 			"anyOf": [
 				{
-					"type": "string",
-					"enum": [
-						"Form",
-						"Infm"
-					]
+					"$ref": "#/$defs/__schema419"
 				},
 				{
 					"type": "null"
@@ -13344,9 +13325,6 @@
 					"$ref": "#/$defs/__schema413"
 				},
 				{
-					"$ref": "#/$defs/__schema421"
-				},
-				{
 					"$ref": "#/$defs/__schema422"
 				},
 				{
@@ -13356,7 +13334,10 @@
 					"$ref": "#/$defs/__schema424"
 				},
 				{
-					"$ref": "#/$defs/__schema427"
+					"$ref": "#/$defs/__schema425"
+				},
+				{
+					"$ref": "#/$defs/__schema428"
 				},
 				{
 					"$ref": "#/$defs/__schema436"

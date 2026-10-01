@@ -7,9 +7,8 @@ const lemma = {
 	kind: "PRON",
 	canonicalForm: "euch",
 	coreFeatures: {
-		extPos: null,
 		person: "2",
-		polite: "Infm",
+		polite: null,
 		poss: null,
 		pronType: "Prs",
 		case: "Acc",

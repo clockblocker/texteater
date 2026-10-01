@@ -35,7 +35,7 @@ each for Int and for Rel, and their Surfaces mark case alone. `wen`, `wem`
 and `wessen` are Surfaces of `wer`, and `was` and `wessen` are Surfaces of
 `was`. Genitive `wessen` is a Surface of both, and the referent decides
 which. Attributive `wessen` names a possessor person; it has one form and is
-its own invariant Lemma with extPos DET.
+its own invariant Lemma, cited apart from `wer`.
 
 **Gender and possessors.** Personal gender uses `gender`. Unmarked features
 are null, compared literally, and never used as wildcards or as guesses about
@@ -45,8 +45,8 @@ singular. Possessor gender and number describe a possessive's Surface, as
 they do on the possessive articles, and mark only what the form shows: `sein-` (his, its) has gender[psor] Masc, Neut, and
 `ihr-` (hers, theirs) marks neither. So `seiner`/`seinige` and
 `ihrer`/`ihrige` are one Lemma each, and formal `Ihrer` stays apart. Only a
-possessive marks possessor features. Reflexivity and historical status are
-Surface evidence.
+possessive marks possessor features, and historical status is Surface
+evidence. No pronoun marks reflexivity.
 
 **Formal address.** Formal `Sie`, `Ihnen` and `Ihrer`, and the possessive
 `Ihr`, are the third person plural with `polite` Form. Person 2 only restated
@@ -55,14 +55,16 @@ LEO, grammis and TIGER treat the polite form as the 3rd person plural, used
 for one person or several, and the verb (*Sie sind*), free `sich` (*setzen
 Sie sich*) and `Ihr` agree with it without an exception. The pronoun cells
 keep number Plur, because that is their agreement, not their meaning. So
-formal `Sie` and 3pl `sie` differ in politeness alone.
+formal `Sie` and 3pl `sie` differ in politeness alone. `polite` is Form or
+null: informal `du`, `ihr`, `dein` and `euer` leave it null, since person 2
+already says who is meant.
 
 **Free `sich`.** A reflexive the verb does not require is a unit of its own,
 and a lexical reflexive is a member of its verb (`sich erinnern`,
 [ADR 0003](./0003-attestation-supersedes-selection-and-owns-realization-coverage.md)).
-Free `sich` is the reflexive's Acc or Dat cell, with person 3 in Core. Its
-Surface marks the reflexive use (`reflex` Yes), as reflexive `mich`, `uns`
-and `euch` mark theirs while staying their personal cells. A reciprocal use
+Free `sich` is the reflexive's Acc or Dat cell, with person 3 in Core.
+Reflexive `mich`, `uns` and `euch` stay their personal cells, and no Surface
+marks the reflexive use, which the sentence shows. A reciprocal use
 (*Unsere Nachbarn grüßen sich*) keeps the same Lemma and Reading, since the
 plural context makes the clause reciprocal, and no `sich` has `pronType` Rcp.
 The `sich` with no case in Core is the reflexivity unit a lexical reflexive
@@ -110,8 +112,8 @@ invariant Lemma beside `derjenige`, with `pronType` Dem in Core and one
 uninflected form, as attributive `wessen` has. Duden gives it as a genitive
 plural only.
 
-**Elsewhere `derer` spells `deren`.** Wherever standalone `deren` could stand
-instead, `derer` is a Licensed Variant of that `deren` cell. That covers the
+**Elsewhere `derer` spells `deren`.** In an occurrence where `deren` could
+stand alone instead, `derer` is a Licensed Variant of that `deren` cell. That covers the
 relative (*die Opfer, derer wir gedenken*) and the demonstrative pointing back
 (*Die Kartons stehen herum; wir wollen uns derer entledigen*). The test is a
 swap. If `deren` fits, the learner who clicks `derer` sees `deren`, relative
@@ -119,7 +121,9 @@ or demonstrative, with `derer` marked as its accepted spelling. If only
 `derer` fits, they see the `derer` Lemma, *of those (who …)*. `deren` stays
 the Canonical Form, because it is the one form every pointing-back use
 accepts: before a noun or a number only `deren` stands (*deren Freundin*,
-*deren viele*). Attributive `deren` has no `derer` spelling.
+*deren viele*). Attributive and standalone `deren` are one Lemma, so the swap
+is judged per occurrence, and an attributive occurrence has no `derer`
+spelling.
 
 Amended on 2026-10-01: standalone demonstrative `derer` was a second Lemma of
 the `deren` cells, accepted as the one exception to ADR 0032's rule that no
@@ -162,6 +166,22 @@ were person 2 with number Plur, a mix no grammar or treebank uses, and a
 future verb agreement check would have rejected every formal-address
 sentence. They are person 3 now. Decided on
 [#743](https://github.com/clockblocker/texteater/issues/743).
+
+Amended on 2026-10-01: attributive `dessen` and `deren` were Lemmas of their
+own beside the standalone cells, kept apart by `extPos` DET. The two uses
+mean the same to a learner, and their forms are the same cell, so they are
+one Lemma each now, and `extPos` left German PRON. The `derer` licence, a
+property of the standalone Lemma, became the per-occurrence swap test above.
+Attributive `wessen` stays its own invariant Lemma, cited apart from `wer`.
+Decided on [#766](https://github.com/clockblocker/texteater/issues/766).
+
+Amended on 2026-10-01: a pronoun Surface marked its reflexive use (`reflex`
+Yes), and informal address carried `polite` Infm. Neither split a Lemma: the
+sentence shows the reflexive use, and person 2 says informal address. Infm
+was set on some cells and not others, which split `dich` by accident and left
+the possessives `dein` and `euer` inconsistent. A lexical reflexive stays a
+member of its verb. Decided on
+[#766](https://github.com/clockblocker/texteater/issues/766).
 
 Amended on 2026-10-01: free `sich` and its reciprocal use are stated here.
 ADR 0018 held them until a rewrite on 2026-08-30 cut them, and ADR 0044 did

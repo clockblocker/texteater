@@ -39,7 +39,7 @@
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔗" },
 			"notes": {
-				"rationale": "Attributive dessen is the relative pillar cell Gen.Sg with extPos DET (de/pron-or-det-by-use). It serves a masculine and a neuter antecedent alike, so its gender is null (ADR 0044), and Buch is a separate target."
+				"rationale": "Attributive dessen is the relative pillar cell Gen.Sg, one Lemma with standalone dessen (de/pron-or-det-by-use). It serves a masculine and a neuter antecedent alike, so its gender is null (ADR 0044), and Buch is a separate target."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -62,7 +62,6 @@
 						"kind": "PRON",
 						"coreFeatures": {
 							"pronType": "Rel",
-							"extPos": "DET",
 							"person": null,
 							"polite": null,
 							"poss": null,

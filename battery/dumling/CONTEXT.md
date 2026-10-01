@@ -105,10 +105,9 @@ mark Degree. See [ADR 0042].
 _Avoid_: Gradability
 
 **Paradigm Cell**:
-One combination of case, number, gender or reflexivity in a closed, authored
-paradigm. Depending on the paradigm, a cell is a Lemma of its own (`mir`,
-`mich`) or a Surface of one Lemma such as `dieser`. See [ADR 0032] and
-[ADR 0044].
+One combination of case, number and gender in a closed, authored paradigm.
+Depending on the paradigm, a cell is a Lemma of its own (`mir`, `mich`) or a
+Surface of one Lemma such as `dieser`. See [ADR 0032] and [ADR 0044].
 _Avoid_: Paradigm form, inflected closed-class Surface
 
 **Spelling Crossroad**:

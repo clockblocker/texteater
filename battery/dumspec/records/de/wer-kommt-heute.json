@@ -38,7 +38,6 @@
 						"coreFeatures": {
 							"case": null,
 							"number": null,
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -54,8 +53,7 @@
 						"gender": null,
 						"number": null,
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					}
 				},
 				"members": [{ "attested": "Wer", "orthography": "Standard" }],

@@ -35,7 +35,6 @@ const emptyCore: Core = {
 	case: null,
 	gender: null,
 	number: null,
-	extPos: null,
 	person: null,
 	polite: null,
 	poss: null,

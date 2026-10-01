@@ -7,7 +7,6 @@ const lemma = {
 	kind: "PRON",
 	canonicalForm: "dessen",
 	coreFeatures: {
-		extPos: null,
 		person: null,
 		polite: null,
 		poss: null,
@@ -23,9 +22,12 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👉" }, lemma },
 	knowledge: {
 		definition:
-			"Das Demonstrativpronomen „dessen“ verweist betont auf eine im Kontext bestimmte Person oder Sache.",
+			"Das Demonstrativpronomen „dessen“ verweist betont auf eine im Kontext bestimmte Person oder Sache. Vor einem Nomen ordnet es dieses ihr zu: mein Freund und dessen Hund.",
 		transcription: "ˈdɛsn̩",
-		translations: { en: ["that one", "this one"], ru: ["его"] },
+		translations: {
+			en: ["that one", "this one", "his", "its"],
+			ru: ["его"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

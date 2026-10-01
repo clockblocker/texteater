@@ -344,7 +344,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -529,7 +528,6 @@
 						"coreFeatures": {
 							"case": "Acc",
 							"number": "Sing",
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -949,7 +947,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -1236,14 +1233,7 @@
 					"spelling": {
 						"kind": "Canonical"
 					},
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -1253,7 +1243,6 @@
 						"coreFeatures": {
 							"case": "Acc",
 							"number": null,
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,

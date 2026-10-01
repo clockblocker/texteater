@@ -323,7 +323,6 @@
 						"coreFeatures": {
 							"case": "Acc",
 							"number": null,
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -336,14 +335,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"gender": null,
-						"number": null,
-						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": "Yes"
-					}
+					"inflectionalFeatures": null
 				},
 				"articleEvidence": null,
 				"members": [

@@ -227,7 +227,6 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,

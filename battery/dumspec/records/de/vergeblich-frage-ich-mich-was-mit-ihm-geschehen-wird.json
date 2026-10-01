@@ -286,7 +286,6 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -331,8 +330,7 @@
 						"gender": null,
 						"number": null,
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					},
 					"lemma": {
 						"unitKind": "Lemma",
@@ -341,7 +339,6 @@
 						"kind": "PRON",
 						"canonicalForm": "was",
 						"coreFeatures": {
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -469,7 +466,6 @@
 						"kind": "PRON",
 						"canonicalForm": "ihm",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,

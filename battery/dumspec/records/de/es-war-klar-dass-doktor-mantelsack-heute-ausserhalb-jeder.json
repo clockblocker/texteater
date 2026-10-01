@@ -327,7 +327,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -1078,8 +1077,7 @@
 						"gender": null,
 						"number": null,
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					},
 					"lemma": {
 						"unitKind": "Lemma",
@@ -1090,7 +1088,6 @@
 						"coreFeatures": {
 							"case": null,
 							"number": null,
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,

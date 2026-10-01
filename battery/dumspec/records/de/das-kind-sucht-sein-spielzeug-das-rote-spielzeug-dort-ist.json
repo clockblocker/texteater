@@ -51,7 +51,6 @@
 						"coreFeatures": {
 							"case": null,
 							"number": null,
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -67,8 +66,7 @@
 						"gender": "Neut",
 						"number": "Sing",
 						"gender[psor]": ["Masc", "Neut"],
-						"number[psor]": "Sing",
-						"reflex": null
+						"number[psor]": "Sing"
 					}
 				},
 				"members": [

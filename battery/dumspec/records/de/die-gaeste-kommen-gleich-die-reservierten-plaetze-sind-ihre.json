@@ -47,7 +47,6 @@
 						"coreFeatures": {
 							"case": null,
 							"number": null,
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -63,8 +62,7 @@
 						"gender": null,
 						"number": "Plur",
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					}
 				},
 				"members": [{ "attested": "ihre", "orthography": "Standard" }],

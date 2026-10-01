@@ -43,7 +43,7 @@ Do not use \`extPos\` just to restate the Lemma's ordinary lexical class. That o
 			body: `
 The abstract enum in Dumling follows the universal UD value set and includes all ten values listed above.
 
-Current concrete Dumling schemas encode only \`ADP\`, \`ADV\`, \`CCONJ\`, \`DET\`, \`PRON\`, \`PROPN\`, and \`SCONJ\`. The remaining universal values \`ADJ\`, \`AUX\`, and \`INTJ\` are available in the abstract catalog but are not currently exposed by the concrete English or German Lemma schemas.
+Current concrete Dumling schemas encode only \`ADP\`, \`ADV\`, \`CCONJ\`, \`PRON\`, \`PROPN\`, and \`SCONJ\`, all on English routes; no German route uses \`extPos\`. The remaining universal values \`ADJ\`, \`AUX\`, \`DET\`, and \`INTJ\` are available in the abstract catalog but are not currently exposed by any concrete Lemma schema.
 `,
 		},
 	],

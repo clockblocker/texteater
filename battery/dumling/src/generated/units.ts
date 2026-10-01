@@ -1283,7 +1283,7 @@ export interface UnitMap {
 				gender: ("Fem" | "Masc" | "Neut") | null;
 				number: ("Plur" | "Sing") | null;
 				person: ("1" | "2" | "3") | null;
-				polite: ("Form" | "Infm") | null;
+				polite: "Form" | null;
 				poss: "Yes" | null;
 				pronType:
 					| (
@@ -1315,7 +1315,7 @@ export interface UnitMap {
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
 					person: ("1" | "2" | "3") | null;
-					polite: ("Form" | "Infm") | null;
+					polite: "Form" | null;
 					poss: "Yes" | null;
 					pronType:
 						| (
@@ -1384,7 +1384,7 @@ export interface UnitMap {
 					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
 					person: ("1" | "2" | "3") | null;
-					polite: ("Form" | "Infm") | null;
+					polite: "Form" | null;
 					poss: "Yes" | null;
 					pronType:
 						| (
@@ -1420,7 +1420,7 @@ export interface UnitMap {
 						gender: ("Fem" | "Masc" | "Neut") | null;
 						number: ("Plur" | "Sing") | null;
 						person: ("1" | "2" | "3") | null;
-						polite: ("Form" | "Infm") | null;
+						polite: "Form" | null;
 						poss: "Yes" | null;
 						pronType:
 							| (
@@ -2218,9 +2218,8 @@ export interface UnitMap {
 			coreFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 				number: ("Plur" | "Sing") | null;
-				extPos: "DET" | null;
 				person: ("1" | "2" | "3") | null;
-				polite: ("Form" | "Infm") | null;
+				polite: "Form" | null;
 				poss: "Yes" | null;
 				pronType:
 					| (
@@ -2249,9 +2248,8 @@ export interface UnitMap {
 				coreFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
-					extPos: "DET" | null;
 					person: ("1" | "2" | "3") | null;
-					polite: ("Form" | "Infm") | null;
+					polite: "Form" | null;
 					poss: "Yes" | null;
 					pronType:
 						| (
@@ -2303,7 +2301,6 @@ export interface UnitMap {
 					  )
 					| null;
 				"number[psor]": ("Plur" | "Sing") | null;
-				reflex: "Yes" | null;
 			} | null;
 		};
 		Reading: {
@@ -2317,9 +2314,8 @@ export interface UnitMap {
 				coreFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 					number: ("Plur" | "Sing") | null;
-					extPos: "DET" | null;
 					person: ("1" | "2" | "3") | null;
-					polite: ("Form" | "Infm") | null;
+					polite: "Form" | null;
 					poss: "Yes" | null;
 					pronType:
 						| (
@@ -2352,9 +2348,8 @@ export interface UnitMap {
 					coreFeatures: {
 						case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
 						number: ("Plur" | "Sing") | null;
-						extPos: "DET" | null;
 						person: ("1" | "2" | "3") | null;
-						polite: ("Form" | "Infm") | null;
+						polite: "Form" | null;
 						poss: "Yes" | null;
 						pronType:
 							| (
@@ -2406,7 +2401,6 @@ export interface UnitMap {
 						  )
 						| null;
 					"number[psor]": ("Plur" | "Sing") | null;
-					reflex: "Yes" | null;
 				} | null;
 			};
 			members: [

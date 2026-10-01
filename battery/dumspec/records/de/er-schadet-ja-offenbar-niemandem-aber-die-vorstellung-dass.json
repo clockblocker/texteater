@@ -307,7 +307,6 @@
 						"kind": "PRON",
 						"canonicalForm": "er",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -490,8 +489,7 @@
 						"gender": null,
 						"number": "Sing",
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					},
 					"lemma": {
 						"unitKind": "Lemma",
@@ -500,7 +498,6 @@
 						"kind": "PRON",
 						"canonicalForm": "niemand",
 						"coreFeatures": {
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -676,7 +673,6 @@
 						"kind": "PRON",
 						"canonicalForm": "er",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": null,
@@ -724,7 +720,6 @@
 						"kind": "PRON",
 						"canonicalForm": "mich",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -1016,7 +1011,6 @@
 						"kind": "PRON",
 						"canonicalForm": "mir",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,

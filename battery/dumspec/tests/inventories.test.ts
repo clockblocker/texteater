@@ -39,7 +39,6 @@ function pronounSurface(
 			number: null,
 			"gender[psor]": null,
 			"number[psor]": null,
-			reflex: null,
 			...cell,
 		},
 	};
@@ -269,9 +268,10 @@ describe("the German authored inventory", () => {
 
 	test("derer is its own invariant Lemma pointing ahead and spells standalone deren elsewhere (system ADR 0044)", () => {
 		// Demonstrative derer points ahead to a relative clause and has one
-		// uninflected form. Wherever deren could stand instead, relative or
-		// demonstrative pointing back, derer is a Licensed Variant of that
-		// deren cell; attributive deren has no such spelling.
+		// uninflected form. Wherever deren could stand alone instead, relative
+		// or demonstrative pointing back, derer is a Licensed Variant of that
+		// deren cell. Attributive and standalone deren are one Lemma, so the
+		// swap is judged per occurrence: before a noun only deren stands.
 		const spelledDerer = authoredRealizations
 			.filter(({ spelled }) => spelled === "derer")
 			.map(({ member, inflection }) => {
@@ -345,10 +345,9 @@ describe("the German authored inventory", () => {
 					(realization) =>
 						realization.spelled === spelled &&
 						realization.member.lemma.kind === "PRON" &&
-						field(
-							realization.member.lemma.coreFeatures,
-							"extPos",
-						) === null,
+						// A stem's Surface marks its cell; invariant
+						// attributive wessen marks none.
+						realization.inflection != null,
 				)
 				.map(({ member, inflection }) => ({
 					canonicalForm: member.lemma.canonicalForm,
@@ -367,8 +366,7 @@ describe("the German authored inventory", () => {
 			const found = authoredMembers.find(
 				({ lemma }) =>
 					lemma.canonicalForm === canonicalForm &&
-					field(lemma.coreFeatures, "pronType") === "Int" &&
-					field(lemma.coreFeatures, "extPos") === null,
+					field(lemma.coreFeatures, "pronType") === "Int",
 			);
 			if (!found) throw Error(`No interrogative ${canonicalForm}`);
 			return found;

@@ -36,6 +36,7 @@ const retiredGermanFeatures: Readonly<Record<string, readonly string[]>> = {
 	"de/lexeme/determiner.ts": ["definite", "extPos", "numType"],
 	"de/lexeme/numeral.ts": ["abbr", "numType"],
 	"de/lexeme/particle.ts": ["abbr"],
+	"de/lexeme/pronoun.ts": ["extPos", "reflex"],
 	"de/lexeme/punctuation.ts": ["punctType"],
 	"de/lexeme/subordinating-conjunction.ts": ["conjType"],
 	"de/lexeme/symbol.ts": ["numType"],

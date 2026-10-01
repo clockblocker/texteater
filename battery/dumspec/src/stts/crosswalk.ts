@@ -835,7 +835,8 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "PRELAT",
 		stts: "attributive relative pronoun",
-		dumling: "Lexeme PRON pronType Rel with extPos DET (dessen, deren)",
+		dumling:
+			"Lexeme PRON pronType Rel, the genitive cell dessen or deren, one Lemma with the standalone use",
 		mappings: [
 			{
 				use: "dessen or deren before a noun",
@@ -859,7 +860,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "PRF",
 		stts: "reflexive personal pronoun",
 		dumling:
-			"A free reflexive is PRON with reflex on the Surface; a verb's inherent sich is a member of the verb; einander is PRON Rcp",
+			"A free reflexive is its personal or sich PRON cell, unmarked for reflexivity; a verb's inherent sich is a member of the verb; einander is PRON Rcp",
 		mappings: [
 			{
 				use: "free reflexive object",
@@ -923,7 +924,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "PWAT",
 		stts: "attributive interrogative pronoun",
 		dumling:
-			"Lexeme DET pronType Int; attributive wessen is an invariant PRON with extPos DET (ADR 0044)",
+			"Lexeme DET pronType Int; attributive wessen is an invariant PRON (ADR 0044)",
 		mappings: [
 			{
 				use: "welcher before a noun",

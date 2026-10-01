@@ -14,7 +14,6 @@ import {
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
 // LEO separates antecedent/possessor coordinates from the pronoun's own case.
-// Attributive genitives fit extPos DET without borrowing the following noun's agreement.
 // System ADR 0044 chooses Core identity coordinates; LEO does not prescribe Lemma granularity.
 // System ADR 0032: a pillar (personal, der-series) sets case, number and
 // gender in Core; a stem word (dieser, keiner, meiner, wer) marks them on its Surfaces.
@@ -31,9 +30,8 @@ export const DePronounFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
 		number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
-		extPos: DE_FEATURE_SCHEMA.extPos.extract(["DET"]),
 		person: DE_FEATURE_SCHEMA.person.extract(["1", "2", "3"]),
-		polite: DE_FEATURE_SCHEMA.polite.extract(["Form", "Infm"]),
+		polite: DE_FEATURE_SCHEMA.polite,
 		poss: DE_FEATURE_SCHEMA.poss,
 		pronType: DE_FEATURE_SCHEMA.pronType.extract([
 			"Dem",
@@ -54,7 +52,6 @@ export const DePronounFeatureBagsSchema = z.strictObject({
 			number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
 			"gender[psor]": featureValueSetSchema(gender),
 			"number[psor]": DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
-			reflex: DE_FEATURE_SCHEMA.reflex,
 		}),
 	),
 });

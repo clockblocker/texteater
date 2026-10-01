@@ -60,14 +60,6 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		varies: [{ key: "pronType", values: ["Dem", "Rel"] }],
 	},
 	{
-		split: "Attributive dessen, deren and wessen take extPos DET",
-		adrs: ["ADR-0044"],
-		rules: ["de/pron-or-det-by-use"],
-		forms: ["dessen", "deren", "wessen"],
-		both: { kind: ["PRON"] },
-		varies: [{ key: "extPos", values: [null, "DET"] }],
-	},
-	{
 		split: "wer and was are each one Lemma for Int and one for Rel",
 		adrs: ["ADR-0044"],
 		rules: ["de/core-features-are-identity"],

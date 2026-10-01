@@ -49,7 +49,6 @@
 						"coreFeatures": {
 							"case": null,
 							"number": null,
-							"extPos": null,
 							"person": "3",
 							"polite": null,
 							"poss": "Yes",
@@ -65,8 +64,7 @@
 						"gender": "Masc",
 						"number": "Sing",
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					}
 				},
 				"members": [{ "attested": "ihrer", "orthography": "Standard" }],

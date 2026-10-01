@@ -179,9 +179,8 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "2",
-							"polite": "Infm",
+							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
 							"gender": null
@@ -224,7 +223,6 @@
 						"coreFeatures": {
 							"case": "Acc",
 							"number": "Sing",
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,

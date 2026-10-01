@@ -48,8 +48,7 @@
 						"gender": null,
 						"number": "Plur",
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					},
 					"lemma": {
 						"unitKind": "Lemma",
@@ -59,7 +58,6 @@
 						"kind": "PRON",
 						"coreFeatures": {
 							"pronType": "Ind",
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,

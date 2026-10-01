@@ -217,7 +217,6 @@
 						"coreFeatures": {
 							"case": "Dat",
 							"number": "Plur",
-							"extPos": null,
 							"person": "3",
 							"polite": "Form",
 							"poss": null,
@@ -378,7 +377,6 @@
 						"coreFeatures": {
 							"case": null,
 							"number": null,
-							"extPos": null,
 							"person": null,
 							"polite": null,
 							"poss": null,
@@ -396,8 +394,7 @@
 						"gender": "Masc",
 						"number": "Sing",
 						"gender[psor]": null,
-						"number[psor]": null,
-						"reflex": null
+						"number[psor]": null
 					}
 				},
 				"members": [

@@ -52,13 +52,14 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 		bag.inflectional
 	)
 		Object.assign(bag.inflectional, { gender: null });
-	// A Paradigm Cell coordinate is marked in Core or on the Surface, never both.
+	// A Paradigm Cell coordinate is marked in Core or on the Surface, never
+	// both. The PRON sample Core is unmarked, so its Surface marks the case.
 	if (
 		(route.key === "de/Lexeme/DET" || route.key === "de/Lexeme/PRON") &&
 		bag.inflectional
 	)
 		Object.assign(bag.inflectional, {
-			case: null,
+			...(route.key === "de/Lexeme/DET" ? { case: null } : {}),
 			gender: null,
 			number: null,
 		});

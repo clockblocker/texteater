@@ -177,7 +177,6 @@
 						"kind": "PRON",
 						"canonicalForm": "ich",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -357,7 +356,6 @@
 						"kind": "PRON",
 						"canonicalForm": "wir",
 						"coreFeatures": {
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,

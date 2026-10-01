@@ -199,7 +199,6 @@
 						"coreFeatures": {
 							"case": "Dat",
 							"number": "Sing",
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
@@ -244,7 +243,6 @@
 						"coreFeatures": {
 							"case": "Nom",
 							"number": "Sing",
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,

@@ -70,7 +70,6 @@
 						"coreFeatures": {
 							"person": null,
 							"pronType": "Dem",
-							"extPos": null,
 							"polite": null,
 							"poss": null,
 							"case": "Nom",
@@ -153,7 +152,6 @@
 						"coreFeatures": {
 							"case": "Dat",
 							"number": "Sing",
-							"extPos": null,
 							"person": "1",
 							"polite": null,
 							"poss": null,
