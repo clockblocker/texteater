@@ -68,6 +68,39 @@ test("a Lemma target closes only when its Lemma has exactly one Reading", () => 
 	expect(project([source])).toEqual([direct]);
 });
 
+test("a Canonical Form counts without case, as Lemma identity does (system ADR 0002)", () => {
+	const duplicate = projectSemanticRelations([
+		{ reading: dog, knowledge: {} },
+		{ reading: reading("HUND"), knowledge: {} },
+	]);
+	expect(duplicate.success).toBe(false);
+	if (!duplicate.success)
+		expect(duplicate.error.issues[0]?.path).toEqual([1, "reading"]);
+	const shouted = { ...animal.lemma, canonicalForm: "TIER" };
+	expect(
+		project([
+			{
+				reading: dog,
+				knowledge: { semanticRelations: { hypernym: [shouted] } },
+			},
+			{ reading: animal, knowledge: {} },
+		]),
+	).toEqual([
+		{
+			source: dog,
+			relation: "hypernym",
+			target: shouted,
+			provenance: "direct",
+		},
+		{
+			source: animal,
+			relation: "hyponym",
+			target: dog.lemma,
+			provenance: "inferred",
+		},
+	]);
+});
+
 test("reading counts must be valid, unique, and cover the supplied Readings", () => {
 	const entries = [
 		{ reading: animal, knowledge: {} },

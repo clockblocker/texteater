@@ -632,6 +632,8 @@ describe("Grundform assessment", () => {
 			"Wer rastet, der rostet",
 			"Wer rastet, der rostet!",
 			"Wer rastet der rostet.",
+			// Case is never grammar (system ADR 0002).
+			"wer rastet, der rostet",
 		])
 			expect(
 				checkIfGrundform(
@@ -642,7 +644,7 @@ describe("Grundform assessment", () => {
 				),
 				form,
 			).toEqual({ success: true, value: true });
-		for (const form of ["Wer rastet, rostet", "wer rastet, der rostet"])
+		for (const form of ["Wer rastet, rostet", "Wer rostet, der rastet"])
 			expect(
 				checkIfGrundform(
 					surface("de/Saying/Saying", {

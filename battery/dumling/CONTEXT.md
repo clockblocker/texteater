@@ -8,8 +8,8 @@ semantic values that learner text resolves to.
 ### Grammatical identity
 
 **Lemma**:
-An identity-bearing grammatical entity defined by language, Canonical Form,
-Family, Kind, and Core Features.
+An identity-bearing grammatical entity defined by language, Family, Kind, Core
+Features and Canonical Form, the Canonical Form compared without letter case.
 _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 
 **Lexeme**:
@@ -73,11 +73,12 @@ from the multiword Lemma's Note (`den Faden verlieren`: `Faden`,
 _Avoid_: components, drill-down segmentation
 
 **Canonical Form**:
-The normalized form that names a Lemma and participates in its identity. It
-takes the word's lexical casing, never its position: sentence-initial `Wegen`
-is the Lemma `wegen`. An open slot in a discontinuous form is `…` (U+2026)
-with a space on each side: `um … willen`. ASCII `...` is accepted on input and
-stored as `…`.
+The normalized form that names a Lemma. It takes part in the Lemma's identity
+without letter case, so `LOL` and `lol` are one INTJ. It keeps the casing a
+dictionary shows (`Haus`, `LOL`, `Sie`), never the word's position:
+sentence-initial `Wegen` is the Lemma `wegen`. An open slot in a
+discontinuous form is `…` (U+2026) with a space on each side: `um … willen`.
+ASCII `...` is accepted on input and stored as `…`.
 _Avoid_: Citation Form, Lemma Form
 
 **Family**:

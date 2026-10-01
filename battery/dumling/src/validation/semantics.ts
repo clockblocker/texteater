@@ -30,7 +30,8 @@ export function sayingCanonicalFormError(): string {
  * A Foreign Lemma has one Surface: its Canonical Form, spelled Canonical,
  * with no Surface features (ADR 0045). A typo is a Typo member and a
  * spelling such as `colour` is the Canonical Form itself, so no other
- * Surface is needed.
+ * Surface is needed. The form is compared exactly, display casing included:
+ * the sentence's casing stays on the member, so the Lemma keeps one Surface.
  */
 export function isForeignSurface(input: unknown): boolean {
 	const value = input as {

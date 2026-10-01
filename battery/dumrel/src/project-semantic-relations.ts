@@ -2,6 +2,7 @@ import { ParsingError } from "common-utils";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { conflict, contextualizeKnowledge } from "./context.js";
+import { foldCanonicalForm } from "./fingerprint.js";
 import type {
 	ReadingWithKnowledge,
 	SemanticRelation,
@@ -26,8 +27,9 @@ const relationOrder = Object.keys(algebra);
 
 /**
  * Structural indexing private to one projection, not a persistent ID codec.
- * Keys are cached by object identity, which holds because a projection never
- * mutates the values it indexes.
+ * A Canonical Form counts case-folded, as Lemma identity does (system ADR
+ * 0002). Keys are cached by object identity, which holds because a projection
+ * never mutates the values it indexes.
  */
 function structuralKeys() {
 	const cache = new WeakMap<object, string>();
@@ -38,7 +40,7 @@ function structuralKeys() {
 		if (known !== undefined) return known;
 		const computed = Array.isArray(value)
 			? `[${value.map(key).join(",")}]`
-			: `{${Object.entries(value)
+			: `{${Object.entries(foldCanonicalForm(value))
 					.filter(([, member]) => member !== undefined)
 					.sort(([left], [right]) => compare(left, right))
 					.map(

@@ -1,6 +1,7 @@
 import { ParsingError } from "common-utils";
 import type * as Dumling from "dumling/types";
 import { conflict, contextualizeKnowledge } from "./context.js";
+import { foldCanonicalForm } from "./fingerprint.js";
 import type {
 	ParticipleProjection,
 	ParticipleSource,
@@ -8,11 +9,12 @@ import type {
 } from "./types.js";
 import { parseProjectionShape } from "./validation.js";
 
-// Structural indexing is private to this projection, not a persistent ID codec.
+// Structural indexing is private to this projection, not a persistent ID
+// codec. A Canonical Form counts case-folded, as Lemma identity does.
 function key(value: unknown): string {
 	if (Array.isArray(value)) return `[${value.map(key).join(",")}]`;
 	if (value !== null && typeof value === "object")
-		return `{${Object.entries(value)
+		return `{${Object.entries(foldCanonicalForm(value))
 			.filter(([, member]) => member !== undefined)
 			.sort(([left], [right]) => compare(left, right))
 			.map(([name, member]) => `${JSON.stringify(name)}:${key(member)}`)

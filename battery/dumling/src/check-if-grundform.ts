@@ -15,7 +15,8 @@ import type { Surface } from "./types.js";
  * the Lemma; this function does not perform spell checking or infer missing
  * grammar.
  * Routes without represented inflection use the canonical form/Variant evidence.
- * A Saying's spelling is compared by its words only (ADR 0039). A German or
+ * Spelling is compared without case (system ADR 0002), and a Saying's by its
+ * words only (ADR 0039). A German or
  * English ADV or ADJ is assessed from its Lemma's comparability (ADR 0042):
  * a comparable one cites its positive, and a non-comparable one without
  * inflection (`hier`, `tot`) is Grundform by its spelling.

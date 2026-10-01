@@ -6,6 +6,12 @@ export {
 	type GrundformIssue,
 	type GrundformResult,
 } from "./grundform/result.js";
+export {
+	foldCase,
+	lemmaIdentityKey,
+	readingIdentityKey,
+	sameLemma,
+} from "./identity.js";
 export { type ParseResult, parseUnit } from "./parse-unit.js";
 export type {
 	Attestation,

@@ -1,3 +1,4 @@
+import { foldCase } from "../identity.js";
 import type { Surface } from "../types.js";
 
 // A word is letters, marks and digits, joined inside by an apostrophe, a
@@ -9,14 +10,15 @@ function words(value: string): string {
 }
 
 /**
- * Whether a Surface spells its Lemma's Canonical Form. A Saying keeps its
- * internal punctuation, so only its words count (ADR 0039): `Wer rastet, der
- * rostet!` spells `Wer rastet, der rostet`. Every other route compares the
- * whole spelling.
+ * Whether a Surface spells its Lemma's Canonical Form, compared without case:
+ * case is never grammar, so `lol` spells `LOL` (system ADR 0002). A Saying
+ * keeps its internal punctuation, so only its words count (ADR 0039): `Wer
+ * rastet, der rostet!` spells `Wer rastet, der rostet`. Every other route
+ * compares the whole spelling.
  */
 export function spellsCanonicalForm(surface: Surface): boolean {
-	const { canonicalForm, family } = surface.lemma;
-	return family === "Saying"
-		? words(surface.normalizedSurface) === words(canonicalForm)
-		: surface.normalizedSurface === canonicalForm;
+	const { canonicalForm, family, language } = surface.lemma;
+	const spelling = (value: string) =>
+		foldCase(family === "Saying" ? words(value) : value, language);
+	return spelling(surface.normalizedSurface) === spelling(canonicalForm);
 }

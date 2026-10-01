@@ -49,7 +49,11 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 		"UnitKind",
 		"VariantTag",
 		"checkIfGrundform",
+		"foldCase",
+		"lemmaIdentityKey",
 		"parseUnit",
+		"readingIdentityKey",
+		"sameLemma",
 	]);
 	expect(module.parseUnit(null).success).toBe(false);
 });

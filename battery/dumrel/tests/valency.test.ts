@@ -175,6 +175,24 @@ test("each route allows its own complements, and lists each once", () => {
 			knowledge: { valency: [optional(aufAcc), required(aufAcc)] },
 		}).success,
 	).toBe(false);
+	// A preposition counts without case, as Lemma identity does (system ADR 0002).
+	const shouted = {
+		...aufAcc,
+		preposition: { ...aufAcc.preposition, canonicalForm: "AUF" },
+	};
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: { valency: [optional(aufAcc), required(shouted)] },
+		}).success,
+	).toBe(false);
+	expect(
+		applyKnowledgeChange({
+			source: wartenReading,
+			knowledge: { valency: [optional(aufAcc)] },
+			change: { kind: "Retract", aspect: "valency", complement: shouted },
+		}),
+	).toEqual({ success: true, value: {} });
 });
 
 test("Contribute adds missing Slots, Correct replaces the frame, Retract removes a Slot or the frame", () => {
