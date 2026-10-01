@@ -1,0 +1,233 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"canonicalForm": "Wer zuerst kommt, mahlt zuerst",
+		"family": "Saying",
+		"kind": "Saying",
+		"coreFeatures": {}
+	},
+	"sentence": "Wer zuerst kommt, mahlt zuerst",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Wer" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zuerst" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "kommt" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mahlt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zuerst" }
+	],
+	"sources": {
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041"],
+		"rules": [
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "044ad2bbec5191e7"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: wer zuerst kommt, mahlt zuerst",
+				"url": "https://www.dwds.de/wb/wer%20zuerst%20kommt,%20mahlt%20zuerst",
+				"supports": "The wording, the Saying's Canonical Form"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "Wer heads a free relative clause with no antecedent and stands for a noun phrase, so it is the relative PRON wer with the gold's 🔗👤 Reading, as in Wer mitkommen will, meldet sich bis Freitag (de/pron-or-det-by-use). Its Surface marks Nom, its case as subject of kommt."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "Wer", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "wer",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "wer",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"pronType": "Rel",
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"case": null,
+							"number": null,
+							"gender": "Masc"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": { "emojiDescription": "🔗👤" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "zuerst 'first' is an ADV with no comparison forms."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "zuerst", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "zuerst",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "zuerst",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": { "comparable": null, "pronType": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "kommt", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "kommt",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "kommen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The Breakdown reads mahlt literally, as grinding grain at the mill: the proverb's meaning belongs to the Saying."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "mahlt", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "mahlt",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "mahlen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "zuerst", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "zuerst",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "zuerst",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": { "comparable": null, "pronType": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	]
+}

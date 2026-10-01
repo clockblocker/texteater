@@ -20,11 +20,17 @@ describe("Breakdown Records", () => {
 		expect(
 			breakdowns.map(({ id, lemma }) => [id, lemma.family, lemma.kind]),
 		).toEqual([
+			["breakdown/de/da-liegt-der-hase-im-pfeffer", "Locution", "VERB"],
 			["breakdown/de/den-faden-verlieren", "Locution", "VERB"],
+			["breakdown/de/den-nagel-auf-den-kopf-treffen", "Locution", "VERB"],
+			["breakdown/de/guten-morgen", "Locution", "INTJ"],
+			["breakdown/de/guten-tag", "Locution", "INTJ"],
 			["breakdown/de/morgenstund-hat-gold-im-mund", "Saying", "Saying"],
 			["breakdown/de/na-ja", "Locution", "INTJ"],
+			["breakdown/de/nur-bahnhof-verstehen", "Locution", "VERB"],
 			["breakdown/de/uebung-macht-den-meister", "Saying", "Saying"],
 			["breakdown/de/um-zu", "Locution", "SCONJ"],
+			["breakdown/de/wer-zuerst-kommt-mahlt-zuerst", "Saying", "Saying"],
 		]);
 	});
 

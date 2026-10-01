@@ -1,0 +1,106 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"canonicalForm": "guten Morgen",
+		"family": "Locution",
+		"kind": "INTJ",
+		"coreFeatures": {}
+	},
+	"sentence": "guten Morgen",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "guten" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Morgen" }
+	],
+	"sources": {
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041", "ADR-0042"],
+		"rules": [
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "dc0d3ef97ace5bc0"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "The Breakdown reads guten literally, as gut 'good' with the gold's 👍 Reading: the greeting's meaning belongs to the Locution. It is attributive before Morgen, strong accusative masculine singular, as in einen guten Morgen wünschen, and gut is comparable, so it marks Pos (de/comparability-is-lexical)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "guten", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "guten",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": "Pos",
+						"gender": "Masc",
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "gut",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"coreFeatures": { "comparable": "Yes" }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": { "emojiDescription": "👍" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "A bare noun with no article; guten shows its accusative."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Morgen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Morgen",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Morgen",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Masc" }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": { "emojiDescription": "🌅" }
+		}
+	]
+}

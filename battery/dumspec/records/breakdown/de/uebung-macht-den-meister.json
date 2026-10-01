@@ -28,7 +28,7 @@
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"notes": {
-				"rationale": "A bare noun: Übung has no article in the Saying, so its Surface marks article None."
+				"rationale": "A bare noun: Übung has no article in the Saying, so it has no article evidence."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

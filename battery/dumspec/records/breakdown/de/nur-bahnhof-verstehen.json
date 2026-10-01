@@ -1,0 +1,146 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"canonicalForm": "nur Bahnhof verstehen",
+		"family": "Locution",
+		"kind": "VERB",
+		"coreFeatures": {}
+	},
+	"sentence": "nur Bahnhof verstehen",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "nur" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Bahnhof" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "verstehen" }
+	],
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0041"],
+		"rules": [
+			{ "rule": "de/focus-word-is-adv", "hash": "d38200289df9682c" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: Bahnhof",
+				"url": "https://www.duden.de/rechtschreibung/Bahnhof",
+				"supports": "The wording, the Locution's Canonical Form ([immer] nur Bahnhof verstehen)"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "nur is the restrictive focus word on Bahnhof: a single-member ADV, not comparable (de/focus-word-is-adv)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "nur", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "nur",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "nur",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": { "comparable": null, "pronType": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "The Breakdown reads Bahnhof literally, as railway station: the idiom's meaning belongs to the Locution, and its parts are the Readings a learner drills down to. It is a bare noun with no article."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Bahnhof", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Bahnhof",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Bahnhof",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Masc" }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"grundform": true,
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "verstehen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "verstehen",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "verstehen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	]
+}
