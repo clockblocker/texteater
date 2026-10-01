@@ -144,6 +144,32 @@ function Action({
 	);
 }
 
+/** A unit's rows, filled with its details or with placeholders. */
+function UnitRows({
+	members,
+	route,
+	lemma,
+	rationale,
+}: {
+	members: ReactNode;
+	route: ReactNode;
+	lemma: ReactNode;
+	rationale: ReactNode;
+}) {
+	return (
+		<dl className="grid grid-cols-[8rem_1fr] gap-x-4 gap-y-1 text-sm">
+			<dt className="text-ink-muted">Members</dt>
+			<dd>{members}</dd>
+			<dt className="text-ink-muted">Route</dt>
+			<dd>{route}</dd>
+			<dt className="text-ink-muted">Draft Lemma</dt>
+			<dd className="text-ink-soft">{lemma}</dd>
+			<dt className="text-ink-muted">Rationale</dt>
+			<dd className="text-ink-soft">{rationale}</dd>
+		</dl>
+	);
+}
+
 function SelectionDetails({
 	record,
 	focus,
@@ -151,12 +177,21 @@ function SelectionDetails({
 	record: ReadableRecordView;
 	focus: Focus | null;
 }) {
-	if (!focus)
+	if (!focus) {
+		const placeholder = <span className="text-ink-faint">—</span>;
 		return (
-			<p className="text-ink-muted text-sm">
-				Hover a word to see its unit; click to select it.
-			</p>
+			<UnitRows
+				members={
+					<span className="text-ink-muted">
+						Hover a word to see its unit; click to select it.
+					</span>
+				}
+				route={placeholder}
+				lemma={placeholder}
+				rationale={placeholder}
+			/>
 		);
+	}
 	if (focus.kind === "noTarget") {
 		const entry = record.noTarget.find(
 			(candidate) => candidate.segment === focus.segment,
@@ -173,26 +208,71 @@ function SelectionDetails({
 	const unit = record.units[focus.index];
 	if (!unit) return null;
 	return (
-		<dl
-			className="grid grid-cols-[8rem_1fr] gap-x-4 gap-y-1 text-sm"
-			data-selected-unit={focus.index}
-		>
-			<dt className="text-ink-muted">Members</dt>
-			<dd>{memberText(unit, record.segments)}</dd>
-			<dt className="text-ink-muted">Route</dt>
-			<dd>
-				{unit.route.family} / {unit.route.kind}
-			</dd>
-			<dt className="text-ink-muted">Draft Lemma</dt>
-			<dd className="text-ink-soft">
-				{unit.lemmaHint ?? "—"}{" "}
-				<span className="text-ink-faint">
-					(a hint; not reviewed here)
-				</span>
-			</dd>
-			<dt className="text-ink-muted">Rationale</dt>
-			<dd className="text-ink-soft">{unit.rationale ?? "—"}</dd>
-		</dl>
+		<UnitRows
+			members={memberText(unit, record.segments)}
+			route={`${unit.route.family} / ${unit.route.kind}`}
+			lemma={
+				<>
+					{unit.lemmaHint ?? "—"}{" "}
+					<span className="text-ink-faint">
+						(a hint; not reviewed here)
+					</span>
+				</>
+			}
+			rationale={unit.rationale ?? "—"}
+		/>
+	);
+}
+
+/**
+ * The focused details. The details of nothing, of every unit and of every No
+ * Target entry sit stacked in one grid cell with only the focused one
+ * visible, so the panel keeps the height of the record's longest and moving
+ * the pointer across the sentence never shifts what lies below.
+ */
+function FocusDetails({
+	record,
+	focus,
+}: {
+	record: ReadableRecordView;
+	focus: Focus | null;
+}) {
+	const layers: readonly { key: string; focus: Focus | null }[] = [
+		{ key: "none", focus: null },
+		...record.units.map((_, index) => ({
+			key: `unit-${index}`,
+			focus: { kind: "unit", index } as const,
+		})),
+		...record.noTarget.map(({ segment }) => ({
+			key: `no-target-${segment}`,
+			focus: { kind: "noTarget", segment } as const,
+		})),
+	];
+	return (
+		<div className="grid">
+			{layers.map((layer) => {
+				const shown =
+					layer.focus === null
+						? focus === null
+						: sameFocus(layer.focus, focus);
+				return (
+					<div
+						key={layer.key}
+						className={cn(
+							"col-start-1 row-start-1",
+							!shown && "invisible",
+						)}
+						data-selected-unit={
+							shown && layer.focus?.kind === "unit"
+								? layer.focus.index
+								: undefined
+						}
+					>
+						<SelectionDetails record={record} focus={layer.focus} />
+					</div>
+				);
+			})}
+		</div>
 	);
 }
 
@@ -311,7 +391,7 @@ export function RecordPanel({
 				}
 			/>
 			<Section title={selected ? "Selected unit" : "Unit"}>
-				<SelectionDetails record={record} focus={focus} />
+				<FocusDetails record={record} focus={focus} />
 			</Section>
 			<Section
 				title={`Units (${record.units.length}) · coverage ${record.coverage}`}
