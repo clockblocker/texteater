@@ -137,6 +137,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "er refers to Odradek; the form has one cell."
 			},

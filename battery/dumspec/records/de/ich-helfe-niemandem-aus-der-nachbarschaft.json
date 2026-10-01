@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "niemandem is the Dat Surface of the stem Lemma niemand; its case is on the Surface."
 			},

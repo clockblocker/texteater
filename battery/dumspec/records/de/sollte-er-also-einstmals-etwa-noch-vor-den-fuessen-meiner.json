@@ -305,6 +305,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "er refers to Odradek."
 			},
@@ -618,6 +621,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🔐"
 			},
 			"notes": {
 				"rationale": "meiner is the possessive mein, a DET of its own, never an article (de/only-der-and-ein-are-articles); Surface Gen.Plur, possessor singular."

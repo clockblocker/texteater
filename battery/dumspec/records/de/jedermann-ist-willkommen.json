@@ -20,6 +20,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🌐" },
 			"notes": {
 				"rationale": "The singular case occurrence is an Surface of the separate fixed Lemma jedermann, never a Lemma jedermanns or jeder."
 			},

@@ -749,6 +749,9 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"reading": {
+				"emojiDescription": "🔐"
+			},
 			"notes": {
 				"rationale": "ihre is the possessive determiner of the ihr- stem, a DET of its own (de/only-der-and-ein-are-articles); lowercase, so third person, not formal Ihr. ihr- marks no possessor gender or number (ADR 0044)."
 			},
@@ -848,6 +851,9 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "🚫"
+			},
 			"notes": {
 				"rationale": "nicht is a single-member PART with polarity Neg (de/nicht-is-part)."
 			},
@@ -929,6 +935,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "🔗"
+			},
 			"notes": {
 				"rationale": "die opens the relative clause about Hände and is the object of ließ: relative PRON die Acc.Plur, a pillar cell (ADR 0044)."
 			},
@@ -975,6 +984,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"notes": {
 				"rationale": "sie is the subject of singular ließ, so it is 3sg Fem Nom; grammar rules out the plural and formal cells."
@@ -1226,6 +1238,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "🪞"
 			},
 			"notes": {
 				"rationale": "sich is the reflexive accusative object of wenden, Acc like den Kopf in den Kopf wenden. Ruled on #743 (MB-B1, A4)."

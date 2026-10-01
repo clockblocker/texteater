@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🪞" },
 			"notes": {
 				"rationale": "VERB selects it. Target still PRON only."
 			},

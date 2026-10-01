@@ -27,6 +27,7 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "The antecedent Maria is inside the sentence, so no context is needed."
 			},

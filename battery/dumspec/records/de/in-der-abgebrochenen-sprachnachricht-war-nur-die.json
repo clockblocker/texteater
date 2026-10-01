@@ -136,6 +136,7 @@
 		{
 			"memberSegmentIndices": [21],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "mir", "orthography": "Standard" }],

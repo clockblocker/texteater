@@ -410,6 +410,9 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "🚫"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

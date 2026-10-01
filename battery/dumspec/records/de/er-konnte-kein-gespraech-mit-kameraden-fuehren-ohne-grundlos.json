@@ -225,6 +225,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -325,6 +328,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🚫"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

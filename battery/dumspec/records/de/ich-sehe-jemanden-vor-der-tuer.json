@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👤" },
 			"notes": {
 				"rationale": "jemanden is the Acc Surface of the stem Lemma jemand; its case is on the Surface."
 			},

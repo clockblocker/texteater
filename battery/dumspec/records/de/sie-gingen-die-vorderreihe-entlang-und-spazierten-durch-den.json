@@ -237,6 +237,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "Sie with plural gingen is 3pl or formal Sie. Those cells differ in who is meant, so the referent chooses: the narrative (Tony and Morten) gives 3pl (ADR 0044). Ruled on #743 (MB-A1, A1)."
 			},
@@ -575,6 +578,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "🔗"
+			},
 			"notes": {
 				"rationale": "der opens the relative clause on Kurgarten and is its subject: relative PRON der Nom.Masc.Sg."
 			},
@@ -784,6 +790,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🔐"
 			},
 			"notes": {
 				"rationale": "seinen modifies both Kieswegen and Rosenanlagen. It is a DET of its own, not an article, so the shared-article Rule does not apply and neither noun is Partial."

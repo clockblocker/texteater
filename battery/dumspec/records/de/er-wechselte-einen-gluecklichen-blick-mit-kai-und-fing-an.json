@@ -240,6 +240,7 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -604,6 +605,7 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"reading": { "emojiDescription": "🔐" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -827,6 +829,7 @@
 		{
 			"memberSegmentIndices": [30],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "The zu inside abzuspannen is a Fusion piece of its own, PART zu, the zu-infinitive marker after anfangen (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
 			},
@@ -984,6 +987,7 @@
 		{
 			"memberSegmentIndices": [36],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "The zu inside auszuruhen is a Fusion piece of its own, PART zu, the zu-infinitive marker after anfangen (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
 			},

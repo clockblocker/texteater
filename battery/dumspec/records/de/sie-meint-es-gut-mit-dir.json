@@ -66,6 +66,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -164,6 +165,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

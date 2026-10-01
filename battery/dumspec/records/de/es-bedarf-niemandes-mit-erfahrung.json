@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "niemandes is the Gen Surface of the stem Lemma niemand; its case is on the Surface."
 			},

@@ -140,6 +140,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -471,6 +474,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"notes": {
 				"rationale": "Dative object of zuhören, a PRON of its own."

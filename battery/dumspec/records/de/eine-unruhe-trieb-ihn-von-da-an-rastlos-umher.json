@@ -236,6 +236,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🌐" },
 			"notes": {
 				"rationale": "The occurrence aller is the Gen Plur Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 			},

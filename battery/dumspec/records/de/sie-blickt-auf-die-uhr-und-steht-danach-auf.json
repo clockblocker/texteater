@@ -61,6 +61,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -289,6 +290,7 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "🔜" },
 			"notes": {
 				"rationale": "Temporal danach ('afterwards') stands alone as an ADV (de/pronominal-adverb-stands-alone)."
 			},

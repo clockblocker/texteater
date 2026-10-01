@@ -18,6 +18,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🌐" },
 			"notes": {
 				"rationale": "The occurrence alles is the Nom Sing Neut Surface of the stem Lemma alle; its case, number and gender are Surface inflection, not Core."
 			},

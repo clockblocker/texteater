@@ -75,6 +75,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "Viele determines Bewohner: DET viel (de/quantifier-by-use)."
 			},

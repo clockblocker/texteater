@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "unser is the standard genitive of wir, governed here by sich erinnern. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of unser. So the Surface carries no historical status (de/variant-and-historical-status)."
 			},

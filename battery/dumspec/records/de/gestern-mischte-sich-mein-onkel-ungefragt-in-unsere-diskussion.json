@@ -253,6 +253,9 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"reading": {
+				"emojiDescription": "🔐"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -384,6 +387,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🔐"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

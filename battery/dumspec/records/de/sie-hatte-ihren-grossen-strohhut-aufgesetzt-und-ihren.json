@@ -241,6 +241,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "Sie is the subject of singular hatte, so it is 3sg Fem Nom; the verb rules out plural and formal Sie."
 			},
@@ -345,6 +348,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🔐"
 			},
 			"notes": {
 				"rationale": "Possessive DET of the ihr- stem, Acc.Masc.Sg with Strohhut (de/only-der-and-ein-are-articles)."
@@ -519,6 +525,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🔐"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

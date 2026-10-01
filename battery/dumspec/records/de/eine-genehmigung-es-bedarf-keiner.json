@@ -25,6 +25,7 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "The occurrence keiner is the Gen Sing Fem Surface of the stem Lemma keiner; its case, number and gender are Surface inflection, not Core."
 			},

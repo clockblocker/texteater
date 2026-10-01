@@ -337,6 +337,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "🌐"
+			},
 			"notes": {
 				"rationale": "Alles stands for a noun phrase, so it is PRON (de/pron-or-det-by-use): the Nom.Neut.Sg Surface of the stem Lemma alle (ADR 0044)."
 			},
@@ -389,6 +392,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "🔗📦"
 			},
 			"notes": {
 				"rationale": "was is the relative pronoun after alles, subject of its clause: relative was (pronType Rel), Surface Nom (ADR 0044)."
@@ -831,6 +837,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": {
+				"emojiDescription": "📌"
+			},
 			"notes": {
 				"rationale": "daran is a pronominal adverb and stands alone, whatever governs its an (de/pronominal-adverb-stands-alone)."
 			},
@@ -980,6 +989,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👉"
 			},
 			"notes": {
 				"rationale": "das stands for the whole preceding clause and is the subject, so it is the demonstrative PRON das, the Nom.Neut.Sg cell (de/pron-or-det-by-use, ADR 0044)."
@@ -1179,6 +1191,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
+			},
+			"reading": {
+				"emojiDescription": "🚫"
 			},
 			"notes": {
 				"rationale": "nicht is PART with polarity Neg, a target of its own (de/nicht-is-part)."

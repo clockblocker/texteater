@@ -678,6 +678,9 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"reading": {
+				"emojiDescription": "💯"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -985,6 +988,9 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "🚫"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1024,6 +1030,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
+			},
+			"reading": {
+				"emojiDescription": "🔄"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1065,6 +1074,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "❓👤"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1165,6 +1177,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
+			},
+			"reading": {
+				"emojiDescription": "🚫"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

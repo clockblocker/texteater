@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "❓" },
 			"notes": {
 				"rationale": "The inflected member belongs to the welcher paradigm; canonicalForm is the full masculine nominative singular dictionary form, never the stem welch."
 			},

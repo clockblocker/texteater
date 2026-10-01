@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "The occurrence mancher is the Dat Sing Fem Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 			},

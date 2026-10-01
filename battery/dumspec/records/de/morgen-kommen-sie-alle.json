@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "Plural kommen and alle settle third person plural inside the sentence."
 			},

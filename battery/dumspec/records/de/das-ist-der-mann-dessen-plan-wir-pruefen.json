@@ -31,6 +31,7 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "The der-series is a pillar (ADR 0044), so this cell is its own Lemma, with case and number in Core. dessen serves a masculine and a neuter antecedent alike, so its gender is null, and context selects demonstrative versus relative pronType."
 			},

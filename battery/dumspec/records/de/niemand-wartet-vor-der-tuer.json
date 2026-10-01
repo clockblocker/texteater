@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "niemand is the Nom Surface of the stem Lemma niemand; its case is on the Surface."
 			},

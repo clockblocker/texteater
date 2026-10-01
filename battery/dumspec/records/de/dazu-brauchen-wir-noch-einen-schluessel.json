@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "🎯" },
 			"notes": {
 				"rationale": "Ordinary sentence-initial capitalization is Standard; the pronominal adverb has PronType Dem."
 			},

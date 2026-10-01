@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "⏳" },
 			"notes": {
 				"rationale": "The pronominal ADV is a complete member; do not split or reinterpret it as the ADP vor."
 			},

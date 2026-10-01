@@ -501,6 +501,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -920,6 +923,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1068,6 +1074,9 @@
 				"family": "Lexeme",
 				"kind": "PART"
 			},
+			"reading": {
+				"emojiDescription": "🔗"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1215,6 +1224,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "🪞"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

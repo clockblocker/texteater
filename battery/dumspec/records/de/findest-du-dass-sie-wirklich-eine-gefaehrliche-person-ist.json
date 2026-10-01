@@ -464,6 +464,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -545,6 +548,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1046,6 +1052,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1128,6 +1137,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "🌐"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1180,6 +1192,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
+			},
+			"reading": {
+				"emojiDescription": "🚫"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1618,6 +1633,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "🔗"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

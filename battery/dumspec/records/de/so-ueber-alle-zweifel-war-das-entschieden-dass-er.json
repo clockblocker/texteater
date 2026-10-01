@@ -397,6 +397,9 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"reading": {
+				"emojiDescription": "💯"
+			},
 			"notes": {
 				"rationale": "alle directly modifies Zweifel, so it is the DET alle (de/pron-or-det-by-use)."
 			},
@@ -550,6 +553,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👉"
+			},
 			"notes": {
 				"rationale": "das stands alone as the subject: the demonstrative PRON das Nom.Neut.Sg (de/pron-or-det-by-use)."
 			},
@@ -638,6 +644,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

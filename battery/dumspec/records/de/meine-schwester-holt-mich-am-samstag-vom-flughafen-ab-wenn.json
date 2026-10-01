@@ -177,6 +177,9 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"reading": {
+				"emojiDescription": "🔐"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -327,6 +330,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"notes": {
 				"rationale": "mich is the ordinary object of abholen, not a reflexive: the subject is meine Schwester."
@@ -657,6 +663,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🔐"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -475,6 +475,9 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"reading": {
+				"emojiDescription": "🔐"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -611,6 +614,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "🔐"
 			},
 			"notes": {
 				"rationale": "sein Buch in der Hand is an absolute accusative (den Hut in der Hand); the neuter form hides the case, which the construction fixes as Acc."
@@ -857,6 +863,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "ihr after neben is Dat, and the only Dat cell spelled ihr is 3sg Fem: grammar decides."
 			},
@@ -988,6 +997,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"notes": {
 				"rationale": "sie is Acc, 3sg Fem or 3pl. Those cells differ in who is meant, so the referent chooses: the ihr beside whom he walks gives 3sg Fem (ADR 0044). Ruled on #743 (MB-A1, A1)."

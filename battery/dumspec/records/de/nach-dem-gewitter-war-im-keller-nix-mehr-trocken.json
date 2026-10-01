@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🚫" },
 			"notes": { "rationale": "Licensed colloquial form. Not Typo." },
 			"attestation": {
 				"unitKind": "Attestation",

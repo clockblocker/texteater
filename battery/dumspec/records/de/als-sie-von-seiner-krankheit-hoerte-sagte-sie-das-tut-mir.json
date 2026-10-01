@@ -47,6 +47,7 @@
 		{
 			"memberSegmentIndices": [19],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👉" },
 			"notes": {
 				"rationale": "Das is the subject of leidtun and points back to his illness. It is the demonstrative PRON das, a target of its own, not a member of the verb (#759 Q1)."
 			},
@@ -132,6 +133,7 @@
 		{
 			"memberSegmentIndices": [23],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "mir", "orthography": "Standard" }],

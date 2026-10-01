@@ -226,6 +226,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "Subject pronoun wir; die Mama und ich spells it out."
 			},
@@ -532,6 +535,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"notes": {
 				"rationale": "ich is in the apposition that spells out wir."

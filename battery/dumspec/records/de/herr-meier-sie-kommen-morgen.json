@@ -25,6 +25,7 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "The address Herr Meier and the mid-sentence capital settle formal Sie inside the sentence, so no context is needed."
 			},

@@ -204,6 +204,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🪞" },
 			"notes": { "rationale": "Reflexive possessor. Dative form sich." },
 			"attestation": {
 				"unitKind": "Attestation",

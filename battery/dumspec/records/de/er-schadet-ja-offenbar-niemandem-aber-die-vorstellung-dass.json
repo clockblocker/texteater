@@ -279,6 +279,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "Er refers to Odradek."
 			},
@@ -464,6 +467,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "🚫"
+			},
 			"notes": {
 				"rationale": "niemandem is the dative of the stem pronoun niemand (ADR 0044)."
 			},
@@ -645,6 +651,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "er refers to Odradek."
 			},
@@ -691,6 +700,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"notes": {
 				"rationale": "mich is the object of überleben, not a reflexive."
@@ -982,6 +994,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"notes": {
 				"rationale": "mir is the free dative of the person judging."

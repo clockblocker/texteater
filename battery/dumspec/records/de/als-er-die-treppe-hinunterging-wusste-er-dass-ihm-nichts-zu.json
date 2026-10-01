@@ -274,6 +274,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -480,6 +483,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -562,6 +568,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "Dat 3sg. ihm is one cell for er and es, with gender null, so its referent Alfred chooses no cell (ADR 0044). Ruled on #743 (MB-A1, A1)."
 			},
@@ -609,6 +618,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "🚫"
+			},
 			"notes": {
 				"rationale": "nichts is the subject of übrig blieb, modified by the infinitive zu tun; the negative PRON nichts. Ruled on #743 (MB-B2)."
 			},
@@ -655,6 +667,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
+			},
+			"reading": {
+				"emojiDescription": "🔗"
 			},
 			"notes": {
 				"rationale": "zu before a bare infinitive is a single-member PART (de/bare-infinitive-zu)."
@@ -903,6 +918,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PART"
+			},
+			"reading": {
+				"emojiDescription": "🔗"
 			},
 			"notes": {
 				"rationale": "zu before a bare infinitive is a single-member PART (de/bare-infinitive-zu)."

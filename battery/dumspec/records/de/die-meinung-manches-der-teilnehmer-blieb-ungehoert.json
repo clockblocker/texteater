@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "The occurrence manches is the Gen Sing Masc Surface of the stem Lemma mancher; its case, number and gender are Surface inflection, not Core."
 			},

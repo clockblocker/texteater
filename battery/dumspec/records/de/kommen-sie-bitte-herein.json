@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "Formal address is one identity whatever the addressee count, so an unstated count still resolves (ticket 500)."
 			},

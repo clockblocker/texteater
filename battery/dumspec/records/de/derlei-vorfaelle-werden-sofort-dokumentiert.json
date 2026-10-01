@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "👉" },
 			"notes": {
 				"rationale": "The codec has no invariant contextual Surface; use Citation for this uninflected DET while preserving its demonstrative identity."
 			},

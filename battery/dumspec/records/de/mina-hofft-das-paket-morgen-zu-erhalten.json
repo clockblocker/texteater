@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "The infinitive marker has PartType=Inf and no polarity."
 			},

@@ -163,6 +163,9 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"reading": {
+				"emojiDescription": "🔐"
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -310,6 +313,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "🪞"
+			},
 			"notes": {
 				"rationale": "Control: reciprocal object of grüßen, a free PRON."
 			},
@@ -356,6 +362,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "💯"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

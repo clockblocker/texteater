@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🔐" },
 			"notes": {
 				"rationale": "Possessor first person. Pronoun stands alone."
 			},

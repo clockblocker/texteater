@@ -82,6 +82,7 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "dir is the free dative of the person asked and resolves on its own."
 			},

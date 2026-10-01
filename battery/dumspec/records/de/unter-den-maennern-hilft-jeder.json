@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🌐" },
 			"notes": {
 				"rationale": "The occurrence jeder is the Nom Sing Masc Surface of the stem Lemma jeder; its case, number and gender are Surface inflection, not Core."
 			},

@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "❓🔢" },
 			"notes": {
 				"rationale": "The upstream route is DET, not ADJ or NUM."
 			},

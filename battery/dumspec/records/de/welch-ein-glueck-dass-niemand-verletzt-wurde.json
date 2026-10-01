@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "❗" },
 			"notes": {
 				"rationale": "The exclamative DET is invariant here, so the exact codec uses Citation."
 			},

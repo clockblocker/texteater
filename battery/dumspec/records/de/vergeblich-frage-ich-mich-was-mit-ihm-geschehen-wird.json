@@ -262,6 +262,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "Subject pronoun ich."
 			},
@@ -308,6 +311,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "❓📦"
 			},
 			"notes": {
 				"rationale": "was opens the indirect question and is its subject, so it is interrogative was (pronType Int), a stem whose Surface marks case (ADR 0044)."
@@ -441,6 +447,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"notes": {
 				"rationale": "ihm is the dative of er and es, one cell with gender null, so its referent Odradek, whom the next sentence calls er, chooses no cell (ADR 0044). Ruled on #743 (SZ-A2, A1)."

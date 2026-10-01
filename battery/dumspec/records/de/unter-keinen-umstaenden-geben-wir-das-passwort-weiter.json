@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "The classified target is the DET member inside a larger fixed expression; preserve the fixed upstream function-word membership."
 			},

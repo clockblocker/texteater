@@ -45,6 +45,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "The inflected member belongs to the mancher paradigm; canonicalForm preserves the full dictionary form rather than the stem manch."
 			},

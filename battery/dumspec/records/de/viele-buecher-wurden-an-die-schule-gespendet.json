@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": { "rationale": "The upstream route is DET, not ADJ." },
 			"attestation": {
 				"unitKind": "Attestation",

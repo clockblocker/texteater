@@ -273,6 +273,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "ihm is Dat 3sg, one cell for er and es with gender null, so its referent (Alfred, the er of the next clause) chooses no cell (ADR 0044). Ruled on #743 (MB-A1, A1)."
 			},
@@ -454,6 +457,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

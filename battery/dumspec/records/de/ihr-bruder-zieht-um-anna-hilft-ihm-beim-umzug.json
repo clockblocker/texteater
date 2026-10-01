@@ -34,6 +34,7 @@
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "ihm stands for Ihr Bruder. It is the dative of er and es, one cell with gender null (ADR 0044)."
 			},

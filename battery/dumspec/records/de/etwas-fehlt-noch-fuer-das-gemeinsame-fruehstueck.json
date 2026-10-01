@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "📦" },
 			"notes": {
 				"rationale": "Invariant form with unmarked inflectionalFeatures. Initial capital normalizes down."
 			},

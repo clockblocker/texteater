@@ -199,6 +199,9 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
 			"notes": {
 				"rationale": "Subject pronoun ich."
 			},
@@ -300,6 +303,9 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADV"
+			},
+			"reading": {
+				"emojiDescription": "🔄"
 			},
 			"notes": {
 				"rationale": "darum 'therefore' is the pronominal adverb in its causal sense and stands alone (de/pronominal-adverb-stands-alone)."

@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "Current role relative. Scalar PronType Rel."
 			},
