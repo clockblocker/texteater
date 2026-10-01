@@ -41,23 +41,20 @@ The exposed lower portion of an occluded Card. It identifies the Card and
 provides its lift handle.
 
 **Locked Sheet**:
-A Sheet protected from Collapse. It may still be covered, and a Reveal of a
-Sheet beneath it drops it.
+A Sheet protected from Collapse. It may still be covered.
 _Avoid_: pinned Note, locked Pane
 
 **Active Pane**:
 The Pane receiving pane-scoped commands.
 
 **Held Card**:
-A Presentation in Card form during a Lift. It has one visible Card body and a
-gesture checkpoint that records the state to restore on cancellation.
+A Presentation in Card form during a Lift.
 
 **Open**:
 Create a Presentation or Card Layer from an interaction with a Subject.
 
 **Lift**:
-Begin a provisional gesture for a Presentation in Card form. Its resting body
-and shadow leave their previous position.
+Begin a provisional gesture for a Presentation in Card form.
 
 **Expand**:
 Settle a Held Card as a Sheet while retaining its Card Layer membership.
