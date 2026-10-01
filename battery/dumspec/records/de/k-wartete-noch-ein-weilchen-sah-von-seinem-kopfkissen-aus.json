@@ -380,6 +380,11 @@
 				"title": "Project Gutenberg eBook #69327: Franz Kafka, Der Prozess",
 				"url": "https://www.gutenberg.org/ebooks/69327",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #69327 (released 2022-11-11), transcribed from Verlag Die Schmiede, Berlin 1925. Chapter 1, paragraph 1, sentences 1-5 of 41."
+			},
+			{
+				"title": "Duden: gleichzeitig",
+				"url": "https://www.duden.de/rechtschreibung/gleichzeitig",
+				"supports": "Target [gleichzeitig]: sense 2, 'zugleich erfolgend, auch noch' (selten), shown only as a predicate (das Rauchtischchen ist gleichzeitig ein Schachbrett); sense 1 'zur gleichen Zeit [stattfindend]' is attributive too. No comparison forms."
 			}
 		]
 	},
@@ -1579,7 +1584,7 @@
 			"memberSegmentIndices": [64],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADJ"
+				"kind": "ADV"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1590,10 +1595,11 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "ADV",
 						"canonicalForm": "gleichzeitig",
 						"coreFeatures": {
-							"comparable": null
+							"comparable": null,
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "gleichzeitig",
@@ -1609,12 +1615,10 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full",
-				"articleEvidence": null,
-				"valencyEvidence": []
+				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "Adverbially used adjective (de/adjective-stays-adj); Duden gives no comparison forms."
+				"rationale": "Before two coordinated states, gleichzeitig means 'at once, both … and': Duden's sense 2, 'zugleich erfolgend, auch noch' (das Rauchtischchen ist gleichzeitig ein Schachbrett). That sense has no attributive form, so by de/adjective-stays-adj's within-sense test it is another word, an ADV, and Duden gives it no comparison forms. Sense 1, 'zur gleichen Zeit', stays ADJ. Ruled by the user on #739 (2026-10-01)."
 			}
 		},
 		{
