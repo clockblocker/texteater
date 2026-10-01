@@ -255,20 +255,25 @@ export function referenceConnections(
 			supported: score >= 0.5 && score > (probabilities.plus ?? 0),
 		});
 	}
-	const rule = (kind: string, pieces: readonly number[]) =>
+	const rule = (
+		kind: string,
+		pieces: readonly number[],
+		conditional = false,
+	) =>
 		connections.push({
 			id: `${kind}_${pieces.join("_")}`,
 			kind,
 			pieces: sorted(pieces),
 			source: "rule",
-			supported: true,
+			...(conditional ? { conditional } : {}),
+			supported: !conditional,
 		});
 	for (const range of numberRanges(sentence)) rule("range", range);
 	for (const link of superlativeLinks(sentence)) rule("superlative", link);
 	const runs = new Set(
 		[...fusedSiblings(sentence).values()].map((run) => run.join("_")),
 	);
-	for (const run of runs) rule("sibling", run.split("_").map(Number));
+	for (const run of runs) rule("sibling", run.split("_").map(Number), true);
 	// The preposition opening a noun's phrase, before the noun or before any
 	// article that may head to it: absorbed when the noun joins an expression.
 	const articleSlots = core.slots.filter((slot) => slot.kind === "article");
@@ -296,7 +301,7 @@ export function referenceConnections(
 		}
 	}
 	for (const entry of prepositions)
-		rule("preposition", entry.split("_").map(Number));
+		rule("preposition", entry.split("_").map(Number), true);
 	return connections;
 }
 

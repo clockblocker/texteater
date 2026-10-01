@@ -65,6 +65,7 @@
 		"evaluate": "bun --env-file=../../.env.local cli/evaluate.ts",
 		"spec-coverage": "bun cli/spec-coverage.ts",
 		"segment-in-units-lab": "bun --env-file=../../.env.local cli/segment-in-units-lab.ts",
+		"segment-in-units-attribution": "bun cli/segment-in-units-attribution.ts",
 		"check:segment-in-units": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.segment-in-units.json --noEmit",
 		"typesafe:dummy": "bun cli/typesafe-dummy.ts"
 	},

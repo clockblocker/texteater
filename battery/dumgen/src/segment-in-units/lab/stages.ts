@@ -27,7 +27,7 @@ export type Groups = readonly (readonly number[])[];
 /**
  * One proposed connection: the pieces it would put in one unit. A `judged`
  * connection is `supported` when its judgment clears the resolver's floor;
- * a `rule` connection is code's own and always supported.
+ * a `rule` connection is code's own and supported, unless `conditional`.
  */
 export type Connection = {
 	readonly id: string;
@@ -35,6 +35,12 @@ export type Connection = {
 	/** Sorted piece ids. */
 	readonly pieces: readonly number[];
 	readonly source: "judged" | "rule";
+	/**
+	 * A rule connection the resolver draws only to absorb pieces into a unit
+	 * judged connections already built (a split word's other half, the
+	 * preposition opening a member noun's phrase). Alone it makes no unit.
+	 */
+	readonly conditional?: boolean;
 	/** The question whose answer judged it. */
 	readonly question?: string;
 	/** The share or Noul the decision read. */
@@ -95,6 +101,8 @@ export type StageTrace = {
 	readonly judgments: Readonly<Record<string, Answer>>;
 	/** Connections the resolver drew an edge for. */
 	readonly selected: readonly string[];
+	/** Every edge the resolver drew, its partition being their union. */
+	readonly edges: readonly Edge[];
 	/** Edges the resolver drew by its own rules. */
 	readonly assembly: readonly Edge[];
 	readonly resolved: Groups;
@@ -227,6 +235,7 @@ export async function runStages<Evidence, Detail>(
 					),
 				),
 			],
+			edges: membership.edges,
 			assembly: membership.edges.filter(
 				(edge) => edge.connection === undefined,
 			),
