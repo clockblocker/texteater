@@ -13,10 +13,10 @@ syntactic analysis to produce a copy of Source Contexts.
 
 **The Valency Frame.**
 
-Each Reading owns one Valency Frame, modelled on E-VALBU, the IDS Mannheim
-valency dictionary, where each Lesart has one Satzbauplan and optional
-complements are parenthesised. A frame is an ordered list of Slots. Each Slot
-has `status: "Required" | "Optional"` and a complement.
+A Reading owns at most one Valency Frame, modelled on E-VALBU, the IDS
+Mannheim valency dictionary, where each Lesart has one Satzbauplan and
+optional complements are parenthesised. A frame is an ordered list of Slots.
+Each Slot has `status: "Required" | "Optional"` and a complement.
 
 A frame never creates a Lemma or a Reading. Only the Emoji Description splits
 Readings ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)).
@@ -50,7 +50,9 @@ and Preposition. English marks position and preposition, with no case:
 Subject, DirectObject, IndirectObject (`him` in `give him a book`) and
 Preposition. Each language × Family × Kind route chooses which complements
 it allows, as [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)
-does for Core Features.
+does for Core Features. A route that allows none, such as Foreign
+([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)),
+takes no frame.
 
 The subject is a slot too. In German it is always Nom, and it is not
 rendered. A verb with no subject has no Nom slot, and its experiencer is a Dat
