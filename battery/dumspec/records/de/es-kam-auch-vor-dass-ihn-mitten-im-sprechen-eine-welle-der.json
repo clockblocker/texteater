@@ -252,7 +252,7 @@
 			},
 			{
 				"rule": "de/bare-infinitive-zu",
-				"hash": "839e40a7258859ad"
+				"hash": "a1c44338fa4ffc37"
 			},
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -1110,7 +1110,7 @@
 						"kind": "PART",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Inf",
 							"polarity": null
 						}
 					},
@@ -1118,7 +1118,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "zu before an infinitive without um, ohne or statt is a single-member PART (de/bare-infinitive-zu)."
+				"rationale": "zu before an infinitive without um, ohne or statt is a single-member PART with partType Inf (de/bare-infinitive-zu)."
 			}
 		},
 		{

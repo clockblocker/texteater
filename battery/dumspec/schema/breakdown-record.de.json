@@ -696,47 +696,47 @@
 								"type": "object",
 								"properties": {
 									"unitKind": {
-										"$ref": "#/$defs/__schema217"
+										"$ref": "#/$defs/__schema220"
 									},
 									"surface": {
-										"$ref": "#/$defs/__schema218"
+										"$ref": "#/$defs/__schema221"
 									},
 									"members": {
-										"$ref": "#/$defs/__schema242"
-									},
-									"realizationCoverage": {
-										"$ref": "#/$defs/__schema243"
-									},
-									"articleEvidence": {
-										"$ref": "#/$defs/__schema244"
-									}
-								},
-								"required": [
-									"unitKind",
-									"surface",
-									"members",
-									"realizationCoverage",
-									"articleEvidence"
-								],
-								"additionalProperties": false
-							},
-							{
-								"type": "object",
-								"properties": {
-									"unitKind": {
 										"$ref": "#/$defs/__schema245"
 									},
-									"surface": {
+									"realizationCoverage": {
 										"$ref": "#/$defs/__schema246"
 									},
+									"articleEvidence": {
+										"$ref": "#/$defs/__schema247"
+									}
+								},
+								"required": [
+									"unitKind",
+									"surface",
+									"members",
+									"realizationCoverage",
+									"articleEvidence"
+								],
+								"additionalProperties": false
+							},
+							{
+								"type": "object",
+								"properties": {
+									"unitKind": {
+										"$ref": "#/$defs/__schema248"
+									},
+									"surface": {
+										"$ref": "#/$defs/__schema249"
+									},
 									"members": {
-										"$ref": "#/$defs/__schema258"
+										"$ref": "#/$defs/__schema261"
 									},
 									"realizationCoverage": {
-										"$ref": "#/$defs/__schema259"
+										"$ref": "#/$defs/__schema262"
 									},
 									"articleEvidence": {
-										"$ref": "#/$defs/__schema260"
+										"$ref": "#/$defs/__schema263"
 									}
 								},
 								"required": [
@@ -767,7 +767,7 @@
 												"const": "de"
 											},
 											"lemma": {
-												"$ref": "#/$defs/__schema261"
+												"$ref": "#/$defs/__schema264"
 											},
 											"normalizedSurface": {
 												"$ref": "#/$defs/__schema4"
@@ -835,7 +835,7 @@
 												"const": "de"
 											},
 											"lemma": {
-												"$ref": "#/$defs/__schema265"
+												"$ref": "#/$defs/__schema268"
 											},
 											"normalizedSurface": {
 												"$ref": "#/$defs/__schema4"
@@ -903,7 +903,7 @@
 												"const": "de"
 											},
 											"lemma": {
-												"$ref": "#/$defs/__schema269"
+												"$ref": "#/$defs/__schema272"
 											},
 											"normalizedSurface": {
 												"$ref": "#/$defs/__schema4"
@@ -920,13 +920,13 @@
 														"type": "object",
 														"properties": {
 															"case": {
-																"$ref": "#/$defs/__schema273"
+																"$ref": "#/$defs/__schema276"
 															},
 															"gender": {
-																"$ref": "#/$defs/__schema274"
+																"$ref": "#/$defs/__schema277"
 															},
 															"number": {
-																"$ref": "#/$defs/__schema275"
+																"$ref": "#/$defs/__schema278"
 															}
 														},
 														"required": [
@@ -984,19 +984,19 @@
 								"type": "object",
 								"properties": {
 									"unitKind": {
-										"$ref": "#/$defs/__schema276"
+										"$ref": "#/$defs/__schema279"
 									},
 									"surface": {
-										"$ref": "#/$defs/__schema277"
+										"$ref": "#/$defs/__schema280"
 									},
 									"members": {
-										"$ref": "#/$defs/__schema286"
+										"$ref": "#/$defs/__schema289"
 									},
 									"realizationCoverage": {
-										"$ref": "#/$defs/__schema287"
+										"$ref": "#/$defs/__schema290"
 									},
 									"expletiveEvidence": {
-										"$ref": "#/$defs/__schema288"
+										"$ref": "#/$defs/__schema291"
 									},
 									"valencyEvidence": {
 										"$ref": "#/$defs/__schema102"
@@ -1025,19 +1025,19 @@
 								"type": "object",
 								"properties": {
 									"transcription": {
-										"$ref": "#/$defs/__schema289"
+										"$ref": "#/$defs/__schema292"
 									},
 									"definition": {
-										"$ref": "#/$defs/__schema289"
+										"$ref": "#/$defs/__schema292"
 									},
 									"translations": {
 										"type": "object",
 										"properties": {
 											"en": {
-												"$ref": "#/$defs/__schema290"
+												"$ref": "#/$defs/__schema293"
 											},
 											"ru": {
-												"$ref": "#/$defs/__schema290"
+												"$ref": "#/$defs/__schema293"
 											}
 										},
 										"additionalProperties": false
@@ -1056,7 +1056,7 @@
 														"minItems": 1,
 														"type": "array",
 														"items": {
-															"$ref": "#/$defs/__schema291"
+															"$ref": "#/$defs/__schema294"
 														}
 													}
 												},
@@ -1093,7 +1093,7 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema487"
+																			"$ref": "#/$defs/__schema490"
 																		}
 																	},
 																	"required": [
@@ -1113,7 +1113,7 @@
 																			"$ref": "#/$defs/__schema74"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1134,7 +1134,7 @@
 																			"$ref": "#/$defs/__schema108"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1155,7 +1155,7 @@
 																			"$ref": "#/$defs/__schema116"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1176,7 +1176,7 @@
 																			"$ref": "#/$defs/__schema126"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1197,7 +1197,7 @@
 																			"$ref": "#/$defs/__schema155"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1218,7 +1218,7 @@
 																			"$ref": "#/$defs/__schema161"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1239,7 +1239,7 @@
 																			"$ref": "#/$defs/__schema185"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1260,7 +1260,7 @@
 																			"$ref": "#/$defs/__schema193"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1281,7 +1281,7 @@
 																			"$ref": "#/$defs/__schema203"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1302,7 +1302,7 @@
 																			"$ref": "#/$defs/__schema213"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1320,10 +1320,10 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema221"
+																			"$ref": "#/$defs/__schema224"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1341,10 +1341,10 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema249"
+																			"$ref": "#/$defs/__schema252"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1362,10 +1362,10 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema261"
+																			"$ref": "#/$defs/__schema264"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1383,10 +1383,10 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema265"
+																			"$ref": "#/$defs/__schema268"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1404,10 +1404,10 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema269"
+																			"$ref": "#/$defs/__schema272"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1425,10 +1425,10 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema280"
+																			"$ref": "#/$defs/__schema283"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1449,7 +1449,7 @@
 																			"$ref": "#/$defs/__schema0"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1470,7 +1470,7 @@
 																			"$ref": "#/$defs/__schema6"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1491,7 +1491,7 @@
 																			"$ref": "#/$defs/__schema10"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1512,7 +1512,7 @@
 																			"$ref": "#/$defs/__schema14"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1533,7 +1533,7 @@
 																			"$ref": "#/$defs/__schema18"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1554,7 +1554,7 @@
 																			"$ref": "#/$defs/__schema22"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1575,7 +1575,7 @@
 																			"$ref": "#/$defs/__schema26"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1596,7 +1596,7 @@
 																			"$ref": "#/$defs/__schema30"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1617,7 +1617,7 @@
 																			"$ref": "#/$defs/__schema34"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1638,7 +1638,7 @@
 																			"$ref": "#/$defs/__schema38"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1659,7 +1659,7 @@
 																			"$ref": "#/$defs/__schema42"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1670,31 +1670,31 @@
 																	"additionalProperties": false
 																},
 																{
-																	"$ref": "#/$defs/__schema292"
-																},
-																{
 																	"$ref": "#/$defs/__schema295"
 																},
 																{
-																	"$ref": "#/$defs/__schema297"
+																	"$ref": "#/$defs/__schema298"
 																},
 																{
-																	"$ref": "#/$defs/__schema299"
+																	"$ref": "#/$defs/__schema300"
 																},
 																{
-																	"$ref": "#/$defs/__schema301"
+																	"$ref": "#/$defs/__schema302"
 																},
 																{
-																	"$ref": "#/$defs/__schema303"
+																	"$ref": "#/$defs/__schema304"
 																},
 																{
-																	"$ref": "#/$defs/__schema305"
+																	"$ref": "#/$defs/__schema306"
 																},
 																{
-																	"$ref": "#/$defs/__schema307"
+																	"$ref": "#/$defs/__schema308"
 																},
 																{
-																	"$ref": "#/$defs/__schema309"
+																	"$ref": "#/$defs/__schema310"
+																},
+																{
+																	"$ref": "#/$defs/__schema312"
 																},
 																{
 																	"type": "object",
@@ -1707,66 +1707,7 @@
 																			"$ref": "#/$defs/__schema46"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma",
-																		"emojiDescription"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
-																			"$ref": "#/$defs/__schema489"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
-																			"$ref": "#/$defs/__schema490"
-																		},
-																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma",
-																		"emojiDescription"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
-																			"$ref": "#/$defs/__schema491"
-																		},
-																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1785,9 +1726,26 @@
 																		},
 																		"lemma": {
 																			"$ref": "#/$defs/__schema492"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
+																			"$ref": "#/$defs/__schema493"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1808,7 +1766,7 @@
 																			"$ref": "#/$defs/__schema494"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1829,7 +1787,7 @@
 																			"$ref": "#/$defs/__schema495"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1847,10 +1805,10 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
-																			"$ref": "#/$defs/__schema496"
+																			"$ref": "#/$defs/__schema497"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1871,7 +1829,7 @@
 																			"$ref": "#/$defs/__schema498"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1892,28 +1850,7 @@
 																			"$ref": "#/$defs/__schema499"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma",
-																		"emojiDescription"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
-																			"$ref": "#/$defs/__schema500"
-																		},
-																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1934,7 +1871,7 @@
 																			"$ref": "#/$defs/__schema501"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1955,7 +1892,28 @@
 																			"$ref": "#/$defs/__schema502"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma",
+																		"emojiDescription"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
+																			"$ref": "#/$defs/__schema503"
+																		},
+																		"emojiDescription": {
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1976,7 +1934,7 @@
 																			"$ref": "#/$defs/__schema504"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -1997,28 +1955,7 @@
 																			"$ref": "#/$defs/__schema505"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma",
-																		"emojiDescription"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
-																			"$ref": "#/$defs/__schema506"
-																		},
-																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2039,7 +1976,7 @@
 																			"$ref": "#/$defs/__schema507"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2060,7 +1997,7 @@
 																			"$ref": "#/$defs/__schema508"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2081,7 +2018,7 @@
 																			"$ref": "#/$defs/__schema509"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2102,7 +2039,7 @@
 																			"$ref": "#/$defs/__schema510"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2123,7 +2060,7 @@
 																			"$ref": "#/$defs/__schema511"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2144,7 +2081,7 @@
 																			"$ref": "#/$defs/__schema512"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2165,7 +2102,7 @@
 																			"$ref": "#/$defs/__schema513"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2186,7 +2123,7 @@
 																			"$ref": "#/$defs/__schema514"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2195,36 +2132,6 @@
 																		"emojiDescription"
 																	],
 																	"additionalProperties": false
-																},
-																{
-																	"$ref": "#/$defs/__schema311"
-																},
-																{
-																	"$ref": "#/$defs/__schema313"
-																},
-																{
-																	"$ref": "#/$defs/__schema315"
-																},
-																{
-																	"$ref": "#/$defs/__schema317"
-																},
-																{
-																	"$ref": "#/$defs/__schema319"
-																},
-																{
-																	"$ref": "#/$defs/__schema321"
-																},
-																{
-																	"$ref": "#/$defs/__schema323"
-																},
-																{
-																	"$ref": "#/$defs/__schema325"
-																},
-																{
-																	"$ref": "#/$defs/__schema327"
-																},
-																{
-																	"$ref": "#/$defs/__schema329"
 																},
 																{
 																	"type": "object",
@@ -2237,7 +2144,7 @@
 																			"$ref": "#/$defs/__schema515"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2256,26 +2163,9 @@
 																		},
 																		"lemma": {
 																			"$ref": "#/$defs/__schema516"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
-																			"$ref": "#/$defs/__schema517"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2293,10 +2183,61 @@
 																			"const": "Reading"
 																		},
 																		"lemma": {
+																			"$ref": "#/$defs/__schema517"
+																		},
+																		"emojiDescription": {
+																			"$ref": "#/$defs/__schema297"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma",
+																		"emojiDescription"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"$ref": "#/$defs/__schema314"
+																},
+																{
+																	"$ref": "#/$defs/__schema316"
+																},
+																{
+																	"$ref": "#/$defs/__schema318"
+																},
+																{
+																	"$ref": "#/$defs/__schema320"
+																},
+																{
+																	"$ref": "#/$defs/__schema322"
+																},
+																{
+																	"$ref": "#/$defs/__schema324"
+																},
+																{
+																	"$ref": "#/$defs/__schema326"
+																},
+																{
+																	"$ref": "#/$defs/__schema328"
+																},
+																{
+																	"$ref": "#/$defs/__schema330"
+																},
+																{
+																	"$ref": "#/$defs/__schema332"
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
 																			"$ref": "#/$defs/__schema518"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2315,15 +2256,11 @@
 																		},
 																		"lemma": {
 																			"$ref": "#/$defs/__schema519"
-																		},
-																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
 																		}
 																	},
 																	"required": [
 																		"unitKind",
-																		"lemma",
-																		"emojiDescription"
+																		"lemma"
 																	],
 																	"additionalProperties": false
 																},
@@ -2338,7 +2275,7 @@
 																			"$ref": "#/$defs/__schema520"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2359,7 +2296,7 @@
 																			"$ref": "#/$defs/__schema521"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2380,7 +2317,7 @@
 																			"$ref": "#/$defs/__schema522"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2401,7 +2338,7 @@
 																			"$ref": "#/$defs/__schema523"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2422,7 +2359,28 @@
 																			"$ref": "#/$defs/__schema524"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma",
+																		"emojiDescription"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
+																			"$ref": "#/$defs/__schema525"
+																		},
+																		"emojiDescription": {
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2443,7 +2401,7 @@
 																			"$ref": "#/$defs/__schema526"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2464,28 +2422,7 @@
 																			"$ref": "#/$defs/__schema527"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma",
-																		"emojiDescription"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
-																			"$ref": "#/$defs/__schema528"
-																		},
-																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2506,7 +2443,28 @@
 																			"$ref": "#/$defs/__schema529"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma",
+																		"emojiDescription"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
+																			"$ref": "#/$defs/__schema530"
+																		},
+																		"emojiDescription": {
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2527,7 +2485,7 @@
 																			"$ref": "#/$defs/__schema531"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2548,28 +2506,7 @@
 																			"$ref": "#/$defs/__schema532"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
-																		}
-																	},
-																	"required": [
-																		"unitKind",
-																		"lemma",
-																		"emojiDescription"
-																	],
-																	"additionalProperties": false
-																},
-																{
-																	"type": "object",
-																	"properties": {
-																		"unitKind": {
-																			"type": "string",
-																			"const": "Reading"
-																		},
-																		"lemma": {
-																			"$ref": "#/$defs/__schema533"
-																		},
-																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2590,7 +2527,7 @@
 																			"$ref": "#/$defs/__schema534"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2611,7 +2548,7 @@
 																			"$ref": "#/$defs/__schema535"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2632,7 +2569,7 @@
 																			"$ref": "#/$defs/__schema536"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2641,36 +2578,6 @@
 																		"emojiDescription"
 																	],
 																	"additionalProperties": false
-																},
-																{
-																	"$ref": "#/$defs/__schema331"
-																},
-																{
-																	"$ref": "#/$defs/__schema333"
-																},
-																{
-																	"$ref": "#/$defs/__schema335"
-																},
-																{
-																	"$ref": "#/$defs/__schema337"
-																},
-																{
-																	"$ref": "#/$defs/__schema339"
-																},
-																{
-																	"$ref": "#/$defs/__schema341"
-																},
-																{
-																	"$ref": "#/$defs/__schema343"
-																},
-																{
-																	"$ref": "#/$defs/__schema345"
-																},
-																{
-																	"$ref": "#/$defs/__schema347"
-																},
-																{
-																	"$ref": "#/$defs/__schema349"
 																},
 																{
 																	"type": "object",
@@ -2683,7 +2590,100 @@
 																			"$ref": "#/$defs/__schema537"
 																		},
 																		"emojiDescription": {
-																			"$ref": "#/$defs/__schema294"
+																			"$ref": "#/$defs/__schema297"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma",
+																		"emojiDescription"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
+																			"$ref": "#/$defs/__schema538"
+																		},
+																		"emojiDescription": {
+																			"$ref": "#/$defs/__schema297"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma",
+																		"emojiDescription"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
+																			"$ref": "#/$defs/__schema539"
+																		},
+																		"emojiDescription": {
+																			"$ref": "#/$defs/__schema297"
+																		}
+																	},
+																	"required": [
+																		"unitKind",
+																		"lemma",
+																		"emojiDescription"
+																	],
+																	"additionalProperties": false
+																},
+																{
+																	"$ref": "#/$defs/__schema334"
+																},
+																{
+																	"$ref": "#/$defs/__schema336"
+																},
+																{
+																	"$ref": "#/$defs/__schema338"
+																},
+																{
+																	"$ref": "#/$defs/__schema340"
+																},
+																{
+																	"$ref": "#/$defs/__schema342"
+																},
+																{
+																	"$ref": "#/$defs/__schema344"
+																},
+																{
+																	"$ref": "#/$defs/__schema346"
+																},
+																{
+																	"$ref": "#/$defs/__schema348"
+																},
+																{
+																	"$ref": "#/$defs/__schema350"
+																},
+																{
+																	"$ref": "#/$defs/__schema352"
+																},
+																{
+																	"type": "object",
+																	"properties": {
+																		"unitKind": {
+																			"type": "string",
+																			"const": "Reading"
+																		},
+																		"lemma": {
+																			"$ref": "#/$defs/__schema540"
+																		},
+																		"emojiDescription": {
+																			"$ref": "#/$defs/__schema297"
 																		}
 																	},
 																	"required": [
@@ -2712,43 +2712,43 @@
 													"synonym": {
 														"type": "array",
 														"items": {
-															"$ref": "#/$defs/__schema538"
+															"$ref": "#/$defs/__schema541"
 														}
 													},
 													"nearSynonym": {
 														"type": "array",
 														"items": {
-															"$ref": "#/$defs/__schema538"
+															"$ref": "#/$defs/__schema541"
 														}
 													},
 													"antonym": {
 														"type": "array",
 														"items": {
-															"$ref": "#/$defs/__schema538"
+															"$ref": "#/$defs/__schema541"
 														}
 													},
 													"nearAntonym": {
 														"type": "array",
 														"items": {
-															"$ref": "#/$defs/__schema538"
+															"$ref": "#/$defs/__schema541"
 														}
 													},
 													"hypernym": {
 														"type": "array",
 														"items": {
-															"$ref": "#/$defs/__schema538"
+															"$ref": "#/$defs/__schema541"
 														}
 													},
 													"holonym": {
 														"type": "array",
 														"items": {
-															"$ref": "#/$defs/__schema538"
+															"$ref": "#/$defs/__schema541"
 														}
 													},
 													"endonym": {
 														"type": "array",
 														"items": {
-															"$ref": "#/$defs/__schema538"
+															"$ref": "#/$defs/__schema541"
 														}
 													}
 												},
@@ -2760,7 +2760,7 @@
 										"minItems": 1,
 										"type": "array",
 										"items": {
-											"$ref": "#/$defs/__schema539"
+											"$ref": "#/$defs/__schema542"
 										}
 									},
 									"participleSource": {
@@ -2769,13 +2769,13 @@
 											"verb": {
 												"anyOf": [
 													{
-														"$ref": "#/$defs/__schema280"
+														"$ref": "#/$defs/__schema283"
 													},
 													{
-														"$ref": "#/$defs/__schema508"
+														"$ref": "#/$defs/__schema511"
 													},
 													{
-														"$ref": "#/$defs/__schema534"
+														"$ref": "#/$defs/__schema537"
 													}
 												]
 											},
@@ -2796,7 +2796,7 @@
 									"plural": {
 										"anyOf": [
 											{
-												"$ref": "#/$defs/__schema290"
+												"$ref": "#/$defs/__schema293"
 											},
 											{
 												"type": "string",
@@ -2811,7 +2811,7 @@
 										"minItems": 1,
 										"type": "array",
 										"items": {
-											"$ref": "#/$defs/__schema542"
+											"$ref": "#/$defs/__schema545"
 										}
 									},
 									"locutionType": {
@@ -2832,7 +2832,7 @@
 												]
 											},
 											"attribution": {
-												"$ref": "#/$defs/__schema289"
+												"$ref": "#/$defs/__schema292"
 											}
 										},
 										"required": [
@@ -6626,41 +6626,13 @@
 					"type": "object",
 					"properties": {
 						"abbr": {
-							"anyOf": [
-								{
-									"$ref": "#/$defs/__schema78"
-								},
-								{
-									"type": "null"
-								}
-							]
+							"$ref": "#/$defs/__schema217"
 						},
 						"partType": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Inf"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
+							"$ref": "#/$defs/__schema218"
 						},
 						"polarity": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Neg",
-										"Pos"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
+							"$ref": "#/$defs/__schema219"
 						}
 					},
 					"required": [
@@ -6694,20 +6666,57 @@
 			"const": "PART"
 		},
 		"__schema217": {
+			"anyOf": [
+				{
+					"$ref": "#/$defs/__schema78"
+				},
+				{
+					"type": "null"
+				}
+			]
+		},
+		"__schema218": {
+			"anyOf": [
+				{
+					"type": "string",
+					"enum": [
+						"Inf",
+						"Mod"
+					]
+				},
+				{
+					"type": "null"
+				}
+			]
+		},
+		"__schema219": {
+			"anyOf": [
+				{
+					"type": "string",
+					"enum": [
+						"Neg"
+					]
+				},
+				{
+					"type": "null"
+				}
+			]
+		},
+		"__schema220": {
 			"type": "string",
 			"const": "Attestation"
 		},
-		"__schema218": {
+		"__schema221": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
-					"$ref": "#/$defs/__schema219"
+					"$ref": "#/$defs/__schema222"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema220"
+					"$ref": "#/$defs/__schema223"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema221"
+					"$ref": "#/$defs/__schema224"
 				},
 				"normalizedSurface": {
 					"$ref": "#/$defs/__schema4"
@@ -6719,7 +6728,7 @@
 					"$ref": "#/$defs/__schema83"
 				},
 				"inflectionalFeatures": {
-					"$ref": "#/$defs/__schema234"
+					"$ref": "#/$defs/__schema237"
 				}
 			},
 			"required": [
@@ -6733,15 +6742,15 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema219": {
+		"__schema222": {
 			"type": "string",
 			"const": "Surface"
 		},
-		"__schema220": {
+		"__schema223": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema221": {
+		"__schema224": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -6749,13 +6758,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema222"
+					"$ref": "#/$defs/__schema225"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema223"
+					"$ref": "#/$defs/__schema226"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema224"
+					"$ref": "#/$defs/__schema227"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -6764,28 +6773,28 @@
 					"type": "object",
 					"properties": {
 						"case": {
-							"$ref": "#/$defs/__schema225"
-						},
-						"number": {
-							"$ref": "#/$defs/__schema226"
-						},
-						"extPos": {
-							"$ref": "#/$defs/__schema227"
-						},
-						"person": {
 							"$ref": "#/$defs/__schema228"
 						},
-						"polite": {
+						"number": {
 							"$ref": "#/$defs/__schema229"
 						},
-						"poss": {
+						"extPos": {
 							"$ref": "#/$defs/__schema230"
 						},
-						"pronType": {
+						"person": {
 							"$ref": "#/$defs/__schema231"
 						},
-						"gender": {
+						"polite": {
 							"$ref": "#/$defs/__schema232"
+						},
+						"poss": {
+							"$ref": "#/$defs/__schema233"
+						},
+						"pronType": {
+							"$ref": "#/$defs/__schema234"
+						},
+						"gender": {
+							"$ref": "#/$defs/__schema235"
 						}
 					},
 					"required": [
@@ -6811,19 +6820,19 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema222": {
+		"__schema225": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema223": {
+		"__schema226": {
 			"type": "string",
 			"const": "Lexeme"
 		},
-		"__schema224": {
+		"__schema227": {
 			"type": "string",
 			"const": "PRON"
 		},
-		"__schema225": {
+		"__schema228": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -6839,7 +6848,7 @@
 				}
 			]
 		},
-		"__schema226": {
+		"__schema229": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -6853,7 +6862,7 @@
 				}
 			]
 		},
-		"__schema227": {
+		"__schema230": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -6866,7 +6875,7 @@
 				}
 			]
 		},
-		"__schema228": {
+		"__schema231": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -6881,7 +6890,7 @@
 				}
 			]
 		},
-		"__schema229": {
+		"__schema232": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -6895,7 +6904,7 @@
 				}
 			]
 		},
-		"__schema230": {
+		"__schema233": {
 			"anyOf": [
 				{
 					"$ref": "#/$defs/__schema176"
@@ -6905,7 +6914,7 @@
 				}
 			]
 		},
-		"__schema231": {
+		"__schema234": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -6925,17 +6934,17 @@
 				}
 			]
 		},
-		"__schema232": {
+		"__schema235": {
 			"anyOf": [
 				{
-					"$ref": "#/$defs/__schema233"
+					"$ref": "#/$defs/__schema236"
 				},
 				{
 					"type": "null"
 				}
 			]
 		},
-		"__schema233": {
+		"__schema236": {
 			"type": "string",
 			"enum": [
 				"Fem",
@@ -6943,28 +6952,28 @@
 				"Neut"
 			]
 		},
-		"__schema234": {
+		"__schema237": {
 			"anyOf": [
 				{
 					"type": "object",
 					"properties": {
 						"case": {
-							"$ref": "#/$defs/__schema235"
-						},
-						"gender": {
-							"$ref": "#/$defs/__schema236"
-						},
-						"number": {
-							"$ref": "#/$defs/__schema237"
-						},
-						"gender[psor]": {
 							"$ref": "#/$defs/__schema238"
 						},
-						"number[psor]": {
+						"gender": {
 							"$ref": "#/$defs/__schema239"
 						},
-						"reflex": {
+						"number": {
 							"$ref": "#/$defs/__schema240"
+						},
+						"gender[psor]": {
+							"$ref": "#/$defs/__schema241"
+						},
+						"number[psor]": {
+							"$ref": "#/$defs/__schema242"
+						},
+						"reflex": {
+							"$ref": "#/$defs/__schema243"
 						}
 					},
 					"required": [
@@ -6982,7 +6991,7 @@
 				}
 			]
 		},
-		"__schema235": {
+		"__schema238": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -6998,63 +7007,10 @@
 				}
 			]
 		},
-		"__schema236": {
-			"anyOf": [
-				{
-					"$ref": "#/$defs/__schema233"
-				},
-				{
-					"type": "null"
-				}
-			]
-		},
-		"__schema237": {
-			"anyOf": [
-				{
-					"type": "string",
-					"enum": [
-						"Plur",
-						"Sing"
-					]
-				},
-				{
-					"type": "null"
-				}
-			]
-		},
-		"__schema238": {
-			"anyOf": [
-				{
-					"anyOf": [
-						{
-							"$ref": "#/$defs/__schema233"
-						},
-						{
-							"type": "array",
-							"prefixItems": [
-								{
-									"$ref": "#/$defs/__schema233"
-								}
-							],
-							"items": {
-								"$ref": "#/$defs/__schema233"
-							}
-						}
-					]
-				},
-				{
-					"type": "null"
-				}
-			]
-		},
 		"__schema239": {
 			"anyOf": [
 				{
-					"type": "string",
-					"enum": [
-						"Plur",
-						"Sing"
-					]
+					"$ref": "#/$defs/__schema236"
 				},
 				{
 					"type": "null"
@@ -7064,7 +7020,11 @@
 		"__schema240": {
 			"anyOf": [
 				{
-					"$ref": "#/$defs/__schema241"
+					"type": "string",
+					"enum": [
+						"Plur",
+						"Sing"
+					]
 				},
 				{
 					"type": "null"
@@ -7072,12 +7032,61 @@
 			]
 		},
 		"__schema241": {
+			"anyOf": [
+				{
+					"anyOf": [
+						{
+							"$ref": "#/$defs/__schema236"
+						},
+						{
+							"type": "array",
+							"prefixItems": [
+								{
+									"$ref": "#/$defs/__schema236"
+								}
+							],
+							"items": {
+								"$ref": "#/$defs/__schema236"
+							}
+						}
+					]
+				},
+				{
+					"type": "null"
+				}
+			]
+		},
+		"__schema242": {
+			"anyOf": [
+				{
+					"type": "string",
+					"enum": [
+						"Plur",
+						"Sing"
+					]
+				},
+				{
+					"type": "null"
+				}
+			]
+		},
+		"__schema243": {
+			"anyOf": [
+				{
+					"$ref": "#/$defs/__schema244"
+				},
+				{
+					"type": "null"
+				}
+			]
+		},
+		"__schema244": {
 			"type": "string",
 			"enum": [
 				"Yes"
 			]
 		},
-		"__schema242": {
+		"__schema245": {
 			"type": "array",
 			"prefixItems": [
 				{
@@ -7088,14 +7097,14 @@
 				"$ref": "#/$defs/__schema91"
 			}
 		},
-		"__schema243": {
+		"__schema246": {
 			"type": "string",
 			"enum": [
 				"Full",
 				"Partial"
 			]
 		},
-		"__schema244": {
+		"__schema247": {
 			"anyOf": [
 				{
 					"$ref": "#/$defs/__schema101"
@@ -7105,21 +7114,21 @@
 				}
 			]
 		},
-		"__schema245": {
+		"__schema248": {
 			"type": "string",
 			"const": "Attestation"
 		},
-		"__schema246": {
+		"__schema249": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
-					"$ref": "#/$defs/__schema247"
+					"$ref": "#/$defs/__schema250"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema248"
+					"$ref": "#/$defs/__schema251"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema249"
+					"$ref": "#/$defs/__schema252"
 				},
 				"normalizedSurface": {
 					"$ref": "#/$defs/__schema4"
@@ -7131,7 +7140,7 @@
 					"$ref": "#/$defs/__schema83"
 				},
 				"inflectionalFeatures": {
-					"$ref": "#/$defs/__schema254"
+					"$ref": "#/$defs/__schema257"
 				}
 			},
 			"required": [
@@ -7145,15 +7154,15 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema247": {
+		"__schema250": {
 			"type": "string",
 			"const": "Surface"
 		},
-		"__schema248": {
+		"__schema251": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema249": {
+		"__schema252": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -7161,13 +7170,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema250"
+					"$ref": "#/$defs/__schema253"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema251"
+					"$ref": "#/$defs/__schema254"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema252"
+					"$ref": "#/$defs/__schema255"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -7201,7 +7210,7 @@
 						"gender": {
 							"anyOf": [
 								{
-									"$ref": "#/$defs/__schema253"
+									"$ref": "#/$defs/__schema256"
 								},
 								{
 									"type": "null"
@@ -7227,19 +7236,19 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema250": {
+		"__schema253": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema251": {
+		"__schema254": {
 			"type": "string",
 			"const": "Lexeme"
 		},
-		"__schema252": {
+		"__schema255": {
 			"type": "string",
 			"const": "PROPN"
 		},
-		"__schema253": {
+		"__schema256": {
 			"type": "string",
 			"enum": [
 				"Fem",
@@ -7247,19 +7256,19 @@
 				"Neut"
 			]
 		},
-		"__schema254": {
+		"__schema257": {
 			"anyOf": [
 				{
 					"type": "object",
 					"properties": {
 						"case": {
-							"$ref": "#/$defs/__schema255"
+							"$ref": "#/$defs/__schema258"
 						},
 						"gender": {
-							"$ref": "#/$defs/__schema256"
+							"$ref": "#/$defs/__schema259"
 						},
 						"number": {
-							"$ref": "#/$defs/__schema257"
+							"$ref": "#/$defs/__schema260"
 						}
 					},
 					"required": [
@@ -7274,7 +7283,7 @@
 				}
 			]
 		},
-		"__schema255": {
+		"__schema258": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -7290,17 +7299,17 @@
 				}
 			]
 		},
-		"__schema256": {
+		"__schema259": {
 			"anyOf": [
 				{
-					"$ref": "#/$defs/__schema253"
+					"$ref": "#/$defs/__schema256"
 				},
 				{
 					"type": "null"
 				}
 			]
 		},
-		"__schema257": {
+		"__schema260": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -7314,7 +7323,7 @@
 				}
 			]
 		},
-		"__schema258": {
+		"__schema261": {
 			"type": "array",
 			"prefixItems": [
 				{
@@ -7325,14 +7334,14 @@
 				"$ref": "#/$defs/__schema91"
 			}
 		},
-		"__schema259": {
+		"__schema262": {
 			"type": "string",
 			"enum": [
 				"Full",
 				"Partial"
 			]
 		},
-		"__schema260": {
+		"__schema263": {
 			"anyOf": [
 				{
 					"$ref": "#/$defs/__schema101"
@@ -7342,7 +7351,7 @@
 				}
 			]
 		},
-		"__schema261": {
+		"__schema264": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -7350,13 +7359,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema262"
+					"$ref": "#/$defs/__schema265"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema263"
+					"$ref": "#/$defs/__schema266"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema264"
+					"$ref": "#/$defs/__schema267"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -7402,19 +7411,19 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema262": {
+		"__schema265": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema263": {
+		"__schema266": {
 			"type": "string",
 			"const": "Lexeme"
 		},
-		"__schema264": {
+		"__schema267": {
 			"type": "string",
 			"const": "PUNCT"
 		},
-		"__schema265": {
+		"__schema268": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -7422,13 +7431,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema266"
+					"$ref": "#/$defs/__schema269"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema267"
+					"$ref": "#/$defs/__schema270"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema268"
+					"$ref": "#/$defs/__schema271"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -7466,19 +7475,19 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema266": {
+		"__schema269": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema267": {
+		"__schema270": {
 			"type": "string",
 			"const": "Lexeme"
 		},
-		"__schema268": {
+		"__schema271": {
 			"type": "string",
 			"const": "SCONJ"
 		},
-		"__schema269": {
+		"__schema272": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -7486,13 +7495,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema270"
+					"$ref": "#/$defs/__schema273"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema271"
+					"$ref": "#/$defs/__schema274"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema272"
+					"$ref": "#/$defs/__schema275"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -7531,19 +7540,19 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema270": {
+		"__schema273": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema271": {
+		"__schema274": {
 			"type": "string",
 			"const": "Lexeme"
 		},
-		"__schema272": {
+		"__schema275": {
 			"type": "string",
 			"const": "SYM"
 		},
-		"__schema273": {
+		"__schema276": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -7559,7 +7568,7 @@
 				}
 			]
 		},
-		"__schema274": {
+		"__schema277": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -7574,7 +7583,7 @@
 				}
 			]
 		},
-		"__schema275": {
+		"__schema278": {
 			"anyOf": [
 				{
 					"type": "string",
@@ -7588,21 +7597,21 @@
 				}
 			]
 		},
-		"__schema276": {
+		"__schema279": {
 			"type": "string",
 			"const": "Attestation"
 		},
-		"__schema277": {
+		"__schema280": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
-					"$ref": "#/$defs/__schema278"
+					"$ref": "#/$defs/__schema281"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema279"
+					"$ref": "#/$defs/__schema282"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema280"
+					"$ref": "#/$defs/__schema283"
 				},
 				"normalizedSurface": {
 					"$ref": "#/$defs/__schema4"
@@ -7614,7 +7623,7 @@
 					"$ref": "#/$defs/__schema83"
 				},
 				"inflectionalFeatures": {
-					"$ref": "#/$defs/__schema285"
+					"$ref": "#/$defs/__schema288"
 				}
 			},
 			"required": [
@@ -7628,15 +7637,15 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema278": {
+		"__schema281": {
 			"type": "string",
 			"const": "Surface"
 		},
-		"__schema279": {
+		"__schema282": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema280": {
+		"__schema283": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -7644,13 +7653,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema281"
+					"$ref": "#/$defs/__schema284"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema282"
+					"$ref": "#/$defs/__schema285"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema283"
+					"$ref": "#/$defs/__schema286"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -7661,7 +7670,7 @@
 						"hasSepPrefix": {
 							"anyOf": [
 								{
-									"$ref": "#/$defs/__schema284"
+									"$ref": "#/$defs/__schema287"
 								},
 								{
 									"type": "null"
@@ -7713,23 +7722,23 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema281": {
+		"__schema284": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema282": {
+		"__schema285": {
 			"type": "string",
 			"const": "Lexeme"
 		},
-		"__schema283": {
+		"__schema286": {
 			"type": "string",
 			"const": "VERB"
 		},
-		"__schema284": {
+		"__schema287": {
 			"type": "string",
 			"minLength": 1
 		},
-		"__schema285": {
+		"__schema288": {
 			"anyOf": [
 				{
 					"$ref": "#/$defs/__schema131"
@@ -7739,7 +7748,7 @@
 				}
 			]
 		},
-		"__schema286": {
+		"__schema289": {
 			"type": "array",
 			"prefixItems": [
 				{
@@ -7750,14 +7759,14 @@
 				"$ref": "#/$defs/__schema91"
 			}
 		},
-		"__schema287": {
+		"__schema290": {
 			"type": "string",
 			"enum": [
 				"Full",
 				"Partial"
 			]
 		},
-		"__schema288": {
+		"__schema291": {
 			"anyOf": [
 				{
 					"$ref": "#/$defs/__schema91"
@@ -7767,18 +7776,18 @@
 				}
 			]
 		},
-		"__schema289": {
+		"__schema292": {
 			"type": "string",
 			"minLength": 1
 		},
-		"__schema290": {
+		"__schema293": {
 			"minItems": 1,
 			"type": "array",
 			"items": {
-				"$ref": "#/$defs/__schema289"
+				"$ref": "#/$defs/__schema292"
 			}
 		},
-		"__schema291": {
+		"__schema294": {
 			"anyOf": [
 				{
 					"type": "object",
@@ -7790,91 +7799,91 @@
 						"reading": {
 							"anyOf": [
 								{
-									"$ref": "#/$defs/__schema292"
-								},
-								{
 									"$ref": "#/$defs/__schema295"
 								},
 								{
-									"$ref": "#/$defs/__schema297"
+									"$ref": "#/$defs/__schema298"
 								},
 								{
-									"$ref": "#/$defs/__schema299"
+									"$ref": "#/$defs/__schema300"
 								},
 								{
-									"$ref": "#/$defs/__schema301"
+									"$ref": "#/$defs/__schema302"
 								},
 								{
-									"$ref": "#/$defs/__schema303"
+									"$ref": "#/$defs/__schema304"
 								},
 								{
-									"$ref": "#/$defs/__schema305"
+									"$ref": "#/$defs/__schema306"
 								},
 								{
-									"$ref": "#/$defs/__schema307"
+									"$ref": "#/$defs/__schema308"
 								},
 								{
-									"$ref": "#/$defs/__schema309"
+									"$ref": "#/$defs/__schema310"
 								},
 								{
-									"$ref": "#/$defs/__schema311"
+									"$ref": "#/$defs/__schema312"
 								},
 								{
-									"$ref": "#/$defs/__schema313"
+									"$ref": "#/$defs/__schema314"
 								},
 								{
-									"$ref": "#/$defs/__schema315"
+									"$ref": "#/$defs/__schema316"
 								},
 								{
-									"$ref": "#/$defs/__schema317"
+									"$ref": "#/$defs/__schema318"
 								},
 								{
-									"$ref": "#/$defs/__schema319"
+									"$ref": "#/$defs/__schema320"
 								},
 								{
-									"$ref": "#/$defs/__schema321"
+									"$ref": "#/$defs/__schema322"
 								},
 								{
-									"$ref": "#/$defs/__schema323"
+									"$ref": "#/$defs/__schema324"
 								},
 								{
-									"$ref": "#/$defs/__schema325"
+									"$ref": "#/$defs/__schema326"
 								},
 								{
-									"$ref": "#/$defs/__schema327"
+									"$ref": "#/$defs/__schema328"
 								},
 								{
-									"$ref": "#/$defs/__schema329"
+									"$ref": "#/$defs/__schema330"
 								},
 								{
-									"$ref": "#/$defs/__schema331"
+									"$ref": "#/$defs/__schema332"
 								},
 								{
-									"$ref": "#/$defs/__schema333"
+									"$ref": "#/$defs/__schema334"
 								},
 								{
-									"$ref": "#/$defs/__schema335"
+									"$ref": "#/$defs/__schema336"
 								},
 								{
-									"$ref": "#/$defs/__schema337"
+									"$ref": "#/$defs/__schema338"
 								},
 								{
-									"$ref": "#/$defs/__schema339"
+									"$ref": "#/$defs/__schema340"
 								},
 								{
-									"$ref": "#/$defs/__schema341"
+									"$ref": "#/$defs/__schema342"
 								},
 								{
-									"$ref": "#/$defs/__schema343"
+									"$ref": "#/$defs/__schema344"
 								},
 								{
-									"$ref": "#/$defs/__schema345"
+									"$ref": "#/$defs/__schema346"
 								},
 								{
-									"$ref": "#/$defs/__schema347"
+									"$ref": "#/$defs/__schema348"
 								},
 								{
-									"$ref": "#/$defs/__schema349"
+									"$ref": "#/$defs/__schema350"
+								},
+								{
+									"$ref": "#/$defs/__schema352"
 								}
 							]
 						}
@@ -7898,16 +7907,16 @@
 									"type": "object",
 									"properties": {
 										"language": {
-											"$ref": "#/$defs/__schema351"
+											"$ref": "#/$defs/__schema354"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
-											"$ref": "#/$defs/__schema353"
+											"$ref": "#/$defs/__schema356"
 										},
 										"kind": {
-											"$ref": "#/$defs/__schema354"
+											"$ref": "#/$defs/__schema357"
 										}
 									},
 									"required": [
@@ -7925,7 +7934,7 @@
 											"$ref": "#/$defs/__schema75"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema76"
@@ -7949,7 +7958,7 @@
 											"$ref": "#/$defs/__schema109"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema110"
@@ -7973,7 +7982,7 @@
 											"$ref": "#/$defs/__schema117"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema118"
@@ -7997,7 +8006,7 @@
 											"$ref": "#/$defs/__schema127"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema128"
@@ -8021,7 +8030,7 @@
 											"$ref": "#/$defs/__schema156"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema157"
@@ -8045,7 +8054,7 @@
 											"$ref": "#/$defs/__schema162"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema163"
@@ -8069,7 +8078,7 @@
 											"$ref": "#/$defs/__schema186"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema187"
@@ -8093,7 +8102,7 @@
 											"$ref": "#/$defs/__schema194"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema195"
@@ -8117,7 +8126,7 @@
 											"$ref": "#/$defs/__schema204"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema205"
@@ -8141,7 +8150,7 @@
 											"$ref": "#/$defs/__schema214"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema215"
@@ -8162,16 +8171,16 @@
 									"type": "object",
 									"properties": {
 										"language": {
-											"$ref": "#/$defs/__schema222"
+											"$ref": "#/$defs/__schema225"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
-											"$ref": "#/$defs/__schema223"
+											"$ref": "#/$defs/__schema226"
 										},
 										"kind": {
-											"$ref": "#/$defs/__schema224"
+											"$ref": "#/$defs/__schema227"
 										}
 									},
 									"required": [
@@ -8186,16 +8195,16 @@
 									"type": "object",
 									"properties": {
 										"language": {
-											"$ref": "#/$defs/__schema250"
+											"$ref": "#/$defs/__schema253"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
-											"$ref": "#/$defs/__schema251"
+											"$ref": "#/$defs/__schema254"
 										},
 										"kind": {
-											"$ref": "#/$defs/__schema252"
+											"$ref": "#/$defs/__schema255"
 										}
 									},
 									"required": [
@@ -8210,40 +8219,16 @@
 									"type": "object",
 									"properties": {
 										"language": {
-											"$ref": "#/$defs/__schema262"
+											"$ref": "#/$defs/__schema265"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
-											"$ref": "#/$defs/__schema263"
-										},
-										"kind": {
-											"$ref": "#/$defs/__schema264"
-										}
-									},
-									"required": [
-										"language",
-										"canonicalForm",
-										"family",
-										"kind"
-									],
-									"additionalProperties": false
-								},
-								{
-									"type": "object",
-									"properties": {
-										"language": {
 											"$ref": "#/$defs/__schema266"
 										},
-										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
-										},
-										"family": {
-											"$ref": "#/$defs/__schema267"
-										},
 										"kind": {
-											"$ref": "#/$defs/__schema268"
+											"$ref": "#/$defs/__schema267"
 										}
 									},
 									"required": [
@@ -8258,16 +8243,16 @@
 									"type": "object",
 									"properties": {
 										"language": {
+											"$ref": "#/$defs/__schema269"
+										},
+										"canonicalForm": {
+											"$ref": "#/$defs/__schema355"
+										},
+										"family": {
 											"$ref": "#/$defs/__schema270"
 										},
-										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
-										},
-										"family": {
-											"$ref": "#/$defs/__schema271"
-										},
 										"kind": {
-											"$ref": "#/$defs/__schema272"
+											"$ref": "#/$defs/__schema271"
 										}
 									},
 									"required": [
@@ -8282,16 +8267,40 @@
 									"type": "object",
 									"properties": {
 										"language": {
-											"$ref": "#/$defs/__schema281"
+											"$ref": "#/$defs/__schema273"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
-											"$ref": "#/$defs/__schema282"
+											"$ref": "#/$defs/__schema274"
 										},
 										"kind": {
-											"$ref": "#/$defs/__schema283"
+											"$ref": "#/$defs/__schema275"
+										}
+									},
+									"required": [
+										"language",
+										"canonicalForm",
+										"family",
+										"kind"
+									],
+									"additionalProperties": false
+								},
+								{
+									"type": "object",
+									"properties": {
+										"language": {
+											"$ref": "#/$defs/__schema284"
+										},
+										"canonicalForm": {
+											"$ref": "#/$defs/__schema355"
+										},
+										"family": {
+											"$ref": "#/$defs/__schema285"
+										},
+										"kind": {
+											"$ref": "#/$defs/__schema286"
 										}
 									},
 									"required": [
@@ -8309,7 +8318,7 @@
 											"$ref": "#/$defs/__schema1"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema2"
@@ -8333,7 +8342,7 @@
 											"$ref": "#/$defs/__schema7"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema8"
@@ -8357,7 +8366,7 @@
 											"$ref": "#/$defs/__schema11"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema12"
@@ -8381,7 +8390,7 @@
 											"$ref": "#/$defs/__schema15"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema16"
@@ -8405,7 +8414,7 @@
 											"$ref": "#/$defs/__schema19"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema20"
@@ -8429,7 +8438,7 @@
 											"$ref": "#/$defs/__schema23"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema24"
@@ -8453,7 +8462,7 @@
 											"$ref": "#/$defs/__schema27"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema28"
@@ -8477,7 +8486,7 @@
 											"$ref": "#/$defs/__schema31"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema32"
@@ -8501,7 +8510,7 @@
 											"$ref": "#/$defs/__schema35"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema36"
@@ -8525,7 +8534,7 @@
 											"$ref": "#/$defs/__schema39"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema40"
@@ -8549,7 +8558,7 @@
 											"$ref": "#/$defs/__schema43"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema44"
@@ -8573,7 +8582,7 @@
 											"$ref": "#/$defs/__schema47"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema48"
@@ -8594,34 +8603,10 @@
 									"type": "object",
 									"properties": {
 										"language": {
-											"$ref": "#/$defs/__schema355"
-										},
-										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
-										},
-										"family": {
-											"$ref": "#/$defs/__schema356"
-										},
-										"kind": {
-											"$ref": "#/$defs/__schema357"
-										}
-									},
-									"required": [
-										"language",
-										"canonicalForm",
-										"family",
-										"kind"
-									],
-									"additionalProperties": false
-								},
-								{
-									"type": "object",
-									"properties": {
-										"language": {
 											"$ref": "#/$defs/__schema358"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema359"
@@ -8645,7 +8630,7 @@
 											"$ref": "#/$defs/__schema361"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema362"
@@ -8669,7 +8654,7 @@
 											"$ref": "#/$defs/__schema364"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema365"
@@ -8693,7 +8678,7 @@
 											"$ref": "#/$defs/__schema367"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema368"
@@ -8717,7 +8702,7 @@
 											"$ref": "#/$defs/__schema370"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema371"
@@ -8741,7 +8726,7 @@
 											"$ref": "#/$defs/__schema373"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema374"
@@ -8765,7 +8750,7 @@
 											"$ref": "#/$defs/__schema376"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema377"
@@ -8789,7 +8774,7 @@
 											"$ref": "#/$defs/__schema379"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema380"
@@ -8813,7 +8798,7 @@
 											"$ref": "#/$defs/__schema382"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema383"
@@ -8837,7 +8822,7 @@
 											"$ref": "#/$defs/__schema385"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema386"
@@ -8861,7 +8846,7 @@
 											"$ref": "#/$defs/__schema388"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema389"
@@ -8885,7 +8870,7 @@
 											"$ref": "#/$defs/__schema391"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema392"
@@ -8909,7 +8894,7 @@
 											"$ref": "#/$defs/__schema394"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema395"
@@ -8933,7 +8918,7 @@
 											"$ref": "#/$defs/__schema397"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema398"
@@ -8957,7 +8942,7 @@
 											"$ref": "#/$defs/__schema400"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema401"
@@ -8981,7 +8966,7 @@
 											"$ref": "#/$defs/__schema403"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema404"
@@ -9005,7 +8990,7 @@
 											"$ref": "#/$defs/__schema406"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema407"
@@ -9029,7 +9014,7 @@
 											"$ref": "#/$defs/__schema409"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema410"
@@ -9053,7 +9038,7 @@
 											"$ref": "#/$defs/__schema412"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema413"
@@ -9077,7 +9062,7 @@
 											"$ref": "#/$defs/__schema415"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema416"
@@ -9101,7 +9086,7 @@
 											"$ref": "#/$defs/__schema418"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema419"
@@ -9125,7 +9110,7 @@
 											"$ref": "#/$defs/__schema421"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema422"
@@ -9149,7 +9134,7 @@
 											"$ref": "#/$defs/__schema424"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema425"
@@ -9173,7 +9158,7 @@
 											"$ref": "#/$defs/__schema427"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema428"
@@ -9197,7 +9182,7 @@
 											"$ref": "#/$defs/__schema430"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema431"
@@ -9221,7 +9206,7 @@
 											"$ref": "#/$defs/__schema433"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema434"
@@ -9245,7 +9230,7 @@
 											"$ref": "#/$defs/__schema436"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema437"
@@ -9269,7 +9254,7 @@
 											"$ref": "#/$defs/__schema439"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema440"
@@ -9293,7 +9278,7 @@
 											"$ref": "#/$defs/__schema442"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema443"
@@ -9317,7 +9302,7 @@
 											"$ref": "#/$defs/__schema445"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema446"
@@ -9341,7 +9326,7 @@
 											"$ref": "#/$defs/__schema448"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema449"
@@ -9365,7 +9350,7 @@
 											"$ref": "#/$defs/__schema451"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema452"
@@ -9389,7 +9374,7 @@
 											"$ref": "#/$defs/__schema454"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema455"
@@ -9413,7 +9398,7 @@
 											"$ref": "#/$defs/__schema457"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema458"
@@ -9437,7 +9422,7 @@
 											"$ref": "#/$defs/__schema460"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema461"
@@ -9461,7 +9446,7 @@
 											"$ref": "#/$defs/__schema463"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema464"
@@ -9485,7 +9470,7 @@
 											"$ref": "#/$defs/__schema466"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema467"
@@ -9509,7 +9494,7 @@
 											"$ref": "#/$defs/__schema469"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema470"
@@ -9533,7 +9518,7 @@
 											"$ref": "#/$defs/__schema472"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema473"
@@ -9557,7 +9542,7 @@
 											"$ref": "#/$defs/__schema475"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema476"
@@ -9581,7 +9566,7 @@
 											"$ref": "#/$defs/__schema478"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema479"
@@ -9605,7 +9590,7 @@
 											"$ref": "#/$defs/__schema481"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema482"
@@ -9629,13 +9614,37 @@
 											"$ref": "#/$defs/__schema484"
 										},
 										"canonicalForm": {
-											"$ref": "#/$defs/__schema352"
+											"$ref": "#/$defs/__schema355"
 										},
 										"family": {
 											"$ref": "#/$defs/__schema485"
 										},
 										"kind": {
 											"$ref": "#/$defs/__schema486"
+										}
+									},
+									"required": [
+										"language",
+										"canonicalForm",
+										"family",
+										"kind"
+									],
+									"additionalProperties": false
+								},
+								{
+									"type": "object",
+									"properties": {
+										"language": {
+											"$ref": "#/$defs/__schema487"
+										},
+										"canonicalForm": {
+											"$ref": "#/$defs/__schema355"
+										},
+										"family": {
+											"$ref": "#/$defs/__schema488"
+										},
+										"kind": {
+											"$ref": "#/$defs/__schema489"
 										}
 									},
 									"required": [
@@ -9666,7 +9675,7 @@
 							"minItems": 1,
 							"type": "array",
 							"items": {
-								"$ref": "#/$defs/__schema291"
+								"$ref": "#/$defs/__schema294"
 							}
 						}
 					},
@@ -9678,7 +9687,7 @@
 				}
 			]
 		},
-		"__schema292": {
+		"__schema295": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9686,10 +9695,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema293"
+					"$ref": "#/$defs/__schema296"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -9699,7 +9708,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema293": {
+		"__schema296": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9737,11 +9746,11 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema294": {
+		"__schema297": {
 			"type": "string",
 			"minLength": 1
 		},
-		"__schema295": {
+		"__schema298": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9749,10 +9758,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema296"
+					"$ref": "#/$defs/__schema299"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -9762,7 +9771,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema296": {
+		"__schema299": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9800,7 +9809,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema297": {
+		"__schema300": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9808,10 +9817,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema298"
+					"$ref": "#/$defs/__schema301"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -9821,7 +9830,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema298": {
+		"__schema301": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9859,7 +9868,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema299": {
+		"__schema302": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9867,10 +9876,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema300"
+					"$ref": "#/$defs/__schema303"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -9880,7 +9889,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema300": {
+		"__schema303": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9918,7 +9927,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema301": {
+		"__schema304": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9926,10 +9935,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema302"
+					"$ref": "#/$defs/__schema305"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -9939,7 +9948,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema302": {
+		"__schema305": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -9967,7 +9976,7 @@
 						"hasSepPrefix": {
 							"anyOf": [
 								{
-									"$ref": "#/$defs/__schema284"
+									"$ref": "#/$defs/__schema287"
 								},
 								{
 									"type": "null"
@@ -9991,121 +10000,24 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema303": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Reading"
-				},
-				"lemma": {
-					"$ref": "#/$defs/__schema304"
-				},
-				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
-				}
-			},
-			"required": [
-				"unitKind",
-				"lemma",
-				"emojiDescription"
-			],
-			"additionalProperties": false
-		},
-		"__schema304": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Lemma"
-				},
-				"language": {
-					"type": "string",
-					"const": "de"
-				},
-				"family": {
-					"type": "string",
-					"const": "Morpheme"
-				},
-				"kind": {
-					"type": "string",
-					"const": "Root"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {},
-					"additionalProperties": false
-				}
-			},
-			"required": [
-				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
-			],
-			"additionalProperties": false
-		},
-		"__schema305": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Reading"
-				},
-				"lemma": {
-					"$ref": "#/$defs/__schema306"
-				},
-				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
-				}
-			},
-			"required": [
-				"unitKind",
-				"lemma",
-				"emojiDescription"
-			],
-			"additionalProperties": false
-		},
 		"__schema306": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
 					"type": "string",
-					"const": "Lemma"
+					"const": "Reading"
 				},
-				"language": {
-					"type": "string",
-					"const": "de"
+				"lemma": {
+					"$ref": "#/$defs/__schema307"
 				},
-				"family": {
-					"type": "string",
-					"const": "Morpheme"
-				},
-				"kind": {
-					"type": "string",
-					"const": "Suffix"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {},
-					"additionalProperties": false
+				"emojiDescription": {
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
 				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
+				"lemma",
+				"emojiDescription"
 			],
 			"additionalProperties": false
 		},
@@ -10114,19 +10026,36 @@
 			"properties": {
 				"unitKind": {
 					"type": "string",
-					"const": "Reading"
+					"const": "Lemma"
 				},
-				"lemma": {
-					"$ref": "#/$defs/__schema308"
+				"language": {
+					"type": "string",
+					"const": "de"
 				},
-				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+				"family": {
+					"type": "string",
+					"const": "Morpheme"
+				},
+				"kind": {
+					"type": "string",
+					"const": "Root"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {},
+					"additionalProperties": false
 				}
 			},
 			"required": [
 				"unitKind",
-				"lemma",
-				"emojiDescription"
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
 			],
 			"additionalProperties": false
 		},
@@ -10135,36 +10064,19 @@
 			"properties": {
 				"unitKind": {
 					"type": "string",
-					"const": "Lemma"
+					"const": "Reading"
 				},
-				"language": {
-					"type": "string",
-					"const": "de"
+				"lemma": {
+					"$ref": "#/$defs/__schema309"
 				},
-				"family": {
-					"type": "string",
-					"const": "Morpheme"
-				},
-				"kind": {
-					"type": "string",
-					"const": "Suffixoid"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {},
-					"additionalProperties": false
+				"emojiDescription": {
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
 				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
+				"lemma",
+				"emojiDescription"
 			],
 			"additionalProperties": false
 		},
@@ -10173,13 +10085,51 @@
 			"properties": {
 				"unitKind": {
 					"type": "string",
+					"const": "Lemma"
+				},
+				"language": {
+					"type": "string",
+					"const": "de"
+				},
+				"family": {
+					"type": "string",
+					"const": "Morpheme"
+				},
+				"kind": {
+					"type": "string",
+					"const": "Suffix"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"unitKind",
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
+			],
+			"additionalProperties": false
+		},
+		"__schema310": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema310"
+					"$ref": "#/$defs/__schema311"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10189,7 +10139,66 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema310": {
+		"__schema311": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
+					"const": "Lemma"
+				},
+				"language": {
+					"type": "string",
+					"const": "de"
+				},
+				"family": {
+					"type": "string",
+					"const": "Morpheme"
+				},
+				"kind": {
+					"type": "string",
+					"const": "Suffixoid"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"unitKind",
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
+			],
+			"additionalProperties": false
+		},
+		"__schema312": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
+					"const": "Reading"
+				},
+				"lemma": {
+					"$ref": "#/$defs/__schema313"
+				},
+				"emojiDescription": {
+					"$ref": "#/$defs/__schema297"
+				}
+			},
+			"required": [
+				"unitKind",
+				"lemma",
+				"emojiDescription"
+			],
+			"additionalProperties": false
+		},
+		"__schema313": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10227,121 +10236,24 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema311": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Reading"
-				},
-				"lemma": {
-					"$ref": "#/$defs/__schema312"
-				},
-				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
-				}
-			},
-			"required": [
-				"unitKind",
-				"lemma",
-				"emojiDescription"
-			],
-			"additionalProperties": false
-		},
-		"__schema312": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Lemma"
-				},
-				"language": {
-					"type": "string",
-					"const": "en"
-				},
-				"family": {
-					"type": "string",
-					"const": "Morpheme"
-				},
-				"kind": {
-					"type": "string",
-					"const": "Circumfix"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {},
-					"additionalProperties": false
-				}
-			},
-			"required": [
-				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
-			],
-			"additionalProperties": false
-		},
-		"__schema313": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Reading"
-				},
-				"lemma": {
-					"$ref": "#/$defs/__schema314"
-				},
-				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
-				}
-			},
-			"required": [
-				"unitKind",
-				"lemma",
-				"emojiDescription"
-			],
-			"additionalProperties": false
-		},
 		"__schema314": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
 					"type": "string",
-					"const": "Lemma"
+					"const": "Reading"
 				},
-				"language": {
-					"type": "string",
-					"const": "en"
+				"lemma": {
+					"$ref": "#/$defs/__schema315"
 				},
-				"family": {
-					"type": "string",
-					"const": "Morpheme"
-				},
-				"kind": {
-					"type": "string",
-					"const": "Duplifix"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {},
-					"additionalProperties": false
+				"emojiDescription": {
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
 				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
+				"lemma",
+				"emojiDescription"
 			],
 			"additionalProperties": false
 		},
@@ -10350,13 +10262,51 @@
 			"properties": {
 				"unitKind": {
 					"type": "string",
+					"const": "Lemma"
+				},
+				"language": {
+					"type": "string",
+					"const": "en"
+				},
+				"family": {
+					"type": "string",
+					"const": "Morpheme"
+				},
+				"kind": {
+					"type": "string",
+					"const": "Circumfix"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"unitKind",
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
+			],
+			"additionalProperties": false
+		},
+		"__schema316": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema316"
+					"$ref": "#/$defs/__schema317"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10366,7 +10316,66 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema316": {
+		"__schema317": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
+					"const": "Lemma"
+				},
+				"language": {
+					"type": "string",
+					"const": "en"
+				},
+				"family": {
+					"type": "string",
+					"const": "Morpheme"
+				},
+				"kind": {
+					"type": "string",
+					"const": "Duplifix"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"unitKind",
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
+			],
+			"additionalProperties": false
+		},
+		"__schema318": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
+					"const": "Reading"
+				},
+				"lemma": {
+					"$ref": "#/$defs/__schema319"
+				},
+				"emojiDescription": {
+					"$ref": "#/$defs/__schema297"
+				}
+			},
+			"required": [
+				"unitKind",
+				"lemma",
+				"emojiDescription"
+			],
+			"additionalProperties": false
+		},
+		"__schema319": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10404,7 +10413,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema317": {
+		"__schema320": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10412,10 +10421,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema318"
+					"$ref": "#/$defs/__schema321"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10425,7 +10434,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema318": {
+		"__schema321": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10463,7 +10472,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema319": {
+		"__schema322": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10471,10 +10480,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema320"
+					"$ref": "#/$defs/__schema323"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10484,7 +10493,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema320": {
+		"__schema323": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10522,7 +10531,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema321": {
+		"__schema324": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10530,10 +10539,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema322"
+					"$ref": "#/$defs/__schema325"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10543,7 +10552,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema322": {
+		"__schema325": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10581,7 +10590,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema323": {
+		"__schema326": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10589,10 +10598,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema324"
+					"$ref": "#/$defs/__schema327"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10602,7 +10611,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema324": {
+		"__schema327": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10640,7 +10649,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema325": {
+		"__schema328": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10648,10 +10657,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema326"
+					"$ref": "#/$defs/__schema329"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10661,7 +10670,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema326": {
+		"__schema329": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10699,7 +10708,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema327": {
+		"__schema330": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10707,10 +10716,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema328"
+					"$ref": "#/$defs/__schema331"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10720,7 +10729,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema328": {
+		"__schema331": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10758,7 +10767,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema329": {
+		"__schema332": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10766,10 +10775,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema330"
+					"$ref": "#/$defs/__schema333"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10779,7 +10788,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema330": {
+		"__schema333": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10817,7 +10826,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema331": {
+		"__schema334": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10825,10 +10834,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema332"
+					"$ref": "#/$defs/__schema335"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10838,7 +10847,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema332": {
+		"__schema335": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10876,7 +10885,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema333": {
+		"__schema336": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10884,10 +10893,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema334"
+					"$ref": "#/$defs/__schema337"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10897,7 +10906,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema334": {
+		"__schema337": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10935,7 +10944,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema335": {
+		"__schema338": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10943,10 +10952,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema336"
+					"$ref": "#/$defs/__schema339"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -10956,7 +10965,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema336": {
+		"__schema339": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -10994,7 +11003,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema337": {
+		"__schema340": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11002,10 +11011,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema338"
+					"$ref": "#/$defs/__schema341"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -11015,7 +11024,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema338": {
+		"__schema341": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11053,7 +11062,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema339": {
+		"__schema342": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11061,10 +11070,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema340"
+					"$ref": "#/$defs/__schema343"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -11074,7 +11083,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema340": {
+		"__schema343": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11112,7 +11121,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema341": {
+		"__schema344": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11120,10 +11129,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema342"
+					"$ref": "#/$defs/__schema345"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -11133,7 +11142,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema342": {
+		"__schema345": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11171,7 +11180,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema343": {
+		"__schema346": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11179,10 +11188,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema344"
+					"$ref": "#/$defs/__schema347"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -11192,7 +11201,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema344": {
+		"__schema347": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11230,7 +11239,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema345": {
+		"__schema348": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11238,10 +11247,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema346"
+					"$ref": "#/$defs/__schema349"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -11251,7 +11260,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema346": {
+		"__schema349": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11289,7 +11298,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema347": {
+		"__schema350": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11297,10 +11306,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema348"
+					"$ref": "#/$defs/__schema351"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -11310,7 +11319,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema348": {
+		"__schema351": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11348,7 +11357,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema349": {
+		"__schema352": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11356,10 +11365,10 @@
 					"const": "Reading"
 				},
 				"lemma": {
-					"$ref": "#/$defs/__schema350"
+					"$ref": "#/$defs/__schema353"
 				},
 				"emojiDescription": {
-					"$ref": "#/$defs/__schema294"
+					"$ref": "#/$defs/__schema297"
 				}
 			},
 			"required": [
@@ -11369,7 +11378,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema350": {
+		"__schema353": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -11407,25 +11416,13 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema351": {
+		"__schema354": {
 			"type": "string",
 			"const": "de"
 		},
-		"__schema352": {
-			"type": "string",
-			"minLength": 1
-		},
-		"__schema353": {
-			"type": "string",
-			"const": "Foreign"
-		},
-		"__schema354": {
-			"type": "string",
-			"const": "Foreign"
-		},
 		"__schema355": {
 			"type": "string",
-			"const": "en"
+			"minLength": 1
 		},
 		"__schema356": {
 			"type": "string",
@@ -11441,11 +11438,11 @@
 		},
 		"__schema359": {
 			"type": "string",
-			"const": "Lexeme"
+			"const": "Foreign"
 		},
 		"__schema360": {
 			"type": "string",
-			"const": "ADJ"
+			"const": "Foreign"
 		},
 		"__schema361": {
 			"type": "string",
@@ -11457,7 +11454,7 @@
 		},
 		"__schema363": {
 			"type": "string",
-			"const": "ADP"
+			"const": "ADJ"
 		},
 		"__schema364": {
 			"type": "string",
@@ -11469,7 +11466,7 @@
 		},
 		"__schema366": {
 			"type": "string",
-			"const": "ADV"
+			"const": "ADP"
 		},
 		"__schema367": {
 			"type": "string",
@@ -11481,7 +11478,7 @@
 		},
 		"__schema369": {
 			"type": "string",
-			"const": "AUX"
+			"const": "ADV"
 		},
 		"__schema370": {
 			"type": "string",
@@ -11493,7 +11490,7 @@
 		},
 		"__schema372": {
 			"type": "string",
-			"const": "CCONJ"
+			"const": "AUX"
 		},
 		"__schema373": {
 			"type": "string",
@@ -11505,7 +11502,7 @@
 		},
 		"__schema375": {
 			"type": "string",
-			"const": "DET"
+			"const": "CCONJ"
 		},
 		"__schema376": {
 			"type": "string",
@@ -11517,7 +11514,7 @@
 		},
 		"__schema378": {
 			"type": "string",
-			"const": "INTJ"
+			"const": "DET"
 		},
 		"__schema379": {
 			"type": "string",
@@ -11529,7 +11526,7 @@
 		},
 		"__schema381": {
 			"type": "string",
-			"const": "NOUN"
+			"const": "INTJ"
 		},
 		"__schema382": {
 			"type": "string",
@@ -11541,7 +11538,7 @@
 		},
 		"__schema384": {
 			"type": "string",
-			"const": "NUM"
+			"const": "NOUN"
 		},
 		"__schema385": {
 			"type": "string",
@@ -11553,7 +11550,7 @@
 		},
 		"__schema387": {
 			"type": "string",
-			"const": "PART"
+			"const": "NUM"
 		},
 		"__schema388": {
 			"type": "string",
@@ -11565,7 +11562,7 @@
 		},
 		"__schema390": {
 			"type": "string",
-			"const": "PRON"
+			"const": "PART"
 		},
 		"__schema391": {
 			"type": "string",
@@ -11577,7 +11574,7 @@
 		},
 		"__schema393": {
 			"type": "string",
-			"const": "PROPN"
+			"const": "PRON"
 		},
 		"__schema394": {
 			"type": "string",
@@ -11589,7 +11586,7 @@
 		},
 		"__schema396": {
 			"type": "string",
-			"const": "PUNCT"
+			"const": "PROPN"
 		},
 		"__schema397": {
 			"type": "string",
@@ -11601,7 +11598,7 @@
 		},
 		"__schema399": {
 			"type": "string",
-			"const": "SCONJ"
+			"const": "PUNCT"
 		},
 		"__schema400": {
 			"type": "string",
@@ -11613,7 +11610,7 @@
 		},
 		"__schema402": {
 			"type": "string",
-			"const": "SYM"
+			"const": "SCONJ"
 		},
 		"__schema403": {
 			"type": "string",
@@ -11625,7 +11622,7 @@
 		},
 		"__schema405": {
 			"type": "string",
-			"const": "VERB"
+			"const": "SYM"
 		},
 		"__schema406": {
 			"type": "string",
@@ -11633,11 +11630,11 @@
 		},
 		"__schema407": {
 			"type": "string",
-			"const": "Locution"
+			"const": "Lexeme"
 		},
 		"__schema408": {
 			"type": "string",
-			"const": "ADP"
+			"const": "VERB"
 		},
 		"__schema409": {
 			"type": "string",
@@ -11649,7 +11646,7 @@
 		},
 		"__schema411": {
 			"type": "string",
-			"const": "ADV"
+			"const": "ADP"
 		},
 		"__schema412": {
 			"type": "string",
@@ -11661,7 +11658,7 @@
 		},
 		"__schema414": {
 			"type": "string",
-			"const": "INTJ"
+			"const": "ADV"
 		},
 		"__schema415": {
 			"type": "string",
@@ -11673,7 +11670,7 @@
 		},
 		"__schema417": {
 			"type": "string",
-			"const": "NOUN"
+			"const": "INTJ"
 		},
 		"__schema418": {
 			"type": "string",
@@ -11685,7 +11682,7 @@
 		},
 		"__schema420": {
 			"type": "string",
-			"const": "SCONJ"
+			"const": "NOUN"
 		},
 		"__schema421": {
 			"type": "string",
@@ -11697,7 +11694,7 @@
 		},
 		"__schema423": {
 			"type": "string",
-			"const": "VERB"
+			"const": "SCONJ"
 		},
 		"__schema424": {
 			"type": "string",
@@ -11705,23 +11702,23 @@
 		},
 		"__schema425": {
 			"type": "string",
-			"const": "Saying"
+			"const": "Locution"
 		},
 		"__schema426": {
 			"type": "string",
-			"const": "Saying"
+			"const": "VERB"
 		},
 		"__schema427": {
 			"type": "string",
-			"const": "he"
+			"const": "en"
 		},
 		"__schema428": {
 			"type": "string",
-			"const": "Foreign"
+			"const": "Saying"
 		},
 		"__schema429": {
 			"type": "string",
-			"const": "Foreign"
+			"const": "Saying"
 		},
 		"__schema430": {
 			"type": "string",
@@ -11729,11 +11726,11 @@
 		},
 		"__schema431": {
 			"type": "string",
-			"const": "Lexeme"
+			"const": "Foreign"
 		},
 		"__schema432": {
 			"type": "string",
-			"const": "ADJ"
+			"const": "Foreign"
 		},
 		"__schema433": {
 			"type": "string",
@@ -11745,7 +11742,7 @@
 		},
 		"__schema435": {
 			"type": "string",
-			"const": "ADP"
+			"const": "ADJ"
 		},
 		"__schema436": {
 			"type": "string",
@@ -11757,7 +11754,7 @@
 		},
 		"__schema438": {
 			"type": "string",
-			"const": "ADV"
+			"const": "ADP"
 		},
 		"__schema439": {
 			"type": "string",
@@ -11769,7 +11766,7 @@
 		},
 		"__schema441": {
 			"type": "string",
-			"const": "AUX"
+			"const": "ADV"
 		},
 		"__schema442": {
 			"type": "string",
@@ -11781,7 +11778,7 @@
 		},
 		"__schema444": {
 			"type": "string",
-			"const": "CCONJ"
+			"const": "AUX"
 		},
 		"__schema445": {
 			"type": "string",
@@ -11793,7 +11790,7 @@
 		},
 		"__schema447": {
 			"type": "string",
-			"const": "DET"
+			"const": "CCONJ"
 		},
 		"__schema448": {
 			"type": "string",
@@ -11805,7 +11802,7 @@
 		},
 		"__schema450": {
 			"type": "string",
-			"const": "INTJ"
+			"const": "DET"
 		},
 		"__schema451": {
 			"type": "string",
@@ -11817,7 +11814,7 @@
 		},
 		"__schema453": {
 			"type": "string",
-			"const": "NOUN"
+			"const": "INTJ"
 		},
 		"__schema454": {
 			"type": "string",
@@ -11829,7 +11826,7 @@
 		},
 		"__schema456": {
 			"type": "string",
-			"const": "NUM"
+			"const": "NOUN"
 		},
 		"__schema457": {
 			"type": "string",
@@ -11841,7 +11838,7 @@
 		},
 		"__schema459": {
 			"type": "string",
-			"const": "PART"
+			"const": "NUM"
 		},
 		"__schema460": {
 			"type": "string",
@@ -11853,7 +11850,7 @@
 		},
 		"__schema462": {
 			"type": "string",
-			"const": "PRON"
+			"const": "PART"
 		},
 		"__schema463": {
 			"type": "string",
@@ -11865,7 +11862,7 @@
 		},
 		"__schema465": {
 			"type": "string",
-			"const": "PROPN"
+			"const": "PRON"
 		},
 		"__schema466": {
 			"type": "string",
@@ -11877,7 +11874,7 @@
 		},
 		"__schema468": {
 			"type": "string",
-			"const": "PUNCT"
+			"const": "PROPN"
 		},
 		"__schema469": {
 			"type": "string",
@@ -11889,7 +11886,7 @@
 		},
 		"__schema471": {
 			"type": "string",
-			"const": "SCONJ"
+			"const": "PUNCT"
 		},
 		"__schema472": {
 			"type": "string",
@@ -11901,7 +11898,7 @@
 		},
 		"__schema474": {
 			"type": "string",
-			"const": "SYM"
+			"const": "SCONJ"
 		},
 		"__schema475": {
 			"type": "string",
@@ -11913,7 +11910,7 @@
 		},
 		"__schema477": {
 			"type": "string",
-			"const": "VERB"
+			"const": "SYM"
 		},
 		"__schema478": {
 			"type": "string",
@@ -11921,11 +11918,11 @@
 		},
 		"__schema479": {
 			"type": "string",
-			"const": "Locution"
+			"const": "Lexeme"
 		},
 		"__schema480": {
 			"type": "string",
-			"const": "ADV"
+			"const": "VERB"
 		},
 		"__schema481": {
 			"type": "string",
@@ -11937,7 +11934,7 @@
 		},
 		"__schema483": {
 			"type": "string",
-			"const": "INTJ"
+			"const": "ADV"
 		},
 		"__schema484": {
 			"type": "string",
@@ -11945,59 +11942,25 @@
 		},
 		"__schema485": {
 			"type": "string",
-			"const": "Saying"
+			"const": "Locution"
 		},
 		"__schema486": {
 			"type": "string",
-			"const": "Saying"
+			"const": "INTJ"
 		},
 		"__schema487": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Lemma"
-				},
-				"language": {
-					"$ref": "#/$defs/__schema351"
-				},
-				"family": {
-					"$ref": "#/$defs/__schema353"
-				},
-				"kind": {
-					"$ref": "#/$defs/__schema354"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {
-						"sourceLang": {
-							"$ref": "#/$defs/__schema488"
-						}
-					},
-					"required": [
-						"sourceLang"
-					],
-					"additionalProperties": false
-				}
-			},
-			"required": [
-				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
-			],
-			"additionalProperties": false
+			"type": "string",
+			"const": "he"
 		},
 		"__schema488": {
 			"type": "string",
-			"pattern": "^[a-z]{2,3}$"
+			"const": "Saying"
 		},
 		"__schema489": {
+			"type": "string",
+			"const": "Saying"
+		},
+		"__schema490": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12005,7 +11968,7 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema355"
+					"$ref": "#/$defs/__schema354"
 				},
 				"family": {
 					"$ref": "#/$defs/__schema356"
@@ -12020,7 +11983,7 @@
 					"type": "object",
 					"properties": {
 						"sourceLang": {
-							"$ref": "#/$defs/__schema488"
+							"$ref": "#/$defs/__schema491"
 						}
 					},
 					"required": [
@@ -12039,7 +12002,11 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema490": {
+		"__schema491": {
+			"type": "string",
+			"pattern": "^[a-z]{2,3}$"
+		},
+		"__schema492": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12054,6 +12021,48 @@
 				},
 				"kind": {
 					"$ref": "#/$defs/__schema360"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {
+						"sourceLang": {
+							"$ref": "#/$defs/__schema491"
+						}
+					},
+					"required": [
+						"sourceLang"
+					],
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"unitKind",
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
+			],
+			"additionalProperties": false
+		},
+		"__schema493": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
+					"const": "Lemma"
+				},
+				"language": {
+					"$ref": "#/$defs/__schema361"
+				},
+				"family": {
+					"$ref": "#/$defs/__schema362"
+				},
+				"kind": {
+					"$ref": "#/$defs/__schema363"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12145,7 +12154,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema491": {
+		"__schema494": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12153,13 +12162,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema361"
+					"$ref": "#/$defs/__schema364"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema362"
+					"$ref": "#/$defs/__schema365"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema363"
+					"$ref": "#/$defs/__schema366"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12210,7 +12219,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema492": {
+		"__schema495": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12218,13 +12227,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema364"
+					"$ref": "#/$defs/__schema367"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema365"
+					"$ref": "#/$defs/__schema368"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema366"
+					"$ref": "#/$defs/__schema369"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12301,17 +12310,17 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/$defs/__schema493"
+											"$ref": "#/$defs/__schema496"
 										},
 										{
 											"type": "array",
 											"prefixItems": [
 												{
-													"$ref": "#/$defs/__schema493"
+													"$ref": "#/$defs/__schema496"
 												}
 											],
 											"items": {
-												"$ref": "#/$defs/__schema493"
+												"$ref": "#/$defs/__schema496"
 											}
 										}
 									]
@@ -12343,7 +12352,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema493": {
+		"__schema496": {
 			"type": "string",
 			"enum": [
 				"Dem",
@@ -12354,7 +12363,7 @@
 				"Tot"
 			]
 		},
-		"__schema494": {
+		"__schema497": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12362,13 +12371,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema367"
+					"$ref": "#/$defs/__schema370"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema368"
+					"$ref": "#/$defs/__schema371"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema369"
+					"$ref": "#/$defs/__schema372"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12403,7 +12412,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema495": {
+		"__schema498": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12411,13 +12420,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema370"
+					"$ref": "#/$defs/__schema373"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema371"
+					"$ref": "#/$defs/__schema374"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema372"
+					"$ref": "#/$defs/__schema375"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12466,7 +12475,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema496": {
+		"__schema499": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12474,13 +12483,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema373"
+					"$ref": "#/$defs/__schema376"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema374"
+					"$ref": "#/$defs/__schema377"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema375"
+					"$ref": "#/$defs/__schema378"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12557,17 +12566,17 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/$defs/__schema497"
+											"$ref": "#/$defs/__schema500"
 										},
 										{
 											"type": "array",
 											"prefixItems": [
 												{
-													"$ref": "#/$defs/__schema497"
+													"$ref": "#/$defs/__schema500"
 												}
 											],
 											"items": {
-												"$ref": "#/$defs/__schema497"
+												"$ref": "#/$defs/__schema500"
 											}
 										}
 									]
@@ -12599,7 +12608,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema497": {
+		"__schema500": {
 			"type": "string",
 			"enum": [
 				"Art",
@@ -12612,7 +12621,7 @@
 				"Tot"
 			]
 		},
-		"__schema498": {
+		"__schema501": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12620,13 +12629,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema376"
+					"$ref": "#/$defs/__schema379"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema377"
+					"$ref": "#/$defs/__schema380"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema378"
+					"$ref": "#/$defs/__schema381"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12676,7 +12685,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema499": {
+		"__schema502": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12684,13 +12693,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema379"
+					"$ref": "#/$defs/__schema382"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema380"
+					"$ref": "#/$defs/__schema383"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema381"
+					"$ref": "#/$defs/__schema384"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12772,7 +12781,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema500": {
+		"__schema503": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12780,13 +12789,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema382"
+					"$ref": "#/$defs/__schema385"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema383"
+					"$ref": "#/$defs/__schema386"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema384"
+					"$ref": "#/$defs/__schema387"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12866,7 +12875,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema501": {
+		"__schema504": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12874,13 +12883,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema385"
+					"$ref": "#/$defs/__schema388"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema386"
+					"$ref": "#/$defs/__schema389"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema387"
+					"$ref": "#/$defs/__schema390"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -12943,7 +12952,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema502": {
+		"__schema505": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -12951,13 +12960,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema388"
+					"$ref": "#/$defs/__schema391"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema389"
+					"$ref": "#/$defs/__schema392"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema390"
+					"$ref": "#/$defs/__schema393"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13019,17 +13028,17 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/$defs/__schema503"
+											"$ref": "#/$defs/__schema506"
 										},
 										{
 											"type": "array",
 											"prefixItems": [
 												{
-													"$ref": "#/$defs/__schema503"
+													"$ref": "#/$defs/__schema506"
 												}
 											],
 											"items": {
-												"$ref": "#/$defs/__schema503"
+												"$ref": "#/$defs/__schema506"
 											}
 										}
 									]
@@ -13086,7 +13095,7 @@
 						"reflex": {
 							"anyOf": [
 								{
-									"$ref": "#/$defs/__schema241"
+									"$ref": "#/$defs/__schema244"
 								},
 								{
 									"type": "null"
@@ -13118,7 +13127,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema503": {
+		"__schema506": {
 			"type": "string",
 			"enum": [
 				"Dem",
@@ -13132,7 +13141,7 @@
 				"Tot"
 			]
 		},
-		"__schema504": {
+		"__schema507": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13140,13 +13149,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema391"
+					"$ref": "#/$defs/__schema394"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema392"
+					"$ref": "#/$defs/__schema395"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema393"
+					"$ref": "#/$defs/__schema396"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13209,7 +13218,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema505": {
+		"__schema508": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13217,13 +13226,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema394"
+					"$ref": "#/$defs/__schema397"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema395"
+					"$ref": "#/$defs/__schema398"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema396"
+					"$ref": "#/$defs/__schema399"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13244,7 +13253,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema506": {
+		"__schema509": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13252,13 +13261,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema397"
+					"$ref": "#/$defs/__schema400"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema398"
+					"$ref": "#/$defs/__schema401"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema399"
+					"$ref": "#/$defs/__schema402"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13308,7 +13317,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema507": {
+		"__schema510": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13316,13 +13325,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema400"
+					"$ref": "#/$defs/__schema403"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema401"
+					"$ref": "#/$defs/__schema404"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema402"
+					"$ref": "#/$defs/__schema405"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13372,7 +13381,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema508": {
+		"__schema511": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13380,13 +13389,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema403"
+					"$ref": "#/$defs/__schema406"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema404"
+					"$ref": "#/$defs/__schema407"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema405"
+					"$ref": "#/$defs/__schema408"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13451,7 +13460,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema509": {
+		"__schema512": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13459,13 +13468,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema406"
+					"$ref": "#/$defs/__schema409"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema407"
+					"$ref": "#/$defs/__schema410"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema408"
+					"$ref": "#/$defs/__schema411"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13486,7 +13495,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema510": {
+		"__schema513": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13494,13 +13503,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema409"
+					"$ref": "#/$defs/__schema412"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema410"
+					"$ref": "#/$defs/__schema413"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema411"
+					"$ref": "#/$defs/__schema414"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13535,42 +13544,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema511": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Lemma"
-				},
-				"language": {
-					"$ref": "#/$defs/__schema412"
-				},
-				"family": {
-					"$ref": "#/$defs/__schema413"
-				},
-				"kind": {
-					"$ref": "#/$defs/__schema414"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {},
-					"additionalProperties": false
-				}
-			},
-			"required": [
-				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
-			],
-			"additionalProperties": false
-		},
-		"__schema512": {
+		"__schema514": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13605,7 +13579,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema513": {
+		"__schema515": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13640,7 +13614,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema514": {
+		"__schema516": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13675,7 +13649,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema515": {
+		"__schema517": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13690,6 +13664,41 @@
 				},
 				"kind": {
 					"$ref": "#/$defs/__schema426"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"unitKind",
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
+			],
+			"additionalProperties": false
+		},
+		"__schema518": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
+					"const": "Lemma"
+				},
+				"language": {
+					"$ref": "#/$defs/__schema427"
+				},
+				"family": {
+					"$ref": "#/$defs/__schema428"
+				},
+				"kind": {
+					"$ref": "#/$defs/__schema429"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema50"
@@ -13710,7 +13719,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema516": {
+		"__schema519": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13718,13 +13727,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema427"
+					"$ref": "#/$defs/__schema430"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema428"
+					"$ref": "#/$defs/__schema431"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema429"
+					"$ref": "#/$defs/__schema432"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13733,7 +13742,7 @@
 					"type": "object",
 					"properties": {
 						"sourceLang": {
-							"$ref": "#/$defs/__schema488"
+							"$ref": "#/$defs/__schema491"
 						}
 					},
 					"required": [
@@ -13752,7 +13761,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema517": {
+		"__schema520": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13760,13 +13769,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema430"
+					"$ref": "#/$defs/__schema433"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema431"
+					"$ref": "#/$defs/__schema434"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema432"
+					"$ref": "#/$defs/__schema435"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13801,7 +13810,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema518": {
+		"__schema521": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13809,13 +13818,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema433"
+					"$ref": "#/$defs/__schema436"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema434"
+					"$ref": "#/$defs/__schema437"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema435"
+					"$ref": "#/$defs/__schema438"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13865,7 +13874,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema519": {
+		"__schema522": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13873,13 +13882,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema436"
+					"$ref": "#/$defs/__schema439"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema437"
+					"$ref": "#/$defs/__schema440"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema438"
+					"$ref": "#/$defs/__schema441"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13917,7 +13926,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema520": {
+		"__schema523": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13925,13 +13934,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema439"
+					"$ref": "#/$defs/__schema442"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema440"
+					"$ref": "#/$defs/__schema443"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema441"
+					"$ref": "#/$defs/__schema444"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -13970,7 +13979,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema521": {
+		"__schema524": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -13978,13 +13987,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema442"
+					"$ref": "#/$defs/__schema445"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema443"
+					"$ref": "#/$defs/__schema446"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema444"
+					"$ref": "#/$defs/__schema447"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14005,7 +14014,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema522": {
+		"__schema525": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14013,13 +14022,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema445"
+					"$ref": "#/$defs/__schema448"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema446"
+					"$ref": "#/$defs/__schema449"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema447"
+					"$ref": "#/$defs/__schema450"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14058,7 +14067,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema523": {
+		"__schema526": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14066,13 +14075,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema448"
+					"$ref": "#/$defs/__schema451"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema449"
+					"$ref": "#/$defs/__schema452"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema450"
+					"$ref": "#/$defs/__schema453"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14093,7 +14102,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema524": {
+		"__schema527": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14101,13 +14110,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema451"
+					"$ref": "#/$defs/__schema454"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema452"
+					"$ref": "#/$defs/__schema455"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema453"
+					"$ref": "#/$defs/__schema456"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14130,17 +14139,17 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/$defs/__schema525"
+											"$ref": "#/$defs/__schema528"
 										},
 										{
 											"type": "array",
 											"prefixItems": [
 												{
-													"$ref": "#/$defs/__schema525"
+													"$ref": "#/$defs/__schema528"
 												}
 											],
 											"items": {
-												"$ref": "#/$defs/__schema525"
+												"$ref": "#/$defs/__schema528"
 											}
 										}
 									]
@@ -14168,49 +14177,14 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema525": {
+		"__schema528": {
 			"type": "string",
 			"enum": [
 				"Fem",
 				"Masc"
 			]
 		},
-		"__schema526": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Lemma"
-				},
-				"language": {
-					"$ref": "#/$defs/__schema454"
-				},
-				"family": {
-					"$ref": "#/$defs/__schema455"
-				},
-				"kind": {
-					"$ref": "#/$defs/__schema456"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {},
-					"additionalProperties": false
-				}
-			},
-			"required": [
-				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
-			],
-			"additionalProperties": false
-		},
-		"__schema527": {
+		"__schema529": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14245,7 +14219,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema528": {
+		"__schema530": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14260,6 +14234,41 @@
 				},
 				"kind": {
 					"$ref": "#/$defs/__schema462"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"unitKind",
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
+			],
+			"additionalProperties": false
+		},
+		"__schema531": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
+					"const": "Lemma"
+				},
+				"language": {
+					"$ref": "#/$defs/__schema463"
+				},
+				"family": {
+					"$ref": "#/$defs/__schema464"
+				},
+				"kind": {
+					"$ref": "#/$defs/__schema465"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14299,7 +14308,7 @@
 						"reflex": {
 							"anyOf": [
 								{
-									"$ref": "#/$defs/__schema241"
+									"$ref": "#/$defs/__schema244"
 								},
 								{
 									"type": "null"
@@ -14325,7 +14334,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema529": {
+		"__schema532": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14333,13 +14342,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema463"
+					"$ref": "#/$defs/__schema466"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema464"
+					"$ref": "#/$defs/__schema467"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema465"
+					"$ref": "#/$defs/__schema468"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14375,17 +14384,17 @@
 								{
 									"anyOf": [
 										{
-											"$ref": "#/$defs/__schema530"
+											"$ref": "#/$defs/__schema533"
 										},
 										{
 											"type": "array",
 											"prefixItems": [
 												{
-													"$ref": "#/$defs/__schema530"
+													"$ref": "#/$defs/__schema533"
 												}
 											],
 											"items": {
-												"$ref": "#/$defs/__schema530"
+												"$ref": "#/$defs/__schema533"
 											}
 										}
 									]
@@ -14414,14 +14423,14 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema530": {
+		"__schema533": {
 			"type": "string",
 			"enum": [
 				"Fem",
 				"Masc"
 			]
 		},
-		"__schema531": {
+		"__schema534": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14429,13 +14438,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema466"
+					"$ref": "#/$defs/__schema469"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema467"
+					"$ref": "#/$defs/__schema470"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema468"
+					"$ref": "#/$defs/__schema471"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14456,7 +14465,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema532": {
+		"__schema535": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14464,13 +14473,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema469"
+					"$ref": "#/$defs/__schema472"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema470"
+					"$ref": "#/$defs/__schema473"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema471"
+					"$ref": "#/$defs/__schema474"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14508,7 +14517,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema533": {
+		"__schema536": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14516,13 +14525,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema472"
+					"$ref": "#/$defs/__schema475"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema473"
+					"$ref": "#/$defs/__schema476"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema474"
+					"$ref": "#/$defs/__schema477"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14543,7 +14552,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema534": {
+		"__schema537": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14551,13 +14560,13 @@
 					"const": "Lemma"
 				},
 				"language": {
-					"$ref": "#/$defs/__schema475"
+					"$ref": "#/$defs/__schema478"
 				},
 				"family": {
-					"$ref": "#/$defs/__schema476"
+					"$ref": "#/$defs/__schema479"
 				},
 				"kind": {
-					"$ref": "#/$defs/__schema477"
+					"$ref": "#/$defs/__schema480"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema4"
@@ -14615,42 +14624,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema535": {
-			"type": "object",
-			"properties": {
-				"unitKind": {
-					"type": "string",
-					"const": "Lemma"
-				},
-				"language": {
-					"$ref": "#/$defs/__schema478"
-				},
-				"family": {
-					"$ref": "#/$defs/__schema479"
-				},
-				"kind": {
-					"$ref": "#/$defs/__schema480"
-				},
-				"canonicalForm": {
-					"$ref": "#/$defs/__schema4"
-				},
-				"coreFeatures": {
-					"type": "object",
-					"properties": {},
-					"additionalProperties": false
-				}
-			},
-			"required": [
-				"unitKind",
-				"language",
-				"family",
-				"kind",
-				"canonicalForm",
-				"coreFeatures"
-			],
-			"additionalProperties": false
-		},
-		"__schema536": {
+		"__schema538": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14685,7 +14659,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema537": {
+		"__schema539": {
 			"type": "object",
 			"properties": {
 				"unitKind": {
@@ -14700,6 +14674,41 @@
 				},
 				"kind": {
 					"$ref": "#/$defs/__schema486"
+				},
+				"canonicalForm": {
+					"$ref": "#/$defs/__schema4"
+				},
+				"coreFeatures": {
+					"type": "object",
+					"properties": {},
+					"additionalProperties": false
+				}
+			},
+			"required": [
+				"unitKind",
+				"language",
+				"family",
+				"kind",
+				"canonicalForm",
+				"coreFeatures"
+			],
+			"additionalProperties": false
+		},
+		"__schema540": {
+			"type": "object",
+			"properties": {
+				"unitKind": {
+					"type": "string",
+					"const": "Lemma"
+				},
+				"language": {
+					"$ref": "#/$defs/__schema487"
+				},
+				"family": {
+					"$ref": "#/$defs/__schema488"
+				},
+				"kind": {
+					"$ref": "#/$defs/__schema489"
 				},
 				"canonicalForm": {
 					"$ref": "#/$defs/__schema50"
@@ -14720,10 +14729,10 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema538": {
+		"__schema541": {
 			"anyOf": [
 				{
-					"$ref": "#/$defs/__schema487"
+					"$ref": "#/$defs/__schema490"
 				},
 				{
 					"$ref": "#/$defs/__schema74"
@@ -14756,22 +14765,22 @@
 					"$ref": "#/$defs/__schema213"
 				},
 				{
-					"$ref": "#/$defs/__schema221"
+					"$ref": "#/$defs/__schema224"
 				},
 				{
-					"$ref": "#/$defs/__schema249"
+					"$ref": "#/$defs/__schema252"
 				},
 				{
-					"$ref": "#/$defs/__schema261"
+					"$ref": "#/$defs/__schema264"
 				},
 				{
-					"$ref": "#/$defs/__schema265"
+					"$ref": "#/$defs/__schema268"
 				},
 				{
-					"$ref": "#/$defs/__schema269"
+					"$ref": "#/$defs/__schema272"
 				},
 				{
-					"$ref": "#/$defs/__schema280"
+					"$ref": "#/$defs/__schema283"
 				},
 				{
 					"$ref": "#/$defs/__schema0"
@@ -14807,46 +14816,40 @@
 					"$ref": "#/$defs/__schema42"
 				},
 				{
-					"$ref": "#/$defs/__schema293"
-				},
-				{
 					"$ref": "#/$defs/__schema296"
 				},
 				{
-					"$ref": "#/$defs/__schema298"
+					"$ref": "#/$defs/__schema299"
 				},
 				{
-					"$ref": "#/$defs/__schema300"
+					"$ref": "#/$defs/__schema301"
 				},
 				{
-					"$ref": "#/$defs/__schema302"
+					"$ref": "#/$defs/__schema303"
 				},
 				{
-					"$ref": "#/$defs/__schema304"
+					"$ref": "#/$defs/__schema305"
 				},
 				{
-					"$ref": "#/$defs/__schema306"
+					"$ref": "#/$defs/__schema307"
 				},
 				{
-					"$ref": "#/$defs/__schema308"
+					"$ref": "#/$defs/__schema309"
 				},
 				{
-					"$ref": "#/$defs/__schema310"
+					"$ref": "#/$defs/__schema311"
+				},
+				{
+					"$ref": "#/$defs/__schema313"
 				},
 				{
 					"$ref": "#/$defs/__schema46"
 				},
 				{
-					"$ref": "#/$defs/__schema489"
-				},
-				{
-					"$ref": "#/$defs/__schema490"
-				},
-				{
-					"$ref": "#/$defs/__schema491"
-				},
-				{
 					"$ref": "#/$defs/__schema492"
+				},
+				{
+					"$ref": "#/$defs/__schema493"
 				},
 				{
 					"$ref": "#/$defs/__schema494"
@@ -14855,7 +14858,7 @@
 					"$ref": "#/$defs/__schema495"
 				},
 				{
-					"$ref": "#/$defs/__schema496"
+					"$ref": "#/$defs/__schema497"
 				},
 				{
 					"$ref": "#/$defs/__schema498"
@@ -14864,22 +14867,19 @@
 					"$ref": "#/$defs/__schema499"
 				},
 				{
-					"$ref": "#/$defs/__schema500"
-				},
-				{
 					"$ref": "#/$defs/__schema501"
 				},
 				{
 					"$ref": "#/$defs/__schema502"
 				},
 				{
+					"$ref": "#/$defs/__schema503"
+				},
+				{
 					"$ref": "#/$defs/__schema504"
 				},
 				{
 					"$ref": "#/$defs/__schema505"
-				},
-				{
-					"$ref": "#/$defs/__schema506"
 				},
 				{
 					"$ref": "#/$defs/__schema507"
@@ -14906,36 +14906,6 @@
 					"$ref": "#/$defs/__schema514"
 				},
 				{
-					"$ref": "#/$defs/__schema312"
-				},
-				{
-					"$ref": "#/$defs/__schema314"
-				},
-				{
-					"$ref": "#/$defs/__schema316"
-				},
-				{
-					"$ref": "#/$defs/__schema318"
-				},
-				{
-					"$ref": "#/$defs/__schema320"
-				},
-				{
-					"$ref": "#/$defs/__schema322"
-				},
-				{
-					"$ref": "#/$defs/__schema324"
-				},
-				{
-					"$ref": "#/$defs/__schema326"
-				},
-				{
-					"$ref": "#/$defs/__schema328"
-				},
-				{
-					"$ref": "#/$defs/__schema330"
-				},
-				{
 					"$ref": "#/$defs/__schema515"
 				},
 				{
@@ -14943,6 +14913,36 @@
 				},
 				{
 					"$ref": "#/$defs/__schema517"
+				},
+				{
+					"$ref": "#/$defs/__schema315"
+				},
+				{
+					"$ref": "#/$defs/__schema317"
+				},
+				{
+					"$ref": "#/$defs/__schema319"
+				},
+				{
+					"$ref": "#/$defs/__schema321"
+				},
+				{
+					"$ref": "#/$defs/__schema323"
+				},
+				{
+					"$ref": "#/$defs/__schema325"
+				},
+				{
+					"$ref": "#/$defs/__schema327"
+				},
+				{
+					"$ref": "#/$defs/__schema329"
+				},
+				{
+					"$ref": "#/$defs/__schema331"
+				},
+				{
+					"$ref": "#/$defs/__schema333"
 				},
 				{
 					"$ref": "#/$defs/__schema518"
@@ -14966,25 +14966,25 @@
 					"$ref": "#/$defs/__schema524"
 				},
 				{
+					"$ref": "#/$defs/__schema525"
+				},
+				{
 					"$ref": "#/$defs/__schema526"
 				},
 				{
 					"$ref": "#/$defs/__schema527"
 				},
 				{
-					"$ref": "#/$defs/__schema528"
+					"$ref": "#/$defs/__schema529"
 				},
 				{
-					"$ref": "#/$defs/__schema529"
+					"$ref": "#/$defs/__schema530"
 				},
 				{
 					"$ref": "#/$defs/__schema531"
 				},
 				{
 					"$ref": "#/$defs/__schema532"
-				},
-				{
-					"$ref": "#/$defs/__schema533"
 				},
 				{
 					"$ref": "#/$defs/__schema534"
@@ -14996,41 +14996,50 @@
 					"$ref": "#/$defs/__schema536"
 				},
 				{
-					"$ref": "#/$defs/__schema332"
-				},
-				{
-					"$ref": "#/$defs/__schema334"
-				},
-				{
-					"$ref": "#/$defs/__schema336"
-				},
-				{
-					"$ref": "#/$defs/__schema338"
-				},
-				{
-					"$ref": "#/$defs/__schema340"
-				},
-				{
-					"$ref": "#/$defs/__schema342"
-				},
-				{
-					"$ref": "#/$defs/__schema344"
-				},
-				{
-					"$ref": "#/$defs/__schema346"
-				},
-				{
-					"$ref": "#/$defs/__schema348"
-				},
-				{
-					"$ref": "#/$defs/__schema350"
-				},
-				{
 					"$ref": "#/$defs/__schema537"
+				},
+				{
+					"$ref": "#/$defs/__schema538"
+				},
+				{
+					"$ref": "#/$defs/__schema539"
+				},
+				{
+					"$ref": "#/$defs/__schema335"
+				},
+				{
+					"$ref": "#/$defs/__schema337"
+				},
+				{
+					"$ref": "#/$defs/__schema339"
+				},
+				{
+					"$ref": "#/$defs/__schema341"
+				},
+				{
+					"$ref": "#/$defs/__schema343"
+				},
+				{
+					"$ref": "#/$defs/__schema345"
+				},
+				{
+					"$ref": "#/$defs/__schema347"
+				},
+				{
+					"$ref": "#/$defs/__schema349"
+				},
+				{
+					"$ref": "#/$defs/__schema351"
+				},
+				{
+					"$ref": "#/$defs/__schema353"
+				},
+				{
+					"$ref": "#/$defs/__schema540"
 				}
 			]
 		},
-		"__schema539": {
+		"__schema542": {
 			"type": "object",
 			"properties": {
 				"status": {
@@ -15044,7 +15053,7 @@
 					"minItems": 1,
 					"type": "array",
 					"items": {
-						"$ref": "#/$defs/__schema540"
+						"$ref": "#/$defs/__schema543"
 					}
 				}
 			},
@@ -15054,7 +15063,7 @@
 			],
 			"additionalProperties": false
 		},
-		"__schema540": {
+		"__schema543": {
 			"anyOf": [
 				{
 					"type": "object",
@@ -15073,7 +15082,7 @@
 							]
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15102,7 +15111,7 @@
 							]
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15206,7 +15215,7 @@
 							"const": "Subject"
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15223,7 +15232,7 @@
 							"const": "DirectObject"
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15240,10 +15249,10 @@
 							"const": "Preposition"
 						},
 						"preposition": {
-							"$ref": "#/$defs/__schema518"
+							"$ref": "#/$defs/__schema521"
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15261,7 +15270,7 @@
 							"const": "Subject"
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15278,7 +15287,7 @@
 							"const": "DirectObject"
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15295,7 +15304,7 @@
 							"const": "IndirectObject"
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15312,10 +15321,10 @@
 							"const": "Preposition"
 						},
 						"preposition": {
-							"$ref": "#/$defs/__schema491"
+							"$ref": "#/$defs/__schema494"
 						},
 						"referent": {
-							"$ref": "#/$defs/__schema541"
+							"$ref": "#/$defs/__schema544"
 						}
 					},
 					"required": [
@@ -15327,7 +15336,7 @@
 				}
 			]
 		},
-		"__schema541": {
+		"__schema544": {
 			"type": "string",
 			"enum": [
 				"Someone",
@@ -15335,7 +15344,7 @@
 				"Either"
 			]
 		},
-		"__schema542": {
+		"__schema545": {
 			"type": "string",
 			"enum": [
 				"Strong",

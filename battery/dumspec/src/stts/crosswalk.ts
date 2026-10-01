@@ -82,6 +82,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 						"ganze",
 						"ganz",
 					),
+					show("ich-suche-einen-besseren-ansatz", "besseren", "gut"),
 				],
 			},
 			{
@@ -151,7 +152,10 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 			{
 				use: "adverb",
 				becomes: alone(lexeme("ADV")),
-				records: [show("sieh-einmal-hier-steht-er", "hier", "hier")],
+				records: [
+					show("sieh-einmal-hier-steht-er", "hier", "hier"),
+					show("am-naechsten-morgen-war-alles-anders", "anders", "anders"),
+				],
 			},
 		],
 		rules: [],
@@ -365,7 +369,10 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 			{
 				use: "one-word interjection",
 				becomes: alone(lexeme("INTJ")),
-				records: [show("sieh-einmal-hier-steht-er", "pfui", "pfui")],
+				records: [
+					show("sieh-einmal-hier-steht-er", "pfui", "pfui"),
+					show("fort-geht-nun-die-mutter-und", "wupp", "wupp"),
+				],
 			},
 			{
 				use: "part of a multiword interjection or formula",
@@ -1146,7 +1153,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		rules: ["de/verbal-surface-is-whole"],
 		adrs: ["ADR-0022"],
 		model: modeled,
-		gold: "Yes",
+		gold: "No",
 		pipeline: waitsOnDumgen,
 	},
 	{
@@ -1474,7 +1481,10 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 			{
 				use: "comma",
 				becomes: { role: "Punctuation" },
-				records: [show("es-brennt-die-hand-es-brennt-das-haar", ",")],
+				records: [
+					show("es-brennt-die-hand-es-brennt-das-haar", ","),
+					show("er-versucht-hinauszulaufen", ","),
+				],
 			},
 		],
 		rules: [],

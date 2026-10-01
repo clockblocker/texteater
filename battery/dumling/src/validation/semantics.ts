@@ -133,6 +133,21 @@ export function germanDeterminerCoreError(): string {
 	return "German determiner plural agreement has no marked gender";
 }
 
+/**
+ * German PART is closed and typed (system ADR 0032): every Lemma names
+ * exactly one type, polarity Neg for nicht, partType Inf for infinitive zu
+ * or partType Mod for a modal particle.
+ */
+export function isGermanParticleCore(core: Record<string, unknown>): boolean {
+	return (
+		((core.partType ?? null) === null) !==
+		((core.polarity ?? null) === null)
+	);
+}
+export function germanParticleCoreError(): string {
+	return "A German PART names exactly one type: polarity Neg, partType Inf or partType Mod";
+}
+
 const cellCoordinates = ["case", "number", "gender"] as const;
 /**
  * A pillar Lemma marks its Paradigm Cell in Core; a stem Lemma marks it on

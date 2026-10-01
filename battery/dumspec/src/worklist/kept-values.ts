@@ -9,10 +9,10 @@ export const germanKeptValues: readonly KeptValue[] = [
 	{
 		route: "Lexeme/PART",
 		bag: "Core",
-		feature: "polarity",
-		value: "Pos",
-		keptBy: { issue: 734 },
-		why: "Its uses are answers, which de/interjection-counts-its-words makes INTJ Res; #734 decides whether it leaves German PART.",
+		feature: "partType",
+		value: "Mod",
+		keptBy: { rule: "de/modal-particle-is-part" },
+		why: "A modal particle; the authored modal particles carry it.",
 	},
 	{
 		route: "Lexeme/INTJ",

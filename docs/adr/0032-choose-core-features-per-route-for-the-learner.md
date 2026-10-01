@@ -103,6 +103,9 @@ Features.
   German ADP: a circumposition is a Locution ADP (ADR 0039), its bracket part
   of its Canonical Form. `partType: Vbp` left too, since a separated verb
   particle is a member of its verb, and `extPos: ADV`, which no Rule backed.
+- German PART names its type in Core: `polarity: Neg` (*nicht*),
+  `partType: Inf` (infinitive *zu*) or `partType: Mod` (a modal particle),
+  exactly one ([#734](https://github.com/clockblocker/texteater/issues/734)).
 - Hebrew is unchanged; its routes may choose differently.
 
 **Articles are derived, not chosen.** An Article satellite's spelling, read

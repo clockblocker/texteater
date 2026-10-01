@@ -11,6 +11,7 @@ import {
 	germanClosedClassSurfaceError,
 	germanDeterminerCoreError,
 	germanNounSurfaceError,
+	germanParticleCoreError,
 	germanPronounCoreError,
 	germanProperNounSurfaceError,
 	germanValencyAttestationError,
@@ -29,6 +30,7 @@ import {
 	isGermanClosedClassSurface,
 	isGermanDeterminerCore,
 	isGermanNounSurface,
+	isGermanParticleCore,
 	isGermanPronounCore,
 	isGermanProperNounSurface,
 	isGermanValencyAttestation,
@@ -109,6 +111,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.de-determiner.core": check(
 		isGermanDeterminerCore,
 		germanDeterminerCoreError,
+	),
+	"dumling.de-particle.core": check(
+		isGermanParticleCore,
+		germanParticleCoreError,
 	),
 	"dumling.de-closed-class.surface": check(
 		isGermanClosedClassSurface,

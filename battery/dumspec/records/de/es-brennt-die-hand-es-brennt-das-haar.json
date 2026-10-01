@@ -34,7 +34,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Segmentation",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -51,6 +51,10 @@
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/focus-word-is-adv",
+				"hash": "d38200289df9682c"
 			}
 		],
 		"references": []
@@ -138,10 +142,10 @@
 		},
 		{
 			"memberSegmentIndices": [28],
-			"route": { "family": "Lexeme", "kind": "PART" },
+			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "😮" },
 			"notes": {
-				"rationale": "sogar is a scalar focus particle on das ganze Kind: even the whole child burns. Duden classes it as a Partikel, so it is PART, like the modal particles."
+				"rationale": "sogar is a focus word on das ganze Kind: even the whole child burns. A focus word is a single-member ADV, never PART, whatever Duden's Partikel label says (de/focus-word-is-adv). It has no comparison forms, so it is not comparable and its Surface has no inflection."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -149,6 +153,7 @@
 				"realizationCoverage": "Full",
 				"surface": {
 					"unitKind": "Surface",
+					"inflectionalFeatures": null,
 					"language": "de",
 					"normalizedSurface": "sogar",
 					"spelling": { "kind": "Canonical" },
@@ -157,11 +162,11 @@
 						"language": "de",
 						"canonicalForm": "sogar",
 						"family": "Lexeme",
-						"kind": "PART",
+						"kind": "ADV",
 						"coreFeatures": {
-							"abbr": null,
-							"partType": null,
-							"polarity": null
+							"comparable": null,
+							"numType": null,
+							"pronType": null
 						}
 					},
 					"surfaceFeatures": null

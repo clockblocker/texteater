@@ -52,7 +52,9 @@ describe("the schema values", () => {
 
 	test("are read from Dumling's German routes", () => {
 		const keys = new Set(germanValues.map(schemaValueKey));
-		expect(keys.has("Lexeme/PART Core polarity=Pos")).toBe(true);
+		expect(keys.has("Lexeme/PART Core partType=Mod")).toBe(true);
+		// Answers are INTJ partType Res, so Pos left German PART (#734).
+		expect(keys.has("Lexeme/PART Core polarity=Pos")).toBe(false);
 		// German ADP Core is abbr only (ADR 0032).
 		expect(keys.has("Lexeme/ADP Core adpType=Circ")).toBe(false);
 		expect(keys.has("Lexeme/VERB Inflectional verbForm=Fin")).toBe(true);

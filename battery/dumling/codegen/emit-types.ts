@@ -21,6 +21,7 @@ export function outputType(
 							"dumling.comparability.surface",
 							"dumling.de-pronoun.core",
 							"dumling.de-determiner.core",
+							"dumling.de-particle.core",
 							"dumling.de-closed-class.surface",
 							"dumling.de-noun.surface",
 							"dumling.de-proper-noun.surface",

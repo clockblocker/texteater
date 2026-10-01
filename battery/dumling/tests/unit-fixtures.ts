@@ -43,6 +43,8 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 	if (route.family === "Foreign") sample.core.sourceLang = "en";
 	// The first German number value is plural, whose agreement has no gender.
 	if (route.key === "de/Lexeme/DET") sample.core.gender = null;
+	// A German PART names exactly one type (partType Inf here).
+	if (route.key === "de/Lexeme/PART") sample.core.polarity = null;
 	const bag = route.bag.parse(sample);
 	// A DET or PRON Locution's first number value is plural too.
 	if (

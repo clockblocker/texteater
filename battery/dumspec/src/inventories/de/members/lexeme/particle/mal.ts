@@ -13,7 +13,7 @@ const lemma = {
 	canonicalForm: "mal",
 	coreFeatures: {
 		abbr: null,
-		partType: null,
+		partType: "Mod",
 		polarity: null,
 	},
 	unitKind: "Lemma",

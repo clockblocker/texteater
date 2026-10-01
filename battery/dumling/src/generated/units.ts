@@ -2133,8 +2133,8 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				abbr: "Yes" | null;
-				partType: "Inf" | null;
-				polarity: ("Neg" | "Pos") | null;
+				partType: ("Inf" | "Mod") | null;
+				polarity: "Neg" | null;
 			};
 		};
 		Surface: {
@@ -2148,8 +2148,8 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
-					partType: "Inf" | null;
-					polarity: ("Neg" | "Pos") | null;
+					partType: ("Inf" | "Mod") | null;
+					polarity: "Neg" | null;
 				};
 			};
 			normalizedSurface: string;
@@ -2184,8 +2184,8 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					abbr: "Yes" | null;
-					partType: "Inf" | null;
-					polarity: ("Neg" | "Pos") | null;
+					partType: ("Inf" | "Mod") | null;
+					polarity: "Neg" | null;
 				};
 			};
 			emojiDescription: string;
@@ -2203,8 +2203,8 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						abbr: "Yes" | null;
-						partType: "Inf" | null;
-						polarity: ("Neg" | "Pos") | null;
+						partType: ("Inf" | "Mod") | null;
+						polarity: "Neg" | null;
 					};
 				};
 				normalizedSurface: string;

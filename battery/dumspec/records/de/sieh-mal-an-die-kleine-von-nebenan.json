@@ -19,7 +19,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Segmentation",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
@@ -28,7 +28,11 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
+			}
 		],
 		"references": []
 	},
@@ -87,7 +91,7 @@
 			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🤏" },
 			"notes": {
-				"rationale": "Duden lists mal as a particle of its own, not a spelling of einmal: it lends the utterance a certain casualness. So mal is PART mal, a target apart from ansehen."
+				"rationale": "Duden lists mal as a particle of its own, not a spelling of einmal: it lends the utterance a certain casualness. So mal is the modal particle PART mal with partType Mod (de/modal-particle-is-part), a target apart from ansehen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -106,7 +110,7 @@
 						"kind": "PART",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},

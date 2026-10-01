@@ -80,7 +80,7 @@
 		}
 	],
 	"coverage": "Full",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Segmentation",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -98,6 +98,10 @@
 			{
 				"rule": "de/interjection-counts-its-words",
 				"hash": "b572bad8906b508d"
+			},
+			{
+				"rule": "de/modal-particle-is-part",
+				"hash": "cd0286be11031c26"
 			}
 		],
 		"references": []
@@ -159,7 +163,7 @@
 			"route": { "family": "Lexeme", "kind": "PART" },
 			"reading": { "emojiDescription": "🫴" },
 			"notes": {
-				"rationale": "einmal is the unstressed particle that softens the request Sieh einmal, not the adverb once. Duden classes this einmal as a Partikel that intensifies statements, questions and requests (komm doch einmal her!), so it is a PART of its own."
+				"rationale": "einmal is the unstressed modal particle that softens the request Sieh einmal, not the adverb once: Duden's Partikel einmal (komm doch einmal her!). A modal particle is PART with partType Mod (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -183,7 +187,7 @@
 						"kind": "PART",
 						"coreFeatures": {
 							"abbr": null,
-							"partType": null,
+							"partType": "Mod",
 							"polarity": null
 						}
 					},
