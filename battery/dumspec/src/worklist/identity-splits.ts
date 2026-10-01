@@ -1,3 +1,5 @@
+import { foldCase } from "dumling";
+import type * as Dumling from "dumling/types";
 import type { AdrId, AnnotationLayer, RuleId, SpecRecordId } from "../types.js";
 import type { LemmaInFile, RecordFile } from "./record-files.js";
 
@@ -70,9 +72,14 @@ interface IdentityUse {
 	rules: readonly RuleId[];
 }
 
-/** A Canonical Form with more than one identity, and who uses each. */
+/**
+ * A Canonical Form with more than one identity, and who uses each. Lemma
+ * identity ignores letter case (system ADR 0002), so `form` is case-folded
+ * and `spellings` holds the casings the records write, sorted.
+ */
 export interface IdentitySplit {
 	form: string;
+	spellings: readonly string[];
 	identities: readonly {
 		identity: LemmaIdentity;
 		uses: readonly IdentityUse[];
@@ -80,21 +87,37 @@ export interface IdentitySplit {
 }
 
 /**
- * Groups every target Lemma in `files` by Canonical Form and returns each
- * form with more than one identity, sorted by form; its identities in order
- * of first use. A record using an identity twice is listed once.
+ * Groups every target Lemma in `files` by case-folded Canonical Form and
+ * returns each form with more than one identity, sorted by form; its
+ * identities in order of first use. A record using an identity twice is
+ * listed once.
  */
 export function identitySplits(files: readonly RecordFile[]): IdentitySplit[] {
 	const byForm = new Map<
 		string,
-		Map<string, { identity: LemmaIdentity; uses: IdentityUse[] }>
+		{
+			spellings: Set<string>;
+			identities: Map<
+				string,
+				{ identity: LemmaIdentity; uses: IdentityUse[] }
+			>;
+		}
 	>();
 	for (const file of files)
 		for (const lemma of file.lemmas) {
 			const identity = lemmaIdentity(lemma);
 			const key = formatIdentity(identity);
-			const identities = byForm.get(lemma.canonicalForm) ?? new Map();
-			byForm.set(lemma.canonicalForm, identities);
+			const form = foldCase(
+				lemma.canonicalForm,
+				lemma.language as Dumling.Language,
+			);
+			const group = byForm.get(form) ?? {
+				spellings: new Set<string>(),
+				identities: new Map(),
+			};
+			byForm.set(form, group);
+			group.spellings.add(lemma.canonicalForm);
+			const { identities } = group;
 			const entry = identities.get(key) ?? { identity, uses: [] };
 			identities.set(key, entry);
 			if (entry.uses.at(-1)?.record !== file.id)
@@ -107,9 +130,10 @@ export function identitySplits(files: readonly RecordFile[]): IdentitySplit[] {
 				});
 		}
 	return [...byForm]
-		.filter(([, identities]) => identities.size > 1)
-		.map(([form, identities]) => ({
+		.filter(([, { identities }]) => identities.size > 1)
+		.map(([form, { spellings, identities }]) => ({
 			form,
+			spellings: [...spellings].toSorted(),
 			identities: [...identities.values()],
 		}))
 		.toSorted((a, b) => (a.form < b.form ? -1 : a.form > b.form ? 1 : 0));
@@ -139,8 +163,9 @@ interface Variation {
 
 /**
  * A decided class of identity split: the ADRs and Rules it follows from,
- * the forms it covers (every form when absent), the values both identities
- * must have, and the keys on which they may differ.
+ * the forms it covers (every form when absent; a split is covered when the
+ * records spell its form one of these ways), the values both identities must
+ * have, and the keys on which they may differ.
  */
 export interface SplitRuling {
 	split: string;
@@ -152,8 +177,9 @@ export interface SplitRuling {
 }
 
 /**
- * Forms an open grilling names. Remove the entry when the issue is ruled;
- * a ruling that settles a class of split adds a failing check for it.
+ * Forms an open grilling names, as the records spell them. Remove the entry
+ * when the issue is ruled; a ruling that settles a class of split adds a
+ * failing check for it.
  */
 export interface OpenSplit {
 	forms: readonly string[];
@@ -169,13 +195,18 @@ export type SplitSort =
 	| { sort: "Open"; open: OpenSplit }
 	| { sort: "Unexplained" };
 
+/** Whether `forms` names one of the ways the records spell a split's form. */
+function names(forms: readonly string[], split: IdentitySplit): boolean {
+	return split.spellings.some((spelling) => forms.includes(spelling));
+}
+
 function applies(
 	ruling: SplitRuling,
-	form: string,
+	split: IdentitySplit,
 	a: LemmaIdentity,
 	b: LemmaIdentity,
 ): boolean {
-	if (ruling.forms && !ruling.forms.includes(form)) return false;
+	if (ruling.forms && !names(ruling.forms, split)) return false;
 	return Object.entries(ruling.both ?? {}).every(
 		([key, values]) =>
 			values.includes(identityValue(a, key)) &&
@@ -193,7 +224,7 @@ export function sortSplit(
 	rulings: readonly SplitRuling[],
 	open: readonly OpenSplit[],
 ): SplitSort {
-	const named = open.find((entry) => entry.forms.includes(split.form));
+	const named = open.find((entry) => names(entry.forms, split));
 	if (named) return { sort: "Open", open: named };
 	const used = new Set<SplitRuling>();
 	const identities = split.identities.map(({ identity }) => identity);
@@ -201,7 +232,7 @@ export function sortSplit(
 		for (const b of identities.slice(index + 1)) {
 			const difference = identityDifference(a, b);
 			const applying = rulings.filter((ruling) =>
-				applies(ruling, split.form, a, b),
+				applies(ruling, split, a, b),
 			);
 			for (const key of difference) {
 				const covering = applying.find((ruling) =>

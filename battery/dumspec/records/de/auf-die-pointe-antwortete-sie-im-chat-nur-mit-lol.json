@@ -27,14 +27,26 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0002", "ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "a8af926f196177f3"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"notes": {
+				"rationale": "Duden lists lol, so LOL is a German INTJ, not Foreign. Identity ignores case, so LOL and lol (Er antwortete im Chat nur mit lol) are one Lemma, cited LOL, and the capitals are a Standard member, neither a Variant nor a Typo."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

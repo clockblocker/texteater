@@ -142,6 +142,31 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 			{ key: "gender", values: [null, "Fem"] },
 		],
 	},
+	{
+		split: "Case splits no Lemma; where it tells words apart, Kind does",
+		adrs: ["ADR-0002"],
+		rules: [
+			"de/canonical-form-is-the-headword",
+			"de/substantivized-infinitive-is-a-noun",
+		],
+		forms: ["Morgen", "Sprechen"],
+		both: { kind: ["NOUN", "ADV", "VERB"] },
+		varies: [
+			{ key: "kind", values: ["NOUN", "ADV", "VERB"] },
+			{ key: "gender", onlyWith: "kind" },
+		],
+	},
+	{
+		split: "Formal Sie and Ihr- differ from sie, ihr and ihr- by Core, not by case",
+		adrs: ["ADR-0002", "ADR-0044"],
+		rules: ["de/core-features-are-identity"],
+		both: { pronType: ["Prs"] },
+		varies: [
+			{ key: "person", onlyWith: "polite" },
+			{ key: "polite", onlyWith: "person" },
+			{ key: "polite", values: ["Form", "Infm"] },
+		],
+	},
 ];
 
 /** The German forms whose split an open grilling decides. */

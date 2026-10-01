@@ -1097,7 +1097,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/canonical-form-is-the-headword",
 		statement:
-			"A Lemma's Canonical Form is its exact dictionary headword, casing included, and may differ from the words in the sentence. An interjection written in pieces is cited as written instead (de/interjection-counts-its-words): ha ha, o je. It takes the word's lexical casing, never its place in the sentence: sentence-initial Wegen is wegen. A noun's is the bare noun, without its article. An open slot in a discontinuous form is written … (U+2026) with a space on each side (um … willen). A Surface spelled Canonical need not be the Grundform.",
+			"A Lemma's Canonical Form is its dictionary headword and may differ from the sentence's words. An interjection written in pieces is cited as written instead (de/interjection-counts-its-words): ha ha, o je. Identity ignores case (LOL and lol are one Lemma), but the Canonical Form keeps the dictionary's casing (Haus, LOL, Sie), never the word's position: sentence-initial Wegen is wegen. A noun's is the bare noun, without its article. An open slot in a discontinuous form is written … (U+2026) with a space on each side (um … willen). A Surface spelled Canonical need not be the Grundform.",
 		adrs: ["ADR-0002", "ADR-0035"],
 		routes: [],
 		records: [
@@ -1122,17 +1122,20 @@ const attestations: Rule[] = [
 			"de/guten-tag-ich-habe-einen-termin",
 			"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen",
 			"de/genau-da-liegt-der-hase-im-pfeffer",
+			"de/auf-die-pointe-antwortete-sie-im-chat-nur-mit-lol",
+			"de/er-antwortete-im-chat-nur-mit-lol",
 		],
 	},
 	{
 		id: "de/member-orthography",
 		statement:
-			"Each member records how it is written. Standard covers sentence-initial capitals and the spelling of a Variant Surface, whatever its tags; Typo is a real spelling or casing error, a spelling no Variant tag covers; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
+			"Each member records how it is written. Standard covers sentence-initial capitals, casing the word leaves free (lol for LOL) and the spelling of a Variant Surface, whatever its tags; Typo is a real spelling or casing error, a spelling no Variant tag covers; Fused is one piece of a written word that holds several words (m in im, 's in geht's); Shorthand is a standalone shortened word ('ne, z.B., wo for irgendwo). Members stay aligned with the sentence: none is added, dropped or modernized.",
 		adrs: ["ADR-0003", "ADR-0035"],
 		routes: [],
 		records: [
 			"de/im-heft-stand-filosofie-statt-philosophie",
 			"de/der-hockte-da-im-gruenen-gras",
+			"de/er-antwortete-im-chat-nur-mit-lol",
 		],
 	},
 	{

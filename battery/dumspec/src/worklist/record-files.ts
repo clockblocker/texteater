@@ -10,6 +10,7 @@ const recordsDirectory = fileURLToPath(
 
 /** A target's Lemma as the record file writes it, unchecked. */
 export interface LemmaInFile {
+	language: string;
 	family: string;
 	kind: string;
 	canonicalForm: string;
@@ -42,6 +43,7 @@ const recordFileSchema = z.object({
 					.object({
 						surface: z.object({
 							lemma: z.object({
+								language: z.string(),
 								family: z.string(),
 								kind: z.string(),
 								canonicalForm: z.string(),

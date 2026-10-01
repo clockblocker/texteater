@@ -30,7 +30,7 @@
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0035"],
 		"rules": [
-			{ "rule": "de/member-orthography", "hash": "81f5ca84af1bc0ca" },
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
 		],
 		"references": [

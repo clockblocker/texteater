@@ -22,7 +22,13 @@ const lemma = (
 	canonicalForm: string,
 	kind: string,
 	coreFeatures: Record<string, unknown> = {},
-): LemmaInFile => ({ family: "Lexeme", kind, canonicalForm, coreFeatures });
+): LemmaInFile => ({
+	language: "de",
+	family: "Lexeme",
+	kind,
+	canonicalForm,
+	coreFeatures,
+});
 const file = (
 	id: string,
 	lemmas: LemmaInFile[],
@@ -72,7 +78,8 @@ describe("identity normalization", () => {
 		]);
 		expect(splits).toEqual([
 			{
-				form: "Band",
+				form: "band",
+				spellings: ["Band"],
 				identities: [
 					{
 						identity: {
@@ -100,6 +107,25 @@ describe("identity normalization", () => {
 			},
 		]);
 		expect(splits.map(splitsFamilyOrKind)).toEqual([false]);
+	});
+
+	test("compares Canonical Forms without case (system ADR 0002)", () => {
+		const splits = identitySplits([
+			file("de/a", [lemma("LOL", "INTJ", { partType: null })]),
+			file("de/b", [lemma("lol", "INTJ")]),
+			file("de/c", [lemma("Morgen", "NOUN", { gender: "Masc" })]),
+			file("de/d", [lemma("morgen", "ADV")]),
+		]);
+		expect(
+			splits.map(({ form, spellings, identities }) => ({
+				form,
+				spellings,
+				identities: identities.length,
+			})),
+		).toEqual([
+			{ form: "morgen", spellings: ["Morgen", "morgen"], identities: 2 },
+		]);
+		expect(splits.map(splitsFamilyOrKind)).toEqual([true]);
 	});
 });
 
@@ -204,6 +230,16 @@ describe("sorting a split", () => {
 				),
 			),
 		).toEqual({ sort: "Decided", rulings: [cells] });
+	});
+
+	test("covers a split when a ruling names any way the records spell it", () => {
+		const nouns = split(
+			"Band",
+			lemma("Band", "NOUN", { gender: "Fem" }),
+			lemma("band", "NOUN", { gender: "Neut" }),
+		);
+		expect(nouns.spellings).toEqual(["Band", "band"]);
+		expect(sort(nouns)).toEqual({ sort: "Decided", rulings: [genders] });
 	});
 
 	test("is Open when an open grilling names the form, even if a ruling fits", () => {

@@ -115,7 +115,7 @@
 			},
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "b86703d3f7281f0a"
+				"hash": "a8af926f196177f3"
 			},
 			{
 				"rule": "de/comparability-is-lexical",
@@ -131,7 +131,7 @@
 			},
 			{
 				"rule": "de/member-orthography",
-				"hash": "81f5ca84af1bc0ca"
+				"hash": "66373ce319bd065a"
 			},
 			{
 				"rule": "de/pron-or-det-by-use",

@@ -31,7 +31,7 @@
 				"rule": "de/abbreviation-is-one-segment",
 				"hash": "686c9815ab8717d8"
 			},
-			{ "rule": "de/member-orthography", "hash": "81f5ca84af1bc0ca" },
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" }
 		],
 		"references": []

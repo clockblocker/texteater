@@ -22,7 +22,7 @@
 	"sources": {
 		"adrs": ["ADR-0035"],
 		"rules": [
-			{ "rule": "de/member-orthography", "hash": "81f5ca84af1bc0ca" },
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{
 				"rule": "de/variant-and-historical-status",
 				"hash": "9e2c6c25c942a570"

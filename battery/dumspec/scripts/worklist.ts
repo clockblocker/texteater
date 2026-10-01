@@ -109,7 +109,7 @@ for (const sort of sorts) {
 	for (const { split, sorted } of splits.filter(
 		({ sorted }) => sorted.sort === sort,
 	)) {
-		console.log(`${split.form} (${because(sorted)})`);
+		console.log(`${split.spellings.join(" / ")} (${because(sorted)})`);
 		for (const { identity, uses } of split.identities) {
 			console.log(`  ${formatIdentity(identity)}`);
 			for (const use of uses)

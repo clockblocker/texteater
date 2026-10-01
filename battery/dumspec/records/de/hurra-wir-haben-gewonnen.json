@@ -29,7 +29,7 @@
 			"case": {
 				"input": {
 					"markedContext": "<TARGET>Hurra</TARGET>, wir haben gewonnen!",
-					"lemma": "Hurra",
+					"lemma": "hurra",
 					"existingEmojiDescriptions": []
 				},
 				"idealOutput": { "emojiDescription": "🎉" },
@@ -65,7 +65,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "INTJ",
-						"canonicalForm": "Hurra",
+						"canonicalForm": "hurra",
 						"coreFeatures": { "partType": null }
 					},
 					"candidates": []

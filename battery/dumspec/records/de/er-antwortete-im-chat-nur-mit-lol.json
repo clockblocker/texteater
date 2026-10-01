@@ -21,12 +21,17 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0045"],
+		"adrs": ["ADR-0045", "ADR-0002"],
 		"rules": [
 			{
 				"rule": "de/foreign-unless-duden-or-german-grammar",
 				"hash": "c2f06b03fed6e233"
-			}
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "a8af926f196177f3"
+			},
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
 		],
 		"references": []
 	},
@@ -35,7 +40,7 @@
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"notes": {
-				"rationale": "Duden lists lol (drückt große Heiterkeit aus, from English laughing out loud), so it is a German INTJ, though it never inflects. mit lol quotes a reply the way mit ach does, and UD EWT tags lol INTJ. It answers no question, so partType is null. The Emoji Description comes from the dropped imported case."
+				"rationale": "Duden lists lol (drückt große Heiterkeit aus, from English laughing out loud), so it is a German INTJ, though it never inflects. mit lol quotes a reply the way mit ach does, and UD EWT tags lol INTJ. It answers no question, so partType is null. Identity ignores case, so lol and LOL are one Lemma, cited LOL as in Auf die Pointe antwortete sie im Chat nur mit LOL; the lowercase member is Standard, since the word leaves its casing free. The Emoji Description comes from the dropped imported case."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -44,12 +49,12 @@
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "lol",
+					"normalizedSurface": "LOL",
 					"spelling": { "kind": "Canonical" },
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "lol",
+						"canonicalForm": "LOL",
 						"family": "Lexeme",
 						"kind": "INTJ",
 						"coreFeatures": { "partType": null }
