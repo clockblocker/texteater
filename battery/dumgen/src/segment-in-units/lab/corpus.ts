@@ -6,6 +6,7 @@
  * `heldout` is Reviewed − excluded, scored only for finalists.
  */
 import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { loadGold } from "../../evaluation/spec-corpus/gold.js";
@@ -118,6 +119,52 @@ export async function loadSet(root: string, name: SetName): Promise<LabSet> {
 	return JSON.parse(await readFile(setPath(root, name), "utf8")) as LabSet;
 }
 
+/**
+ * The membership focus set (#755): every dev gold unit the candidate
+ * reference got wrong by majority or that flipped across repetitions. Later
+ * membership experiments run on its cases and are judged on its units first.
+ */
+export type FocusUnit = {
+	readonly caseId: string;
+	/** Index into the case's ideal units. */
+	readonly unit: number;
+	readonly text: string;
+	readonly bucket: string;
+	readonly wrongByMajority: boolean;
+	readonly flips: boolean;
+	readonly disputedGold: boolean;
+	readonly cause?: string;
+};
+
+export type FocusSet = {
+	readonly name: string;
+	readonly set: { readonly name: SetName; readonly hash: string };
+	readonly sourceRun: string;
+	readonly policy: string;
+	readonly cases: readonly string[];
+	readonly units: readonly FocusUnit[];
+};
+
+export const focusPath = join(
+	import.meta.dir,
+	"..",
+	"..",
+	"..",
+	"evidence",
+	"segment-in-units-lab",
+	"membership-focus.json",
+);
+
+/** The focus set, refused when `set` is not the frozen set it was taken from. */
+export function loadFocus(set: LabSet): FocusSet {
+	const focus = JSON.parse(readFileSync(focusPath, "utf8")) as FocusSet;
+	if (focus.set.name !== set.name || focus.set.hash !== set.hash)
+		throw Error(
+			`The membership focus set was taken from ${focus.set.name}@${focus.set.hash}, not ${set.name}@${set.hash}`,
+		);
+	return focus;
+}
+
 const multi = (labCase: LabCase) =>
 	labCase.idealOutput.units.some((unit) => unit.segments.length > 1);
 
@@ -130,7 +177,8 @@ const shuffled = (cases: readonly LabCase[], salt: string) =>
 /**
  * Named subsets. `smoke`: 10 cases (2 Full, 4 with a multi-piece unit, 4
  * other). `slice300`: every Full case, then multi-piece and other cases
- * evenly, 300 in all; the Luna arms run on it. `all`: the whole set.
+ * evenly, 300 in all; the Luna arms run on it. `focus`: the cases of the
+ * membership focus set (dev only). `all`: the whole set.
  */
 export function subset(set: LabSet, name: string): readonly LabCase[] {
 	const full = shuffled(
@@ -188,5 +236,9 @@ export function subset(set: LabSet, name: string): readonly LabCase[] {
 		return [...target, ...fullControls, ...otherControls];
 	}
 	if (name === "multi") return [...full, ...withMulti];
+	if (name === "focus") {
+		const ids = new Set(loadFocus(set).cases);
+		return set.cases.filter((labCase) => ids.has(labCase.id));
+	}
 	throw Error(`Unknown subset ${name}`);
 }
