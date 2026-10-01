@@ -8,6 +8,7 @@ export {
 	attestationArticleAgreementIssues,
 } from "./check-article-agreement.js";
 export { checkPromptCitations, type PromptIssue } from "./check-citations.js";
+export { checkRecord, type RecordCheck } from "./check-record.js";
 export {
 	type ArticleAgreement,
 	type ArticleMember,

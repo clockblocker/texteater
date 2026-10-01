@@ -39,6 +39,11 @@ each target's members and route only: the gold `segment.inUnits` is scored on.
 `isReviewed(record, "Segmentation")` tells whether a person has reviewed a
 layer. Both loaders throw a `SpecRecordError` that lists every failing check
 of a reviewed layer, and of any record whose file is malformed.
+`checkRecord(id, json)` checks one sentence record's parsed file and never
+throws: `errors` fail it, `issues` are its Draft layers' work, each tagged
+with its Annotation Layer, beside its `reviewDepth` and `validThrough`. A
+tool that edits one record at a time checks it with this, so one broken file
+hides no other.
 
 `loadSpecWorklist` lists each record whose Draft layers fail a check against
 the current Dumling model or lack a target's Attestation or Reading, with its

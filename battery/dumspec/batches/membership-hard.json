@@ -1,0 +1,306 @@
+{
+	"note": "Drafts in records/de. held-out rows get reviewDepth Segmentation only after the user approves them; dev rows stay Draft so they do not move into held-out.",
+	"reserves": [
+		"de/ich-bedanke-mich-bei-dir-fuer-die-hilfe",
+		"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss",
+		"mein-onkel-hat-sich-noch-nie-in-unsere-diskussionen-eingemischt (generator spec, skipped)"
+	],
+	"rows": [
+		{
+			"row": "L1",
+			"record": "de/ich-bin-extra-frueh-aufgestanden-um-den-bus-um-sieben-zu",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S12"]
+		},
+		{
+			"row": "L2",
+			"record": "de/er-legte-auf-ohne-ein-wort-zu-sagen",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S1"]
+		},
+		{
+			"row": "L3",
+			"record": "de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "L4",
+			"record": "de/weder-mein-vater-noch-meine-mutter-konnte-mir-die-frage",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "L5",
+			"record": "de/tut-mir-leid-ich-habe-deine-nachricht-zu-spaet-gesehen",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S3"],
+			"openQuestion": {
+				"issue": 759,
+				"question": 1
+			}
+		},
+		{
+			"row": "L6",
+			"record": "de/von-morgen-an-fahre-ich-mit-dem-rad-zur-arbeit",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S13"]
+		},
+		{
+			"row": "L7",
+			"record": "de/meine-oma-sagt-immer-uebung-macht-den-meister",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "L8",
+			"record": "de/du-willst-mich-doch-auf-den-arm-nehmen",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S2"]
+		},
+		{
+			"row": "L9",
+			"record": "de/mit-dieser-frage-ist-er-voll-ins-fettnaepfchen-getreten",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "L10",
+			"record": "de/mein-bruder-bindet-mir-gern-einen-baeren-auf",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "L11",
+			"record": "de/das-laute-hupen-vor-dem-haus-geht-mir-langsam-auf-die-nerven",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "L12",
+			"record": "de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": [],
+			"openQuestion": {
+				"issue": 759,
+				"question": 2
+			}
+		},
+		{
+			"row": "L13",
+			"record": "de/sie-meint-es-gut-mit-dir",
+			"bucket": "locution",
+			"split": "dev",
+			"change": "fix+promote",
+			"consistencySets": ["S4"],
+			"openQuestion": {
+				"issue": 759,
+				"question": 4
+			}
+		},
+		{
+			"row": "L14",
+			"record": "de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins",
+			"bucket": "locution",
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": [],
+			"openQuestion": {
+				"issue": 759,
+				"question": 2
+			}
+		},
+		{
+			"row": "L15",
+			"record": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre",
+			"bucket": "locution",
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": []
+		},
+		{
+			"row": "C1",
+			"record": "de/der-alte-hund-tut-mir-so-leid",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S3"],
+			"openQuestion": {
+				"issue": 759,
+				"question": 1
+			}
+		},
+		{
+			"row": "C2",
+			"record": "de/der-vater-nimmt-das-weinende-kind-auf-den-arm",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S2"],
+			"openQuestion": {
+				"issue": 759,
+				"question": 3
+			}
+		},
+		{
+			"row": "C3",
+			"record": "de/es-warten-drei-kunden-vor-der-tuer-aber-keiner-hat-es-eilig",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "C4",
+			"record": "de/als-wir-angekommen-sind-war-die-kueche-schon-aufgeraeumt",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S5", "S6"]
+		},
+		{
+			"row": "C5",
+			"record": "de/sie-legt-das-handy-auf-den-tisch-und-hoert-ihm-aufmerksam-zu",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S1", "S11"],
+			"openQuestion": {
+				"issue": 759,
+				"question": 3
+			}
+		},
+		{
+			"row": "C6",
+			"record": "de/ich-nehme-den-roten-pullover-nicht-den-blauen",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "C7",
+			"record": "de/unsere-nachbarn-gruessen-sich-jeden-morgen-und-unterhalten-sich",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S10"]
+		},
+		{
+			"row": "C8",
+			"record": "de/sie-blickt-auf-die-uhr-und-steht-danach-auf",
+			"bucket": "overgroup-control",
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["S11"],
+			"openQuestion": {
+				"issue": 759,
+				"question": 3
+			}
+		},
+		{
+			"row": "C9",
+			"record": "de/nach-dem-training-waescht-lea-sich-die-haende",
+			"bucket": "overgroup-control",
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["S10"]
+		},
+		{
+			"row": "P1",
+			"record": "de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn",
+			"bucket": "particle-gov-refl",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S6", "S13"]
+		},
+		{
+			"row": "P2",
+			"record": "de/kannst-du-mich-morgen-vom-bahnhof-abholen",
+			"bucket": "particle-gov-refl",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S6"]
+		},
+		{
+			"row": "P3",
+			"record": "de/gestern-mischte-sich-mein-onkel-ungefragt-in-unsere-diskussion",
+			"bucket": "particle-gov-refl",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "P4",
+			"record": "de/ich-weiss-nicht-ob-sich-meine-oma-inzwischen-mit-dem-neuen",
+			"bucket": "particle-gov-refl",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S7"]
+		},
+		{
+			"row": "P5",
+			"record": "de/meine-oma-findet-sich-mit-dem-neuen-handy-einfach-nicht-ab",
+			"bucket": "particle-gov-refl",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S7"]
+		},
+		{
+			"row": "P6",
+			"record": "de/in-der-mittagspause-hat-jonas-mit-seiner-chefin-ueber-die",
+			"bucket": "particle-gov-refl",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S8"]
+		},
+		{
+			"row": "P7",
+			"record": "de/hast-du-mit-ihr-darueber-gesprochen",
+			"bucket": "particle-gov-refl",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S8"]
+		},
+		{
+			"row": "P8",
+			"record": "de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann",
+			"bucket": "particle-gov-refl",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S9"]
+		},
+		{
+			"row": "P9",
+			"record": "de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach",
+			"bucket": "particle-gov-refl",
+			"split": "dev",
+			"change": "promote",
+			"consistencySets": ["S10"]
+		}
+	]
+}
