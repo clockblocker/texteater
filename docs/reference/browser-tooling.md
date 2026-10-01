@@ -1,7 +1,7 @@
 # Browser tooling
 
-Poke an app with `browse`; write anything meant to be rerun as a Playwright
-test.
+Poke an app with local `browse`; write anything meant to be rerun as a
+Playwright test.
 
 ## Poking with browse
 
@@ -9,6 +9,10 @@ A poke is interactive, step-by-step exploration of an app's UI by an agent or a
 human: open a page, read its accessibility snapshot, click or hover, read
 state. `browse` is Browserbase's CLI, installed globally with
 `npm install -g browse` rather than as a repository dependency.
+
+Run `browse` locally only. Don't open `--remote` sessions or run
+`browse cloud`, `browse functions` or anything else that calls Browserbase,
+and keep `BROWSERBASE_API_KEY` out of the environment.
 
 Open every session with `--local`, and name the session on every command:
 
@@ -23,7 +27,8 @@ browse stop --session <name>
 `--headed` to watch it. When `BROWSERBASE_API_KEY` is set, `browse` defaults to
 remote mode, a billed Browserbase cloud browser that cannot reach a dev server
 on `127.0.0.1`. A command without `--session` targets the `default` session
-rather than the one you opened. `browse skills show` covers the other commands.
+rather than the one you opened. `browse skills show` covers the other commands;
+skip its remote and cloud ones.
 
 ## Checks with Playwright
 
