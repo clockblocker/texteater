@@ -17,7 +17,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "044ad2bbec5191e7"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -34,7 +39,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADJ",
-						"canonicalForm": "zweit",
+						"canonicalForm": "zweite",
 						"coreFeatures": {
 							"comparable": null
 						}

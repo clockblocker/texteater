@@ -15,7 +15,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "044ad2bbec5191e7"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -23,7 +28,7 @@
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
-				"rationale": "Ordinal ADJ. Keep agreement."
+				"rationale": "Ordinal ADJ, cited as Duden's headword erste. Keep agreement."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -35,7 +40,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "ADJ",
-						"canonicalForm": "erst",
+						"canonicalForm": "erste",
 						"coreFeatures": {
 							"comparable": null
 						}

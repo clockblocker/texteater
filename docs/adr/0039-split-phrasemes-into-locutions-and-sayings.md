@@ -22,11 +22,12 @@ Family.
 **Lexeme or Locution.** A Lexeme has exactly one Head. Its other members are
 satellites: a separable particle, governed preposition, reflexive, expletive,
 article or auxiliary. A satellite may be part of the Canonical Form (`sich
-erinnern`, `take off`, `die Schweiz`). A Lemma with two or more Heads is a
-Locution. A proper name is one Lexeme whatever its length (`Angela Merkel`,
-`New York`, `Deutsche Bank`): its words are parts of the name, which UD
-attaches as `flat`, not Heads. At text time a Locution is one unit over its
-Segments; its words come out only in the Note's drill-down.
+erinnern`, `take off`), or a Core Feature may record it: the PROPN `Schweiz`
+has Core `article: Definite` and owns its `die`. A Lemma with two or more
+Heads is a Locution. A proper name is one Lexeme whatever its length
+(`Angela Merkel`, `New York`, `Deutsche Bank`): its words are parts of the
+name, which UD attaches as `flat`, not Heads. At text time a Locution is one
+unit over its Segments; its words come out only in the Note's drill-down.
 
 A Locution's Kind is the part of speech the whole acts as:
 
@@ -234,3 +235,8 @@ news), and 'arouse pity' (*Der alte Hund tut mir so leid*). So *tut mir leid*
 no longer exemplifies a Locution INTJ in the table, a Formula Role in the
 bullet above, or a routine formula in the 2026-09-27 amendment. Every other
 routine formula stays as it is.
+
+Amended on 2026-10-01: the satellite example *die Schweiz* cited the article
+inside the Canonical Form, which the gold never did; it is `Schweiz` with
+Core `article: Definite`. Decided on
+[#766](https://github.com/clockblocker/texteater/issues/766).
