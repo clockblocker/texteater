@@ -1,12 +1,13 @@
 /**
  * The Authored Inventories: closed-class units authored instead of generated,
- * each with its Reading and reviewed Reading Knowledge. German holds the AUX
- * Readings, the PRON and DET pillar cells and stems, the reflexivity unit a
- * reflexive drills down to, the pronominal adverbs, and the interrogative and
- * relative w-adverbs (wo, wann, wie, warum). It also holds the German ADP
- * Case Table, the positions and cases each adposition takes, the list of
- * conjunction Locutions its Rules cite, and derives an article's der or ein
- * cell from its spelling and its Head's agreement.
+ * each with its Reading and reviewed Reading Knowledge. ADR 0021 decides which
+ * units belong in one. The German inventories live in `src/inventories/de/`.
+ *
+ * This entry exports the authored members and their realizations, the
+ * reviewed pronoun and determiner paradigms, the closed verb forms, and the
+ * reflexive drill-down. It also exports German lookups: the ADP Case Table,
+ * the conjunction Locutions the Rules cite, and the der or ein cell an article
+ * derives to.
  *
  * This entry reads no files and loads neither Zod nor the record checks, so a
  * host inside a database transaction or another short-lived isolate can
