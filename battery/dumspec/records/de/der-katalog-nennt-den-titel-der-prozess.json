@@ -23,7 +23,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "c3eb61394edd1818"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -40,13 +45,13 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PROPN",
-						"canonicalForm": "Der Prozess",
+						"canonicalForm": "Prozess",
 						"coreFeatures": {
-							"article": null,
+							"article": "Definite",
 							"gender": "Masc"
 						}
 					},
-					"normalizedSurface": "Der Prozess",
+					"normalizedSurface": "Prozess",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": null
@@ -56,7 +61,13 @@
 					{ "attested": "Prozess", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				}
+			},
+			"notes": {
+				"rationale": "A title whose article inflects (im „Prozess“) is cited without it and owns it, with Core article Definite, as Zauberflöte is (de/proper-noun-article). The quoted title after den Titel is a citation mention, so its Surface is uninflected."
 			}
 		}
 	],
