@@ -16,8 +16,7 @@ _Avoid_: Linguistic Entry, Lemma Form, dictionary entry
 
 **Lexeme**:
 A Lemma with exactly one Head; its other members are satellites
-([ADR 0039]). Lexeme is one Family, not a synonym for Lemma. An interjection
-written in pieces, one of them no word of its own (`o wei`), is one Lexeme.
+([ADR 0039]). Lexeme is one Family, not a synonym for Lemma.
 _Avoid_: multiword Lexeme, for a unit with several Heads
 
 **Locution**:
@@ -59,8 +58,7 @@ _Avoid_: components, drill-down segmentation
 
 **Canonical Form**:
 The normalized form that names a Lemma, in the casing a dictionary shows. It
-takes part in the Lemma's identity without letter case ([ADR 0002]). An open
-slot in a discontinuous form is `…` (U+2026): `um … willen`.
+takes part in the Lemma's identity without letter case ([ADR 0002]).
 _Avoid_: Citation Form, Lemma Form
 
 **Family**:
@@ -103,23 +101,19 @@ _Avoid_: Paradigm form, inflected closed-class Surface
 **Spelling Crossroad**:
 A projection with no identity that gathers every Reading whose Lemma's
 Canonical Form has one spelling in one language, compared without letter
-case: `essen` gathers the verb and the noun `Essen`. No Surface spelling
-forms one, Typo and Variant spellings included.
+case: `essen` gathers the verb and the noun `Essen`.
 _Avoid_: Headword, Vocable, Page, Homograph Set
 
 **Surface**:
 A reusable grammatical form that realizes exactly one Lemma under one
 analysis. It carries its normalized form, its spelling (Canonical or a
 Variant) and the inflectional features its route allows. [ADR 0040] covers
-noun Surfaces and [ADR 0022] verbal ones. A German noun whose Lemma has no
-gender (`Reisende`) marks on a singular Surface the gender its form shows.
+noun Surfaces and [ADR 0022] verbal ones.
 
 **Variant**:
 A spelling of a Surface's Lemma that is neither its standard spelling nor a
 mistake; a mistake is a Typo member. Its tags, such as Licensed or Regional,
-say why it differs, and they combine. See [ADR 0041]. An archaic inflected
-form (`ward`) is spelled Canonical: its age is historical status, not
-spelling.
+say why it differs, and they combine. See [ADR 0041].
 _Avoid_: licensed variant, for Variant in general; Variant type, for its tags
 
 **Grundform**:
@@ -167,8 +161,8 @@ Foreign Readings.
 _Avoid_: Meaning, Sense, Semantic Unit, dictionary entry
 
 **Emoji Description**:
-The stable, dictionary-scoped label of one to four emoji that tells the
-Readings of one Lemma apart. See [ADR 0031].
+The stable, dictionary-scoped emoji label that tells the Readings of one
+Lemma apart. See [ADR 0031].
 _Avoid_: Mnemonic, Gloss, Sense ID
 
 ### Valency
