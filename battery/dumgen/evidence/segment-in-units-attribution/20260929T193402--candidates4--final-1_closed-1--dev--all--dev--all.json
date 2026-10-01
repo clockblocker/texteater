@@ -1,0 +1,7103 @@
+{
+	"runId": "20260929T193402--candidates4--final-1_closed-1--dev--all",
+	"set": {
+		"name": "dev",
+		"hash": "90c1afa7a4df706d"
+	},
+	"subset": "all",
+	"policy": "step0+saying+closed",
+	"reproduced": 3621,
+	"mismatches": [],
+	"freshCalls": 0,
+	"rows": [
+		{
+			"bucket": "one piece",
+			"units": 1242,
+			"wrong": 55,
+			"flipping": 6,
+			"causes": {
+				"not nominated": 0,
+				"rejected": 0,
+				"accepted": 30,
+				"assembly": 2,
+				"ambiguous": 2
+			},
+			"disputedGold": 25,
+			"headroom": 34
+		},
+		{
+			"bucket": "multi-piece Lexeme",
+			"units": 264,
+			"wrong": 36,
+			"flipping": 8,
+			"causes": {
+				"not nominated": 1,
+				"rejected": 8,
+				"accepted": 6,
+				"assembly": 2,
+				"ambiguous": 5
+			},
+			"disputedGold": 20,
+			"headroom": 21
+		},
+		{
+			"bucket": "contiguous Locution",
+			"units": 90,
+			"wrong": 29,
+			"flipping": 6,
+			"causes": {
+				"not nominated": 0,
+				"rejected": 17,
+				"accepted": 7,
+				"assembly": 0,
+				"ambiguous": 3
+			},
+			"disputedGold": 5,
+			"headroom": 27
+		},
+		{
+			"bucket": "discontinuous Locution",
+			"units": 105,
+			"wrong": 30,
+			"flipping": 7,
+			"causes": {
+				"not nominated": 0,
+				"rejected": 14,
+				"accepted": 12,
+				"assembly": 1,
+				"ambiguous": 2
+			},
+			"disputedGold": 5,
+			"headroom": 29
+		},
+		{
+			"bucket": "Saying",
+			"units": 72,
+			"wrong": 16,
+			"flipping": 2,
+			"causes": {
+				"not nominated": 0,
+				"rejected": 16,
+				"accepted": 2,
+				"assembly": 0,
+				"ambiguous": 0
+			},
+			"disputedGold": 0,
+			"headroom": 18
+		},
+		{
+			"bucket": "all",
+			"units": 1773,
+			"wrong": 166,
+			"flipping": 29,
+			"causes": {
+				"not nominated": 1,
+				"rejected": 55,
+				"accepted": 57,
+				"assembly": 5,
+				"ambiguous": 12
+			},
+			"disputedGold": 55,
+			"headroom": 129
+		}
+	],
+	"units": [
+		{
+			"caseId": "de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
+			"record": "de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
+			"unit": 12,
+			"text": "schlüssig",
+			"bucket": "one piece",
+			"pieces": [
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
+			"record": "de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
+			"unit": 13,
+			"text": "machen",
+			"bucket": "one piece",
+			"pieces": [
+				14
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
+			"record": "de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
+			"unit": 16,
+			"text": "zu dich stellen",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				17,
+				21,
+				22
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.41
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.46
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.42
+				}
+			]
+		},
+		{
+			"caseId": "de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
+			"record": "de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
+			"unit": 18,
+			"text": "wandte",
+			"bucket": "one piece",
+			"pieces": [
+				21
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
+			"record": "de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
+			"unit": 19,
+			"text": "sich",
+			"bucket": "one piece",
+			"pieces": [
+				22
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"record": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"unit": 5,
+			"text": "eine Art",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				6,
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.04
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.04
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.06
+				}
+			]
+		},
+		{
+			"caseId": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"record": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"unit": 6,
+			"text": "Ziel",
+			"bucket": "one piece",
+			"pieces": [
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"record": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"unit": 7,
+			"text": "eine Art",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				9,
+				10
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.1
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.08
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.07
+				}
+			]
+		},
+		{
+			"caseId": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"record": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"unit": 8,
+			"text": "Tätigkeit",
+			"bucket": "one piece",
+			"pieces": [
+				11
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"record": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"unit": 14,
+			"text": "trifft zu",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				20,
+				24
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"record": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"unit": 15,
+			"text": "bei",
+			"bucket": "one piece",
+			"pieces": [
+				21
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
+			"record": "de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
+			"unit": 0,
+			"text": "Danke",
+			"bucket": "one piece",
+			"pieces": [
+				11
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
+			"record": "de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
+			"unit": 0,
+			"text": "Darf ich bitten",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				9,
+				10,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
+			"record": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
+			"unit": 11,
+			"text": "übrig blieb",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				13,
+				14
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.49
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.52
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.49
+				}
+			]
+		},
+		{
+			"caseId": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
+			"record": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
+			"unit": 13,
+			"text": "ein Ende machen",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				16,
+				17,
+				19
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.66
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.69
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.68
+				}
+			]
+		},
+		{
+			"caseId": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
+			"record": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
+			"unit": 13,
+			"text": "zu",
+			"bucket": "one piece",
+			"pieces": [
+				16
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
+			"record": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
+			"unit": 16,
+			"text": "verwandelt",
+			"bucket": "one piece",
+			"pieces": [
+				20
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
+			"record": "de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
+			"unit": 0,
+			"text": "Das",
+			"bucket": "one piece",
+			"pieces": [
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
+			"record": "de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
+			"unit": 1,
+			"text": "tut mir leid",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				10,
+				11,
+				12
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/am-schalter-bestellte-sie-zwei-fahrkarten-nach-bonn-bitte",
+			"record": "de/am-schalter-bestellte-sie-zwei-fahrkarten-nach-bonn-bitte",
+			"unit": 0,
+			"text": "bitte schön",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				10,
+				11
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.69
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.67
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.69
+				}
+			]
+		},
+		{
+			"caseId": "de/anna-kauft-obst-gemuese-und-so-weiter-auf-dem-markt",
+			"record": "de/anna-kauft-obst-gemuese-und-so-weiter-auf-dem-markt",
+			"unit": 0,
+			"text": "und so weiter",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				5,
+				6,
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.32
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.33
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.3
+				}
+			]
+		},
+		{
+			"caseId": "de/anstatt-dass-er-klagte-half-er-sofort",
+			"record": "de/anstatt-dass-er-klagte-half-er-sofort",
+			"unit": 0,
+			"text": "Anstatt",
+			"bucket": "one piece",
+			"pieces": [
+				1
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/aus-opportunismus-folgt-sie-immer-der-mehrheit-sie-heult-mit",
+			"record": "de/aus-opportunismus-folgt-sie-immer-der-mehrheit-sie-heult-mit",
+			"unit": 0,
+			"text": "heult mit den Wölfen",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				9,
+				10,
+				11,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "assembly",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				}
+			]
+		},
+		{
+			"caseId": "de/blase-jetzt-nicht-laenger-truebsal",
+			"record": "de/blase-jetzt-nicht-laenger-truebsal",
+			"unit": 0,
+			"text": "Blase Trübsal",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				1,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.59
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.63
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.64
+				}
+			]
+		},
+		{
+			"caseId": "de/da-gehe-ich-morgen-hin",
+			"record": "de/da-gehe-ich-morgen-hin",
+			"unit": 0,
+			"text": "Da hin",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.48
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.49
+				}
+			]
+		},
+		{
+			"caseId": "de/da-gehe-ich-morgen-hin",
+			"record": "de/da-gehe-ich-morgen-hin",
+			"unit": 1,
+			"text": "gehe",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/da-kann-ich-nichts-fuer",
+			"record": "de/da-kann-ich-nichts-fuer",
+			"unit": 0,
+			"text": "Da für",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.16
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.15
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.14
+				}
+			]
+		},
+		{
+			"caseId": "de/da-kann-ich-nichts-fuer",
+			"record": "de/da-kann-ich-nichts-fuer",
+			"unit": 1,
+			"text": "kann",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/da-weiss-ich-nichts-von",
+			"record": "de/da-weiss-ich-nichts-von",
+			"unit": 0,
+			"text": "Da von",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/da-weiss-ich-nichts-von",
+			"record": "de/da-weiss-ich-nichts-von",
+			"unit": 1,
+			"text": "weiß",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/das-kind-sortiert-das-lego-nach-farben",
+			"record": "de/das-kind-sortiert-das-lego-nach-farben",
+			"unit": 0,
+			"text": "LEGO",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/das-museum-oeffnet-zum-beispiel-am-montag",
+			"record": "de/das-museum-oeffnet-zum-beispiel-am-montag",
+			"unit": 0,
+			"text": "zu m Beispiel",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				4,
+				5,
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.15
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.7
+				}
+			]
+		},
+		{
+			"caseId": "de/das-radio-geht-s-wieder",
+			"record": "de/das-radio-geht-s-wieder",
+			"unit": 0,
+			"text": "Geht",
+			"bucket": "one piece",
+			"pieces": [
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/das-radio-geht-s-wieder",
+			"record": "de/das-radio-geht-s-wieder",
+			"unit": 1,
+			"text": "'s",
+			"bucket": "one piece",
+			"pieces": [
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/das-verfahren-eignet-sich-sowohl-fuer-kleine-teams-wie-fuer",
+			"record": "de/das-verfahren-eignet-sich-sowohl-fuer-kleine-teams-wie-fuer",
+			"unit": 0,
+			"text": "sowohl wie",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				5,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.74
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/das-wetter-nimmt-einfluss-auf-die-planung",
+			"record": "de/das-wetter-nimmt-einfluss-auf-die-planung",
+			"unit": 0,
+			"text": "nimmt Einfluss",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				3,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-arme-rechnet-dem-reichen-die-grossmut-niemals-als-tugend",
+			"record": "de/der-arme-rechnet-dem-reichen-die-grossmut-niemals-als-tugend",
+			"unit": 0,
+			"text": "Der Arme rechnet dem Reichen die Großmut niemals als Tugend an",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.53
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.55
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.54
+				}
+			]
+		},
+		{
+			"caseId": "de/der-beschaedigte-briefentwurf-endete-sichtbar-mit-mit",
+			"record": "de/der-beschaedigte-briefentwurf-endete-sichtbar-mit-mit",
+			"unit": 0,
+			"text": "Mit freundlichen",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				7,
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.66
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.66
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.65
+				}
+			]
+		},
+		{
+			"caseId": "de/der-fonds-investiert-eine-million-euro",
+			"record": "de/der-fonds-investiert-eine-million-euro",
+			"unit": 0,
+			"text": "Million",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
+			"record": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
+			"unit": 2,
+			"text": "schritt her",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				4,
+				16
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
+			"record": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
+			"unit": 11,
+			"text": "neben",
+			"bucket": "one piece",
+			"pieces": [
+				14
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"record": "de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"unit": 4,
+			"text": "stand gegenüber",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				6,
+				22
+			],
+			"nominated": false,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "not nominated",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"record": "de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"unit": 9,
+			"text": "den Schweizerhäusern",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				13,
+				21
+			],
+			"nominated": false,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "not nominated",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"record": "de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"unit": 11,
+			"text": "durch",
+			"bucket": "one piece",
+			"pieces": [
+				15
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"record": "de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"unit": 15,
+			"text": "verbundenen",
+			"bucket": "one piece",
+			"pieces": [
+				20
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-neue-brunnen-ist-tiefer-als-der-alte",
+			"record": "de/der-neue-brunnen-ist-tiefer-als-der-alte",
+			"unit": 1,
+			"text": "der alte",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				7,
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.48
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum",
+			"record": "de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum",
+			"unit": 0,
+			"text": "tanzte auf der Nahse herum",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				3,
+				6,
+				7,
+				8,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.43
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.36
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.4
+				}
+			]
+		},
+		{
+			"caseId": "de/der-preistraeger-erhielt-die-urkunde-ueberreicht",
+			"record": "de/der-preistraeger-erhielt-die-urkunde-ueberreicht",
+			"unit": 0,
+			"text": "erhielt überreicht",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.3
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.31
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.34
+				}
+			]
+		},
+		{
+			"caseId": "de/der-rat-erteilt-zustimmung",
+			"record": "de/der-rat-erteilt-zustimmung",
+			"unit": 0,
+			"text": "erteilt Zustimmung",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				3,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.68
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/der-tisch-besteht-aus-massivem-holz",
+			"record": "de/der-tisch-besteht-aus-massivem-holz",
+			"unit": 0,
+			"text": "aus",
+			"bucket": "one piece",
+			"pieces": [
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/der-vorschlag-hat-anerkenung-gefunden",
+			"record": "de/der-vorschlag-hat-anerkenung-gefunden",
+			"unit": 0,
+			"text": "hat Anerkenung gefunden",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				3,
+				4,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.57
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.56
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.6
+				}
+			]
+		},
+		{
+			"caseId": "de/die-aufnahme-brach-mitten-in-der-dankesformel-vielen",
+			"record": "de/die-aufnahme-brach-mitten-in-der-dankesformel-vielen",
+			"unit": 0,
+			"text": "Vielen herzlichen",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				8,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.72
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.72
+				}
+			]
+		},
+		{
+			"caseId": "de/die-guete-die-nicht-grenzenlos-ist-verdient-den-namen-nicht",
+			"record": "de/die-guete-die-nicht-grenzenlos-ist-verdient-den-namen-nicht",
+			"unit": 0,
+			"text": "Die Güte die nicht grenzenlos ist verdient den Namen nicht",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.47
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.37
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.46
+				}
+			]
+		},
+		{
+			"caseId": "de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die",
+			"record": "de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die",
+			"unit": 1,
+			"text": "der Frau",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.42
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.37
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.42
+				}
+			]
+		},
+		{
+			"caseId": "de/die-leidenschaft-ist-immer-ein-leiden-auch-die-befriedigte",
+			"record": "de/die-leidenschaft-ist-immer-ein-leiden-auch-die-befriedigte",
+			"unit": 0,
+			"text": "Die Leidenschaft ist immer ein Leiden auch die befriedigte",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.41
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.41
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.44
+				}
+			]
+		},
+		{
+			"caseId": "de/die-menschen-denen-wir-eine-stuetze-sind-die-geben-uns-den",
+			"record": "de/die-menschen-denen-wir-eine-stuetze-sind-die-geben-uns-den",
+			"unit": 0,
+			"text": "die Menschen denen wir eine Stütze sind die geben uns den Halt i m Leben",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.61
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.62
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.6
+				}
+			]
+		},
+		{
+			"caseId": "de/die-parteien-treffen-eine-vereinbarung",
+			"record": "de/die-parteien-treffen-eine-vereinbarung",
+			"unit": 0,
+			"text": "treffen eine Vereinbarung",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				3,
+				4,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.62
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.63
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.64
+				}
+			]
+		},
+		{
+			"caseId": "de/die-redaktion-fuehrt-aufgrund-als-leitform-auf-grund-des",
+			"record": "de/die-redaktion-fuehrt-aufgrund-als-leitform-auf-grund-des",
+			"unit": 0,
+			"text": "auf Grund",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				7,
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.06
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.5
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.49
+				}
+			]
+		},
+		{
+			"caseId": "de/die-seiten-des-kinder-und-jugendbuchs-fehlen",
+			"record": "de/die-seiten-des-kinder-und-jugendbuchs-fehlen",
+			"unit": 0,
+			"text": "des Kinder‐",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.02
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.01
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.02
+				}
+			]
+		},
+		{
+			"caseId": "de/die-tansanische-wahlkommission-hat-die-chadema-partei-des",
+			"record": "de/die-tansanische-wahlkommission-hat-die-chadema-partei-des",
+			"unit": 0,
+			"text": "hat von ausgeschlossen",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				4,
+				11,
+				17
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.05
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.04
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.04
+				}
+			]
+		},
+		{
+			"caseId": "de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss",
+			"record": "de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss",
+			"unit": 0,
+			"text": "lief auf hinaus",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				5,
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "assembly",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				}
+			]
+		},
+		{
+			"caseId": "de/die-werkstatt-repariert-den-thermomix-noch-heute",
+			"record": "de/die-werkstatt-repariert-den-thermomix-noch-heute",
+			"unit": 0,
+			"text": "Thermomix",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht",
+			"record": "de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht",
+			"unit": 0,
+			"text": "wurde Licht in s Dunkel gebracht",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				4,
+				6,
+				7,
+				8,
+				9,
+				10
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.61
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.69
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.65
+				}
+			]
+		},
+		{
+			"caseId": "de/ein-aphorismus-ist-der-letzte-ring-einer-langen",
+			"record": "de/ein-aphorismus-ist-der-letzte-ring-einer-langen",
+			"unit": 0,
+			"text": "Ein Aphorismus ist der letzte Ring einer langen Gedankenkette",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.48
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.46
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.46
+				}
+			]
+		},
+		{
+			"caseId": "de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher",
+			"record": "de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher",
+			"unit": 1,
+			"text": "trieb umher",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.44
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher",
+			"record": "de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher",
+			"unit": 3,
+			"text": "von an",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				5,
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.44
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.46
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.43
+				}
+			]
+		},
+		{
+			"caseId": "de/er-biss-in-den-rasen",
+			"record": "de/er-biss-in-den-rasen",
+			"unit": 0,
+			"text": "biss",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/er-biss-in-den-rasen",
+			"record": "de/er-biss-in-den-rasen",
+			"unit": 1,
+			"text": "in",
+			"bucket": "one piece",
+			"pieces": [
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				}
+			]
+		},
+		{
+			"caseId": "de/er-biss-in-den-rasen",
+			"record": "de/er-biss-in-den-rasen",
+			"unit": 2,
+			"text": "den Rasen",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				4,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				}
+			]
+		},
+		{
+			"caseId": "de/er-biss-ins-kunstgras",
+			"record": "de/er-biss-ins-kunstgras",
+			"unit": 0,
+			"text": "biss in s",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				2,
+				3,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				}
+			]
+		},
+		{
+			"caseId": "de/er-biss-ins-kunstgras",
+			"record": "de/er-biss-ins-kunstgras",
+			"unit": 1,
+			"text": "Kunstgras",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				}
+			]
+		},
+		{
+			"caseId": "de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos",
+			"record": "de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos",
+			"unit": 3,
+			"text": "Gespräch mit führen",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				4,
+				5,
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.37
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.31
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.39
+				}
+			]
+		},
+		{
+			"caseId": "de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
+			"record": "de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
+			"unit": 12,
+			"text": "ein wenig",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				14,
+				15
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.71
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.7
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.7
+				}
+			]
+		},
+		{
+			"caseId": "de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
+			"record": "de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
+			"unit": 28,
+			"text": "m Niedergleiten",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				32,
+				34
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.48
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/er-stellt-die-kiste-vor-die-tuer",
+			"record": "de/er-stellt-die-kiste-vor-die-tuer",
+			"unit": 0,
+			"text": "vor",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/er-stellt-eine-frage-und-stellt-die-vase-ab",
+			"record": "de/er-stellt-eine-frage-und-stellt-die-vase-ab",
+			"unit": 0,
+			"text": "stellt eine Frage",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				2,
+				3,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.4
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.37
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.34
+				}
+			]
+		},
+		{
+			"caseId": "de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
+			"record": "de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
+			"unit": 9,
+			"text": "ein wenig",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				13,
+				14
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.2
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.19
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.18
+				}
+			]
+		},
+		{
+			"caseId": "de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+			"record": "de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+			"unit": 18,
+			"text": "sich",
+			"bucket": "one piece",
+			"pieces": [
+				24
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+			"record": "de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+			"unit": 19,
+			"text": "abwenden",
+			"bucket": "one piece",
+			"pieces": [
+				25
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am",
+			"record": "de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am",
+			"unit": 0,
+			"text": "Es war",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.05
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.07
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.05
+				}
+			]
+		},
+		{
+			"caseId": "de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+			"record": "de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+			"unit": 5,
+			"text": "so",
+			"bucket": "one piece",
+			"pieces": [
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+			"record": "de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+			"unit": 8,
+			"text": "daß",
+			"bucket": "one piece",
+			"pieces": [
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
+			"record": "de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
+			"unit": 19,
+			"text": "examiniert worden war",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				22,
+				23,
+				24
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.39
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.46
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der",
+			"record": "de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der",
+			"unit": 0,
+			"text": "an weitergeleitet werden",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				13,
+				16,
+				17
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.22
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.3
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.29000000000000004
+				}
+			]
+		},
+		{
+			"caseId": "de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur",
+			"record": "de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur",
+			"unit": 0,
+			"text": "stellte zu r Verfügung",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				4,
+				9,
+				10,
+				11
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/geduld-mit-der-streitsucht-der-einfaeltigen-es-ist-nicht",
+			"record": "de/geduld-mit-der-streitsucht-der-einfaeltigen-es-ist-nicht",
+			"unit": 0,
+			"text": "Geduld mit der Streitsucht der Einfältigen Es ist nicht leicht zu begreifen dass man nicht begreift",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.49
+				}
+			]
+		},
+		{
+			"caseId": "de/heult-nicht-laenger-mit-den-woelfen",
+			"record": "de/heult-nicht-laenger-mit-den-woelfen",
+			"unit": 0,
+			"text": "Heult mit den Wölfen",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				1,
+				4,
+				5,
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.26
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.3
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.39
+				}
+			]
+		},
+		{
+			"caseId": "de/ich-lese-und-dann-wir-gehen-viel-spazieren",
+			"record": "de/ich-lese-und-dann-wir-gehen-viel-spazieren",
+			"unit": 5,
+			"text": "gehen spazieren",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				6,
+				8
+			],
+			"nominated": false,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "not nominated",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				}
+			]
+		},
+		{
+			"caseId": "de/im-allgemeinen-ist-der-zug-puenktlich",
+			"record": "de/im-allgemeinen-ist-der-zug-puenktlich",
+			"unit": 0,
+			"text": "I m Allgemeinen",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				1,
+				2,
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.14
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.05
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.28
+				}
+			]
+		},
+		{
+			"caseId": "de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten",
+			"record": "de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten",
+			"unit": 0,
+			"text": "hat gezogen",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				13,
+				16
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert",
+			"record": "de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert",
+			"unit": 0,
+			"text": "Das Alter verklärt oder versteinert",
+			"bucket": "Saying",
+			"pieces": [
+				14,
+				15,
+				16,
+				17,
+				18
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.39
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.38
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.38
+				}
+			]
+		},
+		{
+			"caseId": "de/im-nachruf-stand-dass-er-den-loefel-schliesslich-abgab",
+			"record": "de/im-nachruf-stand-dass-er-den-loefel-schliesslich-abgab",
+			"unit": 0,
+			"text": "den Löfel abgab",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				7,
+				8,
+				10
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.31
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.22
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.26
+				}
+			]
+		},
+		{
+			"caseId": "de/im-seminar-zitierte-sie-verkuerzt-die-verstehen-sehr-wenig",
+			"record": "de/im-seminar-zitierte-sie-verkuerzt-die-verstehen-sehr-wenig",
+			"unit": 0,
+			"text": "Die verstehen sehr wenig",
+			"bucket": "Saying",
+			"pieces": [
+				7,
+				8,
+				9,
+				10
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.28
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.23
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.29000000000000004
+				}
+			]
+		},
+		{
+			"caseId": "de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
+			"record": "de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
+			"unit": 0,
+			"text": "Es",
+			"bucket": "one piece",
+			"pieces": [
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
+			"record": "de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
+			"unit": 1,
+			"text": "tut mir",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				10,
+				11
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/in-faellen-wo-das-gesetz-schweigt-entscheidet-das-gericht",
+			"record": "de/in-faellen-wo-das-gesetz-schweigt-entscheidet-das-gericht",
+			"unit": 0,
+			"text": "wo",
+			"bucket": "one piece",
+			"pieces": [
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/in-suedkorea-ist-der-junge-musiker-und-schauspieler-cha-in",
+			"record": "de/in-suedkorea-ist-der-junge-musiker-und-schauspieler-cha-in",
+			"unit": 0,
+			"text": "ist aufgefunden worden",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				20,
+				21
+			],
+			"nominated": false,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "not nominated",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				}
+			]
+		},
+		{
+			"caseId": "de/je-frueher-desto-besser",
+			"record": "de/je-frueher-desto-besser",
+			"unit": 0,
+			"text": "Je desto",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				1,
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/je-laenger-der-weg-desto-mueder-die-reisenden",
+			"record": "de/je-laenger-der-weg-desto-mueder-die-reisenden",
+			"unit": 0,
+			"text": "Je desto",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				1,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/je-laenger-wir-warteten-desto-unruhiger-wurden-die-kinder",
+			"record": "de/je-laenger-wir-warteten-desto-unruhiger-wurden-die-kinder",
+			"unit": 0,
+			"text": "Je desto",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				1,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"record": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"unit": 4,
+			"text": "sah",
+			"bucket": "one piece",
+			"pieces": [
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"record": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"unit": 5,
+			"text": "von aus",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				7,
+				10
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.23
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.24
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.28
+				}
+			]
+		},
+		{
+			"caseId": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"record": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"unit": 8,
+			"text": "die Frau",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				11,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.35
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.3
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.24
+				}
+			]
+		},
+		{
+			"caseId": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"record": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"unit": 18,
+			"text": "einer Neugierde",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				22,
+				27
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"record": "de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
+			"unit": 19,
+			"text": "an",
+			"bucket": "one piece",
+			"pieces": [
+				23
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/kaffee-oder-tee-das-ist-hier-die-frage",
+			"record": "de/kaffee-oder-tee-das-ist-hier-die-frage",
+			"unit": 0,
+			"text": "oder das ist hier die Frage",
+			"bucket": "Saying",
+			"pieces": [
+				2,
+				4,
+				5,
+				6,
+				7,
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/komm-endlich-zum-ende",
+			"record": "de/komm-endlich-zum-ende",
+			"unit": 0,
+			"text": "Komm zu m Ende",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				1,
+				3,
+				4,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.35
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.35
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.4
+				}
+			]
+		},
+		{
+			"caseId": "de/mara-schaemt-sich-fuer-den-irrtum",
+			"record": "de/mara-schaemt-sich-fuer-den-irrtum",
+			"unit": 0,
+			"text": "sich",
+			"bucket": "one piece",
+			"pieces": [
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/mina-verliess-den-raum-ohne-sich-zu-verabschieden",
+			"record": "de/mina-verliess-den-raum-ohne-sich-zu-verabschieden",
+			"unit": 0,
+			"text": "ohne",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun",
+			"record": "de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun",
+			"unit": 0,
+			"text": "hat alle Hände voll tun",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				4,
+				7,
+				8,
+				9,
+				11
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.63
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.63
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.68
+				}
+			]
+		},
+		{
+			"caseId": "de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich",
+			"record": "de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich",
+			"unit": 0,
+			"text": "Mit sich zanken",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				11,
+				14
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.01
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.01
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.01
+				}
+			]
+		},
+		{
+			"caseId": "de/mittlerweile-hat-sich-der-preis-auf-rund-4150-us-dollar-pro",
+			"record": "de/mittlerweile-hat-sich-der-preis-auf-rund-4150-us-dollar-pro",
+			"unit": 0,
+			"text": "hat sich eingependelt",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				2,
+				3,
+				12
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
+			"record": "de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
+			"unit": 0,
+			"text": "Nein",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "assembly",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "assembly"
+				}
+			]
+		},
+		{
+			"caseId": "de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
+			"record": "de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
+			"unit": 1,
+			"text": "danke",
+			"bucket": "one piece",
+			"pieces": [
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "assembly",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "assembly"
+				}
+			]
+		},
+		{
+			"caseId": "de/morgen-wird-sie-wohl-kein-blatt-vor-den-mund-nehmen",
+			"record": "de/morgen-wird-sie-wohl-kein-blatt-vor-den-mund-nehmen",
+			"unit": 0,
+			"text": "wird kein Blatt vor den Mund nehmen",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				2,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.55
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.58
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.58
+				}
+			]
+		},
+		{
+			"caseId": "de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat",
+			"record": "de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat",
+			"unit": 0,
+			"text": "Wie dem auch sei",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				18,
+				19,
+				20,
+				21
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.69
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/nach-dem-grammatikbeispiel-eine-entscheidung-treffen-folgte",
+			"record": "de/nach-dem-grammatikbeispiel-eine-entscheidung-treffen-folgte",
+			"unit": 0,
+			"text": "Nicht jene die streiten sind zu fürchten sondern jene die ausweichen",
+			"bucket": "Saying",
+			"pieces": [
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.55
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.52
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.56
+				}
+			]
+		},
+		{
+			"caseId": "de/nach-dem-unerwarteten-sieg-erinnerte-der-kapitaen-die",
+			"record": "de/nach-dem-unerwarteten-sieg-erinnerte-der-kapitaen-die",
+			"unit": 0,
+			"text": "Wer zuletzt lacht lacht a m besten",
+			"bucket": "Saying",
+			"pieces": [
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/nach-der-formel-guten-morgen-hat-sie-ohne-pruefung-die-katze",
+			"record": "de/nach-der-formel-guten-morgen-hat-sie-ohne-pruefung-die-katze",
+			"unit": 0,
+			"text": "hat die Katze i m Sack gekauft",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				6,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.58
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.6
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.6
+				}
+			]
+		},
+		{
+			"caseId": "de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank",
+			"record": "de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank",
+			"unit": 0,
+			"text": "Vielen Dank",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				8,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins",
+			"record": "de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins",
+			"unit": 0,
+			"text": "hat sich in s Fäustchen gelacht",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				5,
+				7,
+				9,
+				10,
+				11,
+				12
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.77
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.69
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/nachdem-alle-ihre-werkzeuge-bereitgelegt-hatten-sagte-der",
+			"record": "de/nachdem-alle-ihre-werkzeuge-bereitgelegt-hatten-sagte-der",
+			"unit": 0,
+			"text": "Dann wollen wir mal",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				10,
+				11,
+				12,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.16
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.19
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.21
+				}
+			]
+		},
+		{
+			"caseId": "de/nachdem-der-ausschuss-eine-entscheidung-getroffen-hat-lass",
+			"record": "de/nachdem-der-ausschuss-eine-entscheidung-getroffen-hat-lass",
+			"unit": 0,
+			"text": "lass die Kirche i m Dorf",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				8,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.08
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.05
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.07
+				}
+			]
+		},
+		{
+			"caseId": "de/nachdem-die-bibliothekarin-das-seltene-buch-gefunden-hatte",
+			"record": "de/nachdem-die-bibliothekarin-das-seltene-buch-gefunden-hatte",
+			"unit": 0,
+			"text": "Besten Dank",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				12,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
+			"record": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
+			"unit": 0,
+			"text": "Es",
+			"bucket": "one piece",
+			"pieces": [
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
+			"record": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
+			"unit": 1,
+			"text": "tut mir leid",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				10,
+				11,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin",
+			"record": "de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin",
+			"unit": 0,
+			"text": "Ich bitte um Verzeihung",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				10,
+				11,
+				12,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.67
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.69
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.67
+				}
+			]
+		},
+		{
+			"caseId": "de/nora-loeste-die-aufgabe-ohne-jemanden-um-hilfe-zu-bitten",
+			"record": "de/nora-loeste-die-aufgabe-ohne-jemanden-um-hilfe-zu-bitten",
+			"unit": 0,
+			"text": "ohne zu",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				5,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous"
+				}
+			]
+		},
+		{
+			"caseId": "de/oh-la-la-du-hast-dich-aber-schick-gemacht",
+			"record": "de/oh-la-la-du-hast-dich-aber-schick-gemacht",
+			"unit": 0,
+			"text": "Oh là là",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				2,
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.69
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/ohne-mantel-fror-sie-wie-ein-schneider",
+			"record": "de/ohne-mantel-fror-sie-wie-ein-schneider",
+			"unit": 0,
+			"text": "fror wie ein Schneider",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				3,
+				5,
+				6,
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.43
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.5
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.52
+				}
+			]
+		},
+		{
+			"caseId": "de/pass-auf-dich-auf",
+			"record": "de/pass-auf-dich-auf",
+			"unit": 0,
+			"text": "Pass auf auf",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				2,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "assembly",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				}
+			]
+		},
+		{
+			"caseId": "de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang",
+			"record": "de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang",
+			"unit": 2,
+			"text": "i m Vergleich zu",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				3,
+				4,
+				5,
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "assembly",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "assembly"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-bekommt-das-glas-endlich-geoeffnet",
+			"record": "de/sie-bekommt-das-glas-endlich-geoeffnet",
+			"unit": 0,
+			"text": "bekommt",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-blickt-auf-die-uhr-und-steht-danach-auf",
+			"record": "de/sie-blickt-auf-die-uhr-und-steht-danach-auf",
+			"unit": 0,
+			"text": "auf",
+			"bucket": "one piece",
+			"pieces": [
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-faehrt-zum-archiv-um-die-akte-zu-pruefen",
+			"record": "de/sie-faehrt-zum-archiv-um-die-akte-zu-pruefen",
+			"unit": 0,
+			"text": "zu",
+			"bucket": "one piece",
+			"pieces": [
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-ging-erst-in-die-kueche-und-dann-hinaus",
+			"record": "de/sie-ging-erst-in-die-kueche-und-dann-hinaus",
+			"unit": 0,
+			"text": "ging",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-ging-erst-in-die-kueche-und-dann-hinaus",
+			"record": "de/sie-ging-erst-in-die-kueche-und-dann-hinaus",
+			"unit": 1,
+			"text": "hinaus",
+			"bucket": "one piece",
+			"pieces": [
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-ging-frueher-um-den-zug-zu-erreichen",
+			"record": "de/sie-ging-frueher-um-den-zug-zu-erreichen",
+			"unit": 0,
+			"text": "um",
+			"bucket": "one piece",
+			"pieces": [
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den",
+			"record": "de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den",
+			"unit": 1,
+			"text": "gingen entlang",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				2,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.43
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.48
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.47
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den",
+			"record": "de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den",
+			"unit": 2,
+			"text": "die Vorderreihe",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				4
+			],
+			"nominated": false,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "not nominated",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "not nominated"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-hat-hilfe-in-anspruch-genommen",
+			"record": "de/sie-hat-hilfe-in-anspruch-genommen",
+			"unit": 0,
+			"text": "hat in Anspruch genommen",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				2,
+				4,
+				5,
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
+			"record": "de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
+			"unit": 10,
+			"text": "es",
+			"bucket": "one piece",
+			"pieces": [
+				12
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
+			"record": "de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
+			"unit": 11,
+			"text": "herrschte",
+			"bucket": "one piece",
+			"pieces": [
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-kauft-ein-kinder-oder-jugendbuch",
+			"record": "de/sie-kauft-ein-kinder-oder-jugendbuch",
+			"unit": 0,
+			"text": "ein Kinder-",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.07
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.07
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.08
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-leistet-abbite",
+			"record": "de/sie-leistet-abbite",
+			"unit": 0,
+			"text": "leistet Abbite",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				2,
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.38
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.46
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.52
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern",
+			"record": "de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern",
+			"unit": 0,
+			"text": "oder Ähnliches",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				5,
+				6
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-meint-es-gut-mit-dir",
+			"record": "de/sie-meint-es-gut-mit-dir",
+			"unit": 0,
+			"text": "meint",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-nahm-den-antrag-gruendlich-zur-kenntnis",
+			"record": "de/sie-nahm-den-antrag-gruendlich-zur-kenntnis",
+			"unit": 0,
+			"text": "nahm zu r Kenntnis",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				2,
+				6,
+				7,
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-testet-das-neue-iphone-im-labor",
+			"record": "de/sie-testet-das-neue-iphone-im-labor",
+			"unit": 0,
+			"text": "iPhone",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt",
+			"record": "de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt",
+			"unit": 0,
+			"text": "he he",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				6,
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.51
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.5
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.47
+				}
+			]
+		},
+		{
+			"caseId": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"record": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"unit": 1,
+			"text": "über",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"record": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"unit": 2,
+			"text": "alle",
+			"bucket": "one piece",
+			"pieces": [
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"record": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"unit": 3,
+			"text": "Zweifel",
+			"bucket": "one piece",
+			"pieces": [
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"record": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"unit": 4,
+			"text": "war",
+			"bucket": "one piece",
+			"pieces": [
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"record": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"unit": 6,
+			"text": "entschieden",
+			"bucket": "one piece",
+			"pieces": [
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"record": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"unit": 13,
+			"text": "nach Hause",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				16,
+				17
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.02
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.03
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.04
+				}
+			]
+		},
+		{
+			"caseId": "de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner",
+			"record": "de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner",
+			"unit": 9,
+			"text": "Kinder und Kindeskinder",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				11,
+				12,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				}
+			]
+		},
+		{
+			"caseId": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre",
+			"record": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre",
+			"unit": 0,
+			"text": "nahm Rücksicht auf",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				4,
+				7,
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/um-das-haus-blieb-es-zu-laut-um-dort-ruhig-schlafen-zu",
+			"record": "de/um-das-haus-blieb-es-zu-laut-um-dort-ruhig-schlafen-zu",
+			"unit": 0,
+			"text": "um zu",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				8,
+				12
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/um-des-friedens-willen-schwiegen-beide-seiten",
+			"record": "de/um-des-friedens-willen-schwiegen-beide-seiten",
+			"unit": 0,
+			"text": "Um willen",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				1,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "ambiguous"
+				}
+			]
+		},
+		{
+			"caseId": "de/unbegruendeter-tadel-ist-manchmal-eine-feine-form-der",
+			"record": "de/unbegruendeter-tadel-ist-manchmal-eine-feine-form-der",
+			"unit": 0,
+			"text": "Unbegründeter Tadel ist manchmal eine feine Form der Schmeichelei",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.21
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.21
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.22
+				}
+			]
+		},
+		{
+			"caseId": "de/unter-keinen-umstaenden-geben-wir-das-passwort-weiter",
+			"record": "de/unter-keinen-umstaenden-geben-wir-das-passwort-weiter",
+			"unit": 0,
+			"text": "keinen",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+			"record": "de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+			"unit": 1,
+			"text": "frage mich",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				2,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.35
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.36
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.39
+				}
+			]
+		},
+		{
+			"caseId": "de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+			"record": "de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+			"unit": 4,
+			"text": "mit geschehen wird",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				6,
+				8,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": true,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.13
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.18
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.14
+				}
+			]
+		},
+		{
+			"caseId": "de/vertrauen-schrieb-sie-ist-mut-und-treue-ist-kraft",
+			"record": "de/vertrauen-schrieb-sie-ist-mut-und-treue-ist-kraft",
+			"unit": 0,
+			"text": "Vertrauen ist Mut und Treue ist Kraft",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.14
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.16
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.13
+				}
+			]
+		},
+		{
+			"caseId": "de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach",
+			"record": "de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach",
+			"unit": 0,
+			"text": "sehnen sich nach",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				3,
+				4,
+				9
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "ambiguous",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous"
+				}
+			]
+		},
+		{
+			"caseId": "de/waehrend-der-waerter-das-historische-bett-huetete-huetete",
+			"record": "de/waehrend-der-waerter-das-historische-bett-huetete-huetete",
+			"unit": 0,
+			"text": "hütete das Bett",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				8,
+				12,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.1
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.11
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.14
+				}
+			]
+		},
+		{
+			"caseId": "de/warten-lernen-wir-gewoehnlich-erst-wenn-wir-nichts-mehr-zu",
+			"record": "de/warten-lernen-wir-gewoehnlich-erst-wenn-wir-nichts-mehr-zu",
+			"unit": 0,
+			"text": "Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.47
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.45
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.42
+				}
+			]
+		},
+		{
+			"caseId": "de/was-zum",
+			"record": "de/was-zum",
+			"unit": 0,
+			"text": "zu m",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				2,
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/was-zum-2",
+			"record": "de/was-zum-2",
+			"unit": 0,
+			"text": "zu m",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				2,
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/wenn-der-vorschlag-hand-und-fuss-haette-stimmte-ich-zu",
+			"record": "de/wenn-der-vorschlag-hand-und-fuss-haette-stimmte-ich-zu",
+			"unit": 0,
+			"text": "Hand und Fuß hätte",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				4,
+				5,
+				6,
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.61
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.63
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.63
+				}
+			]
+		},
+		{
+			"caseId": "de/wenn-man-nur-die-alten-liest-ist-man-sicher-immer-neu-zu",
+			"record": "de/wenn-man-nur-die-alten-liest-ist-man-sicher-immer-neu-zu",
+			"unit": 0,
+			"text": "Wenn man nur die Alten liest ist man sicher immer neu zu bleiben",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": false,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.49
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/wer-sich-seiner-eigenen-kindheit-nicht-mehr-deutlich",
+			"record": "de/wer-sich-seiner-eigenen-kindheit-nicht-mehr-deutlich",
+			"unit": 0,
+			"text": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.37
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.4
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.32
+				}
+			]
+		},
+		{
+			"caseId": "de/wie-geht-s-dir-heute",
+			"record": "de/wie-geht-s-dir-heute",
+			"unit": 0,
+			"text": "Wie geht 's",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				1,
+				2,
+				3
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0
+				}
+			]
+		},
+		{
+			"caseId": "de/wie-weise-muss-man-sein-um-immer-gut-zu-sein",
+			"record": "de/wie-weise-muss-man-sein-um-immer-gut-zu-sein",
+			"unit": 0,
+			"text": "Wie weise muss man sein um immer gut zu sein",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.15
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.15000000000000002
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.88
+				}
+			]
+		},
+		{
+			"caseId": "de/wir-liefen-den-fluss-entlang-bis-zur-bruecke",
+			"record": "de/wir-liefen-den-fluss-entlang-bis-zur-bruecke",
+			"unit": 0,
+			"text": "liefen entlang",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				2,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.16
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.16
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.21
+				}
+			]
+		},
+		{
+			"caseId": "de/wir-stellen-die-daten-zur-verfuegung",
+			"record": "de/wir-stellen-die-daten-zur-verfuegung",
+			"unit": 0,
+			"text": "stellen zu r Verfügung",
+			"bucket": "discontinuous Locution",
+			"pieces": [
+				2,
+				5,
+				6,
+				7
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/wo-gehobelt-wird-da-erklaerte-der-meister-und-setzte-das",
+			"record": "de/wo-gehobelt-wird-da-erklaerte-der-meister-und-setzte-das",
+			"unit": 0,
+			"text": "Wo gehobelt wird da fallen Späne",
+			"bucket": "Saying",
+			"pieces": [
+				1,
+				2,
+				3,
+				4,
+				16,
+				17
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.62
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.65
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.64
+				}
+			]
+		},
+		{
+			"caseId": "de/wo-gehst-du-hin",
+			"record": "de/wo-gehst-du-hin",
+			"unit": 0,
+			"text": "Wo hin",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/wo-gehst-du-hin",
+			"record": "de/wo-gehst-du-hin",
+			"unit": 1,
+			"text": "gehst",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/wo-hast-du-das-mit-gemacht",
+			"record": "de/wo-hast-du-das-mit-gemacht",
+			"unit": 0,
+			"text": "Wo mit",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				5
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": true,
+					"cause": "ambiguous",
+					"nearest": 0.49
+				}
+			]
+		},
+		{
+			"caseId": "de/wo-kommst-du-her",
+			"record": "de/wo-kommst-du-her",
+			"unit": 0,
+			"text": "Wo her",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				1,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/wo-kommst-du-her",
+			"record": "de/wo-kommst-du-her",
+			"unit": 1,
+			"text": "kommst",
+			"bucket": "one piece",
+			"pieces": [
+				2
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		},
+		{
+			"caseId": "de/woerterbucheintrag-eine-frage-stellen",
+			"record": "de/woerterbucheintrag-eine-frage-stellen",
+			"unit": 0,
+			"text": "eine Frage stellen",
+			"bucket": "contiguous Locution",
+			"pieces": [
+				2,
+				3,
+				4
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": true,
+			"cause": "rejected",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.62
+				},
+				{
+					"correct": false,
+					"split": true,
+					"enlarged": false,
+					"cause": "rejected",
+					"nearest": 0.6900000000000001
+				},
+				{
+					"correct": true,
+					"split": false,
+					"enlarged": false
+				}
+			]
+		},
+		{
+			"caseId": "de/zahnaerztin-shimaa-mahmoud-setzt-sich-eine-gesichtsmaske-auf",
+			"record": "de/zahnaerztin-shimaa-mahmoud-setzt-sich-eine-gesichtsmaske-auf",
+			"unit": 0,
+			"text": "setzt auf",
+			"bucket": "multi-piece Lexeme",
+			"pieces": [
+				4,
+				8
+			],
+			"nominated": true,
+			"wrongByMajority": true,
+			"flips": false,
+			"cause": "accepted",
+			"disputedGold": false,
+			"repetitions": [
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				},
+				{
+					"correct": false,
+					"split": false,
+					"enlarged": true,
+					"cause": "accepted"
+				}
+			]
+		}
+	]
+}
