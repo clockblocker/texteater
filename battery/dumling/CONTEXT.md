@@ -2,7 +2,9 @@
 
 Dumling names the language-specific grammatical entities and foundational
 semantic values that learner text resolves to. Each entry links the ADRs that
-hold the term's precise definition, edge cases and examples.
+hold the term's precise definition, edge cases and examples. This Context's
+terms are language-neutral, and each language's classifications live in the
+[Dumspec Context](../dumspec/CONTEXT.md).
 
 ## Language
 
@@ -23,6 +25,17 @@ _Avoid_: multiword Lexeme, for a unit with several Heads
 A Lemma with two or more Heads, such as `den Faden verlieren` or `zum Teil`.
 Its Kind is the part of speech the whole acts as. See [ADR 0039].
 _Avoid_: Phraseme, multiword expression, fixed expression
+
+**Collocation**:
+A Locution whose verb only supports its noun or adjective predicate, such as
+`eine Entscheidung treffen`. See [ADR 0039].
+_Avoid_: Idiom, Phraseme, weak collocation as a unit
+
+**Idiom**:
+A Locution whose meaning is not the sum of its words, such as `ins Gras
+beißen`. Idiom and Collocation are values of a Reading's Locution Type
+(Dumrel), not Kinds. See [ADR 0039].
+_Avoid_: Phraseme
 
 **Saying**:
 A Family with the one Kind `Saying`: a complete saying, either a Proverb or a
@@ -86,9 +99,9 @@ by what serves the learner. See [ADR 0032].
 _Avoid_: Inherent Features
 
 **Comparability**:
-A Core Feature of German and English ADV and ADJ Lemmas: whether the Lemma
-has comparison forms of its own. It decides whether the Lemma's Surfaces mark
-Degree. See [ADR 0042].
+A Core Feature of ADV and ADJ Lemmas on routes that mark Degree: whether the
+Lemma has comparison forms of its own. It decides whether the Lemma's Surfaces
+mark Degree. See [ADR 0042].
 _Avoid_: Gradability
 
 **Paradigm Cell**:
@@ -179,69 +192,14 @@ One position in a Valency Frame, Required or Optional. Each language defines
 its complements, and each route chooses which it allows. See [ADR 0034].
 _Avoid_: argument, valent, complement slot, Ergänzung
 
-### German classifications
-
-**Verbal Participle**:
-A participle in a perfect or a passive, which joins its auxiliary in one VERB
-target. A participle used as an adjective is a Participial Adjective instead.
-See [ADR 0036].
-_Avoid_: state passive, as a verbal construction
-
-**Modal Verb**:
-A German modal such as `können` or `müssen`: a VERB Lexeme, one Lemma whether
-it governs an infinitive or an object. See [ADR 0026].
-_Avoid_: Modal auxiliary, modal AUX
-
-**Auxiliary**:
-A verb serving another verb's grammatical composition, such as `haben` in a
-perfect, `werden` in a passive or causative `lassen`. An AUX Lexeme is one
-such grammatical use with its own Reading; the same verb standing alone is a
-VERB Lexeme. See [ADR 0026]; dumspec authors the AUX Readings ([ADR 0021]).
-_Avoid_: lone auxiliary, copula AUX, per-form AUX Lemma
-
-**Participial Adjective**:
-A participle used as an adjective: an ADJ Lexeme whether lexicalized or not,
-whose Reading names its verb as Participle Source (Dumrel). See [ADR 0036].
-_Avoid_: productive participle and lexicalized participle, as a Kind contrast
-
-**Collocation**:
-A Locution whose verb only supports its noun or adjective predicate, such as
-`eine Entscheidung treffen`. See [ADR 0039].
-_Avoid_: Idiom, Phraseme, weak collocation as a unit
-
-**Idiom**:
-A Locution whose meaning is not the sum of its words, such as `ins Gras
-beißen`. Idiom and Collocation are Reading Knowledge, not Kinds. See
-[ADR 0039].
-_Avoid_: Phraseme
-
-**Free `sich`**:
-The German reflexive `sich` as a unit of its own rather than a member of its
-verb: the reflexive's Acc or Dat cell, in reciprocal use too. See [ADR 0044].
-_Avoid_: Reciprocal `sich`, `pronType=Rcp` `sich`
-
-**Standalone `einander`**:
-The invariant German reciprocal pronoun `einander`: one Lemma, with case
-unmarked. See [ADR 0044].
-_Avoid_: Case-specific `einander`
-
-**Reciprocal Pronominal Adverb**:
-A German ADV Lexeme whose whole form joins a preposition to `einander`, such
-as `miteinander` or `voneinander`. See [ADR 0029].
-_Avoid_: `preposition + einander` PRON, reciprocal PRON compound
-
 [ADR 0002]: ../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
 [ADR 0003]: ../../docs/adr/0003-attestation-supersedes-selection-and-owns-realization-coverage.md
-[ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
 [ADR 0022]: ../../docs/adr/0022-describe-whole-verbal-surfaces-compositionally.md
-[ADR 0026]: ../../docs/adr/0026-treat-modals-as-verbs-and-confine-aux-to-grammar-readings.md
 [ADR 0027]: ../../docs/adr/0027-retire-the-construction-family.md
-[ADR 0029]: ../../docs/adr/0029-keep-preposition-government-out-of-lemma-identity.md
 [ADR 0031]: ../../docs/adr/0031-resolve-readings-through-the-emoji-description-alone.md
 [ADR 0032]: ../../docs/adr/0032-choose-core-features-per-route-for-the-learner.md
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0035]: ../../docs/adr/0035-attest-articles-and-fused-words-segment-by-segment.md
-[ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
 [ADR 0040]: ../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md
 [ADR 0041]: ../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md

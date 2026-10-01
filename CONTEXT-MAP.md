@@ -9,11 +9,12 @@
   workspace Presentation, Card, Sheet, and gesture terminology.
 - [lego](./battery/lego/CONTEXT.md): owns the shared token palette, theme
   choice, and the atoms and molecules Notes and reading text are built from.
-- [Dumling](./battery/dumling/CONTEXT.md): names the grammatical entities to
-  which learner text resolves.
+- [Dumling](./battery/dumling/CONTEXT.md): names, in language-neutral terms,
+  the grammatical entities to which learner text resolves.
 - [Dumspec](./battery/dumspec/CONTEXT.md): owns the gold Dumgen is scored
-  against, Spec Records, Text Records and classification Rules, and the
-  Authored Inventories of closed-class units.
+  against, Spec Records, Text Records and classification Rules, the Authored
+  Inventories of closed-class units, and each language's classification
+  terms.
 - [Dumrel](./battery/dumrel/CONTEXT.md): defines Reading Knowledge and relation
   algebra.
 - [Dumdict](./battery/dumdict/CONTEXT.md): manages dictionary records over

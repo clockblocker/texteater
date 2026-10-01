@@ -135,3 +135,50 @@ _Avoid_: backlog, review queue
 Where a Spec Record's sentence comes from: Authored for the corpus, or Quoted
 from a work with its author and year.
 _Avoid_: source, which names the ADRs and Rules a record cites
+
+### German classifications
+
+**Modal Verb**:
+A modal such as `können` or `müssen`: a VERB Lexeme, one Lemma whether it
+governs an infinitive or an object. See [ADR 0026].
+_Avoid_: Modal auxiliary, modal AUX
+
+**Auxiliary**:
+A verb serving another verb's grammatical composition, such as `haben` in a
+perfect, `werden` in a passive or causative `lassen`. An AUX Lexeme is one
+such grammatical use with its own Reading; the same verb standing alone is a
+VERB Lexeme. See [ADR 0026]. The AUX Readings are an Authored Inventory
+([ADR 0021]).
+_Avoid_: lone auxiliary, copula AUX, per-form AUX Lemma
+
+**Verbal Participle**:
+A participle in a perfect or a passive, which joins its auxiliary in one VERB
+target. A participle used as an adjective is a Participial Adjective instead.
+See [ADR 0036].
+_Avoid_: state passive, as a verbal construction
+
+**Participial Adjective**:
+A participle used as an adjective: an ADJ Lexeme whether lexicalized or not,
+whose Reading names its verb as Participle Source (Dumrel). See [ADR 0036].
+_Avoid_: productive participle and lexicalized participle, as a Kind contrast
+
+**Free `sich`**:
+The reflexive `sich` as a unit of its own rather than a member of its verb:
+the reflexive's Acc or Dat cell, in reciprocal use too. See [ADR 0044].
+_Avoid_: Reciprocal `sich`, `pronType=Rcp` `sich`
+
+**Standalone `einander`**:
+The invariant reciprocal pronoun `einander`: one Lemma, with case unmarked.
+See [ADR 0044].
+_Avoid_: Case-specific `einander`
+
+**Reciprocal Pronominal Adverb**:
+An ADV Lexeme whose whole form joins a preposition to `einander`, such as
+`miteinander` or `voneinander`. See [ADR 0029].
+_Avoid_: `preposition + einander` PRON, reciprocal PRON compound
+
+[ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
+[ADR 0026]: ../../docs/adr/0026-treat-modals-as-verbs-and-confine-aux-to-grammar-readings.md
+[ADR 0029]: ../../docs/adr/0029-keep-preposition-government-out-of-lemma-identity.md
+[ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
+[ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
