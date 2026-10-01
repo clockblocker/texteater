@@ -35,7 +35,7 @@
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "5cf586fc49528ead"
+				"hash": "b72c043c004f9dc9"
 			}
 		],
 		"references": []

@@ -764,8 +764,8 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/comparability-is-lexical",
 		statement:
-			"An ADV or ADJ Lemma is comparable when Duden, or else DWDS, gives it comparison forms, suppletive ones included: gern → lieber, am liebsten. A form marked colloquial or rare does not count (töter, toter). A participle no dictionary lists as an adjective is not comparable. Every Surface of a comparable Lemma marks Degree, Pos in a citation and in predicative or adverbial use (singt laut). No Surface of a non-comparable Lemma (hier, heute, tot, entzwei) marks Degree. Such a Surface has no inflection, except that an attributive ADJ marks case, gender and number (der tote Mann).",
-		adrs: ["ADR-0042"],
+			"An ADV or ADJ Lemma is comparable when Duden, or else DWDS, gives it comparison forms, suppletive ones included (gern → lieber); forms marked colloquial or rare do not count. A participle no dictionary lists as an adjective is not comparable. Two Duden headwords are two Lemmas, as for entschieden; one headword with mixed senses is one Lemma, comparable if any sense compares. Every Surface of a comparable Lemma marks Degree, Pos in every uncompared use. No Surface of a non-comparable Lemma marks Degree, and it has no inflection, except that an attributive ADJ marks case, gender and number.",
+		adrs: ["ADR-0036", "ADR-0042"],
 		routes: lexeme("ADJ", "ADV"),
 		records: [
 			"de/als-grundform-wird-mild-angegeben",

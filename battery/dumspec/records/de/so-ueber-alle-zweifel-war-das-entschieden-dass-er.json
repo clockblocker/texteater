@@ -245,7 +245,7 @@
 			},
 			{
 				"rule": "de/comparability-is-lexical",
-				"hash": "be68bba1666ed2cc"
+				"hash": "b72c043c004f9dc9"
 			},
 			{
 				"rule": "de/copula-stays-apart",
@@ -604,7 +604,7 @@
 				"kind": "ADJ"
 			},
 			"notes": {
-				"rationale": "entschieden after copular war is the ADJ entschieden with Participle Source entscheiden (de/sein-perfect-or-copula). Duden gives no comparison forms, and DWDS gives entschiedener, am entschiedensten, so the Lemma is comparable and marks Pos (de/comparability-is-lexical). Ruled on #743 (MB-A6, A9) for the sources; open: whether this 'decided' Reading, which does not compare, may override its Lemma's comparability."
+				"rationale": "entschieden after copular war is the ADJ entschieden with Participle Source entscheiden (de/sein-perfect-or-copula). Here it means 'decided, settled', Duden's Partizip headword, which gives no comparison forms. The comparable 'resolute' (entschiedener, am entschiedensten) is Duden's Adjektiv headword, a Lemma of its own. So this Lemma is not comparable, and its predicative Surface marks no Degree (de/comparability-is-lexical, ADR 0036). Ruled on #743 (MB-A6, A9)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -619,7 +619,7 @@
 						"canonicalForm": "entschieden",
 						"coreFeatures": {
 							"abbr": null,
-							"comparable": "Yes",
+							"comparable": null,
 							"numType": null,
 							"variant": null
 						}
@@ -629,12 +629,7 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{

@@ -105,3 +105,17 @@ that says the same is supporting evidence, not a mechanical test. *\*Der Laden
 A bare *Er hat die Augen geschlossen* can mean either; what segmentation
 returns for a sentence that can't decide is
 [#725](https://github.com/clockblocker/texteater/issues/725).
+
+Amended on 2026-10-01: a participial adjective whose spelling has two Duden
+headwords is two ADJ Lemmas, and they may differ in Core comparability
+([ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md)).
+Duden's Adjektiv *entschieden* 'resolute' has comparison forms (*entschiedener*,
+*aufs Entschiedenste*) and is comparable; its Partizip *entschieden* 'decided,
+settled' has none and is not. Both name `entscheiden` as Participle Source. A
+word with one headword and senses that differ in comparing stays one Lemma,
+comparable if any sense compares: *ergriffen* 'grasped' and 'moved' is one
+non-comparable Lemma. The two Readings of one ADJ `gebildet` above follow the
+same clause. A Reading never overrides its Lemma's comparability, because a
+Surface realizes a Lemma, not a Reading, and Dumling could no longer check
+Degree without it. Decided on
+[#743](https://github.com/clockblocker/texteater/issues/743).

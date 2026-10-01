@@ -84,3 +84,12 @@ article paradigm, stay in dumspec.
 - Hebrew is unchanged.
 - Decided in [#659](https://github.com/clockblocker/texteater/issues/659) on
   [#595](https://github.com/clockblocker/texteater/issues/595).
+
+Amended on 2026-10-01: dumspec's `de/comparability-is-lexical` keeps one
+example and leans on this ADR for the rest: *hier*, *heute*, *tot* and
+*entzwei* are not comparable, *singt laut* marks `Pos`, *der tote Mann* is an
+attributive non-comparable ADJ, and a rare or colloquial form (*töter*,
+*toter*) makes nothing comparable. Where one spelling has two Duden headwords
+that differ in comparing, they are two Lemmas
+([ADR 0036](./0036-make-adjectival-german-participles-adj-linked-to-their-verb.md),
+[#743](https://github.com/clockblocker/texteater/issues/743)).
