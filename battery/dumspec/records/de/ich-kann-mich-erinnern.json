@@ -14,73 +14,65 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0026", "ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" }
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/source-data.json",
-			"caseId": "lexical-resolve-contextual-shadows",
 			"memberSegmentIndices": [4, 6],
-			"case": {
-				"input": {
-					"source": "mich erinnern",
-					"markedContext": "Ich kann <TARGET>mich erinnern</TARGET>.",
-					"owner": {
-						"lemmaDescriptor": {
-							"language": "de",
-							"canonicalForm": "sich erinnern",
-							"family": "Lexeme",
-							"kind": "VERB"
-						},
-						"emojiDescription": "🧠"
-					},
-					"segmentation": {
-						"components": ["mich", "erinnern"]
-					}
-				},
-				"idealOutput": [
-					{
-						"language": "de",
-						"canonicalForm": "mich",
-						"family": "Lexeme",
-						"kind": "PRON"
-					},
-					{
-						"language": "de",
-						"canonicalForm": "erinnern",
-						"family": "Lexeme",
-						"kind": "VERB"
-					}
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🧠💭" },
+			"notes": {
+				"rationale": "sich erinnern is inherently reflexive, so mich is a member of the infinitive's target (de/verb-owns-its-scattered-members), with the gold's 'remember' Reading 🧠💭. The modal kann is a VERB of its own. A Lexeme has no Breakdown: its reflexive drill-down is read from model data (ADR 0041), so the two lexical-breakdown cases are dropped (#700)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "mich", "orthography": "Standard" },
+					{ "attested": "erinnern", "orthography": "Standard" }
 				],
-				"explanation": "The case-specific pronoun mich keeps its own Canonical Form mich in the Lexeme shadow, never sich; no component Reading is created."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/source-data.json",
-			"caseId": "lexical-segment-contextual-reflexive",
-			"memberSegmentIndices": [4, 6],
-			"case": {
-				"input": {
-					"source": "mich erinnern",
-					"markedContext": "Ich kann <TARGET>mich erinnern</TARGET>.",
-					"owner": {
-						"lemmaDescriptor": {
-							"language": "de",
-							"canonicalForm": "sich erinnern",
-							"family": "Lexeme",
-							"kind": "VERB"
-						},
-						"emojiDescription": "🧠"
-					}
-				},
-				"idealOutput": {
-					"components": ["mich", "erinnern"]
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "mich erinnern",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sich erinnern",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Acc"
+						}
+					},
+					"surfaceFeatures": null
 				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

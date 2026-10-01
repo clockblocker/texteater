@@ -1,0 +1,150 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"canonicalForm": "in Betracht ziehen",
+		"family": "Locution",
+		"kind": "VERB",
+		"coreFeatures": {}
+	},
+	"sentence": "in Betracht ziehen",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "in" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Betracht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ziehen" }
+	],
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0041"],
+		"rules": [],
+		"references": [
+			{
+				"title": "Duden: Betracht",
+				"url": "https://www.duden.de/rechtschreibung/Betracht",
+				"supports": "The wording, the Locution's Canonical Form"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "The Breakdown reads in literally, as the directional ADP with the accusative that ziehen in takes (ins Vertrauen ziehen)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "in", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"governedCase": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "in",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "in",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "der Betracht, a bare noun with no article, which Duden lists only inside its fixed expressions."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Betracht", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Betracht",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Betracht",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Masc" }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"grundform": true,
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "ziehen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "ziehen",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "ziehen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	]
+}

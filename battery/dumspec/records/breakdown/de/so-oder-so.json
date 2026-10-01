@@ -1,0 +1,114 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"canonicalForm": "so oder so",
+		"family": "Locution",
+		"kind": "ADV",
+		"coreFeatures": { "comparable": null }
+	},
+	"sentence": "so oder so",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "so" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "oder" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "so" }
+	],
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: so",
+				"url": "https://www.dwds.de/wb/so",
+				"supports": "The wording, the Locution's Canonical Form"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "The Breakdown reads so as the ADV so 'thus', with no comparison forms: the idiom's meaning belongs to the Locution."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "so", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "so",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "so",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": { "comparable": null, "pronType": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "oder", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "oder",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "oder",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "so", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "so",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "so",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"coreFeatures": { "comparable": null, "pronType": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	]
+}

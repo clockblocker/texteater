@@ -18,78 +18,68 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/source-data.json",
-			"caseId": "lexical-resolve-collocation-shadows",
-			"memberSegmentIndices": [6, 8, 10],
-			"case": {
-				"input": {
-					"source": "in Betracht ziehen",
-					"markedContext": "Wir sollten das <TARGET>in Betracht ziehen</TARGET>.",
-					"owner": {
-						"lemmaDescriptor": {
-							"language": "de",
-							"canonicalForm": "in Betracht ziehen",
-							"family": "Phraseme",
-							"kind": "Collocation"
-						},
-						"emojiDescription": "🤔"
-					},
-					"segmentation": {
-						"components": ["in", "Betracht", "ziehen"]
-					}
-				},
-				"idealOutput": [
-					{
-						"language": "de",
-						"canonicalForm": "in",
-						"family": "Lexeme",
-						"kind": "ADP"
-					},
-					{
-						"language": "de",
-						"canonicalForm": "Betracht",
-						"family": "Lexeme",
-						"kind": "NOUN"
-					},
-					{
-						"language": "de",
-						"canonicalForm": "ziehen",
-						"family": "Lexeme",
-						"kind": "VERB"
-					}
-				]
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
 			}
-		},
+		],
+		"references": [
+			{
+				"title": "Duden: Betracht",
+				"url": "https://www.duden.de/rechtschreibung/Betracht",
+				"supports": "Target 0, in Betracht ziehen (jemanden, etwas in Betracht ziehen)."
+			}
+		]
+	},
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/source-data.json",
-			"caseId": "lexical-segment-collocation",
 			"memberSegmentIndices": [6, 8, 10],
-			"case": {
-				"input": {
-					"source": "in Betracht ziehen",
-					"markedContext": "Wir sollten das <TARGET>in Betracht ziehen</TARGET>.",
-					"owner": {
-						"lemmaDescriptor": {
-							"language": "de",
-							"canonicalForm": "in Betracht ziehen",
-							"family": "Phraseme",
-							"kind": "Collocation"
-						},
-						"emojiDescription": "🤔"
-					}
-				},
-				"idealOutput": {
-					"components": ["in", "Betracht", "ziehen"]
+			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🤔" },
+			"notes": {
+				"rationale": "in Betracht ziehen 'consider' is a Funktionsverbgefüge (Duden: jemanden, etwas in Betracht ziehen): ziehen only supports Betracht, so it is a Collocation, a Locution VERB over in, Betracht and ziehen (de/funktionsverbgefuege-are-collocations). The Emoji Description 🤔 is the imported gold's. das is its free object and sollten a VERB of its own. Its parts are in its Breakdown Record."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "in", "orthography": "Standard" },
+					{ "attested": "Betracht", "orthography": "Standard" },
+					{ "attested": "ziehen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "in Betracht ziehen",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "in Betracht ziehen",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
 				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

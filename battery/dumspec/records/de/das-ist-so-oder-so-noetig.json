@@ -18,78 +18,56 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/resolution/source-data.json",
-			"caseId": "lexical-resolve-repeated-shadows",
-			"memberSegmentIndices": [4, 6, 8],
-			"case": {
-				"input": {
-					"source": "so oder so",
-					"markedContext": "Das ist <TARGET>so oder so</TARGET> nötig.",
-					"owner": {
-						"lemmaDescriptor": {
-							"language": "de",
-							"canonicalForm": "so oder so",
-							"family": "Phraseme",
-							"kind": "Idiom"
-						},
-						"emojiDescription": "🔁"
-					},
-					"segmentation": {
-						"components": ["so", "oder", "so"]
-					}
-				},
-				"idealOutput": [
-					{
-						"language": "de",
-						"canonicalForm": "so",
-						"family": "Lexeme",
-						"kind": "ADV"
-					},
-					{
-						"language": "de",
-						"canonicalForm": "oder",
-						"family": "Lexeme",
-						"kind": "CCONJ"
-					},
-					{
-						"language": "de",
-						"canonicalForm": "so",
-						"family": "Lexeme",
-						"kind": "ADV"
-					}
-				]
+		"adrs": ["ADR-0039", "ADR-0042"],
+		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
 			}
-		},
+		],
+		"references": [
+			{
+				"title": "DWDS: so",
+				"url": "https://www.dwds.de/wb/so",
+				"supports": "Target 0, so oder so: 'auf diese oder jene Weise' and 'in jedem Fall'."
+			}
+		]
+	},
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexical-breakdown/segmentation/source-data.json",
-			"caseId": "lexical-segment-phraseme-repetition",
 			"memberSegmentIndices": [4, 6, 8],
-			"case": {
-				"input": {
-					"source": "so oder so",
-					"markedContext": "Das ist <TARGET>so oder so</TARGET> nötig.",
-					"owner": {
-						"lemmaDescriptor": {
-							"language": "de",
-							"canonicalForm": "so oder so",
-							"family": "Phraseme",
-							"kind": "Idiom"
-						},
-						"emojiDescription": "🔁"
-					}
-				},
-				"idealOutput": {
-					"components": ["so", "oder", "so"]
+			"route": { "family": "Locution", "kind": "ADV" },
+			"reading": { "emojiDescription": "🔁" },
+			"notes": {
+				"rationale": "so oder so 'in any case' is an established pair (DWDS so: so oder so 'auf diese oder jene Weise' and 'in jedem Fall'); the literal sum gives neither meaning, so it is a Locution ADV (de/idiom), with no comparison forms. The Emoji Description 🔁 is the imported gold's. Its parts are in its Breakdown Record."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "so", "orthography": "Standard" },
+					{ "attested": "oder", "orthography": "Standard" },
+					{ "attested": "so", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "so oder so",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "so oder so",
+						"coreFeatures": { "comparable": null }
+					},
+					"surfaceFeatures": null
 				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }
