@@ -202,6 +202,18 @@ test("the table lists each Lexeme ADP's positions with a case set each", () => {
 		Prep: ["Gen", "Dat"],
 		Post: [],
 	});
+	// Positions follow Duden, the single standard.
+	expect(positions("inkl.")).toEqual(positions("inklusive"));
+	expect(positions("entgegen")).toEqual({ Prep: ["Dat"], Post: ["Dat"] });
+	expect(positions("zugunsten")).toEqual({ Prep: ["Gen"], Post: ["Dat"] });
+	expect(positions("zuungunsten")).toEqual({ Prep: ["Gen"], Post: ["Dat"] });
+	expect(positions("hindurch")).toEqual({ Post: ["Acc"] });
+	expect(positions("betreffend")).toEqual({ Prep: ["Acc"], Post: ["Acc"] });
+	// Postposed eingedenk is Duden's adjective, an Eides statt its own
+	// headword, and gleich's postposed use only grammis's.
+	expect(positions("eingedenk")).toEqual({ Prep: ["Gen"] });
+	expect(positions("statt")).toEqual({ Prep: ["Gen", "Dat"] });
+	expect(positions("gleich")).toEqual({ Prep: ["Dat"] });
 	const wegen = germanAdpositionEntry(adposition("wegen"));
 	if (!wegen) throw Error("wegen unlisted");
 	expect(germanAdpositionAllowedCases(wegen)).toEqual(["Gen", "Dat"]);

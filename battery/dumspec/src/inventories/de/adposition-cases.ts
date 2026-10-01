@@ -84,9 +84,13 @@ const prepOrPost = (
 
 /**
  * The German Lexeme ADPs, keyed by Canonical Form, each with the positions it
- * takes and the cases for each. It covers the standard adpositions, checked
- * against Duden and grammis, the governable prepositions and every adposition
- * Grammatical Resolution produces in its reviewed cases. `preferred` marks
+ * takes and the cases for each. Positions and cases follow Duden, the single
+ * standard; grammis is a secondary source only, so a position or case only
+ * grammis gives is left out. A postposed use Duden files under another
+ * headword, an adjective (`dessen eingedenk`) or `an Eides statt`, is no
+ * position of the preposition. It covers the standard adpositions, the
+ * governable prepositions and every adposition Grammatical Resolution
+ * produces in its reviewed cases. `preferred` marks
  * only a split between the written norm and colloquial or regional use; an
  * elevated or rare second case leaves it null. Case is grammar, not Lemma
  * identity (ADR 0034): no two German ADPs differ by case alone. It is a fact
@@ -105,12 +109,15 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	vor: prep(twoWay),
 	zwischen: prep(twoWay),
 	// Accusative.
-	betreffend: post(only("Acc")), // den Vorfall betreffend.
+	// den Vorfall betreffend, betreffend den Vorfall; Duden's mainly Austrian
+	// genitive before the noun is left out.
+	betreffend: prepOrPost(only("Acc")),
 	bis: prep(only("Acc")),
 	contra: prep(only("Acc")),
 	durch: prepOrPost(only("Acc")), // die ganze Nacht durch.
 	für: prep(only("Acc")),
 	gegen: prep(only("Acc")),
+	hindurch: post(only("Acc")), // den Winter hindurch.
 	je: prep(only("Acc")), // je erwachsenen Teilnehmer.
 	kontra: prep(only("Acc")),
 	ohne: prep(only("Acc")),
@@ -124,7 +131,7 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	aus: prep(only("Dat")),
 	außer: prep(only("Dat")),
 	bei: prep(only("Dat")),
-	entgegen: prep(only("Dat")),
+	entgegen: prepOrPost(only("Dat")), // seltener meinem Vorschlag entgegen.
 	entsprechend: prepOrPost(only("Dat")), // dem Antrag entsprechend.
 	gegenüber: prepOrPost(only("Dat")),
 	gemäß: prepOrPost(only("Dat")),
@@ -161,7 +168,8 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	betreffs: prep(only("Gen")),
 	bezüglich: prep(only("Gen")),
 	diesseits: prep(only("Gen")),
-	eingedenk: prepOrPost(only("Gen")), // eingedenk der Gefahr, der Gefahr eingedenk.
+	// eingedenk seiner Verdienste; postposed eingedenk is Duden's adjective.
+	eingedenk: prep(only("Gen")),
 	halber: post(only("Gen")), // der Ordnung halber.
 	hinsichtlich: prep(only("Gen")),
 	infolge: prep(only("Gen")),
@@ -179,9 +187,9 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	unweit: prep(only("Gen")),
 	vermöge: prep(only("Gen")),
 	vorbehaltlich: prep(only("Gen")),
-	zugunsten: prep(only("Gen")),
+	zugunsten: { Prep: only("Gen"), Post: only("Dat") }, // dem Freund zugunsten.
 	zulasten: prep(only("Gen")),
-	zuungunsten: prep(only("Gen")),
+	zuungunsten: { Prep: only("Gen"), Post: only("Dat") }, // dem Antragsteller zuungunsten.
 	zuzüglich: prep(only("Gen")),
 	zwecks: prep(only("Gen")),
 	// Genitive in the written norm, dative in colloquial or regional use;
@@ -203,7 +211,7 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	einschließlich: { Prep: genitiveOrDative, Post: caseless }, // Sophia einschließlich.
 	exklusive: prep(genitiveOrDative),
 	fern: prep(genitiveOrDative), // Dat rarer.
-	"inkl.": prep(genitiveOrDative),
+	"inkl.": { Prep: genitiveOrDative, Post: caseless }, // Duden: kurz für inklusive.
 	inklusive: { Prep: genitiveOrDative, Post: caseless }, // Porto inklusive.
 	laut: prep(genitiveOrDative),
 	längs: prep(genitiveOrDative),
