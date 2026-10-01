@@ -50,9 +50,9 @@ material), historical name (`Brüssel` is current)
 
 **Governed Preposition**:
 a preposition a Reading lexically selects: a Preposition Slot of the Reading's
-Valency Frame, naming an ADP Lemma and, in German, the case it assigns in
-that construction (`warten`: `auf` + Acc; Hebrew `סמך`: `על`; English
-`depend`: `on`). An adjunct the sentence happens to contain is not one.
+Valency Frame, naming an ADP Lemma and, where its language marks case, the
+case it assigns (`auf` for `warten`, `on` for `depend`). An adjunct the
+sentence happens to contain is not one.
 _Avoid_: govPrep, prepositional object, valency note
 
 **Governor**:
@@ -77,25 +77,6 @@ whether a Reading with a Participle Source means a sense of its verb
 'deceased' is Verbal. A Drifted Reading is not among its verb's participial
 adjectives.
 _Avoid_: lexicalized (lexicalized `gebildet` is still Verbal), etymology
-
-**Plural Pattern**:
-how a German noun forms its plural from its singular: no ending, umlaut only,
-`-e`, umlaut + `-e`, `-er`, umlaut + `-er`, `-(e)n`, `-s`, or another way. It
-is derived from a plural form, never stored: a NOUN Reading's Knowledge stores
-its plural forms (`Pizza`: `Pizzen`, `Pizzas`), or a NoPlural or PluralOnly
-marker. It never splits a Lemma: `Mutter` 👩 `Mütter` and 🔩 `Muttern` are two
-Readings of one Lemma.
-_Avoid_: plural class, declension class (declension covers the singular too)
-
-**Conjugation Class**:
-how a German verb forms its Präteritum, judged on the stem: Strong changes
-the stem with no `-te` (`wog`), Weak adds `-te` to the unchanged stem
-(`wiegte`), Mixed adds `-te` to a changed stem (`brachte`). A separable verb
-is judged by its stem (`aufstehen`: `stand`). A VERB Reading's Knowledge
-stores every class its Präteritum forms attest (`senden`: `sandte`,
-`sendete`). It never splits a Lemma: `wiegen` 'weigh' (`wog`) and 'rock'
-(`wiegte`) are two Readings of one Lemma.
-_Avoid_: verb type, irregular verb, Verbklasse
 
 **Locution Type**:
 whether a Locution's Reading is an Idiom (its meaning is not the sum of its

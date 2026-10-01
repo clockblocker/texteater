@@ -177,8 +177,24 @@ An ADV Lexeme whose whole form joins a preposition to `einander`, such as
 `miteinander` or `voneinander`. See [ADR 0029].
 _Avoid_: `preposition + einander` PRON, reciprocal PRON compound
 
+**Plural Pattern**:
+How a German noun forms its plural from its singular, such as umlaut + `-er`
+in `Haus`, `Häuser`. A NOUN Reading's Knowledge stores its plural forms
+(Dumrel), and each form's pattern is derived from them, never stored. It
+never splits a Lemma: `Mutter` 👩 `Mütter` and 🔩 `Muttern` are two Readings
+of one Lemma. See [ADR 0038].
+_Avoid_: plural class, declension class (declension covers the singular too)
+
+**Conjugation Class**:
+How a German verb forms its Präteritum, judged on the stem: Strong, Weak or
+Mixed. A VERB Reading's Knowledge stores every class its Präteritum forms
+attest (Dumrel). It never splits a Lemma: `wiegen` 'weigh' (`wog`) and 'rock'
+(`wiegte`) are two Readings of one Lemma. See [ADR 0038].
+_Avoid_: verb type, irregular verb, Verbklasse
+
 [ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
 [ADR 0026]: ../../docs/adr/0026-treat-modals-as-verbs-and-confine-aux-to-grammar-readings.md
 [ADR 0029]: ../../docs/adr/0029-keep-preposition-government-out-of-lemma-identity.md
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
+[ADR 0038]: ../../docs/adr/0038-store-german-inflection-classes-as-reading-knowledge.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
