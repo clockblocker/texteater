@@ -2,7 +2,8 @@
 
 tf-demo presents one shared linguistic graph and demo dictionary. Anonymous
 Visitors contribute encounter history but do not partition linguistic identity
-or Knowledge.
+or Knowledge. Each entry links the ADRs that hold the term's precise
+definition, edge cases and examples.
 
 ## Language
 
@@ -11,14 +12,15 @@ defines Presentation, Card, Sheet, Pane, Card Layer, Sheet Stack, Lift, Expand,
 Collapse, Move, Close, and cancellation. tf-demo uses that model in production.
 
 **Library Sheet**:
-The initial Locked Sheet containing the Library.
+The initial Locked Sheet containing the Library. See [tf-demo ADR 0003].
 
 **Text Sheet**:
-A Locked Sheet containing a Text Subject.
+A Locked Sheet containing a Text Subject. See [tf-demo ADR 0003].
 
 **Note Presentation**:
-A Reading, Lemma, Surface, Attestation, Shadow, Resolution, or Resolution Step
-Subject in Card or Sheet form. One element in every form; its Blocks adapt.
+A Subject such as a Reading, a Surface or a Resolution Step, presented as a
+Note in Card or Sheet form. It is one element in every form, and its Blocks
+adapt. See [tf-demo ADR 0006].
 
 **Deck**:
 The Cards dealt for one selection, attached to the Sheet they were dealt from.
@@ -27,72 +29,59 @@ _Avoid_: pile
 
 **Block**:
 One ordered member of a Note's content. It reads the Presentation's form and
-renders accordingly.
+renders accordingly. See [tf-demo ADR 0006].
 
 **Heading Block**:
 The pinned first Block naming the Note's Subject. It is the lift handle in
-every form.
+every form. See [tf-demo ADR 0006].
 
 **Source Contexts Block**:
-The pinned Block listing where the Subject was met, most recent first.
+The pinned Block listing where the Subject was met. See [tf-demo ADR 0006].
 
 **Valency Block**:
-The Block showing a Reading's Lemma with its Valency Frame, such as
-`>passen (auf jN/etw) auf<`. It is computed from the frame at render time and
-never stored as text. A Reading without a frame has no Valency Block. A
-German ADP Reading has no frame; its block renders from dumspec's ADP Case
-Table (`auf etw · Akk: wohin? · Dat: wo?`), and each of its Source Contexts
-shows the case it realized, marking a non-preferred one
-(`Dat · umgangssprachlich`).
+The Block showing a Reading's Lemma with its Valency Frame. A German ADP
+Reading has no frame, and its block renders from dumspec's ADP Case Table
+instead. See [ADR 0034].
 
 **Fusion Block**:
-The Attestation Note Block for a fused word that the Attestation holds a
-piece of, or whose hidden article component it owns. It shows the fused word,
-the words it stands for, and the authored one-liner: `im = in + dem`. Clicking
-`i`, `m` or `Wald` in `im Wald` reaches the same Fusion Block.
+The Attestation Note Block for a fused word that the Attestation holds a piece
+of: the fused word and the words it stands for, such as `im = in + dem`. See
+[ADR 0035].
 
 **Anchor Blocks**:
 The Heading and Source Contexts, which stay visible across every form so the
-Presentation reads as one thing while it changes.
+Presentation reads as one thing while it changes. See [tf-demo ADR 0006].
 _Avoid_: header, card tail content
 
 **Workspace Persistence**:
-The placed Sheet composition and the Card Layer membership needed to return an
-expanded Note are durable browser state. Resting Card Layers and active
-gestures are transient.
+The workspace state that survives a reload: the placed Sheets and the Card
+Layer membership an expanded Note needs to return. See [tf-demo ADR 0003].
 
 **Occurrence Attestation**:
 tf-demo's durable record for one resolved high-level occurrence in one
-Sentence. Its database ID is application identity and is absent from the public
-Dumling Attestation value.
+Sentence. Its database ID is application identity and never enters the public
+Dumling Attestation value. See [tf-demo ADR 0001].
 
 **Attestation Membership**:
-The exclusive link from one Segment, keyed by its character offset in the
-Sentence, to at most one Occurrence Attestation. It carries the member's
-orthography: `Standard`, `Typo`, `Fused` or `Shorthand`. A `Fused` membership
-also stores its Fusion and the component the Segment realizes. The `m` of
-`im` is `Fused` in `Wald`'s Attestation, and `'ne` is `Shorthand` in
-`Frage`'s. Ordered memberships reconstruct Attestation members, each attested
-as its Segment's own letters.
+The exclusive link from one Segment to at most one Occurrence Attestation,
+carrying the member's orthography. Ordered memberships reconstruct the
+Attestation's members. See [tf-demo ADR 0001], [ADR 0035] and
+[Dumgen ADR 0004].
 _Avoid_: Segment index link
 
 **Stored Segment**:
-One Segment of a stored Sentence. Every German and English Sentence stores a
-fused word as its pieces, one Segment per component, whether or not intake
-analysed it: `im` is `i` (standing for `in`) and `m` (standing for `dem`), and
-`I'll` is `I` and `'ll`. A stored Sentence
-that holds a whole fused word is broken, and tf-demo refuses it.
+One Segment of a stored Sentence. tf-demo stores a fused word as its pieces,
+one Segment per component, and refuses a stored Sentence that holds a whole
+fused word. See [ADR 0035].
 _Avoid_: token, word
 
 **Sentence Analysis**:
-What the legacy intake (Dumgen ADR 0006) produced for one German Sentence,
-stored with it and read at selection time: Lexeme Targets and Phraseme
-Targets over the Stored Segments. A click selects the largest resolved unit
-at the clicked Segment. It is a hint for resolution, not linguistic identity,
-and a Segment it leaves unresolved is classified at click time. Dumgen ADR
-0007 replaces it with biggest units whose route segmentation chose, so a
-click never classifies; tf-demo keeps the legacy form until it is rebuilt
-after the segmentation rewrite (#701).
+What the legacy intake produced for one German Sentence, stored with it and
+read at selection time so that a click selects the largest resolved unit at
+the clicked Segment. It is a hint for resolution, not linguistic identity.
+[Dumgen ADR 0007] replaces it with biggest units whose route segmentation
+chose, so a click never classifies; tf-demo keeps the legacy form until its
+rebuild after the segmentation rewrite. See [Dumgen ADR 0006].
 _Avoid_: precomputed resolution, Unit map, Analysis Target list
 
 **Shared Demo Dictionary**:
@@ -108,13 +97,13 @@ An application-owned aggregate of equivalent Catalog Misses. It is diagnostic
 evidence, not linguistic identity or Visitor history.
 
 **Reviewed Grammatical Alternative**:
-A reviewed authored Reading selected by varying named Core Features of another
-reviewed member. The selected Reading can be opened before it has been
-encountered in a Text.
+A reviewed authored Reading reached by Grammatical Navigation from another
+reviewed member. It can be opened before any Text has attested it. See
+[ADR 0019].
 
 **Unit Reading**:
-A Reading whose Lemma family is Lexeme, Locution, Saying, or Morpheme. The grouping
-adds no identity.
+A Reading whose Lemma family is Lexeme, Locution, Saying, or Morpheme. The
+grouping adds no identity.
 
 **Reading Note**:
 The learner-facing Note for one Unit Reading, combining its Knowledge, Lemma,
@@ -126,39 +115,33 @@ a Reading Note but remains separate from the Reading's shared Knowledge.
 _Avoid_: User Note, Knowledge Note
 
 **Source Context**:
-A projection of one Occurrence Attestation inside its source Sentence, whether
-that Sentence belongs to a Visitor-submitted Text or to a Definition Text. Its
-return locator and highlighting add no linguistic identity. A Reading Note
-includes it only when the current Visitor has encountered one of the
-occurrence's member Segments, and never includes the Reading's own Definition
-Text.
+A projection of one Occurrence Attestation inside its source Sentence, from a
+Visitor-submitted Text or a Definition Text. It adds no linguistic identity.
+A Reading Note shows only those the current Visitor has encountered. See
+[tf-demo ADR 0004] and [tf-demo ADR 0005].
 _Avoid_: clicked context, Reading identity evidence
 
 **Definition Text**:
 The hidden Text that holds one Reading's Knowledge definition as a single
-Sentence so its Segments can be selected. At most one is live per Reading; a
-Corrected or Retracted definition strips and replaces it. It is never listed
-in the Library.
+Sentence so its Segments can be selected. It is never listed in the Library.
+See [tf-demo ADR 0005].
 _Avoid_: definition sentence row, synthetic text
 
 **Definition Focus**:
 The part of a Reading Note target that lands on the Definition block and
 lights the members of one occurrence inside it. It is presentation state and
-adds no identity.
+adds no identity. See [tf-demo ADR 0005].
 
 **Lemma Note**:
-A projection of one Lemma and its Readings. A VERB's Lemma Note also lists
-the Readings that name it as their Participle Source with a Verbal meaning.
-It adds no identity beyond the Lemma and Reading records it presents.
+A projection of one Lemma and its Readings. A VERB's Lemma Note also lists the
+Readings that name it as their Participle Source. It adds no identity beyond
+the Lemma and Reading records it presents. See [ADR 0036].
 
 **Surface Note**:
 A projection of one normalized orthographic form in one language, aggregating
-its typed Lemma analyses without assigning the Note an outer Family or Kind.
-A German noun's header shows the definite article of its Lemma's gender, so
-the learner remembers the gender: `der Wald`. A proper noun cited with its
-article takes it from its Core `article`: Surface `Schweiz` (Dat, Sing) reads
-`der Schweiz`. An occurrence shows the article members it attests. English
-nouns display no article.
+its typed Lemma analyses without assigning the Note an outer Family or Kind. A
+German noun's header shows its article so the learner remembers the gender.
+See [ADR 0040].
 
 **Crossroad Note**:
 A projection of one Spelling Crossroad: every Reading whose Lemma's Canonical
@@ -180,18 +163,18 @@ turn that Shadow into a provisional Reading.
 
 **Visitor**:
 A stable anonymous interaction identity that owns Visitor Encounter history
-and Personal Annotations.
+and Personal Annotations. See [tf-demo ADR 0002].
 _Avoid_: Learner, User, account
 
 **Segment Selection**:
 An ephemeral Visitor command that presents a stored route or starts one
-Resolution Session.
+Resolution Session. See [tf-demo ADR 0002].
 _Avoid_: Click record, Resolution
 
 **Segment Resolution State**:
-The shared current outcome for an unattested Segment: `Active`, `Unresolved`,
-or `PermanentFailure`. A Visitor sees it only after encountering that Segment.
-Committed Attestation Membership replaces and clears it.
+The shared current outcome for an unattested Segment. A Visitor sees it only
+after encountering that Segment, and committed Attestation Membership
+replaces it. See [tf-demo ADR 0004].
 _Avoid_: Visitor status, Attestation state
 
 **Resolution Step Note**:
@@ -200,15 +183,31 @@ converges to the canonical Note subject.
 
 **Visitor Encounter**:
 The single durable association of one Visitor with one Segment after its first
-selection, carrying its Text and Sentence locator. Later selections reuse it;
-an occurrence is encountered when any of its member Segments was encountered.
+selection. An occurrence is encountered when any of its member Segments was.
+See [tf-demo ADR 0002] and [tf-demo ADR 0004].
 
 **Membership Conflict**:
 A rejected occurrence proposal that overlaps a committed Occurrence
-Attestation without matching all and only its members.
+Attestation without matching all and only its members. See
+[tf-demo ADR 0001].
 
 **Analysis Stripping**:
-Removal of derived analysis, including each Sentence Analysis, for the Texts in
-scope while preserving those Texts and their Sentences. Apart from full reset, it is the only operation that ends
-Occurrence Attestations and memberships. Stripping every analysis scopes the
-Visitor Texts; a Definition Text is stripped only with the Reading it defines.
+Removal of derived analysis for the Texts in scope while preserving those
+Texts and their Sentences. Apart from full reset, it is the only operation
+that ends Occurrence Attestations. See [tf-demo ADR 0001] and
+[tf-demo ADR 0005].
+
+[ADR 0019]: ../../docs/adr/0019-select-grammatical-alternatives-from-reviewed-members.md
+[ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
+[ADR 0035]: ../../docs/adr/0035-attest-articles-and-fused-words-segment-by-segment.md
+[ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
+[ADR 0040]: ../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md
+[Dumgen ADR 0004]: ../../battery/dumgen/docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
+[Dumgen ADR 0006]: ../../battery/dumgen/docs/adr/0006-segment-in-two-layers-lexeme-targets-and-phraseme-targets.md
+[Dumgen ADR 0007]: ../../battery/dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
+[tf-demo ADR 0001]: ./docs/adr/0001-persist-occurrence-attestations-by-segment-membership.md
+[tf-demo ADR 0002]: ./docs/adr/0002-persist-one-visitor-encounter-per-segment.md
+[tf-demo ADR 0003]: ./docs/adr/0003-make-the-workspace-own-navigation.md
+[tf-demo ADR 0004]: ./docs/adr/0004-share-segment-resolution-state-behind-visitor-encounters.md
+[tf-demo ADR 0005]: ./docs/adr/0005-materialize-definitions-as-hidden-definition-texts.md
+[tf-demo ADR 0006]: ./docs/adr/0006-render-a-note-presentation-as-one-element-of-blocks.md
