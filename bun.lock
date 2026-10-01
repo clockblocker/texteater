@@ -179,6 +179,7 @@
         "common-utils": "workspace:^",
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
+        "dumspec": "workspace:^",
         "dumval": "workspace:^",
         "effect": "3.22.1",
         "zod": "^4.4.0",
