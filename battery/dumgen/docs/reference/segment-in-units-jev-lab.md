@@ -28,6 +28,7 @@ bun run segment-in-units-lab report --run <runId> [--policy <p>] [--subset <s>] 
 bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:policy] \
   [--subset <s>] [--noise <noiseRunId>] [--record [--verdict "<text>"]]
 bun run segment-in-units-lab noise --run <runId> [--reps 3] [--offset 1000]
+bun run segment-in-units-lab sweep --run <runId> [--policy <p>] [--replay <runId>[:policy]]
 bun run segment-in-units-lab ledger [--table]
 ```
 
@@ -42,6 +43,11 @@ bun run segment-in-units-lab ledger [--table]
 - `--offline` answers from the cache only. A cache miss becomes a case
   error. `--token-budget` moves the ledger's stop line in fresh jev input
   tokens.
+- The `reference` arm takes its resolver floors as options (`--opt
+  expression=0.6`; `floorsOf` in `arms/reference.ts`). The
+  `reference-floors` arm sweeps them from the same cached answers, one
+  policy per setting (`--opt grid=single|combined`), and `sweep` reads
+  every policy of such a run against its baseline (#762).
 
 ## Artifacts
 

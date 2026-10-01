@@ -85,10 +85,15 @@ export type SlotLink = {
 	readonly kind: SlotKind;
 };
 
-/** Each piece's best slot answer: the kind whose best host has the highest share. */
+/**
+ * Each piece's best slot answer: the kind whose best host has the highest
+ * share. A host counts only when its share beats `none`, a satellite's by
+ * more than `satelliteMargin` (#762 sweeps it; v1 to v3 use 0).
+ */
 export function slotLinks(
 	slots: readonly Slot[],
 	answers: Answers,
+	satelliteMargin = 0,
 ): SlotLink[] {
 	const best = new Map<number, SlotLink>();
 	for (const slot of slots) {
@@ -100,7 +105,8 @@ export function slotLinks(
 		);
 		const top = argmax(hosts);
 		const none = answer.probabilities.none ?? 0;
-		if (!top.key || top.share <= none) continue;
+		const margin = slot.kind === "idiom" ? 0 : satelliteMargin;
+		if (!top.key || top.share <= none + margin) continue;
 		const link = {
 			from: slot.piece.id,
 			to: Number(top.key.slice(1)),

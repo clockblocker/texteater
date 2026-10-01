@@ -18,6 +18,12 @@
  * Replaying the reference run reproduces its cached outputs exactly. The
  * AUX inventory is pinned to the one dumspec authored when that run was
  * made: causative `lassen` (aecec098) came later and changes v3's request.
+ *
+ * The resolver's floors are parameters (#762), `referenceFloors` by
+ * default; `--opt` sets one (`--opt expression=0.6`). No floor changes a
+ * request nomination or the historical route batches send, so a setting
+ * reads the same cached answers; only groups no batch asked need a request
+ * of their own.
  */
 import { authoredRealizations } from "dumspec";
 import type { Questions } from "promptsmith/typesafe";
@@ -34,12 +40,14 @@ import {
 	type Groups,
 	type Membership,
 	type Nomination,
+	type Routed,
 	runStages,
 	type Stages,
 } from "../../lab/stages.js";
 import {
 	type Arm,
 	type ArmContext,
+	type ArmOptions,
 	judgeRoutes,
 	type RouteJudgment,
 	readRoutes,
@@ -62,7 +70,7 @@ import {
 } from "../closed-class.js";
 import { groupKey, outputOf } from "../partition.js";
 import { allRoutes, type RouteKey, routeCriteria } from "../routes.js";
-import { slotId } from "./candidates.js";
+import { slotId, slotLinks } from "./candidates.js";
 import {
 	type AssembledEdge,
 	type AssemblyInput,
@@ -71,6 +79,7 @@ import {
 	type CandidatesCore,
 	candidatesCore,
 	type Family,
+	oneSatellitePerHost,
 	type Policy,
 	policies,
 	policyInput,
@@ -113,11 +122,86 @@ export function isReferenceAuxiliary(text: string): boolean {
 
 const full07 = policies["full@0.7"] as Policy;
 
+/**
+ * Where the resolver turns a judgment into a supported connection. The
+ * historical route batches keep `full@0.7` and the reference's own values
+ * whatever the setting, so their requests stay cache hits.
+ */
+export type ReferenceFloors = {
+	/** A satellite's top host share (article, particle, auxiliary, reflexive, expletive es, governed preposition). */
+	readonly satellite: number;
+	/** How far a satellite's top host share must exceed `none`'s. */
+	readonly margin: number;
+	/** An idiom host's share, v3's and step 0's re-asked one. */
+	readonly idiom: number;
+	/** An expression pair's Noul. */
+	readonly expression: number;
+	/** The fixedness Noul both pieces of an expression pair need. */
+	readonly fixed: number;
+	/** A Saying span's whole + fragment share. */
+	readonly saying: number;
+};
+
+/** The reference run's floors. */
+export const referenceFloors: ReferenceFloors = {
+	satellite: full07.satellite,
+	margin: 0,
+	idiom: full07.idiom ?? 0.7,
+	expression: full07.expression ?? 0.7,
+	fixed: 0.5,
+	saying: 0.5,
+};
+
+export const floorNames = Object.keys(
+	referenceFloors,
+) as readonly (keyof ReferenceFloors)[];
+
+/** The floors `--opt` sets, the reference's own for the rest. */
+export function floorsOf(options: ArmOptions): ReferenceFloors {
+	const floors: Record<string, number> = { ...referenceFloors };
+	for (const name of floorNames) {
+		const value = options[name];
+		if (value === undefined) continue;
+		const number = Number(value);
+		if (!Number.isFinite(number))
+			throw Error(`--opt ${name}=${value} is not a number`);
+		floors[name] = number;
+	}
+	return floors as ReferenceFloors;
+}
+
+/**
+ * A setting's policy name: the floors it moves (`expression=0.6,fixed=0.4`),
+ * or the reference policy when it moves none.
+ */
+export function floorsKey(floors: ReferenceFloors): string {
+	const moved = floorNames.filter(
+		(name) => floors[name] !== referenceFloors[name],
+	);
+	return moved.length === 0
+		? referencePolicy
+		: moved.map((name) => `${name}=${floors[name]}`).join(",");
+}
+
 /** What v3's requests and the `final` request answered. */
 export type ReferenceEvidence = {
 	readonly core: CandidatesCore;
 	readonly final: Answers;
 };
+
+/** The core as a setting reads it: satellite hosts re-read under its margin. */
+function coreUnder(
+	core: CandidatesCore,
+	floors: ReferenceFloors,
+): CandidatesCore {
+	if (floors.margin === referenceFloors.margin) return core;
+	return {
+		...core,
+		slotAnswers: oneSatellitePerHost(
+			slotLinks(core.slots, core.first, floors.margin),
+		),
+	};
+}
 
 export type ReferenceDetail = {
 	readonly familyOf: (group: readonly number[]) => Family;
@@ -139,10 +223,11 @@ function hostShares(answer: Extract<Answer, { type: "choice" }>) {
 
 /**
  * Every connection v3's requests and the `final` request judged, with the
- * reference's own floor deciding `supported`, and code's rule connections.
+ * floors deciding `supported`, and code's rule connections.
  */
 export function referenceConnections(
 	evidence: ReferenceEvidence,
+	floors: ReferenceFloors = referenceFloors,
 ): Connection[] {
 	const { core, final } = evidence;
 	const { sentence } = core;
@@ -158,6 +243,7 @@ export function referenceConnections(
 		question: string,
 		answer: Extract<Answer, { type: "choice" }>,
 		floor: number,
+		margin: number,
 	) => {
 		const { hosts, top, none } = hostShares(answer);
 		for (const [key, share] of hosts) {
@@ -169,24 +255,34 @@ export function referenceConnections(
 				source: "judged",
 				question,
 				probability: share,
-				supported: key === top.key && share > none && share >= floor,
+				supported:
+					key === top.key && share > none + margin && share >= floor,
 			});
 		}
 	};
 	for (const slot of core.slots) {
 		if (slot.kind === "idiom" && reasked.has(slot.piece.id)) continue;
 		const question = slotId(slot);
+		const idiom = slot.kind === "idiom";
 		hostConnections(
 			slot.kind,
 			slot.piece.id,
 			question,
 			choiceOf(core.first, question),
-			slot.kind === "idiom" ? (full07.idiom ?? 0.7) : full07.satellite,
+			idiom ? floors.idiom : floors.satellite,
+			idiom ? 0 : floors.margin,
 		);
 	}
 	for (const id of reasked) {
 		const question = `s4_idiom_${id}`;
-		hostConnections("idiom", id, question, choiceOf(final, question), 0.7);
+		hostConnections(
+			"idiom",
+			id,
+			question,
+			choiceOf(final, question),
+			floors.idiom,
+			0,
+		);
 	}
 	for (const pair of core.pairs) {
 		const question = `c_${pair.left.id}_${pair.right.id}`;
@@ -234,9 +330,9 @@ export function referenceConnections(
 			question,
 			probability: link.probability,
 			supported:
-				link.probability >= (full07.expression ?? 0.7) &&
-				(core.fixed.get(link.left) ?? 0) >= 0.5 &&
-				(core.fixed.get(link.right) ?? 0) >= 0.5,
+				link.probability >= floors.expression &&
+				(core.fixed.get(link.left) ?? 0) >= floors.fixed &&
+				(core.fixed.get(link.right) ?? 0) >= floors.fixed,
 		});
 	}
 	for (const span of sayingSpans(sentence)) {
@@ -252,7 +348,8 @@ export function referenceConnections(
 			source: "judged",
 			question,
 			probability: score,
-			supported: score >= 0.5 && score > (probabilities.plus ?? 0),
+			supported:
+				score >= floors.saying && score > (probabilities.plus ?? 0),
 		});
 	}
 	const rule = (
@@ -305,22 +402,40 @@ export function referenceConnections(
 	return connections;
 }
 
-/** The assembly input of `step0+saying`: step 0 over v3's `full@0.7`, Sayings from the Choice. */
-function referenceInput(evidence: ReferenceEvidence): {
+/**
+ * The assembly input of `step0+saying`: step 0 over v3's `full@0.7`,
+ * Sayings from the Choice, each under the setting's floors.
+ */
+function referenceInput(
+	evidence: ReferenceEvidence,
+	floors: ReferenceFloors,
+): {
 	readonly input: AssemblyInput;
 	readonly ranges: readonly (readonly number[])[];
 } {
-	const { core, final } = evidence;
+	const { final } = evidence;
+	const core = coreUnder(evidence.core, floors);
 	const { input, ranges } = stepZeroInput(
 		core,
-		policyInput(core, full07),
+		policyInput(core, {
+			...full07,
+			satellite: floors.satellite,
+			idiom: floors.idiom,
+			expression: floors.expression,
+			fixed: floors.fixed,
+		}),
 		final,
-		0.7,
+		floors.idiom,
 	);
 	return {
 		input: {
 			...input,
-			sayings: polishedSayings(core.sentence, final, 0.5, false),
+			sayings: polishedSayings(
+				core.sentence,
+				final,
+				floors.saying,
+				false,
+			),
 		},
 		ranges,
 	};
@@ -461,10 +576,11 @@ const ask = (
 		calls: context.calls,
 	});
 
-async function nominate(
+/** v3's two requests and the `final` request: what every setting reads. */
+export async function referenceEvidence(
 	input: Parameters<Arm["run"]>[0],
 	context: ArmContext,
-): Promise<Nomination<ReferenceEvidence>> {
+): Promise<ReferenceEvidence> {
 	const core = await candidatesCore(
 		input,
 		v3Context(context),
@@ -474,10 +590,17 @@ async function nominate(
 		...stepZeroQuestions(core),
 		...sayingQuestions(core),
 	});
-	const evidence = { core, final };
-	const connections = referenceConnections(evidence);
+	return { core, final };
+}
+
+/** The connections of the evidence, `supported` under the floors. */
+export function nominationOf(
+	evidence: ReferenceEvidence,
+	floors: ReferenceFloors = referenceFloors,
+): Nomination<ReferenceEvidence> {
+	const connections = referenceConnections(evidence, floors);
 	return {
-		pieces: core.sentence.pieces.map((piece) => piece.id),
+		pieces: evidence.core.sentence.pieces.map((piece) => piece.id),
 		connections,
 		judgments: judgmentsOf(evidence, connections),
 		evidence,
@@ -486,10 +609,15 @@ async function nominate(
 
 export function resolveReference(
 	nomination: Nomination<ReferenceEvidence>,
+	floors: ReferenceFloors = referenceFloors,
 ): Membership<ReferenceDetail> {
 	const { core } = nomination.evidence;
-	const { input, ranges } = referenceInput(nomination.evidence);
-	const built = assemble(core.sentence, articleHosts(core), input);
+	const { input, ranges } = referenceInput(nomination.evidence, floors);
+	const built = assemble(
+		core.sentence,
+		articleHosts(coreUnder(core, floors)),
+		input,
+	);
 	const rangeKeys = new Set(ranges.map((range) => groupKey(range)));
 	return {
 		partition: built.partition,
@@ -549,12 +677,27 @@ function closedQuestions(core: CandidatesCore): Questions {
 	return questions;
 }
 
-async function routeReference(
-	nomination: Nomination<ReferenceEvidence>,
-	membership: Membership<ReferenceDetail>,
+type Routes = ReturnType<typeof readRoutes>;
+
+/**
+ * The route requests of the reference run, which no floor changes: v3's
+ * route request over its policies' groups, `route2` over the groups the
+ * historical policies added and the abbreviations, and closed-class
+ * identity.
+ */
+export type ReferenceRouteAnswers = {
+	/** Every group the historical batches asked about. */
+	readonly asked: ReadonlySet<string>;
+	readonly routes: Routes;
+	readonly route2: Answers;
+	readonly closed: Answers;
+};
+
+export async function askReferenceRoutes(
+	evidence: ReferenceEvidence,
 	context: ArmContext,
-) {
-	const { core } = nomination.evidence;
+): Promise<ReferenceRouteAnswers> {
+	const { core } = evidence;
 	const { sentence } = core;
 	const articleOf = articleHosts(core);
 	const v3Partitions = Object.values(policies).map(
@@ -569,7 +712,7 @@ async function routeReference(
 	const v3Groups = new Set(
 		v3Partitions.flatMap((partition) => partition.map(groupKey)),
 	);
-	const fresh = historicalFreshGroups(nomination.evidence, v3Groups);
+	const fresh = historicalFreshGroups(evidence, v3Groups);
 	const abbreviations: Questions = {};
 	for (const piece of sentence.pieces.filter(isAbbreviationPiece))
 		abbreviations[`ra_${piece.id}`] = choice(
@@ -582,36 +725,48 @@ async function routeReference(
 		...abbreviations,
 	});
 	const freshRoutes = readRoutes(sentence, freshGroups, route2);
-	// Groups of another resolver that no historical batch asked about.
-	const unasked = membership.partition.filter(
-		(group) =>
-			!v3Groups.has(groupKey(group)) && !fresh.has(groupKey(group)),
-	);
-	const extraRoutes = readRoutes(
-		sentence,
-		unasked,
-		await ask(
-			core,
-			context,
-			"route-extra",
-			routeQuestions(sentence, unasked, core.ref, v3Context(context)),
-		),
-	);
-	const closedAnswers = await ask(
-		core,
-		context,
-		"closed",
-		closedQuestions(core),
-	);
+	const closed = await ask(core, context, "closed", closedQuestions(core));
+	return {
+		asked: new Set([...v3Groups, ...fresh.keys()]),
+		routes: {
+			open: new Map([...v3Routes.open, ...freshRoutes.open]),
+			identity: new Map([...v3Routes.identity, ...freshRoutes.identity]),
+			distributions: new Map([
+				...v3Routes.distributions,
+				...freshRoutes.distributions,
+			]),
+		},
+		route2,
+		closed,
+	};
+}
+
+/** The groups of a partition no historical batch asked about. */
+export const unaskedGroups = (
+	answers: ReferenceRouteAnswers,
+	partition: Groups,
+): Groups => partition.filter((group) => !answers.asked.has(groupKey(group)));
+
+/**
+ * Routes a membership from the route answers, plus `extra`, the answers
+ * for the groups no historical batch asked about. A group without either
+ * routes `Unresolved`.
+ */
+export function routeReferenceWith(
+	nomination: Nomination<ReferenceEvidence>,
+	membership: Membership<ReferenceDetail>,
+	answers: ReferenceRouteAnswers,
+	extra?: Routes,
+): Routed {
+	const { sentence } = nomination.evidence.core;
+	const { route2, closed: closedAnswers } = answers;
 	const judged = new Map<string, RouteJudgment>([
-		...v3Routes.identity,
-		...freshRoutes.identity,
-		...extraRoutes.identity,
+		...answers.routes.identity,
+		...(extra?.identity ?? []),
 	]);
 	const distributions = new Map([
-		...v3Routes.distributions,
-		...freshRoutes.distributions,
-		...extraRoutes.distributions,
+		...answers.routes.distributions,
+		...(extra?.distributions ?? []),
 	]);
 	const jevRoute = (group: readonly number[]): RouteKey => {
 		const [only] = group;
@@ -659,22 +814,63 @@ async function routeReference(
 	};
 }
 
-export const referenceStages: Stages<ReferenceEvidence, ReferenceDetail> = {
-	nominate,
-	resolve: resolveReference,
-	route: routeReference,
-};
+/** Routing that asks a `route-extra` request for the groups no historical batch asked about. */
+async function routeReference(
+	nomination: Nomination<ReferenceEvidence>,
+	membership: Membership<ReferenceDetail>,
+	context: ArmContext,
+): Promise<Routed> {
+	const { core } = nomination.evidence;
+	const answers = await askReferenceRoutes(nomination.evidence, context);
+	const unasked = unaskedGroups(answers, membership.partition);
+	const extra = readRoutes(
+		core.sentence,
+		unasked,
+		await ask(
+			core,
+			context,
+			"route-extra",
+			routeQuestions(
+				core.sentence,
+				unasked,
+				core.ref,
+				v3Context(context),
+			),
+		),
+	);
+	return routeReferenceWith(nomination, membership, answers, extra);
+}
 
-/** Replaying or re-running the reference through the lab. */
+/** The reference's stages under a setting of its floors. */
+export function referenceStagesUnder(
+	floors: ReferenceFloors,
+): Stages<ReferenceEvidence, ReferenceDetail> {
+	return {
+		nominate: async (input, context) =>
+			nominationOf(await referenceEvidence(input, context), floors),
+		resolve: (nomination) => resolveReference(nomination, floors),
+		route: routeReference,
+	};
+}
+
+export const referenceStages = referenceStagesUnder(referenceFloors);
+
+/**
+ * Replaying or re-running the reference through the lab; `--opt` moves its
+ * floors, and the policy is named after the floors moved.
+ */
 export const referenceArm: Arm = {
 	id: "reference",
 	summary:
 		"The #755 candidate reference (candidates4 final=1 closed=1, step0+saying+closed) behind nomination, membership and routing stages",
 	async run(input, context) {
-		const { output } = await runStages(referenceStages, input, context);
-		return {
-			primary: referencePolicy,
-			outputs: { [referencePolicy]: output },
-		};
+		const floors = floorsOf(context.options);
+		const { output } = await runStages(
+			referenceStagesUnder(floors),
+			input,
+			context,
+		);
+		const policy = floorsKey(floors);
+		return { primary: policy, outputs: { [policy]: output } };
 	},
 };

@@ -10,6 +10,7 @@ import { ownershipArm } from "./ownership.js";
 import { anchoredArm, pairwiseArm } from "./pairs.js";
 import { proposalsArm } from "./proposals.js";
 import { referenceArm } from "./reference.js";
+import { referenceFloorsArm } from "./reference-floors.js";
 
 export const arms: Readonly<Record<string, Arm>> = Object.fromEntries(
 	[
@@ -25,6 +26,7 @@ export const arms: Readonly<Record<string, Arm>> = Object.fromEntries(
 		candidates2Arm,
 		candidates4Arm,
 		referenceArm,
+		referenceFloorsArm,
 		lunaArm,
 	].map((arm) => [arm.id, arm]),
 );

@@ -160,6 +160,8 @@ export type Policy = {
 	readonly expression: number | null;
 	readonly saying: number | null;
 	readonly absorb: boolean;
+	/** The fixedness both pieces of an expression pair need; 0.5 unless set (#762 sweeps it). */
+	readonly fixed?: number;
 };
 
 export const policies: Readonly<Record<string, Policy>> = {
@@ -458,12 +460,13 @@ export function policyInput(
 			if (link.kind === "idiom" && link.share >= floor)
 				expression.push([link.from, link.to]);
 	}
+	const fixed = policy.fixed ?? 0.5;
 	if (policy.expression !== null)
 		for (const link of core.links)
 			if (
 				link.probability >= policy.expression &&
-				(core.fixed.get(link.left) ?? 0) >= 0.5 &&
-				(core.fixed.get(link.right) ?? 0) >= 0.5
+				(core.fixed.get(link.left) ?? 0) >= fixed &&
+				(core.fixed.get(link.right) ?? 0) >= fixed
 			)
 				expression.push([link.left, link.right]);
 	return {

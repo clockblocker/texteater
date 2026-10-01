@@ -10,6 +10,7 @@
  *   bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:policy]
  *       [--noise <noiseRunId>] [--record [--verdict "<text>"]]
  *   bun run segment-in-units-lab noise --run <runId> [--reps 3] [--offset 1000]
+ *   bun run segment-in-units-lab sweep --run <runId> [--policy <baseline>] [--replay <runId>[:policy]]
  *   bun run segment-in-units-lab ledger [--table]
  *
  * Frozen sets, raw runs and the answer cache live under
@@ -42,6 +43,7 @@ import {
 	readManifests,
 	readOutcomes,
 	readSummary,
+	runDirectory,
 	summaryPath,
 	writeManifest,
 	writeNoise,
@@ -105,6 +107,7 @@ import {
 	runArm,
 	saveLabRun,
 } from "../src/segment-in-units/lab/run.js";
+import { sweepRows, sweepTable } from "../src/segment-in-units/lab/sweep.js";
 import {
 	type FocusIterationRow,
 	focusIterationTable,
@@ -155,6 +158,7 @@ const { positionals, values } = parseArgs({
 		"token-budget": { type: "string" },
 		offset: { type: "string" },
 		noise: { type: "string" },
+		replay: { type: "string" },
 		record: { type: "boolean", default: false },
 		verdict: { type: "string" },
 		table: { type: "boolean", default: false },
@@ -951,6 +955,93 @@ async function compareCases(
 	}
 }
 
+/**
+ * Reads every policy of one run against a baseline policy (#762): the
+ * sweep table, written beside the run's evidence. `--replay` also counts
+ * the case-repetitions whose baseline output equals another run's.
+ */
+async function sweep() {
+	const runId = values.run ?? "";
+	const labRun = await loadLabRun(labRoot, runId);
+	const set = await loadSet(labRoot, labRun.set as SetName);
+	const focus = focusOf({ name: labRun.set, hash: labRun.setHash });
+	if (!focus)
+		throw Error(
+			`${runId} ran on ${labRun.set}@${labRun.setHash}, not the set the membership focus set was taken from`,
+		);
+	const cases = plainCases(set.cases);
+	const baseline = values.policy ?? primaryOf(labRun);
+	const policies = policiesOf(labRun);
+	const unrouted = Object.fromEntries(
+		policies.map((policy) => [
+			policy,
+			labRun.cases.reduce(
+				(total, caseRun) =>
+					total +
+					caseRun.repetitions.reduce(
+						(sum, repetition) =>
+							sum +
+							(repetition.outputs?.[policy]?.units.filter(
+								(unit) => unit.route === "Unresolved",
+							).length ?? 0),
+						0,
+					),
+				0,
+			),
+		]),
+	);
+	const rows = sweepRows({
+		rows: outcomesOf(labRun, cases),
+		summaries: policies.map((policy) =>
+			summarizePolicy(labRun, cases, policy),
+		),
+		baseline,
+		focus,
+		unrouted,
+	});
+	let replay:
+		| {
+				readonly against: string;
+				readonly identical: number;
+				readonly total: number;
+		  }
+		| undefined;
+	if (values.replay) {
+		const [againstId = "", againstPolicy] = values.replay.split(":");
+		const against = await loadLabRun(labRoot, againstId);
+		const policy = againstPolicy ?? primaryOf(against);
+		const recorded = new Map(
+			against.cases.map((entry) => [entry.id, entry]),
+		);
+		let identical = 0;
+		let total = 0;
+		for (const caseRun of labRun.cases)
+			for (const [index, repetition] of caseRun.repetitions.entries()) {
+				total++;
+				const other = recorded.get(caseRun.id)?.repetitions[index];
+				const output = repetition.outputs?.[baseline];
+				if (
+					output &&
+					stableJson(output) === stableJson(other?.outputs?.[policy])
+				)
+					identical++;
+			}
+		replay = { against: `${againstId}:${policy}`, identical, total };
+		console.log(
+			`replay: ${identical} of ${total} case-repetitions of ${baseline} are identical to ${replay.against}`,
+		);
+	}
+	const table = sweepTable(rows, baseline);
+	process.stdout.write(table);
+	const directory = runDirectory(evidenceRoot, runId);
+	await mkdir(directory, { recursive: true });
+	await writeFile(join(directory, "sweep.md"), table);
+	await writeFile(
+		join(directory, "sweep.json"),
+		`${JSON.stringify({ runId, baseline, ...(replay ? { replay } : {}), rows }, null, "\t")}\n`,
+	);
+}
+
 async function ledger() {
 	const entries = await readLedger(ledgerPath);
 	if (values.table) {
@@ -1158,6 +1249,8 @@ else if (command === "run") await run();
 else if (command === "report") await report(values.run ?? "");
 else if (command === "compare") await compare();
 else if (command === "noise") await noise();
+else if (command === "sweep") await sweep();
 else if (command === "ledger") await ledger();
 else if (command === "limit-qpc") await limitQuestionsPerCall();
-else throw Error("Commands: freeze, run, report, compare, noise, ledger");
+else
+	throw Error("Commands: freeze, run, report, compare, noise, sweep, ledger");
