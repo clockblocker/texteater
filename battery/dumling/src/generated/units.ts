@@ -3119,7 +3119,7 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				hasSepPrefix: string | null;
-				lexicallyReflexive: "Yes" | null;
+				lexicallyReflexive: ("Acc" | "Dat") | null;
 			};
 		};
 		Surface: {
@@ -3133,7 +3133,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					hasSepPrefix: string | null;
-					lexicallyReflexive: "Yes" | null;
+					lexicallyReflexive: ("Acc" | "Dat") | null;
 				};
 			};
 			normalizedSurface: string;
@@ -3319,7 +3319,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					hasSepPrefix: string | null;
-					lexicallyReflexive: "Yes" | null;
+					lexicallyReflexive: ("Acc" | "Dat") | null;
 				};
 			};
 			emojiDescription: string;
@@ -3337,7 +3337,7 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						hasSepPrefix: string | null;
-						lexicallyReflexive: "Yes" | null;
+						lexicallyReflexive: ("Acc" | "Dat") | null;
 					};
 				};
 				normalizedSurface: string;

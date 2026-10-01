@@ -63,6 +63,10 @@
 			{
 				"rule": "de/pron-or-det-by-use",
 				"hash": "bc1096b61ad7294d"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
 			}
 		],
 		"references": []
@@ -165,7 +169,7 @@
 						"canonicalForm": "sich sehnen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "sehnen sich",

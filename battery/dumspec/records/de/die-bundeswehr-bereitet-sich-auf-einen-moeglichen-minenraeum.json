@@ -35,7 +35,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -55,7 +60,7 @@
 						"canonicalForm": "sich vorbereiten",
 						"coreFeatures": {
 							"hasSepPrefix": "vor",
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "bereitet sich vor",

@@ -184,6 +184,10 @@
 			{
 				"rule": "de/modal-particle-is-part",
 				"hash": "cd0286be11031c26"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
 			}
 		],
 		"references": [
@@ -244,7 +248,7 @@
 						"canonicalForm": "sich zanken",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "sich zanken",

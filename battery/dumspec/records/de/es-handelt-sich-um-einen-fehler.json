@@ -19,7 +19,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -42,7 +47,7 @@
 						"canonicalForm": "sich handeln",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "es handelt sich",

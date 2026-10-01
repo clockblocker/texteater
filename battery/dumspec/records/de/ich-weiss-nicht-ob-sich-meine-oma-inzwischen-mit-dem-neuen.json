@@ -158,6 +158,10 @@
 			{
 				"rule": "de/noun-owns-its-article",
 				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
 			}
 		],
 		"references": [
@@ -357,7 +361,7 @@
 						"canonicalForm": "sich abfinden",
 						"coreFeatures": {
 							"hasSepPrefix": "ab",
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "sich abgefunden hat",

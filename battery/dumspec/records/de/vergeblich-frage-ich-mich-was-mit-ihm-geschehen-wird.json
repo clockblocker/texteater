@@ -110,6 +110,10 @@
 				"hash": "20805b8ea5d73309"
 			},
 			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			},
+			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
@@ -245,7 +249,7 @@
 						"canonicalForm": "sich fragen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"surfaceFeatures": null

@@ -182,6 +182,10 @@
 			{
 				"rule": "de/digits-spell-the-numeral",
 				"hash": "ae8bd58519856b20"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
 			}
 		],
 		"references": [
@@ -557,7 +561,7 @@
 						"canonicalForm": "sich befinden",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "sich befinden",

@@ -130,6 +130,10 @@
 			{
 				"rule": "de/modal-particle-is-part",
 				"hash": "cd0286be11031c26"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
 			}
 		],
 		"references": [
@@ -256,7 +260,7 @@
 						"canonicalForm": "sich abfinden",
 						"coreFeatures": {
 							"hasSepPrefix": "ab",
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "findet sich ab",

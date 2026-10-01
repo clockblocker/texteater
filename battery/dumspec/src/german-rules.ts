@@ -1356,11 +1356,12 @@ const attestations: Rule[] = [
 	{
 		id: "de/verb-core-features",
 		statement:
-			"A VERB's hasSepPrefix names only its separable prefix, never a governed preposition or a preposition with its own complement.",
+			"A VERB's hasSepPrefix names only its separable prefix, never a governed preposition or a preposition with its own complement. lexicallyReflexive names the case its lexical reflexive takes, which is fixed per word: sich erinnern is Acc (ich erinnere mich).",
 		adrs: ["ADR-0029"],
 		routes: lexeme("VERB"),
 		records: [
 			"de/der-faehrmann-hat-uns-uebergesetzt",
+			"de/sie-erinnert-sich-an-den-geruch",
 			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
 			"de/der-laster-fuhr-das-schild-um",
 			"de/sie-umfuhr-die-baustelle-weitraeumig",

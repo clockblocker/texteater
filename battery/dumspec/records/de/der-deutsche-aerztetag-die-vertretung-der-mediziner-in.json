@@ -49,7 +49,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -69,7 +74,7 @@
 						"canonicalForm": "sich aussprechen",
 						"coreFeatures": {
 							"hasSepPrefix": "aus",
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "hat sich ausgesprochen",

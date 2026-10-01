@@ -280,7 +280,14 @@
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
 			},
-			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "c3eb61394edd1818"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			}
 		],
 		"references": [
 			{
@@ -917,7 +924,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"surfaceFeatures": null

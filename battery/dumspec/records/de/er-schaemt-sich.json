@@ -13,7 +13,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -33,7 +38,7 @@
 						"canonicalForm": "sich schämen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "schämt sich",

@@ -656,7 +656,7 @@ describe("the German authored inventory", () => {
 	test("drills down from a reflexive to the reflexivity unit, never a case cell", () => {
 		const verb = (
 			canonicalForm: string,
-			lexicallyReflexive: "Yes" | null,
+			lexicallyReflexive: "Acc" | "Dat" | null,
 		) =>
 			({
 				unitKind: "Lemma",
@@ -671,8 +671,8 @@ describe("the German authored inventory", () => {
 			}) as const;
 		// er schämt sich takes the Acc, er bildet sich etwas ein the Dat.
 		for (const reflexive of [
-			verb("sich schämen", "Yes"),
-			verb("sich einbilden", "Yes"),
+			verb("sich schämen", "Acc"),
+			verb("sich einbilden", "Dat"),
 		]) {
 			expect(parseUnit(reflexive).success).toBe(true);
 			expect(reflexiveDrillDown(reflexive)).toBe(reflexivityUnit);

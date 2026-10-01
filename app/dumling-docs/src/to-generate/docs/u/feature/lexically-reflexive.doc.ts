@@ -12,13 +12,14 @@ const document = defineUniversalConceptPage({
 	subject: "LexicallyReflexive",
 	title: "LexicallyReflexive",
 	body: `
-\`LexicallyReflexive\` marks that a [\`Lemma\`](/u/entity/lemma/) is lexically reflexive.
+\`LexicallyReflexive\` marks that a [\`Lemma\`](/u/entity/lemma/) is lexically reflexive and names the case its reflexive takes.
 
-It is a Dumling-specific feature with one public value and belongs in \`Lemma.coreFeatures\`.
+It is a Dumling-specific feature and belongs in \`Lemma.coreFeatures\`.
 
 ## Values
 
-- \`Yes\`: the Lemma is recorded as lexically reflexive
+- \`Acc\`: the reflexive is accusative, as in German \`sich erinnern\` (\`ich erinnere mich\`)
+- \`Dat\`: the reflexive is dative, as in German \`sich etwas vorstellen\` (\`ich stelle mir etwas vor\`)
 
 If \`Lemma.coreFeatures.lexicallyReflexive\` is absent or \`undefined\`, the Lemma is treated as not being marked lexically reflexive.
 `,
@@ -27,7 +28,7 @@ If \`Lemma.coreFeatures.lexicallyReflexive\` is absent or \`undefined\`, the Lem
 		{
 			heading: "Use",
 			body: `
-Use \`lexicallyReflexive: "Yes"\` when reflexivity is part of the Lemma's lexical identity, as with German \`sich erinnern\`.
+Use \`lexicallyReflexive\` when reflexivity is part of the Lemma's lexical identity, as with German \`sich erinnern\`. The case is fixed per word, so German \`sich vorstellen\` (Acc, 'introduce oneself') and \`sich etwas vorstellen\` (Dat, 'imagine') are two Lemmas, apart from plain \`vorstellen\`.
 
 Do not add it merely because one attested clause happens to contain a reflexive pronoun. The feature is for lexemes whose citation identity already includes reflexive behavior.
 `,

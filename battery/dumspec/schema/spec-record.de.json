@@ -8703,7 +8703,8 @@
 								{
 									"type": "string",
 									"enum": [
-										"Yes"
+										"Acc",
+										"Dat"
 									]
 								},
 								{

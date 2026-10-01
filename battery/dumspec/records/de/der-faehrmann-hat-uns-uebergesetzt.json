@@ -23,7 +23,7 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/verb-core-features", "hash": "b43bf4d795ca1ee1" },
+			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"

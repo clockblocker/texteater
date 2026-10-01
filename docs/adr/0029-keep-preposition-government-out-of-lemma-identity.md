@@ -55,3 +55,13 @@ Lemmas, `pronType` Int and Rel by use. Duden gives each w-adverb one headword
 with an interrogative and a relative sense, so the two uses are Readings of
 one Lemma, and Int and Rel left German ADV; Dem, Ind and Neg stay. Decided on
 [#766](https://github.com/clockblocker/texteater/issues/766).
+
+Amended on 2026-10-01: `lexicallyReflexive` names the case its reflexive
+takes, Acc or Dat, fixed per word: `sich erinnern` is Acc (*ich erinnere
+mich*), `sich etwas vorstellen` Dat (*ich stelle mir etwas vor*). So `sich
+vorstellen` (Acc, 'introduce oneself') and `sich etwas vorstellen` (Dat,
+'imagine') are two Lemmas, apart from `vorstellen`. A reflexive verb stays a
+Lemma of its own with a "sich X" Canonical Form. Merging it into its base
+verb was rejected, and so was recording the mark on a Reading or in
+Knowledge. Decided on
+[#766](https://github.com/clockblocker/texteater/issues/766).

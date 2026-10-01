@@ -146,6 +146,10 @@
 			{
 				"rule": "de/noun-owns-its-article",
 				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
 			}
 		],
 		"references": [
@@ -223,7 +227,7 @@
 						"canonicalForm": "sich verlassen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "verlasse mich",
@@ -480,7 +484,7 @@
 						"canonicalForm": "sich verlassen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "verlässt sich",

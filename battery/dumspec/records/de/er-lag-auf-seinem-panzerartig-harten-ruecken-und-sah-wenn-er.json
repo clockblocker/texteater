@@ -413,6 +413,10 @@
 			{
 				"rule": "de/quantifier-by-use",
 				"hash": "740bfc8b0cfe812b"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
 			}
 		],
 		"references": [
@@ -1578,7 +1582,7 @@
 						"canonicalForm": "sich erhalten",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "sich erhalten",

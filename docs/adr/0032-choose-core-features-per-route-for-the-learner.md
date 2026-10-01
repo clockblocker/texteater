@@ -49,6 +49,13 @@ One check helps: does a standard learner's dictionary of the language give the
 value its own headword, or only a usage line under one headword? A usage line
 means the value is not identity.
 
+The check gives way for German reflexive verbs. Duden gives `sich lassen` only
+a grammar line under `lassen`, yet each `sich X` is a VERB Lemma of its own,
+and its `lexicallyReflexive` names the reflexive's case, Acc or Dat
+([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)).
+E-VALBU gives `sich X` its own entry, learners learn `sich erinnern` as a
+word, and the reflexive's case is fixed per such word.
+
 The test reopens no split already decided: ADR 0044's pronoun cells and its
 Dem/Rel split, and the per-route choices below, stand. ADR 0044 itself
 reopened its cells on 2026-10-01: a pronoun form whose cells differ in gender
@@ -164,6 +171,10 @@ navigation hold inside one pillar. Decided on
 Amended on 2026-10-01: the English PRON line said German keeps reflexivity
 on the Surface. No German pronoun marks it now (ADR 0044,
 [#766](https://github.com/clockblocker/texteater/issues/766)).
+
+Amended on 2026-10-01: the dictionary check gives way for German reflexive
+verbs, stated above. Decided on
+[#766](https://github.com/clockblocker/texteater/issues/766).
 
 ## Considered Options
 

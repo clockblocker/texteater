@@ -17,7 +17,7 @@ const verlieben = {
 	canonicalForm: "sich verlieben",
 	coreFeatures: {
 		hasSepPrefix: null,
-		lexicallyReflexive: "Yes",
+		lexicallyReflexive: "Acc",
 	},
 } as const satisfies Dumling.Lemma<"de", "Lexeme", "VERB">;
 const verliebenReading = {

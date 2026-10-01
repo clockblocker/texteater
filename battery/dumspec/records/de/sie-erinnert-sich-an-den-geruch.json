@@ -66,6 +66,10 @@
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
 				"hash": "20805b8ea5d73309"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
 			}
 		],
 		"references": []
@@ -91,7 +95,7 @@
 						"canonicalForm": "sich erinnern",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"normalizedSurface": "erinnert sich",

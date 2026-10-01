@@ -28,7 +28,7 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/verb-core-features", "hash": "b43bf4d795ca1ee1" },
+			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
 			{
 				"rule": "de/modal-particle-is-part",
 				"hash": "cd0286be11031c26"

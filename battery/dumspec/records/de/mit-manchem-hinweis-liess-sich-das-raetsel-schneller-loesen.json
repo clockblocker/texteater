@@ -26,7 +26,14 @@
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0026"],
 		"rules": [
-			{ "rule": "de/causative-lassen", "hash": "6df00ff37a0a5baa" },
+			{
+				"rule": "de/causative-lassen",
+				"hash": "6df00ff37a0a5baa"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
@@ -120,7 +127,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"surfaceFeatures": null

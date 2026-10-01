@@ -94,6 +94,10 @@
 				"hash": "fbed9130c4b77fbf"
 			},
 			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			},
+			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			}
@@ -259,7 +263,7 @@
 						"canonicalForm": "sich erholen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes"
+							"lexicallyReflexive": "Acc"
 						}
 					},
 					"surfaceFeatures": null
