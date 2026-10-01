@@ -11870,9 +11870,7 @@
 									"enum": [
 										"Dem",
 										"Ind",
-										"Int",
-										"Neg",
-										"Rel"
+										"Neg"
 									]
 								},
 								{

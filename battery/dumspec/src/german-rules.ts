@@ -713,7 +713,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/relative-w-adverb-fills-a-slot",
 		statement:
-			"Outside a question, direct or indirect, a w-adverb is a relative ADV (pronType Rel) when it names a place, time, manner or reason inside its own clause, with or without an antecedent: die Stadt, wo sie wohnt. A causal overtone on such a use is an inference and changes neither Kind nor Reading. The same word is SCONJ when it only links the clauses and names nothing inside its own. Comparison wie fills no slot in its clause: it is CCONJ before a phrase and SCONJ before a clause.",
+			"Outside a question, direct or indirect, a w-adverb is a relative ADV when it names a place, time, manner or reason inside its own clause, with or without an antecedent: die Stadt, wo sie wohnt. A causal overtone on such a use is an inference and changes neither Kind nor Reading. The same word is SCONJ when it only links the clauses and names nothing inside its own. Comparison wie fills no slot in its clause: it is CCONJ before a phrase and SCONJ before a clause.",
 		adrs: [],
 		routes: lexeme("ADV", "SCONJ", "CCONJ"),
 		records: [

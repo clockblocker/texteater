@@ -515,7 +515,7 @@ export interface UnitMap {
 			canonicalForm: string;
 			coreFeatures: {
 				comparable: "Yes" | null;
-				pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
+				pronType: ("Dem" | "Ind" | "Neg") | null;
 			};
 		};
 		Surface: {
@@ -529,7 +529,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					comparable: "Yes" | null;
-					pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
+					pronType: ("Dem" | "Ind" | "Neg") | null;
 				};
 			};
 			normalizedSurface: string;
@@ -567,7 +567,7 @@ export interface UnitMap {
 				canonicalForm: string;
 				coreFeatures: {
 					comparable: "Yes" | null;
-					pronType: ("Dem" | "Ind" | "Int" | "Neg" | "Rel") | null;
+					pronType: ("Dem" | "Ind" | "Neg") | null;
 				};
 			};
 			emojiDescription: string;
@@ -585,9 +585,7 @@ export interface UnitMap {
 					canonicalForm: string;
 					coreFeatures: {
 						comparable: "Yes" | null;
-						pronType:
-							| ("Dem" | "Ind" | "Int" | "Neg" | "Rel")
-							| null;
+						pronType: ("Dem" | "Ind" | "Neg") | null;
 					};
 				};
 				normalizedSurface: string;

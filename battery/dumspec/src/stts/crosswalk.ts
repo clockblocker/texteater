@@ -953,7 +953,8 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "PWAV",
 		stts: "adverbial interrogative or relative pronoun",
-		dumling: "Lexeme ADV pronType Int or Rel",
+		dumling:
+			"Lexeme ADV, one Lemma per w-adverb with an interrogative and a relative Reading",
 		mappings: [
 			{
 				use: "interrogative w-adverb",

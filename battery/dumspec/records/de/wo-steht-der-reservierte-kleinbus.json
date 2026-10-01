@@ -38,7 +38,7 @@
 						"canonicalForm": "wo",
 						"coreFeatures": {
 							"comparable": null,
-							"pronType": "Int"
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "wo",

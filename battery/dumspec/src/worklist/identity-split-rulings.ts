@@ -116,14 +116,11 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		varies: [{ key: "gender" }],
 	},
 	{
-		split: "A w-adverb is Int in a question, Rel when it names something in its clause, SCONJ or CCONJ when it only links",
+		split: "A w-adverb asking or naming something in its clause is ADV, SCONJ or CCONJ when it only links",
 		adrs: [],
 		rules: ["de/relative-w-adverb-fills-a-slot"],
 		forms: ["wo", "wie", "wann", "warum"],
-		varies: [
-			{ key: "kind", values: ["ADV", "SCONJ", "CCONJ"] },
-			{ key: "pronType", values: [null, "Int", "Rel"] },
-		],
+		varies: [{ key: "kind", values: ["ADV", "SCONJ", "CCONJ"] }],
 	},
 	{
 		split: "Comparison als is CCONJ before a phrase and SCONJ before a clause",

@@ -43,7 +43,7 @@
 						"canonicalForm": "warum",
 						"coreFeatures": {
 							"comparable": null,
-							"pronType": "Int"
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "warum",

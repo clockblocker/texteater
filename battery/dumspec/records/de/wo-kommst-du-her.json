@@ -44,7 +44,7 @@
 						"canonicalForm": "woher",
 						"coreFeatures": {
 							"comparable": null,
-							"pronType": "Int"
+							"pronType": null
 						}
 					},
 					"normalizedSurface": "wo her",

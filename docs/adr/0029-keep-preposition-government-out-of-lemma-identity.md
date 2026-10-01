@@ -22,10 +22,10 @@ seinen Sohn` opens the governor.
 
 A German pronominal adverb (`darauf`, `dafür`, `damit`, the `wo(r)-` and
 `hier-` compounds) is its own single-member ADV Lexeme (`pronType: Dem` for
-`da(r)-` and `hier-` forms, `Int` or `Rel` for `wo(r)-` forms by use), never a
-governed member of the governing word and never a fixed Locution member with
-its governor outside a genuine idiom. The government relation stays on the
-governor. A reciprocal pronominal adverb, a preposition joined to `einander`
+`da(r)-` and `hier-` forms; a `wo(r)-` form is one Lemma whose interrogative
+and relative uses are two Readings), never a governed member of the governing
+word and never a fixed Locution member with its governor outside a genuine
+idiom. The government relation stays on the governor. A reciprocal pronominal adverb, a preposition joined to `einander`
 (`miteinander`, `aufeinander`, `voneinander`), is an ADV Lexeme of its whole
 form in the same way, with no `pronType`. It never splits into an ADP and
 PRON `einander`: `aufeinander warten` gives [warten] VERB and [aufeinander]
@@ -49,3 +49,9 @@ the word that governs its preposition. The dumspec Rule is
 Amended on 2026-10-01: the reciprocal pronominal adverbs are stated here.
 They were decided on [#238](https://github.com/clockblocker/texteater/issues/238)
 on 2026-08-26, and no ADR held them.
+
+Amended on 2026-10-01: a `wo(r)-` form, like `wo`, `wie` and `warum`, was two
+Lemmas, `pronType` Int and Rel by use. Duden gives each w-adverb one headword
+with an interrogative and a relative sense, so the two uses are Readings of
+one Lemma, and Int and Rel left German ADV; Dem, Ind and Neg stay. Decided on
+[#766](https://github.com/clockblocker/texteater/issues/766).

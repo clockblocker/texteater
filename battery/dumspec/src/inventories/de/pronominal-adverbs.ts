@@ -184,7 +184,7 @@ type Series = {
 	readonly prefix: string;
 	readonly linking: boolean;
 	readonly ipa: string;
-	readonly pronType: NonNullable<Core["pronType"]>;
+	readonly pronType: Core["pronType"];
 	readonly marker: string;
 	readonly definition: (form: string, preposition: string) => string;
 	readonly en: (preposition: Preposition) => readonly string[];
@@ -226,7 +226,7 @@ const series: readonly Series[] = [
 		prefix: "wo",
 		linking: true,
 		ipa: "vo",
-		pronType: "Int",
+		pronType: null,
 		marker: "❓",
 		definition: (form, preposition) =>
 			`„${form}“ ist ein Frageadverb aus „wo“ und „${preposition}“. Es fragt nach „${preposition} + Sache“, nicht nach einer Person.`,
@@ -237,7 +237,7 @@ const series: readonly Series[] = [
 		prefix: "wo",
 		linking: true,
 		ipa: "vo",
-		pronType: "Rel",
+		pronType: null,
 		marker: "🧩",
 		definition: (form, preposition) =>
 			`„${form}“ ist ein Relativadverb aus „wo“ und „${preposition}“. Es leitet einen Relativsatz ein und ersetzt „${preposition} + Sache“, oft nach „das“, „etwas“, „alles“, „nichts“ oder nach einem ganzen Satz.`,
@@ -310,8 +310,8 @@ function pronominalAdverb(
 
 /**
  * Every German pronominal adverb: da(r)- and hier- forms are demonstrative,
- * wo(r)- forms are one interrogative and one relative Lemma each, since
- * pronType is a Lemma Core Feature. Classification keeps each one a singleton
+ * and each wo(r)- form is one Lemma with an interrogative and a relative
+ * Reading (system ADR 0029). Classification keeps each one a singleton
  * ADV; a verb that governs the fused preposition does not absorb it.
  */
 export const pronominalAdverbs: readonly AuthoredMember[] = series.flatMap(

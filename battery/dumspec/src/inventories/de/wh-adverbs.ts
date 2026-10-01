@@ -13,8 +13,9 @@ type Meaning = {
 /** A Reading of a use that has several, each with its own emoji. */
 type EmojiMeaning = Meaning & { readonly emoji: string };
 /**
- * One w-adverb with its interrogative and relative use. A use is one Reading
- * under the adverb's emoji, or several Readings with an emoji each.
+ * One w-adverb with its interrogative and relative use, each a Reading of the
+ * one Lemma (system ADR 0029). A use is one Reading under the adverb's emoji,
+ * or several Readings with an emoji each.
  * `synonymOf` names the adverb this one is a synonym of in both uses; only
  * that direct claim is stored, and the rest is projected (ADR 0012).
  */
@@ -437,8 +438,9 @@ const marker: Readonly<Record<Use, string>> = {
 };
 
 /**
- * A w-adverb has no comparison forms (ADR 0042); pronType is Core, and null
- * for a directional adverb.
+ * A w-adverb has no comparison forms (ADR 0042). pronType is Core for an
+ * indefinite or demonstrative adverb, and null for a directional one and for
+ * a w-adverb, whose interrogative and relative uses are Readings of one Lemma.
  */
 function lemmaOf(text: string, use: Use | null): Lemma {
 	return {
@@ -449,7 +451,7 @@ function lemmaOf(text: string, use: Use | null): Lemma {
 		canonicalForm: text,
 		coreFeatures: {
 			comparable: null,
-			pronType: use,
+			pronType: use === "Ind" || use === "Dem" ? use : null,
 		},
 	};
 }
@@ -503,9 +505,9 @@ function whAdverb(
 
 /**
  * The German interrogative and relative w-adverbs (wo, wohin, woher, wann,
- * wie, warum, wieso, weshalb, weswegen): one Int and one Rel Lemma each,
- * since pronType is Core. Each Lemma has one Reading, except relative wo,
- * which has a place and a time Reading. Then the indefinite irgend- adverbs,
+ * wie, warum, wieso, weshalb, weswegen): one Lemma each, with an
+ * interrogative and a relative Reading; relative wo has a place and a time
+ * Reading. Then the indefinite irgend- adverbs,
  * one Ind Lemma each, the demonstrative dahin, daher, hierhin and hierher,
  * one Dem Lemma each, and the directional her- and hin- adverbs (heraus,
  * hinaus, herein, hinein, herüber, hinüber, herunter, hinunter, herauf, hinauf

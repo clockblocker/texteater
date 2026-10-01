@@ -422,7 +422,7 @@ describe("the German authored inventory", () => {
 			).toEqual(new Set([cited]));
 	});
 
-	test("authors each w-adverb as one Int and one Rel ADV", () => {
+	test("authors each w-adverb as one ADV with an interrogative and a relative Reading (system ADR 0029)", () => {
 		const readingsOf = (text: string) =>
 			authoredMembers.filter(
 				({ lemma }) =>
@@ -439,7 +439,7 @@ describe("the German authored inventory", () => {
 			"weshalb",
 			"weswegen",
 		];
-		for (const text of whAdverbs)
+		for (const text of whAdverbs) {
 			expect(
 				new Set(
 					readingsOf(text).map(({ lemma }) =>
@@ -447,7 +447,16 @@ describe("the German authored inventory", () => {
 					),
 				),
 				text,
-			).toEqual(new Set(["Int", "Rel"]));
+			).toEqual(new Set([null]));
+			expect(
+				new Set(
+					readingsOf(text).map(
+						({ reading }) => [...reading.emojiDescription][0],
+					),
+				),
+				text,
+			).toEqual(new Set(["❓", "🧩"]));
+		}
 		// Relative wo has a place and a time Reading; every other use has one.
 		expect(
 			readingsOf("wo").map(({ reading }) => reading.emojiDescription),
@@ -455,17 +464,17 @@ describe("the German authored inventory", () => {
 		expect(
 			whAdverbs.filter((text) => text !== "wo").flatMap(readingsOf),
 		).toHaveLength(2 * (whAdverbs.length - 1));
-		// wieso, weshalb and weswegen claim warum as a synonym, one use to the same use.
+		// wieso, weshalb and weswegen claim warum as a synonym in each use.
 		const weshalb = authoredMembers.find(
-			({ lemma }) =>
+			({ lemma, reading }) =>
 				lemma.canonicalForm === "weshalb" &&
-				field(lemma.coreFeatures, "pronType") === "Rel",
+				reading.emojiDescription.startsWith("🧩"),
 		);
 		expect(weshalb?.knowledge.semanticRelations).toEqual({
 			synonym: [
 				expect.objectContaining({
 					canonicalForm: "warum",
-					coreFeatures: expect.objectContaining({ pronType: "Rel" }),
+					coreFeatures: expect.objectContaining({ pronType: null }),
 				}),
 			],
 		});

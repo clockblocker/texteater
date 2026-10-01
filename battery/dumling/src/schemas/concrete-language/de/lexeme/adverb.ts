@@ -11,13 +11,9 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 export const DeAdverbFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
 		comparable: DE_FEATURE_SCHEMA.comparable,
-		pronType: DE_FEATURE_SCHEMA.pronType.extract([
-			"Dem",
-			"Ind",
-			"Int",
-			"Neg",
-			"Rel",
-		]),
+		// A w-adverb is one Lemma whose interrogative and relative uses are
+		// Readings, so Int and Rel are no ADV values (system ADR 0029).
+		pronType: DE_FEATURE_SCHEMA.pronType.extract(["Dem", "Ind", "Neg"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

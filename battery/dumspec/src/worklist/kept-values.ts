@@ -22,12 +22,4 @@ export const germanKeptValues: readonly KeptValue[] = [
 		keptBy: { rule: "de/interjection-counts-its-words" },
 		why: "A response particle answering a question.",
 	},
-	{
-		route: "Lexeme/ADV",
-		bag: "Core",
-		feature: "pronType",
-		value: "Rel",
-		keptBy: { rule: "de/relative-w-adverb-fills-a-slot" },
-		why: "A w-adverb naming a place, time, manner or reason inside its own clause.",
-	},
 ];
