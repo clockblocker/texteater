@@ -1,0 +1,9 @@
+{
+	"$schema": "https://turborepo.dev/schema.json",
+	"extends": ["//"],
+	"tasks": {
+		"dev:package": {
+			"passThroughEnv": ["SPEC_REVIEW_*"]
+		}
+	}
+}

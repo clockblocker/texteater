@@ -1,0 +1,37 @@
+{
+	"name": "@texteater/spec-review",
+	"private": true,
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"engines": {
+		"node": "24.x"
+	},
+	"scripts": {
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run check && vite build",
+		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+		"dev": "turbo run dev:package",
+		"dev:package": "bun scripts/dev.ts",
+		"fix": "bun run --silent biome check --write .",
+		"lint": "bun run --silent biome check .",
+		"test": "bun test",
+		"validate": "bun ../../tooling/validate-package.ts"
+	},
+	"dependencies": {
+		"@biomejs/biome": "2.5.13",
+		"dumspec": "workspace:^",
+		"jsonc-parser": "^3.3.1",
+		"lego": "workspace:^",
+		"react": "^19.2.6",
+		"react-dom": "^19.2.6",
+		"zod": "^4.4.0"
+	},
+	"devDependencies": {
+		"@tailwindcss/vite": "^4",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-react": "^6",
+		"bun-types": "1.4.2",
+		"vite": "^8"
+	}
+}
