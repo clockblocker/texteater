@@ -2533,14 +2533,33 @@ export type ValencyReferent = "Someone" | "Something" | "Either";
 export type GermanValencyComplement =
 	| {
 			kind: "Case";
-			case: "Nom" | "Acc" | "Dat" | "Gen";
+			governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			referent: ValencyReferent;
 	  }
 	| {
 			kind: "Preposition";
 			preposition: Dumling.Lemma<"de", "Lexeme", "ADP">;
-			case: GovernedCase;
+			governedCase: GovernedCase;
 			referent: ValencyReferent;
+	  }
+	| {
+			kind: "Adverbial";
+			standIn:
+				| "Irgendwo"
+				| "Irgendwohin"
+				| "Irgendwie"
+				| "IrgendwieLange"
+				| "IrgendwieViel";
+	  }
+	| {
+			kind: "Predicative";
+			of: "Subject" | "Object";
+			marker: "None" | "Als" | "Für";
+	  }
+	| {
+			kind: "Clause";
+			form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W";
+			correlate?: ("Required" | "Optional") | undefined;
 	  };
 export type HebrewValencyComplement =
 	| { kind: "Subject"; referent: ValencyReferent }
@@ -2562,14 +2581,33 @@ export type EnglishValencyComplement =
 export type ValencyComplement =
 	| {
 			kind: "Case";
-			case: "Nom" | "Acc" | "Dat" | "Gen";
+			governedCase: "Nom" | "Acc" | "Dat" | "Gen";
 			referent: ValencyReferent;
 	  }
 	| {
 			kind: "Preposition";
 			preposition: Dumling.Lemma<"de", "Lexeme", "ADP">;
-			case: GovernedCase;
+			governedCase: GovernedCase;
 			referent: ValencyReferent;
+	  }
+	| {
+			kind: "Adverbial";
+			standIn:
+				| "Irgendwo"
+				| "Irgendwohin"
+				| "Irgendwie"
+				| "IrgendwieLange"
+				| "IrgendwieViel";
+	  }
+	| {
+			kind: "Predicative";
+			of: "Subject" | "Object";
+			marker: "None" | "Als" | "Für";
+	  }
+	| {
+			kind: "Clause";
+			form: "ZuInfinitive" | "BareInfinitive" | "Dass" | "Ob" | "W";
+			correlate?: ("Required" | "Optional") | undefined;
 	  }
 	| { kind: "Subject"; referent: ValencyReferent }
 	| { kind: "DirectObject"; referent: ValencyReferent }
@@ -2588,7 +2626,7 @@ export type ValencyComplement =
 	  };
 export type ValencySlot = {
 	status: ValencySlotStatus;
-	complement: ValencyComplement;
+	complements: Array<ValencyComplement>;
 };
 export type GovernmentRelation = "governs" | "governedBy";
 export type GovernmentProjection = {
@@ -2905,7 +2943,7 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
 				| Dumling.Reading<"he", "Saying", "Saying">
 		  );
-	case: GovernedCase | null;
+	governedCase: GovernedCase | null;
 	provenance: "direct" | "inferred";
 };
 export type ParticipleMeaning = "Verbal" | "Drifted";

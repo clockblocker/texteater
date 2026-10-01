@@ -200,7 +200,13 @@ function parseValencyComplement<R extends Dumling.Reading>(
 	return { ...complement, preposition } as ValencyComplement;
 }
 
-/** A frame whose Slots the source's route allows, each complement listed once. */
+/**
+ * A frame whose complements the source's route allows, each listed once
+ * across all Slots and their alternatives. Which complements belong in one
+ * Slot is the proposal's call; only the correlate is checked: a Clause with a
+ * correlate takes its `da(r)-` from the Slot's preposition, so a Slot that
+ * holds one has at most one Preposition (ADR 0034).
+ */
 function parseValencyFrame<R extends Dumling.Reading>(
 	source: R,
 	frame: ValencyFrame,
@@ -209,20 +215,38 @@ function parseValencyFrame<R extends Dumling.Reading>(
 	const slots: ValencySlot[] = [];
 	const seen = new Set<string>();
 	for (const [index, slot] of frame.entries()) {
-		const complement = parseValencyComplement(source, slot.complement, [
-			...path,
-			index,
-			"complement",
-		]);
-		if (complement instanceof ParsingError) return complement;
-		const identity = fingerprint(complement);
-		if (seen.has(identity))
-			return issue(
-				[...path, index, "complement"],
-				"A Valency Frame lists each complement once",
+		const complements: ValencyComplement[] = [];
+		for (const [alternative, value] of slot.complements.entries()) {
+			const complementPath = [...path, index, "complements", alternative];
+			const complement = parseValencyComplement(
+				source,
+				value,
+				complementPath,
 			);
-		seen.add(identity);
-		slots.push({ status: slot.status, complement });
+			if (complement instanceof ParsingError) return complement;
+			const identity = fingerprint(complement);
+			if (seen.has(identity))
+				return issue(
+					complementPath,
+					"A Valency Frame lists each complement once, across all its Slots",
+				);
+			seen.add(identity);
+			complements.push(complement);
+		}
+		const correlated = complements.findIndex(
+			(complement) =>
+				complement.kind === "Clause" &&
+				complement.correlate !== undefined,
+		);
+		const prepositions = complements.filter(
+			({ kind }) => kind === "Preposition",
+		).length;
+		if (correlated !== -1 && prepositions > 1)
+			return issue(
+				[...path, index, "complements", correlated, "correlate"],
+				"A Clause with a correlate in a Preposition Slot needs exactly one Preposition alternative there",
+			);
+		slots.push({ status: slot.status, complements } as ValencySlot);
 	}
 	return slots as ValencyFrame;
 }

@@ -17,7 +17,20 @@ type RoutePolicy<Kind extends ComplementKind> = Readonly<
 	Record<string, Readonly<Record<string, readonly Kind[]>>>
 >;
 
-const caseOrPreposition = ["Case", "Preposition"] as const;
+const germanVerbComplements = [
+	"Case",
+	"Preposition",
+	"Adverbial",
+	"Predicative",
+	"Clause",
+] as const;
+const germanAdjectiveComplements = [
+	"Case",
+	"Preposition",
+	"Adverbial",
+	"Clause",
+] as const;
+const germanNounComplements = ["Preposition", "Clause"] as const;
 const functionOrPreposition = [
 	"Subject",
 	"DirectObject",
@@ -33,12 +46,14 @@ const positionOrPreposition = [
 /**
  * The complements each language × Family × Kind route lets its Valency Frame
  * hold, chosen per route the way ADR 0032 chooses Core Features. A route
- * missing here takes no frame. German nouns take only governed prepositions
- * (`Angst vor`); their bare cases are attributes, not valency. A Locution
- * route takes the frame of the Lexeme route with its Kind (ADR 0039): `Angst
- * haben vor`. Hebrew mirrors the German choices with its own complements:
- * nouns take only governed prepositions, and it has no framed Locution route
- * yet. English makes the same choices with its own complements.
+ * missing here takes no frame. German verbs take every German kind; adjectives
+ * all but Predicative. German nouns take governed prepositions (`Angst vor`)
+ * and clauses, beside a preposition (`die Freude darauf, dass …`) or alone
+ * (`der Versuch, etw zu tun`); their bare cases are attributes, not valency.
+ * A Locution route takes the frame of the Lexeme route with its Kind (ADR
+ * 0039): `Angst haben vor`. Hebrew mirrors the German choices with its own
+ * complements: nouns take only governed prepositions, and it has no framed
+ * Locution route yet. English makes the same choices with its own complements.
  */
 const valencyPolicy: {
 	readonly [L in keyof ComplementsByLanguage]: RoutePolicy<
@@ -47,14 +62,14 @@ const valencyPolicy: {
 } = {
 	de: {
 		Lexeme: {
-			VERB: caseOrPreposition,
-			ADJ: caseOrPreposition,
-			NOUN: ["Preposition"],
+			VERB: germanVerbComplements,
+			ADJ: germanAdjectiveComplements,
+			NOUN: germanNounComplements,
 		},
 		Locution: {
-			VERB: caseOrPreposition,
-			ADJ: caseOrPreposition,
-			NOUN: ["Preposition"],
+			VERB: germanVerbComplements,
+			ADJ: germanAdjectiveComplements,
+			NOUN: germanNounComplements,
 		},
 	},
 	he: {

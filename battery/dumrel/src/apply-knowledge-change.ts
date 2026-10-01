@@ -19,9 +19,11 @@ import { conjugationClassValues } from "./vocabulary.js";
  * Applies one source-aware change atomically. Contribute adds absent atomic
  * aspects or distinct bucket values; Correct replaces; Retract removes. Exact
  * Reading targets support synonym only and require targetKind: "reading",
- * including retractions. The Valency Frame: Contribute appends the Slots whose
- * complement the frame lacks, Correct replaces the frame, and Retract removes
- * the frame or, given a complement, that one Slot. A Participle Source,
+ * including retractions. The Valency Frame: Contribute appends each Slot none
+ * of whose complements a stored complement covers, never adding an
+ * alternative to a stored Slot; Correct replaces the frame; and Retract
+ * removes the frame or, given a complement, that complement from its Slot and
+ * the Slot once it is empty (ADR 0034). A Participle Source,
  * Locution Type, Saying Type and Formula Role are atomic like a definition.
  * A noun's plural: Contribute adds the plural forms it lacks, and a NoPlural
  * or PluralOnly marker is atomic. A verb's
@@ -101,6 +103,12 @@ function applyTranslation<R extends Dumling.Reading>(
 	else knowledge.translations = translations;
 }
 
+/**
+ * Only the proposal that creates the Reading and Correct group complements as
+ * alternatives (#673): Contribute appends a whole Slot or nothing, so
+ * contributing `von` + Dat to `reden` Optional `über` + Acc | `von` + Dat
+ * changes nothing.
+ */
 function applyValency<R extends Dumling.Reading>(
 	knowledge: ReadingKnowledge<R>,
 	change: Extract<KnowledgeChange, { aspect: "valency" }>,
@@ -110,17 +118,26 @@ function applyValency<R extends Dumling.Reading>(
 	if (change.kind === "Retract") {
 		const retracted = change.complement && fingerprint(change.complement);
 		next = retracted
-			? frame.filter(
-					({ complement }) => fingerprint(complement) !== retracted,
-				)
+			? frame.flatMap((slot) => {
+					const complements = slot.complements.filter(
+						(complement) => fingerprint(complement) !== retracted,
+					);
+					return complements.length === 0
+						? []
+						: [{ ...slot, complements } as ValencySlot];
+				})
 			: [];
 	} else if (change.kind === "Correct") next = structuredClone(change.value);
 	else {
 		next = [...frame];
 		for (const slot of change.value)
 			if (
-				!next.some(({ complement }) =>
-					fills(complement, slot.complement),
+				!next.some((stored) =>
+					stored.complements.some((complement) =>
+						slot.complements.some((contributed) =>
+							fills(complement, contributed),
+						),
+					),
 				)
 			)
 				next.push(structuredClone(slot));
@@ -187,22 +204,31 @@ function applyConjugation<R extends Dumling.Reading>(
 }
 
 /**
- * A stored complement already covers a contributed one when both name the same
- * case, and the same preposition, and their referents agree or one is Either:
- * an attested `auf` + Acc adds nothing to a proposed `auf` + Acc Someone.
+ * A stored complement already covers a contributed one when both are the same
+ * apart from their referents, and those agree or one is Either: an attested
+ * `auf` + Acc adds nothing to a proposed `auf` + Acc Someone. A complement
+ * with no referent (an Adverbial, Predicative or Clause) covers only itself.
  */
 function fills(
 	stored: ValencyComplement,
 	contributed: ValencyComplement,
 ): boolean {
-	const { referent: storedReferent, ...storedRest } = stored;
-	const { referent: contributedReferent, ...contributedRest } = contributed;
+	const [storedReferent, storedRest] = splitReferent(stored);
+	const [contributedReferent, contributedRest] = splitReferent(contributed);
 	return (
 		fingerprint(storedRest) === fingerprint(contributedRest) &&
 		(storedReferent === contributedReferent ||
 			storedReferent === "Either" ||
 			contributedReferent === "Either")
 	);
+}
+
+function splitReferent(
+	complement: ValencyComplement,
+): [string | undefined, object] {
+	if (!("referent" in complement)) return [undefined, complement];
+	const { referent, ...rest } = complement;
+	return [referent, rest];
 }
 
 function applyRelation<R extends Dumling.Reading>(

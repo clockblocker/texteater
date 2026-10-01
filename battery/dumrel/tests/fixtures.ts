@@ -49,6 +49,12 @@ export const aufLemma = adposition("auf");
 export const fuerLemma = adposition("für");
 /** Governed by `grauen` with Dat: `mir graut vor dem Winter`. */
 export const vorLemma = adposition("vor");
+/** `reden über` + Acc, an alternative to `reden von` + Dat. */
+export const ueberLemma = adposition("über");
+/** `reden von` + Dat, an alternative to `reden über` + Acc. */
+export const vonLemma = adposition("von");
+/** `reden mit` + Dat, which can appear beside `über` and takes its own Slot. */
+export const mitLemma = adposition("mit");
 
 /** Hebrew preposition: Hebrew complements mark no case. */
 export const alLemma = {

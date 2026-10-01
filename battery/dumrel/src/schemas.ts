@@ -19,6 +19,9 @@ import {
 import { semanticRelationSchema } from "./selection-schemas.js";
 import { normalizeText } from "./semantics.js";
 import {
+	adverbialStandInValues,
+	clauseCorrelateValues,
+	clauseFormValues,
 	conjugationClassValues,
 	directSemanticRelationValues,
 	formulaRoleValues,
@@ -28,6 +31,8 @@ import {
 	participleMeaningValues,
 	pluralMarkerValues,
 	pluralPatternValues,
+	predicativeMarkerValues,
+	predicativeOfValues,
 	sayingTypeValues,
 	translationLanguageValues,
 	valencyReferentValues,
@@ -49,21 +54,39 @@ export const valencySlotStatusSchema = z.enum(valencySlotStatusValues);
 export const valencyReferentSchema = z.enum(valencyReferentValues);
 
 /**
- * German complements, marked by case as in E-VALBU: a bare case (`jemandem`,
- * Dat) or a governed preposition with the ADP Lemma it selects and the case it
- * assigns in this construction (`warten auf` + Acc, `bestehen auf` + Dat).
+ * German complements, after E-VALBU (ADR 0034): a bare case (`jemandem`, Dat);
+ * a governed preposition with the ADP Lemma it selects and the case it governs
+ * in this construction (`warten auf` + Acc, `bestehen auf` + Dat); an
+ * Adverbial named by its stand-in (`wohnen` irgendwo); a Predicative of the
+ * subject or object with its free marker (`jN für dumm halten`); or a Clause
+ * of one form, with the correlate it may need (`sich freuen auf`: Dass,
+ * Required `darauf`). Only Case and Preposition name a referent.
  */
 export const germanValencyComplementSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Case"),
-		case: z.enum(germanComplementCaseValues),
+		governedCase: z.enum(germanComplementCaseValues),
 		referent: valencyReferentSchema,
 	}),
 	z.strictObject({
 		kind: z.literal("Preposition"),
 		preposition: adpositionLemmaSchemas.de,
-		case: governedCaseSchema,
+		governedCase: governedCaseSchema,
 		referent: valencyReferentSchema,
+	}),
+	z.strictObject({
+		kind: z.literal("Adverbial"),
+		standIn: z.enum(adverbialStandInValues),
+	}),
+	z.strictObject({
+		kind: z.literal("Predicative"),
+		of: z.enum(predicativeOfValues),
+		marker: z.enum(predicativeMarkerValues),
+	}),
+	z.strictObject({
+		kind: z.literal("Clause"),
+		form: z.enum(clauseFormValues),
+		correlate: z.enum(clauseCorrelateValues).optional(),
 	}),
 ]);
 /**
@@ -114,24 +137,33 @@ export const englishValencyComplementSchema = z.union([
 /**
  * The Slot skeleton is shared; each language brings its own complement
  * vocabulary, and another language joins by spreading its options here and
- * keying its routes in `valency-policy.ts`. A Preposition complement names an
- * ADP Lemma of its own language, so the vocabularies never overlap, and the
- * source-aware check keeps each Reading to its route's complements.
+ * keying its routes in `valency-policy.ts`. The vocabularies overlap: Hebrew
+ * and English share the Subject and DirectObject shapes, and the three
+ * Preposition shapes differ only in their ADP Lemma's language. The
+ * source-aware check keeps each Reading to its route's kinds and to
+ * prepositions of its own language.
  */
 export const valencyComplementSchema = z.union([
 	...germanValencyComplementSchema.options,
 	...hebrewValencyComplementSchema.options,
 	...englishValencyComplementSchema.options,
 ]);
+/**
+ * One position of a Valency Frame: one status for the Reading's valency, and
+ * its complements in order, usually one. Several complements are
+ * alternatives, E-VALBU's `/` (`reden` Optional `über` + Acc | `von` + Dat);
+ * complements that can appear together take separate Slots (ADR 0034).
+ */
 export const valencySlotSchema = z.strictObject({
 	status: valencySlotStatusSchema,
-	complement: valencyComplementSchema,
+	complements: z.array(valencyComplementSchema).min(1),
 });
 /**
- * The owning Reading's Valency Frame: its governed complements in order. The
- * governor owns every claim; a preposition's side is a read-time projection.
- * Fixed parts (a separable prefix, a lexical reflexive, a Locution's wording)
- * come from Lemma identity and are never Slots.
+ * The owning Reading's Valency Frame: its Slots in order, each complement in
+ * at most one of them. The governor owns every claim; a preposition's side is
+ * a read-time projection. Fixed parts (a separable prefix, a lexical
+ * reflexive, a Locution's wording) come from Lemma identity and are never
+ * Slots.
  */
 export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
 
@@ -322,7 +354,10 @@ export const knowledgeChangeSchema = z.union([
 	z.strictObject({
 		kind: z.literal("Retract"),
 		aspect: z.literal("valency"),
-		/** Retracts only the Slot with this complement; without it, the frame. */
+		/**
+		 * Retracts only this complement from its Slot, and the Slot once it is
+		 * empty; without it, the frame.
+		 */
 		complement: valencyComplementSchema.optional(),
 	}),
 	z.strictObject({
@@ -412,17 +447,17 @@ export const semanticRelationProjectionSchema = z.strictObject({
 export const governmentRelationSchema = z.enum(["governs", "governedBy"]);
 /**
  * One edge of Prepositional Government. `governs` runs from the governor
- * Reading to the ADP Lemma of a Preposition Slot in its Valency Frame;
- * `governedBy` is the inferred inverse from each supplied Reading of that ADP
- * Lemma back to the exact governor Reading. `case` is the case the Slot
- * assigns, and null in a language whose complements mark none (Hebrew,
- * English).
+ * Reading to the ADP Lemma of a Preposition complement in its Valency Frame,
+ * alternatives included; `governedBy` is the inferred inverse from each
+ * supplied Reading of that ADP Lemma back to the exact governor Reading.
+ * `governedCase` is the case the complement governs, and null in a language
+ * whose complements mark none (Hebrew, English).
  */
 export const governmentProjectionSchema = z.strictObject({
 	source: readingSchema,
 	relation: governmentRelationSchema,
 	target: z.union([lemmaSchema, readingSchema]),
-	case: governedCaseSchema.nullable(),
+	governedCase: governedCaseSchema.nullable(),
 	provenance: z.enum(["direct", "inferred"]),
 });
 

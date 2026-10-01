@@ -32,10 +32,13 @@ Both operations are synchronous and return an explicit success or
 deduplicated bucket values, `Correct` replaces one atomic aspect or bucket,
 and `Retract` removes it. A failed operation returns no partial value.
 
-`valency` records a Reading's Valency Frame: its governed complements in
-order, each Slot Required or Optional. German complements are a bare case
-or an ADP Lemma with the case it assigns. `projectPrepositionalGovernment`
-derives the inverse `governedBy` edges from Preposition Slots over a
+`valency` records a Reading's Valency Frame: its Slots in order, each
+Required or Optional and holding one complement or several alternatives.
+German complements are a bare case, an ADP Lemma with the case it governs, an
+Adverbial named by its stand-in, a Predicative, or a Clause of one form.
+`Contribute` adds a whole Slot or nothing, and a `Retract` that names a
+complement removes it from its Slot. `projectPrepositionalGovernment` derives
+the inverse `governedBy` edges from every Preposition complement over a
 dictionary inventory, so a preposition lists its Governors without storing
 them.
 

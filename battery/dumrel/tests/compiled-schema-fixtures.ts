@@ -31,23 +31,33 @@ export const samples: Record<string, unknown[]> = {
 			valency: [
 				{
 					status: "Required",
-					complement: {
-						kind: "Case",
-						case: "Nom",
-						referent: "Someone",
-					},
+					complements: [
+						{
+							kind: "Case",
+							governedCase: "Nom",
+							referent: "Someone",
+						},
+					],
 				},
 				{
 					status: "Optional",
-					complement: {
-						kind: "Preposition",
-						preposition: aufLemma,
-						case: "Acc",
-						referent: "Either",
-					},
+					complements: [
+						{
+							kind: "Preposition",
+							preposition: aufLemma,
+							governedCase: "Acc",
+							referent: "Either",
+						},
+						{ kind: "Clause", form: "Dass", correlate: "Required" },
+					],
+				},
+				{
+					status: "Required",
+					complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
 				},
 			],
 		},
+		{ valency: [{ status: "Required", complements: [] }] },
 		{
 			semanticRelations: {
 				targetKind: "reading",
@@ -88,12 +98,14 @@ export const samples: Record<string, unknown[]> = {
 			value: [
 				{
 					status: "Optional",
-					complement: {
-						kind: "Preposition",
-						preposition: aufLemma,
-						case: "Acc",
-						referent: "Either",
-					},
+					complements: [
+						{
+							kind: "Preposition",
+							preposition: aufLemma,
+							governedCase: "Acc",
+							referent: "Either",
+						},
+					],
 				},
 			],
 		},
@@ -101,7 +113,16 @@ export const samples: Record<string, unknown[]> = {
 		{
 			kind: "Retract",
 			aspect: "valency",
-			complement: { kind: "Case", case: "Dat", referent: "Someone" },
+			complement: {
+				kind: "Case",
+				governedCase: "Dat",
+				referent: "Someone",
+			},
+		},
+		{
+			kind: "Retract",
+			aspect: "valency",
+			complement: { kind: "Predicative", of: "Object", marker: "Für" },
 		},
 		{
 			kind: "Contribute",
@@ -158,20 +179,29 @@ export const samples: Record<string, unknown[]> = {
 	valencySlotStatus: ["Required", "Optional"],
 	valencyReferent: ["Someone", "Something", "Either"],
 	valencyComplement: [
+		{ kind: "Case", governedCase: "Gen", referent: "Something" },
+		// The field is governedCase; the Feature Pool's case is no Knowledge field.
 		{ kind: "Case", case: "Gen", referent: "Something" },
 		{
 			kind: "Preposition",
 			preposition: aufLemma,
-			case: "Dat",
+			governedCase: "Dat",
 			referent: "Either",
 		},
+		{ kind: "Adverbial", standIn: "IrgendwieLange" },
+		{ kind: "Adverbial", standIn: "Irgendwo", referent: "Something" },
+		{ kind: "Predicative", of: "Subject", marker: "Als" },
+		{ kind: "Predicative", of: "Subject", marker: "Als", case: "Nom" },
+		{ kind: "Clause", form: "ZuInfinitive" },
+		{ kind: "Clause", form: "Ob", correlate: "Optional" },
+		{ kind: "Clause", form: "Wenn" },
 		{ kind: "Subject", referent: "Someone" },
 		{ kind: "Preposition", preposition: alLemma, referent: "Either" },
 		// Each language's Preposition keeps to its own ADP Lemmas.
 		{
 			kind: "Preposition",
 			preposition: alLemma,
-			case: "Acc",
+			governedCase: "Acc",
 			referent: "Either",
 		},
 		{ kind: "Preposition", preposition: aufLemma, referent: "Either" },
@@ -180,35 +210,48 @@ export const samples: Record<string, unknown[]> = {
 		{
 			kind: "Preposition",
 			preposition: onLemma,
-			case: "Acc",
+			governedCase: "Acc",
 			referent: "Something",
 		},
 	],
 	germanValencyComplement: [
-		{ kind: "Case", case: "Nom", referent: "Someone" },
+		{ kind: "Case", governedCase: "Nom", referent: "Someone" },
 		{ kind: "Subject", referent: "Someone" },
+		{ kind: "Adverbial", standIn: "IrgendwieViel" },
+		{ kind: "Predicative", of: "Object", marker: "None" },
+		{ kind: "Clause", form: "BareInfinitive" },
 	],
 	hebrewValencyComplement: [
 		{ kind: "DirectObject", referent: "Something" },
 		{ kind: "Preposition", preposition: alLemma, referent: "Someone" },
-		{ kind: "Case", case: "Nom", referent: "Someone" },
+		{ kind: "Case", governedCase: "Nom", referent: "Someone" },
 		{ kind: "IndirectObject", referent: "Someone" },
+		{ kind: "Adverbial", standIn: "Irgendwo" },
 	],
 	englishValencyComplement: [
 		{ kind: "IndirectObject", referent: "Someone" },
 		{ kind: "Preposition", preposition: onLemma, referent: "Something" },
 		{ kind: "Preposition", preposition: alLemma, referent: "Someone" },
-		{ kind: "Case", case: "Dat", referent: "Someone" },
+		{ kind: "Case", governedCase: "Dat", referent: "Someone" },
+		{ kind: "Clause", form: "Dass" },
 	],
 	valencySlot: [
 		{
 			status: "Optional",
-			complement: {
-				kind: "Preposition",
-				preposition: aufLemma,
-				case: "Acc",
-				referent: "Either",
-			},
+			complements: [
+				{
+					kind: "Preposition",
+					preposition: aufLemma,
+					governedCase: "Acc",
+					referent: "Either",
+				},
+				{ kind: "Clause", form: "ZuInfinitive" },
+			],
+		},
+		{ status: "Optional", complements: [] },
+		{
+			status: "Optional",
+			complement: { kind: "Adverbial", standIn: "Irgendwohin" },
 		},
 	],
 	governmentRelation: ["governs", "governedBy"],
@@ -217,14 +260,14 @@ export const samples: Record<string, unknown[]> = {
 			source: wartenReading,
 			relation: "governs",
 			target: aufLemma,
-			case: "Acc",
+			governedCase: "Acc",
 			provenance: "direct",
 		},
 		{
 			source: wartenReading,
 			relation: "governs",
 			target: alLemma,
-			case: null,
+			governedCase: null,
 			provenance: "direct",
 		},
 	],

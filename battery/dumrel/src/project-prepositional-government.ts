@@ -26,8 +26,9 @@ const relationOrder = ["governs", "governedBy"];
 
 /**
  * Projects Prepositional Government over a finite dictionary inventory. Each
- * Preposition Slot of a stored Valency Frame yields a direct `governs` edge
- * from the governor Reading to the ADP Lemma, and an inferred `governedBy`
+ * Preposition complement of a stored Valency Frame, alternatives included,
+ * yields a direct `governs` edge from the governor Reading to the ADP Lemma
+ * (`reden` governs both `über` and `von`), and an inferred `governedBy`
  * edge from every supplied Reading of that ADP Lemma back to the exact
  * governor Reading, so a
  * preposition's page can list `warten`, `stolz` and `Angst` without storing
@@ -37,8 +38,8 @@ const relationOrder = ["governs", "governedBy"];
  * source Readings or invalid Knowledge reject the whole projection. An ADP
  * Lemma without supplied Readings still receives its direct edges. Output is
  * sorted by structural source key, relation (governs, governedBy), structural
- * target key, then case. A Hebrew or English edge has a null case. No inputs
- * are mutated.
+ * target key, then governed case. A Hebrew or English edge has a null
+ * governed case. No inputs are mutated.
  */
 export function projectPrepositionalGovernment(
 	entries: readonly ReadingWithKnowledge[],
@@ -83,19 +84,22 @@ export function projectPrepositionalGovernment(
 			key(edge.source),
 			edge.relation,
 			key(edge.target),
-			edge.case,
+			edge.governedCase,
 		]);
 		if (!edges.has(identity)) edges.set(identity, edge);
 	}
 	for (const { reading, knowledge } of governors)
-		for (const { complement: governed } of knowledge.valency ?? []) {
+		for (const governed of (knowledge.valency ?? []).flatMap(
+			({ complements }) => complements,
+		)) {
 			if (governed.kind !== "Preposition") continue;
-			const governedCase = "case" in governed ? governed.case : null;
+			const governedCase =
+				"governedCase" in governed ? governed.governedCase : null;
 			add({
 				source: reading,
 				relation: "governs",
 				target: governed.preposition,
-				case: governedCase,
+				governedCase,
 				provenance: "direct",
 			} as GovernmentProjection);
 			for (const preposition of byLemma.get(key(governed.preposition)) ??
@@ -104,7 +108,7 @@ export function projectPrepositionalGovernment(
 					source: preposition,
 					relation: "governedBy",
 					target: reading,
-					case: governedCase,
+					governedCase,
 					provenance: "inferred",
 				} as GovernmentProjection);
 		}
@@ -116,7 +120,7 @@ export function projectPrepositionalGovernment(
 				relationOrder.indexOf(left.relation) -
 					relationOrder.indexOf(right.relation) ||
 				compare(key(left.target), key(right.target)) ||
-				compare(left.case ?? "", right.case ?? ""),
+				compare(left.governedCase ?? "", right.governedCase ?? ""),
 		),
 	};
 }

@@ -39,6 +39,53 @@ export const participleMeaningValues = ["Verbal", "Drifted"] as const;
 export const germanComplementCaseValues = ["Nom", "Acc", "Dat", "Gen"] as const;
 
 /**
+ * The adverb that stands in for a German Adverbial complement, as E-VALBU
+ * substitutes it (ADR 0034): a place (`wohnen` irgendwo), a direction
+ * (`legen` irgendwohin), a manner (`sich benehmen` irgendwie), a duration
+ * (`dauern` irgendwie lange) or a measure (`kosten` irgendwie viel).
+ */
+export const adverbialStandInValues = [
+	"Irgendwo",
+	"Irgendwohin",
+	"Irgendwie",
+	"IrgendwieLange",
+	"IrgendwieViel",
+] as const;
+
+/**
+ * What a German Predicative complement describes: the subject (`gut
+ * aussehen`) or the object (`jN für dumm halten`).
+ */
+export const predicativeOfValues = ["Subject", "Object"] as const;
+
+/**
+ * The free word that marks a German Predicative: none (`aussehen`), `als`
+ * (`sich zeigen`) or `für` (`halten`). It is never a member and never a
+ * Preposition complement (ADR 0034).
+ */
+export const predicativeMarkerValues = ["None", "Als", "Für"] as const;
+
+/**
+ * The forms a German Clause complement takes, one complement per form: a
+ * zu-infinitive (`versuchen`), a bare infinitive (a modal), or a clause with
+ * `dass`, `ob` or a w-word (`wissen`).
+ */
+export const clauseFormValues = [
+	"ZuInfinitive",
+	"BareInfinitive",
+	"Dass",
+	"Ob",
+	"W",
+] as const;
+
+/**
+ * Whether a Clause complement needs the word that anticipates it: `es` in a
+ * Nom or Acc Slot, `da(r)-` with the Slot's preposition in a Preposition Slot
+ * (`sich freuen auf`: Required `darauf`).
+ */
+export const clauseCorrelateValues = ["Required", "Optional"] as const;
+
+/**
  * How a German noun forms its plural from its singular: no ending
  * (`Lehrer`), umlaut only (`Mutter` → `Mütter`), `-e` (`Tag`), umlaut + `-e`
  * (`Bank` → `Bänke`), `-er` (`Kind`), umlaut + `-er` (`Haus` → `Häuser`),

@@ -14,7 +14,10 @@ import {
 	fuerLemma,
 	houseLemma,
 	houseReading,
+	mitLemma,
 	onLemma,
+	ueberLemma,
+	vonLemma,
 	vorLemma,
 	wartenReading,
 } from "./fixtures.js";
@@ -22,15 +25,16 @@ import {
 const aufAcc = {
 	kind: "Preposition",
 	preposition: aufLemma,
-	case: "Acc",
+	governedCase: "Acc",
 	referent: "Either",
 } as const;
-const aufDat = { ...aufAcc, case: "Dat" } as const;
-const optional = <C>(complement: C) =>
-	({ status: "Optional", complement }) as const;
-const required = <C>(complement: C) =>
-	({ status: "Required", complement }) as const;
-const nom = { kind: "Case", case: "Nom", referent: "Someone" } as const;
+const aufDat = { ...aufAcc, governedCase: "Dat" } as const;
+/** A Slot of these complements, alternatives when there are several. */
+const optional = <const C extends unknown[]>(...complements: C) =>
+	({ status: "Optional", complements }) as const;
+const required = <const C extends unknown[]>(...complements: C) =>
+	({ status: "Required", complements }) as const;
+const nom = { kind: "Case", governedCase: "Nom", referent: "Someone" } as const;
 
 const stolzReading = {
 	unitKind: "Reading",
@@ -74,7 +78,25 @@ test("a two-way preposition takes the construction's case", () => {
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
-			knowledge: { valency: [optional({ ...aufAcc, case: "Nom" })] },
+			knowledge: {
+				valency: [optional({ ...aufAcc, governedCase: "Nom" })],
+			},
+		}).success,
+	).toBe(false);
+	// The field is governedCase: Knowledge names no Feature Pool feature.
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: {
+				valency: [
+					optional({
+						kind: "Preposition",
+						preposition: aufLemma,
+						case: "Acc",
+						referent: "Either",
+					}),
+				],
+			},
 		}).success,
 	).toBe(false);
 });
@@ -86,7 +108,11 @@ test("a subjectless verb's frame has no Nom slot", () => {
 		lemma: { ...wartenReading.lemma, canonicalForm: "grauen" },
 		emojiDescription: "😨",
 	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
-	const dat = { kind: "Case", case: "Dat", referent: "Someone" } as const;
+	const dat = {
+		kind: "Case",
+		governedCase: "Dat",
+		referent: "Someone",
+	} as const;
 	const vorDat = { ...aufDat, preposition: vorLemma } as const;
 	const valency = [required(dat), optional(vorDat)];
 	expect(
@@ -108,7 +134,7 @@ test("Dumrel leaves a preposition's case to dumspec's ADP Case Table", () => {
 					optional({
 						...aufAcc,
 						preposition: fuerLemma,
-						case: "Dat",
+						governedCase: "Dat",
 					}),
 				],
 			},
@@ -138,7 +164,9 @@ test("only an ADP Lemma of the source Language can be governed", () => {
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,
-			knowledge: { valency: [optional({ ...aufAcc, case: "Nom" })] },
+			knowledge: {
+				valency: [optional({ ...aufAcc, governedCase: "Nom" })],
+			},
 		}).success,
 	).toBe(false);
 });
@@ -154,7 +182,8 @@ test("each route allows its own complements, and lists each once", () => {
 			"knowledge",
 			"valency",
 			0,
-			"complement",
+			"complements",
+			0,
 			"kind",
 		]);
 	expect(
@@ -252,7 +281,11 @@ test("Contribute adds missing Slots, Correct replaces the frame, Retract removes
 			kind: "Contribute",
 			aspect: "valency",
 			value: [
-				optional({ ...aufAcc, preposition: fuerLemma, case: "Nom" }),
+				optional({
+					...aufAcc,
+					preposition: fuerLemma,
+					governedCase: "Nom",
+				}),
 			],
 		},
 	});
@@ -311,7 +344,7 @@ test("projection reads Preposition Slots and infers the preposition side", () =>
 		source: wartenReading,
 		relation: "governs",
 		target: aufLemma,
-		case: "Acc",
+		governedCase: "Acc",
 		provenance: "direct",
 	});
 	const withoutPreposition = projectPrepositionalGovernment([
@@ -325,7 +358,7 @@ test("projection reads Preposition Slots and infers the preposition side", () =>
 			source: wartenReading,
 			relation: "governs",
 			target: aufLemma,
-			case: "Acc",
+			governedCase: "Acc",
 			provenance: "direct",
 		},
 	]);
@@ -335,6 +368,277 @@ test("projection reads Preposition Slots and infers the preposition side", () =>
 			{ reading: wartenReading, knowledge: {} },
 		]).success,
 	).toBe(false);
+});
+
+const germanVerbReading = (canonicalForm: string, emojiDescription: string) =>
+	({
+		...wartenReading,
+		lemma: { ...wartenReading.lemma, canonicalForm },
+		emojiDescription,
+	}) as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;
+const wohnenReading = germanVerbReading("wohnen", "🏠");
+const redenReading = germanVerbReading("reden", "💬");
+const sprechenReading = germanVerbReading("sprechen", "📢");
+const ueberAcc = { ...aufAcc, preposition: ueberLemma } as const;
+const vonDat = {
+	...aufAcc,
+	preposition: vonLemma,
+	governedCase: "Dat",
+} as const;
+const mitDat = { ...vonDat, preposition: mitLemma } as const;
+const irgendwo = { kind: "Adverbial", standIn: "Irgendwo" } as const;
+const irgendwie = { kind: "Adverbial", standIn: "Irgendwie" } as const;
+const dassClause = { kind: "Clause", form: "Dass" } as const;
+/** `reden`: Optional `über` + Acc | `von` + Dat, with `mit` + Dat beside it. */
+const reden = [required(nom), optional(mitDat), optional(ueberAcc, vonDat)];
+
+test("a complement the word requires is a Slot whatever marks it", () => {
+	// Sie wohnt bei ihrer Tante: the place is required, its preposition free.
+	const wohnen = [required(nom), required(irgendwo), optional(irgendwie)];
+	expect(
+		parseReadingKnowledge({
+			source: wohnenReading,
+			knowledge: { valency: wohnen },
+		}),
+	).toEqual({ success: true, value: { valency: wohnen } });
+	for (const invalid of [
+		{ kind: "Adverbial", standIn: "Irgendwann" },
+		{ ...irgendwo, referent: "Something" },
+		{ kind: "Predicative", of: "Subject", marker: "Wie" },
+		{ kind: "Predicative", of: "Subject" },
+		{ kind: "Clause", form: "Wenn" },
+		{ ...dassClause, correlate: "Never" },
+	])
+		expect(
+			parseReadingKnowledge({
+				source: wohnenReading,
+				knowledge: { valency: [required(invalid)] },
+			}).success,
+		).toBe(false);
+});
+
+test("a Slot holds alternatives, and a complement sits in one Slot at most", () => {
+	expect(
+		parseReadingKnowledge({
+			source: redenReading,
+			knowledge: { valency: reden },
+		}),
+	).toEqual({ success: true, value: { valency: reden } });
+	expect(
+		parseReadingKnowledge({
+			source: redenReading,
+			knowledge: { valency: [optional()] },
+		}).success,
+	).toBe(false);
+	const twice = parseReadingKnowledge({
+		source: redenReading,
+		knowledge: { valency: [...reden, optional(ueberAcc)] },
+	});
+	expect(twice.success).toBe(false);
+	if (!twice.success)
+		expect(twice.error.issues[0]?.path).toEqual([
+			"knowledge",
+			"valency",
+			3,
+			"complements",
+			0,
+		]);
+	expect(
+		parseReadingKnowledge({
+			source: redenReading,
+			knowledge: { valency: [optional(ueberAcc, vonDat, ueberAcc)] },
+		}).success,
+	).toBe(false);
+});
+
+test("each German route allows its own complement kinds", () => {
+	const allows = (source: Dumling.Reading, complement: unknown) =>
+		parseReadingKnowledge({
+			source,
+			knowledge: { valency: [optional(complement)] },
+		}).success;
+	const predicative = {
+		kind: "Predicative",
+		of: "Subject",
+		marker: "None",
+	} as const;
+	const zuInfinitive = { kind: "Clause", form: "ZuInfinitive" } as const;
+	// Verbs take every German kind: a copula's Predicative of its subject.
+	for (const complement of [irgendwo, predicative, zuInfinitive])
+		expect(allows(wartenReading, complement)).toBe(true);
+	// Adjectives take all but Predicative.
+	expect(allows(stolzReading, irgendwo)).toBe(true);
+	expect(allows(stolzReading, dassClause)).toBe(true);
+	expect(allows(stolzReading, predicative)).toBe(false);
+	// Nouns take a Clause, alone (der Versuch, etw zu tun) or beside a
+	// Preposition (die Freude darauf, dass …), and no other markerless kind.
+	expect(allows(houseReading, zuInfinitive)).toBe(true);
+	expect(
+		parseReadingKnowledge({
+			source: houseReading,
+			knowledge: {
+				valency: [
+					optional(aufAcc, { ...dassClause, correlate: "Required" }),
+				],
+			},
+		}).success,
+	).toBe(true);
+	expect(allows(houseReading, irgendwo)).toBe(false);
+	expect(allows(houseReading, predicative)).toBe(false);
+	expect(allows(houseReading, nom)).toBe(false);
+});
+
+test("a Clause with a correlate takes its da(r)- from the Slot's one Preposition", () => {
+	// sich freuen auf: auf + Acc | dass-clause with a Required darauf.
+	const freuenAuf = [
+		required(nom),
+		required(aufAcc, { ...dassClause, correlate: "Required" }),
+	];
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: { valency: freuenAuf },
+		}).success,
+	).toBe(true);
+	// freuen 'please': a subject clause in the Nom Slot, its es Optional.
+	expect(
+		parseReadingKnowledge({
+			source: wartenReading,
+			knowledge: {
+				valency: [
+					required(nom, { ...dassClause, correlate: "Optional" }),
+					required({ ...nom, governedCase: "Acc" }),
+				],
+			},
+		}).success,
+	).toBe(true);
+	const ambiguous = parseReadingKnowledge({
+		source: redenReading,
+		knowledge: {
+			valency: [
+				required(nom),
+				optional(ueberAcc, vonDat, {
+					...dassClause,
+					correlate: "Required",
+				}),
+			],
+		},
+	});
+	expect(ambiguous.success).toBe(false);
+	if (!ambiguous.success)
+		expect(ambiguous.error.issues[0]?.path).toEqual([
+			"knowledge",
+			"valency",
+			1,
+			"complements",
+			2,
+			"correlate",
+		]);
+	// Without a correlate, the clause names no preposition.
+	expect(
+		parseReadingKnowledge({
+			source: redenReading,
+			knowledge: {
+				valency: [
+					required(nom),
+					optional(ueberAcc, vonDat, dassClause),
+				],
+			},
+		}).success,
+	).toBe(true);
+});
+
+test("Contribute never groups alternatives, and Retract empties a Slot one complement at a time", () => {
+	const contribute = (value: unknown) =>
+		applyKnowledgeChange({
+			source: redenReading,
+			knowledge: { valency: [...reden] },
+			change: { kind: "Contribute", aspect: "valency", value },
+		});
+	expect(contribute([optional(vonDat)])).toEqual({
+		success: true,
+		value: { valency: reden },
+	});
+	// A contributed Slot is added whole or not at all.
+	expect(contribute([optional(ueberAcc, { ...aufAcc })])).toEqual({
+		success: true,
+		value: { valency: reden },
+	});
+	expect(contribute([optional(aufAcc)])).toEqual({
+		success: true,
+		value: { valency: [...reden, optional(aufAcc)] },
+	});
+	expect(contribute([optional(irgendwo)])).toEqual({
+		success: true,
+		value: { valency: [...reden, optional(irgendwo)] },
+	});
+	const retract = (knowledge: unknown, complement: unknown) =>
+		applyKnowledgeChange({
+			source: redenReading,
+			knowledge: knowledge as never,
+			change: { kind: "Retract", aspect: "valency", complement },
+		});
+	const withoutUeber = [required(nom), optional(mitDat), optional(vonDat)];
+	expect(retract({ valency: reden }, ueberAcc)).toEqual({
+		success: true,
+		value: { valency: withoutUeber },
+	});
+	expect(retract({ valency: withoutUeber }, vonDat)).toEqual({
+		success: true,
+		value: { valency: [required(nom), optional(mitDat)] },
+	});
+	expect(retract({ valency: [optional(vonDat)] }, vonDat)).toEqual({
+		success: true,
+		value: {},
+	});
+	expect(
+		applyKnowledgeChange({
+			source: redenReading,
+			knowledge: { valency: [...reden] },
+			change: {
+				kind: "Correct",
+				aspect: "valency",
+				value: [required(nom), optional(ueberAcc)],
+			},
+		}),
+	).toEqual({
+		success: true,
+		value: { valency: [required(nom), optional(ueberAcc)] },
+	});
+});
+
+test("every Preposition alternative governs", () => {
+	const vonReading = {
+		unitKind: "Reading",
+		lemma: vonLemma,
+		emojiDescription: "🔙",
+	} as const satisfies Dumling.Reading<"de", "Lexeme", "ADP">;
+	const result = projectPrepositionalGovernment([
+		{ reading: vonReading, knowledge: {} },
+		{ reading: redenReading, knowledge: { valency: [...reden] } },
+		{
+			reading: sprechenReading,
+			knowledge: { valency: [required(nom), optional(irgendwie)] },
+		},
+	]);
+	expect(result.success).toBe(true);
+	if (!result.success) return;
+	expect(
+		result.value
+			.filter((edge) => edge.relation === "governs")
+			.map((edge) => [edge.target, edge.governedCase]),
+	).toEqual([
+		[mitLemma, "Dat"],
+		[vonLemma, "Dat"],
+		[ueberLemma, "Acc"],
+	]);
+	expect(result.value).toContainEqual({
+		source: vonReading,
+		relation: "governedBy",
+		target: redenReading,
+		governedCase: "Dat",
+		provenance: "inferred",
+	});
 });
 
 const samachLemma = {
@@ -420,7 +724,7 @@ test("a Hebrew Reading holds a caseless frame its Attestation realizes", () => {
 			{ member: 1, complement: al },
 			{ member: 1, complement: { ...al, referent: "Someone" } },
 		],
-		[{ member: 1, complement: { ...al, case: "Acc" } }],
+		[{ member: 1, complement: { ...al, governedCase: "Acc" } }],
 		[{ member: 1, complement: al, realizedCase: "Acc" }],
 	])
 		expect(
@@ -441,12 +745,14 @@ test("a Hebrew frame takes only its route's Hebrew complements", () => {
 			"knowledge",
 			"valency",
 			0,
-			"complement",
+			"complements",
+			0,
 			"kind",
 		]);
 	for (const complement of [
 		aufAcc,
-		{ ...al, case: "Acc" },
+		{ ...al, governedCase: "Acc" },
+		{ kind: "Adverbial", standIn: "Irgendwo" },
 		{ ...al, preposition: { ...alLemma, language: "de" } },
 	] as unknown[])
 		expect(
@@ -488,7 +794,7 @@ test("a Hebrew Preposition Slot projects government with no case", () => {
 			source: samachReading,
 			relation: "governs",
 			target: alLemma,
-			case: null,
+			governedCase: null,
 			provenance: "direct",
 		},
 	]);
@@ -577,7 +883,7 @@ test("an English Reading holds a caseless frame by position and preposition", ()
 	for (const invalid of [
 		[{ member: 0, complement: on }],
 		[{ member: 1, complement: indirectObject }],
-		[{ member: 1, complement: { ...on, case: "Acc" } }],
+		[{ member: 1, complement: { ...on, governedCase: "Acc" } }],
 		[{ member: 1, complement: on, realizedCase: "Acc" }],
 		[{ member: 1, complement: { ...al, referent: "Something" } }],
 	])
@@ -592,7 +898,10 @@ test("an English frame takes only its route's English complements", () => {
 	const germanCase = parseReadingKnowledge({
 		source: giveReading,
 		knowledge: {
-			valency: [required(subject), optional({ ...nom, case: "Dat" })],
+			valency: [
+				required(subject),
+				optional({ ...nom, governedCase: "Dat" }),
+			],
 		},
 	} as never);
 	expect(germanCase.success).toBe(false);
@@ -601,13 +910,15 @@ test("an English frame takes only its route's English complements", () => {
 			"knowledge",
 			"valency",
 			1,
-			"complement",
+			"complements",
+			0,
 			"kind",
 		]);
 	for (const complement of [
 		aufAcc,
 		al,
-		{ ...on, case: "Acc" },
+		{ ...on, governedCase: "Acc" },
+		{ kind: "Clause", form: "Dass" },
 		{ ...on, preposition: { ...onLemma, language: "de" } },
 	] as unknown[])
 		expect(
@@ -638,7 +949,7 @@ test("an English Preposition Slot projects government with no case", () => {
 			source: dependReading,
 			relation: "governs",
 			target: onLemma,
-			case: null,
+			governedCase: null,
 			provenance: "direct",
 		},
 	]);
