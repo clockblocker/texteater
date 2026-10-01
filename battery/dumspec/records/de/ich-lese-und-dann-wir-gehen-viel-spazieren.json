@@ -238,8 +238,7 @@
 						"canonicalForm": "lesen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

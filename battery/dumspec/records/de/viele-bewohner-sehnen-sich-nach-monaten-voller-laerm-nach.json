@@ -169,8 +169,7 @@
 						"canonicalForm": "sich sehnen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "sehnen sich",

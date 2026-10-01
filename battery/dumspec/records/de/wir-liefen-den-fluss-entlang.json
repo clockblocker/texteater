@@ -27,7 +27,7 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
+			{ "rule": "de/verb-core-features", "hash": "b43bf4d795ca1ee1" }
 		],
 		"references": []
 	},
@@ -73,8 +73,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "entlang",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

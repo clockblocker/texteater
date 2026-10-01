@@ -260,8 +260,7 @@
 						"canonicalForm": "sich abfinden",
 						"coreFeatures": {
 							"hasSepPrefix": "ab",
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "findet sich ab",

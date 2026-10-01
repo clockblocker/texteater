@@ -62,8 +62,7 @@
 						"canonicalForm": "herüberkommen",
 						"coreFeatures": {
 							"hasSepPrefix": "herüber",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "kommst herüber",

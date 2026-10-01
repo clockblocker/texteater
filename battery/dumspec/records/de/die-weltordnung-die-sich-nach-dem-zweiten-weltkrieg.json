@@ -63,8 +63,7 @@
 						"canonicalForm": "sich etablieren",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "sich etabliert hat",

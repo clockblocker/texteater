@@ -123,8 +123,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "leid",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

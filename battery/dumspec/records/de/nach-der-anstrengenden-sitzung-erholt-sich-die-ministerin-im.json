@@ -56,8 +56,7 @@
 						"canonicalForm": "sich erholen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "erholt sich",

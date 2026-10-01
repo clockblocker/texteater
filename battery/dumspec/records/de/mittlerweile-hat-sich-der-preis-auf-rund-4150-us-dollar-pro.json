@@ -60,8 +60,7 @@
 						"canonicalForm": "sich einpendeln",
 						"coreFeatures": {
 							"hasSepPrefix": "ein",
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "hat sich eingependelt",

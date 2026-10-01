@@ -73,8 +73,7 @@
 						"canonicalForm": "wollen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "willst",
@@ -120,8 +119,7 @@
 						"canonicalForm": "hinfahren",
 						"coreFeatures": {
 							"hasSepPrefix": "hin",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hinfahren",

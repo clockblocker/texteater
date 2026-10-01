@@ -54,7 +54,7 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
+			{ "rule": "de/verb-core-features", "hash": "b43bf4d795ca1ee1" },
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
 			{ "rule": "de/bare-infinitive-zu", "hash": "a1c44338fa4ffc37" }
 		],
@@ -81,8 +81,7 @@
 						"canonicalForm": "hinauslaufen",
 						"coreFeatures": {
 							"hasSepPrefix": "hinaus",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hinauslaufen",

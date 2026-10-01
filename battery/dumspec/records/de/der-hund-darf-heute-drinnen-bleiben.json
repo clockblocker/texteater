@@ -42,8 +42,7 @@
 						"canonicalForm": "dürfen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "darf",

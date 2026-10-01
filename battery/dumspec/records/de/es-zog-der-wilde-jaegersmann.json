@@ -128,8 +128,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "an",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

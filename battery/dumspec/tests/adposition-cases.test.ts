@@ -158,7 +158,6 @@ test("a Valency Frame's preposition is listed and takes the slot's case", () => 
 			coreFeatures: {
 				hasSepPrefix: null,
 				lexicallyReflexive: null,
-				verbType: null,
 			},
 		},
 	} as const satisfies Dumling.Reading<"de", "Lexeme", "VERB">;

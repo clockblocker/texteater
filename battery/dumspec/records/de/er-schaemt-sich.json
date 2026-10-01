@@ -33,8 +33,7 @@
 						"canonicalForm": "sich schämen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "schämt sich",

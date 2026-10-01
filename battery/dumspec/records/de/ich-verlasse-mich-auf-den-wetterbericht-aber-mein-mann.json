@@ -224,8 +224,7 @@
 						"canonicalForm": "sich verlassen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "verlasse mich",
@@ -489,8 +488,7 @@
 						"canonicalForm": "sich verlassen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "verlässt sich",

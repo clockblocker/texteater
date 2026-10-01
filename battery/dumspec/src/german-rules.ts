@@ -1355,12 +1355,11 @@ const attestations: Rule[] = [
 	{
 		id: "de/verb-core-features",
 		statement:
-			"A VERB's hasSepPrefix names only its separable prefix, never a governed preposition or a preposition with its own complement. verbType Mod marks a modal, one Lemma whether it governs an infinitive or an object.",
-		adrs: ["ADR-0026", "ADR-0029"],
+			"A VERB's hasSepPrefix names only its separable prefix, never a governed preposition or a preposition with its own complement.",
+		adrs: ["ADR-0029"],
 		routes: lexeme("VERB"),
 		records: [
 			"de/der-faehrmann-hat-uns-uebergesetzt",
-			"de/er-muss-heute-arbeiten",
 			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
 			"de/der-laster-fuhr-das-schild-um",
 			"de/sie-umfuhr-die-baustelle-weitraeumig",

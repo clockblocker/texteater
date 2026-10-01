@@ -186,8 +186,7 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "ist",
@@ -558,8 +557,7 @@
 						"canonicalForm": "verteidigen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "verteidigen",
@@ -613,8 +611,7 @@
 						"canonicalForm": "wollen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "wolltest",

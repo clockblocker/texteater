@@ -57,8 +57,7 @@
 						"canonicalForm": "sich erinnern",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "erinnert sich",

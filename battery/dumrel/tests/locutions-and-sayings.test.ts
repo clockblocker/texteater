@@ -33,7 +33,6 @@ const sterben = {
 		coreFeatures: {
 			hasSepPrefix: null,
 			lexicallyReflexive: null,
-			verbType: null,
 		},
 	},
 	emojiDescription: "🪦",

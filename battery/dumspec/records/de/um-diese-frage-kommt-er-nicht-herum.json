@@ -49,8 +49,7 @@
 						"canonicalForm": "herumkommen",
 						"coreFeatures": {
 							"hasSepPrefix": "herum",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "kommt herum",

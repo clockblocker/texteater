@@ -3252,7 +3252,6 @@ export interface UnitMap {
 			coreFeatures: {
 				hasSepPrefix: string | null;
 				lexicallyReflexive: "Yes" | null;
-				verbType: "Mod" | null;
 			};
 		};
 		Surface: {
@@ -3267,7 +3266,6 @@ export interface UnitMap {
 				coreFeatures: {
 					hasSepPrefix: string | null;
 					lexicallyReflexive: "Yes" | null;
-					verbType: "Mod" | null;
 				};
 			};
 			normalizedSurface: string;
@@ -3454,7 +3452,6 @@ export interface UnitMap {
 				coreFeatures: {
 					hasSepPrefix: string | null;
 					lexicallyReflexive: "Yes" | null;
-					verbType: "Mod" | null;
 				};
 			};
 			emojiDescription: string;
@@ -3473,7 +3470,6 @@ export interface UnitMap {
 					coreFeatures: {
 						hasSepPrefix: string | null;
 						lexicallyReflexive: "Yes" | null;
-						verbType: "Mod" | null;
 					};
 				};
 				normalizedSurface: string;

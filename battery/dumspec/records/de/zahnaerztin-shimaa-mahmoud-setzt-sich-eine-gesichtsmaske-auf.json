@@ -46,8 +46,7 @@
 						"canonicalForm": "aufsetzen",
 						"coreFeatures": {
 							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "setzt auf",

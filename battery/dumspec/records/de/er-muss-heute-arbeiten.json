@@ -17,7 +17,7 @@
 	"sources": {
 		"adrs": ["ADR-0026"],
 		"rules": [
-			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
+			{ "rule": "de/verb-core-features", "hash": "b43bf4d795ca1ee1" },
 			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
 		],
 		"references": []
@@ -61,8 +61,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -109,8 +108,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

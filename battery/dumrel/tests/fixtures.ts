@@ -87,7 +87,6 @@ export const wartenReading = {
 		coreFeatures: {
 			hasSepPrefix: null,
 			lexicallyReflexive: null,
-			verbType: null,
 		},
 	},
 	emojiDescription: "⏳",

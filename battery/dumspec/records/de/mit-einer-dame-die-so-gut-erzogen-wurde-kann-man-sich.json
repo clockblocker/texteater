@@ -244,8 +244,7 @@
 						"canonicalForm": "sich zanken",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "sich zanken",
@@ -519,8 +518,7 @@
 						"canonicalForm": "erziehen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "erzogen wurde",
@@ -578,8 +576,7 @@
 						"canonicalForm": "können",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "kann",

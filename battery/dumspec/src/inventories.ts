@@ -30,7 +30,10 @@ export {
 	germanArticleCell,
 	germanArticleSpellings,
 } from "./inventories/de/article-cells.js";
-export { closedVerbForms } from "./inventories/de/closed-verb-paradigms.js";
+export {
+	closedVerbForms,
+	modalVerbs,
+} from "./inventories/de/closed-verb-paradigms.js";
 export { germanConjunctionLocutions } from "./inventories/de/conjunction-locutions.js";
 export { reviewedDeterminers } from "./inventories/de/determiner-paradigms.js";
 export {

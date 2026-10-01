@@ -55,8 +55,7 @@
 						"canonicalForm": "sich vorbereiten",
 						"coreFeatures": {
 							"hasSepPrefix": "vor",
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "bereitet sich vor",

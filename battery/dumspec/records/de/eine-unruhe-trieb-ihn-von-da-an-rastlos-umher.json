@@ -221,8 +221,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "umher",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

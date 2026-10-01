@@ -183,7 +183,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "bcb53b5333fa8af4"
+				"hash": "b43bf4d795ca1ee1"
 			},
 			{
 				"rule": "de/noun-owns-its-article",
@@ -261,8 +261,7 @@
 						"canonicalForm": "klopfen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "klopfte es",
@@ -720,8 +719,7 @@
 						"canonicalForm": "sehen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "gesehen hatte",
@@ -779,8 +777,7 @@
 						"canonicalForm": "eintreten",
 						"coreFeatures": {
 							"hasSepPrefix": "ein",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "trat ein",

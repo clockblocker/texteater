@@ -72,8 +72,7 @@
 						"canonicalForm": "herstellen",
 						"coreFeatures": {
 							"hasSepPrefix": "her",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hergestellt werden",

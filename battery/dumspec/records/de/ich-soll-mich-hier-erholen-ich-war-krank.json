@@ -202,8 +202,7 @@
 						"canonicalForm": "sollen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -261,8 +260,7 @@
 						"canonicalForm": "sich erholen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"surfaceFeatures": null
@@ -406,8 +404,7 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

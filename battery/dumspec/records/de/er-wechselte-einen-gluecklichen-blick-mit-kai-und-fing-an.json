@@ -348,8 +348,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -597,8 +596,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "an",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -829,8 +827,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "ab",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -990,8 +987,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "aus",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

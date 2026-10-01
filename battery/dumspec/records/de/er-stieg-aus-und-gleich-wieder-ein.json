@@ -177,8 +177,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "aus",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -355,8 +354,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "ein",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

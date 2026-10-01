@@ -36,8 +36,7 @@
 						"canonicalForm": "mögen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "mag",

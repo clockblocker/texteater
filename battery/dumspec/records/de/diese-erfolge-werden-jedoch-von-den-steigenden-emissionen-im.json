@@ -55,8 +55,7 @@
 						"canonicalForm": "auffressen",
 						"coreFeatures": {
 							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "werden aufgefressen",

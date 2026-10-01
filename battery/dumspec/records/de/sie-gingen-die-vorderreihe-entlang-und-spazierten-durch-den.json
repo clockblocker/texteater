@@ -215,7 +215,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "bcb53b5333fa8af4"
+				"hash": "b43bf4d795ca1ee1"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -301,8 +301,7 @@
 						"canonicalForm": "entlanggehen",
 						"coreFeatures": {
 							"hasSepPrefix": "entlang",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "gingen entlang",
@@ -447,8 +446,7 @@
 						"canonicalForm": "spazieren",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "spazierten",
@@ -997,8 +995,7 @@
 						"canonicalForm": "daliegen",
 						"coreFeatures": {
 							"hasSepPrefix": "da",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "dalag",

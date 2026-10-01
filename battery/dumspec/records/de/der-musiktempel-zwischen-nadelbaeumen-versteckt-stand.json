@@ -231,7 +231,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "bcb53b5333fa8af4"
+				"hash": "b43bf4d795ca1ee1"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -457,8 +457,7 @@
 						"canonicalForm": "gegenüberstehen",
 						"coreFeatures": {
 							"hasSepPrefix": "gegenüber",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "stand gegenüber",

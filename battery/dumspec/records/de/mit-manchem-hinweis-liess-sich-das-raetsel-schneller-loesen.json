@@ -123,8 +123,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"surfaceFeatures": null

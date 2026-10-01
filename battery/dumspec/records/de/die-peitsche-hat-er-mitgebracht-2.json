@@ -37,8 +37,7 @@
 						"canonicalForm": "mitbringen",
 						"coreFeatures": {
 							"hasSepPrefix": "mit",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hat mitgebracht",

@@ -272,8 +272,7 @@
 						"canonicalForm": "grüßen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "grüßen",
@@ -515,8 +514,7 @@
 						"canonicalForm": "sich unterhalten",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "unterhalten sich",

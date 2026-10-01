@@ -127,8 +127,7 @@
 						"canonicalForm": "können",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "kannst",
@@ -435,8 +434,7 @@
 						"canonicalForm": "abholen",
 						"coreFeatures": {
 							"hasSepPrefix": "ab",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "abholen",

@@ -484,8 +484,7 @@
 						"canonicalForm": "sterben",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -543,8 +542,7 @@
 						"canonicalForm": "haben",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -931,8 +929,7 @@
 						"canonicalForm": "sich zerreiben",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"surfaceFeatures": null
@@ -1086,8 +1083,7 @@
 						"canonicalForm": "zutreffen",
 						"coreFeatures": {
 							"hasSepPrefix": "zu",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

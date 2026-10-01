@@ -57,8 +57,7 @@
 						"canonicalForm": "hinunterschauen",
 						"coreFeatures": {
 							"hasSepPrefix": "hinunter",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "schaut hinunter",

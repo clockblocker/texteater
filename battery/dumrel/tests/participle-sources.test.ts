@@ -18,7 +18,6 @@ const verlieben = {
 	coreFeatures: {
 		hasSepPrefix: null,
 		lexicallyReflexive: "Yes",
-		verbType: null,
 	},
 } as const satisfies Dumling.Lemma<"de", "Lexeme", "VERB">;
 const verliebenReading = {

@@ -62,8 +62,7 @@
 						"canonicalForm": "ausschließen",
 						"coreFeatures": {
 							"hasSepPrefix": "aus",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hat ausgeschlossen",

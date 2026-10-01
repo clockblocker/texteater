@@ -146,8 +146,7 @@
 						"canonicalForm": "fortgehen",
 						"coreFeatures": {
 							"hasSepPrefix": "fort",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "fort geht",

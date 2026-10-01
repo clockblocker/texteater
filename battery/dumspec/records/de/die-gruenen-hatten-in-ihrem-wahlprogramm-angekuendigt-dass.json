@@ -76,8 +76,7 @@
 						"canonicalForm": "ankündigen",
 						"coreFeatures": {
 							"hasSepPrefix": "an",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hatten angekündigt",

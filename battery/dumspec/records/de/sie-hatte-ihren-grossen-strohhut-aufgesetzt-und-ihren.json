@@ -215,7 +215,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "bcb53b5333fa8af4"
+				"hash": "b43bf4d795ca1ee1"
 			},
 			{
 				"rule": "de/verbal-participle",
@@ -305,8 +305,7 @@
 						"canonicalForm": "aufsetzen",
 						"coreFeatures": {
 							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hatte aufgesetzt",
@@ -644,8 +643,7 @@
 						"canonicalForm": "aufspannen",
 						"coreFeatures": {
 							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "aufgespannt",
@@ -783,8 +781,7 @@
 						"canonicalForm": "herrschen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "herrschte",
@@ -978,8 +975,7 @@
 						"canonicalForm": "gehen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "ging",

@@ -407,8 +407,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "vor",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -872,8 +871,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1069,8 +1067,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1165,8 +1162,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1220,8 +1216,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1330,8 +1325,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "ab",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1386,8 +1380,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

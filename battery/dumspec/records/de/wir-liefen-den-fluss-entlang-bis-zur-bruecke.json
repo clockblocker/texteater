@@ -64,8 +64,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "entlang",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

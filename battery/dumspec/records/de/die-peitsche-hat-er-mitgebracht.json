@@ -145,8 +145,7 @@
 						"kind": "VERB",
 						"coreFeatures": {
 							"hasSepPrefix": "mit",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null

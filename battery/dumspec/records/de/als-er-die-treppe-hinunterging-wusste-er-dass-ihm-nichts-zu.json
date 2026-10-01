@@ -215,7 +215,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "bcb53b5333fa8af4"
+				"hash": "b43bf4d795ca1ee1"
 			},
 			{
 				"rule": "de/comparison-als",
@@ -391,8 +391,7 @@
 						"canonicalForm": "hinuntergehen",
 						"coreFeatures": {
 							"hasSepPrefix": "hinunter",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hinunterging",
@@ -446,8 +445,7 @@
 						"canonicalForm": "wissen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "wußte",
@@ -724,8 +722,7 @@
 						"canonicalForm": "tun",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "tun",
@@ -779,8 +776,7 @@
 						"canonicalForm": "übrig bleiben",
 						"coreFeatures": {
 							"hasSepPrefix": "übrig",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "übrig blieb",

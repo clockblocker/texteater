@@ -32,7 +32,6 @@ const verb = {
 		coreFeatures: {
 			hasSepPrefix: null,
 			lexicallyReflexive: null,
-			verbType: null,
 		},
 	},
 	inflectionalFeatures: {

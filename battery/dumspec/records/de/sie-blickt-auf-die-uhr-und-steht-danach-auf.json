@@ -112,8 +112,7 @@
 						"canonicalForm": "blicken",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "blickt",
@@ -263,8 +262,7 @@
 						"canonicalForm": "aufstehen",
 						"coreFeatures": {
 							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "steht auf",

@@ -290,8 +290,7 @@
 						"canonicalForm": "abholen",
 						"coreFeatures": {
 							"hasSepPrefix": "ab",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "holt ab",
@@ -828,8 +827,7 @@
 						"canonicalForm": "ankommen",
 						"coreFeatures": {
 							"hasSepPrefix": "an",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "ankommt",

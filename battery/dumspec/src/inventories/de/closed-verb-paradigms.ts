@@ -120,6 +120,12 @@ const modalForms: Readonly<Record<string, readonly string[]>> = {
 };
 
 /**
+ * The six modal verbs. A German VERB Lemma is a modal when its Canonical Form
+ * is one of them; no Core Feature marks it (ADR 0026).
+ */
+export const modalVerbs: readonly string[] = Object.keys(modalForms);
+
+/**
  * Every form of the VERB Lemmas whose whole paradigm is closed, keyed by
  * Lemma: sein, haben, werden and the modals. The recipient-passive verbs
  * share an AUX Lemma but stay open as VERBs (kriegen is not bekommen), so

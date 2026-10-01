@@ -11653,25 +11653,11 @@
 									"type": "null"
 								}
 							]
-						},
-						"verbType": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Mod"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
 						}
 					},
 					"required": [
 						"hasSepPrefix",
-						"lexicallyReflexive",
-						"verbType"
+						"lexicallyReflexive"
 					],
 					"additionalProperties": false
 				}

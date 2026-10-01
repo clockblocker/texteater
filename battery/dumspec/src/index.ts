@@ -35,6 +35,7 @@ export {
 	germanConjunctionLocutions,
 	germanParticleMember,
 	germanParticles,
+	modalVerbs,
 	type ReviewedMember,
 	reflexiveDrillDown,
 	reflexivityUnit,

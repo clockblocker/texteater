@@ -217,8 +217,7 @@
 						"canonicalForm": "ankommen",
 						"coreFeatures": {
 							"hasSepPrefix": "an",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "angekommen sind",
@@ -276,8 +275,7 @@
 						"canonicalForm": "sein",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "war",

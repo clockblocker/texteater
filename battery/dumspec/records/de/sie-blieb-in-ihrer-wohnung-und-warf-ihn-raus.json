@@ -57,8 +57,7 @@
 						"canonicalForm": "hinauswerfen",
 						"coreFeatures": {
 							"hasSepPrefix": "hinaus",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "warf hinaus",

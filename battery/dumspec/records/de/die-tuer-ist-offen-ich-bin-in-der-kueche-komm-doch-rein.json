@@ -65,8 +65,7 @@
 						"canonicalForm": "hereinkommen",
 						"coreFeatures": {
 							"hasSepPrefix": "herein",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "komm herein",

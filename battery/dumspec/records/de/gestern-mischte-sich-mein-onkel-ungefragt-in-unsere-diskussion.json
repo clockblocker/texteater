@@ -113,7 +113,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "bcb53b5333fa8af4"
+				"hash": "b43bf4d795ca1ee1"
 			}
 		],
 		"references": [
@@ -186,8 +186,7 @@
 						"canonicalForm": "sich einmischen",
 						"coreFeatures": {
 							"hasSepPrefix": "ein",
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "mischte sich ein",

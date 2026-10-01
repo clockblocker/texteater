@@ -1429,7 +1429,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "VMFIN",
 		stts: "finite modal verb",
-		dumling: "Lexeme VERB verbType Mod (ADR 0026)",
+		dumling: "Lexeme VERB, a modal by dumspec's modal list (ADR 0026)",
 		mappings: [
 			{
 				use: "finite modal",
@@ -1437,7 +1437,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 				records: [show("er-muss-heute-arbeiten", "muss", "müssen")],
 			},
 		],
-		rules: ["de/modal-is-a-verb", "de/verb-core-features"],
+		rules: ["de/modal-is-a-verb"],
 		adrs: ["ADR-0026"],
 		model: modeled,
 		gold: "Yes",
@@ -1447,7 +1447,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "VMINF",
 		stts: "infinitive modal verb",
 		dumling:
-			"Lexeme VERB verbType Mod owning its auxiliary: hat … schreiben müssen is [hat, müssen]",
+			"Lexeme VERB modal owning its auxiliary: hat … schreiben müssen is [hat, müssen]",
 		mappings: [
 			{
 				use: "modal infinitive in a perfect (Ersatzinfinitiv)",
@@ -1465,8 +1465,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "VMPP",
 		stts: "past participle of a modal verb",
-		dumling:
-			"Lexeme VERB verbType Mod, verbForm Part, owning its auxiliary",
+		dumling: "Lexeme VERB modal, verbForm Part, owning its auxiliary",
 		mappings: [
 			{
 				use: "modal participle (hat gemusst)",

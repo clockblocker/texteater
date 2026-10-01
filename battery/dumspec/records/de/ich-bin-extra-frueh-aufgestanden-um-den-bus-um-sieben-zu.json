@@ -207,8 +207,7 @@
 						"canonicalForm": "aufstehen",
 						"coreFeatures": {
 							"hasSepPrefix": "auf",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "bin aufgestanden",
@@ -531,8 +530,7 @@
 						"canonicalForm": "erreichen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "erreichen",

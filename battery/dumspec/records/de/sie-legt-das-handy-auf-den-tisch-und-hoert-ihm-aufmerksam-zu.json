@@ -201,8 +201,7 @@
 						"canonicalForm": "legen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "legt",
@@ -436,8 +435,7 @@
 						"canonicalForm": "zuhören",
 						"coreFeatures": {
 							"hasSepPrefix": "zu",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "hört zu",

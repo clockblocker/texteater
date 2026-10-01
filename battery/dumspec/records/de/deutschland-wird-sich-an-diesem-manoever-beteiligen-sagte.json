@@ -58,8 +58,7 @@
 						"canonicalForm": "sich beteiligen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "wird sich beteiligen",

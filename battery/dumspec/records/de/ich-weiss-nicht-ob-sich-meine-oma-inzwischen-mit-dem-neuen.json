@@ -233,8 +233,7 @@
 						"canonicalForm": "wissen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "weiß",
@@ -362,8 +361,7 @@
 						"canonicalForm": "sich abfinden",
 						"coreFeatures": {
 							"hasSepPrefix": "ab",
-							"lexicallyReflexive": "Yes",
-							"verbType": null
+							"lexicallyReflexive": "Yes"
 						}
 					},
 					"normalizedSurface": "sich abgefunden hat",

@@ -15,7 +15,6 @@ import {
 	PronType,
 	Tense,
 	VerbForm,
-	VerbType,
 	Voice,
 } from "../../universal/index.js";
 
@@ -62,9 +61,6 @@ const DeParticipleFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
 const DeHasSepPrefixSchema = UNIVERSAL_FEATURE_SCHEMA.hasSepPrefix;
 const DeLexicallyReflexiveSchema = UNIVERSAL_FEATURE_SCHEMA.lexicallyReflexive;
 const DeComparableSchema = UNIVERSAL_FEATURE_SCHEMA.comparable;
-const DeModalVerbTypeSchema = UNIVERSAL_FEATURE_SCHEMA.verbType.extract([
-	VerbType.Mod,
-]);
 const DeCaseSchema = UNIVERSAL_FEATURE_SCHEMA.case.extract([
 	Case.Acc,
 	Case.Dat,
@@ -121,7 +117,6 @@ export const DE_FEATURE_SCHEMA = {
 	hasSepPrefix: DeHasSepPrefixSchema,
 	lexicallyReflexive: DeLexicallyReflexiveSchema,
 	comparable: DeComparableSchema,
-	modalVerbType: DeModalVerbTypeSchema,
 	case: DeCaseSchema,
 	definite: DeDefiniteSchema,
 	degree: DeDegreeSchema,

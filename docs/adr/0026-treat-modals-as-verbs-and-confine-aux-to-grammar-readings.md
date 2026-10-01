@@ -5,12 +5,12 @@ status: accepted
 # Treat modals as verbs and confine AUX to grammar Readings
 
 German modals (`dürfen`, `können`, `mögen`, `müssen`, `sollen`, `wollen`) are
-VERB Lemmas with `verbType: Mod` in the Lemma core. A modal is one identity
-whether it governs an infinitive (`kann schwimmen`) or an object (`mag
-Schokolade`); governing an infinitive is a role inside a verbal unit, not a
-second Lemma. This reverses the earlier product policy that classified modals
-as Lexeme/AUX and deviates from Universal Dependencies, which tags them AUX. A
-learner reads a modal for its meaning, so it takes the reader-facing route.
+VERB Lemmas. A modal is one identity whether it governs an infinitive (`kann
+schwimmen`) or an object (`mag Schokolade`); governing an infinitive is a role
+inside a verbal unit, not a second Lemma. This reverses the earlier product
+policy that classified modals as Lexeme/AUX and deviates from Universal
+Dependencies, which tags them AUX. A learner reads a modal for its meaning, so
+it takes the reader-facing route.
 
 AUX is `sein`, `haben` and `werden` in grammatical function only. There is no
 lone auxiliary: standing alone, these verbs are ordinary VERB Lemmas with their
@@ -83,3 +83,9 @@ left out *Sie lässt sich die Haare schneiden*, and it named neither the Idiom
 exception nor the intransitive infinitive. Decided by the user on
 [#723](https://github.com/clockblocker/texteater/issues/723#issuecomment-5928789497)
 and implemented on [#771](https://github.com/clockblocker/texteater/issues/771).
+
+Amended on 2026-10-01: a modal carried `verbType: Mod` in its VERB Core. The
+value split no Lemma, since no other verb shares a modal's Canonical Form, so
+it only labelled what the Canonical Form already says. dumspec's list of the
+six modals says which VERBs are modals. Decided on
+[#766](https://github.com/clockblocker/texteater/issues/766).

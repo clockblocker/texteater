@@ -11,6 +11,7 @@ import {
 	closedVerbForms,
 	germanParticleMember,
 	germanParticles,
+	modalVerbs,
 	reflexiveDrillDown,
 	reflexivityUnit,
 	subjectExpletiveEs,
@@ -598,6 +599,14 @@ describe("the German authored inventory", () => {
 		);
 		expect(authoredMembers).toContain(subjectExpletiveEs);
 		expect(closedVerbForms.müssen).toContain("muß");
+		expect(modalVerbs).toEqual([
+			"dürfen",
+			"können",
+			"mögen",
+			"müssen",
+			"sollen",
+			"wollen",
+		]);
 	});
 
 	test("authors the reflexivity unit a reflexive drills down to (system ADR 0041)", () => {
@@ -638,7 +647,6 @@ describe("the German authored inventory", () => {
 				coreFeatures: {
 					hasSepPrefix: null,
 					lexicallyReflexive,
-					verbType: null,
 				},
 			}) as const;
 		// er schämt sich takes the Acc, er bildet sich etwas ein the Dat.

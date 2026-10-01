@@ -143,8 +143,7 @@
 						"canonicalForm": "leidtun",
 						"coreFeatures": {
 							"hasSepPrefix": "leid",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "tut leid",
@@ -289,8 +288,7 @@
 						"canonicalForm": "sehen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"normalizedSurface": "habe gesehen",

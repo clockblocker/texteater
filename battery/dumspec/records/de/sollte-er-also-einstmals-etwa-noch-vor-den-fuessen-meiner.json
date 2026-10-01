@@ -199,7 +199,7 @@
 			},
 			{
 				"rule": "de/verb-core-features",
-				"hash": "bcb53b5333fa8af4"
+				"hash": "b43bf4d795ca1ee1"
 			},
 			{
 				"rule": "de/modal-particle-is-part",
@@ -292,8 +292,7 @@
 						"canonicalForm": "sollen",
 						"coreFeatures": {
 							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": "Mod"
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
@@ -974,8 +973,7 @@
 						"canonicalForm": "hinunterkollern",
 						"coreFeatures": {
 							"hasSepPrefix": "hinunter",
-							"lexicallyReflexive": null,
-							"verbType": null
+							"lexicallyReflexive": null
 						}
 					},
 					"surfaceFeatures": null
