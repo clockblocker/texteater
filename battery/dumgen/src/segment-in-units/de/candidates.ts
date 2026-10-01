@@ -5,7 +5,7 @@
  * adverbs, correlators) from dumspec's inventories and closed word lists,
  * and the judge only picks the host among a bounded window, or `none`.
  */
-import { authoredRealizations, germanAdpositionCases } from "dumspec";
+import { authoredRealizations, germanAdpositionEntry } from "dumspec";
 import type { Piece, Sentence } from "./sentence.js";
 
 export type SlotKind =
@@ -88,15 +88,12 @@ export function isAuxiliaryForm(text: string): boolean {
 	return auxiliaryForms.has(text.toLowerCase());
 }
 
+/** Whether dumspec's ADP Case Table lists the word as a Lexeme ADP, in any position. */
 export function isAdposition(word: string): boolean {
-	const lemma = {
-		language: "de",
-		family: "Lexeme",
-		kind: "ADP",
-		canonicalForm: word.toLowerCase(),
-		coreFeatures: { adpType: "Prep" },
-	} as unknown as Parameters<typeof germanAdpositionCases>[0];
-	return germanAdpositionCases(lemma) !== null;
+	return (
+		germanAdpositionEntry({ family: "Lexeme", canonicalForm: word }) !==
+		null
+	);
 }
 
 const lower = (piece: Piece) => piece.text.toLowerCase();
