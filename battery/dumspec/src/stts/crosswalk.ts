@@ -154,7 +154,11 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 				becomes: alone(lexeme("ADV")),
 				records: [
 					show("sieh-einmal-hier-steht-er", "hier", "hier"),
-					show("am-naechsten-morgen-war-alles-anders", "anders", "anders"),
+					show(
+						"am-naechsten-morgen-war-alles-anders",
+						"anders",
+						"anders",
+					),
 				],
 			},
 		],

@@ -12,6 +12,7 @@ export type SpecCheck =
 	| "Knowledge"
 	| "AdpositionCase"
 	| "ArticleAgreement"
+	| "ClosedPart"
 	| "Segments"
 	| "Members"
 	| "Coverage"

@@ -3,12 +3,14 @@ import { parseUnit } from "dumling";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { frameAdpositionCaseIssues } from "../src/check-adposition-cases.js";
-import { loadSpecRecords } from "../src/index.js";
+import { attestationParticleIssues, loadSpecRecords } from "../src/index.js";
 import {
 	type AuthoredMember,
 	authoredMembers,
 	authoredRealizations,
 	closedVerbForms,
+	germanParticleMember,
+	germanParticles,
 	reflexiveDrillDown,
 	reflexivityUnit,
 	subjectExpletiveEs,
@@ -648,5 +650,111 @@ describe("the German authored inventory", () => {
 			expect(reflexiveDrillDown(reflexive)).toBe(reflexivityUnit);
 		}
 		expect(reflexiveDrillDown(verb("warten", null))).toBeUndefined();
+	});
+});
+
+describe("German PART (#734)", () => {
+	const modal = [
+		"aber",
+		"auch",
+		"bloß",
+		"denn",
+		"doch",
+		"eben",
+		"eigentlich",
+		"einfach",
+		"einmal",
+		"etwa",
+		"halt",
+		"ja",
+		"mal",
+		"nur",
+		"ruhig",
+		"schon",
+		"vielleicht",
+		"wohl",
+	];
+	const type = ({ lemma }: AuthoredMember) => {
+		const core = lemma.coreFeatures as Readonly<Record<string, unknown>>;
+		return `${lemma.canonicalForm} ${String(core.partType ?? core.polarity)}`;
+	};
+
+	test("is fully authored: nicht, infinitive zu and the modal particles", () => {
+		const parts = authoredMembers.filter(
+			({ lemma }) => lemma.kind === "PART",
+		);
+		expect(parts).toEqual([...germanParticles]);
+		expect([...new Set(parts.map(type))].toSorted()).toEqual(
+			[
+				"nicht Neg",
+				"zu Inf",
+				...modal.map((form) => `${form} Mod`),
+			].toSorted(),
+		);
+	});
+
+	const attestation = (
+		canonicalForm: string,
+		coreFeatures: Readonly<Record<string, string | null>>,
+	) => {
+		const parsed = parseUnit({
+			unitKind: "Attestation",
+			members: [{ attested: canonicalForm, orthography: "Standard" }],
+			realizationCoverage: "Full",
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				normalizedSurface: canonicalForm,
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "PART",
+					canonicalForm,
+					coreFeatures: {
+						abbr: null,
+						partType: null,
+						polarity: null,
+						...coreFeatures,
+					},
+				},
+			},
+		});
+		if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+			throw Error(`Expected a PART Attestation of ${canonicalForm}`);
+		return parsed.chain.value;
+	};
+
+	test("the closed-PART check passes an authored PART and fails any other", () => {
+		expect(
+			attestationParticleIssues(attestation("ja", { partType: "Mod" })),
+		).toEqual([]);
+		expect(
+			attestationParticleIssues(
+				attestation("nicht", { polarity: "Neg" }),
+			),
+		).toEqual([]);
+		expect(
+			attestationParticleIssues(attestation("zu", { partType: "Inf" })),
+		).toEqual([]);
+		// A focus or degree word is ADV, and zu is no modal particle.
+		for (const [form, core] of [
+			["sogar", { partType: "Mod" }],
+			["zu", { partType: "Mod" }],
+			["ja", { polarity: "Neg" }],
+		] as const)
+			expect(
+				attestationParticleIssues(attestation(form, core)).map(
+					({ path }) => path,
+				),
+			).toEqual(["surface.lemma"]);
+		expect(
+			germanParticleMember({
+				canonicalForm: "Doch",
+				coreFeatures: { abbr: null, partType: "Mod", polarity: null },
+			})?.lemma.canonicalForm,
+		).toBe("doch");
 	});
 });

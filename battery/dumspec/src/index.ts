@@ -8,6 +8,10 @@ export {
 	attestationArticleAgreementIssues,
 } from "./check-article-agreement.js";
 export { checkPromptCitations, type PromptIssue } from "./check-citations.js";
+export {
+	attestationParticleIssues,
+	type ParticleIssue,
+} from "./check-particles.js";
 export { checkRecord, type RecordCheck } from "./check-record.js";
 export {
 	type ArticleAgreement,
@@ -29,6 +33,8 @@ export {
 	germanArticleCell,
 	germanArticleSpellings,
 	germanConjunctionLocutions,
+	germanParticleMember,
+	germanParticles,
 	type ReviewedMember,
 	reflexiveDrillDown,
 	reflexivityUnit,

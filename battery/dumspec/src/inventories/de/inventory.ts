@@ -43,8 +43,6 @@ import { member as m20 } from "./members/lexeme/determiner/exclamative/welch.js"
 import { member as m30 } from "./members/lexeme/determiner/quantifying/lauter.js";
 import { member as m31 } from "./members/lexeme/determiner/quantifying/manch.js";
 import { member as m35 } from "./members/lexeme/determiner/quantifying/mehr.js";
-import { member as softeningMal } from "./members/lexeme/particle/mal.js";
-import { member as negationNicht } from "./members/lexeme/particle/nicht.js";
 import { member as m143 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-accusative.js";
 import { member as m142 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-nominative.js";
 import { member as m145 } from "./members/lexeme/pronoun/demonstrative/dem-singular-dative.js";
@@ -114,6 +112,7 @@ import { member as m157 } from "./members/lexeme/pronoun/relative/die-feminine-s
 import { member as m156 } from "./members/lexeme/pronoun/relative/die-feminine-singular-nominative.js";
 import { member as m159 } from "./members/lexeme/pronoun/relative/die-plural-accusative.js";
 import { member as m158 } from "./members/lexeme/pronoun/relative/die-plural-nominative.js";
+import { germanParticles } from "./particles.js";
 import { pronominalAdverbs } from "./pronominal-adverbs.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
 import { whAdverbs } from "./wh-adverbs.js";
@@ -121,8 +120,10 @@ import { whAdverbs } from "./wh-adverbs.js";
 /**
  * Every German authored member in one list. ADR 0021 decides which units
  * belong in an inventory. Single members are defined in
- * `src/inventories/de/members/`, and the paradigm and adverb modules beside
- * this file define the rest.
+ * `src/inventories/de/members/`, and the paradigm, adverb and particle
+ * modules beside this file define the rest. German PART is fully authored:
+ * nicht, infinitive zu and the modal particles, one member per Reading
+ * (`particles.ts`, #734).
  */
 export const authoredMembers = [
 	article_das_neuter_singular_accusative,
@@ -242,6 +243,5 @@ export const authoredMembers = [
 	...reviewedPronouns.map(({ member }) => member),
 	...pronominalAdverbs,
 	...whAdverbs,
-	negationNicht,
-	softeningMal,
+	...germanParticles,
 ];

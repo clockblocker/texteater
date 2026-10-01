@@ -5,6 +5,7 @@ import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
 import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
 import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
+import { attestationParticleIssues } from "./check-particles.js";
 import { unitRoutes } from "./generated/routes.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
 import { annotationLayers, layerRank } from "./layers.js";
@@ -424,6 +425,12 @@ function checkTargetLayers(
 	for (const found of attestationArticleAgreementIssues(attestation))
 		attestationIssue(
 			"ArticleAgreement",
+			`${path}.attestation.${found.path}`,
+			found.message,
+		);
+	for (const found of attestationParticleIssues(attestation))
+		attestationIssue(
+			"ClosedPart",
 			`${path}.attestation.${found.path}`,
 			found.message,
 		);

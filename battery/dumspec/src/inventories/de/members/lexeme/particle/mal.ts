@@ -1,10 +1,12 @@
 import type * as Dumling from "dumling/types";
 import { defineAuthoredMember } from "../../../member.js";
+import { modalParticleLemma } from "./modal-particles.js";
 
-// Softening mal is a PART of its own, not a spelling of einmal: Duden lists
-// mal as a Partikel headword that "verleiht einer Äußerung eine gewisse
-// Beiläufigkeit" (hör mal zu, ich versuche es mal). Its one Reading is that
-// softening. A relation to einmal can be claimed here later.
+// Softening mal is a modal particle of its own, PART with partType Mod, not
+// a spelling of einmal: Duden lists mal as a Partikel headword that
+// "verleiht einer Äußerung eine gewisse Beiläufigkeit" (hör mal zu, ich
+// versuche es mal). Its one Reading is that softening, a synonym of the
+// modal particle einmal (#734).
 // https://www.duden.de/rechtschreibung/mal_nun_mal_beilaeufig
 const lemma = {
 	language: "de",
@@ -26,6 +28,7 @@ export const member = defineAuthoredMember({
 		definition:
 			"Verleiht einer Äußerung eine gewisse Beiläufigkeit und macht eine Bitte oder Aufforderung weniger streng: Hör mal zu! Ich versuche es mal. Leihst du mir das Buch mal?",
 		translations: { en: ["just"], ru: ["-ка"] },
+		semanticRelations: { synonym: [modalParticleLemma("einmal")] },
 	},
 	coverage: {
 		transcription: "Authored",
@@ -33,7 +36,7 @@ export const member = defineAuthoredMember({
 		translations: { en: "Authored", ru: "Authored" },
 		semanticRelationTargetKind: "lemma",
 		semanticRelations: {
-			synonym: "ReviewedEmpty",
+			synonym: "Authored",
 			nearSynonym: "ReviewedEmpty",
 			antonym: "ReviewedEmpty",
 			nearAntonym: "ReviewedEmpty",

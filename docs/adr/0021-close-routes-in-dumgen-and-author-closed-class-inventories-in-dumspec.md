@@ -20,7 +20,11 @@ adverbs (`heraus`, `hinaus`, `herein`, `hinein`, `herüber`, `hinüber`,
 `herunter`, `hinunter`, `herauf`, `hinauf`, `heran`; colloquial `raus`,
 `rein`, `rüber`, `runter`, `rauf` and `ran` are their Shorthands), the `irgend-`
 adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), the negation
-particle `nicht`, and the softening particle `mal`, with every spelling that realizes them and each
+particle `nicht`, infinitive `zu` and the modal particles (`aber`, `auch`,
+`bloß`, `denn`, `doch`, `eben`, `eigentlich`, `einfach`, `einmal`, `etwa`,
+`halt`, `ja`, `mal`, `nur`, `ruhig`, `schon`, `vielleicht`, `wohl`), which
+with `nicht` make German PART fully authored
+([#734](https://github.com/clockblocker/texteater/issues/734)), with every spelling that realizes them and each
 Reading's Knowledge and semantic relation claims. `dumspec` checks them with
 Dumling and Dumrel. Dumling still owns linguistic values and their
 validation, and Dumrel owns Knowledge types, validation and relation algebra.

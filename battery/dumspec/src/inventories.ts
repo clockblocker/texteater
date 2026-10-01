@@ -40,6 +40,10 @@ export {
 export { authoredMembers } from "./inventories/de/inventory.js";
 export type { AuthoredMember } from "./inventories/de/member.js";
 export { member as subjectExpletiveEs } from "./inventories/de/members/lexeme/pronoun/personal/es-subject-expletive.js";
+export {
+	germanParticleMember,
+	germanParticles,
+} from "./inventories/de/particles.js";
 export { reviewedPronouns } from "./inventories/de/pronoun-paradigms.js";
 export {
 	type AuthoredRealization,
