@@ -23,7 +23,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0040"],
 		"rules": [],
 		"references": []
 	},
@@ -32,7 +32,7 @@
 			"memberSegmentIndices": [12, 14],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
-				"rationale": "The surrounding common noun Titel bears sentence case; the separately quoted work-name mention is Citation rather than an accusative name occurrence."
+				"rationale": "„Tonio Kröger“ is the title of Mann's novella, not the name of a person, so it keeps Core gender Masc: a work title names one work and has one gender by convention, and a title named after its hero takes his gender (der „Werther“). The full-name rule, which gives no Core gender to a name whose gender comes from the person it names, does not apply (ADR 0040; decided on #825). The quoted title after der Titel is a citation mention, so its Surface is uninflected."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
