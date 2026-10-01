@@ -1,0 +1,79 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Die Zahl derer, die das Angebot nutzen, steigt.",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Zahl" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "derer" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "die" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Angebot" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nutzen" },
+		{ "kind": "Punctuation", "text": "," },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "steigt" },
+		{ "kind": "Punctuation", "text": "." }
+	],
+	"coverage": "Partial",
+	"provenance": { "kind": "Authored" },
+	"sources": {
+		"adrs": ["ADR-0044"],
+		"rules": [],
+		"references": [
+			{
+				"title": "Duden: derer",
+				"url": "https://www.duden.de/rechtschreibung/derer",
+				"supports": "derer as the forward-pointing demonstrative whose referent follows: der Andrang derer, die …; gedenkt derer, die euer gedenken."
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "derer points ahead to the relative clause die das Angebot nutzen, so it is the invariant demonstrative Lemma derer, not a genitive plural cell of the der-series pillar; its one form leaves case and number unmarked."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "derer",
+						"coreFeatures": {
+							"case": null,
+							"number": null,
+							"extPos": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "derer",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "derer", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			},
+			"reading": { "emojiDescription": "👉" }
+		}
+	],
+	"noTarget": []
+}

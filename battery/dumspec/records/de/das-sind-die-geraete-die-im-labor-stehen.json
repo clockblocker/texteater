@@ -33,7 +33,7 @@
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
-				"rationale": "The exact written form is the fixed Lemma; context selects demonstrative versus relative pronType while Case, gender, and number remain Surface evidence."
+				"rationale": "The der-series is a pillar (ADR 0044), so this cell is its own Lemma: case, number and gender are Core, read from the sentence and the referent, and context selects demonstrative versus relative pronType."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

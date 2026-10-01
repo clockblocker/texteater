@@ -19,35 +19,6 @@ const describe = (lemma: Dumling.Lemma) =>
 		.sort()
 		.join(" ")}`;
 
-/**
- * The one accepted pillar collision (system ADR 0032). Standalone
- * demonstrative deren and derer realize the same Gen.Fem.Sg and Gen.Plur
- * cells and differ only in reference direction: derer points ahead to a
- * relative clause (Wir gedenken derer, die geholfen haben), deren points back
- * (Die Lösungen dort: Deren bedarf es). No UD feature marks that direction.
- * Never add a line without such a reason.
- */
-const acceptedPillarCollisions = [
-	"deren = derer: PRON case=Gen gender=Fem number=Sing pronType=Dem",
-	"deren = derer: PRON case=Gen number=Plur pronType=Dem",
-];
-
-test("no two per-cell Lemmas of one Kind share all Core Features", () => {
-	const groups = new Map<string, Set<string>>();
-	for (const { lemma } of closedClass) {
-		if (!isParadigmCell(lemma)) continue;
-		const key = describe(lemma);
-		groups.set(
-			key,
-			(groups.get(key) ?? new Set()).add(lemma.canonicalForm),
-		);
-	}
-	const collisions = [...groups]
-		.filter(([, forms]) => forms.size > 1)
-		.map(([key, forms]) => `${[...forms].sort().join(" = ")}: ${key}`);
-	expect(collisions.sort()).toEqual([...acceptedPillarCollisions].sort());
-});
-
 test("a stem Lemma leaves its cell to the Surface and cites a Grundform", () => {
 	for (const member of closedClass) {
 		const realizations = authoredRealizations.filter(
@@ -234,26 +205,4 @@ test("wer is masculine and was neuter; wessen belongs to both", () => {
 			({ lemma }) => lemma.canonicalForm,
 		),
 	).toEqual(["was"]);
-});
-
-test("relative derer is a Variant of relative deren, not its own Lemma", () => {
-	const derer = authoredRealizations.filter(
-		({ spelled }) => spelled === "derer",
-	);
-	expect(
-		derer
-			.map(({ member }) => {
-				const core = member.lemma.coreFeatures as Record<
-					string,
-					unknown
-				>;
-				return `${member.lemma.canonicalForm} ${String(core.pronType)} ${String(core.number)}`;
-			})
-			.sort(),
-	).toEqual([
-		"deren Rel Plur",
-		"deren Rel Sing",
-		"derer Dem Plur",
-		"derer Dem Sing",
-	]);
 });

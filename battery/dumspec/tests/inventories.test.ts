@@ -179,7 +179,6 @@ describe("the German authored inventory", () => {
 			"denen",
 			"dessen",
 			"deren",
-			"derer",
 		]);
 		const isPillar = ({ lemma }: AuthoredMember) => {
 			const { pronType } = lemma.coreFeatures as { pronType?: string };
@@ -198,6 +197,56 @@ describe("the German authored inventory", () => {
 				!isPillar(member),
 		);
 		expect(strays.map(name)).toEqual([]);
+	});
+
+	test("no two per-cell Lemmas of one Kind share all Core Features (system ADR 0032)", () => {
+		// A per-cell Lemma marks case, number or gender in Core. Navigation
+		// such as "the plural of dessen" lands on exactly one Lemma only while
+		// no two of them share every Core Feature. Never accept a collision
+		// here without an ADR that names it.
+		const coordinates = ["case", "number", "gender"];
+		const groups = new Map<string, Set<string>>();
+		for (const { lemma } of authoredMembers) {
+			if (lemma.kind !== "PRON" && lemma.kind !== "DET") continue;
+			const core = Object.entries(lemma.coreFeatures).filter(
+				([, value]) => value !== null,
+			);
+			if (!core.some(([key]) => coordinates.includes(key))) continue;
+			const key = `${lemma.kind} ${core
+				.map(([feature, value]) => `${feature}=${String(value)}`)
+				.sort()
+				.join(" ")}`;
+			groups.set(
+				key,
+				(groups.get(key) ?? new Set()).add(lemma.canonicalForm),
+			);
+		}
+		const collisions = [...groups]
+			.filter(([, forms]) => forms.size > 1)
+			.map(([key, forms]) => `${[...forms].sort().join(" = ")}: ${key}`);
+		expect(collisions).toEqual([]);
+	});
+
+	test("derer is its own invariant Lemma, apart from the deren cells (system ADR 0044)", () => {
+		// Demonstrative derer points ahead to a relative clause and has one
+		// uninflected form; relative derer is a Variant of relative deren.
+		const spelledDerer = authoredRealizations
+			.filter(({ spelled }) => spelled === "derer")
+			.map(({ member, inflection }) => {
+				const core = member.lemma.coreFeatures as Readonly<
+					Record<string, unknown>
+				>;
+				const cell = ["case", "number", "gender"]
+					.map((key) => String(core[key] ?? null))
+					.join(" ");
+				return `${member.lemma.canonicalForm} ${String(core.pronType)} ${cell}${inflection ? " inflected" : ""}`;
+			})
+			.sort();
+		expect(spelledDerer).toEqual([
+			"deren Rel Gen Plur null",
+			"deren Rel Gen Sing Fem",
+			"derer Dem null null null",
+		]);
 	});
 
 	test("a stem's spellings are Surfaces Dumling accepts", () => {

@@ -24,9 +24,9 @@ const description = (
 const reviewed: ReviewedPronoun[] = [];
 // A pillar's forms cannot be derived from another paradigm (system ADR 0032).
 // Pillars are one Lemma per cell: the personal and der-series cells are member
-// files, and derer, attributive dessen and deren, and einer are pushed
-// explicitly below. Every add() is a stem with borrowed endings: one Lemma
-// whose Surfaces mark the cell.
+// files, and attributive dessen and deren, and einer are pushed explicitly
+// below. Every add() is a stem with borrowed endings: one Lemma whose
+// Surfaces mark the cell.
 const add = (
 	table: PronounTable,
 	meaning: PronounDescription,
@@ -136,6 +136,27 @@ for (const [tail, ipa, definition, en, ru] of [
 		description("Dem", "👉", definition, [en], [ru]),
 	);
 }
+// derer points ahead to a following relative clause, the job derjenige does
+// with its own stem (Wir gedenken derer, die geholfen haben). Standalone
+// deren points back (Ich habe deren viele) and alone fills the der-series
+// Gen.Fem.Sg and Gen.Plur cells. derer is not a second spelling of those
+// cells: Duden marks "Wir gedenken deren, die …" wrong. It has one form, so
+// it is an invariant Lemma, as attributive wessen is (system ADR 0044), and
+// Duden gives it as a genitive plural only.
+// https://www.duden.de/rechtschreibung/derer
+// https://www.duden.de/sprachwissen/sprachratgeber/Demonstrativpronomen-deren-derer
+reviewed.push(
+	pronounMember(
+		form("derer", "ˈdeːʁɐ"),
+		description(
+			"Dem",
+			"👉",
+			"Kündigt einen folgenden Relativsatz an und verweist im Genitiv Plural auf die Personen oder Sachen, die er bestimmt: Wir gedenken derer, die geholfen haben.",
+			["of those (who …)"],
+			["тех, кто …; тех, которые …"],
+		),
+	),
+);
 
 // Relative welcher has no masculine/neuter genitive; interrogative welcher does.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-welcher3.xml?lang=de
@@ -257,30 +278,11 @@ for (const pronType of ["Int", "Rel"] as const) {
 	}
 }
 
-// Only deren is attributive. Standalone demonstrative derer points ahead to a
-// relative clause (Wir gedenken derer, die geholfen haben) and deren points
-// back, so both stay Lemmas of the same cells. Relative derer is nonstandard
-// (Duden prescribes deren) and is a Variant spelling of relative deren
-// (realizations.ts). Bare der is not a genitive PRON form.
+// Only deren is attributive. Relative derer is nonstandard (Duden prescribes
+// deren) and is a Variant spelling of relative deren (realizations.ts). Bare
+// der is not a genitive PRON form.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Demonstr/Pron-der-die-das.html?lang=de
-for (const [gender, number] of [
-	["Fem", "Sing"],
-	[null, "Plur"],
-] as const)
-	reviewed.push(
-		pronounMember(
-			form("derer", "ˈdeːʁɐ"),
-			description(
-				"Dem",
-				"👉",
-				"Genitivischer Verweis auf eine im Kontext bestimmte Person oder Gruppe. Steht selbstständig; der feminine Singular ist unüblich.",
-				["of that one; of those"],
-				["того; тех"],
-			),
-			{ case: "Gen", gender, number },
-		),
-	);
 for (const pronType of ["Dem", "Rel"] as const)
 	for (const [text, ipa, gender, number] of [
 		["dessen", "ˈdɛsən", "Masc", "Sing"],

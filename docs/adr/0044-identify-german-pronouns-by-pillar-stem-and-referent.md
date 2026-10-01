@@ -64,12 +64,24 @@ settle it either, the most probable cell wins, and a wrong guess is corrected
 by moving the occurrence (ADR 0043). An uncertain encounter never merges
 reviewed members.
 
-**One accepted collision.** Relative `derer` is nonstandard (Duden prescribes
-`deren`) and is a Variant spelling of relative `deren`. Standalone
-demonstrative `deren` and `derer` realize the same cells and differ in
-direction: `derer` points ahead to a relative clause (*Wir gedenken derer, die
-geholfen haben*), `deren` points back. No UD feature marks that direction, so
-the two stay Lemmas of the same cells.
+**`derer` is its own Lemma.** Standalone demonstrative `deren` points back
+(*Ich habe deren viele*) and is the only Lemma of its Gen.Fem.Sg and Gen.Plur
+cells. `derer` points ahead to a relative clause (*Wir gedenken derer, die
+geholfen haben*). That is a different use of `der`, not a second spelling of
+the cell: Duden marks *Wir gedenken deren, die …* wrong, and `derjenige` does
+the same job with its own stem. A learner meets `derer` as a fixed pattern
+before a relative clause and looks it up under that gloss. So `derer` is one
+invariant Lemma beside `derjenige`, with `pronType` Dem in Core and one
+uninflected form, as attributive `wessen` has. Duden gives it as a genitive
+plural only. Relative `derer` is nonstandard (Duden prescribes `deren`) and is
+a Variant spelling of relative `deren`.
+
+Amended on 2026-10-01: standalone demonstrative `derer` was a second Lemma of
+the `deren` cells, accepted as the one exception to ADR 0032's rule that no
+two cell Lemmas of one Kind share all Core Features, because no UD feature
+marks the direction. The exception let navigation such as "the plural of
+`dessen`" land on two Lemmas. Decided on
+[#595](https://github.com/clockblocker/texteater/issues/595).
 
 UD supplies feature meanings, not this project's Lemma granularity:
 [German features](https://universaldependencies.org/de/index.html) and
@@ -98,6 +110,9 @@ UD supplies feature meanings, not this project's Lemma granularity:
   Masc|Neut for `ihm`. Rejected (#606): navigation compares Core values
   literally, and varying case from `er` must reach `ihn` and the masculine
   `ihm` and `seiner`, never a neuter cell.
+- Demonstrative `derer` as a second Lemma of the `deren` cells, kept apart by
+  direction alone. Chosen first, rejected on 2026-10-01: the two shared every
+  Core Feature, so navigation to either cell found two Lemmas.
 
 ## Consequences
 
@@ -108,4 +123,5 @@ UD supplies feature meanings, not this project's Lemma granularity:
   Surface.
 - Decided on #420, #421, #606 and
   [#595](https://github.com/clockblocker/texteater/issues/595) between
-  2026-09-25 and 2026-09-28.
+  2026-09-25 and 2026-09-28; `derer` left the pillar on 2026-10-01, and no
+  pillar collision is accepted since.

@@ -9,7 +9,6 @@ const derSeries = [
 	"dessen",
 	"deren",
 	"denen",
-	"derer",
 ];
 
 /**
