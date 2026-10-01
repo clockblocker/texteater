@@ -216,18 +216,18 @@ beißen`. Idiom and Collocation are Reading Knowledge, not Kinds. See
 _Avoid_: Phraseme
 
 **Free `sich`**:
-The independently resolvable personal or reflexive pronoun `sich`, distinct
-from a verb-owned reflexive member. See [ADR 0044].
+The German reflexive `sich` as a unit of its own rather than a member of its
+verb: the reflexive's Acc or Dat cell, in reciprocal use too. See [ADR 0044].
 _Avoid_: Reciprocal `sich`, `pronType=Rcp` `sich`
 
 **Standalone `einander`**:
-The invariant German reciprocal pronoun `einander`, one Lemma ([ADR 0044])
-with one Reading.
+The invariant German reciprocal pronoun `einander`: one Lemma, with case
+unmarked. See [ADR 0044].
 _Avoid_: Case-specific `einander`
 
 **Reciprocal Pronominal Adverb**:
-A German ADV Lexeme whose whole form combines a prepositional element with
-`einander`, such as `miteinander` or `voneinander`.
+A German ADV Lexeme whose whole form joins a preposition to `einander`, such
+as `miteinander` or `voneinander`. See [ADR 0029].
 _Avoid_: `preposition + einander` PRON, reciprocal PRON compound
 
 [ADR 0002]: ../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
@@ -236,6 +236,7 @@ _Avoid_: `preposition + einander` PRON, reciprocal PRON compound
 [ADR 0022]: ../../docs/adr/0022-describe-whole-verbal-surfaces-compositionally.md
 [ADR 0026]: ../../docs/adr/0026-treat-modals-as-verbs-and-confine-aux-to-grammar-readings.md
 [ADR 0027]: ../../docs/adr/0027-retire-the-construction-family.md
+[ADR 0029]: ../../docs/adr/0029-keep-preposition-government-out-of-lemma-identity.md
 [ADR 0031]: ../../docs/adr/0031-resolve-readings-through-the-emoji-description-alone.md
 [ADR 0032]: ../../docs/adr/0032-choose-core-features-per-route-for-the-learner.md
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
