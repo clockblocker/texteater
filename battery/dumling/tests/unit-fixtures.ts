@@ -67,7 +67,10 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 			"number[psor]": null,
 		});
 	// Only a singular whose Lemma has no gender marks gender on the Surface.
-	if (route.key === "de/Lexeme/NOUN" && bag.inflectional)
+	if (
+		(route.key === "de/Lexeme/NOUN" || route.key === "de/Lexeme/PROPN") &&
+		bag.inflectional
+	)
 		Object.assign(bag.inflectional, { gender: null });
 	const verbal = [
 		"de/Lexeme/VERB",

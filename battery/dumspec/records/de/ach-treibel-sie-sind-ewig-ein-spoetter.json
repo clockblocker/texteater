@@ -107,7 +107,7 @@
 			},
 			{
 				"rule": "de/proper-noun-article",
-				"hash": "467218f77ed6cd15"
+				"hash": "7abeb6a67e70b96b"
 			},
 			{
 				"rule": "de/title-before-a-name",
@@ -211,6 +211,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,
+						"gender": null,
 						"number": "Sing"
 					}
 				},
@@ -224,7 +225,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Treibel is the surname, used in direct address, so a PROPN cited bare with no article; a vocative marks no case, only singular number (de/empty-inflection-is-structural, de/title-before-a-name: an addressed noun does not take a case from the clause). Ruled on #743 (JT-A7, A9) for the case. Gender is left null: a surname names Herr and Frau Treibel alike, and nothing in this sentence agrees with it. open: finding A1."
+				"rationale": "Treibel is the surname, used in direct address, so a PROPN cited bare with no article; a vocative marks no case, only singular number (de/empty-inflection-is-structural, de/title-before-a-name: an addressed noun does not take a case from the clause). Ruled on #743 (JT-A7, A9) for the case. A surname has no Core gender, since it names Herr and Frau Treibel alike, and nothing in this sentence shows one on its Surface (de/proper-noun-article). Ruled on #743 (JT-A1, A1)."
 			}
 		},
 		{

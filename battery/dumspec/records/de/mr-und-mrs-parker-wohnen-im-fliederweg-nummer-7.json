@@ -162,7 +162,11 @@
 					"normalizedSurface": "Fliederweg",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
 					{

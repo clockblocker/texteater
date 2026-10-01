@@ -42,7 +42,11 @@
 					"normalizedSurface": "Saarland",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
 					{ "attested": "Saarland", "orthography": "Standard" }

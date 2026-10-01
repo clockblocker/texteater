@@ -58,7 +58,11 @@
 					"normalizedSurface": "Kyjiw",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [{ "attested": "Kyjiw", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

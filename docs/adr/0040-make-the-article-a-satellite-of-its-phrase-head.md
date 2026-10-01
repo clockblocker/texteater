@@ -122,6 +122,10 @@ whether noun `definite` survives beyond the construct state.
 - Splitting `am` before a superlative. Rejected: `m` would derive a DET cell
   with no noun to agree with, and the `am` Fusion entry already says the word
   is no Fusion there.
+- Core gender on every German proper noun. Rejected on 2026-10-01 (#743): a
+  surname names men and women alike, so *Herr* and *Frau Treibel* became two
+  Lemmas, and a coined name took its gender from a pronoun in another
+  sentence.
 
 ## Consequences
 
@@ -157,3 +161,16 @@ fused piece counts the same way: in *am selben Morgen*, `am` is still `a`
 attests DET `derselbe` with Full coverage and `Morgen` has no Article member.
 DET Attestations carry no article evidence, so the Fused piece creates no
 article identity inside `derselbe`.
+
+Amended on 2026-10-01: a German surname or coined name has no Core gender.
+One surname names a man and a woman alike (*der* and *die junge
+Schwarzkopf*), and a coined name such as Kafka's *Odradek* gets a gender only
+from what refers to it. An initial standing for a surname, such as *K.*,
+counts as one. The name's singular Surface marks the gender an owned article
+or an agreeing adjective shows, as an adjectival noun's does (`der
+Reisende`), and it must mark it wherever the name owns its article, so the
+agreement check never passes an unmarked gender: `der junge Schwarzkopf`
+attests PROPN `Schwarzkopf` over `[der, Schwarzkopf]` with Surface gender
+Masc. First names, places, rivers and brands keep Core gender (*Anna*, *das
+alte Berlin*, *der Rhein*, *das iPhone*). Decided on
+[#743](https://github.com/clockblocker/texteater/issues/743).

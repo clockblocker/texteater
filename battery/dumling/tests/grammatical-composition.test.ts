@@ -575,8 +575,10 @@ test("a hidden Hebrew article is a Fusion component that leaves its noun Partial
 const properNoun = (
 	canonicalForm: string,
 	article: "Definite" | null,
-	gender: "Fem" | "Masc" | "Neut",
+	gender: "Fem" | "Masc" | "Neut" | null,
 	grammaticalCase: "Acc" | "Dat" | "Nom",
+	surfaceGender: "Fem" | "Masc" | "Neut" | null = null,
+	number: "Plur" | "Sing" = "Sing",
 ) => ({
 	unitKind: "Surface",
 	language: "de",
@@ -591,7 +593,26 @@ const properNoun = (
 		canonicalForm,
 		coreFeatures: { abbr: null, article, gender },
 	},
-	inflectionalFeatures: { case: grammaticalCase, number: "Sing" },
+	inflectionalFeatures: {
+		case: grammaticalCase,
+		gender: surfaceGender,
+		number,
+	},
+});
+test("a surname has no Core gender, and its singular Surface marks the gender the sentence shows", () => {
+	// der junge Schwarzkopf
+	expect(
+		parseUnit(properNoun("Schwarzkopf", null, null, "Nom", "Masc")).success,
+	).toBe(true);
+	// Odradek, with nothing in the sentence to show a gender
+	expect(parseUnit(properNoun("Odradek", null, null, "Dat")).success).toBe(
+		true,
+	);
+	for (const invalid of [
+		properNoun("Berlin", null, "Neut", "Nom", "Neut"),
+		properNoun("Treibel", null, null, "Nom", "Masc", "Plur"),
+	])
+		expect(parseUnit(invalid).success).toBe(false);
 });
 test("a proper noun cited with its article owns it like a common noun", () => {
 	// Wir fahren in die Schweiz.

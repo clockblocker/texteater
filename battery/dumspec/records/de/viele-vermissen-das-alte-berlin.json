@@ -19,7 +19,7 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/proper-noun-article", "hash": "467218f77ed6cd15" },
+			{ "rule": "de/proper-noun-article", "hash": "7abeb6a67e70b96b" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
 		],
 		"references": []
@@ -55,7 +55,11 @@
 					"normalizedSurface": "Berlin",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
 					{ "attested": "das", "orthography": "Standard" },

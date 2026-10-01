@@ -50,7 +50,11 @@
 					"normalizedSurface": "Hannover",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Dat", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [{ "attested": "Hannnover", "orthography": "Typo" }],
 				"realizationCoverage": "Full",

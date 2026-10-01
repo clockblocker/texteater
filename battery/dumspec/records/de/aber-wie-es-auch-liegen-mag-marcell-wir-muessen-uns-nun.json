@@ -287,7 +287,7 @@
 			},
 			{
 				"rule": "de/proper-noun-article",
-				"hash": "467218f77ed6cd15"
+				"hash": "7abeb6a67e70b96b"
 			},
 			{
 				"rule": "de/relative-w-adverb-fills-a-slot",
@@ -701,6 +701,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": null,
+						"gender": null,
 						"number": "Sing"
 					}
 				},

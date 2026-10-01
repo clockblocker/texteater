@@ -195,6 +195,29 @@ export function germanNounSurfaceError(): string {
 	return "A singular noun Surface marks gender only when its Lemma has none, and then must; a plural marks none";
 }
 
+/**
+ * A German proper noun Surface marks gender only where its Lemma has none, a
+ * surname or coined name, and only in the singular: the gender its owned
+ * article or an agreeing adjective shows (der junge Schwarzkopf). Unlike a
+ * noun's, the mark is not required here; dumspec requires it wherever the
+ * name owns an article (ADR 0040).
+ */
+export function isGermanProperNounSurface(input: unknown): boolean {
+	const value = input as {
+		inflectionalFeatures: {
+			gender: string | null;
+			number: string | null;
+		} | null;
+		lemma: { coreFeatures: { gender: string | null } };
+	};
+	const bag = value.inflectionalFeatures;
+	if (!bag || bag.gender === null) return true;
+	return value.lemma.coreFeatures.gender === null && bag.number === "Sing";
+}
+export function germanProperNounSurfaceError(): string {
+	return "A proper noun Surface marks gender only in the singular and only when its Lemma has none";
+}
+
 type Fusion = { spelling: string; components: { span: string }[] };
 /** The components' spans spell the fused word, in order. */
 export function isFusion(input: unknown): boolean {

@@ -49,7 +49,11 @@
 					"normalizedSurface": "Berlin",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Nom", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
 					{ "attested": "Berlin", "orthography": "Standard" }

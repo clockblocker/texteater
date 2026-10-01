@@ -54,7 +54,11 @@
 					"normalizedSurface": "Johann Wolfgang von Goethe",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
 					{ "attested": "Johann", "orthography": "Standard" },

@@ -219,12 +219,42 @@ test("any Head that stands in for an elided noun owns its article", () => {
 					gender: "Neut",
 				},
 			},
-			inflectionalFeatures: { case: "Nom", number: "Sing" },
+			inflectionalFeatures: { case: "Nom", gender: null, number: "Sing" },
 		},
 		members: [standard("das"), standard("Berlin")],
 		articleEvidence: { kind: "Owned", member: 0 },
 	});
 	expect(issues(berlin)).toEqual([]);
+});
+
+test("a surname that owns its article shows its gender on the Surface (system ADR 0040)", () => {
+	// der junge Schwarzkopf: the surname has no Core gender, and der shows it.
+	const schwarzkopf = (gender: string | null) =>
+		attest({
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				normalizedSurface: "Schwarzkopf",
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "PROPN",
+					canonicalForm: "Schwarzkopf",
+					coreFeatures: { abbr: null, article: null, gender: null },
+				},
+				inflectionalFeatures: { case: "Nom", gender, number: "Sing" },
+			},
+			members: [standard("der"), standard("Schwarzkopf")],
+			articleEvidence: { kind: "Owned", member: 0 },
+		});
+	expect(issues(schwarzkopf("Masc"))).toEqual([]);
+	expect(issues(schwarzkopf("Fem"))).toHaveLength(1);
+	expect(issues(schwarzkopf(null))).toEqual([
+		"Schwarzkopf owns der, so its Surface marks the gender the article shows",
+	]);
 });
 
 test("a shared article agrees with the Head that shares it", () => {

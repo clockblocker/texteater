@@ -38,7 +38,9 @@ function surface(
 		...("features" in options
 			? {
 					inflectionalFeatures:
-						key === "de/Lexeme/NOUN" && options.features
+						(key === "de/Lexeme/NOUN" ||
+							key === "de/Lexeme/PROPN") &&
+						options.features
 							? { gender: null, ...options.features }
 							: options.features,
 				}

@@ -10,6 +10,7 @@ import {
 	germanAdpositionAttestationError,
 	germanClosedClassSurfaceError,
 	germanNounSurfaceError,
+	germanProperNounSurfaceError,
 	germanValencyAttestationError,
 	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
@@ -25,6 +26,7 @@ import {
 	isGermanAdpositionAttestation,
 	isGermanClosedClassSurface,
 	isGermanNounSurface,
+	isGermanProperNounSurface,
 	isGermanValencyAttestation,
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
@@ -356,6 +358,10 @@ export function buildUnitSchemas<
 		route.language === "de" &&
 		route.family === "Lexeme" &&
 		route.kind === "NOUN";
+	const properNoun =
+		route.language === "de" &&
+		route.family === "Lexeme" &&
+		route.kind === "PROPN";
 	const articleOwner =
 		route.family === "Lexeme" &&
 		(route.language === "he"
@@ -403,6 +409,10 @@ export function buildUnitSchemas<
 	if (noun)
 		Surface = Surface.refine(isGermanNounSurface, {
 			error: germanNounSurfaceError,
+		});
+	if (properNoun)
+		Surface = Surface.refine(isGermanProperNounSurface, {
+			error: germanProperNounSurfaceError,
 		});
 	if (verbal)
 		Surface = Surface.refine(isGermanVerbalSurface, {

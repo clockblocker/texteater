@@ -23,6 +23,7 @@ export function outputType(
 							"dumling.de-determiner.core",
 							"dumling.de-closed-class.surface",
 							"dumling.de-noun.surface",
+							"dumling.de-proper-noun.surface",
 							"dumling.article.attestation",
 							"dumling.foreign.surface",
 							"dumling.fusion",

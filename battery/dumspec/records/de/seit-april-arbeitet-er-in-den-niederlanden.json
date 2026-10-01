@@ -48,7 +48,11 @@
 					"normalizedSurface": "Niederlanden",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Dat", "number": "Plur" }
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Plur"
+					}
 				},
 				"members": [
 					{ "attested": "den", "orthography": "Standard" },

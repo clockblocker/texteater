@@ -47,7 +47,11 @@
 					"normalizedSurface": "Peters",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Gen", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
 					{ "attested": "Peters", "orthography": "Standard" }

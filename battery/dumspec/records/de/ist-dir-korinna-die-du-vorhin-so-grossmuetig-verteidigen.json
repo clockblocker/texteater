@@ -151,7 +151,7 @@
 			},
 			{
 				"rule": "de/proper-noun-article",
-				"hash": "467218f77ed6cd15"
+				"hash": "7abeb6a67e70b96b"
 			},
 			{
 				"rule": "de/sein-perfect-or-copula",
@@ -300,6 +300,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
+						"gender": null,
 						"number": "Sing"
 					}
 				},

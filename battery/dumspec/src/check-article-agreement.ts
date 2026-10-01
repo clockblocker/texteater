@@ -30,8 +30,9 @@ const englishArticles: Readonly<Record<string, (number: unknown) => boolean>> =
 
 /**
  * The case, number and gender a Head shows, whether its Surface or its Core
- * marks them: a noun's gender is its Lemma's, or its singular Surface's when
- * the Lemma has none (`der Reisende`). Plural agreement has no gender.
+ * marks them: a noun's or name's gender is its Lemma's, or its singular
+ * Surface's when the Lemma has none (`der Reisende`, `der junge
+ * Schwarzkopf`). Plural agreement has no gender.
  */
 function headAgreement(surface: Dumling.Surface): ArticleAgreement {
 	const core: Readonly<Record<string, unknown>> = surface.lemma.coreFeatures;
@@ -62,9 +63,11 @@ function describe(head: ArticleAgreement): string {
  * read through its Fusion or Shorthand, must name a cell of `der` or `ein`
  * for the Head's case, number and gender, or be English `the`, `a` or `an`
  * fitting the Head's number. `ein Häuser` and `a books` fail; so does an
- * owned member that is no article at all. Dumling checks only where the
- * evidence points. A Typo article is not read, and Hebrew marks its article
- * on the Surface.
+ * owned member that is no article at all. A German name that owns its
+ * article must show its gender, in Core or, for a surname or coined name, on
+ * its singular Surface, so the check never passes on an unmarked gender.
+ * Dumling checks only where the evidence points. A Typo article is not read,
+ * and Hebrew marks its article on the Surface.
  */
 export function attestationArticleAgreementIssues(
 	attestation: Dumling.Attestation,
@@ -108,6 +111,18 @@ export function attestationArticleAgreementIssues(
 					},
 				];
 	}
+	if (
+		evidence.kind === "Owned" &&
+		surface.lemma.kind === "PROPN" &&
+		head.number !== "Plur" &&
+		head.gender === null
+	)
+		return [
+			{
+				path: "surface.inflectionalFeatures.gender",
+				message: `${surface.lemma.canonicalForm} owns ${article.attested}, so its Surface marks the gender the article shows`,
+			},
+		];
 	if (germanArticleSpellings(article) === undefined) return [];
 	return germanArticleCell(article, head) === undefined
 		? [

@@ -49,7 +49,11 @@
 					"normalizedSurface": "Physiker",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Acc", "number": "Plur" }
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Plur"
+					}
 				},
 				"members": [
 					{ "attested": "Die", "orthography": "Standard" },

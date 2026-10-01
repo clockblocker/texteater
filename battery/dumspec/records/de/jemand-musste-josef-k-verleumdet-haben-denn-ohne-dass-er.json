@@ -372,6 +372,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
+						"gender": null,
 						"number": "Sing"
 					}
 				},

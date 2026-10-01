@@ -684,6 +684,7 @@
 					},
 					"inflectionalFeatures": {
 						"case": "Nom",
+						"gender": null,
 						"number": "Sing"
 					},
 					"lemma": {

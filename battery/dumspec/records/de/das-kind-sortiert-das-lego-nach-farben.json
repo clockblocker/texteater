@@ -51,7 +51,11 @@
 					"normalizedSurface": "LEGO",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [{ "attested": "LEGO", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

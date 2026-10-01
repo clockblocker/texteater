@@ -263,7 +263,7 @@
 			},
 			{
 				"rule": "de/proper-noun-article",
-				"hash": "467218f77ed6cd15"
+				"hash": "7abeb6a67e70b96b"
 			},
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -1149,7 +1149,7 @@
 				"kind": "PROPN"
 			},
 			"notes": {
-				"rationale": "Odradek is Kafka's coined name for the creature, a bare singular after bei as only a name stands, so it is a PROPN cited bare, not a nonce No Target (de/no-target excludes names). Its gender comes from the text, which calls Odradek er; this sentence shows none. open: finding A3"
+				"rationale": "Odradek is Kafka's coined name for the creature, a bare singular after bei as only a name stands, so it is a PROPN cited bare, not a nonce No Target (de/no-target excludes names). A coined name has no Core gender, and this sentence shows none, so its Surface marks none; the er the text calls Odradek is its referent (de/proper-noun-article). Ruled on #743 (SZ-A3, A1)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1170,6 +1170,7 @@
 					},
 					"inflectionalFeatures": {
 						"case": "Dat",
+						"gender": null,
 						"number": "Sing"
 					},
 					"lemma": {
@@ -1181,7 +1182,7 @@
 						"coreFeatures": {
 							"abbr": null,
 							"article": null,
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"surfaceFeatures": null

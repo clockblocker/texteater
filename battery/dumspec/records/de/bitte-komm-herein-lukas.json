@@ -43,7 +43,11 @@
 					"normalizedSurface": "Lukas",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": null, "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [{ "attested": "Lukas", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

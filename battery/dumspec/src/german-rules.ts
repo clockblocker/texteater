@@ -570,7 +570,7 @@ const nouns: Rule[] = [
 	{
 		id: "de/proper-noun-article",
 		statement:
-			"A proper noun cited with its definite article (die Schweiz, der Rhein) has Core article Definite and owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Every name of a street, square, river, mountain or building is cited with it, and so is a title whose article inflects. A name cited bare (Berlin, Anna) has no Core article and still owns the article that opens its phrase, as the Head.",
+			"A proper noun cited with its definite article (die Schweiz) has Core article Definite and owns that article as a common noun does, fused pieces included: im Rhein gives [i] ADP and [m, Rhein] PROPN. Names of streets, squares, rivers, mountains and buildings are cited with it, as is a title whose article inflects. A name cited bare (Berlin) has none and still owns the article that opens its phrase. A surname or coined name, unlike other names, has no Core gender: its Surface marks the gender an owned article or agreeing adjective shows, and must where it owns one (der junge Schwarzkopf).",
 		adrs: ["ADR-0035", "ADR-0040"],
 		routes: lexeme("PROPN"),
 		records: [
@@ -583,6 +583,10 @@ const nouns: Rule[] = [
 			"de/sieh-einmal-hier-steht-er",
 			"de/die-nato-beraet-heute-ueber-den-antrag",
 			"de/im-sommer-besucht-sie-die-schweiz",
+			"de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
+			"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die",
+			"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+			"de/ach-treibel-sie-sind-ewig-ein-spoetter",
 		],
 	},
 	{

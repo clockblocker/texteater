@@ -56,7 +56,11 @@
 					"normalizedSurface": "Zauberflöte",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": { "case": "Acc", "number": "Sing" }
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [
 					{ "attested": "Die", "orthography": "Standard" },

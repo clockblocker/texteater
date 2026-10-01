@@ -2620,6 +2620,7 @@ export interface UnitMap {
 			surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 			inflectionalFeatures: {
 				case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+				gender: ("Fem" | "Masc" | "Neut") | null;
 				number: ("Plur" | "Sing") | null;
 			} | null;
 		};
@@ -2679,6 +2680,7 @@ export interface UnitMap {
 				surfaceFeatures: { historicalStatus: "Archaic" | null } | null;
 				inflectionalFeatures: {
 					case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+					gender: ("Fem" | "Masc" | "Neut") | null;
 					number: ("Plur" | "Sing") | null;
 				} | null;
 			};

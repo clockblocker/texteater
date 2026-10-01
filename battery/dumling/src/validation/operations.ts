@@ -12,6 +12,7 @@ import {
 	germanDeterminerCoreError,
 	germanNounSurfaceError,
 	germanPronounCoreError,
+	germanProperNounSurfaceError,
 	germanValencyAttestationError,
 	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
@@ -29,6 +30,7 @@ import {
 	isGermanDeterminerCore,
 	isGermanNounSurface,
 	isGermanPronounCore,
+	isGermanProperNounSurface,
 	isGermanValencyAttestation,
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
@@ -88,6 +90,10 @@ export const validationOperations: ValidationOperations = {
 	"dumling.de-noun.surface": check(
 		isGermanNounSurface,
 		germanNounSurfaceError,
+	),
+	"dumling.de-proper-noun.surface": check(
+		isGermanProperNounSurface,
+		germanProperNounSurfaceError,
 	),
 	"dumling.article.attestation": check(
 		isArticleAttestation,

@@ -23,7 +23,7 @@
 	"sources": {
 		"adrs": ["ADR-0035", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/proper-noun-article", "hash": "467218f77ed6cd15" },
+			{ "rule": "de/proper-noun-article", "hash": "7abeb6a67e70b96b" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/abbreviation-is-one-segment",
@@ -50,7 +50,11 @@
 				"articleEvidence": { "kind": "Owned", "member": 0 },
 				"surface": {
 					"unitKind": "Surface",
-					"inflectionalFeatures": { "case": "Nom", "number": "Sing" },
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					},
 					"language": "de",
 					"normalizedSurface": "BVG",
 					"spelling": { "kind": "Canonical" },
