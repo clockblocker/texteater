@@ -89,7 +89,14 @@ cells, and their spellings tell them apart.
   `ein`-words (`kein`, the possessives, `irgendein`) and the quantifiers. A
   stem cites its Nom.Masc.Sg form, or the plural when plural-cited (`einige`,
   `beide`). Article Surfaces have no inflectional bag; a stem's Surface marks
-  its cell.
+  its cell. Interrogative and relative `welcher` are two Lemmas, because Duden
+  gives them separate headwords; each w-adverb, one headword in Duden, is one
+  Lemma ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)).
+- German NOUN: gender sits in Core or on the Surface, never both on one
+  Lemma. A noun with a gender of its own has it in Core. An adjectival noun
+  for a person and a plural-only noun have Core gender null, and the first
+  marks the gender its singular Surface shows
+  ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)).
 - German PRON: [ADR 0044](./0044-identify-german-pronouns-by-pillar-stem-and-referent.md).
 - English PRON: case, number, gender and reflexivity are Core, so `I`, `me`,
   `my`, `mine` and `myself` are five Lemmas, and English PRON has no Surface
@@ -174,6 +181,11 @@ on the Surface. No German pronoun marks it now (ADR 0044,
 
 Amended on 2026-10-01: the dictionary check gives way for German reflexive
 verbs, stated above. Decided on
+[#766](https://github.com/clockblocker/texteater/issues/766).
+
+Amended on 2026-10-01: the German NOUN and `welcher` lines are stated. Both
+were the practice already; the `welcher` line applies the w-adverb test to
+the determiner. Decided on
 [#766](https://github.com/clockblocker/texteater/issues/766).
 
 ## Considered Options

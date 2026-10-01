@@ -67,6 +67,16 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		both: { kind: ["PRON"] },
 		varies: [{ key: "pronType", values: ["Int", "Rel"] }],
 	},
+	// Duden gives interrogative and relative welcher separate headwords, so
+	// they stay two Lemmas; each w-adverb has one and is one Lemma (#766).
+	{
+		split: "Interrogative and relative welcher are separate DET Lemmas",
+		adrs: ["ADR-0032"],
+		rules: [],
+		forms: ["welcher"],
+		both: { kind: ["DET"] },
+		varies: [{ key: "pronType", values: ["Int", "Rel"] }],
+	},
 	{
 		split: "A pronoun standing for a noun phrase is PRON, one modifying a noun DET",
 		adrs: [],
