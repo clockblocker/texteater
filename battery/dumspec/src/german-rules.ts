@@ -670,7 +670,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/quantifier-by-use",
 		statement:
-			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides: after a determiner they are ADJ, also with their noun elided (seine vielen Beine, die meisten); standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig, whose Cmp and Sup are mehr and am meisten, weniger and am wenigsten. For these words this Rule decides over de/pron-or-det-by-use and de/adjective-stays-adj.",
+			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides: after a determiner they are ADJ, also with their noun elided (seine vielen Beine); standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig (mehr, am meisten; weniger, am wenigsten). This decides over de/pron-or-det-by-use and de/adjective-stays-adj. ein wenig and quantity bisschen are one Lexeme PRON each in every use; the ein of ein wenig is fixed, ein and der before bisschen are its satellites, and the word they quantify is its own target.",
 		adrs: ["ADR-0040", "ADR-0042"],
 		routes: lexeme("ADJ", "PRON", "DET", "ADV"),
 		records: [
@@ -758,7 +758,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/adjective-stays-adj",
 		statement:
-			"Comparative and adverbially used adjectives are ADJ, never ADV: sie singt laut gives [laut] ADJ. A word that can inflect as an attributive adjective (lauter, langsame) is an adjective.",
+			"An adjective used adverbially or compared stays ADJ, never ADV, when the same sense can stand inflected before a noun: sie singt laut gives [laut] ADJ. A use whose sense no attributive form has is another word: ganz 'quite' and früh 'in the morning' are ADV, as are degree words (de/degree-word-is-adv), and einfach and ruhig as modal particles are PART. A sentence adverb, which comments on the whole statement and mostly can answer a yes/no question alone (offenbar 'apparently', wahrscheinlich, natürlich 'of course', wirklich 'in fact', eigentlich 'actually'), is a non-comparable ADV.",
 		adrs: [],
 		routes: lexeme("ADJ", "ADV"),
 		records: [
@@ -892,7 +892,7 @@ const conjunctionsAndParticles: Rule[] = [
 	{
 		id: "de/bare-infinitive-zu",
 		statement:
-			"zu before an infinitive or infixed in it, without um, ohne or statt, is a single-member PART and never joins the infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB.",
+			"zu before an infinitive or infixed in it, without um, ohne or statt, is a single-member PART with partType Inf and never joins the infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB.",
 		adrs: [],
 		routes: lexeme("PART"),
 		records: [
@@ -930,6 +930,53 @@ const conjunctionsAndParticles: Rule[] = [
 			"de/die-datei-wurde-nciht-rechtzeitig-gespeichert",
 			"de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale",
 			"de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine",
+		],
+	},
+	{
+		id: "de/modal-particle-is-part",
+		statement:
+			"A modal particle is a single-member PART with partType Mod. Unstressed in the middle field, it adds the speaker's attitude without changing what is claimed; it cannot open the clause alone, answer a question, be negated or pick out a focus: Du kennst den Weg ja gives [ja] PART ja. Only the authored modal particles are PART Mod, and particles standing together are separate targets. The same spelling used otherwise is another word: ADV for vielleicht 'perhaps' or a focus word, CCONJ joining clauses, INTJ answering. Other German PART is only nicht (polarity Neg) and infinitive zu (partType Inf).",
+		adrs: ["ADR-0021", "ADR-0032"],
+		routes: lexeme("PART", "ADV", "CCONJ", "INTJ"),
+		records: [
+			"de/vielleicht-ist-es-so",
+			"de/er-wollte-kommen-doch-der-zug-fiel-aus",
+			"de/sie-fragte-kommst-du-nicht-er-antwortete-doch",
+		],
+	},
+	{
+		id: "de/focus-word-is-adv",
+		statement:
+			"A focus word picks out one phrase and sets it against alternatives: nur, bloß, lediglich, allein, erst, schon, noch, auch, sogar, selbst, gerade, ausgerechnet, eben 'precisely'. It is a single-member ADV, never PART, and never joins the phrase it picks out, also when both stand before the finite verb: Selbst der erfahrenste Techniker gives [Selbst] ADV selbst. The same spelling as a modal particle is PART (de/modal-particle-is-part), and nicht is PART (de/nicht-is-part).",
+		adrs: [],
+		routes: lexeme("ADV", "PART"),
+		records: [
+			"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
+			"de/manchmal-fahren-wir-auch-im-wagen-die-mama-und-ich",
+		],
+	},
+	{
+		id: "de/degree-word-is-adv",
+		statement:
+			"A word that says to what degree an adjective or adverb holds (sehr, zu, allzu, ziemlich, ganz 'quite', gar, recht 'fairly', höchst, äußerst, überaus) is a single-member ADV that never joins the word it grades, and degree words standing together stay apart: zu schnell gives [zu] ADV zu and [schnell] ADJ schnell. Excess is no Degree value, so only superlative am is a DegreeMarker (de/fused-word-pieces). allzu written apart (all zu) is one target, ADV allzu with a Variant spelling. sehr is comparable (mehr, am meisten); the others are not.",
+		adrs: ["ADR-0040", "ADR-0042"],
+		routes: lexeme("ADV", "PART", "ADJ"),
+		records: [
+			"de/die-peitsche-hat-er-mitgebracht",
+			"de/und-minz-und-maunz-die-schreien",
+			"de/tut-mir-leid-ich-habe-deine-nachricht-zu-spaet-gesehen",
+		],
+	},
+	{
+		id: "de/aber-is-cconj",
+		statement:
+			"aber meaning 'but, however' is CCONJ wherever it stands in its clause, before it, after its first phrase or in the middle field: Bald aber lernte er gives [aber] CCONJ aber. It never fills the position before the finite verb by itself, so its position changes neither its Kind nor its Lemma. Modal aber in an exclamation is PART (de/modal-particle-is-part), and aber 'again' is ADV.",
+		adrs: [],
+		routes: lexeme("CCONJ", "ADV", "PART"),
+		records: [
+			"de/sie-ist-muede-aber-sie-arbeitet-weiter",
+			"de/es-warten-drei-kunden-vor-der-tuer-aber-keiner-hat-es-eilig",
+			"de/bald-aber-lernte-er-es-richtiger-schaetzen",
 		],
 	},
 ];
@@ -1017,7 +1064,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/interjection-counts-its-words",
 		statement:
-			"An interjection stands outside the clause to exclaim, answer or imitate a sound and is an INTJ Lexeme, with partType Res for a response particle answering a question, else none. Until punctuation splits them, interjection pieces are one call and one target, cited as written in lexical casing: a Lexeme if a piece is no German word, else a Locution INTJ (ha ha). So is an established exclamation whose meaning is not the sum of its words. Spacing is never a Variant or a Typo: each written shape is its own Lemma. An answer before a formula and a dative after an interjection resolve on their own.",
+			"An interjection stands outside the clause to exclaim, answer or imitate a sound: an INTJ Lexeme, with partType Res for an answer word, quoted or embedded too, else none; German PART never has polarity Pos. Until punctuation splits them, interjection pieces are one target, cited as written in lexical casing: a Lexeme if a piece is no German word, else a Locution INTJ (ha ha), as is an established exclamation whose meaning is not the sum of its words. Each spacing is its own Lemma, never a Variant or Typo. An answer before a formula and a dative after an interjection resolve on their own.",
 		adrs: ["ADR-0039", "ADR-0041"],
 		routes: [...lexeme("INTJ"), ...locution("INTJ")],
 		records: [

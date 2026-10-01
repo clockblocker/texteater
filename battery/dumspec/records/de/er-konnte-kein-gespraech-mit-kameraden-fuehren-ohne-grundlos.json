@@ -163,11 +163,11 @@
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
-				"hash": "9b5fe154ed54d6dc"
+				"hash": "8ef3db1fe0214e40"
 			},
 			{
 				"rule": "de/bare-infinitive-zu",
-				"hash": "839e40a7258859ad"
+				"hash": "a1c44338fa4ffc37"
 			},
 			{
 				"rule": "de/comparability-is-lexical",

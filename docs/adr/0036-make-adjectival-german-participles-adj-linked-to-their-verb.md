@@ -119,3 +119,10 @@ same clause. A Reading never overrides its Lemma's comparability, because a
 Surface realizes a Lemma, not a Reading, and Dumling could no longer check
 Degree without it. Decided on
 [#743](https://github.com/clockblocker/texteater/issues/743).
+
+Amended on 2026-10-01: the adverbial use above stays ADJ for a sense the
+adjective has, one that can stand inflected before a noun. A degree sense
+(*ganz* 'quite'), *früh* 'in the morning' and a sentence adverb (*offenbar*
+'apparently') are ADV (`de/adjective-stays-adj`,
+[#734](https://github.com/clockblocker/texteater/issues/734)). This narrows
+the adverbial case; it doesn't reverse it.

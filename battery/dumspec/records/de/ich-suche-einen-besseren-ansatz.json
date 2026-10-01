@@ -27,7 +27,7 @@
 				"rule": "de/attributive-adjective-stands-alone",
 				"hash": "dc0d3ef97ace5bc0"
 			},
-			{ "rule": "de/adjective-stays-adj", "hash": "9b5fe154ed54d6dc" },
+			{ "rule": "de/adjective-stays-adj", "hash": "8ef3db1fe0214e40" },
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "044ad2bbec5191e7"
