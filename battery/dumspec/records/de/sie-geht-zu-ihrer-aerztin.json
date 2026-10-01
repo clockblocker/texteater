@@ -35,12 +35,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "zu",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "zu",
 					"spelling": { "kind": "Canonical" },

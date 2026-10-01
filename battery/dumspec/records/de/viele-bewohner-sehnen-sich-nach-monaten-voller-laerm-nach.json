@@ -201,12 +201,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "nach",
-								"coreFeatures": {
-									"abbr": null,
-									"adpType": "Prep",
-									"extPos": null,
-									"partType": null
-								}
+								"coreFeatures": { "abbr": null }
 							},
 							"case": "Dat",
 							"referent": "Either"
@@ -239,12 +234,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "nach",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "nach",
 					"spelling": { "kind": "Canonical" },

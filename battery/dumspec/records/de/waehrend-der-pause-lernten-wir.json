@@ -36,12 +36,7 @@
 							"canonicalForm": "während",
 							"family": "Lexeme",
 							"kind": "ADP",
-							"coreFeatures": {
-								"abbr": null,
-								"adpType": null,
-								"extPos": null,
-								"partType": null
-							},
+							"coreFeatures": { "abbr": null },
 							"unitKind": "Lemma"
 						},
 						"emojiDescription": "⏳",

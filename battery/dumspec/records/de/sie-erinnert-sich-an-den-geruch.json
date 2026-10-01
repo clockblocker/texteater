@@ -138,12 +138,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "an",
-								"coreFeatures": {
-									"abbr": null,
-									"adpType": "Prep",
-									"extPos": null,
-									"partType": null
-								}
+								"coreFeatures": { "abbr": null }
 							},
 							"case": "Acc",
 							"referent": "Something"

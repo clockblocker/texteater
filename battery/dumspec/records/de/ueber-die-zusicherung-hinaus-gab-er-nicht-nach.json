@@ -59,7 +59,18 @@
 					{ "attested": "Über", "orthography": "Standard" },
 					{ "attested": "hinaus", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
 			}
 		},
 		{

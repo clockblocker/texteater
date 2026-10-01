@@ -92,12 +92,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "über",
-								"coreFeatures": {
-									"abbr": null,
-									"adpType": "Prep",
-									"extPos": null,
-									"partType": null
-								}
+								"coreFeatures": { "abbr": null }
 							},
 							"case": "Acc",
 							"referent": "Something"

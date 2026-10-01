@@ -496,12 +496,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "durch",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "durch",
 					"spelling": {
@@ -771,12 +766,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "mit",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "mit",
 					"spelling": {

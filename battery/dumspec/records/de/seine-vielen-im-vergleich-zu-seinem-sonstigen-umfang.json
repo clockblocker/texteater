@@ -391,10 +391,21 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B2, VP-A9, A9). im Vergleich zu (Duden, Vergleich: im Vergleich zu/(auch:) mit) works as one preposition, and Vergleich takes no article or attribute of its own there, so it is a complex preposition, a Locution ADP like in Bezug auf (de/complex-preposition, ADR 0039). Both pieces of im are fixed members (de/fused-word-pieces). Its case waits on the ADP Case Table's circumposition entries (#733, #652)."
+				"rationale": "Ruled on #743 (VP-B2, VP-A9, A9). im Vergleich zu (Duden, Vergleich: im Vergleich zu/(auch:) mit) works as one preposition, and Vergleich takes no article or attribute of its own there, so it is a complex preposition, a Locution ADP like in Bezug auf (de/complex-preposition, ADR 0039). Both pieces of im are fixed members (de/fused-word-pieces). It records the dative of seinem sonstigen Umfang, the one case the ADP Case Table lists for it (#652)."
 			}
 		},
 		{
@@ -847,12 +858,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "vor",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "vor",
 					"spelling": {

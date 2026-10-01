@@ -275,12 +275,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "gegen",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "gegen",
 					"spelling": {
@@ -668,12 +663,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "an",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "an",
 					"spelling": {

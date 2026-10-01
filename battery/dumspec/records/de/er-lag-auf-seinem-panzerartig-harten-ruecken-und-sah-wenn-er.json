@@ -534,12 +534,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "auf",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "auf",
 					"spelling": {
@@ -1239,12 +1234,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "von",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "von",
 					"spelling": {
@@ -1477,12 +1467,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "auf",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "auf",
 					"spelling": {
@@ -1780,12 +1765,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "zu",
-								"coreFeatures": {
-									"abbr": null,
-									"adpType": "Prep",
-									"extPos": null,
-									"partType": null
-								}
+								"coreFeatures": { "abbr": null }
 							},
 							"case": "Dat",
 							"referent": "Something"

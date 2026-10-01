@@ -151,12 +151,7 @@
 						"canonicalForm": "an",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"surfaceFeatures": null
 				}

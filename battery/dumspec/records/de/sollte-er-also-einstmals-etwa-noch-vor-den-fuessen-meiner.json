@@ -553,12 +553,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "vor",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"surfaceFeatures": null
 				}
@@ -768,12 +763,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "mit",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"surfaceFeatures": null
 				}

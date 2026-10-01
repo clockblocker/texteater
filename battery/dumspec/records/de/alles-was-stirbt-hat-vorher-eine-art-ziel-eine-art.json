@@ -1136,12 +1136,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "bei",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"surfaceFeatures": null
 				}

@@ -315,7 +315,8 @@
 						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
-				}
+				},
+				"valencyEvidence": []
 			},
 			"notes": {
 				"rationale": "von da an is one constituent outside the bracket, and an is no particle of the verb, so von … an is the circumposition, a Locution ADP (de/bracket-particle-or-circumposition, as in von diesem Tag an). Its slot is open (von nun an, von heute an), so da stays outside."

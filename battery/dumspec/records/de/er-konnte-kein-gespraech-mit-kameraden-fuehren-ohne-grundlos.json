@@ -413,12 +413,7 @@
 								"canonicalForm": "mit",
 								"family": "Lexeme",
 								"kind": "ADP",
-								"coreFeatures": {
-									"abbr": null,
-									"adpType": "Prep",
-									"extPos": null,
-									"partType": null
-								}
+								"coreFeatures": { "abbr": null }
 							},
 							"case": "Dat",
 							"referent": "Someone"

@@ -306,12 +306,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "von",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "von",
 					"spelling": {

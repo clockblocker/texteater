@@ -64,12 +64,7 @@
 						"canonicalForm": "entlang",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"coreFeatures": {
-							"adpType": "Post",
-							"abbr": null,
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"surfaceFeatures": null
 				}

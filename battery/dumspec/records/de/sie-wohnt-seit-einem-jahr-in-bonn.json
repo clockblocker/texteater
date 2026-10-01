@@ -39,12 +39,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "seit",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "seit",
 					"spelling": { "kind": "Canonical" },

@@ -37,12 +37,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "aus",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "aus",
 					"spelling": { "kind": "Canonical" },

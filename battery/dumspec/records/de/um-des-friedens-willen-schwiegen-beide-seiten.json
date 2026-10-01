@@ -49,7 +49,18 @@
 					{ "attested": "Um", "orthography": "Standard" },
 					{ "attested": "willen", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				]
 			}
 		}
 	],

@@ -50,7 +50,18 @@
 					{ "attested": "Von", "orthography": "Standard" },
 					{ "attested": "an", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
 			}
 		}
 	],

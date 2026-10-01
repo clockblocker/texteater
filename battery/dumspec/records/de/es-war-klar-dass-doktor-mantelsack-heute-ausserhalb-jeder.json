@@ -660,12 +660,7 @@
 						"canonicalForm": "außerhalb",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"surfaceFeatures": null
 				}
@@ -902,12 +897,7 @@
 								"canonicalForm": "um",
 								"family": "Lexeme",
 								"kind": "ADP",
-								"coreFeatures": {
-									"abbr": null,
-									"adpType": "Prep",
-									"extPos": null,
-									"partType": null
-								}
+								"coreFeatures": { "abbr": null }
 							},
 							"case": "Acc",
 							"referent": "Something"

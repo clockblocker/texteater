@@ -653,7 +653,18 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				]
 			},
 			"notes": {
 				"rationale": "aus stands in the middle field before the object, not in the right bracket, and aussehen has no sense 'see from', so von … aus is a circumposition, a Locution ADP (de/bracket-particle-or-circumposition)."
@@ -964,12 +975,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "gegenüber",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Post",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "gegenüber",
 					"spelling": {
@@ -997,7 +1003,7 @@
 				]
 			},
 			"notes": {
-				"rationale": "gegenüber takes the dative ihm and stands after it, as Duden prescribes with personal pronouns (mir gegenüber), so it is an ADP with adpType Post, not an adverb."
+				"rationale": "gegenüber takes the dative ihm and stands after it, as Duden prescribes with personal pronouns (mir gegenüber), so it is a postposed ADP, not an adverb."
 			}
 		},
 		{
@@ -1195,12 +1201,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "mit",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "mit",
 					"spelling": {
@@ -1299,12 +1300,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "an",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "an",
 					"spelling": {

@@ -363,12 +363,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "über",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "über",
 					"spelling": {
@@ -809,12 +804,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "durch",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "durch",
 					"spelling": {
@@ -1101,12 +1091,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "zu",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "zu",
 					"spelling": {
@@ -1286,12 +1271,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "nach",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"normalizedSurface": "nach",
 					"spelling": {

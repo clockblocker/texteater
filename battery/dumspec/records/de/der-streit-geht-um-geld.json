@@ -68,12 +68,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "um",
-						"coreFeatures": {
-							"abbr": null,
-							"adpType": "Prep",
-							"extPos": null,
-							"partType": null
-						}
+						"coreFeatures": { "abbr": null }
 					},
 					"candidates": ["🔄", "🔗"]
 				},
