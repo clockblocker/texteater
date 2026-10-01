@@ -1,0 +1,268 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Was ist das für ein Buch?",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Was"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "das"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "für"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Buch"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "?"
+		}
+	],
+	"coverage": "Full",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/was-fuer",
+				"hash": "2f7aa9826f2670de"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 6, 8],
+			"route": {
+				"family": "Locution",
+				"kind": "DET"
+			},
+			"reading": {
+				"emojiDescription": "❓👉"
+			},
+			"notes": {
+				"rationale": "Split was für ein is still one DET Locution: was opens the question and für ein stays before the noun (de/was-fuer). The predicate noun Buch is its own target, and das is the demonstrative subject."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "DET",
+						"canonicalForm": "was für ein",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "was für ein",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": "Neut",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "Was",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "für",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🟰"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "sein",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"normalizedSurface": "ist",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "ist",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👉"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "das",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Dem",
+							"gender": "Neut"
+						}
+					},
+					"normalizedSurface": "das",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{
+						"attested": "das",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Buch",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					},
+					"normalizedSurface": "Buch",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "Buch",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

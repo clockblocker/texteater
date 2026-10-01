@@ -1,0 +1,330 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Du brauchst einen Schirm, aber was für einen?",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Du"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "brauchst"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Schirm"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "aber"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "was"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "für"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "einen"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "?"
+		}
+	],
+	"coverage": "Full",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/was-fuer",
+				"hash": "2f7aa9826f2670de"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "du",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"person": "2",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "du",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{
+						"attested": "Du",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "brauchen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"normalizedSurface": "brauchst",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "2",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [
+					{
+						"attested": "brauchst",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		{
+			"memberSegmentIndices": [4, 6],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Schirm",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					},
+					"normalizedSurface": "Schirm",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "einen",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Schirm",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": []
+			}
+		},
+		{
+			"memberSegmentIndices": [9],
+			"route": {
+				"family": "Lexeme",
+				"kind": "CCONJ"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "aber",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "aber",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null
+				},
+				"members": [
+					{
+						"attested": "aber",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [11, 13, 15],
+			"route": {
+				"family": "Locution",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "❓"
+			},
+			"notes": {
+				"rationale": "Standalone was für einen stands for a noun phrase, so it is one PRON Locution was für einer (de/was-fuer), unlike the article einen that Schirm owns."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "PRON",
+						"canonicalForm": "was für einer",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "was für einen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": "Masc",
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "was",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "für",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "einen",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full"
+			}
+		}
+	],
+	"noTarget": []
+}

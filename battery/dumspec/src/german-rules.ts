@@ -712,7 +712,12 @@ const pronounsAndAdjectives: Rule[] = [
 			"Standalone was für einer or was für welche is one PRON target. was für ein before a noun, and plural or mass was für, is one DET target. Either may be split across the sentence; the noun and other free words stay outside.",
 		adrs: ["ADR-0039"],
 		routes: locution("PRON", "DET"),
-		records: [],
+		records: [
+			"de/was-fuer-ein-buch-liest-du",
+			"de/was-ist-das-fuer-ein-buch",
+			"de/was-fuer-buecher-liest-du",
+			"de/du-brauchst-einen-schirm-aber-was-fuer-einen",
+		],
 	},
 	{
 		id: "de/relative-w-adverb-fills-a-slot",
