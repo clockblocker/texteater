@@ -474,10 +474,11 @@ export function englishValencyAttestationError(): string {
 }
 
 /**
- * A German ADP Attestation records at most one slot: the oblique bare case
- * its complement took (`auf dem Tisch` Dat), marked by no member. An ADP with
- * no case-marked complement records none. Which cases the ADP takes is a fact
- * about German, checked in dumspec (ADR 0041).
+ * A German ADP Attestation, Lexeme or Locution, records at most one slot: the
+ * oblique bare case its complement took (`auf dem Tisch` Dat, `um des
+ * Friedens willen` Gen), marked by no member. An ADP with no case-marked
+ * complement records none. Which cases the ADP takes is a fact about German,
+ * checked in dumspec (ADR 0041); no table is consulted here.
  */
 export function isGermanAdpositionAttestation(input: unknown): boolean {
 	const value = input as { valencyEvidence: ValencyEvidence[] };

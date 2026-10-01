@@ -760,18 +760,13 @@ test("an English and a Hebrew proper noun own the article they are cited with", 
 	};
 	expect(parseUnit(bare).success).toBe(false);
 });
-const preposition = (canonicalForm: string, adpType = "Prep") => ({
+const preposition = (canonicalForm: string) => ({
 	unitKind: "Lemma",
 	language: "de",
 	family: "Lexeme",
 	kind: "ADP",
 	canonicalForm,
-	coreFeatures: {
-		abbr: null,
-		adpType,
-		extPos: null,
-		partType: null,
-	},
+	coreFeatures: { abbr: null },
 });
 test("valency evidence names the owned member realizing its preposition", () => {
 	const slot = {
@@ -841,8 +836,9 @@ test("valency evidence names the owned member realizing its preposition", () => 
 		}).success,
 	).toBe(true);
 });
-// Which cases a preposition takes is checked in dumspec (ADR 0041).
-test("a governor's preposition slot takes any oblique case", () => {
+// Which cases a preposition takes, and whether the ADP Case Table lists it at
+// all, is checked in dumspec (ADR 0041): Dumling consults no table.
+test("a governor's preposition slot passes Dumling in any oblique case, listed or not", () => {
 	const attestation = (canonicalForm: string, grammaticalCase: string) => ({
 		unitKind: "Attestation",
 		surface: {
@@ -876,6 +872,7 @@ test("a governor's preposition slot takes any oblique case", () => {
 	expect(parseUnit(attestation("auf", "Dat")).success).toBe(true);
 	expect(parseUnit(attestation("für", "Acc")).success).toBe(true);
 	expect(parseUnit(attestation("für", "Dat")).success).toBe(true);
+	expect(parseUnit(attestation("à", "Dat")).success).toBe(true);
 	expect(parseUnit(attestation("für", "Nom")).success).toBe(false);
 });
 
@@ -884,7 +881,6 @@ const adpAttestation = (
 	attested: string,
 	canonicalForm: string,
 	realizedCase: string | null,
-	adpType = "Prep",
 ) => ({
 	unitKind: "Attestation",
 	members: [{ attested, orthography: "Standard" }],
@@ -909,28 +905,29 @@ const adpAttestation = (
 		normalizedSurface: canonicalForm,
 		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
-		lemma: preposition(canonicalForm, adpType),
+		lemma: preposition(canonicalForm),
 	},
 });
-// Which cases an ADP takes is checked in dumspec (ADR 0041).
-test("an ADP Attestation records its realized case in any oblique case", () => {
-	for (const [attested, canonicalForm, realizedCase, adpType] of [
-		["auf", "auf", "Dat", "Prep"],
-		["auf", "auf", "Acc", "Prep"],
-		["Wegen", "wegen", "Dat", "Prep"],
-		["Wegen", "wegen", "Gen", "Prep"],
-		["entlang", "entlang", "Acc", "Post"],
-		["Entlang", "entlang", "Gen", "Prep"],
-		["in", "in", "Dat", "Prep"],
-		["Anstatt", "anstatt", null, "Prep"],
-		["versus", "versus", "Acc", "Prep"],
-		["für", "für", "Dat", "Prep"],
-		["auf", "auf", "Gen", "Prep"],
+// Which cases an ADP takes, and whether the ADP Case Table lists it at all, is
+// checked in dumspec (ADR 0041): Dumling consults no table.
+test("an ADP Attestation's realized case passes Dumling in any oblique case, listed or not", () => {
+	for (const [attested, canonicalForm, realizedCase] of [
+		["auf", "auf", "Dat"],
+		["auf", "auf", "Acc"],
+		["Wegen", "wegen", "Dat"],
+		["wegen", "wegen", "Gen"],
+		["entlang", "entlang", "Acc"],
+		["Entlang", "entlang", "Gen"],
+		["in", "in", "Dat"],
+		["Anstatt", "anstatt", null],
+		["versus", "versus", "Acc"],
+		["à", "à", "Dat"],
+		["für", "für", "Dat"],
+		["auf", "auf", "Gen"],
 	] as const)
 		expect(
-			parseUnit(
-				adpAttestation(attested, canonicalForm, realizedCase, adpType),
-			).success,
+			parseUnit(adpAttestation(attested, canonicalForm, realizedCase))
+				.success,
 		).toBe(true);
 	expect(parseUnit(adpAttestation("auf", "auf", "Nom")).success).toBe(false);
 	const valid = adpAttestation("auf", "auf", "Dat");
@@ -945,6 +942,90 @@ test("an ADP Attestation records its realized case in any oblique case", () => {
 		);
 	const { valencyEvidence: _, ...missing } = valid;
 	expect(parseUnit(missing).success).toBe(false);
+});
+// Where an adposition stands is not identity, and the sentence shows it, so
+// neither the Lemma nor the Attestation records it (ADR 0032).
+test("a German ADP records its position on neither its Lemma nor its Attestation", () => {
+	const wegen = adpAttestation("wegen", "wegen", "Gen");
+	expect(parseUnit(wegen).success).toBe(true);
+	for (const retired of [
+		{ adpType: "Post" },
+		{ adpType: "Circ" },
+		{ extPos: "ADV" },
+		{ partType: "Vbp" },
+	])
+		expect(
+			parseUnit({
+				...wegen,
+				surface: {
+					...wegen.surface,
+					lemma: {
+						...wegen.surface.lemma,
+						coreFeatures: { abbr: null, ...retired },
+					},
+				},
+			}).success,
+		).toBe(false);
+	for (const adpType of ["Prep", "Post"])
+		expect(parseUnit({ ...wegen, adpType }).success).toBe(false);
+});
+// A Locution ADP records its complement's case as a Lexeme ADP does, and no
+// position: its words are its Canonical Form (ADR 0039, amended 2026-10-01).
+test("a Locution ADP Attestation records at most one bare-case slot", () => {
+	const willen = (realizedCase: string | null) => ({
+		unitKind: "Attestation",
+		members: [
+			{ attested: "Um", orthography: "Standard" },
+			{ attested: "willen", orthography: "Standard" },
+		],
+		realizationCoverage: "Full",
+		valencyEvidence:
+			realizedCase === null
+				? []
+				: [
+						{
+							member: null,
+							complement: {
+								kind: "Case",
+								case: realizedCase,
+								referent: "Either",
+							},
+							realizedCase,
+						},
+					],
+		surface: {
+			unitKind: "Surface",
+			language: "de",
+			normalizedSurface: "um … willen",
+			spelling: { kind: "Canonical" },
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "de",
+				family: "Locution",
+				kind: "ADP",
+				canonicalForm: "um … willen",
+				coreFeatures: {},
+			},
+		},
+	});
+	// The Case Table's Gen is dumspec's to check; Dumling takes any oblique case.
+	for (const realizedCase of ["Gen", "Dat", null])
+		expect(parseUnit(willen(realizedCase)).success).toBe(true);
+	expect(parseUnit(willen("Nom")).success).toBe(false);
+	const valid = willen("Gen");
+	const [slot] = valid.valencyEvidence;
+	for (const invalid of [
+		[slot, slot],
+		[{ ...slot, member: 0 }],
+		[{ ...slot, realizedCase: "Acc" }],
+	])
+		expect(parseUnit({ ...valid, valencyEvidence: invalid }).success).toBe(
+			false,
+		);
+	const { valencyEvidence: _, ...missing } = valid;
+	expect(parseUnit(missing).success).toBe(false);
+	expect(parseUnit({ ...valid, adpType: "Circ" }).success).toBe(false);
 });
 test("an adjective or noun Attestation names its owned governed preposition like a verb", () => {
 	const auf = preposition("auf");

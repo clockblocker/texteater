@@ -105,7 +105,9 @@ export function unitFixtures(route: SourceRoute, zod: typeof z) {
 	const Attestation = {
 		unitKind: "Attestation",
 		...(verbal ? { expletiveEvidence: null, valencyEvidence: [] } : {}),
-		...(route.key === "de/Lexeme/ADP" ? { valencyEvidence: [] } : {}),
+		...(route.key === "de/Lexeme/ADP" || route.key === "de/Locution/ADP"
+			? { valencyEvidence: [] }
+			: {}),
 		surface: Surface,
 		members: [{ attested: "example", orthography: "Standard" }],
 		realizationCoverage: "Full",

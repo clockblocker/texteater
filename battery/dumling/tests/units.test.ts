@@ -154,21 +154,18 @@ describe("compiled unit interface", () => {
 		);
 	});
 	test("writes a discontinuous form's open slot as …", () => {
-		const adpRoute = routes.find((route) => route.key === "de/Lexeme/ADP");
-		if (!adpRoute) throw Error("Missing German ADP route");
+		const adpRoute = routes.find(
+			(route) => route.key === "de/Locution/ADP",
+		);
+		if (!adpRoute) throw Error("Missing German Locution ADP route");
 		const lemma = (canonicalForm: string) =>
 			({
 				unitKind: "Lemma",
 				language: "de",
-				family: "Lexeme",
+				family: "Locution",
 				kind: "ADP",
 				canonicalForm,
-				coreFeatures: {
-					abbr: null,
-					adpType: "Circ",
-					extPos: null,
-					partType: null,
-				},
+				coreFeatures: {},
 			}) as const;
 		const parsed = (canonicalForm: string) => {
 			const result = parseUnit(lemma(canonicalForm));

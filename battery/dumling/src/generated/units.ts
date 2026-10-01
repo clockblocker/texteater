@@ -362,12 +362,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: "ADV" | null;
-									partType: "Vbp" | null;
-								};
+								coreFeatures: { abbr: "Yes" | null };
 							};
 							case: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -383,12 +378,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "ADP";
 			canonicalForm: string;
-			coreFeatures: {
-				abbr: "Yes" | null;
-				adpType: ("Circ" | "Post" | "Prep") | null;
-				extPos: "ADV" | null;
-				partType: "Vbp" | null;
-			};
+			coreFeatures: { abbr: "Yes" | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -399,12 +389,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "ADP";
 				canonicalForm: string;
-				coreFeatures: {
-					abbr: "Yes" | null;
-					adpType: ("Circ" | "Post" | "Prep") | null;
-					extPos: "ADV" | null;
-					partType: "Vbp" | null;
-				};
+				coreFeatures: { abbr: "Yes" | null };
 			};
 			normalizedSurface: string;
 			spelling:
@@ -436,12 +421,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "ADP";
 				canonicalForm: string;
-				coreFeatures: {
-					abbr: "Yes" | null;
-					adpType: ("Circ" | "Post" | "Prep") | null;
-					extPos: "ADV" | null;
-					partType: "Vbp" | null;
-				};
+				coreFeatures: { abbr: "Yes" | null };
 			};
 			emojiDescription: string;
 		};
@@ -456,12 +436,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "ADP";
 					canonicalForm: string;
-					coreFeatures: {
-						abbr: "Yes" | null;
-						adpType: ("Circ" | "Post" | "Prep") | null;
-						extPos: "ADV" | null;
-						partType: "Vbp" | null;
-					};
+					coreFeatures: { abbr: "Yes" | null };
 				};
 				normalizedSurface: string;
 				spelling:
@@ -542,12 +517,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: "ADV" | null;
-									partType: "Vbp" | null;
-								};
+								coreFeatures: { abbr: "Yes" | null };
 							};
 							case: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -1184,12 +1154,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: "ADV" | null;
-									partType: "Vbp" | null;
-								};
+								coreFeatures: { abbr: "Yes" | null };
 							};
 							case: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -1943,12 +1908,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: "ADV" | null;
-									partType: "Vbp" | null;
-								};
+								coreFeatures: { abbr: "Yes" | null };
 							};
 							case: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -3768,12 +3728,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: "ADV" | null;
-									partType: "Vbp" | null;
-								};
+								coreFeatures: { abbr: "Yes" | null };
 							};
 							case: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -3940,12 +3895,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: "ADV" | null;
-									partType: "Vbp" | null;
-								};
+								coreFeatures: { abbr: "Yes" | null };
 							};
 							case: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -4084,6 +4034,29 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			valencyEvidence: Array<{
+				member: number | null;
+				complement:
+					| {
+							kind: "Case";
+							case: "Nom" | "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  }
+					| {
+							kind: "Preposition";
+							preposition: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "ADP";
+								canonicalForm: string;
+								coreFeatures: { abbr: "Yes" | null };
+							};
+							case: "Acc" | "Dat" | "Gen";
+							referent: "Someone" | "Something" | "Either";
+					  };
+				realizedCase: "Nom" | "Acc" | "Dat" | "Gen";
+			}>;
 		};
 	};
 	"de/Locution/ADV": {
@@ -4784,12 +4757,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: "ADV" | null;
-									partType: "Vbp" | null;
-								};
+								coreFeatures: { abbr: "Yes" | null };
 							};
 							case: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -5686,12 +5654,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: {
-									abbr: "Yes" | null;
-									adpType: ("Circ" | "Post" | "Prep") | null;
-									extPos: "ADV" | null;
-									partType: "Vbp" | null;
-								};
+								coreFeatures: { abbr: "Yes" | null };
 							};
 							case: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";

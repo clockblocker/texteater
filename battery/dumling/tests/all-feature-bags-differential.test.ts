@@ -26,6 +26,23 @@ function setsForeign(input: unknown): boolean {
 	return typeof core === "object" && core !== null && "foreign" in core;
 }
 
+// German ADP Core is abbr only (ADR 0032, amended 2026-10-01): position is no
+// identity, a circumposition is a Locution ADP, and adpType, extPos and
+// partType left the route, so a legacy sample that sets them is rejected.
+function setsRetiredGermanAdpositionCore(
+	route: string,
+	input: unknown,
+): boolean {
+	if (route !== "de/lexeme/adposition.ts") return false;
+	if (typeof input !== "object" || input === null) return false;
+	const core = (input as { core?: unknown }).core;
+	return (
+		typeof core === "object" &&
+		core !== null &&
+		["adpType", "extPos", "partType"].some((feature) => feature in core)
+	);
+}
+
 for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 	if (retired.test(route)) continue;
 	// A proper noun marks its article in its Core (ADR 0035), a German noun
@@ -53,7 +70,8 @@ for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 			).toBe(
 				supersededShape ||
 					setsEnglishStyle(route, sample.input) ||
-					setsForeign(sample.input)
+					setsForeign(sample.input) ||
+					setsRetiredGermanAdpositionCore(route, sample.input)
 					? false
 					: sample.accepted,
 			);

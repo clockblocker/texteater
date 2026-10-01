@@ -41,6 +41,16 @@ type _RetiredX = Lemma<"de", "Lexeme", "X">;
 declare const loan: Lemma<"de", "Lexeme", "ADJ">;
 // @ts-expect-error No Lexeme route carries UD Foreign; foreign material is Foreign.
 loan.coreFeatures.foreign;
+declare const adposition: Lemma<"de", "Lexeme", "ADP">;
+const _adpositionCore: { abbr: "Yes" | null } = adposition.coreFeatures;
+// @ts-expect-error Position is no identity; dumspec's ADP Case Table lists it (ADR 0032).
+adposition.coreFeatures.adpType;
+declare const adpositionOccurrence: Unit<"Attestation", "de", "Lexeme", "ADP">;
+// @ts-expect-error The sentence shows an adposition's position; no Attestation records it.
+adpositionOccurrence.adpType;
+declare const circumposition: Unit<"Attestation", "de", "Locution", "ADP">;
+const _circumpositionCase: "Nom" | "Acc" | "Dat" | "Gen" | undefined =
+	circumposition.valencyEvidence[0]?.realizedCase;
 // @ts-expect-error German noun _gender is restricted.
 const _wrongGender: "Com" = noun.coreFeatures.gender;
 declare const reading: Reading<"de", "Lexeme", "NOUN">;

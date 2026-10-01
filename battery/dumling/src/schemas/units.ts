@@ -334,9 +334,9 @@ const englishValencyEvidenceSchema = z.array(
  * Attestation names its owned subject-expletive member as evidence (ADR
  * 0022). Every German governor (a Lexeme or Locution VERB, ADJ or NOUN, and
  * AUX) names the valency slots it realizes, such as its governed preposition
- * member (ADR 0034). A German ADP Lexeme Attestation records the case its
- * complement took as its one bare-case slot; dumspec checks it against the
- * ADP Case Table. A Hebrew or English governor (a Lexeme or Locution VERB,
+ * member (ADR 0034). A German ADP Attestation, Lexeme or Locution, records the
+ * case its complement took as its one bare-case slot, and no position;
+ * dumspec checks the case against the ADP Case Table. A Hebrew or English governor (a Lexeme or Locution VERB,
  * ADJ or NOUN) may name the slots it realizes, with no case. A Locution route
  * is a governor where the Lexeme route of its Kind is (ADR 0039); the Kind
  * alone never decides, since Lexeme and Locution share Kind names.
@@ -366,9 +366,7 @@ export function buildUnitSchemas<
 		((route.family === "Lexeme" && ["VERB", "AUX"].includes(route.kind)) ||
 			(route.family === "Locution" && route.kind === "VERB"));
 	const adposition =
-		route.language === "de" &&
-		route.family === "Lexeme" &&
-		route.kind === "ADP";
+		route.language === "de" && lexemeOrLocution && route.kind === "ADP";
 	const adnominalGovernor =
 		route.language === "de" &&
 		lexemeOrLocution &&
@@ -457,6 +455,7 @@ export function buildUnitSchemas<
 			(L extends "de"
 				? `${F}/${K}` extends
 						| "Lexeme/ADP"
+						| "Locution/ADP"
 						| "Lexeme/ADJ"
 						| "Lexeme/NOUN"
 						| "Locution/ADJ"
