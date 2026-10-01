@@ -330,7 +330,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/causative-lassen",
 		statement:
-			"lassen with an infinitive joins that infinitive's target as its causative, voice Cau on the Surface, only when the clause names nobody who does the action and has no sich with lassen: Ich lasse mir die Haare schneiden gives [lasse, schneiden] VERB schneiden, and Sie hat den Zaun reparieren lassen gives [hat, reparieren, lassen]. Everything else is VERB lassen with the infinitive as a target of its own: a doer in any form (lässt ihn reparieren, lässt es von ihm reparieren), permissive let (lässt die Kinder spielen), sich lassen (lässt sich öffnen) and lass uns.",
+			"lassen with an infinitive joins that infinitive's target as its causative, voice Cau on the Surface, only when the clause names nobody who does the action and lassen is not the modal-passive sich lassen ('can be done'): Ich lasse mir die Haare schneiden gives [lasse, schneiden] VERB schneiden, and Sie hat den Zaun reparieren lassen gives [hat, reparieren, lassen]. The modal-passive lässt sich öffnen is VERB sich lassen over [lässt, sich], with the infinitive a target of its own. Everything else is VERB lassen with the infinitive as a target of its own: a doer in any form (lässt ihn reparieren, lässt es von ihm reparieren), permissive let (lässt die Kinder spielen) and lass uns. With an intransitive infinitive, the accusative is its doer (lässt den Zaun verrotten, ließ die Tasse fallen). All of this holds unless the combination is an Idiom under de/idiom.",
 		adrs: ["ADR-0026", "ADR-0022"],
 		routes: lexeme("VERB", "AUX"),
 		records: [

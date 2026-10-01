@@ -55,14 +55,31 @@ has no `State` value.
 Amended on 2026-09-30 ([#721](https://github.com/clockblocker/texteater/issues/721),
 [#722](https://github.com/clockblocker/texteater/issues/722)): causative
 `lassen` joins AUX the way the recipient passive did. When the clause names
-nobody who does the action and has no `sich` with `lassen`, `lassen` joins the
-infinitive's target as one authored grammar Reading, and German `voice` gains
-`Cau` beside `Pass`, with `passive` null: *Ich lasse mir die Haare schneiden*
-gives `[lasse, schneiden]` VERB `schneiden` with `voice: Cau`, and *Sie hat den
-Zaun reparieren lassen* gives `[hat, reparieren, lassen]`. Everything else is
-the VERB `lassen` with the infinitive as a target of its own: a doer in any
-form (*lässt ihn reparieren*, *lässt es von ihm reparieren*), permissive
-*lässt die Kinder spielen*, *sich lassen* and *lass uns*. The line above that
-names `sich lassen` among the VERBs with a meaning of their own stands.
-Lexicalized combinations (*liegen lassen*, *fallen lassen*) are
-[#723](https://github.com/clockblocker/texteater/issues/723).
+nobody who does the action and `lassen` is not the modal-passive `sich lassen`
+('can be done'), `lassen` joins the infinitive's target as one authored
+grammar Reading, and German `voice` gains `Cau` beside `Pass`, with `passive`
+null: *Ich lasse mir die Haare schneiden* gives `[lasse, schneiden]` VERB
+`schneiden` with `voice: Cau`, and *Sie hat den Zaun reparieren lassen* gives
+`[hat, reparieren, lassen]`. A free dative or a free `sich` leaves it a
+causative: *Sie lässt sich die Haare schneiden*, and *Er lässt sich
+untersuchen* ('has himself examined'), where `sich` alternates with *ihn*.
+The modal-passive *lässt sich öffnen* is the VERB `sich lassen` over `[lässt,
+sich]`, with the infinitive a target of its own; the line above that names
+`sich lassen` among the VERBs with a meaning of their own stands. Everything
+else is the VERB `lassen` with the infinitive as a target of its own: a doer
+in any form (*lässt ihn reparieren*, *lässt es von ihm reparieren*),
+permissive *lässt die Kinder spielen* and *lass uns*. With an intransitive
+infinitive, the accusative is its doer (*lässt den Zaun verrotten*, *ließ die
+Tasse fallen*). All of this holds unless the combination is an Idiom
+([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)): *X
+lassen* is one only when the idiom test holds and Duden gives the combination
+its own headword or an idiom line, so a usage example under one sense of
+*lassen* does not count, and literal uses stay apart. Lexicalized combinations
+(*liegen lassen*, *fallen lassen*) are ruled on
+[#723](https://github.com/clockblocker/texteater/issues/723#issuecomment-5928789497).
+
+Amended on 2026-10-01: the causative excluded any `sich` with `lassen`, which
+left out *Sie lässt sich die Haare schneiden*, and it named neither the Idiom
+exception nor the intransitive infinitive. Decided by the user on
+[#723](https://github.com/clockblocker/texteater/issues/723#issuecomment-5928789497)
+and implemented on [#771](https://github.com/clockblocker/texteater/issues/771).

@@ -20,7 +20,7 @@
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0026"],
 		"rules": [
-			{ "rule": "de/causative-lassen", "hash": "88a0940ea4f8c1b6" }
+			{ "rule": "de/causative-lassen", "hash": "cb1a81b16b55e418" }
 		],
 		"references": []
 	},
