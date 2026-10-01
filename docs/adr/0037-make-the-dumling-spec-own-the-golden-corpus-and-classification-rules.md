@@ -149,8 +149,8 @@ statement over 600 characters unless the Rule states why it needs the length.
 
 Amended on 2026-09-29: records are reviewed one Annotation Layer at a time
 ([#736](https://github.com/clockblocker/texteater/issues/736); one Review
-Depth per record was ruled on 2026-09-29, and the rest awaits the maintainer's
-rulings). `segment.inUnits` is scored only on each target's members
+Depth per record was ruled on 2026-09-29, and the maintainer ratified the rest
+on 2026-10-01). `segment.inUnits` is scored only on each target's members
 and route, yet a Reviewed record had to carry a full Attestation and an Emoji
 Description for every word, and a model change to one Attestation feature
 demoted the whole record.

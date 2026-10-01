@@ -3,7 +3,6 @@
 	"entry": [
 		"scripts/import-dumgen-gold.ts",
 		"scripts/import-dumgen-gold-remainder.ts",
-		"scripts/migrate-review-depth.ts",
 		"src/inventories.ts",
 		"src/types.ts",
 		"tests/**/*.ts"
