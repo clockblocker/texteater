@@ -74,10 +74,6 @@
 			"reason": "Target 0, AUX [wären], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
 			"issue": 700
 		},
-		"de/sie-bekommt-das-paket-geliefert": {
-			"reason": "Target 0, AUX [bekommt], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
-			"issue": 700
-		},
 		"de/sie-koennte-den-zug-verpasst-haben": {
 			"reason": "Target 0, AUX [haben], stands alone instead of joining the verb it serves (Rule de/auxiliary-joins-the-verb-it-serves), as noted on #700.",
 			"issue": 700
