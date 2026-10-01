@@ -715,7 +715,7 @@ for (const [text, ipa, en, ru] of [
 		),
 	);
 
-// Standalone einander is one invariant reciprocal Lemma (Dumling Context); case
+// Standalone einander is one invariant reciprocal Lemma (system ADR 0044); case
 // is supplied by the governing verb or preposition and is not part of identity.
 reviewed.push(
 	pronounMember(
