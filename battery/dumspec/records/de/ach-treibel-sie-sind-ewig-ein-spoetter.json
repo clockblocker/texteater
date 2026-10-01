@@ -249,7 +249,7 @@
 							"case": "Nom",
 							"number": "Plur",
 							"extPos": null,
-							"person": "2",
+							"person": "3",
 							"polite": "Form",
 							"poss": null,
 							"pronType": "Prs",
@@ -328,7 +328,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "sind is the copula before the predicate noun ein Spötter, a single-member VERB (de/copula-stays-apart). The form is third person plural, the agreement formal Sie takes; the pronoun's Core says person 2. open: finding A6."
+				"rationale": "sind is the copula before the predicate noun ein Spötter, a single-member VERB (de/copula-stays-apart). The form is third person plural, as formal Sie is (ADR 0044). Ruled on #743 (JT-A6, A9)."
 			}
 		},
 		{

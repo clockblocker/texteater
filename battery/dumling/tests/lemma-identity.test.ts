@@ -19,7 +19,8 @@ const interjection = (canonicalForm: string) =>
 		canonicalForm,
 		coreFeatures: { partType: null },
 	}) satisfies Lemma<"de", "Lexeme", "INTJ">;
-const personal = (canonicalForm: string, person: "2" | "3") =>
+/** Formal Sie is the third person plural with polite Form (system ADR 0044). */
+const personal = (canonicalForm: string, polite: "Form" | null) =>
 	({
 		unitKind: "Lemma",
 		language: "de",
@@ -28,8 +29,8 @@ const personal = (canonicalForm: string, person: "2" | "3") =>
 		canonicalForm,
 		coreFeatures: {
 			extPos: null,
-			person,
-			polite: person === "2" ? "Form" : null,
+			person: "3",
+			polite,
 			poss: null,
 			pronType: "Prs",
 			case: "Nom",
@@ -79,12 +80,12 @@ describe("Lemma identity (system ADR 0002)", () => {
 	});
 
 	test("keeps words apart by Core: formal Sie and third-person sie", () => {
-		expect(sameLemma(personal("Sie", "2"), personal("sie", "3"))).toBe(
+		expect(sameLemma(personal("Sie", "Form"), personal("sie", null))).toBe(
 			false,
 		);
-		expect(sameLemma(personal("Sie", "2"), personal("sie", "2"))).toBe(
-			true,
-		);
+		expect(
+			sameLemma(personal("Sie", "Form"), personal("sie", "Form")),
+		).toBe(true);
 	});
 
 	test("keeps words apart by spelling and Family", () => {
@@ -101,7 +102,7 @@ describe("Lemma identity (system ADR 0002)", () => {
 
 	test("counts Core Features by their set values, in any order", () => {
 		const reordered = {
-			...personal("sie", "3"),
+			...personal("sie", null),
 			coreFeatures: {
 				gender: null,
 				number: "Plur",
@@ -110,7 +111,7 @@ describe("Lemma identity (system ADR 0002)", () => {
 				person: "3",
 			},
 		} as unknown as Lemma;
-		expect(sameLemma(personal("sie", "3"), reordered)).toBe(true);
+		expect(sameLemma(personal("sie", null), reordered)).toBe(true);
 	});
 
 	test("normalizes the Canonical Form as parsing would", () => {

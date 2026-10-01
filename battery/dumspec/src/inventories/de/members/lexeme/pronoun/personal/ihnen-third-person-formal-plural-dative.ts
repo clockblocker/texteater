@@ -5,14 +5,14 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "Sie",
+	canonicalForm: "Ihnen",
 	coreFeatures: {
 		extPos: null,
-		person: "2",
+		person: "3",
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",
-		case: "Nom",
+		case: "Dat",
 		number: "Plur",
 		gender: null,
 	},
@@ -23,11 +23,11 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „Sie“ verweist auf eine oder mehrere höflich angesprochene Personen.",
-		transcription: "ziː",
+			"Die Personalpronomenform „Ihnen“ verweist auf eine oder mehrere höflich angesprochene Personen.",
+		transcription: "ˈiːnən",
 		translations: {
 			en: ["you (formal)"],
-			ru: ["Вы"],
+			ru: ["Вам"],
 		},
 	},
 	coverage: {

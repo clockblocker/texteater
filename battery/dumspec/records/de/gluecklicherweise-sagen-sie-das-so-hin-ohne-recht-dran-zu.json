@@ -310,7 +310,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "sagen … hin is the particle verb hinsagen, 'say lightly, without meaning it' (DWDS: das war nur so hingesagt), so the detached hin is its separable particle (de/verb-owns-its-scattered-members, de/bracket-particle-or-circumposition). so is optional in DWDS's examples and stays a free ADV. The form is third person plural under formal Sie (finding A6)."
+				"rationale": "sagen … hin is the particle verb hinsagen, 'say lightly, without meaning it' (DWDS: das war nur so hingesagt), so the detached hin is its separable particle (de/verb-owns-its-scattered-members, de/bracket-particle-or-circumposition). so is optional in DWDS's examples and stays a free ADV. The form is third person plural, as formal Sie is (ADR 0044). Ruled on #743 (JT-A6, A9)."
 			}
 		},
 		{
@@ -334,7 +334,7 @@
 							"case": "Nom",
 							"number": "Plur",
 							"extPos": null,
-							"person": "2",
+							"person": "3",
 							"polite": "Form",
 							"poss": null,
 							"pronType": "Prs",

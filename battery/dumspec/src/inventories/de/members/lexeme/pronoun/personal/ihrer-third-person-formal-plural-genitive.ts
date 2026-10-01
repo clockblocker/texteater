@@ -8,7 +8,7 @@ const lemma = {
 	canonicalForm: "Ihrer",
 	coreFeatures: {
 		extPos: null,
-		person: "2",
+		person: "3",
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",

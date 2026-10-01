@@ -33,6 +33,8 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 			{ key: "gender", onlyWith: "person" },
 			{ key: "number" },
 			{ key: "person" },
+			// Formal Sie and 3pl sie differ in polite alone (ADR 0044).
+			{ key: "polite", values: [null, "Form"] },
 			{ key: "polite", onlyWith: "person" },
 		],
 	},
@@ -92,7 +94,7 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 			{ key: "gender", onlyWith: "poss" },
 			{ key: "number", onlyWith: "poss" },
 			{ key: "person", onlyWith: "poss" },
-			{ key: "polite", onlyWith: "person" },
+			{ key: "polite", onlyWith: "poss" },
 		],
 	},
 	{
@@ -171,10 +173,12 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		adrs: ["ADR-0002", "ADR-0044"],
 		rules: ["de/core-features-are-identity"],
 		both: { pronType: ["Prs"] },
+		// Formal address is the third person plural with polite Form, so
+		// politeness alone may tell it apart (ADR 0044).
 		varies: [
 			{ key: "person", onlyWith: "polite" },
+			{ key: "polite", values: [null, "Form"] },
 			{ key: "polite", onlyWith: "person" },
-			{ key: "polite", values: ["Form", "Infm"] },
 		],
 	},
 ];

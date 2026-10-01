@@ -8,11 +8,11 @@ const lemma = {
 	canonicalForm: "Sie",
 	coreFeatures: {
 		extPos: null,
-		person: "2",
+		person: "3",
 		polite: "Form",
 		poss: null,
 		pronType: "Prs",
-		case: "Acc",
+		case: "Nom",
 		number: "Plur",
 		gender: null,
 	},
@@ -27,7 +27,7 @@ export const member = defineAuthoredMember({
 		transcription: "ziː",
 		translations: {
 			en: ["you (formal)"],
-			ru: ["Вас"],
+			ru: ["Вы"],
 		},
 	},
 	coverage: {

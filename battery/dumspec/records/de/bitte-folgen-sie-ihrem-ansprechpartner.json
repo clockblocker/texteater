@@ -36,7 +36,7 @@
 			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "🔐" },
 			"notes": {
-				"rationale": "The capitalized polite possessive is encoded as DET with person 2, polite Form, and poss Yes.",
+				"rationale": "The capitalized polite possessive is encoded as DET with person 3, polite Form, and poss Yes: formal address is the third person plural (ADR 0044).",
 				"knownMistakes": [
 					"Do not add gender[psor] or number[psor] unless the attested form shows them. For polite Ihrem here, the earlier mistake was adding possessor features that are not recoverable from the attestation."
 				]
@@ -68,7 +68,7 @@
 							"case": null,
 							"gender": null,
 							"number": null,
-							"person": "2",
+							"person": "3",
 							"polite": "Form",
 							"poss": "Yes",
 							"pronType": "Prs",

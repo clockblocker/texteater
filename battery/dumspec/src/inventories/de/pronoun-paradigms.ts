@@ -753,7 +753,7 @@ for (const [stem, ipa, person, polite, en, ru] of [
 		"yours (plural informal)",
 		"ваш (несколько адресатов)",
 	],
-	["Ihr", "ˈiːʁ", "2", "Form", "yours (formal)", "Ваш (вежливое обращение)"],
+	["Ihr", "ˈiːʁ", "3", "Form", "yours (formal)", "Ваш (вежливое обращение)"],
 ] as const) {
 	const meaning: PronounDescription = {
 		core: { pronType: "Prs", poss: "Yes", person, polite },

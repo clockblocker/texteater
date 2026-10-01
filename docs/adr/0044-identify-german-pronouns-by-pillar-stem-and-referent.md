@@ -39,14 +39,23 @@ its own invariant Lemma with extPos DET.
 
 **Gender and possessors.** Personal gender uses `gender`. Unmarked features
 are null, compared literally, and never used as wildcards or as guesses about
-a person's sex, with one exception for navigation (below). Plural agreement has no marked gender, and a marked personal
-gender needs a third-person singular. Possessor gender and number describe a
-possessive's Surface, as they do on the possessive articles, and mark only
-what the form shows: `sein-` (his, its) has gender[psor] Masc, Neut, and
+a person's sex, with one exception for navigation (below). Plural agreement
+has no marked gender, and a marked personal gender needs a third-person
+singular. Possessor gender and number describe a possessive's Surface, as
+they do on the possessive articles, and mark only what the form shows: `sein-` (his, its) has gender[psor] Masc, Neut, and
 `ihr-` (hers, theirs) marks neither. So `seiner`/`seinige` and
 `ihrer`/`ihrige` are one Lemma each, and formal `Ihrer` stays apart. Only a
 possessive marks possessor features. Reflexivity and historical status are
 Surface evidence.
+
+**Formal address.** Formal `Sie`, `Ihnen` and `Ihrer`, and the possessive
+`Ihr`, are the third person plural with `polite` Form. Person 2 only restated
+what `polite` Form says, as `referenceNumber` once restated `number`. Duden,
+LEO, grammis and TIGER treat the polite form as the 3rd person plural, used
+for one person or several, and the verb (*Sie sind*), free `sich` (*setzen
+Sie sich*) and `Ihr` agree with it without an exception. The pronoun cells
+keep number Plur, because that is their agreement, not their meaning. So
+formal `Sie` and 3pl `sie` differ in politeness alone.
 
 **Free `sich`.** A reflexive the verb does not require is a unit of its own,
 and a lexical reflexive is a member of its verb (`sich erinnern`,
@@ -148,6 +157,12 @@ gender null. A learner sees one word, the dative or genitive of `er` and
 the masculine cell's gloss "him" was wrong for *der Tisch*. Decided on
 [#743](https://github.com/clockblocker/texteater/issues/743).
 
+Amended on 2026-10-01: formal `Sie`, `Ihnen`, `Ihrer` and the possessive `Ihr`
+were person 2 with number Plur, a mix no grammar or treebank uses, and a
+future verb agreement check would have rejected every formal-address
+sentence. They are person 3 now. Decided on
+[#743](https://github.com/clockblocker/texteater/issues/743).
+
 Amended on 2026-10-01: free `sich` and its reciprocal use are stated here.
 ADR 0018 held them until a rewrite on 2026-08-30 cut them, and ADR 0044 did
 not restate them. Decided on
@@ -180,6 +195,10 @@ UD supplies feature meanings, not this project's Lemma granularity:
 - A `referenceNumber` feature. Rejected: it repeated `number` on personal
   pronouns, was null on formal `Sie`, and stood in for possessor number on
   possessives.
+- Formal `Sie` as person 2, the addressee, with number null, as UD's German
+  guidelines have it. Rejected on 2026-10-01 (#743): `polite` Form already
+  names the addressee, and the grammars, the verb, `sich` and `Ihr` all go
+  by the 3rd person plural.
 - A Core value set such as Masc|Neut for `ihm`. Rejected (#606): navigation
   compares Core values literally, so a set matches neither `er` nor `es`.
   Gender null with the navigation exception above reaches `ihm` from both.

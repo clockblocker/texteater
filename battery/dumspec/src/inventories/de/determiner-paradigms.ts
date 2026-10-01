@@ -274,7 +274,7 @@ for (const [stem, ipa, person, polite, definition, en, ru] of [
 	[
 		"Ihr",
 		"ˈiːɐ̯",
-		"2",
+		"3",
 		"Form",
 		"Der Possessivartikel „Ihr“ ordnet den bezeichneten Gegenstand der oder den förmlich angesprochenen Personen zu.",
 		["your (formal)"],
