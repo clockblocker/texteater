@@ -90,8 +90,8 @@ _Avoid_: Aphorism, provenance Kind
 
 **Formula Role**:
 What a routine formula does in conversation, such as greeting or apology,
-stored in an INTJ Reading's Knowledge. It never splits a Lemma:
-`tut mir leid` has an apology Reading and a sympathy Reading. See [ADR 0039].
+stored in an INTJ Reading's Knowledge. It never splits a Lemma. See
+[ADR 0039].
 _Avoid_: discourseFormulaRole, DiscourseFormula
 
 [ADR 0002]: ../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md

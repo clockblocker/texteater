@@ -198,7 +198,9 @@ Amended on 2026-09-29 (#662): the apology and sympathy formula is the Lemma
 `tut mir leid`. A subject *es* or *das* before it is a PRON of its own:
 *Es tut mir leid* gives `[Es]` PRON `es` and `[tut, mir, leid]`. DWDS, which
 gives many proverbs an entry of their own, joins the reference collections a
-Reviewed Saying record may cite.
+Reviewed Saying record may cite. The *tut mir leid* ruling
+([#728](https://github.com/clockblocker/texteater/issues/728#issuecomment-5883616011))
+is reversed by the 2026-10-01 amendment on #759 below; the DWDS ruling stands.
 
 Amended on 2026-09-30 ([#735](https://github.com/clockblocker/texteater/issues/735)):
 `so dass` is no Locution, so the SCONJ example in the table and the Locution
@@ -221,3 +223,14 @@ at most one bare-case slot, with no member. `um des Friedens willen` records
 Gen, and `von da an` none, since `da` shows no case. It records no position,
 since its words are its Canonical Form, and dumspec's ADP Case Table gives
 it one case set.
+
+Amended on 2026-10-01 ([#759](https://github.com/clockblocker/texteater/issues/759),
+Q1): *tut mir leid* is no routine formula. It is always the VERB `leidtun`
+over `[tut, leid]`, with *mir*, or any other experiencer dative, a free PRON,
+and a subject *es* or *das* stays a PRON of its own. Its Readings follow
+Duden's senses: 'regret', for an apology (*Tut mir leid, das war mein
+Fehler*) and for sympathy about a matter (*Das tut mir leid* on hearing bad
+news), and 'arouse pity' (*Der alte Hund tut mir so leid*). So *tut mir leid*
+no longer exemplifies a Locution INTJ in the table, a Formula Role in the
+bullet above, or a routine formula in the 2026-09-27 amendment. Every other
+routine formula stays as it is.

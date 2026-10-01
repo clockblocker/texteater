@@ -67,8 +67,7 @@ or, for a VERB Locution, a `Collocation`, or is absent when it is neither
 (`zum Teil`). `sayingType`
 marks a Saying Reading as a `Proverb` or a `WingedWord`, with an optional
 `attribution`. `formulaRole` records what a Lexeme or Locution INTJ Reading
-does as a routine formula, so `tut mir leid` has an `Apology` Reading and a
-`Sympathy` Reading.
+does as a routine formula, such as `Thanks` for `danke`.
 
 A Semantic Relation stays in its source's language and relation space.
 Lexeme and Locution share one space (`ins Gras beißen` ↔ `sterben`); a Saying

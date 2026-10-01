@@ -131,7 +131,7 @@ export const sayingTypeValues = ["Proverb", "WingedWord"] as const;
 
 /**
  * What a routine formula does in conversation (ADR 0039). An INTJ Reading
- * stores one, so `tut mir leid` has an Apology Reading and a Sympathy Reading.
+ * stores one, so a role never splits a Lemma.
  */
 export const formulaRoleValues = [
 	"Greeting",
