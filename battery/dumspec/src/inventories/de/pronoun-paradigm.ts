@@ -118,25 +118,38 @@ export function pronounMember(
 	};
 }
 
-/** A pillar paradigm: one Lemma per occupied cell. */
+/**
+ * A pillar paradigm: one Lemma per occupied cell. A masculine and a neuter
+ * cell spelled alike are one cell with gender null (einem, eines), since the
+ * referent may choose only between cells that differ in who is meant (system
+ * ADR 0044).
+ */
 export function pronounParadigm(
 	table: PronounTable,
 	description: PronounDescription,
 ): ReviewedPronoun[] {
 	const result: ReviewedPronoun[] = [];
+	const sharedByGender = (index: number) =>
+		table.Masc[index] !== null &&
+		table.Masc[index]?.text === table.Neut[index]?.text;
 	for (const column of ["Masc", "Neut", "Fem", "Plur"] as const) {
 		for (const [index, grammaticalCase] of (
 			["Nom", "Acc", "Dat", "Gen"] as const
 		).entries()) {
 			const form = table[column][index];
-			if (form)
-				result.push(
-					pronounMember(form, description, {
-						case: grammaticalCase,
-						gender: column === "Plur" ? null : column,
-						number: column === "Plur" ? "Plur" : "Sing",
-					}),
-				);
+			if (!form || (column === "Neut" && sharedByGender(index))) continue;
+			const gender =
+				column === "Plur" ||
+				(column === "Masc" && sharedByGender(index))
+					? null
+					: column;
+			result.push(
+				pronounMember(form, description, {
+					case: grammaticalCase,
+					gender,
+					number: column === "Plur" ? "Plur" : "Sing",
+				}),
+			);
 		}
 	}
 	return result;

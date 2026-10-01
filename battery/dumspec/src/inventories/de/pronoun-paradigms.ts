@@ -433,7 +433,9 @@ for (const [stem, ipa, en, ru] of [
 
 // Singular keiner/einer vs plural keine; eins/keins only in Nom/Acc Neut.
 // einer is the pronominal use of the ein article table and, like it, a pillar
-// with one Lemma per cell; irgendeiner and keiner are stems.
+// with one Lemma per cell, its masculine and neuter einem and eines one cell
+// each (mit einem der Kinder, eines der Häuser); irgendeiner and keiner are
+// stems.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-einer3.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-irgendein3.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de

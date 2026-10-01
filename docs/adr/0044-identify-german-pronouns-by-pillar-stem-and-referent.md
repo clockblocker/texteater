@@ -84,8 +84,9 @@ cells differ in decides whether the form is one Lemma or several:
   the form serves both genders alike. Personal `ihm` and `seiner` are the
   dative and genitive of both `er` and `es`. Der-series `dem` and `dessen`,
   demonstrative, relative and attributive, serve a masculine and a neuter
-  referent alike. A learner learns `ihm` as one word, the dative of `er` and
-  `es`.
+  referent alike, and so do the `einer` pillar's `einem` and `eines` (*mit
+  einem der Kinder*, *eines der Häuser*). A learner learns `ihm` as one word,
+  the dative of `er` and `es`.
 
 Navigation reaches a gender-null cell from each gender it serves: varying
 case from `er` or from `es` reaches `ihm` and `seiner`, and from `der` or
@@ -166,6 +167,12 @@ were person 2 with number Plur, a mix no grammar or treebank uses, and a
 future verb agreement check would have rejected every formal-address
 sentence. They are person 3 now. Decided on
 [#743](https://github.com/clockblocker/texteater/issues/743).
+
+Amended on 2026-10-01: pronominal `einem` and `eines` were two cells each in
+the `einer` pillar, a Masc and a Neut one. They serve both genders alike, so
+they are one cell each with gender null, as `ihm` and `dem` are. Decided by
+the user, extending
+[#743](https://github.com/clockblocker/texteater/issues/743)'s ruling 1.
 
 Amended on 2026-10-01: attributive `dessen` and `deren` were Lemmas of their
 own beside the standalone cells, kept apart by `extPos` DET. The two uses
