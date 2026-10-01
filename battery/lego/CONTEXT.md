@@ -9,24 +9,21 @@ look.
 
 **Token**:
 A named design value exposed to Tailwind through `lego/styles.css`, such as an
-ink step, a surface, a line, or a linguistic tone. Applications style with
-tokens, never with literal colours or lengths.
+Ink step, a Surface, a Line or a linguistic tone. Applications style with
+Tokens, never with literal colours or lengths.
 
 **Ink**:
-The four-step text scale from body text to the faintest legible mark: ink,
-soft, muted, faint.
+The text colour scale, from body text to the faintest legible mark.
 
 **Surface**:
-A background level. The canvas sits behind Panes, paper is what a Sheet or Card
-rests on, and raised is one step above paper for hover and popups.
+A background level that Panes, Sheets, Cards and popups sit on.
 
 **Line**:
-A hairline rule. The strong line marks a separator or a Card edge.
+A hairline rule, such as a separator or a Card edge.
 
 **Gender tone**:
-The feminine, masculine, or neuter variant of link colour for a noun or pronoun
-whose gender is a marked Core Feature. A noun's article shares its Gender tone,
-including on plural forms.
+The link colour variant for a noun or pronoun whose gender is a marked Core
+Feature.
 
 **Segment tone**:
 The colour of a reader segment by its state: unknown, known, selected,
@@ -38,16 +35,13 @@ A shadcn-derived primitive with no product opinion, such as `Button` or
 `Dialog`.
 
 **Molecule**:
-An opinionated composition of atoms and tokens that carries the reading
-experience, such as `NoteSection`, `NoteTitle`, `QuoteButton`, or
-`ReaderSegment`.
+An opinionated composition of Atoms and Tokens that carries the reading
+experience, such as `NoteTitle` or `ReaderSegment`.
 
 **Density**:
-Whether a subtree has comfortable or compact room. `DensityScope` declares it;
-molecules read it through the `compact:` variant. A Card is compact, a Sheet is
-comfortable.
+Whether a subtree has comfortable or compact room: a Sheet is comfortable, a
+Card compact. Molecules adapt to it.
 _Avoid_: presentation mode, card mode
 
 **Theme**:
-The persisted appearance choice: dark, light, or system. `ThemeProvider` keeps
-the document in sync with it. The light theme currently reuses the dark palette.
+The persisted appearance choice: dark, light or system.
