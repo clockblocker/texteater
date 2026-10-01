@@ -1,7 +1,7 @@
-import { germanAdpositionAllows } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { germanAdpositionAllows } from "dumspec/inventories";
 import { lemmaFingerprint, readingFingerprint } from "./core/identity";
 
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
@@ -127,7 +127,7 @@ function knowledgeChangeUsesLanguage(
 			? valencyUsesLanguage(change.value, language)
 			: !change.complement ||
 					valencyUsesLanguage(
-						[{ status: "Optional", complement: change.complement }],
+						retractedSlot(change.complement),
 						language,
 					);
 	if (change.aspect === "participleSource" && "value" in change)
@@ -135,28 +135,45 @@ function knowledgeChangeUsesLanguage(
 	return true;
 }
 
+/** A Retract's one complement, as the frame its checks read. */
+function retractedSlot(
+	complement: Dumrel.ValencyComplement,
+): Dumrel.ValencyFrame {
+	return [{ status: "Optional", complements: [complement] }];
+}
+
 function valencyUsesLanguage(
-	frame: readonly Dumrel.ValencySlot[],
+	frame: Dumrel.ValencyFrame,
 	language: Dumling.Language,
 ): boolean {
-	return frame.every(
-		({ complement }) =>
-			complement.kind !== "Preposition" ||
-			lemmaUsesLanguage(complement.preposition, language),
+	return frame.every(({ complements }) =>
+		complements.every(
+			(complement) =>
+				complement.kind !== "Preposition" ||
+				lemmaUsesLanguage(complement.preposition, language),
+		),
 	);
 }
 
 /**
- * Each German Preposition Slot takes a case the ADP Case Table allows its
- * preposition. A Hebrew or English one names no case, so it has nothing to
+ * Each German Preposition complement, alternatives included, takes a case
+ * the ADP Case Table allows its preposition. The table and its check are
+ * dumspec's (ADR 0034); its frame walk, `frameAdpositionCaseIssues`, sits
+ * behind dumspec's Node-only entry, which tf-demo's Convex isolate cannot
+ * load. A Hebrew or English complement names no case, so it has nothing to
  * check.
  */
-function valencyCasesAllowed(frame: readonly Dumrel.ValencySlot[]): boolean {
-	return frame.every(
-		({ complement }) =>
-			complement.kind !== "Preposition" ||
-			!("case" in complement) ||
-			germanAdpositionAllows(complement.preposition, complement.case),
+function valencyCasesAllowed(frame: Dumrel.ValencyFrame): boolean {
+	return frame.every(({ complements }) =>
+		complements.every(
+			(complement) =>
+				complement.kind !== "Preposition" ||
+				!("governedCase" in complement) ||
+				germanAdpositionAllows(
+					complement.preposition,
+					complement.governedCase,
+				),
+		),
 	);
 }
 
@@ -173,9 +190,7 @@ function knowledgeChangePrepositionCasesAllowed(
 	return "value" in change
 		? valencyCasesAllowed(change.value)
 		: !change.complement ||
-				valencyCasesAllowed([
-					{ status: "Optional", complement: change.complement },
-				]);
+				valencyCasesAllowed(retractedSlot(change.complement));
 }
 
 type ReadingEntryLike = {
@@ -413,7 +428,7 @@ export const dumdictNamedValidationPredicates = lazyNamedRegistry(
 ) as Readonly<Record<PredicateName, NamedPredicate>>;
 
 const prepositionCaseError =
-	"A Preposition Slot must take a case the ADP Case Table allows its preposition.";
+	"Each Preposition complement must name a preposition the ADP Case Table lists and a case it allows.";
 
 function constantError(message: string): () => string {
 	return () => message;
