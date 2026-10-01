@@ -236,8 +236,8 @@
 				"hash": "53eb6d28dab42ddc"
 			},
 			{
-				"rule": "de/modal-is-a-verb",
-				"hash": "fbed9130c4b77fbf"
+				"rule": "de/causative-lassen",
+				"hash": "6df00ff37a0a5baa"
 			},
 			{
 				"rule": "de/nicht-is-part",
@@ -1066,7 +1066,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "hängen is the bare infinitive governed by permissive lassen, a VERB target of its own (de/modal-is-a-verb). Here the hands literally hang; Duden's univerbated hängenlassen covers only the figurative senses, so no Locution."
+				"rationale": "hängen is the infinitive under permissive lassen. The accusative die, the hands, does the hanging, so the clause names a doer and lassen is no causative: hängen is a VERB target of its own (de/causative-lassen). Here the hands literally hang; Duden's hängen lassen covers only figurative senses, so no Locution."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1120,7 +1120,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "Permissive lassen with an infinitive adds its own meaning, so it is the VERB lassen and hängen stays outside (de/modal-is-a-verb, which names sich lassen)."
+				"rationale": "ließ is permissive lassen. Its clause names the doer of hängen, the accusative die, so lassen joins no infinitive as a causative: it is the VERB lassen, and hängen stays outside (de/causative-lassen)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
