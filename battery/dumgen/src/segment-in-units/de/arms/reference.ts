@@ -30,6 +30,10 @@
  */
 import { authoredRealizations } from "dumspec";
 import type { Questions } from "promptsmith/typesafe";
+import type {
+	Route,
+	SegmentInUnitsOutput,
+} from "../../../evaluation/spec-corpus/segment-in-units.js";
 import {
 	type Answer,
 	type Answers,
@@ -69,10 +73,11 @@ import {
 import {
 	closedClassQuestion,
 	closedClassRoute,
+	closedClassRouteShares,
 	hasFixedRoute,
 } from "../closed-class.js";
 import { groupKey, outputOf } from "../partition.js";
-import { allRoutes, type RouteKey, routeCriteria } from "../routes.js";
+import { allRoutes, type RouteKey, routeCriteria, routeOf } from "../routes.js";
 import { slotId, slotLinks } from "./candidates.js";
 import {
 	type AssembledEdge,
@@ -769,16 +774,61 @@ export const unaskedGroups = (
 ): Groups => partition.filter((group) => !answers.asked.has(groupKey(group)));
 
 /**
+ * The route variants of a borderline unit (Dumgen ADR 0007, amended
+ * 2026-09-30). When the top two shares of the distribution that decided
+ * its route lie within `margin` of each other, the routes within `margin`
+ * of the top, its route first, at most `most`; undefined when one route
+ * is clear.
+ */
+export function routeVariants(
+	route: RouteKey,
+	shares: Readonly<Record<string, number>> | undefined,
+	margin: number,
+	most = 3,
+): RouteKey[] | undefined {
+	if (!shares || route === "Unresolved") return undefined;
+	const ranked = Object.entries(shares)
+		.filter(([key]) => key !== "Unresolved")
+		.sort((a, b) => b[1] - a[1]);
+	const [top, second] = ranked;
+	if (!top || !second || top[1] - second[1] > margin) return undefined;
+	const near = ranked
+		.filter(([, share]) => share >= top[1] - margin)
+		.map(([key]) => key);
+	const variants = [route, ...near.filter((key) => key !== route)].slice(
+		0,
+		most,
+	);
+	return variants.length > 1 ? variants : undefined;
+}
+
+const variantRoute = (key: RouteKey): Route => {
+	const route = routeOf(key);
+	if (route === "Unresolved") throw Error("A route variant is a route");
+	return route;
+};
+
+/** The reference's routing, with each unit's route variants under a margin. */
+export type ReferenceRouted = Routed & {
+	readonly withVariants: (margin: number) => SegmentInUnitsOutput;
+};
+
+/**
  * Routes a membership from the route answers, plus `extra`, the answers
  * for the groups no historical batch asked about. A group without either
- * routes `Unresolved`.
+ * routes `Unresolved`. A unit's variants come from the distribution that
+ * decided its route: closed-class identity for a covered spelling (its
+ * uses' shares summed by route), the abbreviation route for an
+ * abbreviation, the route Choice for any other word, and the Choice
+ * restricted to the Family code named for a multi-piece unit. A Saying, a
+ * merged interjection and a fixed closed-class route carry none.
  */
 export function routeReferenceWith(
 	nomination: Nomination<ReferenceEvidence>,
 	membership: Membership<ReferenceDetail>,
 	answers: ReferenceRouteAnswers,
 	extra?: Routes,
-): Routed {
+): ReferenceRouted {
 	const { sentence } = nomination.evidence.core;
 	const { route2, closed: closedAnswers } = answers;
 	const judged = new Map<string, RouteJudgment>([
@@ -823,8 +873,46 @@ export function routeReferenceWith(
 		(merged.merged.has(groupKey(group))
 			? "Locution/INTJ"
 			: structural(group));
+	const decidingShares = (
+		group: readonly number[],
+	): Readonly<Record<string, number>> | undefined => {
+		const [only] = group;
+		if (group.length === 1 && only !== undefined) {
+			const piece = sentence.pieces[only - 1];
+			if (!piece || hasFixedRoute(piece)) return undefined;
+			const closed = closedAnswers[`cc_${only}`];
+			if (closed?.type === "choice")
+				return closedClassRouteShares(piece, closed.probabilities);
+			const abbreviation = route2[`ra_${only}`];
+			if (abbreviation?.type === "choice")
+				return abbreviation.probabilities;
+			return distributions.get(groupKey(group));
+		}
+		if (merged.merged.has(groupKey(group))) return undefined;
+		const family = membership.detail.familyOf(group);
+		if (family === "Saying") return undefined;
+		return Object.fromEntries(
+			Object.entries(distributions.get(groupKey(group)) ?? {}).filter(
+				([key]) => key.startsWith(`${family}/`),
+			),
+		);
+	};
+	const output = outputOf(sentence, merged.partition, route);
 	return {
-		output: outputOf(sentence, merged.partition, route),
+		output,
+		withVariants: (margin) => ({
+			units: output.units.map((unit, index) => {
+				const group = merged.partition[index] ?? [];
+				const keys = routeVariants(
+					route(group),
+					decidingShares(group),
+					margin,
+				);
+				return keys
+					? { ...unit, variants: keys.map(variantRoute) }
+					: unit;
+			}),
+		}),
 		partition: merged.partition,
 		merges: merged.links.map(
 			(pieces): Edge => ({
@@ -845,7 +933,7 @@ const routeReference =
 		nomination: Nomination<ReferenceEvidence>,
 		membership: Membership<ReferenceDetail>,
 		context: ArmContext,
-	): Promise<Routed> => {
+	): Promise<ReferenceRouted> => {
 		const { core } = nomination.evidence;
 		const answers = await askReferenceRoutes(nomination.evidence, context);
 		if (unasked === "unresolved")
@@ -886,26 +974,150 @@ export function referenceStagesUnder(
 export const referenceRunStages = referenceStagesUnder(runFloors);
 
 /**
+ * The click-time pick of Dumgen ADR 0007 (amended 2026-09-30), as a lab
+ * prototype: one Choice per unit carrying variants, among those variants
+ * only, against the judge state the route requests read. The unit's
+ * grouping is fixed; the answer is its one route.
+ */
+export function pickQuestions(
+	core: Pick<CandidatesCore, "sentence" | "ref">,
+	partition: Groups,
+	output: SegmentInUnitsOutput,
+): Questions {
+	const questions: Questions = {};
+	output.units.forEach((unit, index) => {
+		const group = partition[index];
+		if (!unit.variants || !group) return;
+		const refs = group
+			.map((id) => {
+				const piece = core.sentence.pieces[id - 1];
+				if (!piece) throw Error(`No piece p${id}`);
+				return core.ref(piece);
+			})
+			.join(", ");
+		questions[pickId(group)] = choice(
+			group.length === 1
+				? `In \`sentence\`, the word ${refs} is a unit on its own. Which of these routes does it take here?`
+				: `In \`sentence\`, the pieces ${refs} together form one unit. Which of these routes does that whole unit take here?`,
+			routeCriteria(
+				unit.variants.map(
+					(variant) => `${variant.family}/${variant.kind}`,
+				),
+				true,
+			),
+		);
+	});
+	return questions;
+}
+
+export const pickId = (group: readonly number[]) => `pk_${group.join("_")}`;
+
+/** Each unit with variants takes the route its pick chose, among its variants. */
+export function pickedOutput(
+	partition: Groups,
+	output: SegmentInUnitsOutput,
+	picks: Answers,
+): SegmentInUnitsOutput {
+	return {
+		units: output.units.map((unit, index) => {
+			const group = partition[index];
+			if (!unit.variants || !group) return unit;
+			const { variants, ...single } = unit;
+			const answer = picks[pickId(group)];
+			const picked = variants.find(
+				(variant) =>
+					answer?.type === "choice" &&
+					`${variant.family}/${variant.kind}` === answer.choice,
+			);
+			return { ...single, route: picked ?? single.route };
+		}),
+	};
+}
+
+const marginsOf = (value: string | undefined, name: string) =>
+	(value ?? "")
+		.split(",")
+		.filter(Boolean)
+		.map((entry) => {
+			const margin = Number(entry);
+			if (!Number.isFinite(margin) || margin < 0)
+				throw Error(`--opt ${name}=${value} must list margins`);
+			return margin;
+		});
+
+/**
  * Running the reference through the lab, or replaying its run with `--opt
  * floors=run`; `--opt` moves its floors, and the policy is named after the
  * floors moved from the run's. `--opt unasked=unresolved` asks nothing for
  * groups no historical batch asked about.
+ *
+ * `--opt variants=0.1,0.2` adds a policy per margin whose borderline units
+ * carry route variants (`<policy>+variants@0.1`); they read the same
+ * answers. `--opt pick=0.1` also asks the click-time pick for the units
+ * carrying variants at that margin, a fresh `pick` request, and adds
+ * `<policy>+variants@0.1+pick` with the picked routes.
  */
 export const referenceArm: Arm = {
 	id: "reference",
 	summary:
-		"The #755 candidate reference (candidates4 final=1 closed=1, step0+saying+closed) behind nomination, membership and routing stages, with the floors #762 adopted",
+		"The #755 candidate reference (candidates4 final=1 closed=1, step0+saying+closed) behind nomination, membership and routing stages, with the floors #762 adopted, route variants and the click-time pick (#760)",
 	async run(input, context) {
 		const floors = floorsOf(context.options);
 		const unasked = context.options.unasked ?? "ask";
 		if (unasked !== "ask" && unasked !== "unresolved")
 			throw Error(`--opt unasked=${unasked} must be ask or unresolved`);
+		const variantMargins = marginsOf(context.options.variants, "variants");
+		const [pickMargin, ...more] = marginsOf(context.options.pick, "pick");
+		if (more.length > 0) throw Error("--opt pick takes one margin");
+		const stages = referenceStagesUnder(floors, unasked);
+		let evidence: ReferenceEvidence | undefined;
+		let routed: ReferenceRouted | undefined;
 		const { output } = await runStages(
-			referenceStagesUnder(floors, unasked),
+			{
+				...stages,
+				nominate: async (stageInput, stageContext) => {
+					const nomination = await stages.nominate(
+						stageInput,
+						stageContext,
+					);
+					evidence = nomination.evidence;
+					return nomination;
+				},
+				route: async (nomination, membership, stageContext) => {
+					routed = (await stages.route(
+						nomination,
+						membership,
+						stageContext,
+					)) as ReferenceRouted;
+					return routed;
+				},
+			},
 			input,
 			context,
 		);
 		const policy = floorsKey(floors);
-		return { primary: policy, outputs: { [policy]: output } };
+		const outputs: Record<string, SegmentInUnitsOutput> = {
+			[policy]: output,
+		};
+		if (!routed || !evidence) throw Error("The reference did not route");
+		for (const margin of variantMargins)
+			outputs[`${policy}+variants@${margin}`] =
+				routed.withVariants(margin);
+		if (pickMargin !== undefined) {
+			const withVariants = routed.withVariants(pickMargin);
+			const picks = await ask(
+				evidence.core,
+				context,
+				"pick",
+				pickQuestions(evidence.core, routed.partition, withVariants),
+			);
+			outputs[`${policy}+variants@${pickMargin}`] = withVariants;
+			outputs[`${policy}+variants@${pickMargin}+pick`] = pickedOutput(
+				routed.partition,
+				withVariants,
+				picks,
+			);
+		}
+		return { primary: policy, outputs };
 	},
 };

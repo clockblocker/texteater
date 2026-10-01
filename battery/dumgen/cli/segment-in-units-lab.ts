@@ -28,6 +28,7 @@ import {
 	deltaBetween,
 	focusBetween,
 	loadSide,
+	type Side,
 } from "../src/segment-in-units/lab/compare.js";
 import {
 	focusOf,
@@ -93,6 +94,8 @@ import {
 	type OutcomeRow,
 	outcomePolicies,
 	outcomesOf,
+	pickScore,
+	variantsOf,
 } from "../src/segment-in-units/lab/outcomes.js";
 import {
 	provenanceOf,
@@ -511,7 +514,7 @@ async function report(runId: string) {
 	);
 	// ADR 0008: membership first, then its consistency, then the route.
 	console.log(
-		`${"policy".padEnd(30)}   mem% multiMem% singleMem%  memFlips   tol% route|mem tol%  strict% route|mem%   case%     full% caseFlips varying  M/A/R/S/Mi/Stub  split/merged/crossed  mem% by rep`,
+		`${"policy".padEnd(30)}   mem% multiMem% singleMem%  memFlips   tol% route|mem tol%  strict% route|mem%   var%     k   case%     full% caseFlips varying  M/A/R/S/Mi/Stub  split/merged/crossed  mem% by rep`,
 	);
 	for (const row of rows) {
 		const { rates, tally } = row;
@@ -526,6 +529,11 @@ async function report(runId: string) {
 				percent(rates.tolerantRouteGivenMembership).padStart(13),
 				percent(rates.unitAccuracy).padStart(8),
 				percent(rates.routeGivenMembership).padStart(10),
+				percent(rates.variantRate).padStart(6),
+				(Number.isNaN(rates.meanVariants)
+					? "–"
+					: rates.meanVariants.toFixed(2)
+				).padStart(5),
 				percent(rates.casePass).padStart(7),
 				`${percent(rates.fullPass)}(${tally.fullCases / row.repetitions})`.padStart(
 					9,
@@ -541,11 +549,41 @@ async function report(runId: string) {
 		);
 	}
 	console.log(
-		"mem%: gold Segment set exact, any route; memFlips: units whose membership differs between repetitions; tol%: membership with a same or tolerated route (ADR 0008); strict%: same route too; case%: contract (membership) passes",
+		"mem%: gold Segment set exact, any route; memFlips: units whose membership differs between repetitions; tol%: membership with an acceptable route, the same, a tolerated confusion or the gold among the variants (ADR 0008); strict%: same route too, a borderline unit's first; var%: units with membership that carry route variants, k their mean count; case%: contract (membership) passes",
 	);
+	const outcomeRows = outcomesOf(labRun, cases);
+	// The click-time pick (#760), on the units that carried variants.
+	const pickCalls = labRun.cases
+		.filter((caseRun) => !only || only.has(caseRun.id))
+		.flatMap((caseRun) => caseRun.repetitions)
+		.map((repetition) =>
+			repetition.calls
+				.filter((call) => call.stage === "pick")
+				.reduce((total, call) => total + call.inputTokens, 0),
+		);
+	const picks = policies
+		.filter(
+			(policy) =>
+				policy.endsWith("+pick") &&
+				policies.includes(policy.slice(0, -"+pick".length)),
+		)
+		.map((policy) => {
+			const scope = only
+				? outcomeRows.filter((row) => only.has(row.case))
+				: outcomeRows;
+			const score = pickScore(
+				scope,
+				policy.slice(0, -"+pick".length),
+				policy,
+			);
+			console.log(
+				`pick (${policy}): ${score.units} unit-repetitions carried variants; gold among them ${percent(score.among / score.units)}%, picked exactly ${percent(score.strict / score.units)}%, picked acceptably ${percent(score.tolerant / score.units)}%; pick input ${(pickCalls.reduce((total, tokens) => total + tokens, 0) / Math.max(1, pickCalls.length)).toFixed(0)} jev tokens/sentence`,
+			);
+			return { policy, ...score };
+		});
 	const focus = focusOf({ name: labRun.set, hash: labRun.setHash });
 	const focusScore = focus
-		? scoreFocus(outcomesOf(labRun, cases), primary, focus, only)
+		? scoreFocus(outcomeRows, primary, focus, only)
 		: undefined;
 	if (focusScore) printFocusScore(focusScore);
 	console.log(
@@ -651,6 +689,7 @@ async function report(runId: string) {
 		model: labRun.model,
 		primary,
 		policies: rows,
+		...(picks.length > 0 ? { picks } : {}),
 		...(focusScore ? { focus: focusScore } : {}),
 		cost,
 		routeErrors: {
@@ -860,6 +899,13 @@ async function compare() {
 			`${measure === "tolerant" ? "tolerant route (ADR 0008)" : "strict (route equal)"}: left ${percent(accuracyOf(scopedRows(left.rows), left.policy, measure))}%, right ${percent(accuracyOf(scopedRows(right.rows), right.policy, measure))}%; +${delta.all.gained} −${delta.all.lost}, p ${formatP(delta.all.p)}${floorText(delta.all.floor, delta.all.beyondNoise)}`,
 		);
 	}
+	const variantText = (entry: Side) => {
+		const tally = variantsOf(scopedRows(entry.rows), entry.policy);
+		return `${percent(tally.withVariants / tally.units)}%${tally.withVariants > 0 ? ` (mean ${(tally.routes / tally.withVariants).toFixed(2)} routes)` : ""}`;
+	};
+	console.log(
+		`route variants, of unit-repetitions with membership (ADR 0008): left ${variantText(left)}, right ${variantText(right)}`,
+	);
 	const focus = focusBetween(left, right, only);
 	if (focus) printFocusComparison(focus);
 	console.log("membership by bucket:");

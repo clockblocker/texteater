@@ -4,10 +4,12 @@ import { projectCorpus } from "../../src/evaluation/spec-corpus/projection.js";
 import {
 	type SegmentInUnitsOutput,
 	segmentInUnits,
+	segmentInUnitsOutputSchema,
 	type Unit,
 } from "../../src/evaluation/spec-corpus/segment-in-units.js";
 import { evaluateSegmentInUnits } from "../../src/evaluation/spec-corpus/segment-in-units-evaluation.js";
 import {
+	acceptableRoute,
 	tolerableRoute,
 	toleratedKindPairs,
 	toleratedPairOf,
@@ -257,5 +259,110 @@ describe("segment.inUnits route tolerance (ADR 0008)", () => {
 		});
 		expect(tolerableRoute(route("ADV"), route("ADV"))).toBe(true);
 		expect(toleratedPairOf(route("ADV"), route("ADV"))).toBeUndefined();
+	});
+});
+
+describe("segment.inUnits route variants (ADR 0007, amended 2026-09-30)", () => {
+	// "So ist es." with one gold unit on "So".
+	const input = {
+		language: "de" as const,
+		segments: segmentsOf("So ist es."),
+	};
+	const evaluateOne = evaluateSegmentInUnits({
+		"de/so": { coverage: "Partial", sources: [{ target: 0 }] },
+	});
+	function judge(expected: Unit["route"], returned: Unit) {
+		const result = evaluateOne({
+			caseId: "de/so",
+			input,
+			idealOutput: { units: [{ segments: [0], route: expected }] },
+			output: { units: [returned] },
+		});
+		const [check] = result.units;
+		return {
+			verdict: check?.verdict,
+			tolerated: check?.verdict === "WrongRoute" && check.tolerated,
+			membership: result.membership,
+			tolerantMatched: result.tolerantMatched,
+			matched: result.matched,
+			withVariants: result.withVariants,
+			variantRoutes: result.variantRoutes,
+		};
+	}
+	const borderline = (...kinds: string[]): Unit => ({
+		segments: [0],
+		route: route(kinds[0] ?? ""),
+		variants: kinds.map((kind) => route(kind)),
+	});
+
+	test("a unit carries variants alongside its route, its route first and each once", () => {
+		const parse = (unit: Unit) =>
+			segmentInUnitsOutputSchema.safeParse({ units: [unit] }).success;
+		expect(parse(borderline("PART", "ADV"))).toBe(true);
+		expect(parse({ segments: [0], route: route("ADV") })).toBe(true);
+		expect(
+			parse({ ...borderline("PART", "ADV"), route: route("ADV") }),
+		).toBe(false);
+		expect(parse(borderline("PART", "PART"))).toBe(false);
+		expect(parse(borderline("PART"))).toBe(false);
+		expect(
+			parse({ ...borderline("PART", "ADV"), route: "Unresolved" }),
+		).toBe(false);
+	});
+
+	test("counts the route right when gold is the first variant", () => {
+		expect(judge(route("PART"), borderline("PART", "ADV"))).toEqual({
+			verdict: "Match",
+			tolerated: false,
+			membership: 1,
+			tolerantMatched: 1,
+			matched: 1,
+			withVariants: 1,
+			variantRoutes: 2,
+		});
+	});
+
+	test("counts the route right when gold is among the variants, though strict reads the first", () => {
+		expect(
+			judge(route("CCONJ"), borderline("ADV", "SCONJ", "CCONJ")),
+		).toEqual({
+			verdict: "WrongRoute",
+			tolerated: true,
+			membership: 1,
+			tolerantMatched: 1,
+			matched: 0,
+			withVariants: 1,
+			variantRoutes: 3,
+		});
+	});
+
+	test("counts the route wrong when gold is not among the variants, even a tolerated Kind", () => {
+		expect(judge(route("ADV"), borderline("ADJ", "NOUN"))).toEqual({
+			verdict: "WrongRoute",
+			tolerated: false,
+			membership: 1,
+			tolerantMatched: 0,
+			matched: 0,
+			withVariants: 1,
+			variantRoutes: 2,
+		});
+		expect(acceptableRoute(route("ADV"), borderline("ADJ", "NOUN"))).toBe(
+			false,
+		);
+		expect(acceptableRoute(route("ADV"), { route: route("ADJ") })).toBe(
+			true,
+		);
+	});
+
+	test("counts no variants for a single route or a unit without membership", () => {
+		expect(
+			judge(route("ADV"), { segments: [0], route: route("ADV") }),
+		).toMatchObject({ withVariants: 0, variantRoutes: 0 });
+		expect(
+			judge(route("ADV"), {
+				...borderline("ADV", "PART"),
+				segments: [0, 2],
+			}),
+		).toMatchObject({ verdict: "WrongSegments", withVariants: 0 });
 	});
 });

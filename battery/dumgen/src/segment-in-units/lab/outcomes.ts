@@ -5,7 +5,10 @@
  * without the gitignored raw runs.
  */
 import { gunzipSync, gzipSync } from "node:zlib";
-import type { UnitCheck } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
+import {
+	hasMembership,
+	type UnitCheck,
+} from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
 import { keyOf } from "../de/routes.js";
 import type { LabCase } from "./corpus.js";
 import { bucketOf, isStub, mcnemar, policiesOf, scoreCase } from "./metrics.js";
@@ -62,6 +65,11 @@ export type PolicyOutcome = {
 	readonly v: string;
 	/** Per repetition, the route returned for a WrongRoute unit (A or R), else null; absent when no repetition was one. */
 	readonly r?: readonly (string | null)[];
+	/**
+	 * Per repetition, how many route variants the returned unit carries when
+	 * its membership holds, else 0; absent when no repetition carried any.
+	 */
+	readonly k?: readonly number[];
 };
 
 export type OutcomeRow = {
@@ -110,10 +118,18 @@ export function outcomesOf(
 						? keyOf(returned.route)
 						: null;
 				});
+				const variants = units.map((check) =>
+					check && hasMembership(check)
+						? (check.returned[0]?.variants?.length ?? 0)
+						: 0,
+				);
 				outcomes[policy] = {
 					v: verdicts.join(""),
 					...(routes.some((route) => route !== null)
 						? { r: routes }
+						: {}),
+					...(variants.some((count) => count > 0)
+						? { k: variants }
 						: {}),
 				};
 			}
@@ -290,3 +306,72 @@ export function membershipFlipsOf(
 
 export const pairedP = (paired: Paired) =>
 	mcnemar(paired.leftOnly.length, paired.rightOnly.length);
+
+/**
+ * How often a policy's units carry route variants (ADR 0008), over the
+ * unit-repetitions whose membership holds: the variant rate and the mean
+ * variant count of those that carry them.
+ */
+export function variantsOf(
+	rows: readonly OutcomeRow[],
+	policy: string,
+): {
+	readonly units: number;
+	readonly withVariants: number;
+	readonly routes: number;
+} {
+	let units = 0;
+	let withVariants = 0;
+	let routes = 0;
+	for (const row of rows) {
+		const outcome = row.policies[policy];
+		if (row.stub || !outcome) continue;
+		[...outcome.v].forEach((letter, repetition) => {
+			if (!isHit(letter, "membership")) return;
+			units++;
+			const count = outcome.k?.[repetition] ?? 0;
+			if (count > 0) {
+				withVariants++;
+				routes += count;
+			}
+		});
+	}
+	return { units, withVariants, routes };
+}
+
+/**
+ * The click-time pick on the units that carried variants (#760): over the
+ * unit-repetitions whose membership held with variants under
+ * `variantsPolicy`, how often the gold route was among the variants (the
+ * pick's ceiling), and how often `pickPolicy` picked it exactly or an
+ * acceptable route.
+ */
+export function pickScore(
+	rows: readonly OutcomeRow[],
+	variantsPolicy: string,
+	pickPolicy: string,
+): {
+	readonly units: number;
+	readonly among: number;
+	readonly strict: number;
+	readonly tolerant: number;
+} {
+	let units = 0;
+	let among = 0;
+	let strict = 0;
+	let tolerant = 0;
+	for (const row of rows) {
+		const variants = row.policies[variantsPolicy];
+		const picked = row.policies[pickPolicy];
+		if (row.stub || !variants || !picked) continue;
+		[...variants.v].forEach((letter, repetition) => {
+			if ((variants.k?.[repetition] ?? 0) === 0) return;
+			units++;
+			if (isHit(letter, "tolerant")) among++;
+			const pick = picked.v[repetition] ?? "";
+			if (isHit(pick, "strict")) strict++;
+			if (isHit(pick, "tolerant")) tolerant++;
+		});
+	}
+	return { units, among, strict, tolerant };
+}

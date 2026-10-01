@@ -1,7 +1,7 @@
 /**
  * Which route misses `segment.inUnits` scoring tolerates (Dumgen ADR 0008).
- * The evaluator and the lab both judge a returned route through
- * `tolerableRoute`, so the tolerated set lives here only.
+ * The evaluator and the lab both judge a returned unit's route through
+ * `acceptableRoute`, so the tolerated set lives here only.
  */
 import type { Unit } from "./segment-in-units.js";
 
@@ -70,4 +70,21 @@ export function tolerableRoute(
 		sameRoute(expected, returned) ||
 		toleratedPairOf(expected, returned) !== undefined
 	);
+}
+
+/**
+ * Whether a returned unit routes acceptably (Dumgen ADR 0008): a
+ * borderline unit when the expected route is among its variants, a unit
+ * with one route when that route is tolerable. The tolerated Kind pairs
+ * apply to single routes only.
+ */
+export function acceptableRoute(
+	expected: UnitRoute,
+	returned: Pick<Unit, "route" | "variants">,
+): boolean {
+	if (returned.variants)
+		return returned.variants.some((variant) =>
+			sameRoute(expected, variant),
+		);
+	return tolerableRoute(expected, returned.route);
 }

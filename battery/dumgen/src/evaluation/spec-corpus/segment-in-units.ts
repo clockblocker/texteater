@@ -33,15 +33,47 @@ const routeSchema = z.strictObject({
 });
 export type Route = z.infer<typeof routeSchema>;
 
+const sameRouteKey = (route: Route) =>
+	`${route.language}/${route.family}/${route.kind}`;
+
 /**
  * One biggest unit: the indices of the input Segments that route to it, in
  * ascending order, discontinuous ones included, and its route or
  * `Unresolved`.
+ *
+ * A borderline unit also carries `variants` (Dumgen ADR 0007, amended
+ * 2026-09-30): two or more distinct routes a click picks one of, its
+ * `route` first. Its grouping is fixed either way. A unit with one route,
+ * the common case, carries none, and neither does an `Unresolved` one.
+ * Variants stay in Dumgen: what a click stores has one exact route.
  */
-const unitSchema = z.strictObject({
-	segments: z.array(z.int().nonnegative()).min(1),
-	route: z.union([routeSchema, z.literal("Unresolved")]),
-});
+const unitSchema = z
+	.strictObject({
+		segments: z.array(z.int().nonnegative()).min(1),
+		route: z.union([routeSchema, z.literal("Unresolved")]),
+		variants: z.array(routeSchema).min(2).optional(),
+	})
+	.superRefine((unit, context) => {
+		if (!unit.variants) return;
+		const [first] = unit.variants;
+		if (
+			unit.route === "Unresolved" ||
+			!first ||
+			sameRouteKey(first) !== sameRouteKey(unit.route)
+		)
+			context.addIssue({
+				code: "custom",
+				path: ["variants"],
+				message: "Route variants start with the unit's route",
+			});
+		const keys = unit.variants.map(sameRouteKey);
+		if (new Set(keys).size !== keys.length)
+			context.addIssue({
+				code: "custom",
+				path: ["variants"],
+				message: "Route variants are distinct",
+			});
+	});
 export type Unit = z.infer<typeof unitSchema>;
 
 /**

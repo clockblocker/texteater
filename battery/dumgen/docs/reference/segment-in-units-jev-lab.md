@@ -83,12 +83,24 @@ The pilot writes its manifest, configuration, requests and results to
   repetitions. **tol%** adds a route that is the same or one of the five
   tolerated Kind confusions (PART/ADV, CCONJ/ADV, ADJ/ADV, NOUN/PROPN,
   PRON/DET, within Lexeme, either way), defined once in
-  `src/evaluation/spec-corpus/segment-in-units-route-tolerance.ts`.
-  **strict%** is the exact match, kept for comparison. Rates are summed
-  over repetitions. **caseFlips** counts cases whose contract verdict
-  differs between repetitions. `Unresolved` and Foreign gold units are
-  Stubs and go unscored. Outcome letters mark a tolerated route `A` and
-  any other route miss `R`.
+  `src/evaluation/spec-corpus/segment-in-units-route-tolerance.ts`. A
+  borderline unit may carry route variants instead (Dumgen ADR 0007,
+  amended 2026-09-30); its route counts for tol% when the gold route is
+  among them, and the five pairs apply to single routes only.
+  **strict%** is the exact match, kept for comparison; it reads a
+  borderline unit's first route. **var%** counts the units with membership
+  that carry variants, and **k** their mean number of routes, so returning
+  variants can't stand in for deciding. Rates are summed over repetitions.
+  **caseFlips** counts cases whose contract verdict differs between
+  repetitions. `Unresolved` and Foreign gold units are Stubs and go
+  unscored. Outcome letters mark an acceptable route miss `A` and any
+  other `R`; `k` keeps each repetition's variant count.
+- The `reference` arm's `--opt variants=<margins>` adds a policy per
+  margin whose units carry variants where the top two shares of the
+  distribution that decided the route lie within it, read from the same
+  answers. `--opt pick=<margin>` asks the click-time pick for those units
+  (a fresh `pick` request) and adds a `+pick` policy; `report` scores the
+  pick on the units that carried variants.
 - `compare` pairs gold units by their majority over repetitions, on
   membership first, then prints each side's consistency and the tolerant
   and strict deltas. `+a −b` means a units gained and b lost from left to

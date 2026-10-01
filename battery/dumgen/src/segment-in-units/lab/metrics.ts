@@ -43,6 +43,9 @@ export type Tally = {
 	split: number;
 	merged: number;
 	crossed: number;
+	/** Units with membership whose returned unit carries route variants, and their variant routes. */
+	variantUnits: number;
+	variantRoutes: number;
 	multiScored: number;
 	multiMembership: number;
 	multiMatch: number;
@@ -67,6 +70,8 @@ const emptyTally = (): Tally => ({
 	split: 0,
 	merged: 0,
 	crossed: 0,
+	variantUnits: 0,
+	variantRoutes: 0,
 	multiScored: 0,
 	multiMembership: 0,
 	multiMatch: 0,
@@ -175,6 +180,11 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 			if (check.tolerated) tally.toleratedRoute++;
 		}
 		if (check.verdict === "Missing") tally.missing++;
+		const variants = membership ? check.returned[0]?.variants : undefined;
+		if (variants) {
+			tally.variantUnits++;
+			tally.variantRoutes += variants.length;
+		}
 		if (check.expected.segments.length > 1) {
 			tally.multiScored++;
 			if (membership) tally.multiMembership++;
@@ -204,9 +214,12 @@ export const isStub = (unit: Unit) =>
 
 /**
  * Rates over scored gold units, summed over repetitions. `membership` is
- * the headline (ADR 0008); `tolerantUnitAccuracy` adds a same or tolerated
- * route; `unitAccuracy` is the strict match, kept for comparison. The route
- * rates read only units whose membership holds.
+ * the headline (ADR 0008); `tolerantUnitAccuracy` adds an acceptable route
+ * (the same, a tolerated confusion, or the gold route among a borderline
+ * unit's variants); `unitAccuracy` is the strict match, kept for
+ * comparison. The route rates read only units whose membership holds, and
+ * so do `variantRate` (how many of them carry variants) and
+ * `meanVariants` (how many routes those carry).
  */
 export function rates(tally: Tally) {
 	const membership = tally.match + tally.wrongRoute;
@@ -224,6 +237,8 @@ export function rates(tally: Tally) {
 		),
 		unitAccuracy: ratio(tally.match, tally.scored),
 		routeGivenMembership: ratio(tally.match, membership),
+		variantRate: ratio(tally.variantUnits, membership),
+		meanVariants: ratio(tally.variantRoutes, tally.variantUnits),
 		multiUnitAccuracy: ratio(tally.multiMatch, tally.multiScored),
 		singleUnitAccuracy: ratio(tally.singleMatch, tally.singleScored),
 		casePass: ratio(tally.contractPass, tally.contractCases),
@@ -659,13 +674,18 @@ export function unitVerdicts(
 
 export type Confusion = {
 	readonly count: number;
-	/** The ADR 0008 Kind pair it confuses, as `PART/ADV`; absent when it stays an error. */
+	/**
+	 * The ADR 0008 Kind pair it confuses, as `PART/ADV`, or `variants` when
+	 * the gold route is among a borderline unit's variants; absent when it
+	 * stays an error.
+	 */
 	readonly tolerated?: string;
 };
 
 /**
  * Route confusions over units whose membership holds, keyed gold →
- * returned, each marked with the tolerated Kind pair it falls on.
+ * returned (a borderline unit's variants joined by `|`), each marked with
+ * what makes it acceptable.
  */
 export function confusions(
 	run: LabRun,
@@ -684,14 +704,22 @@ export function confusions(
 				if (check.verdict !== "WrongRoute") continue;
 				const [returned] = check.returned;
 				if (!returned) continue;
-				const key = `${keyOf(check.expected.route)} → ${keyOf(returned.route)}`;
-				const pair = toleratedPairOf(
-					check.expected.route,
-					returned.route,
-				);
+				const key = `${keyOf(check.expected.route)} → ${
+					returned.variants
+						? returned.variants.map(keyOf).join("|")
+						: keyOf(returned.route)
+				}`;
+				const pair = returned.variants
+					? undefined
+					: toleratedPairOf(check.expected.route, returned.route);
+				const tolerated = returned.variants
+					? check.tolerated
+						? "variants"
+						: undefined
+					: pair?.join("/");
 				counts.set(key, {
 					count: (counts.get(key)?.count ?? 0) + 1,
-					...(pair ? { tolerated: pair.join("/") } : {}),
+					...(tolerated ? { tolerated } : {}),
 				});
 			}
 		}

@@ -2,7 +2,8 @@
  * Scores a `segment.inUnits` answer against its Spec Record. Only ResolvableText
  * Segments are scored; whether a unit also lists whitespace or punctuation
  * does not count. Membership comes first and the route second, tolerating
- * the Kind confusions of Dumgen ADR 0008.
+ * the Kind confusions of Dumgen ADR 0008 and accepting a borderline unit
+ * whose route variants hold the gold route.
  */
 import type * as Dumspec from "dumspec/types";
 import type {
@@ -13,8 +14,8 @@ import type {
 	Unit,
 } from "./segment-in-units.js";
 import {
+	acceptableRoute,
 	sameRoute,
-	tolerableRoute,
 } from "./segment-in-units-route-tolerance.js";
 
 /**
@@ -33,7 +34,9 @@ export type UnitVerdict =
  * One gold unit and the returned units that share a Segment with it. Its
  * membership holds when exactly one does, with the same Segments (`Match`
  * or `WrongRoute`); it matches strictly when that unit's route is the same
- * too. A `WrongRoute` says whether ADR 0008 tolerates the returned route.
+ * too, a borderline unit's first route. A `WrongRoute` says whether ADR
+ * 0008 accepts the returned unit's route: a tolerated confusion, or the
+ * gold route among its variants.
  */
 export type UnitCheck = {
 	readonly source: GoldUnitSource;
@@ -82,12 +85,19 @@ export type SegmentInUnitsEvaluation = {
 	readonly coverage: Dumspec.Coverage;
 	/** Scored gold units whose Segment set came back exactly. */
 	readonly membership: number;
-	/** Of those, the units whose route is the same or a tolerated confusion. */
+	/** Of those, the units whose route is acceptable: the same, a tolerated confusion, or among the variants. */
 	readonly tolerantMatched: number;
 	/** Of those, the units whose route is the same: the strict match. */
 	readonly matched: number;
 	readonly scored: number;
 	readonly stubbed: number;
+	/**
+	 * Of the units with membership, those whose returned unit carries route
+	 * variants: ADR 0008 asks how often a unit leaves the route to the click.
+	 */
+	readonly withVariants: number;
+	/** Their variant routes, summed; over `withVariants`, the mean variant count. */
+	readonly variantRoutes: number;
 	readonly units: readonly UnitCheck[];
 	readonly sentence?: SentenceCheck;
 };
@@ -108,7 +118,7 @@ function verdictOf(
 	if (sameRoute(expected.route, only.unit.route)) return { verdict: "Match" };
 	return {
 		verdict: "WrongRoute",
-		tolerated: tolerableRoute(expected.route, only.unit.route),
+		tolerated: acceptableRoute(expected.route, only.unit),
 	};
 }
 
@@ -170,6 +180,10 @@ export function evaluateSegmentInUnits(
 		const matched = scoredUnits.filter(
 			({ verdict }) => verdict === "Match",
 		).length;
+		const variantCounts = scoredUnits
+			.filter(hasMembership)
+			.map((check) => check.returned[0]?.variants?.length ?? 0)
+			.filter((count) => count > 0);
 		const sentence =
 			caseFacts.coverage === "Full"
 				? sentenceCheck(
@@ -193,6 +207,11 @@ export function evaluateSegmentInUnits(
 			matched,
 			scored: scoredUnits.length,
 			stubbed: units.length - scoredUnits.length,
+			withVariants: variantCounts.length,
+			variantRoutes: variantCounts.reduce(
+				(total, count) => total + count,
+				0,
+			),
 			units,
 			...(sentence ? { sentence } : {}),
 		};
