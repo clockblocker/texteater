@@ -26,7 +26,7 @@
 			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
 			{
 				"rule": "de/core-features-are-identity",
-				"hash": "240b45072e01295e"
+				"hash": "d86b565fbb8929c3"
 			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",

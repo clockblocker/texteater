@@ -1063,8 +1063,8 @@ const attestations: Rule[] = [
 	{
 		id: "de/core-features-are-identity",
 		statement:
-			"A Lemma's Core Features belong to its dictionary identity; features of one occurrence belong to its Surface. Each route chooses its Core Features for the learner: a pillar such as the der table or the personal pronouns has one Lemma per cell, and a stem word such as dieser or mein is one Lemma whose forms are Surfaces.",
-		adrs: ["ADR-0002", "ADR-0032", "ADR-0044"],
+			"Each route splits the Feature Pool between Core Features, which are the Lemma's identity, and its Surfaces' inflection, choosing for the learner: a pillar such as the der table or the personal pronouns has one Lemma per cell, and a stem word such as dieser or mein is one Lemma whose forms are Surfaces. A value a learner's dictionary gives only as a usage line under one headword is not identity. A value that is neither leaves the pool and is restated in another layer's own terms: Attestation evidence for what one occurrence shows (a realized case), Reading Knowledge for a fact about a sense or a class (an inflection class), a dumspec table for what the language allows. Where an adposition stands is not identity: wegen des Sturms and des Nebels wegen attest one Lemma, and the ADP Case Table lists the positions wegen takes.",
+		adrs: ["ADR-0002", "ADR-0032", "ADR-0034", "ADR-0044"],
 		routes: [],
 		records: [
 			"de/das-rote-band-lag-auf-dem-geschenk",
@@ -1092,6 +1092,8 @@ const attestations: Rule[] = [
 			"de/viele-kamen-zu-spaet",
 			"de/wer-war-das",
 			"de/wer-mitkommen-will-meldet-sich-bis-freitag",
+			"de/wegen-des-sturms-blieb-die-faehre-im-hafen",
+			"de/des-dichten-nebels-wegen-fiel-der-flug-aus",
 		],
 	},
 	{

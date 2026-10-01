@@ -213,3 +213,11 @@ the zu-infinitive one (`um … zu`, `ohne … zu`, `statt … zu`, `anstatt … 
 and its Rules cite the list instead of naming them inline. A German ADP never
 takes `extPos: SCONJ`: `anstatt dass` is not the ADP `anstatt` used as a
 subordinator, so the value leaves Dumling's German ADP schema.
+
+Amended on 2026-10-01 ([#652](https://github.com/clockblocker/texteater/issues/652)):
+a Locution ADP's Attestation records the case its complement took, as a
+Lexeme ADP's does ([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)):
+at most one bare-case slot, with no member. `um des Friedens willen` records
+Gen, and `von da an` none, since `da` shows no case. It records no position,
+since its words are its Canonical Form, and dumspec's ADP Case Table gives
+it one case set.

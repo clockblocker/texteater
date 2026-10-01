@@ -93,11 +93,23 @@ The concrete subtype of a Lemma within its Family, such as NOUN, VERB, Prefix,
 Saying, or Foreign.
 _Avoid_: Entry Subkind
 
+**Feature Pool**:
+The one catalog of grammatical features, after UD and narrowed per language,
+that a Lemma's Core Features and a Surface's inflectional features draw from.
+It does not include the vocabularies of the Attestation, the Reading or
+Knowledge, even where their values coincide with the pool's: a realized case
+is Attestation evidence, an inflection class Reading Knowledge. A value that
+is neither Core nor inflectional on a route leaves the pool for one of those
+layers, a dumspec Rule or table, or nothing.
+_Avoid_: feature, for an Attestation, Reading or Knowledge field
+
 **Core Features**:
-The grammatical features that belong to a Lemma's identity; the rest
-describe its Surfaces. Each language, Family and Kind decides which features
-are Core by what serves the learner best, so the same feature can be Core on
-one route and inflectional on another.
+The Feature Pool features that belong to a Lemma's identity; the route's
+other pool features describe its Surfaces. Each language, Family and Kind
+decides which features are Core by what serves the learner best, so the same
+feature can be Core on one route and inflectional on another. A value a
+learner's dictionary gives only as a usage line under one headword is not
+Core: preposed and postposed `wegen` are one Lemma.
 _Avoid_: Inherent Features
 
 **Comparability**:
@@ -178,9 +190,10 @@ governed preposition is an owned member but not a Fixed one, so the
 normalized Surface leaves it out: `wartet`, not `wartet auf`; `stolz`, not
 `stolz auf`. A Hebrew or English governor (verb, adjective, noun, Locution) may
 record valency evidence the same way, with no realized case. A German ADP
-Attestation records the case its complement took
-as its realized case: `auf dem Tisch` Dat, `auf den Tisch` Acc, `wegen dem
-Regen` Dat. A Modification is attested with Partial coverage.
+Attestation, Lexeme or Locution, records the case its complement took as its
+realized case: `auf dem Tisch` Dat, `auf den Tisch` Acc, `wegen dem Regen`
+Dat, `um des Friedens willen` Gen. It records no position: `des Nebels
+wegen` shows it. A Modification is attested with Partial coverage.
 _Avoid_: Selection, click result, selected Surface
 
 **Modification**:

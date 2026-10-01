@@ -20,7 +20,7 @@
 			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
 			{
 				"rule": "de/core-features-are-identity",
-				"hash": "240b45072e01295e"
+				"hash": "d86b565fbb8929c3"
 			}
 		],
 		"references": []

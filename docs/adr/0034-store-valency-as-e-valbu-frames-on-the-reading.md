@@ -187,18 +187,32 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   the adjective's `cop`.
 - `governedCase` leaves German ADP Core. Identity does not change, since no
   two German ADPs differ by case alone. An authored, closed table per
-  language, the ADP Case Table, records each preposition's allowed cases, a preferred
-  case where there is a norm, and whether it is two-way, keyed by `adpType`
-  where that matters: `für` {Acc}, `mit` {Dat}, `auf` and `in` {Acc, Dat}
-  two-way, `wegen` and `trotz` {Gen, Dat} preferring Gen, `entlang` Post
-  {Acc} and Prep {Gen, Dat}. It replaces Dumgen's `governablePrepositions`,
-  and a governor's Preposition slot is validated against it: `warten` `auf`
-  + Acc and `bestehen` `auf` + Dat pass, `für` + Dat fails. ADR 0041 moved
-  the table and its check from Dumling to dumspec, since which cases a
+  language, the ADP Case Table, lists each adposition with the positions it
+  takes, before (Prep) or after (Post) its complement, and for each position
+  its allowed cases, a preferred case where there is a norm, and whether it
+  is two-way: `für` Prep {Acc}, `mit` Prep {Dat}, `auf` and `in` Prep
+  {Acc, Dat} two-way, `trotz` Prep {Gen, Dat} preferring Gen, `wegen` Prep
+  {Gen, Dat} preferring Gen and Post {Gen}, `entlang` Post {Acc, Dat}
+  preferring Acc and Prep {Gen, Dat}. A position it doesn't list isn't
+  allowed. A circumposition or other Locution ADP has one case set and no
+  position, since its words are its Canonical Form. Neither the Lemma nor
+  the Attestation records the position
+  ([ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)):
+  the sentence shows it, and the table states what German allows and what a
+  Note can show. It replaces Dumgen's `governablePrepositions`, and a
+  governor's Preposition slot is validated against it: `warten` `auf` + Acc
+  and `bestehen` `auf` + Dat pass, `für` + Dat fails. ADR 0041 moved the
+  table and its check from Dumling to dumspec, since which cases a
   preposition takes is a fact about the language.
 - A free ADP occurrence records the case it took as `realizedCase` in its
   `valencyEvidence`, from the judgement Grammatical Resolution already makes
   for the case. `[Wegen] dem Regen` records Dat against the preferred Gen. A
+  Locution ADP records it the same way (`um des Friedens willen` Gen). An
+  occurrence whose complement shows no case records none (`Köln versus
+  Berlin`). dumspec accepts a realized case that one of the adposition's
+  positions allows. It fails an adposition the table doesn't list, naming
+  it, a case none of its positions allows, naming the word and the case, and
+  a governor's Preposition slot whose preposition the table lacks. A
   governed preposition has no ADP Attestation; its case lives in the
   governor's frame. The ADP's Valency Block renders from the table
   (`` auf `etw` · Akk: wohin? · Dat: wo? ``), and each Source Context shows
@@ -211,3 +225,11 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   [#604](https://github.com/clockblocker/texteater/issues/604).
 
 Amended by [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md): Idiom and Collocation governors are Locutions, and a Collocation's predicate may be a noun or an adjective, which widens the Collocation test above.
+
+Amended on 2026-10-01: the ADP Case Table was keyed by the Lemma's
+`adpType` only where position changed the case, Post `entlang` took {Acc}
+alone, an adposition the table didn't list took any oblique case, and a
+Locution ADP recorded no case. Now every entry lists its positions, the
+any-case fallback is gone, and a Locution ADP records its case. Decided on
+[#652](https://github.com/clockblocker/texteater/issues/652) and
+[#733](https://github.com/clockblocker/texteater/issues/733).

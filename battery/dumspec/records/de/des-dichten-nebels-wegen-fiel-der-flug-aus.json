@@ -22,8 +22,13 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0032"],
+		"rules": [
+			{
+				"rule": "de/core-features-are-identity",
+				"hash": "d86b565fbb8929c3"
+			}
+		],
 		"references": []
 	},
 	"targets": [

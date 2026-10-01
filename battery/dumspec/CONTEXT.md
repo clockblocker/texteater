@@ -33,16 +33,18 @@ Route), closed set, catalog member
 **ADP Case Table**:
 The closed, authored list of a language's adpositions with the cases each
 takes: the allowed cases, a preferred case where the others are colloquial,
-and whether it is two-way. German keys it by Canonical Form and, where
-position changes the case, by `adpType`: `für` {Acc}, `auf` {Acc, Dat}
-two-way, `wegen` {Gen, Dat} preferring Gen, `entlang` Post {Acc} and Prep
-{Gen, Dat}. Case is not ADP Core, since no two German ADPs differ by case
-alone. It is a fact about the language, so Dumling types a frame's
-preposition and case without it (ADR 0041). Dumspec checks that a
-governor's Preposition Slot and an ADP occurrence's realized case, in its
-records and inventories, are cases the table allows. The table lists the
-circumpositions too (`um … willen`), but they are Locution ADPs and record
-no case until #652 decides, so no check reads those entries yet.
+and whether it is two-way. A German Lexeme ADP lists each position it takes,
+before (Prep) or after (Post) its complement, with that position's cases:
+`für` Prep {Acc}, `auf` Prep {Acc, Dat} two-way, `wegen` Prep {Gen, Dat}
+preferring Gen and Post {Gen}, `entlang` Post {Acc, Dat} preferring Acc and
+Prep {Gen, Dat}. A Locution ADP (`um … willen`, `im Vergleich zu`) lists one
+case set. The table says what German allows and what a Note can show; no
+Lemma or Attestation records the position. Case is not ADP Core, since no
+two German ADPs differ by case alone. It is a fact about the language, so
+Dumling types a frame's preposition and case without it (ADR 0041). Dumspec
+fails an ADP occurrence whose realized case none of its positions allows, an
+adposition the table doesn't list, and a governor's Preposition Slot whose
+preposition is unlisted or doesn't take the slot's case.
 _Avoid_: governed case, governedCase, case government feature
 
 **Spec Record**:

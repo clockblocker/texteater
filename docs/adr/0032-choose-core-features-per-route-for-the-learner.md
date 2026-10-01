@@ -13,6 +13,45 @@ a triple, and a Kind name may repeat across Families
 textbook test, constant across the paradigm means lexical, is one input to
 the choice, not the rule.
 
+**The Feature Pool.** Lemma Core bags and Surface inflectional bags draw from
+one catalog, the Feature Pool: Dumling's `UNIVERSAL_FEATURE_SCHEMA`, after
+UD, narrowed per language (`DE_FEATURE_SCHEMA`). Each route splits the
+features it uses into Core and inflectional. Attestation, Reading and
+Knowledge have vocabularies of their own and never carry a Feature Pool
+feature or its name. Their values may coincide with the pool's: an
+Attestation's `realizedCase` has its own case enum, and Dumrel has its own
+literals.
+
+**The placement test.** Within the Feature Pool, the test chooses Core or
+inflectional by what is best for the learner. Core tells apart the entity the
+learner learns; an inflectional feature describes a reusable form of that
+Lemma. A value that is neither leaves the pool and is restated in another
+layer's own terms:
+
+- Attestation evidence, if it describes this occurrence;
+- Reading Knowledge, if it is a fact about a sense, a class or a type;
+- a dumspec Rule or table, if it says which uses the language allows;
+- or nothing, and it is dropped.
+
+Each has been done before. Inflection class
+([ADR 0038](./0038-store-german-inflection-classes-as-reading-knowledge.md)),
+valency ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md),
+[ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)) and the
+Locution and Saying Types ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md))
+went to Reading Knowledge. Governed case went to a dumspec table plus
+Attestation evidence (ADR 0034), the article to an Attestation member plus
+evidence ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)),
+and `foreign` was dropped
+([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)).
+An adposition's position went to the dumspec table alone (below).
+
+One check helps: does a standard learner's dictionary of the language give the
+value its own headword, or only a usage line under one headword? A usage line
+means the value is not identity.
+
+The test reopens no split already decided: ADR 0044's pronoun cells and its
+Dem/Rel split, and the per-route choices below, stand.
+
 **Pillars and stems.** A closed paradigm is a pillar only when its forms
 cannot be derived from another paradigm: a suppletive paradigm (`ich`, `mir`,
 `mich`) or a source table other words borrow their endings from (the `der`
@@ -51,6 +90,15 @@ Features.
 - A Locution route borrows the inflection features and Grundform rule of the
   Lexeme route with its Kind (ADR 0039). `discourseFormulaRole` is not Core;
   it is the Formula Role in Reading Knowledge.
+- German ADP: Lexeme ADP Core is `abbr` only. Where an adposition stands is
+  not identity, so `wegen des Sturms` and `des Nebels wegen` attest one Lemma
+  `wegen`; Duden, grammis and LEO each give the position as a usage line
+  under one headword. No Lemma or Attestation records the position, since
+  the sentence shows it. The ADP Case Table in dumspec lists the positions
+  each adposition takes, with the cases for each (ADR 0034). `Circ` left
+  German ADP: a circumposition is a Locution ADP (ADR 0039), its bracket part
+  of its Canonical Form. `partType: Vbp` left too, since a separated verb
+  particle is a member of its verb, and `extPos: ADV`, which no Rule backed.
 - Hebrew is unchanged; its routes may choose differently.
 
 **Articles are derived, not chosen.** An Article satellite's spelling, read
@@ -68,6 +116,12 @@ is reached only when both ends mark every varied feature, and a plural cell's
 unmarked gender counts as marked. Navigation compares Core values literally,
 and no Core value is a set.
 
+Amended on 2026-10-01: the Feature Pool and the placement test are stated for
+the first time, and German ADP Core keeps only `abbr`. `adpType` was Core, so
+preposed and postposed `wegen`, `entlang` and `gegenüber` were two Lemmas
+each. Decided on [#733](https://github.com/clockblocker/texteater/issues/733)
+with [#652](https://github.com/clockblocker/texteater/issues/652).
+
 ## Considered Options
 
 - Choosing a determiner's headword by the noun's gender (masculine `der`,
@@ -80,3 +134,12 @@ and no Core value is a set.
 - The pillar test by memorization alone. Replaced on 2026-09-27 by the
   derivation test above, which gives the same answer for the tables and
   settles `jemand` and `wer` (ADR 0044).
+- `adpType` in German ADP Core. Rejected on 2026-10-01: an adposition that
+  stands on either side of its complement became two Lemmas with duplicated
+  Readings, where every dictionary has one headword.
+- Position on the ADP Attestation, beside its realized case. Rejected the
+  same day: the sentence always shows it, nothing reads it, and all it bought
+  was a sharper case check for `entlang` and `zufolge`, which take different
+  cases before and after their complement.
+- Position on the Surface. Rejected: `wegen` is spelled the same in both
+  positions, so it is no form of the word.
