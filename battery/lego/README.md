@@ -13,7 +13,7 @@ The state model and commands remain in `react-resizable-panels/workspace`.
 
 Import components from `lego`. Atoms are the shadcn primitives (`Button`,
 `Dialog`, `Sidebar`, and so on). Molecules are the opinionated pieces that give
-Notes and reading text their look: `NoteSection`, `NoteTitle`, `QuoteButton`,
+Notes and reading text their look: `NoteSection`, `NoteTitle`, `Quote`,
 `ReaderSegment`, and their companions. `DensityScope` marks a subtree as
 `compact` or `comfortable` so the same molecules read well as a Card or a Sheet.
 
