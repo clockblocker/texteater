@@ -79,9 +79,10 @@ _Avoid_: token, word
 What the legacy intake produced for one German Sentence, stored with it and
 read at selection time so that a click selects the largest resolved unit at
 the clicked Segment. It is a hint for resolution, not linguistic identity.
-[Dumgen ADR 0007] replaces it with biggest units whose route segmentation
-chose, so a click never classifies; tf-demo keeps the legacy form until its
-rebuild after the segmentation rewrite. See [Dumgen ADR 0006].
+[Dumgen ADR 0007] replaces it with biggest units whose grouping segmentation
+fixes, each with its route or a few route variants that a click picks among;
+tf-demo keeps the legacy form until its rebuild after the segmentation
+rewrite. See [Dumgen ADR 0006].
 _Avoid_: precomputed resolution, Unit map, Analysis Target list
 
 **Shared Demo Dictionary**:

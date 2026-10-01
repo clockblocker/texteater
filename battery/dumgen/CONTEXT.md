@@ -38,9 +38,10 @@ A Segmented Sentence together with one Analysis Target supplied for
 linguistic resolution or Knowledge production.
 
 **Analysis Target**:
-The unit an Encounter resolves: its route and ordered Segment members, as
-segmentation chose them. A click resolves it and never classifies it. See
-[Dumgen ADR 0007].
+The unit an Encounter resolves: its ordered Segment members and its route, as
+segmentation chose them. Where segmentation left a few route variants, a click
+picks one of them; it never regroups the members or weighs a route outside the
+variants. See [Dumgen ADR 0007].
 _Avoid_: Unit, group, lattice node
 
 **Realized Slot**:
