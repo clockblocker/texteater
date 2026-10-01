@@ -82,8 +82,9 @@ Features.
 - German PRON: [ADR 0044](./0044-identify-german-pronouns-by-pillar-stem-and-referent.md).
 - English PRON: case, number, gender and reflexivity are Core, so `I`, `me`,
   `my`, `mine` and `myself` are five Lemmas, and English PRON has no Surface
-  inflection. Reflexivity is Core because `myself` is its own spelled word;
-  German free `sich` stays one form whose reflexive use is Surface evidence.
+  inflection. Reflexivity is Core because `myself` is its own spelled word.
+  German keeps reflexivity on the Surface: reflexive `mich` is the Lemma
+  `mich`, and free `sich` is the Acc or Dat cell of the reflexive (ADR 0044).
 - German and English ADV and ADJ record comparability in Core, which decides
   whether their Surfaces mark Degree
   ([ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md)).
@@ -121,6 +122,11 @@ the first time, and German ADP Core keeps only `abbr`. `adpType` was Core, so
 preposed and postposed `wegen`, `entlang` and `gegenüber` were two Lemmas
 each. Decided on [#733](https://github.com/clockblocker/texteater/issues/733)
 with [#652](https://github.com/clockblocker/texteater/issues/652).
+
+Amended on 2026-10-01: the English PRON line said German free `sich` "stays
+one form", which read as one Lemma. `sich` has been authored as two pillar
+cells, Acc and Dat, since 2026-09-13, and ADR 0044 states it; only the
+wording changed.
 
 ## Considered Options
 

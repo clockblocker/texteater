@@ -48,6 +48,19 @@ what the form shows: `sein-` (his, its) has gender[psor] Masc, Neut, and
 possessive marks possessor features. Reflexivity and historical status are
 Surface evidence.
 
+**Free `sich`.** A reflexive the verb does not require is a unit of its own,
+and a lexical reflexive is a member of its verb (`sich erinnern`,
+[ADR 0003](./0003-attestation-supersedes-selection-and-owns-realization-coverage.md)).
+Free `sich` is the reflexive's Acc or Dat cell, with person 3 in Core. Its
+Surface marks the reflexive use (`reflex` Yes), as reflexive `mich`, `uns`
+and `euch` mark theirs while staying their personal cells. A reciprocal use
+(*Unsere Nachbarn grüßen sich*) keeps the same Lemma and Reading, since the
+plural context makes the clause reciprocal, and no `sich` has `pronType` Rcp.
+The `sich` with no case in Core is the reflexivity unit a lexical reflexive
+drills down to
+([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+and no spelling realizes it.
+
 **The referent decides between pillar cells.** A pillar form can fit several
 cells that differ only in what it refers to. Those cells stay separate
 Lemmas, and no Core value is a set:
@@ -113,6 +126,12 @@ gives `derer` as the demonstrative's Gen.Fem.Sg and Gen.Plur form. A current
 standard accepts the spelling, so it is Licensed. Neither STTS (PDS, PRELS)
 nor UD marks the direction.
 
+Amended on 2026-10-01: free `sich` and its reciprocal use are stated here.
+ADR 0018 held them until a rewrite on 2026-08-30 cut them, and ADR 0044 did
+not restate them. Decided on
+[#237](https://github.com/clockblocker/texteater/issues/237) and
+[#238](https://github.com/clockblocker/texteater/issues/238).
+
 UD supplies feature meanings, not this project's Lemma granularity:
 [German features](https://universaldependencies.org/de/index.html) and
 [possessor gender](https://universaldependencies.org/u/feat/Gender-psor.html).
@@ -130,6 +149,9 @@ UD supplies feature meanings, not this project's Lemma granularity:
   Lemma with its gender on the Surface. Rejected on 2026-09-28: it treated
   inherent gender as agreement, and it gave one Reading two meanings, *who*
   and *what*, which ADR 0002 forbids.
+- A reciprocal `sich`, with `pronType` Rcp. Rejected (#237, #238): the
+  plural context makes the clause reciprocal, not the word, and Rcp had no
+  identity or selection job.
 - Possessor gender in PRON Core, so that `seiner`/Masc and `seines`/Neut are
   two Lemmas. Rejected: it is the stem's own grammar, as on the possessive
   articles, not a split by referent.

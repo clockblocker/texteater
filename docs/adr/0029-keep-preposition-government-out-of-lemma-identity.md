@@ -25,7 +25,11 @@ A German pronominal adverb (`darauf`, `dafür`, `damit`, the `wo(r)-` and
 `da(r)-` and `hier-` forms, `Int` or `Rel` for `wo(r)-` forms by use), never a
 governed member of the governing word and never a fixed Locution member with
 its governor outside a genuine idiom. The government relation stays on the
-governor.
+governor. A reciprocal pronominal adverb, a preposition joined to `einander`
+(`miteinander`, `aufeinander`, `voneinander`), is an ADV Lexeme of its whole
+form in the same way, with no `pronType`. It never splits into an ADP and
+PRON `einander`: `aufeinander warten` gives [warten] VERB and [aufeinander]
+ADV.
 
 Consequences: stored VERB Lemmas that differed only by `hasGovPrep` collapse
 into one Lemma, so their Readings merge under the Emoji Description that
@@ -41,3 +45,7 @@ members. *Da weiß ich nichts von* gives [Da, von] ADV `davon`, and *Wo gehst
 du hin?* gives [Wo, hin] ADV `wohin`. A pronominal adverb still never joins
 the word that governs its preposition. The dumspec Rule is
 `de/split-adverb-is-one-target`.
+
+Amended on 2026-10-01: the reciprocal pronominal adverbs are stated here.
+They were decided on [#238](https://github.com/clockblocker/texteater/issues/238)
+on 2026-08-26, and no ADR held them.
