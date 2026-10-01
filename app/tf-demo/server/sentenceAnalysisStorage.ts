@@ -21,6 +21,11 @@ function fromStoredMass(mass: StoredMass): Record<string, number> {
 	return Object.fromEntries(mass.map(({ key, share }) => [key, share]));
 }
 
+/**
+ * A stored slot's complement names its case `governedCase`, as Attestation
+ * evidence does (ADR 0034). Dumgen's legacy intake still names it `case`, so
+ * both directions rename it.
+ */
 export function toStoredSentenceAnalysis(
 	analysis: SentenceAnalysis,
 ): StoredSentenceAnalysis {
@@ -61,10 +66,15 @@ export function toStoredSentenceAnalysis(
 				...component,
 			})),
 		})),
-		slots: analysis.slots.map((slot) => ({
-			...slot,
-			complement: { ...slot.complement },
-		})),
+		slots: analysis.slots.map(
+			({
+				complement: { case: governedCase, ...complement },
+				...slot
+			}) => ({
+				...slot,
+				complement: { ...complement, governedCase },
+			}),
+		),
 	};
 }
 
@@ -97,13 +107,19 @@ export function fromStoredSentenceAnalysis(
 			provenance: phraseme.provenance,
 		})),
 		fusions: stored.fusions,
-		slots: stored.slots.map((slot) => ({
-			...slot,
-			complement: {
-				...slot.complement,
-				preposition: slot.complement
-					.preposition as Slot["complement"]["preposition"],
-			},
-		})),
+		slots: stored.slots.map(
+			({
+				complement: { governedCase, preposition, ...complement },
+				...slot
+			}) => ({
+				...slot,
+				complement: {
+					...complement,
+					preposition:
+						preposition as Slot["complement"]["preposition"],
+					case: governedCase,
+				},
+			}),
+		),
 	};
 }

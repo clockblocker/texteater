@@ -89,7 +89,7 @@ const analysis: StoredSentenceAnalysis = {
 						partType: null,
 					},
 				},
-				case: "Dat",
+				governedCase: "Dat",
 				referent: "Something",
 			},
 			realizedCase: "Dat",
@@ -120,21 +120,32 @@ test("a stale or slotless analysis attests nothing", () => {
 	).toEqual([]);
 });
 
-test("a Preposition Slot covers the same preposition and case only", () => {
+test("a Preposition complement covers the same preposition and case only, alternatives included", () => {
+	const preposition = (canonicalForm: string, governedCase: string) => ({
+		kind: "Preposition",
+		preposition: { canonicalForm },
+		governedCase,
+		referent: "Either",
+	});
 	const knowledge = {
 		valency: [
 			{
 				status: "Required",
-				complement: { kind: "Case", case: "Dat", referent: "Someone" },
+				complements: [
+					{ kind: "Case", governedCase: "Dat", referent: "Someone" },
+				],
 			},
 			{
 				status: "Optional",
-				complement: {
-					kind: "Preposition",
-					preposition: { canonicalForm: "von" },
-					case: "Dat",
-					referent: "Either",
-				},
+				complements: [
+					preposition("über", "Acc"),
+					preposition("von", "Dat"),
+					{ kind: "Clause", form: "Dass", correlate: "Optional" },
+				],
+			},
+			{
+				status: "Optional",
+				complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
 			},
 		],
 	};
@@ -142,11 +153,16 @@ test("a Preposition Slot covers the same preposition and case only", () => {
 		uncoveredGovernment(
 			[
 				{ preposition: "von", case: "Dat" },
+				{ preposition: "über", case: "Acc" },
+				{ preposition: "über", case: "Dat" },
 				{ preposition: "auf", case: "Acc" },
 			],
 			knowledge,
 		),
-	).toEqual([{ preposition: "auf", case: "Acc" }]);
+	).toEqual([
+		{ preposition: "über", case: "Dat" },
+		{ preposition: "auf", case: "Acc" },
+	]);
 	expect(
 		uncoveredGovernment([{ preposition: "von", case: "Dat" }], {}),
 	).toEqual([{ preposition: "von", case: "Dat" }]);

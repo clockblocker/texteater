@@ -11,7 +11,10 @@ import {
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
 } from "../../model/shadows";
-import { structuralShadowAspectValidator } from "../../model/validators";
+import {
+	literalUnion,
+	structuralShadowAspectValidator,
+} from "../../model/validators";
 import { loadPersonalAnnotation } from "../../personalAnnotations";
 import {
 	projectSentenceView,
@@ -108,38 +111,88 @@ const governedCaseValidator = v.union(
 	v.literal("Gen"),
 );
 
+type GermanComplement<Kind extends Dumrel.GermanValencyComplement["kind"]> =
+	Extract<Dumrel.GermanValencyComplement, { kind: Kind }>;
+
+const adverbialStandInValues = [
+	"Irgendwo",
+	"Irgendwohin",
+	"Irgendwie",
+	"IrgendwieLange",
+	"IrgendwieViel",
+] as const satisfies readonly GermanComplement<"Adverbial">["standIn"][];
+const predicativeOfValues = [
+	"Subject",
+	"Object",
+] as const satisfies readonly GermanComplement<"Predicative">["of"][];
+const predicativeMarkerValues = [
+	"None",
+	"Als",
+	"Für",
+] as const satisfies readonly GermanComplement<"Predicative">["marker"][];
+const clauseFormValues = [
+	"ZuInfinitive",
+	"BareInfinitive",
+	"Dass",
+	"Ob",
+	"W",
+] as const satisfies readonly GermanComplement<"Clause">["form"][];
+const clauseCorrelateValues = [
+	"Required",
+	"Optional",
+] as const satisfies readonly NonNullable<
+	GermanComplement<"Clause">["correlate"]
+>[];
+
 /**
- * A Valency Frame Slot, as the Valency Block reads it: German complements
- * marked by case, then Hebrew and English ones marked by function or
- * position and preposition.
+ * A Valency Frame Slot, as the Valency Block reads it: its status and its
+ * alternatives (ADR 0034). German complements are marked by case, or are an
+ * Adverbial, Predicative or Clause with no referent; Hebrew and English ones
+ * are marked by function or position and preposition.
  */
 const valencySlotValidator = v.object({
 	status: v.union(v.literal("Required"), v.literal("Optional")),
-	complement: v.union(
-		v.object({
-			kind: v.literal("Case"),
-			case: v.union(v.literal("Nom"), governedCaseValidator),
-			referent: valencyReferentValidator,
-		}),
-		v.object({
-			kind: v.literal("Preposition"),
-			preposition: readingValueLemmaValidator,
-			case: governedCaseValidator,
-			referent: valencyReferentValidator,
-		}),
-		v.object({
-			kind: v.union(
-				v.literal("Subject"),
-				v.literal("DirectObject"),
-				v.literal("IndirectObject"),
-			),
-			referent: valencyReferentValidator,
-		}),
-		v.object({
-			kind: v.literal("Preposition"),
-			preposition: readingValueLemmaValidator,
-			referent: valencyReferentValidator,
-		}),
+	complements: v.array(
+		v.union(
+			v.object({
+				kind: v.literal("Case"),
+				governedCase: v.union(v.literal("Nom"), governedCaseValidator),
+				referent: valencyReferentValidator,
+			}),
+			v.object({
+				kind: v.literal("Preposition"),
+				preposition: readingValueLemmaValidator,
+				governedCase: governedCaseValidator,
+				referent: valencyReferentValidator,
+			}),
+			v.object({
+				kind: v.literal("Adverbial"),
+				standIn: literalUnion(adverbialStandInValues),
+			}),
+			v.object({
+				kind: v.literal("Predicative"),
+				of: literalUnion(predicativeOfValues),
+				marker: literalUnion(predicativeMarkerValues),
+			}),
+			v.object({
+				kind: v.literal("Clause"),
+				form: literalUnion(clauseFormValues),
+				correlate: v.optional(literalUnion(clauseCorrelateValues)),
+			}),
+			v.object({
+				kind: v.union(
+					v.literal("Subject"),
+					v.literal("DirectObject"),
+					v.literal("IndirectObject"),
+				),
+				referent: valencyReferentValidator,
+			}),
+			v.object({
+				kind: v.literal("Preposition"),
+				preposition: readingValueLemmaValidator,
+				referent: valencyReferentValidator,
+			}),
+		),
 	),
 });
 

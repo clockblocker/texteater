@@ -174,7 +174,7 @@ function governedAnalysis(segmentedSentenceId: string) {
 							partType: null,
 						},
 					},
-					case: "Dat" as const,
+					governedCase: "Dat" as const,
 					referent: "Something" as const,
 				},
 				realizedCase: "Dat" as const,
@@ -447,12 +447,14 @@ test("a Full Reading still tops up government its new sentence attests, and only
 			valency: [
 				{
 					status: "Optional",
-					complement: {
-						kind: "Preposition",
-						preposition: { canonicalForm: "vor" },
-						case: "Dat",
-						referent: "Either",
-					},
+					complements: [
+						{
+							kind: "Preposition",
+							preposition: { canonicalForm: "vor" },
+							governedCase: "Dat",
+							referent: "Either",
+						},
+					],
 				},
 			],
 		},
@@ -539,7 +541,7 @@ test("a Full Reading still takes the Plural Pattern its new sentence attests, wi
 const VOR_DAT = {
 	kind: "Preposition",
 	preposition: { canonicalForm: "vor" },
-	case: "Dat",
+	governedCase: "Dat",
 } as const;
 
 test.each([
@@ -549,7 +551,7 @@ test.each([
 		stored: [
 			{
 				status: "Optional",
-				complement: { ...VOR_DAT, referent: "Either" },
+				complements: [{ ...VOR_DAT, referent: "Either" }],
 			},
 		],
 	},
@@ -569,7 +571,7 @@ test.each([
 		stored: [
 			{
 				status: "Required",
-				complement: { ...VOR_DAT, referent: "Something" },
+				complements: [{ ...VOR_DAT, referent: "Something" }],
 			},
 		],
 	},
@@ -926,12 +928,14 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 				valency: [
 					{
 						status: "Optional",
-						complement: {
-							kind: "Preposition",
-							preposition: { canonicalForm: "vor" },
-							case: "Dat",
-							referent: "Either",
-						},
+						complements: [
+							{
+								kind: "Preposition",
+								preposition: { canonicalForm: "vor" },
+								governedCase: "Dat",
+								referent: "Either",
+							},
+						],
 					},
 				],
 			},

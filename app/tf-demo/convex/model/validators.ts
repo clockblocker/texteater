@@ -355,7 +355,10 @@ export const storedSentenceAnalysisValidator = v.object({
 			),
 		}),
 	),
-	/** The preposition slots the sentence realizes (ADR 0034). */
+	/**
+	 * The preposition slots the sentence realizes (ADR 0034), each with the
+	 * one Preposition complement it realizes, as Attestation evidence names it.
+	 */
 	slots: v.array(
 		v.object({
 			governor: v.string(),
@@ -364,7 +367,7 @@ export const storedSentenceAnalysisValidator = v.object({
 			complement: v.object({
 				kind: v.literal("Preposition"),
 				preposition: lemmaValueValidator,
-				case: governedCaseValidator,
+				governedCase: governedCaseValidator,
 				referent: v.union(
 					v.literal("Someone"),
 					v.literal("Something"),

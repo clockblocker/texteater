@@ -57,9 +57,15 @@ export function attestedGovernment(
 	return [...found.values()];
 }
 
+type StoredComplement = {
+	readonly kind?: string;
+	readonly preposition?: { readonly canonicalForm?: string };
+	readonly governedCase?: string;
+};
+
 /**
  * The attested government a Reading's Valency Frame lacks: a preposition and
- * case no Preposition Slot holds yet.
+ * case no Preposition complement holds yet, alternatives included.
  */
 export function uncoveredGovernment(
 	attested: readonly GovernedPrepositionDraft[],
@@ -71,18 +77,14 @@ export function uncoveredGovernment(
 			: undefined;
 	const covered = new Set(
 		(Array.isArray(frame) ? frame : []).flatMap(
-			(slot: {
-				complement?: {
-					kind?: string;
-					preposition?: { canonicalForm?: string };
-					case?: string;
-				};
-			}) =>
-				slot.complement?.kind === "Preposition"
-					? [
-							`${slot.complement.preposition?.canonicalForm}/${slot.complement.case}`,
-						]
-					: [],
+			(slot: { readonly complements?: readonly StoredComplement[] }) =>
+				(slot.complements ?? []).flatMap((complement) =>
+					complement.kind === "Preposition"
+						? [
+								`${complement.preposition?.canonicalForm}/${complement.governedCase}`,
+							]
+						: [],
+				),
 		),
 	);
 	return attested.filter(

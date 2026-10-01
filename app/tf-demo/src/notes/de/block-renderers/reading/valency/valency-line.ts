@@ -3,10 +3,12 @@ import type { NoteDataFor } from "../../../../universal/note/data";
 type FrameSlot = NonNullable<
 	NoteDataFor<"Reading">["knowledge"]["valency"]
 >[number];
-/** German complements are the ones marked by case. */
-type Complement = Extract<FrameSlot["complement"], { case: string }>;
-type ValencySlot = Omit<FrameSlot, "complement"> & { complement: Complement };
-type RenderedCase = Exclude<Complement["case"], "Nom">;
+/** The German complements the line shows are the ones marked by case. */
+type Complement = Extract<
+	FrameSlot["complements"][number],
+	{ governedCase: string }
+>;
+type RenderedCase = Exclude<Complement["governedCase"], "Nom">;
 
 /** One piece of a German Valency Line, in reading order. */
 export type ValencyLinePart =
@@ -69,24 +71,18 @@ export function germanValencyLine(
 	lemma: ValencyLemma,
 	frame: readonly FrameSlot[] | undefined,
 ): readonly ValencyLinePart[] | null {
-	const slots = (frame ?? []).filter(
-		(slot): slot is ValencySlot & { complement: { case: RenderedCase } } =>
-			"case" in slot.complement && slot.complement.case !== "Nom",
-	);
+	const slots = (frame ?? []).flatMap(slotPart);
 	if (slots.length === 0) return null;
 
 	const { head, reflexive, fixed } = splitCanonicalForm(lemma);
 	const prefix = separablePrefix(lemma.coreFeatures, head);
 	const caseSlots = CASE_SLOT_ORDER.flatMap((grammaticalCase) =>
 		slots.filter(
-			({ complement }) =>
-				complement.kind === "Case" &&
-				complement.case === grammaticalCase,
+			(slot) =>
+				slot.preposition === null && slot.case === grammaticalCase,
 		),
 	);
-	const prepositionSlots = slots.filter(
-		({ complement }) => complement.kind === "Preposition",
-	);
+	const prepositionSlots = slots.filter((slot) => slot.preposition !== null);
 
 	return [
 		{
@@ -95,9 +91,9 @@ export function germanValencyLine(
 			separable: prefix !== null,
 		},
 		...(reflexive ? [{ part: "Reflexive" as const, text: reflexive }] : []),
-		...caseSlots.map(slotPart),
+		...caseSlots,
 		...(fixed ? [{ part: "Fixed" as const, text: fixed }] : []),
-		...prepositionSlots.map(slotPart),
+		...prepositionSlots,
 		...(prefix ? [{ part: "SeparatedPrefix" as const, text: prefix }] : []),
 	];
 }
@@ -141,20 +137,36 @@ function separablePrefix(coreFeatures: unknown, head: string): string | null {
 		: null;
 }
 
-function slotPart(
-	slot: ValencySlot & { complement: { case: RenderedCase } },
-): ValencyLinePart {
-	const { complement } = slot;
-	return {
-		part: "Slot",
-		optional: slot.status === "Optional",
-		preposition:
-			complement.kind === "Preposition"
-				? complement.preposition.canonicalForm
-				: null,
-		case: complement.case,
-		token: referentToken(complement.case, complement.referent),
-	};
+type SlotPart = Extract<ValencyLinePart, { part: "Slot" }>;
+
+/**
+ * The part a Slot shows: its one complement marked by case, unless that is
+ * the subject's Nom. A Slot with alternatives, or with an Adverbial,
+ * Predicative or Clause, shows nothing until #676 decides how the line
+ * renders them.
+ */
+function slotPart(slot: FrameSlot): SlotPart[] {
+	const [complement, ...alternatives] = slot.complements;
+	if (
+		complement === undefined ||
+		alternatives.length > 0 ||
+		!("governedCase" in complement)
+	)
+		return [];
+	const grammaticalCase = complement.governedCase;
+	if (grammaticalCase === "Nom") return [];
+	return [
+		{
+			part: "Slot",
+			optional: slot.status === "Optional",
+			preposition:
+				complement.kind === "Preposition"
+					? complement.preposition.canonicalForm
+					: null,
+			case: grammaticalCase,
+			token: referentToken(grammaticalCase, complement.referent),
+		},
+	];
 }
 
 function referentToken(

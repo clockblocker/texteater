@@ -65,6 +65,18 @@ const anrufenLemma = {
 } as const;
 
 /** Stores a Lemma, one Surface of it, and one Reading, keyed as production keys them. */
+/** A German ADP Lemma, which has no Core Features. */
+function germanAdposition(canonicalForm: string) {
+	return {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "ADP",
+		canonicalForm,
+		coreFeatures: {},
+	} as const;
+}
+
 async function insertReading(t: TestConvexDb, reading: ReadingValue) {
 	const { lemma, emojiDescription } = reading;
 	const readingKey = readingFingerprint(reading);
@@ -347,25 +359,14 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 	const valency = [
 		{
 			status: "Optional",
-			complement: {
-				kind: "Preposition",
-				preposition: {
-					unitKind: "Lemma",
-					language: "de",
-					family: "Lexeme",
-					kind: "ADP",
-					canonicalForm: "auf",
-					coreFeatures: {
-						abbr: null,
-						adpType: "Prep",
-						extPos: null,
-						foreign: null,
-						partType: null,
-					},
+			complements: [
+				{
+					kind: "Preposition",
+					preposition: germanAdposition("auf"),
+					governedCase: "Acc",
+					referent: "Either",
 				},
-				case: "Acc",
-				referent: "Either",
-			},
+			],
 		},
 	];
 	const reading = await insertReading(t, {
@@ -394,6 +395,144 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 	expect(markup).toContain(
 		'<span data-slot="valency-token" class="font-mono text-[0.9em] text-ink-soft">jN/etw</span>',
 	);
+});
+
+test("the Reading Note carries Slot alternatives and every German complement kind", async () => {
+	const t = createTestConvex();
+	const verb = (canonicalForm: string, hasSepPrefix: string | null = null) =>
+		({
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "VERB",
+			canonicalForm,
+			coreFeatures: { hasSepPrefix, lexicallyReflexive: null },
+		}) as const;
+	const subject = {
+		status: "Required",
+		complements: [
+			{ kind: "Case", governedCase: "Nom", referent: "Someone" },
+		],
+	};
+	const frames = [
+		{
+			lemma: verb("reden"),
+			valency: [
+				subject,
+				{
+					status: "Optional",
+					complements: [
+						{
+							kind: "Preposition",
+							preposition: germanAdposition("über"),
+							governedCase: "Acc",
+							referent: "Either",
+						},
+						{
+							kind: "Preposition",
+							preposition: germanAdposition("von"),
+							governedCase: "Dat",
+							referent: "Either",
+						},
+					],
+				},
+			],
+		},
+		{
+			lemma: verb("wohnen"),
+			valency: [
+				subject,
+				{
+					status: "Required",
+					complements: [{ kind: "Adverbial", standIn: "Irgendwo" }],
+				},
+			],
+		},
+		{
+			lemma: verb("aussehen", "aus"),
+			valency: [
+				subject,
+				{
+					status: "Required",
+					complements: [
+						{ kind: "Predicative", of: "Subject", marker: "None" },
+					],
+				},
+			],
+		},
+		{
+			lemma: verb("warten"),
+			valency: [
+				subject,
+				{
+					status: "Optional",
+					complements: [
+						{
+							kind: "Preposition",
+							preposition: germanAdposition("auf"),
+							governedCase: "Acc",
+							referent: "Either",
+						},
+						{ kind: "Clause", form: "Dass", correlate: "Required" },
+					],
+				},
+			],
+		},
+		{
+			lemma: verb("bedeuten"),
+			valency: [
+				{
+					status: "Required",
+					complements: [
+						{
+							kind: "Case",
+							governedCase: "Nom",
+							referent: "Something",
+						},
+						{ kind: "Clause", form: "Dass" },
+					],
+				},
+				{
+					status: "Required",
+					complements: [
+						{
+							kind: "Case",
+							governedCase: "Acc",
+							referent: "Something",
+						},
+						{ kind: "Clause", form: "Dass" },
+					],
+				},
+			],
+		},
+	];
+	for (const { lemma, valency } of frames) {
+		const reading = await insertReading(t, {
+			unitKind: "Reading",
+			lemma,
+			emojiDescription: "🧩",
+		});
+		await t.run(async (ctx) => {
+			await ctx.db.insert("accumulatedKnowledge", {
+				ownerReadingKey: reading.readingKey,
+				knowledge: { valency },
+				status: "Partial",
+				updatedAt: 1,
+			});
+		});
+
+		const note = await t.query(api.readingNotes.get, {
+			readingId: reading.readingId,
+			visitorId: "visitor-1",
+		});
+
+		if (!note) throw new Error("Expected a Reading Note.");
+		expect(note.knowledge.valency).toEqual(valency);
+		// The Valency Line shows no alternatives or free complements yet (#676).
+		expect(
+			renderToStaticMarkup(renderNote({ noteData: note })),
+		).not.toContain('aria-label="Valency"');
+	}
 });
 
 test("note and text queries expose target-specific interfaces", () => {

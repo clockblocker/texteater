@@ -42,12 +42,14 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Optional",
-				complement: {
-					kind: "Preposition",
-					preposition: adp("auf"),
-					case: "Acc",
-					referent: "Either",
-				},
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("auf"),
+						governedCase: "Acc",
+						referent: "Either",
+					},
+				],
 			},
 		],
 		line: ">passen (auf `jN/etw`) auf<",
@@ -57,12 +59,14 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Optional",
-				complement: {
-					kind: "Preposition",
-					preposition: adp("mit"),
-					case: "Dat",
-					referent: "Something",
-				},
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("mit"),
+						governedCase: "Dat",
+						referent: "Something",
+					},
+				],
 			},
 		],
 		line: ">fangen (mit `etw`) an<",
@@ -72,16 +76,20 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Required",
-				complement: { kind: "Case", case: "Nom", referent: "Someone" },
+				complements: [
+					{ kind: "Case", governedCase: "Nom", referent: "Someone" },
+				],
 			},
 			{
 				status: "Optional",
-				complement: {
-					kind: "Preposition",
-					preposition: adp("auf"),
-					case: "Acc",
-					referent: "Either",
-				},
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("auf"),
+						governedCase: "Acc",
+						referent: "Either",
+					},
+				],
 			},
 		],
 		line: "warten (auf `jN/etw`)",
@@ -96,12 +104,14 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Optional",
-				complement: {
-					kind: "Preposition",
-					preposition: adp("auf"),
-					case: "Acc",
-					referent: "Either",
-				},
+				complements: [
+					{
+						kind: "Preposition",
+						preposition: adp("auf"),
+						governedCase: "Acc",
+						referent: "Either",
+					},
+				],
 			},
 		],
 		line: "stolz (auf `jN/etw`)",
@@ -116,7 +126,9 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Required",
-				complement: { kind: "Case", case: "Dat", referent: "Someone" },
+				complements: [
+					{ kind: "Case", governedCase: "Dat", referent: "Someone" },
+				],
 			},
 		],
 		line: "gehen `jM` auf den Keks",
@@ -132,15 +144,19 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Required",
-				complement: {
-					kind: "Case",
-					case: "Acc",
-					referent: "Something",
-				},
+				complements: [
+					{
+						kind: "Case",
+						governedCase: "Acc",
+						referent: "Something",
+					},
+				],
 			},
 			{
 				status: "Optional",
-				complement: { kind: "Case", case: "Dat", referent: "Someone" },
+				complements: [
+					{ kind: "Case", governedCase: "Dat", referent: "Someone" },
+				],
 			},
 		],
 		line: "stellen (`jM`) `etw` zur Verfügung",
@@ -156,7 +172,9 @@ const cases: readonly {
 		frame: [
 			{
 				status: "Required",
-				complement: { kind: "Case", case: "Acc", referent: "Either" },
+				complements: [
+					{ kind: "Case", governedCase: "Acc", referent: "Either" },
+				],
 			},
 		],
 		line: ">stellen sich `jN/etw` vor<",
@@ -188,7 +206,9 @@ test("a Reading with no frame, an empty frame, or only a subject has no Valency 
 		[
 			{
 				status: "Required",
-				complement: { kind: "Case", case: "Nom", referent: "Someone" },
+				complements: [
+					{ kind: "Case", governedCase: "Nom", referent: "Someone" },
+				],
 			},
 		] satisfies ValencyFrame,
 	]) {
@@ -196,6 +216,63 @@ test("a Reading with no frame, an empty frame, or only a subject has no Valency 
 			'aria-label="Valency"',
 		);
 	}
+});
+
+test("a Slot with alternatives or a free complement shows nothing until #676", () => {
+	const reden = verb("reden", null);
+	const frame = [
+		{
+			status: "Optional",
+			complements: [
+				{
+					kind: "Preposition",
+					preposition: adp("über"),
+					governedCase: "Acc",
+					referent: "Either",
+				},
+				{
+					kind: "Preposition",
+					preposition: adp("von"),
+					governedCase: "Dat",
+					referent: "Either",
+				},
+			],
+		},
+		{
+			status: "Optional",
+			complements: [{ kind: "Adverbial", standIn: "Irgendwie" }],
+		},
+		{
+			status: "Optional",
+			complements: [
+				{ kind: "Predicative", of: "Subject", marker: "Als" },
+			],
+		},
+		{
+			status: "Optional",
+			complements: [
+				{ kind: "Clause", form: "Dass", correlate: "Optional" },
+			],
+		},
+	] satisfies ValencyFrame;
+	expect(renderReading(reden, frame)).not.toContain('aria-label="Valency"');
+	expect(
+		valencyLine(
+			renderReading(reden, [
+				...frame,
+				{
+					status: "Required",
+					complements: [
+						{
+							kind: "Case",
+							governedCase: "Dat",
+							referent: "Someone",
+						},
+					],
+				},
+			]),
+		),
+	).toBe("reden `jM`");
 });
 
 test("the Valency Block follows the anchor Blocks", () => {
