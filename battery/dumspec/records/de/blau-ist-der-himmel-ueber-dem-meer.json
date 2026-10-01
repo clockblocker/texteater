@@ -41,6 +41,7 @@
 						"canonicalForm": "blau",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": "Yes",
 							"numType": null,
 							"variant": null
 						}

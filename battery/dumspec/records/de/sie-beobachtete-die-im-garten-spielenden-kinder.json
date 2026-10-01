@@ -45,6 +45,7 @@
 						"canonicalForm": "spielend",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"numType": null,
 							"variant": null
 						}
@@ -54,7 +55,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
-						"degree": "Pos",
+						"degree": null,
 						"gender": null,
 						"number": "Plur"
 					}

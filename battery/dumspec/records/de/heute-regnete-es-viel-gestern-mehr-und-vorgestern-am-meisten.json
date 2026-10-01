@@ -51,6 +51,7 @@
 						"kind": "ADV",
 						"canonicalForm": "viel",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"numType": null,
 							"pronType": "Ind"
 						}

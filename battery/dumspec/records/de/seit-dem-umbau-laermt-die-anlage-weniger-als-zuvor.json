@@ -44,6 +44,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wenig",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"numType": null,
 							"pronType": "Ind"
 						}

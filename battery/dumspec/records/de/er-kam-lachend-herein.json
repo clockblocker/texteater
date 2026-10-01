@@ -38,6 +38,7 @@
 						"canonicalForm": "lachend",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"numType": null,
 							"variant": null
 						}
@@ -45,12 +46,7 @@
 					"normalizedSurface": "lachend",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					}
+					"inflectionalFeatures": null
 				},
 				"members": [
 					{ "attested": "lachend", "orthography": "Standard" }

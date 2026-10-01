@@ -43,6 +43,7 @@
 						"canonicalForm": "sanft",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": "Yes",
 							"numType": null,
 							"variant": null
 						}
@@ -50,7 +51,12 @@
 					"normalizedSurface": "sanft",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
 				},
 				"members": [{ "attested": "sanft", "orthography": "Standard" }],
 				"realizationCoverage": "Full",

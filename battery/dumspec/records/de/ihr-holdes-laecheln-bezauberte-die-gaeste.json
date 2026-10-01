@@ -42,6 +42,7 @@
 						"canonicalForm": "hold",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"numType": null,
 							"variant": null
 						}
@@ -51,7 +52,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Neut",
 						"number": "Sing"
 					}

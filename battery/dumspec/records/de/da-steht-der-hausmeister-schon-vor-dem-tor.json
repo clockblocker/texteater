@@ -45,6 +45,7 @@
 						"kind": "ADV",
 						"canonicalForm": "da",
 						"coreFeatures": {
+							"comparable": null,
 							"numType": null,
 							"pronType": null
 						}

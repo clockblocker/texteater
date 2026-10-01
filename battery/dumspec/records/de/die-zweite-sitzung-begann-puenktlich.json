@@ -37,6 +37,7 @@
 						"canonicalForm": "zweit",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"numType": "Ord",
 							"variant": null
 						}
@@ -46,7 +47,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Fem",
 						"number": "Sing"
 					}

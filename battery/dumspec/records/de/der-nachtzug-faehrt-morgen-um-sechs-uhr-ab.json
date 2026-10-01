@@ -42,6 +42,7 @@
 						"kind": "ADV",
 						"canonicalForm": "morgen",
 						"coreFeatures": {
+							"comparable": null,
 							"numType": null,
 							"pronType": null
 						}

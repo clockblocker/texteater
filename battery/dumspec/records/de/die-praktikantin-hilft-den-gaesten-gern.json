@@ -41,6 +41,7 @@
 						"kind": "ADV",
 						"canonicalForm": "gern",
 						"coreFeatures": {
+							"comparable": "Yes",
 							"numType": null,
 							"pronType": null
 						}
@@ -48,7 +49,9 @@
 					"normalizedSurface": "gern",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"degree": "Pos"
+					}
 				},
 				"members": [{ "attested": "gern", "orthography": "Standard" }],
 				"realizationCoverage": "Full"

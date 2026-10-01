@@ -40,6 +40,7 @@
 						"canonicalForm": "hoch",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": "Yes",
 							"numType": null,
 							"variant": null
 						}

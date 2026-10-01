@@ -41,6 +41,7 @@
 						"kind": "ADV",
 						"canonicalForm": "gestern",
 						"coreFeatures": {
+							"comparable": null,
 							"numType": null,
 							"pronType": null
 						}

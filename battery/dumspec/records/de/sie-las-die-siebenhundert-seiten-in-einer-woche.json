@@ -46,6 +46,7 @@
 						"canonicalForm": "siebenhundert",
 						"coreFeatures": {
 							"abbr": null,
+							"comparable": null,
 							"numType": "Card",
 							"variant": null
 						}
@@ -55,7 +56,7 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
-						"degree": "Pos",
+						"degree": null,
 						"gender": "Fem",
 						"number": "Plur"
 					}

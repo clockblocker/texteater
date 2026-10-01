@@ -43,6 +43,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wobei",
 						"coreFeatures": {
+							"comparable": null,
 							"numType": null,
 							"pronType": "Rel"
 						}

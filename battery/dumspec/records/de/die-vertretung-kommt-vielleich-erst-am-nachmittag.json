@@ -41,6 +41,7 @@
 						"kind": "ADV",
 						"canonicalForm": "vielleicht",
 						"coreFeatures": {
+							"comparable": null,
 							"numType": null,
 							"pronType": null
 						}
