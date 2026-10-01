@@ -31,7 +31,7 @@
 			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
 			{
 				"rule": "de/core-features-are-identity",
-				"hash": "d86b565fbb8929c3"
+				"hash": "c11b321c41f117a1"
 			}
 		],
 		"references": []

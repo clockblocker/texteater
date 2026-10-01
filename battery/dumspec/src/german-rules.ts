@@ -185,7 +185,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/governed-preposition-joins-its-governor",
 		statement:
-			"A preposition that a verb, adjective or noun selects for its complement is a member of that word's target, also when it stands apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in (aus Angst vor Hunden gives [Angst, vor] NOUN) and is never part of the Lemma. A participial ADJ governs the preposition its source verb governs in the same sense. Government is read from E-VALBU, and from Duden where E-VALBU has no entry. A free adjunct preposition (wartet im Keller) is not a member, and neither is the preposition inside an Adverbial complement (legt das Buch auf den Tisch, wohnt in Bonn): the verb requires a place or direction, not that preposition.",
+			"A preposition that a verb, adjective or noun selects for its complement is a member of that word's target, also when it stands apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in and is never part of the Lemma. A participial ADJ governs the preposition its source verb governs in the same sense. Government is read from E-VALBU, and from Duden where E-VALBU has no entry. An adjunct's preposition is not a member, and neither is the preposition inside an Adverbial complement, since the verb requires a place or direction, not that preposition.",
 		adrs: ["ADR-0029", "ADR-0034", "ADR-0036"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),
@@ -1078,7 +1078,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/core-features-are-identity",
 		statement:
-			"Each route splits the Feature Pool between Core Features, which are the Lemma's identity, and its Surfaces' inflection, choosing for the learner: a pillar such as the der table or the personal pronouns has one Lemma per cell, and a stem word such as dieser or mein is one Lemma whose forms are Surfaces. A value a learner's dictionary gives only as a usage line under one headword is not identity. A value that is neither leaves the pool and is restated in another layer's own terms: Attestation evidence for what one occurrence shows (a realized case), Reading Knowledge for a fact about a sense or a class (an inflection class), a dumspec table for what the language allows. Where an adposition stands is not identity: wegen des Sturms and des Nebels wegen attest one Lemma, and the ADP Case Table lists the positions wegen takes.",
+			"Each route splits the Feature Pool between Core Features, which are the Lemma's identity, and its Surfaces' inflection, choosing for the learner. A pillar has one Lemma per cell and a stem word is one Lemma whose forms are Surfaces: mir is a Lemma of its own, diesem a Surface of dieser. A value a learner's dictionary gives only as a usage line under one headword, such as where an adposition stands, is not identity. A value that is neither Core nor inflection leaves the pool and is restated in another layer: Attestation evidence, Reading Knowledge or a dumspec table.",
 		adrs: ["ADR-0002", "ADR-0032", "ADR-0034", "ADR-0044"],
 		routes: [],
 		records: [

@@ -28,7 +28,7 @@
 			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" },
 			{
 				"rule": "de/core-features-are-identity",
-				"hash": "d86b565fbb8929c3"
+				"hash": "c11b321c41f117a1"
 			}
 		],
 		"references": []

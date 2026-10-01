@@ -342,3 +342,11 @@ Also amended on 2026-10-01: every complement appeared at most once in a
 frame, so `bedeuten` could not take a dass-clause as both its subject and its
 object. Now only Case and Preposition complements do, and an Adverbial,
 Predicative or Clause is unique within its Slot. Decided by the user on #674.
+
+Also amended on 2026-10-01: dumspec's
+`de/governed-preposition-joins-its-governor` keeps one example, *Auf ihn bin
+ich stolz*, and this ADR holds the ones it dropped: `aus Angst vor Hunden`
+gives `[Angst, vor]` NOUN, and `legt das Buch auf den Tisch` and `wohnt in
+Bonn` keep the preposition inside their Adverbial free. The `im` of `wartet
+im Keller` heads a free adjunct, so it is no member of `warten` either.
+Decided on [#743](https://github.com/clockblocker/texteater/issues/743).

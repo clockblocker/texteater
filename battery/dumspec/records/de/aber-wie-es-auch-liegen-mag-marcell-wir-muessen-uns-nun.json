@@ -247,7 +247,7 @@
 			},
 			{
 				"rule": "de/core-features-are-identity",
-				"hash": "d86b565fbb8929c3"
+				"hash": "c11b321c41f117a1"
 			},
 			{
 				"rule": "de/expletive-es-joins-its-verb",
@@ -259,7 +259,7 @@
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "1439391c748fbe8b"
+				"hash": "20805b8ea5d73309"
 			},
 			{
 				"rule": "de/idiom",
