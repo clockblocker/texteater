@@ -7,8 +7,14 @@ import type {
 	SttsStatus,
 } from "./types.js";
 
-const lexeme = (kind: SttsRoute["kind"]): SttsRoute => ({ family: "Lexeme", kind });
-const locution = (kind: SttsRoute["kind"]): SttsRoute => ({ family: "Locution", kind });
+const lexeme = (kind: SttsRoute["kind"]): SttsRoute => ({
+	family: "Lexeme",
+	kind,
+});
+const locution = (kind: SttsRoute["kind"]): SttsRoute => ({
+	family: "Locution",
+	kind,
+});
 /** The token is the whole target, alone. */
 const alone = (route: SttsRoute): SttsBecomes => ({ role: "Target", route });
 /** The token's word is the target, whose Head may own other members. */
@@ -536,7 +542,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "NE",
 		stts: "proper noun",
 		dumling:
-			"Lexeme PROPN, owning its article; an abbreviated name has abbr Yes",
+			"Lexeme PROPN, owning its article; a surname or coined name has no Core gender, and its Surface marks the gender an owned article shows; an abbreviated name has abbr Yes",
 		mappings: [
 			{
 				use: "proper noun",
@@ -548,11 +554,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		],
 		rules: ["de/proper-noun-article", "de/abbreviation-is-one-segment"],
 		adrs: ["ADR-0040"],
-		model: partial({
-			gap: "A surname's gender is Core, so one surname used for a man and a woman is two Lemmas",
-			issue: 743,
-			findings: ["A1"],
-		}),
+		model: modeled,
 		gold: "Yes",
 		pipeline: waitsOnDumgen,
 	},
@@ -682,7 +684,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "PPER",
 		stts: "irreflexive personal pronoun",
 		dumling:
-			"Lexeme PRON pronType Prs; each case form is its own Lemma, a pillar cell (ADR 0044)",
+			"Lexeme PRON pronType Prs; each case form is its own Lemma, a pillar cell, and a form serving two genders alike (ihm) is one cell with gender null (ADR 0044)",
 		mappings: [
 			{
 				use: "personal pronoun",
@@ -692,11 +694,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		],
 		rules: ["de/core-features-are-identity"],
 		adrs: ["ADR-0044"],
-		model: partial({
-			gap: "A cell told apart only by its referent (ihm Masc or Neut) guesses the referent",
-			issue: 743,
-			findings: ["A1"],
-		}),
+		model: modeled,
 		gold: "Yes",
 		pipeline: waitsOnDumgen,
 	},
@@ -831,11 +829,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		],
 		rules: ["de/verb-owns-its-scattered-members"],
 		adrs: ["ADR-0044"],
-		model: partial({
-			gap: "The test for an inherent reflexive leaves out reflexive senses, anticausatives and alternating objects",
-			issue: 743,
-			findings: ["A4"],
-		}),
+		model: modeled,
 		gold: "Partial",
 		pipeline: waitsOnDumgen,
 	},
@@ -1312,13 +1306,9 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 				],
 			},
 		],
-		rules: ["de/auxiliary-joins-the-verb-it-serves"],
-		adrs: ["ADR-0022"],
-		model: partial({
-			gap: "An auxiliary shared by coordinated participles has no Rule",
-			issue: 743,
-			findings: ["MB-A3"],
-		}),
+		rules: ["de/auxiliary-joins-the-verb-it-serves", "de/partial-coverage"],
+		adrs: ["ADR-0022", "ADR-0041"],
+		model: modeled,
 		gold: "No",
 		pipeline: waitsOnDumgen,
 	},
