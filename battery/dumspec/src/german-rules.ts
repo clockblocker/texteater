@@ -341,6 +341,7 @@ const verbs: Rule[] = [
 			"de/ich-lasse-das-auto-von-ihm-reparieren",
 			"de/sie-laesst-die-kinder-spielen",
 			"de/lass-uns-gehen",
+			"de/das-fenster-laesst-sich-oeffnen",
 		],
 	},
 	{
