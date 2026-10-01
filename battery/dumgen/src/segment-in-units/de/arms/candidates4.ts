@@ -73,7 +73,7 @@ import {
 } from "./candidates2.js";
 
 /** v3's options: its requests must stay byte-identical. */
-const v3Options = { routes: "question", tests: "1", gen: "3" } as const;
+export const v3Options = { routes: "question", tests: "1", gen: "3" } as const;
 
 const text = (sentence: Sentence, ids: readonly number[]) => {
 	const first = sentence.pieces[(ids[0] ?? 1) - 1]?.segment ?? 0;
@@ -86,7 +86,7 @@ const text = (sentence: Sentence, ids: readonly number[]) => {
 
 // ------------------------------------------------------------- step 0
 
-function stepZeroQuestions(core: CandidatesCore): Questions {
+export function stepZeroQuestions(core: CandidatesCore): Questions {
 	const { sentence, ref } = core;
 	const questions: Questions = {};
 	for (const slot of core.slots) {
@@ -111,7 +111,7 @@ function stepZeroQuestions(core: CandidatesCore): Questions {
 }
 
 /** v3's assembly input with the step-0 rules and fixed idiom hosts applied. */
-function stepZeroInput(
+export function stepZeroInput(
 	core: CandidatesCore,
 	base: AssemblyInput,
 	answers: Answers,
@@ -183,11 +183,15 @@ function stepZeroInput(
  * Adjacent one-piece units both routed INTJ, with only a space between,
  * merge into one Locution/INTJ (Rule `de/interjection-counts-its-words`).
  */
-function mergeInterjections(
+export function mergeInterjections(
 	sentence: Sentence,
 	partition: Partition,
 	route: (group: readonly number[]) => RouteKey,
-): { partition: Partition; merged: Set<string> } {
+): {
+	partition: Partition;
+	merged: Set<string>;
+	links: readonly (readonly [number, number])[];
+} {
 	const interjection = (id: number) => {
 		const group = partition.find((entry) => entry.includes(id));
 		return group?.length === 1 && route(group) === "Lexeme/INTJ";
@@ -208,7 +212,7 @@ function mergeInterjections(
 		)
 			links.push([previous.id, piece.id]);
 	}
-	if (links.length === 0) return { partition, merged: new Set() };
+	if (links.length === 0) return { partition, merged: new Set(), links };
 	const next = partitionOf(
 		sentence.pieces.map((piece) => piece.id),
 		[
@@ -223,7 +227,7 @@ function mergeInterjections(
 			.filter((group) => links.some(([a]) => group.includes(a)))
 			.map(groupKey),
 	);
-	return { partition: next, merged };
+	return { partition: next, merged, links };
 }
 
 // ------------------------------------------------------------- spans
@@ -306,11 +310,11 @@ const sayingCriteria = {
 	none: "An ordinary statement, question or description, not a saying",
 };
 
-const sayingChoiceId = (ids: readonly number[]) => `y4_${ids.join("_")}`;
+export const sayingChoiceId = (ids: readonly number[]) => `y4_${ids.join("_")}`;
 const polishedFixedId = (id: number) => `f4_${id}`;
 const polishedPairId = (a: number, b: number) => `e4_${a}_${b}`;
 
-function sayingQuestions(core: CandidatesCore): Questions {
+export function sayingQuestions(core: CandidatesCore): Questions {
 	const questions: Questions = {};
 	for (const span of sayingSpans(core.sentence)) {
 		const ids = span.pieces.map((piece) => piece.id);
@@ -366,7 +370,7 @@ function polishPairQuestions(
 	return questions;
 }
 
-function polishedSayings(
+export function polishedSayings(
 	sentence: Sentence,
 	answers: Answers,
 	floor: number,

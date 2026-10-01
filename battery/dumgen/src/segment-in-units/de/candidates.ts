@@ -143,7 +143,15 @@ export function nounLike(piece: Piece): boolean {
 	);
 }
 
-export function slotsOf(sentence: Sentence, version = 1): Slot[] {
+/**
+ * The satellite slots of a Sentence. `isAuxiliary` defaults to dumspec's
+ * current AUX spellings; a replay pins the inventory its run read.
+ */
+export function slotsOf(
+	sentence: Sentence,
+	version = 1,
+	isAuxiliary: (text: string) => boolean = isAuxiliaryForm,
+): Slot[] {
 	const slots: Slot[] = [];
 	for (const piece of sentence.pieces) {
 		const text = lower(piece);
@@ -178,7 +186,7 @@ export function slotsOf(sentence: Sentence, version = 1): Slot[] {
 					(other) => other.id < piece.id && other.id >= piece.id - 15,
 				),
 			});
-		if (isAuxiliaryForm(text))
+		if (isAuxiliary(text))
 			slots.push({
 				kind: "auxiliary",
 				piece,

@@ -234,15 +234,19 @@ export type CandidatesCore = {
 	])[];
 };
 
-/** v2/v3's two requests, unchanged, so their answers stay cache hits. */
+/**
+ * v2/v3's two requests, unchanged, so their answers stay cache hits.
+ * `isAuxiliary` pins the AUX inventory for a replay (see `slotsOf`).
+ */
 export async function candidatesCore(
 	input: Parameters<Arm["run"]>[0],
 	context: Parameters<Arm["run"]>[1],
+	isAuxiliary?: (text: string) => boolean,
 ): Promise<CandidatesCore> {
 	const sentence = sentenceOf(input);
 	const { state, ref } = judgeState(sentence, context);
 	const generation = Number(option(context.options, "gen", "2"));
-	const slots = slotsOf(sentence, generation);
+	const slots = slotsOf(sentence, generation, isAuxiliary);
 	const pairs = pairCandidatesOf(sentence, 2);
 	const spans = sayingSpans(sentence);
 	const first = await context.jev.ask({
@@ -338,22 +342,50 @@ export type AssemblyInput = {
 	readonly absorb: boolean;
 };
 
+/** Where an assembled edge came from. */
+export type EdgeSource =
+	| "satellite"
+	| "pair"
+	| "superlative"
+	| "expression"
+	| "saying"
+	| "sibling"
+	| "preposition";
+
+export type AssembledEdge = {
+	readonly pieces: readonly [number, number];
+	readonly source: EdgeSource;
+};
+
 /**
  * Connected components of every link, with fused siblings and a member
  * noun's opening preposition absorbed into expressions, and the Family each
- * group was built as.
+ * group was built as. `edges` lists every edge with where it came from.
  */
 export function assemble(
 	sentence: Sentence,
 	articleOf: ReadonlyMap<number, number>,
 	input: AssemblyInput,
-): { partition: Partition; familyOf: (group: readonly number[]) => Family } {
+): {
+	partition: Partition;
+	familyOf: (group: readonly number[]) => Family;
+	edges: readonly AssembledEdge[];
+} {
 	const ids = sentence.pieces.map((piece) => piece.id);
 	const siblings = fusedSiblings(sentence);
-	const edges: (readonly [number, number])[] = [
-		...input.satellites,
-		...input.accepted.map(([left, right]) => [left, right] as const),
-		...superlativeLinks(sentence),
+	const tagged: AssembledEdge[] = [
+		...input.satellites.map(
+			([a, b]) => ({ pieces: [a, b], source: "satellite" }) as const,
+		),
+		...input.accepted.map(
+			([a, b]) => ({ pieces: [a, b], source: "pair" }) as const,
+		),
+		...superlativeLinks(sentence).map(
+			([a, b]) => ({ pieces: [a, b], source: "superlative" }) as const,
+		),
+		...input.expression.map(
+			([a, b]) => ({ pieces: [a, b], source: "expression" }) as const,
+		),
 	];
 	const locutionPieces = new Set(
 		input.accepted
@@ -369,12 +401,15 @@ export function assemble(
 		for (const id of span) {
 			sayingPieces.add(id);
 			expression.push([span[0] ?? id, id]);
+			tagged.push({ pieces: [span[0] ?? id, id], source: "saying" });
 		}
 	if (input.absorb) {
 		const members = new Set(expression.flat());
 		for (const id of [...members]) {
-			for (const sibling of siblings.get(id) ?? [])
+			for (const sibling of siblings.get(id) ?? []) {
 				expression.push([id, sibling]);
+				tagged.push({ pieces: [id, sibling], source: "sibling" });
+			}
 			const piece = sentence.pieces[id - 1];
 			if (!piece || !nounLike(piece)) continue;
 			const start = Math.min(articleOf.get(id) ?? id, id);
@@ -385,14 +420,21 @@ export function assemble(
 				isAdpositionPiece(before)
 			) {
 				expression.push([id, before.id]);
-				for (const sibling of siblings.get(before.id) ?? [])
+				tagged.push({ pieces: [id, before.id], source: "preposition" });
+				for (const sibling of siblings.get(before.id) ?? []) {
 					expression.push([id, sibling]);
+					tagged.push({ pieces: [id, sibling], source: "sibling" });
+				}
 			}
 		}
 	}
 	for (const id of expression.flat()) locutionPieces.add(id);
 	return {
-		partition: partitionOf(ids, [...edges, ...expression]),
+		edges: tagged,
+		partition: partitionOf(
+			ids,
+			tagged.map(({ pieces }) => pieces),
+		),
 		familyOf: (group) =>
 			group.length === 1
 				? "Lexeme"
