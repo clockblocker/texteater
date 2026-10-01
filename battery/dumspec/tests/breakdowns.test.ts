@@ -16,12 +16,15 @@ const seed = "breakdown/de/den-faden-verlieren";
 describe("Breakdown Records", () => {
 	const breakdowns = loadBreakdownRecords();
 
-	test("load one German Breakdown per Family", () => {
+	test("load the German Breakdowns of both Families", () => {
 		expect(
 			breakdowns.map(({ id, lemma }) => [id, lemma.family, lemma.kind]),
 		).toEqual([
 			["breakdown/de/den-faden-verlieren", "Locution", "VERB"],
+			["breakdown/de/morgenstund-hat-gold-im-mund", "Saying", "Saying"],
+			["breakdown/de/na-ja", "Locution", "INTJ"],
 			["breakdown/de/uebung-macht-den-meister", "Saying", "Saying"],
+			["breakdown/de/um-zu", "Locution", "SCONJ"],
 		]);
 	});
 

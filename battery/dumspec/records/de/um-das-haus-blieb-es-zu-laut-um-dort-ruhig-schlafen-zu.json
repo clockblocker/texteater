@@ -42,7 +42,7 @@
 			"memberSegmentIndices": [15, 23],
 			"route": { "family": "Locution", "kind": "SCONJ" },
 			"notes": {
-				"rationale": "Earlier um and zu are unmarked context; only the later supplied anchors belong to this Lexeme."
+				"rationale": "Earlier um and zu are unmarked context; only the later supplied anchors belong to this Locution."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

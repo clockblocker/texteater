@@ -1,0 +1,88 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"canonicalForm": "um … zu",
+		"family": "Locution",
+		"kind": "SCONJ",
+		"coreFeatures": {}
+	},
+	"sentence": "um … zu",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "um" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "Punctuation", "text": "…" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "zu" }
+	],
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0041"],
+		"rules": [
+			{ "rule": "de/bare-infinitive-zu", "hash": "839e40a7258859ad" }
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"notes": {
+				"rationale": "um is the SCONJ um in its 'in order to' Reading, the Reading the Locution um … zu has. The open slot … is no word, so the Breakdown covers um and zu only."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "um", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "um",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "um",
+						"family": "Lexeme",
+						"kind": "SCONJ",
+						"coreFeatures": { "conjType": null }
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": { "emojiDescription": "🎯" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PART" },
+			"notes": {
+				"rationale": "zu is the infinitive particle, PART zu with partType Inf, the one Reading the bare zu before an infinitive has (de/bare-infinitive-zu, #734)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "zu", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "zu",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "zu",
+						"family": "Lexeme",
+						"kind": "PART",
+						"coreFeatures": {
+							"abbr": null,
+							"partType": "Inf",
+							"polarity": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": { "emojiDescription": "🔗" }
+		}
+	]
+}

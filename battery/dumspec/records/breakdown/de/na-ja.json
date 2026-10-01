@@ -1,0 +1,86 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"canonicalForm": "na ja",
+		"family": "Locution",
+		"kind": "INTJ",
+		"coreFeatures": {}
+	},
+	"sentence": "na ja",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "na" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ja" }
+	],
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0041"],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "ebd4778ba5db037a"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: na ja!",
+				"url": "https://www.duden.de/rechtschreibung/na_ja_",
+				"supports": "The wording, the Locution's Canonical Form"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "na", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "na",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "na",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"coreFeatures": { "partType": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"notes": {
+				"rationale": "The Breakdown reads ja as the answer particle in its ordinary yes Reading, partType Res (de/interjection-counts-its-words): the softening meaning belongs to the Locution, and its parts are the Readings a learner drills down to, as Faden is read literally in den Faden verlieren."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "ja", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "ja",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "ja",
+						"family": "Lexeme",
+						"kind": "INTJ",
+						"coreFeatures": { "partType": "Res" }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	]
+}

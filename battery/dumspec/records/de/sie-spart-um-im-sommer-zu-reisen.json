@@ -22,45 +22,43 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-lexeme-sconj-um-zu-click-um",
 			"memberSegmentIndices": [4, 11],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 4,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "spart" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "um" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "i" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sommer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zu" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "reisen" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "SCONJ",
-					"memberSegmentIndices": [4, 11]
-				},
-				"explanation": "ADR 0009 treats um and zu as the ordered fixed members of one Lexeme/SCONJ; the purpose-clause material between them remains free context. Source: https://universaldependencies.org/u/pos/SCONJ.html",
-				"contaminationKeys": ["target-lexeme:sconj:um-zu"]
+			"route": { "family": "Locution", "kind": "SCONJ" },
+			"reading": { "emojiDescription": "🎯" },
+			"notes": {
+				"rationale": "um … zu is a correlator, a Locution SCONJ made of its anchors um and zu (de/correlator-anchors). im Sommer and reisen belong to the clause it introduces and stay outside."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "um", "orthography": "Standard" },
+					{ "attested": "zu", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "um zu",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "um … zu",
+						"family": "Locution",
+						"kind": "SCONJ",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

@@ -1,0 +1,250 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"canonicalForm": "Morgenstund hat Gold im Mund",
+		"family": "Saying",
+		"kind": "Saying",
+		"coreFeatures": {}
+	},
+	"sentence": "Morgenstund hat Gold im Mund",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "Morgenstund" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "hat" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Gold" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Mund" }
+	],
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0039", "ADR-0041"],
+		"rules": [
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "044ad2bbec5191e7"
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" }
+		],
+		"references": [
+			{
+				"title": "DWDS: Morgenstund hat Gold im Mund",
+				"url": "https://www.dwds.de/wb/Morgenstund%20hat%20Gold%20im%20Mund",
+				"supports": "The wording, the Saying's Canonical Form"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Morgenstund is Morgenstunde with its final e dropped, a standalone shortened spelling of one word, so it is a Shorthand member and the Surface spells the full Morgenstunde, Canonical and not Archaic (de/member-orthography). Morgenstund is no Lemma or Variant of its own. The Saying keeps it in its Canonical Form, the DWDS headword (de/canonical-form-is-the-headword)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{ "attested": "Morgenstund", "orthography": "Shorthand" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Morgenstunde",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Morgenstunde",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Fem", "hyph": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "hat", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "hat",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "haben",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": { "emojiDescription": "🤲" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "Gold", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Gold",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Gold",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Neut", "hyph": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "im is two Segments. i stands for the ADP in, whose complement dem Mund took the dative, and m is the article Mund owns (de/fused-word-pieces)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "i",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "im",
+							"components": [
+								{ "span": "i", "surface": "in" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 0
+					}
+				],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"governedCase": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "in",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "in",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"coreFeatures": { "abbr": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [7, 9],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "m",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "im",
+							"components": [
+								{ "span": "i", "surface": "in" },
+								{ "span": "m", "surface": "dem" }
+							]
+						},
+						"component": 1
+					},
+					{ "attested": "Mund", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "Mund",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "Mund",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"coreFeatures": { "gender": "Masc", "hyph": null }
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	]
+}
