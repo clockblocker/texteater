@@ -1,98 +1,103 @@
 # Dumrel
 
-Dumrel defines identityless Knowledge and pure operations over it.
+Dumrel defines identityless Knowledge and pure operations over it
+([Dumrel ADR 0001]). Each entry links the ADRs that hold the term's precise
+definition, edge cases and examples. A language's classification terms whose
+values Knowledge stores, such as the German Plural Pattern and Conjugation
+Class, live in the [Dumspec Context].
 
 ## Language
 
 **Reading Knowledge**:
-optional linguistic content owned by one exact Reading.
-An empty value contains no authored aspects.
+Optional linguistic content owned by one exact Reading, never by a Lemma. An
+empty value holds no authored aspects. See [ADR 0002].
 
 **Knowledge Change**:
-a Contribute, Correct, or Retract operation on one atomic
-aspect or bucket. Omission does not delete an aspect.
+A Contribute, Correct or Retract operation on one atomic aspect or bucket of
+Reading Knowledge. Omitting an aspect does not delete it.
 
 **Knowledge Policy**:
-the mapping from a source route (language, Family, Kind) to the Knowledge
-aspects that apply to it.
+The mapping from a source route (language, Family, Kind) to the Knowledge
+aspects that apply to it. See [Dumrel ADR 0001].
 _Avoid_: applicability table, request schema
 
 **Knowledge Settings**:
-enabled or disabled preferences applied to the aspects
-applicable to a source route. Omitted preferences are enabled.
+Preferences that enable or disable the aspects applicable to a source route.
+An omitted preference is enabled.
 
 **Knowledge Request Mask**:
-the applicable, enabled aspects requested for
-production. Present leaves carry null; absent leaves are not requested.
+The aspects requested for production: those the Knowledge Policy applies to a
+route and the Knowledge Settings leave enabled.
 
 **Unit Shadow**:
-a target described by Language, Family, Kind and Canonical Form
-without choosing a Lemma's Core Features or an exact Reading.
+A target described by language, Family, Kind and Canonical Form, without
+choosing a Lemma's Core Features or an exact Reading. See [ADR 0011].
 
 **Pending Semantic Relation**:
-a direct relation proposal whose target is a
-Unit Shadow awaiting downstream matching.
+A direct relation proposal whose target is a Unit Shadow awaiting downstream
+matching. See [ADR 0012] and [ADR 0020].
 
 **Endonym**:
-a place's own local name (`Bratislava`). A PROPN Reading stores the endonyms
-of the place it names, each a PROPN Lemma in the Reading's language
-(`Pressburg`: `Bratislava`). A place with two local names has two
-(`Brüssel`: `Bruxelles`, `Brussel`). No other route stores one.
+A place's own local name, such as `Bratislava`. A PROPN Reading that names a
+place from outside stores that place's endonyms, each a PROPN Lemma of the
+Reading's language (`Pressburg`: `Bratislava`).
 _Avoid_: native name, local-name field
 
 **Exonym**:
-the name speakers of a Reading's language use for a place outside their area
-(`Pressburg`). It is projected onto the local name from the endonym the
-outside name stores, and never stored itself: `Bratislava` has the exonym
-`Pressburg` because `Pressburg` stores the endonym `Bratislava`.
+The name speakers of a Reading's language use for a place outside their area,
+such as `Pressburg`. It is never stored: it is projected onto the local name
+from the endonym the outside name stores.
 _Avoid_: foreign name (Dumling's Foreign is the Family of foreign-language
 material), historical name (`Brüssel` is current)
 
 **Governed Preposition**:
-a preposition a Reading lexically selects: a Preposition Slot of the Reading's
-Valency Frame, naming an ADP Lemma and, where its language marks case, the
-case it assigns (`auf` for `warten`, `on` for `depend`). An adjunct the
-sentence happens to contain is not one.
+A preposition a Reading lexically selects: a Preposition Slot of the Reading's
+Valency Frame (Dumling), naming an ADP Lemma and, where its language marks
+case, the case it assigns (`auf` for `warten`, `on` for `depend`). An adjunct
+the sentence happens to contain is not one. See [ADR 0034].
 _Avoid_: govPrep, prepositional object, valency note
 
 **Governor**:
-the Reading whose Valency Frame holds a Governed Preposition. The
-preposition's side of the link is projected, never stored.
+The Reading whose Valency Frame holds a Governed Preposition. The
+preposition's side of the link is projected, never stored. See [ADR 0034].
 _Avoid_: governing verb (adjectives, nouns and Locutions govern too)
 
 **Participle Source**:
-the VERB Lemma whose participle a Participial Adjective's form is, with the
-Reading's Participle Meaning, stored in that Reading's Knowledge (`gekocht`:
-`kochen`; `verliebt`: `sich verlieben`). The form alone names the verb, so
-every Reading of one adjective names the same verb. It is a grammatical link,
-not a Semantic Relation. The verb's side, its participial adjectives, is
-projected from the verb's Lemma, never stored.
+The VERB Lemma whose participle an adjective is, stored with its Participle
+Meaning in the adjective's Reading Knowledge (`gekocht`: `kochen`). It is a
+grammatical link, not a Semantic Relation, and the verb's side is projected
+from the verb's Lemma, never stored. See [ADR 0036].
 _Avoid_: base verb, derivation relation, participle relation
 
 **Participle Meaning**:
-whether a Reading with a Participle Source means a sense of its verb
-(Verbal: `gekocht`, `gebildet` 'educated') or has drifted from all of them
-(Drifted: `gelassen` 😌 from `lassen`, `verschieden` ↔️ 'different' from
-`verscheiden`). Readings of one adjective can differ: `verschieden` ⚰️
-'deceased' is Verbal. A Drifted Reading is not among its verb's participial
-adjectives.
+Whether a Reading with a Participle Source means a sense of its verb
+(Verbal) or has drifted from all of them (Drifted). It is judged per Reading,
+and a Drifted Reading is not among its verb's participial adjectives. See
+[ADR 0036].
 _Avoid_: lexicalized (lexicalized `gebildet` is still Verbal), etymology
 
 **Locution Type**:
-whether a Locution's Reading is an Idiom (its meaning is not the sum of its
-words: `ins Gras beißen`) or a Collocation (its verb only supports the
-predicate: `eine Entscheidung treffen`). Optional: `zum Teil` has none. It
-never splits a Lemma.
+Whether a Locution's Reading is an Idiom or a Collocation (Dumling), if
+either. It never splits a Lemma. See [ADR 0039].
 _Avoid_: Phraseme Kind, idiomaticity
 
 **Saying Type**:
-whether a Saying's Reading is a Proverb or a Winged Word, with an optional
-attribution (`Sein oder Nichtsein`: Shakespeare). It never splits a Lemma.
+Whether a Saying's Reading is a Proverb or a Winged Word (Dumling), with an
+optional attribution. It never splits a Lemma. See [ADR 0039].
 _Avoid_: Aphorism, provenance Kind
 
 **Formula Role**:
-what a routine formula does in conversation: greeting, farewell, thanks,
-apology, sympathy, request and the like. An INTJ Reading's Knowledge stores
-it, so `tut mir leid` is one Lemma with an apology Reading and a sympathy
-Reading.
+What a routine formula does in conversation, such as greeting or apology,
+stored in an INTJ Reading's Knowledge. It never splits a Lemma:
+`tut mir leid` has an apology Reading and a sympathy Reading. See [ADR 0039].
 _Avoid_: discourseFormulaRole, DiscourseFormula
+
+[ADR 0002]: ../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
+[ADR 0011]: ../../docs/adr/0011-use-reading-owned-lemma-targeted-semantic-relations.md
+[ADR 0012]: ../../docs/adr/0012-store-only-direct-semantic-relation-claims.md
+[ADR 0020]: ../../docs/adr/0020-keep-semantic-relations-inside-one-family.md
+[ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
+[ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
+[ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
+[Dumrel ADR 0001]: ./docs/adr/0001-keep-dumrel-ownerless-and-pure.md
+[Dumspec Context]: ../dumspec/CONTEXT.md
