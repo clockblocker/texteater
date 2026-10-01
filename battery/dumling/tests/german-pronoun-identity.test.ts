@@ -154,7 +154,7 @@ test("unmarked and inapplicable features have explicit behavior", () => {
 	);
 	accepts(lemma("jemand", { pronType: "Ind", case: "Nom" }), true);
 });
-test("wer and was fix their inherent gender in Core (ADR 0018, 0032)", () => {
+test("wer and was fix their inherent gender in Core (system ADR 0044, 0032)", () => {
 	for (const pronType of ["Int", "Rel"]) {
 		const wer = lemma("wer", { pronType, gender: "Masc" });
 		accepts(wer, true);

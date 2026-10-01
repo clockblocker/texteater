@@ -65,7 +65,7 @@ function cellCoordinates(core: Partial<PronounCell>): string {
 }
 
 /** A pillar's occupied, reviewed table cell is an identity; null cells are intentionally absent.
- * ADR 0018 and system ADR 0032, not LEO, determine this project's Lemma granularity.
+ * System ADR 0044 and ADR 0032, not LEO, determine this project's Lemma granularity.
  * https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/index.xml?lang=de
  */
 export function pronounMember(

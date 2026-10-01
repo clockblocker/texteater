@@ -679,7 +679,7 @@ for (const [stem, ipa, pronType, emoji, definition, en, ru] of [
 	);
 }
 // man has one form of its own; its oblique cases are borrowed from einer
-// (einen, einem), so it is an invariant Lemma with case unmarked (ADR 0018).
+// (einen, einem), so it is an invariant Lemma with case unmarked (system ADR 0044).
 // It always takes singular agreement.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-man.html?lang=de
 reviewed.push(
@@ -695,7 +695,7 @@ reviewed.push(
 		{ number: "Sing" },
 	),
 );
-// Invariant expressions keep unmarked coordinates, per ADR 0018.
+// Invariant expressions keep unmarked coordinates, per system ADR 0044.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/index.html?lang=de
 for (const [text, ipa, en, ru] of [
 	["etwas", "ˈɛtvas", "something", "что-то"],

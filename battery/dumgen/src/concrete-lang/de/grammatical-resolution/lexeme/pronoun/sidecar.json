@@ -1,6 +1,6 @@
 {
 	"slices": {
-		"referent-context": "Pronoun forms whose cell only the referent decides (ADR 0018, #606): given the neighbouring Sentences, alone in a one-Sentence Text, and alone while more exists, where resolution may ask for the neighbours.",
+		"referent-context": "Pronoun forms whose cell only the referent decides (ADR 0044, #606): given the neighbouring Sentences, alone in a one-Sentence Text, and alone while more exists, where resolution may ask for the neighbours.",
 		"casing": "A Canonical Form and its members take the word's lexical casing, never its position; formal Sie keeps its capital and a lowercase formal sie is a Typo (ADR 0002)."
 	},
 	"cases": {
