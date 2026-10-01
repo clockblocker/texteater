@@ -159,11 +159,12 @@ export const valencySlotSchema = z.strictObject({
 	complements: z.array(valencyComplementSchema).min(1),
 });
 /**
- * The owning Reading's Valency Frame: its Slots in order, each complement in
- * at most one of them. The governor owns every claim; a preposition's side is
- * a read-time projection. Fixed parts (a separable prefix, a lexical
- * reflexive, a Locution's wording) come from Lemma identity and are never
- * Slots.
+ * The owning Reading's Valency Frame: its Slots in order. A Case or
+ * Preposition complement sits in at most one of them; an Adverbial,
+ * Predicative or Clause may recur in another Slot (ADR 0034). The governor
+ * owns every claim; a preposition's side is a read-time projection. Fixed
+ * parts (a separable prefix, a lexical reflexive, a Locution's wording) come
+ * from Lemma identity and are never Slots.
  */
 export const valencyFrameSchema = z.array(valencySlotSchema).min(1);
 

@@ -21,8 +21,12 @@ optional complements are parenthesised. A frame is an ordered list of Slots.
 Each Slot is `{ status, complements }`: one status, `"Required" | "Optional"`,
 and a non-empty ordered list of complements, usually one. Several complements
 in one Slot are alternatives, E-VALBU's `/`: `reden` has a Required Nom, an
-Optional `mit` + Dat and an Optional `über` + Acc | `von` + Dat. A complement
-appears in at most one Slot of a frame.
+Optional `mit` + Dat and an Optional `über` + Acc | `von` + Dat. A Case or
+Preposition complement appears at most once in a frame, since its referent
+tells it apart (`jemanden etwas lehren` has an Acc Someone and an Acc
+Something). An Adverbial, Predicative or Clause appears at most once in a
+Slot but may recur in another: `Dass er kommt, bedeutet, dass sie geht` has
+a Clause Dass in the Nom Slot and in the Acc Slot of `bedeuten`.
 
 The status describes the Reading's valency, not one occurrence. A sentence in
 this sense realizes one complement of each Required Slot and at most one of
@@ -333,3 +337,8 @@ which [#672](https://github.com/clockblocker/texteater/issues/672) replaced
 with Clause alternatives. Decided on
 [#673](https://github.com/clockblocker/texteater/issues/673) and #672, and
 implemented on [#674](https://github.com/clockblocker/texteater/issues/674).
+
+Also amended on 2026-10-01: every complement appeared at most once in a
+frame, so `bedeuten` could not take a dass-clause as both its subject and its
+object. Now only Case and Preposition complements do, and an Adverbial,
+Predicative or Clause is unique within its Slot. Decided by the user on #674.

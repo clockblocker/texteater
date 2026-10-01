@@ -449,6 +449,81 @@ test("a Slot holds alternatives, and a complement sits in one Slot at most", () 
 			knowledge: { valency: [optional(ueberAcc, vonDat, ueberAcc)] },
 		}).success,
 	).toBe(false);
+	// A Case complement too: its referent tells it apart (jemanden etwas
+	// lehren), so only an exact repeat is rejected.
+	const accSomeone = { ...nom, governedCase: "Acc" } as const;
+	const accSomething = { ...accSomeone, referent: "Something" } as const;
+	expect(
+		parseReadingKnowledge({
+			source: redenReading,
+			knowledge: {
+				valency: [
+					required(nom),
+					required(accSomeone),
+					required(accSomething),
+				],
+			},
+		}).success,
+	).toBe(true);
+	expect(
+		parseReadingKnowledge({
+			source: redenReading,
+			knowledge: {
+				valency: [
+					required(nom),
+					required(accSomeone),
+					optional(accSomeone),
+				],
+			},
+		}).success,
+	).toBe(false);
+});
+
+test("an Adverbial, Predicative or Clause may recur in another Slot, never in its own", () => {
+	// Dass er kommt, bedeutet, dass sie geht: a dass-clause in both the Nom and
+	// the Acc Slot of bedeuten.
+	const bedeuten = [
+		required(nom, dassClause),
+		required(
+			{ ...nom, governedCase: "Acc", referent: "Something" },
+			dassClause,
+		),
+	];
+	expect(
+		parseReadingKnowledge({
+			source: germanVerbReading("bedeuten", "📖"),
+			knowledge: { valency: bedeuten },
+		}),
+	).toEqual({ success: true, value: { valency: bedeuten } });
+	const twoPlaces = [required(nom), required(irgendwo), optional(irgendwo)];
+	expect(
+		parseReadingKnowledge({
+			source: wohnenReading,
+			knowledge: { valency: twoPlaces },
+		}),
+	).toEqual({ success: true, value: { valency: twoPlaces } });
+	const predicative = {
+		kind: "Predicative",
+		of: "Subject",
+		marker: "None",
+	} as const;
+	for (const complement of [dassClause, irgendwo, predicative]) {
+		const repeated = parseReadingKnowledge({
+			source: wohnenReading,
+			knowledge: {
+				valency: [required(nom), required(complement, complement)],
+			},
+		});
+		expect(repeated.success).toBe(false);
+		if (!repeated.success)
+			expect(repeated.error.issues[0]?.path).toEqual([
+				"knowledge",
+				"valency",
+				1,
+				"complements",
+				1,
+			]);
+	}
 });
 
 test("each German route allows its own complement kinds", () => {

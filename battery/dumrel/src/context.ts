@@ -201,11 +201,15 @@ function parseValencyComplement<R extends Dumling.Reading>(
 }
 
 /**
- * A frame whose complements the source's route allows, each listed once
- * across all Slots and their alternatives. Which complements belong in one
- * Slot is the proposal's call; only the correlate is checked: a Clause with a
- * correlate takes its `da(r)-` from the Slot's preposition, so a Slot that
- * holds one has at most one Preposition (ADR 0034).
+ * A frame whose complements the source's route allows. A complement with a
+ * referent (a Case or Preposition, or a Hebrew or English Subject or object)
+ * appears once in the frame, its referent telling it apart from its
+ * namesakes. An Adverbial, Predicative or Clause appears once per Slot but may
+ * recur in another: `Dass er kommt, bedeutet, dass …` has a Clause Dass in its
+ * Nom Slot and in its Acc Slot. Which complements belong in one Slot is the
+ * proposal's call; only the correlate is checked: a Clause with a correlate
+ * takes its `da(r)-` from the Slot's preposition, so a Slot that holds one has
+ * at most one Preposition (ADR 0034).
  */
 function parseValencyFrame<R extends Dumling.Reading>(
 	source: R,
@@ -213,9 +217,10 @@ function parseValencyFrame<R extends Dumling.Reading>(
 	path: Path,
 ): ValencyFrame | ParsingError {
 	const slots: ValencySlot[] = [];
-	const seen = new Set<string>();
+	const inFrame = new Set<string>();
 	for (const [index, slot] of frame.entries()) {
 		const complements: ValencyComplement[] = [];
+		const inSlot = new Set<string>();
 		for (const [alternative, value] of slot.complements.entries()) {
 			const complementPath = [...path, index, "complements", alternative];
 			const complement = parseValencyComplement(
@@ -225,12 +230,20 @@ function parseValencyFrame<R extends Dumling.Reading>(
 			);
 			if (complement instanceof ParsingError) return complement;
 			const identity = fingerprint(complement);
-			if (seen.has(identity))
+			if (inSlot.has(identity))
 				return issue(
 					complementPath,
-					"A Valency Frame lists each complement once, across all its Slots",
+					"A Slot lists each complement once",
 				);
-			seen.add(identity);
+			inSlot.add(identity);
+			if ("referent" in complement) {
+				if (inFrame.has(identity))
+					return issue(
+						complementPath,
+						"A Valency Frame lists each Case or Preposition complement once, across all its Slots",
+					);
+				inFrame.add(identity);
+			}
 			complements.push(complement);
 		}
 		const correlated = complements.findIndex(
