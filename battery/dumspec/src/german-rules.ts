@@ -1104,7 +1104,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/canonical-form-is-the-headword",
 		statement:
-			"A Lemma's Canonical Form is its dictionary headword and may differ from the sentence's words. An interjection written in pieces is cited as written instead (de/interjection-counts-its-words): ha ha, o je. Identity ignores case (LOL and lol are one Lemma), but the Canonical Form keeps the dictionary's casing (Haus, LOL, Sie), never the word's position: sentence-initial Wegen is wegen. A noun's is the bare noun, without its article. An open slot in a discontinuous form is written … (U+2026) with a space on each side (um … willen). A Surface spelled Canonical need not be the Grundform.",
+			"A Lemma's Canonical Form is its dictionary headword and may differ from the sentence's words. Where Duden lists two spellings, the Canonical Form is Duden's recommended one. An interjection written in pieces is cited as written instead (de/interjection-counts-its-words): ha ha, o je. Identity ignores case, but the Canonical Form keeps the dictionary's casing (Haus, LOL, Sie), never the word's position: sentence-initial Wegen is wegen. A noun's is the bare noun. An open slot is written … (U+2026) with a space on each side (um … willen). A Surface spelled Canonical need not be the Grundform.",
 		adrs: ["ADR-0002", "ADR-0035"],
 		routes: [],
 		records: [
@@ -1131,6 +1131,7 @@ const attestations: Rule[] = [
 			"de/genau-da-liegt-der-hase-im-pfeffer",
 			"de/auf-die-pointe-antwortete-sie-im-chat-nur-mit-lol",
 			"de/er-antwortete-im-chat-nur-mit-lol",
+			"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
 		],
 	},
 	{

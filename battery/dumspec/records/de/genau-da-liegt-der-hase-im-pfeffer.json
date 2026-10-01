@@ -30,7 +30,7 @@
 			{ "rule": "de/fused-word-pieces", "hash": "3f8fdc8a20ed9a44" },
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "a8af926f196177f3"
+				"hash": "044ad2bbec5191e7"
 			},
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
 			{

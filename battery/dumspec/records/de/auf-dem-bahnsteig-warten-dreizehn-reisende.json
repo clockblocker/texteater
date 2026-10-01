@@ -22,7 +22,7 @@
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "a8af926f196177f3"
+				"hash": "044ad2bbec5191e7"
 			},
 			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" }
 		],

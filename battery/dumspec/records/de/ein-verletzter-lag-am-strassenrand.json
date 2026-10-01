@@ -22,7 +22,7 @@
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "a8af926f196177f3"
+				"hash": "044ad2bbec5191e7"
 			},
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },

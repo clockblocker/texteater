@@ -183,7 +183,7 @@
 			},
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "a8af926f196177f3"
+				"hash": "044ad2bbec5191e7"
 			},
 			{
 				"rule": "de/copula-stays-apart",
@@ -764,7 +764,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "Duden (übrig bleiben, übrigbleiben) and DWDS (übrigbleiben) list a verb, and DWDS files jmdm. bleibt nichts (anderes, weiter) übrig, als … 'have no choice but' as its figurative sense. So übrig blieb is one VERB with übrig as its separable first part, not copular bleiben plus ADJ übrig; nichts and als stay outside. Ruled on #743 (MB-B2)."
+				"rationale": "Duden (übrig bleiben, übrigbleiben) and DWDS (übrigbleiben) list a verb, and DWDS files jmdm. bleibt nichts (anderes, weiter) übrig, als … 'have no choice but' as its figurative sense. So übrig blieb is one VERB with übrig as its separable first part, not copular bleiben plus ADJ übrig; nichts and als stay outside. Ruled on #743 (MB-B2). Its Canonical Form is Duden's recommended spelling, übrig bleiben, written apart (D 55); Duden allows the joined übrigbleiben only in a transferred sense (de/canonical-form-is-the-headword). Ruled on #771."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -776,7 +776,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "VERB",
-						"canonicalForm": "übrigbleiben",
+						"canonicalForm": "übrig bleiben",
 						"coreFeatures": {
 							"hasSepPrefix": "übrig",
 							"lexicallyReflexive": null,
