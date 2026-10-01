@@ -26,14 +26,169 @@
 		{ "kind": "ResolvableText", "text": "gelacht" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0003", "ADR-0022", "ADR-0035", "ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/idiom",
+				"hash": "c05df428b3a42079"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "3f8fdc8a20ed9a44"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{
+				"rule": "de/participial-adjective",
+				"hash": "5d4481bf31cb7267"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
 		"references": []
 	},
 	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "Temporal nach heads a free adjunct; it is no part of the idiom."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "nach",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"partType": null
+						}
+					},
+					"normalizedSurface": "nach",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"members": [{ "attested": "Nach", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2, 6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Nachricht",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Nachricht",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "der", "orthography": "Standard" },
+					{ "attested": "Nachricht", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "überraschend",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "überraschenden",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": "Fem",
+						"number": "Sing"
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "überraschenden", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
 		{
 			"memberSegmentIndices": [8, 12, 16, 17, 19, 21],
 			"route": { "family": "Locution", "kind": "VERB" },
@@ -99,6 +254,83 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "sie",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"extPos": null,
+							"person": "3",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": "Fem"
+						}
+					},
+					"normalizedSurface": "sie",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"members": [{ "attested": "sie", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "heimlich modifies the idiom from inside its span and stays out (de/fixed-members-only)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "heimlich",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": "Yes",
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "heimlich",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Pos",
+						"gender": null,
+						"number": null
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "heimlich", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
 			}
 		}
 	],

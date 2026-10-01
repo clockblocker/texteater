@@ -23,19 +23,120 @@
 		{ "kind": "ResolvableText", "text": "Kollegen" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0039"],
+		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039"],
 		"rules": [
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
 				"hash": "c2ddde608e957137"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "1bb448ae5660b80b"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
 			}
 		],
 		"references": []
 	},
 	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": { "rationale": "trotz heads a free concessive adjunct." },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "trotz",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"partType": null
+						}
+					},
+					"normalizedSurface": "trotz",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Gen",
+							"referent": "Either"
+						},
+						"realizedCase": "Gen"
+					}
+				],
+				"members": [{ "attested": "Trotz", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Zeitdruck",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Zeitdrucks",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Gen",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "des", "orthography": "Standard" },
+					{ "attested": "Zeitdrucks", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
 		{
 			"memberSegmentIndices": [6, 12, 14],
 			"route": { "family": "Locution", "kind": "VERB" },
@@ -102,6 +203,147 @@
 						"realizedCase": "Acc"
 					}
 				]
+			}
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Lea",
+						"coreFeatures": {
+							"abbr": null,
+							"article": null,
+							"gender": "Fem"
+						}
+					},
+					"normalizedSurface": "Lea",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"number": "Sing"
+					}
+				},
+				"articleEvidence": null,
+				"members": [{ "attested": "Lea", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "stets",
+						"coreFeatures": {
+							"comparable": null,
+							"numType": null,
+							"pronType": null
+						}
+					},
+					"normalizedSurface": "stets",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "stets", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [16],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "ihr",
+						"coreFeatures": {
+							"case": null,
+							"definite": null,
+							"extPos": null,
+							"gender": null,
+							"number": null,
+							"numType": null,
+							"person": "3",
+							"polite": null,
+							"poss": "Yes",
+							"pronType": "Prs"
+						}
+					},
+					"normalizedSurface": "ihre",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"degree": null,
+						"gender": null,
+						"gender[psor]": "Fem",
+						"number": "Plur",
+						"number[psor]": "Sing"
+					}
+				},
+				"members": [{ "attested": "ihre", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Kollege",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Kollegen",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "Kollegen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
 			}
 		}
 	],

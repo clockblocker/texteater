@@ -31,17 +31,131 @@
 		{ "kind": "ResolvableText", "text": "Nächten" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0003", "ADR-0022", "ADR-0029", "ADR-0034"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "e80bf8cd47615452"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "1bb448ae5660b80b"
+			},
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "f8c5768e1ce3e526"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "bc1096b61ad7294d"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "Viele determines Bewohner: DET viel (de/quantifier-by-use)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "viel",
+						"coreFeatures": {
+							"case": null,
+							"definite": null,
+							"extPos": null,
+							"gender": null,
+							"number": null,
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Ind"
+						}
+					},
+					"normalizedSurface": "Viele",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"degree": null,
+						"gender": null,
+						"gender[psor]": null,
+						"number[psor]": null,
+						"number": "Plur"
+					}
+				},
+				"members": [{ "attested": "Viele", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Bewohner",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Bewohner",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "Bewohner", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
 			"memberSegmentIndices": [4, 6, 16],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "sich sehnen has no non-reflexive use, so sich is a member. Of the two nach, only the second, nach etwas Ruhe, is the governed nach + Dat; the first, nach Monaten, is a free temporal adjunct and a unit of its own (de/governed-preposition-joins-its-governor)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -75,12 +189,6 @@
 						"passive": null
 					}
 				},
-				"members": [
-					{ "attested": "sehnen", "orthography": "Standard" },
-					{ "attested": "sich", "orthography": "Standard" },
-					{ "attested": "nach", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": [
 					{
@@ -101,11 +209,344 @@
 								}
 							},
 							"case": "Dat",
-							"referent": "Something"
+							"referent": "Either"
 						},
 						"realizedCase": "Dat"
 					}
-				]
+				],
+				"members": [
+					{ "attested": "sehnen", "orthography": "Standard" },
+					{ "attested": "sich", "orthography": "Standard" },
+					{ "attested": "nach", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "Temporal nach Monaten ('after months') is a free adjunct; its look-alike, the second nach, is the governed one."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "nach",
+						"coreFeatures": {
+							"abbr": null,
+							"adpType": "Prep",
+							"extPos": null,
+							"partType": null
+						}
+					},
+					"normalizedSurface": "nach",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"valencyEvidence": [
+					{
+						"member": null,
+						"complement": {
+							"kind": "Case",
+							"case": "Dat",
+							"referent": "Either"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"members": [{ "attested": "nach", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Monat",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Monaten",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "Monaten", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "open: Lemma of undeclined voller ('full of'), voller or voll; the route ADJ is not in doubt."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "voller",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": null,
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "voller",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "voller", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Case after undeclined voller left null, as #743 JT-B5 ruled for voll Oberflächlichkeit."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Lärm",
+						"coreFeatures": {
+							"gender": "Masc",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Lärm",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [{ "attested": "Lärm", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [18],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "etwas determines Ruhe, so it is DET (de/pron-or-det-by-use); it does not inflect."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "etwas",
+						"coreFeatures": {
+							"case": null,
+							"definite": null,
+							"extPos": null,
+							"gender": null,
+							"number": null,
+							"numType": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Ind"
+						}
+					},
+					"normalizedSurface": "etwas",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "etwas", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Ruhe",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Ruhe",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [{ "attested": "Ruhe", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "und",
+						"coreFeatures": {
+							"conjType": null
+						}
+					},
+					"normalizedSurface": "und",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "verlässlich",
+						"coreFeatures": {
+							"abbr": null,
+							"comparable": "Yes",
+							"numType": null,
+							"variant": null
+						}
+					},
+					"normalizedSurface": "verlässlichen",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": "Pos",
+						"gender": "Fem",
+						"number": "Plur"
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "verlässlichen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Nacht",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Nächten",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "Nächten", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
 			}
 		}
 	],

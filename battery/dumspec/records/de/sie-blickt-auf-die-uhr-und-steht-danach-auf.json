@@ -21,19 +21,130 @@
 		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0003", "ADR-0022", "ADR-0029", "ADR-0034"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "e80bf8cd47615452"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "1bb448ae5660b80b"
+			},
+			{
+				"rule": "de/pronominal-adverb-stands-alone",
+				"hash": "1b11d9ee80ce12bd"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "sie",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"extPos": null,
+							"person": "3",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": "Fem"
+						}
+					},
+					"normalizedSurface": "Sie",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"members": [{ "attested": "Sie", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "blicken takes a direction whose preposition varies (auf die Uhr, aus dem Fenster, zur Seite), so auf is no governed preposition and stays a unit of its own."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "blicken",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "blickt",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "blickt", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
-				"rationale": "Marked auf governs a noun; later unmarked auf belongs to the verb."
+				"rationale": "Directional auf die Uhr is free (blicken's direction takes any preposition); the second auf is steht's particle. Foil pair inside one sentence."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -57,8 +168,6 @@
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "auf", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
 				"valencyEvidence": [
 					{
 						"member": null,
@@ -69,7 +178,157 @@
 						},
 						"realizedCase": "Acc"
 					}
-				]
+				],
+				"members": [{ "attested": "auf", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Uhr",
+						"coreFeatures": {
+							"gender": "Fem",
+							"hyph": null
+						}
+					},
+					"normalizedSurface": "Uhr",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "die", "orthography": "Standard" },
+					{ "attested": "Uhr", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "CCONJ",
+						"canonicalForm": "und",
+						"coreFeatures": {
+							"conjType": null
+						}
+					},
+					"normalizedSurface": "und",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null
+				},
+				"members": [{ "attested": "und", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [12, 16],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The clause-final auf is the separable particle of aufstehen (de/verb-owns-its-scattered-members)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "aufstehen",
+						"coreFeatures": {
+							"hasSepPrefix": "auf",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"normalizedSurface": "steht auf",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "steht", "orthography": "Standard" },
+					{ "attested": "auf", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "Temporal danach ('afterwards') stands alone as an ADV (de/pronominal-adverb-stands-alone)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "danach",
+						"coreFeatures": {
+							"comparable": null,
+							"numType": null,
+							"pronType": "Dem"
+						}
+					},
+					"normalizedSurface": "danach",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [
+					{ "attested": "danach", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
 			}
 		}
 	],

@@ -15,20 +15,57 @@
 		{ "kind": "ResolvableText", "text": "dir" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0003", "ADR-0029", "ADR-0034", "ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/fixed-members-only",
+				"hash": "f0bf57e9cd925985"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "1a5d9f3240c41e69"
+			},
+			{
+				"rule": "de/idiom",
+				"hash": "c05df428b3a42079"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "1bb448ae5660b80b"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "99bff23563b49716"
+			}
+		],
+		"references": [
+			{
+				"title": "E-VALBU: meinen, Generelle Anmerkungen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400782",
+				"supports": "E-VALBU lists es gut/ernst/ehrlich/... mit jemandem meinen 'have good/serious/sincere intentions towards someone' as an expression outside its numbered Lesarten; mit + Dat is part of the listed frame."
+			},
+			{
+				"title": "Duden: meinen",
+				"url": "https://www.duden.de/rechtschreibung/meinen",
+				"supports": "er meinte es gut mit uns (war uns freundlich gesinnt)."
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
-			"notes": {
-				"rationale": "This es is outside lexically selected subject-expletive composition."
-			},
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -38,15 +75,49 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "VERB",
-						"canonicalForm": "meinen",
+						"kind": "PRON",
+						"canonicalForm": "sie",
 						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null,
-							"verbType": null
+							"case": "Nom",
+							"number": "Sing",
+							"extPos": null,
+							"person": "3",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": "Fem"
 						}
 					},
-					"normalizedSurface": "meint",
+					"normalizedSurface": "Sie",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"members": [{ "attested": "Sie", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2, 4, 6, 8],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "es gut meinen (Duden: es gut mit jemandem meinen) is an Idiom: the object es is non-referential and das cannot replace it, so it is fixed (de/fixed-member-test), and gut is fixed too. mit + Dat is governed by the expression, so it is a member recorded in valencyEvidence and left out of the Surface. Replaces the old single-member [meint] VERB meinen."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Locution",
+						"kind": "VERB",
+						"canonicalForm": "es gut meinen",
+						"coreFeatures": {}
+					},
+					"normalizedSurface": "meint es gut",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -62,10 +133,73 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "meint", "orthography": "Standard" }],
-				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 3,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "mit",
+								"coreFeatures": {
+									"abbr": null,
+									"adpType": "Prep",
+									"extPos": null,
+									"partType": null
+								}
+							},
+							"case": "Dat",
+							"referent": "Someone"
+						},
+						"realizedCase": "Dat"
+					}
+				],
+				"members": [
+					{ "attested": "meint", "orthography": "Standard" },
+					{ "attested": "es", "orthography": "Standard" },
+					{ "attested": "gut", "orthography": "Standard" },
+					{ "attested": "mit", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "dir",
+						"coreFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"extPos": null,
+							"person": "2",
+							"polite": "Infm",
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "dir",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"members": [{ "attested": "dir", "orthography": "Standard" }],
+				"realizationCoverage": "Full"
 			}
 		}
 	],
