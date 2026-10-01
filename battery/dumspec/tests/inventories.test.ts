@@ -722,7 +722,6 @@ describe("German PART (#734)", () => {
 					kind: "PART",
 					canonicalForm,
 					coreFeatures: {
-						abbr: null,
 						partType: null,
 						polarity: null,
 						...coreFeatures,
@@ -761,7 +760,7 @@ describe("German PART (#734)", () => {
 		expect(
 			germanParticleMember({
 				canonicalForm: "Doch",
-				coreFeatures: { abbr: null, partType: "Mod", polarity: null },
+				coreFeatures: { partType: "Mod", polarity: null },
 			})?.lemma.canonicalForm,
 		).toBe("doch");
 	});

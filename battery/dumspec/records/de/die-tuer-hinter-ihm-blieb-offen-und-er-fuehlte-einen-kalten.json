@@ -240,7 +240,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "hinter",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "hinter",
 					"spelling": {
@@ -391,7 +391,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "offen",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -625,7 +624,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "kalt",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -674,7 +672,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "in",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "in",
 					"spelling": {

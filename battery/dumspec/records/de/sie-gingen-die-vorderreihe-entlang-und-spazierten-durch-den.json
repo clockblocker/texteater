@@ -358,7 +358,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Vorderreihe",
 						"coreFeatures": {
-							"abbr": null,
 							"article": "Definite",
 							"gender": "Fem"
 						}
@@ -493,7 +492,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "durch",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "durch",
 					"spelling": {
@@ -641,7 +640,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "stumm",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -720,7 +718,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "schattenlos",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -761,7 +758,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "mit",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "mit",
 					"spelling": {

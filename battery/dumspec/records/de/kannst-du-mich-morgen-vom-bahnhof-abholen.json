@@ -305,7 +305,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "von",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "von",
 					"spelling": {

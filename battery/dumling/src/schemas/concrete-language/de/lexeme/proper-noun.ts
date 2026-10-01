@@ -13,7 +13,6 @@ export const DeProperNounFeatureBagsSchema = z.strictObject({
 	// A name canonically cited with its article (die Schweiz) owns it like a
 	// common noun; a name cited bare (Berlin) has none (ADR 0035).
 	[FeatureBagKind.Core]: featureBagSchema({
-		abbr: DE_FEATURE_SCHEMA.abbr,
 		article: DE_FEATURE_SCHEMA.article.extract(["Definite"]),
 		gender,
 	}),

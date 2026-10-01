@@ -37,12 +37,8 @@ const file = (
 
 describe("identity normalization", () => {
 	test("counts a missing Core Feature and a null one as the same", () => {
-		expect(
-			lemmaIdentity(lemma("Tisch", "NOUN", { gender: "Masc" })),
-		).toEqual(
-			lemmaIdentity(
-				lemma("Tisch", "NOUN", { gender: "Masc", abbr: null }),
-			),
+		expect(lemmaIdentity(lemma("es", "PRON", { case: "Nom" }))).toEqual(
+			lemmaIdentity(lemma("es", "PRON", { case: "Nom", poss: null })),
 		);
 	});
 

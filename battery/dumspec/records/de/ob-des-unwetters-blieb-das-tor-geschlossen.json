@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "ob",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "ob",
 					"spelling": { "kind": "Canonical" },

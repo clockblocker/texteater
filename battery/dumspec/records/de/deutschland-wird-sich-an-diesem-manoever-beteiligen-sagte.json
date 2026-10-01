@@ -96,7 +96,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "an",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Something"

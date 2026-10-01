@@ -61,7 +61,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "zu",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

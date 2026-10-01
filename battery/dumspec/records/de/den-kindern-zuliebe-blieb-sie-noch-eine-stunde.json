@@ -41,7 +41,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "zuliebe",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "zuliebe",
 					"spelling": { "kind": "Canonical" },

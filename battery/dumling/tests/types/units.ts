@@ -42,9 +42,11 @@ declare const loan: Lemma<"de", "Lexeme", "ADJ">;
 // @ts-expect-error No Lexeme route carries UD Foreign; foreign material is Foreign.
 loan.coreFeatures.foreign;
 declare const adposition: Lemma<"de", "Lexeme", "ADP">;
-const _adpositionCore: { abbr: "Yes" | null } = adposition.coreFeatures;
+// German ADP has no Core Features (ADR 0032).
+type AdpositionCore = Lemma<"de", "Lexeme", "ADP">["coreFeatures"];
+const _adpositionCore: AdpositionCore = adposition.coreFeatures;
 // @ts-expect-error Position is no identity; dumspec's ADP Case Table lists it (ADR 0032).
-adposition.coreFeatures.adpType;
+const _adpType: AdpositionCore = { adpType: null };
 declare const adpositionOccurrence: Unit<"Attestation", "de", "Lexeme", "ADP">;
 // @ts-expect-error The sentence shows an adposition's position; no Attestation records it.
 adpositionOccurrence.adpType;

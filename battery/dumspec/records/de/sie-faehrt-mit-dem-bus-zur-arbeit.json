@@ -43,7 +43,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "mit",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "mit",
 					"spelling": { "kind": "Canonical" },

@@ -391,7 +391,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "an",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "an",
 					"spelling": {
@@ -518,7 +518,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "von",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "von",
 					"spelling": {
@@ -774,7 +774,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "pünktlich",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null

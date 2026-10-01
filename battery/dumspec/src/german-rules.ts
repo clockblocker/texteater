@@ -638,7 +638,7 @@ const fusedWords: Rule[] = [
 	{
 		id: "de/abbreviation-is-one-segment",
 		statement:
-			"An abbreviation (z.B., usw., Dr.) is one Segment and stands for its whole expansion: the Surface of z.B. is zum Beispiel. A name whose initialism is its usual form (BVG, NATO, ZDF, SPD) stays its own Lemma instead, with abbr Yes, and its Surface keeps the letters: die BVG gives [die, BVG] PROPN BVG, never Berliner Verkehrsbetriebe. An initial the text never expands is its own Lemma the same way, and a name it ends is another: K. and Josef K. are two PROPN Lemmas.",
+			"An abbreviation (z.B., usw., Dr.) is one Segment and stands for its whole expansion: the Surface of z.B. is zum Beispiel. A name whose initialism is its usual form (BVG, NATO, ZDF, SPD) stays its own Lemma instead, and its Surface keeps the letters: die BVG gives [die, BVG] PROPN BVG, never Berliner Verkehrsbetriebe. An initial the text never expands is its own Lemma the same way, and a name it ends is another: K. and Josef K. are two PROPN Lemmas.",
 		adrs: ["ADR-0035", "dumgen/ADR-0004"],
 		routes: [],
 		records: [

@@ -9,7 +9,6 @@ export function modalParticleLemma(canonicalForm: string) {
 		kind: "PART",
 		canonicalForm,
 		coreFeatures: {
-			abbr: null,
 			partType: "Mod",
 			polarity: null,
 		},

@@ -185,7 +185,6 @@
 						"family": "Lexeme",
 						"kind": "PART",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Mod",
 							"polarity": null
 						}
@@ -371,7 +370,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Struwwelpeter",
 						"coreFeatures": {
-							"abbr": null,
 							"article": "Definite",
 							"gender": "Masc"
 						}

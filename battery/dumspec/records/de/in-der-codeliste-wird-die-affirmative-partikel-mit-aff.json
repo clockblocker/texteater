@@ -30,7 +30,7 @@
 		"rules": [
 			{
 				"rule": "de/abbreviation-is-one-segment",
-				"hash": "686c9815ab8717d8"
+				"hash": "8b5d215a31ab7264"
 			},
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{
@@ -59,7 +59,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "affirmativ",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

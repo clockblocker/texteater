@@ -45,7 +45,6 @@
 						"kind": "NUM",
 						"canonicalForm": "eins",
 						"coreFeatures": {
-							"abbr": null,
 							"numType": "Card"
 						}
 					},

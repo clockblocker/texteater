@@ -456,7 +456,6 @@ test("the Head standing in for an elided noun owns the article", () => {
 				kind: "ADJ",
 				canonicalForm: "rot",
 				coreFeatures: {
-					abbr: null,
 					comparable: "Yes",
 					numType: null,
 					variant: null,
@@ -590,7 +589,7 @@ const properNoun = (
 		family: "Lexeme",
 		kind: "PROPN",
 		canonicalForm,
-		coreFeatures: { abbr: null, article, gender },
+		coreFeatures: { article, gender },
 	},
 	inflectionalFeatures: {
 		case: grammaticalCase,
@@ -786,7 +785,7 @@ const preposition = (canonicalForm: string) => ({
 	family: "Lexeme",
 	kind: "ADP",
 	canonicalForm,
-	coreFeatures: { abbr: null },
+	coreFeatures: {},
 });
 test("valency evidence names the owned member realizing its preposition", () => {
 	const slot = {
@@ -1025,7 +1024,7 @@ test("a German ADP records its position on neither its Lemma nor its Attestation
 					...wegen.surface,
 					lemma: {
 						...wegen.surface.lemma,
-						coreFeatures: { abbr: null, ...retired },
+						coreFeatures: { ...retired },
 					},
 				},
 			}).success,
@@ -1119,7 +1118,6 @@ test("an adjective or noun Attestation names its owned governed preposition like
 				kind: "ADJ",
 				canonicalForm: "stolz",
 				coreFeatures: {
-					abbr: null,
 					comparable: "Yes",
 					numType: null,
 					variant: null,

@@ -208,7 +208,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "laut",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -257,7 +256,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "vor",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "vor",
 					"spelling": {
@@ -462,7 +461,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "langsam",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null

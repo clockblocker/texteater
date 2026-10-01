@@ -139,7 +139,6 @@ export interface UnitMap {
 			kind: "ADJ";
 			canonicalForm: string;
 			coreFeatures: {
-				abbr: "Yes" | null;
 				comparable: "Yes" | null;
 				numType: ("Card" | "Ord") | null;
 				variant: "Short" | null;
@@ -155,7 +154,6 @@ export interface UnitMap {
 				kind: "ADJ";
 				canonicalForm: string;
 				coreFeatures: {
-					abbr: "Yes" | null;
 					comparable: "Yes" | null;
 					numType: ("Card" | "Ord") | null;
 					variant: "Short" | null;
@@ -198,7 +196,6 @@ export interface UnitMap {
 				kind: "ADJ";
 				canonicalForm: string;
 				coreFeatures: {
-					abbr: "Yes" | null;
 					comparable: "Yes" | null;
 					numType: ("Card" | "Ord") | null;
 					variant: "Short" | null;
@@ -218,7 +215,6 @@ export interface UnitMap {
 					kind: "ADJ";
 					canonicalForm: string;
 					coreFeatures: {
-						abbr: "Yes" | null;
 						comparable: "Yes" | null;
 						numType: ("Card" | "Ord") | null;
 						variant: "Short" | null;
@@ -362,7 +358,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -378,7 +374,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "ADP";
 			canonicalForm: string;
-			coreFeatures: { abbr: "Yes" | null };
+			coreFeatures: Record<string, never>;
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -389,7 +385,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "ADP";
 				canonicalForm: string;
-				coreFeatures: { abbr: "Yes" | null };
+				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
 			spelling:
@@ -421,7 +417,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "ADP";
 				canonicalForm: string;
-				coreFeatures: { abbr: "Yes" | null };
+				coreFeatures: Record<string, never>;
 			};
 			emojiDescription: string;
 		};
@@ -436,7 +432,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "ADP";
 					canonicalForm: string;
-					coreFeatures: { abbr: "Yes" | null };
+					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
 				spelling:
@@ -517,7 +513,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -1154,7 +1150,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -1908,7 +1904,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -1925,7 +1921,6 @@ export interface UnitMap {
 			kind: "NUM";
 			canonicalForm: string;
 			coreFeatures: {
-				abbr: "Yes" | null;
 				numType: ("Card" | "Frac" | "Mult" | "Range") | null;
 			};
 		};
@@ -1939,7 +1934,6 @@ export interface UnitMap {
 				kind: "NUM";
 				canonicalForm: string;
 				coreFeatures: {
-					abbr: "Yes" | null;
 					numType: ("Card" | "Frac" | "Mult" | "Range") | null;
 				};
 			};
@@ -1979,7 +1973,6 @@ export interface UnitMap {
 				kind: "NUM";
 				canonicalForm: string;
 				coreFeatures: {
-					abbr: "Yes" | null;
 					numType: ("Card" | "Frac" | "Mult" | "Range") | null;
 				};
 			};
@@ -1997,7 +1990,6 @@ export interface UnitMap {
 					kind: "NUM";
 					canonicalForm: string;
 					coreFeatures: {
-						abbr: "Yes" | null;
 						numType: ("Card" | "Frac" | "Mult" | "Range") | null;
 					};
 				};
@@ -2132,7 +2124,6 @@ export interface UnitMap {
 			kind: "PART";
 			canonicalForm: string;
 			coreFeatures: {
-				abbr: "Yes" | null;
 				partType: ("Inf" | "Mod") | null;
 				polarity: "Neg" | null;
 			};
@@ -2147,7 +2138,6 @@ export interface UnitMap {
 				kind: "PART";
 				canonicalForm: string;
 				coreFeatures: {
-					abbr: "Yes" | null;
 					partType: ("Inf" | "Mod") | null;
 					polarity: "Neg" | null;
 				};
@@ -2183,7 +2173,6 @@ export interface UnitMap {
 				kind: "PART";
 				canonicalForm: string;
 				coreFeatures: {
-					abbr: "Yes" | null;
 					partType: ("Inf" | "Mod") | null;
 					polarity: "Neg" | null;
 				};
@@ -2202,7 +2191,6 @@ export interface UnitMap {
 					kind: "PART";
 					canonicalForm: string;
 					coreFeatures: {
-						abbr: "Yes" | null;
 						partType: ("Inf" | "Mod") | null;
 						polarity: "Neg" | null;
 					};
@@ -2577,7 +2565,6 @@ export interface UnitMap {
 			kind: "PROPN";
 			canonicalForm: string;
 			coreFeatures: {
-				abbr: "Yes" | null;
 				article: "Definite" | null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 			};
@@ -2592,7 +2579,6 @@ export interface UnitMap {
 				kind: "PROPN";
 				canonicalForm: string;
 				coreFeatures: {
-					abbr: "Yes" | null;
 					article: "Definite" | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
@@ -2633,7 +2619,6 @@ export interface UnitMap {
 				kind: "PROPN";
 				canonicalForm: string;
 				coreFeatures: {
-					abbr: "Yes" | null;
 					article: "Definite" | null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
@@ -2652,7 +2637,6 @@ export interface UnitMap {
 					kind: "PROPN";
 					canonicalForm: string;
 					coreFeatures: {
-						abbr: "Yes" | null;
 						article: "Definite" | null;
 						gender: ("Fem" | "Masc" | "Neut") | null;
 					};
@@ -3726,7 +3710,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -3893,7 +3877,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -4048,7 +4032,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -4755,7 +4739,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";
@@ -5652,7 +5636,7 @@ export interface UnitMap {
 								family: "Lexeme";
 								kind: "ADP";
 								canonicalForm: string;
-								coreFeatures: { abbr: "Yes" | null };
+								coreFeatures: Record<string, never>;
 							};
 							governedCase: "Acc" | "Dat" | "Gen";
 							referent: "Someone" | "Something" | "Either";

@@ -287,7 +287,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Korinna",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": "Fem"
 						}
@@ -511,7 +510,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "großmütig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -664,7 +662,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "verleidet",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -743,7 +740,6 @@
 						"kind": "PART",
 						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

@@ -107,7 +107,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "für",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Acc",
 							"referent": "Something"

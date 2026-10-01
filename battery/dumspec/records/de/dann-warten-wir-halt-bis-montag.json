@@ -49,7 +49,6 @@
 						"kind": "PART",
 						"canonicalForm": "halt",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Mod",
 							"polarity": null
 						}

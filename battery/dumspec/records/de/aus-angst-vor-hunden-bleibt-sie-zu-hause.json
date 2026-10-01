@@ -72,7 +72,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "vor",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Something"

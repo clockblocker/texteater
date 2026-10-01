@@ -45,7 +45,6 @@ const stolzReading = {
 		kind: "ADJ",
 		canonicalForm: "stolz",
 		coreFeatures: {
-			abbr: null,
 			comparable: "Yes",
 			numType: null,
 			variant: null,

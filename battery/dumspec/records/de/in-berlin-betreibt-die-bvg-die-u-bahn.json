@@ -27,7 +27,7 @@
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/abbreviation-is-one-segment",
-				"hash": "57538162fe227476"
+				"hash": "8b5d215a31ab7264"
 			}
 		],
 		"references": []
@@ -38,7 +38,7 @@
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🚇" },
 			"notes": {
-				"rationale": "BVG is a name cited with its article, like die NATO, so its Lemma has Core article Definite and gender Fem, and it owns die (Rule de/proper-noun-article). It is an initialism used as the name itself, so abbr is Yes and the Surface keeps its letters. betreibt makes it nominative singular."
+				"rationale": "BVG is a name cited with its article, like die NATO, so its Lemma has Core article Definite and gender Fem, and it owns die (Rule de/proper-noun-article). It is an initialism used as the name itself, so it stays its own Lemma and the Surface keeps its letters. betreibt makes it nominative singular."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -65,7 +65,6 @@
 						"family": "Lexeme",
 						"kind": "PROPN",
 						"coreFeatures": {
-							"abbr": "Yes",
 							"article": "Definite",
 							"gender": "Fem"
 						}

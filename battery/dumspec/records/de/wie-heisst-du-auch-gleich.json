@@ -93,7 +93,6 @@
 						"family": "Lexeme",
 						"kind": "PART",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Mod",
 							"polarity": null
 						}

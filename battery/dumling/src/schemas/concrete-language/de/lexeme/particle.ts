@@ -14,7 +14,6 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 // Pos is no German PART value.
 export const DeParticleFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
-		abbr: DE_FEATURE_SCHEMA.abbr,
 		partType: DE_FEATURE_SCHEMA.partType.extract(["Inf", "Mod"]),
 		polarity: DE_FEATURE_SCHEMA.polarity.extract(["Neg"]),
 	}).refine(isGermanParticleCore, { error: germanParticleCoreError }),

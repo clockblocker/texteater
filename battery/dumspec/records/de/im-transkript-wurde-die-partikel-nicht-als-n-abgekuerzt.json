@@ -29,7 +29,7 @@
 		"rules": [
 			{
 				"rule": "de/abbreviation-is-one-segment",
-				"hash": "686c9815ab8717d8"
+				"hash": "8b5d215a31ab7264"
 			},
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" }
@@ -56,7 +56,6 @@
 						"kind": "PART",
 						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

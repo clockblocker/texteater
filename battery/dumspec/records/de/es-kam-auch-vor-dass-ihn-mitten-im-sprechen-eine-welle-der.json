@@ -640,7 +640,7 @@
 						"canonicalForm": "in",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}
@@ -1006,7 +1006,6 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -1102,7 +1101,6 @@
 						"family": "Lexeme",
 						"kind": "PART",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Inf",
 							"polarity": null
 						}

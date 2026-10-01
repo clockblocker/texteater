@@ -55,7 +55,6 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"abbr": "Yes",
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -65,7 +64,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "3D is the German adjective it is in 3D-Drucker and 3D-Film, cited as written with abbr Yes. It has no comparison forms and takes no ending here, so its Surface has no inflection."
+				"rationale": "3D is the German adjective it is in 3D-Drucker and 3D-Film, cited as written. It has no comparison forms and takes no ending here, so its Surface has no inflection."
 			}
 		}
 	],

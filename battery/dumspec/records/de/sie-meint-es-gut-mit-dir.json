@@ -145,7 +145,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "mit",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Someone"

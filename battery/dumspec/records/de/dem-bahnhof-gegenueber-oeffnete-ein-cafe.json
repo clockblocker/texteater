@@ -37,7 +37,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "gegenüber",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "gegenüber",
 					"spelling": { "kind": "Canonical" },

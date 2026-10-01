@@ -12,7 +12,6 @@ const lemma = {
 	kind: "PART",
 	canonicalForm: "nicht",
 	coreFeatures: {
-		abbr: null,
 		partType: null,
 		polarity: "Neg",
 	},

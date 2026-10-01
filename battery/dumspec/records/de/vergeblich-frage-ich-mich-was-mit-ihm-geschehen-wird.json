@@ -187,7 +187,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "vergeblich",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -396,7 +395,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "mit",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Either"

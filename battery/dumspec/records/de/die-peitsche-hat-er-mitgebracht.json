@@ -335,7 +335,6 @@
 						"kind": "ADJ",
 						"coreFeatures": {
 							"comparable": "Yes",
-							"abbr": null,
 							"numType": null,
 							"variant": null
 						}

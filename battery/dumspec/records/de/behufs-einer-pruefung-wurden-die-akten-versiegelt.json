@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "behufs",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "behufs",
 					"spelling": { "kind": "Canonical" },

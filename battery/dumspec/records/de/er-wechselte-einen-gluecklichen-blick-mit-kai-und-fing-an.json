@@ -313,7 +313,7 @@
 								"canonicalForm": "mit",
 								"family": "Lexeme",
 								"kind": "ADP",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Someone"
@@ -449,7 +449,6 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -497,7 +496,6 @@
 						"family": "Lexeme",
 						"kind": "PROPN",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": "Masc"
 						}
@@ -853,7 +851,6 @@
 						"kind": "PART",
 						"canonicalForm": "zu",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Inf",
 							"polarity": null
 						}
@@ -1011,7 +1008,6 @@
 						"kind": "PART",
 						"canonicalForm": "zu",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Inf",
 							"polarity": null
 						}

@@ -359,7 +359,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Grubach",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": null
 						}
@@ -692,7 +691,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "gegen",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "gegen",
 					"spelling": {
@@ -738,7 +737,6 @@
 						"kind": "NUM",
 						"canonicalForm": "acht",
 						"coreFeatures": {
-							"abbr": null,
 							"numType": "Card"
 						}
 					},
@@ -1055,7 +1053,6 @@
 						"kind": "PART",
 						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

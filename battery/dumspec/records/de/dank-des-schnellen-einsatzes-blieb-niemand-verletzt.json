@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "dank",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "dank",
 					"spelling": { "kind": "Canonical" },

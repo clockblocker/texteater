@@ -291,7 +291,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "mit",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Someone"
@@ -467,7 +467,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "gut",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -719,7 +718,6 @@
 						"kind": "PART",
 						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

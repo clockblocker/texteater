@@ -293,7 +293,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "mit",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Either"
@@ -391,7 +391,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "neu",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -444,7 +443,6 @@
 						"kind": "PART",
 						"canonicalForm": "einfach",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Mod",
 							"polarity": null
 						}
@@ -482,7 +480,6 @@
 						"kind": "PART",
 						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

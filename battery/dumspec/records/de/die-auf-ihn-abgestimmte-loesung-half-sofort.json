@@ -72,7 +72,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "auf",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Acc",
 							"referent": "Either"
@@ -98,7 +98,6 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

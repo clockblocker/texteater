@@ -14,7 +14,6 @@ const lemma = {
 	kind: "PART",
 	canonicalForm: "mal",
 	coreFeatures: {
-		abbr: null,
 		partType: "Mod",
 		polarity: null,
 	},

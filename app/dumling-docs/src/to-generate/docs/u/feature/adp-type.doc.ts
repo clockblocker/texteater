@@ -33,7 +33,7 @@ Do not use \`adpType\` to encode the preposition a verb, adjective, noun or Locu
 		{
 			heading: "Current Dumling support",
 			body: `
-The abstract feature enum follows UD and includes all four values above. No current concrete Dumling route uses it. German [\`ADP\`](/u/entity/lemma/lexeme/adp/) Core is \`abbr\` only: the Dumling spec's ADP Case Table lists the positions each German adposition takes, and a German circumposition is a Locution ADP.
+The abstract feature enum follows UD and includes all four values above. No current concrete Dumling route uses it. German [\`ADP\`](/u/entity/lemma/lexeme/adp/) has no Core Features: the Dumling spec's ADP Case Table lists the positions each German adposition takes, and a German circumposition is a Locution ADP.
 `,
 		},
 	],

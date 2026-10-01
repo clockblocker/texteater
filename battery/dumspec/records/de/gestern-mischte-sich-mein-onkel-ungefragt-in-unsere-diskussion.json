@@ -219,7 +219,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "in",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Acc",
 							"referent": "Something"
@@ -363,7 +363,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "ungefragt",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

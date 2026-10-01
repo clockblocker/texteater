@@ -102,7 +102,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "in",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "in",
 					"spelling": { "kind": "Canonical" },
@@ -154,7 +154,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Fliederweg",
 						"coreFeatures": {
-							"abbr": null,
 							"article": "Definite",
 							"gender": "Masc"
 						}

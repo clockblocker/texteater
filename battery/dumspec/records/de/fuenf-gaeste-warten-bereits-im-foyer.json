@@ -39,7 +39,6 @@
 						"kind": "NUM",
 						"canonicalForm": "fünf",
 						"coreFeatures": {
-							"abbr": null,
 							"numType": "Card"
 						}
 					},

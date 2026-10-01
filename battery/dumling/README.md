@@ -27,7 +27,6 @@ const lemma = {
 	family: "Lexeme",
 	kind: "ADJ",
 	coreFeatures: {
-		abbr: null,
 		comparable: null,
 		numType: null,
 		variant: null,

@@ -14,7 +14,6 @@ function particle(
 		kind: "PART",
 		canonicalForm,
 		coreFeatures: {
-			abbr: null,
 			partType: null,
 			polarity: null,
 			...features,

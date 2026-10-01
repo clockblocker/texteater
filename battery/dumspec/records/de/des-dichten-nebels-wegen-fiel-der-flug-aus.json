@@ -46,7 +46,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "wegen",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wegen",
 					"spelling": { "kind": "Canonical" },

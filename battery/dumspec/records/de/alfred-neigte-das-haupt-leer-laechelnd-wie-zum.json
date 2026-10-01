@@ -298,7 +298,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Alfred",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": "Masc"
 						}
@@ -453,7 +452,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "leer",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -503,7 +501,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "lächelnd",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -584,7 +581,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "zu",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "zu",
 					"spelling": {
@@ -872,7 +869,6 @@
 						"kind": "PART",
 						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}
@@ -1051,7 +1047,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "entfremdet",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

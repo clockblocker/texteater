@@ -135,7 +135,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "seit",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "seit",
 					"spelling": {
@@ -259,7 +259,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "um",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Acc",
 							"referent": "Either"

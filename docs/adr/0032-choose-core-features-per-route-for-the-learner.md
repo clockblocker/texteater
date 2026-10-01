@@ -94,7 +94,7 @@ Features.
 - A Locution route borrows the inflection features and Grundform rule of the
   Lexeme route with its Kind (ADR 0039). `discourseFormulaRole` is not Core;
   it is the Formula Role in Reading Knowledge.
-- German ADP: Lexeme ADP Core is `abbr` only. Where an adposition stands is
+- German ADP: Lexeme ADP has no Core Features. Where an adposition stands is
   not identity, so `wegen des Sturms` and `des Nebels wegen` attest one Lemma
   `wegen`; Duden, grammis and LEO each give the position as a usage line
   under one headword. No Lemma or Attestation records the position, since
@@ -141,6 +141,13 @@ gender alone (`ihm`, `seiner`, `dem`, `dessen`) and lets navigation reach
 each from both genders it serves
 ([#743](https://github.com/clockblocker/texteater/issues/743)). The sentence
 on decided splits and the navigation paragraph point to it.
+
+Amended on 2026-10-01: `abbr` left every German route, ADP's last Core
+Feature among them. It split no Lemma: *BVG* and *K.* are their own Lemmas
+because the text uses the letters as the name, and their Surfaces keep them.
+How an abbreviation expands is a relation
+([#763](https://github.com/clockblocker/texteater/issues/763)), not identity.
+Decided on [#766](https://github.com/clockblocker/texteater/issues/766).
 
 ## Considered Options
 

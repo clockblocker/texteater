@@ -39,7 +39,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "durch",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "durch",
 					"spelling": { "kind": "Canonical" },

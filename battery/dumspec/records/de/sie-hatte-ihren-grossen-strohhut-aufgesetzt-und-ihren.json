@@ -415,7 +415,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "groß",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -918,7 +917,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "klein",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -1019,7 +1017,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "heftig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null

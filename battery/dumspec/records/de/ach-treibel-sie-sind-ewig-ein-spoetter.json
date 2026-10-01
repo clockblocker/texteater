@@ -199,7 +199,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Treibel",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": null
 						}
@@ -348,7 +347,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "ewig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

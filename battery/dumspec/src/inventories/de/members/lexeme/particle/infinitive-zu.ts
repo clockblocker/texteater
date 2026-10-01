@@ -13,7 +13,6 @@ const lemma = {
 	kind: "PART",
 	canonicalForm: "zu",
 	coreFeatures: {
-		abbr: null,
 		partType: "Inf",
 		polarity: null,
 	},

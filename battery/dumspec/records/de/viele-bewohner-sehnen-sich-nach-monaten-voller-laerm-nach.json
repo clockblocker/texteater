@@ -200,7 +200,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "nach",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Either"
@@ -233,7 +233,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "nach",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "nach",
 					"spelling": { "kind": "Canonical" },
@@ -308,7 +308,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "voller",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -476,7 +475,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "verlässlich",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null

@@ -181,7 +181,6 @@ test("any Head that stands in for an elided noun owns its article", () => {
 				kind: "ADJ",
 				canonicalForm: "rot",
 				coreFeatures: {
-					abbr: null,
 					comparable: "Yes",
 					numType: null,
 					variant: null,
@@ -214,7 +213,6 @@ test("any Head that stands in for an elided noun owns its article", () => {
 				kind: "PROPN",
 				canonicalForm: "Berlin",
 				coreFeatures: {
-					abbr: null,
 					article: null,
 					gender: "Neut",
 				},
@@ -243,7 +241,7 @@ test("a surname that owns its article shows its gender on the Surface (system AD
 					family: "Lexeme",
 					kind: "PROPN",
 					canonicalForm: "Schwarzkopf",
-					coreFeatures: { abbr: null, article: null, gender: null },
+					coreFeatures: { article: null, gender: null },
 				},
 				inflectionalFeatures: { case: "Nom", gender, number: "Sing" },
 			},

@@ -39,7 +39,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "während",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "während",
 					"spelling": { "kind": "Canonical" },

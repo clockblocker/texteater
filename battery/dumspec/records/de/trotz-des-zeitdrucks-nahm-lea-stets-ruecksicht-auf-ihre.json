@@ -71,7 +71,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "trotz",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "trotz",
 					"spelling": { "kind": "Canonical" },
@@ -185,7 +185,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "auf",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Acc",
 							"referent": "Someone"
@@ -210,7 +210,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Lea",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": "Fem"
 						}

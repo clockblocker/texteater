@@ -303,7 +303,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "früh",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -444,7 +443,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "um",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "um",
 					"spelling": {
@@ -490,7 +489,6 @@
 						"kind": "NUM",
 						"canonicalForm": "sieben",
 						"coreFeatures": {
-							"abbr": null,
 							"numType": "Card"
 						}
 					},

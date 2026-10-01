@@ -367,7 +367,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "in",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

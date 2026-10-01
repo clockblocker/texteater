@@ -283,7 +283,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Gregor Samsa",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": null
 						}
@@ -387,7 +386,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "aus",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "aus",
 					"spelling": {
@@ -436,7 +435,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "unruhig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -734,7 +732,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "in",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "in",
 					"spelling": {
@@ -931,7 +929,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "ungeheuer",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -981,7 +978,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "verwandelt",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1017,7 +1013,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "zu",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Either"

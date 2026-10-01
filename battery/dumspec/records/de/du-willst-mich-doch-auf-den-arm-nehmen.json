@@ -272,7 +272,6 @@
 						"kind": "PART",
 						"canonicalForm": "doch",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Mod",
 							"polarity": null
 						}

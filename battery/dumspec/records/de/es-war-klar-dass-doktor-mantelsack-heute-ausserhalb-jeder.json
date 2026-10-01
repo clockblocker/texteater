@@ -433,7 +433,6 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -566,7 +565,6 @@
 						"family": "Lexeme",
 						"kind": "PROPN",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": null
 						}
@@ -659,7 +657,7 @@
 						"canonicalForm": "außerhalb",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}
@@ -893,7 +891,7 @@
 								"canonicalForm": "um",
 								"family": "Lexeme",
 								"kind": "ADP",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Acc",
 							"referent": "Something"
@@ -1009,7 +1007,6 @@
 						"family": "Lexeme",
 						"kind": "PART",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}
@@ -1195,7 +1192,6 @@
 						"family": "Lexeme",
 						"kind": "PART",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

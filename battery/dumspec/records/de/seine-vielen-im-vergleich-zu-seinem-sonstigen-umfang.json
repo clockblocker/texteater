@@ -288,7 +288,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "viel",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -479,7 +478,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "sonstig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -570,7 +568,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "kläglich",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -620,7 +617,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "dünn",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -816,7 +812,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "hilflos",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -857,7 +852,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "vor",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "vor",
 					"spelling": {

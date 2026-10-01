@@ -319,7 +319,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "mit",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "mit",
 					"spelling": {
@@ -415,7 +415,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "zu",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "zu",
 					"spelling": {

@@ -318,7 +318,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "zwischen",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "zwischen",
 					"spelling": {
@@ -411,7 +411,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "versteckt",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -514,7 +513,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "schweigend",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -804,7 +802,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "durch",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "durch",
 					"spelling": {
@@ -901,7 +899,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "lang",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -993,7 +990,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "verbunden",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

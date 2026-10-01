@@ -132,7 +132,7 @@
 						"canonicalForm": "auf",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

@@ -689,7 +689,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Marcell",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": "Masc"
 						}
@@ -974,7 +973,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "schlüssig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1208,7 +1206,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "zu",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Something"
@@ -1296,7 +1294,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "ganz",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

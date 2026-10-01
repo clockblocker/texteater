@@ -31,8 +31,10 @@ function setsForeign(input: unknown): boolean {
 // amended 2026-10-01), and the #766 sweep dropped the features that only
 // labelled a Lemma. A legacy sample that sets one is rejected.
 const retiredGermanFeatures: Readonly<Record<string, readonly string[]>> = {
-	"de/lexeme/adposition.ts": ["adpType", "extPos", "partType"],
+	"de/lexeme/adposition.ts": ["abbr", "adpType", "extPos", "partType"],
 	"de/lexeme/coordinating-conjunction.ts": ["conjType"],
+	"de/lexeme/numeral.ts": ["abbr"],
+	"de/lexeme/particle.ts": ["abbr"],
 	"de/lexeme/subordinating-conjunction.ts": ["conjType"],
 };
 function setsRetiredGermanFeature(route: string, input: unknown): boolean {

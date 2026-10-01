@@ -43,7 +43,6 @@
 						"kind": "NUM",
 						"canonicalForm": "Trillion",
 						"coreFeatures": {
-							"abbr": null,
 							"numType": "Card"
 						}
 					},

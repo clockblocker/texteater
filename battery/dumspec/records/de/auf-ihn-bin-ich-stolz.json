@@ -39,7 +39,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "stolz",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -72,7 +71,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "auf",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Acc",
 							"referent": "Someone"

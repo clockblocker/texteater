@@ -363,7 +363,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "über",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "über",
 					"spelling": {
@@ -617,7 +617,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "entschieden",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -707,7 +706,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "gemächlich",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -757,7 +755,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "schlendernd",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -798,7 +795,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "durch",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "durch",
 					"spelling": {
@@ -901,7 +898,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "schmeichelnd",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1082,7 +1078,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "zu",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "zu",
 					"spelling": {
@@ -1213,7 +1209,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "ersehnt",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1262,7 +1257,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "nach",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "nach",
 					"spelling": {
@@ -1362,7 +1357,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "wüst",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null

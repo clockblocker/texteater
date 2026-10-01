@@ -55,7 +55,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "aufgrund",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "auf Grund",
 					"spelling": {

@@ -87,7 +87,7 @@
 						"canonicalForm": "an",
 						"family": "Lexeme",
 						"kind": "ADP",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}
@@ -178,7 +178,6 @@
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

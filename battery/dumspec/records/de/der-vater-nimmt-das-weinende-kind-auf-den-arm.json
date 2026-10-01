@@ -284,7 +284,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "weinend",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -330,7 +329,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "auf",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "auf",
 					"spelling": {

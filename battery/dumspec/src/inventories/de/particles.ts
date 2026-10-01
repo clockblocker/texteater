@@ -17,7 +17,7 @@ export const germanParticles: readonly AuthoredMember[] = [
 	...modalParticles,
 ];
 
-const coreKeys = ["abbr", "partType", "polarity"] as const;
+const coreKeys = ["partType", "polarity"] as const;
 
 /**
  * The first authored PART member whose Lemma has `lemma`'s Canonical Form,

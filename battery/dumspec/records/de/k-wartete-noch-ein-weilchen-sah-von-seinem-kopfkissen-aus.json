@@ -339,7 +339,7 @@
 			},
 			{
 				"rule": "de/abbreviation-is-one-segment",
-				"hash": "57538162fe227476"
+				"hash": "8b5d215a31ab7264"
 			},
 			{
 				"rule": "de/participial-adjective",
@@ -402,7 +402,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "K.",
 						"coreFeatures": {
-							"abbr": "Yes",
 							"article": null,
 							"gender": null
 						}
@@ -428,7 +427,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B9, A8). K. is how the novel names its hero: an initial that is the name's usual form, so its own PROPN with abbr Yes, like BVG (de/abbreviation-is-one-segment). It counts as a surname, so it has no Core gender, and nothing in this sentence shows one on its Surface (de/proper-noun-article; ruled on #743, A1)."
+				"rationale": "Ruled on #743 (VP-B9, A8). K. is how the novel names its hero: an initial that is the name's usual form, so its own PROPN, like BVG (de/abbreviation-is-one-segment). It counts as a surname, so it has no Core gender, and nothing in this sentence shows one on its Surface (de/proper-noun-article; ruled on #743, A1)."
 			}
 		},
 		{
@@ -844,7 +843,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "alt",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -983,7 +981,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "gegenüber",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "gegenüber",
 					"spelling": {
@@ -1206,7 +1204,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "mit",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "mit",
 					"spelling": {
@@ -1305,7 +1303,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "an",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "an",
 					"spelling": {
@@ -1441,7 +1439,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "ungewöhnlich",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -1615,7 +1612,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "gleichzeitig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1660,7 +1656,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "befremdet",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1742,7 +1737,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "hungrig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

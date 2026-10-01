@@ -1130,7 +1130,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "bei",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}
@@ -1174,7 +1174,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Odradek",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": null
 						}
@@ -1215,7 +1214,6 @@
 						"kind": "PART",
 						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}

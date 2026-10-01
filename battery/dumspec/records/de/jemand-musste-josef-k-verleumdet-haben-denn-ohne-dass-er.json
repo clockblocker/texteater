@@ -195,7 +195,7 @@
 			},
 			{
 				"rule": "de/abbreviation-is-one-segment",
-				"hash": "57538162fe227476"
+				"hash": "8b5d215a31ab7264"
 			},
 			{
 				"rule": "de/variant-and-historical-status",
@@ -360,7 +360,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Josef K.",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": null
 						}

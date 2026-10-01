@@ -214,7 +214,6 @@
 						"kind": "PART",
 						"canonicalForm": "denn",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": "Mod",
 							"polarity": null
 						}

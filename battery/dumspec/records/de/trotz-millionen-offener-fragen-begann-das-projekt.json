@@ -40,7 +40,6 @@
 						"kind": "NUM",
 						"canonicalForm": "Million",
 						"coreFeatures": {
-							"abbr": null,
 							"numType": "Card"
 						}
 					},

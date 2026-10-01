@@ -49,7 +49,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "ohne",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "ohne",
 					"spelling": { "kind": "Canonical" },

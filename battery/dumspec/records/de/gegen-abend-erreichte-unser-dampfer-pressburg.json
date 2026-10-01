@@ -38,7 +38,6 @@
 								"kind": "PROPN",
 								"canonicalForm": "Bratislava",
 								"coreFeatures": {
-									"abbr": null,
 									"article": null,
 									"gender": "Neut"
 								}
@@ -62,7 +61,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Pressburg",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": "Neut"
 						}

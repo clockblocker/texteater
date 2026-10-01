@@ -609,7 +609,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "NE",
 		stts: "proper noun",
 		dumling:
-			"Lexeme PROPN, owning its article; a surname or coined name has no Core gender, and its Surface marks the gender an owned article shows; an abbreviated name has abbr Yes",
+			"Lexeme PROPN, owning its article; a surname or coined name has no Core gender, and its Surface marks the gender an owned article shows",
 		mappings: [
 			{
 				use: "proper noun",

@@ -21,7 +21,7 @@ export const berlinLemma = {
 	family: "Lexeme",
 	kind: "PROPN",
 	canonicalForm: "Berlin",
-	coreFeatures: { abbr: null, article: null, gender: "Neut" },
+	coreFeatures: { article: null, gender: "Neut" },
 } as const satisfies Dumling.Lemma<"de", "Lexeme", "PROPN">;
 
 export const prefixLemma = {
@@ -40,7 +40,7 @@ const adposition = (canonicalForm: string) =>
 		family: "Lexeme",
 		kind: "ADP",
 		canonicalForm,
-		coreFeatures: { abbr: null },
+		coreFeatures: {},
 	}) as const satisfies Dumling.Lemma<"de", "Lexeme", "ADP">;
 
 /** Two-way preposition: the construction supplies the case. */

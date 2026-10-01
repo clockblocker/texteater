@@ -34,7 +34,6 @@ const verliebtReading = {
 		kind: "ADJ",
 		canonicalForm: "verliebt",
 		coreFeatures: {
-			abbr: null,
 			comparable: "Yes",
 			numType: null,
 			variant: null,

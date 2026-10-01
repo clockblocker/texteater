@@ -275,7 +275,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "rot",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -322,7 +321,6 @@
 						"kind": "PART",
 						"canonicalForm": "nicht",
 						"coreFeatures": {
-							"abbr": null,
 							"partType": null,
 							"polarity": "Neg"
 						}
@@ -363,7 +361,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "blau",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null

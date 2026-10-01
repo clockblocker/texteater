@@ -17,7 +17,7 @@ const adposition = (canonicalForm: string) => ({
 	family: "Lexeme",
 	kind: "ADP",
 	canonicalForm,
-	coreFeatures: { abbr: null },
+	coreFeatures: {},
 });
 
 const caseSlot = (realizedCase: string) => ({

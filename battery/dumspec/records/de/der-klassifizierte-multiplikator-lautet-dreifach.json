@@ -36,7 +36,6 @@
 						"kind": "NUM",
 						"canonicalForm": "dreifach",
 						"coreFeatures": {
-							"abbr": null,
 							"numType": "Mult"
 						}
 					},

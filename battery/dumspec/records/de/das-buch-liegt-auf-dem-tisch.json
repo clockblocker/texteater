@@ -40,7 +40,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "auf",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "auf",
 					"spelling": { "kind": "Canonical" },

@@ -10,7 +10,6 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
 export const DeNumeralFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
-		abbr: DE_FEATURE_SCHEMA.abbr,
 		numType: DE_FEATURE_SCHEMA.numType.extract([
 			"Card",
 			"Frac",

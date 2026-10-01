@@ -62,7 +62,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "nach",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "nach",
 					"spelling": { "kind": "Canonical" },
@@ -184,7 +184,6 @@
 						"kind": "PROPN",
 						"canonicalForm": "Lea",
 						"coreFeatures": {
-							"abbr": null,
 							"article": null,
 							"gender": "Fem"
 						}

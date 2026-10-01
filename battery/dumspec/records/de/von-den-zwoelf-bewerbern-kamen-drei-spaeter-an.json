@@ -45,7 +45,6 @@
 						"kind": "NUM",
 						"canonicalForm": "drei",
 						"coreFeatures": {
-							"abbr": null,
 							"numType": "Card"
 						}
 					},

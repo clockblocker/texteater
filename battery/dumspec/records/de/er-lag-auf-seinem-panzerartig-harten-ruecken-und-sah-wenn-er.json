@@ -537,7 +537,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "auf",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "auf",
 					"spelling": {
@@ -636,7 +636,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "panzerartig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -681,7 +680,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "hart",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -1143,7 +1141,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "gewölbt",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1193,7 +1190,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "braun",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": "Yes",
 							"numType": null,
 							"variant": null
@@ -1239,7 +1235,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "von",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "von",
 					"spelling": {
@@ -1288,7 +1284,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "bogenförmig",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1379,7 +1374,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "geteilt",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1472,7 +1466,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "auf",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "auf",
 					"spelling": {
@@ -1719,7 +1713,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "bereit",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null
@@ -1769,7 +1762,7 @@
 								"family": "Lexeme",
 								"kind": "ADP",
 								"canonicalForm": "zu",
-								"coreFeatures": { "abbr": null }
+								"coreFeatures": {}
 							},
 							"governedCase": "Dat",
 							"referent": "Something"
@@ -1868,7 +1861,6 @@
 						"kind": "ADJ",
 						"canonicalForm": "gänzlich",
 						"coreFeatures": {
-							"abbr": null,
 							"comparable": null,
 							"numType": null,
 							"variant": null

@@ -40,7 +40,7 @@
 						"family": "Lexeme",
 						"kind": "ADP",
 						"canonicalForm": "entlang",
-						"coreFeatures": { "abbr": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "entlang",
 					"spelling": { "kind": "Canonical" },

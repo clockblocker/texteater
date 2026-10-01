@@ -46,7 +46,6 @@
 						"kind": "PART",
 						"coreFeatures": {
 							"polarity": "Neg",
-							"abbr": null,
 							"partType": null
 						}
 					},
