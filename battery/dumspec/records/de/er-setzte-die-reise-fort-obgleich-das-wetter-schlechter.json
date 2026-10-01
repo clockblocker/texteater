@@ -46,7 +46,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "obgleich",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "obgleich",
 					"spelling": { "kind": "Canonical" },

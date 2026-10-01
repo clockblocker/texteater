@@ -45,7 +45,7 @@
 						"canonicalForm": "um",
 						"family": "Lexeme",
 						"kind": "SCONJ",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

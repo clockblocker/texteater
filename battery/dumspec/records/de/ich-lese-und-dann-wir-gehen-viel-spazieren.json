@@ -276,9 +276,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

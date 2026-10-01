@@ -50,7 +50,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "wo",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wo",
 					"spelling": { "kind": "Canonical" },

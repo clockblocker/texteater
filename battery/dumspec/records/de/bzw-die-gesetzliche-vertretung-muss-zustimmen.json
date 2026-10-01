@@ -40,7 +40,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "beziehungsweise",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "beziehungsweise",
 					"spelling": { "kind": "Canonical" },

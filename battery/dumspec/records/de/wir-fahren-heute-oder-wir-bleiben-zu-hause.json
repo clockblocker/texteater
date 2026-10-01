@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "oder",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "oder",
 					"spelling": { "kind": "Canonical" },

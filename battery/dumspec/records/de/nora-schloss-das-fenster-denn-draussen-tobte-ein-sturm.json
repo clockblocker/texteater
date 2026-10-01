@@ -47,7 +47,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "denn",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "denn",
 					"spelling": { "kind": "Canonical" },

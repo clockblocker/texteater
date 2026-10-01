@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "ehe",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "ehe",
 					"spelling": { "kind": "Canonical" },

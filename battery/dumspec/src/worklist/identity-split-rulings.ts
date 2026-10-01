@@ -131,7 +131,6 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		varies: [
 			{ key: "kind", values: ["ADV", "SCONJ", "CCONJ"] },
 			{ key: "pronType", values: [null, "Int", "Rel"] },
-			{ key: "conjType", values: [null, "Comp"] },
 		],
 	},
 	{
@@ -139,10 +138,7 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		adrs: [],
 		rules: ["de/comparison-als"],
 		forms: ["als"],
-		varies: [
-			{ key: "kind", values: ["CCONJ", "SCONJ"] },
-			{ key: "conjType", values: [null, "Comp"] },
-		],
+		varies: [{ key: "kind", values: ["CCONJ", "SCONJ"] }],
 	},
 	{
 		split: "A one-word routine formula is an INTJ apart from the noun",

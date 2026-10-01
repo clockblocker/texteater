@@ -475,9 +475,7 @@
 						"canonicalForm": "dass",
 						"family": "Lexeme",
 						"kind": "SCONJ",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}
@@ -855,9 +853,7 @@
 						"canonicalForm": "und",
 						"family": "Lexeme",
 						"kind": "CCONJ",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

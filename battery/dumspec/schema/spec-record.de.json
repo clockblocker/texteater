@@ -7027,24 +7027,7 @@
 				},
 				"coreFeatures": {
 					"type": "object",
-					"properties": {
-						"conjType": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Comp"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
-						}
-					},
-					"required": [
-						"conjType"
-					],
+					"properties": {},
 					"additionalProperties": false
 				}
 			},
@@ -8782,24 +8765,7 @@
 				},
 				"coreFeatures": {
 					"type": "object",
-					"properties": {
-						"conjType": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Comp"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
-						}
-					},
-					"required": [
-						"conjType"
-					],
+					"properties": {},
 					"additionalProperties": false
 				}
 			},

@@ -40,7 +40,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "bis",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "bis",
 					"spelling": { "kind": "Canonical" },

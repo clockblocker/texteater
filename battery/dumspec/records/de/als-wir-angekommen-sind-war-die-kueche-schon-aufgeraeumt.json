@@ -131,9 +131,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "als",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "als",
 					"spelling": {

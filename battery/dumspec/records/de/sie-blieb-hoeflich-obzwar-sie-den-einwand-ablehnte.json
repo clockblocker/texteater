@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "obzwar",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "obzwar",
 					"spelling": { "kind": "Canonical" },

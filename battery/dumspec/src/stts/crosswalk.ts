@@ -540,7 +540,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "KOKOM",
 		stts: "comparison particle",
 		dumling:
-			"als or wie: CCONJ before a phrase, SCONJ before a clause, conjType Comp",
+			"als or wie in its comparison Reading (than, as): CCONJ before a phrase, SCONJ before a clause",
 		mappings: [
 			{
 				use: "before a phrase",

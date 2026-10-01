@@ -40,7 +40,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "sobald",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "sobald",
 					"spelling": { "kind": "Canonical" },

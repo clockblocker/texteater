@@ -45,7 +45,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "allein",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "allein",
 					"spelling": { "kind": "Canonical" },

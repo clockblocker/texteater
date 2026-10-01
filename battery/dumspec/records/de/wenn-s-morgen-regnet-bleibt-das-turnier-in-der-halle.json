@@ -54,7 +54,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "wenn",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wenn",
 					"spelling": { "kind": "Canonical" },

@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "wohingegen",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wohingegen",
 					"spelling": { "kind": "Canonical" },

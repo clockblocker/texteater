@@ -651,9 +651,7 @@
 						"canonicalForm": "dass",
 						"family": "Lexeme",
 						"kind": "SCONJ",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

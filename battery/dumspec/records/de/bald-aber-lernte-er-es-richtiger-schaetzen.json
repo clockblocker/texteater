@@ -175,9 +175,7 @@
 						"canonicalForm": "aber",
 						"family": "Lexeme",
 						"kind": "CCONJ",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

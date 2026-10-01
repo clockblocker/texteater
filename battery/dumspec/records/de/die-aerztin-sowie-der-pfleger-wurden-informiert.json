@@ -39,7 +39,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "sowie",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "sowie",
 					"spelling": { "kind": "Canonical" },

@@ -505,9 +505,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "und",
 					"spelling": {
@@ -695,9 +693,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "denn",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "denn",
 					"spelling": {
@@ -830,9 +826,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "obgleich",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "obgleich",
 					"spelling": {

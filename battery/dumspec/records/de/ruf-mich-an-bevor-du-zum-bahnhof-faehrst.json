@@ -43,7 +43,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "bevor",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "bevor",
 					"spelling": { "kind": "Canonical" },

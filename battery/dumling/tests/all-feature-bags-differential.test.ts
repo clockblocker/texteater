@@ -26,20 +26,23 @@ function setsForeign(input: unknown): boolean {
 	return typeof core === "object" && core !== null && "foreign" in core;
 }
 
-// German ADP Core is abbr only (ADR 0032, amended 2026-10-01): position is no
-// identity, a circumposition is a Locution ADP, and adpType, extPos and
-// partType left the route, so a legacy sample that sets them is rejected.
-function setsRetiredGermanAdpositionCore(
-	route: string,
-	input: unknown,
-): boolean {
-	if (route !== "de/lexeme/adposition.ts") return false;
-	if (typeof input !== "object" || input === null) return false;
-	const core = (input as { core?: unknown }).core;
-	return (
-		typeof core === "object" &&
-		core !== null &&
-		["adpType", "extPos", "partType"].some((feature) => feature in core)
+// German Core and Surface features that left their route: an ADP's
+// position is no identity and a circumposition is a Locution ADP (ADR 0032,
+// amended 2026-10-01), and the #766 sweep dropped the features that only
+// labelled a Lemma. A legacy sample that sets one is rejected.
+const retiredGermanFeatures: Readonly<Record<string, readonly string[]>> = {
+	"de/lexeme/adposition.ts": ["adpType", "extPos", "partType"],
+	"de/lexeme/coordinating-conjunction.ts": ["conjType"],
+	"de/lexeme/subordinating-conjunction.ts": ["conjType"],
+};
+function setsRetiredGermanFeature(route: string, input: unknown): boolean {
+	const retired = retiredGermanFeatures[route];
+	if (!retired || typeof input !== "object" || input === null) return false;
+	return Object.values(input).some(
+		(bag) =>
+			typeof bag === "object" &&
+			bag !== null &&
+			retired.some((feature) => feature in bag),
 	);
 }
 
@@ -71,7 +74,7 @@ for (const route of new Set(fixtures.all.map((sample) => sample.route))) {
 				supersededShape ||
 					setsEnglishStyle(route, sample.input) ||
 					setsForeign(sample.input) ||
-					setsRetiredGermanAdpositionCore(route, sample.input)
+					setsRetiredGermanFeature(route, sample.input)
 					? false
 					: sample.accepted,
 			);

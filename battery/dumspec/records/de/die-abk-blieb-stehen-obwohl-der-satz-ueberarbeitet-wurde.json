@@ -48,7 +48,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "obwohl",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "obwohl",
 					"spelling": { "kind": "Canonical" },

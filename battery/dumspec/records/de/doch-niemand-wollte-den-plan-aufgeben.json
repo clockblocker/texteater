@@ -37,7 +37,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "doch",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "doch",
 					"spelling": { "kind": "Canonical" },

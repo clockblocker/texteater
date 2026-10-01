@@ -124,7 +124,7 @@ const umZuLemma = {
 \tcanonicalForm: "um zu",
 \tfamily: "Lexeme",
 \tkind: "SCONJ",
-\tcoreFeatures: { conjType: null },
+\tcoreFeatures: {},
 } satisfies Dumling.Lemma<"de", "Lexeme", "SCONJ">;
 
 const umZuAttestation = {

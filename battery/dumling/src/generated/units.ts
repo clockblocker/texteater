@@ -1170,7 +1170,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "CCONJ";
 			canonicalForm: string;
-			coreFeatures: { conjType: "Comp" | null };
+			coreFeatures: Record<string, never>;
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -1181,7 +1181,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "CCONJ";
 				canonicalForm: string;
-				coreFeatures: { conjType: "Comp" | null };
+				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
 			spelling:
@@ -1213,7 +1213,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "CCONJ";
 				canonicalForm: string;
-				coreFeatures: { conjType: "Comp" | null };
+				coreFeatures: Record<string, never>;
 			};
 			emojiDescription: string;
 		};
@@ -1228,7 +1228,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "CCONJ";
 					canonicalForm: string;
-					coreFeatures: { conjType: "Comp" | null };
+					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
 				spelling:
@@ -2975,7 +2975,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "SCONJ";
 			canonicalForm: string;
-			coreFeatures: { conjType: "Comp" | null };
+			coreFeatures: Record<string, never>;
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -2986,7 +2986,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "SCONJ";
 				canonicalForm: string;
-				coreFeatures: { conjType: "Comp" | null };
+				coreFeatures: Record<string, never>;
 			};
 			normalizedSurface: string;
 			spelling:
@@ -3018,7 +3018,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "SCONJ";
 				canonicalForm: string;
-				coreFeatures: { conjType: "Comp" | null };
+				coreFeatures: Record<string, never>;
 			};
 			emojiDescription: string;
 		};
@@ -3033,7 +3033,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "SCONJ";
 					canonicalForm: string;
-					coreFeatures: { conjType: "Comp" | null };
+					coreFeatures: Record<string, never>;
 				};
 				normalizedSurface: string;
 				spelling:

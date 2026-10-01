@@ -44,7 +44,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "als",
-						"coreFeatures": { "conjType": "Comp" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "als",
 					"spelling": { "kind": "Canonical" },

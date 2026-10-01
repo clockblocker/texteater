@@ -42,7 +42,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "damit",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "damit",
 					"spelling": { "kind": "Canonical" },

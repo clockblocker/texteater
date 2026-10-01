@@ -547,9 +547,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "wie",
-						"coreFeatures": {
-							"conjType": "Comp"
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wie",
 					"spelling": {
@@ -1311,9 +1309,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "und",
 					"spelling": {

@@ -1082,9 +1082,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "und",
 					"spelling": {
@@ -1579,9 +1577,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "aber",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "aber",
 					"spelling": {
@@ -1708,9 +1704,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "und",
 					"spelling": {

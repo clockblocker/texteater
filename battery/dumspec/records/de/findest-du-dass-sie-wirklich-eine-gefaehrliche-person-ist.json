@@ -520,9 +520,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "dass",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "daß",
 					"spelling": {
@@ -905,9 +903,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "und",
 					"spelling": {
@@ -988,9 +984,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "oder",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "oder",
 					"spelling": {
@@ -1120,9 +1114,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "dass",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "daß",
 					"spelling": {
@@ -1348,9 +1340,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "und",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "und",
 					"spelling": {

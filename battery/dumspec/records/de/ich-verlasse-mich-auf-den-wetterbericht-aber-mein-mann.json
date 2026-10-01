@@ -350,9 +350,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "aber",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "aber",
 					"spelling": {

@@ -39,7 +39,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "wie",
-						"coreFeatures": { "conjType": "Comp" }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "wie",
 					"spelling": { "kind": "Canonical" },

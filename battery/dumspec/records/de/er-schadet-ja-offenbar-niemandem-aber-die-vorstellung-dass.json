@@ -547,9 +547,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "aber",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}
@@ -641,9 +639,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "dass",
-						"coreFeatures": {
-							"conjType": null
-						}
+						"coreFeatures": {}
 					},
 					"surfaceFeatures": null
 				}

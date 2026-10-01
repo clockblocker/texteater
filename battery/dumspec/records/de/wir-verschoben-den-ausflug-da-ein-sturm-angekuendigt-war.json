@@ -47,7 +47,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "da",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "da",
 					"spelling": { "kind": "Canonical" },

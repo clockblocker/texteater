@@ -46,7 +46,7 @@
 						"family": "Lexeme",
 						"kind": "SCONJ",
 						"canonicalForm": "weil",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "weil",
 					"spelling": { "kind": "Canonical" },

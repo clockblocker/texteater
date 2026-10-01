@@ -40,7 +40,7 @@
 						"family": "Lexeme",
 						"kind": "CCONJ",
 						"canonicalForm": "sondern",
-						"coreFeatures": { "conjType": null }
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "sondern",
 					"spelling": { "kind": "Canonical" },
