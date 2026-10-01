@@ -50,6 +50,7 @@
 		{
 			"memberSegmentIndices": [24, 28],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "😔" },
 			"notes": {
 				"rationale": "Sympathy about his dog's death: the verb leidtun 'regret' (Duden sense 1), not a routine formula (#759 Q1). leid is its separable first part (de/verb-owns-its-scattered-members), and mir is a free dative."
 			},

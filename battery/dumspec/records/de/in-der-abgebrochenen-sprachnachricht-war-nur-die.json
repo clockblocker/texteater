@@ -92,6 +92,7 @@
 		{
 			"memberSegmentIndices": [19],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "😔" },
 			"notes": {
 				"rationale": "The ellipsis breaks the apology off before leid, so the verb leidtun 'regret' (#759 Q1) is attested Partially over tut, and mir is a free dative. de/partial-coverage names no verb whose separable particle breaks off; the user ruled on 2026-10-01 that this is a Partial leidtun, not Unresolved (#759)."
 			},

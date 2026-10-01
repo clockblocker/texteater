@@ -102,6 +102,7 @@
 		{
 			"memberSegmentIndices": [21, 29],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "😔" },
 			"notes": {
 				"rationale": "An apology: the verb leidtun 'regret' (Duden sense 1), not a routine formula (#759 Q1). leid is its separable first part, a member across the parenthetical wirklich (de/verb-owns-its-scattered-members), and mir is a free dative. The dass clause stays outside."
 			},

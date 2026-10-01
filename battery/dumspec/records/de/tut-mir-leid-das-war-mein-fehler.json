@@ -19,7 +19,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Attestation",
+	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0039"],
@@ -37,8 +37,9 @@
 		{
 			"memberSegmentIndices": [0, 4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "😔" },
 			"notes": {
-				"rationale": "Tut … leid is the verb leidtun, not a routine formula (#759 Q1): leid is its separable first part (de/verb-owns-its-scattered-members), and mir is a free dative. The Reading is leidtun 'regret' (Duden sense 1), here an apology. The old 🙇 is a bow of apology, which does not fit the sympathy that sense also covers, so the Reading awaits its Emoji Description."
+				"rationale": "Tut … leid is the verb leidtun, not a routine formula (#759 Q1): leid is its separable first part (de/verb-owns-its-scattered-members), and mir is a free dative. The Reading is leidtun 'regret' (Duden sense 1), here an apology."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -85,6 +86,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "mir", "orthography": "Standard" }],

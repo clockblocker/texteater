@@ -194,6 +194,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": {
+				"emojiDescription": "🥺"
+			},
 			"notes": {
 				"rationale": "Pity: the verb leidtun 'arouse pity' (Duden sense 2), with leid as its separable first part and mir a free dative (tut ihr leid), as in every tut mir leid (#759 Q1). Consistency partner of tut-mir-leid-ich-habe-…."
 			},

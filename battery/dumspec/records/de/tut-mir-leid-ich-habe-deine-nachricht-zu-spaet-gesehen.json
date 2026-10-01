@@ -124,6 +124,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": {
+				"emojiDescription": "😔"
+			},
 			"notes": {
 				"rationale": "Tut … leid is the verb leidtun 'regret' (Duden sense 1), here an apology, not a routine formula (#759 Q1): leid is its separable first part and mir a free dative, as in der-alte-hund-tut-mir-so-leid."
 			},
