@@ -653,7 +653,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/pron-or-det-by-use",
 		statement:
-			"An interrogative, demonstrative, relative, quantifier or negative that stands for a noun phrase is PRON; one that directly modifies a noun is DET. Genitive jedermanns is PRON, and so are attributive dessen, deren and wessen, whose following noun is a separate target.",
+			"An interrogative, demonstrative, relative, quantifier or negative that stands for a noun phrase is PRON; one that directly modifies a noun is DET, except beide after a determiner, which is ADJ (die beiden Häuser). Genitive jedermanns is PRON, and so are attributive dessen, deren and wessen, whose following noun is a separate target.",
 		adrs: [],
 		routes: lexeme("PRON", "DET"),
 		records: [
@@ -665,12 +665,13 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/viele-kamen-zu-spaet",
 			"de/wer-war-das",
 			"de/wer-mitkommen-will-meldet-sich-bis-freitag",
+			"de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
 		],
 	},
 	{
 		id: "de/quantifier-by-use",
 		statement:
-			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides: after a determiner they are ADJ, also with their noun elided (seine vielen Beine); standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig (mehr, am meisten; weniger, am wenigsten). This decides over de/pron-or-det-by-use and de/adjective-stays-adj. ein wenig and quantity bisschen are one Lexeme PRON each in every use; the ein of ein wenig is fixed, ein and der before bisschen are its satellites, and the word they quantify is its own target.",
+			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides. After a determiner they are ADJ, noun elided or not; standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig. mehr 'any longer' (nicht mehr) is Duden's Adverb mehr, not a form of viel. It overrides de/pron-or-det-by-use and de/adjective-stays-adj. ein wenig and quantity bisschen are one Lexeme PRON each in every use: the ein of ein wenig is fixed, ein or der before bisschen is a satellite, and what they quantify is its own target.",
 		adrs: ["ADR-0040", "ADR-0042"],
 		routes: lexeme("ADJ", "PRON", "DET", "ADV"),
 		records: [
@@ -692,6 +693,7 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/er-ass-nur-ein-wenig",
 			"de/sie-war-ein-wenig-muede",
 			"de/ich-will-ein-wenig-ausruhen",
+			"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
 		],
 	},
 	{

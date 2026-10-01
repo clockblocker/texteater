@@ -227,7 +227,7 @@
 			},
 			{
 				"rule": "de/pron-or-det-by-use",
-				"hash": "bc1096b61ad7294d"
+				"hash": "c2995798ac6c735d"
 			},
 			{
 				"rule": "de/verb-core-features",
@@ -721,10 +721,10 @@
 			"memberSegmentIndices": [29],
 			"route": {
 				"family": "Lexeme",
-				"kind": "DET"
+				"kind": "ADJ"
 			},
 			"notes": {
-				"rationale": "beiden directly modifies Schweizerhäusern after the article, so it is the DET beide, Dat.Plur (de/pron-or-det-by-use)."
+				"rationale": "beiden follows the article den before Schweizerhäusern, so it is ADJ beide, Dat.Plur, not a DET: beide after a determiner is an adjective (de/pron-or-det-by-use). It has no comparison forms."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -735,16 +735,10 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "DET",
+						"kind": "ADJ",
 						"canonicalForm": "beide",
 						"coreFeatures": {
-							"case": null,
-							"gender": null,
-							"number": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Tot"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "beiden",
@@ -756,9 +750,7 @@
 						"case": "Dat",
 						"degree": null,
 						"gender": null,
-						"gender[psor]": null,
-						"number": "Plur",
-						"number[psor]": null
+						"number": "Plur"
 					}
 				},
 				"members": [
@@ -767,7 +759,9 @@
 						"orthography": "Standard"
 					}
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		},
 		{

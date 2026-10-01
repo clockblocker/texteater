@@ -363,7 +363,7 @@
 			},
 			{
 				"rule": "de/pron-or-det-by-use",
-				"hash": "bc1096b61ad7294d"
+				"hash": "c2995798ac6c735d"
 			},
 			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" },
 			{

@@ -244,6 +244,10 @@
 			{
 				"rule": "de/focus-word-is-adv",
 				"hash": "d38200289df9682c"
+			},
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "d6fb19407461c452"
 			}
 		],
 		"references": [

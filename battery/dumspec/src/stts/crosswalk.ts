@@ -717,12 +717,12 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "PIDAT",
 		stts: "attributive indefinite pronoun with a determiner",
-		dumling: "Lexeme DET, merged with PIAT for now",
-		loss: "PIDAT and PIAT merge: the determiner before it isn't recorded as such",
+		dumling:
+			"Lexeme ADJ beide after a determiner (die beiden Häuser); wenig of ein wenig is part of PRON ein wenig",
 		mappings: [
 			{
 				use: "beide after a determiner (die beiden Häuser)",
-				becomes: alone(lexeme("DET")),
+				becomes: alone(lexeme("ADJ")),
 				records: [
 					show(
 						"der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
@@ -739,12 +739,9 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 				],
 			},
 		],
-		rules: ["de/quantifier-by-use"],
+		rules: ["de/pron-or-det-by-use", "de/quantifier-by-use"],
 		adrs: [],
-		model: partial({
-			gap: "#734's ruling maps die beiden to ADJ, but no Rule states it and the gold has DET beide",
-			issue: 734,
-		}),
+		model: modeled,
 		gold: "No",
 		pipeline: waitsOnDumgen,
 	},

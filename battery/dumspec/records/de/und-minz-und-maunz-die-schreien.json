@@ -34,7 +34,7 @@
 	"sources": {
 		"adrs": ["ADR-0032", "ADR-0042", "ADR-0044"],
 		"rules": [
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
 			{ "rule": "de/adjective-stays-adj", "hash": "8ef3db1fe0214e40" },
 			{
 				"rule": "de/comparability-is-lexical",

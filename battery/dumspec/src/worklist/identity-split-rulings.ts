@@ -85,6 +85,18 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		varies: [{ key: "kind", values: ["PRON", "DET"] }],
 	},
 	{
+		split: "beide after a determiner is ADJ; before a noun without one it is DET",
+		adrs: [],
+		rules: ["de/pron-or-det-by-use"],
+		forms: ["beide"],
+		both: { kind: ["ADJ", "DET"] },
+		varies: [
+			{ key: "kind", values: ["ADJ", "DET"] },
+			{ key: "pronType", values: [null, "Tot"], onlyWith: "kind" },
+			{ key: "comparable", onlyWith: "kind" },
+		],
+	},
+	{
 		split: "A personal pronoun's cell and the possessive of the same spelling are separate Lemmas",
 		adrs: ["ADR-0044"],
 		rules: ["de/core-features-are-identity"],

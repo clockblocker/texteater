@@ -17,7 +17,7 @@
 	"sources": {
 		"adrs": ["ADR-0044"],
 		"rules": [
-			{ "rule": "de/pron-or-det-by-use", "hash": "bc1096b61ad7294d" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
