@@ -44,11 +44,7 @@
 			"bucket": "locution",
 			"split": "held-out",
 			"change": "new",
-			"consistencySets": ["S3"],
-			"openQuestion": {
-				"issue": 759,
-				"question": 1
-			}
+			"consistencySets": ["S3"]
 		},
 		{
 			"row": "L6",
@@ -148,11 +144,7 @@
 			"bucket": "overgroup-control",
 			"split": "held-out",
 			"change": "new",
-			"consistencySets": ["S3"],
-			"openQuestion": {
-				"issue": 759,
-				"question": 1
-			}
+			"consistencySets": ["S3"]
 		},
 		{
 			"row": "C2",

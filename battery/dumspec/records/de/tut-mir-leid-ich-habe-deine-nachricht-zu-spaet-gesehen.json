@@ -107,8 +107,8 @@
 				"hash": "fdaeed620ab52c64"
 			},
 			{
-				"rule": "de/routine-formula-is-intj",
-				"hash": "3e6f15de4e616d8c"
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
 			},
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
@@ -119,13 +119,13 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2, 4],
+			"memberSegmentIndices": [0, 4],
 			"route": {
-				"family": "Locution",
-				"kind": "INTJ"
+				"family": "Lexeme",
+				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "The apology formula, as in tut-mir-leid-das-war-mein-fehler."
+				"rationale": "Tut … leid is the verb leidtun 'regret' (Duden sense 1), here an apology, not a routine formula (#759 Q1): leid is its separable first part and mir a free dative, as in der-alte-hund-tut-mir-so-leid."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -135,28 +135,87 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "INTJ",
-						"canonicalForm": "tut mir leid",
-						"coreFeatures": {}
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "leidtun",
+						"coreFeatures": {
+							"hasSepPrefix": "leid",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
 					},
-					"normalizedSurface": "Tut mir leid",
+					"normalizedSurface": "tut leid",
 					"spelling": {
 						"kind": "Canonical"
 					},
-					"surfaceFeatures": null
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"members": [
 					{
 						"attested": "Tut",
 						"orthography": "Standard"
 					},
 					{
-						"attested": "mir",
-						"orthography": "Standard"
-					},
-					{
 						"attested": "leid",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full"
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "mir",
+						"coreFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"extPos": null,
+							"person": "1",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "mir",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"articleEvidence": null,
+				"members": [
+					{
+						"attested": "mir",
 						"orthography": "Standard"
 					}
 				],

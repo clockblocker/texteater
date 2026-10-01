@@ -36,8 +36,18 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "99bff23563b49716"
+			},
+			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -45,7 +55,7 @@
 			"memberSegmentIndices": [17],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
-				"rationale": "Es is the subject of tut mir leid and stands for the regretted matter: das or dein Verlust could take its place. So it is the referential PRON es, a target of its own, and no member of the formula (ADR 0039)."
+				"rationale": "Es is the subject of leidtun and stands for the regretted matter: das or dein Verlust could take its place. So it is the referential PRON es, a target of its own, not a member of the verb (de/expletive-es-joins-its-verb, #759 Q1)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -80,30 +90,80 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [19, 21],
-			"route": { "family": "Locution", "kind": "INTJ" },
+			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "The ellipsis breaks the apology off before leid, so tut mir leid is attested Partially over tut and mir; the missing leid is really absent."
+				"rationale": "open: the ellipsis breaks the apology off before leid, so the verb leidtun 'regret' (#759 Q1) is attested Partially over tut, and mir is a free dative. de/partial-coverage names no verb whose separable particle breaks off, so whether this is a Partial leidtun or Unresolved awaits a ruling."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"members": [
-					{ "attested": "tut", "orthography": "Standard" },
-					{ "attested": "mir", "orthography": "Standard" }
-				],
+				"members": [{ "attested": "tut", "orthography": "Standard" }],
 				"realizationCoverage": "Partial",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "tut mir",
+					"normalizedSurface": "tut",
 					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "tut mir leid",
-						"family": "Locution",
-						"kind": "INTJ",
-						"coreFeatures": {}
+						"canonicalForm": "leidtun",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": "leid",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "mir", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "mir",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "mir",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"extPos": null,
+							"person": "1",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
 					},
 					"surfaceFeatures": null
 				}

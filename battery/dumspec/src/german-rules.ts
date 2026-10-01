@@ -67,7 +67,6 @@ const units: Rule[] = [
 			"de/guten-tag-ich-habe-einen-termin",
 			"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen",
 			"de/na-ja-ganz-ueberzeugt-bin-ich-nicht",
-			"de/tut-mir-leid-das-war-mein-fehler",
 			"de/genau-da-liegt-der-hase-im-pfeffer",
 			"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen",
 			"de/wer-zuerst-kommt-mahlt-zuerst",
@@ -158,6 +157,8 @@ const verbs: Rule[] = [
 			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
 			"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit",
 			"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins",
+			"de/tut-mir-leid-das-war-mein-fehler",
+			"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
 		],
 	},
 	{
@@ -178,6 +179,7 @@ const verbs: Rule[] = [
 			"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
 			"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
 			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
+			"de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
 		],
 	},
 	{
@@ -975,8 +977,6 @@ const locutionsAndSayings: Rule[] = [
 		adrs: ["ADR-0039"],
 		routes: [...lexeme("INTJ"), ...locution("INTJ", "ADV")],
 		records: [
-			"de/tut-mir-leid-das-war-mein-fehler",
-			"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
 			"de/obwohl-am-empfang-schon-jemand-hallo-gerufen-hatte",
 			"de/nach-dem-lockeren-zuruf-hallo-trat-die-gastgeberin-ans",
 			"de/gibst-du-ihm-das-original-ohne-quittung-auf-keinen-fall",

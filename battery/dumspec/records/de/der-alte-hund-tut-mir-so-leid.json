@@ -79,10 +79,6 @@
 				"hash": "fdaeed620ab52c64"
 			},
 			{
-				"rule": "de/routine-formula-is-intj",
-				"hash": "3e6f15de4e616d8c"
-			},
-			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
@@ -199,7 +195,7 @@
 				"kind": "VERB"
 			},
 			"notes": {
-				"rationale": "open: pity, not the apology formula: the verb leidtun with leid as its separable first part, and mir a free dative (tut ihr leid). Consistency partner of tut-mir-leid-ich-habe-…."
+				"rationale": "Pity: the verb leidtun 'arouse pity' (Duden sense 2), with leid as its separable first part and mir a free dative (tut ihr leid), as in every tut mir leid (#759 Q1). Consistency partner of tut-mir-leid-ich-habe-…."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

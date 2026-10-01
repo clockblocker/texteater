@@ -19,51 +19,99 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Attestation",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0039"],
+		"adrs": ["ADR-0022", "ADR-0039"],
 		"rules": [
-			{
-				"rule": "de/routine-formula-is-intj",
-				"hash": "3e6f15de4e616d8c"
-			},
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
 			{
-				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
-				"hash": "fdaeed620ab52c64"
-			}
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{ "rule": "de/verb-core-features", "hash": "bcb53b5333fa8af4" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 2, 4],
-			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙇" },
+			"memberSegmentIndices": [0, 4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "Tut mir leid is the apology formula tut mir leid, a Locution INTJ, not a finite verb. All three of its words are here, so the Attestation is Full over Tut, mir and leid, and a click on any of them selects the formula. Its apology role is Reading Knowledge, not part of the Lemma."
+				"rationale": "Tut … leid is the verb leidtun, not a routine formula (#759 Q1): leid is its separable first part (de/verb-owns-its-scattered-members), and mir is a free dative. The Reading is leidtun 'regret' (Duden sense 1), here an apology. The old 🙇 is a bow of apology, which does not fit the sympathy that sense also covers, so the Reading awaits its Emoji Description."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
 					{ "attested": "Tut", "orthography": "Standard" },
-					{ "attested": "mir", "orthography": "Standard" },
 					{ "attested": "leid", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
-					"normalizedSurface": "tut mir leid",
+					"normalizedSurface": "tut leid",
 					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "tut mir leid",
-						"family": "Locution",
-						"kind": "INTJ",
-						"coreFeatures": {}
+						"canonicalForm": "leidtun",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": "leid",
+							"lexicallyReflexive": null,
+							"verbType": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "mir", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "mir",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "mir",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"case": "Dat",
+							"number": "Sing",
+							"extPos": null,
+							"person": "1",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
 					},
 					"surfaceFeatures": null
 				}
