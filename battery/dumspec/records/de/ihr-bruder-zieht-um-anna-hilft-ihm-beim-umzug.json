@@ -35,7 +35,7 @@
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
-				"rationale": "ihm stands for Ihr Bruder, so it is the dative of er: masculine singular."
+				"rationale": "ihm stands for Ihr Bruder. It is the dative of er and es, one cell with gender null (ADR 0044)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -56,7 +56,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "ihm",

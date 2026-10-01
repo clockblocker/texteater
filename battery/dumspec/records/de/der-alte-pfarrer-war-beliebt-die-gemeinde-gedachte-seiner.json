@@ -36,7 +36,7 @@
 			"memberSegmentIndices": [17],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
-				"rationale": "seiner is the standard genitive of er, governed here by gedenken. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of seiner. So the Surface carries no historical status (de/variant-and-historical-status)."
+				"rationale": "seiner is the standard genitive of er and es, one cell with gender null (ADR 0044), governed here by gedenken. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of seiner. So the Surface carries no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -57,7 +57,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "seiner",

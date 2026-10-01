@@ -39,7 +39,7 @@ its own invariant Lemma with extPos DET.
 
 **Gender and possessors.** Personal gender uses `gender`. Unmarked features
 are null, compared literally, and never used as wildcards or as guesses about
-a person's sex. Plural agreement has no marked gender, and a marked personal
+a person's sex, with one exception for navigation (below). Plural agreement has no marked gender, and a marked personal
 gender needs a third-person singular. Possessor gender and number describe a
 possessive's Surface, as they do on the possessive articles, and mark only
 what the form shows: `sein-` (his, its) has gender[psor] Masc, Neut, and
@@ -61,15 +61,28 @@ drills down to
 ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
 and no spelling realizes it.
 
-**The referent decides between pillar cells.** A pillar form can fit several
-cells that differ only in what it refers to. Those cells stay separate
-Lemmas, and no Core value is a set:
+**The referent may choose only between cells that differ in who is meant.**
+A pillar form can fit several cells. No Core value is a set, and what the
+cells differ in decides whether the form is one Lemma or several:
 
-- Accusative `sie` is 3sg Fem or 3pl, genitive `ihrer` 3sg Fem or 3pl,
-  demonstrative `dem` and `dessen` Masc or Neut, and sentence-initial `Sie`
-  formal or 3pl.
-- Personal `ihm` and genitive `seiner` are two Lemmas each, the cells of `er`
-  (Masc) and `es` (Neut).
+- Cells that differ in number, person or politeness mean different people or
+  things, so they stay separate Lemmas and the referent chooses: accusative
+  `sie` is 3sg Fem or 3pl, genitive `ihrer` 3sg Fem or 3pl, and
+  sentence-initial `Sie` formal or 3pl.
+- Cells that differ in gender alone are one cell with gender null, because
+  the form serves both genders alike. Personal `ihm` and `seiner` are the
+  dative and genitive of both `er` and `es`. Der-series `dem` and `dessen`,
+  demonstrative, relative and attributive, serve a masculine and a neuter
+  referent alike. A learner learns `ihm` as one word, the dative of `er` and
+  `es`.
+
+Navigation reaches a gender-null cell from each gender it serves: varying
+case from `er` or from `es` reaches `ihm` and `seiner`, and from `der` or
+`das` reaches `dem` and `dessen` of the same pronoun type. This is the one
+exception to the ban on wildcards above, and ADR 0032's plural clause, which
+counts a plural cell's unmarked gender as marked, is its precedent. Varying
+case from `die` still reaches `der` Dat.Fem.Sg, because the feminine has a
+cell of its own there.
 
 Dumgen reads the referent from the sentence. When the sentence cannot settle
 it, Dumgen reads the sentence before and the sentence after. If those don't
@@ -126,6 +139,15 @@ gives `derer` as the demonstrative's Gen.Fem.Sg and Gen.Plur form. A current
 standard accepts the spelling, so it is Licensed. Neither STTS (PDS, PRELS)
 nor UD marks the direction.
 
+Amended on 2026-10-01: personal `ihm` and `seiner` and der-series `dem` and
+`dessen` were two Lemmas each, a Masc and a Neut cell, and the referent picked
+one, often from another sentence. The referent now chooses only between cells
+that differ in who is meant, and those four forms are one cell each, with
+gender null. A learner sees one word, the dative or genitive of `er` and
+`es`; two cards with the same form, sound and use looked like a duplicate, and
+the masculine cell's gloss "him" was wrong for *der Tisch*. Decided on
+[#743](https://github.com/clockblocker/texteater/issues/743).
+
 Amended on 2026-10-01: free `sich` and its reciprocal use are stated here.
 ADR 0018 held them until a rewrite on 2026-08-30 cut them, and ADR 0044 did
 not restate them. Decided on
@@ -158,10 +180,14 @@ UD supplies feature meanings, not this project's Lemma granularity:
 - A `referenceNumber` feature. Rejected: it repeated `number` on personal
   pronouns, was null on formal `Sie`, and stood in for possessor number on
   possessives.
-- No Lemma that depends on its referent, with a Core value set such as
-  Masc|Neut for `ihm`. Rejected (#606): navigation compares Core values
-  literally, and varying case from `er` must reach `ihn` and the masculine
-  `ihm` and `seiner`, never a neuter cell.
+- A Core value set such as Masc|Neut for `ihm`. Rejected (#606): navigation
+  compares Core values literally, so a set matches neither `er` nor `es`.
+  Gender null with the navigation exception above reaches `ihm` from both.
+- Two cells each for `ihm`, `seiner`, `dem` and `dessen`, a Masc and a Neut
+  one, with the referent picking. Chosen on #606, rejected on 2026-10-01
+  (#743): the choice rested on what the word refers to, often in another
+  sentence, while the two cells meant the same to a learner and differed in
+  nothing the word shows.
 - Demonstrative `derer` as a second Lemma of the `deren` cells, kept apart by
   direction alone. Chosen first, rejected on 2026-10-01: the two shared every
   Core Feature, so navigation to either cell found two Lemmas.
@@ -182,4 +208,5 @@ UD supplies feature meanings, not this project's Lemma granularity:
   [#595](https://github.com/clockblocker/texteater/issues/595) between
   2026-09-25 and 2026-09-28; `derer` left the pillar on 2026-10-01, and no
   pillar collision is accepted since. The same day `derer` became a Licensed
-  Variant of standalone relative and demonstrative `deren`.
+  Variant of standalone relative and demonstrative `deren`, and the cells
+  that differed in gender alone became one each (#743).

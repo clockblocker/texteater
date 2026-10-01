@@ -935,7 +935,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "ihm",
@@ -955,7 +955,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Complement of the postposition gegenüber. Its masculine cell comes from K. at the head of the sentence by coreference, not from agreement; see finding A1."
+				"rationale": "Complement of the postposition gegenüber. ihm is one cell for er and es, with gender null, so its referent K. chooses no cell (ADR 0044). Ruled on #743 (VP-A1, A1)."
 			}
 		},
 		{

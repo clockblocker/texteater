@@ -1010,7 +1010,7 @@
 				"kind": "PRON"
 			},
 			"notes": {
-				"rationale": "sie is Acc; 3sg Fem over 3pl only by its referent, the ihr beside whom he walks (ADR 0044). open: finding A1."
+				"rationale": "sie is Acc, 3sg Fem or 3pl. Those cells differ in who is meant, so the referent chooses: the ihr beside whom he walks gives 3sg Fem (ADR 0044). Ruled on #743 (MB-A1, A1)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -572,7 +572,7 @@
 				"kind": "PRON"
 			},
 			"notes": {
-				"rationale": "Dat 3sg; Masc over Neut only by its referent Alfred (ADR 0044). open: finding A1."
+				"rationale": "Dat 3sg. ihm is one cell for er and es, with gender null, so its referent Alfred chooses no cell (ADR 0044). Ruled on #743 (MB-A1, A1)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -593,7 +593,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "ihm",

@@ -131,7 +131,8 @@ test("same-spelling personal and possessive identities remain distinct", () => {
 				lemma.coreFeatures.gender === null,
 		),
 	).toHaveLength(1);
-	// Personal ihm and seiner are two cells each: those of er and of es.
+	// Personal ihm and seiner are one cell each for er and es, gender null
+	// (system ADR 0044).
 	for (const [form, grammaticalCase] of [
 		["ihm", "Dat"],
 		["seiner", "Gen"],
@@ -144,9 +145,8 @@ test("same-spelling personal and possessive identities remain distinct", () => {
 						lemma.coreFeatures.poss === null &&
 						lemma.coreFeatures.case === grammaticalCase,
 				)
-				.map((lemma) => lemma.coreFeatures.gender)
-				.sort(),
-		).toEqual(["Masc", "Neut"]);
+				.map((lemma) => lemma.coreFeatures.gender),
+		).toEqual([null]);
 	const demonstrative = pronouns.find(
 		(lemma) =>
 			lemma.canonicalForm === "der" &&

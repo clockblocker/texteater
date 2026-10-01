@@ -50,7 +50,10 @@ value its own headword, or only a usage line under one headword? A usage line
 means the value is not identity.
 
 The test reopens no split already decided: ADR 0044's pronoun cells and its
-Dem/Rel split, and the per-route choices below, stand.
+Dem/Rel split, and the per-route choices below, stand. ADR 0044 itself
+reopened its cells on 2026-10-01: a pronoun form whose cells differ in gender
+alone is now one cell, because the referent may choose only between cells
+that differ in who is meant.
 
 **Pillars and stems.** A closed paradigm is a pillar only when its forms
 cannot be derived from another paradigm: a suppletive paradigm (`ich`, `mir`,
@@ -115,7 +118,9 @@ never through semantic relation claims. Navigation stays among pillars: a
 stem's forms are its own Surfaces, so `diesem` never reaches `jenem`. A cell
 is reached only when both ends mark every varied feature, and a plural cell's
 unmarked gender counts as marked. Navigation compares Core values literally,
-and no Core value is a set.
+and no Core value is a set. ADR 0044 makes one exception on that precedent: a
+pronoun cell whose gender is null because its form serves two genders alike
+(`ihm`) is reached from each of them (`er`, `es`).
 
 Amended on 2026-10-01: the Feature Pool and the placement test are stated for
 the first time, and German ADP Core keeps only `abbr`. `adpType` was Core, so
@@ -127,6 +132,12 @@ Amended on 2026-10-01: the English PRON line said German free `sich` "stays
 one form", which read as one Lemma. `sich` has been authored as two pillar
 cells, Acc and Dat, since 2026-09-13, and ADR 0044 states it; only the
 wording changed.
+
+Amended on 2026-10-01: ADR 0044 merged the pronoun cells that differ in
+gender alone (`ihm`, `seiner`, `dem`, `dessen`) and lets navigation reach
+each from both genders it serves
+([#743](https://github.com/clockblocker/texteater/issues/743)). The sentence
+on decided splits and the navigation paragraph point to it.
 
 ## Considered Options
 

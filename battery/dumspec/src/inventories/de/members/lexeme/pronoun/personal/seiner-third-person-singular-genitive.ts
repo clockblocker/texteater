@@ -5,27 +5,27 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "dem",
+	canonicalForm: "seiner",
 	coreFeatures: {
 		extPos: null,
-		person: null,
+		person: "3",
 		polite: null,
 		poss: null,
-		pronType: "Rel",
-		case: "Dat",
+		pronType: "Prs",
+		case: "Gen",
 		number: "Sing",
-		gender: "Masc",
+		gender: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🔗" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Das Relativpronomen „dem“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort.",
-		transcription: "deːm",
-		translations: { en: ["who", "which", "that"], ru: ["которому"] },
+			"Die Personalpronomenform „seiner“ ist der Genitiv von „er“ und von „es“ und verweist auf die dritte Person Einzahl, männlich oder sächlich.",
+		transcription: "ˈzaɪ̯nɐ",
+		translations: { en: ["of him", "of it"], ru: ["его"] },
 	},
 	coverage: {
 		transcription: "Authored",

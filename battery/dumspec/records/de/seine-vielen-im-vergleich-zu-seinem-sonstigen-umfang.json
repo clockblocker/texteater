@@ -773,7 +773,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "ihm",
@@ -793,7 +793,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Free dative of the person whose eyes are meant. Nothing in this sentence tells the masculine cell from the neuter one; Gregor, in the sentences before, gives Masc. See finding A1."
+				"rationale": "Free dative of the person whose eyes are meant. ihm is one cell for er and es, with gender null, so nothing needs to tell its masculine referent Gregor from a neuter one (ADR 0044). Ruled on #743 (VP-A1, A1)."
 			}
 		},
 		{

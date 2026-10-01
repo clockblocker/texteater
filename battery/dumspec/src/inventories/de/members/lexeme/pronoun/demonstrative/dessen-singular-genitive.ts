@@ -5,16 +5,16 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "dem",
+	canonicalForm: "dessen",
 	coreFeatures: {
 		extPos: null,
 		person: null,
 		polite: null,
 		poss: null,
 		pronType: "Dem",
-		case: "Dat",
+		case: "Gen",
 		number: "Sing",
-		gender: "Masc",
+		gender: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
@@ -23,9 +23,9 @@ export const member = defineAuthoredMember({
 	reading: { ...{ unitKind: "Reading", emojiDescription: "👉" }, lemma },
 	knowledge: {
 		definition:
-			"Das Demonstrativpronomen „dem“ verweist betont auf eine im Kontext bestimmte Person oder Sache.",
-		transcription: "deːm",
-		translations: { en: ["that one", "this one"], ru: ["тому", "этому"] },
+			"Das Demonstrativpronomen „dessen“ verweist betont auf eine im Kontext bestimmte Person oder Sache.",
+		transcription: "ˈdɛsn̩",
+		translations: { en: ["that one", "this one"], ru: ["его"] },
 	},
 	coverage: {
 		transcription: "Authored",

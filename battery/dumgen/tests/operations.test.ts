@@ -406,7 +406,7 @@ test("feature navigation preserves Case and compares unmarked values literally",
 		[],
 	);
 });
-test("varying case from er reaches only er's own cells, never a neuter one", () => {
+test("varying case from er or es reaches its own cells and the shared ihm and seiner", () => {
 	const personal = (form: string, grammaticalCase: string) =>
 		required(
 			authoredMembers.find(
@@ -428,15 +428,16 @@ test("varying case from er reaches only er's own cells, never a neuter one", () 
 			})
 			.sort();
 	expect(cells(personal("er", "Nom"))).toEqual([
-		"ihm/Dat.Masc",
+		"ihm/Dat.null",
 		"ihn/Acc.Masc",
-		"seiner/Gen.Masc",
+		"seiner/Gen.null",
 	]);
 	expect(cells(personal("es", "Nom"))).toEqual([
 		"es/Acc.Neut",
-		"ihm/Dat.Neut",
-		"seiner/Gen.Neut",
+		"ihm/Dat.null",
+		"seiner/Gen.null",
 	]);
+	expect(cells(personal("sie", "Nom"))).not.toContain("ihm/Dat.null");
 });
 test("feature navigation walks German article cells like pronoun cells", () => {
 	const dem = required(

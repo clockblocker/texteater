@@ -18,6 +18,9 @@ const derSeries = [
  * decides that form's split.
  */
 export const germanSplitRulings: readonly SplitRuling[] = [
+	// The referent may choose only between cells that differ in who is
+	// meant, so gender never splits a pillar cell alone: ihm, seiner, dem and
+	// dessen are one cell each, with gender null (ADR 0044).
 	{
 		split: "Each cell of the personal-pronoun pillar is its own Lemma",
 		adrs: ["ADR-0044", "ADR-0032"],
@@ -25,7 +28,9 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		both: { kind: ["PRON"], pronType: ["Prs"], poss: [null] },
 		varies: [
 			{ key: "case" },
-			{ key: "gender" },
+			{ key: "gender", onlyWith: "case" },
+			{ key: "gender", onlyWith: "number" },
+			{ key: "gender", onlyWith: "person" },
 			{ key: "number" },
 			{ key: "person" },
 			{ key: "polite", onlyWith: "person" },
@@ -37,7 +42,12 @@ export const germanSplitRulings: readonly SplitRuling[] = [
 		rules: ["de/core-features-are-identity"],
 		forms: derSeries,
 		both: { kind: ["PRON"] },
-		varies: [{ key: "case" }, { key: "gender" }, { key: "number" }],
+		varies: [
+			{ key: "case" },
+			{ key: "gender", onlyWith: "case" },
+			{ key: "gender", onlyWith: "number" },
+			{ key: "number" },
+		],
 	},
 	{
 		split: "der-series demonstratives and relatives are separate Lemmas",
@@ -190,13 +200,6 @@ export const germanOpenSplits: readonly OpenSplit[] = [
 		issue: 734,
 		question:
 			"PART, ADV or INTJ for degree, modal, focus and answer words; must every PART name its type?",
-	},
-	{
-		forms: ["ihm"],
-		issue: 743,
-		findings: ["K-A1"],
-		question:
-			"Referent-decided pronoun cells: does ADR 0044's Masc/Neut split stand?",
 	},
 	{
 		forms: ["viel"],

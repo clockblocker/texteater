@@ -5,27 +5,27 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "ihm",
+	canonicalForm: "dem",
 	coreFeatures: {
 		extPos: null,
-		person: "3",
+		person: null,
 		polite: null,
 		poss: null,
-		pronType: "Prs",
+		pronType: "Dem",
 		case: "Dat",
 		number: "Sing",
-		gender: "Neut",
+		gender: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "👉" }, lemma },
 	knowledge: {
 		definition:
-			"Die Personalpronomenform „ihm“ ist der Dativ von „es“ und verweist auf die sächliche dritte Person Einzahl.",
-		transcription: "iːm",
-		translations: { en: ["it"], ru: ["ему"] },
+			"Das Demonstrativpronomen „dem“ verweist betont auf eine im Kontext bestimmte Person oder Sache.",
+		transcription: "deːm",
+		translations: { en: ["that one", "this one"], ru: ["тому", "этому"] },
 	},
 	coverage: {
 		transcription: "Authored",

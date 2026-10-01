@@ -32,7 +32,7 @@
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
-				"rationale": "The der-series is a pillar (ADR 0044), so this cell is its own Lemma: case, number and gender are Core, read from the sentence and the referent, and context selects demonstrative versus relative pronType."
+				"rationale": "The der-series is a pillar (ADR 0044), so this cell is its own Lemma, with case and number in Core. dessen serves a masculine and a neuter antecedent alike, so its gender is null, and context selects demonstrative versus relative pronType."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -53,7 +53,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Rel",
-							"gender": "Neut"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "dessen",

@@ -1520,7 +1520,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Rel",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"normalizedSurface": "dessen",
@@ -1540,7 +1540,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Attributive relative dessen is PRON with extPos DET, and Höhe is a separate target (de/pron-or-det-by-use). Its antecedent Bauch fixes the masculine cell by agreement inside the sentence."
+				"rationale": "Attributive relative dessen is PRON with extPos DET, and Höhe is a separate target (de/pron-or-det-by-use). It serves a masculine and a neuter antecedent alike, so its gender is null (ADR 0044). Ruled on #743 (VP-A1, A1)."
 			}
 		},
 		{

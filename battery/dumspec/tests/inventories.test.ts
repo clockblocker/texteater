@@ -228,6 +228,29 @@ describe("the German authored inventory", () => {
 		expect(collisions).toEqual([]);
 	});
 
+	test("no personal or der-series cell is split by gender alone (system ADR 0044)", () => {
+		// The referent may choose only between cells that differ in who is
+		// meant. A form that serves two genders alike (ihm, seiner, dem,
+		// dessen) is one cell with gender null.
+		const byRest = new Map<string, Set<string>>();
+		for (const { lemma } of authoredMembers) {
+			if (lemma.kind !== "PRON") continue;
+			const { gender, ...rest } = lemma.coreFeatures as Readonly<
+				Record<string, unknown>
+			>;
+			if (!["Prs", "Dem", "Rel"].includes(String(rest.pronType)))
+				continue;
+			if ((rest.case ?? null) === null) continue;
+			const key = `${lemma.canonicalForm} ${JSON.stringify(rest)}`;
+			byRest.set(key, (byRest.get(key) ?? new Set()).add(String(gender)));
+		}
+		expect(
+			[...byRest]
+				.filter(([, genders]) => genders.size > 1)
+				.map(([key, genders]) => `${key}: ${[...genders].join(", ")}`),
+		).toEqual([]);
+	});
+
 	test("derer is its own invariant Lemma pointing ahead and spells standalone deren elsewhere (system ADR 0044)", () => {
 		// Demonstrative derer points ahead to a relative clause and has one
 		// uninflected form. Wherever deren could stand instead, relative or

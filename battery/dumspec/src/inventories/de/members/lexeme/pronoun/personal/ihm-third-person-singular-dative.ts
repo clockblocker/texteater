@@ -5,27 +5,27 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "dessen",
+	canonicalForm: "ihm",
 	coreFeatures: {
 		extPos: null,
-		person: null,
+		person: "3",
 		polite: null,
 		poss: null,
-		pronType: "Rel",
-		case: "Gen",
+		pronType: "Prs",
+		case: "Dat",
 		number: "Sing",
-		gender: "Neut",
+		gender: null,
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🔗" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "👈" }, lemma },
 	knowledge: {
 		definition:
-			"Das Relativpronomen „dessen“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort.",
-		transcription: "ˈdɛsn̩",
-		translations: { en: ["who", "which", "that"], ru: ["которого", "чей"] },
+			"Die Personalpronomenform „ihm“ ist der Dativ von „er“ und von „es“ und verweist auf die dritte Person Einzahl, männlich oder sächlich.",
+		transcription: "iːm",
+		translations: { en: ["him", "it"], ru: ["ему"] },
 	},
 	coverage: {
 		transcription: "Authored",

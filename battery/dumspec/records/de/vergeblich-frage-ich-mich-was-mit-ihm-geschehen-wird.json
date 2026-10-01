@@ -447,7 +447,7 @@
 				"kind": "PRON"
 			},
 			"notes": {
-				"rationale": "ihm is the dative of er or es; only the referent decides. It refers to Odradek, whom the next sentence calls er, so it is the Masc cell (ADR 0044, Referent Context). The sentence's grammar alone cannot decide it. open: finding A2"
+				"rationale": "ihm is the dative of er and es, one cell with gender null, so its referent Odradek, whom the next sentence calls er, chooses no cell (ADR 0044). Ruled on #743 (SZ-A2, A1)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -481,7 +481,7 @@
 							"pronType": "Prs",
 							"case": "Dat",
 							"number": "Sing",
-							"gender": "Masc"
+							"gender": null
 						}
 					},
 					"surfaceFeatures": null

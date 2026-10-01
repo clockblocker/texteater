@@ -61,7 +61,7 @@ const thirdSingular = {
 	number: "Sing",
 } as const;
 
-test("ihm and seiner keep er's and es's gender apart, never a set", () => {
+test("ihm and seiner are one cell of er and es, gender null, never a set", () => {
 	accepts(
 		lemma("sie", { ...thirdSingular, gender: "Fem", case: "Nom" }),
 		true,
@@ -70,15 +70,7 @@ test("ihm and seiner keep er's and es's gender apart, never a set", () => {
 		["ihm", "Dat"],
 		["seiner", "Gen"],
 	] as const) {
-		for (const gender of ["Masc", "Neut"])
-			accepts(
-				lemma(form, {
-					...thirdSingular,
-					gender,
-					case: grammaticalCase,
-				}),
-				true,
-			);
+		accepts(lemma(form, { ...thirdSingular, case: grammaticalCase }), true);
 		accepts(
 			lemma(form, {
 				...thirdSingular,

@@ -282,13 +282,14 @@ for (const pronType of ["Int", "Rel"] as const) {
 
 // Only deren is attributive. Standalone derer is a Licensed Variant of
 // standalone deren (realizations.ts), not of these Lemmas. Bare der is not a
-// genitive PRON form.
+// genitive PRON form. dessen serves a masculine and a neuter Bezugswort
+// alike, so it is one cell with gender unmarked: the referent may choose only
+// between cells that differ in who is meant (system ADR 0044).
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Demonstr/Pron-der-die-das.html?lang=de
 for (const pronType of ["Dem", "Rel"] as const)
 	for (const [text, ipa, gender, number] of [
-		["dessen", "ˈdɛsən", "Masc", "Sing"],
-		["dessen", "ˈdɛsən", "Neut", "Sing"],
+		["dessen", "ˈdɛsən", null, "Sing"],
 		["deren", "ˈdeːʁən", "Fem", "Sing"],
 		["deren", "ˈdeːʁən", null, "Plur"],
 	] as const)
@@ -732,8 +733,8 @@ reviewed.push(
 
 // Possessor gender and number describe the Surface, as on the possessive
 // articles: seiner serves a masculine or neuter possessor (his, its) and ihrer
-// a feminine or plural one (hers, theirs), so each is one Lemma. Only the word
-// and its sentence's grammar decide a Lemma, never what it refers to.
+// a feminine or plural one (hers, theirs), so each is one Lemma. The referent
+// may choose only between cells that differ in who is meant (system ADR 0044).
 // Strong standalone, weak after an article, and article-bound -ig forms:
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/Pron-Poss-ig1.html?lang=de
