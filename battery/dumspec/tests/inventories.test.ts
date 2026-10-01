@@ -20,7 +20,10 @@ import {
 const name = ({ lemma, reading }: AuthoredMember) =>
 	`${lemma.kind}/${lemma.canonicalForm} ${reading.emojiDescription} ${JSON.stringify(lemma.coreFeatures)}`;
 
-/** The Surface a stem PRON's spelling realizes, marking the cell it names. */
+/**
+ * The Surface a stem PRON's spelling realizes, marking the cell it names. A
+ * Locution PRON (was für einer) marks no possessor features.
+ */
 function pronounSurface(
 	{ lemma }: AuthoredMember,
 	spelled: string,
@@ -37,8 +40,9 @@ function pronounSurface(
 			case: null,
 			gender: null,
 			number: null,
-			"gender[psor]": null,
-			"number[psor]": null,
+			...(lemma.family === "Lexeme"
+				? { "gender[psor]": null, "number[psor]": null }
+				: {}),
 			...cell,
 		},
 	};
@@ -50,10 +54,14 @@ function field(value: unknown, key: string): unknown {
 		: undefined;
 }
 
+/** A Locution may have no Locution Type (ADR 0039); ReviewedEmpty records that. */
+const optionalAspects = new Set(["locutionType"]);
+
 /**
  * The aspects an authored member leaves incomplete (system ADR 0021): every
  * aspect the route's Knowledge policy selects is stored and marked Authored,
- * and each semantic relation is Authored with claims or ReviewedEmpty.
+ * an optional one may be ReviewedEmpty instead, and each semantic relation
+ * is Authored with claims or ReviewedEmpty.
  */
 function incompleteKnowledge(member: AuthoredMember): string[] {
 	const { language, family, kind } = member.lemma;
@@ -70,7 +78,14 @@ function incompleteKnowledge(member: AuthoredMember): string[] {
 		const content = field(member.knowledge, aspect);
 		const coverage = field(member.coverage, aspect);
 		if (selection === null) {
-			if (content === undefined || coverage !== "Authored")
+			const reviewedNone =
+				optionalAspects.has(aspect) &&
+				content === undefined &&
+				coverage === "ReviewedEmpty";
+			if (
+				!reviewedNone &&
+				(content === undefined || coverage !== "Authored")
+			)
 				gaps.push(aspect);
 			continue;
 		}
@@ -336,6 +351,67 @@ describe("the German authored inventory", () => {
 			},
 		);
 		expect(failures).toEqual([]);
+	});
+
+	test("was für ein and was für einer are Locutions with no Locution Type (de/was-fuer)", () => {
+		const locutions = authoredMembers.filter(
+			({ lemma }) => lemma.family === "Locution",
+		);
+		expect(
+			locutions.map(({ lemma, knowledge, coverage }) => ({
+				route: `${lemma.kind} ${lemma.canonicalForm}`,
+				core: lemma.coreFeatures,
+				locutionType: knowledge.locutionType ?? null,
+				coverage: coverage.locutionType,
+			})),
+		).toEqual(
+			["DET was für ein", "PRON was für einer"].map((route) => ({
+				route,
+				core: {},
+				locutionType: null,
+				coverage: "ReviewedEmpty",
+			})),
+		);
+		// Every spelling is a Surface Dumling accepts. Bare was für spells the
+		// DET's plural cells and, before a mass noun, realizes it without one.
+		const realizations = authoredRealizations.filter(({ member }) =>
+			locutions.includes(member),
+		);
+		const failures = realizations.flatMap(
+			({ member, spelled, inflection }) => {
+				const parsed = parseUnit({
+					unitKind: "Surface",
+					language: "de",
+					lemma: member.lemma,
+					normalizedSurface: spelled,
+					spelling: { kind: "Canonical" },
+					surfaceFeatures: null,
+					inflectionalFeatures: inflection ?? null,
+				});
+				return parsed.success
+					? []
+					: [`${name(member)} ${spelled}: ${parsed.error.message}`];
+			},
+		);
+		expect(failures).toEqual([]);
+		expect(
+			realizations
+				.filter(({ spelled }) => spelled === "was für")
+				.map(({ member, inflection }) =>
+					[
+						member.lemma.kind,
+						...(inflection
+							? [inflection.case, inflection.number]
+							: ["uninflected"]),
+					].join(" "),
+				),
+		).toEqual([
+			"DET Nom Plur",
+			"DET Acc Plur",
+			"DET Dat Plur",
+			"DET Gen Plur",
+			"DET uninflected",
+		]);
 	});
 
 	test("jemand, niemand, wer and was are stems (system ADR 0032)", () => {

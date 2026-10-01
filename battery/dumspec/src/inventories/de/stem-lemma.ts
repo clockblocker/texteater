@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import { type AuthoredMember, defineAuthoredMember } from "./member.js";
 import type { PronounForm, PronounTable } from "./pronoun-paradigm.js";
 
@@ -61,29 +62,59 @@ export function citationForm(table: PronounTable): PronounForm {
 }
 
 /**
+ * The route a stem Lemma takes. A Lexeme names its Core Features. A Locution
+ * (was für ein) has an empty Core and names its Locution Type, or null when
+ * it has none (ADR 0039).
+ */
+export type StemRoute<Kind extends "PRON" | "DET"> =
+	| {
+			readonly family: "Lexeme";
+			readonly coreFeatures: Dumling.Lemma<
+				"de",
+				"Lexeme",
+				Kind
+			>["coreFeatures"];
+	  }
+	| {
+			readonly family: "Locution";
+			readonly locutionType: Dumrel.LocutionType | null;
+	  };
+
+/**
  * A word made of a stem and borrowed article endings is one Lemma with one
  * Reading (system ADR 0032). Its Core leaves case, number and gender null;
  * each spelling carries the cell its Surface marks.
  */
 export function stemMember<Kind extends "PRON" | "DET">(input: {
 	readonly kind: Kind;
-	readonly coreFeatures: Dumling.Lemma<"de", "Lexeme", Kind>["coreFeatures"];
+	readonly route: StemRoute<Kind>;
 	readonly citation: PronounForm;
 	readonly description: StemDescription<unknown>;
 	readonly spellings: readonly AuthoredSpelling[];
 }): ReviewedMember {
+	const { route } = input;
 	const lemma = {
 		unitKind: "Lemma",
 		language: "de",
-		family: "Lexeme",
+		family: route.family,
 		kind: input.kind,
 		canonicalForm: input.citation.text,
-		coreFeatures: input.coreFeatures,
-	} as Dumling.Lemma<"de", "Lexeme">;
+		coreFeatures: route.family === "Lexeme" ? route.coreFeatures : {},
+	} as Dumling.Lemma<"de", StemRoute<Kind>["family"]>;
 	const seen = new Set<string>();
 	const synonym = input.description.synonyms?.length
 		? [...input.description.synonyms]
 		: undefined;
+	// A Locution with no Locution Type records that as a reviewed decision.
+	const locutionType =
+		route.family === "Locution"
+			? route.locutionType
+				? {
+						knowledge: { locutionType: route.locutionType },
+						coverage: { locutionType: "Authored" },
+					}
+				: { knowledge: {}, coverage: { locutionType: "ReviewedEmpty" } }
+			: { knowledge: {}, coverage: {} };
 	return {
 		member: defineAuthoredMember({
 			lemma,
@@ -91,7 +122,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 				unitKind: "Reading",
 				lemma,
 				emojiDescription: input.description.emoji,
-			} as Dumling.Reading<"de", "Lexeme">,
+			} as Dumling.Reading<"de", StemRoute<Kind>["family"]>,
 			knowledge: {
 				definition: input.description.definition,
 				transcription: input.citation.ipa,
@@ -100,6 +131,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 					ru: [...input.description.ru],
 				},
 				...(synonym ? { semanticRelations: { synonym } } : {}),
+				...locutionType.knowledge,
 			},
 			coverage: {
 				definition: "Authored",
@@ -112,6 +144,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 					antonym: "ReviewedEmpty",
 					nearAntonym: "ReviewedEmpty",
 				},
+				...locutionType.coverage,
 			},
 		}),
 		spellings: input.spellings.filter((spelling) => {

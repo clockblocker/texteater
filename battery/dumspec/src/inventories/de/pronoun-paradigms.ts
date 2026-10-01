@@ -3,6 +3,7 @@ import {
 	form,
 	type PronounDescription,
 	type PronounTable,
+	pronounLocution,
 	pronounMember,
 	pronounParadigm,
 	pronounStem,
@@ -810,35 +811,41 @@ for (const [stem, ipa, person, polite, en, ru] of [
 	);
 }
 
-// was für: plural standalone welche, but attributive bare was für.
-// The standalone genitive is rare (echo questions after a genitive verb: "Er bedarf
-// eines Anwalts. Was für eines?") but exists, so the Closed Route invariant keeps it.
+// was für einer is a Locution PRON with an empty Core and no Locution Type
+// (de/was-fuer, ADR 0039; ruled on #741). Plural standalone welche, but
+// attributive bare was für. The standalone genitive is rare (echo questions
+// after a genitive verb: "Er bedarf eines Anwalts. Was für eines?") but
+// exists, so the Closed Route invariant keeps it.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-was_fuer.xml?lang=de
 {
 	const t = strongPronoun("was für ein", "vas fyːɐ̯ ˈaɪ̯n");
-	add(
-		{
-			Masc: t.Masc,
-			Neut: [
-				form("was für eines", "vas fyːɐ̯ ˈaɪ̯nəs", "was für eins"),
-				form("was für eines", "vas fyːɐ̯ ˈaɪ̯nəs", "was für eins"),
-				t.Neut[2],
-				t.Neut[3],
-			],
-			Fem: t.Fem,
-			Plur: [
-				form("was für welche", "vas fyːɐ̯ ˈvɛlçə"),
-				form("was für welche", "vas fyːɐ̯ ˈvɛlçə"),
-				form("was für welchen", "vas fyːɐ̯ ˈvɛlçən"),
-				form("was für welcher", "vas fyːɐ̯ ˈvɛlçɐ"),
-			],
-		},
-		description(
-			"Int",
-			"❓",
-			"Fragt nach der Art oder Beschaffenheit einer Person oder Sache.",
-			["what kind; what sort"],
-			["что за; какого рода"],
+	reviewed.push(
+		pronounLocution(
+			{
+				Masc: t.Masc,
+				Neut: [
+					form("was für eines", "vas fyːɐ̯ ˈaɪ̯nəs", "was für eins"),
+					form("was für eines", "vas fyːɐ̯ ˈaɪ̯nəs", "was für eins"),
+					t.Neut[2],
+					t.Neut[3],
+				],
+				Fem: t.Fem,
+				Plur: [
+					form("was für welche", "vas fyːɐ̯ ˈvɛlçə"),
+					form("was für welche", "vas fyːɐ̯ ˈvɛlçə"),
+					form("was für welchen", "vas fyːɐ̯ ˈvɛlçən"),
+					form("was für welcher", "vas fyːɐ̯ ˈvɛlçɐ"),
+				],
+			},
+			{
+				core: {},
+				emoji: "❓",
+				definition:
+					"Fragt nach der Art oder Beschaffenheit einer Person oder Sache.",
+				en: ["what kind; what sort"],
+				ru: ["что за; какого рода"],
+			},
+			null,
 		),
 	);
 }

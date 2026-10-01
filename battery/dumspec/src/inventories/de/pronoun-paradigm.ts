@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import { defineAuthoredMember } from "./member.js";
 import {
 	type AuthoredSpelling,
@@ -182,10 +183,32 @@ export function pronounStemOf(
 ): ReviewedPronoun {
 	return stemMember({
 		kind: "PRON",
-		coreFeatures: { ...emptyCore, ...description.core },
+		route: {
+			family: "Lexeme",
+			coreFeatures: { ...emptyCore, ...description.core },
+		},
 		citation,
 		description,
 		spellings,
+	});
+}
+
+/**
+ * A PRON Locution (was für einer) is a stem too: one Lemma, with an empty
+ * Core, whose Surfaces mark the cell (ADR 0039). It cites its Nom.Masc.Sg
+ * cell.
+ */
+export function pronounLocution(
+	table: PronounTable,
+	description: StemDescription<Record<string, never>>,
+	locutionType: Dumrel.LocutionType | null,
+): ReviewedPronoun {
+	return stemMember({
+		kind: "PRON",
+		route: { family: "Locution", locutionType },
+		citation: citationForm(table),
+		description,
+		spellings: tableSpellings(table),
 	});
 }
 

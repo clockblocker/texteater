@@ -14,6 +14,8 @@ export type AuthoredMember = {
 		readonly translations: Readonly<Record<string, string>>;
 		readonly semanticRelations: Readonly<Record<string, string>>;
 		readonly semanticRelationTargetKind: string;
+		/** A Locution's Locution Type: Authored, or ReviewedEmpty when it has none (ADR 0039). */
+		readonly locutionType?: string;
 	};
 };
 /** Provides the authoring type boundary; catalog validation runs in the build. */

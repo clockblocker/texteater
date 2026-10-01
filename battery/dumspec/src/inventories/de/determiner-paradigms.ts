@@ -1,6 +1,7 @@
 import type * as Dumling from "dumling/types";
 import {
 	type DeterminerDescription,
+	determinerLocution,
 	determinerStem,
 	type ReviewedDeterminer,
 } from "./determiner-paradigm.js";
@@ -191,18 +192,27 @@ for (const pronType of ["Int", "Rel"] as const)
 				),
 	);
 
-// was für: plural and mass use drop the article (was für Leute).
+// was für ein is a Locution DET with an empty Core and no Locution Type
+// (de/was-fuer, ADR 0039; ruled on #741): a determiner in a noun phrase, not
+// a routine formula. The article has no plural or mass form, so bare was für
+// spells the plural cells (was für Leute) and, before a mass noun, realizes
+// the Lemma without a cell, as uninflected viel does (was für Wein).
 {
 	const t = einWord("was für ein", "vas fyːɐ̯ ˈaɪ̯n", false);
 	const bare = form("was für", "vas fyːɐ̯");
-	add(
-		{ ...t, Plur: [bare, bare, bare, bare] },
-		description(
-			{ pronType: "Int" },
-			"❓👉",
-			"Der interrogative Determinierer „was für ein“ fragt nach der Art oder Beschaffenheit.",
-			["what kind of a"],
-			["какой"],
+	reviewed.push(
+		determinerLocution(
+			{ ...t, Plur: [bare, bare, bare, bare] },
+			{
+				core: {},
+				emoji: "❓👉",
+				definition:
+					"Der interrogative Determinierer „was für ein“ fragt nach der Art oder Beschaffenheit.",
+				en: ["what kind of a"],
+				ru: ["какой"],
+			},
+			null,
+			{ uninflected: [bare.text] },
 		),
 	);
 }

@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import type { PronounForm, PronounTable } from "./pronoun-paradigm.js";
 import {
 	type AuthoredSpelling,
@@ -43,9 +44,35 @@ export function determinerStem(
 	];
 	return stemMember({
 		kind: "DET",
-		coreFeatures: { ...emptyCore, ...description.core },
+		route: {
+			family: "Lexeme",
+			coreFeatures: { ...emptyCore, ...description.core },
+		},
 		citation: options.citation ?? citationForm(table),
 		description,
 		spellings,
+	});
+}
+
+/**
+ * A DET Locution (was für ein) is a stem too: one Lemma, with an empty Core,
+ * whose Surfaces mark the cell (ADR 0039). It cites its Nom.Masc.Sg cell;
+ * uninflected spellings realize it without a cell.
+ */
+export function determinerLocution(
+	table: PronounTable,
+	description: StemDescription<Record<string, never>>,
+	locutionType: Dumrel.LocutionType | null,
+	options: { readonly uninflected?: readonly string[] } = {},
+): ReviewedDeterminer {
+	return stemMember({
+		kind: "DET",
+		route: { family: "Locution", locutionType },
+		citation: citationForm(table),
+		description,
+		spellings: [
+			...tableSpellings(table),
+			...(options.uninflected ?? []).map((spelled) => ({ spelled })),
+		],
 	});
 }
