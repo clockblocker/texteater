@@ -125,11 +125,10 @@ import { reviewedPronouns } from "./pronoun-paradigms.js";
 import { whAdverbs } from "./wh-adverbs.js";
 
 /**
- * Every German authored member: the article and PRON pillar cells, the
- * invariant determiners, the AUX Readings (one per grammatical use, ADR
- * 0026), the reflexivity unit, the stem determiners and pronouns, and the
- * pronominal adverbs and the interrogative and relative w-adverbs, the
- * negation particle nicht and the softening particle mal.
+ * Every German authored member in one list. ADR 0021 decides which units
+ * belong in an inventory. Single members are defined in
+ * `src/inventories/de/members/`, and the paradigm and adverb modules beside
+ * this file define the rest.
  */
 export const authoredMembers = [
 	article_das_neuter_singular_accusative,
