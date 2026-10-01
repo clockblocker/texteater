@@ -1,174 +1,169 @@
 # Dumgen
 
-Dumgen produces linguistic Units and Knowledge for supplied encounters.
+Dumgen produces linguistic Units and Knowledge for supplied encounters. Each
+entry links the ADRs that hold the term's precise definition, edge cases and
+examples.
 
 ## Language
 
 **Segment**:
-the one clickable piece of a Segmented Sentence: its character offset in the
-Stitched Text, its kind, the text it shows, and the surface it stands for. For
-most words surface equals text; a fused word yields one Segment per component
-(`ins` is `in`, `s` standing for `das`), and an abbreviation is one Segment
-whose surface is its expansion. Segments concatenated give the Stitched Text
-back. The offset is the persisted occurrence coordinate.
+The one clickable piece of a Segmented Sentence. A fused word yields one
+Segment per component, and a Segment's character offset in the Stitched Text
+is the persisted occurrence coordinate. See [Dumgen ADR 0004].
 _Avoid_: Piece, token, Segment index as identity
 
 **Segmented Sentence**:
-one Sentence as intake leaves it: language, Stitched Text and Segments.
+One Sentence as intake leaves it: language, Stitched Text and Segments.
 _Avoid_: Sentence DTO
 
 **`segment.inUnits`**:
-the segmenter that routes clicks. It takes a text already split into
-paragraphs and Sentences, and returns each Sentence's Segments and its biggest
-units, each the Segments that route to one unit with its route (language,
-Family, Kind) or `Unresolved`. Every Segment belongs to exactly one unit.
-Splitting the text is done above it. Its jev-based judges see one Sentence at
-a time.
+The segmenter that routes clicks. It takes a text already split into
+Sentences and groups each Sentence's Segments into biggest units, each with
+its route or `Unresolved`. Its jev-based judges see one Sentence at a time.
+See [Dumgen ADR 0007] and [Dumgen ADR 0008].
 _Avoid_: Segment.Text, lattice, Sentence Analysis, for the current design
 
 **`segment.inLexemes`**:
-the segmenter that breaks one Locution or Saying down into its Lexemes, once
-per Lemma. It returns the same shape as `segment.inUnits` one level down and
-never the whole Lemma as one unit.
+The segmenter that breaks one Locution or Saying down into its Lexemes, once
+per Lemma. It returns the same shape as `segment.inUnits` one level down. See
+[Dumgen ADR 0007].
 _Avoid_: Segment.Unit, Lexical Breakdown, inner layer
 
 **`segment.inMorphemes`**:
-the segmenter that would break a Lexeme down into its Morphemes. Named to
-complete the set; out of scope for now.
+The segmenter that would break a Lexeme down into its Morphemes. It is named
+to complete the set and is out of scope for now. See [Dumgen ADR 0007].
 
 **Encounter**:
-a Segmented Sentence together with one Analysis Target supplied
-for linguistic resolution or Knowledge production.
+A Segmented Sentence together with one Analysis Target supplied for
+linguistic resolution or Knowledge production.
 
 **Analysis Target**:
-the unit an Encounter resolves: its route and ordered Segment members, as
-segmentation chose them. A click resolves it and never classifies it.
+The unit an Encounter resolves: its route and ordered Segment members, as
+segmentation chose them. A click resolves it and never classifies it. See
+[Dumgen ADR 0007].
 _Avoid_: Unit, group, lattice node
 
 **Realized Slot**:
-a preposition slot the sentence realizes, linked to the unit that lexically
-selects the preposition. Its marker is the Segment realizing the preposition
-(a preposition or a fused word's adposition); a pronominal adverb realizes
-the preposition and its filler at once, so it stays its own unit and is the
-slot's filler instead. The complement names the preposition's Lemma, its case
-and its referent. The governor is the smallest unit the government survives
-with in the same sense: `Angst vor` belongs to `Angst`, also inside `Angst
-haben`, while `Bescheid wissen über` belongs to the Locution, since
-`Bescheid` alone is an official notice. Intake records only preposition
-slots; bare-case slots come from the Knowledge call's frame.
+A preposition slot a Sentence realizes, linked to the unit that lexically
+selects the preposition. Bare-case slots come from the Knowledge call's
+Valency Frame instead. See [ADR 0034].
 _Avoid_: government list, valency guess, governed-preposition prompt
 
 **Grammatical Resolution**:
-production of a click-independent Attestation for an Analysis Target whose
+Production of a click-independent Attestation for an Analysis Target whose
 route is already chosen.
 
 **Referent Context**:
-the Sentences just before and after an Encounter's Sentence in its Text.
-Grammatical Resolution reads them only for a pronoun form that several cells
-share and that only its referent decides: accusative `sie` is her or them,
-`ihm` belongs to `er` or `es`. Given the Sentence alone while neighbours
-exist, resolution may answer More Context Required. With the neighbours, or
-with none to give, it always picks a cell.
+The Sentences just before and after an Encounter's Sentence in its Text.
+Grammatical Resolution reads them only for a pronoun form whose cell its
+referent decides. See [ADR 0044].
 _Avoid_: surrounding text, paragraph context
 
 **Authored Content**:
-reviewed Lemmas, fixed Readings, Knowledge and semantic
-relation claims that Dumgen selects under its production policy. Dumspec's
-Authored Inventories hold the closed-class members; Dumgen reads them.
+Reviewed Lemmas, fixed Readings, Knowledge and semantic relation claims that
+Dumgen selects under its production policy. Dumspec's Authored Inventories
+hold the closed-class members, and Dumgen reads them. See [ADR 0021].
 
 **Fixed Catalog**:
-the reviewed Authored Content that bounds a Closed Route. Its members are
-authored in Dumspec; Dumgen decides the closure.
+The reviewed Authored Content that bounds a Closed Route. Its members are
+authored in Dumspec, and Dumgen decides the closure. See [ADR 0021].
 
 **Fixed Population**:
-reviewed Authored Content within an Open Route. An occurrence that matches no
-member continues through generation; a matched member missing required
-content is a Catalog Miss.
+Reviewed Authored Content within an Open Route. See [ADR 0021].
 
 **Closed Route**:
-a production route that resolves only within its Fixed Catalog. The German
-Closed Routes are Lexeme AUX and DET.
+A production route that resolves only within its Fixed Catalog. See
+[ADR 0021].
 
 **Catalog Miss**:
-absence of a required authored value on a Closed Route or for an exact authored
-Reading in a Fixed Population.
+Absence of a required authored value on a Closed Route or for an exact
+authored Reading in a Fixed Population. See [ADR 0021].
 
 **Grammatical Navigation**:
-selection of reviewed members by preserving fixed
-Core Features and varying explicitly named coordinates.
+Selection of reviewed members by preserving fixed Core Features and varying
+explicitly named coordinates. See [ADR 0019].
 
 **Knowledge Production**:
-proposed Knowledge changes and Pending Semantic
-Relations for a caller-supplied Reading in an Encounter.
+Proposed Knowledge changes and Pending Semantic Relations for a
+caller-supplied Reading in an Encounter. See [Dumgen ADR 0003].
 
 **Evaluation Run**:
-one recorded execution of a linguistic experiment, with
-its effective model settings, case outputs, failures and evaluation results.
+One recorded execution of a linguistic experiment, with its effective model
+settings, case outputs, failures and evaluation results. See the
+[evaluation reference].
 
 ### Legacy intake
 
-These terms name the intake Dumgen still ships, from Dumgen ADRs 0005 and 0006.
-Dumgen ADR 0007 supersedes both, and the segmentation rewrite (#701) removes
-these terms with the code. The legacy intake still names Phraseme Kinds, which
-ADR 0039 replaced with Locution and Saying.
+These terms name the intake Dumgen still ships, from [Dumgen ADR 0005] and
+[Dumgen ADR 0006]; the [intake-owned units reference] holds its contract.
+[Dumgen ADR 0007] supersedes both, and the segmentation rewrite removes these
+terms with the code. The legacy intake still names Phraseme Kinds, which
+[ADR 0039] replaced with Locution and Saying.
 
 **Sentence Analysis**:
-what the legacy intake stores beside one German Segmented Sentence: its
-offset-keyed Segments with surfaces, its Lexeme Targets, its Phraseme Targets,
-and its Fusions. Produced by `analyzeSentence` and read at selection time.
+What the legacy intake stores beside one German Segmented Sentence: its
+Lexeme Targets and Phraseme Targets over offset-keyed Segments.
+`analyzeSentence` produces it, and hosts read it at selection time. See
+[Dumgen ADR 0006].
 _Avoid_: precomputed resolution
 
 **Lexeme Target**:
-the Segments that realize one Lexeme occurrence: its Members with roles,
-exactly one Head, one Route Mass over Lexeme Kinds, and, when the head is
-closed-class, its Identity Candidates. `zur` is two: the ADP `zu` and the
-Article `r` of the noun that follows.
+The Segments that realize one Lexeme occurrence: its Members, exactly one of
+them the Head, with a Route Mass and, for a closed-class head, Identity
+Candidates. See [Dumgen ADR 0006].
 _Avoid_: word, token group
 
 **Phraseme Target**:
-the Lexeme Targets that are fixed lexical members of one expression, with a
-Kind Mass and a fixedness. It also lists a preposition the expression governs
-when no one of its words governs it alone (`über` in `weiß Bescheid über`),
-which never counts toward its fixedness.
+The Lexeme Targets that are fixed lexical members of one expression, with a
+Kind Mass and a Fixedness. See [Dumgen ADR 0006].
 _Avoid_: nested target, idiom group
 
 **Kind Mass**:
-a Phraseme Target's distribution over Phraseme Kinds, `None` and Unresolved.
-The fixedness score establishes the expression; the Kind Mass names it.
+A Phraseme Target's distribution over Phraseme Kinds. The Fixedness
+establishes the expression; the Kind Mass names it. See [Dumgen ADR 0006].
 
 **Fixedness**:
-the score of a word inside the wording around it: free combination, preferred
-combination, collocation, fixed expression. Only a word at or above the floor
-is a member of a Phraseme Target.
+The score of how fixed a word is inside the wording around it. Only a word at
+or above the floor is a member of a Phraseme Target. See [Dumgen ADR 0006].
 _Avoid_: confidence, idiomaticity
 
 **Member**:
-one Segment inside a Lexeme Target with its Member Role: Head,
-SeparableParticle, GovernedPreposition, Reflexive, Expletive, Article,
-Auxiliary, DegreeMarker, or Unresolved. Roles stay inside the legacy intake;
-no Attestation records them (ADR 0041).
+One Segment inside a Lexeme Target with its Member Role. Roles stay inside
+the legacy intake, and no Attestation records them. See [Dumgen ADR 0005] and
+[ADR 0041].
 _Avoid_: role mass, Free member
 
 **Route Mass**:
-a Lexeme Target's distribution over Lexeme Kinds, including Unresolved. The
-legacy intake derives the Family from the Kind, which ADR 0039 no longer
-allows: a Kind name may repeat across Families.
+A Lexeme Target's distribution over Lexeme Kinds, Unresolved included. See
+[Dumgen ADR 0005].
 _Avoid_: route, classification
 
 **Identity Candidates**:
-a Lexeme Target's distribution over the authored members its closed-class
-head can realize, plus NoMatch and Unresolved. The winning candidate implies
-the route.
+A Lexeme Target's distribution over the authored members its closed-class
+head can realize. The winning candidate implies the route. See
+[Dumgen ADR 0005].
 _Avoid_: headword, per-member identity
 
 **Identity State**:
-what the Resolution Selector says about a Member: Selected (the head has a
-winning candidate), Derived (a non-head role whose identity follows from the
-target's shape and grammar), Open (no candidates; generation continues), or
-Miss (a DET or PRON route whose head's spelling enumerates no candidate).
+What the Resolution Selector concludes about a Member's identity from its
+role and its target's candidates. See [Dumgen ADR 0005].
 
 **Resolution Selector**:
-the pure function that turns a Sentence Analysis's masses into resolved
-values: the Unresolved floor, identity implies route, Identity State from
-role and candidates, and the largest unit at an offset.
+The pure function that turns a Sentence Analysis's masses into resolved
+values, including the largest unit at an offset. See [Dumgen ADR 0005].
 _Avoid_: stored resolution, threshold migration
+
+[ADR 0019]: ../../docs/adr/0019-select-grammatical-alternatives-from-reviewed-members.md
+[ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
+[ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
+[ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
+[ADR 0041]: ../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md
+[ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
+[Dumgen ADR 0003]: ./docs/adr/0003-split-german-knowledge-generation-by-family.md
+[Dumgen ADR 0004]: ./docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
+[Dumgen ADR 0005]: ./docs/adr/0005-intake-owns-segments-and-analysis-targets.md
+[Dumgen ADR 0006]: ./docs/adr/0006-segment-in-two-layers-lexeme-targets-and-phraseme-targets.md
+[Dumgen ADR 0007]: ./docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
+[Dumgen ADR 0008]: ./docs/adr/0008-judge-segment-in-units-by-membership-before-route.md
+[evaluation reference]: ./docs/reference/evaluation.md
+[intake-owned units reference]: ./docs/reference/intake-owned-units.md
