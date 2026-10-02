@@ -15,10 +15,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Abkürzung" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "z" },
-		{ "kind": "Punctuation", "text": "." },
-		{ "kind": "ResolvableText", "text": "B" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "z.B." },
 		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "dem" },
@@ -60,16 +57,20 @@
 			{
 				"rule": "de/foreign-unless-duden-or-german-grammar",
 				"hash": "c2f06b03fed6e233"
+			},
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "8b5d215a31ab7264"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [47],
+			"memberSegmentIndices": [44],
 			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
-				"rationale": "Duden lists neither yeet nor yeeten, and bare yeet shows no German ending: Foreign en. A German ending would make it the VERB yeeten (geyeetet)."
+				"rationale": "Duden lists neither yeet nor yeeten, and bare yeet shows no German ending: Foreign en. A German ending would make it the VERB yeeten (geyeetet). Rule-decided Segment fix, 2026-10-02 (#851): The abbreviation z.B. that the sentence names was four Segments, z . B ., and is now one, z.B. (de/abbreviation-is-one-segment). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

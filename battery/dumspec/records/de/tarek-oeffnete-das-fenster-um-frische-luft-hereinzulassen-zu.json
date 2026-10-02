@@ -17,7 +17,9 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Luft" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "hereinzulassen" },
+		{ "kind": "ResolvableText", "text": "herein", "surface": "herein" },
+		{ "kind": "ResolvableText", "text": "zu", "surface": "zu" },
+		{ "kind": "ResolvableText", "text": "lassen", "surface": "lassen" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "zu" },
 		{ "kind": "Whitespace", "text": " " },
@@ -28,13 +30,21 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "53eb6d28dab42ddc"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [9, 17],
+			"memberSegmentIndices": [9, 19],
 			"route": { "family": "Locution", "kind": "SCONJ" },
+			"notes": {
+				"rationale": "Rule-decided Segment fix, 2026-10-02 (#851): hereinzulassen was one Segment and is now herein, zu and lassen: an infinitive's infixed zu is a piece (de/fused-word-pieces, de/bare-infinitive-zu). Groupings unchanged."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

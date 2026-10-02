@@ -8,7 +8,8 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "wo" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "im" },
+		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
+		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Keller" },
 		{ "kind": "Punctuation", "text": "." }
@@ -21,6 +22,10 @@
 			{
 				"rule": "de/bare-w-word-is-shorthand",
 				"hash": "7ae30cfdb910de05"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "53eb6d28dab42ddc"
 			}
 		],
 		"references": []
@@ -31,7 +36,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "❔📍" },
 			"notes": {
-				"rationale": "Unstressed wo mid-clause names an unspecified place and asks nothing: the Shorthand of irgendwo."
+				"rationale": "Unstressed wo mid-clause names an unspecified place and asks nothing: the Shorthand of irgendwo. Rule-decided Segment fix, 2026-10-02 (#851): im was one Segment and is now i (in) and m (dem), one Segment per word a fused word holds (de/fused-word-pieces). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

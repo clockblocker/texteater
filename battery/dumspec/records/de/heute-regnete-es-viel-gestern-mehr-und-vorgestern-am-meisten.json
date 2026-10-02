@@ -19,8 +19,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "vorgestern" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
-		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
+		{ "kind": "ResolvableText", "text": "am" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "meisten" },
 		{ "kind": "Punctuation", "text": "." }
@@ -37,6 +36,10 @@
 			{
 				"rule": "de/quantifier-by-use",
 				"hash": "b5504b9423a22bbb"
+			},
+			{
+				"rule": "de/fused-word-pieces",
+				"hash": "53eb6d28dab42ddc"
 			}
 		],
 		"references": []
@@ -47,7 +50,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "viel is used adverbially, so it is the comparable ADV viel, and the explicit degree contrast makes its Surface Pos (de/quantifier-by-use, de/comparability-is-lexical). Adverbial viel 'a lot' takes the 🔢 of DET viel, and DWDS viel II.1 'häufig, oft' (viel spazieren gehen) is merged into it under ADR 0031."
+				"rationale": "viel is used adverbially, so it is the comparable ADV viel, and the explicit degree contrast makes its Surface Pos (de/quantifier-by-use, de/comparability-is-lexical). Adverbial viel 'a lot' takes the 🔢 of DET viel, and DWDS viel II.1 'häufig, oft' (viel spazieren gehen) is merged into it under ADR 0031. Rule-decided Segment fix, 2026-10-02 (#851): am before the superlative meisten, with no noun after it, is one Segment, no longer a (an) and m (dem) (de/fused-word-pieces). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

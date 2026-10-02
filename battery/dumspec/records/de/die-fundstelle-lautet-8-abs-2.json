@@ -12,8 +12,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "8" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Abs" },
-		{ "kind": "Punctuation", "text": "." },
+		{ "kind": "ResolvableText", "text": "Abs." },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "2" },
 		{ "kind": "Punctuation", "text": "." }
@@ -22,7 +21,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "8b5d215a31ab7264"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -30,6 +34,9 @@
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "SYM" },
 			"reading": { "emojiDescription": "⚖📑" },
+			"notes": {
+				"rationale": "Rule-decided Segment fix, 2026-10-02 (#851): Abs. was Abs and a Punctuation period and is now one Segment with its period (de/abbreviation-is-one-segment). No target changed."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
