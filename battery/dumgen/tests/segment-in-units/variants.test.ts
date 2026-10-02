@@ -4,8 +4,12 @@ import {
 	type SegmentInUnitsOutput,
 	segmentInUnitsOutputSchema,
 } from "../../src/evaluation/spec-corpus/segment-in-units.js";
+import { toleratedKindPairs } from "../../src/evaluation/spec-corpus/segment-in-units-route-tolerance.js";
 import { closedClassRouteShares } from "../../src/segment/de/closed-class.js";
-import { routeVariants } from "../../src/segment/de/routing.js";
+import {
+	routeVariants,
+	variantKindPairs,
+} from "../../src/segment/de/routing.js";
 import { type Sentence, sentenceOf } from "../../src/segment/de/sentence.js";
 import {
 	pickedOutput,
@@ -34,15 +38,30 @@ test("a unit is borderline when the top two shares of its deciding distribution 
 		"Lexeme/ADV",
 	]);
 	expect(routeVariants("Lexeme/PART", shares, 0.01)).toBeUndefined();
-	expect(routeVariants("Lexeme/PART", shares, 0.35)).toEqual([
-		"Lexeme/PART",
-		"Lexeme/ADV",
-		"Lexeme/ADJ",
-	]);
-	expect(routeVariants("Lexeme/PART", shares, 0.35, 2)).toEqual([
-		"Lexeme/PART",
-		"Lexeme/ADV",
-	]);
+	// PART|ADJ is not a tolerated pair, so a margin that reaches ADJ gives
+	// PART alone (#827).
+	expect(routeVariants("Lexeme/PART", shares, 0.35)).toBeUndefined();
+	expect(
+		routeVariants(
+			"Lexeme/NOUN",
+			{ "Lexeme/NOUN": 0.5, "Lexeme/PROPN": 0.4, "Lexeme/ADP": 0.1 },
+			0.2,
+		),
+	).toEqual(["Lexeme/NOUN", "Lexeme/PROPN"]);
+	expect(
+		routeVariants(
+			"Lexeme/NOUN",
+			{ "Lexeme/NOUN": 0.5, "Lexeme/ADP": 0.45 },
+			0.2,
+		),
+	).toBeUndefined();
+	expect(
+		routeVariants(
+			"Locution/ADV",
+			{ "Locution/ADV": 0.5, "Locution/CCONJ": 0.45 },
+			0.2,
+		),
+	).toBeUndefined();
 	// A route an identity or Rule test chose stays first.
 	expect(routeVariants("Lexeme/ADV", shares, 0.1)).toEqual([
 		"Lexeme/ADV",
@@ -53,6 +72,10 @@ test("a unit is borderline when the top two shares of its deciding distribution 
 		routeVariants("Lexeme/PART", { "Lexeme/PART": 1 }, 1),
 	).toBeUndefined();
 	expect(routeVariants("Lexeme/PART", undefined, 1)).toBeUndefined();
+});
+
+test("route variants span exactly the Kind pairs the evaluator tolerates", () => {
+	expect(variantKindPairs).toEqual(toleratedKindPairs);
 });
 
 // Er0 _1 zog2 _3 eben4 _5 an6 .7

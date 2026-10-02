@@ -218,6 +218,50 @@ test("a borderline unit carries route variants only under a variant margin", asy
 	]);
 });
 
+test("route variants span only the tolerated Kind pairs and never sit on a fused half (#827)", async () => {
+	const borderlineZu = picked("infinitive", {
+		infinitive: 0.5,
+		degree: 0.45,
+		preposition: 0.05,
+	});
+	const variantsAt = async (
+		segments: readonly Segment[],
+		answers: Readonly<Record<string, Answer>>,
+		segment: number,
+	) =>
+		(
+			await segmentGermanUnits({ segments }, fakeJudge(answers).ask, {
+				...productionUnitSettings,
+				variantMargin: 0.2,
+			})
+		).find(({ segments: [first] }) => first === segment)?.variants;
+	// Er0 _1 kam2 _3 zu4 _5 spät6 .7: PART|ADV is a tolerated pair.
+	expect(
+		await variantsAt(
+			segmentsOf("Er kam zu spät."),
+			{ cc_3: borderlineZu },
+			4,
+		),
+	).toEqual([route("Lexeme", "PART"), route("Lexeme", "ADV")]);
+	// The same zu as the first half of zum carries none.
+	expect(
+		await variantsAt(zumGlueck, { cc_5: borderlineZu }, 9),
+	).toBeUndefined();
+	// NOUN|ADP is not a tolerated pair.
+	expect(
+		await variantsAt(
+			zumGlueck,
+			{
+				r_7: picked("Lexeme/NOUN", {
+					"Lexeme/NOUN": 0.5,
+					"Lexeme/ADP": 0.45,
+				}),
+			},
+			12,
+		),
+	).toBeUndefined();
+});
+
 test("closed-class identity routes a covered spelling by its use, and a one-use spelling with no question", async () => {
 	// Das0 _1 ist2 _3 eben4 _5 nicht6 _7 so8 .9
 	const judge = fakeJudge({

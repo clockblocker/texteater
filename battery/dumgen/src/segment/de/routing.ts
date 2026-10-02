@@ -452,11 +452,39 @@ function mergeInterjections(
 }
 
 /**
+ * The Kind pairs a unit's route variants may span (#827): the five pairs
+ * Dumgen ADR 0008 tolerates, within Family Lexeme. The evaluator's
+ * `toleratedKindPairs` names the same five.
+ */
+export const variantKindPairs = [
+	["PART", "ADV"],
+	["CCONJ", "ADV"],
+	["ADJ", "ADV"],
+	["NOUN", "PROPN"],
+	["PRON", "DET"],
+] as const;
+
+const variantPair = (left: RouteKey, right: RouteKey) => {
+	const [leftFamily, leftKind] = left.split("/");
+	const [rightFamily, rightKind] = right.split("/");
+	return (
+		leftFamily === "Lexeme" &&
+		rightFamily === "Lexeme" &&
+		variantKindPairs.some(
+			([a, b]) =>
+				(leftKind === a && rightKind === b) ||
+				(leftKind === b && rightKind === a),
+		)
+	);
+};
+
+/**
  * The route variants of a borderline unit (Dumgen ADR 0007, amended
  * 2026-09-30). When the top two shares of the distribution that decided
  * its route lie within `margin` of each other, the routes within `margin`
  * of the top, its route first, at most `most`; undefined when one route
- * is clear.
+ * is clear. A unit whose route and near routes include two outside the
+ * tolerated `variantKindPairs` takes its route alone (#827).
  */
 export function routeVariants(
 	route: RouteKey,
@@ -473,10 +501,14 @@ export function routeVariants(
 	const near = ranked
 		.filter(([, share]) => share >= top[1] - margin)
 		.map(([key]) => key);
-	const variants = [route, ...near.filter((key) => key !== route)].slice(
-		0,
-		most,
-	);
+	const routes = [route, ...near.filter((key) => key !== route)];
+	if (
+		routes.some((left, index) =>
+			routes.slice(index + 1).some((right) => !variantPair(left, right)),
+		)
+	)
+		return undefined;
+	const variants = routes.slice(0, most);
 	return variants.length > 1 ? variants : undefined;
 }
 
@@ -507,8 +539,9 @@ export type RoutedMembership = {
  * its route: closed-class identity for a covered spelling (its uses'
  * shares summed by route), the abbreviation route for an abbreviation, the
  * route Choice for any other word, and the Choice restricted to the Family
- * code named for a multi-piece unit. A Saying, a merged interjection and a
- * fixed closed-class route carry none.
+ * code named for a multi-piece unit. A Saying, a merged interjection, a
+ * fixed closed-class route and a unit holding part of a fused word carry
+ * none, and variants span only `variantKindPairs` (#827).
  */
 export function routeMembership(
 	nomination: Nomination,
@@ -564,6 +597,11 @@ export function routeMembership(
 	const decidingShares = (
 		group: readonly number[],
 	): Readonly<Record<string, number>> | undefined => {
+		// Never on a fused half, the i or m of im (#827).
+		if (
+			group.some((id) => sentence.pieces[id - 1]?.fusedWord !== undefined)
+		)
+			return undefined;
 		const [only] = group;
 		if (group.length === 1 && only !== undefined) {
 			const piece = sentence.pieces[only - 1];
