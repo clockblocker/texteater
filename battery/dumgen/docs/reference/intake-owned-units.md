@@ -70,9 +70,9 @@ type Slot = {
 };
 ```
 
-The offset is the persisted occurrence coordinate. A rule change may re-split
-a word and shift Segment indices; offsets into the same Stitched Text do not
-move. Types are exported from `legacy-dumgen/types`; the module is
+Offsets key Segments inside the Sentence Analysis only; the persisted
+occurrence coordinate is the Segment's index in its Sentence (Dumgen ADR
+0004, amended 2026-10-02). Types are exported from `legacy-dumgen/types`; the module is
 `src/concrete-lang/de/sentence-analysis/`.
 
 Invariants enforced in code, never asked:
@@ -251,9 +251,9 @@ English and Hebrew: not analysed; `analyzeSentence` accepts German only.
 
 tf-demo runs `analyzeSentence` at intake for every accepted German sentence,
 stores the analysis beside the sentence, reads it at selection time, and
-strips it with the other derived analysis. Attestation Membership stays keyed
-by stored Segment index; the offset migration and Fused orthography are the
-remaining production items, with the Convex hop cost of the authored
+strips it with the other derived analysis. Attestation Membership is keyed by
+stored Segment index (Dumgen ADR 0004, amended 2026-10-02); Fused orthography
+is the remaining production item, with the Convex hop cost of the authored
 candidates and live latency per Identity State.
 
 ## Playground

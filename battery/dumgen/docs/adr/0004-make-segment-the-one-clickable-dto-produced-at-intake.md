@@ -5,12 +5,21 @@ status: accepted
 # Make Segment the one clickable DTO, produced at intake
 
 A Segment is the thing a learner hovers and clicks. It carries its kind, the
-text it shows, the surface it stands for, and its character offset in the
-Stitched Text. For most words surface equals text. Where a source word
-realizes more than one grammatical component, it becomes several Segments:
-`ins Haus` is `in`, `s`, `Haus`, and `im` is `i` standing for `in` beside `m`
-standing for `dem`. An abbreviation stays one Segment whose surface is its
-expansion. Analysis Targets and Attestation members are made of Segments.
+text it shows and the surface it stands for. For most words surface equals
+text. Where a source word realizes more than one grammatical component, it
+becomes several Segments: `ins Haus` is `in`, `s`, `Haus`, and `im` is `i`
+standing for `in` beside `m` standing for `dem`. An abbreviation stays one
+Segment whose surface is its expansion. Analysis Targets and Attestation
+members are made of Segments.
+
+Amended 2026-10-02 ([#767](https://github.com/clockblocker/texteater/issues/767)):
+a Segment's persisted occurrence coordinate is its index in its Sentence's
+Segments, and a Segment carries no character offset. Offsets were chosen
+because a rule change can re-split a word and shift the indices after it.
+A stored Sentence keeps its own Segments, though, so a rule change cannot
+shift indices under rows already stored, and every consumer already keys by
+index: `segment.inUnits` units, Analysis Target members, dumspec gold and
+tf-demo's stored Segments.
 
 Segments are produced at intake. The deterministic, package-free tokenizer
 that ADR 0001 named as the Source Segmentation boundary becomes the first
@@ -19,9 +28,8 @@ abbreviations, and for open patterns one bounded TypeSafe Choice, decide where
 a word splits. Segmentation stays lossless: the Segments concatenated give the
 Stitched Text back.
 
-The persisted occurrence coordinate is the character offset, not the Segment
-index. A rule change may re-split a word and shift every later index; offsets
-into the same Stitched Text do not move.
+The persisted occurrence coordinate is the Segment's index in its Sentence's
+Segments (amended 2026-10-02).
 
 ## Considered Options
 
@@ -44,7 +52,7 @@ into the same Stitched Text do not move.
   member with Full coverage. A component with no letters of its own leaves its
   unit Partial with evidence pointing at the Fusion value.
 - Hosts that persist occurrences, today tf-demo's Attestation Membership and
-  click records, key them by offset. That migration belongs to the production
-  effort, not to this decision.
+  click records, key them by Segment index, as they already did (amended
+  2026-10-02).
 - The Segment parser on the package root changes under ADR 0014's frozen
   interface and is inventoried as a deliberate change.

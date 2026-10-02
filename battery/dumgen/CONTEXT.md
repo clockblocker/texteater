@@ -8,9 +8,9 @@ examples.
 
 **Segment**:
 The one clickable piece of a Segmented Sentence. A fused word yields one
-Segment per component, and a Segment's character offset in the Stitched Text
+Segment per component, and a Segment's index among its Sentence's Segments
 is the persisted occurrence coordinate. See [Dumgen ADR 0004].
-_Avoid_: Piece, token, Segment index as identity
+_Avoid_: Piece, token, character offset as identity
 
 **Segmented Sentence**:
 One Sentence as intake leaves it: language, Stitched Text and Segments.
