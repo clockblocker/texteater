@@ -26,8 +26,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "den" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Präsidentschafts" },
-		{ "kind": "Punctuation", "text": "-" },
+		{ "kind": "ResolvableText", "text": "Präsidentschafts-" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "und" },
 		{ "kind": "Whitespace", "text": " " },
@@ -42,16 +41,21 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/suspended-compound-completion",
+				"hash": "c86ab32a13fa94be"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 20, 33],
+			"memberSegmentIndices": [6, 20, 32],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🚫👥" },
 			"notes": {
-				"rationale": "DWDS ausschließen 2a, 'jmdn. an etw. nicht teilnehmen lassen', not 4, ruling something out."
+				"rationale": "DWDS ausschließen 2a, 'jmdn. an etw. nicht teilnehmen lassen', not 4, ruling something out. Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the fragment Präsidentschafts- was two Segments, Präsidentschafts and -, and is now one that keeps its hyphen (de/suspended-compound-completion). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -74,7 +74,7 @@ export const grammarPolicyCitations: readonly CitingPrompt[] = [
 		implements: [
 			{
 				rule: "de/suspended-compound-completion",
-				hash: "d40697026790c142",
+				hash: "c86ab32a13fa94be",
 			},
 			{
 				rule: "de/empty-inflection-is-structural",

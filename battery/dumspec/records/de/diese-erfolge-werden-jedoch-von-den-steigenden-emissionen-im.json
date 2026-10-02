@@ -21,8 +21,7 @@
 		{ "kind": "ResolvableText", "text": "i", "surface": "in" },
 		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Verkehrs" },
-		{ "kind": "Punctuation", "text": "-" },
+		{ "kind": "ResolvableText", "text": "Verkehrs-" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "und" },
 		{ "kind": "Whitespace", "text": " " },
@@ -35,16 +34,21 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0031"],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/suspended-compound-completion",
+				"hash": "c86ab32a13fa94be"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 26],
+			"memberSegmentIndices": [4, 25],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🍖🦴" },
 			"notes": {
-				"rationale": "Emissions eating up the gains is the figurative use (1a, 1b) of DWDS auffressen 1, 'etw. fressen, bis nichts mehr da ist', one Reading under ADR 0031."
+				"rationale": "Emissions eating up the gains is the figurative use (1a, 1b) of DWDS auffressen 1, 'etw. fressen, bis nichts mehr da ist', one Reading under ADR 0031. Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the fragment Verkehrs- was two Segments, Verkehrs and -, and is now one that keeps its hyphen (de/suspended-compound-completion). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

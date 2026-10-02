@@ -1374,7 +1374,7 @@ const attestations: Rule[] = [
 	{
 		id: "de/suspended-compound-completion",
 		statement:
-			"A fragment with a trailing hyphen is completed only in a two-part und or oder coordination with a full compound that shares its literal ending: in Ein- und Ausgang, Ein- is completed to Eingang, with Full coverage.",
+			"A fragment with a trailing hyphen is completed only in a two-part und or oder coordination with a full compound that shares its literal ending: in Ein- und Ausgang, Ein- is completed to Eingang, with Full coverage. The hyphen belongs to the fragment's Segment: Ein- is one Segment.",
 		adrs: ["ADR-0003"],
 		routes: lexeme("NOUN"),
 		records: [
@@ -1382,6 +1382,8 @@ const attestations: Rule[] = [
 			"de/sie-verkauft-kinder-und-jugendbuecher",
 			"de/sie-kauft-ein-kinder-oder-jugendbuch",
 			"de/auf-dem-zettel-steht-kinder",
+			// A non-breaking hyphen (U+2011) stays in the Segment too.
+			"de/der-laden-fuehrt-kinder-und-jugendbuecher",
 		],
 	},
 	{
