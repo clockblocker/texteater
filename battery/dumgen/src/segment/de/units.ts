@@ -22,7 +22,11 @@
  * lassen, bekommen, haben and sein forms whose auxiliary slot named an
  * infinitive or participle: causative lassen and sich lassen, the
  * recipient passive, and perfect or state. On dev, 11 more gold units held
- * and none lost.
+ * and none lost. After it, X4's Government Choice (#851,
+ * `government-choice.ts`) asks one `government` request about the
+ * prepositions whose grouping depends on valency, worded with E-VALBU's
+ * tests, and splits or joins each as de/governed-preposition-joins-its-governor
+ * and de/idiom decide: on dev, 16 more gold units held and 2 lost.
  */
 import type { Ask } from "../ask.js";
 import type { Segment, Unit } from "../segmented-sentence.js";
@@ -95,7 +99,7 @@ export type UnitSettings = {
 	readonly government?: GovernmentSettings;
 };
 
-/** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7, every code rule, the Locution Choice at 0.6 and the Verb Choice's lassen, recipient and state families at 0.5. */
+/** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7, every code rule, the Locution Choice at 0.6, the Verb Choice's lassen, recipient and state families at 0.5 and the Government Choice at 0.5 without its weak family. */
 export const productionUnitSettings: UnitSettings = {
 	floors: {
 		satellite: 0.5,
@@ -127,6 +131,14 @@ export const productionUnitSettings: UnitSettings = {
 	// families failed: these three ask what no slot question names, and
 	// lost no dev unit at 0.5, 0.6 or 0.7. Held-out (#852) is the check.
 	verb: { floor: 0.5, families: ["lassen", "recipient", "state"] },
+	// Picked on dev (#851, X4) after the pre-registered setting, v2 without
+	// the duel at 0.5, held +12 −2 (net 10, under the 10.5-unit floor): v3
+	// adds the duel and frees a literal idiom's preposition. Held-out (#852)
+	// is the check.
+	government: {
+		floor: 0.5,
+		families: ["joined", "particle", "rival", "literal", "duel"],
+	},
 };
 
 /** Groups one German Sentence's Segments into its biggest units and routes each. */

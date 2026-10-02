@@ -121,10 +121,15 @@ test("de/idiom: used literally, the idiom's preposition leaves the verb its slot
 	expect(groups).toEqual([[0], [2], [4, 6], [8], [10, 12]]);
 });
 
-test("production asks no government request; a Sentence with no flag asks none", async () => {
+test("production asks the government request without its weak family; a Sentence with no flag asks none", async () => {
+	expect(productionUnitSettings.government?.families).not.toContain("weak");
 	const production = fakeJudge(uhrHeard);
 	await segmentGermanUnits({ segments: segmentsOf(uhr) }, production.ask);
-	expect(production.stages()).not.toContain("government");
+	expect(production.stages()).toContain("government");
 	const { judge } = await run("Sie wohnt hier.", {});
 	expect(judge.stages()).not.toContain("government");
+	const off = fakeJudge(uhrHeard);
+	const { government: _, ...without } = productionUnitSettings;
+	await segmentGermanUnits({ segments: segmentsOf(uhr) }, off.ask, without);
+	expect(off.stages()).not.toContain("government");
 });

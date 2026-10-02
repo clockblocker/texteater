@@ -16,8 +16,8 @@ it and score it against frozen gold. Results live in the lab tickets
   (`nomination.ts`) asks what jev judges about code's candidates,
   membership (`assembly.ts`) assembles units under floors, and routing
   (`routing.ts`) routes them. Its default, `productionUnitSettings`, is
-  candidates4's maxim+closed policy (#843) with the code rules of X3 and
-  X5 (`code-rules.ts`, #851): each enforces one dumspec Rule over the
+  candidates4's maxim+closed policy (#843) with the code rules of X3, X5,
+  D4 and X4 (`code-rules.ts`, #851): each enforces one dumspec Rule over the
   assembled membership, dropping a link its Rule forbids or adding one its
   Rule decides from the words alone. Then X5's Locution Choice
   (`locution-choice.ts`) asks one more request, `locution`, about the units
@@ -26,7 +26,15 @@ it and score it against frozen gold. Results live in the lab tickets
   one `verb` request about the lassen, bekommen, haben and sein forms whose
   auxiliary slot named an infinitive or participle, and joins or splits
   each by its Rule (causative lassen and sich lassen, the recipient
-  passive, perfect or state).
+  passive, perfect or state). After it, X4's Government Choice
+  (`government-choice.ts`) asks one `government` request about the
+  prepositions whose grouping depends on valency: one the preposition slot
+  joined, a particle join whose word opens a phrase, a host another link
+  took or a nearer twin, the same preposition twice on one host (a duel),
+  and an idiom unit that took in a member noun's preposition (literal or
+  not). Each question names the phrase and tells a governed preposition
+  from a place, direction or adjunct by E-VALBU's stand-ins
+  (de/governed-preposition-joins-its-governor, de/idiom).
 - `src/segment-in-units/de/arms/` holds the three arms. `candidates4`
   (`--opt final=1 --opt closed=1`) outputs v3, step0, step0+saying and
   step0+saying+maxim@0.7, each step-0 policy also `+closed`; production is
@@ -42,7 +50,10 @@ it and score it against frozen gold. Results live in the lab tickets
   `saying-closed`; the variants of one rule set share one `locution`
   request) and `--opt verb=<floor>[-<family>…],…` (the Verb Choice at each
   floor over the families named, all five when none is; every variant
-  reads one `verb` request over all five families).
+  reads one `verb` request over all five families) and `--opt
+  gov=<floor>[-<family>…],…` (the Government Choice at each floor over the
+  families named, all six when none is; every variant reads one
+  `government` request, asked over production's membership).
   `reference` is the #755 reference.
   The retired arms and candidates4's other levers are at ec467e8d, and
   reference-floors at 5335f033.
