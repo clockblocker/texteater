@@ -1,8 +1,8 @@
 import * as Cause from "effect/Cause";
+import type * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Option from "effect/Option";
-import * as Runtime from "effect/Runtime";
 import * as Tracer from "effect/Tracer";
 import type {
 	CapturedInspectionStep,
@@ -27,36 +27,34 @@ export function inspectionStep(
 }
 
 /**
- * Runs promise work as spans under the span `runtime` was taken in, for
- * callers outside a fiber. A hop rethrows its own error.
+ * Runs promise work as spans under the span current where `services` were
+ * taken, for callers outside a fiber. A hop rethrows its own error.
  */
-export function spanHops(runtime: Runtime.Runtime<never>) {
+export function spanHops(services: Context.Context<never>) {
 	const markFailed = () =>
-		Runtime.runSync(runtime, Effect.annotateCurrentSpan(FAILED, true));
+		Effect.runSyncWith(services)(Effect.annotateCurrentSpan(FAILED, true));
 	return {
-		run: Runtime.runPromise(runtime),
+		run: Effect.runPromiseWith(services),
 		async hop<T>(
 			name: string,
 			owner: string,
 			input: unknown,
 			run: () => Promise<T>,
 		): Promise<T> {
-			const exit = await Runtime.runPromiseExit(
-				runtime,
+			const exit = await Effect.runPromiseExitWith(services)(
 				Effect.tryPromise({ try: run, catch: (error) => error }).pipe(
 					Effect.withSpan(name, inspectionStep(owner, input)),
 				),
 			);
 			if (Exit.isSuccess(exit)) return exit.value;
-			throw Cause.originalError(Cause.squash(exit.cause));
+			throw Cause.squash(exit.cause);
 		},
 		/** Fails the enclosing step although its work returns normally. */
 		markFailed,
 		/** A handled failure: a failed step of its own that fails the enclosing step. */
 		failure(name: string, owner: string, input: unknown, error: unknown) {
 			markFailed();
-			Runtime.runSyncExit(
-				runtime,
+			Effect.runSyncExitWith(services)(
 				Effect.fail(error).pipe(
 					Effect.withSpan(name, inspectionStep(owner, input)),
 				),
@@ -82,7 +80,7 @@ function statusOf(
 	failed: boolean,
 ): InspectionStep["status"] {
 	if (Exit.isSuccess(exit)) return failed ? "Failure" : "Success";
-	return Cause.isInterruptedOnly(exit.cause) ? "Interrupted" : "Failure";
+	return Cause.hasInterruptsOnly(exit.cause) ? "Interrupted" : "Failure";
 }
 
 const isStep = (span: Tracer.Span) => span.attributes.has(OWNER);
@@ -118,7 +116,7 @@ export function createInspectionCapture() {
 	) {
 		const root = rootOf(span);
 		const failure = Exit.isFailure(exit)
-			? Cause.originalError(Cause.squash(exit.cause))
+			? Cause.squash(exit.cause)
 			: undefined;
 		steps.push({
 			id: span.spanId,
@@ -135,8 +133,8 @@ export function createInspectionCapture() {
 				...(failure === undefined
 					? {}
 					: {
-							error: Cause.isUnknownException(failure)
-								? failure.error
+							error: Cause.isUnknownError(failure)
+								? failure.cause
 								: failure,
 						}),
 			}),
@@ -144,7 +142,7 @@ export function createInspectionCapture() {
 	}
 
 	const tracer = Tracer.make({
-		span(name, parent, context, links, startTime, kind) {
+		span({ name, parent, annotations, links, startTime, kind }) {
 			const spanId = crypto.randomUUID();
 			const attributes = new Map<string, unknown>();
 			const allLinks = [...links];
@@ -155,7 +153,7 @@ export function createInspectionCapture() {
 				spanId,
 				traceId: Option.isSome(parent) ? parent.value.traceId : spanId,
 				parent,
-				context,
+				annotations,
 				links: allLinks,
 				sampled: true,
 				kind,
@@ -178,7 +176,6 @@ export function createInspectionCapture() {
 			spans.add(span);
 			return span;
 		},
-		context: (execute) => execute(),
 	});
 
 	return {

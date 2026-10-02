@@ -73,7 +73,7 @@
 		"dumrel": "workspace:^",
 		"dumspec": "workspace:^",
 		"zod": "^4.4.0",
-		"effect": "3.22.1",
+		"effect": "4.0.0",
 		"dumling": "workspace:^",
 		"dumval": "workspace:^"
 	},

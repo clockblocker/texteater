@@ -30,9 +30,10 @@ type Booted = ReturnType<typeof getBootedUpDumdict<"en">>;
 async function serviceOutcome(
 	effect: Effect.Effect<PreparedMutation<"en">, DumdictPreparationFailure>,
 ): Promise<DumdictPlanOutcome<"en">> {
-	const result = await Effect.runPromise(Effect.either(effect));
-	if (result._tag === "Right") return { status: "planned", ...result.right };
-	const failure = result.left;
+	const result = await Effect.runPromise(Effect.result(effect));
+	if (result._tag === "Success")
+		return { status: "planned", ...result.success };
+	const failure = result.failure;
 	switch (failure._tag) {
 		case "DumdictRejection":
 			return {

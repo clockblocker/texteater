@@ -1,24 +1,18 @@
 import type { Infer } from "convex/values";
 import type { SegmentCall, SegmentedText } from "dumgen";
 import * as Cause from "effect/Cause";
-import * as Runtime from "effect/Runtime";
 import type { intakeRunValidator } from "../convex/model/intakeRuns";
 
 export type IntakeRun = Infer<typeof intakeRunValidator>;
 type SentenceOutcome = IntakeRun["sentences"][number]["segmentation"];
 
 /**
- * The tag a failed submission attempt records: the thrown error's name,
- * never its message, which can quote the Text.
+ * The tag a failed submission attempt records: the name of the error its
+ * failure squashes to, never its message, which can quote the Text.
  */
-export function failureTagOf(error: unknown): string {
-	const cause = Runtime.isFiberFailure(error)
-		? error[Runtime.FiberFailureCauseId]
-		: Cause.die(error);
+export function failureTagOf(cause: Cause.Cause<unknown>): string {
 	const squashed = Cause.squash(cause);
-	const original = Cause.isUnknownException(squashed)
-		? squashed.error
-		: squashed;
+	const original = Cause.isUnknownError(squashed) ? squashed.cause : squashed;
 	const name = original instanceof Error ? original.name : "NonErrorThrown";
 	return /^[A-Za-z][A-Za-z0-9_.-]{0,63}$/u.test(name) ? name : "Error";
 }

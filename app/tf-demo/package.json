@@ -37,7 +37,7 @@
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
 		"dumspec": "workspace:^",
-		"effect": "3.22.1",
+		"effect": "4.0.0",
 		"lego": "workspace:^",
 		"lucide-react": "^1.31.0",
 		"motion": "^13.1.1",

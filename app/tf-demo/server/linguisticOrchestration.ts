@@ -267,7 +267,7 @@ export function createTfDemoOrchestrator(options: {
 	const draftGrace = Duration.millis(options.draftGraceMs ?? DRAFT_GRACE_MS);
 	/** Waits out the grace, then settles the leaves in flight; a draft that ignores the settle is dropped. */
 	function settleDraft(
-		fiber: Fiber.RuntimeFiber<KnowledgeDraft | null, never>,
+		fiber: Fiber.Fiber<KnowledgeDraft | null, never>,
 		settle: AbortController,
 	) {
 		return Effect.gen(function* () {
@@ -293,7 +293,7 @@ export function createTfDemoOrchestrator(options: {
 	) {
 		return Effect.gen(function* () {
 			let knowledgeDraft:
-				| Fiber.RuntimeFiber<KnowledgeDraft | null, never>
+				| Fiber.Fiber<KnowledgeDraft | null, never>
 				| undefined;
 			const settleDrafts = new AbortController();
 			assertNonEmpty(input.requestId, "requestId");
@@ -368,7 +368,9 @@ export function createTfDemoOrchestrator(options: {
 			);
 			// Text Knowledge speculates from the sentence and Lemma alone, so
 			// it overlaps Reading resolution instead of waiting for the emoji.
-			// The scope interrupts it whenever resolution fails.
+			// It starts at once rather than on a later tick, which the Reading's
+			// promise hops would overtake. The scope interrupts it whenever
+			// resolution fails.
 			if (options.draftKnowledge && !checkpoints.reading)
 				knowledgeDraft = yield* options
 					.draftKnowledge({
@@ -382,7 +384,7 @@ export function createTfDemoOrchestrator(options: {
 							"The Knowledge draft",
 							"the click commits without it",
 						),
-						Effect.forkScoped,
+						Effect.forkScoped({ startImmediately: true }),
 					);
 			const [grammarSaved, readingsLoaded] = yield* Effect.all(
 				[
@@ -461,11 +463,12 @@ export function createTfDemoOrchestrator(options: {
 				? null
 				: readingResolution.decision === "New"
 					? yield* settleDraft(knowledgeDraft, settleDrafts)
-					: yield* Fiber.poll(knowledgeDraft).pipe(
+					: yield* Effect.sync(() =>
+							knowledgeDraft.pollUnsafe(),
+						).pipe(
 							Effect.flatMap((exit) =>
-								Option.isSome(exit) &&
-								Exit.isSuccess(exit.value)
-									? Effect.succeed(exit.value.value)
+								exit && Exit.isSuccess(exit)
+									? Effect.succeed(exit.value)
 									: Fiber.interrupt(knowledgeDraft).pipe(
 											Effect.as(null),
 										),
@@ -596,9 +599,9 @@ function withoutFailedWork(subject: string, consequence: string) {
 	return <Value, Error>(
 		work: Effect.Effect<Value, Error>,
 	): Effect.Effect<Value | null> =>
-		Effect.catchAllCause(work, (cause) => {
-			if (Cause.isInterruptedOnly(cause)) return Effect.interrupt;
-			const failure = Cause.failureOption(cause);
+		Effect.catchCause(work, (cause) => {
+			if (Cause.hasInterruptsOnly(cause)) return Effect.interrupt;
+			const failure = Cause.findErrorOption(cause);
 			return Effect.sync(() => {
 				if (Option.isSome(failure))
 					console.warn(
@@ -618,7 +621,7 @@ function withoutFailedWork(subject: string, consequence: string) {
 /** Test-port boundary: production Dumdict returns Effects, a test may return a Promise. */
 function effectFrom<Value, Error>(
 	value: Effect.Effect<Value, Error> | Promise<Value>,
-): Effect.Effect<Value, Error | Cause.UnknownException> {
+): Effect.Effect<Value, Error | Cause.UnknownError> {
 	return Effect.isEffect(value) ? value : Effect.tryPromise(() => value);
 }
 

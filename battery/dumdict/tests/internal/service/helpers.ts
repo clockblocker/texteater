@@ -74,8 +74,8 @@ export const englishWalkReadingEntry = (): ReadingEntry<"en"> => {
 export async function failure<E>(
 	effect: Effect.Effect<unknown, E>,
 ): Promise<E> {
-	const result = await Effect.runPromise(Effect.either(effect));
-	if (result._tag === "Left") return result.left;
+	const result = await Effect.runPromise(Effect.result(effect));
+	if (result._tag === "Failure") return result.failure;
 	throw new Error("Expected the Effect to fail.");
 }
 

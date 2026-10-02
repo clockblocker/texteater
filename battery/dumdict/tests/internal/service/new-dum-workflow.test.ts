@@ -143,7 +143,7 @@ test("conflicting Knowledge changes reject the whole batch and competing plans k
 	);
 	const before = storage.loadAll();
 	const failed = await Effect.runPromise(
-		Effect.either(
+		Effect.result(
 			dict.applyGeneratedKnowledge({
 				reading: bankReading,
 				changes: [
@@ -162,7 +162,7 @@ test("conflicting Knowledge changes reject the whole batch and competing plans k
 			}),
 		),
 	);
-	expect(failed._tag).toBe("Left");
+	expect(failed._tag).toBe("Failure");
 	expect(storage.loadAll()).toEqual(before);
 	const request = {
 		reading: bankReading,
@@ -203,7 +203,7 @@ test("pending target planning observes the Knowledge mode selected in the same b
 		);
 	const before = storage.loadAll();
 	const result = await Effect.runPromise(
-		Effect.either(
+		Effect.result(
 			dict.prepare.applyGeneratedKnowledge({
 				reading: bankReading,
 				changes: [
@@ -229,6 +229,6 @@ test("pending target planning observes the Knowledge mode selected in the same b
 			}),
 		),
 	);
-	expect(result._tag).toBe("Left");
+	expect(result._tag).toBe("Failure");
 	expect(storage.loadAll()).toEqual(before);
 });

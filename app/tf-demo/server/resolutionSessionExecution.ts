@@ -194,8 +194,8 @@ export function executeResolutionSession({
 			}),
 		);
 	}).pipe(
-		Effect.catchAllCause((cause) => {
-			if (Cause.isInterruptedOnly(cause)) return Effect.failCause(cause);
+		Effect.catchCause((cause) => {
+			if (Cause.hasInterruptsOnly(cause)) return Effect.failCause(cause);
 			const error = Cause.squash(cause);
 			const classified = classifyResolutionFailure(error);
 			const diagnosticId = createDiagnosticId();
@@ -229,7 +229,7 @@ export function executeResolutionSession({
 					generationEvents,
 				}),
 			).pipe(
-				Effect.catchAll((recordingError) =>
+				Effect.catch((recordingError) =>
 					Effect.sync(() => {
 						diagnostics.error(
 							JSON.stringify({

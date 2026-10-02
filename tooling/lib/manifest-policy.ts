@@ -23,7 +23,17 @@ export const governedDependencies = [
 	"@biomejs/biome",
 	"dependency-cruiser",
 	"knip",
+	"effect",
 ] as const;
+
+/**
+ * Workspaces that may pin a governed dependency apart from the rest.
+ * legacy-dumgen stays on Effect v3 until #856 deletes it, and laboratory
+ * with it while its fate is open (#854).
+ */
+const governedDependencyExemptions = new Map<string, readonly string[]>([
+	["effect", ["battery/legacy-dumgen", "app/laboratory"]],
+]);
 
 const requiredWorkspaceScripts = [
 	"build",
@@ -355,6 +365,11 @@ export async function validateManifestPolicy(options: {
 			allDependencyVersions(
 				`${workspace.relativePath}/package.json`,
 				workspace.manifest,
+			).filter(
+				(entry) =>
+					!governedDependencyExemptions
+						.get(entry.name)
+						?.includes(workspace.relativePath),
 			),
 		),
 	].filter(

@@ -310,13 +310,13 @@ export async function generateKnowledge(
 		}
 	};
 	try {
-		// Publication hops and generation run in the root's runtime, so
+		// Publication hops and generation run with the root's services, so
 		// their spans sit under the root's.
 		return await Effect.runPromise(
 			inspected(
-				Effect.flatMap(Effect.runtime<never>(), (runtime) =>
+				Effect.flatMap(Effect.context<never>(), (services) =>
 					Effect.tryPromise({
-						try: () => run(spanHops(runtime)),
+						try: () => run(spanHops(services)),
 						catch: (error) => error,
 					}),
 				).pipe(

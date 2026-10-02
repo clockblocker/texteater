@@ -31,7 +31,7 @@ test("failed code steps retain their input and error without changing the failur
 	const capture = createInspectionCapture();
 	const failure = new Error("Dictionary conflict");
 	const result = await Effect.runPromise(
-		Effect.either(
+		Effect.result(
 			inspected(
 				Effect.tryPromise(() => Promise.reject(failure)).pipe(
 					Effect.withSpan(
@@ -43,7 +43,10 @@ test("failed code steps retain their input and error without changing the failur
 			),
 		),
 	);
-	expect(result).toMatchObject({ _tag: "Left", left: { error: failure } });
+	expect(result).toMatchObject({
+		_tag: "Failure",
+		failure: { cause: failure },
+	});
 	expect(capture.steps[0]).toMatchObject({
 		name: "Commit",
 		owner: "app/tf-demo",
@@ -56,7 +59,7 @@ test("failed code steps retain their input and error without changing the failur
 		error: { name: "Error", message: "Dictionary conflict" },
 	});
 	await Effect.runPromise(
-		Effect.either(
+		Effect.result(
 			inspected(
 				Effect.fail("invalid").pipe(
 					Effect.withSpan(
@@ -145,9 +148,9 @@ test("handled pipeline failures stay visible even when the action returns normal
 	const capture = createInspectionCapture();
 	await Effect.runPromise(
 		inspected(
-			Effect.flatMap(Effect.runtime<never>(), (runtime) =>
+			Effect.flatMap(Effect.context<never>(), (services) =>
 				Effect.sync(() =>
-					spanHops(runtime).failure(
+					spanHops(services).failure(
 						"Publication failed",
 						"battery/dumdict",
 						{ reading: "Bank" },
@@ -174,14 +177,14 @@ test("handled pipeline failures stay visible even when the action returns normal
 	).toBe("Invalid plan");
 });
 
-test("a promise hop becomes a step under the runtime's span and rethrows its own error", async () => {
+test("a promise hop becomes a step under its services' span and rethrows its own error", async () => {
 	const capture = createInspectionCapture();
 	const failure = new Error("Mutation failed");
 	const rejected = await Effect.runPromise(
 		inspected(
-			Effect.flatMap(Effect.runtime<never>(), (runtime) =>
+			Effect.flatMap(Effect.context<never>(), (services) =>
 				Effect.promise(() =>
-					spanHops(runtime)
+					spanHops(services)
 						.hop("Save", "app/tf-demo", { step: 1 }, () =>
 							Promise.reject(failure),
 						)

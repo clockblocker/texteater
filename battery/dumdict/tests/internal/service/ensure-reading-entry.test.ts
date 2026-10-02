@@ -85,7 +85,7 @@ describe("ensureReadingEntry", () => {
 		const beforeConflict = storage.loadAll();
 
 		const result = await Effect.runPromise(
-			Effect.either(
+			Effect.result(
 				dict.ensureReadingEntry({
 					entry: { ...fixedEntry(), notes: "different" },
 				}),
@@ -93,8 +93,8 @@ describe("ensureReadingEntry", () => {
 		);
 
 		expect(result).toMatchObject({
-			_tag: "Left",
-			left: {
+			_tag: "Failure",
+			failure: {
 				_tag: "DumdictRejection",
 				code: "readingEntryConflict",
 			},
@@ -107,7 +107,7 @@ describe("ensureReadingEntry", () => {
 		const entry = fixedEntry();
 
 		const result = await Effect.runPromise(
-			Effect.either(
+			Effect.result(
 				dict.ensureReadingEntry({
 					entry: {
 						...entry,
@@ -121,8 +121,8 @@ describe("ensureReadingEntry", () => {
 		);
 
 		expect(result).toMatchObject({
-			_tag: "Left",
-			left: {
+			_tag: "Failure",
+			failure: {
 				_tag: "DumdictRejection",
 				code: "invalidRequest",
 			},

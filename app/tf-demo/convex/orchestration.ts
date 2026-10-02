@@ -4,7 +4,7 @@ import { ConvexError, type Infer, type Value, v } from "convex/values";
 import { createSegment, createTypeSafeAsk, type SegmentCall } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
-import * as Runtime from "effect/Runtime";
+import * as Exit from "effect/Exit";
 import { selectUnitOnly } from "../server/clickResolution";
 import {
 	inspected,
@@ -79,14 +79,14 @@ type SubmitTextActionResult = Infer<typeof submitTextResultValidator>;
  * The coded Visitor error behind a failed Effect. Convex sends only a
  * ConvexError thrown as itself to the client, not one wrapped in a failure.
  */
-function visitorErrorIn(error: unknown): ConvexError<Value> | undefined {
-	const cause = Runtime.isFiberFailure(error)
-		? error[Runtime.FiberFailureCauseId]
-		: Cause.die(error);
-	for (const failure of [...Cause.failures(cause), ...Cause.defects(cause)]) {
-		const thrown = Cause.isUnknownException(failure)
-			? failure.error
-			: failure;
+function visitorErrorIn(
+	cause: Cause.Cause<unknown>,
+): ConvexError<Value> | undefined {
+	for (const failure of [
+		...cause.reasons.filter(Cause.isFailReason).map(({ error }) => error),
+		...cause.reasons.filter(Cause.isDieReason).map(({ defect }) => defect),
+	]) {
+		const thrown = Cause.isUnknownError(failure) ? failure.cause : failure;
 		if (thrown instanceof ConvexError) return thrown;
 	}
 	return undefined;
@@ -191,7 +191,7 @@ export const submitText = action({
 				},
 				onSegmented: run.segmented,
 			});
-			const result = await Effect.runPromise(
+			const exit = await Effect.runPromiseExit(
 				inspected(
 					intake
 						.submitText({
@@ -210,13 +210,16 @@ export const submitText = action({
 					inspection,
 				),
 			);
+			// The catch reads every failure and defect, not just the squashed one.
+			if (Exit.isFailure(exit)) throw exit.cause;
 			state = "Complete";
-			const textId = convexId<"texts">(result.persisted.textId);
+			const textId = convexId<"texts">(exit.value.persisted.textId);
 			attempt = { outcome: "Accepted", textId };
 			return { status: "Accepted", textId };
 		} catch (error) {
-			attempt = { outcome: "Failed", failureTag: failureTagOf(error) };
-			throw visitorErrorIn(error) ?? error;
+			const cause = Cause.isCause(error) ? error : Cause.die(error);
+			attempt = { outcome: "Failed", failureTag: failureTagOf(cause) };
+			throw visitorErrorIn(cause) ?? Cause.squash(cause);
 		} finally {
 			await inspection?.flush();
 			if (inspectionVisitorId) {
@@ -251,15 +254,15 @@ export const runResolutionSession = internalAction({
 			guard.requestId,
 			inspect === true,
 		);
-		// Lifecycle hops are promises; they run in the session's runtime so
+		// Lifecycle hops are promises; they run with the session's services so
 		// their spans sit under the session's.
-		const session = Effect.flatMap(Effect.runtime<never>(), (runtime) =>
+		const session = Effect.flatMap(Effect.context<never>(), (services) =>
 			executeResolutionSession({
 				identity: guard,
 				lifecycle: createResolutionSessionLifecycle(
 					ctx,
 					guard,
-					spanHops(runtime),
+					spanHops(services),
 				),
 				resolve: (selection, checkpoints, observer, context) =>
 					orchestratorFor(ctx, guard, observer)
