@@ -558,8 +558,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🌬" },
 			"notes": {
-				"rationale": "Hauch owns the article einen across the adjective kalten, deriving einen Acc.Masc.Sg (de/noun-owns-its-article)."
+				"rationale": "Hauch owns the article einen across the adjective kalten, deriving einen Acc.Masc.Sg (de/noun-owns-its-article). einen kalten Hauch im Nacken, the draught from the open door, is DWDS Hauch 2 'sanfter Luftzug, Lüftchen', not breath or a faint trace."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

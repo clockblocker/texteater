@@ -26,8 +26,9 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🇩🇪💰" },
 			"notes": {
-				"rationale": "Currency context fixes common NOUN, not a personal name."
+				"rationale": "Currency context fixes common NOUN, not a personal name. Die Mark is DWDS Mark 'ehemalige deutsche Währungseinheit', not the border region of the other feminine Mark."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🧒📖" },
 			"notes": {
 				"rationale": "Ergänzungsstrich points to shared Bücher; one member stays Standard and Full."
 			},
@@ -62,6 +63,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🧑📖" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

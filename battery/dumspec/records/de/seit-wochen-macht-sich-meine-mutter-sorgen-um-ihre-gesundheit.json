@@ -346,6 +346,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👩‍👧" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -441,6 +442,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
+			},
+			"reading": { "emojiDescription": "🍏💪" },
+			"notes": {
+				"rationale": "Gesundheit is DWDS 'Zustand des Gesundseins, körperliches und geistiges Wohlbefinden'; no emoji shows health, so the apple and the flexed arm stand in for it, against krank 🤒."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

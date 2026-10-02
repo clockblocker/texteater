@@ -738,6 +738,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🛏🪶" },
+			"notes": {
+				"rationale": "Kopfkissen is DWDS 'mit Federn gefülltes Kissen, das im Bett als Unterlage für den Kopf dient'; with no pillow emoji, the bed and a feather stand in for it."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

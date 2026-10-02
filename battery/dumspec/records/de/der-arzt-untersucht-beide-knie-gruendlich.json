@@ -26,8 +26,9 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🧎" },
 			"notes": {
-				"rationale": "The plural is fixed by beide while the noun form is invariant."
+				"rationale": "The plural is fixed by beide while the noun form is invariant. Knie is DWDS 'Gelenk zwischen Oberschenkel und Unterschenkel'; no emoji shows the knee alone, so the kneeling figure stands in for it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

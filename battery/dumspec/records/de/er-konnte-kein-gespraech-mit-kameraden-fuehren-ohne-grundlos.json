@@ -463,6 +463,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🧑‍🤝‍🧑" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -500,7 +501,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Bare dative plural under mit."
+				"rationale": "Bare dative plural under mit. Kameraden one holds a conversation with are DWDS Kamerad 1 'Person, die jmdm. durch gemeinsame Lebensumstände … eng verbunden ist'; the sentence names no unit or fire brigade, so it takes this broad companion Reading, not 2 'Mitglied einer militärischen o. ä. Formation'."
 			}
 		},
 		{
@@ -772,6 +773,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "💬📌" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -816,7 +818,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "den Gegenstand wechseln 'change the subject' uses wechseln literally (DWDS: den Gesprächsgegenstand wechseln), so it is no Locution; Gegenstand owns den."
+				"rationale": "den Gegenstand wechseln 'change the subject' uses wechseln literally (DWDS: den Gesprächsgegenstand wechseln), so it is no Locution; Gegenstand owns den. Gegenstand here is DWDS Gegenstand 2a 'gedanklicher Mittelpunkt, Kern, zentraler Gedanke bzw. das, worum es geht', not the physical object of sense 1."
 			}
 		},
 		{

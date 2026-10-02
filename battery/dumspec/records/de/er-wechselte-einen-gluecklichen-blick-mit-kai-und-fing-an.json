@@ -662,6 +662,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "💪🦵" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -699,7 +700,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Shared object of abzuspannen and auszuruhen; seine is its own DET."
+				"rationale": "Shared object of abzuspannen and auszuruhen; seine is its own DET. seine Glieder abspannen is DWDS Glied 1 'beweglicher, durch ein Gelenk mit dem Rumpf verbundener Körperteil', the limbs, shown as Arm 💪 and Bein 🦵, not a chain link or a member."
 			}
 		},
 		{

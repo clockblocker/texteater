@@ -934,6 +934,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👤" },
+			"notes": {
+				"rationale": "den Kopf heben is DWDS Kopf 1 'Körperteil von Menschen und Tieren, in dem sich Gehirn und Augen befinden', a second Reading beside the nail's head 📌🔝."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1554,6 +1558,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
+			},
+			"reading": { "emojiDescription": "⛰🔝" },
+			"notes": {
+				"rationale": "auf dessen Höhe, on the top of the domed belly, is Duden's Höhe 'Höhe-, Gipfelpunkt' under 'kleinerer Berg; Anhöhe', not height as a measure."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

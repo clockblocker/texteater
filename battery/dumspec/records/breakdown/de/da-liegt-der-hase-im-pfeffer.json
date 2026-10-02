@@ -118,6 +118,7 @@
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🐇" },
 			"notes": {
 				"rationale": "The Breakdown reads Hase literally, as a hare: the idiom's meaning belongs to the Locution, and its parts are the Readings a learner drills down to. The noun owns its article (de/noun-owns-its-article)."
 			},

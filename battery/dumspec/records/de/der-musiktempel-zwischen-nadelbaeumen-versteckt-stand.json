@@ -253,6 +253,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🎵🏛" },
 			"notes": {
 				"rationale": "Musiktempel is a common noun here (the bandstand), not a name."
 			},
@@ -537,6 +538,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "♨🏛" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -587,6 +589,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🍰🏪" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

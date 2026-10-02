@@ -32,6 +32,7 @@
 		{
 			"memberSegmentIndices": [12, 14],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🧥" },
 			"notes": {
 				"rationale": "The article is a member of its noun's Attestation, and a click on it opens Mantel. Its DET cell is derived: einen is einen Acc.Masc.Sg. einen is the article of Mantel, not the NUM eins.",
 				"knownMistakes": [

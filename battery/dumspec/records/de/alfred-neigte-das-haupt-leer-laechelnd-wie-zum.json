@@ -395,8 +395,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👤" },
 			"notes": {
-				"rationale": "Haupt (gehoben for Kopf) owns its article das, Acc.Neut.Sg (de/noun-owns-its-article). Its elevated register is a Reading matter, not a spelling or historical status."
+				"rationale": "Haupt (gehoben for Kopf) owns its article das, Acc.Neut.Sg (de/noun-owns-its-article). Its elevated register is a Reading matter, not a spelling or historical status. das Haupt neigen is DWDS Haupt 1 'Kopf', the elevated word for the head, so it takes the 👤 of Kopf's body-part Reading, not the leader of sense 2."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -815,6 +816,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "✋" },
 			"notes": {
 				"rationale": "Hände is Acc.Plur of Hand. ihre is a DET, not an article, so the noun owns none."
 			},

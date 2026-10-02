@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [0, 4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "👧" },
 			"notes": {
 				"rationale": "A noun owns the article opening its phrase across a numeral, as across an adjective: the sentence-initial Die is the owned article, normalized to die (ADR 0035)."
 			},

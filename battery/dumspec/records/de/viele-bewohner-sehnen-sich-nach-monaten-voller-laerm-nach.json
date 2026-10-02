@@ -260,6 +260,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "📅" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -329,8 +330,9 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔊" },
 			"notes": {
-				"rationale": "Case after undeclined voller left null, as #743 JT-B5 ruled for voll Oberflächlichkeit."
+				"rationale": "Case after undeclined voller left null, as #743 JT-B5 ruled for voll Oberflächlichkeit. Lärm is DWDS 'laute Geräusche verschiedenster Art, Krach', the opposite of the Ruhe 🔇 the sentence longs for, not 'Aufsehen, Gerede'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

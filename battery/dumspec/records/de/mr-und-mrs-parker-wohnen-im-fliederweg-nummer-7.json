@@ -29,6 +29,10 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "👨" },
+			"notes": {
+				"rationale": "Mr is Duden's Mister 'englische Anrede für einen Mann in Verbindung mit dem Namen', not the title of a beauty-contest winner."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -62,6 +66,10 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "💍👩" },
+			"notes": {
+				"rationale": "Mrs before a name is the English title of a married woman, so the ring sets it apart from Frau 👩."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

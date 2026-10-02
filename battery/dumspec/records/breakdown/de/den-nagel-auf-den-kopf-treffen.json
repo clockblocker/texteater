@@ -109,6 +109,10 @@
 		{
 			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "📌🔝" },
+			"notes": {
+				"rationale": "Read literally, auf den Kopf is DWDS Kopf 'breiteres, oft flaches, stumpfes Ende von Nägeln, Schrauben oder Nadeln', the head of Nagel 🔨📌, a Reading apart from the body part."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

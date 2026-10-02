@@ -22,7 +22,7 @@
 		{ "kind": "ResolvableText", "text": "Mund" }
 	],
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0039", "ADR-0041"],
+		"adrs": ["ADR-0031", "ADR-0035", "ADR-0039", "ADR-0041"],
 		"rules": [
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{
@@ -43,6 +43,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🌅🕐" },
 			"notes": {
 				"rationale": "Morgenstund is Morgenstunde with its final e dropped, a standalone shortened spelling of one word, so it is a Shorthand member and the Surface spells the full Morgenstunde, Canonical and not Archaic (de/member-orthography). Morgenstund is no Lemma or Variant of its own. The Saying keeps it in its Canonical Form, the DWDS headword (de/canonical-form-is-the-headword)."
 			},
@@ -123,6 +124,10 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🪙" },
+			"notes": {
+				"rationale": "Read literally, Gold is DWDS's 'Edelmetall, das im kompakten und geschmolzenen Zustand eine gelbe Farbe besitzt', and with no emoji for the metal the gold coin stands in for it."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "Gold", "orthography": "Standard" }],
@@ -207,6 +212,7 @@
 		{
 			"memberSegmentIndices": [7, 9],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "👄" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

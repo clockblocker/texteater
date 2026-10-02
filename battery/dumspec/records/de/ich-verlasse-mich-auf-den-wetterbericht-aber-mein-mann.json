@@ -432,6 +432,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "💍👨" },
+			"notes": {
+				"rationale": "mein Mann is DWDS Mann 2 'Partner männlichen Geschlechts in einer festen, häufig ehelichen Beziehung', the husband, a Reading apart from the adult man 👨."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -19,6 +19,10 @@
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🏠" },
+			"notes": {
+				"rationale": "Haus cited as a dictionary entry is a mentioned word, so it takes the ordinary Reading of the building."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
