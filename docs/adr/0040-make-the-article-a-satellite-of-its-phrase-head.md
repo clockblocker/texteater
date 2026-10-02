@@ -208,3 +208,11 @@ and the ordinal `erste` are: `der meine` attests ADJ `meine` over
 possessive PRON has no weak forms. Decided by agents under the user's
 delegation on 2026-10-02
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
+
+Amended on 2026-10-02: a change under `battery/dumgen/src` no longer
+recompiles the relation verdict. The legacy Dumgen moved, frozen, to
+`battery/legacy-dumgen`, and tf-demo's verdict compiler
+(`app/tf-demo/tooling/compile-relation-verdict.ts`) hashes that copy's `src`
+together with Dumling's and Dumrel's. Changes to Dumling and Dumrel still
+recompile the verdict, but the new Dumgen's do not. Recorded on
+[#839](https://github.com/clockblocker/texteater/issues/839).
