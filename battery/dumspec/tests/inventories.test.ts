@@ -368,8 +368,8 @@ describe("the German authored inventory", () => {
 			variantTags: ["Historical"],
 		});
 		expect(closedVerbFormSpellings.ward?.historicalStatus).toBe("Archaic");
-		// What awaits a ruling carries no spelling: hab, a table's other
-		// spellings of a cell, the comparative weniger and wieviel.
+		// What awaits a ruling carries no spelling: hab and a table's other
+		// spellings of a cell.
 		expect(tagsOf("hab", "AUX")).toEqual(["haben none"]);
 		expect(tagsOf("eins", "PRON")).toEqual(["eines none"]);
 		expect(tagsOf("irgendeins", "PRON")).toEqual(["irgendeiner none"]);
@@ -377,8 +377,9 @@ describe("the German authored inventory", () => {
 		expect(tagsOf("jeden", "DET", "Gen")).toEqual(["jeder none"]);
 		expect(tagsOf("einiges", "DET", "Gen")).toEqual(["einige none"]);
 		expect(tagsOf("selben", "DET")).toEqual(["derselbe none"]);
-		expect(tagsOf("weniger", "DET", null)).toEqual(["wenig none"]);
-		expect(tagsOf("wieviel", "DET")).toEqual(["wieviel none"]);
+		// mehr and weniger are the comparatives of DET viel and wenig.
+		expect(tagsOf("weniger", "DET", null)).toEqual(["wenig Canonical"]);
+		expect(tagsOf("mehr", "DET", null)).toEqual(["viel Canonical"]);
 		// PRON beiden is the Dat cell's own form, and weak beiden beside
 		// beide in Nom awaits the ruling on standalone die beiden.
 		expect(tagsOf("beiden", "PRON", "Dat")).toEqual(["beide Canonical"]);
@@ -446,6 +447,89 @@ describe("the German authored inventory", () => {
 				)
 				.toSorted(),
 		).toEqual(["haben 🏁", "sein 🏁"]);
+	});
+
+	test("settles the determiner Lemmas the user ruled on 2026-10-02 (system ADR 0032)", () => {
+		const readingsOf = (kind: string, text: string) =>
+			authoredMembers
+				.filter(
+					({ lemma }) =>
+						lemma.kind === kind && lemma.canonicalForm === text,
+				)
+				.map(({ lemma, reading }) =>
+					[
+						field(lemma.coreFeatures, "pronType"),
+						reading.emojiDescription,
+					]
+						.filter(Boolean)
+						.join(" "),
+				);
+		// Exclamative welch is a Reading of interrogative welcher, and Exc left
+		// German DET; uninflected welch spells welcher without a cell.
+		expect(readingsOf("DET", "welcher")).toEqual([
+			"Int ❓",
+			"Int ❗",
+			"Rel 🧩",
+		]);
+		expect(readingsOf("DET", "welch")).toEqual([]);
+		const uninflected = (kind: string, spelled: string) =>
+			authoredRealizations
+				.filter(
+					(realization) =>
+						realization.member.lemma.kind === kind &&
+						realization.spelled === spelled &&
+						!realization.inflection,
+				)
+				.map(({ member }) => member.reading.emojiDescription);
+		expect(uninflected("DET", "welch")).toEqual(["❓", "❗"]);
+		// mehr and weniger are the Cmp of DET viel and wenig; standing alone
+		// they are PRON Lemmas, since PRON has no degree.
+		for (const text of [
+			"mehr",
+			"weniger",
+			"wieviel",
+			"wievielte",
+			"manch",
+			"selber",
+		])
+			expect(readingsOf("DET", text), text).toEqual([]);
+		expect(
+			authoredRealizations
+				.filter(
+					({ member, spelled, inflection }) =>
+						member.lemma.kind === "DET" &&
+						["mehr", "weniger"].includes(spelled) &&
+						inflection?.degree,
+				)
+				.map(({ member, spelled, inflection }) => [
+					spelled,
+					member.lemma.canonicalForm,
+					inflection,
+				]),
+		).toEqual([
+			["mehr", "viel", { degree: "Cmp" }],
+			["weniger", "wenig", { degree: "Cmp" }],
+		]);
+		expect(readingsOf("PRON", "mehr")).toEqual(["Ind ➕"]);
+		expect(readingsOf("PRON", "weniger")).toEqual(["Ind ➖"]);
+		// viel and wenig cite their bare form as DET and PRON; uninflected
+		// manch spells DET mancher.
+		for (const kind of ["DET", "PRON"]) {
+			expect(readingsOf(kind, "viel"), kind).toEqual(["Ind 🔢"]);
+			expect(readingsOf(kind, "wenig"), kind).toEqual(["Ind ➖"]);
+			expect(readingsOf(kind, "viele"), kind).toEqual([]);
+		}
+		expect(uninflected("DET", "manch")).toEqual(["🔢"]);
+		// Emphatic selbst and selber are ADVs; selbst also means 'even'.
+		expect(readingsOf("ADV", "selbst")).toEqual(["🫵", "😮"]);
+		expect(readingsOf("ADV", "selber")).toEqual(["🫵"]);
+		expect(
+			authoredMembers.find(
+				({ lemma }) => lemma.canonicalForm === "selber",
+			)?.knowledge.semanticRelations?.synonym,
+		).toEqual([
+			expect.objectContaining({ kind: "ADV", canonicalForm: "selbst" }),
+		]);
 	});
 
 	test("authors etwas as an invariant Ind DET and PRON (de/pron-or-det-by-use)", () => {

@@ -1266,8 +1266,8 @@ const attestations: Rule[] = [
 	{
 		id: "de/canonical-form-is-the-headword",
 		statement:
-			"A Lemma's Canonical Form is its dictionary headword and may differ from the sentence's words. Where Duden lists two spellings, the Canonical Form is Duden's recommended one. An interjection written in pieces is cited as written instead (de/interjection-counts-its-words): ha ha, o je. Identity ignores case, but the Canonical Form keeps the dictionary's casing (Haus, LOL, Sie), never the word's position: sentence-initial Wegen is wegen. A noun's is the bare noun. An open slot is written … (U+2026) with a space on each side (um … willen). A Surface spelled Canonical need not be the Grundform.",
-		adrs: ["ADR-0002", "ADR-0035"],
+			"A Lemma's Canonical Form is its dictionary headword, whatever the sentence spells: Duden's recommended spelling, a noun bare, an interjection in pieces as written (ha ha, o je). Identity ignores case, but the Canonical Form keeps the dictionary's casing (Haus, LOL, Sie), not the word's position: sentence-initial Wegen is wegen. An open slot is … (U+2026) with a space on each side (um … willen). A stem PRON or DET cites its Nom.Masc.Sg cell or, plural-cited, its Nom.Plur (mancher, alle), but viel and wenig their usual bare form. A Surface spelled Canonical need not be the Grundform.",
+		adrs: ["ADR-0002", "ADR-0032", "ADR-0035"],
 		routes: [],
 		records: [
 			"de/die-linke-hand-zitterte",
@@ -1294,6 +1294,7 @@ const attestations: Rule[] = [
 			"de/auf-die-pointe-antwortete-sie-im-chat-nur-mit-lol",
 			"de/er-antwortete-im-chat-nur-mit-lol",
 			"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
+			"de/viele-kamen-zu-spaet",
 		],
 	},
 	{

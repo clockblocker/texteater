@@ -331,7 +331,8 @@ add(
 // Standalone quantifiers (ticket 503): a determiner form without a noun is PRON,
 // resolved in the pronoun catalog; DET keeps the attributive identity. viel and
 // wenig stand alone as neuter mass singular (vieles, bare viel) or plural; the
-// genitive is adjectival -en. Masc/Fem singular has no standalone use.
+// genitive is adjectival -en. Masc/Fem singular has no standalone use. Like
+// the DETs, both cite their usual bare form (de/canonical-form-is-the-headword).
 for (const [stem, ipa, emoji, definition, en, ru] of [
 	[
 		"viel",
@@ -359,11 +360,10 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 		Neut: [bare(t.Neut[0]), bare(t.Neut[1]), bare(t.Neut[2]), t.Masc[1]],
 		Plur: t.Plur,
 	};
-	add(
-		table,
-		description("Ind", emoji, definition, [en], [ru]),
-		plural(table),
-	);
+	add(table, description("Ind", emoji, definition, [en], [ru]), {
+		// Transcriptions reviewed with the bare headword, as on the DETs.
+		citation: form(stem, stem === "viel" ? "fiːl" : "ˈveːnɪç"),
+	});
 }
 // meist has no PRON: standing alone it still follows its article (das meiste,
 // die meisten), so it is ADJ viel with its noun elided (Rule
@@ -391,8 +391,9 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 }
 
 // Comparative quantifiers without a noun (Mehr als die Hälfte; Weniger ist mehr)
-// are invariant PRON identities; case comes from the clause (ticket 503). The
-// attributive comparatives stay DET: mehr as its own headword, weniger as wenig.
+// are invariant PRON identities; case comes from the clause (ticket 503). PRON
+// has no degree, so they are Lemmas of their own. The attributive comparatives
+// are the Cmp of DET viel and wenig (mehr Zeit, weniger Besucher).
 for (const [text, ipa, emoji, definition, en, ru] of [
 	[
 		"mehr",

@@ -21,7 +21,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0032"],
 		"rules": [
 			{
 				"rule": "de/empty-inflection-is-structural",
@@ -36,7 +36,7 @@
 			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "❗" },
 			"notes": {
-				"rationale": "Welch before ein Glück is exclamative welch, a DET with pronType Exc in Core. Before ein it stays uninflected, an invariant use, so its Surface leaves its inflection empty (de/empty-inflection-is-structural)."
+				"rationale": "Welch before ein Glück opens an exclamation, so it is the exclamative Reading ❗ of DET welcher, beside the interrogative ❓ (ADR 0032). Before ein it stays uninflected, the spelling welch of that Lemma, which marks no cell, so its Surface leaves its inflection empty (de/empty-inflection-is-structural)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -48,7 +48,7 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "DET",
-						"canonicalForm": "welch",
+						"canonicalForm": "welcher",
 						"coreFeatures": {
 							"case": null,
 							"gender": null,
@@ -56,7 +56,7 @@
 							"person": null,
 							"polite": null,
 							"poss": null,
-							"pronType": "Exc"
+							"pronType": "Int"
 						}
 					},
 					"normalizedSurface": "welch",

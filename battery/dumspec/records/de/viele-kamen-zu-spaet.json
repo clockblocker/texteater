@@ -12,7 +12,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Segmentation",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0044"],
@@ -21,6 +21,10 @@
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "43184aac9186aceb"
 			}
 		],
 		"references": []
@@ -31,7 +35,7 @@
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "Viele stands for a noun phrase with no noun, so it is PRON (de/pron-or-det-by-use): the stem viele, whose Surface marks Nom.Plur. Attributive viele Leute is the DET viel instead."
+				"rationale": "Viele stands for a noun phrase with no noun, so it is PRON (de/pron-or-det-by-use). It is the stem viel, cited by its usual bare form as the DET viel is (de/canonical-form-is-the-headword), and its Surface viele marks Nom.Plur. Attributive viele Leute is the DET viel instead."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -53,7 +57,7 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "viele",
+						"canonicalForm": "viel",
 						"family": "Lexeme",
 						"kind": "PRON",
 						"coreFeatures": {

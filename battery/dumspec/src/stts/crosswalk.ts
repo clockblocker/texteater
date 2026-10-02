@@ -682,13 +682,13 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 			{
 				use: "viel, wenig or mehr standing for a noun phrase",
 				becomes: alone(lexeme("PRON")),
-				records: [show("viele-kamen-zu-spaet", "Viele", "viele")],
+				records: [show("viele-kamen-zu-spaet", "Viele", "viel")],
 			},
 		],
 		rules: ["de/pron-or-det-by-use", "de/quantifier-by-use"],
 		adrs: ["ADR-0044"],
 		model: modeled,
-		gold: "Partial",
+		gold: "No",
 		pipeline: waitsOnDumgen,
 	},
 	{

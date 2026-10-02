@@ -22,7 +22,7 @@
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "044ad2bbec5191e7"
+				"hash": "43184aac9186aceb"
 			}
 		],
 		"references": []

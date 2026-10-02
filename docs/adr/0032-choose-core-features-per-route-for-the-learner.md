@@ -198,6 +198,21 @@ referent no text settles (ADR 0046). The sentence on reopened splits, the
 per-cell clause and the navigation paragraph follow. Decided by the user on
 [#829](https://github.com/clockblocker/texteater/issues/829).
 
+Amended on 2026-10-02: a stem cites its Nom.Masc.Sg cell, or its Nom.Plur
+cell when plural-cited, even where Duden's headword is another form
+(`mancher`, `alle`). `viel` and `wenig` are usually bare, so DET and PRON
+alike cite the bare form. Uninflected `manch` and `welch` spell `mancher`
+and `welcher` without a cell, as uninflected `viel` and `all` do. DET `mehr`
+and `weniger` are Surfaces of `viel` and `wenig` that mark Cmp. PRON has no
+degree, so standalone `mehr` and `weniger` stay PRON Lemmas. Exclamative
+`welch` is a second Reading, ❗, of interrogative `welcher`, since Duden
+gives the exclamation under the one headword, so Exc left German DET. `wie
+viel` is ADV `wie` and DET `viel`, word by word, and `wievielte` is an ADJ
+like the ordinals, so neither is a DET. Emphatic `selbst` and `selber` are
+ADVs, which retires DET `selber` with Emp. The dumspec Rule is
+`de/canonical-form-is-the-headword`. Decided by the user on 2026-10-02
+([#595](https://github.com/clockblocker/texteater/issues/595)).
+
 ## Considered Options
 
 - Choosing a determiner's headword by the noun's gender (masculine `der`,

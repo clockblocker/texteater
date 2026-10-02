@@ -28,7 +28,11 @@ export type AuthoredRealization = RealizationSpelling & {
 	/** The cell a stem Lemma's Surface marks with this spelling (system ADR 0032). */
 	readonly inflection?: Readonly<Record<string, string | null>>;
 };
-type Alias = RealizationSpelling & { readonly spelled: string };
+type Alias = RealizationSpelling & {
+	readonly spelled: string;
+	/** The inflection a spelling outside the stem's cells marks: mehr is Cmp. */
+	readonly inflection?: Readonly<Record<string, string | null>>;
+};
 
 const licensed: SurfaceSpelling = {
 	kind: "Variant",
@@ -42,11 +46,18 @@ const shorthand = (spelled: string, standsFor: string): Alias => ({
 	standsFor,
 });
 
+/** The comparative of a quantifying determiner, a Canonical Surface marking Cmp. */
+const comparative = (spelled: string): Alias => ({
+	spelled,
+	spelling: canonical,
+	inflection: { degree: "Cmp" },
+});
 /**
  * Other spellings of authored determiners, keyed by Canonical Form. The
  * shortened articles are Shorthand members of the article they stand for
- * ('ne Frage; ADR 0035). weniger, the comparative of uninflected wenig, has
- * no spelling until a ruling.
+ * ('ne Frage; ADR 0035). mehr and weniger are the comparatives of viel and
+ * wenig (mehr Zeit, weniger Besucher), as the ADJ and ADV forms are; standing
+ * alone they are PRON Lemmas of their own.
  */
 const determinerAliases: Readonly<Record<string, readonly Alias[]>> = {
 	ein: [shorthand("n", "ein")],
@@ -54,7 +65,8 @@ const determinerAliases: Readonly<Record<string, readonly Alias[]>> = {
 	einen: [shorthand("nen", "einen")],
 	einem: [shorthand("nem", "einem")],
 	einer: [shorthand("ner", "einer")],
-	wenig: [{ spelled: "weniger" }],
+	viel: [comparative("mehr")],
+	wenig: [comparative("weniger")],
 };
 /** Every form of the three grammatical auxiliaries; the spelling names the Lemma, the served verb's form picks the Reading (ADR 0026). */
 export const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {

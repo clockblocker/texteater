@@ -56,7 +56,7 @@
 			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" },
 			{
 				"rule": "de/canonical-form-is-the-headword",
-				"hash": "044ad2bbec5191e7"
+				"hash": "43184aac9186aceb"
 			}
 		],
 		"references": []

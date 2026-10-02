@@ -39,12 +39,8 @@ import { member as article_einer_feminine_singular_genitive } from "./members/le
 import { member as article_eines_masculine_singular_genitive } from "./members/lexeme/determiner/article/eines-masculine-singular-genitive.js";
 import { member as article_eines_neuter_singular_genitive } from "./members/lexeme/determiner/article/eines-neuter-singular-genitive.js";
 import { member as m16 } from "./members/lexeme/determiner/demonstrative/derlei.js";
-import { member as m17 } from "./members/lexeme/determiner/emphatic/selber.js";
-import { member as m20 } from "./members/lexeme/determiner/exclamative/welch.js";
 import { member as determinerEtwas } from "./members/lexeme/determiner/quantifying/etwas.js";
 import { member as m30 } from "./members/lexeme/determiner/quantifying/lauter.js";
-import { member as m31 } from "./members/lexeme/determiner/quantifying/manch.js";
-import { member as m35 } from "./members/lexeme/determiner/quantifying/mehr.js";
 import { member as m143 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-accusative.js";
 import { member as m142 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-nominative.js";
 import { member as m145 } from "./members/lexeme/pronoun/demonstrative/dem-masculine-singular-dative.js";
@@ -164,12 +160,8 @@ export const sourceMembers = [
 	article_eines_masculine_singular_genitive,
 	article_eines_neuter_singular_genitive,
 	m16,
-	m17,
-	m20,
 	determinerEtwas,
 	m30,
-	m31,
-	m35,
 	aux0,
 	aux2,
 	aux3,

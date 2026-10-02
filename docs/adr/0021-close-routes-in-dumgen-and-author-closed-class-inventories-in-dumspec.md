@@ -22,7 +22,7 @@ w-adverbs (`wo`, `wohin`, `woher`, `wann`, `wie`, `warum`, `wieso`,
 `rein`, `rüber`, `runter`, `rauf` and `ran` are their Shorthands), the `irgend-`
 adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), the negative
 adverbs `nie`, `niemals`, `nirgends`, `nirgendwo` and `keineswegs` (ruled by
-the user on 2026-10-02), the negation
+the user on 2026-10-02), the emphatic adverbs `selbst` and `selber`, the negation
 particle `nicht`, infinitive `zu` and the modal particles (`aber`, `auch`,
 `bloß`, `denn`, `doch`, `eben`, `eigentlich`, `einfach`, `einmal`, `etwa`,
 `halt`, `ja`, `mal`, `nur`, `ruhig`, `schon`, `vielleicht`, `wohl`), which
@@ -67,6 +67,14 @@ special DTO class. The two kinds of miss differ:
   through Open production. It is not a Catalog Miss.
 - A matched authored member whose required content is missing is a Catalog
   Miss on either kind of route.
+
+Amended on 2026-10-02: the emphatic adverbs `selbst`, with the Readings 🫵
+'oneself' and 😮 'even', and `selber` 🫵 joined the inventory. DET `welch`,
+`mehr`, `manch`, `selber`, `wieviel` and `wievielte` left it, as Readings or
+spellings of other Lemmas or as other Kinds
+([ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)).
+Decided by the user on 2026-10-02
+([#595](https://github.com/clockblocker/texteater/issues/595)).
 
 ## Considered Options
 

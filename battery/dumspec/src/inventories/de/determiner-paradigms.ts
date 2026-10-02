@@ -39,17 +39,6 @@ const withVariants = (entry: PronounForm, ...variants: string[]) => ({
 	...entry,
 	variants: [...(entry.variants ?? []), ...variants],
 });
-/** A member whose spellings carry no Surface spelling until a ruling. */
-const unclassified = ({
-	member,
-	spellings,
-}: ReviewedDeterminer): ReviewedDeterminer => ({
-	member,
-	spellings: spellings.map(({ spelled, cell }) =>
-		cell ? { spelled, cell } : { spelled },
-	),
-});
-
 /** ein-words: bare stem in Masc Nom and Neut Nom/Acc, strong endings elsewhere. */
 function einWord(stem: string, ipa: string, plural: boolean): PronounTable {
 	const f = (ending: Ending) => form(stem + ending, ipa + endings[ending]);
@@ -79,23 +68,11 @@ function adjectivalGenitive(stem: string, ipa: string): PronounTable {
 		],
 	};
 }
-/** Weak endings after a definite article: der wievielte. */
-function weak(stem: string, ipa: string): PronounTable {
-	const e = form(`${stem}e`, `${ipa}ə`),
-		en = form(`${stem}en`, `${ipa}ən`);
-	return {
-		Masc: [e, en, en, en],
-		Neut: [e, e, en, en],
-		Fem: [e, e, en, en],
-		Plur: [en, en, en, en],
-	};
-}
-
 // The definite and indefinite articles are pillars, authored one Lemma per
 // cell under members/lexeme/determiner/article. Every other declining
 // determiner is a stem with borrowed article endings: one Lemma here whose
 // Surfaces mark the cell (system ADR 0032). Invariant ones (derlei, etwas,
-// manch, lauter, mehr, selber, welch) keep their single-Lemma files.
+// lauter) keep their single-Lemma files.
 
 for (const [stem, ipa, definition, en, ru] of [
 	[
@@ -182,25 +159,38 @@ for (const [tail, ipa, definition, en, ru] of [
 	);
 }
 
-for (const pronType of ["Int", "Rel"] as const)
-	add(
-		strongPronoun("welch", "ˈvɛlç"),
-		pronType === "Int"
-			? description(
-					{ pronType },
-					"❓",
-					"Der interrogative Determinierer „welcher“ fragt nach Auswahl oder Menge.",
-					["which"],
-					["какой"],
-				)
-			: description(
-					{ pronType },
-					"🧩",
-					"Der relative Determinierer „welcher“ verbindet einen Bezug mit einer weiterführenden Aussage.",
-					["which"],
-					["который"],
-				),
-	);
+// Interrogative welcher has a second Reading, exclamative ❗ (Welch ein
+// Glück! Welche Freude!): Duden gives the exclamation under the one
+// headword. Uninflected welch, mostly before ein, spells that Lemma without
+// a cell, as uninflected viel does, and the spelling serves both Readings.
+// https://www.duden.de/rechtschreibung/welcher_welche_welches
+for (const meaning of [
+	description(
+		{ pronType: "Int" },
+		"❓",
+		"Der interrogative Determinierer „welcher“ fragt nach Auswahl oder Menge.",
+		["which"],
+		["какой"],
+	),
+	description(
+		{ pronType: "Int" },
+		"❗",
+		"Der Determinierer „welcher“ leitet einen Ausruf ein und hebt Art oder Ausmaß des Bezeichneten hervor, gehoben oft unflektiert vor „ein“: Welch ein Glück! Welche Freude!",
+		["what (a)"],
+		["какой"],
+	),
+])
+	add(strongPronoun("welch", "ˈvɛlç"), meaning, { uninflected: ["welch"] });
+add(
+	strongPronoun("welch", "ˈvɛlç"),
+	description(
+		{ pronType: "Rel" },
+		"🧩",
+		"Der relative Determinierer „welcher“ verbindet einen Bezug mit einer weiterführenden Aussage.",
+		["which"],
+		["который"],
+	),
+);
 
 // was für ein is a Locution DET with an empty Core and no Locution Type
 // (de/was-fuer, ADR 0039; ruled on #741): a determiner in a noun phrase, not
@@ -226,46 +216,10 @@ for (const pronType of ["Int", "Rel"] as const)
 		),
 	);
 }
-// Uninflected wieviel stands before a singular noun (wieviel Geld); its
-// declined cells are plural only. Duden now spells wie viel and wie viele
-// apart, so whether these spellings are Historical awaits a source, and none
-// carries a Surface spelling yet (ADR 0041).
-reviewed.push(
-	unclassified(
-		determinerStem(
-			{
-				Masc: absent,
-				Neut: absent,
-				Fem: absent,
-				Plur: [
-					form("wieviele", "viˈfiːlə"),
-					form("wieviele", "viˈfiːlə"),
-					form("wievielen", "viˈfiːlən"),
-					form("wievieler", "viˈfiːlɐ"),
-				],
-			},
-			description(
-				{ pronType: "Int" },
-				"❓🔢",
-				"Der interrogative Determinierer „wieviel“ fragt nach Auswahl oder Menge.",
-				["how much", "how many"],
-				["сколько"],
-			),
-			{ citation: form("wieviel", "viːˈfiːl"), uninflected: ["wieviel"] },
-		),
-	),
-);
-add(
-	weak("wievielt", "viˈfiːlt"),
-	description(
-		{ pronType: "Int" },
-		"❓🔢",
-		"Der interrogative Determinierer „wievielte“ fragt nach der Stelle in einer Reihenfolge.",
-		["which numbered"],
-		["который по счёту"],
-	),
-);
-
+// wie viel is ADV wie and DET viel, two targets word by word, and wievielte
+// is an ADJ like the ordinals (der wievielte Versuch), so no DET is authored
+// for either. A one-word wieviel, the spelling before 1996, is a Historical
+// spelling spanning both words.
 add(
 	einWord("kein", "ˈkaɪ̯n", true),
 	description(
@@ -412,7 +366,8 @@ for (const [stem, ipa, person, polite, definition, en, ru] of [
 // Indefinite quantifiers. einig/etlich/etwelch/viel/wenig/sämtlich/all take
 // the adjectival -en genitive before a strong genitive noun (einigen Aufwands).
 // einige, etliche and etwelche are cited in the plural; viel and wenig by their
-// uninflected form before a singular noun (viel Geld).
+// usual bare form (viel Geld), whose comparatives mehr and weniger are
+// spellings marking Cmp (realizations.ts, de/canonical-form-is-the-headword).
 for (const [stem, ipa, definition, en, ru, emoji, citation] of [
 	[
 		"einig",
@@ -473,30 +428,32 @@ for (const [stem, ipa, definition, en, ru, emoji, citation] of [
 				},
 	);
 }
+// mancher cites its Nom.Masc.Sg cell, and uninflected manch (manch ein
+// Freund, manch schöner Tag) spells it without a cell, as uninflected viel
+// does (de/canonical-form-is-the-headword).
+add(
+	strongPronoun("manch", "ˈmanç"),
+	description(
+		{ pronType: "Ind" },
+		"🔢",
+		"Der quantifizierende Determinierer „mancher“ grenzt die Menge der bezeichneten Bezüge ein; unflektiert „manch“ steht gehoben vor „ein“ oder einem Adjektiv.",
+		["many a"],
+		["многие"],
+	),
+	{ uninflected: ["manch"] },
+);
 // The irgend- determiners take the ❔ marker of the irgend- pronouns and
 // adverbs (irgendeiner, irgendwo).
-for (const [stem, ipa, emoji, definition, en, ru] of [
-	[
-		"manch",
-		"ˈmanç",
-		"🔢",
-		"Der quantifizierende Determinierer „mancher“ grenzt die Menge der bezeichneten Bezüge ein.",
-		"many a",
-		"многие",
-	],
-	[
-		"irgendwelch",
-		"ˈɪʁɡəntˌvɛlç",
+add(
+	strongPronoun("irgendwelch", "ˈɪʁɡəntˌvɛlç"),
+	description(
+		{ pronType: "Ind" },
 		"❔",
 		"Der quantifizierende Determinierer „irgendwelcher“ grenzt die Menge der bezeichneten Bezüge ein.",
-		"any",
-		"какой-либо",
-	],
-] as const)
-	add(
-		strongPronoun(stem, ipa),
-		description({ pronType: "Ind" }, emoji, definition, [en], [ru]),
-	);
+		["any"],
+		["какой-либо"],
+	),
+);
 add(
 	einWord("irgendein", "ˈɪʁɡəntˌaɪ̯n", false),
 	description(

@@ -335,6 +335,52 @@ type ManyReadingAdverb = Pick<OneReadingAdverb, "text" | "ipa"> & {
 	readonly readings: readonly EmojiMeaning[];
 };
 
+// selbst and selber after or before the word they stress (Ich habe es selbst
+// gemacht; Der Chef selbst kam) are ADVs, not determiners or pronouns, with
+// the emphatic Reading 🫵. selbst also means 'even' (Selbst der Techniker
+// übersah den Riss), its 😮 Reading. selber is the colloquial headword Duden
+// defines as emphatic selbst, so it claims selbst as a synonym.
+// https://www.duden.de/rechtschreibung/selbst_sogar_auch
+// https://www.duden.de/rechtschreibung/selber
+const emphaticAdverbs: readonly (ManyReadingAdverb & {
+	readonly synonymOf?: string;
+})[] = [
+	{
+		text: "selbst",
+		ipa: "zɛlpst",
+		readings: [
+			{
+				emoji: "🫵",
+				definition:
+					"Hebt nachdrücklich hervor, dass die genannte Person oder Sache gemeint ist und keine andere, oft auch, dass sie ohne fremde Hilfe handelt: Ich habe es selbst gemacht. Der Chef selbst kam zur Feier.",
+				en: ["oneself (myself, himself, itself …)", "in person"],
+				ru: ["сам; сама; само; сами"],
+			},
+			{
+				emoji: "😮",
+				definition:
+					"Hebt hervor, dass etwas auch für das Genannte gilt, bei dem man es am wenigsten erwartet, sogar: Selbst der erfahrenste Techniker übersah den Riss.",
+				en: ["even"],
+				ru: ["даже"],
+			},
+		],
+	},
+	{
+		text: "selber",
+		ipa: "ˈzɛlbɐ",
+		synonymOf: "selbst",
+		readings: [
+			{
+				emoji: "🫵",
+				definition:
+					"Hebt umgangssprachlich wie „selbst“ nachdrücklich hervor, dass die genannte Person oder Sache gemeint ist und keine andere: Das mache ich selber. Du hast es selber gesagt.",
+				en: ["oneself (myself, himself, itself …)"],
+				ru: ["сам; сама; само; сами"],
+			},
+		],
+	},
+];
+
 // da, hier and dort point at a place, dann at the next step in time and so at
 // a manner or degree: the demonstratives that answer wo, wann and wie, so
 // each Reading is the w-word's emoji with no marker, as on the da(r)- and
@@ -684,9 +730,10 @@ function whAdverb(
  * Reading. Then one Lemma each for the indefinite irgend- adverbs, the
  * negative nie, niemals, nirgends, nirgendwo and keineswegs, the
  * demonstrative da, hier, dort, dann and so, the demonstrative dahin, daher,
- * hierhin, hierher, dorthin and dorther, and the directional her- and hin-
+ * hierhin, hierher, dorthin and dorther, the directional her- and hin-
  * adverbs (heraus, hinaus, herein, hinein, herüber, hinüber, herunter,
- * hinunter, herauf, hinauf and heran). Each Reading's marker shows its series.
+ * hinunter, herauf, hinauf and heran), and emphatic selbst and selber. Each
+ * Reading's marker shows its series.
  * The wo(r)- pronominal adverbs are in pronominal-adverbs.ts.
  */
 export const whAdverbs: readonly AuthoredMember[] = [
@@ -702,4 +749,7 @@ export const whAdverbs: readonly AuthoredMember[] = [
 		whAdverb(adverb, "Dem", adverb),
 	),
 	...directionalAdverbs.map((adverb) => whAdverb(adverb, null, adverb)),
+	...emphaticAdverbs.flatMap((adverb) =>
+		adverb.readings.map((meaning) => whAdverb(adverb, null, meaning)),
+	),
 ];

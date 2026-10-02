@@ -74,7 +74,6 @@ const DeDeterminerPronTypeSchema = UNIVERSAL_FEATURE_SCHEMA.pronType.extract([
 	PronType.Art,
 	PronType.Dem,
 	PronType.Emp,
-	PronType.Exc,
 	PronType.Ind,
 	PronType.Int,
 	PronType.Neg,
