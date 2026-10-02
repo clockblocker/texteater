@@ -11,8 +11,9 @@
  * piece (abzuspannen, de/fused-word-pieces), am before a superlative with
  * no noun after it stays one Segment (am besten), a period inside the
  * Sentence that ends a short word is the abbreviation's own (K., u.,
- * de/abbreviation-is-one-segment), and a sign that stands for a word (%,
- * §§, ©, ※, ;-)) is clickable.
+ * de/abbreviation-is-one-segment), a sign that stands for a word (%, §§,
+ * ©, ※, ;-)) is clickable, and ?! and ... are one mark each while …? is
+ * two (de/one-segment-per-mark).
  *
  * No gold boundary, generated text or language parser enters the request,
  * and there is no stitching question and no language judge. Matching the
@@ -85,6 +86,12 @@ const number = /^\p{N}+(?:[,.]\p{N}+)+/u;
 const apostrophe = /['’‘´`]/u;
 /** The ellipsis written as three full stops is one mark, as … is. */
 const ellipsis = /^\.{3}/u;
+/**
+ * The marks convention writes as one: three full stops and ?!. Any other
+ * run of marks, …? and !? included, is one Segment per mark
+ * (de/one-segment-per-mark).
+ */
+const conventionalMarks = /^(?:\.{3}|\?!)/u;
 const mathematicalOrCurrencySymbol = /^([\p{Sm}\p{Sc}])\1*/u;
 /**
  * A sign that stands for a word, alone or repeated (§§, ‰‰), before a
@@ -98,7 +105,11 @@ const emoji = /\p{Emoji_Presentation}|\u{FE0F}|\u{200D}/u;
 const microSign = /^µ(?=\p{L})/u;
 /** A dash right between two digits reads bis (10–12). */
 const rangeDash = /^[–—]/u;
-/** A Western emoticon, standing apart: ;-) :) :-( :D. */
+/**
+ * A Western emoticon written apart, one Segment (de/one-segment-per-mark):
+ * ;-) :) :-( :D. Glued to a word its marks stay marks, since a parenthesis
+ * may close there (etwa so:).
+ */
 const emoticon = /^[:;][-']?[()DPp](?=\s|$|[.,!?…])/u;
 /** A word of letters only, the shape a dotted short abbreviation has. */
 const letters = /^\p{L}+$/u;
@@ -312,8 +323,8 @@ function scan(
 	const rest = text.slice(start);
 	const whitespace = rest.match(/^\s+/u)?.[0];
 	if (whitespace) return { source: whitespace, kind: "Whitespace" };
-	const dots = rest.match(ellipsis)?.[0];
-	if (dots) return { source: dots, kind: "Punctuation" };
+	const marks = rest.match(conventionalMarks)?.[0];
+	if (marks) return { source: marks, kind: "Punctuation" };
 	const before = text.slice(0, start);
 	const grapheme =
 		graphemes.segment(rest)[Symbol.iterator]().next().value?.segment ?? "";

@@ -397,13 +397,49 @@ test("a sign that stands for a word is clickable, alone or repeated; an emoji is
 	]);
 });
 
-test("three full stops are one ellipsis mark; other marks stay one per Segment", () => {
-	expect(resolvable("Er ruhte aus ...").slice(-1)).toEqual([
-		{ kind: "Punctuation", text: "..." },
+test("three full stops and ?! are one mark each; other runs of marks are one Segment per mark (de/one-segment-per-mark)", () => {
+	const marks = (text: string) =>
+		resolvable(text)
+			.filter(({ kind }) => kind === "Punctuation")
+			.map(({ text }) => text);
+	expect(marks("Er ruhte aus ...")).toEqual(["..."]);
+	expect(marks("Wie bitte?!")).toEqual(["?!"]);
+	expect(marks("„Wie bitte?!“, rief er.")).toEqual([
+		"„",
+		"?!",
+		"“",
+		",",
+		".",
 	]);
-	expect(resolvable("Was nun…?").slice(-2)).toEqual([
-		{ kind: "Punctuation", text: "…" },
-		{ kind: "Punctuation", text: "?" },
+	expect(marks("Wer war das...?!")).toEqual(["...", "?!"]);
+	expect(marks("Was nun…?")).toEqual(["…", "?"]);
+	expect(marks("Wie bitte!?")).toEqual(["!", "?"]);
+	expect(marks("Echt?? Nein!!")).toEqual(["?", "?", "!", "!"]);
+});
+
+test("an emoticon written apart is one clickable Segment; marks glued to a word stay marks (de/one-segment-per-mark)", () => {
+	for (const emoticon of [";-)", ":-)", ":)", ";)", ":-(", ":D"]) {
+		expect(resolvable(`Bis morgen ${emoticon}.`).slice(-2)).toEqual([
+			{ kind: "ResolvableText", text: emoticon },
+			{ kind: "Punctuation", text: "." },
+		]);
+		expect(resolvable(`${emoticon} bis morgen`)[0]).toEqual({
+			kind: "ResolvableText",
+			text: emoticon,
+		});
+	}
+	// A parenthesis may close right after a word and its mark.
+	expect(resolvable("Er nannte (etwa so:) nichts.").slice(2, 7)).toEqual([
+		{ kind: "Punctuation", text: "(" },
+		{ kind: "ResolvableText", text: "etwa" },
+		{ kind: "ResolvableText", text: "so" },
+		{ kind: "Punctuation", text: ":" },
+		{ kind: "Punctuation", text: ")" },
+	]);
+	expect(resolvable("Brot (und Käse;) dazu").slice(3, 6)).toEqual([
+		{ kind: "ResolvableText", text: "Käse" },
+		{ kind: "Punctuation", text: ";" },
+		{ kind: "Punctuation", text: ")" },
 	]);
 });
 
