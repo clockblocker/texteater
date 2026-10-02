@@ -5,11 +5,16 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { api } from "../convex/_generated/api";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
-import type { ReadingPresentationCapabilities } from "../src/notes/universal/note/capabilities";
 
 type ReadingNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.readingNotes.get>>,
 	{ readonly kind: "Reading" }
+>;
+type ReadingPresentationCapabilities = NonNullable<
+	Extract<
+		Parameters<typeof renderNote>[0],
+		{ readonly noteData: { readonly kind: "Reading" } }
+	>["capabilities"]
 >;
 
 const SENTENCE = {

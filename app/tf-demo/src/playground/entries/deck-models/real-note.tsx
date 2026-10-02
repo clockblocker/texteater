@@ -1,15 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, type ReactNode, useContext, useMemo } from "react";
-import { registeredBlockMap } from "@/notes/renderer-registry";
-import { ReadingHeader } from "@/notes/universal/blocks/renderers/reading/header/default";
-import type { ReadingPresentationCapabilities } from "@/notes/universal/note/capabilities";
-import type { NoteData } from "@/notes/universal/note/data";
-import { describeNote } from "@/notes/universal/note/data";
-import { defaultNoteBlockLayout } from "@/notes/universal/note/layout";
-import {
-	defaultCapabilities,
-	renderUniversalNote,
-} from "@/notes/universal/note/render";
+import { renderFixtureNote } from "@/notes";
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { PlaygroundSnapshot } from "../../../../tooling/playground-snapshot";
 import { playgroundNotesQuery } from "../playground-note";
@@ -23,7 +14,10 @@ import { type DummyNote, type NoteLink, noteId, sourceOf } from "./dummy";
  * Note of the same word, so the deck's algebra is untouched.
  */
 
-type ReadingNote = Extract<NoteData, { kind: "Reading" }>;
+type ReadingNote = Extract<
+	PlaygroundSnapshot["notes"][string],
+	{ kind: "Reading" }
+>;
 
 const FixtureContext = createContext<PlaygroundSnapshot | null>(null);
 
@@ -146,18 +140,6 @@ function canonicalFormOf(note: unknown): string | null {
 	return null;
 }
 
-function capabilitiesOf(
-	note: ReadingNote,
-	presentation: "Card" | "Sheet",
-	follow: ReturnType<typeof usePortedFollow>,
-): ReadingPresentationCapabilities {
-	return {
-		...(defaultCapabilities(note) as ReadingPresentationCapabilities),
-		presentation,
-		follow: follow.follow,
-	};
-}
-
 /** The real Reading Header, drawn in the deck's Heading. */
 export function PortedTitle({
 	note,
@@ -168,12 +150,12 @@ export function PortedTitle({
 	presentation: "Card" | "Sheet";
 	follow: ReturnType<typeof usePortedFollow>;
 }) {
-	return (
-		<ReadingHeader
-			note={note}
-			capabilities={capabilitiesOf(note, presentation, follow)}
-		/>
-	);
+	return renderFixtureNote({
+		noteData: note,
+		presentation,
+		follow: follow.follow,
+		part: "Heading",
+	});
 }
 
 /** Every Block but the Header, as the Notes page renders them. */
@@ -186,16 +168,10 @@ export function PortedBlocks({
 	presentation: "Card" | "Sheet";
 	follow: ReturnType<typeof usePortedFollow>;
 }) {
-	const registry = registeredBlockMap(describeNote(note).coordinates);
-	const layout = defaultNoteBlockLayout(
-		Object.keys(registry ?? {}) as Parameters<
-			typeof defaultNoteBlockLayout
-		>[0],
-	);
-	return renderUniversalNote({
+	return renderFixtureNote({
 		noteData: note,
-		capabilities: capabilitiesOf(note, presentation, follow),
-		layout: { ...layout, hidden: new Set(["Header"]) },
-		registryFor: registeredBlockMap,
+		presentation,
+		follow: follow.follow,
+		part: "Body",
 	});
 }

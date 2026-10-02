@@ -17,6 +17,12 @@ import { noteKindSchema } from "./kind";
 import type { NoteBlockLayout } from "./layout";
 import { resolveRenderPlan } from "./render-plan";
 
+type RegistryFor = (
+	coordinates: NoteCoordinates,
+) => Partial<
+	Record<NoteBlockKind, (context: never) => ReactElement | null>
+> | null;
+
 export function renderUniversalNote({
 	noteData,
 	capabilities,
@@ -26,11 +32,7 @@ export function renderUniversalNote({
 	readonly noteData: NoteData;
 	readonly capabilities?: unknown;
 	readonly layout: NoteBlockLayout;
-	readonly registryFor: (
-		coordinates: NoteCoordinates,
-	) => Partial<
-		Record<NoteBlockKind, (context: never) => ReactElement | null>
-	> | null;
+	readonly registryFor: RegistryFor;
 }): ReactElement {
 	try {
 		if (
@@ -48,33 +50,15 @@ export function renderUniversalNote({
 		const renderCapabilities =
 			capabilities ?? defaultCapabilities(noteData);
 		const { plan } = resolveRenderPlan(registryFor, coordinates, layout);
-		const context =
-			noteData.kind === "Surface"
-				? { noteData, PresentationCapabilities: renderCapabilities }
-				: {
-						noteData,
-						RouteKey: { ...coordinates, noteKind: noteData.kind },
-						PresentationCapabilities: renderCapabilities,
-					};
+		const context = blockContext(noteData, coordinates, renderCapabilities);
 		const blocks = plan.flatMap(({ blockKind, renderer }) => {
-			let rendered: ReactElement | null;
-			try {
-				rendered = renderer(context as never);
-			} catch (cause) {
-				rendered = <ErrorBlock blockKind={blockKind} cause={cause} />;
-			}
-			if (rendered === null) return [];
-			return [
-				createElement(
-					NoteBlockErrorBoundary,
-					{
-						key: `${identity}:${blockKind}`,
-						blockKind,
-						resetToken: context,
-					},
-					rendered,
-				),
-			];
+			const rendered = renderBlock(
+				blockKind,
+				renderer,
+				context,
+				identity,
+			);
+			return rendered ? [rendered] : [];
 		});
 		const presentation =
 			(renderCapabilities as { presentation?: "Card" | "Sheet" })
@@ -99,6 +83,72 @@ export function renderUniversalNote({
 	} catch (cause) {
 		return renderErrorNote(cause, `${safeKind(noteData)} Note unavailable`);
 	}
+}
+
+/**
+ * One Block of a Note on its own, without the Note around it, for a host that
+ * draws the Heading Block as its own handle. Null when the Note's route has
+ * no such Block.
+ */
+export function renderUniversalNoteBlock({
+	noteData,
+	capabilities,
+	blockKind,
+	registryFor,
+}: {
+	readonly noteData: NoteData;
+	readonly capabilities?: unknown;
+	readonly blockKind: NoteBlockKind;
+	readonly registryFor: RegistryFor;
+}): ReactElement | null {
+	const { coordinates, identity } = describeNote(noteData);
+	const renderer = registryFor(coordinates)?.[blockKind];
+	if (!renderer) return null;
+	const context = blockContext(
+		noteData,
+		coordinates,
+		capabilities ?? defaultCapabilities(noteData),
+	);
+	return renderBlock(blockKind, renderer, context, identity);
+}
+
+function blockContext(
+	noteData: NoteData,
+	coordinates: NoteCoordinates,
+	capabilities: unknown,
+) {
+	return noteData.kind === "Surface"
+		? { noteData, PresentationCapabilities: capabilities }
+		: {
+				noteData,
+				RouteKey: { ...coordinates, noteKind: noteData.kind },
+				PresentationCapabilities: capabilities,
+			};
+}
+
+/** A Block whose failure stays inside it, so its siblings still render. */
+function renderBlock(
+	blockKind: NoteBlockKind,
+	renderer: (context: never) => ReactElement | null,
+	context: ReturnType<typeof blockContext>,
+	identity: string,
+): ReactElement | null {
+	let rendered: ReactElement | null;
+	try {
+		rendered = renderer(context as never);
+	} catch (cause) {
+		rendered = <ErrorBlock blockKind={blockKind} cause={cause} />;
+	}
+	if (rendered === null) return null;
+	return createElement(
+		NoteBlockErrorBoundary,
+		{
+			key: `${identity}:${blockKind}`,
+			blockKind,
+			resetToken: context,
+		},
+		rendered,
+	);
 }
 
 /** The quiet tag row that closes every Note and names what it is. */

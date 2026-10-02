@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { ReactElement } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { ReadingNoteSkeleton } from "@/views/note-skeletons";
+import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import { api } from "../../convex/_generated/api";
 import { registeredBlockMap } from "./renderer-registry";
 import type { NoteBlockKind } from "./universal/blocks/kind";
@@ -19,7 +19,12 @@ import {
 	defaultNoteBlockLayout,
 	type NoteBlockLayout,
 } from "./universal/note/layout";
-import { renderUniversalNote } from "./universal/note/render";
+import {
+	defaultCapabilities,
+	renderUniversalNote,
+	renderUniversalNoteBlock,
+} from "./universal/note/render";
+import { NoteSkeletonFor } from "./universal/note/skeleton";
 
 type RenderNoteInputFor<K extends NoteKind> = {
 	readonly noteData: NoteDataFor<K>;
@@ -108,7 +113,8 @@ function ReadingWithConfiguredLayout({
 	);
 	if (layoutQuery.isPending) {
 		return (
-			<ReadingNoteSkeleton
+			<NoteSkeletonFor
+				kind="Reading"
 				presentation={input.capabilities?.presentation ?? "Sheet"}
 			/>
 		);
@@ -125,5 +131,47 @@ function ReadingWithConfiguredLayout({
 	});
 }
 
-/** The sole application-facing Notes interface. */
+/** The application-facing Notes interface. */
 export const renderNote = configureRenderNote(acquireConfiguredLayout);
+
+/**
+ * Renders a Note from fixture data, as the playground does: on the default
+ * Block layout instead of a stored one, with the default capabilities plus the
+ * host's presentation and follow. A host that draws the Heading Block as its
+ * own handle asks for the `Heading` alone, or for the `Body`: every Block
+ * but it.
+ */
+export function renderFixtureNote({
+	noteData,
+	presentation,
+	follow,
+	part,
+}: {
+	readonly noteData: NoteData;
+	readonly presentation: "Card" | "Sheet";
+	readonly follow: (target: WorkspaceTarget) => void;
+	readonly part?: "Heading" | "Body";
+}): ReactElement | null {
+	const capabilities = {
+		...defaultCapabilities(noteData),
+		presentation,
+		follow,
+	};
+	if (part === "Heading")
+		return renderUniversalNoteBlock({
+			noteData,
+			capabilities,
+			blockKind: "Header",
+			registryFor: registeredBlockMap,
+		});
+	const layout = defaultConfiguredLayout(noteData);
+	return renderUniversalNote({
+		noteData,
+		capabilities,
+		layout:
+			part === "Body"
+				? { ...layout, hidden: new Set([...layout.hidden, "Header"]) }
+				: layout,
+		registryFor: registeredBlockMap,
+	});
+}

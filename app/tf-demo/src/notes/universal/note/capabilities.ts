@@ -7,8 +7,7 @@ import type { KnowledgePreferences } from "../../../../shared/knowledge-preferen
 import type { NoteDataFor } from "./data";
 
 type SourceContext = NoteDataFor<"Reading">["sourceContexts"]["page"][number];
-export type ShadowNoteReferrer =
-	NoteDataFor<"Shadow">["references"]["page"][number];
+type ShadowNoteReferrer = NoteDataFor<"Shadow">["references"]["page"][number];
 
 export type ReadingPresentationCapabilities = {
 	readonly grammaticalAlternatives?: {

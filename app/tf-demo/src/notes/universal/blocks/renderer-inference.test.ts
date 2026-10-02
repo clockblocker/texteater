@@ -2,8 +2,8 @@ import { afterAll, describe, expect, it } from "bun:test";
 import type { FunctionReturnType } from "convex/server";
 import { closeTestingSessions, inferredType } from "prinfer/testing";
 
-import type { api } from "../../convex/_generated/api";
-import type { ReadingRenderContext } from "../../src/notes/universal/blocks/renderer";
+import type { api } from "../../../../convex/_generated/api";
+import type { ReadingRenderContext } from "./renderer";
 
 afterAll(closeTestingSessions);
 

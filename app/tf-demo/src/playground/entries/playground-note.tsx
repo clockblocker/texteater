@@ -1,11 +1,4 @@
-import { registeredBlockMap } from "@/notes/renderer-registry";
-import type { NoteBlockKind } from "@/notes/universal/blocks/kind";
-import { describeNote } from "@/notes/universal/note/data";
-import { defaultNoteBlockLayout } from "@/notes/universal/note/layout";
-import {
-	defaultCapabilities,
-	renderUniversalNote,
-} from "@/notes/universal/note/render";
+import { renderFixtureNote } from "@/notes";
 import { TextPresentation } from "@/views/text-view";
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
@@ -66,13 +59,5 @@ export function PlaygroundNote({
 	const note = id ? snapshot.notes[`${target.kind}:${id}`] : null;
 	if (!note)
 		return <p>This target is not part of the playground fixtures.</p>;
-	const registry = registeredBlockMap(describeNote(note).coordinates);
-	return renderUniversalNote({
-		noteData: note,
-		capabilities: { ...defaultCapabilities(note), presentation, follow },
-		layout: defaultNoteBlockLayout(
-			Object.keys(registry ?? {}) as NoteBlockKind[],
-		),
-		registryFor: registeredBlockMap,
-	});
+	return renderFixtureNote({ noteData: note, presentation, follow });
 }

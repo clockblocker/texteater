@@ -9,6 +9,5 @@
 		"tooling/print-playground-snapshot.ts",
 		"tooling/resolution-inspector.ts"
 	],
-	"ignoreDependencies": [],
-	"tags": ["-layoutdormant"]
+	"ignoreDependencies": []
 }

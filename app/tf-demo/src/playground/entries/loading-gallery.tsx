@@ -1,8 +1,8 @@
-import { NoteSkeletonFor, type NoteSkeletonKind } from "@/views/note-skeletons";
+import { NoteSkeletonFor } from "@/notes";
 import { TextViewSkeleton } from "@/views/text-view";
 import { CardFrame, SheetFrame, Stage } from "./frames";
 
-const NOTE_KINDS: readonly NoteSkeletonKind[] = [
+const NOTE_KINDS: readonly Parameters<typeof NoteSkeletonFor>[0]["kind"][] = [
 	"Reading",
 	"Lemma",
 	"Surface",

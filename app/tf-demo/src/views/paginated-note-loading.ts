@@ -1,7 +1,6 @@
 import type { FunctionReturnType } from "convex/server";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { visitorErrorMessage } from "@/lib/visitor-error";
-import type { ShadowNoteReferrer } from "@/notes/universal/note/capabilities";
 import type { api } from "../../convex/_generated/api";
 
 type NoteData = NonNullable<
@@ -11,6 +10,7 @@ type NoteData = NonNullable<
 >;
 type AnyReadingNoteData = Extract<NoteData, { readonly kind: "Reading" }>;
 type ShadowNoteData = Extract<NoteData, { readonly kind: "Shadow" }>;
+type ShadowNoteReferrer = ShadowNoteData["references"]["page"][number];
 type NoteDataFor<K extends NoteData["kind"]> = Extract<
 	NoteData,
 	{ readonly kind: K }

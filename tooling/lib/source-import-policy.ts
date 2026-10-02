@@ -125,8 +125,6 @@ interface ModuleBoundary {
 	fromNot?: RegExp;
 	to: RegExp;
 	allowTypeOnly?: boolean;
-	/** Importers exempt until the named ticket moves them off the boundary. */
-	exempt?: { ticket: string; files: readonly string[] };
 }
 
 const moduleBoundaries = new Map<string, readonly ModuleBoundary[]>([
@@ -162,21 +160,6 @@ const moduleBoundaries = new Map<string, readonly ModuleBoundary[]>([
 					"Outside code, including tests, may use only the Notes root interface.",
 				fromNot: /^app\/tf-demo\/src\/notes\//,
 				to: /^app\/tf-demo\/src\/notes\/(?!index\.ts$)/,
-				exempt: {
-					ticket: "#416",
-					files: [
-						"app/tf-demo/src/playground/entries/deck-models/real-note.tsx",
-						"app/tf-demo/src/playground/entries/playground-note.tsx",
-						"app/tf-demo/src/views/note-skeletons.tsx",
-						"app/tf-demo/src/views/paginated-note-loading.ts",
-						"app/tf-demo/src/views/resolving-reading-note.tsx",
-						"app/tf-demo/tests/definition-render.test.ts",
-						"app/tf-demo/tests/types/inferred-reading-render-context.test.ts",
-						"app/tf-demo/tests/types/note-public-interface.ts",
-						"app/tf-demo/tooling/playground-snapshot.ts",
-						"app/tf-demo/tooling/print-playground-snapshot.ts",
-					],
-				},
 			},
 			{
 				name: "tf-demo-notes-universal-does-not-import-languages",
@@ -208,8 +191,7 @@ function breaksBoundary(
 	if (boundary.from && !boundary.from.test(importer)) return false;
 	if (boundary.fromNot?.test(importer)) return false;
 	if (!boundary.to.test(target)) return false;
-	if (boundary.allowTypeOnly && reference.typeOnly) return false;
-	return !boundary.exempt?.files.includes(importer);
+	return !(boundary.allowTypeOnly && reference.typeOnly);
 }
 
 interface PathAlias {

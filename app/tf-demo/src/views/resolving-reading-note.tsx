@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { renderNote } from "@/notes";
-import type { NoteDataFor } from "@/notes/universal/note/data";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id, TableNames } from "../../convex/_generated/dataModel";
@@ -11,7 +10,10 @@ import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../shared/knowledge-preferences";
 
 type Presentation = "Card" | "Sheet";
-type ReadingNoteData = NoteDataFor<"Reading">;
+type ReadingNoteData = Extract<
+	Parameters<typeof renderNote>[0]["noteData"],
+	{ readonly kind: "Reading" }
+>;
 type SourceContext = ReadingNoteData["sourceContexts"]["page"][number];
 
 /**

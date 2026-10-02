@@ -1,6 +1,5 @@
 import type { FunctionReturnType, RegisteredQuery } from "convex/server";
 import type { api } from "../convex/_generated/api";
-import type { NoteData } from "../src/notes/universal/note/data";
 import type { playground } from "./playground-fixtures";
 
 export type PlaygroundSnapshot = {
@@ -11,7 +10,14 @@ export type PlaygroundSnapshot = {
 	>
 		? Awaited<Result>
 		: never;
-	notes: Record<string, NoteData>;
+	notes: Record<
+		string,
+		NonNullable<
+			| FunctionReturnType<typeof api.readingNotes.get>
+			| FunctionReturnType<typeof api.routeNotes.get>
+			| FunctionReturnType<typeof api.shadowNotes.get>
+		>
+	>;
 	texts: Record<
 		string,
 		NonNullable<FunctionReturnType<typeof api.textViews.get>>

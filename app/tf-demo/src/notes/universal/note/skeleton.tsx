@@ -11,13 +11,13 @@ import {
 } from "lego";
 import { LockIcon } from "lucide-react";
 
-import { RelationMark } from "@/notes/universal/blocks/renderers/common/relation-mark";
+import { RelationMark } from "../blocks/renderers/common/relation-mark";
 import {
 	type RouteHop,
 	RouteMark,
-} from "@/notes/universal/blocks/renderers/common/route-mark";
+} from "../blocks/renderers/common/route-mark";
 
-export type NoteSkeletonKind =
+type NoteSkeletonKind =
 	| "Reading"
 	| "Lemma"
 	| "Surface"
@@ -60,11 +60,7 @@ function Hop({ hop }: { hop: RouteHop }) {
 	return <RouteMark hop={hop} className="text-ink-faint" />;
 }
 
-export function ReadingNoteSkeleton({
-	presentation,
-}: {
-	presentation: Presentation;
-}) {
+function ReadingNoteSkeleton({ presentation }: { presentation: Presentation }) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
@@ -194,11 +190,7 @@ function AttestationNoteSkeleton({
 	);
 }
 
-export function ShadowNoteSkeleton({
-	presentation,
-}: {
-	presentation: Presentation;
-}) {
+function ShadowNoteSkeleton({ presentation }: { presentation: Presentation }) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton

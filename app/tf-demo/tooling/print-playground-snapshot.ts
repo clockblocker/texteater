@@ -1,5 +1,4 @@
 import { api } from "../convex/_generated/api";
-import type { NoteData } from "../src/notes/universal/note/data";
 import {
 	createPlaygroundConvex,
 	playgroundFixtures,
@@ -23,9 +22,12 @@ async function createPlaygroundSnapshot(): Promise<PlaygroundSnapshot> {
 		shadows: await ctx.db.query("shadows").collect(),
 		texts: await ctx.db.query("texts").collect(),
 	}));
-	const notes: Record<string, NoteData> = {};
-	function add(key: string, note: unknown) {
-		if (note) notes[key] = note as NoteData;
+	const notes: PlaygroundSnapshot["notes"] = {};
+	function add(
+		key: string,
+		note: PlaygroundSnapshot["notes"][string] | null,
+	) {
+		if (note) notes[key] = note;
 	}
 	for (const row of rows.readings)
 		add(

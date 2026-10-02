@@ -9,9 +9,8 @@ import { useCallback, useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { visitorErrorMessage } from "@/lib/visitor-error";
-import { renderNote } from "@/notes";
+import { NoteSkeletonFor, renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
-import { ReadingNoteSkeleton } from "@/views/note-skeletons";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { ResolvingReadingNote } from "@/views/resolving-reading-note";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
@@ -52,7 +51,7 @@ export function UnitReadingNoteView({
 				presentation={presentation}
 			/>
 		) : (
-			<ReadingNoteSkeleton presentation={presentation} />
+			<NoteSkeletonFor kind="Reading" presentation={presentation} />
 		);
 	}
 	if (noteQuery.data?.kind !== "Reading" || !settingsQuery.data) {
@@ -94,7 +93,7 @@ function ResolvingReadingNoteStandIn({
 	);
 	const note = noteQuery.data;
 	if (!note?.grammar)
-		return <ReadingNoteSkeleton presentation={presentation} />;
+		return <NoteSkeletonFor kind="Reading" presentation={presentation} />;
 	return (
 		<ResolvingReadingNote
 			note={note}
