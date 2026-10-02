@@ -1,6 +1,5 @@
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { COMPILED_RELATION_VERDICT } from "./compiledRelationVerdict";
 
 export type RelationPublicationFingerprints = Readonly<{
 	prompt: string;
@@ -29,40 +28,24 @@ export type ReviewedRelationVerdictArtifact = Readonly<{
 	verdicts: readonly RelationKindVerdict[];
 }>;
 
-type CompiledVerdict = Readonly<{
-	artifactPath: string;
-	reviewedBy: string;
-	reviewedAt: string;
-	verdicts: readonly RelationKindVerdict[];
-}>;
-
-const compiled = COMPILED_RELATION_VERDICT as Readonly<{
-	fingerprints: RelationPublicationFingerprints;
-	invalidationReasons: readonly string[];
-	verdict: CompiledVerdict | null;
-}>;
-
-/** Current source fingerprints; archived candidates retain their own fingerprints separately. */
+/**
+ * No generation contract is fingerprinted while Knowledge generation is
+ * rebuilt (#701): its producer refuses every run. The retained #193 verdict
+ * fingerprinted LegacyDumgen and could never qualify a relation kind; it left
+ * with its compiler (#850). A reviewed verdict for the rebuilt pipeline must
+ * bring its own fingerprints.
+ */
 export const RELATION_PUBLICATION_FINGERPRINTS = Object.freeze({
-	...compiled.fingerprints,
+	prompt: "none",
+	schema: "none",
+	evaluator: "none",
+	model: "none",
+	policy: "none",
 } satisfies RelationPublicationFingerprints);
 
-/**
- * The retained #193 candidate predates the current contracts. Its historical
- * verdict cannot qualify this pipeline: no relation kind is promoted by model quality,
- * Dumrel applicability, or successful Unit Shadow resolution.
- */
+/** No reviewed verdict qualifies the current pipeline, so no relation kind is promoted. */
 export const REVIEWED_RELATION_VERDICT: ReviewedRelationVerdictArtifact | null =
-	compiled.verdict
-		? {
-				artifactPath: compiled.verdict.artifactPath,
-				status: "reviewed",
-				reviewedBy: compiled.verdict.reviewedBy,
-				reviewedAt: compiled.verdict.reviewedAt,
-				fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
-				verdicts: compiled.verdict.verdicts,
-			}
-		: null;
+	null;
 
 export const GENERATED_SEMANTIC_RELATION_POLICY = Object.freeze({
 	productionRequest: "reviewedAllowlist",
@@ -96,7 +79,7 @@ function sameFingerprints(
  * Derives the generated-relation allowlist from a signed reviewed artifact.
  *
  * Publication fails closed unless prompt, schema, evaluator, model, and policy
- * fingerprints match the compiled candidate and every relation verdict is
+ * fingerprints match the current ones and every relation verdict is
  * unique. Invalid or unsigned artifacts therefore qualify no relation kinds.
  */
 export function effectiveRelationPublicationPolicy(
@@ -104,9 +87,7 @@ export function effectiveRelationPublicationPolicy(
 ): EffectiveRelationPublicationPolicy {
 	const invalidationReasons: string[] = [];
 	if (!artifact) {
-		invalidationReasons.push(...compiled.invalidationReasons);
-		if (invalidationReasons.length === 0)
-			invalidationReasons.push("missingReviewedVerdictArtifact");
+		invalidationReasons.push("missingReviewedVerdictArtifact");
 		return {
 			artifactPath: null,
 			fingerprints: RELATION_PUBLICATION_FINGERPRINTS,

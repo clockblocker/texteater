@@ -216,3 +216,11 @@ recompiles the relation verdict. The legacy Dumgen moved, frozen, to
 together with Dumling's and Dumrel's. Changes to Dumling and Dumrel still
 recompile the verdict, but the new Dumgen's do not. Recorded on
 [#839](https://github.com/clockblocker/texteater/issues/839).
+
+Amended on 2026-10-02: no change recompiles a relation verdict any more.
+tf-demo's relation-verdict gate is deleted: its verdict compiler, the compiled
+verdict and the `check:relation-policy` check. The Knowledge generation path
+the verdict approved now refuses every run, and the Luna transport it
+fingerprinted is gone. Relation publication still fails closed: with no
+reviewed verdict, no relation kind is published. Decided by the user on
+2026-10-02 ([#850](https://github.com/clockblocker/texteater/issues/850)).

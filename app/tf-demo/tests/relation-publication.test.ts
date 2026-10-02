@@ -2,7 +2,6 @@ import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import esbuild from "esbuild";
 import { api, internal } from "../convex/_generated/api";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
-import { COMPILED_RELATION_VERDICT } from "../convex/model/compiledRelationVerdict";
 import {
 	effectiveRelationPublicationPolicy,
 	GENERATED_SEMANTIC_RELATION_POLICY,
@@ -16,10 +15,6 @@ import {
 	relationPublicationRunAllowed,
 } from "../convex/relationPublication";
 import { generationRequestFor } from "../server/generatedKnowledgeRequest";
-import {
-	compileReviewedVerdict,
-	currentRelationFingerprints,
-} from "../tooling/compile-relation-verdict";
 import { createTestConvex } from "./support/convex";
 
 beforeEach(() => {
@@ -84,160 +79,6 @@ const sourceReading = {
 	emojiDescription: "🏦",
 } as const;
 
-function jsonBytes(value: unknown): Uint8Array {
-	return new TextEncoder().encode(JSON.stringify(value));
-}
-
-test("the compiler accepts only complete, execution-aware per-kind acceptance evidence", () => {
-	const candidateId = "candidate-1";
-	const selectionCommitmentSha256 = "selection-1";
-	const byRelation = Object.fromEntries(
-		[
-			"synonym",
-			"nearSynonym",
-			"antonym",
-			"nearAntonym",
-			"hypernym",
-			"holonym",
-		].map((relation) => [relation, { gate: { pass: true } }]),
-	);
-	const acceptance = {
-		formatVersion: "german-relation-acceptance-result-v1",
-		state: "complete",
-		candidateId,
-		selectionCommitmentSha256,
-		report: {
-			semanticReport: { byRelation },
-			byRelationPass: Object.fromEntries(
-				Object.keys(byRelation).map((relation) => [relation, true]),
-			),
-		},
-	};
-	const verdict = {
-		formatVersion: "german-relation-human-verdict-v1",
-		candidateId,
-		recordedAt: "2026-08-20T12:00:00.000Z",
-		reviewer: "semantic-reviewer",
-		acceptanceEvidence: {
-			status: "retained-untouched",
-			artifactSha256: "bound-by-compile-helper",
-			reservationCommitmentSha256: selectionCommitmentSha256,
-		},
-		byRelation: Object.fromEntries(
-			Object.keys(byRelation).map((relation) => [
-				relation,
-				{ decision: relation === "synonym" ? "promote" : "revise" },
-			]),
-		),
-	};
-	const compile = (
-		rawAcceptance: unknown = acceptance,
-		verdictOverrides: Record<string, unknown> = {},
-	) => {
-		const acceptanceBytes = jsonBytes(rawAcceptance);
-		const artifactSha256 = new Bun.CryptoHasher("sha256")
-			.update(acceptanceBytes)
-			.digest("hex");
-		return compileReviewedVerdict({
-			candidateId,
-			verdictFormatVersion: "german-relation-human-verdict-v1",
-			requiredAcceptanceStatus: "retained-untouched",
-			selectionCommitmentSha256,
-			verdictArtifactPath: "gate/verdict.json",
-			verdictBytes: jsonBytes({
-				...verdict,
-				...verdictOverrides,
-				acceptanceEvidence: {
-					...verdict.acceptanceEvidence,
-					artifactSha256,
-				},
-			}),
-			acceptanceBytes,
-		});
-	};
-	const compiled = compile();
-	expect(compiled).toMatchObject({
-		candidateId,
-		reviewedBy: "semantic-reviewer",
-	});
-	expect(compiled.verdicts as unknown[]).toContainEqual({
-		relation: "synonym",
-		verdict: "promote",
-	});
-	expect(compiled.verdicts as unknown[]).toContainEqual({
-		relation: "nearSynonym",
-		verdict: "revise",
-	});
-	expect(() => compile({ ...acceptance, state: "revealed-running" })).toThrow(
-		"Acceptance result candidate binding is invalid",
-	);
-	expect(() =>
-		compile({
-			...acceptance,
-			report: {
-				...acceptance.report,
-				byRelationPass: {
-					...acceptance.report.byRelationPass,
-					synonym: false,
-				},
-			},
-		}),
-	).toThrow("synonym cannot be promoted");
-	expect(() =>
-		compile(acceptance, { candidateId: "different-candidate" }),
-	).toThrow("Verdict candidate binding is invalid");
-});
-
-test("historical fingerprints remain bound to the relocated frozen sources", async () => {
-	const historicalFingerprints =
-		COMPILED_RELATION_VERDICT.historicalCandidate.fingerprints;
-	const sha256 = async (path: string) =>
-		new Bun.CryptoHasher("sha256")
-			.update(
-				await Bun.file(new URL(path, import.meta.url)).arrayBuffer(),
-			)
-			.digest("hex");
-	expect(historicalFingerprints.prompt).toBe(
-		`sha256:${await sha256("../../../battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts.txt")}`,
-	);
-	expect(historicalFingerprints.schema).toBe(
-		`sha256:${await sha256("../../../battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/frozen-source/knowledge-generation/de/schemas.ts.txt")}`,
-	);
-	expect(historicalFingerprints.evaluator).toBe(
-		`sha256:${await sha256("../../../battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts.txt")}`,
-	);
-	const modelPolicy = await Bun.file(
-		new URL(
-			"../../../battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/frozen-source/ai-sdk/model-policy.ts.txt",
-			import.meta.url,
-		),
-	).text();
-	expect(modelPolicy).toContain('DUMGEN_GENERATION_MODEL = "gpt-5.6-luna"');
-	expect(historicalFingerprints.model).toContain(
-		"openai:gpt-5.6-luna:sha256:",
-	);
-	expect(historicalFingerprints.policy).toMatch(
-		/^candidate:[a-f0-9]{64}:sha256:[a-f0-9]{64}$/,
-	);
-});
-
-test("the current model cannot be qualified by a signed historical candidate", async () => {
-	expect(RELATION_PUBLICATION_FINGERPRINTS).toEqual(
-		await currentRelationFingerprints(),
-	);
-	expect(COMPILED_RELATION_VERDICT.verdict).toBeNull();
-	expect(
-		effectiveRelationPublicationPolicy({
-			...reviewedArtifact,
-			fingerprints:
-				COMPILED_RELATION_VERDICT.historicalCandidate.fingerprints,
-		}),
-	).toMatchObject({
-		qualifiedKinds: [],
-		invalidationReasons: ["candidateFingerprintMismatch"],
-	});
-});
-
 test("only an explicitly signed, fingerprint-matched promote verdict enters the allowlist", () => {
 	expect(GENERATED_SEMANTIC_RELATION_POLICY).toMatchObject({
 		productionRequest: "reviewedAllowlist",
@@ -245,11 +86,7 @@ test("only an explicitly signed, fingerprint-matched promote verdict enters the 
 	});
 	expect(effectiveRelationPublicationPolicy()).toMatchObject({
 		qualifiedKinds: [],
-		invalidationReasons: [
-			"archivedRunEvidence",
-			"missingReviewedVerdictArtifact",
-			"historicalCandidateRequiresReevaluation",
-		],
+		invalidationReasons: ["missingReviewedVerdictArtifact"],
 	});
 	expect(effectiveRelationPublicationPolicy(reviewedArtifact)).toMatchObject({
 		artifactPath: reviewedArtifact.artifactPath,

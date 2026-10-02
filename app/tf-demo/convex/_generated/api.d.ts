@@ -27,7 +27,6 @@ import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.
 import type * as knowledgeSettings from "../knowledgeSettings.js";
 import type * as migrations from "../migrations.js";
 import type * as model_canonicalJson from "../model/canonicalJson.js";
-import type * as model_compiledRelationVerdict from "../model/compiledRelationVerdict.js";
 import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
@@ -107,7 +106,6 @@ declare const fullApi: ApiFromModules<{
   knowledgeSettings: typeof knowledgeSettings;
   migrations: typeof migrations;
   "model/canonicalJson": typeof model_canonicalJson;
-  "model/compiledRelationVerdict": typeof model_compiledRelationVerdict;
   "model/definitionTexts": typeof model_definitionTexts;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;

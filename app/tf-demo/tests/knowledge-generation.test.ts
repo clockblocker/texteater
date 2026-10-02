@@ -862,11 +862,7 @@ test("production publication remains empty without a reviewed verdict", () => {
 	expect(effectiveRelationPublicationPolicy()).toMatchObject({
 		artifactPath: null,
 		qualifiedKinds: [],
-		invalidationReasons: [
-			"archivedRunEvidence",
-			"missingReviewedVerdictArtifact",
-			"historicalCandidateRequiresReevaluation",
-		],
+		invalidationReasons: ["missingReviewedVerdictArtifact"],
 	});
 	const publishable = generatedKnowledgeAllowedForPublication({
 		changes: [

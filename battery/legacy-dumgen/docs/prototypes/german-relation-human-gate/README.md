@@ -12,11 +12,12 @@ see the [Dumgen README](../../../README.md) for retrieval instructions.
 Frozen TypeScript files end in `.ts.txt`; they record the old implementation
 and are not executable tools for the replacement packages.
 
-The tf-demo relation-policy compiler verifies the remaining local hashes and separately
-fingerprints the current Dumgen, Dumling, Dumrel and Promptsmith sources.
-An old candidate or signed verdict cannot qualify the current pipeline.
-`archivedRunEvidence` and `historicalCandidateRequiresReevaluation` keep its
-relation allowlist empty. An archived digest is a retrieval reference, not a
+tf-demo's relation-policy compiler verified the remaining local hashes and
+fingerprinted the then-current sources until it was deleted on 2026-10-02
+([#850](https://github.com/clockblocker/texteater/issues/850)); nothing reads
+these hashes now. An old candidate or signed verdict cannot qualify the
+current pipeline: tf-demo has no reviewed verdict, so its relation allowlist
+stays empty. An archived digest is a retrieval reference, not a
 successful verification of the deleted bytes.
 Base Knowledge generation continues through the current contracts.
 
