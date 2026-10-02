@@ -33,8 +33,9 @@
 		{
 			"memberSegmentIndices": [4, 6, 12],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚧⤴" },
 			"notes": {
-				"rationale": "hinaus stands in the right bracket and hinausreichen über + Acc is a dictionary particle verb in this sense, so hinaus is the separable particle and über the governed preposition, though a prepositional phrase precedes it."
+				"rationale": "hinaus stands in the right bracket and hinausreichen über + Acc is a dictionary particle verb in this sense, so hinaus is the separable particle and über the governed preposition, though a prepositional phrase precedes it. reicht über das Jahr hinaus is Duden hinausreichen 'weiter reichen, sich weiter erstrecken als etwas', the near-synonym of hinausgehen 🚧⤴ (über meine Kräfte hinausgehen), not handing something outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

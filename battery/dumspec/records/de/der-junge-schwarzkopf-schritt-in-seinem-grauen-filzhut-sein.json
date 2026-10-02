@@ -369,8 +369,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🚶🚶" },
 			"notes": {
-				"rationale": "her in the right bracket is the particle of the accompanying her- verbs (Duden hergehen 1: vor, neben jemandem hergehen), so schritt … her is one VERB and neben is a free ADP. Neither Duden nor DWDS lists herschreiten, but it belongs to the productive series of such verbs Duden describes under hergehen, so it counts as a particle verb (de/bracket-particle-or-circumposition). Ruled on #743 (MB-B3, A6)."
+				"rationale": "her in the right bracket is the particle of the accompanying her- verbs (Duden hergehen 1: vor, neben jemandem hergehen), so schritt … her is one VERB and neben is a free ADP. Neither Duden nor DWDS lists herschreiten, but it belongs to the productive series of such verbs Duden describes under hergehen, so it counts as a particle verb (de/bracket-particle-or-circumposition). Ruled on #743 (MB-B3, A6). Its Reading is Duden hergehen 'neben jemandem hergehen', walking along beside someone, here with measured strides."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

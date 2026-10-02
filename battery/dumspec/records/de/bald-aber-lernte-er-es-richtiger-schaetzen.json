@@ -67,7 +67,7 @@
 		"year": 1906
 	},
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0042", "ADR-0044"],
+		"adrs": ["ADR-0026", "ADR-0031", "ADR-0042", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -189,6 +189,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📚" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -234,7 +235,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "lernen with a bare infinitive ('came to appreciate'); like the modals it is a VERB of its own and schätzen a separate target (de/modal-is-a-verb)."
+				"rationale": "lernen with a bare infinitive ('came to appreciate'); like the modals it is a VERB of its own and schätzen a separate target (de/modal-is-a-verb). lernte es schätzen is Duden lernen 'im Laufe der Zeit zu einer bestimmten Einstellung gelangen', merged with acquiring knowledge and skills as one concept, learning, under ADR 0031."
 			}
 		},
 		{

@@ -42,6 +42,7 @@
 		{
 			"memberSegmentIndices": [13, 17],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶⬇" },
 			"notes": {
 				"rationale": "The speaker waits downstairs, so the addressee comes down towards the speaker: runter in the right bracket is the particle of herunterkommen. runter is its Shorthand member, and the Surface spells the full particle."
 			},

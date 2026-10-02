@@ -762,6 +762,10 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🌐" },
+			"notes": {
+				"rationale": "es herrschte heftige Hitze is Duden herrschen 'in einer bestimmten, auffallenden Weise [allgemein] verbreitet, vorhanden, deutlich fühlbar sein', not 'Macht haben, regieren'."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

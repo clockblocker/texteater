@@ -1747,6 +1747,10 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🔔" },
+			"notes": {
+				"rationale": "läutete er, with a person as the one ringing, is Duden läuten 'eine Klingel betätigen', the gehoben word for klingeln."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

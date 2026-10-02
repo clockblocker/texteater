@@ -165,6 +165,7 @@
 		{
 			"memberSegmentIndices": [7],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🌾⚙" },
 			"notes": {
 				"rationale": "The Breakdown reads mahlt literally, as grinding grain at the mill: the proverb's meaning belongs to the Saying."
 			},

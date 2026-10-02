@@ -76,8 +76,9 @@
 		{
 			"memberSegmentIndices": [8, 14],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🏳" },
 			"notes": {
-				"rationale": "nach in the right bracket is the separable particle of nachgeben."
+				"rationale": "nach in the right bracket is the separable particle of nachgeben. gab nicht nach is Duden nachgeben 'den Forderungen eines anderen nach anfänglichem Widerstand entsprechen', giving in, not a floor giving way under pressure."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

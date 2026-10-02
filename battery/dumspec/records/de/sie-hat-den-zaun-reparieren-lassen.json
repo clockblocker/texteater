@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [2, 8, 10],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🔧" },
 			"notes": {
 				"rationale": "No doer is named, so causative lassen joins reparieren, and so does the perfect auxiliary hat that serves it: one target whose Surface is perfect with voice Cau (de/causative-lassen, #721)."
 			},

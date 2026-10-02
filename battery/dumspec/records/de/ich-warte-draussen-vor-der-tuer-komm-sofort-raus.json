@@ -42,6 +42,7 @@
 		{
 			"memberSegmentIndices": [13, 17],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚪🚶" },
 			"notes": {
 				"rationale": "The speaker waits outside, so the addressee comes out towards the speaker: raus in the right bracket is the particle of herauskommen. raus is its Shorthand member, and the Surface spells the full particle."
 			},

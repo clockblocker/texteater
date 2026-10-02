@@ -103,6 +103,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚗📍" },
 			"notes": {
 				"rationale": "hin written inside the verb stays with the verb."
 			},

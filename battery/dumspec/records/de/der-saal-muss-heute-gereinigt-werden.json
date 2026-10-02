@@ -37,6 +37,7 @@
 		{
 			"memberSegmentIndices": [8, 10],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🧽" },
 			"notes": {
 				"rationale": "werden is the passive auxiliary of gereinigt, so the target is the passive infinitive [gereinigt, werden]. The modal muss is a VERB of its own (de/modal-is-a-verb)."
 			},

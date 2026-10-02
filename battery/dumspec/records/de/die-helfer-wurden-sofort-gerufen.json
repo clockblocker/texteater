@@ -31,8 +31,9 @@
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🗣🏃" },
 			"notes": {
-				"rationale": "wurden is the passive auxiliary of gerufen, so the target is the whole passive [wurden, gerufen]."
+				"rationale": "wurden is the passive auxiliary of gerufen, so the target is the whole passive [wurden, gerufen]. wurden gerufen is Duden rufen 'jemanden herbeirufen, jemanden kommen lassen', summoning, not shouting."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -46,6 +46,7 @@
 		{
 			"memberSegmentIndices": [13, 21],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "📦⬆" },
 			"notes": {
 				"rationale": "The speaker is upstairs, so the suitcase comes up towards the speaker: rauf in the right bracket is the particle of heraufbringen. rauf is its Shorthand member, and the Surface spells the full particle."
 			},

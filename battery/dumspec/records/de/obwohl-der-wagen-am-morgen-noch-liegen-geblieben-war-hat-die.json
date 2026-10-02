@@ -110,6 +110,7 @@
 		{
 			"memberSegmentIndices": [20, 38],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🔧" },
 			"notes": {
 				"rationale": "hat is the perfect auxiliary of repariert, so the target is the whole perfect [hat, repariert]."
 			},

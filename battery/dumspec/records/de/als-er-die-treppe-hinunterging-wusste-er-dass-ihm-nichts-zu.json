@@ -374,6 +374,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🚶⬇" },
 			"notes": {
 				"rationale": "In the verb-final clause the particle verb hinuntergehen is written whole; hasSepPrefix names hinunter (de/verb-core-features)."
 			},

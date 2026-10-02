@@ -46,6 +46,7 @@
 		{
 			"memberSegmentIndices": [15, 21],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🌉👋" },
 			"notes": {
 				"rationale": "The speaker is already across the street, so the addressee crosses towards the speaker: rüber in the right bracket is the particle of herüberkommen. rüber is its Shorthand member, and the Surface spells the full particle."
 			},

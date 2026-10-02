@@ -33,8 +33,9 @@
 		{
 			"memberSegmentIndices": [0, 6, 12],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚧↪" },
 			"notes": {
-				"rationale": "herum stands in the right bracket, and herumkommen um + Acc is a dictionary particle verb in this sense, to avoid, so herum is its separable particle and Um its governed preposition, though the prepositional phrase opens the clause."
+				"rationale": "herum stands in the right bracket, and herumkommen um + Acc is a dictionary particle verb in this sense, to avoid, so herum is its separable particle and Um its governed preposition, though the prepositional phrase opens the clause. um diese Frage nicht herumkommen is Duden herumkommen 'etwas Unangenehmes umgehen, vermeiden können', not getting about from place to place."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

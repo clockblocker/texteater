@@ -190,6 +190,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📖" },
 			"notes": {
 				"rationale": "lese is intransitive lesen."
 			},

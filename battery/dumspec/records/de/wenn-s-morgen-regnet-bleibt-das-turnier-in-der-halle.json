@@ -67,6 +67,7 @@
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🌧" },
 			"notes": {
 				"rationale": "Weather es refers to nothing, so 's is the expletive member of regnen, across the free adverb morgen (de/expletive-es-joins-its-verb). The clitic is only a way of writing es: it stands apart from any word, so the member is Shorthand, its apostrophe stays in its Segment, and the Surface is es regnet, spelled Canonical.",
 				"knownMistakes": [

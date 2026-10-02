@@ -72,7 +72,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0031", "ADR-0036"],
 		"rules": [
 			{
 				"rule": "de/sein-perfect-or-copula",
@@ -146,8 +146,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🔓" },
 			"notes": {
-				"rationale": "erst um 8 places the opening at a point in time, so the clause reports the verb's own event, and the simple past says the same (öffnete heute erst um 8): hat … geöffnet is the perfect of öffnen, one VERB target (de/sein-perfect-or-copula, #653). Minimal pair: de/der-laden-hat-bis-20-uhr-geoeffnet."
+				"rationale": "erst um 8 places the opening at a point in time, so the clause reports the verb's own event, and the simple past says the same (öffnete heute erst um 8): hat … geöffnet is the perfect of öffnen, one VERB target (de/sein-perfect-or-copula, #653). Minimal pair: de/der-laden-hat-bis-20-uhr-geoeffnet. hat erst um 8 geöffnet is Duden öffnen 'mit der Geschäftszeit beginnen', merged with opening a window as one concept under ADR 0031, as the ADJ geöffnet 🔓 does in de/der-laden-hat-bis-20-uhr-geoeffnet."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

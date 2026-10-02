@@ -340,8 +340,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "⤵" },
 			"notes": {
-				"rationale": "das Haupt neigen is literal (bow the head), so neigte is the VERB neigen and das Haupt its free object."
+				"rationale": "das Haupt neigen is literal (bow the head), so neigte is the VERB neigen and das Haupt its free object. neigte das Haupt is Duden neigen 'nach unten beugen, senken' (den Kopf zum Gruß neigen), not neigen zu, tending towards something."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1085,8 +1086,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🪝" },
 			"notes": {
-				"rationale": "hängen is the infinitive under permissive lassen. The accusative die, the hands, does the hanging, so the clause names a doer and lassen is no causative: hängen is a VERB target of its own (de/causative-lassen). Here the hands literally hang; Duden's hängen lassen covers only figurative senses, so no Locution."
+				"rationale": "hängen is the infinitive under permissive lassen. The accusative die, the hands, does the hanging, so the clause names a doer and lassen is no causative: hängen is a VERB target of its own (de/causative-lassen). Here the hands literally hang; Duden's hängen lassen covers only figurative senses, so no Locution. Hands hanging limply (die sie entfremdet hängen ließ) are Duden hängen (hing) 'vom Eigengewicht nach unten gezogen werden, schlaff nach unten fallen', merged with hanging from a fixed point as one concept under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

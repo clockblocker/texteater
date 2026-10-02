@@ -49,6 +49,7 @@
 		{
 			"memberSegmentIndices": [20, 24],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚪🤗" },
 			"notes": {
 				"rationale": "The speaker is inside, so the addressee comes in towards the speaker: rein in the right bracket is the particle of hereinkommen. rein is its Shorthand member, and the Surface spells the full particle."
 			},

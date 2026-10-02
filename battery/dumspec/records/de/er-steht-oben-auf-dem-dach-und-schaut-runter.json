@@ -41,6 +41,7 @@
 		{
 			"memberSegmentIndices": [14, 16],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "👀⬇" },
 			"notes": {
 				"rationale": "He stands up on the roof and looks down, away from himself: runter in the right bracket is the particle of hinunterschauen. runter is its Shorthand member, and the Surface spells the full particle."
 			},

@@ -41,8 +41,9 @@
 		{
 			"memberSegmentIndices": [12, 16],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🫸🚪" },
 			"notes": {
-				"rationale": "She stays in her flat and throws him out, away from herself: raus in the right bracket is the particle of hinauswerfen. raus is its Shorthand member, and the Surface spells the full particle."
+				"rationale": "She stays in her flat and throws him out, away from herself: raus in the right bracket is the particle of hinauswerfen. raus is its Shorthand member, and the Surface spells the full particle. warf ihn raus is Duden hinauswerfen 'kurzerhand nach draußen weisen' (sie warf ihn aus der Wohnung hinaus), not throwing a thing outside or dismissing someone from a job."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

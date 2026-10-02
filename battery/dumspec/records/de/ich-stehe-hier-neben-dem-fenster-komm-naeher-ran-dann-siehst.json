@@ -53,6 +53,7 @@
 		{
 			"memberSegmentIndices": [13, 17],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶🧲" },
 			"notes": {
 				"rationale": "The addressee comes closer to the speaker at the window: ran in the right bracket is the particle of herankommen. ran is only ever heran, since hinan is an elevated word for hinauf. ran is its Shorthand member, and the Surface spells the full particle."
 			},

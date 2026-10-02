@@ -108,6 +108,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🔧" },
 			"notes": {
 				"rationale": "The infinitive under VERB lassen is a target of its own."
 			},

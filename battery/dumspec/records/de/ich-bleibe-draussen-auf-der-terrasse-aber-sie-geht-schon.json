@@ -46,6 +46,7 @@
 		{
 			"memberSegmentIndices": [17, 21],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶📥" },
 			"notes": {
 				"rationale": "The speaker stays outside on the terrace and she goes in, away from the speaker: rein in the right bracket is the particle of hineingehen. rein is its Shorthand member, and the Surface spells the full particle."
 			},

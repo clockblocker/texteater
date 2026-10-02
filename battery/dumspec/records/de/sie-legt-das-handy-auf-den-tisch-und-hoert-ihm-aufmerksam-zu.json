@@ -187,8 +187,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🫳" },
 			"notes": {
-				"rationale": "legen with a direction: auf den Tisch is a free directional phrase (any preposition fits), and auf is no particle of auflegen here. Consistency partner of er-legte-auf-ohne-…."
+				"rationale": "legen with a direction: auf den Tisch is a free directional phrase (any preposition fits), and auf is no particle of auflegen here. Consistency partner of er-legte-auf-ohne-…. legt das Handy auf den Tisch is Duden legen 'irgendwo in eine bestimmte Lage, Stellung bringen' (das Tuch auf den Tisch legen)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -925,8 +925,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🛞⬇" },
 			"notes": {
-				"rationale": "hinunterkollern 'roll clattering down' is the particle verb with separable hinunter, written as one word, so the particle is in the verb (de/verb-core-features). It is the infinitive sollte governs, a VERB target of its own (de/modal-is-a-verb)."
+				"rationale": "hinunterkollern 'roll clattering down' is the particle verb with separable hinunter, written as one word, so the particle is in the verb (de/verb-core-features). It is the infinitive sollte governs, a VERB target of its own (de/modal-is-a-verb). kollern is DWDS kullern '(mit Geräusch) rollen, kugeln', so hinunterkollern is rolling down with a clatter."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
