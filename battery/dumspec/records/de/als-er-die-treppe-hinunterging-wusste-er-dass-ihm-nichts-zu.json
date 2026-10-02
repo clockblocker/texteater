@@ -428,6 +428,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🧠" },
 			"notes": {
 				"rationale": "wußte is wusste in the spelling before 1996: the form is current, only the ß is old, so the Surface is a Historical Variant with no historical status (de/variant-and-historical-status)."
 			},
@@ -711,6 +712,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🛠" },
 			"notes": {
 				"rationale": "tun is the infinitive of nichts zu tun, a VERB of its own; zu is a separate PART (de/bare-infinitive-zu)."
 			},

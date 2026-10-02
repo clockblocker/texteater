@@ -20,6 +20,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "Copular imperative of VERB sein (ADR 0026). Initial capital is Standard and normalizes lowercase."
 			},

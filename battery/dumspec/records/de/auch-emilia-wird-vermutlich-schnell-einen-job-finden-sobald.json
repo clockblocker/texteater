@@ -45,7 +45,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -53,8 +53,9 @@
 		{
 			"memberSegmentIndices": [4, 14],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🔍" },
 			"notes": {
-				"rationale": "First wird member. Last wird other verb."
+				"rationale": "First wird member. Last wird other verb. einen Job finden is Duden finden 1c 'erlangen', one Reading with finding something in a state (2) under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

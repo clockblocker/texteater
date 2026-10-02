@@ -291,7 +291,7 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0022"],
+		"adrs": ["ADR-0022", "ADR-0031"],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -410,6 +410,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💭" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -455,7 +456,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "finden 'think, consider' with a dass clause, a single-member VERB."
+				"rationale": "finden 'think, consider' with a dass clause, a single-member VERB. A second Reading: finden 'consider, judge' (Duden finden 3), not 'come upon'."
 			}
 		},
 		{
@@ -740,6 +741,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1000,6 +1002,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
+			},
+			"reading": { "emojiDescription": "💭" },
+			"notes": {
+				"rationale": "meinen 'be of the opinion' (Duden meinen 1a)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1405,6 +1411,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1742,6 +1749,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💪" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1787,7 +1795,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "kann is the modal VERB and owns no auxiliary here: werden serves verzeihen (de/modal-is-a-verb)."
+				"rationale": "kann is the modal VERB and owns no auxiliary here: werden serves verzeihen (de/modal-is-a-verb). die verziehen werden kann, that can be forgiven, is possibility (Duden können 1b), the 'can' Reading under ADR 0031."
 			}
 		}
 	],

@@ -43,7 +43,7 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": ["ADR-0026"],
+		"adrs": ["ADR-0026", "ADR-0031"],
 		"rules": [
 			{
 				"rule": "de/modal-is-a-verb",
@@ -83,8 +83,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💪" },
 			"notes": {
-				"rationale": "Kann is the modal können, a VERB of its own; the infinitive it governs is its own target (de/modal-is-a-verb)."
+				"rationale": "Kann is the modal können, a VERB of its own; the infinitive it governs is its own target (de/modal-is-a-verb). Kann er denn sterben? asks whether dying is possible for him (Duden können 1b), the 'can' Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

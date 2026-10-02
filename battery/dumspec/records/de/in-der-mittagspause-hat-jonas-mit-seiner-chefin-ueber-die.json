@@ -245,6 +245,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🗣" },
 			"notes": {
 				"rationale": "sprechen mit jemandem über etwas: E-VALBU sprechen Lesart 4 (Ksub, Kprp, (Kprp)) governs mit + Dat and, optionally, über + Akk. Both are members, left out of the Surface; hat is the perfect auxiliary."
 			},

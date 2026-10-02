@@ -217,7 +217,14 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040", "ADR-0042", "ADR-0044"],
+		"adrs": [
+			"ADR-0031",
+			"ADR-0035",
+			"ADR-0036",
+			"ADR-0040",
+			"ADR-0042",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -1131,8 +1138,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "👐" },
 			"notes": {
-				"rationale": "ließ is permissive lassen. Its clause names the doer of hängen, the accusative die, so lassen joins no infinitive as a causative: it is the VERB lassen, and hängen stays outside (de/causative-lassen)."
+				"rationale": "ließ is permissive lassen. Its clause names the doer of hängen, the accusative die, so lassen joins no infinitive as a causative: it is the VERB lassen, and hängen stays outside (de/causative-lassen). Permissive lassen 'let, not prevent' (Duden lassen 1b 'zulassen; nicht an etwas hindern'): she lets her hands hang."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1322,6 +1330,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
+			},
+			"reading": { "emojiDescription": "🚶" },
+			"notes": {
+				"rationale": "gehen 'leave a place' (Duden gehen 6a 'einen Ort verlassen; weggehen') is folded into one Reading 🚶 with walking (1) and going somewhere (4a), by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

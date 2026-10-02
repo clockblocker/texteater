@@ -187,7 +187,14 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036", "ADR-0040", "ADR-0042"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0026",
+			"ADR-0031",
+			"ADR-0036",
+			"ADR-0040",
+			"ADR-0042"
+		],
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -315,6 +322,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -813,6 +821,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💪" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -858,7 +867,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Modal VERB; the infinitive geschehen is a target of its own (de/modal-is-a-verb)."
+				"rationale": "Modal VERB; the infinitive geschehen is a target of its own (de/modal-is-a-verb). können 'be possible' (Duden können 1b) shares the 'can' Reading with ability (1a) under ADR 0031."
 			}
 		},
 		{

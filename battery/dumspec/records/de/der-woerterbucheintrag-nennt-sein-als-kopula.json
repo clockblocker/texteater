@@ -26,8 +26,9 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
-				"rationale": "Dictionary citation of sein as a copula. A copula is the VERB sein (ADR 0026). Citation Surface."
+				"rationale": "Dictionary citation of sein as a copula. A copula is the VERB sein (ADR 0026). Citation Surface. A mentioned word takes its ordinary Reading, and the sentence names it as the copula, 🟰."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

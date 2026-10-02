@@ -24,8 +24,9 @@
 		{
 			"memberSegmentIndices": [0, 2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "📌" },
 			"notes": {
-				"rationale": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate."
+				"rationale": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate. A further Reading: es geht um 'be about, be at stake' (Duden gehen 15b 'sich um etwas handeln')."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

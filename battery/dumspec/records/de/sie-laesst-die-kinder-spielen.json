@@ -26,8 +26,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "👐" },
 			"notes": {
-				"rationale": "Permissive lassen, 'let': die Kinder are the ones who play, so lassen is the VERB lassen and spielen a target of its own (de/causative-lassen, #721)."
+				"rationale": "Permissive lassen, 'let': die Kinder are the ones who play, so lassen is the VERB lassen and spielen a target of its own (de/causative-lassen, #721). Permissive lassen 'let' (Duden lassen 1b: die Kinder spielen lassen)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -70,6 +71,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🤸" },
 			"notes": {
 				"rationale": "The infinitive under VERB lassen is a target of its own."
 			},

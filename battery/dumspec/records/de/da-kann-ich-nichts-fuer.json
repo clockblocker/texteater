@@ -68,8 +68,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🫵😬" },
 			"notes": {
-				"rationale": "können (für etwas können, be to blame) governs für, but dafür never joins the verb, split or not."
+				"rationale": "können (für etwas können, be to blame) governs für, but dafür never joins the verb, split or not. A Reading of its own: etwas, nichts für etwas können 'be to blame for' (Duden können, Wendung 'für etwas verantwortlich sein'; DWDS können 3a)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

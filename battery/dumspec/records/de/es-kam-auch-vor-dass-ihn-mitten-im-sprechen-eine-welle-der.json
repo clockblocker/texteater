@@ -1020,6 +1020,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🔄" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1329,6 +1330,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "❗" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1375,7 +1377,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Modal VERB (de/modal-is-a-verb). mußte is the pre-1996 spelling of musste, a Historical Variant."
+				"rationale": "Modal VERB (de/modal-is-a-verb). mußte is the pre-1996 spelling of musste, a Historical Variant. sich abwenden mußte, could not help turning away, is compulsion (Duden müssen 1a: wir mussten lachen), the necessity Reading."
 			}
 		}
 	],

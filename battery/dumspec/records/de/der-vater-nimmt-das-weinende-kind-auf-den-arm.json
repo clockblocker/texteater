@@ -166,8 +166,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤲" },
 			"notes": {
-				"rationale": "Literal: he lifts the child onto his arm. The idiom's words used literally are separate units (de/idiom)."
+				"rationale": "Literal: he lifts the child onto his arm. The idiom's words used literally are separate units (de/idiom). nehmen 'take hold of and bring to oneself' (Duden nehmen 5a: das Kind auf den Schoß nehmen), used literally here."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

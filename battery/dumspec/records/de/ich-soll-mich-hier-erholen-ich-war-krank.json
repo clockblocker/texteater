@@ -167,6 +167,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📋" },
 			"notes": {
 				"rationale": "soll is the modal sollen; the infinitive is its own target (de/modal-is-a-verb)."
 			},
@@ -370,6 +371,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "war is the copula and stays apart from krank (de/copula-stays-apart)."
 			},

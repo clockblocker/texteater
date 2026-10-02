@@ -27,8 +27,9 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "✅" },
 			"notes": {
-				"rationale": "Dictionary headword of a modal verb. Citation Surface. VERB with verbType Mod (ADR 0026)."
+				"rationale": "Dictionary headword of a modal verb. Citation Surface. VERB with verbType Mod (ADR 0026). A mentioned word takes its ordinary Reading, here dürfen 'be allowed to' (Duden dürfen 1a)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

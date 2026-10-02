@@ -120,6 +120,10 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶📍" },
+			"notes": {
+				"rationale": "kommen read literally, 'arrive' (Duden kommen 1 'sich auf ein Ziel hin bewegen; anlangen, eintreffen')."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "kommt", "orthography": "Standard" }],

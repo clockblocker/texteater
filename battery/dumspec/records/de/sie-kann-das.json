@@ -12,7 +12,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
+		"adrs": ["ADR-0026", "ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "💪" },
 			"notes": {
-				"rationale": "No overt infinitive. kann is the clause's main predicate and remains VERB. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
+				"rationale": "No overt infinitive. kann is the clause's main predicate and remains VERB. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026). Sie kann das, she knows how, is Duden können 2a 'beherrschen', the 'can' Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -590,6 +590,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💭✅" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -653,7 +654,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "glauben is the infinitive of the ohne … zu clause. It governs an (E-VALBU glauben an, Kprp an + Akk), but dran never joins it, so the valency evidence records an + Acc with no member (de/pronominal-adverb-stands-alone)."
+				"rationale": "glauben is the infinitive of the ohne … zu clause. It governs an (E-VALBU glauben an, Kprp an + Akk), but dran never joins it, so the valency evidence records an + Acc with no member (de/pronominal-adverb-stands-alone). glauben an here is 'hold it to be true', said of one's own words (Duden glauben 2a 'für wahr, richtig halten')."
 			}
 		}
 	],

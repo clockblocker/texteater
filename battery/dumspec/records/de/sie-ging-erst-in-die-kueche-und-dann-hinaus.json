@@ -37,6 +37,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶" },
 			"notes": {
 				"rationale": "One ging serves both conjuncts: the first is plain gehen with the free directional phrase in die Küche, and hinaus is coordinated with that phrase, so it is a free directional ADV, not the particle of hinausgehen. One Segment belongs to one target, so ging cannot be both gehen and hinausgehen."
 			},

@@ -41,8 +41,9 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "❗" },
 			"notes": {
-				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb)."
+				"rationale": "A modal is a VERB of its own with verbType Mod, also with no infinitive after it, and forms no particle verb with the directional (de/modal-is-a-verb). müssen without an infinitive, 'have to come out' (Duden müssen 2b), keeps the necessity Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

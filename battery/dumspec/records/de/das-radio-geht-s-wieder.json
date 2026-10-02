@@ -29,8 +29,9 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "⚙" },
 			"notes": {
-				"rationale": "Here 's refers to das Radio, so it is referential es and no member of gehen (de/expletive-es-joins-its-verb). Geht is the first Fused piece of Geht's and the verb's only member.",
+				"rationale": "Here 's refers to das Radio, so it is referential es and no member of gehen (de/expletive-es-joins-its-verb). Geht is the first Fused piece of Geht's and the verb's only member. A further Reading: gehen 'work, run' of a device (Duden gehen 9a: die Maschine geht).",
 				"knownMistakes": [
 					"Joining 's to gehen as its expletive, as in Mir geht's gut."
 				]

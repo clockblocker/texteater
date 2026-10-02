@@ -12,7 +12,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
+		"adrs": ["ADR-0026", "ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026)."
+				"rationale": "Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026). mögen 'like' (Duden mögen 2a 'gernhaben'); the Reading also takes 'would like' (1d) and 'want, be inclined' (1e), folded in by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -211,6 +211,10 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🚗" },
+			"notes": {
+				"rationale": "mit dem Rad fahren is Duden fahren 2a 'sich mit einem Fahrzeug fortbewegen', the Reading of im Wagen fahren."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -62,8 +62,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶📍" },
 			"notes": {
-				"rationale": "The verb stays bare kommen, since her belongs to woher."
+				"rationale": "The verb stays bare kommen, since her belongs to woher. Wo kommst du her? asks where someone comes from, the movement of Duden kommen 1."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

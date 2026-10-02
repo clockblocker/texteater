@@ -219,7 +219,14 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0029", "ADR-0035", "ADR-0040", "ADR-0044"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0029",
+			"ADR-0031",
+			"ADR-0035",
+			"ADR-0040",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
@@ -503,8 +510,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤲" },
 			"notes": {
-				"rationale": "hat … gehabt is the perfect of possessive haben: the auxiliary hat joins the participle across the object (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle), and the Surface is the whole perfect (de/verbal-surface-is-whole)."
+				"rationale": "hat … gehabt is the perfect of possessive haben: the auxiliary hat joins the participle across the object (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle), and the Surface is the whole perfect (de/verbal-surface-is-whole). haben with an abstract object (eine Art Ziel, eine Art Tätigkeit, Duden haben 1c) shares the 'have' Reading of Wir hätten gern mehr Zeit under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

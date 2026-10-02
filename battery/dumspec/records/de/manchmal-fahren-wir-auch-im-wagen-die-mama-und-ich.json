@@ -172,8 +172,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🚗" },
 			"notes": {
-				"rationale": "fahren 'ride, travel' is intransitive here."
+				"rationale": "fahren 'ride, travel' is intransitive here. fahren 'travel in or on a vehicle' (Duden fahren 2a), whatever the vehicle, drawn like hinfahren 🚗📍."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

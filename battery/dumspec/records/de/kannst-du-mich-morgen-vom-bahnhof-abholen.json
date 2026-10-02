@@ -111,6 +111,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💪" },
 			"notes": {
 				"rationale": "The modal is a VERB of its own; the infinitive it governs is a separate target (de/modal-is-a-verb)."
 			},

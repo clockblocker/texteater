@@ -44,6 +44,10 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🤸" },
+			"notes": {
+				"rationale": "spielen 'play for fun' (Duden spielen 1a), as the ADJ spielend 🤸 (die spielenden Kinder)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

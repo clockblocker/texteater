@@ -351,6 +351,7 @@
 	"sources": {
 		"adrs": [
 			"ADR-0026",
+			"ADR-0031",
 			"ADR-0034",
 			"ADR-0035",
 			"ADR-0036",
@@ -480,6 +481,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
+			},
+			"reading": { "emojiDescription": "📍" },
+			"notes": {
+				"rationale": "Lying on one's back (Duden liegen 1a) shares the gold Reading of das Band lag auf dem Geschenk (3, 'irgendwo sein') under ADR 0031: both are lying somewhere."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -792,6 +797,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
+			},
+			"reading": { "emojiDescription": "👀" },
+			"notes": {
+				"rationale": "sehen 'see, catch sight of' (Duden sehen 5a) shares the gold Reading of Sieh einmal ('look', 2a) under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1957,6 +1966,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💪" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -2002,7 +2012,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "A modal is a VERB of its own, and the infinitive it governs is a separate target (de/modal-is-a-verb)."
+				"rationale": "A modal is a VERB of its own, and the infinitive it governs is a separate target (de/modal-is-a-verb). The cover could hardly stay on: possibility given its state (Duden können 1b), the 'can' Reading under ADR 0031."
 			}
 		}
 	],

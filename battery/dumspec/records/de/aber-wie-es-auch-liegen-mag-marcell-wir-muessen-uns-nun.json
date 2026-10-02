@@ -235,7 +235,7 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0029", "ADR-0034", "ADR-0039"],
+		"adrs": ["ADR-0029", "ADR-0031", "ADR-0034", "ADR-0039"],
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -570,6 +570,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📊" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -615,7 +616,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "liegen 'stand, be the case' is the infinitive under mag."
+				"rationale": "liegen 'stand, be the case' is the infinitive under mag. A second Reading: liegen 'stand, be the case' (Duden liegen 6: die Verhältnisse liegen anders), not the location of 📍."
 			}
 		},
 		{
@@ -624,6 +625,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤷" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -669,7 +671,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "mag is the concessive modal, a VERB of its own; liegen is a separate target (de/modal-is-a-verb)."
+				"rationale": "mag is the concessive modal, a VERB of its own; liegen is a separate target (de/modal-is-a-verb). Concessive mögen, 'however it may be' (Duden mögen 1b 'zum Ausdruck der Einräumung')."
 			}
 		},
 		{
@@ -768,6 +770,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "❗" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -993,6 +996,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🔨" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1038,7 +1042,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "machen is 'make', the infinitive under müssen: we must make ourselves decided, with uns its object and schlüssig the object's predicate, so the three resolve word by word. machen is no copula, so the Locution sich schlüssig werden, sein does not reach it (de/copula-stays-apart). No dictionary lists sich schlüssig machen (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially). Ruled by the user on #739 (2026-10-01), keeping #743 JT-B4."
+				"rationale": "machen is 'make', the infinitive under müssen: we must make ourselves decided, with uns its object and schlüssig the object's predicate, so the three resolve word by word. machen is no copula, so the Locution sich schlüssig werden, sein does not reach it (de/copula-stays-apart). No dictionary lists sich schlüssig machen (DWDS and the Grimm DWB give only sich schlüssig werden, sein), and a changed verb breaks a Locution (de/modification-attests-partially). Ruled by the user on #739 (2026-10-01), keeping #743 JT-B4. uns schlüssig machen is Duden machen 2a 'in einen bestimmten Zustand bringen', one Reading with Übung macht den Meister (2b) under ADR 0031."
 			}
 		},
 		{
@@ -1132,6 +1136,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "👍👎" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1203,7 +1208,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "sich zu etwas stellen, 'take a stance on' (Duden stellen: sich positiv, negativ zu jemandem, zu einer Sache stellen; wie stellst du dich zu diesem Problem?), needs its reflexive, so dich is a member, placed after the object in Fontane's order (de/verb-owns-its-scattered-members). E-VALBU has no Lesart for this sense, so Duden decides that zu is governed: a member recorded in valencyEvidence as zu + Dat (de/governed-preposition-joins-its-governor). willst is a separate modal VERB."
+				"rationale": "sich zu etwas stellen, 'take a stance on' (Duden stellen: sich positiv, negativ zu jemandem, zu einer Sache stellen; wie stellst du dich zu diesem Problem?), needs its reflexive, so dich is a member, placed after the object in Fontane's order (de/verb-owns-its-scattered-members). E-VALBU has no Lesart for this sense, so Duden decides that zu is governed: a member recorded in valencyEvidence as zu + Dat (de/governed-preposition-joins-its-governor). willst is a separate modal VERB. sich zu etwas stellen 'take a stance on' (Duden stellen 10: sich positiv, negativ zu jemandem, zu einer Sache stellen)."
 			}
 		},
 		{
@@ -1358,6 +1363,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🎯" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

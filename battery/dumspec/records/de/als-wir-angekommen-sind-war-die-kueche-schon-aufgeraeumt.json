@@ -259,6 +259,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "Copular sein with a state: the kitchen was tidy, nobody tidies in this clause, so aufgeräumt is an ADJ and war stays apart (de/sein-perfect-or-copula)."
 			},

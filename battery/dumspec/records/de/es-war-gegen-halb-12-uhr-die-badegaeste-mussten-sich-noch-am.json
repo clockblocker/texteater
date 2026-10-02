@@ -133,7 +133,14 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026", "ADR-0035", "ADR-0040", "ADR-0041"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0026",
+			"ADR-0031",
+			"ADR-0035",
+			"ADR-0040",
+			"ADR-0041"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -203,8 +210,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
-				"rationale": "The es of a clock time refers to nothing and stays in every word order (Jetzt war es halb zwölf), so it is not positional; it joins the verb as its expletive subject (de/expletive-es-joins-its-verb), and war stays apart from the time predicate (de/copula-stays-apart). Ruled on #743 (MB-B5, A5)."
+				"rationale": "The es of a clock time refers to nothing and stays in every word order (Jetzt war es halb zwölf), so it is not positional; it joins the verb as its expletive subject (de/expletive-es-joins-its-verb), and war stays apart from the time predicate (de/copula-stays-apart). Ruled on #743 (MB-B5, A5). The copula of a clock time (Es war gegen halb 12 Uhr) is the gold copula Reading 🟰."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -490,8 +498,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "❗" },
 			"notes": {
-				"rationale": "Epistemic müssen ('must have been') is a modal VERB of its own, and befinden a separate target (de/modal-is-a-verb). mußten is the pre-1996 spelling of mussten: a Historical Variant (de/variant-and-historical-status)."
+				"rationale": "Epistemic müssen ('must have been') is a modal VERB of its own, and befinden a separate target (de/modal-is-a-verb). mußten is the pre-1996 spelling of mussten: a Historical Variant (de/variant-and-historical-status). Epistemic müssen, 'must be, as one infers' (Duden müssen 1e 'drückt eine hohe, sich auf bestimmte Tatsachen stützende Wahrscheinlichkeit aus'), is folded into one Reading ❗ with necessity (1a), by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

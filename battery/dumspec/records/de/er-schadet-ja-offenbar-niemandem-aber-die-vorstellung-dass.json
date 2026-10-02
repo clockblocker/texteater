@@ -183,7 +183,14 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0040", "ADR-0041", "ADR-0042", "ADR-0044"],
+		"adrs": [
+			"ADR-0026",
+			"ADR-0031",
+			"ADR-0040",
+			"ADR-0041",
+			"ADR-0042",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -887,8 +894,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📋" },
 			"notes": {
-				"rationale": "sollte in a present-tense frame about a feared future is sollen in Konjunktiv II, mood Sub, tense Past (de/modal-is-a-verb)."
+				"rationale": "sollte in a present-tense frame about a feared future is sollen in Konjunktiv II, mood Sub, tense Past (de/modal-is-a-verb). sollte here voices a feared eventuality, that he might even outlive me (Duden sollen 1h, Konjunktiv II 'für den Fall, dass'), folded into one Reading 📋 with 'be supposed to' (1a) by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -941,6 +949,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "ist is the copula and stays apart from its predicate (de/copula-stays-apart)."
 			},

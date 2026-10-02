@@ -77,7 +77,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0040"],
+		"adrs": ["ADR-0003", "ADR-0031", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -159,6 +159,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
+			},
+			"reading": { "emojiDescription": "🤲" },
+			"notes": {
+				"rationale": "nehmen 'choose, decide on' (Duden nehmen 7: diese Wohnung nehmen wir) is folded into one Reading 🤲 with taking hold (5a), by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

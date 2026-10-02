@@ -12,7 +12,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🌍" },
 			"notes": {
-				"rationale": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate."
+				"rationale": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate. Es gibt Brot may also be Duden geben 16 'angeboten werden' (bread is served); both say 'there is', one Reading with 15 under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

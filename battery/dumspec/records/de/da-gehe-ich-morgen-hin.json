@@ -16,7 +16,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [
 			{
 				"rule": "de/split-adverb-is-one-target",
@@ -64,8 +64,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶" },
 			"notes": {
-				"rationale": "The verb stays bare gehen, since hin belongs to dahin."
+				"rationale": "The verb stays bare gehen, since hin belongs to dahin. gehen 'go somewhere' (Duden gehen 4a) shares the gold Reading 🚶 of walking (1) under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

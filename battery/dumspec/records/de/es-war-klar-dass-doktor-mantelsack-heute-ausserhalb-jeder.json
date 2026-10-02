@@ -358,6 +358,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -780,6 +781,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "❓" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -825,7 +827,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "fragen, here 'ask questions in class'; außerhalb jeder Ordnung is a free adjunct."
+				"rationale": "fragen, here 'ask questions in class'; außerhalb jeder Ordnung is a free adjunct. fragen 'ask questions', here questioning people in turn, as wer am längsten nicht examiniert worden war shows (Duden fragen 1b 'Fragen stellen')."
 			}
 		},
 		{

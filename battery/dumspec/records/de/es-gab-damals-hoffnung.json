@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🌍" },
 			"notes": {
-				"rationale": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate."
+				"rationale": "Fixed nonreferential subject es belongs to the ordinary verb; free arguments remain separate. es gibt 'there is, exist' (Duden geben 15 'vorhanden sein, existieren')."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

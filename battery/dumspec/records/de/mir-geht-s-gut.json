@@ -26,8 +26,9 @@
 		{
 			"memberSegmentIndices": [2, 3],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🌡" },
 			"notes": {
-				"rationale": "es geht jemandem gut selects an es that refers to nothing, so 's is the expletive member of gehen, exactly as a full es would be (de/expletive-es-joins-its-verb). geht's is two Segments, and both Fused pieces are members of the one target: a click on either opens gehen.",
+				"rationale": "es geht jemandem gut selects an es that refers to nothing, so 's is the expletive member of gehen, exactly as a full es would be (de/expletive-es-joins-its-verb). geht's is two Segments, and both Fused pieces are members of the one target: a click on either opens gehen. A further Reading: es geht jemandem gut 'be doing, fare' (Duden gehen 15a 'sich in einer bestimmten Verfassung befinden'); gut is an ADJ of its own.",
 				"knownMistakes": [
 					"Making 's a PRON es target of its own, as in Das Radio? Geht's wieder?"
 				]

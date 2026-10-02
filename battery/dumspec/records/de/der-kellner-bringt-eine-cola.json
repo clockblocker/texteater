@@ -29,8 +29,9 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "📦➡" },
 			"notes": {
-				"rationale": "bringen here means only to bring: an ordinary verb with a free object, no support verb, so bringt is a VERB Lexeme and eine Cola no member of it."
+				"rationale": "bringen here means only to bring: an ordinary verb with a free object, no support verb, so bringt is a VERB Lexeme and eine Cola no member of it. bringen 'carry to someone and hand over' (Duden bringen 1b), drawn like heraufbringen 📦⬆."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

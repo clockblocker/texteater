@@ -887,6 +887,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📦➡" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -937,6 +938,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "VERB"
+			},
+			"reading": { "emojiDescription": "🚶📍" },
+			"notes": {
+				"rationale": "The cook did not come: kommen 'arrive' (Duden kommen 1)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

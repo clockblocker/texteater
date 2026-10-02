@@ -14,7 +14,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
+		"adrs": ["ADR-0026", "ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+				"rationale": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target. Read as Duden mögen 1e 'wollen, geneigt sein', Tobias wants to come along later, folded into one Reading 👍 with mögen 'like' (2a) by the user's split ruling (2026-10-02, ADR 0031); the sentence alone also allows the concessive 1b or the conjecture 1a."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

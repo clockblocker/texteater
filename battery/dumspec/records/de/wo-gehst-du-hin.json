@@ -62,6 +62,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶" },
 			"notes": {
 				"rationale": "The verb stays bare gehen, since hin belongs to wohin."
 			},

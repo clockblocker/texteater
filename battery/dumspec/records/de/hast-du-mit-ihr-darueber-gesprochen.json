@@ -57,7 +57,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0022", "ADR-0029", "ADR-0034"],
+		"adrs": ["ADR-0003", "ADR-0022", "ADR-0029", "ADR-0031", "ADR-0034"],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -99,8 +99,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🗣" },
 			"notes": {
-				"rationale": "Consistency partner of in-der-mittagspause-…: mit joins before a pronoun as before a noun; the über slot is filled by darüber, which stands alone, so it is recorded with no member."
+				"rationale": "Consistency partner of in-der-mittagspause-…: mit joins before a pronoun as before a noun; the über slot is filled by darüber, which stands alone, so it is recorded with no member. mit jemandem über etwas sprechen 'talk with' (Duden sprechen 4a) shares one Reading with speaking to an audience (1b, 6) under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

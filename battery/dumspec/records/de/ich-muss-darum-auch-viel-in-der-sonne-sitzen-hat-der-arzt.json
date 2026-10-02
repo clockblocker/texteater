@@ -249,6 +249,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "❗" },
 			"notes": {
 				"rationale": "muß is the modal müssen in the spelling valid before 1996, so the Surface is a Historical Variant (de/variant-and-historical-status, de/modal-is-a-verb)."
 			},
@@ -587,6 +588,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💬" },
 			"notes": {
 				"rationale": "hat … gesagt is the perfect of sagen (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle, de/verbal-surface-is-whole)."
 			},

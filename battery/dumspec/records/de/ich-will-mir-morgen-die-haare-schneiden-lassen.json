@@ -34,6 +34,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🎯" },
 			"notes": {
 				"rationale": "will is the modal VERB wollen, and the infinitive it governs is a target of its own (de/modal-is-a-verb)."
 			},

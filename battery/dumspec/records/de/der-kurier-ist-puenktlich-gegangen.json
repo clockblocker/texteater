@@ -16,7 +16,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0031", "ADR-0036"],
 		"rules": [
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
@@ -35,8 +35,9 @@
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶" },
 			"notes": {
-				"rationale": "ist is the perfect auxiliary of gegangen: the clause reports the leaving itself, as ging would, so the target is the whole perfect [ist, gegangen]."
+				"rationale": "ist is the perfect auxiliary of gegangen: the clause reports the leaving itself, as ging would, so the target is the whole perfect [ist, gegangen]. The courier left on time: gehen 'leave' (Duden gehen 6a), folded into one Reading 🚶 with walking (1) and going somewhere (4a) by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

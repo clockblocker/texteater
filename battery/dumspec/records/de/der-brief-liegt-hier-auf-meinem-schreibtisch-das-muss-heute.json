@@ -45,8 +45,9 @@
 		{
 			"memberSegmentIndices": [17],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "❗" },
 			"notes": {
-				"rationale": "A modal is a VERB of its own with verbType Mod, whether or not an infinitive follows (de/modal-is-a-verb). With raus and no infinitive it forms no particle verb such as hinausmüssen, so muss is a single-member VERB müssen.",
+				"rationale": "A modal is a VERB of its own with verbType Mod, whether or not an infinitive follows (de/modal-is-a-verb). With raus and no infinitive it forms no particle verb such as hinausmüssen, so muss is a single-member VERB müssen. müssen without an infinitive, 'have to go' (Duden müssen 2b: der Brief muss zur Post), keeps the necessity Reading.",
 				"knownMistakes": [
 					"Do not tag müssen AUX: a modal is never an auxiliary, with or without an infinitive."
 				]

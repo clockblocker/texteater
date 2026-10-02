@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [4, 10],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "Perfect of copular VERB sein: ist is its auxiliary member, gewesen the head (ADR 0026). Whole-Surface composition per ADR 0022."
 			},

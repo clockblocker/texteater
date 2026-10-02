@@ -369,8 +369,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🚶" },
 			"notes": {
-				"rationale": "gehen is the finite VERB and spazieren its infinitive, a VERB of its own; viel between them is free. spazieren gehen has a Duden headword but means what its words say, 'go walking', like einkaufen gehen, so it fails de/idiom, and a verb + verb unit needs both (#723). Ruled by the user on #739 (2026-10-01), reversing #743 SZ-B7."
+				"rationale": "gehen is the finite VERB and spazieren its infinitive, a VERB of its own; viel between them is free. spazieren gehen has a Duden headword but means what its words say, 'go walking', like einkaufen gehen, so it fails de/idiom, and a verb + verb unit needs both (#723). Ruled by the user on #739 (2026-10-01), reversing #743 SZ-B7. spazieren gehen is gehen 4a with an infinitive of purpose (schwimmen, tanzen gehen), the Reading 🚶."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

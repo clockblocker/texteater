@@ -62,6 +62,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🟰" },
 			"grundform": false,
 			"notes": {
 				"rationale": "sein linking a subject to a predicate is the copula VERB, not AUX.",

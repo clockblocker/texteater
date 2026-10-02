@@ -499,6 +499,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
 				"rationale": "entscheiden forms its perfect with haben, and war entschieden reports a settled state, not entschied: state passive, so war is the copula VERB sein (de/sein-perfect-or-copula, de/copula-stays-apart)."
 			},

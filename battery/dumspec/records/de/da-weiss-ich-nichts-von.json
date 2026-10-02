@@ -68,6 +68,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🧠" },
 			"notes": {
 				"rationale": "wissen governs von, but davon never joins the verb, split or not."
 			},

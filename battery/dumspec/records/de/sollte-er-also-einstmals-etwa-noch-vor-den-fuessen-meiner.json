@@ -163,7 +163,7 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0036", "ADR-0039", "ADR-0040"],
+		"adrs": ["ADR-0026", "ADR-0031", "ADR-0036", "ADR-0039", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -251,8 +251,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📋" },
 			"notes": {
-				"rationale": "Sollte opening a question about a possible future event is the modal sollen in Konjunktiv II (Duden sollen: im 2. Konjunktiv, drückt eine Möglichkeit aus), so mood Sub, tense Past (de/modal-is-a-verb)."
+				"rationale": "Sollte opening a question about a possible future event is the modal sollen in Konjunktiv II (Duden sollen: im 2. Konjunktiv, drückt eine Möglichkeit aus), so mood Sub, tense Past (de/modal-is-a-verb). Sollte er … hinunterkollern? asks whether it might one day happen (Duden sollen 1j, Konjunktiv II in a question of doubt), folded into one Reading 📋 with 'be supposed to' (1a) by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -25,7 +25,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
+		"adrs": ["ADR-0026", "ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -33,8 +33,9 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Both uses of mögen are one VERB Mod identity (ADR 0026); governing an infinitive is a Unit role, not a different Lemma."
+				"rationale": "Both uses of mögen are one VERB Mod identity (ADR 0026); governing an infinitive is a Unit role, not a different Lemma. heute mag sie lieber kochen, today she would rather cook, is Duden mögen 1e 'wollen, geneigt sein', one Reading with möchte (1d) under ADR 0031, and with mögen 'like' (2a) by the user's split ruling (2026-10-02)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

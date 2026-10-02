@@ -351,8 +351,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🎶" },
 			"notes": {
-				"rationale": "Gitarre spielen is an ordinary verb and object, no Locution (de/fixed-members-only)."
+				"rationale": "Gitarre spielen is an ordinary verb and object, no Locution (de/fixed-members-only). A second Reading: spielen 'play an instrument' (Duden spielen 5a: Gitarre spielen)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
