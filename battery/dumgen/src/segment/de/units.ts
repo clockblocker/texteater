@@ -15,6 +15,11 @@
 import type { Ask } from "../ask.js";
 import type { Segment, Unit } from "../segmented-sentence.js";
 import { type Floors, membershipOf, type SayingAssembly } from "./assembly.js";
+import {
+	answerBeforeFormula,
+	type CodeRule,
+	withCodeRules,
+} from "./code-rules.js";
 import { authoredInventory, type GermanInventory } from "./inventory.js";
 import { nominate } from "./nomination.js";
 import {
@@ -38,6 +43,11 @@ export type UnitSettings = {
 	 * ADR 0007, amended 2026-09-30). None when absent.
 	 */
 	readonly variantMargin?: number;
+	/**
+	 * The code rules applied over the assembled membership (#851, X3), each
+	 * enforcing one dumspec Rule. `was-fuer` also asks its Noul in `final`.
+	 */
+	readonly rules: readonly CodeRule[];
 };
 
 /** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7. */
@@ -52,6 +62,7 @@ export const productionUnitSettings: UnitSettings = {
 	saying: { floor: 0.7, maxim: true },
 	inventory: authoredInventory,
 	unasked: "ask",
+	rules: [],
 };
 
 /** Groups one German Sentence's Segments into its biggest units and routes each. */
@@ -60,11 +71,13 @@ export async function segmentGermanUnits(
 	ask: Ask,
 	settings: UnitSettings = productionUnitSettings,
 ): Promise<Unit[]> {
-	const nomination = await nominate(sentence, ask, settings.inventory);
-	const membership = membershipOf(
+	const nomination = await nominate(sentence, ask, settings.inventory, {
+		wasFuer: settings.rules.includes("was-fuer"),
+	});
+	const membership = withCodeRules(
 		nomination,
-		settings.floors,
-		settings.saying,
+		membershipOf(nomination, settings.floors, settings.saying),
+		settings.rules,
 	);
 	const answers = await askRouteBatches(nomination, ask);
 	const extra =
@@ -76,7 +89,13 @@ export async function segmentGermanUnits(
 					ask,
 				)
 			: undefined;
-	return routeMembership(nomination, membership, answers, extra).units(
-		settings.variantMargin,
-	);
+	return routeMembership(
+		nomination,
+		membership,
+		answers,
+		extra,
+		settings.rules.includes("answer-apart")
+			? answerBeforeFormula
+			: undefined,
+	).units(settings.variantMargin);
 }

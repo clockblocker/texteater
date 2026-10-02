@@ -151,7 +151,9 @@ type EdgeSource =
 	| "expression"
 	| "saying"
 	| "sibling"
-	| "preposition";
+	| "preposition"
+	/** A code rule's link (`code-rules.ts`). */
+	| "rule";
 
 export type AssembledEdge = {
 	readonly pieces: readonly [number, number];

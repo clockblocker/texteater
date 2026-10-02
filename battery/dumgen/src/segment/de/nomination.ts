@@ -36,6 +36,8 @@ import {
 	type SlotKind,
 	sayingSpans,
 	slotsOf,
+	wasFuerId,
+	wasFuerPairs,
 } from "./candidates.js";
 import type { GermanInventory } from "./inventory.js";
 import { argmax } from "./partition.js";
@@ -250,11 +252,21 @@ const sayingCriteria = {
 	none: "An ordinary statement, question or description, not a saying",
 };
 
-/** The `final` request: step 0's idiom hosts and `so … daß`, and the Saying Choice. */
+/** What the `final` request asks beyond candidates4's questions. */
+export type FinalOptions = {
+	/** A Noul per was … für pair, for the `was-fuer` code rule (de/was-fuer). */
+	readonly wasFuer?: boolean;
+};
+
+/**
+ * The `final` request: step 0's idiom hosts and `so … daß`, and the Saying
+ * Choice; with `wasFuer`, whether was … für is was für (ein).
+ */
 function finalQuestions(
 	sentence: Sentence,
 	ref: Reference,
 	slots: readonly Slot[],
+	options: FinalOptions,
 ): Questions {
 	const questions: Questions = {};
 	for (const slot of slots) {
@@ -282,6 +294,11 @@ function finalQuestions(
 			sayingCriteria,
 		);
 	}
+	if (options.wasFuer)
+		for (const [was, fuer] of wasFuerPairs(sentence))
+			questions[wasFuerId(was.id, fuer.id)] = noul(
+				`In \`sentence\`, do ${ref(was)} and ${ref(fuer)} together form was für (ein), asking or exclaiming what kind of thing or person (Was für ein Buch liest du? Was ist das für ein Buch? Was für Bücher? Aber was für einen?), rather than was standing on its own and für being a preposition (Was hast du für das Buch bezahlt?)?`,
+			);
 	return questions;
 }
 
@@ -290,6 +307,7 @@ export async function nominate(
 	input: { readonly segments: readonly Segment[] },
 	ask: Ask,
 	inventory: GermanInventory,
+	options: FinalOptions = {},
 ): Promise<Nomination> {
 	const sentence = sentenceOf(input);
 	const { state, ref } = judgeState(sentence);
@@ -333,7 +351,7 @@ export async function nominate(
 	const final = await askAny(ask, {
 		stage: "final",
 		state,
-		questions: finalQuestions(sentence, ref, slots),
+		questions: finalQuestions(sentence, ref, slots, options),
 	});
 	return {
 		sentence,

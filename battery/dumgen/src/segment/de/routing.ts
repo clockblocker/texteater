@@ -65,7 +65,12 @@ import {
 	routeOf,
 	singletonRoutes,
 } from "./routes.js";
-import { joinRefs, type Reference, type Sentence } from "./sentence.js";
+import {
+	joinRefs,
+	type Piece,
+	type Reference,
+	type Sentence,
+} from "./sentence.js";
 
 /** One route answer, kept for calibration. */
 export type RouteJudgment = {
@@ -400,14 +405,19 @@ export const structuralRoute =
 		return best.key || jevRoute(group);
 	};
 
+/** Two adjacent pieces that stay apart although both are interjections. */
+export type KeepApart = (left: Piece, right: Piece) => boolean;
+
 /**
  * Adjacent one-piece units both routed INTJ, with only whitespace between,
- * merge into one Locution INTJ (Rule `de/interjection-counts-its-words`).
+ * merge into one Locution INTJ (Rule `de/interjection-counts-its-words`),
+ * unless `apart` keeps the two pieces apart.
  */
 function mergeInterjections(
 	sentence: Sentence,
 	partition: Partition,
 	route: (group: readonly number[]) => RouteKey,
+	apart: KeepApart | undefined,
 ): {
 	readonly partition: Partition;
 	readonly merged: ReadonlySet<string>;
@@ -429,7 +439,8 @@ function mergeInterjections(
 			between.length > 0 &&
 			between.every((segment) => segment.kind === "Whitespace") &&
 			interjection(previous.id) &&
-			interjection(piece.id)
+			interjection(piece.id) &&
+			!apart?.(previous, piece)
 		)
 			links.push([previous.id, piece.id]);
 	}
@@ -548,6 +559,7 @@ export function routeMembership(
 	membership: Pick<Membership, "partition" | "familyOf">,
 	answers: RouteAnswers,
 	extra?: Routes,
+	keepApart?: KeepApart,
 ): RoutedMembership {
 	const { sentence } = nomination;
 	const { route2, closed: closedAnswers } = answers;
@@ -576,6 +588,7 @@ export function routeMembership(
 		sentence,
 		membership.partition,
 		structural,
+		keepApart,
 	);
 	const closedRoute = (group: readonly number[]): RouteKey | undefined => {
 		const [only] = group;

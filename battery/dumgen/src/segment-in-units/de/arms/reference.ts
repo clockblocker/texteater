@@ -424,6 +424,9 @@ function edgesOf(
 					...(byId.has(id) ? { connection: id } : {}),
 				};
 			}
+			case "rule":
+				// The reference applies no code rule (#851, X3).
+				return { pieces, rule: "code" };
 		}
 		throw Error(`Unknown edge source ${source satisfies never}`);
 	});

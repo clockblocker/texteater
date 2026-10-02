@@ -1,12 +1,10 @@
 import { expect, test } from "bun:test";
-import type { Question } from "promptsmith/typesafe";
-import type { Answer, Ask, AskRequest } from "../../../src/segment/ask.js";
+import type { Answer } from "../../../src/segment/ask.js";
 import {
 	authoredInventory,
 	germanInventory,
 } from "../../../src/segment/de/inventory.js";
 import { partitionOf } from "../../../src/segment/de/partition.js";
-import { routeOf } from "../../../src/segment/de/routes.js";
 import { sentenceOf } from "../../../src/segment/de/sentence.js";
 import {
 	productionUnitSettings,
@@ -15,44 +13,7 @@ import {
 } from "../../../src/segment/de/units.js";
 import type { Segment } from "../../../src/segment/segmented-sentence.js";
 import { segmentsOf } from "../../spec-corpus/fixtures.js";
-
-const picked = (
-	choice: string,
-	probabilities: Record<string, number> = { [choice]: 1 },
-): Answer => ({ type: "choice", choice, confidence: 1, probabilities });
-const noul = (value: number): Answer => ({ type: "noul", noul: value });
-
-/**
- * A judge that answers by question id from `answers` and otherwise says no:
- * a Noul 0.1, a Choice its last option (`none`, `Other`, …).
- */
-function fakeJudge(answers: Readonly<Record<string, Answer>> = {}) {
-	const requests: AskRequest[] = [];
-	const ask: Ask = async (request) => {
-		requests.push(request);
-		return Object.fromEntries(
-			Object.entries(request.questions).map(
-				([id, question]: [string, Question]) => {
-					const known = answers[id];
-					if (known) return [id, known];
-					if (question.type === "noul") return [id, noul(0.1)];
-					const keys = Object.keys(
-						question.type === "choice" ? question.criteria : {},
-					);
-					return [id, picked(keys.at(-1) ?? "")];
-				},
-			),
-		);
-	};
-	return { ask, stages: () => requests.map(({ stage }) => stage), requests };
-}
-
-/** A German route, checked against the routes the unit stage offers. */
-const route = (family: string, kind: string) => {
-	const checked = routeOf(`${family}/${kind}`);
-	if (checked === "Unresolved") throw Error("Not a route");
-	return checked;
-};
+import { fakeJudge, noul, picked, route } from "./fake-judge.js";
 
 // Er0 _1 zog2 _3 sich4 _5 an6 ,7 _8 zu9 m10 _11 Glück12 .13
 const zumGlueck: readonly Segment[] = [

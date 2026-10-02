@@ -16,6 +16,11 @@
  *   repetition.
  * - `--opt variants=0.1,0.2` (X7): production with route variants at each
  *   margin, `production+variants@<margin>`.
+ * - `--opt x3=<rule>,<rule>` (X3): production with each listed code rule
+ *   added to its own, `production+<rule>`, and with all of them,
+ *   `production+x3` (`code-rules.ts`). `all` lists every rule. `was-fuer` asks its Noul
+ *   in `final`, so a Sentence with was … für misses the cache once.
+ *   Groups no batch asked about route `Unresolved`, as in the grid.
  */
 import { stableJson } from "promptsmith";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
@@ -29,10 +34,17 @@ import {
 	type SayingAssembly,
 	stepZeroMembership,
 } from "../../../segment/de/assembly.js";
+import {
+	answerBeforeFormula,
+	type CodeRule,
+	codeRules,
+	withCodeRules,
+} from "../../../segment/de/code-rules.js";
 import { type Nomination, nominate } from "../../../segment/de/nomination.js";
 import {
 	askRouteBatches,
 	askUnaskedRoutes,
+	type RouteAnswers,
 	type RouteJudgment,
 	routeMembership,
 } from "../../../segment/de/routing.js";
@@ -111,10 +123,29 @@ type Levers = {
 	readonly pool: readonly Pooling[];
 	readonly margins: readonly number[];
 	readonly unasked: "ask" | "unresolved";
+	readonly rules: readonly CodeRule[];
 };
 
+function rulesOf(option: string | undefined): CodeRule[] {
+	const listed = (option ?? "").split(",").filter(Boolean);
+	if (listed.includes("all")) return [...codeRules];
+	for (const rule of listed)
+		if (!codeRules.includes(rule as CodeRule))
+			throw Error(
+				`--opt x3=${option} lists all, ${codeRules.join(", ")}`,
+			);
+	return listed as CodeRule[];
+}
+
 function leversOf(options: ArmOptions): Levers {
-	const known = new Set(["grid", "pool", "variants", "unasked", "primary"]);
+	const known = new Set([
+		"grid",
+		"pool",
+		"variants",
+		"unasked",
+		"primary",
+		"x3",
+	]);
 	for (const key of Object.keys(options))
 		if (!known.has(key)) throw Error(`production takes no --opt ${key}`);
 	if (options.grid !== undefined && options.grid !== "x1")
@@ -144,7 +175,51 @@ function leversOf(options: ArmOptions): Levers {
 		pool: pool as Pooling[],
 		margins,
 		unasked,
+		rules: rulesOf(options.x3),
 	};
+}
+
+/** X3's policies: each listed rule and, with two or more, all of them. */
+const x3Policies = (rules: readonly CodeRule[]) => [
+	...rules.map((rule) => [rule, [rule]] as const),
+	...(rules.length > 1 ? [["x3", rules] as const] : []),
+];
+
+/** A nomination and its batched route answers. */
+type Read = {
+	readonly nomination: Nomination;
+	readonly answers: RouteAnswers;
+};
+
+/** Units under code rules over one read, as the unit stage routes them. */
+async function ruledUnits(
+	read: Read,
+	rules: readonly CodeRule[],
+	unasked: "ask" | "unresolved",
+	ask: Ask,
+) {
+	const settings = productionUnitSettings;
+	const membership = withCodeRules(
+		read.nomination,
+		membershipOf(read.nomination, settings.floors, settings.saying),
+		rules,
+	);
+	const extra =
+		unasked === "ask"
+			? await askUnaskedRoutes(
+					read.nomination,
+					read.answers,
+					membership.partition,
+					ask,
+				)
+			: undefined;
+	return routeMembership(
+		read.nomination,
+		membership,
+		read.answers,
+		extra,
+		rules.includes("answer-apart") ? answerBeforeFormula : undefined,
+	);
 }
 
 /** Every policy over one `ask`, each name prefixed. */
@@ -158,23 +233,30 @@ async function outputsOf(
 	readonly routes: RouteJudgment[];
 }> {
 	const settings = productionUnitSettings;
-	const nomination = await nominate(input, ask, settings.inventory);
-	const answers = await askRouteBatches(nomination, ask);
-	const membership = membershipOf(
-		nomination,
-		settings.floors,
-		settings.saying,
+	// was-fuer adds its Noul to `final`; a Sentence without was … für asks the same.
+	const reads = new Map<boolean, Promise<Read>>();
+	const readOf = (wasFuer: boolean): Promise<Read> => {
+		const known = reads.get(wasFuer);
+		if (known) return known;
+		const read = (async () => {
+			const nomination = await nominate(input, ask, settings.inventory, {
+				wasFuer,
+			});
+			return {
+				nomination,
+				answers: await askRouteBatches(nomination, ask),
+			};
+		})();
+		reads.set(wasFuer, read);
+		return read;
+	};
+	const production = await readOf(settings.rules.includes("was-fuer"));
+	const routed = await ruledUnits(
+		production,
+		settings.rules,
+		settings.unasked,
+		ask,
 	);
-	const extra =
-		settings.unasked === "ask"
-			? await askUnaskedRoutes(
-					nomination,
-					answers,
-					membership.partition,
-					ask,
-				)
-			: undefined;
-	const routed = routeMembership(nomination, membership, answers, extra);
 	const outputs: Record<string, SegmentInUnitsOutput> = {
 		[`${prefix}production`]: {
 			units: routed.units(settings.variantMargin),
@@ -184,7 +266,21 @@ async function outputsOf(
 		outputs[`${prefix}production+variants@${margin}`] = {
 			units: routed.units(margin),
 		};
-	if (levers.grid)
+	for (const [name, listed] of x3Policies(levers.rules)) {
+		const rules = [...new Set([...settings.rules, ...listed])];
+		outputs[`${prefix}production+${name}`] = {
+			units: (
+				await ruledUnits(
+					await readOf(rules.includes("was-fuer")),
+					rules,
+					levers.unasked,
+					ask,
+				)
+			).units(),
+		};
+	}
+	if (levers.grid) {
+		const { nomination, answers } = await readOf(false);
 		for (const [name, assembly] of Object.entries(x1Grid)) {
 			const under = membershipUnder(nomination, assembly);
 			const more =
@@ -205,7 +301,11 @@ async function outputsOf(
 				).units(),
 			};
 		}
-	return { outputs, routes: [...answers.routes.identity.values()] };
+	}
+	return {
+		outputs,
+		routes: [...production.answers.routes.identity.values()],
+	};
 }
 
 /** The repetitions a pool reads. */
@@ -240,7 +340,13 @@ function heardOf(
 					}),
 					answers,
 				),
-				{ grid: false, pool: [], margins: [], unasked: "ask" },
+				{
+					grid: false,
+					pool: [],
+					margins: [],
+					unasked: "ask",
+					rules: [],
+				},
 			);
 			return answers;
 		}),

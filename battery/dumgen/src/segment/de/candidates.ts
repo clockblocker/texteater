@@ -97,8 +97,8 @@ const window = (
 			other.id <= piece.id + after,
 	);
 
-/** A fused word's article piece (`m` of `im`) stands for its article. */
-function isArticle(piece: Piece): boolean {
+/** A form of der or ein; a fused word's article piece (`m` of `im`) stands for its article. */
+export function isArticle(piece: Piece): boolean {
 	if (piece.fusedWord && piece.surface !== piece.text)
 		return articleForms.has(piece.surface.toLowerCase());
 	return (
@@ -538,3 +538,24 @@ export const isSymbolPiece = (piece: Piece) =>
 /** An abbreviation's shape: letters with inner dots, or a short word ending in a dot. */
 export const isAbbreviationPiece = (piece: Piece) =>
 	/\p{L}\.\p{L}/u.test(piece.text) || /^\p{L}{1,5}\.$/u.test(piece.text);
+
+/** The `final` request's was für question ids, by the was and für pieces. */
+export const wasFuerId = (was: number, fuer: number) => `w4_${was}_${fuer}`;
+
+/** The was … für pairs the `final` request asks about: für within six pieces after was, in its clause. */
+export function wasFuerPairs(sentence: Sentence): (readonly [Piece, Piece])[] {
+	const pairs: (readonly [Piece, Piece])[] = [];
+	const { pieces } = sentence;
+	for (const was of pieces) {
+		if (lower(was) !== "was") continue;
+		for (const fuer of pieces)
+			if (
+				lower(fuer) === "für" &&
+				fuer.id > was.id &&
+				fuer.id - was.id <= 6 &&
+				fuer.clause === was.clause
+			)
+				pairs.push([was, fuer]);
+	}
+	return pairs;
+}
