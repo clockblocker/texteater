@@ -404,9 +404,17 @@ describe("the German authored inventory", () => {
 		// The possessive PRON has no weak forms: after an article the weak
 		// possessive is ADJ, so der meine gives ADJ meine
 		// (de/possessive-after-article; decided by agents under the user's
-		// delegation, 2026-10-02).
+		// delegation, 2026-10-02). The -ig forms always follow an article, so
+		// der meinige gives ADJ meinige and no PRON is spelled with -ig.
 		expect(tagsOf("meinen", "PRON", "Gen")).toEqual([]);
 		expect(tagsOf("unsren", "PRON", "Nom")).toEqual([]);
+		expect(
+			authoredRealizations.filter(
+				({ member, spelled }) =>
+					member.lemma.kind === "PRON" &&
+					/^(mein|dein|sein|ihr|unse?r|eue?r)ige/i.test(spelled),
+			),
+		).toEqual([]);
 		expect(tagsOf("meine", "PRON", "Nom")).toEqual(["meiner Canonical"]);
 		expect(
 			authoredRealizations.filter(

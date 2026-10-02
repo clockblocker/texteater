@@ -764,9 +764,10 @@ reviewed.push(
 // a feminine or plural one (hers, theirs), so each is one Lemma. A possessor
 // is no Core Feature, so no referent picks between possessive cells and none
 // has a Syncretism (system ADR 0044, ADR 0046).
-// Strong standalone and article-bound -ig forms:
+// Strong standalone forms only. The -ig forms (der meinige) always follow an
+// article, where the weak possessive is ADJ (der meinige gives ADJ meinige;
+// de/possessive-after-article), so they are no PRON.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de
-// https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/Pron-Poss-ig1.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
 for (const [stem, ipa, person, polite, en, ru] of [
 	["mein", "ˈmaɪ̯n", "1", null, "mine", "мой"],
@@ -854,22 +855,6 @@ for (const [stem, ipa, person, polite, en, ru] of [
 			],
 		},
 		meaning,
-	);
-	const igStem = stem === "unser" ? "unsrig" : `${stem}ig`;
-	const igIpa = stem === "unser" ? "ˈʊnzʁɪɡ" : `${ipa}ɪɡ`;
-	const e = form(`${igStem}e`, `${igIpa}ə`),
-		enForm = form(`${igStem}en`, `${igIpa}ən`);
-	add(
-		{
-			Masc: [e, enForm, enForm, enForm],
-			Neut: [e, e, enForm, enForm],
-			Fem: [e, e, enForm, enForm],
-			Plur: [enForm, enForm, enForm, enForm],
-		},
-		{
-			...meaning,
-			definition: `${meaning.definition} Die Form auf -ig verlangt einen Artikel.`,
-		},
 	);
 }
 

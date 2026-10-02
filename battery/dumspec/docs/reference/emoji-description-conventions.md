@@ -145,7 +145,7 @@ Other authored units have one emoji for the whole Reading:
 | Emoji | Units |
 | --- | --- |
 | 👈 | every personal pronoun, in every person, case and number: `ich`, `dich`, `Sie` |
-| 🔐 | possessives: `mein`, `sein`, `meinige` |
+| 🔐 | possessives: `mein`, `sein`, `meiner` |
 | 👉 | the definite article and demonstrative PRON and DET: `der`, `dieser`, `jener` |
 | 1⃣ | the indefinite article `ein` and PRON `einer` |
 | 2⃣ | `beide`, PRON and DET |

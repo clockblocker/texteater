@@ -104,6 +104,8 @@ Canonical spellings with no cell, as DET `viel`'s uninflected spelling is.
 possessive lost its weak forms: after an article the weak possessive is ADJ,
 so `der meine` gives ADJ `meine`
 ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)).
+The PRON `-ig` possessives (`meinige`, `unsrige`, `Ihrige`) are retired:
+after an article they are ADJ (`de/possessive-after-article`, 6ea8a981).
 Decided by agents under the user's delegation (2026-10-02)
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
 
