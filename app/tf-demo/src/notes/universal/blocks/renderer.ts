@@ -14,9 +14,10 @@ import type { NoteDataFor } from "../note/data";
 import type { NoteKind } from "../note/kind";
 
 export type GrammaticalNoteKind = Exclude<NoteKind, "Surface">;
+/** The Unit Reading Families; a Foreign unit has no Note of its own yet. */
 export type NoteFamilyFor<L extends SupportedTargetLanguage> = Extract<
 	Dumling.Family<L>,
-	"Lexeme" | "Phraseme" | "Morpheme"
+	"Lexeme" | "Locution" | "Saying" | "Morpheme"
 >;
 export type NoteLemmaKindFor<
 	L extends SupportedTargetLanguage,

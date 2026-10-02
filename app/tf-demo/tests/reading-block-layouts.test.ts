@@ -22,10 +22,10 @@ const VERB_ROUTE = {
 	family: "Lexeme",
 	kind: "VERB",
 } as const satisfies ReadingBlockRoute;
-const IDIOM_ROUTE = {
+const LOCUTION_ROUTE = {
 	targetLanguage: "de",
-	family: "Phraseme",
-	kind: "Idiom",
+	family: "Locution",
+	kind: "VERB",
 } as const satisfies ReadingBlockRoute;
 const PUNCT_ROUTE = {
 	targetLanguage: "de",
@@ -101,7 +101,7 @@ describe("Reading Block layout persistence", () => {
 
 		expect(await layoutRows(t, "readingLanguageLayouts")).toHaveLength(1);
 		expect(await layoutRows(t, "readingFamilyKindLayouts")).toEqual([]);
-		for (const route of [VERB_ROUTE, IDIOM_ROUTE, PUNCT_ROUTE]) {
+		for (const route of [VERB_ROUTE, LOCUTION_ROUTE, PUNCT_ROUTE]) {
 			expect(
 				await t.query(getFamilyKind, {
 					visitorId: VISITOR_ID,
@@ -152,7 +152,7 @@ describe("Reading Block layout persistence", () => {
 		expect(
 			await t.query(getFamilyKind, {
 				visitorId: VISITOR_ID,
-				route: IDIOM_ROUTE,
+				route: LOCUTION_ROUTE,
 			}),
 		).toEqual({ order: LANGUAGE_ORDER, hidden: ["Relations"] });
 		expect(
@@ -187,7 +187,7 @@ describe("Reading Block layout persistence", () => {
 		expect(
 			await t.query(getFamilyKind, {
 				visitorId: VISITOR_ID,
-				route: IDIOM_ROUTE,
+				route: LOCUTION_ROUTE,
 			}),
 		).toEqual(DEFAULT_DE_READING_LANGUAGE_LAYOUT);
 

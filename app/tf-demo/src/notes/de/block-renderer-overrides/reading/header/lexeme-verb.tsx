@@ -15,7 +15,7 @@ export const renderHeaderDeLexemeVerb = (({
 			capabilities={PresentationCapabilities}
 			title={verbCanonicalForm(
 				noteData.reading.lemma.canonicalForm,
-				lexicallyReflexive === "Yes",
+				lexicallyReflexive !== null,
 				hasSepPrefix,
 			)}
 		/>

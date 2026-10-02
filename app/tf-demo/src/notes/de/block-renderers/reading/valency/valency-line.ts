@@ -58,11 +58,11 @@ const CASE_SLOT_ORDER = [
  *
  * The line reads: the head (a separable verb's base, marked `>`), a lexical
  * reflexive `sich`, the bare case slots (Dat before Acc before Gen), a
- * Phraseme's other Fixed words, the preposition slots, and last the separated
+ * Locution's other Fixed words, the preposition slots, and last the separated
  * prefix (marked `<`). Optional slots are parenthesised. A Nom slot is the
  * subject and is not shown.
  *
- * Provisional: where slots go relative to a Phraseme's Fixed words is not
+ * Provisional: where slots go relative to a Locution's Fixed words is not
  * decided yet (#711). This order matches ADR 0034's six examples, and
  * placing `sich` before the case slots follows German word order
  * (`nimmt sich etwas zu Herzen`). Keep the whole ordering rule here.
@@ -99,7 +99,7 @@ export function germanValencyLine(
 }
 
 /**
- * A verbal Phraseme's head is its final infinitive (`auf den Keks gehen`), and
+ * A verbal Locution's head is its final infinitive (`auf den Keks gehen`), and
  * so is a reflexive verb's (`sich freuen`). Any other Canonical Form is its
  * own head.
  */

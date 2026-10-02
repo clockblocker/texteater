@@ -39,14 +39,17 @@ const READING_VALENT = {
 	Valency: renderDeReadingValency,
 };
 
+/** An ADP renders its cases from dumspec's ADP Case Table instead of a frame. */
+const READING_ADPOSITION = {
+	...READING_RELATIONAL,
+	SourceContexts: renderDeAdpositionSourceContexts,
+	Valency: renderDeAdpositionValency,
+};
+
 const READING = {
 	Lexeme: {
 		ADJ: READING_VALENT,
-		ADP: {
-			...READING_RELATIONAL,
-			SourceContexts: renderDeAdpositionSourceContexts,
-			Valency: renderDeAdpositionValency,
-		},
+		ADP: READING_ADPOSITION,
 		ADV: READING_RELATIONAL,
 		AUX: READING_RELATIONAL,
 		CCONJ: READING_RELATIONAL,
@@ -61,14 +64,22 @@ const READING = {
 		SCONJ: READING_RELATIONAL,
 		SYM: READING_RELATIONAL,
 		VERB: { ...READING_VALENT, Header: renderHeaderDeLexemeVerb },
-		X: READING_BASE,
 	},
-	Phraseme: {
-		Aphorism: READING_RELATIONAL,
-		Collocation: READING_VALENT,
-		DiscourseFormula: READING_RELATIONAL,
-		Idiom: READING_VALENT,
-		Proverb: READING_RELATIONAL,
+	Locution: {
+		ADJ: READING_VALENT,
+		ADP: READING_ADPOSITION,
+		ADV: READING_RELATIONAL,
+		CCONJ: READING_RELATIONAL,
+		DET: READING_RELATIONAL,
+		INTJ: READING_RELATIONAL,
+		NOUN: READING_VALENT,
+		NUM: READING_RELATIONAL,
+		PRON: READING_RELATIONAL,
+		SCONJ: READING_RELATIONAL,
+		VERB: READING_VALENT,
+	},
+	Saying: {
+		Saying: READING_RELATIONAL,
 	},
 	Morpheme: {
 		Circumfix: READING_BASE,
@@ -116,14 +127,22 @@ const LEMMA = {
 		SCONJ: LEMMA_ROUTE,
 		SYM: LEMMA_ROUTE,
 		VERB: LEMMA_ROUTE,
-		X: LEMMA_ROUTE,
 	},
-	Phraseme: {
-		Aphorism: LEMMA_ROUTE,
-		Collocation: LEMMA_ROUTE,
-		DiscourseFormula: LEMMA_ROUTE,
-		Idiom: LEMMA_ROUTE,
-		Proverb: LEMMA_ROUTE,
+	Locution: {
+		ADJ: LEMMA_ROUTE,
+		ADP: LEMMA_ROUTE,
+		ADV: LEMMA_ROUTE,
+		CCONJ: LEMMA_ROUTE,
+		DET: LEMMA_ROUTE,
+		INTJ: LEMMA_ROUTE,
+		NOUN: LEMMA_ROUTE,
+		NUM: LEMMA_ROUTE,
+		PRON: LEMMA_ROUTE,
+		SCONJ: LEMMA_ROUTE,
+		VERB: LEMMA_ROUTE,
+	},
+	Saying: {
+		Saying: LEMMA_ROUTE,
 	},
 	Morpheme: {
 		Circumfix: LEMMA_ROUTE,
@@ -155,14 +174,22 @@ const ATTESTATION = {
 		SCONJ: ATTESTATION_ROUTE,
 		SYM: ATTESTATION_ROUTE,
 		VERB: ATTESTATION_ROUTE,
-		X: ATTESTATION_ROUTE,
 	},
-	Phraseme: {
-		Aphorism: ATTESTATION_ROUTE,
-		Collocation: ATTESTATION_ROUTE,
-		DiscourseFormula: ATTESTATION_ROUTE,
-		Idiom: ATTESTATION_ROUTE,
-		Proverb: ATTESTATION_ROUTE,
+	Locution: {
+		ADJ: ATTESTATION_ROUTE,
+		ADP: ATTESTATION_ROUTE,
+		ADV: ATTESTATION_ROUTE,
+		CCONJ: ATTESTATION_ROUTE,
+		DET: ATTESTATION_ROUTE,
+		INTJ: ATTESTATION_ROUTE,
+		NOUN: ATTESTATION_ROUTE,
+		NUM: ATTESTATION_ROUTE,
+		PRON: ATTESTATION_ROUTE,
+		SCONJ: ATTESTATION_ROUTE,
+		VERB: ATTESTATION_ROUTE,
+	},
+	Saying: {
+		Saying: ATTESTATION_ROUTE,
 	},
 	Morpheme: {
 		Circumfix: ATTESTATION_ROUTE,
@@ -194,14 +221,22 @@ const SHADOW = {
 		SCONJ: SHADOW_ROUTE,
 		SYM: SHADOW_ROUTE,
 		VERB: SHADOW_ROUTE,
-		X: SHADOW_ROUTE,
 	},
-	Phraseme: {
-		Aphorism: SHADOW_ROUTE,
-		Collocation: SHADOW_ROUTE,
-		DiscourseFormula: SHADOW_ROUTE,
-		Idiom: SHADOW_ROUTE,
-		Proverb: SHADOW_ROUTE,
+	Locution: {
+		ADJ: SHADOW_ROUTE,
+		ADP: SHADOW_ROUTE,
+		ADV: SHADOW_ROUTE,
+		CCONJ: SHADOW_ROUTE,
+		DET: SHADOW_ROUTE,
+		INTJ: SHADOW_ROUTE,
+		NOUN: SHADOW_ROUTE,
+		NUM: SHADOW_ROUTE,
+		PRON: SHADOW_ROUTE,
+		SCONJ: SHADOW_ROUTE,
+		VERB: SHADOW_ROUTE,
+	},
+	Saying: {
+		Saying: SHADOW_ROUTE,
 	},
 	Morpheme: {
 		Circumfix: SHADOW_ROUTE,

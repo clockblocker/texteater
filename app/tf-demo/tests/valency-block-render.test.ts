@@ -11,7 +11,7 @@ type ReadingNote = Extract<
 >;
 type ValencyFrame = NonNullable<ReadingNote["knowledge"]["valency"]>;
 type Lemma = {
-	readonly family: "Lexeme" | "Phraseme";
+	readonly family: "Lexeme" | "Locution";
 	readonly kind: string;
 	readonly canonicalForm: string;
 	readonly coreFeatures: Record<string, unknown>;
@@ -118,8 +118,8 @@ const cases: readonly {
 	},
 	{
 		lemma: {
-			family: "Phraseme",
-			kind: "Idiom",
+			family: "Locution",
+			kind: "VERB",
 			canonicalForm: "auf den Keks gehen",
 			coreFeatures: {},
 		},
@@ -135,8 +135,8 @@ const cases: readonly {
 	},
 	{
 		lemma: {
-			family: "Phraseme",
-			kind: "Collocation",
+			family: "Locution",
+			kind: "VERB",
 			canonicalForm: "zur Verfügung stellen",
 			coreFeatures: {},
 		},
@@ -167,7 +167,7 @@ const cases: readonly {
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm: "sich vorstellen",
-			coreFeatures: { lexicallyReflexive: "Yes", hasSepPrefix: "vor" },
+			coreFeatures: { lexicallyReflexive: "Dat", hasSepPrefix: "vor" },
 		},
 		frame: [
 			{

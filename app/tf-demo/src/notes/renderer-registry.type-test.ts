@@ -57,9 +57,9 @@ type InvalidFamilyKindRegistry = RendererRegistry<
 	"de",
 	"Reading",
 	"Lexeme",
-	"Aphorism"
+	"Saying"
 >;
-// @ts-expect-error A Phraseme Kind cannot address a Lexeme slice.
+// @ts-expect-error A Saying Kind cannot address a Lexeme slice.
 const invalidFamilyKindRegistry: InvalidFamilyKindRegistry = {};
 void (null as unknown as UnknownLanguageRegistry);
 void (null as unknown as UnknownNoteRegistry);
