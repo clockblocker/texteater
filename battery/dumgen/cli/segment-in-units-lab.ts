@@ -237,7 +237,7 @@ async function freeze() {
 			throw Error(`${name} is frozen already; pass --force to refreeze`);
 	for (const set of await freezeSets(labRoot, repository))
 		console.log(
-			`${set.name}: ${set.cases.length} cases, hash ${set.hash}, git ${set.gitHead.slice(0, 8)}, ${set.dirtyRecordFiles} uncommitted record files`,
+			`${set.name}: ${set.cases.length} cases (${set.cases.filter((labCase) => labCase.facts.coverage === "Full").length} Full), ${set.cases.reduce((total, labCase) => total + labCase.idealOutput.units.length, 0)} gold units, hash ${set.hash}, git ${set.gitHead.slice(0, 8)}, ${set.dirtyRecordFiles} uncommitted record files, withheld ${set.withheld?.join(", ") || "none"}`,
 		);
 }
 
@@ -543,7 +543,7 @@ type RunSummary = {
 
 async function report(runId: string) {
 	const labRun = await loadLabRun(labRoot, runId);
-	const set = await loadSet(labRoot, labRun.set as SetName);
+	const set = await loadSet(labRoot, labRun.set as SetName, labRun.setHash);
 	const cases = casesOf(set.cases);
 	if (values.relabel === "734")
 		console.log(
@@ -911,8 +911,8 @@ async function compare() {
 	const [leftId = "", leftPolicy] = (values.left ?? "").split(":");
 	const [rightId = "", rightPolicy] = (values.right ?? "").split(":");
 	if (!leftId || !rightId) throw Error("--left and --right name runs");
-	const setCases = async (setName: string) =>
-		casesOf((await loadSet(labRoot, setName as SetName)).cases);
+	const setCases = async (setName: string, setHash: string) =>
+		casesOf((await loadSet(labRoot, setName as SetName, setHash)).cases);
 	const side = (runId: string, policy: string | undefined) =>
 		loadSide({
 			labRoot,
@@ -932,7 +932,11 @@ async function compare() {
 	const only = values.subset
 		? new Set(
 				subset(
-					await loadSet(labRoot, left.setName as SetName),
+					await loadSet(
+						labRoot,
+						left.setName as SetName,
+						left.setHash,
+					),
 					values.subset,
 				).map(({ id }) => id),
 			)
@@ -1046,7 +1050,10 @@ async function compare() {
 async function compareGrouping(
 	left: { readonly raw: LabRun; readonly policy: string },
 	right: { readonly raw: LabRun; readonly policy: string },
-	casesOfSet: (setName: string) => Promise<ReadonlyMap<string, LabCase>>,
+	casesOfSet: (
+		setName: string,
+		setHash: string,
+	) => Promise<ReadonlyMap<string, LabCase>>,
 	only: ReadonlySet<string> | undefined,
 ) {
 	console.log(groupingLegend);
@@ -1056,7 +1063,7 @@ async function compareGrouping(
 	] as const;
 	const constructions = [];
 	for (const [name, side] of sides) {
-		const cases = await casesOfSet(side.raw.set);
+		const cases = await casesOfSet(side.raw.set, side.raw.setHash);
 		console.log(
 			`  ${name.padEnd(5)} ${groupingText(summarizePolicy(side.raw, cases, side.policy, only))}`,
 		);
@@ -1088,7 +1095,11 @@ async function compareCases(
 	const exported = [];
 	for (const entry of [left, right]) {
 		if (!entry.raw) return;
-		const set = await loadSet(labRoot, entry.raw.set as SetName);
+		const set = await loadSet(
+			labRoot,
+			entry.raw.set as SetName,
+			entry.raw.setHash,
+		);
 		const cases = new Map(
 			[...casesOf(set.cases)].filter(([id]) => !only || only.has(id)),
 		);
@@ -1115,7 +1126,7 @@ async function compareCases(
 		`same corpus: ${comparison.sameCorpus}; changed verdicts ${verdicts.length}; changed outputs ${comparison.changedOutputs.length}`,
 	);
 	const cases = casesOf(
-		(await loadSet(labRoot, left.setName as SetName)).cases,
+		(await loadSet(labRoot, left.setName as SetName, left.setHash)).cases,
 	);
 	for (const entry of verdicts.slice(0, Number(values.limit ?? 40))) {
 		const labCase = cases.get(entry.caseId);
@@ -1135,7 +1146,7 @@ async function compareCases(
 async function sweep() {
 	const runId = values.run ?? "";
 	const labRun = await loadLabRun(labRoot, runId);
-	const set = await loadSet(labRoot, labRun.set as SetName);
+	const set = await loadSet(labRoot, labRun.set as SetName, labRun.setHash);
 	const focus = focusOf({ name: labRun.set, hash: labRun.setHash });
 	if (!focus)
 		throw Error(

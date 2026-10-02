@@ -1,5 +1,5 @@
 import { afterAll, expect, test } from "bun:test";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
@@ -14,7 +14,13 @@ import {
 	sentenceOf,
 	taggedText,
 } from "../../src/segment-in-units/de/sentence.js";
-import type { LabCase, LabSet } from "../../src/segment-in-units/lab/corpus.js";
+import {
+	archivedSetPath,
+	type LabCase,
+	type LabSet,
+	loadSet,
+	setPath,
+} from "../../src/segment-in-units/lab/corpus.js";
 import { Jev } from "../../src/segment-in-units/lab/jev.js";
 import { summarizePolicy } from "../../src/segment-in-units/lab/metrics.js";
 import { runArm } from "../../src/segment-in-units/lab/run.js";
@@ -178,4 +184,21 @@ test("the pairwise and oracle arms score every gold unit with a gold judge", asy
 		});
 		expect(summary.flips).toBe(0);
 	}
+});
+
+test("a run's set is read by its hash, from the archive once a refreeze replaced it", async () => {
+	const root = join(directory, "sets-root");
+	await mkdir(join(root, "sets"), { recursive: true });
+	await writeFile(setPath(root, "dev"), JSON.stringify(set));
+	const replaced = { ...set, hash: "older", cases: [] };
+	await writeFile(
+		archivedSetPath(root, "dev", "older"),
+		JSON.stringify(replaced),
+	);
+	expect((await loadSet(root, "dev")).hash).toBe("test");
+	expect((await loadSet(root, "dev", "test")).cases.length).toBe(1);
+	expect((await loadSet(root, "dev", "older")).cases.length).toBe(0);
+	expect(loadSet(root, "dev", "unknown")).rejects.toThrow(
+		"neither the frozen dev@test nor archived",
+	);
 });

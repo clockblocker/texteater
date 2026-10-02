@@ -42,6 +42,7 @@ export async function loadSide(args: {
 	/** Reads a raw run's set as scored (the #734 relabel, say); committed outcomes cannot be re-read. */
 	readonly casesOf?: (
 		setName: string,
+		setHash: string,
 	) => Promise<ReadonlyMap<string, LabCase>>;
 	readonly relabeled?: boolean;
 }): Promise<Side> {
@@ -52,7 +53,7 @@ export async function loadSide(args: {
 			policy: args.policy ?? primaryOf(raw),
 			setName: raw.set,
 			setHash: raw.setHash,
-			rows: outcomesOf(raw, await args.casesOf(raw.set)),
+			rows: outcomesOf(raw, await args.casesOf(raw.set, raw.setHash)),
 			raw,
 		};
 	}

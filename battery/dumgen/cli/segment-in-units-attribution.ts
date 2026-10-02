@@ -4,7 +4,14 @@
  * checks the replay reproduces the cached run exactly, and writes, per
  * bucket, why each wrong or flipping gold unit went wrong.
  *
- *   bun run segment-in-units-attribution --run <runId> [--set dev] [--subset all|multiword400]
+ *   bun run segment-in-units-attribution --run <runId> [--subset all|multiword400]
+ *       [--floors run|reference] [--disputed ud-drafts|none]
+ *
+ * The run's own set is read. `--floors` names the floors the run was made
+ * under: the reference run's (#755) or the adopted ones (#762).
+ * `--disputed none` counts no record as in review, as since #739 closed.
+ * Cases whose run failed a repetition, a cache miss in an offline run, are
+ * left out and listed.
  *
  * Reads the frozen sets, the raw run and the answer cache under
  * `.runs/segment-in-units-lab/`; writes the report under
@@ -15,8 +22,9 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import {
-	referencePolicy,
-	referenceRunStages,
+	floorsKey,
+	floorsOf,
+	referenceStagesUnder,
 } from "../src/segment-in-units/de/arms/reference.js";
 import {
 	attributeUnit,
@@ -27,6 +35,7 @@ import {
 	type UnitAttribution,
 } from "../src/segment-in-units/lab/attribution.js";
 import {
+	type LabCase,
 	loadSet,
 	type SetName,
 	subset,
@@ -57,14 +66,18 @@ const { values } = parseArgs({
 	args: Bun.argv.slice(2),
 	options: {
 		run: { type: "string" },
-		set: { type: "string", default: "dev" },
 		subset: { type: "string", default: "all" },
+		floors: { type: "string", default: "run" },
+		disputed: { type: "string", default: "ud-drafts" },
 		concurrency: { type: "string", default: "12" },
 	},
 });
 
 /** Records drafted from a UD parse whose gold is still in review (#739). */
 async function disputedRecords(): Promise<Set<string>> {
+	if (values.disputed === "none") return new Set();
+	if (values.disputed !== "ud-drafts")
+		throw Error("--disputed must be ud-drafts or none");
 	const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
 		texts: Record<string, { paragraphs: { sentences: string[] }[] }>;
 	};
@@ -78,9 +91,18 @@ async function disputedRecords(): Promise<Set<string>> {
 const runId = values.run;
 if (!runId) throw Error("--run <runId> is required");
 const original = await loadLabRun(labRoot, runId);
-const set = await loadSet(labRoot, values.set as SetName);
-const cases = subset(set, values.subset);
+const set = await loadSet(labRoot, original.set as SetName, original.setHash);
+const floors = floorsOf({ floors: values.floors ?? "run" });
+const policy = floorsKey(floors);
+const stages = referenceStagesUnder(floors);
 const recorded = new Map(original.cases.map((entry) => [entry.id, entry]));
+const failed = (labCase: LabCase) =>
+	recorded
+		.get(labCase.id)
+		?.repetitions.some((repetition) => repetition.error !== undefined) ??
+	false;
+const uncovered = subset(set, values.subset).filter(failed);
+const cases = subset(set, values.subset).filter((labCase) => !failed(labCase));
 const disputed = await disputedRecords();
 const jev = new Jev({
 	cacheDirectory: join(labRoot, "cache"),
@@ -103,20 +125,15 @@ const traced = await Promise.all(
 			repetition++
 		) {
 			const calls: CallRecord[] = [];
-			const { output, trace } = await runStages(
-				referenceRunStages,
-				labCase.input,
-				{
-					jev,
-					repetition,
-					calls,
-					options: {},
-					noise: [],
-				},
-			);
+			const { output, trace } = await runStages(stages, labCase.input, {
+				jev,
+				repetition,
+				calls,
+				options: {},
+				noise: [],
+			});
 			freshCalls.push(...calls.filter((call) => !call.cached));
-			const cached =
-				run.repetitions[repetition]?.outputs?.[referencePolicy];
+			const cached = run.repetitions[repetition]?.outputs?.[policy];
 			if (stringify(output) === stringify(cached)) reproduced++;
 			else mismatches.push(`${labCase.id}#${repetition}`);
 			traces.push(trace);
@@ -261,7 +278,7 @@ const table = [
 const report = [
 	`# Membership attribution: ${runId}, ${set.name} ${values.subset}`,
 	"",
-	`Reference policy \`${referencePolicy}\` replayed behind the lab's stages: ${reproduced} of ${reproduced + mismatches.length} case-repetitions reproduce the cached outputs exactly, with ${freshCalls.length} fresh jev calls (model ${[...jev.resolvedModels].sort().join(", ")}).`,
+	`Reference policy \`${policy}\` replayed behind the lab's stages: ${reproduced} of ${reproduced + mismatches.length} case-repetitions reproduce the cached outputs exactly, with ${freshCalls.length} fresh jev calls (model ${[...jev.resolvedModels].sort().join(", ")}).${uncovered.length > 0 ? ` ${uncovered.length} cases whose run failed a repetition are left out.` : ""}`,
 	"",
 	"Units counted under a cause are the wrong-by-majority or flipping ones outside the records in review (#739); those are counted apart, not relabelled. Headroom counts those whose exact gold arrangement was nominated and that failed later, in judgment or assembly.",
 	"",
@@ -295,9 +312,12 @@ await writeFile(
 			runId,
 			set: { name: set.name, hash: set.hash },
 			subset: values.subset,
-			policy: referencePolicy,
+			policy,
 			reproduced,
 			mismatches,
+			...(uncovered.length > 0
+				? { uncovered: uncovered.map(({ id }) => id) }
+				: {}),
 			freshCalls: freshCalls.length,
 			rows,
 			units: attributed.map(({ repetitions, ...unit }) => ({
