@@ -1,6 +1,6 @@
-import { ParsingError } from "common-utils";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import { ParsingError } from "dumval/runtime";
 import { issue } from "./context.js";
 import { compare, structuralKeys } from "./fingerprint.js";
 import { parseProjectionInventory } from "./projection-inventory.js";

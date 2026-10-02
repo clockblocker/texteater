@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { ParsingError } from "common-utils";
+import { ParsingError } from "dumval/runtime";
 import { operationalEntrypoints } from "../dum-entrypoint-rss/inventory";
 import {
 	compareDifferentialTarget,

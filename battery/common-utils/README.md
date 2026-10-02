@@ -1,30 +1,21 @@
 # common-utils
 
-`common-utils` is the Zod-free runtime shared by generated textfresser
-validators. It exposes `ParsingError`, the versioned validation-artifact types,
-and `parseValidationArtifact`.
-
-Canonical schemas and artifact generation remain in their owning packages.
-This package interprets committed artifacts at operational runtime and has no
-runtime dependency on Zod.
+`common-utils` holds the small TypeScript helpers several workspaces share:
+compile-time assertions for type tests, type-display helpers and `required`.
 
 ```ts
-import {
-	parseValidationArtifact,
-	type ValidationArtifact,
-} from "common-utils";
+import { type Equal, type Expect, required } from "common-utils";
 
-interface Greeting {
-	message: string;
-}
+type _SameShape = Expect<Equal<{ value: 1 }, { value: 1 }>>;
 
-const artifact: ValidationArtifact<Greeting> = {
-	version: 1,
-	root: ["object", { message: ["string", [["min", 1]]] }, "strict"],
-};
-
-const greeting = parseValidationArtifact(artifact, { message: "hello" });
+const first = required(["a"].at(0), "Expected a first item");
 ```
 
-An invalid value returns `ParsingError`; an unknown artifact version or
-reference throws because it indicates incompatible or corrupt generated code.
+- `Equal`, `Expect` and `Assert` state compile-time facts in type tests and
+  schema files.
+- `Prettify` and `PrettifyDeep` flatten intersections, so hovers and emitted
+  declarations show one object type.
+- `required` returns a present value or throws with the caller's invariant
+  message.
+
+`ParsingError` and the validation runtime live in `dumval/runtime`.

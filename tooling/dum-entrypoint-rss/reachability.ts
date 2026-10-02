@@ -3,11 +3,7 @@ import { findRepositoryRoot } from "../lib/workspaces";
 
 import { DUM_PACKAGE_PATHS } from "./inventory";
 
-const runtimePackagePaths = {
-	...DUM_PACKAGE_PATHS,
-	"common-utils": "common-utils",
-};
-const workspacePackages = new Set(Object.keys(runtimePackagePaths));
+const workspacePackages = new Set(Object.keys(DUM_PACKAGE_PATHS));
 const heavyweightPackages = new Set(["openai", "zod"]);
 
 export type EntrypointReachability = {
@@ -47,8 +43,8 @@ export async function auditEntrypointReachability(
 				join(
 					root,
 					"battery",
-					runtimePackagePaths[
-						packageName as keyof typeof runtimePackagePaths
+					DUM_PACKAGE_PATHS[
+						packageName as keyof typeof DUM_PACKAGE_PATHS
 					],
 					"package.json",
 				),
@@ -73,9 +69,7 @@ export async function auditEntrypointReachability(
 		return join(
 			root,
 			"battery",
-			runtimePackagePaths[
-				packageName as keyof typeof runtimePackagePaths
-			],
+			DUM_PACKAGE_PATHS[packageName as keyof typeof DUM_PACKAGE_PATHS],
 			relative,
 		);
 	}

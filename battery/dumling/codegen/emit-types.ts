@@ -1,4 +1,4 @@
-import type { Constraint } from "common-utils";
+import type { Constraint } from "dumval/runtime";
 import { registrations } from "./operations.js";
 
 // Every Dumling operation keeps its input's structural type.

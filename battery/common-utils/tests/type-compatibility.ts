@@ -1,4 +1,3 @@
-import type { z } from "zod";
 import type {
 	Brand,
 	DistributiveOmit,
@@ -8,8 +7,6 @@ import type {
 	ExpectFalse,
 	IsAny,
 	LooseAutocomplete,
-	ParsingError,
-	ParsingIssue,
 	PrettifyDeep,
 	Replace,
 	ReplaceMany,
@@ -76,14 +73,4 @@ type _BrandRetainsItsValueType = Expect<
 >;
 type _BrandRejectsAnUnbrandedValue = ExpectFalse<
 	string extends ExampleId ? true : false
->;
-
-type _IssuesRemainStructurallyCompatible = Expect<
-	ParsingIssue extends z.ZodIssue ? true : false
->;
-
-type ParsingErrorProjection = Pick<ParsingError, "issues" | "message" | "name">;
-type ZodErrorProjection = Pick<z.ZodError, "issues" | "message" | "name">;
-type _ErrorProjectionRemainsStructurallyCompatible = Expect<
-	ParsingErrorProjection extends ZodErrorProjection ? true : false
 >;

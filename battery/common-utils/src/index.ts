@@ -1,24 +1,3 @@
-export {
-	type CustomIssue,
-	type InvalidElementIssue,
-	type InvalidFormatIssue,
-	type InvalidKeyIssue,
-	type InvalidTypeExpected,
-	type InvalidTypeIssue,
-	type InvalidUnionIssue,
-	type InvalidUnionMultipleMatchIssue,
-	type InvalidUnionNoMatchIssue,
-	type InvalidValueIssue,
-	type NotMultipleOfIssue,
-	ParsingError,
-	type ParsingIssue,
-	type ParsingIssueBase,
-	type ParsingPath,
-	type PrimitiveValue,
-	type TooBigIssue,
-	type TooSmallIssue,
-	type UnrecognizedKeysIssue,
-} from "./parsing-error.js";
 export { required } from "./required.js";
 export type {
 	Assert,
@@ -36,18 +15,3 @@ export type {
 	ReplaceMany,
 	ValueOf,
 } from "./total-typescript-helpers.js";
-export {
-	type ArrayConstraintCheck,
-	type ArtifactPrimitive,
-	type Constraint,
-	type NumberConstraintCheck,
-	type ObjectConstraintShape,
-	type ObjectUnknownKeyPolicy,
-	parseValidationArtifact,
-	type StringConstraintCheck,
-	type ValidationArtifact,
-	type ValidationEffect,
-	type ValidationOperation,
-	type ValidationOperationResult,
-	type ValidationOperations,
-} from "./validation-artifact.js";

@@ -1,12 +1,12 @@
 import { expect, test } from "bun:test";
+import { required } from "common-utils";
+import { validationOperations } from "dumling/validation";
+import * as schemas from "dumrel/schema";
 import {
 	ParsingError,
 	parseValidationArtifact,
-	required,
 	type ValidationArtifact,
-} from "common-utils";
-import { validationOperations } from "dumling/validation";
-import * as schemas from "dumrel/schema";
+} from "dumval/runtime";
 import { encodedValidation } from "../src/generated/validation";
 import { normalizeText } from "../src/semantics";
 

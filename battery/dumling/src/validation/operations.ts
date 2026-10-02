@@ -1,4 +1,4 @@
-import type { ValidationOperation, ValidationOperations } from "common-utils";
+import type { ValidationOperation, ValidationOperations } from "dumval/runtime";
 import {
 	articleAttestationError,
 	comparabilitySurfaceError,

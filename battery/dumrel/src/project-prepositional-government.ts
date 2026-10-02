@@ -1,4 +1,4 @@
-import { ParsingError } from "common-utils";
+import { ParsingError } from "dumval/runtime";
 import { compare, structuralKeys } from "./fingerprint.js";
 import { parseProjectionInventory } from "./projection-inventory.js";
 import type { GovernmentProjection, ReadingWithKnowledge } from "./types.js";

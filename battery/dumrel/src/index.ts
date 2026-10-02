@@ -1,4 +1,4 @@
-export { ParsingError } from "common-utils";
+export { ParsingError } from "dumval/runtime";
 export { applyKnowledgeChange } from "./apply-knowledge-change.js";
 export { germanConjugationClass } from "./german-conjugation-class.js";
 export { germanPluralPattern } from "./german-plural-pattern.js";

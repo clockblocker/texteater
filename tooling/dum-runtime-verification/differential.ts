@@ -1,8 +1,5 @@
 import { isDeepStrictEqual } from "node:util";
-import {
-	ParsingError,
-	type ParsingIssue,
-} from "../../battery/common-utils/dist/index.js";
+import { ParsingError, type ParsingIssue } from "dumval/runtime";
 
 type CanonicalResult<Output> =
 	| { readonly data: Output; readonly success: true }

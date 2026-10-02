@@ -24,12 +24,8 @@ export async function preparePublishedRuntime(repositoryRoot: string) {
 				join(repositoryRoot, "tooling/dum-entrypoint-rss", file),
 				join(root, "tooling/dum-entrypoint-rss", file),
 			);
-		const packages = {
-			...DUM_PACKAGE_PATHS,
-			"common-utils": "common-utils",
-		};
 		const external = new Set<string>();
-		for (const [name, path] of Object.entries(packages)) {
+		for (const [name, path] of Object.entries(DUM_PACKAGE_PATHS)) {
 			const source = join(repositoryRoot, "battery", path);
 			const dest = join(root, "node_modules", name);
 			await mkdir(dest, { recursive: true });
@@ -44,7 +40,8 @@ export async function preparePublishedRuntime(repositoryRoot: string) {
 				recursive: true,
 			});
 			for (const dependency of Object.keys(manifest.dependencies ?? {}))
-				if (!(dependency in packages)) external.add(dependency);
+				if (!(dependency in DUM_PACKAGE_PATHS))
+					external.add(dependency);
 		}
 		for (const name of external) {
 			await mkdir(join(root, "node_modules", name, ".."), {

@@ -123,10 +123,6 @@
     "battery/codegen": {
       "name": "codegen",
       "version": "0.1.0",
-      "dependencies": {
-        "dumval": "workspace:^",
-        "zod": "^4.4.0",
-      },
       "devDependencies": {
         "@biomejs/biome": "2.5.13",
         "@types/node": "^24.13.3",
@@ -139,9 +135,6 @@
     "battery/common-utils": {
       "name": "common-utils",
       "version": "0.1.0",
-      "dependencies": {
-        "dumval": "workspace:^",
-      },
       "devDependencies": {
         "@biomejs/biome": "2.5.13",
         "@types/node": "^24.13.3",
@@ -150,7 +143,6 @@
         "esbuild": "^0.28.1",
         "knip": "^6.29.0",
         "typescript": "^7.0.2",
-        "zod": "^4.4.0",
       },
     },
     "battery/dumdict": {

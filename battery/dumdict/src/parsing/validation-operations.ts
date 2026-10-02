@@ -1,5 +1,5 @@
-import type { ValidationOperations } from "common-utils";
 import { validationOperations } from "dumling/validation";
+import type { ValidationOperations } from "dumval/runtime";
 import {
 	dumdictNamedValidationErrors,
 	dumdictNamedValidationPredicates,

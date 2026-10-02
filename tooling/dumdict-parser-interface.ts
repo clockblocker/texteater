@@ -12,13 +12,13 @@ import type {
 	SurfaceEntry,
 } from "dumdict";
 import type * as Dumling from "dumling/types";
-import type { ParsingError } from "../battery/common-utils/src/index";
+import type { ParsingError } from "dumval/runtime";
 
 type Parsed<Value> = Value | ParsingError<Value>;
 
 /** Frozen package-root parser contract for Dumdict's lightweight boundary. */
 export interface DumdictParserInterface {
-	readonly ParsingError: typeof import("../battery/common-utils/src/index").ParsingError;
+	readonly ParsingError: typeof import("dumval/runtime").ParsingError;
 	readonly parseAsLemmaRecord: <const L extends Dumling.Language>(
 		input: unknown,
 		language: L,

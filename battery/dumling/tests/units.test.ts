@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { compileZodValidationArtifacts } from "codegen";
+import { compileZodValidationArtifacts } from "dumval/compiler";
 import { z } from "zod";
 import { registrations } from "../codegen/operations.js";
 import { loadRoutes } from "../codegen/routes.js";

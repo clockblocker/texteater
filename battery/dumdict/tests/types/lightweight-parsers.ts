@@ -1,8 +1,5 @@
-import type {
-	Equal,
-	Expect,
-	ParsingError as ParsingErrorType,
-} from "common-utils";
+import type { Equal, Expect } from "common-utils";
+import type { ParsingError as ParsingErrorType } from "dumval/runtime";
 
 import { z } from "zod";
 import type { DumdictParserInterface } from "../../../../tooling/dumdict-parser-interface";
