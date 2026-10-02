@@ -106,8 +106,8 @@ The pilot writes its manifest, configuration, requests and results to
   more gold units, and **under** counts gold units split across returned
   units. Each figure names the records it is counted over. `report` also
   gives membership of discontinuous gold units and writes every over- and
-  under-merge once, with its repetitions, to `grouping.examples` in
-  `summary.json`. `compare` prints each side's grouping and its membership
+  under-merge once, one line each with its repetitions, to `grouping.over`
+  and `grouping.under` in `summary.json`. `compare` prints each side's grouping and its membership
   per phenomenon tag; both need the raw run.
 - The `reference` arm's `--opt variants=<margins>` adds a policy per
   margin whose units carry variants where the top two shares of the

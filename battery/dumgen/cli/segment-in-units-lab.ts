@@ -196,13 +196,20 @@ function groupingText(summary: PolicySummary): string {
 const groupingLegend =
 	"grouping (#701), summed over repetitions: pairP = Segment pairs a returned unit joins that one gold unit holds, Full records only; assertedP = the same over pairs touching an asserted unit on any record; pairR = gold pairs kept together; [records, pairs]; over = returned units joining Segments of 2+ gold units, under = gold units split, per repetition in brackets";
 
-/** An over-merge as its parts with their gold routes (? where none is asserted), an under-merge as its fragments. */
-const exampleText = (example: GroupingExample) =>
-	example.kind === "over"
-		? example.parts
-				.map((part) => `[${part.text} ${part.gold ?? "?"}]`)
-				.join(" + ")
-		: `${example.text} ${example.gold ?? ""} → ${example.parts.map((part) => `[${part.text}]`).join(" ")}`;
+/**
+ * One merge on one line, the way `report` prints it and `summary.json`
+ * keeps it: an over-merge as its parts with their gold routes (? where no
+ * gold unit is asserted), an under-merge as its gold unit and fragments,
+ * then the repetitions, the case and the Sentence.
+ */
+const exampleLine = (example: GroupingExample) =>
+	`${
+		example.kind === "over"
+			? example.parts
+					.map((part) => `[${part.text} ${part.gold ?? "?"}]`)
+					.join(" + ")
+			: `${example.text} ${example.gold ?? ""} → ${example.parts.map((part) => `[${part.text}]`).join(" ")}`
+	} (${example.repetitions.join(",")}) ${example.case} «${example.sentence}»`;
 
 /** The cases by id, read against the #734 ruling when `--relabel 734`. */
 function casesOf(cases: readonly LabCase[]): Map<string, LabCase> {
@@ -588,15 +595,21 @@ async function report(runId: string) {
 	for (const row of rows)
 		console.log(`  ${row.policy.padEnd(30)} ${groupingText(row)}`);
 	const examples = groupingExamples(labRun, cases, primary, only);
+	const merges = {
+		over: examples
+			.filter((example) => example.kind === "over")
+			.map(exampleLine),
+		under: examples
+			.filter((example) => example.kind === "under")
+			.map(exampleLine),
+	};
 	for (const kind of ["over", "under"] as const) {
-		const ofKind = examples.filter((example) => example.kind === kind);
+		const lines = merges[kind];
+		const shown = Math.min(lines.length, Number(values.limit ?? 12));
 		console.log(
-			`${kind}-merges (${primary}): ${ofKind.length} distinct, first ${Math.min(ofKind.length, Number(values.limit ?? 12))}; repetitions in brackets`,
+			`${kind}-merges (${primary}): ${lines.length} distinct, first ${shown}; repetitions in brackets`,
 		);
-		for (const example of ofKind.slice(0, Number(values.limit ?? 12)))
-			console.log(
-				`  ${exampleText(example)} (${example.repetitions.join(",")})  «${example.sentence.slice(0, 120)}»`,
-			);
+		for (const line of lines.slice(0, shown)) console.log(`  ${line}`);
 	}
 	const outcomeRows = outcomesOf(labRun, cases);
 	// The click-time pick (#760), on the units that carried variants.
@@ -746,7 +759,7 @@ async function report(runId: string) {
 			byPair: Object.fromEntries(byPair),
 			confusions: Object.fromEntries(confused),
 		},
-		grouping: { policy: primary, examples },
+		grouping: { policy: primary, ...merges },
 		breakdowns: {
 			phenomenon: phenomenonBreakdown,
 			route: routeBreakdown,
