@@ -183,6 +183,24 @@ describe("approving", () => {
 		expect(await text("de/er-schlaeft")).toBe(before);
 	});
 
+	test("a save answers with its row's new Review Depth for the list", async () => {
+		const { review } = await setup();
+		const draft = await readable(review, "de/er-schlaeft");
+		expect(draft.row.reviewDepth).toBeUndefined();
+		const approved = await review.approve({
+			id: "de/er-schlaeft",
+			sha256: draft.sha256,
+		});
+		if (approved.body.outcome !== "saved") throw new Error("not saved");
+		expect(approved.body.record.row.reviewDepth).toBe("Segmentation");
+		const takenBack = await review.takeBack({
+			id: "de/er-schlaeft",
+			sha256: approved.body.record.sha256 ?? "",
+		});
+		if (takenBack.body.outcome !== "saved") throw new Error("not saved");
+		expect(takenBack.body.record.row.reviewDepth).toBeUndefined();
+	});
+
 	test("refuses to take back a deeper review", async () => {
 		const { review, text } = await setup();
 		const before = await text("de/attested");

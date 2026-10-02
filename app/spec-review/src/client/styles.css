@@ -1,1 +1,7 @@
 @import "lego/styles.css";
+
+/* The page never scrolls; its columns do. Keep the viewport from bouncing
+   when a wheel or trackpad lands outside a column's scroller. */
+html {
+	overscroll-behavior: none;
+}

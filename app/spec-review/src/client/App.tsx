@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { BatchView, RecordView } from "../shared/contract";
+import type { BatchRowView, BatchView, RecordView } from "../shared/contract";
 import { fetchBatch, fetchRecord } from "./api";
 import { BatchList } from "./BatchList";
 import { RecordPanel } from "./RecordPanel";
@@ -7,6 +7,14 @@ import { RecordPanel } from "./RecordPanel";
 /** The selected row lives in the URL hash, so a reload keeps it. */
 function rowFromHash(): string | undefined {
 	return decodeURIComponent(window.location.hash.slice(1)) || undefined;
+}
+
+/** The batch with one row replaced by the row a save answered with. */
+function withRow(batch: BatchView, saved: BatchRowView): BatchView {
+	return {
+		...batch,
+		rows: batch.rows.map((row) => (row.row === saved.row ? saved : row)),
+	};
 }
 
 export function App() {
@@ -42,8 +50,11 @@ export function App() {
 		};
 	}, [recordId]);
 
+	// The page never scrolls: the grid fills the viewport, its one row is
+	// capped at the viewport's height, and the row list and the record each
+	// scroll on their own without handing their overscroll to the page.
 	return (
-		<div className="grid h-dvh grid-cols-[minmax(20rem,28rem)_1fr] bg-canvas text-ink">
+		<div className="grid h-dvh grid-cols-[minmax(20rem,28rem)_minmax(0,1fr)] grid-rows-1 overflow-hidden bg-canvas text-ink">
 			<aside className="flex min-h-0 flex-col border-e border-line">
 				<header className="border-b border-line px-4 py-3">
 					<h1 className="font-medium text-sm">Segmentation review</h1>
@@ -64,7 +75,7 @@ export function App() {
 					/>
 				)}
 			</aside>
-			<main className="min-h-0 overflow-y-auto">
+			<main className="min-h-0 overflow-y-auto overscroll-contain">
 				{error && (
 					<p className="m-4 text-destructive text-sm" role="alert">
 						{error}
@@ -76,6 +87,12 @@ export function App() {
 						record={record}
 						onSaved={(next) => {
 							setRecord(next);
+							// The list shows the save at once; the reload
+							// then catches up with any other change.
+							setBatch(
+								(current) =>
+									current && withRow(current, next.row),
+							);
 							reloadBatch();
 						}}
 					/>
