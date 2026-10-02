@@ -98,6 +98,14 @@ A weak possessive after an article (`der meine`) and bare PRON `viel` and
 `wenig` carry no spelling until a ruling. Decided by the user on 2026-10-02
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
 
+Amended on 2026-10-02: the authored AUX members, including the periphrastic
+`würde`, `haben zu`, `sein zu` and `sein am`, are drill-down pieces. An
+auxiliary joins the verb it serves, so `segment.inUnits` never returns one
+as a target; `segment.inLexemes` reaches them by drill-down and is out of
+scope for now. Decided by the user on 2026-10-02
+([#620](https://github.com/clockblocker/texteater/issues/620),
+[#595](https://github.com/clockblocker/texteater/issues/595)).
+
 ## Considered Options
 
 - Inventories in Dumling with their Knowledge and relation claims in Dumrel.

@@ -1,0 +1,141 @@
+{
+	"$schema": "../../../schema/breakdown-record.de.json",
+	"lemma": {
+		"unitKind": "Lemma",
+		"language": "de",
+		"family": "Locution",
+		"kind": "DET",
+		"canonicalForm": "was für ein",
+		"coreFeatures": {}
+	},
+	"sentence": "was für ein",
+	"segments": [
+		{ "kind": "ResolvableText", "text": "was" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "für" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "ein" }
+	],
+	"sources": {
+		"adrs": ["ADR-0032", "ADR-0039"],
+		"rules": [{ "rule": "de/was-fuer", "hash": "2f7aa9826f2670de" }],
+		"references": [
+			{
+				"title": "LEO Grammatik: was für (ein)",
+				"url": "https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-was_fuer.xml?lang=de",
+				"supports": "was für ein asks for a kind; its ein declines like the indefinite article"
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "❓📦" },
+			"notes": {
+				"rationale": "was is the interrogative PRON was, asking 'what', in its citation cell, the Nominative. The Locution asks for a kind as a whole; the Breakdown reads its pieces word by word."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "was", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "was",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": null,
+						"gender[psor]": null,
+						"number[psor]": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "was",
+						"coreFeatures": {
+							"case": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Int",
+							"gender": "Neut"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "für is the ADP für. It governs no case here, since the noun after was für ein takes its case from the clause (was für einen Mann). Its Reading stays unnamed until German ADP is authored."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "für", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "für",
+					"spelling": { "kind": "Canonical" },
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADP",
+						"canonicalForm": "für",
+						"coreFeatures": {}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "1⃣" },
+			"notes": {
+				"rationale": "ein is the indefinite article DET ein in its citation cell, Nom.Masc.Sg: the cell the Locution's Canonical Form spells. In use the article declines with the noun (was für einen Mann, mit was für einem Werkzeug), and the Locution's Surface marks that cell."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [{ "attested": "ein", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "ein",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "DET",
+						"canonicalForm": "ein",
+						"coreFeatures": {
+							"case": "Nom",
+							"gender": "Masc",
+							"number": "Sing",
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Art"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		}
+	]
+}

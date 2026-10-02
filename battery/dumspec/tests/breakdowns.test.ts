@@ -32,7 +32,40 @@ describe("Breakdown Records", () => {
 			["breakdown/de/so-oder-so", "Locution", "ADV"],
 			["breakdown/de/uebung-macht-den-meister", "Saying", "Saying"],
 			["breakdown/de/um-zu", "Locution", "SCONJ"],
+			["breakdown/de/was-fuer-ein", "Locution", "DET"],
+			["breakdown/de/was-fuer-einer", "Locution", "PRON"],
 			["breakdown/de/wer-zuerst-kommt-mahlt-zuerst", "Saying", "Saying"],
+		]);
+	});
+
+	test("break was für ein and was für einer down to the citation cell of their article or pronoun, für unnamed", () => {
+		const pieces = (id: string) =>
+			breakdowns
+				.find((record) => record.id === id)
+				?.targets.map(({ attestation, reading }) => {
+					const { lemma } = attestation.surface;
+					const core: Readonly<Record<string, unknown>> =
+						lemma.coreFeatures;
+					return [
+						lemma.kind,
+						lemma.canonicalForm,
+						[core.case, core.gender, core.number]
+							.filter(Boolean)
+							.join("."),
+						reading && "emojiDescription" in reading
+							? reading.emojiDescription
+							: undefined,
+					];
+				});
+		expect(pieces("breakdown/de/was-fuer-ein")).toEqual([
+			["PRON", "was", "Neut", "❓📦"],
+			["ADP", "für", "", undefined],
+			["DET", "ein", "Nom.Masc.Sing", "1⃣"],
+		]);
+		expect(pieces("breakdown/de/was-fuer-einer")).toEqual([
+			["PRON", "was", "Neut", "❓📦"],
+			["ADP", "für", "", undefined],
+			["PRON", "einer", "Nom.Masc.Sing", "1⃣"],
 		]);
 	});
 
