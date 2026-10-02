@@ -52,7 +52,7 @@ export function resolutionDeckCards(
 	return steps;
 }
 
-export function resolutionDeckCardKey(
+function resolutionDeckCardKey(
 	requestId: string,
 	role: ResolutionStepKind | "Resolver",
 ): string {
@@ -109,7 +109,7 @@ function completedCards(
 	);
 }
 
-export function canonicalResolutionDeckCards(
+function canonicalResolutionDeckCards(
 	requestId: string,
 	foregroundTarget: WorkspaceTarget,
 	canonical: CanonicalResolution,
@@ -146,6 +146,29 @@ export function canonicalResolutionDeckCards(
 	return foregroundTarget.kind === "Reading"
 		? [reading, lemma, surface, attestation]
 		: [attestation, reading, lemma, surface];
+}
+
+/**
+ * The Deck a Segment Selection deals: a stored route's canonical Cards, or
+ * the Resolution Card of the Session it started or joined.
+ */
+export function segmentSelectionDeckCards(
+	requestId: string,
+	result:
+		| {
+				readonly kind: "Available";
+				readonly target: WorkspaceTarget;
+				readonly canonical: CanonicalResolution;
+		  }
+		| { readonly kind: "Resolving"; readonly requestId: string },
+): readonly WorkspaceCardTarget[] {
+	return result.kind === "Available"
+		? canonicalResolutionDeckCards(
+				requestId,
+				result.target,
+				result.canonical,
+			)
+		: [resolutionCard(result.requestId)];
 }
 
 function resolutionCard(requestId: string): WorkspaceCardTarget {

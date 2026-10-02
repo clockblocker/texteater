@@ -6,7 +6,6 @@ import type { api } from "../convex/_generated/api";
 import { renderNote } from "../src/notes";
 import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import {
-	isCurrentShadowAction,
 	reduceShadowControls,
 	shadowCleanupFeedback,
 } from "../src/views/shadow-note-controls";
@@ -139,7 +138,7 @@ test("the paginated Note interface merges Shadow referrers by Reading", async ()
 	).toEqual(["locator-one", "locator-two", "locator-three"]);
 });
 
-test("keeps conflict feedback after refresh and ignores a completion from an older target epoch", () => {
+test("keeps conflict feedback after a cleanup settles", () => {
 	const conflict = {
 		status: "conflict",
 		message: "Inspection is stale.",
@@ -149,26 +148,10 @@ test("keeps conflict feedback after refresh and ignores a completion from an old
 		outcome: null,
 	});
 	const settled = reduceShadowControls(
-		{ targetShadowId: "shadow-a", actionError: null, outcome: null },
+		{ actionError: null, outcome: null },
 		{ type: "settled", result: conflict },
 	);
-	const refreshed = reduceShadowControls(settled, {
-		type: "refreshed",
-		targetShadowId: "shadow-a",
-	});
-	expect(refreshed.actionError).toBe(
+	expect(settled.actionError).toBe(
 		"Inspection is stale. The Shadow Note was refreshed.",
 	);
-	expect(
-		reduceShadowControls(refreshed, {
-			type: "targetChanged",
-			targetShadowId: "shadow-b",
-		}),
-	).toEqual({
-		targetShadowId: "shadow-b",
-		actionError: null,
-		outcome: null,
-	});
-	expect(isCurrentShadowAction(3, 3)).toBe(true);
-	expect(isCurrentShadowAction(3, 4)).toBe(false);
 });

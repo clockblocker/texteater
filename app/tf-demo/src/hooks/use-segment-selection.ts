@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { visitorErrorMessage } from "@/lib/visitor-error";
-import { segmentSelectionDeckCards } from "@/views/segment-selection-deck";
+import { segmentSelectionDeckCards } from "@/views/resolution-deck";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";

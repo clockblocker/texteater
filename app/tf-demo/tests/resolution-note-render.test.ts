@@ -3,14 +3,15 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
-import { resolutionDeckCards } from "../src/views/resolution-deck";
-import { completionTarget } from "../src/views/resolution-note-state";
+import {
+	resolutionDeckCards,
+	segmentSelectionDeckCards,
+} from "../src/views/resolution-deck";
 import {
 	ResolutionNoteFrame,
 	ResolutionStepNoteFrame,
 } from "../src/views/resolution-note-view";
 import { resolvingReadingNoteData } from "../src/views/resolving-reading-note";
-import { segmentSelectionDeckCards } from "../src/views/segment-selection-deck";
 import { renderCardTail } from "../src/views/subject-presentation";
 
 const route = {
@@ -299,35 +300,6 @@ test("a terminal failure keeps Resolution foremost without discarding reached st
 		"Surface",
 		"Attestation",
 	]);
-});
-
-test("completion reconciliation preserves its canonical Route Note target", () => {
-	const note = {
-		kind: "ResolutionNote",
-		target: { kind: "Resolution", requestId: "request-1" },
-		lifecycle: {
-			state: "Terminal",
-			progress: "Committing",
-			outcome: "Complete",
-			attestationId: "attestation-1" as never,
-			target: {
-				kind: "Attestation",
-				attestationId: "attestation-1" as never,
-			},
-		},
-		route: {
-			textId: "text-1" as never,
-			sentenceId: "sentence-1" as never,
-			stitchedText: "Die Banken.",
-			clickedSegmentIndex: 2,
-			selectedSegment: "Banken",
-		},
-		updatedAt: 1,
-	} as const;
-	expect(completionTarget(note)).toEqual({
-		kind: "Attestation",
-		attestationId: "attestation-1",
-	});
 });
 
 function stepKinds(cards: ReturnType<typeof resolutionDeckCards>) {

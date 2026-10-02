@@ -13,11 +13,6 @@ import { useEffect, useState } from "react";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
-import {
-	type KnowledgeSettingPath,
-	knowledgeSettingValue,
-	withKnowledgeSetting,
-} from "./knowledge-settings";
 
 export function KnowledgeSettingsForm({
 	visitorId,
@@ -68,20 +63,70 @@ export function KnowledgeSettingsForm({
 	);
 }
 
-const KNOWLEDGE_SETTING_LABELS: ReadonlyArray<{
-	readonly path: KnowledgeSettingPath;
+type KnowledgeSetting = {
+	readonly id: string;
 	readonly label: string;
-}> = [
-	{ path: "transcription", label: "Transcription" },
-	{ path: "definition", label: "Definition" },
-	{ path: "translations.en", label: "English translations" },
-	{ path: "translations.ru", label: "Russian translations" },
-	{ path: "morphologicalTree", label: "Morphological tree" },
-	...directSemanticRelationValues.map((relation) => ({
-		path: `semanticRelations.${relation}` as const,
-		label: relationLabel(relation),
-	})),
+	readonly read: (settings: KnowledgePreferences) => boolean;
+	readonly write: (
+		settings: KnowledgePreferences,
+		enabled: boolean,
+	) => KnowledgePreferences;
+};
+
+const KNOWLEDGE_SETTING_LABELS: readonly KnowledgeSetting[] = [
+	{
+		id: "transcription",
+		label: "Transcription",
+		read: (settings) => settings.transcription,
+		write: (settings, transcription) => ({ ...settings, transcription }),
+	},
+	{
+		id: "definition",
+		label: "Definition",
+		read: (settings) => settings.definition,
+		write: (settings, definition) => ({ ...settings, definition }),
+	},
+	translationSetting("en", "English translations"),
+	translationSetting("ru", "Russian translations"),
+	{
+		id: "morphologicalTree",
+		label: "Morphological tree",
+		read: (settings) => settings.morphologicalTree,
+		write: (settings, morphologicalTree) => ({
+			...settings,
+			morphologicalTree,
+		}),
+	},
+	...directSemanticRelationValues.map(
+		(relation): KnowledgeSetting => ({
+			id: `semanticRelations.${relation}`,
+			label: relationLabel(relation),
+			read: (settings) => settings.semanticRelations[relation],
+			write: (settings, enabled) => ({
+				...settings,
+				semanticRelations: {
+					...settings.semanticRelations,
+					[relation]: enabled,
+				},
+			}),
+		}),
+	),
 ];
+
+function translationSetting(
+	language: Dumrel.TranslationLanguage,
+	label: string,
+): KnowledgeSetting {
+	return {
+		id: `translations.${language}`,
+		label,
+		read: (settings) => settings.translations[language],
+		write: (settings, enabled) => ({
+			...settings,
+			translations: { ...settings.translations, [language]: enabled },
+		}),
+	};
+}
 
 export function KnowledgeSettingsChecklist({
 	settings,
@@ -96,22 +141,16 @@ export function KnowledgeSettingsChecklist({
 		<FieldSet disabled={disabled}>
 			<FieldLegend className="sr-only">Visible Knowledge</FieldLegend>
 			<FieldGroup className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-				{KNOWLEDGE_SETTING_LABELS.map(({ path, label }) => (
-					<Field key={path} orientation="horizontal">
+				{KNOWLEDGE_SETTING_LABELS.map(({ id, label, read, write }) => (
+					<Field key={id} orientation="horizontal">
 						<Checkbox
-							id={`knowledge-setting-${path}`}
-							checked={knowledgeSettingValue(settings, path)}
+							id={`knowledge-setting-${id}`}
+							checked={read(settings)}
 							onCheckedChange={(checked) =>
-								onChange?.(
-									withKnowledgeSetting(
-										settings,
-										path,
-										checked,
-									),
-								)
+								onChange?.(write(settings, checked))
 							}
 						/>
-						<FieldLabel htmlFor={`knowledge-setting-${path}`}>
+						<FieldLabel htmlFor={`knowledge-setting-${id}`}>
 							{label}
 						</FieldLabel>
 					</Field>

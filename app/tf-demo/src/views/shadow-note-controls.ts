@@ -5,13 +5,6 @@ type ShadowCleanupResult = FunctionReturnType<
 	typeof api.shadowResolution.cleanupPendingRelation
 >;
 
-export function isCurrentShadowAction(
-	attempt: number,
-	currentEpoch: number,
-): boolean {
-	return attempt === currentEpoch;
-}
-
 export function shadowCleanupFeedback(result: ShadowCleanupResult): {
 	actionError: string | null;
 	outcome: string | null;
@@ -28,33 +21,24 @@ export function shadowCleanupFeedback(result: ShadowCleanupResult): {
 	};
 }
 
-export type ShadowControlState = {
-	targetShadowId: string;
+type ShadowControlState = {
 	actionError: string | null;
 	outcome: string | null;
 };
 
-export type ShadowControlEvent =
+type ShadowControlEvent =
 	| { type: "begin" }
 	| { type: "settled"; result: ShadowCleanupResult }
-	| { type: "failed"; message: string }
-	| { type: "targetChanged"; targetShadowId: string }
-	| { type: "refreshed"; targetShadowId: string };
+	| { type: "failed"; message: string };
 
+/**
+ * The cleanup feedback of one Shadow Note. `ShadowNoteView` keys its
+ * container by Shadow ID, so a new target starts from fresh state.
+ */
 export function reduceShadowControls(
 	state: ShadowControlState,
 	event: ShadowControlEvent,
 ): ShadowControlState {
-	if (event.type === "targetChanged") {
-		return event.targetShadowId === state.targetShadowId
-			? state
-			: {
-					targetShadowId: event.targetShadowId,
-					actionError: null,
-					outcome: null,
-				};
-	}
-	if (event.type === "refreshed") return state;
 	if (event.type === "begin") {
 		return { ...state, actionError: null, outcome: null };
 	}

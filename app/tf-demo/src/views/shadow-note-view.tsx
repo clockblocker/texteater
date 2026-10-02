@@ -10,10 +10,7 @@ import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { ShadowNoteTarget } from "../../shared/navigation";
-import {
-	isCurrentShadowAction,
-	reduceShadowControls,
-} from "./shadow-note-controls";
+import { reduceShadowControls } from "./shadow-note-controls";
 
 type ShadowNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.shadowNotes.get>>,
@@ -79,7 +76,6 @@ function ShadowNoteContainer({
 	);
 	const [activeLocator, setActiveLocator] = useState<string | null>(null);
 	const [controls, dispatchControls] = useReducer(reduceShadowControls, {
-		targetShadowId: note.target.shadowId,
 		actionError: null,
 		outcome: null,
 	});
@@ -95,18 +91,18 @@ function ShadowNoteContainer({
 				shadowId: note.target.shadowId,
 				locatorKey,
 			});
-			if (!isCurrentShadowAction(attempt, actionEpoch.current)) return;
+			if (attempt !== actionEpoch.current) return;
 			await onRefresh();
-			if (!isCurrentShadowAction(attempt, actionEpoch.current)) return;
+			if (attempt !== actionEpoch.current) return;
 			dispatchControls({ type: "settled", result });
 		} catch (cause) {
-			if (!isCurrentShadowAction(attempt, actionEpoch.current)) return;
+			if (attempt !== actionEpoch.current) return;
 			dispatchControls({
 				type: "failed",
 				message: visitorErrorMessage(cause),
 			});
 		} finally {
-			if (isCurrentShadowAction(attempt, actionEpoch.current)) {
+			if (attempt === actionEpoch.current) {
 				setActiveLocator(null);
 			}
 		}

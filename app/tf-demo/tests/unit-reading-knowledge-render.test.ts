@@ -3,15 +3,17 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 
-import { withKnowledgeSetting } from "../src/views/knowledge-settings";
 import { KnowledgeSettingsChecklist } from "../src/views/unit-reading-knowledge-settings";
 
 test("renders every global setting and reflects disabled leaves", () => {
-	const settings = withKnowledgeSetting(
-		withKnowledgeSetting(DEFAULT_KNOWLEDGE_SETTINGS, "definition", false),
-		"semanticRelations.antonym",
-		false,
-	);
+	const settings = {
+		...DEFAULT_KNOWLEDGE_SETTINGS,
+		definition: false,
+		semanticRelations: {
+			...DEFAULT_KNOWLEDGE_SETTINGS.semanticRelations,
+			antonym: false,
+		},
+	};
 	const markup = renderToStaticMarkup(
 		createElement(KnowledgeSettingsChecklist, {
 			settings,
@@ -24,10 +26,18 @@ test("renders every global setting and reflects disabled leaves", () => {
 	expect(markup).toContain("Russian translations");
 	expect(markup).toContain("near synonym");
 	expect(markup).toContain("near antonym");
-	expect(settings.definition).toBeFalse();
-	expect(settings.semanticRelations.antonym).toBeFalse();
-	expect(
-		withKnowledgeSetting(settings, "translations.ru", false).translations,
-	).toEqual({ en: true, ru: false });
-	expect(DEFAULT_KNOWLEDGE_SETTINGS.definition).toBeTrue();
+	expect(isChecked(markup, "definition")).toBeFalse();
+	expect(isChecked(markup, "semanticRelations.antonym")).toBeFalse();
+	expect(isChecked(markup, "translations.ru")).toBeTrue();
 });
+
+/** Whether one setting's checkbox input renders checked. */
+function isChecked(markup: string, id: string): boolean {
+	const input = markup.match(
+		new RegExp(
+			`<input id="knowledge-setting-${id.replace(".", "\\.")}"[^>]*>`,
+		),
+	)?.[0];
+	if (!input) throw new Error(`No checkbox for ${id}.`);
+	return /\schecked=""/.test(input);
+}
