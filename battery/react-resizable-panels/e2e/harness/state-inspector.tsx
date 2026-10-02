@@ -1,6 +1,6 @@
 import { useId } from "react";
 import {
-	getWorkspaceStateLabel,
+	selectWorkspaceStateLabel,
 	selectWorkspaceTransitionDescriptors,
 	WORKSPACE_TRANSITIONS,
 	type WorkspaceState,
@@ -30,7 +30,7 @@ export function WorkspaceStateInspector<S>({
 	history: TransitionRecord[];
 }) {
 	const arrowId = useId();
-	const current = getWorkspaceStateLabel(state);
+	const current = selectWorkspaceStateLabel(state);
 	const transitions = [
 		...WORKSPACE_TRANSITIONS,
 		...selectWorkspaceTransitionDescriptors(state).filter(

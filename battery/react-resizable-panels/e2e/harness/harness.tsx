@@ -1,7 +1,7 @@
 import { useReducer } from "react";
 import {
 	createWorkspace,
-	getWorkspaceStateLabel,
+	selectWorkspaceStateLabel,
 	Workspace,
 	type WorkspaceCommand,
 	type WorkspaceRenderContext,
@@ -64,9 +64,9 @@ function reduce(
 			: [
 					...state.history,
 					{
-						from: getWorkspaceStateLabel(state.workspace),
+						from: selectWorkspaceStateLabel(state.workspace),
 						command: command.type,
-						to: getWorkspaceStateLabel(workspace),
+						to: selectWorkspaceStateLabel(workspace),
 					},
 				].slice(-8);
 	return { workspace, history };

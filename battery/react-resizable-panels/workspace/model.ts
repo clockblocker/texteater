@@ -29,9 +29,6 @@ export type WorkspacePresentation<S> = {
 	layerId?: string;
 };
 
-/** Short renderer-facing name for a workspace Presentation. */
-export type Presentation<S> = WorkspacePresentation<S>;
-
 export type WorkspaceCardLayer = {
 	id: string;
 	originPresentationId: string;
@@ -75,12 +72,6 @@ export type WorkspaceCommand<S> =
 	| { type: "ClosePresentation"; presentationId: string }
 	| { type: "RevealSheet"; presentationId: string }
 	| { type: "ActivatePane"; paneId: string };
-
-export type WorkspaceTransition = {
-	command: WorkspaceCommand<unknown>["type"];
-	label: string;
-	enabled: boolean;
-};
 
 export type WorkspaceStateLabel =
 	| "UnderlyingSheet"
@@ -186,19 +177,8 @@ export function workspaceReducer<S>(
 	}
 }
 
-export function selectLayout<S>(state: WorkspaceState<S>): WorkspaceLayout {
-	return state.layout;
-}
-
 export function selectPanes<S>(state: WorkspaceState<S>): WorkspacePane[] {
 	return panesIn(state.layout, state.panes);
-}
-
-export function selectPresentation<S>(
-	state: WorkspaceState<S>,
-	presentationId: string,
-): WorkspacePresentation<S> | undefined {
-	return state.presentations[presentationId];
 }
 
 export function selectVisibleSheets<S>(
@@ -255,59 +235,6 @@ export function selectLiftedPresentation<S>(
 		: undefined;
 }
 
-export function selectWorkspaceTransitions<S>(
-	state: WorkspaceState<S>,
-): WorkspaceTransition[] {
-	const lifted = selectLiftedPresentation(state);
-	if (lifted) {
-		return [
-			{ command: "Expand", label: "Expand", enabled: true },
-			{
-				command: "ReturnToLayer",
-				label: "Return to Card Layer",
-				enabled: Boolean(lifted.presentation.layerId),
-			},
-			{
-				command: "CancelGesture",
-				label: "Cancel gesture",
-				enabled: true,
-			},
-		];
-	}
-	const sheets = Object.values(state.presentations).filter(
-		(presentation) => presentation.form === "Sheet",
-	);
-	const canLift = Object.values(state.presentations).some(
-		(presentation) =>
-			presentation.form === "Card" ||
-			selectVisibleSheets(
-				state,
-				paneContaining(state, presentation.id) ?? "",
-			).at(-1)?.id === presentation.id,
-	);
-	const canCollapse = sheets.some(
-		(presentation) =>
-			!presentation.locked &&
-			Boolean(presentation.layerId) &&
-			selectVisibleSheets(
-				state,
-				paneContaining(state, presentation.id) ?? "",
-			).at(-1)?.id === presentation.id,
-	);
-	const canCloseLayer = Object.values(state.layers).some(
-		(layer) => selectVisibleCards(state, layer.id).length > 0,
-	);
-	return [
-		{ command: "Lift", label: "Lift", enabled: canLift },
-		{ command: "Collapse", label: "Collapse", enabled: canCollapse },
-		{
-			command: "CloseLayer",
-			label: "Close Card Layer",
-			enabled: canCloseLayer,
-		},
-	];
-}
-
 export function selectWorkspaceStateLabel<S>(
 	state: WorkspaceState<S>,
 ): WorkspaceStateLabel {
@@ -329,8 +256,6 @@ export function selectWorkspaceStateLabel<S>(
 	return "UnderlyingSheet";
 }
 
-export const getWorkspaceStateLabel = selectWorkspaceStateLabel;
-
 /**
  * The inspector reads this instead of maintaining a parallel state machine.
  * Cancellation is dynamic because its destination is the gesture checkpoint.
@@ -338,7 +263,7 @@ export const getWorkspaceStateLabel = selectWorkspaceStateLabel;
 export function selectWorkspaceTransitionDescriptors<S>(
 	state: WorkspaceState<S>,
 ) {
-	const current = getWorkspaceStateLabel(state);
+	const current = selectWorkspaceStateLabel(state);
 	const staticTransitions = WORKSPACE_TRANSITIONS.filter(
 		(transition) => transition.from === current,
 	);
@@ -347,7 +272,7 @@ export function selectWorkspaceTransitionDescriptors<S>(
 		...staticTransitions,
 		{
 			from: "HoldingPresentation",
-			to: getWorkspaceStateLabel(state.gesture.checkpoint),
+			to: selectWorkspaceStateLabel(state.gesture.checkpoint),
 			command: "CancelGesture",
 			label: "Cancel gesture",
 		},

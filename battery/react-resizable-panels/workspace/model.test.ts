@@ -1,12 +1,12 @@
 import { describe, expect, test } from "vitest";
 import {
 	createWorkspace,
-	getWorkspaceStateLabel,
 	selectCardLayersForPane,
 	selectLiftedPresentation,
 	selectPanes,
 	selectVisibleCards,
 	selectVisibleSheets,
+	selectWorkspaceStateLabel,
 	WORKSPACE_TRANSITIONS,
 	type WorkspaceState,
 	workspaceReducer,
@@ -27,7 +27,7 @@ function reduce(
 
 describe("workspace algebra", () => {
 	test("exposes the Card Layer opening transition from the underlying Sheet", () => {
-		expect(getWorkspaceStateLabel(createWorkspace(source))).toBe(
+		expect(selectWorkspaceStateLabel(createWorkspace(source))).toBe(
 			"UnderlyingSheet",
 		);
 		expect(

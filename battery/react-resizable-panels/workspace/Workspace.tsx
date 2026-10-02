@@ -13,7 +13,6 @@ import { createPortal } from "react-dom";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import {
 	selectCardLayersForPane,
-	selectLayout,
 	selectLiftedPresentation,
 	selectPanes,
 	selectVisibleCards,
@@ -250,7 +249,7 @@ export function Workspace<S>({
 		paneId: string;
 		composition: string;
 	} | null>(null);
-	const layout = selectLayout(state);
+	const layout = state.layout;
 	const lifted = selectLiftedPresentation(state);
 	/* Cards that just left the state stay drawn for one short exit. A lifted
 	   Card is not leaving: it turns into the drag ghost instead. */
