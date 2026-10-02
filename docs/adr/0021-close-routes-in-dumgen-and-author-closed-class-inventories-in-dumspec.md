@@ -86,6 +86,18 @@ PRON `ein wenig` joined with one Reading, 🤏, since an amount and a degree
 are shades of one meaning. Decided by the user on 2026-10-02
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
 
+Amended on 2026-10-02: PRON `beide` lost its weak `beiden` cells: after
+an article, `beide` is ADJ. A cell's other accepted forms (`eins`, `keins`,
+`meins`, `dies`, `unsre`, genitive `jeden`, Acc and Dat `jemand`) are
+Licensed Variants beside its Canonical form. AUX `hab` is the Shorthand of
+`habe`; VERB `hab` is also the imperative, which is Canonical. `selben` in
+`am selben` is no spelling of `derselbe` but what remains of `demselben`
+after its Fused piece
+([ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md)).
+A weak possessive after an article (`der meine`) and bare PRON `viel` and
+`wenig` carry no spelling until a ruling. Decided by the user on 2026-10-02
+([#595](https://github.com/clockblocker/texteater/issues/595)).
+
 ## Considered Options
 
 - Inventories in Dumling with their Knowledge and relation claims in Dumrel.

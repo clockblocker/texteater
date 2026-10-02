@@ -17,12 +17,19 @@ export type SurfaceCell = {
 export type SurfaceSpelling = Dumling.Surface<"de">["spelling"];
 /** The spelling of a form's main spelling (Rule de/variant-and-historical-status). */
 export const canonical: SurfaceSpelling = { kind: "Canonical" };
+/** The spelling of an accepted alternative form of a cell, beside its main form. */
+export const licensed: SurfaceSpelling = {
+	kind: "Variant",
+	variantTags: ["Licensed"],
+};
 /**
  * A reviewed spelling; a stem Lemma's spellings name the cell they realize.
- * `spelling` is the Surface's spelling where gold or a Rule fixes it, and a
- * form's main spelling is Canonical. A table's other spellings of a cell
- * (eins beside eines, genitive jeden beside jedes) have none until a ruling
- * says whether each is a Variant and with which tags.
+ * `spelling` is the Surface's spelling where gold, a Rule or a ruling fixes
+ * it. A form's main spelling is Canonical, and a table's other spellings of
+ * a cell (eins beside eines, unsre beside unsere, genitive jeden beside
+ * jedes) are Licensed Variants, as the user ruled on 2026-10-02. A form
+ * whose status awaits a ruling has none: a weak form after an article (der
+ * meine), and bare viel and wenig beside vieles and weniges.
  */
 export type AuthoredSpelling = {
 	readonly spelled: string;
@@ -47,8 +54,9 @@ export type StemDescription<Core> = {
 const cases = ["Nom", "Acc", "Dat", "Gen"] as const;
 
 /**
- * Every occupied cell's spellings, variants included, with the cell each
- * realizes. A cell's own form is Canonical; its variants carry no spelling.
+ * Every occupied cell's spellings, variants and unruled forms included,
+ * with the cell each realizes. A cell's own form is Canonical, its variants
+ * are Licensed, and its unruled forms carry no spelling.
  */
 export function tableSpellings(table: PronounTable): AuthoredSpelling[] {
 	const spellings: AuthoredSpelling[] = [];
@@ -63,6 +71,8 @@ export function tableSpellings(table: PronounTable): AuthoredSpelling[] {
 			};
 			spellings.push({ spelled: form.text, cell, spelling: canonical });
 			for (const spelled of form.variants ?? [])
+				spellings.push({ spelled, cell, spelling: licensed });
+			for (const spelled of form.unruled ?? [])
 				spellings.push({ spelled, cell });
 		}
 	return spellings;

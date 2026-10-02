@@ -368,25 +368,54 @@ describe("the German authored inventory", () => {
 			variantTags: ["Historical"],
 		});
 		expect(closedVerbFormSpellings.ward?.historicalStatus).toBe("Archaic");
-		// What awaits a ruling carries no spelling: hab and a table's other
-		// spellings of a cell.
-		expect(tagsOf("hab", "AUX")).toEqual(["haben none"]);
-		expect(tagsOf("eins", "PRON")).toEqual(["eines none"]);
-		expect(tagsOf("irgendeins", "PRON")).toEqual(["irgendeiner none"]);
-		// Genitive jeden and einiges stand beside jedes and einigen.
-		expect(tagsOf("jeden", "DET", "Gen")).toEqual(["jeder none"]);
-		expect(tagsOf("einiges", "DET", "Gen")).toEqual(["einige none"]);
-		expect(tagsOf("selben", "DET")).toEqual(["derselbe none"]);
+		// AUX hab is the 1sg, the Shorthand of habe; VERB haben's hab is
+		// also the imperative, plainly Canonical (user ruling, 2026-10-02).
+		expect(tagsOf("hab", "AUX")).toEqual([
+			"haben Canonical Shorthand habe",
+		]);
+		expect(closedVerbFormSpellings.hab).toBeUndefined();
+		// A table's other accepted forms of a cell are Licensed Variants
+		// beside the cell's Canonical form (user ruling, 2026-10-02).
+		for (const [spelled, kind, inCase, lemma] of [
+			["eins", "PRON", undefined, "eines"],
+			["keins", "PRON", "Nom", "keiner"],
+			["irgendeins", "PRON", "Acc", "irgendeiner"],
+			["was für eins", "PRON", "Nom", "was für einer"],
+			["meins", "PRON", "Nom", "meiner"],
+			["dies", "PRON", "Acc", "dieser"],
+			["unsre", "DET", "Nom", "unser"],
+			["euern", "DET", "Dat", "euer"],
+			["unsrer", "PRON", "Gen", "unserer"],
+			["jeden", "DET", "Gen", "jeder"],
+			["jedweden", "DET", "Gen", "jedweder"],
+			["jeglichen", "DET", "Gen", "jeglicher"],
+			["einiges", "DET", "Gen", "einige"],
+			["jemand", "PRON", "Acc", "jemand"],
+			["niemand", "PRON", "Dat", "niemand"],
+			["jemands", "PRON", "Gen", "jemand"],
+		] as const)
+			expect(tagsOf(spelled, kind, inCase)).toEqual([
+				`${lemma} Licensed`,
+			]);
+		// selben in im selben is a Fused-piece remainder of demselben (ADR
+		// 0035), no spelling.
+		expect(tagsOf("selben", "DET")).toEqual([]);
+		expect(tagsOf("selbe", "DET")).toEqual([]);
+		// What awaits a ruling carries no spelling: a weak form after an
+		// article and bare PRON viel and wenig beside vieles and weniges.
+		expect(tagsOf("meinen", "PRON", "Gen")).toEqual(["meiner none"]);
+		expect(tagsOf("unsren", "PRON", "Nom")).toEqual(["unserer none"]);
+		expect(tagsOf("viel", "PRON", "Acc")).toEqual(["viel none"]);
 		// mehr and weniger are the comparatives of DET viel and wenig.
 		expect(tagsOf("weniger", "DET", null)).toEqual(["wenig Canonical"]);
 		expect(tagsOf("mehr", "DET", null)).toEqual(["viel Canonical"]);
-		// PRON beiden is the Dat cell's own form, and weak beiden beside
-		// beide in Nom awaits the ruling on standalone die beiden.
+		// PRON beiden is the Dat cell's own form only: weak beiden follows
+		// an article, where beide is ADJ (de/pron-or-det-by-use).
 		expect(tagsOf("beiden", "PRON", "Dat")).toEqual(["beide Canonical"]);
-		expect(tagsOf("beiden", "PRON", "Nom")).toEqual(["beide none"]);
+		expect(tagsOf("beiden", "PRON", "Nom")).toEqual([]);
 	});
 
-	test("DET beide has no weak beiden, which stands only after a determiner (de/pron-or-det-by-use)", () => {
+	test("DET and PRON beide have no weak beiden, which stands only after a determiner (de/pron-or-det-by-use)", () => {
 		const beidenCells = (kind: string) =>
 			authoredRealizations
 				.filter(
@@ -397,7 +426,7 @@ describe("the German authored inventory", () => {
 				)
 				.map(({ inflection }) => inflection?.case);
 		expect(beidenCells("DET")).toEqual(["Dat"]);
-		expect(beidenCells("PRON")).toEqual(["Nom", "Acc", "Dat", "Gen"]);
+		expect(beidenCells("PRON")).toEqual(["Dat"]);
 	});
 
 	test("PRON and DET share their series markers with the adverbs: relative 🧩, total 🌐, irgend- ❔, beide 2⃣ (ADR 0029)", () => {

@@ -103,8 +103,9 @@ for (const [stem, ipa, definition, en, ru] of [
 	);
 
 // Both parts decline: article + weak ending, including plural denjenigen/denselben.
-// After a fused piece (am selben, ins selbe), selbe/selben spell the rest of the
-// cell: derselbe owns the piece too, with Full coverage (#618).
+// After a fused piece (am selben, ins selbe), selben and selbe are no spellings
+// of their own: derselbe owns the piece, a Fused member standing for its dem-
+// or das-, and its Surface is the whole demselben or dasselbe (ADR 0035, #618).
 for (const [tail, ipa, definition, en, ru] of [
 	[
 		"jenig",
@@ -121,8 +122,6 @@ for (const [tail, ipa, definition, en, ru] of [
 		"тот же самый",
 	],
 ] as const) {
-	const fused = (entry: PronounForm, piece: string) =>
-		tail === "selb" ? withVariants(entry, piece) : entry;
 	const f = (article: string, sound: string, ending: "e" | "en") =>
 		form(
 			article + tail + ending,
@@ -133,19 +132,19 @@ for (const [tail, ipa, definition, en, ru] of [
 			Masc: [
 				f("der", "deːɐ̯", "e"),
 				f("den", "deːn", "en"),
-				fused(f("dem", "deːm", "en"), "selben"),
+				f("dem", "deːm", "en"),
 				f("des", "dɛs", "en"),
 			],
 			Neut: [
 				f("das", "das", "e"),
-				fused(f("das", "das", "e"), "selbe"),
-				fused(f("dem", "deːm", "en"), "selben"),
+				f("das", "das", "e"),
+				f("dem", "deːm", "en"),
 				f("des", "dɛs", "en"),
 			],
 			Fem: [
 				f("die", "diː", "e"),
 				f("die", "diː", "e"),
-				fused(f("der", "deːɐ̯", "en"), "selben"),
+				f("der", "deːɐ̯", "en"),
 				f("der", "deːɐ̯", "en"),
 			],
 			Plur: [

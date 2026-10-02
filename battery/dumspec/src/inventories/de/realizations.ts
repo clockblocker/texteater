@@ -4,7 +4,7 @@ import { reflexivityUnit } from "./drill-down.js";
 import { authoredMembers } from "./inventory.js";
 import type { AuthoredMember } from "./member.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
-import { canonical, type SurfaceSpelling } from "./stem-lemma.js";
+import { canonical, licensed, type SurfaceSpelling } from "./stem-lemma.js";
 
 /**
  * How one spelling is written, where gold or a Rule fixes it. `spelling` is
@@ -34,10 +34,6 @@ type Alias = RealizationSpelling & {
 	readonly inflection?: Readonly<Record<string, string | null>>;
 };
 
-const licensed: SurfaceSpelling = {
-	kind: "Variant",
-	variantTags: ["Licensed"],
-};
 /** A Shorthand member of the word it shortens, whose Surface is Canonical. */
 const shorthand = (spelled: string, standsFor: string): Alias => ({
 	spelled,
@@ -201,8 +197,8 @@ export const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
  * The auxiliary forms whose spelling is not plainly Canonical and Standard;
  * every other form is. ward and wardst are Canonical and Archaic, the archaic
  * preterite (de/variant-and-historical-status). hätt is the Shorthand of
- * hätte, as gold has it (de/member-orthography). hab has no spelling until a
- * ruling: it is the imperative and also a shortened habe.
+ * hätte, as gold has it (de/member-orthography), and hab, the 1sg (ich hab's
+ * gesehen), the Shorthand of habe, as the user ruled on 2026-10-02.
  */
 export const auxiliaryFormSpellings: Readonly<
 	Record<string, RealizationSpelling>
@@ -210,7 +206,7 @@ export const auxiliaryFormSpellings: Readonly<
 	ward: { spelling: canonical, historicalStatus: "Archaic" },
 	wardst: { spelling: canonical, historicalStatus: "Archaic" },
 	hätt: { spelling: canonical, orthography: "Shorthand", standsFor: "hätte" },
-	hab: {},
+	hab: { spelling: canonical, orthography: "Shorthand", standsFor: "habe" },
 };
 /**
  * Other spellings of pronouns, keyed by Canonical Form. nix is a Licensed

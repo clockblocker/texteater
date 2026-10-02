@@ -14,6 +14,7 @@ import {
 import {
 	type AuthoredSpelling,
 	canonical,
+	licensed,
 	type SurfaceCell,
 } from "./stem-lemma.js";
 
@@ -351,9 +352,14 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 		"немногое; немногие",
 	],
 ] as const) {
+	// Bare viel and wenig are the usual forms and the Canonical Form, so
+	// whether they are Canonical or Licensed beside vieles and weniges awaits
+	// a ruling.
 	const t = strongPronoun(stem, ipa),
-		bare = (cell: (typeof t.Neut)[number]) =>
-			form(cell.text, cell.ipa, stem);
+		bare = (cell: (typeof t.Neut)[number]) => ({
+			...cell,
+			unruled: [stem],
+		});
 	const table: PronounTable = {
 		Masc: absent,
 		Fem: absent,
@@ -552,7 +558,10 @@ for (const [stem, ipa] of [
 		),
 	);
 }
-// beide: neuter singular has no Gen; plural weak endings follow an article.
+// beide: neuter singular has no Gen. Weak beiden follows an article, where
+// beide is ADJ with its noun elided or not (Die beiden kamen; die beiden
+// Häuser; de/pron-or-det-by-use), so PRON beide has only its strong cells:
+// Beide kamen.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-beide.html?lang=de
 {
 	const t = strongPronoun("beid", "ˈbaɪ̯d");
@@ -562,10 +571,10 @@ for (const [stem, ipa] of [
 			Fem: absent,
 			Neut: [t.Neut[0], t.Neut[1], t.Neut[2], null],
 			Plur: [
-				form("beide", "ˈbaɪ̯də", "beiden"),
-				form("beide", "ˈbaɪ̯də", "beiden"),
+				form("beide", "ˈbaɪ̯də"),
+				form("beide", "ˈbaɪ̯də"),
 				t.Plur[2],
-				form("beider", "ˈbaɪ̯dɐ", "beiden"),
+				form("beider", "ˈbaɪ̯dɐ"),
 			],
 		},
 		description(
@@ -618,15 +627,16 @@ for (const [stem, ipa, pronType, emoji, definition, en, ru] of [
 		gender: null,
 	});
 	// Each cell's inflected form is Canonical. The bare stem in Acc and Dat
-	// and the short genitive carry no spelling until a ruling.
+	// and the short genitive are Licensed Variants, other accepted forms of
+	// the cell, as the user ruled on 2026-10-02.
 	const spellings: AuthoredSpelling[] = [
 		{ spelled: stem, cell: cell("Nom"), spelling: canonical },
 		{ spelled: `${stem}en`, cell: cell("Acc"), spelling: canonical },
-		{ spelled: stem, cell: cell("Acc") },
+		{ spelled: stem, cell: cell("Acc"), spelling: licensed },
 		{ spelled: `${stem}em`, cell: cell("Dat"), spelling: canonical },
-		{ spelled: stem, cell: cell("Dat") },
+		{ spelled: stem, cell: cell("Dat"), spelling: licensed },
 		{ spelled: `${stem}es`, cell: cell("Gen"), spelling: canonical },
-		{ spelled: `${stem}s`, cell: cell("Gen") },
+		{ spelled: `${stem}s`, cell: cell("Gen"), spelling: licensed },
 	];
 	reviewed.push(
 		pronounStemOf(
@@ -785,31 +795,41 @@ for (const [stem, ipa, person, polite, en, ru] of [
 		ru: [ru],
 	};
 	const t = strongPronoun(stem, ipa);
-	const weak = (ending: "e" | "en") => stem + ending;
+	// The e of unser drops or the eu- of eur widens (unsre, unserm; euere,
+	// euern): other spellings of the same form.
+	const respellings = (text: string): string[] => {
+		if (stem === "unser")
+			return [
+				text.replace(/^unser/, "unsr"),
+				...(/^unser(en|em)$/.test(text)
+					? [text.replace(/e([nm])$/, "$1")]
+					: []),
+			];
+		if (stem === "eur")
+			return [
+				text.replace(/^eur/, "euer"),
+				...(/^eur(en|em)$/.test(text)
+					? [text.replace(/^eur/, "euer").replace(/e([nm])$/, "$1")]
+					: []),
+			];
+		return [];
+	};
+	// A cell's respellings and short meins, deins or seins are Licensed
+	// Variants. The weak form after an article (der meine, den unsren)
+	// awaits a ruling; weak beiden after an article is ADJ beide.
 	const withWeak = (
 		entry: NonNullable<PronounTable["Masc"][0]>,
 		ending: "e" | "en",
 		short = false,
 	) => {
-		const variants = new Set([weak(ending)]);
+		const variants = new Set(respellings(entry.text));
 		if (short && ["mein", "dein", "sein"].includes(stem))
 			variants.add(`${stem}s`);
-		for (const text of [entry.text, ...variants]) {
-			if (stem === "unser") {
-				variants.add(text.replace(/^unser/, "unsr"));
-				if (/^unser(en|em)$/.test(text))
-					variants.add(text.replace(/e([nm])$/, "$1"));
-			}
-			if (stem === "eur") {
-				variants.add(text.replace(/^eur/, "euer"));
-				if (/^eur(en|em)$/.test(text))
-					variants.add(
-						text.replace(/^eur/, "euer").replace(/e([nm])$/, "$1"),
-					);
-			}
-		}
+		const weak = stem + ending;
+		const unruled = new Set([weak, ...respellings(weak)]);
 		variants.delete(entry.text);
-		return { ...entry, variants: [...variants] };
+		for (const text of [entry.text, ...variants]) unruled.delete(text);
+		return { ...entry, variants: [...variants], unruled: [...unruled] };
 	};
 	add(
 		{
