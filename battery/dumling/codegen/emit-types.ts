@@ -20,6 +20,8 @@ export function outputType(
 							"dumling.feature-bag.marked",
 							"dumling.comparability.surface",
 							"dumling.de-pronoun.core",
+							"dumling.syncretism.view",
+							"dumling.syncretism.lemma",
 							"dumling.de-determiner.core",
 							"dumling.de-particle.core",
 							"dumling.de-closed-class.surface",

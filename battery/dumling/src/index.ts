@@ -22,6 +22,15 @@ export type {
 	ParsedUnit,
 	Reading,
 	Surface,
+	Syncretism,
+	SyncretismView,
+	SyncretizableUnitKind,
 	Unit,
 	UnitRoute,
 } from "./types.js";
+export {
+	isSyncreticUnit,
+	isSyncretism,
+	syncretismView,
+	syncretize,
+} from "./validation/syncretism.js";

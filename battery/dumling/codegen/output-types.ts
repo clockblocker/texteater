@@ -5,6 +5,8 @@ import { encodedValidation } from "../src/generated/validation.js";
 export const dumlingTypePreservingOperations = [
 	"dumling.feature-bag.marked",
 	"dumling.de-pronoun.core",
+	"dumling.syncretism.view",
+	"dumling.syncretism.lemma",
 	"dumling.de-determiner.core",
 	"dumling.de-particle.core",
 	"dumling.emoji-description",

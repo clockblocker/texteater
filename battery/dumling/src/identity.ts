@@ -23,10 +23,16 @@ export function foldCase(value: string, language: Language): string {
  * normalized as parsing would normalize it, and Core Features count by their
  * set values, so key order and a missing versus a `null` feature don't
  * matter.
+ *
+ * A Syncretism's key adds its `syncretic` list, the features it leaves open,
+ * as stored (system ADR 0046). Its units are content, not identity, so its
+ * view has the same key. An ordinary Lemma has no list, so no Syncretism
+ * shares its key.
  */
 export function lemmaIdentityKey(lemma: Lemma): string {
 	const { language, family, kind, canonicalForm } = lemma;
 	const core = lemma.coreFeatures as Readonly<Record<string, unknown>>;
+	const { syncretic } = lemma as { syncretic?: readonly string[] };
 	return JSON.stringify([
 		language,
 		family,
@@ -37,6 +43,7 @@ export function lemmaIdentityKey(lemma: Lemma): string {
 			.toSorted(([left], [right]) =>
 				left < right ? -1 : left > right ? 1 : 0,
 			),
+		...(syncretic === undefined ? [] : [syncretic]),
 	]);
 }
 

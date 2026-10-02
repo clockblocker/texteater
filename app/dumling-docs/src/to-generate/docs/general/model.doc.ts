@@ -54,6 +54,18 @@ one to four emoji graphemes. A Foreign Lemma's one Reading has no
 \`emojiDescription\`: the Lemma alone identifies it. Dictionary scope, persistence and identity keys
 belong to consumers.
 
+## Syncretism
+
+A Syncretism is a Lemma for one spelling that realizes two or more Lemmas of
+one route that only the referent tells apart, such as German \`ihm\`, the
+dative of \`er\` and of \`es\`. It is the Lemma with two more fields:
+\`syncretized\`, its units by value in identity order, and \`syncretic\`, the
+Core Features they disagree on, in alphabetical order. Its Core keeps the
+values they agree on and is null for the listed features. Without
+\`syncretized\` it is still a valid Lemma: the view a classifier answers, with
+the same identity, a Lemma's plus the \`syncretic\` list. A route accepts
+Syncretisms only where its schema allows them; German PRON does.
+
 ## Attestation
 
 <!-- DOC_BLOCK:core-attestation -->

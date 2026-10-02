@@ -47,6 +47,12 @@ import {
 	variantTagCombinationError,
 	variantTagListError,
 } from "../src/validation/semantics.js";
+import {
+	isLemmaSyncretism,
+	isSyncretismView,
+	lemmaSyncretismError,
+	syncretismViewError,
+} from "../src/validation/syncretism.js";
 
 export const registrations = [
 	{
@@ -145,6 +151,20 @@ export const registrations = [
 		implementation: isGermanPronounCore,
 		error: germanPronounCoreError,
 		name: "dumling.de-pronoun.core",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isSyncretismView,
+		error: syncretismViewError,
+		name: "dumling.syncretism.view",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isLemmaSyncretism,
+		error: lemmaSyncretismError,
+		name: "dumling.syncretism.lemma",
 		version: 1,
 	},
 	{

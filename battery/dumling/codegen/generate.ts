@@ -41,6 +41,12 @@ export type Family<L extends Language=Language>=L extends Language ? { [R in key
 export type Kind<L extends Language=Language,F extends Family<L>=Family<L>>=L extends Language ? F extends Family<L> ? { [R in keyof UnitMap]: UnitMap[R]["Lemma"] extends {language:L;family:F} ? UnitMap[R]["Lemma"]["kind"] : never }[keyof UnitMap] : never : never;
 export type Unit<U extends UnitKind=UnitKind,L extends Language=Language,F extends Family<L>=Family<L>,K extends Kind<L,F>=Kind<L,F>>=UnitMap[Extract<\`\${L}/\${F}/\${K}\`,keyof UnitMap>][U];
 ${kinds.map((kind) => `export type ${kind}<L extends Language=Language,F extends Family<L>=Family<L>,K extends Kind<L,F>=Kind<L,F>>=Unit<"${kind}",L,F,K>;`).join("\n")}
+/** The Unit Kinds that carry features, so a route may give them Syncretisms (system ADR 0046). Reading and Attestation reach one through their Lemma or Surface. */
+export type SyncretizableUnitKind="Lemma"|"Surface";
+/** A Syncretism with its units (system ADR 0046): \`syncretic\` names the features its units disagree on and \`syncretized\` holds them. Only routes whose schema allows one have it. */
+export type Syncretism<U extends SyncretizableUnitKind=SyncretizableUnitKind,L extends Language=Language,F extends Family<L>=Family<L>,K extends Kind<L,F>=Kind<L,F>>=Unit<U,L,F,K> extends infer T ? T extends {syncretic?:infer S;syncretized?:infer V} ? "syncretized" extends keyof T ? {[P in keyof T as P extends "syncretic"|"syncretized" ? never : P]:T[P]}&{syncretic:Exclude<S,undefined>;syncretized:Exclude<V,undefined>} : never : never : never;
+/** A Syncretism without its units: what a classifier answers. It keeps \`syncretic\`, so it has the Syncretism's identity (system ADR 0046). */
+export type SyncretismView<U extends SyncretizableUnitKind=SyncretizableUnitKind,L extends Language=Language,F extends Family<L>=Family<L>,K extends Kind<L,F>=Kind<L,F>>=Unit<U,L,F,K> extends infer T ? T extends {syncretic?:infer S} ? "syncretic" extends keyof T ? {[P in keyof T as P extends "syncretic"|"syncretized" ? never : P]:T[P]}&{syncretic:Exclude<S,undefined>} : never : never : never;
 export type UnitRoute={ [R in keyof UnitMap]: Pick<UnitMap[R]["Lemma"],"language"|"family"|"kind"> & {unitKind:UnitKind} }[keyof UnitMap];
 // Distributes over R without re-checking each route against UnitRoute: that
 // check relates every route to the whole union and grows cubically with routes.

@@ -2233,6 +2233,113 @@ export interface UnitMap {
 					| null;
 				gender: ("Fem" | "Masc" | "Neut") | null;
 			};
+			syncretic?:
+				| [
+						(
+							| "case"
+							| "number"
+							| "person"
+							| "polite"
+							| "poss"
+							| "pronType"
+							| "gender"
+						),
+						...Array<
+							| "case"
+							| "number"
+							| "person"
+							| "polite"
+							| "poss"
+							| "pronType"
+							| "gender"
+						>,
+				  ]
+				| undefined;
+			syncretized?:
+				| [
+						{
+							unitKind: "Lemma";
+							language: "de";
+							family: "Lexeme";
+							kind: "PRON";
+							canonicalForm: string;
+							coreFeatures: {
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								polite: "Form" | null;
+								poss: "Yes" | null;
+								pronType:
+									| (
+											| "Dem"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Prs"
+											| "Rcp"
+											| "Rel"
+											| "Tot"
+									  )
+									| null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+							};
+						},
+						{
+							unitKind: "Lemma";
+							language: "de";
+							family: "Lexeme";
+							kind: "PRON";
+							canonicalForm: string;
+							coreFeatures: {
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								polite: "Form" | null;
+								poss: "Yes" | null;
+								pronType:
+									| (
+											| "Dem"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Prs"
+											| "Rcp"
+											| "Rel"
+											| "Tot"
+									  )
+									| null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+							};
+						},
+						...Array<{
+							unitKind: "Lemma";
+							language: "de";
+							family: "Lexeme";
+							kind: "PRON";
+							canonicalForm: string;
+							coreFeatures: {
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								number: ("Plur" | "Sing") | null;
+								person: ("1" | "2" | "3") | null;
+								polite: "Form" | null;
+								poss: "Yes" | null;
+								pronType:
+									| (
+											| "Dem"
+											| "Ind"
+											| "Int"
+											| "Neg"
+											| "Prs"
+											| "Rcp"
+											| "Rel"
+											| "Tot"
+									  )
+									| null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+							};
+						}>,
+				  ]
+				| undefined;
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -2263,6 +2370,119 @@ export interface UnitMap {
 						| null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
+				syncretic?:
+					| [
+							(
+								| "case"
+								| "number"
+								| "person"
+								| "polite"
+								| "poss"
+								| "pronType"
+								| "gender"
+							),
+							...Array<
+								| "case"
+								| "number"
+								| "person"
+								| "polite"
+								| "poss"
+								| "pronType"
+								| "gender"
+							>,
+					  ]
+					| undefined;
+				syncretized?:
+					| [
+							{
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+							},
+							{
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+							},
+							...Array<{
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+							}>,
+					  ]
+					| undefined;
 			};
 			normalizedSurface: string;
 			spelling:
@@ -2329,6 +2549,119 @@ export interface UnitMap {
 						| null;
 					gender: ("Fem" | "Masc" | "Neut") | null;
 				};
+				syncretic?:
+					| [
+							(
+								| "case"
+								| "number"
+								| "person"
+								| "polite"
+								| "poss"
+								| "pronType"
+								| "gender"
+							),
+							...Array<
+								| "case"
+								| "number"
+								| "person"
+								| "polite"
+								| "poss"
+								| "pronType"
+								| "gender"
+							>,
+					  ]
+					| undefined;
+				syncretized?:
+					| [
+							{
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+							},
+							{
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+							},
+							...Array<{
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+							}>,
+					  ]
+					| undefined;
 			};
 			emojiDescription: string;
 		};
@@ -2363,6 +2696,125 @@ export interface UnitMap {
 							| null;
 						gender: ("Fem" | "Masc" | "Neut") | null;
 					};
+					syncretic?:
+						| [
+								(
+									| "case"
+									| "number"
+									| "person"
+									| "polite"
+									| "poss"
+									| "pronType"
+									| "gender"
+								),
+								...Array<
+									| "case"
+									| "number"
+									| "person"
+									| "polite"
+									| "poss"
+									| "pronType"
+									| "gender"
+								>,
+						  ]
+						| undefined;
+					syncretized?:
+						| [
+								{
+									unitKind: "Lemma";
+									language: "de";
+									family: "Lexeme";
+									kind: "PRON";
+									canonicalForm: string;
+									coreFeatures: {
+										case:
+											| ("Acc" | "Dat" | "Gen" | "Nom")
+											| null;
+										number: ("Plur" | "Sing") | null;
+										person: ("1" | "2" | "3") | null;
+										polite: "Form" | null;
+										poss: "Yes" | null;
+										pronType:
+											| (
+													| "Dem"
+													| "Ind"
+													| "Int"
+													| "Neg"
+													| "Prs"
+													| "Rcp"
+													| "Rel"
+													| "Tot"
+											  )
+											| null;
+										gender:
+											| ("Fem" | "Masc" | "Neut")
+											| null;
+									};
+								},
+								{
+									unitKind: "Lemma";
+									language: "de";
+									family: "Lexeme";
+									kind: "PRON";
+									canonicalForm: string;
+									coreFeatures: {
+										case:
+											| ("Acc" | "Dat" | "Gen" | "Nom")
+											| null;
+										number: ("Plur" | "Sing") | null;
+										person: ("1" | "2" | "3") | null;
+										polite: "Form" | null;
+										poss: "Yes" | null;
+										pronType:
+											| (
+													| "Dem"
+													| "Ind"
+													| "Int"
+													| "Neg"
+													| "Prs"
+													| "Rcp"
+													| "Rel"
+													| "Tot"
+											  )
+											| null;
+										gender:
+											| ("Fem" | "Masc" | "Neut")
+											| null;
+									};
+								},
+								...Array<{
+									unitKind: "Lemma";
+									language: "de";
+									family: "Lexeme";
+									kind: "PRON";
+									canonicalForm: string;
+									coreFeatures: {
+										case:
+											| ("Acc" | "Dat" | "Gen" | "Nom")
+											| null;
+										number: ("Plur" | "Sing") | null;
+										person: ("1" | "2" | "3") | null;
+										polite: "Form" | null;
+										poss: "Yes" | null;
+										pronType:
+											| (
+													| "Dem"
+													| "Ind"
+													| "Int"
+													| "Neg"
+													| "Prs"
+													| "Rcp"
+													| "Rel"
+													| "Tot"
+											  )
+											| null;
+										gender:
+											| ("Fem" | "Masc" | "Neut")
+											| null;
+									};
+								}>,
+						  ]
+						| undefined;
 				};
 				normalizedSurface: string;
 				spelling:
@@ -17212,6 +17664,47 @@ export type Attestation<
 	F extends Family<L> = Family<L>,
 	K extends Kind<L, F> = Kind<L, F>,
 > = Unit<"Attestation", L, F, K>;
+/** The Unit Kinds that carry features, so a route may give them Syncretisms (system ADR 0046). Reading and Attestation reach one through their Lemma or Surface. */
+export type SyncretizableUnitKind = "Lemma" | "Surface";
+/** A Syncretism with its units (system ADR 0046): `syncretic` names the features its units disagree on and `syncretized` holds them. Only routes whose schema allows one have it. */
+export type Syncretism<
+	U extends SyncretizableUnitKind = SyncretizableUnitKind,
+	L extends Language = Language,
+	F extends Family<L> = Family<L>,
+	K extends Kind<L, F> = Kind<L, F>,
+> =
+	Unit<U, L, F, K> extends infer T
+		? T extends { syncretic?: infer S; syncretized?: infer V }
+			? "syncretized" extends keyof T
+				? {
+						[P in keyof T as P extends "syncretic" | "syncretized"
+							? never
+							: P]: T[P];
+					} & {
+						syncretic: Exclude<S, undefined>;
+						syncretized: Exclude<V, undefined>;
+					}
+				: never
+			: never
+		: never;
+/** A Syncretism without its units: what a classifier answers. It keeps `syncretic`, so it has the Syncretism's identity (system ADR 0046). */
+export type SyncretismView<
+	U extends SyncretizableUnitKind = SyncretizableUnitKind,
+	L extends Language = Language,
+	F extends Family<L> = Family<L>,
+	K extends Kind<L, F> = Kind<L, F>,
+> =
+	Unit<U, L, F, K> extends infer T
+		? T extends { syncretic?: infer S }
+			? "syncretic" extends keyof T
+				? {
+						[P in keyof T as P extends "syncretic" | "syncretized"
+							? never
+							: P]: T[P];
+					} & { syncretic: Exclude<S, undefined> }
+				: never
+			: never
+		: never;
 export type UnitRoute = {
 	[R in keyof UnitMap]: Pick<
 		UnitMap[R]["Lemma"],

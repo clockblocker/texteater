@@ -8,6 +8,8 @@ import {
 	readingIdentityKey,
 	type Surface,
 	sameLemma,
+	syncretismView,
+	syncretize,
 } from "dumling";
 
 const interjection = (canonicalForm: string) =>
@@ -125,6 +127,69 @@ describe("Lemma identity (system ADR 0002)", () => {
 			}) as unknown as Lemma;
 		expect(sameLemma(slot(" Um ... willen"), slot("um … willen"))).toBe(
 			true,
+		);
+	});
+});
+
+describe("Syncretism identity (system ADR 0046)", () => {
+	const accusative = (
+		canonicalForm: string,
+		features: { number: "Sing" | "Plur"; polite?: "Form"; gender?: "Fem" },
+	) =>
+		({
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm,
+			coreFeatures: {
+				person: "3",
+				polite: features.polite ?? null,
+				poss: null,
+				pronType: "Prs",
+				case: "Acc",
+				number: features.number,
+				gender: features.gender ?? null,
+			},
+		}) satisfies Lemma<"de", "Lexeme", "PRON">;
+	const feminine = accusative("sie", { number: "Sing", gender: "Fem" });
+	const plural = accusative("sie", { number: "Plur" });
+	const formal = accusative("Sie", { number: "Plur", polite: "Form" });
+	const themOrYou = syncretize([plural, formal]);
+	const herOrThem = syncretize([feminine, plural]);
+	const herThemOrYou = syncretize([feminine, plural, formal]);
+
+	test("adds the open features to the Lemma's key; the view shares it", () => {
+		expect(lemmaIdentityKey(syncretismView(themOrYou) as Lemma)).toBe(
+			lemmaIdentityKey(themOrYou),
+		);
+		expect(JSON.parse(lemmaIdentityKey(themOrYou)).at(-1)).toEqual([
+			"polite",
+		]);
+		expect(JSON.parse(lemmaIdentityKey(plural))).toHaveLength(5);
+	});
+
+	test("differs from each unit's and from a plain Lemma with the same Core", () => {
+		for (const unit of [plural, formal])
+			expect(sameLemma(themOrYou, unit)).toBe(false);
+		// 3pl-or-formal sie has plain 3pl sie's Core; only the list differs.
+		expect(themOrYou.coreFeatures).toEqual(plural.coreFeatures);
+		expect(sameLemma(themOrYou, plural)).toBe(false);
+	});
+
+	test("keeps the two-way and three-way sie apart", () => {
+		expect(sameLemma(herOrThem, herThemOrYou)).toBe(false);
+		expect(sameLemma(themOrYou, herThemOrYou)).toBe(false);
+	});
+
+	test("extends to the Reading key", () => {
+		const reading = (lemma: Lemma) =>
+			({ unitKind: "Reading", lemma, emojiDescription: "👥" }) as Reading;
+		expect(readingIdentityKey(reading(themOrYou))).toBe(
+			readingIdentityKey(reading(syncretismView(themOrYou) as Lemma)),
+		);
+		expect(readingIdentityKey(reading(themOrYou))).not.toBe(
+			readingIdentityKey(reading(plural)),
 		);
 	});
 });

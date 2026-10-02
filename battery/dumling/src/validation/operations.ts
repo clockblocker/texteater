@@ -47,6 +47,12 @@ import {
 	variantTagCombinationError,
 	variantTagListError,
 } from "./semantics.js";
+import {
+	isLemmaSyncretism,
+	isSyncretismView,
+	lemmaSyncretismError,
+	syncretismViewError,
+} from "./syncretism.js";
 
 function check(
 	predicate: (value: never) => boolean,
@@ -108,6 +114,8 @@ export const validationOperations: ValidationOperations = {
 		isGermanPronounCore,
 		germanPronounCoreError,
 	),
+	"dumling.syncretism.view": check(isSyncretismView, syncretismViewError),
+	"dumling.syncretism.lemma": check(isLemmaSyncretism, lemmaSyncretismError),
 	"dumling.de-determiner.core": check(
 		isGermanDeterminerCore,
 		germanDeterminerCoreError,

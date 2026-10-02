@@ -3,7 +3,12 @@ import { compileZodValidationArtifacts } from "codegen";
 import { z } from "zod";
 import { registrations } from "../codegen/operations.js";
 import { loadRoutes } from "../codegen/routes.js";
-import { parseUnit, UnitKind } from "../src/index.js";
+import {
+	parseUnit,
+	syncretismView,
+	syncretize,
+	UnitKind,
+} from "../src/index.js";
 import { unitFixtures } from "./unit-fixtures.js";
 
 const routes = await loadRoutes();
@@ -81,6 +86,67 @@ describe("compiled unit interface", () => {
 			}
 		}
 	}, 30_000);
+	// A Syncretism and its view are German PRON Lemmas too (system ADR 0046).
+	test("Syncretisms and their views preserve canonical outputs and malformed nested acceptance", () => {
+		const route = routes.find((route) => route.key === "de/Lexeme/PRON");
+		if (!route) throw Error("Missing German pronoun route");
+		const { Lemma, Surface, Reading, Attestation } = unitFixtures(route, z);
+		const cell = (
+			canonicalForm: string,
+			features: Record<string, string>,
+		) => ({
+			...Lemma,
+			canonicalForm,
+			coreFeatures: {
+				...(Lemma.coreFeatures as object),
+				pronType: "Prs",
+				person: "3",
+				case: "Acc",
+				number: "Plur",
+				...features,
+			},
+		});
+		const syncretism = syncretize([
+			cell("sie", { number: "Sing", gender: "Fem" }),
+			cell("sie", {}),
+			cell("Sie", { polite: "Form" }),
+		] as never[]) as object;
+		const view = syncretismView(syncretism);
+		// A pillar cell marks its case in Core, so its Surface marks none.
+		const surface = {
+			...Surface,
+			lemma: syncretism,
+			inflectionalFeatures: null,
+		};
+		const units = {
+			Lemma: [syncretism, view],
+			Surface: [surface],
+			Reading: [{ ...Reading, lemma: view }],
+			Attestation: [{ ...Attestation, surface }],
+		};
+		for (const kind of Object.values(UnitKind))
+			for (const fixture of units[kind]) {
+				const schema = route.schemas[kind];
+				expect(schema.safeParse(fixture).success, kind).toBe(true);
+				for (const input of [
+					fixture,
+					...Array.from(corruptions(fixture), (change) =>
+						replaced(fixture, change.path, change.replacement),
+					),
+				]) {
+					const canonical = schema.safeParse(input),
+						actual = parseUnit(input);
+					expect(
+						actual.success,
+						`${kind}: ${JSON.stringify(input)}`,
+					).toBe(canonical.success);
+					if (actual.success && canonical.success)
+						expect<unknown>(actual.chain.value).toEqual(
+							canonical.data,
+						);
+				}
+			}
+	});
 	test("returns the selected chain and rejects contradictory expected coordinates", () => {
 		const parsed = parseUnit(noun.Lemma, {
 			unitKind: "Lemma",

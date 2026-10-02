@@ -42,6 +42,12 @@ import {
 	variantTagListError,
 	variantTagOrder,
 } from "../validation/semantics.js";
+import {
+	isLemmaSyncretism,
+	isSyncretismView,
+	lemmaSyncretismError,
+	syncretismViewError,
+} from "../validation/syncretism.js";
 import { DeAdpositionFeatureBagsSchema } from "./concrete-language/de/lexeme/adposition.js";
 import { EnAdpositionFeatureBagsSchema } from "./concrete-language/en/lexeme/adposition.js";
 import { HeAdpositionFeatureBagsSchema } from "./concrete-language/he/lexeme/adposition.js";
@@ -150,6 +156,49 @@ const surfaceFeaturesSchema = z
 	.refine(hasMarkedFeature, { error: nonEmptyFeatureBagError })
 	.nullable();
 
+/** A Core Feature of the route, named in a Syncretism's `syncretic` list. */
+type CoreFeatureName<C extends z.core.$ZodType> = z.ZodEnum<{
+	[Name in Extract<keyof z.output<C>, string>]: Name;
+}>;
+/**
+ * A Lemma of a route that allows Syncretisms (system ADR 0046). It is a plain
+ * Lemma, a view that adds `syncretic`, or a Syncretism that also holds its
+ * units in `syncretized`. The two fields are optional, so the Lemma stays one
+ * object schema whose `shape` consumers compose.
+ */
+type SyncretizableLemmaSchema<
+	P extends z.ZodObject,
+	C extends z.core.$ZodType,
+> = z.ZodObject<
+	P["shape"] & {
+		syncretic: z.ZodOptional<
+			z.ZodTuple<[CoreFeatureName<C>], CoreFeatureName<C>>
+		>;
+		syncretized: z.ZodOptional<z.ZodTuple<[P, P], P>>;
+	},
+	z.core.$strict
+>;
+function syncretizableLemmaSchema(
+	plainLemma: z.ZodObject,
+	core: z.core.$ZodType,
+) {
+	const shape = (core as { shape?: unknown }).shape;
+	const [first, ...rest] =
+		shape !== null && typeof shape === "object" ? Object.keys(shape) : [];
+	if (first === undefined)
+		throw Error("A Syncretism needs a route whose Core names its features");
+	const name = z.enum([first, ...rest]);
+	return plainLemma
+		.extend({
+			syncretic: z.tuple([name], name).optional(),
+			syncretized: z
+				.tuple([plainLemma, plainLemma], plainLemma)
+				.optional(),
+		})
+		.refine(isSyncretismView, { error: syncretismViewError })
+		.refine(isLemmaSyncretism, { error: lemmaSyncretismError });
+}
+
 /** Missing inflectional schemas omit the Surface field; present schemas retain their refinements. */
 function buildBaseUnitSchemas<
 	L extends string,
@@ -158,7 +207,7 @@ function buildBaseUnitSchemas<
 	C extends z.core.$ZodType,
 	I extends z.core.$ZodType | undefined,
 >(route: { language: L; family: F; kind: K }, core: C, inflectional: I) {
-	const Lemma = z.strictObject({
+	const PlainLemma = z.strictObject({
 		unitKind: z.literal(UnitKindSchema.enum.Lemma),
 		language: z.literal(route.language),
 		family: z.literal(route.family),
@@ -169,6 +218,19 @@ function buildBaseUnitSchemas<
 				: normalizedFormSchema,
 		coreFeatures: core,
 	});
+	// German PRON opts in first: only the referent tells some of its pillar
+	// cells apart (system ADR 0046). Other routes reject both fields.
+	const syncretizable =
+		route.language === "de" &&
+		route.family === "Lexeme" &&
+		route.kind === "PRON";
+	// The conditional type keeps the concrete schema exports exact; runtime
+	// construction uses the same route condition.
+	const Lemma = (
+		syncretizable ? syncretizableLemmaSchema(PlainLemma, core) : PlainLemma
+	) as `${L}/${F}/${K}` extends "de/Lexeme/PRON"
+		? SyncretizableLemmaSchema<typeof PlainLemma, C>
+		: typeof PlainLemma;
 	const surfaceShape = {
 		unitKind: z.literal(UnitKindSchema.enum.Surface),
 		language: z.literal(route.language),
