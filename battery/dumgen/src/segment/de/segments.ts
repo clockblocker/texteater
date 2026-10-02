@@ -1,6 +1,19 @@
+/**
+ * The German Segment stage: one Sentence in, its Segments out (Dumgen ADR
+ * 0004). Code stitches the Sentence's whitespace and scans it into written
+ * runs. A run the fusion table matches (a fused word, an apostrophe clitic,
+ * an abbreviation) or an apostrophe or dotted run it cannot read gets one
+ * jev Choice among complete authored plans, its intact spelling always
+ * among them. Every other run needs no question, and a Sentence with none
+ * makes no call.
+ *
+ * No gold boundary, generated text or language parser enters the request,
+ * and there is no stitching question and no language judge. Matching the
+ * table is evidence, not interpretation: `Im` can be a name and `I'm` a
+ * Foreign word in a German Sentence.
+ */
 import type { EntryType, Questions } from "promptsmith/typesafe";
-import { germanFusionTable } from "../../concrete-lang/de/fusion-entries.js";
-import type { SegmentInUnitsInput } from "../../evaluation/spec-corpus/segment-in-units.js";
+import { type Answers, type Ask, askAny, choice, choiceOf } from "../ask.js";
 import {
 	abbreviationEntry,
 	cliticEntry,
@@ -8,48 +21,44 @@ import {
 	leadingAbbreviation,
 	leadingFreeClitic,
 	splitClitic,
-} from "../../universal/fusion-table.js";
-import {
-	type Answers,
-	type CallRecord,
-	choice,
-	choiceOf,
-	type Jev,
-} from "../lab/jev.js";
+} from "../fusion-table.js";
+import type { Segment, SegmentedSentence } from "../segmented-sentence.js";
+import { stitchedText } from "../stitched-text.js";
+import { germanFusionTable } from "./fusion-entries.js";
 
-type Segment = SegmentInUnitsInput["segments"][number];
-
-/** UTF-16 source coordinates, matching String.slice and the persisted offsets. */
-export type SourceSpan = {
-	readonly start: number;
-	readonly end: number;
-};
-
+/** One complete way to cut a written run into Segments and recover them. */
 type Plan = {
 	readonly key: string;
 	readonly segments: readonly Segment[];
 	readonly description: string;
 };
 
-type Run = SourceSpan & {
+/** One written run, in UTF-16 coordinates of the scanned text. */
+type Run = {
+	readonly start: number;
+	readonly end: number;
 	readonly text: string;
 	readonly plans: readonly Plan[];
 };
 
-export type PreparedGermanSource = {
+/** The scanned runs and the one request that settles the ambiguous ones. */
+export type PreparedSegments = {
 	readonly text: string;
 	readonly runs: readonly Run[];
-	readonly state: Record<string, EntryType>;
+	readonly state: Readonly<Record<string, EntryType>>;
 	readonly questions: Questions;
 };
 
-export type GermanSource = {
-	readonly input: SegmentInUnitsInput;
-	/** One coordinate per input Segment, including whitespace and punctuation. */
-	readonly spans: readonly SourceSpan[];
-	/** Unsupported or uncertain source recovery; ownership must leave it Unresolved. */
+export type GermanSegmentation = SegmentedSentence & {
+	/**
+	 * The Segments whose written run kept its spelling because jev did not
+	 * settle how to cut it, or found no authored plan for it.
+	 */
 	readonly unresolved: readonly number[];
 };
+
+/** A plan counts only when jev gives it at least this share. */
+const planFloor = 0.7;
 
 const graphemes = new Intl.Segmenter("und", { granularity: "grapheme" });
 const word = /^[\p{L}\p{M}\p{N}]+(?:[-‐‑'’‘´`][\p{L}\p{M}\p{N}]+)*[-‐‑]?/u;
@@ -135,16 +144,15 @@ function plansFor(text: string): readonly Plan[] {
 }
 
 /**
- * Scans exact written runs, then supplies complete authored alternatives.
- * No gold boundaries, expansions, generated text or language parser enter the request.
- * Ordinary words need no semantic question. Authored recovery entries retain
- * an intact alternative: matching the table is evidence, not interpretation.
+ * Scans the text into written runs and asks one Choice per ambiguous run
+ * among its complete authored plans. The text is kept as given; stitching
+ * is the caller's (`segmentGermanSentence`).
  */
-export function prepareGermanSource(text: string): PreparedGermanSource {
-	if (text.length === 0) throw Error("A source Sentence must be non-empty");
+export function prepareGermanSegments(text: string): PreparedSegments {
+	if (text.length === 0) throw Error("A Sentence must be non-empty");
 	const runs: Run[] = [];
 	const questions: Questions = {};
-	const written: Record<string, EntryType> = {};
+	const written: Record<string, string> = {};
 	let start = 0;
 	while (start < text.length) {
 		const rest = text.slice(start);
@@ -163,7 +171,7 @@ export function prepareGermanSource(text: string): PreparedGermanSource {
 			[Symbol.iterator]()
 			.next().value;
 		const source = candidate ?? grapheme?.segment;
-		if (!source) throw Error("Cannot scan a non-empty source remainder");
+		if (!source) throw Error("Cannot scan a non-empty remainder");
 		const kind = whitespace
 			? "Whitespace"
 			: candidate
@@ -223,21 +231,22 @@ export function prepareGermanSource(text: string): PreparedGermanSource {
 	return { text, runs, questions, state: { sentence: text, written } };
 }
 
-/** Applies only supplied plans. Uncertainty keeps the whole written run, with no retry. */
-export function resolveGermanSource(
-	prepared: PreparedGermanSource,
+/**
+ * Applies the plan each answer chose. A share under the floor, an unknown
+ * plan or `Unresolved` keeps the whole written run, with no retry.
+ */
+export function resolveGermanSegments(
+	prepared: PreparedSegments,
 	answers: Answers,
-	minimumProbability = 0.7,
-): GermanSource {
+): GermanSegmentation {
 	const segments: Segment[] = [];
-	const spans: SourceSpan[] = [];
 	const unresolved: number[] = [];
 	for (const [index, run] of prepared.runs.entries()) {
 		let plan = run.plans[0];
 		if (`source_${index}` in prepared.questions) {
 			const answer = choiceOf(answers, `source_${index}`);
 			plan =
-				(answer.probabilities[answer.choice] ?? 0) >= minimumProbability
+				(answer.probabilities[answer.choice] ?? 0) >= planFloor
 					? run.plans.find(({ key }) => key === answer.choice)
 					: undefined;
 		}
@@ -246,36 +255,25 @@ export function resolveGermanSource(
 			plan = whole(run.text);
 		}
 		if (plan.segments.map(({ text }) => text).join("") !== run.text)
-			throw Error("A source plan does not preserve its written run");
-		let start = run.start;
-		for (const segment of plan.segments) {
-			segments.push(segment);
-			spans.push({ start, end: start + segment.text.length });
-			start += segment.text.length;
-		}
+			throw Error("A plan does not preserve its written run");
+		segments.push(...plan.segments);
 	}
-	return { input: { language: "de", segments }, spans, unresolved };
+	return { language: "de", text: prepared.text, segments, unresolved };
 }
 
-/** Batches every contextual source decision; a deterministic sentence makes no call. */
-export async function segmentGermanSource(
-	text: string,
-	context: {
-		readonly jev: Pick<Jev, "ask">;
-		readonly repetition: number;
-		readonly calls: CallRecord[];
-	},
-): Promise<GermanSource> {
-	const prepared = prepareGermanSource(text);
-	const answers =
-		Object.keys(prepared.questions).length > 0
-			? await context.jev.ask({
-					stage: "source",
-					state: prepared.state,
-					questions: prepared.questions,
-					repetition: context.repetition,
-					calls: context.calls,
-				})
-			: {};
-	return resolveGermanSource(prepared, answers);
+/**
+ * Stitches one German Sentence and cuts it into Segments, asking jev once
+ * for every ambiguous run together; a Sentence with none makes no call.
+ */
+export async function segmentGermanSentence(
+	sentence: string,
+	ask: Ask,
+): Promise<GermanSegmentation> {
+	const prepared = prepareGermanSegments(stitchedText(sentence));
+	const answers = await askAny(ask, {
+		stage: "segments",
+		state: prepared.state,
+		questions: prepared.questions,
+	});
+	return resolveGermanSegments(prepared, answers);
 }

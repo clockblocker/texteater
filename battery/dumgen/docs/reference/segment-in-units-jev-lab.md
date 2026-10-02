@@ -7,13 +7,17 @@ unit. It is not the production segmenter. Results live in the lab tickets
 
 ## Layout and dependencies
 
+- The German Segment stage is production code:
+  `src/segment/de/segments.ts` stitches a Sentence and cuts it into
+  Segments, reaching jev through the injected `ask` port of
+  `src/segment/ask.ts`. The lab passes its cached jev as that port.
 - `src/segment-in-units/de/` holds the arms, candidate generators, guide
   and routes. `src/segment-in-units/lab/` holds the frozen sets, the cached
   jev and Luna clients, metrics, run evidence, the promptsmith export and
   the ledger. The CLI is `cli/segment-in-units-lab.ts`.
   `cli/segment-ownership-pilot.ts` is a bounded pilot beside it.
-- The lab imports only the #731 harness (`src/evaluation/spec-corpus/`),
-  promptsmith and dumspec, so it runs while Dumgen is red. Keep it that
+- Besides the production segmenter, the lab imports only the #731 harness
+  (`src/evaluation/spec-corpus/`), promptsmith and dumspec. Keep it that
   way. Typecheck it with `bun run check:segment-in-units` and test it with
   `bun test tests/segment-in-units`.
 - Model calls go through jev (TypeSafe) only. The lab tracks tokens only.

@@ -3,7 +3,7 @@ import type {
 	CliticEntry,
 	FusionEntry,
 	FusionTable,
-} from "../../universal/fusion-table.js";
+} from "../fusion-table.js";
 
 /**
  * German fusion Entries (Dumgen ADR 0004, issue 498). Reviewed data: the

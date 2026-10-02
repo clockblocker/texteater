@@ -15,10 +15,12 @@ import { hashOf } from "./jev.js";
 
 /**
  * The Dumgen sources a lab run executes, relative to the package root: the
- * arms and lab, the #731 harness they score with, and the CLI. Their
- * per-file hashes make the manifest's `codeHash`.
+ * production segmenter the arms configure, the arms and lab, the #731
+ * harness they score with, and the CLI. Their per-file hashes make the
+ * manifest's `codeHash`.
  */
 export const labSources = [
+	"src/segment",
 	"src/segment-in-units",
 	"src/evaluation/spec-corpus",
 	"tsconfig.segment-in-units.json",
@@ -30,6 +32,7 @@ export const labSources = [
  * keeps, and the records change under a concurrent review.
  */
 export const dirtyScope = (cli: string) => [
+	"battery/dumgen/src/segment",
 	"battery/dumgen/src/segment-in-units",
 	"battery/dumgen/src/evaluation/spec-corpus",
 	"battery/dumgen/tsconfig.segment-in-units.json",

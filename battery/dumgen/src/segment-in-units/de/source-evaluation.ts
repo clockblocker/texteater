@@ -1,11 +1,45 @@
+/**
+ * Scores the German Segment stage against gold Segments by exact source
+ * spans, and units over predicted Segments by the gold Segments they map
+ * to (#701's raw mode).
+ */
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 	Unit,
 } from "../../evaluation/spec-corpus/segment-in-units.js";
-import type { GermanSource, SourceSpan } from "./source.js";
+import type { GermanSegmentation } from "../../segment/de/segments.js";
 
 type Segment = SegmentInUnitsInput["segments"][number];
+
+/** UTF-16 coordinates, matching String.slice and the persisted offsets. */
+export type SourceSpan = {
+	readonly start: number;
+	readonly end: number;
+};
+
+/** The Segment stage's output as the evaluator reads it. */
+export type GermanSource = {
+	readonly input: SegmentInUnitsInput;
+	/** One coordinate per input Segment, including whitespace and punctuation. */
+	readonly spans: readonly SourceSpan[];
+	/** Segments whose written run kept its spelling undecided; see `GermanSegmentation`. */
+	readonly unresolved: readonly number[];
+};
+
+/** A Segment stage result with its spans in its Stitched Text. */
+export function germanSourceOf(segmentation: GermanSegmentation): GermanSource {
+	const segments = segmentation.segments.map(({ kind, text, surface }) => ({
+		kind,
+		text,
+		...(surface === undefined ? {} : { surface }),
+	}));
+	return {
+		input: { language: "de", segments },
+		spans: sourceSpans(segments),
+		unresolved: segmentation.unresolved,
+	};
+}
 
 export type SourceEvaluation = {
 	readonly textPreserved: boolean;

@@ -15,15 +15,14 @@ import {
 	type TypeSafeExecutor,
 } from "promptsmith/typesafe";
 import type { SegmentInUnitsOutput } from "../src/evaluation/spec-corpus/segment-in-units.js";
+import { segmentGermanSentence } from "../src/segment/de/segments.js";
 import type { ArmResult } from "../src/segment-in-units/de/arm.js";
 import { runEnvelopes } from "../src/segment-in-units/de/arms/envelopes.js";
 import { runOwnership } from "../src/segment-in-units/de/arms/ownership.js";
 import {
-	type GermanSource,
-	segmentGermanSource,
-} from "../src/segment-in-units/de/source.js";
-import {
 	evaluateSourceAndUnits,
+	type GermanSource,
+	germanSourceOf,
 	type SourceUnitEvaluation,
 	sourceSpans,
 } from "../src/segment-in-units/de/source-evaluation.js";
@@ -388,11 +387,18 @@ for (const labCase of cases) {
 			try {
 				const source: GermanSource =
 					mode === "source"
-						? await segmentGermanSource(
-								labCase.input.segments
-									.map(({ text }) => text)
-									.join(""),
-								{ jev, repetition, calls },
+						? germanSourceOf(
+								await segmentGermanSentence(
+									labCase.input.segments
+										.map(({ text }) => text)
+										.join(""),
+									(request) =>
+										jev.ask({
+											...request,
+											repetition,
+											calls,
+										}),
+								),
 							)
 						: {
 								input: labCase.input,

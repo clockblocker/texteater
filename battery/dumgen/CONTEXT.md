@@ -16,6 +16,13 @@ _Avoid_: Piece, token, Segment index as identity
 One Sentence as intake leaves it: language, Stitched Text and Segments.
 _Avoid_: Sentence DTO
 
+**Stitched Text**:
+One Sentence's text once code has normalized its mechanical whitespace:
+trimmed, with every run of spaces, tabs or other non-line-break whitespace
+turned into one ASCII space. Line breaks stay as written. Its Segments
+concatenated give it back. No judge sees whitespace (#689).
+_Avoid_: stitching question, repaired text
+
 **`segment.inUnits`**:
 The segmenter that routes clicks. It takes a text already split into
 Sentences and groups each Sentence's Segments into biggest units, each with

@@ -1,10 +1,8 @@
 /**
- * Reviewed data for splitting one source word into several Segments at
- * intake (Dumgen ADR 0004). Each language authors a table of closed entries;
- * open patterns (Hebrew prefix stacks) are enumerated in code and are not
- * tables (`concrete-lang/he/segmentation/prefixes.ts`). A language's segmenter reads its table to cut abbreviations,
- * apostrophe clitics and fused words, and placement reads it for the
- * surfaces.
+ * Reviewed data for splitting one written word into several Segments
+ * (Dumgen ADR 0004). Each language authors a table of closed entries: its
+ * fusions, apostrophe clitics and abbreviations. A language's Segment stage
+ * reads its table to cut them, and a host reads it for the surfaces.
  */
 
 /** One Segment of a fused word: the letters shown and the surface they stand for. */

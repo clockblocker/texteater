@@ -3,10 +3,11 @@ import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 } from "../../src/evaluation/spec-corpus/segment-in-units.js";
-import type { GermanSource } from "../../src/segment-in-units/de/source.js";
 import {
 	evaluateSource,
 	evaluateSourceAndUnits,
+	type GermanSource,
+	germanSourceOf,
 	sourceSpans,
 } from "../../src/segment-in-units/de/source-evaluation.js";
 
@@ -69,6 +70,28 @@ test("exact source coordinates map units even when a predicted Segment index shi
 		groupingMatches: 1,
 		routeMatches: 1,
 		fullPass: true,
+	});
+});
+
+test("the Segment stage's result reads as a source with spans in its Stitched Text", () => {
+	const source = germanSourceOf({
+		language: "de",
+		text: "im Wald",
+		segments: [
+			{ kind: "ResolvableText", text: "i", surface: "in" },
+			{ kind: "ResolvableText", text: "m", surface: "dem" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "Wald" },
+		],
+		unresolved: [3],
+	});
+	expect(source.input).toEqual(gold);
+	expect(source.spans).toEqual(sourceSpans(gold.segments));
+	expect(source.unresolved).toEqual([3]);
+	expect(evaluateSource(gold, source)).toMatchObject({
+		textPreserved: true,
+		strictSurfaceExact: true,
+		unresolvedSegments: 1,
 	});
 });
 
