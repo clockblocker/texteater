@@ -1,3 +1,5 @@
-import { generateContent } from "./generate-content/index.ts";
+import { generateAttestations } from "./generate-content/attestations/generate-attestations.ts";
+import { generateDocs } from "./generate-content/docs/generate-docs.ts";
 
-await generateContent();
+await generateAttestations();
+await generateDocs();

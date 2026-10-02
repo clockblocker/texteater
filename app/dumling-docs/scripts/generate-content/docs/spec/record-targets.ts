@@ -35,7 +35,7 @@ function reviewLabel(record: Dumspec.SpecRecord): "Reviewed" | "Draft" {
 	return isReviewed(record, "Attestation") ? "Reviewed" : "Draft";
 }
 
-export function isArchaic(entry: RecordTarget): boolean {
+function isArchaic(entry: RecordTarget): boolean {
 	const features = entry.target.attestation.surface.surfaceFeatures as {
 		historicalStatus?: string | null;
 	} | null;

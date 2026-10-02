@@ -1,39 +1,32 @@
 import { describe, expect, test } from "bun:test";
 import {
-	navItemsForPages,
 	renderNavJson,
 	renderNavMarkdown,
 } from "../scripts/generate-content/docs/nav";
+import { navItems } from "../src/lib/navigation";
 
 describe("planned docs navigation", () => {
 	const pages = [
 		{
-			frontmatter: {
-				navTitle: "Second",
-				order: 2,
-				routeId: "published/second",
-				title: "Zeta",
-			},
+			navTitle: "Second",
+			order: 2,
 			routeId: "second",
+			title: "Zeta",
 		},
 		{
-			frontmatter: {
-				order: 1,
-				title: "Home",
-			},
+			order: 1,
 			routeId: "index",
+			title: "Home",
 		},
 		{
-			frontmatter: {
-				order: 2,
-				title: "Alpha",
-			},
+			order: 2,
 			routeId: "first",
+			title: "Alpha",
 		},
 	];
 
 	test("sorts and maps page metadata without reading generated files", () => {
-		expect(navItemsForPages(pages)).toEqual([
+		expect(navItems(pages)).toEqual([
 			{
 				href: "/",
 				mdHref: "/index.md",
@@ -49,14 +42,14 @@ describe("planned docs navigation", () => {
 			{
 				href: "/second/",
 				mdHref: "/second.md",
-				routeId: "published/second",
+				routeId: "second",
 				title: "Second",
 			},
 		]);
 	});
 
 	test("preserves the public nav byte formats", () => {
-		const items = navItemsForPages(pages);
+		const items = navItems(pages);
 
 		expect(renderNavJson(items)).toEndWith("\n");
 		expect(renderNavMarkdown(items)).toBe(

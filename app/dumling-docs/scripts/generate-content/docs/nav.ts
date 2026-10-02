@@ -1,34 +1,4 @@
-import type { PageOutput } from "../shared/types";
-import { publicHrefForRouteId } from "./routes";
-
-export type NavItem = {
-	href: string;
-	mdHref: string;
-	routeId: string;
-	title: string;
-};
-
-type NavPage = Pick<PageOutput, "frontmatter" | "routeId">;
-
-export function navItemsForPages(pages: readonly NavPage[]): NavItem[] {
-	return pages
-		.toSorted((left, right) => {
-			const orderDelta = left.frontmatter.order - right.frontmatter.order;
-			if (orderDelta !== 0) {
-				return orderDelta;
-			}
-			return left.frontmatter.title.localeCompare(
-				right.frontmatter.title,
-			);
-		})
-		.map((page) => ({
-			href: publicHrefForRouteId(page.routeId),
-			mdHref:
-				page.routeId === "index" ? "/index.md" : `/${page.routeId}.md`,
-			routeId: page.frontmatter.routeId ?? page.routeId,
-			title: page.frontmatter.navTitle ?? page.frontmatter.title,
-		}));
-}
+import type { NavItem } from "../../../src/lib/navigation.ts";
 
 export function renderNavJson(items: readonly NavItem[]): string {
 	return `${JSON.stringify(items, null, 2)}\n`;

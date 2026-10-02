@@ -3,7 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type * as Dumling from "dumling/types";
 
-export type FeatureLayer = "Core" | "Inflectional";
+type FeatureLayer = "Core" | "Inflectional";
 
 /** Values a schema position accepts. */
 export type AcceptedValues = Readonly<{

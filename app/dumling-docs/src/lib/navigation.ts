@@ -7,7 +7,14 @@ export interface NavItem {
 	title: string;
 }
 
-export function routeIdForDocId(id: string): string {
+type NavPage = {
+	navTitle?: string;
+	order: number;
+	routeId: string;
+	title: string;
+};
+
+function routeIdForDocId(id: string): string {
 	return id.endsWith("/index") ? id.slice(0, -"/index".length) : id;
 }
 
@@ -27,40 +34,20 @@ export function hrefForPage(
 	return publicHrefForRouteId(routeIdForPage(page));
 }
 
-export function paramsSlugForPage(
-	page: CollectionEntry<"docs"> | CollectionEntry<"entities">,
-): string {
-	const href = hrefForPage(page);
-	if (href === "/") {
-		return "";
-	}
-
-	return href.replace(/^\/+/u, "").replace(/\/+$/u, "");
-}
-
-export function mdHrefForRouteId(routeId: string): string {
-	return routeId === "index" ? "/index.md" : `/${routeId}.md`;
-}
-
-export function mdHrefForPage(
-	page: CollectionEntry<"docs"> | CollectionEntry<"entities">,
-): string {
-	return mdHrefForRouteId(routeIdForPage(page));
-}
-
-export function navItemsForDocs(docs: CollectionEntry<"docs">[]): NavItem[] {
-	return docs
+/** The site navigation: pages by `order`, then by title. */
+export function navItems(pages: readonly NavPage[]): NavItem[] {
+	return pages
 		.toSorted((left, right) => {
-			const orderDelta = left.data.order - right.data.order;
+			const orderDelta = left.order - right.order;
 			if (orderDelta !== 0) {
 				return orderDelta;
 			}
-			return left.data.title.localeCompare(right.data.title);
+			return left.title.localeCompare(right.title);
 		})
-		.map((doc) => ({
-			href: hrefForPage(doc),
-			mdHref: mdHrefForPage(doc),
-			routeId: routeIdForPage(doc),
-			title: doc.data.navTitle ?? doc.data.title,
+		.map((page) => ({
+			href: publicHrefForRouteId(page.routeId),
+			mdHref: `/${page.routeId}.md`,
+			routeId: page.routeId,
+			title: page.navTitle ?? page.title,
 		}));
 }

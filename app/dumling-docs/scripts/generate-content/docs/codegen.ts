@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import { defineCodegen } from "codegen";
+import { navItems } from "../../../src/lib/navigation.ts";
 import {
 	generatedDocsDir,
 	generatedEntitiesDir,
@@ -8,7 +9,7 @@ import {
 } from "../shared/paths";
 import type { Frontmatter, PageOutput } from "../shared/types";
 import { serializeFrontmatter } from "./frontmatter";
-import { navItemsForPages, renderNavJson, renderNavMarkdown } from "./nav";
+import { renderNavJson, renderNavMarkdown } from "./nav";
 
 type PageArtifactMeta =
 	| {
@@ -99,17 +100,18 @@ export function definePagesCodegen(
 				return [];
 			}
 
-			const navPages = primary.flatMap((artifact) =>
-				artifact.meta.kind === "generated-page"
-					? [
-							{
-								frontmatter: artifact.meta.frontmatter,
-								routeId: artifact.meta.routeId,
-							},
-						]
-					: [],
+			const items = navItems(
+				primary.flatMap((artifact) =>
+					artifact.meta.kind === "generated-page"
+						? [
+								{
+									...artifact.meta.frontmatter,
+									routeId: artifact.meta.routeId,
+								},
+							]
+						: [],
+				),
 			);
-			const items = navItemsForPages(navPages);
 			const provenance = primary.flatMap((artifact) =>
 				artifact.meta.kind === "generated-page"
 					? [

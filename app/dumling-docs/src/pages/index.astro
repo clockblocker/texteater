@@ -1,7 +1,7 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
 import DocsLayout from "../layouts/DocsLayout.astro";
-import { hrefForPage, navItemsForDocs } from "../lib/navigation";
+import { hrefForPage, navItems, routeIdForPage } from "../lib/navigation";
 
 const page = await getEntry("docs", "index");
 if (page === undefined) {
@@ -9,7 +9,9 @@ if (page === undefined) {
 }
 
 const docs = await getCollection("docs");
-const navItems = navItemsForDocs(docs);
+const items = navItems(
+	docs.map((doc) => ({ ...doc.data, routeId: routeIdForPage(doc) })),
+);
 const { Content } = await render(page);
 const currentHref = hrefForPage(page);
 ---
@@ -17,7 +19,7 @@ const currentHref = hrefForPage(page);
 <DocsLayout
 	currentHref={currentHref}
 	description={page.data.description}
-	navItems={navItems}
+	navItems={items}
 	title={page.data.title}
 >
 	<Content />

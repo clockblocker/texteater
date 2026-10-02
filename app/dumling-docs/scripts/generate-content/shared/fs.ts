@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, rmSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 export function listMarkdownFiles(dir: string): string[] {
@@ -37,21 +37,4 @@ export function listTypeScriptFiles(dir: string): string[] {
 		}
 		return [];
 	});
-}
-
-export function removeEmptyDirectories(dir: string): void {
-	if (!existsSync(dir)) {
-		return;
-	}
-
-	for (const entry of readdirSync(dir, { withFileTypes: true })) {
-		if (!entry.isDirectory()) {
-			continue;
-		}
-		const entryPath = join(dir, entry.name);
-		removeEmptyDirectories(entryPath);
-		if (readdirSync(entryPath).length === 0) {
-			rmSync(entryPath, { recursive: true });
-		}
-	}
 }

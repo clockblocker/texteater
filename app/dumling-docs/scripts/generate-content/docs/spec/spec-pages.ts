@@ -1,7 +1,7 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumspec from "dumspec/types";
+import { publicHrefForRouteId } from "../../../../src/lib/navigation.ts";
 import { spellingTagLabels } from "../../../../src/lib/unit-presentation";
-import { publicHrefForRouteId } from "../routes";
 import {
 	inPageOrder,
 	type RecordTarget,

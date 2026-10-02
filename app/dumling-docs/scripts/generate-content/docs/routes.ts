@@ -17,10 +17,6 @@ export function normalizeRouteId(routeId: string): string {
 		: normalized;
 }
 
-export function publicHrefForRouteId(routeId: string): string {
-	return routeId === "index" ? "/" : `/${routeId}/`;
-}
-
 export function routeIdForGeneratedDocSourcePath(sourcePath: string): string {
 	const relativePath = normalizePathSegments(
 		relative(sourceTypedDocsDir, sourcePath).replace(/\.doc\.ts$/u, ""),
