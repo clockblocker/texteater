@@ -4,8 +4,10 @@ import {
 	defaultRunOutputDirectory,
 	disagreementsFileName,
 	evaluateExperiment,
+	evaluationMetrics,
 	listExperiments,
 	reviewEvaluationRun,
+	unavailableExperiments,
 } from "dumgen/development";
 import type { EvaluationExecutor } from "promptsmith/evaluation";
 import { createOpenAIExecutor } from "promptsmith/openai";
@@ -34,6 +36,7 @@ export async function runEvaluationCli(
 			output: { type: "string" },
 			revision: { type: "string" },
 			open: { type: "string" },
+			offline: { type: "boolean" },
 		},
 	});
 	const write =
@@ -41,6 +44,9 @@ export async function runEvaluationCli(
 		((value) => console.log(JSON.stringify(value, null, 2)));
 	if (values.list) {
 		const experiments = listExperiments();
+		const unavailable = unavailableExperiments();
+		if (unavailable)
+			console.error(`Legacy experiments unavailable: ${unavailable}`);
 		write(experiments);
 		return experiments;
 	}
@@ -87,12 +93,15 @@ export async function runEvaluationCli(
 			sourceRevision: values.revision,
 			outputDirectory,
 			execute: dependencies.execute ?? createOpenAIExecutor(),
+			offline: values.offline ?? false,
 			signal: controller.signal,
 		});
 		const review = reviewEvaluationRun(run);
+		const metrics = evaluationMetrics(run);
 		write({
 			manifest: run.manifest,
 			summary: run.summary,
+			...(metrics && { metrics }),
 			...(review && {
 				review: {
 					scores: review.scores,

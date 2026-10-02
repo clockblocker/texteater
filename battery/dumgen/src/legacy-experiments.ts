@@ -1,10 +1,14 @@
+/**
+ * The legacy pipeline's experiments. Their gold moved to dumspec, and their
+ * modules stop loading until the pipeline is rebuilt against it (#701), so
+ * `development.ts` loads this module behind a boundary that keeps a failure
+ * here from taking down every experiment.
+ */
 import type { LinguisticCorpus } from "./concrete-lang/de/authoring.js";
 import { knowledgeOperationExperiment } from "./evaluation/knowledge-operation.js";
 
 export { resolveOrGenerateTranslation } from "./concrete-lang/de/knowledge-production/translation/operation.js";
-export { disagreementsFileName } from "./evaluation/spec-review.js";
 
-import { fileURLToPath } from "node:url";
 import { defineExperiment, type PromptSource, stableJson } from "promptsmith";
 import {
 	type EvaluationExecutor,
@@ -301,8 +305,3 @@ export async function evaluateExperiment(args: {
 	if (args.outputDirectory) await saveRun(args.outputDirectory, run);
 	return run;
 }
-
-/** Repository default; consumers can always supply a different output directory. */
-export const defaultRunOutputDirectory = fileURLToPath(
-	new URL("../../.runs/dumgen/", import.meta.resolve("dumgen/package.json")),
-);
