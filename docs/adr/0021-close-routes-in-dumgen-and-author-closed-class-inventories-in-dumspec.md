@@ -19,7 +19,8 @@ w-adverbs (`wo`, `wohin`, `woher`, `wann`, `wie`, `warum`, `wieso`,
 adverbs (`heraus`, `hinaus`, `herein`, `hinein`, `herüber`, `hinüber`,
 `herunter`, `hinunter`, `herauf`, `hinauf`, `heran`; colloquial `raus`,
 `rein`, `rüber`, `runter`, `rauf` and `ran` are their Shorthands), the `irgend-`
-adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), the negation
+adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), the Neg time
+adverbs `nie` and `niemals` (ruled by the user on 2026-10-02), the negation
 particle `nicht`, infinitive `zu` and the modal particles (`aber`, `auch`,
 `bloß`, `denn`, `doch`, `eben`, `eigentlich`, `einfach`, `einmal`, `etwa`,
 `halt`, `ja`, `mal`, `nur`, `ruhig`, `schon`, `vielleicht`, `wohl`), which

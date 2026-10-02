@@ -830,6 +830,33 @@ describe("the German authored inventory", () => {
 			).toEqual([["ADV", "Ind"]]);
 	});
 
+	test("authors nie and niemals as one Neg ADV with one Reading, niemals a synonym of nie", () => {
+		for (const text of ["nie", "niemals"])
+			expect(
+				authoredMembers
+					.filter(({ lemma }) => lemma.canonicalForm === text)
+					.map(({ lemma, reading }) => [
+						lemma.kind,
+						field(lemma.coreFeatures, "comparable"),
+						field(lemma.coreFeatures, "pronType"),
+						reading.emojiDescription,
+					]),
+				text,
+			).toEqual([["ADV", null, "Neg", "🚫⏰"]]);
+		const relationsOf = (text: string) =>
+			authoredMembers.find(({ lemma }) => lemma.canonicalForm === text)
+				?.knowledge.semanticRelations;
+		expect(relationsOf("nie")).toBeUndefined();
+		expect(relationsOf("niemals")).toEqual({
+			synonym: [
+				expect.objectContaining({
+					canonicalForm: "nie",
+					coreFeatures: { comparable: null, pronType: "Neg" },
+				}),
+			],
+		});
+	});
+
 	test("authors dahin, daher, hierhin and hierher as one Dem ADV with one Reading", () => {
 		for (const [text, emoji] of [
 			["dahin", "🛬"],

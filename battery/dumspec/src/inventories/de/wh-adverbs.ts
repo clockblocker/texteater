@@ -2,7 +2,7 @@ import type * as Dumling from "dumling/types";
 import { type AuthoredMember, defineAuthoredMember } from "./member.js";
 
 type Lemma = Dumling.Lemma<"de", "Lexeme", "ADV">;
-type Use = "Int" | "Rel" | "Ind" | "Dem";
+type Use = "Int" | "Rel" | "Ind" | "Neg" | "Dem";
 
 /** One Reading of a w-adverb's use: its definition and glosses. */
 type Meaning = {
@@ -264,6 +264,34 @@ const indefiniteAdverbs: readonly OneReadingAdverb[] = [
 	},
 ];
 
+// nie and niemals are the negative time adverbs, one Neg Lemma with one
+// Reading each. Their marker is the 🚫 of kein, keiner, niemand and nichts,
+// before the ⏰ of wann and irgendwann. Duden defines niemals as nie, so it
+// stores that one synonym.
+// https://www.duden.de/rechtschreibung/nie
+// https://www.duden.de/rechtschreibung/niemals
+const negativeAdverbs: readonly OneReadingAdverb[] = [
+	{
+		text: "nie",
+		ipa: "niː",
+		emoji: "⏰",
+		definition:
+			"Verneint eine Aussage für jeden Zeitpunkt, also zu keiner Zeit oder nicht ein einziges Mal: Das vergesse ich nie. Er war noch nie in Paris.",
+		en: ["never; not once"],
+		ru: ["никогда; ни разу"],
+	},
+	{
+		text: "niemals",
+		ipa: "ˈniːmaːls",
+		emoji: "⏰",
+		synonymOf: "nie",
+		definition:
+			"Verneint eine Aussage für jeden Zeitpunkt wie „nie“, oft nachdrücklicher: Das hätte ich niemals gedacht. Sie hat ihn niemals besucht.",
+		en: ["never; at no time"],
+		ru: ["никогда"],
+	},
+];
+
 // dahin, daher, hierhin and hierher answer wohin and woher and are split the
 // same way (Da gehe ich hin, Hier kommst du her; Rule
 // de/split-adverb-is-one-target). They are demonstrative ADVs, not pronominal
@@ -434,13 +462,15 @@ const marker: Readonly<Record<Use, string>> = {
 	Int: "❓",
 	Rel: "🧩",
 	Ind: "❔",
+	Neg: "🚫",
 	Dem: "",
 };
 
 /**
  * A w-adverb has no comparison forms (ADR 0042). pronType is Core for an
- * indefinite or demonstrative adverb, and null for a directional one and for
- * a w-adverb, whose interrogative and relative uses are Readings of one Lemma.
+ * indefinite, negative or demonstrative adverb, and null for a directional
+ * one and for a w-adverb, whose interrogative and relative uses are Readings
+ * of one Lemma.
  */
 function lemmaOf(text: string, use: Use | null): Lemma {
 	return {
@@ -451,7 +481,8 @@ function lemmaOf(text: string, use: Use | null): Lemma {
 		canonicalForm: text,
 		coreFeatures: {
 			comparable: null,
-			pronType: use === "Ind" || use === "Dem" ? use : null,
+			pronType:
+				use === "Ind" || use === "Neg" || use === "Dem" ? use : null,
 		},
 	};
 }
@@ -508,7 +539,8 @@ function whAdverb(
  * wie, warum, wieso, weshalb, weswegen): one Lemma each, with an
  * interrogative and a relative Reading; relative wo has a place and a time
  * Reading. Then the indefinite irgend- adverbs,
- * one Ind Lemma each, the demonstrative dahin, daher, hierhin and hierher,
+ * one Ind Lemma each, the negative nie and niemals, one Neg Lemma each, the
+ * demonstrative dahin, daher, hierhin and hierher,
  * one Dem Lemma each, and the directional her- and hin- adverbs (heraus,
  * hinaus, herein, hinein, herüber, hinüber, herunter, hinunter, herauf, hinauf
  * and heran), one Lemma each with no pronType. The wo(r)- pronominal adverbs
@@ -519,6 +551,7 @@ export const whAdverbs: readonly AuthoredMember[] = [
 		adverbs.flatMap((adverb) => whAdverbReadings(adverb, use)),
 	),
 	...indefiniteAdverbs.map((adverb) => whAdverb(adverb, "Ind", adverb)),
+	...negativeAdverbs.map((adverb) => whAdverb(adverb, "Neg", adverb)),
 	...demonstrativeAdverbs.map((adverb) => whAdverb(adverb, "Dem", adverb)),
 	...directionalAdverbs.map((adverb) => whAdverb(adverb, null, adverb)),
 ];
