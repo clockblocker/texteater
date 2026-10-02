@@ -28,6 +28,12 @@
  *   `0.6-noabsorb`, `0.5-sc`. Every variant reads one `locution` request
  *   per rule set, so the variants of one run ask once. Groups no batch
  *   asked about route as `--opt unasked` says.
+ * - `--opt verb=<variant>,<variant>` (D4): production with the Verb Choice
+ *   (`verb-choice.ts`), `production+verb@<variant>`. A variant is the floor,
+ *   then the families it applies joined by `-` (all when none is named):
+ *   `0.6`, `0.6-lassen-recipient`. Every variant reads the one `verb`
+ *   request, which depends on the nomination alone. Groups no batch asked
+ *   about route as `--opt unasked` says.
  */
 import { stableJson } from "promptsmith";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
@@ -62,6 +68,14 @@ import {
 	routeMembership,
 } from "../../../segment/de/routing.js";
 import { productionUnitSettings } from "../../../segment/de/units.js";
+import {
+	askVerbChoice,
+	type VerbAnswers,
+	type VerbFamily,
+	type VerbSettings,
+	verbFamilies,
+	withVerbChoice,
+} from "../../../segment/de/verb-choice.js";
 import {
 	type Heard,
 	type Pooling,
@@ -138,6 +152,12 @@ type LocutionVariant = {
 	readonly rules: readonly CodeRule[];
 };
 
+/** One D4 variant: the Verb Choice's floor and families. */
+type VerbVariant = {
+	readonly name: string;
+	readonly settings: VerbSettings;
+};
+
 type Levers = {
 	readonly grid: boolean;
 	readonly pool: readonly Pooling[];
@@ -145,7 +165,37 @@ type Levers = {
 	readonly unasked: "ask" | "unresolved";
 	readonly rules: readonly CodeRule[];
 	readonly locution: readonly LocutionVariant[];
+	readonly verb: readonly VerbVariant[];
 };
+
+function verbVariantsOf(option: string | undefined): VerbVariant[] {
+	return (option ?? "")
+		.split(",")
+		.filter(Boolean)
+		.map((name) => {
+			const [floor, ...families] = name.split("-");
+			const share = Number(floor);
+			if (
+				!Number.isFinite(share) ||
+				families.some(
+					(family) => !verbFamilies.includes(family as VerbFamily),
+				)
+			)
+				throw Error(
+					`--opt verb=${option}: a variant is a floor, then any of ${verbFamilies.join(", ")}, joined by -`,
+				);
+			return {
+				name,
+				settings: {
+					floor: share,
+					families:
+						families.length > 0
+							? (families as VerbFamily[])
+							: verbFamilies,
+				},
+			};
+		});
+}
 
 function locutionVariantsOf(option: string | undefined): LocutionVariant[] {
 	return (option ?? "")
@@ -192,6 +242,7 @@ function leversOf(options: ArmOptions): Levers {
 		"primary",
 		"x3",
 		"x5",
+		"verb",
 	]);
 	for (const key of Object.keys(options))
 		if (!known.has(key)) throw Error(`production takes no --opt ${key}`);
@@ -224,6 +275,7 @@ function leversOf(options: ArmOptions): Levers {
 		unasked,
 		rules: rulesOf(options.x3),
 		locution: locutionVariantsOf(options.x5),
+		verb: verbVariantsOf(options.verb),
 	};
 }
 
@@ -239,13 +291,12 @@ type Read = {
 	readonly answers: RouteAnswers;
 };
 
-/** Units under code rules and production's Locution Choice over one read, as the unit stage routes them. */
-async function ruledUnits(
+/** Membership under code rules and production's Locution Choice over one read, before any Verb Choice. */
+async function ruledMembership(
 	read: Read,
 	rules: readonly CodeRule[],
-	unasked: "ask" | "unresolved",
 	ask: Ask,
-) {
+): Promise<Membership> {
 	const settings = productionUnitSettings;
 	const base = membershipOf(
 		read.nomination,
@@ -254,7 +305,7 @@ async function ruledUnits(
 	);
 	const ruled = withCodeRules(read.nomination, base, rules);
 	// Production's Locution Choice (X5) runs over every rule set it is given.
-	const membership = settings.locution
+	return settings.locution
 		? withLocutionChoice(
 				read.nomination,
 				base,
@@ -264,6 +315,37 @@ async function ruledUnits(
 				settings.locution,
 			)
 		: ruled;
+}
+
+/** Units under code rules, production's Locution Choice and its Verb Choice over one read, as the unit stage routes them. */
+async function ruledUnits(
+	read: Read,
+	rules: readonly CodeRule[],
+	unasked: "ask" | "unresolved",
+	ask: Ask,
+) {
+	const settings = productionUnitSettings;
+	const located = await ruledMembership(read, rules, ask);
+	const membership = settings.verb
+		? withVerbChoice(
+				read.nomination,
+				located,
+				await askVerbChoice(read.nomination, ask),
+				rules,
+				settings.verb,
+			)
+		: located;
+	return routedUnits(read, membership, rules, unasked, ask);
+}
+
+/** A membership's units, its new groups routed as `unasked` says. */
+async function routedUnits(
+	read: Read,
+	membership: Membership,
+	rules: readonly CodeRule[],
+	unasked: "ask" | "unresolved",
+	ask: Ask,
+) {
 	const extra =
 		unasked === "ask"
 			? await askUnaskedRoutes(
@@ -384,6 +466,31 @@ async function outputsOf(
 			).units(),
 		};
 	}
+	if (levers.verb.length > 0) {
+		const rules = settings.rules;
+		const read = await readOf(rules.includes("was-fuer"));
+		const located = await ruledMembership(read, rules, ask);
+		// One `verb` request, shared by every variant.
+		const asked: VerbAnswers = await askVerbChoice(read.nomination, ask);
+		for (const variant of levers.verb)
+			outputs[`${prefix}production+verb@${variant.name}`] = {
+				units: (
+					await routedUnits(
+						read,
+						withVerbChoice(
+							read.nomination,
+							located,
+							asked,
+							rules,
+							variant.settings,
+						),
+						rules,
+						levers.unasked,
+						ask,
+					)
+				).units(),
+			};
+	}
 	if (levers.grid) {
 		const { nomination, answers } = await readOf(false);
 		for (const [name, assembly] of Object.entries(x1Grid)) {
@@ -452,6 +559,7 @@ function heardOf(
 					unasked: "ask",
 					rules: [],
 					locution: [],
+					verb: [],
 				},
 			);
 			return answers;

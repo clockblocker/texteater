@@ -155,7 +155,9 @@ type EdgeSource =
 	/** A code rule's link (`code-rules.ts`). */
 	| "rule"
 	/** A merge the Locution Choice accepted (`locution-choice.ts`). */
-	| "locution";
+	| "locution"
+	/** A satellite the Verb Choice joined (`verb-choice.ts`). */
+	| "verb";
 
 export type AssembledEdge = {
 	readonly pieces: readonly [number, number];

@@ -38,6 +38,11 @@ import {
 	askUnaskedRoutes,
 	routeMembership,
 } from "./routing.js";
+import {
+	askVerbChoice,
+	type VerbSettings,
+	withVerbChoice,
+} from "./verb-choice.js";
 
 export type UnitSettings = {
 	readonly floors: Floors;
@@ -65,6 +70,12 @@ export type UnitSettings = {
 	 * accepts. None when absent.
 	 */
 	readonly locution?: LocutionSettings;
+	/**
+	 * The Verb Choice (#851, D4, `verb-choice.ts`): a `verb` request over
+	 * the verb satellites whose slot named a host, and the joins and splits
+	 * its Rule-worded answers decide. None when absent.
+	 */
+	readonly verb?: VerbSettings;
 };
 
 /** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7, every code rule and the Locution Choice at 0.6. */
@@ -106,7 +117,7 @@ export async function segmentGermanUnits(
 	});
 	const base = membershipOf(nomination, settings.floors, settings.saying);
 	const ruled = withCodeRules(nomination, base, settings.rules);
-	const membership = settings.locution
+	const located = settings.locution
 		? withLocutionChoice(
 				nomination,
 				base,
@@ -116,6 +127,15 @@ export async function segmentGermanUnits(
 				settings.locution,
 			)
 		: ruled;
+	const membership = settings.verb
+		? withVerbChoice(
+				nomination,
+				located,
+				await askVerbChoice(nomination, ask),
+				settings.rules,
+				settings.verb,
+			)
+		: located;
 	const answers = await askRouteBatches(nomination, ask);
 	const extra =
 		settings.unasked === "ask"

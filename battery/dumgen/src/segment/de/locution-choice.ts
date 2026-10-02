@@ -43,7 +43,7 @@ import { fusedSiblings, reflexiveForms } from "./candidates.js";
 import { boundPieces, type CodeRule, withCodeRules } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
 import { argmax, groupKey, partitionOf } from "./partition.js";
-import { joinRefs, type Piece } from "./sentence.js";
+import { joinRefs } from "./sentence.js";
 
 /** How the Locution Choice's answers become merges. */
 export type LocutionSettings = {
