@@ -1,5 +1,5 @@
 import type * as Dumspec from "dumspec/types";
-import { ReaderPlainSegment, ReaderSegment } from "lego";
+import { cn, ReaderPlainSegment, ReaderSegment } from "lego";
 import { useMemo } from "react";
 import type { UnitView } from "../shared/contract";
 
@@ -20,8 +20,8 @@ export const sameFocus = (left: Focus | null, right: Focus | null) =>
 /**
  * The sentence from its Segments. Hovering a word previews every Segment of
  * its unit or No Target entry; clicking selects it. A No Target Segment is
- * marked with a dotted rule, and a word in no target or No Target entry stays
- * faint.
+ * marked with a dotted rule, which a preview darkens, and a word in no target
+ * or No Target entry stays faint.
  */
 export function Sentence({
 	segments,
@@ -92,14 +92,19 @@ export function Sentence({
 							{segment.text}
 						</ReaderPlainSegment>
 					);
+				const state = interaction(focus);
 				return (
 					<ReaderSegment
 						key={key}
 						tone={unit !== undefined ? "known" : "unknown"}
-						interaction={interaction(focus)}
+						interaction={state}
 						className={
 							unit === undefined
-								? "underline decoration-dotted"
+								? cn(
+										"underline decoration-dotted",
+										state === "previewed" &&
+											"decoration-current",
+									)
 								: undefined
 						}
 						title={
