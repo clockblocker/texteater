@@ -33,9 +33,16 @@ import type { dictionaryPlanValidator } from "./model/validators";
  * The transaction-local pieces a host write uses beside the workflow methods:
  * the commit budget and the revision a request carries, the Dictionary
  * lookups it branches on, the reviewed-component writes outside a planned
- * commit, and the applier for a plan built elsewhere.
+ * commit, and the applier for a plan built elsewhere. The two slice loaders
+ * are the reads the workflow methods plan from, exported so tests can check
+ * a slice and its commit budget directly.
  */
+export type { ReadingEntryContextArgs } from "./dumdictStorage/contextRequest";
 export { dictionaryPlanResult } from "./dumdictStorage/dictionaryPlan";
+export {
+	loadCleanupRelationsSlice,
+	loadReadingEntryContextSlice,
+} from "./dumdictStorage/queries";
 export {
 	DICTIONARY_REVISION,
 	findReadingByKey,

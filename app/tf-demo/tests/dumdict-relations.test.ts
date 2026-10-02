@@ -4,17 +4,15 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
-import type { ReadingEntryContextArgs } from "../convex/dumdictStorage/contextRequest";
-import {
-	loadCleanupRelationsSlice,
-	loadReadingEntryContextSlice,
-} from "../convex/dumdictStorage/queries";
 import {
 	applyDumdictPlanInTransaction,
 	createDumdictTransaction,
 	type DumdictTransaction,
 	dictionaryPlanResult,
 	findReadingByKey,
+	loadCleanupRelationsSlice,
+	loadReadingEntryContextSlice,
+	type ReadingEntryContextArgs,
 } from "../convex/dumdictTransaction";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";

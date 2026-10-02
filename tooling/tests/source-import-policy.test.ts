@@ -212,6 +212,120 @@ test("tests and package code generators may import explicit schema-authoring sur
 	expect(await issuesFor(root)).toEqual([]);
 });
 
+async function tfDemoFixture() {
+	const root = await temporaryRepository();
+	const app = await addWorkspace(root, {
+		kind: "app",
+		name: "@texteater/tf-demo",
+	});
+	await writeSource(
+		app,
+		"tsconfig.json",
+		'{\n\t// tf-demo maps `@/` to its src folder\n\t"compilerOptions": { "paths": { "@/*": ["./src/*"] } }\n}\n',
+	);
+	await writeSource(
+		app,
+		"src/notes/index.ts",
+		"export const renderNote = 1;\n",
+	);
+	await writeSource(
+		app,
+		"src/notes/universal/note/render.tsx",
+		"export const renderUniversalNote = 1;\n",
+	);
+	await writeSource(
+		app,
+		"convex/dumdictStorage/queries.ts",
+		"export type Slice = { revision: string };\n",
+	);
+	await writeSource(
+		app,
+		"convex/model/validators.ts",
+		"export const storedUnitValidator = {};\n",
+	);
+	return { root, app };
+}
+
+test("tf-demo's boundary rules see alias, type-only and tooling imports", async () => {
+	const { root, app } = await tfDemoFixture();
+	await writeSource(
+		app,
+		"src/views/root-only.tsx",
+		'import { renderNote } from "@/notes";\n',
+	);
+	await writeSource(
+		app,
+		"src/views/deep.tsx",
+		'import { renderUniversalNote } from "@/notes/universal/note/render";\n',
+	);
+	await writeSource(
+		app,
+		"tests/storage.test.ts",
+		'import type { Slice } from "../convex/dumdictStorage/queries";\n',
+	);
+	await writeSource(
+		app,
+		"tooling/snapshot.ts",
+		'import { renderUniversalNote } from "../src/notes/universal/note/render";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(
+		issues
+			.map(({ file, message }) => [file, message.split(":")[0]])
+			.sort(([left = ""], [right = ""]) => left.localeCompare(right)),
+	).toEqual([
+		[
+			"app/tf-demo/src/views/deep.tsx",
+			"tf-demo-notes-hide-their-internals",
+		],
+		[
+			"app/tf-demo/tests/storage.test.ts",
+			"tf-demo-dumdict-storage-implementation-is-private",
+		],
+		[
+			"app/tf-demo/tooling/snapshot.ts",
+			"tf-demo-notes-hide-their-internals",
+		],
+	]);
+});
+
+test("tf-demo's server may name a Convex type but not load a Convex module, and generated code is exempt", async () => {
+	const { root, app } = await tfDemoFixture();
+	await writeSource(
+		app,
+		"server/type-only.ts",
+		'import type { storedUnitValidator } from "../convex/model/validators";\n',
+	);
+	await writeSource(
+		app,
+		"server/value.ts",
+		'import { storedUnitValidator } from "../convex/model/validators";\n',
+	);
+	await writeSource(
+		app,
+		"server/inline-type.ts",
+		'import { type storedUnitValidator } from "../convex/model/validators";\n',
+	);
+	await writeSource(
+		app,
+		"convex/_generated/api.d.ts",
+		'import type * as queries from "../dumdictStorage/queries.js";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(issues.map(({ file }) => file).sort()).toEqual([
+		"app/tf-demo/server/inline-type.ts",
+		"app/tf-demo/server/value.ts",
+	]);
+	for (const issue of issues)
+		expect(issue.message).toStartWith(
+			"tf-demo-server-does-not-import-convex",
+		);
+});
+
 test("Laboratory's evaluation authoring seam does not allow model-authoring imports in the workbench", async () => {
 	const root = await temporaryRepository();
 	await addWorkspace(root, {

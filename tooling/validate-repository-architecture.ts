@@ -14,12 +14,12 @@ const importIssues = await validateSourceImports({
 	workspaces,
 });
 if (importIssues.length > 0) {
-	console.error("Cross-workspace import policy failed:");
+	console.error("Import policy failed:");
 	for (const issue of importIssues) {
 		console.error(`- ${issue.file}: ${issue.message} (${issue.specifier})`);
 	}
 } else {
-	console.log("Cross-workspace import policy passed.");
+	console.log("Import policy passed.");
 }
 
 const tools = toolPaths(repositoryRoot);

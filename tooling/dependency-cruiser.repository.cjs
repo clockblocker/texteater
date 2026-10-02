@@ -1,61 +1,6 @@
 module.exports = {
 	forbidden: [
 		{
-			name: "tf-demo-server-does-not-import-convex",
-			comment:
-				"Application logic must not depend on the Convex adapter layer.",
-			severity: "error",
-			from: { path: "^app/tf-demo/server/" },
-			to: { path: "^app/tf-demo/convex/" },
-		},
-		{
-			name: "tf-demo-convex-does-not-import-ui",
-			comment:
-				"Convex modules must not depend on browser implementation code.",
-			severity: "error",
-			from: { path: "^app/tf-demo/convex/" },
-			to: { path: "^app/tf-demo/src/" },
-		},
-		{
-			name: "tf-demo-dumdict-storage-implementation-is-private",
-			comment:
-				"Callers must choose the action-level or transaction-local Dumdict interface; its implementation folder is private.",
-			severity: "error",
-			from: {
-				pathNot:
-					"^app/tf-demo/convex/(?:dumdictStorage|dumdictActionStorage|dumdictTransaction)(?:\\.ts|/)",
-			},
-			to: { path: "^app/tf-demo/convex/dumdictStorage/" },
-		},
-		{
-			name: "tf-demo-notes-hide-their-internals",
-			comment:
-				"Outside code, including tests, may use only the Notes root interface.",
-			severity: "error",
-			from: { pathNot: "^app/tf-demo/src/notes/" },
-			to: { path: "^app/tf-demo/src/notes/(?!index\\.ts$)" },
-		},
-		{
-			name: "tf-demo-notes-universal-does-not-import-languages",
-			comment:
-				"Universal Note rendering must not depend on a language module.",
-			severity: "error",
-			from: { path: "^app/tf-demo/src/notes/universal/" },
-			to: { path: "^app/tf-demo/src/notes/de/" },
-		},
-		{
-			name: "tf-demo-german-renderer-overrides-are-private",
-			comment:
-				"Private German renderer leaves may only be imported by the auditable German registry.",
-			severity: "error",
-			from: {
-				pathNot: "^app/tf-demo/src/notes/de/registry\\.ts$",
-			},
-			to: {
-				path: "^app/tf-demo/src/notes/de/block-renderer-overrides/",
-			},
-		},
-		{
 			name: "no-unresolved",
 			comment: "Every repository import must resolve.",
 			severity: "error",

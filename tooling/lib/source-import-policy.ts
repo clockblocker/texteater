@@ -48,20 +48,30 @@ async function sourceFiles(dir: string): Promise<string[]> {
 	return files;
 }
 
-function importSpecifiers(contents: string, file: string): string[] {
+interface ImportReference {
+	specifier: string;
+	/**
+	 * Erased before runtime: `import type`, `export type` and `import("…")`
+	 * type nodes. An inline `type` specifier still loads its module under
+	 * `verbatimModuleSyntax`, so it does not count.
+	 */
+	typeOnly: boolean;
+}
+
+function importReferences(contents: string, file: string): ImportReference[] {
 	const script =
 		extname(file) === ".astro"
 			? (contents.match(/^---\s*\n([\s\S]*?)\n---/)?.[1] ?? "")
 			: contents;
-	const specifiers: string[] = [];
-	const addLiteral = (node: unknown): void => {
+	const references: ImportReference[] = [];
+	const addLiteral = (node: unknown, typeOnly = false): void => {
 		if (
 			node &&
 			typeof node === "object" &&
 			"value" in node &&
 			typeof node.value === "string"
 		)
-			specifiers.push(node.value);
+			references.push({ specifier: node.value, typeOnly });
 	};
 	const parsed = parseSync(file, script, {
 		lang:
@@ -81,25 +91,201 @@ function importSpecifiers(contents: string, file: string): string[] {
 				addLiteral(node.arguments[0]);
 		},
 		ExportAllDeclaration(node) {
-			addLiteral(node.source);
+			addLiteral(node.source, node.exportKind === "type");
 		},
 		ExportNamedDeclaration(node) {
-			addLiteral(node.source);
+			addLiteral(node.source, node.exportKind === "type");
 		},
 		ImportDeclaration(node) {
-			addLiteral(node.source);
+			addLiteral(node.source, node.importKind === "type");
 		},
 		ImportExpression(node) {
 			addLiteral(node.source);
 		},
 		TSImportType(node) {
-			addLiteral(node.source);
+			addLiteral(node.source, true);
 		},
 		TSExternalModuleReference(node) {
 			addLiteral(node.expression);
 		},
 	}).visit(parsed.program);
-	return specifiers;
+	return references;
+}
+
+/**
+ * A boundary inside one app: a file matching `from`, or not matching
+ * `fromNot`, may not import a module matching `to`. Paths are
+ * repository-relative. Relative and tsconfig-alias imports from every folder
+ * count, type-only ones included unless `allowTypeOnly` says they erase.
+ */
+interface ModuleBoundary {
+	name: string;
+	comment: string;
+	from?: RegExp;
+	fromNot?: RegExp;
+	to: RegExp;
+	allowTypeOnly?: boolean;
+	/** Importers exempt until the named ticket moves them off the boundary. */
+	exempt?: { ticket: string; files: readonly string[] };
+}
+
+const moduleBoundaries = new Map<string, readonly ModuleBoundary[]>([
+	[
+		"app/tf-demo",
+		[
+			{
+				name: "tf-demo-server-does-not-import-convex",
+				comment:
+					"Application logic must not depend on the Convex adapter layer at runtime. Type-only imports erase, so server code may name a type the Convex schema owns.",
+				from: /^app\/tf-demo\/server\//,
+				to: /^app\/tf-demo\/convex\//,
+				allowTypeOnly: true,
+			},
+			{
+				name: "tf-demo-convex-does-not-import-ui",
+				comment:
+					"Convex modules must not depend on browser implementation code.",
+				from: /^app\/tf-demo\/convex\//,
+				to: /^app\/tf-demo\/src\//,
+			},
+			{
+				name: "tf-demo-dumdict-storage-implementation-is-private",
+				comment:
+					"Callers must choose the action-level or transaction-local Dumdict interface; its implementation folder is private.",
+				fromNot:
+					/^app\/tf-demo\/convex\/(?:dumdictStorage|dumdictActionStorage|dumdictTransaction)(?:\.ts|\/)/,
+				to: /^app\/tf-demo\/convex\/dumdictStorage\//,
+			},
+			{
+				name: "tf-demo-notes-hide-their-internals",
+				comment:
+					"Outside code, including tests, may use only the Notes root interface.",
+				fromNot: /^app\/tf-demo\/src\/notes\//,
+				to: /^app\/tf-demo\/src\/notes\/(?!index\.ts$)/,
+				exempt: {
+					ticket: "#416",
+					files: [
+						"app/tf-demo/src/playground/entries/deck-models/real-note.tsx",
+						"app/tf-demo/src/playground/entries/playground-note.tsx",
+						"app/tf-demo/src/views/note-skeletons.tsx",
+						"app/tf-demo/src/views/paginated-note-loading.ts",
+						"app/tf-demo/src/views/resolving-reading-note.tsx",
+						"app/tf-demo/tests/definition-render.test.ts",
+						"app/tf-demo/tests/types/inferred-reading-render-context.test.ts",
+						"app/tf-demo/tests/types/note-public-interface.ts",
+						"app/tf-demo/tooling/playground-snapshot.ts",
+						"app/tf-demo/tooling/print-playground-snapshot.ts",
+					],
+				},
+			},
+			{
+				name: "tf-demo-notes-universal-does-not-import-languages",
+				comment:
+					"Universal Note rendering must not depend on a language module.",
+				from: /^app\/tf-demo\/src\/notes\/universal\//,
+				to: /^app\/tf-demo\/src\/notes\/de\//,
+			},
+			{
+				name: "tf-demo-german-renderer-overrides-are-private",
+				comment:
+					"Private German renderer leaves may only be imported by the auditable German registry.",
+				fromNot: /^app\/tf-demo\/src\/notes\/de\/registry\.ts$/,
+				to: /^app\/tf-demo\/src\/notes\/de\/block-renderer-overrides\//,
+			},
+		],
+	],
+]);
+
+/** Generated code imports what its generator decides; no boundary applies. */
+const generatedSource = /\/convex\/_generated\//;
+
+function breaksBoundary(
+	boundary: ModuleBoundary,
+	importer: string,
+	target: string,
+	reference: ImportReference,
+): boolean {
+	if (boundary.from && !boundary.from.test(importer)) return false;
+	if (boundary.fromNot?.test(importer)) return false;
+	if (!boundary.to.test(target)) return false;
+	if (boundary.allowTypeOnly && reference.typeOnly) return false;
+	return !boundary.exempt?.files.includes(importer);
+}
+
+interface PathAlias {
+	prefix: string;
+	suffix: string;
+	wildcard: boolean;
+	targets: string[];
+}
+
+/** The `compilerOptions.paths` of a workspace's root tsconfig. */
+async function pathAliases(workspaceDir: string): Promise<PathAlias[]> {
+	const path = join(workspaceDir, "tsconfig.json");
+	if (!existsSync(path)) return [];
+	const config = Bun.JSONC.parse(await readFile(path, "utf8")) as {
+		compilerOptions?: {
+			baseUrl?: string;
+			paths?: Record<string, string[]>;
+		};
+	};
+	const base = join(workspaceDir, config.compilerOptions?.baseUrl ?? ".");
+	return Object.entries(config.compilerOptions?.paths ?? {}).map(
+		([pattern, targets]) => {
+			const [prefix = "", suffix = ""] = pattern.split("*");
+			return {
+				prefix,
+				suffix,
+				wildcard: pattern.includes("*"),
+				targets: targets.map((target) => join(base, target)),
+			};
+		},
+	);
+}
+
+const resolvableExtensions = [".ts", ".tsx", ".d.ts", ".js", ".jsx", ".mjs"];
+
+function resolveFile(base: string): string {
+	const candidates = [
+		base,
+		base.replace(/\.([cm]?)js(x?)$/, ".$1ts$2"),
+		...resolvableExtensions.map((extension) => `${base}${extension}`),
+		...resolvableExtensions.map((extension) =>
+			join(base, `index${extension}`),
+		),
+	];
+	return (
+		candidates.find(
+			(candidate) =>
+				existsSync(candidate) &&
+				sourceExtensions.has(extname(candidate)),
+		) ?? base
+	);
+}
+
+/** The file a relative or aliased specifier names, or undefined for a package. */
+function resolveLocalImport(
+	file: string,
+	specifier: string,
+	aliases: readonly PathAlias[],
+): string | undefined {
+	if (specifier.startsWith(".")) {
+		return resolveFile(resolve(dirname(file), specifier));
+	}
+	for (const alias of aliases) {
+		const matches = alias.wildcard
+			? specifier.startsWith(alias.prefix) &&
+				specifier.endsWith(alias.suffix)
+			: specifier === alias.prefix;
+		const target = alias.targets[0];
+		if (!matches || !target) continue;
+		const matched = specifier.slice(
+			alias.prefix.length,
+			specifier.length - alias.suffix.length,
+		);
+		return resolveFile(target.replace("*", matched));
+	}
+	return undefined;
 }
 
 const dumSchemaAuthoringSubpaths = new Set([
@@ -320,9 +506,42 @@ export async function validateSourceImports(options: {
 
 	for (const workspace of options.workspaces) {
 		const declared = declaredDependencies(workspace);
+		const boundaries = moduleBoundaries.get(workspace.relativePath) ?? [];
+		const aliases =
+			boundaries.length > 0 ? await pathAliases(workspace.dir) : [];
 		for (const file of await sourceFiles(workspace.dir)) {
 			const contents = await readFile(file, "utf8");
-			for (const specifier of importSpecifiers(contents, file)) {
+			const importer = relative(options.repositoryRoot, file).replaceAll(
+				"\\",
+				"/",
+			);
+			for (const reference of importReferences(contents, file)) {
+				const { specifier } = reference;
+				const resolved =
+					boundaries.length > 0 && !generatedSource.test(importer)
+						? resolveLocalImport(file, specifier, aliases)
+						: undefined;
+				if (resolved && workspaceForPath(resolved, [workspace])) {
+					const target = relative(
+						options.repositoryRoot,
+						resolved,
+					).replaceAll("\\", "/");
+					for (const boundary of boundaries) {
+						if (
+							breaksBoundary(
+								boundary,
+								importer,
+								target,
+								reference,
+							)
+						)
+							issues.push({
+								file: importer,
+								message: `${boundary.name}: ${boundary.comment}`,
+								specifier,
+							});
+					}
+				}
 				if (specifier.startsWith(".") || isAbsolute(specifier)) {
 					const targetPath = resolve(dirname(file), specifier);
 					const target = workspaceForPath(
