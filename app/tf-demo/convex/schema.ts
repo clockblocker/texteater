@@ -176,9 +176,6 @@ export default defineSchema({
 		normalizedSurface: v.string(),
 		spelling: surfaceSpellingValidator,
 		surfaceFeatures: v.any(),
-		/** Legacy input retained only until the composition cutover completes. */
-		articleReference: v.optional(v.any()),
-		redirectedTo: v.optional(v.id("surfaces")),
 		inflectionalFeatures: v.optional(v.any()),
 	})
 		.index("by_surface_key", ["surfaceKey"])

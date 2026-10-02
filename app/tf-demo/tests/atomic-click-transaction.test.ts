@@ -584,21 +584,6 @@ test("a noun's owned article is a member of its one occurrence, and derives no D
 	await expectCompleted(t, "request-1", result.attestationId);
 });
 
-test("an in-flight legacy Surface proposal cannot reintroduce articleReference", async () => {
-	const t = createTestConvex();
-	const { selection, guard } = await selectIn(t, ["Banken"]);
-	const before = await snapshot(t);
-	const args = bankOccurrenceCommit(selection, guard, "New");
-	Object.assign(args.occurrence.attestation, {
-		surface: { ...surface, articleReference: null },
-	});
-
-	await expect(
-		t.mutation(internal.persistence.persistResolvedClick, args),
-	).rejects.toThrow();
-	expect(await snapshot(t)).toEqual(before);
-});
-
 test("subject es materializes its exact Reading and Knowledge while retaining one verbal occurrence", async () => {
 	const verbLemma = {
 		unitKind: "Lemma",

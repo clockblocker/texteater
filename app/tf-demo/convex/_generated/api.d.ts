@@ -25,7 +25,6 @@ import type * as intakeRuns from "../intakeRuns.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
 import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.js";
 import type * as knowledgeSettings from "../knowledgeSettings.js";
-import type * as migrations from "../migrations.js";
 import type * as model_canonicalJson from "../model/canonicalJson.js";
 import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
@@ -104,7 +103,6 @@ declare const fullApi: ApiFromModules<{
   knowledgeGeneration: typeof knowledgeGeneration;
   knowledgeGenerationActions: typeof knowledgeGenerationActions;
   knowledgeSettings: typeof knowledgeSettings;
-  migrations: typeof migrations;
   "model/canonicalJson": typeof model_canonicalJson;
   "model/definitionTexts": typeof model_definitionTexts;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
@@ -187,6 +185,5 @@ export declare const internal: FilterApi<
 >;
 
 export declare const components: {
-  migrations: import("@convex-dev/migrations/_generated/component.js").ComponentApi<"migrations">;
   rateLimiter: import("@convex-dev/rate-limiter/_generated/component.js").ComponentApi<"rateLimiter">;
 };

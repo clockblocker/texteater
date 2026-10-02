@@ -235,19 +235,11 @@ async function loadSurfaceRouteNote(
 			cursor: contextCursor ?? null,
 			numItems: SURFACE_ANALYSIS_PAGE_SIZE,
 		});
-	let activeRedirect: Id<"surfaces"> | undefined;
-	let surfaces = page.page.filter((surface) => !surface.redirectedTo);
-	// Every page keys a redirected active analysis by the saved key, so the
-	// client's cross-page dedupe sees one analysis. Only the first page adds
-	// the active analysis when its own page lacks it.
-	if (activeAnalysisKey !== undefined) {
-		const savedSurface = await ctx.db.get(activeAnalysisKey);
-		activeRedirect = savedSurface?.redirectedTo;
-		const activeSurface = savedSurface?.redirectedTo
-			? await ctx.db.get(savedSurface.redirectedTo)
-			: savedSurface;
+	let surfaces = page.page;
+	// Only the first page adds the active analysis when its own page lacks it.
+	if (activeAnalysisKey !== undefined && contextCursor === undefined) {
+		const activeSurface = await ctx.db.get(activeAnalysisKey);
 		if (
-			contextCursor === undefined &&
 			activeSurface?.language === language &&
 			activeSurface.normalizedSurface === normalizedSurface &&
 			!surfaces.some((surface) => surface._id === activeSurface._id)
@@ -271,10 +263,7 @@ async function loadSurfaceRouteNote(
 		}
 		return [
 			{
-				analysisKey:
-					surface._id === activeRedirect && activeAnalysisKey
-						? activeAnalysisKey
-						: surface._id,
+				analysisKey: surface._id,
 				surfaceId: surface._id,
 				lemmaId: lemma._id,
 				presented: presentSurface(surfaceValue(surface, lemma)),
@@ -342,7 +331,7 @@ async function loadLemmaRouteNote(
 				cursor: cursor.cursor,
 				numItems: ROUTE_CONNECTION_PAGE_SIZE,
 			});
-		surfaces = page.page.filter((surface) => !surface.redirectedTo);
+		surfaces = page.page;
 		continueCursor = page.isDone
 			? routeConnectionCursor("Lemma", "sameWrittenForm", null)
 			: routeConnectionCursor("Lemma", "surfaces", page.continueCursor);
