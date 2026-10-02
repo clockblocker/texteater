@@ -16,28 +16,35 @@ bun run demo
 The first run creates a local deployment and writes `VITE_CONVEX_URL` to
 `.env.local`. Later runs reuse that deployment and its data.
 
-From `app/tf-demo`, set the TypeSafe credential on the Convex deployment.
-Omit the value to enter it interactively without putting the secret in shell
-history:
+Text intake needs `TYPESAFE_API_KEY` on the Convex deployment: Dumgen's
+`segment.inUnits` asks jev for each Sentence's units. Convex actions read
+deployment environment variables, not your shell or an `.env.local`, so
+`bun run dev` first runs `bun run env:sync`. It pushes each key the
+deployment reads from the first place that sets it: your shell, then
+`app/tf-demo/.env.local`, then the repository root's `.env.local`, then a zsh
+login shell, which finds exports in `~/.zshrc` when `bun run dev` starts from
+a shell that never read it. Values are never printed. A key found nowhere
+gets a boxed warning, the dev server starts anyway, and adding a text then
+fails with "Intake isn't configured". No other provider key is needed while
+click resolution is rebuilt
+([#848](https://github.com/clockblocker/texteater/issues/848)): a click
+selects its unit and calls no model.
+
+The sync runs before `convex dev` starts the local backend, and
+`convex env set` briefly starts a stopped backend to write the key, so a
+fresh `bun run dev` picks the keys up. The local backend's Node actions keep
+the environment they first loaded with, so restart `bun run dev` after
+setting or changing a key while it runs. Restart once as well when
+`convex dev` itself replaces the deployment after the sync: on the very first
+run, or when a backend upgrade is answered with "start fresh", which wipes
+its variables.
+
+To set the key by hand, run this from `app/tf-demo`; omitting the value
+prompts for it, which keeps the secret out of shell history:
 
 ```sh
 bun x convex env set TYPESAFE_API_KEY
 ```
-
-Convex actions read deployment environment variables. Keys in your shell or
-an `.env.local` are not automatically available there. `bun run dev` runs
-`bun run env:sync`, which pushes `TYPESAFE_API_KEY` from the first place that
-sets it: your shell, then `app/tf-demo/.env.local`, then the repository root's
-`.env.local`. When none sets it, the sync prints a boxed warning and leaves the
-deployment's key as it was. TypeSafe is required during text intake, where
-Dumgen's `segment.inUnits` asks jev for each Sentence's units; a deployment
-without the key rejects every new text with "Intake isn't configured". No
-other provider key is needed while click resolution is rebuilt
-([#848](https://github.com/clockblocker/texteater/issues/848)): a click
-selects its unit and calls no model. Configure the key again when switching
-to a new deployment, including a local backend started fresh. The local
-backend's Node actions keep the environment they first loaded with, so
-restart `bun run dev` after setting or changing a key.
 
 Two deployment flags open anonymous entry points that a hosted deployment
 must keep closed. `bun run dev` sets both to `1` on the local deployment
