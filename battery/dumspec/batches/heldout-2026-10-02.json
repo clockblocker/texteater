@@ -2,7 +2,7 @@
 	"note": "Held-out candidates for German segment.inUnits, drafted 2026-10-02 in records/de with Full coverage at Segmentation depth (members, routes and rationales; no Attestations). None is in the frozen dev set (dev@90c1afa7a4df706d) and none was used for tuning or is named by a Rule. Every row is held-out: approving it sets reviewDepth Segmentation, and the lab counts it as held-out at its next freeze. A row with an openQuestion waits for its ruling; H12's question (does the participle gebildeter govern aus in aus Ton?) was ruled on 2026-10-02: aus stays free. Consistency sets: S1 den Faden verlieren, idiom and literal, S2 Collocations, S3 Sayings, S4 split particle verbs and correlators, S5 auxiliaries and modals in one clause, S6 an article across an extended attribute, S7 literal controls for idioms, S8 a preposition spelled like a particle, S9 bisschen and its article, S10 the state passive.",
 	"reserves": [
 		"de/die-opfer-derer-wir-heute-gedenken-sind-nicht-vergessen (dropped: route-only targets would take it out of loadSpecRecords, which the derer inventory test reads)",
-		"de/wir-gedenken-derer-die-im-krieg-gestorben-sind (dropped for the same reason; its im is still one Segment)",
+		"de/wir-gedenken-derer-die-im-krieg-gestorben-sind (dropped for the same reason; its im is now two Segments, i and m, per de/fused-word-pieces since b01a7659)",
 		"de/die-zahl-derer-die-das-angebot-nutzen-steigt (not drafted; same derer test)"
 	],
 	"rows": [
