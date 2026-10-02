@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal PunctType feature.",
-	family: "feature",
-	leaf: "PunctType",
 	order: 18036,
-	subject: "PunctType",
 	title: "PunctType",
 	body: `
 \`PunctType\` names the kind of punctuation mark a [\`PUNCT\`](/u/entity/lemma/lexeme/punct/) Lemma is, such as \`Comm\` for a comma or \`Peri\` for a period. It is a [UD-compliant](https://universaldependencies.org/u/feat/PunctType.html) feature in the Feature Pool.

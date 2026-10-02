@@ -11,10 +11,7 @@ const whatever = specExample(
 const document = defineUniversalConceptPage({
 	description:
 		"Custom Dumling reference for the sourceLang feature on Foreign Lemmas.",
-	family: "feature",
-	leaf: "SourceLang",
 	order: 18037.25,
-	subject: "SourceLang",
 	title: "SourceLang",
 	body: `
 \`sourceLang\` names the language a [\`Foreign\`](/u/entity/lemma/foreign/foreign/) Lemma comes from. It is the Foreign route's only Core Feature, part of the Lemma's identity together with the text's language and the Canonical Form (ADR 0045).

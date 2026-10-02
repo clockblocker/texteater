@@ -6,10 +6,7 @@ const habayitAttestation = specExample("he/chazarti-labayit");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Definite feature.",
-	family: "feature",
-	leaf: "Definite",
 	order: 18014,
-	subject: "Definite",
 	title: "Definite",
 	body: `
 \`Definite\` marks definiteness-related status on a [\`Lemma\`](/u/entity/lemma/) or a concrete surface.

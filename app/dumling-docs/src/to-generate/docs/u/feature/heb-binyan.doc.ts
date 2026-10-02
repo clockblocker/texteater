@@ -8,10 +8,7 @@ const paalVerb = specExample("he/hu-katav-maher");
 const document = defineUniversalConceptPage({
 	description:
 		"Hebrew-specific reference for the HebBinyan feature used on verbs.",
-	family: "feature",
-	leaf: "HebBinyan",
 	order: 18023.5,
-	subject: "HebBinyan",
 	title: "HebBinyan",
 	body: `
 \`HebBinyan\` marks the Hebrew verbal binyan of a [\`Lemma\`](/u/entity/lemma/).

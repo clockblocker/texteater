@@ -7,7 +7,6 @@ export type DocPageMeta = {
 	description?: string;
 	navTitle?: string;
 	order?: number;
-	slug?: string;
 	title: string;
 };
 
@@ -56,35 +55,19 @@ export type GeneratedDocPageDocument = Prettify<
 	}
 >;
 
-type LegacyMirroredPageFields = {
-	doc?: {
-		family: DocCitePageFamily;
-		leaf?: string | { docId: string; html: string };
-		subject: string;
-	};
-};
-
 export type UniversalConceptPageDocument = Prettify<
-	SharedTypedDocFields &
-		LegacyMirroredPageFields & {
-			[universalConceptPageMarker]: true;
-		}
+	SharedTypedDocFields & {
+		[universalConceptPageMarker]: true;
+	}
 >;
 
 export type LanguageOverlayPageDocument = Prettify<
-	SharedTypedDocFields &
-		LegacyMirroredPageFields & {
-			[languageOverlayPageMarker]: true;
-		}
+	SharedTypedDocFields & {
+		[languageOverlayPageMarker]: true;
+	}
 >;
 
 export type TypedDocDocument =
 	| GeneratedDocPageDocument
 	| UniversalConceptPageDocument
 	| LanguageOverlayPageDocument;
-
-export type TypedDocSourceDefinition = TypedDocDocument;
-
-export type TypedDocExport =
-	| TypedDocSourceDefinition
-	| readonly TypedDocSourceDefinition[];

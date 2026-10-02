@@ -2,9 +2,7 @@ import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirror
 
 const document = defineLanguageOverlayPage({
 	description: "German Attestation occurrence evidence fields.",
-	family: "feature-attestation",
 	order: 8100,
-	subject: "attestation",
 	title: "Attestation",
 	body: `
 Attestations preserve click-independent occurrence evidence without importing

@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Style feature.",
-	family: "feature",
-	leaf: "Style",
 	order: 18037.5,
-	subject: "Style",
 	title: "Style",
 	body: `
 \`Style\` marks the register, sublanguage, or stylistic coloring associated with a word or form.

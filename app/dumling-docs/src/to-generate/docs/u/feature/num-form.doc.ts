@@ -8,10 +8,7 @@ const halfFraction = specExample("en/use-half-the-flour-first");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal NumForm feature.",
-	family: "feature",
-	leaf: "NumForm",
 	order: 18028,
-	subject: "NumForm",
 	title: "NumForm",
 	body: `
 \`NumForm\` marks the written form used by a numeral or number-related [\`Lemma\`](/u/entity/lemma/).

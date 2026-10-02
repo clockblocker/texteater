@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal ExtPos feature.",
-	family: "feature",
-	leaf: "ExtPos",
 	order: 18017,
-	subject: "ExtPos",
 	title: "ExtPos",
 	body: `
 \`ExtPos\` marks the effective external part of speech of an expression when that expression behaves like a different UPOS category from the head word itself.

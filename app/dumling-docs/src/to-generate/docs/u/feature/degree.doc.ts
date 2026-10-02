@@ -7,10 +7,7 @@ const comparativeDegree = specExample("en/this-is-the-better-option");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Degree feature.",
-	family: "feature",
-	leaf: "Degree",
 	order: 18015,
-	subject: "Degree",
 	title: "Degree",
 	body: `
 \`Degree\` marks degree on scalar items such as adjectives and adverbs.

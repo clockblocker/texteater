@@ -6,10 +6,7 @@ const erinnertVerb = specExample("de/sie-erinnert-sich-an-den-geruch");
 const document = defineUniversalConceptPage({
 	description:
 		"Custom Dumling reference for the LexicallyReflexive feature on inherently reflexive Lemmas.",
-	family: "feature",
-	leaf: "LexicallyReflexive",
 	order: 18025,
-	subject: "LexicallyReflexive",
 	title: "LexicallyReflexive",
 	body: `
 \`LexicallyReflexive\` marks that a [\`Lemma\`](/u/entity/lemma/) is lexically reflexive and names the case its reflexive takes.

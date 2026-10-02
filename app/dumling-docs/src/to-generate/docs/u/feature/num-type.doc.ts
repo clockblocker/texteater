@@ -4,7 +4,6 @@ const document = defineUniversalConceptStubPage({
 	family: "feature",
 	leaf: "NumType",
 	order: 18029,
-	subject: "NumType",
 	title: "NumType",
 });
 

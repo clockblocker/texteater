@@ -4,7 +4,6 @@ const document = defineUniversalConceptStubPage({
 	family: "feature",
 	leaf: "VerbForm",
 	order: 18039,
-	subject: "VerbForm",
 	title: "VerbForm",
 });
 

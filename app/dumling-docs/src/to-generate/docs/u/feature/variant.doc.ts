@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Variant feature.",
-	family: "feature",
-	leaf: "Variant",
 	order: 18038,
-	subject: "Variant",
 	title: "Variant",
 	body: `
 \`Variant\` is UD's feature for an alternative form of a word, such as \`Short\` for a short adjective form. It is a [UD-compliant](https://universaldependencies.org/u/feat/Variant.html) feature in the Feature Pool.

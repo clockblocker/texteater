@@ -8,10 +8,7 @@ const ihremPoliteDeterminer = specExample(
 const document = defineLanguageOverlayPage({
 	description: "German Poss.",
 	examples: [ihremPoliteDeterminer],
-	family: "feature",
-	leaf: "Poss",
 	order: 8034,
-	subject: "Poss",
 	title: "Poss",
 });
 

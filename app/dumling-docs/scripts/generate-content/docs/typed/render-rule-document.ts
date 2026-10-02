@@ -1,7 +1,10 @@
-import type { AttestedAttestation } from "../../../../src/lib/docs/document-shapes.ts";
+import type {
+	AttestedAttestation,
+	TypedDocDocument,
+} from "../../../../src/lib/docs/document-shapes.ts";
 import { describeLemma } from "../../../../src/lib/unit-presentation";
 import { withLinkedAttestationSpan } from "../attested-attestation";
-import type { RuleBlock, RuleDocument } from "./load-typed-doc-source";
+import type { RuleBlock } from "./load-typed-doc-source";
 
 export type RenderedChildPage = {
 	description?: string;
@@ -35,7 +38,7 @@ function renderRuleBlock(block: RuleBlock, includeExamples: boolean): string[] {
 }
 
 export function renderRuleDocumentBody(
-	document: RuleDocument,
+	document: TypedDocDocument,
 	options: { includeExamples?: boolean } = {},
 ): string {
 	const includeExamples = options.includeExamples ?? true;

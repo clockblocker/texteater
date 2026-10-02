@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal AdpType feature.",
-	family: "feature",
-	leaf: "AdpType",
 	order: 18011,
-	subject: "AdpType",
 	title: "AdpType",
 	body: `
 \`AdpType\` marks the subtype of an adposition [\`Lemma\`](/u/entity/lemma/).

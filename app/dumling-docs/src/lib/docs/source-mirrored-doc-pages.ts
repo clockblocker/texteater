@@ -20,10 +20,12 @@ type SharedOptions = DocSection & {
 	title: string;
 };
 
-type LegacyMirroredOptions = SharedOptions & {
+type UniversalStubOptions = Omit<
+	SharedOptions,
+	"body" | "examples" | "subsections"
+> & {
 	family: DocCitePageFamily;
 	leaf?: string | { docId: string; html: string };
-	subject: string;
 };
 
 function toMeta(options: {
@@ -40,7 +42,7 @@ function toMeta(options: {
 	};
 }
 
-function leafLabel(leaf: LegacyMirroredOptions["leaf"], title: string): string {
+function leafLabel(leaf: UniversalStubOptions["leaf"], title: string): string {
 	if (typeof leaf === "string") {
 		return leaf;
 	}
@@ -49,7 +51,7 @@ function leafLabel(leaf: LegacyMirroredOptions["leaf"], title: string): string {
 }
 
 function defaultUniversalStubDescription(
-	options: Omit<LegacyMirroredOptions, "body" | "examples" | "subsections">,
+	options: UniversalStubOptions,
 ): string {
 	const label = leafLabel(options.leaf, options.title);
 
@@ -115,16 +117,11 @@ export function defineGeneratedDocPage(
 }
 
 export function defineUniversalConceptPage(
-	options: LegacyMirroredOptions,
+	options: SharedOptions,
 ): UniversalConceptPageDocument {
 	return {
 		[universalConceptPageMarker]: true,
 		body: options.body,
-		doc: {
-			family: options.family,
-			leaf: options.leaf,
-			subject: options.subject,
-		},
 		examples: options.examples ?? [],
 		meta: toMeta(options),
 		subsections: options.subsections,
@@ -132,7 +129,7 @@ export function defineUniversalConceptPage(
 }
 
 export function defineUniversalConceptStubPage(
-	options: Omit<LegacyMirroredOptions, "body" | "examples" | "subsections">,
+	options: UniversalStubOptions,
 ): UniversalConceptPageDocument {
 	return defineUniversalConceptPage({
 		...options,
@@ -142,25 +139,13 @@ export function defineUniversalConceptStubPage(
 }
 
 export function defineLanguageOverlayPage(
-	options: LegacyMirroredOptions,
+	options: SharedOptions,
 ): LanguageOverlayPageDocument {
 	return {
 		[languageOverlayPageMarker]: true,
 		body: options.body,
-		doc: {
-			family: options.family,
-			leaf: options.leaf,
-			subject: options.subject,
-		},
 		examples: options.examples ?? [],
 		meta: toMeta(options),
 		subsections: options.subsections,
 	};
 }
-
-export type {
-	DocSection,
-	GeneratedDocPageDocument,
-	LanguageOverlayPageDocument,
-	UniversalConceptPageDocument,
-};

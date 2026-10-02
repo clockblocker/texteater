@@ -10,10 +10,7 @@ const kaasherTemporal = specExample("he/namshich-kaasher-kulam-yagiu");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Case feature.",
-	family: "feature",
-	leaf: "Case",
 	order: 18012,
-	subject: "Case",
 	title: "Case",
 	body: `
 \`Case\` marks grammatical or adpositional case.

@@ -6,10 +6,7 @@ const zuInfinitivalParticle = specExample("de/das-ist-schwer-zu-erklaeren");
 const document = defineLanguageOverlayPage({
 	description: "German PartType.",
 	examples: [zuInfinitivalParticle],
-	family: "feature",
-	leaf: "PartType",
 	order: 8030,
-	subject: "PartType",
 	title: "PartType",
 });
 

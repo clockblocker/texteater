@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Evident feature.",
-	family: "feature",
-	leaf: "Evident",
 	order: 18016.5,
-	subject: "Evident",
 	title: "Evident",
 	body: `
 \`Evident\` marks evidentiality: whether a form encodes the speaker's source of information.

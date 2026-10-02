@@ -14,10 +14,7 @@ const document = defineLanguageOverlayPage({
 		mitgebrachtParticiple,
 		hinauslaufenInfinitive,
 	],
-	family: "feature",
-	leaf: "HasSepPrefix",
 	order: 8023,
-	subject: "HasSepPrefix",
 	title: "HasSepPrefix",
 	body: `
 In German, \`HasSepPrefix\` is used on Lemmas whose lexical analysis includes a separable verbal prefix.

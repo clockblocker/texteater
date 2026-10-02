@@ -7,10 +7,7 @@ const yeshExistentialVerb = specExample("he/yesh-kafe-bamitbach");
 const document = defineUniversalConceptPage({
 	description:
 		"Hebrew-specific reference for the HebExistential feature used on verbs.",
-	family: "feature",
-	leaf: "HebExistential",
 	order: 18023.6,
-	subject: "HebExistential",
 	title: "HebExistential",
 	body: `
 \`HebExistential\` marks that a Hebrew [\`Lemma\`](/u/entity/lemma/) is an existential verb.

@@ -7,10 +7,7 @@ const twentyFirstHyphenatedOrdinal = specExample(
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Hyph feature.",
-	family: "feature",
-	leaf: "Hyph",
 	order: 18024,
-	subject: "Hyph",
 	title: "Hyph",
 	body: `
 \`Hyph\` marks that a [\`Lemma\`](/u/entity/lemma/) is conventionally hyphenated.

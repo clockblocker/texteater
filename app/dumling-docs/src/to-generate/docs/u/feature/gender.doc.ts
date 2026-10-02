@@ -10,10 +10,7 @@ const atFemininePronoun = specExample("he/rak-at-yodaat");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Gender feature.",
-	family: "feature",
-	leaf: "Gender",
 	order: 18019,
-	subject: "Gender",
 	title: "Gender",
 	body: `
 \`Gender\` marks grammatical gender.

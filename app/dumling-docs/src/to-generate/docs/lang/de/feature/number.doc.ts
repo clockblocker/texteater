@@ -8,10 +8,7 @@ const kindernPluralNoun = specExample(
 const document = defineLanguageOverlayPage({
 	description: "German Number.",
 	examples: [kindernPluralNoun],
-	family: "feature",
-	leaf: "Number",
 	order: 8027,
-	subject: "Number",
 	title: "Number",
 });
 

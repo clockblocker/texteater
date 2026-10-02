@@ -1,9 +1,6 @@
 import { defineLanguageOverlayPage } from "../../../../../../../lib/docs/source-mirrored-doc-pages.ts";
 
 const document = defineLanguageOverlayPage({
-	family: "pos",
-	leaf: "ADJ",
-	subject: "ADJ",
 	title: "ADJ",
 	body: `
 A participial adjective's Canonical Form is the uninflected participle, whether

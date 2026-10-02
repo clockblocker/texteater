@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal NounClass feature.",
-	family: "feature",
-	leaf: "NounClass",
 	order: 18026.5,
-	subject: "NounClass",
 	title: "NounClass",
 	body: `
 \`NounClass\` marks a noun class associated with a [\`Lemma\`](/u/entity/lemma/) or with agreement targeting that noun.

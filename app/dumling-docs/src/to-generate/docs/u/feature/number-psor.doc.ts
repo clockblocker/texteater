@@ -7,7 +7,6 @@ const document = defineUniversalConceptStubPage({
 		html: "Number-psor",
 	},
 	order: 18028,
-	subject: "Number[psor]",
 	title: "Number[psor]",
 });
 

@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal ConjType feature.",
-	family: "feature",
-	leaf: "ConjType",
 	order: 18013,
-	subject: "ConjType",
 	title: "ConjType",
 	body: `
 \`ConjType\` marks a subtype of a conjunction [\`Lemma\`](/u/entity/lemma/).

@@ -6,10 +6,7 @@ const tzahalAbbreviation = specExample("he/hu-sheret-betsahal");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Abbr feature.",
-	family: "feature",
-	leaf: "Abbr",
 	order: 18010,
-	subject: "Abbr",
 	title: "Abbr",
 	body: `
 \`Abbr\` marks that a [\`Lemma\`](/u/entity/lemma/) is an abbreviation.

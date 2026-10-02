@@ -4,7 +4,6 @@ const document = defineUniversalConceptStubPage({
 	family: "feature",
 	leaf: "Reflex",
 	order: 18037,
-	subject: "Reflex",
 	title: "Reflex",
 });
 

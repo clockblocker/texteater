@@ -3,10 +3,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 const document = defineUniversalConceptPage({
 	description:
 		"Hebrew-specific reference for the Prefix feature used on adverbial Lemmas.",
-	family: "feature",
-	leaf: "Prefix",
 	order: 18034.5,
-	subject: "Prefix",
 	title: "Prefix",
 	body: `
 \`Prefix\` marks that a Hebrew [\`Lemma\`](/u/entity/lemma/) is a non-standalone prefixal adverbial.

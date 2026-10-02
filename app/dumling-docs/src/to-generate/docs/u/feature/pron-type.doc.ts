@@ -4,7 +4,6 @@ const document = defineUniversalConceptStubPage({
 	family: "feature",
 	leaf: "PronType",
 	order: 18035,
-	subject: "PronType",
 	title: "PronType",
 });
 

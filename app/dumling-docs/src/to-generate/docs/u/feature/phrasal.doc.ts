@@ -7,10 +7,7 @@ const takeOffVerb = specExample("en/the-plane-will-take-off-at-dawn");
 const document = defineUniversalConceptPage({
 	description:
 		"Custom Dumling reference for the Phrasal feature on phrasal Lemmas.",
-	family: "feature",
-	leaf: "Phrasal",
 	order: 18031.5,
-	subject: "Phrasal",
 	title: "Phrasal",
 	body: `
 \`Phrasal\` marks that a [\`Lemma\`](/u/entity/lemma/) is stored as a phrasal lexical item.

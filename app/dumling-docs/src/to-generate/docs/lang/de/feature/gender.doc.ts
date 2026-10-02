@@ -6,10 +6,7 @@ const mutterNoun = specExample("de/meine-mutter-ruft-jeden-sonntag-an");
 const document = defineLanguageOverlayPage({
 	description: "German Gender.",
 	examples: [mutterNoun],
-	family: "feature",
-	leaf: "Gender",
 	order: 8019,
-	subject: "Gender",
 	title: "Gender",
 });
 

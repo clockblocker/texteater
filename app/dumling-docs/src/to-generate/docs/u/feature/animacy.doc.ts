@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Animacy feature.",
-	family: "feature",
-	leaf: "Animacy",
 	order: 18011.1,
-	subject: "Animacy",
 	title: "Animacy",
 	body: `
 \`Animacy\` marks an animacy class associated with a noun or with agreement targeting that noun.

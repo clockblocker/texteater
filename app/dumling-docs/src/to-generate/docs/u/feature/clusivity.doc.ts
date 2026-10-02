@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Clusivity feature.",
-	family: "feature",
-	leaf: "Clusivity",
 	order: 18012.5,
-	subject: "Clusivity",
 	title: "Clusivity",
 	body: `
 \`Clusivity\` marks whether a first-person plural reference includes the listener.

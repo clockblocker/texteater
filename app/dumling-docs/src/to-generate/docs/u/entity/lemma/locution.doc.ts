@@ -3,7 +3,6 @@ import { defineUniversalConceptStubPage } from "../../../../../lib/docs/source-m
 const document = defineUniversalConceptStubPage({
 	family: "locution",
 	order: 16000,
-	subject: "locution",
 	title: "Locution",
 });
 

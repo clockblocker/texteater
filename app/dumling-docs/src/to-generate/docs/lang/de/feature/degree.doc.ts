@@ -8,10 +8,7 @@ const besserenComparativeAdjective = specExample(
 const document = defineLanguageOverlayPage({
 	description: "German Degree.",
 	examples: [besserenComparativeAdjective],
-	family: "feature",
-	leaf: "Degree",
 	order: 8015,
-	subject: "Degree",
 	title: "Degree",
 });
 

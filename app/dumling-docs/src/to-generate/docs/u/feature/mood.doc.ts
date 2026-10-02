@@ -1,17 +1,16 @@
 import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored-doc-pages.ts";
 import { specExample } from "../../../../lib/docs/spec-examples.ts";
 
-const gehImperative = specExample("de/es-schneit-und-ich-bleibe-drinnen-geh-bitte-nicht-ohne-jacke");
+const gehImperative = specExample(
+	"de/es-schneit-und-ich-bleibe-drinnen-geh-bitte-nicht-ohne-jacke",
+);
 const doesIndicative = specExample("en/does-this-key-open-the-archive");
 const wereSubjunctive = specExample("en/if-i-were-you-i-would-wait");
 const boUImperative = specExample("he/bou-lekan");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Mood feature.",
-	family: "feature",
-	leaf: "Mood",
 	order: 18026,
-	subject: "Mood",
 	title: "Mood",
 	body: `
 \`Mood\` marks the clause mood of a verbal surface, such as indicative, imperative, or subjunctive.

@@ -3,7 +3,6 @@ import { defineUniversalConceptStubPage } from "../../../lib/docs/source-mirrore
 const document = defineUniversalConceptStubPage({
 	family: "entity",
 	order: 11000,
-	subject: "entity",
 	title: "Entity",
 });
 

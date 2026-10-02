@@ -7,10 +7,7 @@ const berlin = specExample("de/viele-vermissen-das-alte-berlin");
 const document = defineLanguageOverlayPage({
 	description: "German PROPN.",
 	examples: [struwwelpeter, berlin],
-	family: "pos",
-	leaf: "PROPN",
 	order: 4005,
-	subject: "PROPN",
 	title: "PROPN",
 });
 

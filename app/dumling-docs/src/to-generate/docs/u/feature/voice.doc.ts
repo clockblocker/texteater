@@ -9,10 +9,7 @@ const hitkatevMiddleVerb = specExample("he/hu-hitkatev-im-hamartse");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Voice feature.",
-	family: "feature",
-	leaf: "Voice",
 	order: 18040.5,
-	subject: "Voice",
 	title: "Voice",
 	body: `
 \`Voice\` marks how the event structure is grammatically oriented, for example toward an actor, patient, middle reading, or other voice category.

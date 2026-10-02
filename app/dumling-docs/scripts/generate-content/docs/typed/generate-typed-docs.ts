@@ -1,8 +1,8 @@
 import { fileURLToPath } from "node:url";
 import { rules } from "dumspec";
+import type { TypedDocDocument } from "../../../../src/lib/docs/document-shapes.ts";
 import { specRecords } from "../../../../src/lib/docs/spec-examples.ts";
 import { pathRelativeToSiteRoot } from "../../shared/paths";
-import { frontmatterForDocMeta } from "../metadata";
 import {
 	generatedPathForTypedDoc,
 	publicHrefForRouteId,
@@ -16,7 +16,6 @@ import { listTypedDocEntrypoints } from "./list-typed-doc-entrypoints";
 import type {
 	GeneratedDocSource,
 	LanguageOverlaySource,
-	RuleDocument,
 	TypedDocSource,
 	UniversalConceptSource,
 } from "./load-typed-doc-source";
@@ -28,7 +27,7 @@ import {
 } from "./render-rule-document";
 
 type RenderPart = {
-	document: RuleDocument;
+	document: TypedDocDocument;
 	includeExamples: boolean;
 };
 
@@ -54,8 +53,8 @@ function mergeInheritedField<T>(
 }
 
 function mergeMirroredMeta(
-	universal: RuleDocument["meta"],
-	overlay?: RuleDocument["meta"],
+	universal: TypedDocDocument["meta"],
+	overlay?: TypedDocDocument["meta"],
 ): {
 	description?: string;
 	navTitle?: string;
@@ -79,16 +78,16 @@ function emitSingleDocumentDraft(
 	source: GeneratedDocSource | UniversalConceptSource | LanguageOverlaySource,
 	routeId: string,
 ): EmittedDocDraft {
-	const frontmatter = frontmatterForDocMeta(source.document.meta);
+	const meta = source.document.meta;
 	return {
-		description: frontmatter.description,
-		navTitle: frontmatter.navTitle,
-		order: frontmatter.order,
+		description: meta.description,
+		navTitle: meta.navTitle,
+		order: meta.order ?? 0,
 		parts: [{ document: source.document, includeExamples: true }],
 		routeId,
 		sections: [],
 		sourcePath: source.sourcePath,
-		title: frontmatter.title,
+		title: meta.title,
 	};
 }
 
@@ -320,10 +319,9 @@ function specPageDraft(
 
 export async function discoverTypedDocs(): Promise<DocsOutput[]> {
 	const entrypoints = listTypedDocEntrypoints();
-	const sourceGroups = await Promise.all(
+	const sources = await Promise.all(
 		entrypoints.map((sourcePath) => loadTypedDocSource(sourcePath)),
 	);
-	const sources = sourceGroups.flat();
 
 	validateUniqueSourceRoutes(sources, "generated-page");
 	validateUniqueSourceRoutes(sources, "universal-concept-page");

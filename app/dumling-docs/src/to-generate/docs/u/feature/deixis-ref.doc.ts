@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal DeixisRef feature.",
-	family: "feature",
-	leaf: "DeixisRef",
 	order: 18015,
-	subject: "DeixisRef",
 	title: "DeixisRef",
 	body: `
 \`DeixisRef\` marks which speech-act participant serves as the reference point for a deictic contrast.

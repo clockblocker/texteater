@@ -4,7 +4,6 @@ const document = defineUniversalConceptStubPage({
 	family: "entity",
 	leaf: "Lemma",
 	order: 11001,
-	subject: "Lemma",
 	title: "Lemma",
 });
 

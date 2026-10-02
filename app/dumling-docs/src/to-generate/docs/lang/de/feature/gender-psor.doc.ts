@@ -2,9 +2,7 @@ import { defineLanguageOverlayPage } from "../../../../../lib/docs/source-mirror
 
 const document = defineLanguageOverlayPage({
 	description: "German Gender[psor].",
-	family: "feature",
 	order: 8020,
-	subject: "Gender[psor]",
 	title: "Gender[psor]",
 	body: `
 A possessive's Surface records the possessor's gender and number only as far

@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Deixis feature.",
-	family: "feature",
-	leaf: "Deixis",
 	order: 18014.5,
-	subject: "Deixis",
 	title: "Deixis",
 	body: `
 \`Deixis\` marks the relative location encoded in demonstrative forms.

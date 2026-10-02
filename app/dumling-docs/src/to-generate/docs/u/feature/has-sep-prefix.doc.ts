@@ -7,10 +7,7 @@ const passAufImperative = specExample("de/pass-auf-dich-auf");
 const document = defineUniversalConceptPage({
 	description:
 		"Custom Dumling reference for the HasSepPrefix feature on Lemmas with separable prefixes.",
-	family: "feature",
-	leaf: "HasSepPrefix",
 	order: 18023,
-	subject: "HasSepPrefix",
 	title: "HasSepPrefix",
 	body: `
 \`HasSepPrefix\` records the canonical separable prefix associated with a [\`Lemma\`](/u/entity/lemma/).

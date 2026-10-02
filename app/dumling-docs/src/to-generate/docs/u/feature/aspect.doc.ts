@@ -2,10 +2,7 @@ import { defineUniversalConceptPage } from "../../../../lib/docs/source-mirrored
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Aspect feature.",
-	family: "feature",
-	leaf: "Aspect",
 	order: 18011.5,
-	subject: "Aspect",
 	title: "Aspect",
 	body: `
 \`Aspect\` marks how an event is viewed in time: as ongoing, completed, habitual, repeated, prospective, or otherwise structured.

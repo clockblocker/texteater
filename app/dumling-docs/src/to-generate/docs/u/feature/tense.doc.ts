@@ -7,10 +7,7 @@ const ochalFutureVerb = specExample("he/machar-ochal-mukdam");
 
 const document = defineUniversalConceptPage({
 	description: "UD-style reference for the universal Tense feature.",
-	family: "feature",
-	leaf: "Tense",
 	order: 18038.5,
-	subject: "Tense",
 	title: "Tense",
 	body: `
 \`Tense\` marks when an event is located in time relative to a reference point.

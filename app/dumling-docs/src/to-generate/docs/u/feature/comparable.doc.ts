@@ -7,10 +7,7 @@ const hierAdverb = specExample("de/bitte-warten-sie-hier-vor-dem-eingang");
 const document = defineUniversalConceptPage({
 	description:
 		"Custom Dumling reference for the Comparable feature on ADV and ADJ Lemmas.",
-	family: "feature",
-	leaf: "Comparable",
 	order: 18012.75,
-	subject: "Comparable",
 	title: "Comparable",
 	body: `
 \`Comparable\` marks that an [\`ADV\`](/u/entity/lemma/lexeme/adv/) or [\`ADJ\`](/u/entity/lemma/lexeme/adj/) [\`Lemma\`](/u/entity/lemma/) has comparison forms of its own.

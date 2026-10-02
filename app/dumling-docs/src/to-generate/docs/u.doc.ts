@@ -2,9 +2,7 @@ import { defineUniversalConceptPage } from "../../lib/docs/source-mirrored-doc-p
 
 const document = defineUniversalConceptPage({
 	description: "Root overview for the universal public concept tree.",
-	family: "scope",
 	order: 10100,
-	subject: "u",
 	title: "Universal",
 	body: `
 This is the universal public concept tree.
