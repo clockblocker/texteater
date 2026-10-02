@@ -1,266 +1,67 @@
 # Intake-owned units
 
-The contract behind Dumgen ADR 0005 and ADR 0006: what intake produces for a
-sentence, what a click reads, what the corpora carry, and what the host
-stores. Terms are the Dumgen glossary's. The code is LegacyDumgen's, frozen
-in `battery/legacy-dumgen` (#701); paths below are relative to it.
+The contract between Dumgen's `segment.inUnits` (Dumgen ADR 0007) and its
+host, tf-demo: what intake produces for a Text, what tf-demo stores, and what
+hover and a click read. The shapes and the API are TSDoc on `dumgen`'s
+exports (`src/index.ts`, `src/segment/segmented-sentence.ts`). The two-layer
+Sentence Analysis of ADR 0005 and ADR 0006 is frozen in
+`battery/legacy-dumgen`; its contract is in this file's history before #850.
 
-## The Sentence Analysis
+## Intake
 
-`analyzeSentence({ sentence })` takes one accepted German Segmented Sentence
-and returns its Sentence Analysis. The input keeps the frozen shape (`id`,
-`language`, `segments` of kind and text); the analysis is the intake-owned
-value beside it.
+1. `splitText(text)` splits a Text into paragraphs and Sentences in code. No
+   model is asked.
+2. tf-demo reads German only for now. A Text submitted in another language is
+   rejected before any jev call; `language` stays a parameter so Hebrew can
+   follow.
+3. `createSegment({ ask: createTypeSafeAsk({ apiKey }), onCall })
+   .inUnits({ language: "de", paragraphs })` gives each Sentence its
+   normalized text, its Segments and its biggest units. jev is the only
+   model; the key is the Convex deployment's `TYPESAFE_API_KEY`.
+4. A Sentence whose segmentation fails keeps its written words, each
+   ResolvableText Segment its own `Unresolved` unit, and the Text is stored
+   anyway. Only a non-German language, a blank Sentence or a throwing
+   `onCall` fails the whole call.
+5. Intake is not deterministic, so a stored submission is never segmented
+   again: resubmitting the same key and source returns the stored Text.
 
-```ts
-type SentenceAnalysis = {
-  sentenceId: string;
-  language: "de";
-  stitchedText: string;
-  segments: AnalyzedSegment[];   // concatenated, they give stitchedText back
-  targets: LexemeTarget[];       // the Lexeme layer: a flat partition of the ResolvableText Segments
-  phrasemes: PhrasemeTarget[];   // the Phraseme layer: a partition of a subset of targets
-  fusions: Fusion[];             // listed once, components point at Segments
-  slots: Slot[];                 // one per preposition slot the sentence realizes (ADR 0034)
-};
+## What tf-demo stores
 
-type AnalyzedSegment = { offset: number; kind: SegmentKind; text: string; surface: string };
+- A `sentences` row keeps the normalized text as `stitchedText` and the units
+  exactly as `segment.inUnits` returned them: ascending Segment indices, the
+  route or `Unresolved`, and any route variants.
+- `segments` rows are keyed by their index in the Sentence. A fused word that
+  segmentation split is stored as its pieces, each with the `surface` it
+  stands for. Units and Attestation Membership name Segments by this index
+  (Dumgen ADR 0004, amended 2026-10-02).
+- Every write checks that each ResolvableText Segment belongs to exactly one
+  unit and that units name only ResolvableText Segments.
+- A Definition Text's single Sentence goes through the same
+  `segment.inUnits` in a scheduled action. Notes fixtures skip jev and store
+  each word as its own `Unresolved` unit.
+- `intakeRuns` keeps one row per submission attempt: each Sentence's outcome
+  (Segmented, Failed or NotStarted), the jev calls, failures, tokens and
+  durations. It never keeps text, prompts or model output.
 
-type LexemeTarget = {
-  id: string;
-  members: { offset: number; role: MemberRole }[];  // ordered by offset, exactly one Head
-  routeMass: Record<LexemeKind | "Unresolved", number>;
-  identity: {                                        // only when the head enumerates candidates
-    candidates: IdentityCandidate[];                 // headword groups
-    mass: Record<CandidateKey | "NoMatch" | "Unresolved", number>;
-  } | null;
-  provenance: string;
-};
+## What hover and a click read
 
-type PhrasemeTarget = {
-  id: string;
-  members: LexemeTarget["id"][];                     // fixed words, never Segments; ordered by first offset
-  governedPrepositions: LexemeTarget["id"][];        // prepositions only the expression governs; outside fixedness
-  kindMass: Record<PhrasemeKind | "None" | "Unresolved", number>;
-  fixedness: number;                                 // mean Score, 0 free to 3 fixed expression
-  provenance: string;
-};
+- `textViews.get` gives every ResolvableText Segment its whole unit. The
+  reader builds one map per Sentence, so hover and focus light every member
+  of the unit, discontinuous ones included, with no network call. A Segment
+  that belongs to an Occurrence Attestation groups with the occurrence's
+  members instead.
+- While click resolution is rebuilt (#848), tf-demo's `ClickResolution` port
+  runs `selectUnitOnly`: a click selects the whole unit, and its Resolution
+  Session ends `Unresolved` at once. No Note is made and no model is asked.
+  The deck settles on one Unit Card with the unit's words (a gap reads as
+  `…`), its route and any variants.
+- Route variants are for the click to pick from (ADR 0007, amended
+  2026-09-30). Until resolution returns, the Unit Card only lists them.
 
-type MemberRole =
-  | "Head" | "SeparableParticle" | "GovernedPreposition" | "Reflexive"
-  | "Expletive" | "Article" | "Auxiliary" | "Unresolved";
+## Live probe
 
-type Fusion = {
-  offset: number;
-  form: string;
-  components: { offset: number; span: string; surface: string; role: string }[];
-};
-
-type Slot = {
-  governor: LexemeTarget["id"] | PhrasemeTarget["id"];
-  marker: number | null;           // the preposition or fused adposition Segment; null for a pronominal adverb
-  filler: LexemeTarget["id"] | null;  // the pronominal adverb (`darauf`) that realizes preposition and filler
-  complement: {
-    kind: "Preposition";
-    preposition: Lemma<"de", "Lexeme", "ADP">;  // `auf` for darauf, `von` for vom
-    case: "Acc" | "Dat" | "Gen";   // fixed by the ADP Lemma, else the vote
-    referent: "Someone" | "Something" | "Either";  // a pronominal adverb's is Something
-  };
-  realizedCase: "Acc" | "Dat" | "Gen";  // a preposition keeps its case, passive included
-};
-```
-
-Offsets key Segments inside the Sentence Analysis only; the persisted
-occurrence coordinate is the Segment's index in its Sentence (Dumgen ADR
-0004, amended 2026-10-02). Types are exported from `legacy-dumgen/types`; the module is
-`src/concrete-lang/de/sentence-analysis/`.
-
-Invariants enforced in code, never asked:
-
-- Every ResolvableText Segment belongs to exactly one Lexeme Target. A word
-  intake cannot place is a singleton whose Route Mass is `{ Unresolved: 1 }`.
-- A Lexeme Target has exactly one Head. A group the matrix glued around two
-  Heads is split at them; a non-head follows the Head it scored the higher
-  Include with, and a verbal role landing on a non-VERB Head, a governed
-  preposition on a Head that is no VERB, ADJ or NOUN, or an Article on a
-  Head that is no NOUN or PROPN, becomes a singleton.
-- A NOUN or PROPN target keeps at most one article, and it opens the phrase.
-- A fused word never joins a group as a whole, whatever the matrix said about
-  the source word. Its adposition component is a singleton ADP target; its
-  article component joins the next NOUN target that has no article, with
-  role Article (system ADR 0032). An unattached fused article is a DET singleton.
-- An article joins a PROPN target only when the name is cited with it (system
-  ADR 0035): a standalone article the matrix gave role Article, or a fused
-  word whose `nameArticle_N` answer is Name (`im Rhein`). Before a name cited
-  bare (`das alte Berlin`, `im alten Berlin`) it stays a DET singleton.
-- An abbreviation is one Segment; its surface is the expansion from the
-  fusion table.
-- A Phraseme Target's members are words, projected by Head from the pair
-  answers, and it has at least two. The fixedness Score establishes it: only
-  a word whose own Score is at or above 1.5 is linked by the pair answers, so
-  fixed neighbours never carry a free word in. The Kind Choice only names
-  it. A word belongs to at most one Phraseme.
-- The governor vote is summed per word (`nimmt` and `teil` vote together)
-  and the word reaching 0.6 governs. Without one, a preposition the Lexeme
-  layer made a word's `GovernedPreposition` member is governed by that word,
-  and failing that the vote summed over a Phraseme's words lets it govern.
-  A governing word inside a Phraseme hands the Slot to the Phraseme when the
-  scope answer says it governs only there (`Bescheid wissen über`); one that
-  keeps its government alone keeps the Slot (`Angst vor` in `Angst haben`).
-  A preposition voted to govern itself and a two-way preposition whose case
-  vote is Unresolved yield no Slot. An Unresolved referent is `Either`.
-- Every governor takes in the preposition its Slot marks (ADR 0034). A VERB,
-  ADJ or NOUN target gains it as a `GovernedPreposition` member wherever it
-  stands (`Auf ihn bin ich stolz`); a Collocation or Idiom lists its Lexeme
-  Target in `governedPrepositions`, which never counts toward fixedness. The
-  preposition leaves its own ADP singleton, or the word the matrix glued it
-  to. A fused adposition (`vom`), a fixed word of an expression, and a
-  preposition before a noun's article stay where they are, and a pronominal
-  adverb stays its own ADV unit.
-
-## The Resolution Selector
-
-One pure function per policy version, shipped with the package (`legacy-dumgen`
-exports), scored by the sentence corpus. Given a Lexeme Target:
-
-- Route: the argmax of the Route Mass. `Unresolved` can win. Family follows
-  from the Kind.
-- Identity State of the head: Selected when a candidate key wins the
-  Identity Mass; Open when `NoMatch` wins or the route is open-class with no
-  candidates; Unresolved when `Unresolved` wins; Miss when the route is
-  DET or PRON and no candidate exists.
-- Identity State of a non-head: Derived. Its identity comes from the head:
-  the article's DET cell from the noun's case, number, gender and
-  definiteness (system ADR 0032); the
-  auxiliary's AUX Reading from the head's form and the other auxiliaries;
-  particle, governed preposition, reflexive and expletive project the head's
-  lexical Core Features.
-- Identity implies route: a Selected head's Kind replaces the vote for a
-  singleton target.
-
-Given a Phraseme Target: the best named Kind of the Kind Mass, even over
-`None`, since assembly admits only words at or above the fixedness floor;
-`Unresolved` only when no Kind has mass. Collocation needs a VERB and a NOUN
-among its fixed words, so a copula with its predicative adjective is never
-one, and a Phraseme whose Collocation share outweighs every Kind its words
-can take is `None`.
-
-Given an offset: `largestOf` is the Phraseme containing the word, as a fixed
-word or a governed preposition, when there is one, else the word; `resolvedUnitAt` is that unit's Family, Kind and
-Segment span, or null when it is Unresolved or `None`, or when the word's
-head Identity State is Miss.
-
-Given a unit's offsets: `slotsAt` lists every Slot whose governor has a
-member among them, so a Phraseme reaches its member words' slots. The host
-passes the prepositions and cases the Reading's Valency Frame lacks as
-`attestedGovernment`, and each becomes an Optional Preposition Slot with no
-model call. The `valency` Knowledge aspect is separate: it asks the Knowledge
-call for the whole frame of a Reading that has none yet.
-
-## The intake call, German
-
-One jev call per sentence (chunked at 220 questions), state is the tagged
-sentence plus two rule fields: `criteria` (the realization rules, the
-shipped `targetCriteria` minus its Phraseme and Fusion sentences) and
-`fixedness` (the fixedness rules). A call that asks a governor, case,
-referent or scope question adds a third, `government` (which word selects a
-preposition, with the adjunct, particle and connective exclusions).
-
-| questions | count for n resolvable Segments | answer used as |
-| --- | --- | --- |
-| membership Choice from every anchor, under `criteria` | n(n-1) | symmetrized Include mass, connected components at tau 0.6 |
-| route Choice over the Lexeme inventory | n, less one per abbreviation with one expansion and a Kind reviewed on issue 498, whose Kind counts in full | Route Mass, summed per group |
-| role Choice | n | Member Role value |
-| identity Choice over authored members, cell rubric | one per Segment with candidates | Identity Mass, summed per headword group |
-| fixedness Score, under `fixedness` | n | mean per expression |
-| Phraseme Kind Choice | n | Kind Mass, summed per expression |
-| same-expression Noul per unordered pair | n(n-1)/2 | components over Heads at 0.5 |
-| governor Choice over the other occurrences plus None, under `government` | one per Segment realizing a governable preposition | mass summed per word, governor at 0.6 |
-| case Choice Acc/Dat | one per two-way preposition among those | argmax, Unresolved drops the Slot |
-| referent Choice Someone/Something | one per preposition among those, never a pronominal adverb | argmax, Unresolved is `Either` |
-| scope Choice Word/Expression | one per Segment realizing a governable preposition | argmax; Expression hands a Phraseme word's Slot to the Phraseme |
-
-Cost, measured: 16.2k input tokens per sentence, p50 about 370 ms per call;
-the 28-occurrence sentence needs several chunked calls.
-
-English and Hebrew: not analysed; `analyzeSentence` accepts German only.
-
-## The click contract
-
-- A click selects the largest unit containing the clicked Segment: the
-  Phraseme when the word is a fixed member of one or a preposition it
-  governs, else the word. A click on a non-head member selects the same unit
-  as the head, so a governed preposition opens its governor: `stolz` in
-  `Er ist stolz auf seinen Sohn`, `Angst haben` in `Sie hat Angst vor
-  Hunden`, `Angst` in `aus Angst vor Hunden`.
-- The host maps the clicked stored Segment to its offset range and reads
-  `resolvedUnitAt`. A resolved unit becomes the Analysis Target for
-  Grammatical Resolution with no classification call; a stored Segment is a
-  member when every analysed Segment inside it belongs to the unit, so a
-  fused `zur` stays outside the NOUN whose article is its `r` and inside the
-  Collocation that covers both.
-- Null (Unresolved route, Miss identity, `None` Phraseme, no analysis)
-  falls back to `classifyTarget`, today's path.
-- Grammar features run at click for the clicked unit only. Selected shows
-  the authored Reading and Knowledge with zero calls; Derived is reached from
-  the head; Open pays one grammar call, then the Luna fan-out.
-
-## Corpora and evaluation
-
-- Sentence gold is keyed by offset (`sentence-analysis/de`, projected by
-  `codegen/project-sentence-cases.ts` from the Full dumspec Spec Records its
-  `sidecar.json` keys; the other cases sit verbatim in Draft Spec Records
-  until they are reshaped, per the 2026-09-27 amendment of system ADR 0037;
-  every other Full record adds an unscored case): Lexeme Targets with members `{ offset, role? }`, a Kind, and for closed-class
-  heads the headword group `Kind:headword`; Phraseme Targets as a Kind, the
-  head offsets of their member words and, where authored, the offsets of the
-  prepositions they govern; Slots as the offset of the Segment
-  realizing the preposition (marker or pronominal adverb), its headword, its
-  case, where authored its referent, and the offsets of the words that may
-  govern it. Roles and referents are scored only where authored, and a layer
-  a case leaves out is not scored: most `sentence-de-government-*` cases
-  score slots alone. The scorer (`scoreAnalysis`) reports members found,
-  route, roles, identity, Phrasemes found and correct, extra Phrasemes, and
-  slots correct and extra; `contractPass` is all of them right and nothing
-  extra.
-- The click corpus keeps scoring per click; its support-verb sentences are
-  Collocation (ADR 0028) and its fused-word sentences ADP (ADR 0027).
-- Held-out split: tau 0.6 was chosen on the evaluation clicks. The authoring
-  cases (`--scope all`) are the held-out set for the threshold.
-- The evaluation is the production operation: `bun cli/evaluate.ts
-  --experiment sentence-analysis/de --revision <rev>` runs `analyzeSentence`
-  on every sentence and records the run with the corpus fingerprint and the
-  effective jev settings. First run, 2026-09-21: 16 sentences, 7 strict
-  passes; the misses are `früh`/`spät` routed ADV, `usw.` and a typo routed
-  X, code-switched words routed as German, and one article left off a
-  genitive noun.
-- Government, 2026-09-23, 35 sentences, three runs: 13 of 14 gold
-  Governments right and no false positive in each. The miss is the case of
-  `an` with an accusative complement (`erinnert sich an seinen Bruder` read
-  as dative, 0.54 to 0.68). Membership matched a run without the government
-  questions: 74 to 75 of 80 members against 75, route and roles equal.
-- Governed prepositions (ADR 0034), 2026-09-25, one run each: the
-  `sentence-analysis/de:governed` slice passes 5 of 6 (`stolz` takes `auf`
-  beside a separate `ist`, `vor` stays in `Angst` inside `Angst haben`,
-  `über` is the governed preposition of `Bescheid wissen`); the miss adds
-  `gut` as a fixed word of `weiß … gut Bescheid`. The click slice
-  `target-classification/de/high-level-whole-unit:governed-preposition`
-  passes 5 of 7; the misses add free material (`aus … Hunden`, `die`).
-
-## The host
-
-tf-demo runs `analyzeSentence` at intake for every accepted German sentence,
-stores the analysis beside the sentence, reads it at selection time, and
-strips it with the other derived analysis. Attestation Membership is keyed by
-stored Segment index (Dumgen ADR 0004, amended 2026-10-02); Fused orthography
-is the remaining production item, with the Convex hop cost of the authored
-candidates and live latency per Identity State.
-
-## Playground
-
-`/playground/lattice/<sentence id>` renders tf-demo's `lattice.json`,
-emitted by the production operation for the 16 corpus sentences, through the
-package's Resolution Selector: a click lights up the largest unit, a
-Phraseme's panel lists its member words and descends to each, a word's panel
-ascends to its Phraseme. Re-emit with `bun prototypes/intake/fixtures.ts
-<output path>`.
+`bun run test:pipeline:live` in `app/tf-demo` asks for interactive
+authorization. It then submits one three-Sentence German Text through live
+jev, checks the stored units, hovers every member of every multi-Segment unit
+and clicks one. The 2026-10-02 run made 13 jev calls for its three Sentences,
+34,161 input tokens in all.

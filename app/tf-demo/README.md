@@ -16,22 +16,24 @@ bun run demo
 The first run creates a local deployment and writes `VITE_CONVEX_URL` to
 `.env.local`. Later runs reuse that deployment and its data.
 
-From `app/tf-demo`, set both provider credentials on the Convex deployment.
-Omit the values to enter them interactively without putting secrets in shell
+From `app/tf-demo`, set the TypeSafe credential on the Convex deployment.
+Omit the value to enter it interactively without putting the secret in shell
 history:
 
 ```sh
-bun x convex env set OPENAI_API_KEY
 bun x convex env set TYPESAFE_API_KEY
 ```
 
 Convex actions read deployment environment variables. Keys in your shell or
-the repository's `.env.local` are not automatically available there. TypeSafe
+an `.env.local` are not automatically available there; `bun run env:sync`
+pushes the ones your shell exports or `app/tf-demo/.env.local` holds. TypeSafe
 is required during text intake, where Dumgen's `segment.inUnits` asks jev for
-each Sentence's units. OpenAI is unused while click resolution is rebuilt
-([#848](https://github.com/clockblocker/texteater/issues/848)): a click selects
-its unit and calls no model. Configure both again when switching to a new
-deployment.
+each Sentence's units. `OPENAI_API_KEY` may stay unset while click resolution
+is rebuilt ([#848](https://github.com/clockblocker/texteater/issues/848)): a
+click selects its unit and calls no model. Configure the key again when
+switching to a new deployment. The local backend's Node actions keep the
+environment they first loaded with, so restart `bun run dev` after setting or
+changing a key.
 
 Two deployment flags open anonymous entry points that a hosted deployment
 must keep closed. `bun run dev` sets both to `1` on the local deployment
