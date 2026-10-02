@@ -42,9 +42,34 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0034", "ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "32797f3b5f083780"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: Verzeihung",
+				"url": "https://www.duden.de/rechtschreibung/Verzeihung",
+				"supports": "Target 0: Verzeihung! and jemanden um Verzeihung bitten, with no für."
+			},
+			{
+				"title": "Duden: Entschuldigung",
+				"url": "https://www.duden.de/rechtschreibung/Entschuldigung",
+				"supports": "für die Wartezeit is free: jemanden für etwas, wegen etwas um Entschuldigung bitten, where für alternates with wegen as the reason."
+			},
+			{
+				"title": "Duden: bitten",
+				"url": "https://www.duden.de/rechtschreibung/bitten",
+				"supports": "für die Wartezeit is free: sense 1, eine Bitte aussprechen, takes um (um Hilfe bitten) and no für; für appears only under sense 2, Fürsprache einlegen (er hat für seinen Kollegen gebeten)."
+			}
+		]
 	},
 	"targets": [
 		{
@@ -52,7 +77,10 @@
 			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🙇" },
 			"notes": {
-				"rationale": "ich bitte um Verzeihung apologizes (Duden Verzeihung: Verzeihung!, jemanden um Verzeihung bitten), so it takes the 🙇 of Entschuldigung."
+				"rationale": "ich bitte um Verzeihung apologizes (Duden Verzeihung: Verzeihung!, jemanden um Verzeihung bitten), so it takes the 🙇 of Entschuldigung. für die Wartezeit is free: für names the reason, as wegen could (Duden Entschuldigung: jemanden für etwas, wegen etwas um Entschuldigung bitten), and no word of the formula governs it. E-VALBU lists only verbs, so Duden decides for the head word Verzeihung, and it codes no für, nor does verzeihen (jemandem etwas verzeihen); bitten takes für only for Fürsprache (Duden bitten 2). So für is an adjunct's preposition, unlike the für of vielen Dank (de/governed-preposition-joins-its-governor, ADR 0034). Decided by an agent under the user's delegation (2026-10-02, #853).",
+				"knownMistakes": [
+					"Taking für into the formula: it marks the reason, as wegen could, and no word of the formula governs it."
+				]
 			},
 			"attestation": {
 				"unitKind": "Attestation",

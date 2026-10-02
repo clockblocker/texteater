@@ -207,6 +207,9 @@ const verbs: Rule[] = [
 			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
 			// Government read from Duden, since E-VALBU has no schämen.
 			"de/mara-schaemt-sich-fuer-den-irrtum",
+			// A formula's reason adjunct stays free: no word of ich bitte um
+			// Verzeihung governs für.
+			"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin",
 		],
 	},
 	{
@@ -606,6 +609,8 @@ const nouns: Rule[] = [
 			"de/ach-treibel-sie-sind-ewig-ein-spoetter",
 			"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er",
 			"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
+			// A brand that takes ein and a plural is not cited with das.
+			"de/sie-testet-das-neue-iphone-im-labor",
 		],
 	},
 	{

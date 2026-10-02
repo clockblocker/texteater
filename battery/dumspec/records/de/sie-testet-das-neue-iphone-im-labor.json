@@ -26,16 +26,23 @@
 			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: iPhone",
+				"url": "https://www.duden.de/rechtschreibung/iPhone",
+				"supports": "Target [das, iPhone]: Eigenname, das iPhone, Plural die iPhones (vor allem Jugendliche nutzen die neuesten iPhones): gender Neut, and a plural, so its article varies with the phrase."
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
-				"rationale": "iPhone is a brand, so it keeps Core gender Neut (das iPhone, ADR 0040), and it owns the article that opens its phrase, across the adjective neue: [das, iPhone], as das alte Berlin gives [das, Berlin] (de/proper-noun-article, de/noun-owns-its-article). das derives the DET cell das Acc.Neut.Sg. Ruled on #828 (case 3). Its Core article stays null, as for a name cited bare; open: no Rule says whether a brand is cited with its article. Registered internal capitalization is Standard and must not be regularized.",
+				"rationale": "iPhone is a brand, so it keeps Core gender Neut (das iPhone, ADR 0040), and it owns the article that opens its phrase, across the adjective neue: [das, iPhone], as das alte Berlin gives [das, Berlin] (de/proper-noun-article, de/noun-owns-its-article). das derives the DET cell das Acc.Neut.Sg. Ruled on #828 (case 3). Its Core article is null: iPhone takes ein, a possessive and a plural (ein iPhone, mein iPhone, Duden's die neuesten iPhones), so no article is part of how it is cited, unlike die NATO, and das is only the article that opens this phrase (de/proper-noun-article, ADR 0035). Decided by an agent under the user's delegation (2026-10-02, #853). Registered internal capitalization is Standard and must not be regularized.",
 				"knownMistakes": [
-					"Making das a DET target of its own: a click on an article never resolves to its DET."
+					"Making das a DET target of its own: a click on an article never resolves to its DET.",
+					"Giving iPhone Core article Definite, as for die NATO: it takes ein and a plural, so das is not part of how it is cited, and a host would add das to ein iPhone."
 				]
 			},
 			"attestation": {
