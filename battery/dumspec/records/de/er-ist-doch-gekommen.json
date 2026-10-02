@@ -56,6 +56,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "↪✅" },
 			"notes": {
 				"rationale": "Read stressed, doch is 'after all, contrary to expectation' (Duden: doch, Adverb 1, dennoch): an ADV, not the modal particle, and not comparable (de/modal-particle-is-part). Unstressed, it would be the modal doch reminding of a known fact."
 			},

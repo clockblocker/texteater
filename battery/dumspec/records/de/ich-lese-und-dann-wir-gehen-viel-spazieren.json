@@ -282,8 +282,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⏭" },
 			"notes": {
-				"rationale": "dann is the temporal ADV 'then'."
+				"rationale": "dann is the temporal ADV 'then'. dann names what comes next in a sequence of activities (DWDS dann 1, 'darauf, danach')."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

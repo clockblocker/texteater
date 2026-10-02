@@ -34,8 +34,9 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "😊" },
 			"notes": {
-				"rationale": "Lieber is the suppletive comparative Surface of the ADV Lemma gern."
+				"rationale": "Lieber is the suppletive comparative Surface of the ADV Lemma gern. lieber 'rather' compares a preference, which DWDS gern 1 covers with liking ('jmds. Wünschen oder Vorlieben entspricht'), so the comparative keeps the 😊 Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

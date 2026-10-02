@@ -760,8 +760,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "➕" },
 			"notes": {
-				"rationale": "auch is the additive adverb; auch noch 'on top of that' is two words that only occur together, so each resolves on its own (de/fixed-members-only)."
+				"rationale": "auch is the additive adverb; auch noch 'on top of that' is two words that only occur together, so each resolves on its own (de/fixed-members-only). auch noch 'on top of that' adds one more thing, so it shares the ➕ Reading of additive auch 'also' under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1112,6 +1113,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🤏" },
 			"notes": {
 				"rationale": "fast is the approximative ADV between the article and its Head, a target of its own."
 			},

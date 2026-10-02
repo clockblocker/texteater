@@ -926,6 +926,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🤝" },
 			"notes": {
 				"rationale": "miteinander is a Reciprocal Pronominal Adverb, an ADV Lexeme of its own; it does not join verbunden."
 			},

@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "☝" },
 			"notes": {
 				"rationale": "lediglich is the restrictive focus word on den letzten Absatz: a single-member ADV, not comparable (de/focus-word-is-adv)."
 			},

@@ -30,8 +30,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "📍" },
 			"notes": {
-				"rationale": "The authoritative ADV route and verb-second clause identify locative da, not clause-introducing SCONJ da."
+				"rationale": "The authoritative ADV route and verb-second clause identify locative da, not clause-introducing SCONJ da. da points at the place where the caretaker stands (DWDS da I.1a, guck, da fährt die Straßenbahn), the place Reading, not the temporal 🕰📍."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

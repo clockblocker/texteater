@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "👇📅" },
 			"notes": {
 				"rationale": "The classified temporal adverb is invariant and therefore uses Citation."
 			},

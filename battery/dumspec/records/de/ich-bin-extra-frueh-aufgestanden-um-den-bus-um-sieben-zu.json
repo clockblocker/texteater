@@ -252,8 +252,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "☝🎯" },
 			"notes": {
-				"rationale": "Route tentative: intensifier extra."
+				"rationale": "Route tentative: intensifier extra. With the um … zu clause naming the purpose, extra is DWDS extra I.3 'eigens', getting up early for that end alone, not the intensifier 'besonders'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

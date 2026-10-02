@@ -70,6 +70,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
 				"rationale": "gar intensifies zu sehr. Degree words standing together stay apart, so gar zu sehr is three ADV targets (de/degree-word-is-adv); gar is not comparable."
 			},

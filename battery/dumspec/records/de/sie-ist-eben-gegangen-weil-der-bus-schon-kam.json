@@ -38,6 +38,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "🔙⏰" },
 			"notes": {
 				"rationale": "eben is temporal 'just now' (Duden: eben, Adverb, soeben): she has just left. The same spelling as a modal particle is PART; this one is an ADV with no comparison forms (de/modal-particle-is-part)."
 			},

@@ -227,6 +227,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⚡" },
 			"notes": {
 				"rationale": "ADV 'right away', no comparison forms."
 			},

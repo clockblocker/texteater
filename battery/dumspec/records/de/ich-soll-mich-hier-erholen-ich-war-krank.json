@@ -281,6 +281,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📍" },
 			"notes": {
 				"rationale": "hier is a non-comparable ADV (de/comparability-is-lexical)."
 			},

@@ -330,6 +330,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🕰📍" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -362,7 +363,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Temporal da 'then', filling the circumposition's slot; no comparison forms."
+				"rationale": "Temporal da 'then', filling the circumposition's slot; no comparison forms. In von da an, da names a point in time, 'then' (DWDS da II, zeitlich), so it shares the temporal 🕰📍 Reading."
 			}
 		},
 		{

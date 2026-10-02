@@ -214,6 +214,7 @@
 		"adrs": [
 			"ADR-0022",
 			"ADR-0029",
+			"ADR-0031",
 			"ADR-0034",
 			"ADR-0040",
 			"ADR-0042",
@@ -593,6 +594,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "👇📅" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -954,6 +956,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -986,7 +989,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "gar intensifies the negation (DWDS gar, Adverb: 'verstärkt eine Verneinung: überhaupt'). gar nicht is compositional, not a Locution, so gar is an ADV and nicht a PART of its own (de/nicht-is-part). No comparison forms."
+				"rationale": "gar intensifies the negation (DWDS gar, Adverb: 'verstärkt eine Verneinung: überhaupt'). gar nicht is compositional, not a Locution, so gar is an ADV and nicht a PART of its own (de/nicht-is-part). No comparison forms. gar before a negation strengthens it (DWDS gar I.1, 'überhaupt'), one intensifying Reading with gar jämmerlich under ADR 0031."
 			}
 		},
 		{
@@ -1138,6 +1141,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⏳" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

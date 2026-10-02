@@ -60,6 +60,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈⚠" },
 			"notes": {
 				"rationale": "allzu 'all too' grades leicht: a single-member degree ADV, not comparable (de/degree-word-is-adv)."
 			},

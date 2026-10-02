@@ -349,6 +349,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "➕" },
 			"notes": {
 				"rationale": "auch is the additive ADV."
 			},

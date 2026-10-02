@@ -1922,6 +1922,10 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🤏" },
+			"notes": {
+				"rationale": "kaum noch erhalten 'barely held' is DWDS kaum 1 'fast gar nicht'; the Reading also takes the temporal kaum 2 'no sooner' (kaum ergriffen), folded in by the user's split ruling (2026-10-02, ADR 0031)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

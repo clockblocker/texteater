@@ -319,7 +319,14 @@
 		"year": 1925
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0036", "ADR-0039", "ADR-0040", "ADR-0044"],
+		"adrs": [
+			"ADR-0031",
+			"ADR-0034",
+			"ADR-0036",
+			"ADR-0039",
+			"ADR-0040",
+			"ADR-0044"
+		],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -1387,6 +1394,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1419,7 +1427,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "The degree word ganz 'quite, very' (Duden lists ganz as an Adverb in this sense) grades ungewöhnlichen. Attributive ganze means 'whole', not 'quite', so the use is a single-member ADV, not comparable (de/degree-word-is-adv, de/adjective-stays-adj)."
+				"rationale": "The degree word ganz 'quite, very' (Duden lists ganz as an Adverb in this sense) grades ungewöhnlichen. Attributive ganze means 'whole', not 'quite', so the use is a single-member ADV, not comparable (de/degree-word-is-adv, de/adjective-stays-adj). ganz ungewöhnlich raises the degree, DWDS ganz 5c 'sehr'; the Reading also takes the restricting ganz 6 'ziemlich' (ganz gut), folded in by the user's split ruling (2026-10-02, ADR 0031)."
 			}
 		},
 		{
@@ -1525,6 +1533,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⏭" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1600,6 +1609,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⏱➕" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

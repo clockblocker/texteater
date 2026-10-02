@@ -26,8 +26,9 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "➕" },
 			"notes": {
-				"rationale": "The supplied target is an ordinary ADV occurrence, not a member of an upstream correlating CCONJ payload."
+				"rationale": "The supplied target is an ordinary ADV occurrence, not a member of an upstream correlating CCONJ payload. Additive auch 'also, too' is a Reading apart from the concessive auch 🤷 of wie es auch liegen mag."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

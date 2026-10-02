@@ -356,6 +356,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "➡💡" },
 			"notes": {
 				"rationale": "also is the inferential adverb 'so, then' linking the question to what came before."
 			},
@@ -397,8 +398,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🔮📅" },
 			"notes": {
-				"rationale": "einstmals is the ADV 'some day' (DWDS: gehoben, einst, künftig); it has no comparison forms."
+				"rationale": "einstmals is the ADV 'some day' (DWDS: gehoben, einst, künftig); it has no comparison forms. einstmals points ahead here, DWDS einstmals 2 'einst, künftig', not sense 1 'ehemals' that einst 📜 has."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

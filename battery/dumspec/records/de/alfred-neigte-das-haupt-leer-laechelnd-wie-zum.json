@@ -909,6 +909,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "➕⏳" },
 			"notes": {
 				"rationale": "mehr after a negation means 'any longer' (DWDS mehr, sense 7: nicht mehr, kein … mehr, nie mehr). It combines with any negator, so nicht mehr is no Locution, and nicht stays a PART of its own (de/nicht-is-part, de/fixed-member-test). In this sense mehr compares nothing, so it is the non-comparable ADV mehr, not the Cmp of sehr or viel."
 			},

@@ -529,6 +529,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🤷" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -561,7 +562,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "auch after the w-word gives the clause its concessive sense (DWDS auch 5, 'verallgemeinert, mit konzessivem Sinn': wie dem auch sei). It does not inflect, so ADV, as auch is elsewhere in the corpus. Ruled on #743 (JT-B3)."
+				"rationale": "auch after the w-word gives the clause its concessive sense (DWDS auch 5, 'verallgemeinert, mit konzessivem Sinn': wie dem auch sei). It does not inflect, so ADV, as auch is elsewhere in the corpus. Ruled on #743 (JT-B3). auch after a w-word generalizes with concessive sense, 'no matter how' (DWDS auch: verallgemeinert, mit konzessivem Sinn, as in wie dem auch sei), a Reading apart from additive auch ➕."
 			}
 		},
 		{

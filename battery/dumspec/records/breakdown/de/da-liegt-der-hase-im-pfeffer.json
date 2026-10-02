@@ -45,8 +45,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "📍" },
 			"notes": {
-				"rationale": "The Breakdown reads da literally, as the locative ADV 'there', with no comparison forms."
+				"rationale": "The Breakdown reads da literally, as the locative ADV 'there', with no comparison forms. This is DWDS da I, räumlich, a Reading apart from the temporal 🕰📍 of da ward ihm sein Gewehr zu schwer."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

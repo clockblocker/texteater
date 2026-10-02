@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "😊" },
 			"notes": {
 				"rationale": "The classified lexical ADV gern remains ADV; productive adverbial ADJ forms belong to their fixed ADJ route instead."
 			},

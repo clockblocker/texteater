@@ -48,7 +48,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [
 			{
 				"rule": "de/degree-word-is-adv",
@@ -72,8 +72,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
-				"rationale": "ganz 'quite' grades gut. Attributive ganze means 'whole', so this sense is a single-member degree ADV, not comparable (de/degree-word-is-adv, de/adjective-stays-adj)."
+				"rationale": "ganz 'quite' grades gut. Attributive ganze means 'whole', so this sense is a single-member degree ADV, not comparable (de/degree-word-is-adv, de/adjective-stays-adj). Unstressed ganz before gut, DWDS ganz 6 'ziemlich', is folded into one Reading 📈 with the intensifying ganz 5c 'sehr', by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

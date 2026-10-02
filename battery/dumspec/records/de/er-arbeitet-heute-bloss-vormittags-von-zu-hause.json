@@ -35,6 +35,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "☝" },
 			"notes": {
 				"rationale": "bloß is the restrictive focus word 'only' on vormittags: a single-member ADV, not comparable (de/focus-word-is-adv). The modal particle bloß and the adjective bloß are other words."
 			},

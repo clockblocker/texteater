@@ -107,7 +107,7 @@
 		"year": 1906
 	},
 	"sources": {
-		"adrs": ["ADR-0032", "ADR-0036", "ADR-0042", "ADR-0044"],
+		"adrs": ["ADR-0031", "ADR-0032", "ADR-0036", "ADR-0042", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -512,6 +512,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🤏" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -544,7 +545,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "ADV 'hardly, no sooner', no comparison forms."
+				"rationale": "ADV 'hardly, no sooner', no comparison forms. kaum ergriffen 'no sooner grasped' is DWDS kaum 2, a moment that just precedes another, folded into one Reading 🤏 with kaum 1 'fast gar nicht' by the user's split ruling (2026-10-02, ADR 0031)."
 			}
 		},
 		{

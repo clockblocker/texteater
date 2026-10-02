@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "🔙📅" },
 			"notes": {
 				"rationale": "The missing final n is repaired in normalizedMembers while the occurrence is marked Typo."
 			},
