@@ -48,6 +48,7 @@
 		{
 			"memberSegmentIndices": [27, 29, 31],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🐢👍" },
 			"notes": {
 				"rationale": "The unmarked greeting is a nearby Locution/INTJ; the marked Saying remains authoritative."
 			},

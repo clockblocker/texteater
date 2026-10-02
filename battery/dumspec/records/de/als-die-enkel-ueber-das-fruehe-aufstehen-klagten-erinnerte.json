@@ -53,6 +53,7 @@
 		{
 			"memberSegmentIndices": [27, 29, 31, 33, 34, 36],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🌅💰" },
 			"notes": {
 				"rationale": "The attribution, quotation marks, and punctuation remain outside the authoritative members."
 			},

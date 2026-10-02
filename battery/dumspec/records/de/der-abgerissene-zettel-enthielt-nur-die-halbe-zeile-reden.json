@@ -40,6 +40,7 @@
 		{
 			"memberSegmentIndices": [17, 19, 21],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🤐🥇" },
 			"notes": {
 				"rationale": "The visibly lost second clause is unrealized; Partial does not add it to normalized members."
 			},

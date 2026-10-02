@@ -55,6 +55,7 @@
 		{
 			"memberSegmentIndices": [1, 3, 5, 8, 36, 38],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🛠🤷" },
 			"notes": {
 				"rationale": "The attribution interrupts one quotation but remains unmarked context; all supplied proverb members stay in source order."
 			},

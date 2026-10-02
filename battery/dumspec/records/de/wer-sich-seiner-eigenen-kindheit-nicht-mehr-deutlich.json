@@ -43,6 +43,7 @@
 				0, 2, 4, 6, 8, 10, 12, 14, 16, 19, 21, 23, 25
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🧸💭🧑‍🏫" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

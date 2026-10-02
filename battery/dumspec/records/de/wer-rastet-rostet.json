@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [0, 2, 5],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🛋📉" },
 			"notes": {
 				"rationale": "The proverb without der is still the proverb, and a Saying survives any change, a shortening included: the kept words attest Wer rastet, der rostet, Partial."
 			},

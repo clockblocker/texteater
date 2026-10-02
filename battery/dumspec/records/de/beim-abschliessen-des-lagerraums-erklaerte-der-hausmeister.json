@@ -42,6 +42,7 @@
 		{
 			"memberSegmentIndices": [21, 23, 25],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🔓🦹" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

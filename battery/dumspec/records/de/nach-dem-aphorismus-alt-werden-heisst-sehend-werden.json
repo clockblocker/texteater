@@ -66,6 +66,7 @@
 		{
 			"memberSegmentIndices": [34, 36, 38, 40, 42, 44, 46, 47, 49],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🎁🚫🧐" },
 			"notes": {
 				"rationale": "The explicitly framed unmarked maxim is context, not a reason to reopen the marked target's route."
 			},

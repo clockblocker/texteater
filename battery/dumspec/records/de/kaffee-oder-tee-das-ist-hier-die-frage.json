@@ -36,6 +36,7 @@
 		{
 			"memberSegmentIndices": [2, 7, 9, 11, 13, 15],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "⚖🤔" },
 			"notes": {
 				"rationale": "Kaffee and Tee replace Sein and Nichtsein, yet speakers still hear Hamlet's line, and a Saying survives any change: the kept words attest it, Partial. Kaffee and Tee resolve on their own."
 			},

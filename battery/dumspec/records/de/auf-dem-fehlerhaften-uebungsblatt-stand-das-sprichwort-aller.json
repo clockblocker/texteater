@@ -38,6 +38,7 @@
 		{
 			"memberSegmentIndices": [15, 17, 19, 21],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🌱😓" },
 			"notes": {
 				"rationale": "The real spelling error is repaired only in its selected member."
 			},

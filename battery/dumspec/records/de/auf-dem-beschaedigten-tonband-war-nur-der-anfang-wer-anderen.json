@@ -46,6 +46,7 @@
 		{
 			"memberSegmentIndices": [17, 19, 21, 23, 25],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🕳🪃" },
 			"notes": {
 				"rationale": "The ellipsis signals genuinely unrealized fixed material; every realized word is selected."
 			},

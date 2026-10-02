@@ -47,6 +47,7 @@
 		{
 			"memberSegmentIndices": [17, 19, 21, 24, 26, 28, 30],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🅰➡🅱" },
 			"notes": {
 				"rationale": "The licensed pre-reform spelling remains Standard on the Surface and maps to current muss in the Lemma."
 			},

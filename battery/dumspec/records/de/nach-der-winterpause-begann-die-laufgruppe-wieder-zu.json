@@ -42,6 +42,7 @@
 		{
 			"memberSegmentIndices": [22, 24, 27, 29],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🛋📉" },
 			"notes": {
 				"rationale": "The Canonical Form is written as a sentence: Wer rastet, der rostet keeps its internal comma and drops the final full stop."
 			},

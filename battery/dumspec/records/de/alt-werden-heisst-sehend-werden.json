@@ -27,6 +27,7 @@
 		{
 			"memberSegmentIndices": [1, 3, 6, 8, 10],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🧓💡" },
 			"notes": {
 				"rationale": "Every lexical member is selected; quotation marks, comma, and full stop are punctuation rather than members. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			},

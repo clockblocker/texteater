@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [6, 8, 10, 12, 14, 16],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🦄🧲👥" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

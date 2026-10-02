@@ -37,6 +37,7 @@
 		{
 			"memberSegmentIndices": [14, 16, 18, 20],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "😶🧠" },
 			"notes": {
 				"rationale": "Only the misspelled verb member is Typo and repaired."
 			},

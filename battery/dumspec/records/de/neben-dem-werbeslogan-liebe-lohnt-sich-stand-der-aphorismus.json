@@ -62,6 +62,7 @@
 				22, 24, 26, 28, 30, 32, 35, 37, 39, 41, 43
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "❤✅" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
