@@ -56,6 +56,30 @@ test("split-adverb: an accepted split adverb is its two pieces, and the verb sta
 	expect(result.with).toEqual([[0, 6], [2], [4]]);
 });
 
+test("stranded-adverb: a non-particle preposition left at its clause's end joins the da before it, though the judge rejected the pair", async () => {
+	// Da0 _1 kann2 _3 ich4 _5 nichts6 _7 für8 .9
+	const result = await groups(
+		segmentsOf("Da kann ich nichts für."),
+		{ c_1_5: noul(0.15) },
+		"stranded-adverb",
+	);
+	expect(result.without).toEqual([[0], [2], [4], [6], [8]]);
+	expect(result.with).toEqual([[0, 8], [2], [4], [6]]);
+	// A complement after it, or a particle (Da mache ich mit), keeps it apart.
+	const followed = await groups(
+		segmentsOf("Da kann ich nichts für dich tun."),
+		{},
+		"stranded-adverb",
+	);
+	expect(followed.with).toEqual(followed.without);
+	const particle = await groups(
+		segmentsOf("Da mache ich mit."),
+		{},
+		"stranded-adverb",
+	);
+	expect(particle.with).toEqual(particle.without);
+});
+
 test("anchors: a correlator is its anchors only, nicht nur … sondern auch with all four", async () => {
 	// Je0 _1 früher2 ,3 _4 desto5 _6 besser7 .8
 	const je = await groups(

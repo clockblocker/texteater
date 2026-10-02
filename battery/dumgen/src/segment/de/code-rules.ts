@@ -8,6 +8,12 @@
  *   de/pronominal-adverb-stands-alone): an accepted split adverb (Da … hin,
  *   Wo … mit) is one unit of exactly its two pieces, and the verb stays
  *   bare.
+ * - `stranded-adverb` (de/split-adverb-is-one-target,
+ *   de/pronominal-adverb-stands-alone): a preposition that is never a
+ *   separable particle (für, von, gegen, in, neben, hinter, zwischen) left
+ *   at the end of its clause has no complement, so with a da, wo or hier
+ *   before it in that clause it is a split pronominal adverb, though the
+ *   judge rejected the pair: Da kann ich nichts für gives [Da, für].
  * - `anchors` (de/correlator-anchors, de/dass-conjunction,
  *   de/complex-preposition): an accepted correlator, X-dass subordinator or
  *   circumposition is one Locution of its anchors only, the auch and nur of
@@ -72,6 +78,7 @@ import type { Piece } from "./sentence.js";
 
 export const codeRules = [
 	"split-adverb",
+	"stranded-adverb",
 	"anchors",
 	"quantifier",
 	"pronoun",
@@ -130,6 +137,55 @@ function splitAdverbs(nomination: Nomination): Decision {
 			})),
 	};
 }
+
+/** Prepositions that are never a separable particle, so one left at its clause's end is stranded. */
+const strandedTails = new Set([
+	"für",
+	"von",
+	"gegen",
+	"in",
+	"neben",
+	"hinter",
+	"zwischen",
+]);
+
+function strandedAdverbs(nomination: Nomination): Decision {
+	const { pieces } = nomination.sentence;
+	const clauseOf = bracketClauses(nomination);
+	const paired = new Set(
+		accepted(nomination)
+			.filter(([, , kind]) => kind === "split-adverb")
+			.flatMap(([left, right]) => [left, right]),
+	);
+	const closed: ClosedUnit[] = [];
+	for (const tail of pieces) {
+		const clause = clauseOf.get(tail.id);
+		if (
+			!strandedTails.has(lower(tail)) ||
+			tail.fusedWord ||
+			paired.has(tail.id) ||
+			pieces.some(
+				(other) =>
+					other.id > tail.id && clauseOf.get(other.id) === clause,
+			)
+		)
+			continue;
+		const head = pieces
+			.filter(
+				(other) =>
+					other.id < tail.id &&
+					clauseOf.get(other.id) === clause &&
+					!other.fusedWord &&
+					splitAdverbHeads.has(lower(other)),
+			)
+			.at(-1);
+		if (head && !paired.has(head.id))
+			closed.push({ pieces: [head.id, tail.id], family: "Lexeme" });
+	}
+	return { closed };
+}
+
+const splitAdverbHeads = new Set(["da", "wo", "hier"]);
 
 /** The anchors right after a correlator's own two: nicht nur … sondern auch, sowohl … als auch. */
 const extraAnchors: Readonly<
@@ -480,6 +536,7 @@ function decisionsOf(
 ): Decision[] {
 	const decide: Record<CodeRule, () => Decision> = {
 		"split-adverb": () => splitAdverbs(nomination),
+		"stranded-adverb": () => strandedAdverbs(nomination),
 		anchors: () => anchors(nomination),
 		quantifier: () => quantifiers(nomination),
 		pronoun: () => pronouns(nomination),

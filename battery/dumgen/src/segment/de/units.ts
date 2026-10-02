@@ -11,9 +11,9 @@
  * grouping measure and gained Sayings beyond noise. The floors, the Saying
  * assembly and the inventory are settings, so the reference's adopted
  * setting (#762) stays expressible for experiments. Over its membership
- * run X3's ten code rules and X5's saying-closed (#851, `code-rules.ts`),
- * each enforcing one dumspec Rule: on dev X3's held 44 more gold units and
- * lost none. Then X5's Locution Choice (#851, `locution-choice.ts`) asks
+ * run X3's ten code rules, X5's saying-closed and D4's stranded-adverb
+ * (#851, `code-rules.ts`), each enforcing one dumspec Rule: on dev X3's
+ * held 44 more gold units and lost none. Then X5's Locution Choice (#851, `locution-choice.ts`) asks
  * one `locution` request about the units a sub-floor link still joins and
  * merges those whose two units both pass de/fixed-member-test at 0.6: with
  * saying-closed, 12 more dev gold units held and none lost.
@@ -92,6 +92,7 @@ export const productionUnitSettings: UnitSettings = {
 	unasked: "ask",
 	rules: [
 		"split-adverb",
+		"stranded-adverb",
 		"anchors",
 		"quantifier",
 		"pronoun",
