@@ -95,6 +95,20 @@ The pilot writes its manifest, configuration, requests and results to
   repetitions. `Unresolved` and Foreign gold units are Stubs and go
   unscored. Outcome letters mark an acceptable route miss `A` and any
   other `R`; `k` keeps each repetition's variant count.
+- Grouping sits beside membership (#701), because hovering a Segment
+  highlights its whole unit. **pairR** counts the Segment pairs inside
+  scored gold units that one returned unit keeps together, on every
+  record. **pairP** counts the returned pairs that one gold unit holds, on
+  Full records only, since a Partial record cannot show two unannotated
+  Segments wrongly joined. **assertedP** does the same for returned pairs
+  that touch an asserted unit on any record: every asserted unit is
+  complete. **over** counts returned units that join Segments of two or
+  more gold units, and **under** counts gold units split across returned
+  units. Each figure names the records it is counted over. `report` also
+  gives membership of discontinuous gold units and writes every over- and
+  under-merge once, with its repetitions, to `grouping.examples` in
+  `summary.json`. `compare` prints each side's grouping and its membership
+  per phenomenon tag; both need the raw run.
 - The `reference` arm's `--opt variants=<margins>` adds a policy per
   margin whose units carry variants where the top two shares of the
   distribution that decided the route lie within it, read from the same

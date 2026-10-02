@@ -81,6 +81,8 @@ import {
 	type CostSummary,
 	calibration,
 	confusions,
+	type GroupingExample,
+	groupingExamples,
 	type PolicySummary,
 	policiesOf,
 	primaryOf,
@@ -106,6 +108,7 @@ import {
 	rerouted,
 } from "../src/segment-in-units/lab/ruling734.js";
 import {
+	type LabRun,
 	loadLabRun,
 	runArm,
 	saveLabRun,
@@ -170,6 +173,36 @@ const { positionals, values } = parseArgs({
 
 const percent = (value: number) =>
 	Number.isNaN(value) ? "–" : `${(100 * value).toFixed(1)}`;
+
+/**
+ * One policy's grouping (#701): pair precision on Full records, on the pairs
+ * any record decides, pair recall and F1, each with [records, pairs]; the
+ * over- and under-merges per repetition; membership of discontinuous,
+ * multi-piece and one-piece gold units.
+ */
+function groupingText(summary: PolicySummary): string {
+	const { rates, tally, pairRecords } = summary;
+	return [
+		`pairP ${percent(rates.pairPrecision)} [${pairRecords.fullPrecision} Full, ${tally.fullPairs}]`,
+		`assertedP ${percent(rates.assertedPairPrecision)} [${pairRecords.assertedPrecision}, ${tally.decidedPairs}]`,
+		`pairR ${percent(rates.pairRecall)} [${pairRecords.recall}, ${tally.goldPairs}]`,
+		`F1 ${percent(rates.pairF1)} asserted ${percent(rates.assertedPairF1)}`,
+		`over ${tally.overMerged} (${summary.overMergedByRepetition.join("/")})`,
+		`under ${tally.underMerged} (${summary.underMergedByRepetition.join("/")})`,
+		`mem% discontinuous ${percent(rates.discontinuousMembership)} [${tally.discontinuousScored}] multi ${percent(rates.multiMembership)} one ${percent(rates.singleMembership)}`,
+	].join("  ");
+}
+
+const groupingLegend =
+	"grouping (#701), summed over repetitions: pairP = Segment pairs a returned unit joins that one gold unit holds, Full records only; assertedP = the same over pairs touching an asserted unit on any record; pairR = gold pairs kept together; [records, pairs]; over = returned units joining Segments of 2+ gold units, under = gold units split, per repetition in brackets";
+
+/** An over-merge as its parts with their gold routes (? where none is asserted), an under-merge as its fragments. */
+const exampleText = (example: GroupingExample) =>
+	example.kind === "over"
+		? example.parts
+				.map((part) => `[${part.text} ${part.gold ?? "?"}]`)
+				.join(" + ")
+		: `${example.text} ${example.gold ?? ""} → ${example.parts.map((part) => `[${part.text}]`).join(" ")}`;
 
 /** The cases by id, read against the #734 ruling when `--relabel 734`. */
 function casesOf(cases: readonly LabCase[]): Map<string, LabCase> {
@@ -551,6 +584,20 @@ async function report(runId: string) {
 	console.log(
 		"mem%: gold Segment set exact, any route; memFlips: units whose membership differs between repetitions; tol%: membership with an acceptable route, the same, a tolerated confusion or the gold among the variants (ADR 0008); strict%: same route too, a borderline unit's first; var%: units with membership that carry route variants, k their mean count; case%: contract (membership) passes",
 	);
+	console.log(groupingLegend);
+	for (const row of rows)
+		console.log(`  ${row.policy.padEnd(30)} ${groupingText(row)}`);
+	const examples = groupingExamples(labRun, cases, primary, only);
+	for (const kind of ["over", "under"] as const) {
+		const ofKind = examples.filter((example) => example.kind === kind);
+		console.log(
+			`${kind}-merges (${primary}): ${ofKind.length} distinct, first ${Math.min(ofKind.length, Number(values.limit ?? 12))}; repetitions in brackets`,
+		);
+		for (const example of ofKind.slice(0, Number(values.limit ?? 12)))
+			console.log(
+				`  ${exampleText(example)} (${example.repetitions.join(",")})  «${example.sentence.slice(0, 120)}»`,
+			);
+	}
 	const outcomeRows = outcomesOf(labRun, cases);
 	// The click-time pick (#760), on the units that carried variants.
 	const pickCalls = labRun.cases
@@ -699,6 +746,7 @@ async function report(runId: string) {
 			byPair: Object.fromEntries(byPair),
 			confusions: Object.fromEntries(confused),
 		},
+		grouping: { policy: primary, examples },
 		breakdowns: {
 			phenomenon: phenomenonBreakdown,
 			route: routeBreakdown,
@@ -906,6 +954,17 @@ async function compare() {
 	console.log(
 		`route variants, of unit-repetitions with membership (ADR 0008): left ${variantText(left)}, right ${variantText(right)}`,
 	);
+	if (left.raw && right.raw)
+		await compareGrouping(
+			{ raw: left.raw, policy: left.policy },
+			{ raw: right.raw, policy: right.policy },
+			setCases,
+			only,
+		);
+	else
+		console.log(
+			"grouping (#701): needs both raw runs; the committed outcomes hold no returned units",
+		);
 	const focus = focusBetween(left, right, only);
 	if (focus) printFocusComparison(focus);
 	console.log("membership by bucket:");
@@ -949,6 +1008,45 @@ async function compare() {
 		};
 		await appendLedger(ledgerPath, entry);
 		console.log("recorded in the ledger");
+	}
+}
+
+/**
+ * Each side's grouping (#701) and its membership by construction: the
+ * phenomenon tags of multi-piece gold units, summed over repetitions.
+ */
+async function compareGrouping(
+	left: { readonly raw: LabRun; readonly policy: string },
+	right: { readonly raw: LabRun; readonly policy: string },
+	casesOfSet: (setName: string) => Promise<ReadonlyMap<string, LabCase>>,
+	only: ReadonlySet<string> | undefined,
+) {
+	console.log(groupingLegend);
+	const sides = [
+		["left", left],
+		["right", right],
+	] as const;
+	const constructions = [];
+	for (const [name, side] of sides) {
+		const cases = await casesOfSet(side.raw.set);
+		console.log(
+			`  ${name.padEnd(5)} ${groupingText(summarizePolicy(side.raw, cases, side.policy, only))}`,
+		);
+		constructions.push(
+			breakdown(side.raw, cases, side.policy, byPhenomenon, only),
+		);
+	}
+	const [before = {}, after = {}] = constructions;
+	console.log(
+		"membership by construction, phenomenon tags past one piece (summed over repetitions): key scored left% → right%",
+	);
+	for (const [key, entry] of Object.entries(before)
+		.filter(([key]) => !key.startsWith("one piece"))
+		.sort((a, b) => b[1].scored - a[1].scored)) {
+		const other = after[key];
+		console.log(
+			`  ${key.padEnd(40)} ${String(entry.scored).padStart(5)} ${percent(entry.membership / entry.scored).padStart(6)} → ${other ? percent(other.membership / other.scored) : "–"}`,
+		);
 	}
 }
 

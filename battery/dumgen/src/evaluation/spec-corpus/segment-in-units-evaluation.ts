@@ -3,7 +3,9 @@
  * Segments are scored; whether a unit also lists whitespace or punctuation
  * does not count. Membership comes first and the route second, tolerating
  * the Kind confusions of Dumgen ADR 0008 and accepting a borderline unit
- * whose route variants hold the gold route.
+ * whose route variants hold the gold route. Beside the per-unit verdicts,
+ * each case carries its grouping: Segment pairs and the units merged
+ * across or split (#701).
  */
 import type * as Dumspec from "dumspec/types";
 import type {
@@ -13,6 +15,11 @@ import type {
 	SegmentInUnitsOutput,
 	Unit,
 } from "./segment-in-units.js";
+import {
+	awaitsForeignScoring,
+	checkGrouping,
+	type GroupingCheck,
+} from "./segment-in-units-grouping.js";
 import {
 	acceptableRoute,
 	sameRoute,
@@ -99,12 +106,10 @@ export type SegmentInUnitsEvaluation = {
 	/** Their variant routes, summed; over `withVariants`, the mean variant count. */
 	readonly variantRoutes: number;
 	readonly units: readonly UnitCheck[];
+	/** The Segment pairs kept together and the units merged across or split. */
+	readonly grouping: GroupingCheck;
 	readonly sentence?: SentenceCheck;
 };
-
-function awaitsForeignScoring(route: Unit["route"]): boolean {
-	return route === "Unresolved" || route.family === "Foreign";
-}
 
 function verdictOf(
 	expected: Unit,
@@ -213,6 +218,11 @@ export function evaluateSegmentInUnits(
 				0,
 			),
 			units,
+			grouping: checkGrouping({
+				segments,
+				ideal: args.idealOutput.units,
+				returned: args.output.units,
+			}),
 			...(sentence ? { sentence } : {}),
 		};
 	};

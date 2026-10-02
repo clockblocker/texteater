@@ -1,11 +1,13 @@
 /**
  * Scores a stored lab run with the harness evaluator (#731) and summarizes
  * it per assembly policy the way ADR 0008 ranks it: membership first (all,
- * one-piece and multi-piece gold units, and the shape of each miss), then
- * its consistency across repetitions, then the route, tolerant and strict.
- * Also Full-record sentence passes, case flips, cost and latency, and
- * breakdowns by gold route and cited Rule and the calibration of route and
- * membership judgments.
+ * one-piece, multi-piece and discontinuous gold units, and the shape of
+ * each miss), then its consistency across repetitions, then the route,
+ * tolerant and strict. Grouping sits beside membership (#701): Segment
+ * pairs kept together, returned units merged across gold units and gold
+ * units split. Also Full-record sentence passes, case flips, cost and
+ * latency, and breakdowns by gold route and cited Rule and the calibration
+ * of route and membership judgments.
  */
 import { stableJson } from "promptsmith";
 import type { Unit } from "../../evaluation/spec-corpus/segment-in-units.js";
@@ -16,6 +18,7 @@ import {
 	tolerantMatch,
 	type UnitCheck,
 } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
+import type { GroupingCheck } from "../../evaluation/spec-corpus/segment-in-units-grouping.js";
 import { toleratedPairOf } from "../../evaluation/spec-corpus/segment-in-units-route-tolerance.js";
 import {
 	expletiveForms,
@@ -52,6 +55,25 @@ export type Tally = {
 	singleScored: number;
 	singleMembership: number;
 	singleMatch: number;
+	/** Multi-piece gold units whose Segments are not contiguous, and their membership. */
+	discontinuousScored: number;
+	discontinuousMembership: number;
+	/** Segment pairs inside scored gold units, and those a returned unit kept together: pair recall. */
+	goldPairs: number;
+	recalledPairs: number;
+	/** Returned Segment pairs on Full records, and those inside one gold unit: pair precision. */
+	fullPairs: number;
+	fullTruePairs: number;
+	/**
+	 * Returned Segment pairs the gold decides on any record, at least one
+	 * Segment in an asserted unit, and those inside one gold unit.
+	 */
+	decidedPairs: number;
+	truePairs: number;
+	/** Returned units joining Segments of two or more gold units. */
+	overMerged: number;
+	/** Scored gold units split across two or more returned units. */
+	underMerged: number;
 	contractCases: number;
 	contractPass: number;
 	fullCases: number;
@@ -78,6 +100,16 @@ const emptyTally = (): Tally => ({
 	singleScored: 0,
 	singleMembership: 0,
 	singleMatch: 0,
+	discontinuousScored: 0,
+	discontinuousMembership: 0,
+	goldPairs: 0,
+	recalledPairs: 0,
+	fullPairs: 0,
+	fullTruePairs: 0,
+	decidedPairs: 0,
+	truePairs: 0,
+	overMerged: 0,
+	underMerged: 0,
 	contractCases: 0,
 	contractPass: 0,
 	fullCases: 0,
@@ -155,8 +187,12 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 			}
 			tally.scored++;
 			tally.missing++;
-			if (unit.segments.length > 1) tally.multiScored++;
+			const pieces = unit.segments.length;
+			tally.goldPairs += (pieces * (pieces - 1)) / 2;
+			if (pieces > 1) tally.multiScored++;
 			else tally.singleScored++;
+			if (pieces > 1 && !contiguous(labCase, unit))
+				tally.discontinuousScored++;
 		}
 		tally.contractCases++;
 		if (labCase.facts.coverage === "Full") tally.fullCases++;
@@ -189,12 +225,17 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 			tally.multiScored++;
 			if (membership) tally.multiMembership++;
 			if (check.verdict === "Match") tally.multiMatch++;
+			if (!contiguous(labCase, check.expected)) {
+				tally.discontinuousScored++;
+				if (membership) tally.discontinuousMembership++;
+			}
 		} else {
 			tally.singleScored++;
 			if (membership) tally.singleMembership++;
 			if (check.verdict === "Match") tally.singleMatch++;
 		}
 	}
+	addGrouping(tally, labCase, evaluation.grouping);
 	if (evaluation.contractPass !== undefined) {
 		tally.contractCases++;
 		if (evaluation.contractPass) tally.contractPass++;
@@ -206,7 +247,27 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 	}
 }
 
+function addGrouping(
+	tally: Tally,
+	labCase: LabCase,
+	grouping: GroupingCheck,
+): void {
+	tally.goldPairs += grouping.goldPairs;
+	tally.recalledPairs += grouping.recalledPairs;
+	tally.decidedPairs += grouping.decidedPairs;
+	tally.truePairs += grouping.truePairs;
+	if (labCase.facts.coverage === "Full") {
+		tally.fullPairs += grouping.decidedPairs;
+		tally.fullTruePairs += grouping.truePairs;
+	}
+	tally.overMerged += grouping.overMerged.length;
+	tally.underMerged += grouping.underMerged.length;
+}
+
 const ratio = (a: number, b: number) => (b === 0 ? Number.NaN : a / b);
+
+const harmonic = (a: number, b: number) =>
+	a + b === 0 ? Number.NaN : (2 * a * b) / (a + b);
 
 /** Unresolved and Foreign gold units, which the evaluator does not score. */
 export const isStub = (unit: Unit) =>
@@ -220,13 +281,32 @@ export const isStub = (unit: Unit) =>
  * comparison. The route rates read only units whose membership holds, and
  * so do `variantRate` (how many of them carry variants) and
  * `meanVariants` (how many routes those carry).
+ *
+ * Grouping (#701): `pairRecall` over the Segment pairs of scored gold
+ * units on every record; `pairPrecision` over returned pairs on Full
+ * records only, since a Partial record cannot show two unannotated Segments
+ * wrongly joined; `pairF1` of the two. `assertedPairPrecision` reads every
+ * record's returned pairs that touch an asserted unit, which a Partial
+ * record does decide, and `assertedPairF1` pairs it with the same recall.
  */
 export function rates(tally: Tally) {
 	const membership = tally.match + tally.wrongRoute;
+	const pairRecall = ratio(tally.recalledPairs, tally.goldPairs);
+	const pairPrecision = ratio(tally.fullTruePairs, tally.fullPairs);
+	const assertedPairPrecision = ratio(tally.truePairs, tally.decidedPairs);
 	return {
 		membership: ratio(membership, tally.scored),
 		multiMembership: ratio(tally.multiMembership, tally.multiScored),
 		singleMembership: ratio(tally.singleMembership, tally.singleScored),
+		discontinuousMembership: ratio(
+			tally.discontinuousMembership,
+			tally.discontinuousScored,
+		),
+		pairRecall,
+		pairPrecision,
+		pairF1: harmonic(pairPrecision, pairRecall),
+		assertedPairPrecision,
+		assertedPairF1: harmonic(assertedPairPrecision, pairRecall),
 		tolerantUnitAccuracy: ratio(
 			tally.match + tally.toleratedRoute,
 			tally.scored,
@@ -277,6 +357,20 @@ export type PolicySummary = {
 	readonly membershipByRepetition: readonly number[];
 	/** Strict unit accuracy of each repetition. */
 	readonly unitAccuracyByRepetition: readonly number[];
+	/**
+	 * The records each pair rate is counted over: those with a gold pair,
+	 * the Full ones with a returned pair, and those with a returned pair the
+	 * gold decides. The pairs themselves are summed over repetitions in the
+	 * tally.
+	 */
+	readonly pairRecords: {
+		readonly recall: number;
+		readonly fullPrecision: number;
+		readonly assertedPrecision: number;
+	};
+	/** Over-merged returned units and under-merged gold units of each repetition. */
+	readonly overMergedByRepetition: readonly number[];
+	readonly underMergedByRepetition: readonly number[];
 	/**
 	 * Consistency: scored gold units whose membership holds in some
 	 * repetitions and not others, of those with more than one repetition.
@@ -331,6 +425,11 @@ export function summarizePolicy(
 	let membershipFlipBase = 0;
 	let varyingOutputs = 0;
 	let counted = 0;
+	const pairRecords = {
+		recall: 0,
+		fullPrecision: 0,
+		assertedPrecision: 0,
+	};
 	for (const caseRun of run.cases) {
 		if (only && !only.has(caseRun.id)) continue;
 		const labCase = cases.get(caseRun.id);
@@ -341,9 +440,12 @@ export function summarizePolicy(
 		const unitMembership = labCase.idealOutput.units.map(
 			(): boolean[] => [],
 		);
+		let decidedPairs = false;
 		for (const [index, repetition] of caseRun.repetitions.entries()) {
 			const score = scoreCase(labCase, repetition, policy);
 			add(tally, labCase, score);
+			if ((score.evaluation?.grouping.decidedPairs ?? 0) > 0)
+				decidedPairs = true;
 			labCase.idealOutput.units.forEach((unit, unitIndex) => {
 				if (isStub(unit)) return;
 				const check = score.evaluation?.units[unitIndex];
@@ -368,6 +470,16 @@ export function summarizePolicy(
 				membershipFlips++;
 		}
 		if (outputs.size > 1) varyingOutputs++;
+		if (
+			labCase.idealOutput.units.some(
+				(unit) => !isStub(unit) && unit.segments.length > 1,
+			)
+		)
+			pairRecords.recall++;
+		if (decidedPairs) {
+			pairRecords.assertedPrecision++;
+			if (labCase.facts.coverage === "Full") pairRecords.fullPrecision++;
+		}
 	}
 	return {
 		policy,
@@ -381,12 +493,113 @@ export function summarizePolicy(
 		unitAccuracyByRepetition: byRepetition.map(
 			(entry) => rates(entry).unitAccuracy,
 		),
+		pairRecords,
+		overMergedByRepetition: byRepetition.map((entry) => entry.overMerged),
+		underMergedByRepetition: byRepetition.map((entry) => entry.underMerged),
 		membershipFlips,
 		membershipFlipBase,
 		flips,
 		flipBase,
 		varyingOutputs,
 	};
+}
+
+/** One over- or under-merge of a run, with the repetitions that made it. */
+export type GroupingExample = {
+	readonly case: string;
+	readonly sentence: string;
+	/** `over`: a returned unit joining Segments of several gold units; `under`: a gold unit split. */
+	readonly kind: "over" | "under";
+	/** The returned unit's Segments for `over`, the gold unit's for `under`. */
+	readonly text: string;
+	/** The split gold unit's route, for `under`. */
+	readonly gold?: string;
+	/**
+	 * `over`: its Segments by gold unit, each with that unit's route, none
+	 * for Segments no gold unit asserts; `under`: the gold unit's Segments
+	 * by returned unit.
+	 */
+	readonly parts: readonly {
+		readonly text: string;
+		readonly gold?: string;
+	}[];
+	readonly repetitions: readonly number[];
+};
+
+/**
+ * Every over- and under-merge of one policy, in case order, each listed
+ * once with the repetitions that made it, so failures read as text.
+ */
+export function groupingExamples(
+	run: LabRun,
+	cases: ReadonlyMap<string, LabCase>,
+	policy: string,
+	only?: ReadonlySet<string>,
+): GroupingExample[] {
+	const examples = new Map<
+		string,
+		{ example: Omit<GroupingExample, "repetitions">; repetitions: number[] }
+	>();
+	for (const caseRun of run.cases) {
+		if (only && !only.has(caseRun.id)) continue;
+		const labCase = cases.get(caseRun.id);
+		if (!labCase) continue;
+		const sentence = labCase.input.segments
+			.map(({ text }) => text)
+			.join("");
+		const goldOf = (unit: number | undefined) => {
+			const entry =
+				unit === undefined
+					? undefined
+					: labCase.idealOutput.units[unit];
+			return entry ? { gold: keyOf(entry.route) } : {};
+		};
+		for (const [index, repetition] of caseRun.repetitions.entries()) {
+			const grouping = scoreCase(labCase, repetition, policy).evaluation
+				?.grouping;
+			if (!grouping) continue;
+			// Two like units of one Sentence stay two examples: the key holds their Segments.
+			const found: {
+				where: unknown;
+				example: Omit<GroupingExample, "repetitions">;
+			}[] = [
+				...grouping.overMerged.map((merge) => ({
+					where: merge.segments,
+					example: {
+						case: caseRun.id,
+						sentence,
+						kind: "over" as const,
+						text: merge.text,
+						parts: merge.parts.map((part) => ({
+							text: part.text,
+							...goldOf(part.unit),
+						})),
+					},
+				})),
+				...grouping.underMerged.map((split) => ({
+					where: split.unit,
+					example: {
+						case: caseRun.id,
+						sentence,
+						kind: "under" as const,
+						text: split.text,
+						...goldOf(split.unit),
+						parts: split.fragments.map((text) => ({ text })),
+					},
+				})),
+			];
+			for (const { where, example } of found) {
+				const key = stableJson({ where, example });
+				const entry = examples.get(key) ?? { example, repetitions: [] };
+				entry.repetitions.push(index);
+				examples.set(key, entry);
+			}
+		}
+	}
+	return [...examples.values()].map(({ example, repetitions }) => ({
+		...example,
+		repetitions,
+	}));
 }
 
 export function summarizeCost(
