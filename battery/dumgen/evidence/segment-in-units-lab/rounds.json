@@ -8,16 +8,31 @@
 			"capTokens": 119047619,
 			"stopLineTokens": 104000000,
 			"pin": {
-				"dumspecCommit": "a95cecf17658757d7d650e0aca364cfd461627e9",
+				"dumspecCommit": "58932ee2a031234fd6300387837bb56ee0429d46",
 				"dumspecDirty": false,
-				"hash": "5dd8dd10a89667c611dbf2f0e482650bdc8484ad70dbd9dd38a3fd53377e1cc5",
+				"hash": "73511f91eafbf2b8f29ce0018bc2400e3187ab4f0ebc6fc71d2e2221cf046ab1",
 				"inputs": {
 					"inventories": "8d7cb8423e919a11234c8a235f477dc501f0ca26f2760e7ea30b7b9877088688",
-					"rules": "ae68eb65fc0d93d2768648a585e6b0690913b344a12a72f8187d3691faac5ed9"
+					"rules": "1a8a87b15ea18284f0fd997f9d12843412068d916b886e0c46e4f7d780dcfd8e"
 				},
-				"at": "2026-10-02T09:24:34.056Z"
+				"at": "2026-10-02T15:26:30.894Z"
 			},
-			"repins": []
+			"repins": [
+				{
+					"at": "2026-10-02T15:26:30.894Z",
+					"from": {
+						"dumspecCommit": "a95cecf17658757d7d650e0aca364cfd461627e9",
+						"dumspecDirty": false,
+						"hash": "5dd8dd10a89667c611dbf2f0e482650bdc8484ad70dbd9dd38a3fd53377e1cc5",
+						"inputs": {
+							"inventories": "8d7cb8423e919a11234c8a235f477dc501f0ca26f2760e7ea30b7b9877088688",
+							"rules": "ae68eb65fc0d93d2768648a585e6b0690913b344a12a72f8187d3691faac5ed9"
+						},
+						"at": "2026-10-02T09:24:34.056Z"
+					},
+					"reason": "#853 reworded German Rules and added de/sign-for-a-word and de/one-segment-per-mark (dumspec 58932ee2). Only the rules input moved: the inventories hash is unchanged, and the unit stage's requests quote no Rule text, so cached answers still hit. Re-pinned with the refreeze of dev to dev@60270b6bfb5062ae."
+				}
+			]
 		}
 	]
 }

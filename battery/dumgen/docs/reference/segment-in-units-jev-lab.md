@@ -194,7 +194,10 @@ names the current one; `round` prints what it has spent and has left.
   live run refuses to start when today's inputs differ from the round's
   pin, unless `--repin`, which pins the round at today's dumspec and keeps
   the old pin in `repins`. `replay` and offline runs report the drift.
-  Rebuild dumspec's dist before checking: the pin reads the build.
+  Rebuild dumspec's dist before checking: the pin reads the build. No
+  request quotes Rule text, so drift in `rules` alone still hits the
+  cache, though `replay` warns that it misses. `round --repin` re-pins
+  without running anything.
 
 ## Artifacts
 
@@ -305,6 +308,16 @@ evidence/segment-in-units-lab/
   cover are outside it, and no unit counts as disputed, because #739 has
   closed. Focus, guardrail and set-level figures don't compare across the
   refreeze, and runs on the old sets no longer get a focus block.
+- A second refreeze that day, at 16da573e, picks up the #853 gold fixes
+  (kept hyphens, `…?` as two marks, signs that stand for a word made
+  ResolvableText, the emoji OpaqueText), #851's re-cut Draft records and
+  #595's der meine, sich schämen für and voller. Dev is now
+  `dev@60270b6bfb5062ae`, 1276 cases as before, 20 of them with new
+  Segments or gold units. Held-out came out with the same cases and hash,
+  so it stays `heldout@c23a5cc90ca8afc9` as frozen at bb136b6c. The focus
+  set was not taken again. It reads only `dev@adb64b2bdaf31f4f`, so runs
+  on the current dev get no focus block and `--subset focus` refuses it.
+  Earlier runs stay scored on `dev@adb64b2bdaf31f4f`.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   committed outcomes otherwise. Outcomes are scored against the frozen
   gold, so `--relabel` needs the raw run.
