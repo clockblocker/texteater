@@ -269,6 +269,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🔄" },
 			"notes": {
 				"rationale": "ADV 'again, back', no comparison forms."
 			},

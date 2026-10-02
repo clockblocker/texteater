@@ -570,6 +570,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⏮" },
 			"notes": {
 				"rationale": "vorher is a temporal ADV with no comparison forms (de/comparability-is-lexical)."
 			},

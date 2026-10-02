@@ -418,6 +418,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "💯" },
 			"notes": {
 				"rationale": "voll 'totally' is Duden's salopp Adverb voll 'im höchsten Maße', a headword apart from the adjective voll, so this use is ADV voll, not ADJ, and it has no comparison forms (de/adjective-stays-adj). Decided on #748."
 			},

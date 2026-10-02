@@ -87,7 +87,7 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0039", "ADR-0042"],
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0042"],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -426,8 +426,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "viel here is used adverbially, modifying the verb ('often, a lot', DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern), so it is the comparable ADV viel, whose Cmp and Sup are mehr and am meisten (de/quantifier-by-use). Ruled on #743 (SZ-B6, SZ-A4, A3)."
+				"rationale": "viel here is used adverbially, modifying the verb ('often, a lot', DWDS viel II.1 adverbiell 'häufig, oft': viel lachen, wandern), so it is the comparable ADV viel, whose Cmp and Sup are mehr and am meisten (de/quantifier-by-use). Ruled on #743 (SZ-B6, SZ-A4, A3). viel spazieren is DWDS viel II.1 'häufig, oft', merged with es regnete viel 'a lot' into one Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

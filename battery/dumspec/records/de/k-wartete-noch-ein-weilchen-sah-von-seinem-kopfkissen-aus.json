@@ -501,6 +501,10 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "➕" },
+			"notes": {
+				"rationale": "noch ein Weilchen adds a stretch to the waiting, DWDS noch I.3 as in its ich bleibe noch acht Tage, so it shares the additive ➕ Reading."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

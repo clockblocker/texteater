@@ -33,8 +33,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "😮" },
 			"notes": {
-				"rationale": "Selbst is the focus word 'even' on der erfahrenste Techniker and stands before the finite verb together with it. A focus word is a single-member ADV that never joins its phrase (de/focus-word-is-adv); not comparable."
+				"rationale": "Selbst is the focus word 'even' on der erfahrenste Techniker and stands before the finite verb together with it. A focus word is a single-member ADV that never joins its phrase (de/focus-word-is-adv); not comparable. selbst before the phrase it picks out means 'sogar', so it takes the 😮 of sogar; the selbst of ich selbst is another sense."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

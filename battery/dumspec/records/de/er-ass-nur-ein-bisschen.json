@@ -68,6 +68,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "☝" },
 			"notes": {
 				"rationale": "nur is the restrictive focus word on ein bisschen: a single-member ADV, not comparable (de/focus-word-is-adv)."
 			},

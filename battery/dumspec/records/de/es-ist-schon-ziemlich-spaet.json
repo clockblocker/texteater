@@ -68,8 +68,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
-				"rationale": "ziemlich 'fairly' grades spät: a single-member degree ADV, not comparable (de/degree-word-is-adv); Duden lists the degree use as an Adverb apart from the adjective. schon is left untargeted: it may be temporal 'already' or the modal particle."
+				"rationale": "ziemlich 'fairly' grades spät: a single-member degree ADV, not comparable (de/degree-word-is-adv); Duden lists the degree use as an Adverb apart from the adjective. schon is left untargeted: it may be temporal 'already' or the modal particle. ziemlich spät is DWDS ziemlich 1a, 'drückt einen verhältnismäßig hohen Grad aus', not 1b 'fast'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

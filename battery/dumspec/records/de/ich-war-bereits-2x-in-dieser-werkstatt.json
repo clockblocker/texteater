@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "2⃣🔁" },
 			"notes": {
 				"rationale": "2x is zweimal written with a digit, so the target is ADV zweimal and the digit spelling a Licensed Variant (de/digits-spell-the-numeral)."
 			},

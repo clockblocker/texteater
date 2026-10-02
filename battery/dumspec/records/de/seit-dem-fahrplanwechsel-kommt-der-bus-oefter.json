@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "🔁📈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

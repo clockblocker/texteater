@@ -39,6 +39,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
 				"rationale": "sehr grades viel besser. A degree word is a single-member ADV (de/degree-word-is-adv); sehr is comparable (mehr, am meisten), so its Surface marks Pos (de/comparability-is-lexical)."
 			},

@@ -166,6 +166,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "mehr used adverbially is the Cmp of ADV viel (de/quantifier-by-use)."
 			},

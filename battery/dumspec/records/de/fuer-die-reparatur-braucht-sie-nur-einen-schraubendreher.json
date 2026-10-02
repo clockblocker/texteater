@@ -35,6 +35,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "☝" },
 			"notes": {
 				"rationale": "nur is the restrictive focus word on einen Schraubendreher: a single-member ADV, not comparable (de/focus-word-is-adv). The modal particle nur is another word."
 			},

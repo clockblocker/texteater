@@ -597,6 +597,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🔄" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -629,7 +630,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "ADV 'again, back', no comparison forms."
+				"rationale": "ADV 'again, back', no comparison forms. wieder weglegen restores the earlier state, DWDS wieder 1 'ein früherer Zustand von neuem'."
 			}
 		}
 	],

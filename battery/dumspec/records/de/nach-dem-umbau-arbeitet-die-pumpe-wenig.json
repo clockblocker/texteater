@@ -37,6 +37,7 @@
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "➖" },
 			"notes": {
 				"rationale": "wenig is used adverbially, modifying arbeitet, so it is the comparable ADV wenig (weniger, am wenigsten), and its Surface marks Pos (de/quantifier-by-use, de/comparability-is-lexical)."
 			},

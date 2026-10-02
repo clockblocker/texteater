@@ -90,6 +90,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "🥇" },
 			"notes": {
 				"rationale": "zuerst 'first' is an ADV with no comparison forms."
 			},
@@ -210,6 +211,7 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "🥇" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

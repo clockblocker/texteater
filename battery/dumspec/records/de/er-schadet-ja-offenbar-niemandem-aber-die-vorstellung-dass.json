@@ -434,8 +434,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "👀✅" },
 			"notes": {
-				"rationale": "offenbar 'apparently' is a sentence adverb commenting on the whole statement; Duden has it as an Adverb headword apart from the adjective. A sentence adverb is a non-comparable ADV (de/adjective-stays-adj), so its Surface has no inflection."
+				"rationale": "offenbar 'apparently' is a sentence adverb commenting on the whole statement; Duden has it as an Adverb headword apart from the adjective. A sentence adverb is a non-comparable ADV (de/adjective-stays-adj), so its Surface has no inflection. offenbar here is DWDS offenbar 2 'anscheinend, wie es scheint', an inference from what is seen, not 1 'offenkundig'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -802,8 +803,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "➕" },
 			"notes": {
-				"rationale": "noch is the additive adverb of auch noch."
+				"rationale": "noch is the additive adverb of auch noch. auch noch adds one more thing, DWDS noch I.3 'gibt an, dass etw. zu etw. Vorhandenem hinzukommt', a Reading apart from the lasting noch ⏳."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

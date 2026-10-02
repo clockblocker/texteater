@@ -112,6 +112,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈⚠" },
 			"notes": {
 				"rationale": "zu 'too' grades sehr. Excess is no Degree value, so degree zu is a single-member ADV, no DegreeMarker, and not comparable (de/degree-word-is-adv)."
 			},
@@ -153,6 +154,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
 				"rationale": "sehr is the degree word graded by gar zu: a single-member ADV (de/degree-word-is-adv). It is comparable (mehr, am meisten), so its Surface marks Pos (de/comparability-is-lexical)."
 			},
@@ -276,6 +278,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈⚠" },
 			"notes": {
 				"rationale": "zu 'too' grades schwer, which stays its own word: degree zu is a single-member ADV, not comparable (de/degree-word-is-adv)."
 			},

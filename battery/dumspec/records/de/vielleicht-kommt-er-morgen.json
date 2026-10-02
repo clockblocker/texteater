@@ -60,6 +60,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🤷" },
 			"notes": {
 				"rationale": "Vielleicht 'perhaps' stands alone before the finite verb, which a modal particle cannot: the sentence adverb, an ADV with no comparison forms (de/modal-particle-is-part, de/adjective-stays-adj)."
 			},

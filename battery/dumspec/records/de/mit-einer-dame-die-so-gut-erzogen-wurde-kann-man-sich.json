@@ -420,6 +420,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "👉" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -673,6 +674,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -705,7 +707,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'), as gar does in gar nicht. German PART is only nicht, infinitive zu and the authored modal particles (de/modal-particle-is-part), so it is a single-member degree ADV (de/degree-word-is-adv), not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way."
+				"rationale": "überhaupt strengthens the negation (DWDS, Adverb: überhaupt nicht 'ganz und gar nicht'), as gar does in gar nicht. German PART is only nicht, infinitive zu and the authored modal particles (de/modal-particle-is-part), so it is a single-member degree ADV (de/degree-word-is-adv), not comparable; überhaupt nicht is free, since überhaupt kein and überhaupt nichts work the same way. überhaupt nicht is DWDS überhaupt 2, 'verstärkt eine Verneinung: ganz und gar nicht', so it takes the intensifying 📈 that gar has in gar nicht."
 			}
 		},
 		{

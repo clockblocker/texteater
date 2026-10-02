@@ -60,6 +60,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🤔👍" },
 			"notes": {
 				"rationale": "Wahrscheinlich answers the yes/no question alone: a sentence adverb, which is a non-comparable ADV (de/adjective-stays-adj)."
 			},

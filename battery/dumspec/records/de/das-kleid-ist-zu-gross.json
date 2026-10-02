@@ -68,6 +68,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈⚠" },
 			"notes": {
 				"rationale": "Degree zu 'too' (STTS PTKA) grades groß and never joins it. Excess is no Degree value, so zu is a single-member ADV, no DegreeMarker, and not comparable (de/degree-word-is-adv)."
 			},

@@ -435,6 +435,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "📈⚠" },
 			"notes": {
 				"rationale": "Route tentative: degree zu 'too' as ADV per the #734 ruling; it stays apart from spät and is no infinitive zu."
 			},

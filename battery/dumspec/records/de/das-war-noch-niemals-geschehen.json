@@ -198,6 +198,10 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⏳" },
+			"notes": {
+				"rationale": "noch niemals 'never yet' is DWDS noch I.1, a state lasting up to the time spoken of (ich bin noch nie dort gewesen), a Reading apart from the additive noch ➕."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -236,6 +240,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🚫⏰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

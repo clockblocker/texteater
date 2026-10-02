@@ -369,8 +369,9 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⏰✅" },
 			"notes": {
-				"rationale": "Route tentative: temporal schon 'already'."
+				"rationale": "Route tentative: temporal schon 'already'. schon is DWDS schon I.1, temporal 'bereits': the tidying was done before the arrival."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

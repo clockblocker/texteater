@@ -504,6 +504,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "👉" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -882,6 +883,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "☝" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -923,6 +925,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "⏳" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -955,7 +958,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "ADV, no comparison forms."
+				"rationale": "ADV, no comparison forms. nur noch, the one way still left, is DWDS noch I.4 'Rest' (es brannte nur noch die Kerze), merged with the lasting ⏳ Reading under ADR 0031."
 			}
 		},
 		{

@@ -874,6 +874,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "👇⏰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -906,7 +907,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "nun is the temporal adverb 'now, at this point'; no comparison forms."
+				"rationale": "nun is the temporal adverb 'now, at this point'; no comparison forms. nun is DWDS nun I 'jetzt', the present the speaker sets, so it takes the 👇⏰ of jetzt."
 			}
 		},
 		{

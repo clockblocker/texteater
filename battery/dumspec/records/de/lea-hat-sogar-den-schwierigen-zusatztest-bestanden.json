@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "😮" },
 			"notes": {
 				"rationale": "sogar is a focus word on den schwierigen Zusatztest. A focus word is a single-member ADV, never PART, and has no comparison forms (de/focus-word-is-adv)."
 			},
