@@ -15,8 +15,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶📍" },
 			"notes": {
-				"rationale": "בואו is an imperative plural form with mood Imp and no tense."
+				"rationale": "בואו is an imperative plural form with mood Imp and no tense. בואו לכאן, come here, takes the 🚶📍 of the German kommen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

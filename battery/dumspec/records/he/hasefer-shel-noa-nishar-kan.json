@@ -16,13 +16,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0031"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "ADP" },
+			"reading": { "emojiDescription": "🔐" },
 			"notes": {
-				"rationale": "של is the genitive relation marker here, modeled as ADP."
+				"rationale": "של is the genitive relation marker here, modeled as ADP. של marks נועה as the owner, and 🔐 is the possessives' sign (ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

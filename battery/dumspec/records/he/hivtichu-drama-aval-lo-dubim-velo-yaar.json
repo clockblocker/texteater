@@ -26,8 +26,9 @@
 		{
 			"memberSegmentIndices": [7, 9, 11, 12, 14],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🚫🤏" },
 			"notes": {
-				"rationale": "לא דובים ולא יער is classified as an idiom; it is proverb-like, but used here as a fixed idiomatic denial."
+				"rationale": "לא דובים ולא יער is classified as an idiom; it is proverb-like, but used here as a fixed idiomatic denial. Wiktionary: 'לא היה ולא נברא, אין שמץ של אמת בדבר', not a shred of it is real."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

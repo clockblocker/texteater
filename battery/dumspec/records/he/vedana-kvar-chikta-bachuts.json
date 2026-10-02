@@ -20,6 +20,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "CCONJ" },
+			"reading": { "emojiDescription": "➕" },
 			"notes": {
 				"rationale": "ו is the CCONJ and, its own Lexeme. It is written fused to דנה, so its member is the Fused first piece of ודנה."
 			},

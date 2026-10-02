@@ -15,8 +15,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
-				"rationale": "ש is the SCONJ that introducing the complement clause, its own Lexeme and the Fused first piece of שתבוא."
+				"rationale": "ש is the SCONJ that introducing the complement clause, its own Lexeme and the Fused first piece of שתבוא. ש here opens the clause that אמרת reports; Wiktionary's one sense, a particle that opens a clause, covers its relative use too, so 🔗 names both."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

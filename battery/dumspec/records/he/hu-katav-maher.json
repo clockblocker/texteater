@@ -16,6 +16,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "✍" },
 			"notes": {
 				"rationale": "כתב is the verb inflection here, distinct from both the root morpheme and noun-like uses."
 			},

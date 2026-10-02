@@ -15,6 +15,7 @@
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🐘" },
 			"notes": {
 				"rationale": "גדולים is a masculine plural adjective inflection."
 			},

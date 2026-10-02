@@ -16,6 +16,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "❓" },
 			"notes": {
 				"rationale": "איזה is an interrogative determiner rather than a pronoun because it modifies רחוב."
 			},

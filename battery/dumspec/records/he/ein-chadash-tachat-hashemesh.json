@@ -19,8 +19,9 @@
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 7],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🚫🆕🔁" },
 			"notes": {
-				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span on חדש does not make it an adjective Surface."
+				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span on חדש does not make it an adjective Surface. Ecclesiastes 1:9: nothing is new, everything has happened before."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

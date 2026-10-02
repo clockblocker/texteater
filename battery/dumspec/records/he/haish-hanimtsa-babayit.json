@@ -19,8 +19,9 @@
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
-				"rationale": "ה introduces the relative participle נמצא, so it is the SCONJ that, not the article; the article ה of האיש belongs to the noun איש."
+				"rationale": "ה introduces the relative participle נמצא, so it is the SCONJ that, not the article; the article ה of האיש belongs to the noun איש. ה here is the relative marker before the participle נמצא, 'who is' (Wiktionary ה־: before a participle the article passes to the relative particle), so it takes the relatives' 🔗."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

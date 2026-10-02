@@ -12,13 +12,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0031"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "✍" },
 			"notes": {
-				"rationale": "נכתב is the NIFAL passive-like form, so it carries voice Pass."
+				"rationale": "נכתב is the NIFAL passive-like form, so it carries voice Pass. The passive is the NIFAL binyan in the Lemma's Core, so the description names only the writing, the ✍ of PAAL כתב (ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

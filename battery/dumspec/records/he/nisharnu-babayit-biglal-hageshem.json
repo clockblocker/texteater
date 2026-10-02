@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "ADP" },
+			"reading": { "emojiDescription": "⛓" },
 			"notes": {
-				"rationale": "בגלל is a causal adposition without an additional case feature in the current schema."
+				"rationale": "בגלל is a causal adposition without an additional case feature in the current schema. בגלל names the cause, as the German wegen ⛓ does."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

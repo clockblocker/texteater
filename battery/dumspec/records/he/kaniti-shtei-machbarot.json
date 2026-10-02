@@ -16,6 +16,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "2⃣" },
 			"notes": {
 				"rationale": "שתי is the construct or feminine form of שתיים and is intentionally awkward for feature-boundary testing."
 			},

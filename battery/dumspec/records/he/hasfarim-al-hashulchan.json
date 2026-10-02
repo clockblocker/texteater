@@ -18,6 +18,7 @@
 		{
 			"memberSegmentIndices": [0, 1],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "📖" },
 			"notes": {
 				"rationale": "The definite plural noun owns its article: members are the Fused pieces ה and ספרים, and normalizedSurface is ספרים without the article."
 			},

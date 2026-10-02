@@ -17,8 +17,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADP" },
+			"reading": { "emojiDescription": "🛬" },
 			"notes": {
-				"rationale": "ל is the ADP to, its own Lexeme and the Fused first piece of לעבודה (la-avoda). The Fusion lists the hidden article ה, which belongs to the noun עבודה."
+				"rationale": "ל is the ADP to, its own Lexeme and the Fused first piece of לעבודה (la-avoda). The Fusion lists the hidden article ה, which belongs to the noun עבודה. ל here marks where the movement goes, Milog ל 1 (direction, 'אל'), drawn with the goal sign 🛬 of dahin and wohin."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -17,8 +17,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADP" },
+			"reading": { "emojiDescription": "🎯" },
 			"notes": {
-				"rationale": "את is the accusative marker here, modeled as ADP and kept separate from the pronoun homograph."
+				"rationale": "את is the accusative marker here, modeled as ADP and kept separate from the pronoun homograph. את marks the definite direct object הסרט (Wiktionary: 'מילת יחס המצטרפת למושא ישיר במשפט כאשר הוא מיודע'), and 🎯 names that object as what the verb acts on."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

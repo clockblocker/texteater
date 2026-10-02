@@ -18,8 +18,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"reading": { "emojiDescription": "⏰" },
 			"notes": {
-				"rationale": "כאשר is SCONJ with temporal case because the schema exposes that feature for Hebrew subordinators."
+				"rationale": "כאשר is SCONJ with temporal case because the schema exposes that feature for Hebrew subordinators. כאשר 'when' opens a time clause, the ⏰ of wann."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

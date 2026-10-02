@@ -14,6 +14,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "✋" },
 			"notes": {
 				"rationale": "ידיים is a dual-number surface for a paired body part."
 			},

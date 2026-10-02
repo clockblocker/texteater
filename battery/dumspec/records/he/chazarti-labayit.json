@@ -10,13 +10,18 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0031", "ADR-0035"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🏠" },
 			"notes": {
-				"rationale": "לבית is la-bayit: ל, a hidden article ה with no letters of its own, and בית. The noun owns that hidden component, so it records Def and its coverage is Partial, pointing at component 1 of the Fusion."
+				"rationale": "לבית is la-bayit: ל, a hidden article ה with no letters of its own, and בית. The noun owns that hidden component, so it records Def and its coverage is Partial, pointing at component 1 of the Fusion. חזרתי לבית, back to the house or home, folds Wiktionary בית 1 (a dwelling) and 2 (a place of belonging) into one Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

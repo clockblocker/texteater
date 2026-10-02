@@ -16,6 +16,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "✉" },
 			"notes": {
 				"rationale": "מכתבים is the plural noun from מכתב, not a verb-root attestation."
 			},

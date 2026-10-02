@@ -17,6 +17,7 @@
 		{
 			"memberSegmentIndices": [3, 5],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🏙🇮🇱" },
 			"notes": {
 				"rationale": "תל אביב is a multiword proper-noun citation with no additional inflectional surface features."
 			},

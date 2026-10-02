@@ -16,6 +16,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "את is the pronoun homograph here, modeled with feminine second-person features."
 			},

@@ -16,8 +16,9 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋❓" },
 			"notes": {
-				"rationale": "The multiword greeting is one Locution/INTJ."
+				"rationale": "The multiword greeting is one Locution/INTJ. מה נשמע greets by asking how things are, so it takes the greeting 👋 with ❓."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

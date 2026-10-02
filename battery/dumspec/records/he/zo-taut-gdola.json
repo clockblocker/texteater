@@ -11,13 +11,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0031"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🐘" },
 			"notes": {
-				"rationale": "גדולה is a feminine singular adjective inflection."
+				"rationale": "גדולה is a feminine singular adjective inflection. טעות גדולה, a serious mistake, is folded with the size of החדרים גדולים (Wiktionary גדול 1 'בעל מידה מרובה') into one Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

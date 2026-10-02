@@ -21,6 +21,7 @@
 		{
 			"memberSegmentIndices": [3, 4],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
 				"rationale": "הטובות is a definite feminine plural adjective agreeing with השאלות. The adjective owns its own article ה as a Fused member; normalizedSurface is טובות."
 			},

@@ -16,6 +16,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🍽" },
 			"notes": {
 				"rationale": "אוכל is the future first-person verb from אכל, separated from the noun homograph."
 			},

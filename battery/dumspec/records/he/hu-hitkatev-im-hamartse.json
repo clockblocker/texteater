@@ -19,8 +19,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "✍💬" },
 			"notes": {
-				"rationale": "התכתב is analyzed as HITPAEL with voice Mid to expose reflexive or reciprocal middle behavior."
+				"rationale": "התכתב is analyzed as HITPAEL with voice Mid to expose reflexive or reciprocal middle behavior. התכתב is Wiktionary's 'ניהל דו־שיח בכתב', a written dialogue, so it takes ✍💬 rather than plain writing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

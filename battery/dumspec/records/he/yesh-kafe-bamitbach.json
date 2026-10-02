@@ -17,8 +17,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🌍" },
 			"notes": {
-				"rationale": "יש is modeled as an existential verb, not as an adverb or particle."
+				"rationale": "יש is modeled as an existential verb, not as an adverb or particle. יש 'there is' states existence, as the German es gibt does (geben 🌍, Duden geben 15 'vorhanden sein, existieren')."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

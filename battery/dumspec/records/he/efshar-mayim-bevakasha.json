@@ -18,8 +18,9 @@
 		{
 			"memberSegmentIndices": [5, 6],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
 			"notes": {
-				"rationale": "בבקשה is treated as a request politeness formula despite containing the noun בקשה. The formula owns both Fused pieces of the written word, the ADP ב and the noun בקשה; be-vakasha has no hidden article."
+				"rationale": "בבקשה is treated as a request politeness formula despite containing the noun בקשה. The formula owns both Fused pieces of the written word, the ADP ב and the noun בקשה; be-vakasha has no hidden article. בבקשה here asks for something, Wiktionary בבקשה 1 'מילת קריאה מנומסת למען שיעשו טובה'; 'here you are' (2) and 'you're welcome' (3) would be other Readings."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

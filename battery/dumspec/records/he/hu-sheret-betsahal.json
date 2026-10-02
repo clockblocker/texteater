@@ -17,8 +17,9 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🪖🇮🇱" },
 			"notes": {
-				"rationale": "צה\"ל is an abbreviated proper noun with the quote mark retained and abbr Yes."
+				"rationale": "צה\"ל is an abbreviated proper noun with the quote mark retained and abbr Yes. צה\"ל is the Israel Defense Forces: the army 🪖, pinned with the flag of a national institution."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

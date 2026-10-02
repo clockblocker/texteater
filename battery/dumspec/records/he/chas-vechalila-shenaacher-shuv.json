@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [0, 2, 3],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏🚫" },
 			"notes": {
-				"rationale": "חס וחלילה is treated as an idiom because the literal pieces are not the learner-facing meaning."
+				"rationale": "חס וחלילה is treated as an idiom because the literal pieces are not the learner-facing meaning. חס וחלילה, God forbid, wards off something unwanted (Wiktionary: 'אמרה הנאמרת על דבר שאין רוצים בהתרחשותו')."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

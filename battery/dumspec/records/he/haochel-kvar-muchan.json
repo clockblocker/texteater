@@ -17,8 +17,9 @@
 		{
 			"memberSegmentIndices": [0, 1],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🍽" },
 			"notes": {
-				"rationale": "אוכל is the noun food here, separated from the future-verb homograph by lemma and POS. It owns the article ה, so the Surface records Def."
+				"rationale": "אוכל is the noun food here, separated from the future-verb homograph by lemma and POS. It owns the article ה, so the Surface records Def. אוכל 'food' takes 🍽, as the verb אכל 'eat' of its root does."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

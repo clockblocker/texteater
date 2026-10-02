@@ -16,6 +16,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶" },
 			"notes": {
 				"rationale": "The verb carries polarity Neg because the negative-command context matters even though אל is separate."
 			},

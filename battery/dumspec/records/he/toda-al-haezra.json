@@ -17,6 +17,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
 			"notes": {
 				"rationale": "תודה is treated as a thanks formula rather than as a standalone noun."
 			},

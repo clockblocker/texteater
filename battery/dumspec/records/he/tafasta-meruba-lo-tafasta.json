@@ -18,8 +18,9 @@
 		{
 			"memberSegmentIndices": [0, 2, 4, 6],
 			"route": { "family": "Saying", "kind": "Saying" },
+			"reading": { "emojiDescription": "🤹❌" },
 			"notes": {
-				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span on תפסת does not make it a standalone verb Attestation."
+				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span on תפסת does not make it a standalone verb Attestation. Wiktionary: grab too much and you are left with nothing (Sukkah 5a); 🤹 takes on too much, ❌ ends with nothing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

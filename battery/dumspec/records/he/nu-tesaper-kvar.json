@@ -17,8 +17,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "⏩" },
 			"notes": {
-				"rationale": "נו is kept as INTJ rather than a multiword formula because it functions as a prompting interjection."
+				"rationale": "נו is kept as INTJ rather than a multiword formula because it functions as a prompting interjection. נו here urges the listener on, Wiktionary נו 1 (urging, impatience)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

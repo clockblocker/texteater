@@ -17,8 +17,9 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADP" },
+			"reading": { "emojiDescription": "📍" },
 			"notes": {
-				"rationale": "ב is the ADP in, its own Lexeme and the Fused first piece of בבית (ba-bayit). The Fusion lists the hidden article ה between ב and בית; that component belongs to the noun בית."
+				"rationale": "ב is the ADP in, its own Lexeme and the Fused first piece of בבית (ba-bayit). The Fusion lists the hidden article ה between ב and בית; that component belongs to the noun בית. ב here places the meeting inside the house, Wiktionary ב־ 1 (being inside a place or a frame), drawn with the place sign 📍 of hier and da."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

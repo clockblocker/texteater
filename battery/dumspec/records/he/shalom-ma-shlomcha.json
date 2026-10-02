@@ -17,6 +17,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋" },
 			"notes": {
 				"rationale": "שלום is a one-word routine formula, Lexeme/INTJ, rather than the noun peace, because the sentence is a greeting."
 			},

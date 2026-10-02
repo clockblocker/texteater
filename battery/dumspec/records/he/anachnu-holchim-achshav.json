@@ -16,8 +16,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚶" },
 			"notes": {
-				"rationale": "Present-like verbal forms are represented as verbForm Part rather than tense Pres."
+				"rationale": "Present-like verbal forms are represented as verbForm Part rather than tense Pres. אנחנו הולכים עכשיו, we're going now, is Wiktionary הלך 1 'move from place to place', which has no separate 'leave' sense, so it shares 🚶 with אל תלך לבד."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

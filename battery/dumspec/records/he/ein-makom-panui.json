@@ -16,8 +16,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🚫🌍" },
 			"notes": {
-				"rationale": "אין is the negative existential verb; its negativity is lexical here, not an inflectional polarity feature."
+				"rationale": "אין is the negative existential verb; its negativity is lexical here, not an inflectional polarity feature. אין 'there is no' negates the existence that יש and the German es gibt (geben 🌍) state."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

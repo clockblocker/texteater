@@ -17,6 +17,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🏙🇮🇱" },
 			"notes": {
 				"rationale": "ירושלים is a proper noun with feminine inherent gender and singular surface number."
 			},

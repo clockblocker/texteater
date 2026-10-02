@@ -15,6 +15,7 @@
 		{
 			"memberSegmentIndices": [0, 1],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🏠" },
 			"notes": {
 				"rationale": "The article ה is owned by its noun: clicking it opens בית (Def), whose members are the Fused pieces ה and בית. normalizedSurface is the noun's own letters."
 			},
