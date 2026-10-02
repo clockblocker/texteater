@@ -83,13 +83,14 @@ const units: Rule[] = [
 	{
 		id: "de/no-target",
 		statement:
-			"A word has no target when no route for it is defensible: unintelligible text or a nonce word that no German or foreign word, name or plausible typo fits (xqzt, glorpen), a word broken off (trans…), an article whose noun phrase breaks off before its Head (das in Er brach das…), or a suspended-compound fragment with no right conjunct to complete it. The context must show the break, not an ellipsis alone, and no noun or demonstrative reading is made up: a complete Er brach das. gives das PRON. The classifier answers Unresolved for it.",
+			"A word has no target when no route for it is defensible: unintelligible text or a nonce word that no German or foreign word, name or plausible typo fits (xqzt, glorpen), a word broken off (trans…), an article whose noun phrase breaks off before its Head (das in Er brach das…), or a suspended-compound fragment with no right conjunct to complete it. The context must show the break, not an ellipsis alone, and no noun or demonstrative reading is made up: a complete Er brach das. gives das PRON. A nonce noun still owns its article, in one No Target: [der, Blarg]. The classifier answers Unresolved.",
 		adrs: ["ADR-0037", "ADR-0040", "ADR-0045"],
 		routes: [],
 		records: [
 			"de/das-wetter-ist-xqzt",
 			"de/im-beispiel-sollte-die-figur-morgen-glorpen-doch-die",
 			"de/der-blarg-tauchte-ohne-erklaerung-im-bericht-auf",
+			"de/mit-dem-glorp-konnte-niemand-etwas-anfangen",
 			"de/das-glossar-fuehrte-den-nicht-weiter-bestimmten-eintrag",
 			"de/die-aufnahme-brach-mitten-im-begonnenen-wort-nach-trans",
 			"de/die-sprecherin-begann-mit-unver-und-brach-das-wort-hoerbar",
@@ -924,7 +925,7 @@ const conjunctionsAndParticles: Rule[] = [
 	{
 		id: "de/bare-infinitive-zu",
 		statement:
-			"zu before an infinitive or infixed in it, without um, ohne or statt, is a single-member PART with partType Inf and never joins the infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB.",
+			"zu before an infinitive or infixed in it, without um, ohne or statt, is a single-member PART with partType Inf and never joins the infinitive: versucht zu schlafen gives [zu] PART and [schlafen] VERB. Where a Locution's or Saying's Canonical Form spells zu (alle Hände voll zu tun haben), zu is that unit's member.",
 		adrs: [],
 		routes: lexeme("PART"),
 		records: [
@@ -932,6 +933,7 @@ const conjunctionsAndParticles: Rule[] = [
 			"de/er-versucht-hinauszulaufen",
 			"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
 			"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
+			"de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun",
 		],
 	},
 	{

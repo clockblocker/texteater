@@ -23,15 +23,15 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0037", "ADR-0045"],
-		"rules": [{ "rule": "de/no-target", "hash": "0ebbe79f51e5e685" }],
+		"adrs": ["ADR-0037", "ADR-0040", "ADR-0045"],
+		"rules": [{ "rule": "de/no-target", "hash": "14ca778c14a8a252" }],
 		"references": []
 	},
 	"targets": [],
 	"noTarget": [
 		{
-			"memberSegmentIndices": [2],
-			"reason": "Nonce word: no German or foreign word, name or plausible typo fits, so it has no defensible route."
+			"memberSegmentIndices": [0, 2],
+			"reason": "Nonce word: no German or foreign word, name or plausible typo fits Blarg, so it has no defensible route. A nonce noun still owns its article (ADR 0040), so Der and Blarg form one No Target (de/no-target; ruled on #701, 2026-10-02)."
 		}
 	]
 }

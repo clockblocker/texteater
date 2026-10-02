@@ -188,6 +188,19 @@ demoted the whole record.
   Attestation, the Reading call from Reading, the Knowledge call from
   Knowledge.
 
+Amended on 2026-10-02: a No Target entry names one or more Segments, in
+sentence order, as a target names its members. A nonce noun still owns the
+article that opens its phrase
+([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)), so
+*der Blarg* is one No Target over `[der, Blarg]`, and hovering *der*
+highlights the unknown word it belongs to. The entry used to hold *Blarg*
+alone and leave *der* in no unit, though `segment.inUnits` could already
+return a multi-piece `Unresolved` unit. The entry now projects to one such
+unit. Coverage still counts each ResolvableText Segment in exactly one target
+or one No Target entry. Decided on
+[#701](https://github.com/clockblocker/texteater/issues/701) (grouping
+audit, Q2).
+
 ## Considered Options
 
 - The spec renders a curated subset of Dumgen's corpus. Rejected: the spec

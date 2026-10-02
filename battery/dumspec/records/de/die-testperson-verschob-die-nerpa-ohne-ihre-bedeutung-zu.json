@@ -26,15 +26,15 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0037", "ADR-0045"],
-		"rules": [{ "rule": "de/no-target", "hash": "0ebbe79f51e5e685" }],
+		"adrs": ["ADR-0037", "ADR-0040", "ADR-0045"],
+		"rules": [{ "rule": "de/no-target", "hash": "14ca778c14a8a252" }],
 		"references": []
 	},
 	"targets": [],
 	"noTarget": [
 		{
-			"memberSegmentIndices": [8],
-			"reason": "Nonce word: no German or foreign word, name or plausible typo fits, so it has no defensible route."
+			"memberSegmentIndices": [6, 8],
+			"reason": "Nonce word: no German or foreign word, name or plausible typo fits Nerpa, so it has no defensible route. A nonce noun still owns its article (ADR 0040), so die and Nerpa form one No Target (de/no-target; ruled on #701, 2026-10-02)."
 		}
 	]
 }

@@ -53,10 +53,11 @@ Partial otherwise. It is not an Attestation's Realization Coverage (Dumling). Se
 _Avoid_: completeness
 
 **No Target**:
-A ResolvableText Segment with no defensible route, such as a nonce word or a
-word broken off, recorded with the authored reason. It is annotation, not a
-gap, so it counts toward Full Coverage. Foreign-language material has a
-route, Foreign ([ADR 0045]). See [ADR 0037].
+ResolvableText Segments with no defensible route, recorded with the authored
+reason: a nonce word or a word broken off, and a nonce noun together with the
+article it owns, `[der, Blarg]` ([ADR 0040]). It is annotation, not a gap, so
+it counts toward Full Coverage. Foreign-language material has a route,
+Foreign ([ADR 0045]). See [ADR 0037].
 _Avoid_: Unresolved, skipped Segment
 
 **Rule**:
