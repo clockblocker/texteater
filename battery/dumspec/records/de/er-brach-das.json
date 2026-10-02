@@ -100,7 +100,7 @@
 	],
 	"noTarget": [
 		{
-			"segment": 4,
+			"memberSegmentIndices": [4],
 			"reason": "A noun phrase broken off before its Head: the text is cut off after the article, so das has no Head to belong to (ADR 0040), and neither a noun nor a demonstrative reading is made up for it. A complete Er brach das. would give das PRON."
 		}
 	]

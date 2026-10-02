@@ -7,22 +7,24 @@ import type {
 	ReadableRecordView,
 	RecordView,
 	RuleCitationView,
-	UnitView,
 } from "../shared/contract";
 import { postSave } from "./api";
 import { DirtyBadge } from "./BatchList";
 import { DepthLabel } from "./DepthLabel";
 import { type Focus, Sentence, sameFocus } from "./Sentence";
 
-/** A unit's member texts, with an ellipsis where a word stands between. */
+/**
+ * The texts of a unit's or No Target entry's Segments, with an ellipsis
+ * where a word stands between.
+ */
 function memberText(
-	unit: UnitView,
+	{ memberSegmentIndices }: { memberSegmentIndices: readonly number[] },
 	segments: readonly Dumspec.Segment[],
 ): string {
-	return unit.memberSegmentIndices
+	return memberSegmentIndices
 		.map((index, position) => {
 			const text = segments[index]?.text ?? "?";
-			const previous = unit.memberSegmentIndices[position - 1];
+			const previous = memberSegmentIndices[position - 1];
 			if (previous === undefined) return text;
 			const between = segments.slice(previous + 1, index);
 			return between.some((segment) => segment.kind === "ResolvableText")
@@ -193,15 +195,14 @@ function SelectionDetails({
 		);
 	}
 	if (focus.kind === "noTarget") {
-		const entry = record.noTarget.find(
-			(candidate) => candidate.segment === focus.segment,
-		);
+		const entry = record.noTarget[focus.index];
+		if (!entry) return null;
 		return (
 			<dl className="grid grid-cols-[8rem_1fr] gap-x-4 gap-y-1 text-sm">
-				<dt className="text-ink-muted">Segment</dt>
-				<dd>{record.segments[focus.segment]?.text}</dd>
+				<dt className="text-ink-muted">Members</dt>
+				<dd>{memberText(entry, record.segments)}</dd>
 				<dt className="text-ink-muted">No Target</dt>
-				<dd>{entry?.reason}</dd>
+				<dd>{entry.reason}</dd>
 			</dl>
 		);
 	}
@@ -243,9 +244,9 @@ function FocusDetails({
 			key: `unit-${index}`,
 			focus: { kind: "unit", index } as const,
 		})),
-		...record.noTarget.map(({ segment }) => ({
-			key: `no-target-${segment}`,
-			focus: { kind: "noTarget", segment } as const,
+		...record.noTarget.map((_, index) => ({
+			key: `no-target-${index}`,
+			focus: { kind: "noTarget", index } as const,
 		})),
 	];
 	return (
@@ -264,6 +265,11 @@ function FocusDetails({
 						)}
 						data-selected-unit={
 							shown && layer.focus?.kind === "unit"
+								? layer.focus.index
+								: undefined
+						}
+						data-selected-no-target={
+							shown && layer.focus?.kind === "noTarget"
 								? layer.focus.index
 								: undefined
 						}
@@ -429,15 +435,36 @@ export function RecordPanel({
 							</li>
 						);
 					})}
-					{record.noTarget.map((entry) => (
-						<li
-							key={`no-target-${entry.segment}`}
-							className="rounded-md border border-line border-dashed px-2 py-1 text-ink-muted text-sm"
-						>
-							{record.segments[entry.segment]?.text}{" "}
-							<span className="text-xs">No Target</span>
-						</li>
-					))}
+					{record.noTarget.map((entry, index) => {
+						const entryFocus: Focus = { kind: "noTarget", index };
+						return (
+							<li key={entry.memberSegmentIndices.join(",")}>
+								<button
+									type="button"
+									data-no-target-chip={index}
+									onMouseEnter={() => setHovered(entryFocus)}
+									onMouseLeave={() => setHovered(null)}
+									onClick={() =>
+										setSelected((current) =>
+											sameFocus(current, entryFocus)
+												? null
+												: entryFocus,
+										)
+									}
+									className={cn(
+										"rounded-md border border-line border-dashed px-2 py-1 text-start text-ink-muted text-sm transition-colors hover:bg-raised/50",
+										sameFocus(entryFocus, selected) &&
+											"border-link bg-raised",
+										sameFocus(entryFocus, hovered) &&
+											"bg-raised/50",
+									)}
+								>
+									{memberText(entry, record.segments)}{" "}
+									<span className="text-xs">No Target</span>
+								</button>
+							</li>
+						);
+					})}
 				</ul>
 			</Section>
 			<Section title="Review">

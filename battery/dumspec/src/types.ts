@@ -81,9 +81,13 @@ export interface SpecTarget extends SegmentationTarget {
 	grundform?: boolean;
 }
 
-/** A ResolvableText Segment with no defensible route, and why. */
+/**
+ * ResolvableText Segments with no defensible route, and why: one Segment, or
+ * a nonce noun with the article it owns (`[der, Blarg]`), in sentence order.
+ * `segment.inUnits` scores the entry as one `Unresolved` unit.
+ */
 export interface NoTarget {
-	segment: number;
+	memberSegmentIndices: readonly number[];
 	reason: string;
 }
 

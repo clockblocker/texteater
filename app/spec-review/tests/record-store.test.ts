@@ -8,7 +8,13 @@ import { createRecordStore } from "../src/record-store";
 import { createReview } from "../src/review";
 import { startSpecReviewServer } from "../src/server";
 import type { ReadableRecordView, SaveResponse } from "../src/shared/contract";
-import { batchRow, draftRecord, formatted, recordsRoot } from "./fixtures";
+import {
+	batchRow,
+	draftRecord,
+	formatted,
+	nonceNounRecord,
+	recordsRoot,
+} from "./fixtures";
 
 const directories: string[] = [];
 afterEach(async () => {
@@ -41,6 +47,7 @@ async function setup(
 		"de/er-schlaeft-q": draftRecord(),
 		"de/er-schlaeft-dev": draftRecord(),
 		"de/attested": { ...draftRecord(), reviewDepth: "Attestation" },
+		"de/der-blarg": nonceNounRecord(),
 	});
 	directories.push(root);
 	const directory = join(root, "records");
@@ -99,6 +106,19 @@ describe("reading", () => {
 			"Coverage",
 		]);
 		expect(broken.approve.allowed).toBe(false);
+	});
+
+	test("reads a No Target entry over several Segments as one entry", async () => {
+		const { review } = await setup([batchRow("N1", "de/der-blarg")]);
+		const record = await readable(review, "de/der-blarg");
+		expect(record.noTarget).toEqual([
+			{
+				memberSegmentIndices: [0, 2],
+				reason: "A nonce noun with its article.",
+			},
+		]);
+		expect(record.segmentationIssues).toEqual([]);
+		expect(record.approve).toEqual({ allowed: true });
 	});
 
 	test("a malformed file is unreadable and hides no other row", async () => {

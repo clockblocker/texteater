@@ -3,22 +3,25 @@ import { ReaderPlainSegment, ReaderSegment } from "lego";
 import { useMemo } from "react";
 import type { UnitView } from "../shared/contract";
 
-/** What the reader points at: one unit, or one No Target Segment. */
+/**
+ * What the reader points at: one unit, or one No Target entry, which may hold
+ * several Segments (`[der, Blarg]`).
+ */
 export type Focus =
 	| { kind: "unit"; index: number }
-	| { kind: "noTarget"; segment: number };
+	| { kind: "noTarget"; index: number };
 
 export const sameFocus = (left: Focus | null, right: Focus | null) =>
 	left !== null &&
 	right !== null &&
-	(left.kind === "unit"
-		? right.kind === "unit" && left.index === right.index
-		: right.kind === "noTarget" && left.segment === right.segment);
+	left.kind === right.kind &&
+	left.index === right.index;
 
 /**
- * The sentence from its Segments. Hovering a word previews every member of
- * its unit; clicking selects the unit. A No Target Segment is marked with a
- * dotted rule, and a word in no target or No Target entry stays faint.
+ * The sentence from its Segments. Hovering a word previews every Segment of
+ * its unit or No Target entry; clicking selects it. A No Target Segment is
+ * marked with a dotted rule, and a word in no target or No Target entry stays
+ * faint.
  */
 export function Sentence({
 	segments,
@@ -44,10 +47,13 @@ export function Sentence({
 				map.set(segment, index);
 		return map;
 	}, [units]);
-	const reasonOf = useMemo(
-		() => new Map(noTarget.map((entry) => [entry.segment, entry.reason])),
-		[noTarget],
-	);
+	const noTargetOf = useMemo(() => {
+		const map = new Map<number, number>();
+		for (const [index, entry] of noTarget.entries())
+			for (const segment of entry.memberSegmentIndices)
+				map.set(segment, index);
+		return map;
+	}, [noTarget]);
 	const interaction = (focus: Focus) =>
 		sameFocus(focus, selected)
 			? "selected"
@@ -66,12 +72,14 @@ export function Sentence({
 						</ReaderPlainSegment>
 					);
 				const unit = unitOf.get(index);
-				const reason = reasonOf.get(index);
+				const entry = noTargetOf.get(index);
+				const reason =
+					entry === undefined ? undefined : noTarget[entry]?.reason;
 				const focus: Focus | undefined =
 					unit !== undefined
 						? { kind: "unit", index: unit }
-						: reason !== undefined
-							? { kind: "noTarget", segment: index }
+						: entry !== undefined
+							? { kind: "noTarget", index: entry }
 							: undefined;
 				if (!focus)
 					return (
@@ -101,7 +109,7 @@ export function Sentence({
 						}
 						data-segment={index}
 						data-unit={unit}
-						data-no-target={reason === undefined ? undefined : ""}
+						data-no-target={entry}
 						onMouseEnter={() => onHover(focus)}
 						onMouseLeave={() => onHover(null)}
 						onFocus={() => onHover(focus)}

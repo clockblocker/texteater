@@ -36,7 +36,7 @@
 	"targets": [],
 	"noTarget": [
 		{
-			"segment": 8,
+			"memberSegmentIndices": [8],
 			"reason": "A word broken off: which word it would have become can't be told, so it has no defensible route."
 		}
 	]

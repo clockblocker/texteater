@@ -164,7 +164,15 @@ export function recordFileSchema<
 		sources: sourcesSchema,
 		targets: z.array(targetSchema(target)),
 		noTarget: z.array(
-			z.strictObject({ segment: indexSchema, reason: textSchema }),
+			z.strictObject({
+				memberSegmentIndices: z
+					.array(indexSchema)
+					.min(1)
+					.describe(
+						"The Segments with no defensible route, in sentence order: one word, or a nonce noun with the article it owns, such as [der, Blarg].",
+					),
+				reason: textSchema,
+			}),
 		),
 		legacy: z.array(legacyCaseSchema).optional(),
 	});

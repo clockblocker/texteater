@@ -56,7 +56,7 @@ type RecordFile = {
 	provenance: { kind: "Authored" };
 	sources: { adrs: string[]; rules: unknown[]; references: unknown[] };
 	targets: RecordTarget[];
-	noTarget: { segment: number; reason: string }[];
+	noTarget: { memberSegmentIndices: number[]; reason: string }[];
 	legacy?: LegacyCase[];
 };
 type Span = readonly [start: number, end: number];
@@ -289,8 +289,10 @@ for (const [caseId, golden] of Object.entries(
 		file &&
 		plain(file.segments) === plain(input.segments) &&
 		("decision" in ideal
-			? file.noTarget.some(
-					(entry) => entry.segment === input.clickedSegmentIndex,
+			? file.noTarget.some((entry) =>
+					entry.memberSegmentIndices.includes(
+						input.clickedSegmentIndex,
+					),
 				)
 			: file.targets.some(
 					(target) =>

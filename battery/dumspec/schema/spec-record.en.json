@@ -4215,15 +4215,20 @@
 			"items": {
 				"type": "object",
 				"properties": {
-					"segment": {
-						"$ref": "#/$defs/__schema2"
+					"memberSegmentIndices": {
+						"minItems": 1,
+						"type": "array",
+						"items": {
+							"$ref": "#/$defs/__schema2"
+						},
+						"description": "The Segments with no defensible route, in sentence order: one word, or a nonce noun with the article it owns, such as [der, Blarg]."
 					},
 					"reason": {
 						"$ref": "#/$defs/__schema0"
 					}
 				},
 				"required": [
-					"segment",
+					"memberSegmentIndices",
 					"reason"
 				],
 				"additionalProperties": false

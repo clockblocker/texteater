@@ -110,7 +110,7 @@ const lemmaOf = (attestation: Dumling.Attestation) =>
 const claimed = (file: RecordFile) =>
 	new Set([
 		...file.targets.flatMap((target) => target.memberSegmentIndices),
-		...file.noTarget.map((entry) => entry.segment),
+		...file.noTarget.flatMap((entry) => entry.memberSegmentIndices),
 	]);
 
 /** The record target or No Target entry equal to the case's expectation. */
@@ -120,7 +120,9 @@ function servingSegment(file: RecordFile, golden: Golden): boolean {
 	const click = golden.input.clickedSegmentIndex;
 	const expected = golden.idealOutput;
 	if ("decision" in expected)
-		return file.noTarget.some((entry) => entry.segment === click);
+		return file.noTarget.some((entry) =>
+			entry.memberSegmentIndices.includes(click),
+		);
 	return file.targets.some((target) => {
 		const lemma = lemmaOf(target.attestation);
 		return (
@@ -187,7 +189,9 @@ function serve(id: string, golden: Golden, recordId: string) {
 	const target = file.targets.find((candidate) =>
 		candidate.memberSegmentIndices.includes(click),
 	);
-	const noTarget = file.noTarget.find((entry) => entry.segment === click);
+	const noTarget = file.noTarget.find((entry) =>
+		entry.memberSegmentIndices.includes(click),
+	);
 	const authored = target?.notes?.rationale ?? noTarget?.reason;
 	const entry: SidecarEntry = { id };
 	if (golden.explanation !== authored)
@@ -320,11 +324,13 @@ for (const [key, entry] of Object.entries(sidecar.cases)) {
 		const record = records.get(place.recordId);
 		if (!record) throw Error("Lost the record");
 		record.file.noTarget.push({
-			segment: click,
+			memberSegmentIndices: [click],
 			reason: golden.explanation ?? "No defensible route.",
 		});
 		record.file.noTarget.sort(
-			(left, right) => left.segment - right.segment,
+			(left, right) =>
+				(left.memberSegmentIndices[0] ?? 0) -
+				(right.memberSegmentIndices[0] ?? 0),
 		);
 		record.changed = true;
 		cite(

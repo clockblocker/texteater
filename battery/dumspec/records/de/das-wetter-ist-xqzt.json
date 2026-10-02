@@ -112,7 +112,7 @@
 	],
 	"noTarget": [
 		{
-			"segment": 6,
+			"memberSegmentIndices": [6],
 			"reason": "Unintelligible text: no German word, name or plausible typo fits, so it has no defensible route."
 		}
 	]

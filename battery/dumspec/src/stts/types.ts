@@ -73,7 +73,7 @@ export type SttsRoute = Pick<SpecRoute, "family" | "kind">;
  *   anchor of a Locution.
  * - `Component`: a piece of a fused word, a Segment standing for another
  *   word (`m` in `im` stands for `dem`), inside a target of `route`.
- * - `NoTarget`: a No Target entry.
+ * - `NoTarget`: a Segment of a No Target entry.
  * - `Punctuation`: a Punctuation Segment, which no target holds.
  */
 export type SttsBecomes =

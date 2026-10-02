@@ -30,7 +30,15 @@ const full = specRecord({
 		[[0], "Lexeme", "PRON"],
 		[[2], "Lexeme", "VERB"],
 	],
-	noTarget: [4, 6],
+	noTarget: [[4], [6]],
+	coverage: "Full",
+});
+// "Der Blarg schläft." → Der 0, Blarg 2, schläft 4
+const blarg = specRecord({
+	id: "de/der-blarg-schlaeft",
+	sentence: "Der Blarg schläft.",
+	targets: [[[4], "Lexeme", "VERB"]],
+	noTarget: [[0, 2]],
 	coverage: "Full",
 });
 const foreign = specRecord({
@@ -41,7 +49,10 @@ const foreign = specRecord({
 
 const projected = projectCorpus(
 	segmentInUnits,
-	goldOf({ records: [partial, full, foreign], sidecar: emptySidecar }),
+	goldOf({
+		records: [partial, full, foreign, blarg],
+		sidecar: emptySidecar,
+	}),
 );
 const evaluate = evaluateSegmentInUnits(projected.facts);
 function score(id: string, units: Unit[]) {
@@ -172,6 +183,32 @@ describe("segment.inUnits on a Full record", () => {
 			uncovered: [6],
 			repeated: [4],
 		});
+	});
+});
+
+describe("segment.inUnits on a nonce noun's No Target with its article", () => {
+	const verb: Unit = { segments: [4], route: route("VERB") };
+
+	test("passes the article and noun returned together, as one stub", () => {
+		const result = score(blarg.id, [
+			{ segments: [0, 2], route: "Unresolved" },
+			verb,
+		]);
+		expect(result).toMatchObject({ contractPass: true, stubbed: 1 });
+		expect(result.units[0]).toMatchObject({
+			source: { noTarget: 0 },
+			text: "Der Blarg",
+			verdict: "Stub",
+		});
+		expect(result.grouping).toMatchObject({ decidedPairs: 0, truePairs: 0 });
+	});
+
+	test("fails the article split from its noun", () => {
+		const article: Unit = { segments: [0], route: "Unresolved" };
+		const noun: Unit = { segments: [2], route: "Unresolved" };
+		const result = score(blarg.id, [article, noun, verb]);
+		expect(result.contractPass).toBe(false);
+		expect(result.sentence?.falseUnits).toEqual([article, noun]);
 	});
 });
 

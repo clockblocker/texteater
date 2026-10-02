@@ -30,7 +30,8 @@ export function specRecord(args: {
 	readonly id: string;
 	readonly sentence: string;
 	readonly targets: readonly TargetSpec[];
-	readonly noTarget?: readonly number[];
+	/** Each No Target entry's Segments. */
+	readonly noTarget?: readonly (readonly number[])[];
 	readonly coverage?: Dumspec.Coverage;
 	readonly reviewDepth?: Dumspec.AnnotationLayer;
 	readonly language?: Dumling.Language;
@@ -47,8 +48,8 @@ export function specRecord(args: {
 			memberSegmentIndices,
 			route: { language, family, kind } as Dumspec.SpecRoute,
 		})),
-		noTarget: (args.noTarget ?? []).map((segment) => ({
-			segment,
+		noTarget: (args.noTarget ?? []).map((memberSegmentIndices) => ({
+			memberSegmentIndices,
 			reason: "Unintelligible",
 		})),
 		coverage: args.coverage ?? "Partial",

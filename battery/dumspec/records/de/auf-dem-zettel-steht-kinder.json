@@ -34,7 +34,7 @@
 	"targets": [],
 	"noTarget": [
 		{
-			"segment": 8,
+			"memberSegmentIndices": [8],
 			"reason": "Under issue #82 and #93 policy, a trailing fragment without a visible right conjunct has no defensible route. Source: https://universaldependencies.org/u/pos/NOUN.html"
 		}
 	]

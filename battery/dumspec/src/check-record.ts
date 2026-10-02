@@ -180,16 +180,27 @@ export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	);
 	const { claims, resolvable } = checked;
 	for (const [n, entry] of noTarget.entries()) {
-		if (!resolvable(entry.segment)) {
-			issue(
-				"Segmentation",
-				"Coverage",
-				`noTarget.${n}.segment`,
-				"No Target names a ResolvableText Segment",
-			);
-			continue;
+		const indices = entry.memberSegmentIndices;
+		for (const [m, index] of indices.entries()) {
+			const at = `noTarget.${n}.memberSegmentIndices.${m}`;
+			if (!resolvable(index)) {
+				issue(
+					"Segmentation",
+					"Coverage",
+					at,
+					"No Target names ResolvableText Segments",
+				);
+				continue;
+			}
+			claims[index] = (claims[index] ?? 0) + 1;
+			if (m > 0 && index <= (indices[m - 1] ?? -1))
+				issue(
+					"Segmentation",
+					"Coverage",
+					at,
+					"No Target names its Segments in sentence order, each once",
+				);
 		}
-		claims[entry.segment] = (claims[entry.segment] ?? 0) + 1;
 	}
 	for (const [index, count] of claims.entries()) {
 		if (count > 1)

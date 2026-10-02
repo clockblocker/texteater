@@ -119,7 +119,8 @@ function segmentInUnitsInput(
 /**
  * One case per German record whose Segmentation passes: each target is a
  * unit with its members' Segments and its route, and each No Target entry an
- * `Unresolved` unit of its one Segment, ordered by first Segment. A case is
+ * `Unresolved` unit of its Segments, so a nonce noun and its article
+ * (`[der, Blarg]`) are one unit, ordered by first Segment. A case is
  * Reviewed when its record is reviewed through Segmentation.
  */
 export const segmentInUnits: Projection<
@@ -146,9 +147,12 @@ export const segmentInUnits: Projection<
 					},
 				};
 			}),
-			...record.noTarget.map(({ segment }, index) => ({
+			...record.noTarget.map(({ memberSegmentIndices }, index) => ({
 				source: { noTarget: index },
-				unit: { segments: [segment], route: "Unresolved" as const },
+				unit: {
+					segments: [...memberSegmentIndices],
+					route: "Unresolved" as const,
+				},
 			})),
 		].sort(
 			(left, right) =>

@@ -97,7 +97,9 @@ export function projectTargetCase(
 	const target = record.targets.find((candidate) =>
 		candidate.memberSegmentIndices.includes(segment),
 	);
-	const noTarget = record.noTarget.find((entry) => entry.segment === segment);
+	const noTarget = record.noTarget.find((entry) =>
+		entry.memberSegmentIndices.includes(segment),
+	);
 	if (!target && !noTarget)
 		throw Error(
 			`Segment ${segment} of ${record.id} is in no target or No Target entry`,

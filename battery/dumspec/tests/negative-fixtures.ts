@@ -190,8 +190,33 @@ export const negativeFixtures: {
 		check: "Coverage",
 		edit: (record) => {
 			record.noTarget = [
-				{ segment: 7, reason: "Duplicated on purpose." },
+				{ memberSegmentIndices: [7], reason: "Duplicated on purpose." },
 			];
+		},
+	},
+	{
+		name: "a No Target entry naming its Segments out of order",
+		seed: "de/das-wetter-ist-xqzt",
+		check: "Coverage",
+		edit: (record) => {
+			record.targets = record.targets.slice(0, 1);
+			record.noTarget[0].memberSegmentIndices = [6, 4];
+		},
+	},
+	{
+		name: "a No Target entry on a Punctuation Segment",
+		seed: "de/das-wetter-ist-xqzt",
+		check: "Coverage",
+		edit: (record) => {
+			record.noTarget[0].memberSegmentIndices = [6, 7];
+		},
+	},
+	{
+		name: "a No Target entry naming no Segment",
+		seed: "de/das-wetter-ist-xqzt",
+		check: "Shape",
+		edit: (record) => {
+			record.noTarget[0].memberSegmentIndices = [];
 		},
 	},
 	{

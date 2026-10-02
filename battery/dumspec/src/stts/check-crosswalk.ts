@@ -52,9 +52,11 @@ function showingIssue(
 			? undefined
 			: `${at} is no Punctuation Segment`;
 	if (becomes.role === "NoTarget")
-		return record.noTarget.some((entry) => entry.segment === index)
+		return record.noTarget.some((entry) =>
+			entry.memberSegmentIndices.includes(index),
+		)
 			? undefined
-			: `${at} is no No Target entry`;
+			: `${at} is in no No Target entry`;
 	const target = record.targets.find((candidate) =>
 		candidate.memberSegmentIndices.includes(index),
 	);

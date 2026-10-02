@@ -25,7 +25,7 @@
 	"targets": [],
 	"noTarget": [
 		{
-			"segment": 4,
+			"memberSegmentIndices": [4],
 			"reason": "UD reserves X for material that cannot receive a more informative part of speech, while current Dumgen policy ordinarily keeps unintelligible material upstream as OpaqueText. No observable category fact licenses qzxv or xqzvrrt as a particular Family/Kind; under issue #82, the clicked ResolvableText therefore has no defensible route, and Unresolved carries no guessed route or membership. Source: https://universaldependencies.org/u/pos/X.html"
 		}
 	]

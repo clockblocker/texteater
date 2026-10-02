@@ -28,9 +28,18 @@ const qzxv = specRecord({
 		[[0], "Lexeme", "PRON"],
 		[[2], "Lexeme", "VERB"],
 	],
-	noTarget: [4],
+	noTarget: [[4]],
 	coverage: "Full",
 	reviewDepth: undefined,
+});
+// "Der Blarg schläft." → Der 0, Blarg 2, schläft 4: a nonce noun's No Target
+// holds its article too.
+const blarg = specRecord({
+	id: "de/der-blarg-schlaeft",
+	sentence: "Der Blarg schläft.",
+	targets: [[[4], "Lexeme", "VERB"]],
+	noTarget: [[0, 2]],
+	coverage: "Full",
 });
 const draft = specRecord({
 	id: "de/sie-geht",
@@ -129,6 +138,21 @@ describe("the segment.inUnits projection", () => {
 			route: "Unresolved",
 		});
 		expect(facts[qzxv.id]?.sources.at(-1)).toEqual({ noTarget: 0 });
+	});
+
+	test("keeps a No Target entry over several Segments one Unresolved unit", () => {
+		const { corpus, facts } = project([blarg], emptySidecar);
+		expect(corpus.cases[blarg.id]?.idealOutput.units).toEqual([
+			{ segments: [0, 2], route: "Unresolved" },
+			{
+				segments: [4],
+				route: { language: "de", family: "Lexeme", kind: "VERB" },
+			},
+		]);
+		expect(facts[blarg.id]?.sources).toEqual([
+			{ noTarget: 0 },
+			{ target: 0 },
+		]);
 	});
 
 	test("groups cases by review through Segmentation and leaves other languages out", () => {

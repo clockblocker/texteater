@@ -35,7 +35,7 @@
 	"targets": [],
 	"noTarget": [
 		{
-			"segment": 4,
+			"memberSegmentIndices": [4],
 			"reason": "Under issue #82 and #93 policy, the malformed double-hyphen fragment has no defensible route and no licensed suspended-compound target. Source: https://universaldependencies.org/u/pos/NOUN.html"
 		}
 	]

@@ -37,7 +37,7 @@
 	"targets": [],
 	"noTarget": [
 		{
-			"segment": 2,
+			"memberSegmentIndices": [2],
 			"reason": "Nonce word: no German or foreign word, name or plausible typo fits, so it has no defensible route."
 		}
 	]

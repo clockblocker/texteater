@@ -43,6 +43,37 @@ export function draftRecord(): Record<string, unknown> {
 	};
 }
 
+/**
+ * A Draft whose nonce noun has No Target together with its article:
+ * `[Der, Blarg]` is one entry.
+ */
+export function nonceNounRecord(): Record<string, unknown> {
+	return {
+		...draftRecord(),
+		sentence: "Der Blarg schläft.",
+		segments: [
+			{ kind: "ResolvableText", text: "Der" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "Blarg" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "schläft" },
+			{ kind: "Punctuation", text: "." },
+		],
+		targets: [
+			{
+				memberSegmentIndices: [4],
+				route: { family: "Lexeme", kind: "VERB" },
+			},
+		],
+		noTarget: [
+			{
+				memberSegmentIndices: [0, 2],
+				reason: "A nonce noun with its article.",
+			},
+		],
+	};
+}
+
 /** The record's text as biome formats a record file. */
 export function formatted(record: unknown): Promise<string> {
 	return formatRecordText(JSON.stringify(record), "de/fixture");
