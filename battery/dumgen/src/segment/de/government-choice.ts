@@ -63,10 +63,15 @@ export type GovernmentSettings = {
 	readonly families: readonly GovernmentFamily[];
 };
 
-/** The setting X4 pre-registered: every family at 0.6. */
+/**
+ * The setting X4 pre-registered for full dev after the focus screen of v2
+ * (#851): the joined, particle, rival and literal families at 0.5. On
+ * focus, 0.6 held +4 −0 and left free answers of 0.5 to 0.6 unused, while
+ * `weak` won nothing and broke 2 units at 0.5.
+ */
 export const governmentSettings: GovernmentSettings = {
-	floor: 0.6,
-	families: governmentFamilies,
+	floor: 0.5,
+	families: ["joined", "particle", "rival", "literal"],
 };
 
 /**

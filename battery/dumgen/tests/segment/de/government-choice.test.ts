@@ -55,7 +55,7 @@ test("de/governed-preposition-joins-its-governor: a governed answer, one under t
 	const joined = [[0], [2, 4], [6, 8]];
 	for (const answer of [
 		picked("governed", { governed: 0.9, place: 0.1 }),
-		picked("place", { place: 0.55, governed: 0.45 }),
+		picked("place", { place: 0.45, governed: 0.4, particle: 0.15 }),
 		picked("particle"),
 	])
 		expect(
