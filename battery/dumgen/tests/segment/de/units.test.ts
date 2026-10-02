@@ -6,6 +6,7 @@ import {
 	germanInventory,
 } from "../../../src/segment/de/inventory.js";
 import { partitionOf } from "../../../src/segment/de/partition.js";
+import { routeOf } from "../../../src/segment/de/routes.js";
 import { sentenceOf } from "../../../src/segment/de/sentence.js";
 import {
 	productionUnitSettings,
@@ -46,11 +47,12 @@ function fakeJudge(answers: Readonly<Record<string, Answer>> = {}) {
 	return { ask, stages: () => requests.map(({ stage }) => stage), requests };
 }
 
-const route = (family: string, kind: string) => ({
-	language: "de",
-	family,
-	kind,
-});
+/** A German route, checked against the routes the unit stage offers. */
+const route = (family: string, kind: string) => {
+	const checked = routeOf(`${family}/${kind}`);
+	if (checked === "Unresolved") throw Error("Not a route");
+	return checked;
+};
 
 // Er0 _1 zog2 _3 sich4 _5 an6 ,7 _8 zu9 m10 _11 Glück12 .13
 const zumGlueck: readonly Segment[] = [

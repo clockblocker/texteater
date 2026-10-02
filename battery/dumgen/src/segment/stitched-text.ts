@@ -1,7 +1,7 @@
 /**
  * Stitched Text: one Sentence's text once code has normalized its
- * mechanical whitespace (#689). Segments concatenated give it back, and a
- * Segment's offset is counted in it (Dumgen ADR 0004).
+ * mechanical whitespace (#689). Segments concatenated give it back (Dumgen
+ * ADR 0004).
  *
  * Code trims the Sentence and turns every run of spaces, tabs and other
  * non-line-break whitespace (no-break and thin spaces included) into one

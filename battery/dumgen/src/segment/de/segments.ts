@@ -22,7 +22,7 @@ import {
 	leadingFreeClitic,
 	splitClitic,
 } from "../fusion-table.js";
-import type { Segment, SegmentedSentence } from "../segmented-sentence.js";
+import type { Segment } from "../segmented-sentence.js";
 import { stitchedText } from "../stitched-text.js";
 import { germanFusionTable } from "./fusion-entries.js";
 
@@ -49,10 +49,15 @@ export type PreparedSegments = {
 	readonly questions: Questions;
 };
 
-export type GermanSegmentation = SegmentedSentence & {
+export type GermanSegmentation = {
+	readonly language: "de";
+	/** The Stitched Text; the Segments concatenated give it back. */
+	readonly text: string;
+	readonly segments: readonly Segment[];
 	/**
 	 * The Segments whose written run kept its spelling because jev did not
-	 * settle how to cut it, or found no authored plan for it.
+	 * settle how to cut it, or found no authored plan for it. Only the
+	 * evaluator's raw mode reads it; `segment.inUnits` does not return it.
 	 */
 	readonly unresolved: readonly number[];
 };
@@ -276,4 +281,25 @@ export async function segmentGermanSentence(
 		questions: prepared.questions,
 	});
 	return resolveGermanSegments(prepared, answers);
+}
+
+/**
+ * The Segments code alone gives one German Sentence, for when jev cannot
+ * be asked: every written run keeps its spelling, and each run a question
+ * would have settled is listed unresolved.
+ */
+export function writtenGermanSegments(sentence: string): GermanSegmentation {
+	const prepared = prepareGermanSegments(stitchedText(sentence));
+	const unsettled: Answers = Object.fromEntries(
+		Object.keys(prepared.questions).map((id) => [
+			id,
+			{
+				type: "choice",
+				choice: "Unresolved",
+				confidence: 1,
+				probabilities: { Unresolved: 1 },
+			},
+		]),
+	);
+	return resolveGermanSegments(prepared, unsettled);
 }

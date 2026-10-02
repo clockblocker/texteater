@@ -13,8 +13,13 @@ is the persisted occurrence coordinate. See [Dumgen ADR 0004].
 _Avoid_: Piece, token, character offset as identity
 
 **Segmented Sentence**:
-One Sentence as intake leaves it: language, Stitched Text and Segments.
+One Sentence as intake leaves it: its Stitched Text, its Segments and its
+units from `segment.inUnits`.
 _Avoid_: Sentence DTO
+
+**Segmented Text**:
+A Text as `segment.inUnits` returns it: its paragraphs, each with its
+Segmented Sentences in order.
 
 **Stitched Text**:
 One Sentence's text once code has normalized its mechanical whitespace:
@@ -23,11 +28,16 @@ turned into one ASCII space. Line breaks stay as written. Its Segments
 concatenated give it back. No judge sees whitespace (#689).
 _Avoid_: stitching question, repaired text
 
+**`splitText`**:
+The code that splits a Text into paragraphs and Sentences before
+`segment.inUnits` sees it. No judge takes part. See [Dumgen ADR 0007].
+
 **`segment.inUnits`**:
 The segmenter that routes clicks. It takes a text already split into
 Sentences and groups each Sentence's Segments into biggest units, each with
 its route or `Unresolved`. Its jev-based judges see one Sentence at a time.
-See [Dumgen ADR 0007] and [Dumgen ADR 0008].
+When they fail for a Sentence, each of its ResolvableText Segments is its
+own `Unresolved` unit. See [Dumgen ADR 0007] and [Dumgen ADR 0008].
 _Avoid_: Segment.Text, lattice, Sentence Analysis, for the current design
 
 **Membership**:

@@ -2,8 +2,10 @@
  * The German routes a `segment.inUnits` unit can take, as option keys
  * (`Lexeme/VERB`) with the short descriptions the judge reads. AUX and PUNCT
  * are left out: an auxiliary always joins the verb it serves, and
- * punctuation is never scored.
+ * punctuation is never scored. The Kinds are checked against Dumling's, and
+ * a key becomes a Route only when it names one of these routes.
  */
+import type * as Dumling from "dumling/types";
 import type { Route } from "../segmented-sentence.js";
 
 const lexemeKinds = [
@@ -21,7 +23,7 @@ const lexemeKinds = [
 	"SCONJ",
 	"SYM",
 	"VERB",
-] as const;
+] as const satisfies readonly Dumling.Kind<"de", "Lexeme">[];
 
 const locutionKinds = [
 	"ADJ",
@@ -35,7 +37,7 @@ const locutionKinds = [
 	"PRON",
 	"SCONJ",
 	"VERB",
-] as const;
+] as const satisfies readonly Dumling.Kind<"de", "Locution">[];
 
 export type RouteKey = string;
 
@@ -99,14 +101,37 @@ export const allRoutes: readonly RouteKey[] = [
 	"Foreign/Foreign",
 ];
 
+const routes: ReadonlyMap<RouteKey, Route> = new Map<RouteKey, Route>([
+	...lexemeKinds.map(
+		(kind) =>
+			[
+				`Lexeme/${kind}`,
+				{ language: "de", family: "Lexeme", kind },
+			] as const,
+	),
+	...locutionKinds.map(
+		(kind) =>
+			[
+				`Locution/${kind}`,
+				{ language: "de", family: "Locution", kind },
+			] as const,
+	),
+	["Saying/Saying", { language: "de", family: "Saying", kind: "Saying" }],
+	["Foreign/Foreign", { language: "de", family: "Foreign", kind: "Foreign" }],
+]);
+
+/** The Route a key names; a key outside the German routes throws. */
 export function routeOf(key: RouteKey): Route | "Unresolved" {
 	if (key === "Unresolved") return "Unresolved";
-	const [family, kind] = key.split("/");
-	if (!family || !kind) throw Error(`Not a route key: ${key}`);
-	return { language: "de", family, kind };
+	const route = routes.get(key);
+	if (!route) throw Error(`Not a German route key: ${key}`);
+	return { ...route };
 }
 
-export function keyOf(route: Route | "Unresolved"): RouteKey {
+/** The key of a route, a gold one with untyped Kinds included. */
+export function keyOf(
+	route: { readonly family: string; readonly kind: string } | "Unresolved",
+): RouteKey {
 	return route === "Unresolved" ? route : `${route.family}/${route.kind}`;
 }
 
