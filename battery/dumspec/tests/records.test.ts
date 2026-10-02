@@ -26,7 +26,9 @@ import { layerRank } from "../src/layers.js";
 import { readRecords } from "../src/load.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
 import {
+	attestSie,
 	negativeFixtures,
+	pronoun,
 	review,
 	ruleCitation,
 	seedJson,
@@ -238,6 +240,24 @@ describe("negative fixtures", () => {
 		expect(checked.errors).toEqual([]);
 		expect(checked.record?.targets[0]?.knowledge).toEqual(knowledge);
 		expect(checked.record?.targets[1]).not.toHaveProperty("knowledge");
+	});
+
+	test("a reviewed record attests a generated Syncretism stored whole (ADR 0046)", () => {
+		const json = seedJson("de/die-kinder-lachen-und-ich-sehe-sie");
+		const syncretism = pronoun("sie", { case: "Acc" }, ["polite"]);
+		attestSie(json, syncretism);
+		review(json);
+		const checked = checkRecord(
+			"de/die-kinder-lachen-und-ich-sehe-sie",
+			json,
+		);
+		expect([...checked.errors, ...checked.issues]).toEqual([]);
+		expect(checked.record?.targets[0]?.attestation.surface.lemma).toEqual(
+			syncretism,
+		);
+		expect(checked.record?.targets[0]?.reading).toMatchObject({
+			emojiDescription: "👈",
+		});
 	});
 
 	test("a record reviewed through Segmentation loads it while its Attestations are Draft", () => {

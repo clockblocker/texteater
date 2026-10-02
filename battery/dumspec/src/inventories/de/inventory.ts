@@ -1,4 +1,5 @@
 import { reviewedDeterminers } from "./determiner-paradigms.js";
+import { germanSyncretisms } from "./generated/syncretisms.js";
 import { member as aux6 } from "./members/lexeme/auxiliary/bekommen-rezipientenpassiv.js";
 import { member as aux8 } from "./members/lexeme/auxiliary/haben-obligation.js";
 import { member as aux2 } from "./members/lexeme/auxiliary/haben-perfekt.js";
@@ -119,14 +120,15 @@ import { reviewedPronouns } from "./pronoun-paradigms.js";
 import { whAdverbs } from "./wh-adverbs.js";
 
 /**
- * Every German authored member in one list. ADR 0021 decides which units
- * belong in an inventory. Single members are defined in
+ * Every German member authored by hand, the source the Syncretisms are
+ * generated from (`codegen/generate-syncretisms.ts`). ADR 0021 decides which
+ * units belong in an inventory. Single members are defined in
  * `src/inventories/de/members/`, and the paradigm, adverb and particle
  * modules beside this file define the rest. German PART is fully authored:
  * nicht, infinitive zu and the modal particles, one member per Reading
  * (`particles.ts`, #734).
  */
-export const authoredMembers = [
+export const sourceMembers = [
 	article_das_neuter_singular_accusative,
 	article_das_neuter_singular_nominative,
 	article_dem_masculine_singular_dative,
@@ -247,3 +249,9 @@ export const authoredMembers = [
 	...whAdverbs,
 	...germanParticles,
 ];
+
+/**
+ * Every German authored member in one list: the members authored by hand and
+ * the Syncretisms generated from their pronoun cells (system ADR 0046).
+ */
+export const authoredMembers = [...sourceMembers, ...germanSyncretisms];

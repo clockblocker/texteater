@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
-import { lemmaIdentityKey } from "dumling";
+import { lemmaIdentityKey, syncretismView, syncretize } from "dumling";
+import type * as Dumling from "dumling/types";
 import { authoredMembers } from "../src/inventories.js";
 import type { SpecCheck } from "../src/issues.js";
 import { ruleStatementHash, rules } from "../src/rules.js";
@@ -47,6 +48,40 @@ export function review(record: RecordJson): RecordJson {
 	}
 	record.sources.rules = [ruleCitation];
 	return record;
+}
+
+/**
+ * The authored PRON Lemma spelled `canonicalForm` with these Core values: a
+ * cell, or with `syncretic` the generated Syncretism (system ADR 0046).
+ */
+export function pronoun(
+	canonicalForm: string,
+	values: Readonly<Record<string, string | null>>,
+	syncretic?: readonly string[],
+): Dumling.Lemma<"de", "Lexeme", "PRON"> {
+	const found = authoredMembers.find(({ lemma }) => {
+		const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
+		return (
+			lemma.kind === "PRON" &&
+			lemma.canonicalForm === canonicalForm &&
+			Object.entries(values).every(
+				([key, value]) => core[key] === value,
+			) &&
+			JSON.stringify((lemma as { syncretic?: unknown }).syncretic) ===
+				JSON.stringify(syncretic)
+		);
+	});
+	if (!found) throw Error(`No authored PRON ${canonicalForm}`);
+	return found.lemma as Dumling.Lemma<"de", "Lexeme", "PRON">;
+}
+
+/** Stores `lemma` as the Lemma of the record's PRON sie. */
+export function attestSie(record: RecordJson, lemma: unknown) {
+	const target = record.targets.find(
+		(each: RecordJson) =>
+			each.attestation.surface.lemma.canonicalForm === "sie",
+	);
+	target.attestation.surface.lemma = lemma;
 }
 
 /**
@@ -393,6 +428,55 @@ export const negativeFixtures: {
 			// Named by no member, so only the table can object.
 			slot.member = null;
 			slot.complement.preposition.canonicalForm = "à";
+		},
+	},
+	{
+		// A classifier answers the view; gold stores the units too.
+		name: "a Syncretism's view without its units",
+		seed: "de/die-kinder-lachen-und-ich-sehe-sie",
+		check: "Syncretism",
+		edit: (record) => {
+			attestSie(
+				record,
+				syncretismView(
+					pronoun("sie", { case: "Acc" }, ["gender", "number"]),
+				),
+			);
+		},
+	},
+	{
+		// Dumling accepts it, but case is no feature only the referent settles.
+		name: "a Syncretism the inventory does not generate",
+		seed: "de/die-kinder-lachen-und-ich-sehe-sie",
+		check: "Syncretism",
+		edit: (record) => {
+			attestSie(
+				record,
+				syncretize([
+					pronoun("sie", { case: "Nom", number: "Sing" }),
+					pronoun("sie", {
+						case: "Acc",
+						number: "Plur",
+						polite: null,
+					}),
+				]),
+			);
+		},
+	},
+	{
+		// 3sg Fem or formal has the identity of the three-way Syncretism,
+		// which also holds 3pl.
+		name: "a Syncretism with other units than the generated one",
+		seed: "de/die-kinder-lachen-und-ich-sehe-sie",
+		check: "Syncretism",
+		edit: (record) => {
+			attestSie(
+				record,
+				syncretize([
+					pronoun("sie", { case: "Acc", number: "Sing" }),
+					pronoun("Sie", { case: "Acc" }),
+				]),
+			);
 		},
 	},
 ];

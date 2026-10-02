@@ -6,7 +6,6 @@ import {
 	type IssueSink,
 	issueCollector,
 	type LayerVerdict,
-	sameValue,
 	settleLayers,
 	uncitedIssue,
 } from "./check-record.js";
@@ -15,6 +14,7 @@ import {
 	breakdownRecordFileSchema,
 	looseRouteSchema,
 } from "./record-schema.js";
+import { sameValue } from "./same-value.js";
 import type {
 	BreakdownRecord,
 	BreakdownRecordId,

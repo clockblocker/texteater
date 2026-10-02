@@ -27,7 +27,10 @@ function authoredMembersOf(lemma: Dumling.Lemma): readonly AuthoredMember[] {
 /**
  * An authored Lemma's Readings are its authored members (ADR 0021), so a
  * Reading of an authored Lemma must name one of them by its Emoji
- * Description (ADR 0031). A Reading of a Lemma no member is passes.
+ * Description (ADR 0031). The members include the generated Syncretisms,
+ * and a Syncretism's view has its identity (ADR 0046), so a Reading of
+ * either is held to the Syncretism's member. A Reading of a Lemma no member
+ * is passes.
  */
 export function authoredReadingIssues(
 	reading: Dumling.Reading,

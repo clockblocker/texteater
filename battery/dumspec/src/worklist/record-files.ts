@@ -15,6 +15,8 @@ export interface LemmaInFile {
 	kind: string;
 	canonicalForm: string;
 	coreFeatures: Readonly<Record<string, unknown>>;
+	/** The Core Features a Syncretism leaves open (system ADR 0046); absent on any other Lemma. */
+	syncretic?: readonly string[];
 }
 
 /**
@@ -50,6 +52,7 @@ const recordFileSchema = z.object({
 								coreFeatures: z
 									.record(z.string(), z.unknown())
 									.nullish(),
+								syncretic: z.array(z.string()).optional(),
 							}),
 						}),
 					})
@@ -83,9 +86,15 @@ export function readRecordFiles(language: string): RecordFile[] {
 			rules: (sources?.rules ?? []).map((citation) => citation.rule),
 			lemmas: (targets ?? []).flatMap((target) => {
 				const lemma = target.attestation?.surface.lemma;
-				return lemma
-					? [{ ...lemma, coreFeatures: lemma.coreFeatures ?? {} }]
-					: [];
+				if (!lemma) return [];
+				const { syncretic, ...rest } = lemma;
+				return [
+					{
+						...rest,
+						coreFeatures: lemma.coreFeatures ?? {},
+						...(syncretic === undefined ? {} : { syncretic }),
+					},
+				];
 			}),
 		});
 	}

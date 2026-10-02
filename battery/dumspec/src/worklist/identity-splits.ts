@@ -4,18 +4,19 @@ import type { AdrId, AnnotationLayer, RuleId, SpecRecordId } from "../types.js";
 import type { LemmaInFile, RecordFile } from "./record-files.js";
 
 /**
- * A Lemma's identity apart from its Canonical Form: Family, Kind and Core
- * Features. A missing Core Feature and a `null` one are the same, and key
- * order doesn't matter, so `coreFeatures` keeps only the set values, sorted
- * by key.
+ * A Lemma's identity apart from its Canonical Form: Family, Kind, Core
+ * Features and, for a Syncretism, the features it leaves open (system ADR
+ * 0046). A missing Core Feature and a `null` one are the same, and key order
+ * doesn't matter, so `coreFeatures` keeps only the set values, sorted by key.
  */
 export interface LemmaIdentity {
 	family: string;
 	kind: string;
 	coreFeatures: Readonly<Record<string, string>>;
+	syncretic?: readonly string[];
 }
 
-/** What an identity split compares: `family`, `kind` or a Core Feature. */
+/** What an identity split compares: `family`, `kind`, `syncretic` or a Core Feature. */
 type IdentityKey = string;
 
 /** The value of `key` in `identity`, `null` when it isn't set. */
@@ -25,6 +26,7 @@ function identityValue(
 ): string | null {
 	if (key === "family") return identity.family;
 	if (key === "kind") return identity.kind;
+	if (key === "syncretic") return identity.syncretic?.join(" ") ?? null;
 	return identity.coreFeatures[key] ?? null;
 }
 
@@ -42,15 +44,24 @@ export function lemmaIdentity(lemma: LemmaInFile): LemmaIdentity {
 				.map(([key, value]) => [key, String(value)] as const)
 				.toSorted(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
 		),
+		...(lemma.syncretic === undefined
+			? {}
+			: { syncretic: lemma.syncretic }),
 	};
 }
 
-/** A readable, comparable form of an identity: `Lexeme/PRON {case: Acc}`. */
+/**
+ * A readable, comparable form of an identity: `Lexeme/PRON {case: Acc}`, and
+ * `Lexeme/PRON {case: Dat} syncretic [polite]` for a Syncretism.
+ */
 export function formatIdentity(identity: LemmaIdentity): string {
 	const features = Object.entries(identity.coreFeatures)
 		.map(([key, value]) => `${key}: ${value}`)
 		.join(", ");
-	return `${identity.family}/${identity.kind} {${features}}`;
+	const open = identity.syncretic
+		? ` syncretic [${identity.syncretic.join(", ")}]`
+		: "";
+	return `${identity.family}/${identity.kind} {${features}}${open}`;
 }
 
 /** The keys on which two identities differ, in a stable order. */
@@ -59,7 +70,7 @@ function identityDifference(a: LemmaIdentity, b: LemmaIdentity): IdentityKey[] {
 		...Object.keys(a.coreFeatures),
 		...Object.keys(b.coreFeatures),
 	]);
-	return ["family", "kind", ...[...features].toSorted()].filter(
+	return ["family", "kind", ...[...features].toSorted(), "syncretic"].filter(
 		(key) => identityValue(a, key) !== identityValue(b, key),
 	);
 }

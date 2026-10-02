@@ -7,10 +7,12 @@ import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
 import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
 import { authoredReadingIssues } from "./check-authored-readings.js";
 import { attestationParticleIssues } from "./check-particles.js";
+import { attestationSyncretismIssues } from "./check-syncretisms.js";
 import { unitRoutes } from "./generated/routes.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
 import { annotationLayers, layerRank } from "./layers.js";
 import { looseRouteSchema, recordFileSchema } from "./record-schema.js";
+import { sameValue } from "./same-value.js";
 import type {
 	AnnotationLayer,
 	LegacyCase,
@@ -138,9 +140,10 @@ export function uncitedIssue(
  * coverage and No Target entries hold. Attestation: strict, normalized
  * Attestations whose Lemma has the target's route and whose members are
  * their Segments, cases against the ADP Case Table, articles against the der
- * and ein cells, and Grundform. Reading: every target names a valid Reading.
- * Knowledge: every Reading Knowledge passes dumrel. A reviewed layer must
- * pass; a Draft layer may fail or be missing.
+ * and ein cells, Syncretisms against the generated ones, and Grundform.
+ * Reading: every target names a valid Reading. Knowledge: every Reading
+ * Knowledge passes dumrel. A reviewed layer must pass; a Draft layer may
+ * fail or be missing.
  */
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const { found, issue } = issueCollector(id);
@@ -249,11 +252,11 @@ type TargetFile = z.infer<typeof fileSchema>["targets"][number];
 /**
  * The checks a sentence record and a Breakdown Record share: the Segments
  * spell the sentence, and each target's members and route (Segmentation),
- * its strict Attestation, ADP cases, articles and Grundform (Attestation),
- * its Reading (Reading) and its Reading Knowledge (Knowledge). Returns each
- * target's Segmentation, each target whose Attestation passes, with the
- * Reading and Knowledge that pass, how many targets claim each Segment, and
- * whether every target holds Knowledge.
+ * its strict Attestation, ADP cases, articles, Syncretisms and Grundform
+ * (Attestation), its Reading (Reading) and its Reading Knowledge
+ * (Knowledge). Returns each target's Segmentation, each target whose
+ * Attestation passes, with the Reading and Knowledge that pass, how many
+ * targets claim each Segment, and whether every target holds Knowledge.
  */
 export function checkTargets(
 	record: {
@@ -432,6 +435,12 @@ function checkTargetLayers(
 	for (const found of attestationParticleIssues(attestation))
 		attestationIssue(
 			"ClosedPart",
+			`${path}.attestation.${found.path}`,
+			found.message,
+		);
+	for (const found of attestationSyncretismIssues(attestation))
+		attestationIssue(
+			"Syncretism",
 			`${path}.attestation.${found.path}`,
 			found.message,
 		);
@@ -629,35 +638,4 @@ function checkKnowledge(
 			message: "Store the Knowledge exactly as dumrel normalizes it",
 		});
 	return { knowledge, issues };
-}
-
-/** Deep equality of JSON values, key order aside. */
-export function sameValue(left: unknown, right: unknown): boolean {
-	if (Object.is(left, right)) return true;
-	if (Array.isArray(left))
-		return (
-			Array.isArray(right) &&
-			left.length === right.length &&
-			left.every((item, index) => sameValue(item, right[index]))
-		);
-	if (
-		left === null ||
-		right === null ||
-		typeof left !== "object" ||
-		typeof right !== "object" ||
-		Array.isArray(right)
-	)
-		return false;
-	const leftKeys = Object.keys(left);
-	return (
-		leftKeys.length === Object.keys(right).length &&
-		leftKeys.every(
-			(key) =>
-				Object.hasOwn(right, key) &&
-				sameValue(
-					(left as Record<string, unknown>)[key],
-					(right as Record<string, unknown>)[key],
-				),
-		)
-	);
 }

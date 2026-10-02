@@ -123,6 +123,20 @@ describe("identity normalization", () => {
 		]);
 		expect(splits.map(splitsFamilyOrKind)).toEqual([true]);
 	});
+
+	test("tells a Syncretism from a cell with the same Core (system ADR 0046)", () => {
+		const core = { case: "Dat", number: "Plur", person: "3" };
+		const [split, ...rest] = identitySplits([
+			file("de/a", [lemma("ihnen", "PRON", core)]),
+			file("de/b", [
+				{ ...lemma("ihnen", "PRON", core), syncretic: ["polite"] },
+			]),
+		]);
+		expect(rest).toEqual([]);
+		expect(
+			split?.identities.map(({ identity }) => identity.syncretic),
+		).toEqual([undefined, ["polite"]]);
+	});
 });
 
 describe("sorting a split", () => {

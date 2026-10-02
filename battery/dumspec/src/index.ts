@@ -18,6 +18,10 @@ export {
 } from "./check-particles.js";
 export { checkRecord, type RecordCheck } from "./check-record.js";
 export {
+	attestationSyncretismIssues,
+	type SyncretismIssue,
+} from "./check-syncretisms.js";
+export {
 	type ArticleAgreement,
 	type ArticleMember,
 	type AuthoredMember,
@@ -49,6 +53,7 @@ export {
 	reviewedPronouns,
 	type SurfaceCell,
 	subjectExpletiveEs,
+	syncretismFor,
 } from "./inventories.js";
 export { type SpecCheck, type SpecIssue, SpecRecordError } from "./issues.js";
 export { annotationLayers, isReviewed } from "./layers.js";

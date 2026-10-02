@@ -84,7 +84,9 @@ const haben = authoredRealizations.filter(
 
 `authoredMembers` holds every German Lemma, Reading and Knowledge:
 the AUX Readings, the PRON and DET pillar cells and stems, the reflexivity
-unit and the pronominal adverbs. `reflexiveDrillDown` gives the reflexivity
+unit and the pronominal adverbs. It also holds the pronoun Syncretisms that
+`bun run generate` derives from the pillar cells (system ADR 0046), and
+`syncretismFor` finds the one a classifier's answer names. `reflexiveDrillDown` gives the reflexivity
 unit for a lexically reflexive Lemma; no spelling realizes it. `authoredRealizations` lists every spelling of a DET,
 PRON or AUX member, with the cell a stem's spelling marks.
 `reviewedDeterminers` and `reviewedPronouns` pair each stem with its

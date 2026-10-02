@@ -5,9 +5,11 @@
  *
  * This entry exports the authored members and their realizations, the
  * reviewed pronoun and determiner paradigms, the closed verb forms, and the
- * reflexive drill-down. It also exports German lookups: the ADP Case Table,
- * the conjunction Locutions the Rules cite, and the der or ein cell an article
- * derives to.
+ * reflexive drill-down. The authored members include the pronoun
+ * Syncretisms generated from the pronoun cells (system ADR 0046). It also
+ * exports German lookups: the ADP Case Table, the conjunction Locutions the
+ * Rules cite, the der or ein cell an article derives to, and the Syncretism a
+ * classifier's answer names.
  *
  * This entry reads no files and loads neither Zod nor the record checks, so a
  * host inside a database transaction or another short-lived isolate can
@@ -59,3 +61,4 @@ export type {
 	ReviewedMember,
 	SurfaceCell,
 } from "./inventories/de/stem-lemma.js";
+export { syncretismFor } from "./inventories/de/syncretisms.js";
