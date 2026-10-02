@@ -183,7 +183,7 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040", "ADR-0044"],
+		"adrs": ["ADR-0035", "ADR-0040", "ADR-0044", "ADR-0046"],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -220,7 +220,8 @@
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
-			}
+			},
+			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
 		"references": [
 			{
@@ -241,7 +242,7 @@
 				"emojiDescription": "👈"
 			},
 			"notes": {
-				"rationale": "Sie with plural gingen is 3pl or formal Sie. Those cells differ in who is meant, so the referent chooses: the narrative (Tony and Morten) gives 3pl (ADR 0044). Ruled on #743 (MB-A1, A1)."
+				"rationale": "Sentence-initial Sie with plural gingen is 3pl sie or formal Sie, and nothing in this sentence says which; the narrative around it does not count. So it attests the Syncretism of those two cells (ADR 0044, ADR 0046, de/open-referent)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -262,7 +263,42 @@
 							"poss": null,
 							"pronType": "Prs",
 							"gender": null
-						}
+						},
+						"syncretic": ["polite"],
+						"syncretized": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PRON",
+								"canonicalForm": "Sie",
+								"coreFeatures": {
+									"case": "Nom",
+									"number": "Plur",
+									"person": "3",
+									"polite": "Form",
+									"poss": null,
+									"pronType": "Prs",
+									"gender": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PRON",
+								"canonicalForm": "sie",
+								"coreFeatures": {
+									"case": "Nom",
+									"number": "Plur",
+									"person": "3",
+									"polite": null,
+									"poss": null,
+									"pronType": "Prs",
+									"gender": null
+								}
+							}
+						]
 					},
 					"normalizedSurface": "sie",
 					"spelling": {

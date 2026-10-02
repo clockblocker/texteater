@@ -527,13 +527,15 @@ describe("the German authored inventory", () => {
 		expect(collisions).toEqual([]);
 	});
 
-	test("no pillar cell is split by gender alone (system ADR 0044)", () => {
-		// The referent may choose only between cells that differ in who is
-		// meant. A form that serves two genders alike (ihm, seiner, dem,
-		// dessen, and pronominal einem and eines) is one cell with gender
-		// null. Every PRON with case in Core is a pillar cell: personal,
-		// der-series or einer. A Syncretism is no cell (ADR 0046).
-		const byRest = new Map<string, Set<string>>();
+	test("ihm, seiner, dem, dessen, einem and eines are a Masc and a Neut cell each, and no other pillar cell is split by gender alone (system ADR 0044)", () => {
+		// The referent chooses between cells that differ only in gender, and
+		// a referent no text settles attests their Syncretism (ADR 0046).
+		// Every PRON with case in Core is a pillar cell: personal, der-series
+		// or einer. A Syncretism is no cell.
+		const byRest = new Map<
+			string,
+			{ label: string; genders: Set<string> }
+		>();
 		for (const { lemma } of authoredMembers) {
 			if (lemma.kind !== "PRON" || isSyncreticUnit(lemma)) continue;
 			const { gender, ...rest } = lemma.coreFeatures as Readonly<
@@ -541,13 +543,31 @@ describe("the German authored inventory", () => {
 			>;
 			if ((rest.case ?? null) === null) continue;
 			const key = `${lemma.canonicalForm} ${JSON.stringify(rest)}`;
-			byRest.set(key, (byRest.get(key) ?? new Set()).add(String(gender)));
+			const entry = byRest.get(key) ?? {
+				label: `${lemma.canonicalForm} ${String(rest.case)} ${String(rest.pronType)}`,
+				genders: new Set(),
+			};
+			entry.genders.add(String(gender));
+			byRest.set(key, entry);
 		}
 		expect(
-			[...byRest]
-				.filter(([, genders]) => genders.size > 1)
-				.map(([key, genders]) => `${key}: ${[...genders].join(", ")}`),
-		).toEqual([]);
+			[...byRest.values()]
+				.filter(({ genders }) => genders.size > 1)
+				.map(
+					({ label, genders }) =>
+						`${label}: ${[...genders].toSorted().join(", ")}`,
+				)
+				.toSorted(),
+		).toEqual([
+			"dem Dat Dem: Masc, Neut",
+			"dem Dat Rel: Masc, Neut",
+			"dessen Gen Dem: Masc, Neut",
+			"dessen Gen Rel: Masc, Neut",
+			"einem Dat Ind: Masc, Neut",
+			"eines Gen Ind: Masc, Neut",
+			"ihm Dat Prs: Masc, Neut",
+			"seiner Gen Prs: Masc, Neut",
+		]);
 	});
 
 	test("derer is its own invariant Lemma pointing ahead and spells standalone deren elsewhere (system ADR 0044)", () => {
@@ -1104,16 +1124,24 @@ describe("the German pronoun Syncretisms (system ADR 0046)", () => {
 
 	test("every closed group of pillar cells that differ only in gender, number or politeness has exactly one Syncretism, and nothing else has one", () => {
 		expect(syncretisms.map(label).toSorted()).toEqual([
+			"PRON dem Dat Dem: gender",
+			"PRON dem Dat Rel: gender",
 			"PRON deren Gen Dem: gender number",
 			"PRON deren Gen Rel: gender number",
+			"PRON dessen Gen Dem: gender",
+			"PRON dessen Gen Rel: gender",
 			"PRON die Acc Dem: gender number",
 			"PRON die Acc Rel: gender number",
 			"PRON die Nom Dem: gender number",
 			"PRON die Nom Rel: gender number",
+			"PRON einem Dat Ind: gender",
+			"PRON eines Gen Ind: gender",
+			"PRON ihm Dat Prs: gender",
 			"PRON ihnen Dat Prs: polite",
 			"PRON ihrer Gen Prs: gender number",
 			"PRON ihrer Gen Prs: gender number polite",
 			"PRON ihrer Gen Prs: polite",
+			"PRON seiner Gen Prs: gender",
 			"PRON sie Acc Prs: gender number",
 			"PRON sie Acc Prs: gender number polite",
 			"PRON sie Acc Prs: polite",

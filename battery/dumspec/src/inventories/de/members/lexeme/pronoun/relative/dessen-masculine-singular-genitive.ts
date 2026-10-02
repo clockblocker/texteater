@@ -5,26 +5,29 @@ const lemma = {
 	language: "de",
 	family: "Lexeme",
 	kind: "PRON",
-	canonicalForm: "dem",
+	canonicalForm: "dessen",
 	coreFeatures: {
 		person: null,
 		polite: null,
 		poss: null,
-		pronType: "Dem",
-		case: "Dat",
+		pronType: "Rel",
+		case: "Gen",
 		number: "Sing",
-		gender: null,
+		gender: "Masc",
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "👉" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🔗" }, lemma },
 	knowledge: {
 		definition:
-			"Das Demonstrativpronomen „dem“ verweist betont auf eine im Kontext bestimmte Person oder Sache.",
-		transcription: "deːm",
-		translations: { en: ["that one", "this one"], ru: ["тому", "этому"] },
+			"Das Relativpronomen „dessen“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort. Vor einem Nomen ordnet es dieses dem Bezugswort zu: der Autor, dessen Buch fehlt.",
+		transcription: "ˈdɛsn̩",
+		translations: {
+			en: ["whose", "who", "which", "that"],
+			ru: ["которого", "чей"],
+		},
 	},
 	coverage: {
 		transcription: "Authored",

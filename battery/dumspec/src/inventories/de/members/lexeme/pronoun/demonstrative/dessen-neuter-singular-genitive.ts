@@ -10,23 +10,23 @@ const lemma = {
 		person: null,
 		polite: null,
 		poss: null,
-		pronType: "Rel",
+		pronType: "Dem",
 		case: "Gen",
 		number: "Sing",
-		gender: null,
+		gender: "Neut",
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🔗" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "👉" }, lemma },
 	knowledge: {
 		definition:
-			"Das Relativpronomen „dessen“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort. Vor einem Nomen ordnet es dieses dem Bezugswort zu: der Autor, dessen Buch fehlt.",
+			"Das Demonstrativpronomen „dessen“ verweist betont auf eine im Kontext bestimmte Person oder Sache. Vor einem Nomen ordnet es dieses ihr zu: das Haus und dessen Dach.",
 		transcription: "ˈdɛsn̩",
 		translations: {
-			en: ["whose", "who", "which", "that"],
-			ru: ["которого", "чей"],
+			en: ["that one", "this one", "its"],
+			ru: ["его"],
 		},
 	},
 	coverage: {

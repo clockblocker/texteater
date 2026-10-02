@@ -87,7 +87,14 @@
 		"year": 1919
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0031", "ADR-0034", "ADR-0042", "ADR-0044"],
+		"adrs": [
+			"ADR-0022",
+			"ADR-0031",
+			"ADR-0034",
+			"ADR-0042",
+			"ADR-0044",
+			"ADR-0046"
+		],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -120,7 +127,8 @@
 			{
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
-			}
+			},
+			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
 		"references": [
 			{
@@ -455,7 +463,7 @@
 				"emojiDescription": "👈"
 			},
 			"notes": {
-				"rationale": "ihm is the dative of er and es, one cell with gender null, so its referent Odradek, whom the next sentence calls er, chooses no cell (ADR 0044). Ruled on #743 (SZ-A2, A1)."
+				"rationale": "Nothing in this sentence names whom ihm stands for, and the next sentence's er does not count, so it attests the Syncretism of the Masc and Neut cells, the dative of er or es (ADR 0044, ADR 0046, de/open-referent)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -482,14 +490,49 @@
 						"kind": "PRON",
 						"canonicalForm": "ihm",
 						"coreFeatures": {
+							"case": "Dat",
+							"number": "Sing",
 							"person": "3",
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"case": "Dat",
-							"number": "Sing",
 							"gender": null
-						}
+						},
+						"syncretic": ["gender"],
+						"syncretized": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PRON",
+								"canonicalForm": "ihm",
+								"coreFeatures": {
+									"case": "Dat",
+									"number": "Sing",
+									"person": "3",
+									"polite": null,
+									"poss": null,
+									"pronType": "Prs",
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PRON",
+								"canonicalForm": "ihm",
+								"coreFeatures": {
+									"case": "Dat",
+									"number": "Sing",
+									"person": "3",
+									"polite": null,
+									"poss": null,
+									"pronType": "Prs",
+									"gender": "Neut"
+								}
+							}
+						]
 					},
 					"surfaceFeatures": null
 				}

@@ -380,7 +380,8 @@
 			{
 				"rule": "de/aber-is-cconj",
 				"hash": "ec4489f45536f6d5"
-			}
+			},
+			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
 		"references": [
 			{
@@ -956,7 +957,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "ihm",
@@ -976,7 +977,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Complement of the postposition gegenüber. ihm is one cell for er and es, with gender null, so its referent K. chooses no cell (ADR 0044). Ruled on #743 (VP-A1, A1)."
+				"rationale": "Complement of the postposition gegenüber. ihm is K., who waits and then läutete er in this sentence, so it is the Masc cell, the dative of er (ADR 0044, de/open-referent)."
 			}
 		},
 		{

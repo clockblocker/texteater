@@ -27,8 +27,8 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0044"],
+		"rules": [{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }],
 		"references": []
 	},
 	"targets": [
@@ -36,6 +36,9 @@
 			"memberSegmentIndices": [7],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "🔗" },
+			"notes": {
+				"rationale": "The der-series is a pillar (ADR 0044), so this cell is its own Lemma, with case, number and gender in Core. dem opens a relative clause on das Gerät, so it is the relative Neut cell (de/open-referent)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -54,7 +57,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Rel",
-							"gender": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "dem",

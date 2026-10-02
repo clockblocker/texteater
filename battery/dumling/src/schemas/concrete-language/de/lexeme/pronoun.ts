@@ -19,9 +19,10 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 // gender in Core; a stem word (dieser, keiner, meiner, wer) marks them on its Surfaces.
 // wer and was fix their inherent gender in Core, Masc and Neut, and mark case
 // on the Surface.
-// A cell whose form serves two genders alike (ihm and seiner for er and es,
-// der-series dem and dessen) is one Lemma with gender null: the referent may
-// choose only between cells that differ in who is meant (system ADR 0044).
+// A cell whose form er and es share (ihm, seiner), and der-series dem and
+// dessen, stays split by gender, and the referent decides between them (system
+// ADR 0044). A referent no text settles attests the form's Syncretism (system
+// ADR 0046).
 // Possessor features describe a possessive's Surface: sein- serves Masc and Neut.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de

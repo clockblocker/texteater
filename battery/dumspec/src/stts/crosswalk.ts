@@ -749,7 +749,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		tag: "PPER",
 		stts: "irreflexive personal pronoun",
 		dumling:
-			"Lexeme PRON pronType Prs; each case form is its own Lemma, a pillar cell, and a form serving two genders alike (ihm) is one cell with gender null (ADR 0044)",
+			"Lexeme PRON pronType Prs; each case form is its own Lemma, a pillar cell, and a form serving two genders (ihm) is a Masc and a Neut cell, whose Syncretism an open referent attests (ADR 0044, ADR 0046)",
 		mappings: [
 			{
 				use: "personal pronoun",
@@ -758,7 +758,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 			},
 		],
 		rules: ["de/core-features-are-identity"],
-		adrs: ["ADR-0044"],
+		adrs: ["ADR-0044", "ADR-0046"],
 		model: modeled,
 		gold: "Yes",
 		pipeline: waitsOnDumgen,

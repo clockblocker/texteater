@@ -18,37 +18,37 @@ const derSeries = [
  * decides that form's split.
  */
 export const germanSplitRulings: readonly SplitRuling[] = [
-	// The referent may choose only between cells that differ in who is
-	// meant, so gender never splits a pillar cell alone: ihm, seiner, dem and
-	// dessen are one cell each, with gender null (ADR 0044).
+	// The referent chooses between pillar cells that differ only in gender,
+	// number or politeness, and a referent no text settles attests their
+	// Syncretism, whose syncretic list keeps it apart from each cell (ADR
+	// 0044, ADR 0046).
 	{
 		split: "Each cell of the personal-pronoun pillar is its own Lemma",
-		adrs: ["ADR-0044", "ADR-0032"],
-		rules: ["de/core-features-are-identity"],
+		adrs: ["ADR-0044", "ADR-0032", "ADR-0046"],
+		rules: ["de/core-features-are-identity", "de/open-referent"],
 		both: { kind: ["PRON"], pronType: ["Prs"], poss: [null] },
 		varies: [
 			{ key: "case" },
-			{ key: "gender", onlyWith: "case" },
-			{ key: "gender", onlyWith: "number" },
-			{ key: "gender", onlyWith: "person" },
+			{ key: "gender" },
 			{ key: "number" },
 			{ key: "person" },
 			// Formal Sie and 3pl sie differ in polite alone (ADR 0044).
 			{ key: "polite", values: [null, "Form"] },
 			{ key: "polite", onlyWith: "person" },
+			{ key: "syncretic" },
 		],
 	},
 	{
 		split: "Each cell of the der-series pillar is its own Lemma",
-		adrs: ["ADR-0044", "ADR-0032"],
-		rules: ["de/core-features-are-identity"],
+		adrs: ["ADR-0044", "ADR-0032", "ADR-0046"],
+		rules: ["de/core-features-are-identity", "de/open-referent"],
 		forms: derSeries,
 		both: { kind: ["PRON"] },
 		varies: [
 			{ key: "case" },
-			{ key: "gender", onlyWith: "case" },
-			{ key: "gender", onlyWith: "number" },
+			{ key: "gender" },
 			{ key: "number" },
+			{ key: "syncretic" },
 		],
 	},
 	{

@@ -1243,6 +1243,21 @@ const attestations: Rule[] = [
 		],
 	},
 	{
+		id: "de/open-referent",
+		statement:
+			"A pronoun form whose cells only its referent tells apart attests the cell its sentence settles, through an antecedent, the verb's agreement, address or capitalization: ihm for Anna's Bruder is the dative of er. When the sentence leaves the referent open, it attests the form's Syncretism, never a guessed cell: ihm with no one named is er's or es's.",
+		adrs: ["ADR-0044", "ADR-0046"],
+		routes: lexeme("PRON"),
+		records: [
+			"de/ihr-bruder-zieht-um-anna-hilft-ihm-beim-umzug",
+			"de/das-tier-zittert-wir-geben-ihm-wasser",
+			"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
+			"de/sie-legt-das-handy-auf-den-tisch-und-hoert-ihm-aufmerksam-zu",
+			"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den",
+			"de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die",
+		],
+	},
+	{
 		id: "de/canonical-form-is-the-headword",
 		statement:
 			"A Lemma's Canonical Form is its dictionary headword and may differ from the sentence's words. Where Duden lists two spellings, the Canonical Form is Duden's recommended one. An interjection written in pieces is cited as written instead (de/interjection-counts-its-words): ha ha, o je. Identity ignores case, but the Canonical Form keeps the dictionary's casing (Haus, LOL, Sie), never the word's position: sentence-initial Wegen is wegen. A noun's is the bare noun. An open slot is written … (U+2026) with a space on each side (um … willen). A Surface spelled Canonical need not be the Grundform.",

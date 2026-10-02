@@ -99,7 +99,7 @@
 		"year": 1892
 	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0039", "ADR-0040", "ADR-0044"],
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0040", "ADR-0044", "ADR-0046"],
 		"rules": [
 			{
 				"rule": "de/adjective-stays-adj",
@@ -141,7 +141,8 @@
 				"rule": "de/pron-or-det-by-use",
 				"hash": "c2995798ac6c735d"
 			},
-			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" }
+			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" },
+			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
 		"references": [
 			{
@@ -214,18 +215,53 @@
 						"language": "de",
 						"family": "Lexeme",
 						"kind": "PRON",
-						"canonicalForm": "Ihnen",
+						"canonicalForm": "ihnen",
 						"coreFeatures": {
 							"case": "Dat",
 							"number": "Plur",
 							"person": "3",
-							"polite": "Form",
+							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
 							"gender": null
-						}
+						},
+						"syncretic": ["polite"],
+						"syncretized": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PRON",
+								"canonicalForm": "Ihnen",
+								"coreFeatures": {
+									"case": "Dat",
+									"number": "Plur",
+									"person": "3",
+									"polite": "Form",
+									"poss": null,
+									"pronType": "Prs",
+									"gender": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PRON",
+								"canonicalForm": "ihnen",
+								"coreFeatures": {
+									"case": "Dat",
+									"number": "Plur",
+									"person": "3",
+									"polite": null,
+									"poss": null,
+									"pronType": "Prs",
+									"gender": null
+								}
+							}
+						]
 					},
-					"normalizedSurface": "Ihnen",
+					"normalizedSurface": "ihnen",
 					"spelling": {
 						"kind": "Canonical"
 					},
@@ -242,7 +278,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Sentence-initial Ihnen could be third person plural ihnen or formal Ihnen; the sentence before (Sie sind ewig ein Spötter) addresses Treibel with Sie, so it is the formal dative cell (ADR 0044: the neighbouring sentence settles the referent). It fills the dative slot of es recht machen and stays outside the Locution."
+				"rationale": "Sentence-initial Ihnen is 3pl ihnen or formal Ihnen, and nothing in this sentence says which; the sentence before does not count. So it attests the Syncretism of those two cells (ADR 0044, ADR 0046, de/open-referent). It fills the dative slot of es recht machen and stays outside the Locution."
 			}
 		},
 		{

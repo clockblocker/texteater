@@ -26,8 +26,8 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0044"],
+		"rules": [{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }],
 		"references": []
 	},
 	"targets": [
@@ -36,7 +36,7 @@
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
 			"notes": {
-				"rationale": "ihm stands for Ihr Bruder. It is the dative of er and es, one cell with gender null (ADR 0044)."
+				"rationale": "ihm stands for Ihr Bruder, who is moving, so it is the Masc cell, the dative of er (ADR 0044, de/open-referent)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -56,7 +56,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "ihm",

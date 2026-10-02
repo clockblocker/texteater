@@ -220,7 +220,8 @@
 			{
 				"rule": "de/comparison-als",
 				"hash": "308ab8fee3b2ddb0"
-			}
+			},
+			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
 		"references": [
 			{
@@ -575,7 +576,7 @@
 				"emojiDescription": "👈"
 			},
 			"notes": {
-				"rationale": "Dat 3sg. ihm is one cell for er and es, with gender null, so its referent Alfred chooses no cell (ADR 0044). Ruled on #743 (MB-A1, A1)."
+				"rationale": "ihm is the er who goes down the stairs and knows, named twice in this sentence, so it is the Masc cell, the dative of er (ADR 0044, de/open-referent)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -595,7 +596,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "ihm",

@@ -47,14 +47,16 @@ import { member as m31 } from "./members/lexeme/determiner/quantifying/manch.js"
 import { member as m35 } from "./members/lexeme/determiner/quantifying/mehr.js";
 import { member as m143 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-accusative.js";
 import { member as m142 } from "./members/lexeme/pronoun/demonstrative/das-neuter-singular-nominative.js";
-import { member as m145 } from "./members/lexeme/pronoun/demonstrative/dem-singular-dative.js";
+import { member as m145 } from "./members/lexeme/pronoun/demonstrative/dem-masculine-singular-dative.js";
+import { member as m146 } from "./members/lexeme/pronoun/demonstrative/dem-neuter-singular-dative.js";
 import { member as m144 } from "./members/lexeme/pronoun/demonstrative/den-masculine-singular-accusative.js";
 import { member as m151 } from "./members/lexeme/pronoun/demonstrative/denen-plural-dative.js";
 import { member as m135 } from "./members/lexeme/pronoun/demonstrative/der-feminine-singular-dative.js";
 import { member as m134 } from "./members/lexeme/pronoun/demonstrative/der-masculine-singular-nominative.js";
 import { member as m149 } from "./members/lexeme/pronoun/demonstrative/deren-feminine-singular-genitive.js";
 import { member as m150 } from "./members/lexeme/pronoun/demonstrative/deren-plural-genitive.js";
-import { member as m147 } from "./members/lexeme/pronoun/demonstrative/dessen-singular-genitive.js";
+import { member as m147 } from "./members/lexeme/pronoun/demonstrative/dessen-masculine-singular-genitive.js";
+import { member as m148 } from "./members/lexeme/pronoun/demonstrative/dessen-neuter-singular-genitive.js";
 import { member as m139 } from "./members/lexeme/pronoun/demonstrative/die-feminine-singular-accusative.js";
 import { member as m138 } from "./members/lexeme/pronoun/demonstrative/die-feminine-singular-nominative.js";
 import { member as m141 } from "./members/lexeme/pronoun/demonstrative/die-plural-accusative.js";
@@ -74,7 +76,8 @@ import { member as m84 } from "./members/lexeme/pronoun/personal/euch-second-per
 import { member as m85 } from "./members/lexeme/pronoun/personal/euch-second-person-informal-plural-dative.js";
 import { member as m86 } from "./members/lexeme/pronoun/personal/euer-second-person-informal-plural-genitive.js";
 import { member as m57 } from "./members/lexeme/pronoun/personal/ich-first-person-singular-nominative.js";
-import { member as m67 } from "./members/lexeme/pronoun/personal/ihm-third-person-singular-dative.js";
+import { member as m67 } from "./members/lexeme/pronoun/personal/ihm-third-person-masculine-singular-dative.js";
+import { member as m76 } from "./members/lexeme/pronoun/personal/ihm-third-person-neuter-singular-dative.js";
 import { member as m66 } from "./members/lexeme/pronoun/personal/ihn-third-person-masculine-singular-accusative.js";
 import { member as m93 } from "./members/lexeme/pronoun/personal/ihnen-third-person-formal-plural-dative.js";
 import { member as m89 } from "./members/lexeme/pronoun/personal/ihnen-third-person-plural-dative.js";
@@ -86,7 +89,8 @@ import { member as m90 } from "./members/lexeme/pronoun/personal/ihrer-third-per
 import { member as m60 } from "./members/lexeme/pronoun/personal/meiner-first-person-singular-genitive.js";
 import { member as m58 } from "./members/lexeme/pronoun/personal/mich-first-person-singular-accusative.js";
 import { member as m59 } from "./members/lexeme/pronoun/personal/mir-first-person-singular-dative.js";
-import { member as m68 } from "./members/lexeme/pronoun/personal/seiner-third-person-singular-genitive.js";
+import { member as m68 } from "./members/lexeme/pronoun/personal/seiner-third-person-masculine-singular-genitive.js";
+import { member as m77 } from "./members/lexeme/pronoun/personal/seiner-third-person-neuter-singular-genitive.js";
 import { member as m70 } from "./members/lexeme/pronoun/personal/sie-third-person-feminine-singular-accusative.js";
 import { member as m69 } from "./members/lexeme/pronoun/personal/sie-third-person-feminine-singular-nominative.js";
 import { member as m92 } from "./members/lexeme/pronoun/personal/sie-third-person-formal-plural-accusative.js";
@@ -102,14 +106,16 @@ import { member as m99 } from "./members/lexeme/pronoun/reflexive/sich-third-per
 import { member as m100 } from "./members/lexeme/pronoun/reflexive/sich-third-person-dative.js";
 import { member as m161 } from "./members/lexeme/pronoun/relative/das-neuter-singular-accusative.js";
 import { member as m160 } from "./members/lexeme/pronoun/relative/das-neuter-singular-nominative.js";
-import { member as m163 } from "./members/lexeme/pronoun/relative/dem-singular-dative.js";
+import { member as m163 } from "./members/lexeme/pronoun/relative/dem-masculine-singular-dative.js";
+import { member as m164 } from "./members/lexeme/pronoun/relative/dem-neuter-singular-dative.js";
 import { member as m162 } from "./members/lexeme/pronoun/relative/den-masculine-singular-accusative.js";
 import { member as m169 } from "./members/lexeme/pronoun/relative/denen-plural-dative.js";
 import { member as m153 } from "./members/lexeme/pronoun/relative/der-feminine-singular-dative.js";
 import { member as m152 } from "./members/lexeme/pronoun/relative/der-masculine-singular-nominative.js";
 import { member as m167 } from "./members/lexeme/pronoun/relative/deren-feminine-singular-genitive.js";
 import { member as m168 } from "./members/lexeme/pronoun/relative/deren-plural-genitive.js";
-import { member as m165 } from "./members/lexeme/pronoun/relative/dessen-singular-genitive.js";
+import { member as m165 } from "./members/lexeme/pronoun/relative/dessen-masculine-singular-genitive.js";
+import { member as m166 } from "./members/lexeme/pronoun/relative/dessen-neuter-singular-genitive.js";
 import { member as m157 } from "./members/lexeme/pronoun/relative/die-feminine-singular-accusative.js";
 import { member as m156 } from "./members/lexeme/pronoun/relative/die-feminine-singular-nominative.js";
 import { member as m159 } from "./members/lexeme/pronoun/relative/die-plural-accusative.js";
@@ -192,6 +198,8 @@ export const sourceMembers = [
 	m73,
 	m74,
 	m75,
+	m76,
+	m77,
 	m78,
 	m79,
 	m80,
@@ -222,7 +230,9 @@ export const sourceMembers = [
 	m143,
 	m144,
 	m145,
+	m146,
 	m147,
+	m148,
 	m149,
 	m150,
 	m151,
@@ -236,7 +246,9 @@ export const sourceMembers = [
 	m161,
 	m162,
 	m163,
+	m164,
 	m165,
+	m166,
 	m167,
 	m168,
 	m169,

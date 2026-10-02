@@ -21,8 +21,8 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0044"],
+		"rules": [{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }],
 		"references": []
 	},
 	"targets": [
@@ -30,6 +30,9 @@
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
+			"notes": {
+				"rationale": "ihm stands for das Tier, so it is the Neut cell, the dative of es (ADR 0044, de/open-referent)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -48,7 +51,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "ihm",

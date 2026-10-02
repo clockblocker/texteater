@@ -157,7 +157,14 @@
 		"year": 1915
 	},
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0035", "ADR-0039", "ADR-0040", "ADR-0044"],
+		"adrs": [
+			"ADR-0031",
+			"ADR-0035",
+			"ADR-0039",
+			"ADR-0040",
+			"ADR-0044",
+			"ADR-0046"
+		],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -206,7 +213,8 @@
 			{
 				"rule": "de/complex-preposition",
 				"hash": "395d3503fe67bb7b"
-			}
+			},
+			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
 		"references": [
 			{
@@ -774,7 +782,42 @@
 							"poss": null,
 							"pronType": "Prs",
 							"gender": null
-						}
+						},
+						"syncretic": ["gender"],
+						"syncretized": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PRON",
+								"canonicalForm": "ihm",
+								"coreFeatures": {
+									"case": "Dat",
+									"number": "Sing",
+									"person": "3",
+									"polite": null,
+									"poss": null,
+									"pronType": "Prs",
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "PRON",
+								"canonicalForm": "ihm",
+								"coreFeatures": {
+									"case": "Dat",
+									"number": "Sing",
+									"person": "3",
+									"polite": null,
+									"poss": null,
+									"pronType": "Prs",
+									"gender": "Neut"
+								}
+							}
+						]
 					},
 					"normalizedSurface": "ihm",
 					"spelling": {
@@ -793,7 +836,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Free dative of the person whose eyes are meant. ihm is one cell for er and es, with gender null, so nothing needs to tell its masculine referent Gregor from a neuter one (ADR 0044). Ruled on #743 (VP-A1, A1)."
+				"rationale": "Free dative of the one whose eyes are meant. Seine and seinem say only that the owner is er's or es's, and nothing in this sentence names the owner, so ihm attests the Syncretism of the Masc and Neut cells (ADR 0044, ADR 0046, de/open-referent)."
 			}
 		},
 		{

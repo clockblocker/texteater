@@ -356,7 +356,8 @@
 			"ADR-0035",
 			"ADR-0036",
 			"ADR-0039",
-			"ADR-0040"
+			"ADR-0040",
+			"ADR-0044"
 		],
 		"rules": [
 			{
@@ -418,7 +419,8 @@
 			{
 				"rule": "de/verb-core-features",
 				"hash": "584917189382edfe"
-			}
+			},
+			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
 		"references": [
 			{
@@ -1541,7 +1543,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Rel",
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "dessen",
@@ -1561,7 +1563,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Attributive relative dessen is the relative PRON cell Gen.Sg, one Lemma with standalone dessen, and Höhe is a separate target (de/pron-or-det-by-use). It serves a masculine and a neuter antecedent alike, so its gender is null (ADR 0044). Ruled on #743 (VP-A1, A1)."
+				"rationale": "Attributive relative dessen is the relative PRON cell Gen.Sg, one Lemma with standalone dessen, and Höhe is a separate target (de/pron-or-det-by-use). Its antecedent is Bauch, so it is the Masc cell (ADR 0044, de/open-referent)."
 			}
 		},
 		{

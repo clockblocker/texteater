@@ -3,6 +3,110 @@
 import type * as Dumling from "dumling/types";
 import type { AuthoredMember } from "../member.js";
 
+// PRON dem Dat Dem: gender
+const demDatDemGender = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "dem",
+	coreFeatures: {
+		case: "Dat",
+		number: "Sing",
+		person: null,
+		polite: null,
+		poss: null,
+		pronType: "Dem",
+		gender: null,
+	},
+	syncretic: ["gender"],
+	syncretized: [
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "dem",
+			coreFeatures: {
+				case: "Dat",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Dem",
+				gender: "Masc",
+			},
+		},
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "dem",
+			coreFeatures: {
+				case: "Dat",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Dem",
+				gender: "Neut",
+			},
+		},
+	],
+} satisfies Dumling.Lemma<"de">;
+// PRON dem Dat Rel: gender
+const demDatRelGender = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "dem",
+	coreFeatures: {
+		case: "Dat",
+		number: "Sing",
+		person: null,
+		polite: null,
+		poss: null,
+		pronType: "Rel",
+		gender: null,
+	},
+	syncretic: ["gender"],
+	syncretized: [
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "dem",
+			coreFeatures: {
+				case: "Dat",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Rel",
+				gender: "Masc",
+			},
+		},
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "dem",
+			coreFeatures: {
+				case: "Dat",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Rel",
+				gender: "Neut",
+			},
+		},
+	],
+} satisfies Dumling.Lemma<"de">;
 // PRON deren Gen Dem: gender number
 const derenGenDemGenderNumber = {
 	unitKind: "Lemma",
@@ -103,6 +207,110 @@ const derenGenRelGenderNumber = {
 				poss: null,
 				pronType: "Rel",
 				gender: null,
+			},
+		},
+	],
+} satisfies Dumling.Lemma<"de">;
+// PRON dessen Gen Dem: gender
+const dessenGenDemGender = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "dessen",
+	coreFeatures: {
+		case: "Gen",
+		number: "Sing",
+		person: null,
+		polite: null,
+		poss: null,
+		pronType: "Dem",
+		gender: null,
+	},
+	syncretic: ["gender"],
+	syncretized: [
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "dessen",
+			coreFeatures: {
+				case: "Gen",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Dem",
+				gender: "Masc",
+			},
+		},
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "dessen",
+			coreFeatures: {
+				case: "Gen",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Dem",
+				gender: "Neut",
+			},
+		},
+	],
+} satisfies Dumling.Lemma<"de">;
+// PRON dessen Gen Rel: gender
+const dessenGenRelGender = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "dessen",
+	coreFeatures: {
+		case: "Gen",
+		number: "Sing",
+		person: null,
+		polite: null,
+		poss: null,
+		pronType: "Rel",
+		gender: null,
+	},
+	syncretic: ["gender"],
+	syncretized: [
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "dessen",
+			coreFeatures: {
+				case: "Gen",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Rel",
+				gender: "Masc",
+			},
+		},
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "dessen",
+			coreFeatures: {
+				case: "Gen",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Rel",
+				gender: "Neut",
 			},
 		},
 	],
@@ -311,6 +519,162 @@ const dieNomRelGenderNumber = {
 				poss: null,
 				pronType: "Rel",
 				gender: null,
+			},
+		},
+	],
+} satisfies Dumling.Lemma<"de">;
+// PRON einem Dat Ind: gender
+const einemDatIndGender = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "einem",
+	coreFeatures: {
+		case: "Dat",
+		number: "Sing",
+		person: null,
+		polite: null,
+		poss: null,
+		pronType: "Ind",
+		gender: null,
+	},
+	syncretic: ["gender"],
+	syncretized: [
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "einem",
+			coreFeatures: {
+				case: "Dat",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Ind",
+				gender: "Masc",
+			},
+		},
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "einem",
+			coreFeatures: {
+				case: "Dat",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Ind",
+				gender: "Neut",
+			},
+		},
+	],
+} satisfies Dumling.Lemma<"de">;
+// PRON eines Gen Ind: gender
+const einesGenIndGender = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "eines",
+	coreFeatures: {
+		case: "Gen",
+		number: "Sing",
+		person: null,
+		polite: null,
+		poss: null,
+		pronType: "Ind",
+		gender: null,
+	},
+	syncretic: ["gender"],
+	syncretized: [
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "eines",
+			coreFeatures: {
+				case: "Gen",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Ind",
+				gender: "Masc",
+			},
+		},
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "eines",
+			coreFeatures: {
+				case: "Gen",
+				number: "Sing",
+				person: null,
+				polite: null,
+				poss: null,
+				pronType: "Ind",
+				gender: "Neut",
+			},
+		},
+	],
+} satisfies Dumling.Lemma<"de">;
+// PRON ihm Dat Prs: gender
+const ihmDatPrsGender = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "ihm",
+	coreFeatures: {
+		case: "Dat",
+		number: "Sing",
+		person: "3",
+		polite: null,
+		poss: null,
+		pronType: "Prs",
+		gender: null,
+	},
+	syncretic: ["gender"],
+	syncretized: [
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "ihm",
+			coreFeatures: {
+				case: "Dat",
+				number: "Sing",
+				person: "3",
+				polite: null,
+				poss: null,
+				pronType: "Prs",
+				gender: "Masc",
+			},
+		},
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "ihm",
+			coreFeatures: {
+				case: "Dat",
+				number: "Sing",
+				person: "3",
+				polite: null,
+				poss: null,
+				pronType: "Prs",
+				gender: "Neut",
 			},
 		},
 	],
@@ -535,6 +899,58 @@ const ihrerGenPrsPolite = {
 				poss: null,
 				pronType: "Prs",
 				gender: null,
+			},
+		},
+	],
+} satisfies Dumling.Lemma<"de">;
+// PRON seiner Gen Prs: gender
+const seinerGenPrsGender = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "PRON",
+	canonicalForm: "seiner",
+	coreFeatures: {
+		case: "Gen",
+		number: "Sing",
+		person: "3",
+		polite: null,
+		poss: null,
+		pronType: "Prs",
+		gender: null,
+	},
+	syncretic: ["gender"],
+	syncretized: [
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "seiner",
+			coreFeatures: {
+				case: "Gen",
+				number: "Sing",
+				person: "3",
+				polite: null,
+				poss: null,
+				pronType: "Prs",
+				gender: "Masc",
+			},
+		},
+		{
+			unitKind: "Lemma",
+			language: "de",
+			family: "Lexeme",
+			kind: "PRON",
+			canonicalForm: "seiner",
+			coreFeatures: {
+				case: "Gen",
+				number: "Sing",
+				person: "3",
+				polite: null,
+				poss: null,
+				pronType: "Prs",
+				gender: "Neut",
 			},
 		},
 	],
@@ -891,6 +1307,61 @@ const sieNomPrsPolite = {
  */
 export const germanSyncretisms: readonly AuthoredMember[] = [
 	{
+		lemma: demDatDemGender,
+		reading: {
+			unitKind: "Reading",
+			lemma: demDatDemGender,
+			emojiDescription: "👉",
+		},
+		knowledge: {
+			definition:
+				"Das Demonstrativpronomen „dem“ verweist betont auf eine im Kontext bestimmte Person oder Sache im Maskulinum oder im Neutrum Singular; der Text lässt offen, welches gemeint ist.",
+			transcription: "deːm",
+			translations: {
+				en: ["that one", "this one"],
+				ru: ["тому", "этому"],
+			},
+		},
+		coverage: {
+			transcription: "Authored",
+			definition: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	},
+	{
+		lemma: demDatRelGender,
+		reading: {
+			unitKind: "Reading",
+			lemma: demDatRelGender,
+			emojiDescription: "🔗",
+		},
+		knowledge: {
+			definition:
+				"Das Relativpronomen „dem“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort im Maskulinum oder im Neutrum Singular; der Text lässt offen, welches gemeint ist.",
+			transcription: "deːm",
+			translations: { en: ["who", "which", "that"], ru: ["которому"] },
+		},
+		coverage: {
+			transcription: "Authored",
+			definition: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	},
+	{
 		lemma: derenGenDemGenderNumber,
 		reading: {
 			unitKind: "Reading",
@@ -933,6 +1404,64 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			translations: {
 				en: ["whose", "who", "which", "that"],
 				ru: ["которой", "чьей", "которых", "чьих"],
+			},
+		},
+		coverage: {
+			transcription: "Authored",
+			definition: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	},
+	{
+		lemma: dessenGenDemGender,
+		reading: {
+			unitKind: "Reading",
+			lemma: dessenGenDemGender,
+			emojiDescription: "👉",
+		},
+		knowledge: {
+			definition:
+				"Das Demonstrativpronomen „dessen“ verweist betont auf eine im Kontext bestimmte Person oder Sache im Maskulinum oder im Neutrum Singular; der Text lässt offen, welches gemeint ist. Vor einem Nomen ordnet es dieses ihr zu: mein Freund und dessen Hund, das Haus und dessen Dach.",
+			transcription: "ˈdɛsn̩",
+			translations: {
+				en: ["that one", "this one", "his", "its"],
+				ru: ["его"],
+			},
+		},
+		coverage: {
+			transcription: "Authored",
+			definition: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	},
+	{
+		lemma: dessenGenRelGender,
+		reading: {
+			unitKind: "Reading",
+			lemma: dessenGenRelGender,
+			emojiDescription: "🔗",
+		},
+		knowledge: {
+			definition:
+				"Das Relativpronomen „dessen“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort im Maskulinum oder im Neutrum Singular; der Text lässt offen, welches gemeint ist. Vor einem Nomen ordnet es dieses dem Bezugswort zu: der Autor, dessen Buch fehlt; das Haus, dessen Tür offen steht.",
+			transcription: "ˈdɛsn̩",
+			translations: {
+				en: ["whose", "who", "which", "that"],
+				ru: ["которого", "чей"],
 			},
 		},
 		coverage: {
@@ -1065,6 +1594,84 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 		},
 	},
 	{
+		lemma: einemDatIndGender,
+		reading: {
+			unitKind: "Reading",
+			lemma: einemDatIndGender,
+			emojiDescription: "1⃣",
+		},
+		knowledge: {
+			definition:
+				"Bezeichnet eine unbestimmte einzelne Person oder Sache im Maskulinum oder im Neutrum; der Text lässt offen, welches gemeint ist. Form: Dativ, Singular.",
+			transcription: "ˈaɪ̯nəm",
+			translations: { en: ["one; someone"], ru: ["один; кто-то"] },
+		},
+		coverage: {
+			definition: "Authored",
+			transcription: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	},
+	{
+		lemma: einesGenIndGender,
+		reading: {
+			unitKind: "Reading",
+			lemma: einesGenIndGender,
+			emojiDescription: "1⃣",
+		},
+		knowledge: {
+			definition:
+				"Bezeichnet eine unbestimmte einzelne Person oder Sache im Maskulinum oder im Neutrum; der Text lässt offen, welches gemeint ist. Form: Genitiv, Singular.",
+			transcription: "ˈaɪ̯nəs",
+			translations: { en: ["one; someone"], ru: ["один; кто-то"] },
+		},
+		coverage: {
+			definition: "Authored",
+			transcription: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	},
+	{
+		lemma: ihmDatPrsGender,
+		reading: {
+			unitKind: "Reading",
+			lemma: ihmDatPrsGender,
+			emojiDescription: "👈",
+		},
+		knowledge: {
+			definition:
+				"Die Personalpronomenform „ihm“ ist der Dativ von „er“ oder von „es“ und verweist auf die männliche oder die sächliche dritte Person Einzahl; der Text lässt offen, welche gemeint ist.",
+			transcription: "iːm",
+			translations: { en: ["him", "it"], ru: ["ему"] },
+		},
+		coverage: {
+			transcription: "Authored",
+			definition: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	},
+	{
 		lemma: ihnenDatPrsPolite,
 		reading: {
 			unitKind: "Reading",
@@ -1157,6 +1764,32 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 				"Die Personalpronomenform „ihrer“ verweist auf die dritte Person Mehrzahl oder, groß geschrieben, auf eine oder mehrere höflich angesprochene Personen; am Satzanfang lässt der Text offen, welches gemeint ist.",
 			transcription: "ˈiːʁɐ",
 			translations: { en: ["you (formal)", "them"], ru: ["Вас", "их"] },
+		},
+		coverage: {
+			transcription: "Authored",
+			definition: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	},
+	{
+		lemma: seinerGenPrsGender,
+		reading: {
+			unitKind: "Reading",
+			lemma: seinerGenPrsGender,
+			emojiDescription: "👈",
+		},
+		knowledge: {
+			definition:
+				"Die Personalpronomenform „seiner“ ist der Genitiv von „er“ oder von „es“ und verweist auf die männliche oder die sächliche dritte Person Einzahl; der Text lässt offen, welche gemeint ist.",
+			transcription: "ˈzaɪ̯nɐ",
+			translations: { en: ["of him", "of it"], ru: ["его"] },
 		},
 		coverage: {
 			transcription: "Authored",

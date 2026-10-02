@@ -18,8 +18,8 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0044"],
+		"rules": [{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +28,7 @@
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
 			"notes": {
-				"rationale": "seiner is the standard genitive of er and es, one cell with gender null (ADR 0044), governed here by gedenken. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of seiner. So the Surface carries no historical status (de/variant-and-historical-status)."
+				"rationale": "seiner takes up des alten Gesetzes, so it is the Neut cell, the standard genitive of es (ADR 0044, de/open-referent), governed here by gedenken. What is archaic is the construction, a verb that governs a genitive object, not the form, which is the same in every modern use of seiner. So the Surface carries no historical status (de/variant-and-historical-status)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -48,7 +48,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Prs",
-							"gender": null
+							"gender": "Neut"
 						}
 					},
 					"normalizedSurface": "seiner",

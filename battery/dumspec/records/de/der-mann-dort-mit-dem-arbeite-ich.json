@@ -21,8 +21,8 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0044"],
+		"rules": [{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }],
 		"references": []
 	},
 	"targets": [
@@ -31,7 +31,7 @@
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👉" },
 			"notes": {
-				"rationale": "The der-series is a pillar (ADR 0044), so this cell is its own Lemma, with case and number in Core. dem serves a masculine and a neuter referent alike, so its gender is null, and context selects demonstrative versus relative pronType."
+				"rationale": "The der-series is a pillar (ADR 0044), so this cell is its own Lemma, with case, number and gender in Core. dem points back to der Mann, so it is the Masc cell (de/open-referent), and it opens no clause, so it is demonstrative."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -51,7 +51,7 @@
 							"polite": null,
 							"poss": null,
 							"pronType": "Dem",
-							"gender": null
+							"gender": "Masc"
 						}
 					},
 					"normalizedSurface": "dem",

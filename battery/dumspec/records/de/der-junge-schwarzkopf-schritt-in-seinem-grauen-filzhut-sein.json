@@ -252,7 +252,8 @@
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
-			}
+			},
+			{ "rule": "de/open-referent", "hash": "eae1e1fa056277e4" }
 		],
 		"references": [
 			{
@@ -1013,7 +1014,7 @@
 				"emojiDescription": "👈"
 			},
 			"notes": {
-				"rationale": "sie is Acc, 3sg Fem or 3pl. Those cells differ in who is meant, so the referent chooses: the ihr beside whom he walks gives 3sg Fem (ADR 0044). Ruled on #743 (MB-A1, A1)."
+				"rationale": "sie is Acc, 3sg Fem or 3pl. The ihr beside whom he walks, 3sg Fem by grammar, is in this sentence and is whom he looks at, so it is the 3sg Fem cell (ADR 0044, de/open-referent)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
