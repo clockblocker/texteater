@@ -1,0 +1,132 @@
+diff --git a/battery/dumgen/src/segment/de/code-rules.ts b/battery/dumgen/src/segment/de/code-rules.ts
+index 61455cd7..40fe61c6 100644
+--- a/battery/dumgen/src/segment/de/code-rules.ts
++++ b/battery/dumgen/src/segment/de/code-rules.ts
+@@ -47,6 +47,17 @@
+  * - `answer-apart` (de/interjection-counts-its-words): an answer word
+  *   before a formula keeps its own unit, with no punctuation between
+  *   (Nein danke); routing reads it when it merges interjections.
++ * - `saying-closed` (de/saying-needs-uptake,
++ *   de/locutions-and-sayings-are-made-of-lexemes): a Saying is one unit
++ *   over exactly its own words, so a link between a word inside a Saying
++ *   span and one outside it drops: erinnerte … „Wer zuletzt lacht, lacht am
++ *   besten“ keeps erinnerte out, though the judge read an of am as its
++ *   governed preposition.
++ * - `complex-preposition` (de/complex-preposition): a preposition, a bare
++ *   noun and the preposition right after it that the judge reads as the
++ *   noun's governed one are one Locution over all their words, both pieces
++ *   of a fused word included: im Vergleich zu gives [i, m, Vergleich, zu].
++ *   A noun with an article or an attribute of its own is left alone.
+  */
+ import {
+ 	closedVerbForms,
+@@ -75,6 +86,8 @@ export const codeRules = [
+ 	"infixed-zu",
+ 	"binomial",
+ 	"answer-apart",
++	"saying-closed",
++	"complex-preposition",
+ ] as const;
+ 
+ export type CodeRule = (typeof codeRules)[number];
+@@ -427,6 +440,90 @@ function binomialLinks(
+ 	return links;
+ }
+ 
++/** Each Saying span's pieces, keyed to its first piece, from the `saying` edges. */
++function sayingSpanOf(edges: readonly AssembledEdge[]): Map<number, number> {
++	const spanOf = new Map<number, number>();
++	for (const { pieces, source } of edges)
++		if (source === "saying") {
++			spanOf.set(pieces[0], pieces[0]);
++			spanOf.set(pieces[1], pieces[0]);
++		}
++	return spanOf;
++}
++
++function sayingsClosed(edges: readonly AssembledEdge[]): Decision {
++	const spanOf = sayingSpanOf(edges);
++	return {
++		drop: (edge) => {
++			if (edge.source === "saying") return false;
++			const [left, right] = edge.pieces.map((id) => spanOf.get(id));
++			return (left !== undefined || right !== undefined) && left !== right;
++		},
++	};
++}
++
++function complexPrepositions(
++	nomination: Nomination,
++	edges: readonly AssembledEdge[],
++): Decision {
++	const { pieces, segments } = nomination.sentence;
++	const { isAdposition } = nomination.inventory;
++	const siblings = fusedSiblings(nomination.sentence);
++	const accepted = new Set(
++		edges
++			.filter((edge) => edge.source === "satellite")
++			.map((edge) => `${edge.pieces[0]}>${edge.pieces[1]}`),
++	);
++	const governs = new Set(
++		nomination.slotAnswers
++			.filter(
++				(link) =>
++					link.kind === "preposition" &&
++					accepted.has(`${link.from}>${link.to}`),
++			)
++			.map((link) => `${link.from}>${link.to}`),
++	);
++	const beside = (left: Piece, right: Piece) =>
++		segments
++			.slice(left.segment + 1, right.segment)
++			.every((segment) => segment.kind === "Whitespace");
++	const closed: ClosedUnit[] = [];
++	for (const first of pieces) {
++		if (!isAdposition(first.surface)) continue;
++		// The fused article of im, zum, beim stands between: i, m, Vergleich.
++		const fused = (siblings.get(first.id) ?? []).filter(
++			(id) => id !== first.id,
++		);
++		const article =
++			fused.length === 1 && fused[0] === first.id + 1
++				? pieces[first.id]
++				: undefined;
++		if (fused.length > 0 && !(article && isArticle(article))) continue;
++		const before = article ?? first;
++		const noun = pieces[before.id];
++		const second = noun ? pieces[noun.id] : undefined;
++		if (
++			!noun ||
++			!second ||
++			!nounLike(noun) ||
++			noun.fusedWord ||
++			second.fusedWord ||
++			!isAdposition(second.surface) ||
++			noun.clause !== first.clause ||
++			second.clause !== first.clause ||
++			!(article !== undefined || beside(first, noun)) ||
++			!beside(noun, second) ||
++			!governs.has(`${second.id}>${noun.id}`)
++		)
++			continue;
++		closed.push({
++			pieces: [first.id, ...(article ? [article.id] : []), noun.id, second.id],
++			family: "Locution",
++		});
++	}
++	return { closed };
++}
++
+ /**
+  * Whether two adjacent interjection pieces stay apart: an answer word
+  * before a formula (de/interjection-counts-its-words).
+@@ -458,6 +555,9 @@ export function withCodeRules(
+ 		binomial: () => ({}),
+ 		// Read by routing, where interjections merge.
+ 		"answer-apart": () => ({}),
++		"saying-closed": () => sayingsClosed(membership.edges),
++		"complex-preposition": () =>
++			complexPrepositions(nomination, membership.edges),
+ 	};
+ 	const decisions = rules.map((rule) => decide[rule]());
+ 	const closedOf = new Map<number, number>();
