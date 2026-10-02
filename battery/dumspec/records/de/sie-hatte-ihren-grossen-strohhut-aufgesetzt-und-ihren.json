@@ -767,7 +767,7 @@
 			},
 			"reading": { "emojiDescription": "🌐" },
 			"notes": {
-				"rationale": "es herrschte heftige Hitze is Duden herrschen 'in einer bestimmten, auffallenden Weise [allgemein] verbreitet, vorhanden, deutlich fühlbar sein', not 'Macht haben, regieren'."
+				"rationale": "es only fills the place before the verb and drops when another word opens the clause (denn heftige Hitze herrschte), so it is positional es, a PRON of its own, and herrschte is a single-member VERB (de/expletive-es-joins-its-verb). es herrschte heftige Hitze is Duden herrschen 'in einer bestimmten, auffallenden Weise [allgemein] verbreitet, vorhanden, deutlich fühlbar sein', not 'Macht haben, regieren'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

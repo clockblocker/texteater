@@ -48,7 +48,10 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" },
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -57,7 +60,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🛠🤷" },
 			"notes": {
-				"rationale": "The attribution interrupts one quotation but remains unmarked context; all supplied proverb members stay in source order."
+				"rationale": "Wo gehobelt wird, da fallen Späne is a Proverb, one Saying target over all its words. The attribution erklärte der Meister … fort stands between them and stays outside; a target with free words between its members is still Full (de/partial-coverage, de/saying-needs-uptake)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -29,7 +29,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -38,7 +43,7 @@
 			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😮" },
 			"notes": {
-				"rationale": "The nearby greeting is an unmarked Locution/INTJ; the authoritative singleton reaction remains INTJ."
+				"rationale": "oh, said on seeing the bill, stands outside the clause and voices surprise: an INTJ Lexeme with no partType, since it answers no question (de/interjection-counts-its-words). oh is Duden's 'Ausruf der Überraschung, der Verwunderung'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

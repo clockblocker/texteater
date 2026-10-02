@@ -25,7 +25,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0002"],
 		"rules": [],
 		"references": []
 	},
@@ -34,7 +34,7 @@
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
-				"rationale": "The fixed SCONJ route makes this causal identity total despite the adverbial homograph."
+				"rationale": "da opens the verb-final clause da ein Sturm angekündigt war and gives the reason: the causal SCONJ da, a Lemma apart from the ADV da, since Kind is identity (ADR 0002)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

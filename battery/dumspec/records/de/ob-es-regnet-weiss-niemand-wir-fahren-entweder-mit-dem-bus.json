@@ -39,7 +39,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -47,7 +49,7 @@
 			"memberSegmentIndices": [16, 24],
 			"route": { "family": "Locution", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "Initial ob is unmarked SCONJ context and does not alter membership."
+				"rationale": "entweder … oder joins mit dem Bus and mit der Bahn, a correlator made of its two anchors, a Locution CCONJ (de/correlator-anchors). The ob of the first clause is an SCONJ of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

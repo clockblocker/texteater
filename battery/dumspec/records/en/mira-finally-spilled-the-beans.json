@@ -15,14 +15,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0039"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🤫📢" },
 			"notes": {
-				"rationale": "The Full Attestation records spilled, the, and beans as the complete idiom occurrence; the docs review span remains on spilled only."
+				"rationale": "spilled the beans is the idiom spill the beans, 'reveal a secret': a Locution VERB over spilled, the and beans, all present, so Full, and it inflects like its verb (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

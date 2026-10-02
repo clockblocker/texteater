@@ -54,7 +54,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -63,7 +68,7 @@
 			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😱" },
 			"notes": {
-				"rationale": "The unmarked Idiom mention is route-contrast context; the marked reaction formula is authoritative. um Himmels willen! at the wrong finding is Duden's 'Ausruf des Erschreckens, der Abwehr', not its 'Ausdruck einer inständigen Bitte'."
+				"rationale": "Um Himmels willen! is an established exclamation whose meaning is not the sum of its words, so it is one Locution INTJ (de/interjection-counts-its-words). um Himmels willen! at the wrong finding is Duden's 'Ausruf des Erschreckens, der Abwehr', not its 'Ausdruck einer inständigen Bitte'. The idiom mentioned earlier, ins Gras beißen, is a unit of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

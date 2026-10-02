@@ -18,7 +18,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0039"],
 		"rules": [],
 		"references": []
 	},
@@ -28,7 +28,7 @@
 			"route": { "family": "Locution", "kind": "NUM" },
 			"reading": { "emojiDescription": "1⃣🔸5⃣" },
 			"notes": {
-				"rationale": "All three authoritative members realize one spoken decimal NUM; preserve membership and source order."
+				"rationale": "ein Komma fünf is one spoken decimal, 1.5: a Locution NUM over its three words, as ADR 0039 lists vier Komma neun."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

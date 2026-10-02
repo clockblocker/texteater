@@ -42,6 +42,18 @@
 			{
 				"rule": "de/verb-core-features",
 				"hash": "584917189382edfe"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
 			}
 		],
 		"references": []
@@ -51,6 +63,9 @@
 			"memberSegmentIndices": [3, 5, 7, 13],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🙋👥" },
+			"notes": {
+				"rationale": "sich beteiligen 'take part' (Duden beteiligen 1: sich an einem Spiel beteiligen) needs the reflexive, since jemanden an etwas beteiligen gives someone a share (2), another sense. So sich is a member, and the Core names its case, lexicallyReflexive Acc (ich beteilige mich). an + Dat is governed, a member left out of the normalized Surface, and wird is the future auxiliary (de/verb-owns-its-scattered-members, de/governed-preposition-joins-its-governor, de/verb-core-features, de/auxiliary-joins-the-verb-it-serves)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

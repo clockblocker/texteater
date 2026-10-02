@@ -31,7 +31,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -40,7 +42,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🌱😓" },
 			"notes": {
-				"rationale": "The real spelling error is repaired only in its selected member."
+				"rationale": "Anfank is a Typo of Anfang: the member keeps its letters, marked Typo, and the Surface spells the proverb right (de/member-orthography). Aller Anfang ist schwer is a Proverb, one Saying target over all its words."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

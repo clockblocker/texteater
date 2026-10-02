@@ -35,7 +35,7 @@
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "2⃣" },
 			"notes": {
-				"rationale": "The unmarked beiden is DET; the supplied cardinal target is independently NUM."
+				"rationale": "zwei is the cardinal NUM counting Personen; jeweils makes the count hold for each group. It does not inflect here, so its Surface marks nothing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

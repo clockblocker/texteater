@@ -16,7 +16,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0035", "ADR-0041"],
 		"rules": [],
 		"references": []
 	},
@@ -26,7 +26,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "✅" },
 			"notes": {
-				"rationale": "Definately is a typo of definitely; mark only `member.orthography: \"Typo\"` here, not a spelling variant, because the intended resolved surface is canonical."
+				"rationale": "definately is a misspelling of definitely that no dictionary accepts, so the member is a Typo, and the Surface spells definitely, Canonical, not a Variant (ADR 0035, ADR 0041)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

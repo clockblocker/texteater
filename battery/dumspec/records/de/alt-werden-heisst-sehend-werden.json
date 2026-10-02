@@ -19,7 +19,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0039"],
 		"rules": [],
 		"references": []
 	},
@@ -29,7 +29,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🧓💡" },
 			"notes": {
-				"rationale": "Every lexical member is selected; quotation marks, comma, and full stop are punctuation rather than members. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
+				"rationale": "Every word of the line is a member; the quotation marks, the comma and the full stop are punctuation and stay outside. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

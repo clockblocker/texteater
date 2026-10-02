@@ -26,12 +26,15 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0002"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🚶" },
+			"notes": {
+				"rationale": "walk here is the act of walking, the NOUN walk, a Lemma apart from the verb walk, since Kind is identity (ADR 0002). my is a determiner of its own, so walk owns no article."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "walk", "orthography": "Standard" }],

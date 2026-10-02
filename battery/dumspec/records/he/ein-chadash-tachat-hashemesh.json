@@ -14,14 +14,18 @@
 	],
 	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0039"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 7],
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🚫🆕🔁" },
 			"notes": {
-				"rationale": "The Full Attestation records every member of the proverb occurrence; the docs review span on חדש does not make it an adjective Surface. Ecclesiastes 1:9: nothing is new, everything has happened before."
+				"rationale": "אין חדש תחת השמש is one Saying over all its words, every one present, so Full; both Fused pieces of השמש are members (ADR 0039, ADR 0035). Ecclesiastes 1:9: nothing is new, everything has happened before."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

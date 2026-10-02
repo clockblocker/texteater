@@ -70,7 +70,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -79,7 +81,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🛏🫵" },
 			"notes": {
-				"rationale": "The unmarked Idiom mention does not affect the fixed Proverb target."
+				"rationale": "Wie man sich bettet, so liegt man is a Proverb, one Saying target over all its words (de/saying-needs-uptake). The idiom mentioned before it, den Nagel auf den Kopf treffen, is a unit of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

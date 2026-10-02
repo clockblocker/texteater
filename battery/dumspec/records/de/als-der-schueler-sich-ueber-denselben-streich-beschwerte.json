@@ -63,7 +63,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -74,7 +76,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🙅🔁" },
 			"notes": {
-				"rationale": "Both occurrences of das are authoritative positions in one proverb and remain separate members."
+				"rationale": "Was du nicht willst, das man dir tu, das füg auch keinem andern zu is a Proverb, one Saying target over all its words: both das are members, each in its own place, and the lead-in zitierte die Lehrerin stays outside (de/saying-needs-uptake)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

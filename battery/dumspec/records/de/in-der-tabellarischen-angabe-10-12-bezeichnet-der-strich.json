@@ -38,7 +38,7 @@
 			"route": { "family": "Lexeme", "kind": "SYM" },
 			"reading": { "emojiDescription": "🔢➡🔢" },
 			"notes": {
-				"rationale": "Upstream already classified this numeric-range glyph as SYM rather than sentence PUNCT. Here – reads bis between two numbers, a range as in zehn bis zwölf, so it copies the range Locutions' description."
+				"rationale": "– between 10 and 12 marks a range of values, as the sentence says, and is read bis: a sign with a meaning of its own, a SYM, not punctuation. Here – reads bis between two numbers, a range as in zehn bis zwölf, so it copies the range Locutions' description."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

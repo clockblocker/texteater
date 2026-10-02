@@ -25,7 +25,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -33,7 +35,7 @@
 			"memberSegmentIndices": [8, 12, 14],
 			"route": { "family": "Locution", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "Außerdem is unmarked ADV context; all three supplied anchors belong to one CCONJ."
+				"rationale": "sowohl … als auch is one correlator over its three anchors, a Locution CCONJ (de/correlator-anchors). klar and knapp stay outside, and Außerdem is an ADV of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

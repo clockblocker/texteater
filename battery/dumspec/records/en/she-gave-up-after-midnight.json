@@ -15,14 +15,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0003"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🏳" },
 			"notes": {
-				"rationale": "Clicking the particle resolves the complete phrasal-verb occurrence `gave up`; the click is one member of that Surface."
+				"rationale": "gave up is the phrasal verb give up, one VERB target over gave and its particle up, so a click on either opens give up (ADR 0003)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

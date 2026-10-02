@@ -32,7 +32,7 @@
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "1⃣" },
 			"notes": {
-				"rationale": "The unmarked nominalized Null contrasts with the classified numeric value eins; do not copy the NOUN route."
+				"rationale": "eins is the number one that the display shows, the cardinal NUM eins, which does not inflect here, so its Surface marks nothing. der Null before it is the NOUN Null, another Lemma."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

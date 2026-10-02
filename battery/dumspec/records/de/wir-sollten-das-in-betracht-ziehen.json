@@ -39,7 +39,7 @@
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🤔" },
 			"notes": {
-				"rationale": "in Betracht ziehen 'consider' is a Funktionsverbgefüge (Duden: jemanden, etwas in Betracht ziehen): ziehen only supports Betracht, so it is a Collocation, a Locution VERB over in, Betracht and ziehen (de/funktionsverbgefuege-are-collocations). The Emoji Description 🤔 is the imported gold's. das is its free object and sollten a VERB of its own. Its parts are in its Breakdown Record."
+				"rationale": "in Betracht ziehen 'consider' is a Funktionsverbgefüge (Duden: jemanden, etwas in Betracht ziehen): ziehen only supports Betracht, so it is a Collocation, a Locution VERB over in, Betracht and ziehen (de/funktionsverbgefuege-are-collocations). das is its free object and sollten a VERB of its own. Its parts are in its Breakdown Record."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

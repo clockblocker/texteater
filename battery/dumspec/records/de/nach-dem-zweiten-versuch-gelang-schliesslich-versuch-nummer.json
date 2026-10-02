@@ -34,7 +34,7 @@
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "3⃣" },
 			"notes": {
-				"rationale": "The unmarked zweiten is an ordinal ADJ, but the classified cardinal label drei remains NUM."
+				"rationale": "drei after Nummer names the attempt by its number: the cardinal NUM drei, which does not inflect here, so its Surface marks nothing. The ordinal zweiten earlier is an ADJ of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

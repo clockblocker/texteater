@@ -35,7 +35,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -43,6 +48,9 @@
 			"memberSegmentIndices": [4, 20],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🙅" },
+			"notes": {
+				"rationale": "verzichten takes auf + Acc for what one gives up (Duden: auf sein Recht, einen Anspruch verzichten), so auf is governed: a member recorded in valencyEvidence and left out of the normalized Surface, though the free phrase trotz heftiger Kritik … stands between them (de/governed-preposition-joins-its-governor)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

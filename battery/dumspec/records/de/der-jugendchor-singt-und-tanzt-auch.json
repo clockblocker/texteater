@@ -19,7 +19,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/focus-word-is-adv", "hash": "d38200289df9682c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +30,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "➕" },
 			"notes": {
-				"rationale": "The supplied target is an ordinary ADV occurrence, not a member of an upstream correlating CCONJ payload. Additive auch 'also, too' is a Reading apart from the concessive auch 🤷 of wie es auch liegen mag."
+				"rationale": "auch adds dancing to singing: the additive focus word, a single-member ADV (de/focus-word-is-adv). Additive auch 'also, too' is a Reading apart from the concessive auch 🤷 of wie es auch liegen mag."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

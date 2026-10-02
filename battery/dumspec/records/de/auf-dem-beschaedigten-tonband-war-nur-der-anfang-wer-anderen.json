@@ -39,7 +39,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -48,7 +50,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🕳🪃" },
 			"notes": {
-				"rationale": "The ellipsis signals genuinely unrealized fixed material; every realized word is selected."
+				"rationale": "Only the beginning survives on the damaged tape, and the ellipsis shows the rest is lost: fällt selbst hinein is fixed material missing from the sentence, so the Saying is attested Partial over the five words present (de/partial-coverage)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

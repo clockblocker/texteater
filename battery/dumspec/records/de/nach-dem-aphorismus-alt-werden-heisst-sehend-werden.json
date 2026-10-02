@@ -59,7 +59,10 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -68,7 +71,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🎁🚫🧐" },
 			"notes": {
-				"rationale": "The explicitly framed unmarked maxim is context, not a reason to reopen the marked target's route."
+				"rationale": "Einem geschenkten Gaul schaut man nicht ins Maul is a Proverb, one Saying target over all its words, both pieces of ins included (de/saying-needs-uptake, de/fused-word-pieces). The aphorism quoted before it is another line."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

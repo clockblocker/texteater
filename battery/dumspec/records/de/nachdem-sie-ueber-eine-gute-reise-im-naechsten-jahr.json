@@ -53,8 +53,10 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/routine-formula-is-intj", "hash": "3e6f15de4e616d8c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -63,7 +65,7 @@
 			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🧳👍" },
 			"notes": {
-				"rationale": "The marked occurrence enacts a wish; the earlier same-word noun phrase and the vocative remain context. The wish is the formula's Formula Role, Reading Knowledge (ADR 0039). Gute Reise wishes someone a good journey, joining the 🧳 of reisen to the 👍 of gut."
+				"rationale": "Gute Reise wishes Leyla a good journey: the routine formula gute Reise, a Locution INTJ, whose wish is its Formula Role, Reading Knowledge (de/routine-formula-is-intj, ADR 0039). The earlier eine gute Reise is an ordinary noun phrase, and Leyla a vocative. The formula joins the 🧳 of reisen to the 👍 of gut."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

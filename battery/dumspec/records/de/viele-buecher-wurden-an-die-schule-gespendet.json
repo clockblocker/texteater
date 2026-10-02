@@ -21,7 +21,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -29,7 +31,9 @@
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "🔢" },
-			"notes": { "rationale": "The upstream route is DET, not ADJ." },
+			"notes": {
+				"rationale": "Viele determines Bücher with no determiner before it, so it is the DET viel, not ADJ, and its Surface marks Nom.Plur (de/quantifier-by-use). Its sentence-initial capital is position casing."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -37,7 +37,7 @@
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "Joins clauses. Route fixed CCONJ. Not intensifying PART."
+				"rationale": "aber joins the two main clauses: the CCONJ aber 'but' (de/aber-is-cconj), not the modal particle of an exclamation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -17,7 +17,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -25,7 +27,7 @@
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
-				"rationale": "Missing h is a genuine typo; repair only the supplied member."
+				"rationale": "one is a Typo of ohne, missing its h: the member keeps its letters, marked Typo, and the Surface spells ohne (de/member-orthography). ohne heads the free phrase ohne Mantel."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

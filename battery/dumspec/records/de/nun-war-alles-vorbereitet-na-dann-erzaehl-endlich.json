@@ -25,7 +25,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -34,7 +39,7 @@
 			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "👉" },
 			"notes": {
-				"rationale": "The unmarked nun is an adverb; the prompting target is independently classified INTJ. na urging the story on is Duden's na leading into an Aufforderung (na, dann mal los), the same Reading that opens na ja."
+				"rationale": "na stands outside the clause and urges the listener on: an INTJ Lexeme with no partType (de/interjection-counts-its-words). na urging the story on is Duden's na leading into an Aufforderung (na, dann mal los), the same Reading that opens na ja."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

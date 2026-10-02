@@ -86,7 +86,7 @@
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
-				"rationale": "The codec has no abbreviation feature; an unmarked abbreviation does not alter the supplied conjunction."
+				"rationale": "obwohl opens the verb-final clause obwohl der Satz überarbeitet wurde, so it is the SCONJ obwohl. The abbreviation Abk. is a unit of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

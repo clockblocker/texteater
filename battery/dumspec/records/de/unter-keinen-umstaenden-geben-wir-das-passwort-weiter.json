@@ -23,7 +23,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -32,7 +34,7 @@
 			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "🚫" },
 			"notes": {
-				"rationale": "The classified target is the DET member inside a larger fixed expression; preserve the fixed upstream function-word membership."
+				"rationale": "keinen determines Umständen, so it is the negative DET kein (de/pron-or-det-by-use), and its Surface marks Dat.Plur, the case unter gives Umständen here."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

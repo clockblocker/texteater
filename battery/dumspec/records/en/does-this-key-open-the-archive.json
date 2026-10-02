@@ -17,14 +17,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0002"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "AUX" },
 			"reading": { "emojiDescription": "⚪" },
 			"notes": {
-				"rationale": "Sentence-initial Does keeps normalizedSurface lowercase while clicked Text preserves casing. Does is dummy do, which carries tense and agreement for a question, negation or emphasis and adds no meaning, so it takes ⚪, the empty sign of the German expletive es."
+				"rationale": "Does opens the question with a sentence-initial capital, which is position casing: the Lemma is do, and the member is Standard (ADR 0002). Does is dummy do, which carries tense and agreement for a question, negation or emphasis and adds no meaning, so it takes ⚪, the empty sign of the German expletive es."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -19,7 +19,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +30,7 @@
 			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "❓🔢" },
 			"notes": {
-				"rationale": "The upstream route is DET, not ADJ or NUM."
+				"rationale": "wievielte asks for a position in a sequence and determines Versuch, so it is the interrogative DET wievielte (de/pron-or-det-by-use), and its Surface marks Nom.Masc.Sg, agreeing with Versuch."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

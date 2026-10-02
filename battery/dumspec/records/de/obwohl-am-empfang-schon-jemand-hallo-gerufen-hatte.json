@@ -51,7 +51,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/routine-formula-is-intj", "hash": "3e6f15de4e616d8c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -60,7 +62,7 @@
 			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "👋" },
 			"notes": {
-				"rationale": "The marked formula performs the greeting; the nearby interjection and vocative remain context."
+				"rationale": "Guten Morgen greets the new colleague: the routine formula guten Morgen, a Locution INTJ (de/routine-formula-is-intj). Frau Keller after it is a vocative, and the earlier Hallo! a unit of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

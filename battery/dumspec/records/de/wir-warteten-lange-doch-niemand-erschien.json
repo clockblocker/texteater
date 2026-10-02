@@ -20,7 +20,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/modal-particle-is-part", "hash": "cd0286be11031c26" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +30,7 @@
 			"memberSegmentIndices": [7],
 			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "Joins clauses. Route fixed CCONJ. Not modal PART."
+				"rationale": "doch joins the two main clauses, and the second keeps its verb second (doch niemand erschien): the CCONJ doch 'but', not the modal particle, which stands unstressed in the middle field (de/modal-particle-is-part)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

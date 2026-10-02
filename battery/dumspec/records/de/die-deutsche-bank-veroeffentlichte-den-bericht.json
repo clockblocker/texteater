@@ -18,8 +18,10 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +30,7 @@
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🏦🇩🇪" },
 			"notes": {
-				"rationale": "Upstream supplied both name members; Deutsche is not reclassified as ADJ and Bank is not repaired to a common NOUN."
+				"rationale": "Deutsche Bank is one proper name, one Lexeme whatever its length (ADR 0039): Deutsche is part of the name, not an ADJ of its own, and Bank no common NOUN. It is cited with its article, die Deutsche Bank, so it has Core article Definite and owns Die (de/proper-noun-article)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

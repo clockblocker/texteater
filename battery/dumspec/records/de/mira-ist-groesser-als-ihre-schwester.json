@@ -19,7 +19,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [{ "rule": "de/comparison-als", "hash": "308ab8fee3b2ddb0" }],
 		"references": []
 	},
 	"targets": [
@@ -27,7 +27,7 @@
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "Comparison complement. Route fixed. Mark Comp."
+				"rationale": "als after the comparative größer introduces the phrase ihre Schwester and fills no slot in a clause: comparison CCONJ als (de/comparison-als)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -46,7 +46,10 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -55,7 +58,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🌅💰" },
 			"notes": {
-				"rationale": "The attribution, quotation marks, and punctuation remain outside the authoritative members."
+				"rationale": "Morgenstund hat Gold im Mund is a Proverb, one Saying target over all its words, both pieces of im included (de/saying-needs-uptake, de/fused-word-pieces). The attribution and the quotation marks stay outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

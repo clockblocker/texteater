@@ -42,7 +42,7 @@
 			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "✅" },
 			"notes": {
-				"rationale": "The unmarked ja is a modal particle; the supplied answer occurrence is fixed upstream as INTJ and carries Res."
+				"rationale": "The second ja answers ihre Frage, so it is the response particle, an INTJ Lexeme with partType Res (de/interjection-counts-its-words). The first ja, in Das ist ja erstaunlich, is the modal particle, another Lemma."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

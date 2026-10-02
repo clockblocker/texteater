@@ -41,7 +41,7 @@
 			"memberSegmentIndices": [18],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
-				"rationale": "An unmarked correlating CCONJ and abbreviation remain outside the authoritative SCONJ target; the codec has no abbreviation feature."
+				"rationale": "bevor opens the verb-final clause bevor die Redaktion zustimmt, so it is the SCONJ bevor. Weder … noch and the abbreviation Abk. are units of their own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

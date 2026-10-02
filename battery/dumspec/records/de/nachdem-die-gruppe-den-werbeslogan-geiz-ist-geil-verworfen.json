@@ -60,7 +60,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -69,7 +71,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "⏰🏆" },
 			"notes": {
-				"rationale": "The unmarked slogan is route-contrast context and does not enter membership."
+				"rationale": "Der frühe Vogel fängt den Wurm is a Proverb, one Saying target over all its words (de/saying-needs-uptake). The advertising slogan quoted before it is another line."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

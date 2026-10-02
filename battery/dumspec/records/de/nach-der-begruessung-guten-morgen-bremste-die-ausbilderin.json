@@ -41,7 +41,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -50,7 +52,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🐢👍" },
 			"notes": {
-				"rationale": "The unmarked greeting is a nearby Locution/INTJ; the marked Saying remains authoritative."
+				"rationale": "Eile mit Weile is a Proverb, one Saying target over its three words (de/saying-needs-uptake). The greeting Guten Morgen quoted before it is a unit of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -18,14 +18,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0002"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Locution", "kind": "ADV" },
 			"reading": { "emojiDescription": "🌖" },
 			"notes": {
-				"rationale": "Sentence-initial capitalization is preserved only in clicked Text. By and large is Wiktionary's 'mostly; generally', drawn as the nearly full moon between half 🌓 and whole 🌕."
+				"rationale": "By and large is one Locution ADV, and its sentence-initial capital is position casing: the Canonical Form is by and large, and the member is Standard (ADR 0002). By and large is Wiktionary's 'mostly; generally', drawn as the nearly full moon between half 🌓 and whole 🌕."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

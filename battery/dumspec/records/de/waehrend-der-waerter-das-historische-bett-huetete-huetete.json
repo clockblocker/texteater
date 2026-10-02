@@ -34,7 +34,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [{ "rule": "de/idiom", "hash": "c05df428b3a42079" }],
 		"references": []
 	},
 	"targets": [
@@ -43,7 +43,7 @@
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🤒🛏" },
 			"notes": {
-				"rationale": "First phrase literal. Marked second phrase means staying in bed ill."
+				"rationale": "The second hütete das Bett says the sick curator stayed in bed: das Bett hüten 'be ill in bed' is an Idiom, a Locution VERB over the verb and its fixed das Bett (de/idiom). The first, hütete das historische Bett, is literal guarding, so its words resolve on their own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

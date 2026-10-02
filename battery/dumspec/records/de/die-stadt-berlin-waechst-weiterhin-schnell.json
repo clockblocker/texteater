@@ -19,7 +19,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +30,7 @@
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🏙🐻" },
 			"notes": {
-				"rationale": "The unmarked common NOUN Stadt is a neighbor, not a member to add."
+				"rationale": "Berlin is the city's name, cited bare, with Core gender Neut (de/proper-noun-article). Stadt before it is a common noun in apposition, not part of the name."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -23,7 +23,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0031"],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -32,7 +37,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🎩⬇" },
 			"notes": {
-				"rationale": "sich ordinary object. Not member. A mask on the face is DWDS aufsetzen 1b and a hat on the head 1a, both putting something on, one Reading under ADR 0031."
+				"rationale": "sich is the free dative of the one the mask goes on: setzt sich eine Maske auf alternates with setzt ihr eine Maske auf in the same sense, so sich is a PRON of its own and no member of aufsetzen (de/verb-owns-its-scattered-members). A mask on the face is DWDS aufsetzen 1b and a hat on the head 1a, both putting something on, one Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

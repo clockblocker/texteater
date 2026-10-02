@@ -20,7 +20,7 @@
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "✂" },
 			"notes": {
-				"rationale": "Scissors uses Number=Ptan to stress plurale-tantum support."
+				"rationale": "scissors has no singular for the one tool: a plurale tantum, so its Surface marks number Ptan."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

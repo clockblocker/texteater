@@ -34,7 +34,10 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
+			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -42,7 +45,7 @@
 			"memberSegmentIndices": [15, 23],
 			"route": { "family": "Locution", "kind": "SCONJ" },
 			"notes": {
-				"rationale": "Earlier um and zu are unmarked context; only the later supplied anchors belong to this Locution."
+				"rationale": "The second um and the zu before können are the anchors of the zu-infinitive conjunction um … zu, a Locution SCONJ (de/correlator-anchors). The first um is the preposition of um das Haus, and the zu before laut is the degree word, so neither belongs to it (de/degree-word-is-adv)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

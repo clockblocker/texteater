@@ -104,7 +104,7 @@
 			"route": { "family": "Lexeme", "kind": "ADP" },
 			"reading": { "emojiDescription": "🔝" },
 			"notes": {
-				"rationale": "`auf` heads the directional phrase `auf die Nas`, so I treated it as an ordinary preposition, not as a verbal particle. The two-way Lemma carries no case; this occurrence records the accusative of `die Nas` (wohin?) as its realized case."
+				"rationale": "`auf` heads the directional phrase `auf die Nas`, so it is an ordinary preposition, not a verbal particle. The two-way Lemma carries no case; this occurrence records the accusative of `die Nas` (wohin?) as its realized case."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

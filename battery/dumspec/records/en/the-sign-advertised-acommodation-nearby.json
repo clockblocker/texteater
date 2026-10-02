@@ -15,14 +15,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🏨" },
 			"notes": {
-				"rationale": "Acommodation is represented as Typo with normalized surface accommodation; no edit-distance metadata exists. acommodation is a Typo of accommodation in Wiktionary's sense 'lodging in a dwelling or similar living quarters afforded to travellers', not 'adaptation or adjustment'."
+				"rationale": "acommodation is a Typo of accommodation, one m short: the member keeps its letters, marked Typo, and the Surface spells accommodation (ADR 0035). acommodation is a Typo of accommodation in Wiktionary's sense 'lodging in a dwelling or similar living quarters afforded to travellers', not 'adaptation or adjustment'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

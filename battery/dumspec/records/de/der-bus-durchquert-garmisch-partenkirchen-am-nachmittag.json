@@ -21,8 +21,10 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -30,6 +32,9 @@
 			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🏘🇩🇪" },
+			"notes": {
+				"rationale": "Garmisch-Partenkirchen is the market town's name, one Lexeme whatever its length (ADR 0039), cited bare, with Core gender Neut like any place name (de/proper-noun-article). It is the object of durchquert, so its Surface marks Acc.Sg."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

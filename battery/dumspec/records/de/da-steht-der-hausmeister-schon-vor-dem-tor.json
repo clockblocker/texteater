@@ -32,7 +32,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "📍" },
 			"notes": {
-				"rationale": "The authoritative ADV route and verb-second clause identify locative da, not clause-introducing SCONJ da. da points at the place where the caretaker stands (DWDS da I.1a, guck, da fährt die Straßenbahn), the place Reading, not the temporal 🕰📍."
+				"rationale": "Da opens a verb-second clause and points at a place, so it is the locative ADV da, not the SCONJ da, which opens a verb-final clause. da points at the place where the caretaker stands (DWDS da I.1a, guck, da fährt die Straßenbahn), the place Reading, not the temporal 🕰📍."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

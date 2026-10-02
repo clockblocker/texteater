@@ -17,14 +17,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0003"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🔍📖" },
 			"notes": {
-				"rationale": "The Full Attestation records both source-ordered members of the discontinuous phrasal verb look ... up; the docs review span remains on look only."
+				"rationale": "look … up is the phrasal verb look up, split around its object it: one VERB target over look and up, Full, since free words between members leave a target whole (ADR 0003)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

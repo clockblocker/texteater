@@ -25,8 +25,13 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0002"],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -35,7 +40,7 @@
 			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "😮‍💨" },
 			"notes": {
-				"rationale": "The marked occurrence is already classified INTJ; the unmarked nominal use does not change its route or Lemma."
+				"rationale": "The sighed ach stands outside a clause: an INTJ Lexeme with no partType (de/interjection-counts-its-words). Sein ständiges Ach uses the word as a noun, another Lemma, since Kind is identity (ADR 0002)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

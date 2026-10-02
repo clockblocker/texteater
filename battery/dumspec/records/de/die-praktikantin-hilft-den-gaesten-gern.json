@@ -19,7 +19,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" },
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +34,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "😊" },
 			"notes": {
-				"rationale": "The classified lexical ADV gern remains ADV; productive adverbial ADJ forms belong to their fixed ADJ route instead."
+				"rationale": "gern 'gladly' has no attributive form in this sense, so it is the ADV gern, not an adverbial ADJ (de/adjective-stays-adj). It compares suppletively (lieber, am liebsten), so it is comparable and marks Pos (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

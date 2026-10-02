@@ -23,7 +23,10 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -31,7 +34,7 @@
 			"memberSegmentIndices": [4, 10],
 			"route": { "family": "Locution", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "Repair the misspelled first anchor while preserving authoritative membership."
+				"rationale": "endweder is a Typo of entweder: the member keeps its letters, marked Typo (de/member-orthography), and with oder it anchors the correlator entweder … oder, a Locution CCONJ (de/correlator-anchors)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

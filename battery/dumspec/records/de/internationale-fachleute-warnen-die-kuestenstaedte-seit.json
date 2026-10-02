@@ -33,7 +33,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -41,6 +46,9 @@
 			"memberSegmentIndices": [4, 14],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🗣⚠" },
+			"notes": {
+				"rationale": "warnen 'point out a danger' takes vor + Dat for the danger (Duden warnen 1: jemanden vor einer Gefahr warnen), so vor is governed: a member recorded in valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). die Küstenstädte, the ones warned, is its free object."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

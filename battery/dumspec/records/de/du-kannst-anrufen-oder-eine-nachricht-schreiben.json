@@ -21,7 +21,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -29,7 +31,7 @@
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "Plain oder joins alternatives without an upstream correlating partner."
+				"rationale": "oder joins the two infinitive phrases anrufen and eine Nachricht schreiben as alternatives: the CCONJ oder. No entweder stands before it, so it is no anchor of a correlator (de/correlator-anchors)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

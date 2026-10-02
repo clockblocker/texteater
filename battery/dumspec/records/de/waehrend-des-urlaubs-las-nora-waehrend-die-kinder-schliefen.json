@@ -34,7 +34,7 @@
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"notes": {
-				"rationale": "The unmarked prepositional use does not change the already-classified SCONJ target."
+				"rationale": "The second während opens the verb-final clause während die Kinder schliefen, so it is the SCONJ während. The first, before the genitive des Urlaubs, is the ADP während, another Lemma."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

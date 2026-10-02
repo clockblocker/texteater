@@ -24,6 +24,9 @@
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🏃" },
+			"notes": {
+				"rationale": "ran is the irregular past tense of run, a Surface of the VERB run: finite past, first person singular after I."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "ran", "orthography": "Standard" }],

@@ -61,7 +61,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0039"],
 		"rules": [],
 		"references": []
 	},
@@ -71,7 +71,7 @@
 			"route": { "family": "Locution", "kind": "ADV" },
 			"reading": { "emojiDescription": "🤷➡" },
 			"notes": {
-				"rationale": "wie dem auch sei (however that may be) is a fixed adverbial that closes the digression, a Locution ADV with no comparison forms, never an INTJ. The unmarked Proverb is contextual route contrast."
+				"rationale": "wie dem auch sei (however that may be) is a fixed adverbial that closes the digression, a Locution ADV with no comparison forms, never an INTJ (ADR 0039). The proverb quoted before it is a unit of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

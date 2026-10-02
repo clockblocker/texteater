@@ -27,7 +27,7 @@
 			"route": { "family": "Lexeme", "kind": "AUX" },
 			"reading": { "emojiDescription": "🟰" },
 			"notes": {
-				"rationale": "Were in if I were you is AUX with Mood=Sub; the schema allows mood without forcing person or number. were is the copula, so it takes the copula's 🟰, and its subjunctive mood stays on the Surface, since a description repeats no grammar (ADR 0031)."
+				"rationale": "were in if I were you is the past subjunctive of be, so its Surface marks mood Sub, and person and number stay unmarked. were is the copula, so it takes the copula's 🟰, and its subjunctive mood stays on the Surface, since a description repeats no grammar (ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

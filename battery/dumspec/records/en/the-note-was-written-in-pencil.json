@@ -24,7 +24,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "✍" },
 			"notes": {
-				"rationale": "Voice=Pass is context-sensitive for English participles; it is included to test whether the model accepts contextual morphology."
+				"rationale": "written is the past participle of write in the passive was written, so its Surface marks voice Pass."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

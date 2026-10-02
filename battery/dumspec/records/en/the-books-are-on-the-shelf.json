@@ -17,12 +17,19 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0040"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "📖" },
+			"notes": {
+				"rationale": "books is the plural of the NOUN book, and it owns its article The (ADR 0040). English shows no article on the Surface, which marks number Plur."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

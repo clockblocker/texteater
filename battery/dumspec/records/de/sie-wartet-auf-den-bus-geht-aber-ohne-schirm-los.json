@@ -28,7 +28,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -36,7 +41,7 @@
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
-				"rationale": "Only supplied ohne resolves here; unmarked auf belongs to warten."
+				"rationale": "ohne heads the free phrase ohne Schirm: no word governs it, so it is a single-member ADP, and the occurrence records the accusative its complement took. The auf of auf den Bus is governed by warten and belongs to it (de/governed-preposition-joins-its-governor)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

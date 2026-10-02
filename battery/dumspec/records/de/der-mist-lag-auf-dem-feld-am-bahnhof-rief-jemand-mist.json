@@ -30,8 +30,13 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0002"],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -40,7 +45,7 @@
 			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🤬" },
 			"notes": {
-				"rationale": "The unmarked noun and marked secondary interjection share spelling, but the supplied route is authoritative. Mist! is the curse Duden gives under Mist 'lästige, ärgerliche Angelegenheit' (in Flüchen: so ein Mist!), not the dung of the NOUN Mist."
+				"rationale": "The called-out Mist! stands outside any clause: an INTJ Lexeme with no partType (de/interjection-counts-its-words), a Lemma apart from the NOUN Mist of the first clause, since Kind is identity (ADR 0002). Mist! is the curse Duden gives under Mist 'lästige, ärgerliche Angelegenheit' (in Flüchen: so ein Mist!), not the dung of the NOUN Mist."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

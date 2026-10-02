@@ -54,7 +54,14 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -62,6 +69,9 @@
 			"memberSegmentIndices": [26, 32, 34],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "📥📤" },
+			"notes": {
+				"rationale": "weitergeleitet werden is the process passive of weiterleiten, 'pass on what one received to another person or office': werden is its passive auxiliary and joins it, and weiter is its separable prefix (de/verbal-participle, de/verb-core-features). an die Rentner names the recipient that weiterleiten asks for (DWDS: die Freiexemplare sind an alle Autoren weiterzuleiten), so an + Acc is governed, a member left out of the normalized Surface (de/governed-preposition-joins-its-governor)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
