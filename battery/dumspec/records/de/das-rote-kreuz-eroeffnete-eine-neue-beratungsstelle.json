@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "⛑" },
 			"notes": {
 				"rationale": "An ordinary multi-member organization subject is Inflection; its contextual article and verb establish nominative singular."
 			},

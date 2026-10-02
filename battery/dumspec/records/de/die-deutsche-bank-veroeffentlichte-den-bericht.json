@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🏦🇩🇪" },
 			"notes": {
 				"rationale": "Upstream supplied both name members; Deutsche is not reclassified as ADJ and Bank is not repaired to a common NOUN."
 			},

@@ -466,6 +466,7 @@
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
+			"reading": { "emojiDescription": "👨" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

@@ -294,6 +294,7 @@
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
+			"reading": { "emojiDescription": "👨" },
 			"notes": {
 				"rationale": "Alfred is a given name cited bare, so its PROPN Lemma has no Core article; it is the subject of neigte."
 			},

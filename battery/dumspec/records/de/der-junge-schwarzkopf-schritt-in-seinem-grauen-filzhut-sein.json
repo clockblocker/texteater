@@ -269,6 +269,7 @@
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
+			"reading": { "emojiDescription": "🧑" },
 			"notes": {
 				"rationale": "Schwarzkopf is a surname cited bare, so no Core article, and it owns the article der that opens its phrase across junge. A surname names women too (die junge Schwarzkopf), so it has no Core gender, and its Surface marks the Masc that der shows (de/proper-noun-article). Ruled on #743 (MB-A5, A1)."
 			},

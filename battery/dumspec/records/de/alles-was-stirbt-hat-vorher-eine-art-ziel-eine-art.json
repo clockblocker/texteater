@@ -1161,8 +1161,9 @@
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
+			"reading": { "emojiDescription": "🧵⭐" },
 			"notes": {
-				"rationale": "Odradek is Kafka's coined name for the creature, a bare singular after bei as only a name stands, so it is a PROPN cited bare, not a nonce No Target (de/no-target excludes names). A coined name has no Core gender, and this sentence shows none, so its Surface marks none; the er the text calls Odradek is its referent (de/proper-noun-article). Ruled on #743 (SZ-A3, A1)."
+				"rationale": "Odradek is Kafka's coined name for the creature, a bare singular after bei as only a name stands, so it is a PROPN cited bare, not a nonce No Target (de/no-target excludes names). A coined name has no Core gender, and this sentence shows none, so its Surface marks none; the er the text calls Odradek is its referent (de/proper-noun-article). Ruled on #743 (SZ-A3, A1). Odradek has one known referent, the creature of Kafka's Die Sorge des Hausvaters, a flat star-shaped spool of thread, so the spool and the star pin it; the pin is the name's identity, not a sense the sentence chooses."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

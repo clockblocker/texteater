@@ -35,6 +35,7 @@
 		{
 			"memberSegmentIndices": [11, 13],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "📖⚖" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -67,7 +68,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "A title whose article inflects (im „Prozess“) is cited without it and owns it, with Core article Definite, as Zauberflöte is (de/proper-noun-article). The quoted title after den Titel is a citation mention, so its Surface is uninflected."
+				"rationale": "A title whose article inflects (im „Prozess“) is cited without it and owns it, with Core article Definite, as Zauberflöte is (de/proper-noun-article). The quoted title after den Titel is a citation mention, so its Surface is uninflected. The quoted title takes its ordinary Reading, Kafka's novel Der Prozess."
 			}
 		}
 	],

@@ -151,6 +151,7 @@
 		{
 			"memberSegmentIndices": [11, 13],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🛣" },
 			"notes": {
 				"rationale": "Fliederweg is a street name, cited with its article whatever the name, so it has Core article Definite and owns the article piece m of im."
 			},

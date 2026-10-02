@@ -23,6 +23,7 @@
 		{
 			"memberSegmentIndices": [9, 11],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🇨🇭" },
 			"notes": {
 				"rationale": "die Schweiz is cited with its definite article, so Schweiz has Core article Definite and owns die."
 			},

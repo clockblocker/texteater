@@ -26,6 +26,10 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🏙🇩🇪" },
+			"notes": {
+				"rationale": "The index entry cites the place name, which takes its ordinary Reading, the city of Mainz."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

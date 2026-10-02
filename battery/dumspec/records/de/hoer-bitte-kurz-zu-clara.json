@@ -25,6 +25,7 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "👩" },
 			"notes": {
 				"rationale": "A direct-address occurrence is contextual Inflection with singular Number and null Case, never Citation."
 			},

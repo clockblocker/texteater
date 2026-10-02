@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🇺🇳📚" },
 			"notes": {
 				"rationale": "An abbreviated organization in an ordinary subject occurrence is Inflection; its acronym shape never turns the contextual use into Citation."
 			},

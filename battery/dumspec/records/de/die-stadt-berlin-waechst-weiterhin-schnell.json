@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🏙🐻" },
 			"notes": {
 				"rationale": "The unmarked common NOUN Stadt is a neighbor, not a member to add."
 			},

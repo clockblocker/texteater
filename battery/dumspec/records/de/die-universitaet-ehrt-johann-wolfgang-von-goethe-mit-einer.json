@@ -36,6 +36,7 @@
 		{
 			"memberSegmentIndices": [6, 8, 10, 12],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "👨✍🇩🇪" },
 			"notes": {
 				"rationale": "A full name is one PROPN Lexeme with no Core gender, like a surname, and nothing in this sentence shows one on its Surface (de/proper-noun-article). Ruled on #743 (A1)."
 			},

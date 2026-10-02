@@ -27,6 +27,7 @@
 		{
 			"memberSegmentIndices": [5, 9],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🏙🐻" },
 			"notes": {
 				"rationale": "Berlin is cited bare, so its Lemma has no Core article, and it still owns the article that opens its phrase: m stands for dem, a Fused member of Berlin across the adjective alten. It derives the DET cell dem Dat.Neut.Sg.",
 				"knownMistakes": [

@@ -395,6 +395,7 @@
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
+			"reading": { "emojiDescription": "🧑" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -432,7 +433,7 @@
 				"articleEvidence": null
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B9, A8). K. is how the novel names its hero: an initial that is the name's usual form, so its own PROPN, like BVG (de/abbreviation-is-one-segment). It counts as a surname, so it has no Core gender, and nothing in this sentence shows one on its Surface (de/proper-noun-article; ruled on #743, A1)."
+				"rationale": "Ruled on #743 (VP-B9, A8). K. is how the novel names its hero: an initial that is the name's usual form, so its own PROPN, like BVG (de/abbreviation-is-one-segment). It counts as a surname, so it has no Core gender, and nothing in this sentence shows one on its Surface (de/proper-noun-article; ruled on #743, A1). The sentence gives only the initial K. and names no work, so K. takes the kind alone, 🧑, as a surname does; telling Josef K. ⚖ from another K. would take the source text."
 			}
 		},
 		{

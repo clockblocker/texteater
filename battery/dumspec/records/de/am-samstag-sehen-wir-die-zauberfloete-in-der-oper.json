@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [9, 11],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"reading": { "emojiDescription": "🎭🪈" },
 			"notes": {
 				"rationale": "A title cited with its article owns it like der Struwwelpeter, because the article inflects (in der Zauberflöte): Canonical Form Zauberflöte with Core article Definite (ADR 0035)."
 			},
