@@ -28,6 +28,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
+	"reviewDepth": "Segmentation",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0029", "ADR-0035", "ADR-0039", "ADR-0040"],
