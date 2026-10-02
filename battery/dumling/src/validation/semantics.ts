@@ -267,8 +267,11 @@ export function fusedMemberError(): string {
  * shared article or a hidden Fusion component leaves the Head Partial.
  * Hebrew marks its article with `definite: Def` on the noun or adjective it
  * prefixes, and only such a form, or a proper noun cited with its article,
- * names evidence; a `Def` form may name none. Whether the article agrees with
- * its Head is a fact about the language, checked in dumspec (ADR 0041).
+ * names evidence; a `Def` form may name none. A NOUN Locution owns its
+ * article the same way (`[a, walk, in, the, park]`), but its other fixed
+ * words decide its coverage too (ADR 0039), so only a shared or hidden
+ * article ties it to Partial. Whether the article agrees with its Head is a
+ * fact about the language, checked in dumspec (ADR 0041).
  */
 export function isArticleAttestation(input: unknown): boolean {
 	const value = input as {
@@ -276,11 +279,12 @@ export function isArticleAttestation(input: unknown): boolean {
 			language: string;
 			inflectionalFeatures: { definite?: string | null } | null;
 			lemma: {
+				family: string;
 				kind: string;
 				coreFeatures: { article?: string | null };
 			};
 		};
-		articleEvidence:
+		articleEvidence?:
 			| { kind: "Owned"; member: number }
 			| { kind: "Shared" }
 			| { kind: "Hidden"; fusion: Fusion; component: number }
@@ -289,8 +293,13 @@ export function isArticleAttestation(input: unknown): boolean {
 		members: unknown[];
 	};
 	const evidence = value.articleEvidence;
-	if (!evidence) return value.realizationCoverage === "Full";
 	const { surface } = value;
+	// A Head whose article is its own or absent is Full; a Locution may still
+	// be Partial for a missing fixed word.
+	const coverageWithOwnArticle =
+		surface.lemma.family === "Locution" ||
+		value.realizationCoverage === "Full";
+	if (!evidence) return coverageWithOwnArticle;
 	if (
 		surface.language === "he" &&
 		!(surface.lemma.kind === "PROPN"
@@ -299,10 +308,7 @@ export function isArticleAttestation(input: unknown): boolean {
 	)
 		return false;
 	if (evidence.kind === "Owned")
-		return (
-			value.realizationCoverage === "Full" &&
-			evidence.member < value.members.length
-		);
+		return coverageWithOwnArticle && evidence.member < value.members.length;
 	if (evidence.kind === "Hidden")
 		return (
 			value.realizationCoverage === "Partial" &&
@@ -311,7 +317,7 @@ export function isArticleAttestation(input: unknown): boolean {
 	return value.realizationCoverage === "Partial";
 }
 export function articleAttestationError(): string {
-	return "A Head's article is an owned member with Full coverage, or a shared article or hidden Fusion component with Partial coverage; a Head without an article has no article evidence and Full coverage";
+	return "A Head's article is an owned member with Full coverage, or a shared article or hidden Fusion component with Partial coverage; a Head without an article has no article evidence and Full coverage; a NOUN Locution's other fixed words may leave it Partial";
 }
 
 type ExpletiveEvidence = {

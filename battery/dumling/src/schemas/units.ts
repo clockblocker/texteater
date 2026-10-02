@@ -397,7 +397,8 @@ const englishValencyEvidenceSchema = z.array(
  * Composition stores grammatical features; source evidence belongs to the
  * Attestation. A German or English Head that can open a phrase (NOUN, PROPN,
  * ADJ, NUM, PRON) and a Hebrew noun, proper noun or adjective name where
- * their article is attested (ADR 0035, ADR 0040). A German verbal
+ * their article is attested (ADR 0035, ADR 0040); so may a German or English
+ * NOUN Locution, the Head of its phrase (ADR 0040, amended 2026-10-02). A German verbal
  * Attestation names its owned subject-expletive member as evidence (ADR
  * 0022). Every German governor (a Lexeme or Locution VERB, ADJ or NOUN, and
  * AUX) names the valency slots it realizes, such as its governed preposition
@@ -424,12 +425,20 @@ export function buildUnitSchemas<
 		route.language === "de" &&
 		route.family === "Lexeme" &&
 		route.kind === "PROPN";
-	const articleOwner =
+	const lexemeArticleOwner =
 		route.family === "Lexeme" &&
 		(route.language === "he"
 			? ["NOUN", "PROPN", "ADJ"].includes(route.kind)
 			: ["de", "en"].includes(route.language) &&
 				["NOUN", "PROPN", "ADJ", "NUM", "PRON"].includes(route.kind));
+	// A NOUN Locution heads its phrase and owns its article as a Lexeme NOUN
+	// does (ADR 0040, amended 2026-10-02). Its evidence is optional, so
+	// Attestations recorded before it stay valid.
+	const locutionArticleOwner =
+		route.family === "Locution" &&
+		["de", "en"].includes(route.language) &&
+		route.kind === "NOUN";
+	const articleOwner = lexemeArticleOwner || locutionArticleOwner;
 	const lexemeOrLocution =
 		route.family === "Lexeme" || route.family === "Locution";
 	const verbal =
@@ -482,8 +491,11 @@ export function buildUnitSchemas<
 		});
 	let Attestation = base.Attestation.extend({
 		surface: Surface,
-		...(articleOwner
+		...(lexemeArticleOwner
 			? { articleEvidence: articleEvidenceSchema.nullable() }
+			: {}),
+		...(locutionArticleOwner
+			? { articleEvidence: articleEvidenceSchema.nullable().optional() }
 			: {}),
 		...(verbal
 			? {
@@ -513,7 +525,15 @@ export function buildUnitSchemas<
 							>;
 						}
 					: Record<never, never>
-				: Record<never, never>) &
+				: F extends "Locution"
+					? `${L}/${K}` extends `${"de" | "en"}/NOUN`
+						? {
+								articleEvidence: z.ZodOptional<
+									z.ZodNullable<typeof articleEvidenceSchema>
+								>;
+							}
+						: Record<never, never>
+					: Record<never, never>) &
 			(L extends "de"
 				? `${F}/${K}` extends
 						| "Lexeme/VERB"

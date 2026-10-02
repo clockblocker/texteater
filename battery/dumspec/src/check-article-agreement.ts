@@ -59,7 +59,8 @@ function describe(head: ArticleAgreement): string {
 
 /**
  * Where a German or English Attestation's article does not agree with its
- * Head (system ADR 0040, ADR 0041): the owned or shared article's spelling,
+ * Head (system ADR 0040, ADR 0041), a Lexeme or a NOUN Locution, whose Core
+ * gender the check reads as a noun's: the owned or shared article's spelling,
  * read through its Fusion or Shorthand, must name a cell of `der` or `ein`
  * for the Head's case, number and gender, or be English `the`, `a` or `an`
  * fitting the Head's number. `ein Häuser` and `a books` fail; so does an
@@ -78,8 +79,12 @@ export function attestationArticleAgreementIssues(
 		(surface.language !== "de" && surface.language !== "en")
 	)
 		return [];
-	const evidence = attestation.articleEvidence as ArticleEvidence | null;
-	if (evidence === null || evidence.kind === "Hidden") return [];
+	// A NOUN Locution may leave its article evidence out.
+	const evidence = attestation.articleEvidence as
+		| ArticleEvidence
+		| null
+		| undefined;
+	if (!evidence || evidence.kind === "Hidden") return [];
 	const [article, path] =
 		evidence.kind === "Owned"
 			? [

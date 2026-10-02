@@ -5043,6 +5043,68 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence?:
+				| (
+						| (
+								| { kind: "Owned"; member: number }
+								| {
+										kind: "Shared";
+										article:
+											| {
+													attested: string;
+													orthography:
+														| "Standard"
+														| "Typo"
+														| "Shorthand";
+											  }
+											| {
+													attested: string;
+													orthography: "Fused";
+													fusion: {
+														spelling: string;
+														components: [
+															{
+																span: string;
+																surface: string;
+															},
+															{
+																span: string;
+																surface: string;
+															},
+															...Array<{
+																span: string;
+																surface: string;
+															}>,
+														];
+													};
+													component: number;
+											  };
+								  }
+								| {
+										kind: "Hidden";
+										fusion: {
+											spelling: string;
+											components: [
+												{
+													span: string;
+													surface: string;
+												},
+												{
+													span: string;
+													surface: string;
+												},
+												...Array<{
+													span: string;
+													surface: string;
+												}>,
+											];
+										};
+										component: number;
+								  }
+						  )
+						| null
+				  )
+				| undefined;
 			valencyEvidence: Array<{
 				member: number | null;
 				complement:
@@ -11194,6 +11256,68 @@ export interface UnitMap {
 				>,
 			];
 			realizationCoverage: "Full" | "Partial";
+			articleEvidence?:
+				| (
+						| (
+								| { kind: "Owned"; member: number }
+								| {
+										kind: "Shared";
+										article:
+											| {
+													attested: string;
+													orthography:
+														| "Standard"
+														| "Typo"
+														| "Shorthand";
+											  }
+											| {
+													attested: string;
+													orthography: "Fused";
+													fusion: {
+														spelling: string;
+														components: [
+															{
+																span: string;
+																surface: string;
+															},
+															{
+																span: string;
+																surface: string;
+															},
+															...Array<{
+																span: string;
+																surface: string;
+															}>,
+														];
+													};
+													component: number;
+											  };
+								  }
+								| {
+										kind: "Hidden";
+										fusion: {
+											spelling: string;
+											components: [
+												{
+													span: string;
+													surface: string;
+												},
+												{
+													span: string;
+													surface: string;
+												},
+												...Array<{
+													span: string;
+													surface: string;
+												}>,
+											];
+										};
+										component: number;
+								  }
+						  )
+						| null
+				  )
+				| undefined;
 			valencyEvidence?:
 				| Array<{
 						member: number | null;

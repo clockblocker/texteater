@@ -21,20 +21,29 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0039", "ADR-0040"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8, 10, 12, 14],
+			"memberSegmentIndices": [6, 8, 10, 12, 14],
 			"route": { "family": "Locution", "kind": "NOUN" },
+			"notes": {
+				"rationale": "walk in the park is a NOUN Locution, the Head of its phrase, so it owns the article a that opens it, as a Lexeme NOUN does (ADR 0040). The inner the is one of its fixed words, and the Canonical Form stays walk in the park. Decided by agents under the user's delegation, 2026-10-02 (#828 case 7)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
+					{ "attested": "a", "orthography": "Standard" },
 					{ "attested": "walk", "orthography": "Standard" },
 					{ "attested": "in", "orthography": "Standard" },
 					{ "attested": "the", "orthography": "Standard" },
 					{ "attested": "park", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
+				"articleEvidence": { "kind": "Owned", "member": 0 },
 				"surface": {
 					"unitKind": "Surface",
 					"language": "en",

@@ -777,6 +777,104 @@ test("an English and a Hebrew proper noun own the article they are cited with", 
 	};
 	expect(parseUnit(bare).success).toBe(false);
 });
+// A NOUN Locution heads its phrase and owns its article as a Lexeme NOUN does
+// (ADR 0040, amended 2026-10-02). The evidence is optional, and the
+// Locution's other fixed words may leave it Partial.
+test("a German or English NOUN Locution owns its article", () => {
+	const walk = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "en",
+			normalizedSurface: "walk in the park",
+			spelling: { kind: "Canonical" },
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "en",
+				family: "Locution",
+				kind: "NOUN",
+				canonicalForm: "walk in the park",
+				coreFeatures: {},
+			},
+			inflectionalFeatures: { number: "Sing" },
+		},
+		realizationCoverage: "Full",
+		members: ["a", "walk", "in", "the", "park"].map((attested) => ({
+			attested,
+			orthography: "Standard",
+		})),
+		articleEvidence: { kind: "Owned", member: 0 },
+	};
+	expect(parseUnit(walk).success).toBe(true);
+	const { articleEvidence: _, ...unrecorded } = walk;
+	for (const valid of [
+		unrecorded,
+		{ ...walk, members: walk.members.slice(1), articleEvidence: null },
+		{ ...walk, realizationCoverage: "Partial" },
+		{ ...unrecorded, realizationCoverage: "Partial" },
+	])
+		expect(parseUnit(valid).success).toBe(true);
+	for (const invalid of [
+		{ ...walk, articleEvidence: { kind: "Owned", member: 5 } },
+		{
+			...walk,
+			articleEvidence: { kind: "Shared", article: walk.members[0] },
+		},
+	])
+		expect(parseUnit(invalid).success).toBe(false);
+	// unter einem weißen Raben: Core gender lets dumspec check the article.
+	const rabe = {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "de",
+			normalizedSurface: "weißen Raben",
+			spelling: { kind: "Canonical" },
+			surfaceFeatures: null,
+			lemma: {
+				unitKind: "Lemma",
+				language: "de",
+				family: "Locution",
+				kind: "NOUN",
+				canonicalForm: "weißer Rabe",
+				coreFeatures: { gender: "Masc" },
+			},
+			inflectionalFeatures: { case: "Dat", number: "Sing" },
+		},
+		realizationCoverage: "Full",
+		members: ["einem", "weißen", "Raben"].map((attested) => ({
+			attested,
+			orthography: "Standard",
+		})),
+		articleEvidence: { kind: "Owned", member: 0 },
+		valencyEvidence: [],
+	};
+	expect(parseUnit(rabe).success).toBe(true);
+	// Only NOUN Locutions own an article: a thank you is an INTJ.
+	const { inflectionalFeatures: __, ...invariant } = walk.surface;
+	const thanks = {
+		...unrecorded,
+		members: ["thank", "you"].map((attested) => ({
+			attested,
+			orthography: "Standard",
+		})),
+		surface: {
+			...invariant,
+			normalizedSurface: "thank you",
+			lemma: {
+				...invariant.lemma,
+				kind: "INTJ",
+				canonicalForm: "thank you",
+			},
+		},
+	};
+	expect(parseUnit(thanks).success).toBe(true);
+	expect(
+		parseUnit({ ...thanks, articleEvidence: { kind: "Owned", member: 0 } })
+			.success,
+	).toBe(false);
+});
 const preposition = (canonicalForm: string) => ({
 	unitKind: "Lemma",
 	language: "de",

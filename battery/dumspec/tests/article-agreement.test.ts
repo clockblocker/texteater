@@ -317,3 +317,66 @@ test("English a or an takes no plural Head, the takes any", () => {
 		["some is not an English article"],
 	);
 });
+
+test("a NOUN Locution's article agrees with its Core gender (system ADR 0040)", () => {
+	// unter einem weißen Raben: the Locution heads its phrase and owns einem.
+	const raben = (article: string) =>
+		attest({
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				normalizedSurface: "weißen Raben",
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Locution",
+					kind: "NOUN",
+					canonicalForm: "weißer Rabe",
+					coreFeatures: { gender: "Masc" },
+				},
+				inflectionalFeatures: { case: "Dat", number: "Sing" },
+			},
+			members: [standard(article), standard("weißen"), standard("Raben")],
+			articleEvidence: { kind: "Owned", member: 0 },
+			valencyEvidence: [],
+		});
+	expect(issues(raben("einem"))).toEqual([]);
+	expect(issues(raben("einer"))).toEqual([
+		"einer names no cell of der or ein for Dat.Masc.Sing",
+	]);
+	// This exam was a walk in the park: English reads only the number.
+	const owned = { articleEvidence: { kind: "Owned", member: 0 } };
+	const walk = (
+		article: string,
+		number: string,
+		evidence: Record<string, unknown> = owned,
+	) =>
+		attest({
+			surface: {
+				unitKind: "Surface",
+				language: "en",
+				normalizedSurface: "walk in the park",
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+				lemma: {
+					unitKind: "Lemma",
+					language: "en",
+					family: "Locution",
+					kind: "NOUN",
+					canonicalForm: "walk in the park",
+					coreFeatures: {},
+				},
+				inflectionalFeatures: { number },
+			},
+			members: [article, "walk", "in", "the", "park"].map(standard),
+			...evidence,
+		});
+	expect(issues(walk("a", "Sing"))).toEqual([]);
+	expect(issues(walk("a", "Plur"))).toEqual([
+		"a does not agree with a Plur Head",
+	]);
+	// A Locution recorded before it could own an article names no evidence.
+	expect(issues(walk("a", "Sing", {}))).toEqual([]);
+});

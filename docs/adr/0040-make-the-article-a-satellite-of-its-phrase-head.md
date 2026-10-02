@@ -189,3 +189,12 @@ adjective. A gender that usage or a dictionary fixes may stay in Core
 Duden entry, used without an article) has none in Core, like a coined name.
 Decided by the user on 2026-10-02
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
+
+Amended on 2026-10-02: a Locution NOUN owns its article as a Lexeme NOUN
+does. It is the Head of its phrase, and ADR 0039 already gives it Core gender
+so a host can show its article: *This exam was a walk in the park* attests
+`walk in the park` over `[a, walk, in, the, park]`, with `a` as its owned
+article and the inner `the` one of its fixed words. Dumling had allowed article
+evidence only on Lexeme routes, a gap rather than a decision. Decided by
+agents under the user's delegation on 2026-10-02
+([#828](https://github.com/clockblocker/texteater/issues/828)).

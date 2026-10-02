@@ -79,7 +79,9 @@ realizes. German and English Attestations of a Head that can open a phrase
 (NOUN, PROPN, ADJ, NUM, PRON), and Hebrew noun, proper-noun and adjective
 Attestations, carry \`articleEvidence\`: an \`Owned\` article member, a
 \`Shared\` article, a \`Hidden\` Fusion component, or \`null\` when the Head
-has no article. Sentences and clicks belong to the consuming application.
+has no article. A German or English NOUN Locution heads its phrase too and may
+carry it (\`[a, walk, in, the, park]\`). Sentences and clicks belong to the
+consuming application.
 
 ## Validation and routing
 

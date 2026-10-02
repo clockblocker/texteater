@@ -29,6 +29,23 @@ const _locutionCore: Record<string, never> = locution.coreFeatures;
 declare const locutionNoun: Lemma<"de", "Locution", "NOUN">;
 const _locutionGender: "Fem" | "Masc" | "Neut" | null =
 	locutionNoun.coreFeatures.gender;
+// A NOUN Locution may own its article (ADR 0040, amended 2026-10-02).
+declare const locutionNounOccurrence: Unit<
+	"Attestation",
+	"en",
+	"Locution",
+	"NOUN"
+>;
+const _locutionArticle: "Owned" | "Shared" | "Hidden" | undefined =
+	locutionNounOccurrence.articleEvidence?.kind;
+declare const locutionVerbOccurrence: Unit<
+	"Attestation",
+	"de",
+	"Locution",
+	"VERB"
+>;
+// @ts-expect-error Only a NOUN Locution owns an article.
+locutionVerbOccurrence.articleEvidence;
 declare const saying: Surface<"de", "Saying", "Saying">;
 // @ts-expect-error A Saying never inflects.
 saying.inflectionalFeatures;
