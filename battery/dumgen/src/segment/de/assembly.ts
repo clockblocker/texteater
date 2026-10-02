@@ -157,7 +157,9 @@ type EdgeSource =
 	/** A merge the Locution Choice accepted (`locution-choice.ts`). */
 	| "locution"
 	/** A satellite the Verb Choice joined (`verb-choice.ts`). */
-	| "verb";
+	| "verb"
+	/** A governed preposition the Government Choice joined (`government-choice.ts`). */
+	| "government";
 
 export type AssembledEdge = {
 	readonly pieces: readonly [number, number];

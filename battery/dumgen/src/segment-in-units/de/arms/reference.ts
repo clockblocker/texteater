@@ -427,7 +427,8 @@ function edgesOf(
 			case "rule":
 			case "locution":
 			case "verb":
-				// The reference applies no code rule (#851, X3) and asks no Locution Choice (X5) or Verb Choice (D4).
+			case "government":
+				// The reference applies no code rule (#851, X3) and asks no Locution Choice (X5), Verb Choice (D4) or Government Choice (X4).
 				return { pieces, rule: "code" };
 		}
 		throw Error(`Unknown edge source ${source satisfies never}`);

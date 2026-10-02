@@ -32,6 +32,11 @@ import {
 	type CodeRule,
 	withCodeRules,
 } from "./code-rules.js";
+import {
+	askGovernmentChoice,
+	type GovernmentSettings,
+	withGovernmentChoice,
+} from "./government-choice.js";
 import { authoredInventory, type GermanInventory } from "./inventory.js";
 import {
 	askLocutionChoice,
@@ -82,6 +87,12 @@ export type UnitSettings = {
 	 * its Rule-worded answers decide. None when absent.
 	 */
 	readonly verb?: VerbSettings;
+	/**
+	 * The Government Choice (#851, X4, `government-choice.ts`): a
+	 * `government` request over the prepositions whose grouping depends on
+	 * valency, and the splits and joins its answers decide. None when absent.
+	 */
+	readonly government?: GovernmentSettings;
 };
 
 /** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7, every code rule, the Locution Choice at 0.6 and the Verb Choice's lassen, recipient and state families at 0.5. */
@@ -139,7 +150,7 @@ export async function segmentGermanUnits(
 				settings.locution,
 			)
 		: ruled;
-	const membership = settings.verb
+	const verbed = settings.verb
 		? withVerbChoice(
 				nomination,
 				located,
@@ -148,6 +159,21 @@ export async function segmentGermanUnits(
 				settings.verb,
 			)
 		: located;
+	const membership = settings.government
+		? withGovernmentChoice(
+				nomination,
+				verbed,
+				await askGovernmentChoice(
+					nomination,
+					verbed,
+					ask,
+					settings.rules,
+					settings.government.families,
+				),
+				settings.rules,
+				settings.government,
+			)
+		: verbed;
 	const answers = await askRouteBatches(nomination, ask);
 	const extra =
 		settings.unasked === "ask"

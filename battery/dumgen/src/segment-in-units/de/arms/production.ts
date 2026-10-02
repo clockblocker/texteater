@@ -34,6 +34,12 @@
  *   `0.6`, `0.6-lassen-recipient`. Every variant reads the one `verb`
  *   request, which depends on the nomination alone. Groups no batch asked
  *   about route as `--opt unasked` says.
+ * - `--opt gov=<variant>,<variant>` (X4): production with the Government
+ *   Choice (`government-choice.ts`), `production+gov@<variant>`. A variant
+ *   is the floor, then the families it applies joined by `-` (all when
+ *   none is named): `0.6`, `0.6-joined-rival`. Every variant reads the one
+ *   `government` request over all five families, asked over production's
+ *   membership. Groups no batch asked about route as `--opt unasked` says.
  */
 import { stableJson } from "promptsmith";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
@@ -53,6 +59,13 @@ import {
 	codeRules,
 	withCodeRules,
 } from "../../../segment/de/code-rules.js";
+import {
+	askGovernmentChoice,
+	type GovernmentFamily,
+	type GovernmentSettings,
+	governmentFamilies,
+	withGovernmentChoice,
+} from "../../../segment/de/government-choice.js";
 import {
 	askLocutionChoice,
 	type LocutionAnswers,
@@ -158,6 +171,12 @@ type VerbVariant = {
 	readonly settings: VerbSettings;
 };
 
+/** One X4 variant: the Government Choice's floor and families. */
+type GovernmentVariant = {
+	readonly name: string;
+	readonly settings: GovernmentSettings;
+};
+
 type Levers = {
 	readonly grid: boolean;
 	readonly pool: readonly Pooling[];
@@ -166,6 +185,7 @@ type Levers = {
 	readonly rules: readonly CodeRule[];
 	readonly locution: readonly LocutionVariant[];
 	readonly verb: readonly VerbVariant[];
+	readonly government: readonly GovernmentVariant[];
 };
 
 function verbVariantsOf(option: string | undefined): VerbVariant[] {
@@ -192,6 +212,38 @@ function verbVariantsOf(option: string | undefined): VerbVariant[] {
 						families.length > 0
 							? (families as VerbFamily[])
 							: verbFamilies,
+				},
+			};
+		});
+}
+
+function governmentVariantsOf(option: string | undefined): GovernmentVariant[] {
+	return (option ?? "")
+		.split(",")
+		.filter(Boolean)
+		.map((name) => {
+			const [floor, ...families] = name.split("-");
+			const share = Number(floor);
+			if (
+				!Number.isFinite(share) ||
+				families.some(
+					(family) =>
+						!governmentFamilies.includes(
+							family as GovernmentFamily,
+						),
+				)
+			)
+				throw Error(
+					`--opt gov=${option}: a variant is a floor, then any of ${governmentFamilies.join(", ")}, joined by -`,
+				);
+			return {
+				name,
+				settings: {
+					floor: share,
+					families:
+						families.length > 0
+							? (families as GovernmentFamily[])
+							: governmentFamilies,
 				},
 			};
 		});
@@ -243,6 +295,7 @@ function leversOf(options: ArmOptions): Levers {
 		"x3",
 		"x5",
 		"verb",
+		"gov",
 	]);
 	for (const key of Object.keys(options))
 		if (!known.has(key)) throw Error(`production takes no --opt ${key}`);
@@ -276,6 +329,7 @@ function leversOf(options: ArmOptions): Levers {
 		rules: rulesOf(options.x3),
 		locution: locutionVariantsOf(options.x5),
 		verb: verbVariantsOf(options.verb),
+		government: governmentVariantsOf(options.gov),
 	};
 }
 
@@ -317,16 +371,15 @@ async function ruledMembership(
 		: ruled;
 }
 
-/** Units under code rules, production's Locution Choice and its Verb Choice over one read, as the unit stage routes them. */
-async function ruledUnits(
+/** Membership under code rules and production's Locution, Verb and Government Choices over one read. */
+async function productionMembership(
 	read: Read,
 	rules: readonly CodeRule[],
-	unasked: "ask" | "unresolved",
 	ask: Ask,
-) {
+): Promise<Membership> {
 	const settings = productionUnitSettings;
 	const located = await ruledMembership(read, rules, ask);
-	const membership = settings.verb
+	const verbed = settings.verb
 		? withVerbChoice(
 				read.nomination,
 				located,
@@ -339,7 +392,37 @@ async function ruledUnits(
 				settings.verb,
 			)
 		: located;
-	return routedUnits(read, membership, rules, unasked, ask);
+	return settings.government
+		? withGovernmentChoice(
+				read.nomination,
+				verbed,
+				await askGovernmentChoice(
+					read.nomination,
+					verbed,
+					ask,
+					rules,
+					settings.government.families,
+				),
+				rules,
+				settings.government,
+			)
+		: verbed;
+}
+
+/** Units under code rules and production's follow-up Choices over one read, as the unit stage routes them. */
+async function ruledUnits(
+	read: Read,
+	rules: readonly CodeRule[],
+	unasked: "ask" | "unresolved",
+	ask: Ask,
+) {
+	return routedUnits(
+		read,
+		await productionMembership(read, rules, ask),
+		rules,
+		unasked,
+		ask,
+	);
 }
 
 /** A membership's units, its new groups routed as `unasked` says. */
@@ -495,6 +578,36 @@ async function outputsOf(
 				).units(),
 			};
 	}
+	if (levers.government.length > 0) {
+		const rules = settings.rules;
+		const read = await readOf(rules.includes("was-fuer"));
+		const membership = await productionMembership(read, rules, ask);
+		// One `government` request over every family, shared by every variant.
+		const asked = await askGovernmentChoice(
+			read.nomination,
+			membership,
+			ask,
+			rules,
+		);
+		for (const variant of levers.government)
+			outputs[`${prefix}production+gov@${variant.name}`] = {
+				units: (
+					await routedUnits(
+						read,
+						withGovernmentChoice(
+							read.nomination,
+							membership,
+							asked,
+							rules,
+							variant.settings,
+						),
+						rules,
+						levers.unasked,
+						ask,
+					)
+				).units(),
+			};
+	}
 	if (levers.grid) {
 		const { nomination, answers } = await readOf(false);
 		for (const [name, assembly] of Object.entries(x1Grid)) {
@@ -564,6 +677,7 @@ function heardOf(
 					rules: [],
 					locution: [],
 					verb: [],
+					government: [],
 				},
 			);
 			return answers;
