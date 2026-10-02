@@ -5,7 +5,6 @@ import {
 	emitLinkedValidationRegistry,
 } from "dumval/compiler";
 import { UnitKindSchema, VariantTagSchema } from "../src/schemas/units.js";
-import { validationOperations } from "../src/validation/operations.js";
 import { outputType } from "./emit-types.js";
 import { registrations } from "./operations.js";
 import { loadRoutes } from "./routes.js";
@@ -21,9 +20,6 @@ const compiled = compileZodValidationArtifacts({
 	schemas,
 	operations: registrations,
 });
-for (const name of compiled.requiredOperations)
-	if (!Object.hasOwn(validationOperations, name))
-		throw Error(`Missing runtime operation ${name}`);
 function rootFor(key: string) {
 	const root = compiled.roots[key];
 	if (!root) throw Error(`Missing compiled route ${key}`);

@@ -1,4 +1,10 @@
 import type { Constraint } from "common-utils";
+import { registrations } from "./operations.js";
+
+// Every Dumling operation keeps its input's structural type.
+const typePreservingOperations = new Set<string>(
+	registrations.map(({ name }) => name),
+);
 
 /** Emit only the compiler constructs with an established structural output. */
 export function outputType(
@@ -16,34 +22,7 @@ export function outputType(
 				for (const effect of node[2])
 					if (
 						effect[0] === "operation" &&
-						!new Set([
-							"dumling.feature-bag.marked",
-							"dumling.comparability.surface",
-							"dumling.de-pronoun.core",
-							"dumling.syncretism.view",
-							"dumling.syncretism.lemma",
-							"dumling.de-determiner.core",
-							"dumling.de-particle.core",
-							"dumling.de-closed-class.surface",
-							"dumling.de-noun.surface",
-							"dumling.de-proper-noun.surface",
-							"dumling.article.attestation",
-							"dumling.foreign.surface",
-							"dumling.fusion",
-							"dumling.fused-member",
-							"dumling.de-adposition.attestation",
-							"dumling.de-valency.attestation",
-							"dumling.he-valency.attestation",
-							"dumling.en-valency.attestation",
-							"dumling.de-verbal.attestation",
-							"dumling.de-verbal.surface",
-							"dumling.emoji-description",
-							"dumling.saying.canonical-form",
-							"dumling.variant-tags.order",
-							"dumling.variant-tags.combination",
-							"dumling.normalize-form",
-							"dumling.normalize-emoji-description",
-						]).has(effect[1])
+						!typePreservingOperations.has(effect[1])
 					)
 						throw Error(`No output-type contract for ${effect[1]}`);
 				return emit(node[1]);

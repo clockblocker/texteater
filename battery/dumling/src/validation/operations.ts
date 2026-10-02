@@ -54,6 +54,194 @@ import {
 	syncretismViewError,
 } from "./syncretism.js";
 
+/**
+ * Every Dumling validation operation, once. The runtime derives its operation
+ * map from this table, and codegen registers it with the Zod compiler
+ * (`codegen/operations.ts`) and names it in the emitted types.
+ */
+export const operationTable = [
+	{
+		construct: "custom",
+		implementation: isComparabilitySurface,
+		error: comparabilitySurfaceError,
+		name: "dumling.comparability.surface",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanVerbalSurface,
+		error: germanVerbalSurfaceError,
+		name: "dumling.de-verbal.surface",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanVerbalAttestation,
+		error: germanVerbalAttestationError,
+		name: "dumling.de-verbal.attestation",
+		version: 4,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanAdpositionAttestation,
+		error: germanAdpositionAttestationError,
+		name: "dumling.de-adposition.attestation",
+		version: 2,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanValencyAttestation,
+		error: germanValencyAttestationError,
+		name: "dumling.de-valency.attestation",
+		version: 2,
+	},
+	{
+		construct: "custom",
+		implementation: isHebrewValencyAttestation,
+		error: hebrewValencyAttestationError,
+		name: "dumling.he-valency.attestation",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isEnglishValencyAttestation,
+		error: englishValencyAttestationError,
+		name: "dumling.en-valency.attestation",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanNounSurface,
+		error: germanNounSurfaceError,
+		name: "dumling.de-noun.surface",
+		version: 5,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanProperNounSurface,
+		error: germanProperNounSurfaceError,
+		name: "dumling.de-proper-noun.surface",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isArticleAttestation,
+		error: articleAttestationError,
+		name: "dumling.article.attestation",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isForeignSurface,
+		error: foreignSurfaceError,
+		name: "dumling.foreign.surface",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isFusion,
+		error: fusionError,
+		name: "dumling.fusion",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isFusedMember,
+		error: fusedMemberError,
+		name: "dumling.fused-member",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanPronounCore,
+		error: germanPronounCoreError,
+		name: "dumling.de-pronoun.core",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isSyncretismView,
+		error: syncretismViewError,
+		name: "dumling.syncretism.view",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isLemmaSyncretism,
+		error: lemmaSyncretismError,
+		name: "dumling.syncretism.lemma",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanDeterminerCore,
+		error: germanDeterminerCoreError,
+		name: "dumling.de-determiner.core",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanParticleCore,
+		error: germanParticleCoreError,
+		name: "dumling.de-particle.core",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isGermanClosedClassSurface,
+		error: germanClosedClassSurfaceError,
+		name: "dumling.de-closed-class.surface",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: hasMarkedFeature,
+		error: nonEmptyFeatureBagError,
+		name: "dumling.feature-bag.marked",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isSayingCanonicalForm,
+		error: sayingCanonicalFormError,
+		name: "dumling.saying.canonical-form",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isEmojiDescription,
+		error: emojiDescriptionError,
+		name: "dumling.emoji-description",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isVariantTagList,
+		error: variantTagListError,
+		name: "dumling.variant-tags.order",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isVariantTagCombination,
+		error: variantTagCombinationError,
+		name: "dumling.variant-tags.combination",
+		version: 1,
+	},
+	{
+		construct: "overwrite",
+		implementation: normalizeForm,
+		name: "dumling.normalize-form",
+		version: 2,
+	},
+	{
+		construct: "overwrite",
+		implementation: normalizeEmojiDescription,
+		name: "dumling.normalize-emoji-description",
+		version: 1,
+	},
+] as const;
+
 function check(
 	predicate: (value: never) => boolean,
 	error: () => string,
@@ -66,89 +254,12 @@ function check(
 					issues: [{ code: "custom", path: [], message: error() }],
 				};
 }
-export const validationOperations: ValidationOperations = {
-	"dumling.comparability.surface": check(
-		isComparabilitySurface,
-		comparabilitySurfaceError,
-	),
-	"dumling.de-verbal.surface": check(
-		isGermanVerbalSurface,
-		germanVerbalSurfaceError,
-	),
-	"dumling.de-verbal.attestation": check(
-		isGermanVerbalAttestation,
-		germanVerbalAttestationError,
-	),
-	"dumling.de-adposition.attestation": check(
-		isGermanAdpositionAttestation,
-		germanAdpositionAttestationError,
-	),
-	"dumling.de-valency.attestation": check(
-		isGermanValencyAttestation,
-		germanValencyAttestationError,
-	),
-	"dumling.he-valency.attestation": check(
-		isHebrewValencyAttestation,
-		hebrewValencyAttestationError,
-	),
-	"dumling.en-valency.attestation": check(
-		isEnglishValencyAttestation,
-		englishValencyAttestationError,
-	),
-	"dumling.de-noun.surface": check(
-		isGermanNounSurface,
-		germanNounSurfaceError,
-	),
-	"dumling.de-proper-noun.surface": check(
-		isGermanProperNounSurface,
-		germanProperNounSurfaceError,
-	),
-	"dumling.article.attestation": check(
-		isArticleAttestation,
-		articleAttestationError,
-	),
-	"dumling.foreign.surface": check(isForeignSurface, foreignSurfaceError),
-	"dumling.fusion": check(isFusion, fusionError),
-	"dumling.fused-member": check(isFusedMember, fusedMemberError),
-	"dumling.de-pronoun.core": check(
-		isGermanPronounCore,
-		germanPronounCoreError,
-	),
-	"dumling.syncretism.view": check(isSyncretismView, syncretismViewError),
-	"dumling.syncretism.lemma": check(isLemmaSyncretism, lemmaSyncretismError),
-	"dumling.de-determiner.core": check(
-		isGermanDeterminerCore,
-		germanDeterminerCoreError,
-	),
-	"dumling.de-particle.core": check(
-		isGermanParticleCore,
-		germanParticleCoreError,
-	),
-	"dumling.de-closed-class.surface": check(
-		isGermanClosedClassSurface,
-		germanClosedClassSurfaceError,
-	),
-	"dumling.feature-bag.marked": check(
-		hasMarkedFeature,
-		nonEmptyFeatureBagError,
-	),
-	"dumling.saying.canonical-form": check(
-		isSayingCanonicalForm,
-		sayingCanonicalFormError,
-	),
-	"dumling.emoji-description": check(
-		isEmojiDescription,
-		emojiDescriptionError,
-	),
-	"dumling.variant-tags.order": check(isVariantTagList, variantTagListError),
-	"dumling.variant-tags.combination": check(
-		isVariantTagCombination,
-		variantTagCombinationError,
-	),
-	"dumling.normalize-form": (value) => ({
-		value: normalizeForm(value as string),
-	}),
-	"dumling.normalize-emoji-description": (value) => ({
-		value: normalizeEmojiDescription(value as string),
-	}),
-};
+/** A `custom` entry reports its error when its predicate fails; an `overwrite` entry maps the value. */
+export const validationOperations: ValidationOperations = Object.fromEntries(
+	operationTable.map((operation): [string, ValidationOperation] => [
+		operation.name,
+		operation.construct === "custom"
+			? check(operation.implementation, operation.error)
+			: (value) => ({ value: operation.implementation(value as string) }),
+	]),
+);

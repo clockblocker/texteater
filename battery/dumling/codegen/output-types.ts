@@ -1,19 +1,14 @@
 import type { ExternalOutputTypes } from "dumval/compiler";
 import { encodedValidation } from "../src/generated/validation.js";
+import { registrations } from "./operations.js";
 
-/** Dumling operations whose output has the same structural type as their input. */
-export const dumlingTypePreservingOperations = [
-	"dumling.feature-bag.marked",
-	"dumling.de-pronoun.core",
-	"dumling.syncretism.view",
-	"dumling.syncretism.lemma",
-	"dumling.de-determiner.core",
-	"dumling.de-particle.core",
-	"dumling.emoji-description",
-	"dumling.saying.canonical-form",
-	"dumling.normalize-form",
-	"dumling.normalize-emoji-description",
-];
+/**
+ * Every Dumling operation keeps its input's structural type: a `custom`
+ * refinement returns its input, and each `overwrite` maps a string to a string.
+ */
+export const dumlingTypePreservingOperations = registrations.map(
+	({ name }) => name,
+);
 
 /** Lets a dependent package's generated types name Dumling units instead of copying them. */
 export function dumlingOutputTypes(): ExternalOutputTypes {

@@ -5,6 +5,10 @@ import { registrations } from "../codegen/operations.js";
 import { loadRoutes } from "../codegen/routes.js";
 import { parseUnit, syncretismView, syncretize } from "../src/index.js";
 import { UnitKindSchema } from "../src/schemas/units.js";
+import {
+	operationTable,
+	validationOperations,
+} from "../src/validation/operations.js";
 import { unitFixtures } from "./unit-fixtures.js";
 
 const routes = await loadRoutes();
@@ -472,5 +476,11 @@ describe("compiled unit interface", () => {
 				operations: registrations,
 			}),
 		).toThrow();
+	});
+	test("the runtime runs exactly the operations codegen registers", () => {
+		expect(Object.keys(validationOperations).sort()).toEqual(
+			operationTable.map(({ name }) => name).sort(),
+		);
+		expect(registrations).toBe(operationTable);
 	});
 });
