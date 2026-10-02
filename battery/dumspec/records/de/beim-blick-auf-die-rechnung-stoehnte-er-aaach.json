@@ -23,7 +23,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -31,6 +31,10 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😮‍💨" },
+			"notes": {
+				"rationale": "Groaning at the bill is Duden's ach of 'Betroffenheit', folded into the one sighing Reading under ADR 0031."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

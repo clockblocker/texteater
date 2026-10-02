@@ -29,6 +29,10 @@
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😲" },
+			"notes": {
+				"rationale": "Bare Donnerwetter! is the 'Ausruf des bewundernden Erstaunens' of Duden and DWDS, here astonishment at the damage, since their curse needs zum or noch einmal (zum Donnerwetter noch einmal!)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

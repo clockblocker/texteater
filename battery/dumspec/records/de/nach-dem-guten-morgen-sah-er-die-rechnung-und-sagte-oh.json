@@ -36,6 +36,7 @@
 		{
 			"memberSegmentIndices": [20],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😮" },
 			"notes": {
 				"rationale": "The nearby greeting is an unmarked Locution/INTJ; the authoritative singleton reaction remains INTJ."
 			},

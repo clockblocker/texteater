@@ -39,6 +39,10 @@
 		{
 			"memberSegmentIndices": [20, 22],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋" },
+			"notes": {
+				"rationale": "auf Wiedersehen is Duden's 'Abschiedsformel', and the parting wave takes the 👋 of grüßen and guten Morgen."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

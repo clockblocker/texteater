@@ -43,8 +43,9 @@
 		{
 			"memberSegmentIndices": [19],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "✉👋" },
 			"notes": {
-				"rationale": "MfG abbreviates the closing formula mit freundlichen Grüßen, a routine formula and so a Locution INTJ (de/routine-formula-is-intj). It is no name whose initialism is its usual form, so the target is the formula and MfG is its Shorthand member, as z.B. is of zum Beispiel (de/abbreviation-is-one-segment)."
+				"rationale": "MfG abbreviates the closing formula mit freundlichen Grüßen, a routine formula and so a Locution INTJ (de/routine-formula-is-intj). It is no name whose initialism is its usual form, so the target is the formula and MfG is its Shorthand member, as z.B. is of zum Beispiel (de/abbreviation-is-one-segment). mit freundlichen Grüßen is one of Duden's 'Grußformeln am Briefschluss', the formal sign-off of a letter."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

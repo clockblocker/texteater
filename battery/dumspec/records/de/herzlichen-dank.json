@@ -18,6 +18,10 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
+			"notes": {
+				"rationale": "herzlichen Dank is one of Duden's thanks formulas, so it takes the 🙏 of danke."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

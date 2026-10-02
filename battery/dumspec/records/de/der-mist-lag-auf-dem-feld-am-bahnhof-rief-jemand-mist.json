@@ -38,8 +38,9 @@
 		{
 			"memberSegmentIndices": [22],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🤬" },
 			"notes": {
-				"rationale": "The unmarked noun and marked secondary interjection share spelling, but the supplied route is authoritative."
+				"rationale": "The unmarked noun and marked secondary interjection share spelling, but the supplied route is authoritative. Mist! is the curse Duden gives under Mist 'lästige, ärgerliche Angelegenheit' (in Flüchen: so ein Mist!), not the dung of the NOUN Mist."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

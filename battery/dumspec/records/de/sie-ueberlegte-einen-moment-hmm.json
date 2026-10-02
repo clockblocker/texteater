@@ -25,8 +25,9 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🤔" },
 			"notes": {
-				"rationale": "Expressive sound lengthening is a licensed Variant and remains Standard occurrence evidence."
+				"rationale": "Expressive sound lengthening is a licensed Variant and remains Standard occurrence evidence. hm while thinking is Duden's hm that 'drückt Nachdenklichkeit oder Bedenken aus'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

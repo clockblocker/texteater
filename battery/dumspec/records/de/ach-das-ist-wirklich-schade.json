@@ -17,7 +17,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -25,6 +25,10 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😮‍💨" },
+			"notes": {
+				"rationale": "ach before schade is Duden's 'Ausdruck des [ironischen] Bedauerns'; its sighs of pain or dismay and of displeasure stay one Reading with it, the sigh, under ADR 0031."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -35,6 +35,10 @@
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😊" },
+			"notes": {
+				"rationale": "gern geschehen answers thanks, 'das habe ich doch gern getan' (DWDS), so it takes the 😊 of gern."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

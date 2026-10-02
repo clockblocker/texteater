@@ -41,8 +41,9 @@
 		{
 			"memberSegmentIndices": [22, 24],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🫴" },
 			"notes": {
-				"rationale": "The presentation function is a Reading of the one Lemma bitte schön; the request use is another. The role is Reading Knowledge, not part of the Lemma (ADR 0039)."
+				"rationale": "The presentation function is a Reading of the one Lemma bitte schön; the request use is another. The role is Reading Knowledge, not part of the Lemma (ADR 0039). bitte schön as the cup is set down is Duden's bitte 'zur Unterstreichung einer [höflichen] Aufforderung' to take what is offered (bitte, bedienen Sie sich!), a Reading apart from the please of a request 🙏."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

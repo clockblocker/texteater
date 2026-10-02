@@ -48,6 +48,10 @@
 		{
 			"memberSegmentIndices": [24, 26],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "▶" },
+			"notes": {
+				"rationale": "Duden glosses nun denn! as 'also, dann wollen wir beginnen!', so it takes the ▶ of beginnen."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

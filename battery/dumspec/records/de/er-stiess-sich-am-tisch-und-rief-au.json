@@ -31,8 +31,9 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🤕" },
 			"notes": {
-				"rationale": "au is a cry of pain, an INTJ Lexeme; it answers no question, so it has no partType."
+				"rationale": "au is a cry of pain, an INTJ Lexeme; it answers no question, so it has no partType. au is DWDS au 1, a cry at sudden or acute pain."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

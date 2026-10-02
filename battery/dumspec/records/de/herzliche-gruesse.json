@@ -18,6 +18,10 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "❤👋" },
+			"notes": {
+				"rationale": "herzliche Grüße are Duden's Grüße sent as a sign of affection or set under a letter (viele, herzliche, liebe Grüße), a warm 👋 like grüßen's."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

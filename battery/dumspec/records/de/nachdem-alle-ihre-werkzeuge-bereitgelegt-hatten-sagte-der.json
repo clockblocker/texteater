@@ -44,6 +44,10 @@
 		{
 			"memberSegmentIndices": [21, 23, 25, 27],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "▶" },
+			"notes": {
+				"rationale": "dann wollen wir mal announces that the work now begins, so it takes the ▶ of beginnen, as nun denn does."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

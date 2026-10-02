@@ -30,8 +30,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "❌" },
 			"notes": {
-				"rationale": "neeee stretches the letters of nee, Duden's own headword (landschaftlich, umgangssprachlich für nein), for effect, so it is a Variant of nee tagged Expressive. nee itself is the regional word, so the spelling adds no Regional tag."
+				"rationale": "neeee stretches the letters of nee, Duden's own headword (landschaftlich, umgangssprachlich für nein), for effect, so it is a Variant of nee tagged Expressive. nee itself is the regional word, so the spelling adds no Regional tag. Duden glosses nee as nein, so it takes the ❌ of nein."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

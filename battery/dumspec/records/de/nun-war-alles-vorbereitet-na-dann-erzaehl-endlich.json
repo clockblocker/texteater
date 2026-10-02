@@ -32,8 +32,9 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👉" },
 			"notes": {
-				"rationale": "The unmarked nun is an adverb; the prompting target is independently classified INTJ."
+				"rationale": "The unmarked nun is an adverb; the prompting target is independently classified INTJ. na urging the story on is Duden's na leading into an Aufforderung (na, dann mal los), the same Reading that opens na ja."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

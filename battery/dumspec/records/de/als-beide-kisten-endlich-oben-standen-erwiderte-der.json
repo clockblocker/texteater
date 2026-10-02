@@ -49,6 +49,7 @@
 		{
 			"memberSegmentIndices": [23],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
 			"notes": {
 				"rationale": "Danke, danke is the one-word formula danke said twice for emphasis. Repetition fixes no new unit, so each danke is its own INTJ target."
 			},
@@ -76,6 +77,7 @@
 		{
 			"memberSegmentIndices": [26],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

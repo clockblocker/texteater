@@ -32,8 +32,9 @@
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🤷" },
 			"notes": {
-				"rationale": "tja voices resignation, an INTJ Lexeme with no partType."
+				"rationale": "tja voices resignation, an INTJ Lexeme with no partType. tja after a failure voices resignation, one of the attitudes of Duden's tja (tja, nun ist es zu spät)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -29,6 +29,10 @@
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "📣" },
+			"notes": {
+				"rationale": "Duden glosses heda as hallo 'Ruf, mit dem man jemandes Aufmerksamkeit auf sich lenkt', a call for attention."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

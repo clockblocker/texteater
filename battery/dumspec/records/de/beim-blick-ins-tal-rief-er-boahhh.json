@@ -35,8 +35,9 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😲" },
 			"notes": {
-				"rationale": "boahhh stretches the letters of boah for effect, so it is a Variant tagged Expressive."
+				"rationale": "boahhh stretches the letters of boah for effect, so it is a Variant tagged Expressive. boah is Duden's 'Ausruf des Staunens', here at the view."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

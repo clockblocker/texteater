@@ -41,8 +41,9 @@
 		{
 			"memberSegmentIndices": [15, 17, 19, 21],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😧" },
 			"notes": {
-				"rationale": "The formula reacts to the accident; the name after it is a vocative."
+				"rationale": "The formula reacts to the accident; the name after it is a vocative. Duden gives [ach] du meine/liebe Güte! as an 'Ausruf des Erschreckens, der Verwunderung', so it takes the 😧 of its near-synonym ach du liebe Zeit."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

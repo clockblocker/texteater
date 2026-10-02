@@ -34,6 +34,7 @@
 		{
 			"memberSegmentIndices": [13, 15],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "✉👋" },
 			"notes": {
 				"rationale": "The visible ellipsis marks an unrealized tail; it is not an omitted present member."
 			},

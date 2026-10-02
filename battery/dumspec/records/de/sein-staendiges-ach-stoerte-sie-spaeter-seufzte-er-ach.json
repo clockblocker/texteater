@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [17],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😮‍💨" },
 			"notes": {
 				"rationale": "The marked occurrence is already classified INTJ; the unmarked nominal use does not change its route or Lemma."
 			},

@@ -37,6 +37,7 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "↪✅" },
 			"notes": {
 				"rationale": "doch is the contradicting answer to the negative question, embedded in mit doch. An answer word stays INTJ with partType Res when a clause embeds it; German PART has no polarity Pos (de/interjection-counts-its-words)."
 			},

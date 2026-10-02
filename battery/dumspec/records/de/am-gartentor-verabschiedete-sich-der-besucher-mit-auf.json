@@ -38,6 +38,7 @@
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋" },
 			"notes": {
 				"rationale": "auf Wiedersehen is a farewell formula, a Locution INTJ (de/routine-formula-is-intj). Wiedersehn is Wiedersehen with its unstressed e dropped, as it is spoken, and stands alone, so it is a Shorthand member and the Surface spells the full auf Wiedersehen, Canonical (de/member-orthography). The capital of Auf opens the quoted greeting and stays Standard."
 			},

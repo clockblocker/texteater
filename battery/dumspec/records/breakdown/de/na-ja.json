@@ -15,7 +15,7 @@
 		{ "kind": "ResolvableText", "text": "ja" }
 	],
 	"sources": {
-		"adrs": ["ADR-0039", "ADR-0041"],
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041"],
 		"rules": [
 			{
 				"rule": "de/interjection-counts-its-words",
@@ -34,6 +34,10 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👉" },
+			"notes": {
+				"rationale": "Read literally, na is Duden's one na that leads from what went before into the speaker's reaction (na [ja] gut, na, dann mal los), whatever feeling it carries."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "na", "orthography": "Standard" }],
@@ -58,6 +62,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "✅" },
 			"notes": {
 				"rationale": "The Breakdown reads ja as the answer particle in its ordinary yes Reading, partType Res (de/interjection-counts-its-words): the softening meaning belongs to the Locution, and its parts are the Readings a learner drills down to, as Faden is read literally in den Faden verlieren."
 			},

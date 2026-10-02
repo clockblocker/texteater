@@ -42,6 +42,7 @@
 		{
 			"memberSegmentIndices": [20],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "↪✅" },
 			"notes": {
 				"rationale": "doch answers the negated question Kommst du nicht? by contradicting it: a response particle, partType Res."
 			},

@@ -44,6 +44,10 @@
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😊" },
+			"notes": {
+				"rationale": "Duden gives keine Ursache! as the 'formelhafte Antwort auf eine Dankesbezeigung; bitte! gern geschehen!', so it takes the 😊 of gern geschehen."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

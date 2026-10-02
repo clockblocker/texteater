@@ -31,6 +31,10 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🫢" },
+			"notes": {
+				"rationale": "hoppla is Duden's call at a near mishap (hoppla, beinah wäre ich gefallen)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

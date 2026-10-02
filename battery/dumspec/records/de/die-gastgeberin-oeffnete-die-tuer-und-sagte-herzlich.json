@@ -41,8 +41,9 @@
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🤗" },
 			"notes": {
-				"rationale": "The missing second l is repaired only in the selected misspelled member."
+				"rationale": "The missing second l is repaired only in the selected misspelled member. herzlich willkommen is Duden's 'Willkommensgruß zur freundlichen Begrüßung', so it takes the 🤗 of willkommen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -25,6 +25,10 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙌" },
+			"notes": {
+				"rationale": "hurra is Duden's 'Ausruf der Begeisterung, des Beifalls'."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

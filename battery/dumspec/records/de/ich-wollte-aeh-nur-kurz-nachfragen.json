@@ -28,6 +28,10 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🫤" },
+			"notes": {
+				"rationale": "äh is Duden's filler that 'dient dazu, kurze Sprechpausen zu überbrücken', the speaker's hesitation."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

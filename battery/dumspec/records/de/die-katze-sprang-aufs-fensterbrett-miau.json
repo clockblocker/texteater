@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🐱" },
 			"notes": {
 				"rationale": "miau imitates the cat's call, an onomatopoeic INTJ Lexeme with no partType."
 			},

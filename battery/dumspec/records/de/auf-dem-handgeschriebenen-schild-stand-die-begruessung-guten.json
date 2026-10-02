@@ -34,6 +34,7 @@
 		{
 			"memberSegmentIndices": [15, 17],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋" },
 			"notes": {
 				"rationale": "The formula-initial adjective is ordinary contextual casing, while the lowercase noun is an actual casing error."
 			},

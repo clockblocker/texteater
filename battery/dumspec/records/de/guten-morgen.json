@@ -18,6 +18,7 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

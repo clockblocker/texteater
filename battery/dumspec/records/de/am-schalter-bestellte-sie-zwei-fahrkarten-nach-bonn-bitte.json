@@ -39,8 +39,9 @@
 		{
 			"memberSegmentIndices": [20, 22],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
 			"notes": {
-				"rationale": "The order context establishes the Request identity of the same canonical wording."
+				"rationale": "The order context establishes the Request identity of the same canonical wording. bitte schön after an order is Duden's bitte 'zur Unterstreichung einer Bitte', the please of a request, a Reading apart from handing something over 🫴."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -33,8 +33,9 @@
 		{
 			"memberSegmentIndices": [17],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🫡" },
 			"notes": {
-				"rationale": "jawohl is an emphatic yes answering the officer: a response particle, partType Res."
+				"rationale": "jawohl is an emphatic yes answering the officer: a response particle, partType Res. jawohl 'drückt unbedingte Zustimmung aus' (DWDS), the emphatic yes given to an officer."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

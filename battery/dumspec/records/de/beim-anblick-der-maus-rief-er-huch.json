@@ -29,6 +29,10 @@
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😱" },
+			"notes": {
+				"rationale": "huch at the mouse is Duden's 'Ausruf des [gespielten] Erschreckens'."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

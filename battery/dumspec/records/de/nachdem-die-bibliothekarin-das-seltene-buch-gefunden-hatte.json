@@ -50,6 +50,10 @@
 		{
 			"memberSegmentIndices": [25, 27],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
+			"notes": {
+				"rationale": "besten Dank is one of Duden's thanks formulas (vielen Dank!, besten Dank!, herzlichen Dank!), so it takes the 🙏 of danke."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

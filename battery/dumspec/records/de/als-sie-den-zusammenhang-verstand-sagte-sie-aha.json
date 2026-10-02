@@ -31,8 +31,9 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "💡" },
 			"notes": {
-				"rationale": "aha marks sudden understanding. It reacts, but it is no response particle answering a question, so its partType is null."
+				"rationale": "aha marks sudden understanding. It reacts, but it is no response particle answering a question, so its partType is null. aha says that one has understood something (Duden: aha, so hängt das zusammen!)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

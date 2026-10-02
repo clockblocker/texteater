@@ -31,6 +31,10 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😤" },
+			"notes": {
+				"rationale": "Mann! at the jammed key is Duden's '[mein lieber] Mann!', 'Ausruf des Erstaunens, des Unwillens', here displeasure, not the man 👨 of the NOUN Mann."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

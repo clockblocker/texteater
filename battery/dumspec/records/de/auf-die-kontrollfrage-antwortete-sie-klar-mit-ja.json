@@ -35,6 +35,7 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "✅" },
 			"notes": {
 				"rationale": "ja is the answer to the question, quoted inside the clause (antwortete mit ja). An answer word stays INTJ with partType Res when a clause embeds it; German PART has no polarity Pos (de/interjection-counts-its-words)."
 			},

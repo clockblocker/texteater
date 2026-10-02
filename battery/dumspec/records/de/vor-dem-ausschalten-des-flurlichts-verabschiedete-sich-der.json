@@ -45,6 +45,10 @@
 		{
 			"memberSegmentIndices": [21, 23],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🌙👋" },
+			"notes": {
+				"rationale": "gute Nacht! is Duden's 'Grußformel vor dem Schlafengehen', so it joins the 🌙 of Nacht to the parting 👋."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

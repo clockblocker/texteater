@@ -61,8 +61,9 @@
 		{
 			"memberSegmentIndices": [39, 41],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🧳👍" },
 			"notes": {
-				"rationale": "The marked occurrence enacts a wish; the earlier same-word noun phrase and the vocative remain context. The wish is the formula's Formula Role, Reading Knowledge (ADR 0039)."
+				"rationale": "The marked occurrence enacts a wish; the earlier same-word noun phrase and the vocative remain context. The wish is the formula's Formula Role, Reading Knowledge (ADR 0039). Gute Reise wishes someone a good journey, joining the 🧳 of reisen to the 👍 of gut."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

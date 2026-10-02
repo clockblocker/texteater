@@ -27,8 +27,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙇" },
 			"notes": {
-				"rationale": "Entschuldigung, said to a stranger before a question, is the apology formula, one word, so it is a Lexeme INTJ. The noun die Entschuldigung is another Lemma (Sie besteht auf einer Entschuldigung)."
+				"rationale": "Entschuldigung, said to a stranger before a question, is the apology formula, one word, so it is a Lexeme INTJ. The noun die Entschuldigung is another Lemma (Sie besteht auf einer Entschuldigung). Entschuldigung! before a stranger is asked something is Duden's 'Höflichkeitsformel' asking for forbearance, an apology for the intrusion, so it takes the 🙇 of the NOUN Entschuldigung."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

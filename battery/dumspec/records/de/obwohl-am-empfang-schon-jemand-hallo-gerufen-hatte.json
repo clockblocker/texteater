@@ -58,6 +58,7 @@
 		{
 			"memberSegmentIndices": [34, 36],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋" },
 			"notes": {
 				"rationale": "The marked formula performs the greeting; the nearby interjection and vocative remain context."
 			},

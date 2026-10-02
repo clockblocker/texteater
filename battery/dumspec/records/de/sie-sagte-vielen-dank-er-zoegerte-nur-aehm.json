@@ -31,6 +31,10 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🫤" },
+			"notes": {
+				"rationale": "ähm bridges a pause or embarrassment (Duden), the hesitation that äh also names with 🫤."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

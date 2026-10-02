@@ -38,8 +38,9 @@
 		{
 			"memberSegmentIndices": [15, 17],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
 			"notes": {
-				"rationale": "The recording contains only the recoverable beginning, so missing Dank is genuinely unrealized."
+				"rationale": "The recording contains only the recoverable beginning, so missing Dank is genuinely unrealized. The recording breaks off before Dank, and the Reading is the whole thanks formula's, the 🙏 of danke."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

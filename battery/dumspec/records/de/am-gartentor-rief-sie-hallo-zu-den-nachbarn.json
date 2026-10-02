@@ -31,6 +31,10 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋" },
+			"notes": {
+				"rationale": "hallo to the neighbours is Duden's hallo '[freundschaftliche] Grußformel', so it takes the 👋 of grüßen."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

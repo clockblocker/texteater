@@ -41,8 +41,9 @@
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
 			"notes": {
-				"rationale": "The free für complement remains outside the fixed thanks formula."
+				"rationale": "The free für complement remains outside the fixed thanks formula. vielen Dank is one of Duden's thanks formulas, so it takes the 🙏 of danke."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

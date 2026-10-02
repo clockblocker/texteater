@@ -48,6 +48,10 @@
 		{
 			"memberSegmentIndices": [22, 24, 26],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋" },
+			"notes": {
+				"rationale": "schönen guten Tag is a warmer guten Tag, so it takes the greeting 👋 that guten Tag has in the gold."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

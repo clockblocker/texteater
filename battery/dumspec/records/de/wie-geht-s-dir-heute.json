@@ -25,8 +25,9 @@
 		{
 			"memberSegmentIndices": [0, 2, 3],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙂❓" },
 			"notes": {
-				"rationale": "Wie geht's is the greeting formula, a Locution INTJ (de/routine-formula-is-intj). Its three words are members, the Fused 's included; the formula's wording has no dative, and Wie geht's Ihnen? swaps the word, so dir is free.",
+				"rationale": "Wie geht's is the greeting formula, a Locution INTJ (de/routine-formula-is-intj). Its three words are members, the Fused 's included; the formula's wording has no dative, and Wie geht's Ihnen? swaps the word, so dir is free. wie geht's greets by asking how someone is.",
 				"knownMistakes": [
 					"Making dir a member of the formula.",
 					"Resolving geht's as the verb gehen with an expletive 's."

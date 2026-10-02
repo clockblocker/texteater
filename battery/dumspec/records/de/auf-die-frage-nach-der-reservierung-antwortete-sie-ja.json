@@ -40,6 +40,7 @@
 		{
 			"memberSegmentIndices": [18],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "✅" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -45,8 +45,9 @@
 		{
 			"memberSegmentIndices": [24],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "↪✅" },
 			"notes": {
-				"rationale": "doch is the contradicting answer to the negated question, embedded in mit doch. An answer word stays INTJ with partType Res when a clause embeds it; German PART has no polarity Pos (de/interjection-counts-its-words)."
+				"rationale": "doch is the contradicting answer to the negated question, embedded in mit doch. An answer word stays INTJ with partType Res when a clause embeds it; German PART has no polarity Pos (de/interjection-counts-its-words). The answer doch is DWDS doch I.3, filed with I.2 'trotzdem' under 'drückt einen Gegensatz aus', so it takes the ↪✅ of the ADV doch."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

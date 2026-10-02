@@ -31,6 +31,10 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😮" },
+			"notes": {
+				"rationale": "oh is Duden's 'Ausruf der Überraschung, der Verwunderung', glad or dismayed alike (oh, wie schön!, oh, wie schrecklich!)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

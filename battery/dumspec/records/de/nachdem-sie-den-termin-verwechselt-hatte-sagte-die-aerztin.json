@@ -50,6 +50,10 @@
 		{
 			"memberSegmentIndices": [21, 23, 25, 27],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙇" },
+			"notes": {
+				"rationale": "ich bitte um Verzeihung apologizes (Duden Verzeihung: Verzeihung!, jemanden um Verzeihung bitten), so it takes the 🙇 of Entschuldigung."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

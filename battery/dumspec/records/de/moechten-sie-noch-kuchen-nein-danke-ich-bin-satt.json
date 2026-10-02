@@ -32,7 +32,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -40,6 +40,7 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "❌" },
 			"notes": {
 				"rationale": "No punctuation stands between Nein and danke, but an answer before a formula keeps its own target: nein is the response particle, partType Res, and danke the thanks formula, each an INTJ target of its own."
 			},
@@ -67,6 +68,10 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🙏" },
+			"notes": {
+				"rationale": "danke after nein is Duden's danke 'zur Unterstreichung einer höflichen Ablehnung', which still thanks for the offer, so it is folded into the thanks Reading under ADR 0031."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

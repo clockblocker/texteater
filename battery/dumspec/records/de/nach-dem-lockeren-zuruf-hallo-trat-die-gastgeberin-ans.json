@@ -53,8 +53,9 @@
 		{
 			"memberSegmentIndices": [36],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🤗" },
 			"notes": {
-				"rationale": "Willkommen in Dresden! greets the guests: a one-word greeting formula, so it is a Lexeme INTJ."
+				"rationale": "Willkommen in Dresden! greets the guests: a one-word greeting formula, so it is a Lexeme INTJ. Willkommen in Dresden! is Duden's willkommen 'in Formeln zur Begrüßung bei jemandes Empfang' (willkommen in der Heimat!)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
