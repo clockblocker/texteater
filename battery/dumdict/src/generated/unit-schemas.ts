@@ -102,8 +102,17 @@ import * as R98 from "dumling/schema/he/morpheme/suffixoid";
 import * as R99 from "dumling/schema/he/morpheme/tone-marking";
 import * as R100 from "dumling/schema/he/morpheme/transfix";
 import * as R101 from "dumling/schema/he/saying/saying";
-import { z } from "zod";
-export const unitSchemas = {
+import type * as Dumling from "dumling/types";
+import { type ZodType, z } from "zod";
+
+type UnitSchemas<L extends Dumling.Language> = {
+	lemma: ZodType<Dumling.Lemma<L>>;
+	reading: ZodType<Dumling.Reading<L>>;
+	surface: ZodType<Dumling.Surface<L>>;
+	attestation: ZodType<Dumling.Attestation<L>>;
+};
+// Annotated so declaration emit need not serialize every route's schema type.
+export const unitSchemas: { [L in Dumling.Language]: UnitSchemas<L> } = {
 	de: {
 		lemma: z.union([
 			R0.lemmaSchema,

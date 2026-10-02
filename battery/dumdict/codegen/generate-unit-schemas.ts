@@ -17,7 +17,7 @@ const schemas = ["de", "en", "he"]
 	.join(",");
 const target = new URL("../src/generated/unit-schemas.ts", import.meta.url);
 const output = await formatTypeScript(
-	`// Generated from Dumling's concrete schema exports.\nimport {z} from "zod";\n${imports}\nexport const unitSchemas={${schemas}};\n`,
+	`// Generated from Dumling's concrete schema exports.\nimport type * as Dumling from "dumling/types";\nimport {type ZodType,z} from "zod";\n${imports}\ntype UnitSchemas<L extends Dumling.Language>={lemma:ZodType<Dumling.Lemma<L>>;reading:ZodType<Dumling.Reading<L>>;surface:ZodType<Dumling.Surface<L>>;attestation:ZodType<Dumling.Attestation<L>>};\n// Annotated so declaration emit need not serialize every route's schema type.\nexport const unitSchemas:{[L in Dumling.Language]:UnitSchemas<L>}={${schemas}};\n`,
 	target,
 );
 if (process.argv.includes("--check")) {

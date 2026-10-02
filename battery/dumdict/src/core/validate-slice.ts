@@ -60,7 +60,12 @@ function validateReading<L extends Dumling.Language>(
 	const parsed = unwrapDumdictParse(
 		parseReadingForDumdictRuntime(reading, expected),
 	);
-	if (parsed.emojiDescription !== reading.emojiDescription)
+	// A Foreign Reading has no Emoji Description to normalize (ADR 0045).
+	if (
+		"emojiDescription" in parsed &&
+		"emojiDescription" in reading &&
+		parsed.emojiDescription !== reading.emojiDescription
+	)
 		throw new Error("Reading emoji description must be normalized.");
 }
 
