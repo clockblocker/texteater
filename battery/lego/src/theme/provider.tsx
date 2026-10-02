@@ -10,11 +10,10 @@ import {
 	writeStoredTheme,
 } from "./bootstrap";
 
-export type ThemeProviderProps = {
+type ThemeProviderProps = {
 	children: React.ReactNode;
 	defaultTheme?: Theme;
 	storageKey?: string;
-	disableTransitionOnChange?: boolean;
 };
 
 type ThemeProviderState = {
@@ -62,7 +61,6 @@ export function ThemeProvider({
 	children,
 	defaultTheme = "system",
 	storageKey = "theme",
-	disableTransitionOnChange = true,
 }: ThemeProviderProps) {
 	const [theme, setThemeState] = React.useState<Theme>(
 		() => readStoredTheme(storageKey) ?? defaultTheme,
@@ -77,11 +75,9 @@ export function ThemeProvider({
 	);
 
 	React.useEffect(() => {
-		const restoreTransitions = disableTransitionOnChange
-			? disableTransitionsTemporarily()
-			: null;
+		const restoreTransitions = disableTransitionsTemporarily();
 		applyTheme(theme);
-		restoreTransitions?.();
+		restoreTransitions();
 
 		if (theme !== "system") return undefined;
 		const mediaQuery = window.matchMedia(COLOR_SCHEME_QUERY);
@@ -90,7 +86,7 @@ export function ThemeProvider({
 		};
 		mediaQuery.addEventListener("change", handleChange);
 		return () => mediaQuery.removeEventListener("change", handleChange);
-	}, [theme, disableTransitionOnChange]);
+	}, [theme]);
 
 	React.useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {

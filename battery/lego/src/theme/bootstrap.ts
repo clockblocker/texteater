@@ -1,9 +1,8 @@
 export type Theme = "dark" | "light" | "system";
-export type ResolvedTheme = Exclude<Theme, "system">;
+type ResolvedTheme = Exclude<Theme, "system">;
 
-export type ThemeBootstrapOptions = {
+type ThemeBootstrapOptions = {
 	defaultTheme?: Theme;
-	document?: Document;
 	storageKey?: string;
 };
 
@@ -19,16 +18,13 @@ export function getSystemTheme(): ResolvedTheme {
 	return window.matchMedia(COLOR_SCHEME_QUERY).matches ? "dark" : "light";
 }
 
-export function resolveTheme(theme: Theme): ResolvedTheme {
+function resolveTheme(theme: Theme): ResolvedTheme {
 	return theme === "system" ? getSystemTheme() : theme;
 }
 
 /** Applies a theme choice without reading or writing persistent preference. */
-export function applyTheme(
-	theme: Theme,
-	documentOverride?: Document,
-): ResolvedTheme {
-	const root = (documentOverride ?? document).documentElement;
+export function applyTheme(theme: Theme): ResolvedTheme {
+	const root = document.documentElement;
 	const resolved = resolveTheme(theme);
 	root.classList.remove("light", "dark");
 	root.classList.add(resolved);
@@ -60,10 +56,9 @@ export function writeStoredTheme(storageKey: string, theme: Theme): void {
  */
 export function initializeTheme({
 	defaultTheme = "system",
-	document: documentOverride,
 	storageKey = "theme",
 }: ThemeBootstrapOptions = {}): Theme {
 	const theme = readStoredTheme(storageKey) ?? defaultTheme;
-	applyTheme(theme, documentOverride);
+	applyTheme(theme);
 	return theme;
 }

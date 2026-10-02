@@ -3,7 +3,6 @@ export * from "./icon-swap";
 export * from "./ipa";
 export * from "./link-button";
 export * from "./mark";
-export * from "./note-rule";
 export * from "./note-section";
 export * from "./note-skeleton";
 export * from "./note-tags";

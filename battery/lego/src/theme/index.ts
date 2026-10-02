@@ -1,11 +1,2 @@
-export {
-	applyTheme,
-	getSystemTheme,
-	initializeTheme,
-	isTheme,
-	type ResolvedTheme,
-	resolveTheme,
-	type Theme,
-	type ThemeBootstrapOptions,
-} from "./bootstrap";
-export { ThemeProvider, type ThemeProviderProps, useTheme } from "./provider";
+export { initializeTheme, type Theme } from "./bootstrap";
+export { ThemeProvider, useTheme } from "./provider";

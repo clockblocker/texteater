@@ -5,7 +5,6 @@ import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
 import * as React from "react";
-import { useIsMobile } from "../hooks/use-mobile";
 import { cn } from "../utils";
 import { Button } from "./button";
 import { Input } from "./input";
@@ -26,6 +25,7 @@ const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
+const MOBILE_BREAKPOINT = 768;
 
 type SidebarContextProps = {
 	state: "expanded" | "collapsed";
@@ -38,6 +38,26 @@ type SidebarContextProps = {
 };
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null);
+
+function useIsMobile() {
+	const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
+		undefined,
+	);
+
+	React.useEffect(() => {
+		const mql = window.matchMedia(
+			`(max-width: ${MOBILE_BREAKPOINT - 1}px)`,
+		);
+		const onChange = () => {
+			setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+		};
+		mql.addEventListener("change", onChange);
+		setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+		return () => mql.removeEventListener("change", onChange);
+	}, []);
+
+	return !!isMobile;
+}
 
 function useSidebar() {
 	const context = React.useContext(SidebarContext);

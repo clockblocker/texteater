@@ -1,7 +1,6 @@
 import type * as React from "react";
 
 import { cn } from "../utils";
-import { NoteRule } from "./note-rule";
 
 /**
  * A titled block of a Note. Comfortable density shows the label on the
@@ -41,7 +40,10 @@ export function NoteSection({
 			{...props}
 		>
 			{headless ? (
-				<NoteRule className="mb-3" />
+				<hr
+					data-slot="note-rule"
+					className="mb-3 border-0 border-t border-dashed border-line"
+				/>
 			) : (
 				<NoteSectionLabel htmlFor={labelFor}>{label}</NoteSectionLabel>
 			)}
@@ -57,7 +59,7 @@ const noteSectionLabelClassName =
  * Small monospaced caps set into a dashed rule. Renders a heading, or a
  * `<label>` when `htmlFor` names the control it titles.
  */
-export function NoteSectionLabel({
+function NoteSectionLabel({
 	children,
 	className,
 	htmlFor,
