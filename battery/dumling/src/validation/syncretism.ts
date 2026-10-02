@@ -1,4 +1,4 @@
-import { foldCase, lemmaIdentityKey } from "../identity.js";
+import { lemmaIdentityKey } from "../identity.js";
 import type {
 	Language,
 	Lemma,
@@ -6,6 +6,7 @@ import type {
 	Syncretism,
 	SyncretismView,
 } from "../types.js";
+import { foldCase } from "./semantics.js";
 
 type Bag = Readonly<Record<string, unknown>>;
 type LemmaFields = {

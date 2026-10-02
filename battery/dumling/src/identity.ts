@@ -1,18 +1,9 @@
-import type { Language, Lemma, Reading } from "./types.js";
+import type { Lemma, Reading } from "./types.js";
 import {
+	foldCase,
 	normalizeEmojiDescription,
 	normalizeForm,
 } from "./validation/semantics.js";
-
-/**
- * Folds letter case by the language's own rules, so spellings that differ
- * only in case compare equal: `LOL` and `lol` both fold to `lol`. Lemma
- * identity compares Canonical Forms this way (system ADR 0002). Hebrew has no
- * case and folds to itself.
- */
-export function foldCase(value: string, language: Language): string {
-	return value.toLocaleLowerCase(language);
-}
 
 /**
  * The key of a Lemma's identity: language, Family, Kind, Core Features and

@@ -1,9 +1,9 @@
 import { z } from "zod";
 import {
 	articleAttestationError,
+	caselessValencyAttestationError,
 	comparabilitySurfaceError,
 	emojiDescriptionError,
-	englishValencyAttestationError,
 	foreignSurfaceError,
 	fusedMemberError,
 	fusionError,
@@ -15,11 +15,10 @@ import {
 	germanVerbalAttestationError,
 	germanVerbalSurfaceError,
 	hasMarkedFeature,
-	hebrewValencyAttestationError,
 	isArticleAttestation,
+	isCaselessValencyAttestation,
 	isComparabilitySurface,
 	isEmojiDescription,
-	isEnglishValencyAttestation,
 	isForeignSurface,
 	isFusedMember,
 	isFusion,
@@ -30,7 +29,6 @@ import {
 	isGermanValencyAttestation,
 	isGermanVerbalAttestation,
 	isGermanVerbalSurface,
-	isHebrewValencyAttestation,
 	isSayingCanonicalForm,
 	isVariantTagCombination,
 	isVariantTagList,
@@ -452,9 +450,9 @@ export function buildUnitSchemas<
 		lexemeOrLocution &&
 		["ADJ", "NOUN"].includes(route.kind);
 	const caselessGovernor =
-		lexemeOrLocution && ["VERB", "ADJ", "NOUN"].includes(route.kind);
-	const hebrewGovernor = route.language === "he" && caselessGovernor;
-	const englishGovernor = route.language === "en" && caselessGovernor;
+		["he", "en"].includes(route.language) &&
+		lexemeOrLocution &&
+		["VERB", "ADJ", "NOUN"].includes(route.kind);
 	// Comparability decides Degree on German and English ADV and ADJ (ADR 0042).
 	const comparability =
 		["de", "en"].includes(route.language) &&
@@ -506,11 +504,13 @@ export function buildUnitSchemas<
 		...(adposition || adnominalGovernor
 			? { valencyEvidence: valencyEvidenceSchema }
 			: {}),
-		...(hebrewGovernor
-			? { valencyEvidence: hebrewValencyEvidenceSchema.optional() }
-			: {}),
-		...(englishGovernor
-			? { valencyEvidence: englishValencyEvidenceSchema.optional() }
+		...(caselessGovernor
+			? {
+					valencyEvidence: (route.language === "he"
+						? hebrewValencyEvidenceSchema
+						: englishValencyEvidenceSchema
+					).optional(),
+				}
 			: {}),
 	}) as unknown as z.ZodObject<
 		Omit<typeof base.Attestation.shape, "surface"> & {
@@ -597,13 +597,9 @@ export function buildUnitSchemas<
 		Attestation = Attestation.refine(isGermanValencyAttestation, {
 			error: germanValencyAttestationError,
 		});
-	if (hebrewGovernor)
-		Attestation = Attestation.refine(isHebrewValencyAttestation, {
-			error: hebrewValencyAttestationError,
-		});
-	if (englishGovernor)
-		Attestation = Attestation.refine(isEnglishValencyAttestation, {
-			error: englishValencyAttestationError,
+	if (caselessGovernor)
+		Attestation = Attestation.refine(isCaselessValencyAttestation, {
+			error: caselessValencyAttestationError,
 		});
 	if (verbal)
 		Attestation = Attestation.refine(isGermanVerbalAttestation, {

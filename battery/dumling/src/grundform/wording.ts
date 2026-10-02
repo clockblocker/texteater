@@ -1,5 +1,5 @@
-import { foldCase } from "../identity.js";
 import type { Surface } from "../types.js";
+import { foldCase } from "../validation/semantics.js";
 
 // A word is letters, marks and digits, joined inside by an apostrophe, a
 // hyphen or a Hebrew geresh or gershayim (geht's, Wer-A, צה״ל).

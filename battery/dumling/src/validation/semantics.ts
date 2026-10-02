@@ -1,4 +1,5 @@
 import emojiRegex from "emoji-regex";
+import type { Language } from "../types.js";
 
 /** Shared by Zod authoring and compiled validation operations. */
 export function hasMarkedFeature(bag: Record<string, unknown>): boolean {
@@ -14,6 +15,15 @@ export function nonEmptyFeatureBagError(): string {
  */
 export function normalizeForm(value: string): string {
 	return value.trim().normalize("NFC").replaceAll("...", "…");
+}
+/**
+ * Folds letter case by the language's own rules, so spellings that differ
+ * only in case compare equal: `LOL` and `lol` both fold to `lol`. Lemma
+ * identity compares Canonical Forms this way (system ADR 0002). Hebrew has no
+ * case and folds to itself.
+ */
+export function foldCase(value: string, language: Language): string {
+	return value.toLocaleLowerCase(language);
 }
 const finalPunctuation = /[.!?,;:…‽]$/u;
 /**
@@ -421,100 +431,83 @@ type ValencyEvidence = {
 	realizedCase: string;
 };
 
-/**
- * Each slot names a distinct owned member, or none. A preposition slot's
- * member spells its preposition unless it is a Typo, and the occurrence
- * keeps the slot's case. A bare-case slot has no marker member. Which cases a
- * preposition takes is a fact about German, checked in dumspec (ADR 0041).
- */
-function isOwnedValencyEvidence(
-	evidence: readonly ValencyEvidence[],
-	members: readonly { attested: string; orthography: string }[],
-): boolean {
-	const named = evidence.flatMap((slot) =>
-		slot.member === null ? [] : [slot.member],
-	);
-	if (new Set(named).size !== named.length) return false;
-	return evidence.every(({ member: index, complement, realizedCase }) => {
-		if (complement.kind === "Case") return index === null;
-		const { canonicalForm } = complement.preposition;
-		if (realizedCase !== complement.governedCase) return false;
-		if (index === null) return true;
-		const member = members[index];
-		return (
-			member !== undefined &&
-			(member.orthography === "Typo" ||
-				member.attested.toLocaleLowerCase("de") === canonicalForm)
-		);
-	});
-}
-
-type CaselessValencyAttestation = {
-	valencyEvidence?: {
-		member: number | null;
-		complement:
-			| { kind: "Subject" | "DirectObject" | "IndirectObject" }
-			| {
-					kind: "Preposition";
-					preposition: { canonicalForm: string };
-			  };
-	}[];
-	members: { attested: string; orthography: string }[];
+type ValencySlot = {
+	member: number | null;
+	complement:
+		| { kind: "Case" | "Subject" | "DirectObject" | "IndirectObject" }
+		| { kind: "Preposition"; preposition: { canonicalForm: string } };
 };
 
 /**
- * Caseless valency evidence (Hebrew, English): each slot names a distinct
- * owned member, or none. A Preposition slot's member spells its preposition,
- * compared without case, unless it is a Typo. Any other slot has no marker
- * member.
+ * Each slot names a distinct owned member, or none. A Preposition slot's
+ * member spells its preposition, compared without case, unless it is a Typo.
  */
-function isCaselessValencyAttestation(
-	input: unknown,
-	language: "he" | "en",
+function namesMarkerMembers(
+	evidence: readonly ValencySlot[],
+	members: readonly { attested: string; orthography: string }[],
+	language: Language,
 ): boolean {
-	const value = input as CaselessValencyAttestation;
-	const evidence = value.valencyEvidence ?? [];
 	const named = evidence.flatMap((slot) =>
 		slot.member === null ? [] : [slot.member],
 	);
 	if (new Set(named).size !== named.length) return false;
 	return evidence.every(({ member: index, complement }) => {
-		if (index === null) return true;
-		if (complement.kind !== "Preposition") return false;
-		const member = value.members[index];
+		if (index === null || complement.kind !== "Preposition") return true;
+		const member = members[index];
 		return (
 			member !== undefined &&
 			(member.orthography === "Typo" ||
-				normalizeForm(member.attested).toLocaleLowerCase(language) ===
-					complement.preposition.canonicalForm)
+				foldCase(normalizeForm(member.attested), language) ===
+					foldCase(complement.preposition.canonicalForm, language))
 		);
 	});
 }
 
 /**
- * A Hebrew governor Attestation (VERB, ADJ, NOUN) may name the valency
- * slots it realizes (ADR 0034). A Fused member spells its Fusion component,
- * so `ב` of `בבית` in `בחר בבית` counts. A Subject or DirectObject slot has
- * no marker member.
+ * German slots also keep their case: a preposition slot's occurrence shows
+ * the case the slot governs, and a bare-case slot has no marker member. Which
+ * cases a preposition takes is a fact about German, checked in dumspec (ADR
+ * 0041).
  */
-export function isHebrewValencyAttestation(input: unknown): boolean {
-	return isCaselessValencyAttestation(input, "he");
-}
-export function hebrewValencyAttestationError(): string {
-	return "Hebrew valency evidence must name distinct owned members spelling its preposition; a Subject or DirectObject slot names no member";
+function isOwnedValencyEvidence(
+	evidence: readonly ValencyEvidence[],
+	members: readonly { attested: string; orthography: string }[],
+): boolean {
+	return (
+		namesMarkerMembers(evidence, members, "de") &&
+		evidence.every(({ member, complement, realizedCase }) =>
+			complement.kind === "Case"
+				? member === null
+				: realizedCase === complement.governedCase,
+		)
+	);
 }
 
 /**
- * An English governor Attestation (VERB, ADJ, NOUN) may name the
- * valency slots it realizes (ADR 0034), as a Hebrew one does: `on` of
- * `depend on`, spelled in any case. A Subject, DirectObject or IndirectObject
- * slot has no marker member.
+ * A Hebrew or English governor Attestation (VERB, ADJ, NOUN) may name the
+ * valency slots it realizes, with no case (ADR 0034): `on` of `depend on`,
+ * spelled in any case, or `על` of `סמך על`. A Fused member spells its Fusion
+ * component, so `ב` of `בבית` in `בחר בבית` counts. A Subject, DirectObject
+ * or IndirectObject slot has no marker member. The language comes from the
+ * Attestation's Surface.
  */
-export function isEnglishValencyAttestation(input: unknown): boolean {
-	return isCaselessValencyAttestation(input, "en");
+export function isCaselessValencyAttestation(input: unknown): boolean {
+	const value = input as {
+		surface: { language: Language };
+		valencyEvidence?: ValencySlot[];
+		members: { attested: string; orthography: string }[];
+	};
+	const evidence = value.valencyEvidence ?? [];
+	return (
+		namesMarkerMembers(evidence, value.members, value.surface.language) &&
+		evidence.every(
+			({ member, complement }) =>
+				member === null || complement.kind === "Preposition",
+		)
+	);
 }
-export function englishValencyAttestationError(): string {
-	return "English valency evidence must name distinct owned members spelling its preposition; a Subject, DirectObject or IndirectObject slot names no member";
+export function caselessValencyAttestationError(): string {
+	return "Valency evidence must name distinct owned members spelling its preposition; a Subject, DirectObject or IndirectObject slot names no member";
 }
 
 /**

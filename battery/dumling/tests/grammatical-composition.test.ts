@@ -954,6 +954,16 @@ test("valency evidence names the owned member realizing its preposition", () => 
 			],
 		}).success,
 	).toBe(true);
+	// The member spells its preposition without regard to case.
+	expect(
+		parseUnit({
+			...attestation,
+			members: [
+				{ attested: "wartet", orthography: "Standard" },
+				{ attested: "Auf", orthography: "Standard" },
+			],
+		}).success,
+	).toBe(true);
 });
 // Evidence is a strict subset of the frame vocabulary, and an Attestation names
 // no Feature Pool feature (ADR 0034, ADR 0032).
@@ -1347,6 +1357,29 @@ test("a Hebrew governor may name its governed preposition with no case", () => {
 		],
 	};
 	expect(parseUnit(bachar).success).toBe(true);
+	// הוא סמך על חבריו: the verb owns the על it governs, spelled apart.
+	const samach = {
+		...bachar,
+		surface: {
+			...bachar.surface,
+			normalizedSurface: "סמך",
+			lemma: { ...bachar.surface.lemma, canonicalForm: "סמך" },
+		},
+		members: [
+			{ attested: "סמך", orthography: "Standard" },
+			{ attested: "על", orthography: "Standard" },
+		],
+		valencyEvidence: [
+			{
+				member: 1,
+				complement: {
+					...be,
+					preposition: { ...be.preposition, canonicalForm: "על" },
+				},
+			},
+		],
+	};
+	expect(parseUnit(samach).success).toBe(true);
 	const { valencyEvidence: _omitted, ...withoutEvidence } = bachar;
 	expect(parseUnit(withoutEvidence).success).toBe(true);
 	for (const invalid of [
@@ -1445,6 +1478,15 @@ test("an English governor may name its governed preposition with no case", () =>
 	expect(
 		parseUnit({
 			...depend,
+			members: [
+				{ attested: "depend", orthography: "Standard" },
+				{ attested: "On", orthography: "Standard" },
+			],
+		}).success,
+	).toBe(true);
+	expect(
+		parseUnit({
+			...depend,
 			valencyEvidence: [{ member: null, complement: indirectObject }],
 		}).success,
 	).toBe(true);
@@ -1452,6 +1494,7 @@ test("an English governor may name its governed preposition with no case", () =>
 	expect(parseUnit(withoutEvidence).success).toBe(true);
 	for (const invalid of [
 		[{ member: 0, complement: on }],
+		[{ member: 1, complement: subject }],
 		[{ member: 1, complement: indirectObject }],
 		[{ member: 1, complement: { ...on, case: "Acc" } }],
 		[{ member: 1, complement: on, realizedCase: "Acc" }],
