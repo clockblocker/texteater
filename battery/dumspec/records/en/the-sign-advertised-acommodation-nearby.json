@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🏨" },
 			"notes": {
-				"rationale": "Acommodation is represented as Typo with normalized surface accommodation; no edit-distance metadata exists."
+				"rationale": "Acommodation is represented as Typo with normalized surface accommodation; no edit-distance metadata exists. acommodation is a Typo of accommodation in Wiktionary's sense 'lodging in a dwelling or similar living quarters afforded to travellers', not 'adaptation or adjustment'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

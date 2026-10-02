@@ -20,6 +20,7 @@
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🤫📢" },
 			"notes": {
 				"rationale": "The Full Attestation records spilled, the, and beans as the complete idiom occurrence; the docs review span remains on spilled only."
 			},

@@ -20,6 +20,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
 			"notes": {
 				"rationale": "They is marked plural because the current English PRON schema has number but no singular-they semantic flag."
 			},

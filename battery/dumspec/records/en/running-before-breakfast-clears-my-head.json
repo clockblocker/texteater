@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🏃" },
 			"notes": {
 				"rationale": "Gerund running is a VERB inflection, not a noun, despite occupying a nominal clause position."
 			},

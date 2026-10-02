@@ -20,13 +20,18 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0031", "ADR-0035"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [7],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": { "emojiDescription": "🔐" },
 			"notes": {
-				"rationale": "Possessive 's is its own PART Lemma, not noun inflection. It attaches to the whole phrase the king of England, so the possessor is the king even though 's is written on England."
+				"rationale": "Possessive 's is its own PART Lemma, not noun inflection. It attaches to the whole phrase the king of England, so the possessor is the king even though 's is written on England. 's marks the possessor of the whole phrase the king of England, and every possessive is 🔐 (ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

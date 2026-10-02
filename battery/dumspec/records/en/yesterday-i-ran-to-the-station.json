@@ -23,6 +23,7 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🏃" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "ran", "orthography": "Standard" }],

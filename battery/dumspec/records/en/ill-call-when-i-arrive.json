@@ -21,8 +21,9 @@
 		{
 			"memberSegmentIndices": [1],
 			"route": { "family": "Lexeme", "kind": "AUX" },
+			"reading": { "emojiDescription": "🔮" },
 			"notes": {
-				"rationale": "'ll is the AUX will, attested as the second piece of the fused word I'll. The member is Fused and names its Fusion, so the Surface stays will; the shortening is a fact about the written occurrence, not a Variant Surface."
+				"rationale": "'ll is the AUX will, attested as the second piece of the fused word I'll. The member is Fused and names its Fusion, so the Surface stays will; the shortening is a fact about the written occurrence, not a Variant Surface. 'll marks the future, as the German future auxiliary werden does with its 🔮."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

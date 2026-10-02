@@ -19,13 +19,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0031"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [8, 10, 12],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "💀" },
 			"notes": {
-				"rationale": "The Locution inflects like its verb: kicked the bucket is the past tense of kick the bucket."
+				"rationale": "The Locution inflects like its verb: kicked the bucket is the past tense of kick the bucket. The old laptop finally kicked the bucket is Wiktionary's 'to break down such that it cannot be repaired', a machine's dying, one Reading 💀 with 'to die' under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

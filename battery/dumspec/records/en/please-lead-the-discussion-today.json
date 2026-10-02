@@ -15,13 +15,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0031"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🧭" },
 			"notes": {
-				"rationale": "Verb lead is kept separate from noun lead despite identical spelling."
+				"rationale": "Verb lead is kept separate from noun lead despite identical spelling. lead the discussion is Wiktionary's lead 'to conduct or direct with authority', one Reading 🧭 with 'to guide or conduct' under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

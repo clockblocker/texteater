@@ -20,6 +20,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
 				"rationale": "Irregular comparative better is attached to the Lemma good with Degree=Cmp."
 			},

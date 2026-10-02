@@ -20,6 +20,7 @@
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🏳" },
 			"notes": {
 				"rationale": "Clicking the particle resolves the complete phrasal-verb occurrence `gave up`; the click is one member of that Surface."
 			},

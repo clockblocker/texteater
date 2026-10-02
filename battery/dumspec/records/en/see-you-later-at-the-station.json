@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👋🔜" },
 			"notes": {
-				"rationale": "Only See is selected, but the intended formula is see you later."
+				"rationale": "Only See is selected, but the intended formula is see you later. See you later is Wiktionary's 'phrase used at parting', a farewell 👋 that looks ahead 🔜."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

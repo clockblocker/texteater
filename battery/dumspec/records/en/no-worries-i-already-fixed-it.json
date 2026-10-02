@@ -18,13 +18,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0031"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "😌" },
 			"notes": {
-				"rationale": "No worries is a routine formula, a Locution/INTJ, rather than compositional negation plus noun."
+				"rationale": "No worries is a routine formula, a Locution/INTJ, rather than compositional negation plus noun. No worries is Wiktionary's 'reassurance not to be concerned further', one Reading 😌 with its 'you're welcome' use under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

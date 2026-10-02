@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"reading": { "emojiDescription": "🟰" },
 			"notes": {
-				"rationale": "Like as a subordinator is marked SCONJ. Many registers prefer as here, but Dumling records no register: that question is parked on #727."
+				"rationale": "Like as a subordinator is marked SCONJ. Many registers prefer as here, but Dumling records no register: that question is parked on #727. like I showed you is Wiktionary's conjunction like 'as, the way', 🟰 for the same manner."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "📖" },
 			"notes": {
 				"rationale": "Past-tense read is orthographically identical to the citation form; the Past tense in inflectionalFeatures makes this Surface non-Grundform despite the matching spelling."
 			},

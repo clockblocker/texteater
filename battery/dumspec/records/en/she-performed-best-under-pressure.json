@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Best is modeled as a superlative adverb here, not an adjective, because it modifies performed."
+				"rationale": "Best is modeled as a superlative adverb here, not an adjective, because it modifies performed. best is the superlative of Wiktionary's well 'accurately, competently, satisfactorily', the concept of good, so it shares good's 👍 across Kinds."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

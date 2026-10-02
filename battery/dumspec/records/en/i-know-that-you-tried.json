@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
-				"rationale": "Complementizer that is SCONJ; no clause-type feature exists, so POS carries the distinction."
+				"rationale": "Complementizer that is SCONJ; no clause-type feature exists, so POS carries the distinction. that is the complementizer linking the clause you tried to know, drawn as the link 🔗."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

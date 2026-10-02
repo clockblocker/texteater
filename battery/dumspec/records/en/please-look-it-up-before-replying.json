@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🔍📖" },
 			"notes": {
 				"rationale": "The Full Attestation records both source-ordered members of the discontinuous phrasal verb look ... up; the docs review span remains on look only."
 			},

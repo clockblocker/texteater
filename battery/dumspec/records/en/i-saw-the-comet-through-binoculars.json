@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "👀" },
 			"notes": {
 				"rationale": "Saw is the past finite surface of see, not the citation noun saw."
 			},

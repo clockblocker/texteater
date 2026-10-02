@@ -31,6 +31,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🚶" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "walk", "orthography": "Standard" }],

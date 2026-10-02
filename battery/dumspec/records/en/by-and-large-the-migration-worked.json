@@ -23,8 +23,9 @@
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Locution", "kind": "ADV" },
+			"reading": { "emojiDescription": "🌖" },
 			"notes": {
-				"rationale": "Sentence-initial capitalization is preserved only in clicked Text."
+				"rationale": "Sentence-initial capitalization is preserved only in clicked Text. By and large is Wiktionary's 'mostly; generally', drawn as the nearly full moon between half 🌓 and whole 🌕."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

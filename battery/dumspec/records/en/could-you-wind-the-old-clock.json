@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "⏰🔄" },
 			"notes": {
-				"rationale": "Wind as a verb is modeled separately from wind as weather; pronunciation contrast is outside the object."
+				"rationale": "Wind as a verb is modeled separately from wind as weather; pronunciation contrast is outside the object. wind the old clock is Wiktionary's wind 'to tighten the spring of a clockwork mechanism', and with no emoji for winding, a clock stands in beside the turning arrows."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

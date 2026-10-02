@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADV" },
+			"reading": { "emojiDescription": "✅" },
 			"notes": {
 				"rationale": "Definately is a typo of definitely; mark only `member.orthography: \"Typo\"` here, not a spelling variant, because the intended resolved surface is canonical."
 			},

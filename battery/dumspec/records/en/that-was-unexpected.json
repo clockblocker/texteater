@@ -16,6 +16,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👉" },
 			"notes": {
 				"rationale": "Standalone that is PRON; it shares its surface spelling with the DET and SCONJ examples. Singular that and plural those are separate Lemmas."
 			},

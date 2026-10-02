@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "✍" },
 			"notes": {
 				"rationale": "Voice=Pass is context-sensitive for English participles; it is included to test whether the model accepts contextual morphology."
 			},

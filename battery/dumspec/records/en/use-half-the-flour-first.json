@@ -20,6 +20,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "🌓" },
 			"notes": {
 				"rationale": "Half before a noun phrase is DET with fractional number features, not NUM."
 			},

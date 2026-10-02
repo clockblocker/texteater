@@ -25,8 +25,9 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
+			"reading": { "emojiDescription": "🤦" },
 			"notes": {
-				"rationale": "My bad is categorized by discourse function Apology, not by the adjective bad."
+				"rationale": "My bad is categorized by discourse function Apology, not by the adjective bad. My bad is Wiktionary 'my fault; mea culpa', owning a mistake, not the 🙇 of a formal apology."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

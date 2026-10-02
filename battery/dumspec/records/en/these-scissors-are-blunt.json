@@ -18,6 +18,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "✂" },
 			"notes": {
 				"rationale": "Scissors uses Number=Ptan to stress plurale-tantum support."
 			},

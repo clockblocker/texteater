@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "📊" },
 			"notes": {
-				"rationale": "Data is treated as a plural inflection of datum, even though contemporary usage often treats data as mass or singular."
+				"rationale": "Data is treated as a plural inflection of datum, even though contemporary usage often treats data as mass or singular. data here is the plural of datum in Wiktionary's sense 'something known or assumed as fact', not the surveyor's reference point."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

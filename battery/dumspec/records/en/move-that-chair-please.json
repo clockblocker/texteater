@@ -19,6 +19,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "DET" },
+			"reading": { "emojiDescription": "👉" },
 			"notes": {
 				"rationale": "That before a noun is DET, distinct from pronominal and complementizer that."
 			},

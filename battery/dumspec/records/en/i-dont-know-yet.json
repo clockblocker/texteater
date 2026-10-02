@@ -19,6 +19,7 @@
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "PART" },
+			"reading": { "emojiDescription": "🚫" },
 			"notes": {
 				"rationale": "n't is the negative PART not, the same Lemma as a written-out not. It is the Fused second piece of don't; do is the AUX piece."
 			},

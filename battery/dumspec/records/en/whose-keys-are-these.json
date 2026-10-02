@@ -18,8 +18,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "❓" },
 			"notes": {
-				"rationale": "Whose is its own Lemma, with genitive case, possessive and interrogative Core Features; it is not a form of who."
+				"rationale": "Whose is its own Lemma, with genitive case, possessive and interrogative Core Features; it is not a form of who. Whose asks for a possessor, as German attributive wessen does, and takes its authored ❓."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

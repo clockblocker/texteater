@@ -24,8 +24,9 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🦠🤷" },
 			"notes": {
-				"rationale": "COVID-ish is English, the language of the text, made with the productive suffix -ish, so it is an ADJ Lexeme, not Foreign. It has no comparison forms of its own."
+				"rationale": "COVID-ish is English, the language of the text, made with the productive suffix -ish, so it is an ADJ Lexeme, not Foreign. It has no comparison forms of its own. COVID-ish is quoted as a word, so it takes its ordinary sense, 'like COVID' with Wiktionary's -ish 'typical of, similar to, being like', drawn as the virus and a hedging shrug."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

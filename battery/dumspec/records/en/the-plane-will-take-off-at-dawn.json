@@ -24,8 +24,9 @@
 		{
 			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🛫" },
 			"notes": {
-				"rationale": "Only the verb component is selected, but the Lemma and surface are the phrasal verb take off."
+				"rationale": "Only the verb component is selected, but the Lemma and surface are the phrasal verb take off. take off here is Wiktionary's 'to leave the ground and ascend into the air or into flight', not 'to remove'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

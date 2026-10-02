@@ -20,8 +20,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"reading": { "emojiDescription": "👌" },
 			"notes": {
-				"rationale": "OK is treated as a standard spelling variant of the canonical lemma okay."
+				"rationale": "OK is treated as a standard spelling variant of the canonical lemma okay. OK is quoted as a word, so it takes the interjection's ordinary sense, Wiktionary OK 'used to indicate acknowledgement or acceptance'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

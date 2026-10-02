@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔩🩶" },
 			"notes": {
-				"rationale": "Material lead is a noun lexeme; pronunciation is not represented in the current model."
+				"rationale": "Material lead is a noun lexeme; pronunciation is not represented in the current model. lead is Wiktionary's 'heavy, pliable, inelastic metal element', and with no emoji for the metal a grey bolt stands in for it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
