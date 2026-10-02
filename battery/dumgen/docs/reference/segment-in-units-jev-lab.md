@@ -17,10 +17,15 @@ it and score it against frozen gold. Results live in the lab tickets
   membership (`assembly.ts`) assembles units under floors, and routing
   (`routing.ts`) routes them. Its default, `productionUnitSettings`, is
   candidates4's maxim+closed policy (#843).
-- `src/segment-in-units/de/arms/` holds the two arms. `candidates4`
+- `src/segment-in-units/de/arms/` holds the three arms. `candidates4`
   (`--opt final=1 --opt closed=1`) outputs v3, step0, step0+saying and
   step0+saying+maxim@0.7, each step-0 policy also `+closed`; production is
-  its `step0+saying+maxim@0.7+closed`. `reference` is the #755 reference.
+  its `step0+saying+maxim@0.7+closed`. `production` runs the unit stage as
+  `productionUnitSettings` sets it, so it follows a changed default, and
+  takes #851's offline levers: `--opt grid=x1` (floors × Saying assembly ×
+  step 0), `--opt pool=mean,median` (answers pooled across the cache's
+  repetitions 0 to 2, `lab/pool.ts`) and `--opt variants=<margins>`.
+  `reference` is the #755 reference.
   The retired arms and candidates4's other levers are at ec467e8d, and
   reference-floors at 5335f033.
 - `src/segment-in-units/lab/` holds the frozen sets, the cached jev
