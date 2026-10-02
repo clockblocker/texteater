@@ -47,3 +47,5 @@ These three decisions were recorded apart as ADRs 0002, 0008 and 0010 and
 merged here on 2026-09-28.
 
 Amended by [ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md): a Foreign Lemma has exactly one Reading, which the Lemma alone identifies, with no Emoji Description. Its Translation carries every sense.
+
+Amended by [ADR 0046](./0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md): a Syncretism's identity is a Lemma's identity plus its `syncretic` list, the Core Features its units disagree on. The units it holds are not part of it. No other Lemma has the list, so every other identity is unchanged.

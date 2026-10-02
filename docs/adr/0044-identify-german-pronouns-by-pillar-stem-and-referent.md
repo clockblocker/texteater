@@ -39,7 +39,7 @@ its own invariant Lemma, cited apart from `wer`.
 
 **Gender and possessors.** Personal gender uses `gender`. Unmarked features
 are null, compared literally, and never used as wildcards or as guesses about
-a person's sex, with one exception for navigation (below). Plural agreement
+a person's sex. Plural agreement
 has no marked gender, and a marked personal gender needs a third-person
 singular. Possessor gender and number describe a possessive's Surface, as
 they do on the possessive articles, and mark only what the form shows: `sein-` (his, its) has gender[psor] Masc, Neut, and
@@ -72,35 +72,34 @@ drills down to
 ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
 and no spelling realizes it.
 
-**The referent may choose only between cells that differ in who is meant.**
-A pillar form can fit several cells. No Core value is a set, and what the
-cells differ in decides whether the form is one Lemma or several:
+**The referent chooses between cells, and a Syncretism stands in when it
+cannot.** A pillar form can fit several cells. No Core value is a set, and
+each cell is a Lemma of its own:
 
-- Cells that differ in number, person or politeness mean different people or
-  things, so they stay separate Lemmas and the referent chooses: accusative
-  `sie` is 3sg Fem or 3pl, genitive `ihrer` 3sg Fem or 3pl, and
-  sentence-initial `Sie` formal or 3pl.
-- Cells that differ in gender alone are one cell with gender null, because
-  the form serves both genders alike. Personal `ihm` and `seiner` are the
-  dative and genitive of both `er` and `es`. Der-series `dem` and `dessen`,
-  demonstrative, relative and attributive, serve a masculine and a neuter
-  referent alike, and so do the `einer` pillar's `einem` and `eines` (*mit
-  einem der Kinder*, *eines der Häuser*). A learner learns `ihm` as one word,
-  the dative of `er` and `es`.
+- The sentence's grammar tells apart cells that differ in case, and a
+  demonstrative from a relative.
+- The referent tells apart cells that differ only in gender, number or
+  politeness. Personal `ihm` and `seiner` are the dative and genitive of
+  `er` (Masc) and of `es` (Neut). Der-series `dem` and `dessen`,
+  demonstrative and relative, and the `einer` pillar's `einem` and `eines`
+  (*mit einem der Kinder*, *eines der Häuser*) have a Masc and a Neut cell
+  each. Accusative `sie`, genitive `ihrer`, and der-series `die` and `deren`
+  are 3sg Fem or plural. At a sentence's start, where the capital no longer
+  tells them apart, `Sie`, `Ihnen` and `Ihrer` may also be formal.
 
-Navigation reaches a gender-null cell from each gender it serves: varying
-case from `er` or from `es` reaches `ihm` and `seiner`, and from `der` or
-`das` reaches `dem` and `dessen` of the same pronoun type. This is the one
-exception to the ban on wildcards above, and ADR 0032's plural clause, which
-counts a plural cell's unmarked gender as marked, is its precedent. Varying
-case from `die` still reaches `der` Dat.Fem.Sg, because the feminine has a
-cell of its own there.
+Navigation reaches only cells: varying case from `er` reaches `ihm` Masc,
+and from `das` reaches `dem` Neut of the same pronoun type. Varying case
+from `die` reaches `der` Dat.Fem.Sg, because the feminine has a cell of its
+own there.
 
 Dumgen reads the referent from the sentence. When the sentence cannot settle
 it, Dumgen reads the sentence before and the sentence after. If those don't
-settle it either, the most probable cell wins, and a wrong guess is corrected
-by moving the occurrence (ADR 0043). An uncertain encounter never merges
-reviewed members.
+settle it either, the occurrence attests the form's Syncretism
+([ADR 0046](./0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md)),
+the generated unit that keeps the features its cells agree on and names the
+others as open. A Spec Record judges by its own sentence. A wrong cell is
+corrected by moving the occurrence (ADR 0043), and an uncertain encounter
+never merges reviewed members.
 
 **`derer` is its own Lemma.** Standalone demonstrative `deren` points back
 (*Ich habe deren viele*) and is the only Lemma of its Gen.Fem.Sg and Gen.Plur
@@ -196,6 +195,16 @@ not restate them. Decided on
 [#237](https://github.com/clockblocker/texteater/issues/237) and
 [#238](https://github.com/clockblocker/texteater/issues/238).
 
+Amended on 2026-10-02: the cells that differ in gender alone are split
+again. On 2026-10-01 (#743) `ihm`, `seiner`, `dem`, `dessen`, `einem` and
+`eines` became one cell each with gender null, and navigation reached each
+from both genders. A sentence that names the referent could no longer record
+it, and number and politeness still needed a guess. Each is a Masc and a
+Neut cell again, the navigation exception is gone, and a referent no text
+settles attests a generated Syncretism instead of the most probable cell
+(ADR 0046). Decided by the user on
+[#829](https://github.com/clockblocker/texteater/issues/829).
+
 UD supplies feature meanings, not this project's Lemma granularity:
 [German features](https://universaldependencies.org/de/index.html) and
 [possessor gender](https://universaldependencies.org/u/feat/Gender-psor.html).
@@ -227,13 +236,17 @@ UD supplies feature meanings, not this project's Lemma granularity:
   names the addressee, and the grammars, the verb, `sich` and `Ihr` all go
   by the 3rd person plural.
 - A Core value set such as Masc|Neut for `ihm`. Rejected (#606): navigation
-  compares Core values literally, so a set matches neither `er` nor `es`.
-  Gender null with the navigation exception above reaches `ihm` from both.
-- Two cells each for `ihm`, `seiner`, `dem` and `dessen`, a Masc and a Neut
-  one, with the referent picking. Chosen on #606, rejected on 2026-10-01
-  (#743): the choice rested on what the word refers to, often in another
-  sentence, while the two cells meant the same to a learner and differed in
-  nothing the word shows.
+  compares Core values literally, so a set matches neither `er` nor `es`. A
+  Syncretism covers the open referent instead (ADR 0046).
+- Two cells each for `ihm`, `seiner`, `dem` and `dessen`, with the referent
+  always picking and the most probable cell winning when no text settles it.
+  Chosen on #606, rejected on 2026-10-01 (#743) and again on 2026-10-02
+  (ADR 0046): the guess showed the learner a gloss the text did not support.
+- One cell each, with gender null, for `ihm`, `seiner`, `dem`, `dessen`,
+  `einem` and `eines`, reached by navigation from both genders. Chosen on
+  2026-10-01 (#743), rejected on 2026-10-02: a sentence that names the
+  referent could not record it, and the null was the one wildcard navigation
+  allowed.
 - Demonstrative `derer` as a second Lemma of the `deren` cells, kept apart by
   direction alone. Chosen first, rejected on 2026-10-01: the two shared every
   Core Feature, so navigation to either cell found two Lemmas.
@@ -255,4 +268,6 @@ UD supplies feature meanings, not this project's Lemma granularity:
   2026-09-25 and 2026-09-28; `derer` left the pillar on 2026-10-01, and no
   pillar collision is accepted since. The same day `derer` became a Licensed
   Variant of standalone relative and demonstrative `deren`, and the cells
-  that differed in gender alone became one each (#743).
+  that differed in gender alone became one each (#743). On 2026-10-02 they
+  were split again, and a Syncretism stands for a referent no text settles
+  (ADR 0046).

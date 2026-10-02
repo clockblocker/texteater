@@ -110,6 +110,14 @@ Depending on the paradigm, a cell is a Lemma of its own (`mir`, `mich`) or a
 Surface of one Lemma such as `dieser`. See [ADR 0032] and [ADR 0044].
 _Avoid_: Paradigm form, inflected closed-class Surface
 
+**Syncretism**:
+A generated unit for one spelling that realizes two or more units of one
+route only the referent tells apart, such as `ihm`, the dative of `er` and of
+`es`. It holds those units, keeps the features they agree on, and names the
+others as open. Its identity is a Lemma's plus the open features. An
+occurrence attests it when no text settles the referent. See [ADR 0046].
+_Avoid_: clash, clashed members, merged cell, gender-null cell
+
 **Spelling Crossroad**:
 A projection with no identity that gathers every Reading whose Lemma's
 Canonical Form has one spelling in one language, compared without letter
@@ -209,4 +217,5 @@ _Avoid_: argument, valent, complement slot, Ergänzung
 [ADR 0042]: ../../docs/adr/0042-record-comparability-on-adv-and-adj-lemmas.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
+[ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [Dumling ADR 0002]: ./docs/adr/0002-assess-grundform-with-language-owned-rules.md

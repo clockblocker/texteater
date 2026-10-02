@@ -15,9 +15,11 @@ classification terms have a section of their own.
 A language's closed-class units that are authored instead of generated, each
 Reading with its reviewed Knowledge. They are the model's content, not gold:
 no run is scored against them. A Note's drill-down reaches an article,
-auxiliary or reflexive in them without generation. The inventories are in
+auxiliary or reflexive in them without generation. Each pronoun form whose
+cells only the referent tells apart also has Syncretisms (Dumling),
+generated from those cells and never authored. The inventories are in
 [`src/inventories/`][inventories], one directory per language. See
-[ADR 0021] and [ADR 0041].
+[ADR 0021], [ADR 0041] and [ADR 0046].
 _Avoid_: Fixed Catalog (Dumgen's term for the members that bound a Closed
 Route), closed set, catalog member
 
@@ -191,5 +193,6 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0041]: ../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
+[ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [Dumgen ADR 0007]: ../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
 [inventories]: ./src/inventories/

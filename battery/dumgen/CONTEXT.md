@@ -57,7 +57,8 @@ route is already chosen.
 **Referent Context**:
 The Sentences just before and after an Encounter's Sentence in its Text.
 Grammatical Resolution reads them only for a pronoun form whose cell its
-referent decides. See [ADR 0044].
+referent decides, and attests the form's Syncretism (Dumling) when they leave
+the referent open. See [ADR 0044] and [ADR 0046].
 _Avoid_: surrounding text, paragraph context
 
 **Authored Content**:
@@ -160,6 +161,7 @@ _Avoid_: stored resolution, threshold migration
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
 [ADR 0041]: ../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
+[ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [Dumgen ADR 0003]: ./docs/adr/0003-split-german-knowledge-generation-by-family.md
 [Dumgen ADR 0004]: ./docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
 [Dumgen ADR 0005]: ./docs/adr/0005-intake-owns-segments-and-analysis-targets.md

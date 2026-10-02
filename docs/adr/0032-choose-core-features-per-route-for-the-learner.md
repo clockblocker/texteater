@@ -57,10 +57,11 @@ E-VALBU gives `sich X` its own entry, learners learn `sich erinnern` as a
 word, and the reflexive's case is fixed per such word.
 
 The test reopens no split already decided: ADR 0044's pronoun cells and its
-Dem/Rel split, and the per-route choices below, stand. ADR 0044 itself
-reopened its cells on 2026-10-01: a pronoun form whose cells differ in gender
-alone is now one cell, because the referent may choose only between cells
-that differ in who is meant.
+Dem/Rel split, and the per-route choices below, stand. ADR 0044 reopened its
+cells on 2026-10-01 and restored them on 2026-10-02: cells that only the
+referent tells apart stay apart, and a generated Syncretism stands for them
+when no text settles the referent
+([ADR 0046](./0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md)).
 
 **Pillars and stems.** A closed paradigm is a pillar only when its forms
 cannot be derived from another paradigm: a suppletive paradigm (`ich`, `mir`,
@@ -77,7 +78,10 @@ on its Surface.
 A pillar fixes its cell coordinates in Core. A stem leaves them null in Core
 and marks them on each Surface, and Dumling rejects a coordinate marked in
 both. Among Lemmas authored per cell, no two of one pillar share all Core
-Features. The `der` and `ein` article tables are two pillars with the same
+Features. A Syncretism is not a cell. Its list of open features keeps its
+identity apart from every cell's, even where its Core equals one: `ihnen`
+that is 3pl or formal is not the plain 3pl `ihnen` (ADR 0046). The `der` and
+`ein` article tables are two pillars with the same
 cells, and their spellings tell them apart.
 
 **The routes decided so far:**
@@ -137,9 +141,8 @@ stem's forms are its own Surfaces, so `diesem` never reaches `jenem`. It stays
 inside the pillar it starts from, so `dem` never reaches `einem`. A cell
 is reached only when both ends mark every varied feature, and a plural cell's
 unmarked gender counts as marked. Navigation compares Core values literally,
-and no Core value is a set. ADR 0044 makes one exception on that precedent: a
-pronoun cell whose gender is null because its form serves two genders alike
-(`ihm`) is reached from each of them (`er`, `es`).
+and no Core value is a set. Navigation never reaches a Syncretism
+(ADR 0046).
 
 Amended on 2026-10-01: the Feature Pool and the placement test are stated for
 the first time, and German ADP Core keeps only `abbr`. `adpType` was Core, so
@@ -187,6 +190,13 @@ Amended on 2026-10-01: the German NOUN and `welcher` lines are stated. Both
 were the practice already; the `welcher` line applies the w-adverb test to
 the determiner. Decided on
 [#766](https://github.com/clockblocker/texteater/issues/766).
+
+Amended on 2026-10-02: ADR 0044 split `ihm`, `seiner`, `dem`, `dessen`,
+`einem` and `eines` by gender again and retired the exception that let
+navigation reach each from both genders. A generated Syncretism stands for a
+referent no text settles (ADR 0046). The sentence on reopened splits, the
+per-cell clause and the navigation paragraph follow. Decided by the user on
+[#829](https://github.com/clockblocker/texteater/issues/829).
 
 ## Considered Options
 
