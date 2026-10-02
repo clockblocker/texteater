@@ -4,15 +4,10 @@ import {
 	type ReaderSegmentInteraction,
 	type ReaderSegmentTone,
 } from "lego";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { segmentKey } from "@/hooks/use-segment-selection";
 import type { SentenceSegmentView } from "@/lib/action-results";
-
-type InteractionTarget = {
-	readonly segmentKey: string;
-	readonly attestationId?: string;
-};
 
 type SegmentDisplayState =
 	| "unknown-preview"
@@ -36,8 +31,9 @@ export type ReaderSentenceData = {
 /**
  * One Sentence of running text whose ResolvableText Segments select like
  * words in the reader. The same paragraph serves a Text and a Definition
- * block: hover and focus preview the word or its whole occurrence, a click
- * selects it, and the members of a focused occurrence wear the selected rule.
+ * block: hover and focus preview every member of the word's group (see
+ * `segmentGroups`), a click selects that group, and the members of a
+ * focused occurrence wear the selected rule. Selection outranks preview.
  */
 export function ReaderSentence<S extends ReaderSentenceData>({
 	sentence,
@@ -59,16 +55,24 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 	readonly onSentenceElement?: (element: HTMLParagraphElement | null) => void;
 	readonly className?: string;
 }) {
-	const [hoveredTarget, setHoveredTarget] =
-		useState<InteractionTarget | null>(null);
-	const [focusedTarget, setFocusedTarget] =
-		useState<InteractionTarget | null>(null);
-	const previewTarget = hoveredTarget ?? focusedTarget;
+	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+	const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+	// Built once per Sentence view, so a hover reads a map and asks nobody.
+	const groups = useMemo(
+		() => segmentGroups(sentence.segments),
+		[sentence.segments],
+	);
+	const previewIndex = hoveredIndex ?? focusedIndex;
+	const previewGroup =
+		previewIndex === null ? undefined : groups.get(previewIndex);
 	const selectedSegment = sentence.segments.find(
 		(segment) =>
 			segmentKey(sentence.sentenceId, segment.index) ===
 			selectedSegmentKey,
 	);
+	const selectedGroup = selectedSegment
+		? groups.get(selectedSegment.index)
+		: undefined;
 
 	return (
 		<p className={className} ref={onSentenceElement}>
@@ -95,7 +99,6 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 		const isSourceContextMember = focusMemberIndices.includes(
 			segment.index,
 		);
-		const key = segmentKey(sentence.sentenceId, segment.index);
 		if (segment.kind !== "ResolvableText") {
 			return (
 				<ReaderPlainSegment key={segment.index}>
@@ -103,33 +106,23 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 				</ReaderPlainSegment>
 			);
 		}
-		const isPreviewed = previewTarget?.attestationId
-			? segment.attestationId === previewTarget.attestationId
-			: previewTarget?.segmentKey === key;
-		/* A word the reader picked, or one the focused Note points
-				   at: both wear the selected rule. */
+		const isPreviewed = previewGroup?.includes(segment.index) ?? false;
+		/* The group of a word the reader picked, or the occurrence the
+		   focused Note points at: both wear the selected rule. */
 		const isSelected =
 			isSourceContextMember ||
-			(selectedSegment?.attestationId
-				? segment.attestationId === selectedSegment.attestationId
-				: selectedSegmentKey === key);
+			(selectedGroup?.includes(segment.index) ?? false);
 		const displayState = displayStateForSegment(
 			segment,
 			isPreviewed,
 			isSelected,
 		);
-		const interactionTarget: InteractionTarget = {
-			segmentKey: key,
-			...(segment.attestationId
-				? { attestationId: segment.attestationId }
-				: {}),
-		};
 
 		return (
 			<ReaderSegment
 				key={segment.index}
 				data-state={displayState}
-				tone={segmentTone(displayState)}
+				tone={segmentTone(displayState, segment)}
 				gender={segment.encountered ? segment.gender : undefined}
 				interaction={segmentInteraction(displayState)}
 				disabled={
@@ -139,10 +132,10 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 				}
 				aria-pressed={isSelected}
 				aria-label={segmentAccessibleLabel(segment)}
-				onBlur={() => setFocusedTarget(null)}
-				onFocus={() => setFocusedTarget(interactionTarget)}
-				onMouseEnter={() => setHoveredTarget(interactionTarget)}
-				onMouseLeave={() => setHoveredTarget(null)}
+				onBlur={() => setFocusedIndex(null)}
+				onFocus={() => setFocusedIndex(segment.index)}
+				onMouseEnter={() => setHoveredIndex(segment.index)}
+				onMouseLeave={() => setHoveredIndex(null)}
 				onClick={(event) => {
 					// A pointer click leaves no focus ring behind; keyboard activation keeps its ring.
 					if (event.detail > 0) event.currentTarget.blur();
@@ -158,6 +151,44 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 			</ReaderSegment>
 		);
 	}
+}
+
+/**
+ * What a hover, focus or click on each ResolvableText Segment lights up in
+ * its Sentence, by Segment index. An attested Segment groups with its
+ * occurrence's members. Any other Segment groups with the members of the
+ * biggest unit intake stored for it that no occurrence claimed, which may be
+ * discontinuous (`gibt … auf`); without a unit it stands alone. Groups never
+ * overlap, so hovering any member lights up the same Segments.
+ */
+export function segmentGroups(
+	segments: readonly SentenceSegmentView[],
+): ReadonlyMap<number, readonly number[]> {
+	const resolvable = segments.filter(
+		(segment) => segment.kind === "ResolvableText",
+	);
+	const occurrenceOf = new Map(
+		resolvable.map((segment) => [segment.index, segment.attestationId]),
+	);
+	const groups = new Map<number, readonly number[]>();
+	for (const segment of resolvable) {
+		if (groups.has(segment.index)) continue;
+		const { attestationId } = segment;
+		const members = attestationId
+			? resolvable
+					.filter((other) => other.attestationId === attestationId)
+					.map(({ index }) => index)
+			: (segment.unit?.segments ?? []).filter(
+					(index) =>
+						occurrenceOf.has(index) && !occurrenceOf.get(index),
+				);
+		// A Segment its stored unit does not name stands alone.
+		const group = members.includes(segment.index)
+			? members
+			: [segment.index];
+		for (const index of group) groups.set(index, group);
+	}
+	return groups;
 }
 
 /** Segments in reading order, a fused word's components grouped into one run. */
@@ -179,28 +210,26 @@ function fusedRuns(
 	return runs;
 }
 
+/**
+ * A running resolution and a dead word show only that. Otherwise selection
+ * outranks preview, and a selected or previewed group wears one look
+ * whichever member was clicked or hovered.
+ */
 function displayStateForSegment(
 	segment: SentenceSegmentView,
 	isPreviewed: boolean,
 	isSelected: boolean,
 ): SegmentDisplayState | undefined {
-	if (isPreviewed && segment.attestationId) return "known-preview";
-	if (isPreviewed) {
-		switch (segment.resolutionState) {
-			case "Active":
-				return "resolving";
-			case "Unresolved":
-				return "unresolved-preview";
-			case "PermanentFailure":
-				return "failed-preview";
-			default:
-				return "unknown-preview";
-		}
-	}
 	if (segment.resolutionState === "Active") return "resolving";
+	if (segment.resolutionState === "PermanentFailure")
+		return isPreviewed ? "failed-preview" : "failed";
+	if (isSelected) return "selected";
+	if (isPreviewed && segment.attestationId) return "known-preview";
+	if (isPreviewed)
+		return segment.resolutionState === "Unresolved"
+			? "unresolved-preview"
+			: "unknown-preview";
 	if (segment.resolutionState === "Unresolved") return "unresolved";
-	if (segment.resolutionState === "PermanentFailure") return "failed";
-	if (isSelected) return segment.attestationId ? "selected" : "resolving";
 	return segment.encountered && segment.attestationId
 		? "retained"
 		: undefined;
@@ -208,6 +237,7 @@ function displayStateForSegment(
 
 function segmentTone(
 	state: SegmentDisplayState | undefined,
+	segment: SentenceSegmentView,
 ): ReaderSegmentTone {
 	switch (state) {
 		case "unknown-preview":
@@ -221,6 +251,8 @@ function segmentTone(
 		case "failed-preview":
 			return "failed";
 		case "selected":
+			// A selected unit no occurrence owns yet is still unknown.
+			return segment.attestationId ? "known" : "unknown";
 		case "known-preview":
 		case "retained":
 			return "known";
