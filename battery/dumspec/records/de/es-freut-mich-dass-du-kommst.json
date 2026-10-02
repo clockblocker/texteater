@@ -27,6 +27,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "😃" },
 			"notes": {
 				"rationale": "This es is outside lexically selected subject-expletive composition."
 			},

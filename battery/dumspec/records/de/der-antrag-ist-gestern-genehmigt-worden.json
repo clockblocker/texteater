@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [4, 8, 10],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "📄✅" },
 			"notes": {
 				"rationale": "ist and worden are the perfect and passive auxiliaries of genehmigt, so the target is the whole perfect passive [ist, genehmigt, worden]."
 			},

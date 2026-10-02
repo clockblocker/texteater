@@ -716,6 +716,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🗣📛" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -765,7 +766,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Process passive of aufrufen 'call on (a pupil)': participle and werden are one VERB target (de/verbal-participle). Past from the finite wurde."
+				"rationale": "Process passive of aufrufen 'call on (a pupil)': participle and werden are one VERB target (de/verbal-participle). Past from the finite wurde. daß Hanno aufgerufen wurde, with no zu naming an action, is DWDS aufrufen 1 'den Namen eines einzelnen aus einer Menge zu einem bestimmten Zweck (laut) rufen', not 2, calling on people to act."
 			}
 		},
 		{
@@ -1106,6 +1107,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "⚡" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

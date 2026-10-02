@@ -160,8 +160,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📞🔚" },
 			"notes": {
-				"rationale": "auflegen 'hang up', with no object; consistency partner of sie-legt-das-handy-auf-den-tisch-…, where auf is a free preposition."
+				"rationale": "auflegen 'hang up', with no object; consistency partner of sie-legt-das-handy-auf-den-tisch-…, where auf is a free preposition. Without an object, auflegen is the Duden auflegen 1 use 'das Telefongespräch beenden', ending a call."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

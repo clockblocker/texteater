@@ -291,6 +291,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🎩⬇" },
 			"notes": {
 				"rationale": "hatte is the pluperfect auxiliary of aufsetzen and joins it (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle); tense Past comes from the finite hatte (de/verbal-surface-is-whole). hatte also serves aufgespannt, and it belongs to the nearer participle, aufgesetzt (de/partial-coverage, ADR 0041). Ruled on #743 (MB-A3, A7)."
 			},
@@ -622,6 +623,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🌂➡☂" },
 			"notes": {
 				"rationale": "aufgespannt is the second participle under the one pluperfect auxiliary hatte, which the nearer first conjunct owns, so the Attestation is Partial. The shared hatte still counts toward its features, so the Surface is the whole pluperfect (de/partial-coverage, de/verbal-surface-is-whole, ADR 0041). Ruled on #743 (MB-A3, A7)."
 			},

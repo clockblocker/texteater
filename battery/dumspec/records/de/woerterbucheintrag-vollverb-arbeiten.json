@@ -20,6 +20,10 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "💼" },
+			"notes": {
+				"rationale": "Cited as a dictionary headword, the word takes its ordinary Reading."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

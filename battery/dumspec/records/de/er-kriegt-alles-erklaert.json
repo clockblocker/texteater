@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "💬💡" },
 			"notes": {
 				"rationale": "kriegt with erklärt is the recipient passive: the participle adds nothing lexical, so kriegt joins erklären in one target [kriegt, erklärt]."
 			},

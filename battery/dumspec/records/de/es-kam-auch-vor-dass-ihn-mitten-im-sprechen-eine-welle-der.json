@@ -1172,6 +1172,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "▶" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1276,6 +1277,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🧍↩" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1321,7 +1323,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Infinitive governed by mußte, separable abwenden 'turn away'."
+				"rationale": "Infinitive governed by mußte, separable abwenden 'turn away'. DWDS abwenden 1, turning oneself away, not 2, averting a danger."
 			}
 		},
 		{

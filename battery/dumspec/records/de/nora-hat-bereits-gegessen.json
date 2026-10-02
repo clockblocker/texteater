@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🍽" },
 			"notes": {
 				"rationale": "hat is the perfect auxiliary of gegessen, so the target is the whole perfect [hat, gegessen]."
 			},

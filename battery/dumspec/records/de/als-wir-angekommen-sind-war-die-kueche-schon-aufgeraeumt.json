@@ -201,6 +201,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🛬" },
 			"notes": {
 				"rationale": "sein-perfect: the clause reports the arrival itself (kamen an)."
 			},

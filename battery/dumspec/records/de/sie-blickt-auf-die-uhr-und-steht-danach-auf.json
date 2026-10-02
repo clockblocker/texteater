@@ -24,7 +24,7 @@
 	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0022", "ADR-0029", "ADR-0034"],
+		"adrs": ["ADR-0003", "ADR-0022", "ADR-0029", "ADR-0031", "ADR-0034"],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -96,6 +96,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "👀" },
 			"notes": {
 				"rationale": "blicken takes a direction whose preposition varies (auf die Uhr, aus dem Fenster, zur Seite), so auf is no governed preposition and stays a unit of its own."
 			},
@@ -243,8 +244,9 @@
 		{
 			"memberSegmentIndices": [12, 16],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🧍⬆" },
 			"notes": {
-				"rationale": "The clause-final auf is the separable particle of aufstehen (de/verb-owns-its-scattered-members)."
+				"rationale": "The clause-final auf is the separable particle of aufstehen (de/verb-owns-its-scattered-members). The sentence leaves open whether she rises from a seat or from bed, and DWDS aufstehen 1a and 1b are one Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

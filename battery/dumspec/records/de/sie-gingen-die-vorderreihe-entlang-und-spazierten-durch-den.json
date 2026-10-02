@@ -287,6 +287,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🛤🚶" },
 			"notes": {
 				"rationale": "entlang in the right bracket is the particle of the dictionary verb entlanggehen (Duden: eine Allee entlanggehen), like liefen … entlang (de/bracket-particle-or-circumposition); die Vorderreihe is its accusative object."
 			},
@@ -967,6 +968,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📍" },
 			"notes": {
 				"rationale": "The particle verb daliegen, written whole in the verb-final relative clause (de/verb-core-features)."
 			},

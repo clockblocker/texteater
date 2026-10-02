@@ -547,6 +547,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "▶" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -756,6 +757,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "😌" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -823,7 +825,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "zu-infinitive of separable abspannen 'relax (the limbs)', written as one word with zu between the particle and the stem. The word is a Fusion of ab, zu and spannen: the VERB attests [ab, spannen], and the zu piece is PART zu, as after anfangen a zu written apart is (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7)."
+				"rationale": "zu-infinitive of separable abspannen 'relax (the limbs)', written as one word with zu between the particle and the stem. The word is a Fusion of ab, zu and spannen: the VERB attests [ab, spannen], and the zu piece is PART zu, as after anfangen a zu written apart is (de/fused-word-pieces, de/bare-infinitive-zu). Ruled on #743 (BT-A3, A7). die Glieder abspannen is DWDS abspannen 2, 'etw., sich entspannen', not 1, unhitching a draught animal."
 			}
 		},
 		{
@@ -914,6 +916,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🛋" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

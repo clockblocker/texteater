@@ -18,7 +18,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -26,8 +26,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "📥" },
 			"notes": {
-				"rationale": "Resultative bekommen (manages to open it): lexical VERB, the participle stays outside the target and passive is null. Only the sentence separates this from the recipient passive."
+				"rationale": "Resultative bekommen (manages to open it): lexical VERB, the participle stays outside the target and passive is null. Only the sentence separates this from the recipient passive. Resultative bekommen, DWDS bekommen I.2.c 'in einer Bemühung erfolgreich sein', is folded into one Reading 📥 with I.1.a 'in den Besitz von etw. kommen', by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -14,7 +14,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "📥" },
 			"notes": {
-				"rationale": "Lexical bekommen with an object: ordinary VERB, no passive."
+				"rationale": "Lexical bekommen with an object: ordinary VERB, no passive. DWDS bekommen I.1.a, 'in den Besitz von etw. kommen'; the Reading also takes resultative bekommen (I.2.c 'in einer Bemühung erfolgreich sein'), folded in by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

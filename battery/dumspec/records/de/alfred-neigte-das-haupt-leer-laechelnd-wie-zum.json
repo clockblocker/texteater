@@ -702,6 +702,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "✊" },
 			"notes": {
 				"rationale": "ergriff is the simple past of ergreifen (grasp); ihre Hände is its free object."
 			},

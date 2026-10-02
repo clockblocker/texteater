@@ -512,6 +512,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "😴➡👀" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

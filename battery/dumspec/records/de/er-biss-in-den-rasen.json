@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🦷" },
 			"notes": {
 				"rationale": "Rasen replaces Gras, the word that carries the image of ins Gras beißen, so the Locution breaks and its words resolve on their own: biss is beißen.",
 				"knownMistakes": [

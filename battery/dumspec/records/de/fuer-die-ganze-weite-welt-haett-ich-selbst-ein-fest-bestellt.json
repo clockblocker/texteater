@@ -50,8 +50,9 @@
 		{
 			"memberSegmentIndices": [10, 20],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "📝📦" },
 			"notes": {
-				"rationale": "hätt bestellt is the unreal past, Konjunktiv II with perfect Yes and tense Past, and describes the whole verbal unit (de/verbal-surface-is-whole). hätt is hätte with its final e dropped, a standalone shortened spelling of one word, so it is a Shorthand member and the Surface spells the full hätte bestellt, Canonical (de/member-orthography). The auxiliary member reaches the AUX Reading haben for the perfect from this Surface's Note (#487, #507)."
+				"rationale": "hätt bestellt is the unreal past, Konjunktiv II with perfect Yes and tense Past, and describes the whole verbal unit (de/verbal-surface-is-whole). hätt is hätte with its final e dropped, a standalone shortened spelling of one word, so it is a Shorthand member and the Surface spells the full hätte bestellt, Canonical (de/member-orthography). The auxiliary member reaches the AUX Reading haben for the perfect from this Surface's Note (#487, #507). ein Fest bestellen is DWDS bestellen 1, 'etw. in Auftrag geben'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

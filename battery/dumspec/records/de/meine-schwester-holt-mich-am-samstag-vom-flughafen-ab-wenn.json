@@ -273,6 +273,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤝🚶" },
 			"notes": {
 				"rationale": "ab closes the verbal bracket as the particle of abholen, although vom Flughafen stands right before it: in the bracket, with a particle verb that fits, von … ab is no circumposition (de/bracket-particle-or-circumposition)."
 			},
@@ -804,6 +805,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🛬" },
 			"notes": {
 				"rationale": "Control: in the verb-final clause the particle verb is written whole."
 			},

@@ -131,6 +131,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🚌➡" },
 			"notes": {
 				"rationale": "stieg serves two particle verbs, aussteigen and einsteigen, and one Segment belongs to one target, so it belongs to the coordinated verb nearer to it: aus is next to it, so [stieg, aus] is aussteigen with Full coverage (de/partial-coverage, de/verb-owns-its-scattered-members). Ruled on #724."
 			},
@@ -308,6 +309,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "➡🚌" },
 			"notes": {
 				"rationale": "ein is the particle of einsteigen, whose finite verb stieg the nearer aussteigen owns, so the Attestation is Partial with no evidence field. The shared stieg still counts toward its features, so the Surface is finite Past, third person singular, while its members and normalizedSurface hold only ein (de/partial-coverage, ADR 0041). Not a free directional ADV: ein is coordinated with another particle, not with a free directional phrase (de/bracket-particle-or-circumposition). Ruled on #724."
 			},

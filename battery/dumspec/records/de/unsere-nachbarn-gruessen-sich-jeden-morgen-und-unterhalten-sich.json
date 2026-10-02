@@ -259,6 +259,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "👋" },
 			"notes": {
 				"rationale": "Reciprocal sich alternates with any object in the same sense (grüßen die Nachbarin), so it is a PRON target of its own."
 			},

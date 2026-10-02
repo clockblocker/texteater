@@ -34,7 +34,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -42,6 +42,10 @@
 		{
 			"memberSegmentIndices": [4, 26],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🍖🦴" },
+			"notes": {
+				"rationale": "Emissions eating up the gains is the figurative use (1a, 1b) of DWDS auffressen 1, 'etw. fressen, bis nichts mehr da ist', one Reading under ADR 0031."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

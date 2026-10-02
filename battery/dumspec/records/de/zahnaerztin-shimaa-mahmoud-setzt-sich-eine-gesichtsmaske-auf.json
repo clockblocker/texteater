@@ -22,7 +22,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -30,8 +30,9 @@
 		{
 			"memberSegmentIndices": [6, 14],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🎩⬇" },
 			"notes": {
-				"rationale": "sich ordinary object. Not member."
+				"rationale": "sich ordinary object. Not member. A mask on the face is DWDS aufsetzen 1b and a hat on the head 1a, both putting something on, one Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

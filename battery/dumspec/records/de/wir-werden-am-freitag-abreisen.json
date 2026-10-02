@@ -35,6 +35,7 @@
 		{
 			"memberSegmentIndices": [2, 9],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🧳👋" },
 			"notes": {
 				"rationale": "werden is the future auxiliary of abreisen, so the target is the whole future [werden, abreisen]."
 			},

@@ -762,6 +762,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "➡🚪" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -811,7 +812,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "trat … ein is the particle verb eintreten; the particle is a member (de/verb-owns-its-scattered-members)."
+				"rationale": "trat … ein is the particle verb eintreten; the particle is a member (de/verb-owns-its-scattered-members). DWDS eintreten 1, entering a room."
 			}
 		}
 	],

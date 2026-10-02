@@ -436,6 +436,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🧍↔🧍" },
 			"notes": {
 				"rationale": "gegenüber in the right bracket is the locative particle of the dictionary verb gegenüberstehen (Duden 1: jemandem zugewandt stehen), and the three coordinated datives are its object; read as a postposition, it would have to govern the whole coordination from the bracket (de/bracket-particle-or-circumposition). Ruled on #743 (MB-A7, A6)."
 			},

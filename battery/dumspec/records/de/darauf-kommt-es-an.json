@@ -129,6 +129,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🔑" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -203,7 +204,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "es kommt auf etwas an 'what matters is' (E-VALBU ankommen, es, Lesart 2: Kprp auf + Akk, obligatory) selects an es that refers to nothing and cannot be replaced by a noun phrase, so es is the expletive member of ankommen, set as expletive Subject (de/expletive-es-joins-its-verb). an is the separable particle (de/verb-owns-its-scattered-members). The auf slot is filled by the pronominal adverb Darauf, so the valency evidence records auf + Acc with no member (de/pronominal-adverb-stands-alone)."
+				"rationale": "es kommt auf etwas an 'what matters is' (E-VALBU ankommen, es, Lesart 2: Kprp auf + Akk, obligatory) selects an es that refers to nothing and cannot be replaced by a noun phrase, so es is the expletive member of ankommen, set as expletive Subject (de/expletive-es-joins-its-verb). an is the separable particle (de/verb-owns-its-scattered-members). The auf slot is filled by the pronominal adverb Darauf, so the valency evidence records auf + Acc with no member (de/pronominal-adverb-stands-alone). es kommt auf etw. an is DWDS ankommen 8, what something depends on or what matters, a second Reading beside 🛬, DWDS 1 'anlangen, eintreffen'."
 			}
 		}
 	],

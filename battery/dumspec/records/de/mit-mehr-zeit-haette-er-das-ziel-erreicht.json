@@ -37,8 +37,9 @@
 		{
 			"memberSegmentIndices": [6, 14],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🏁" },
 			"notes": {
-				"rationale": "hätte is the perfect auxiliary of erreicht, so the target is the whole perfect [hätte, erreicht]. Konjunktiv II: tense Past."
+				"rationale": "hätte is the perfect auxiliary of erreicht, so the target is the whole perfect [hätte, erreicht]. Konjunktiv II: tense Past. DWDS erreichen 3, 'zu etw. gelangen', lists both den Zug erreichen and sein Ziel erreichen, so both targets share one Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

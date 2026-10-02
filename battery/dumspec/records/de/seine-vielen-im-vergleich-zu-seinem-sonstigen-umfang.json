@@ -157,7 +157,7 @@
 		"year": 1915
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0039", "ADR-0040", "ADR-0044"],
+		"adrs": ["ADR-0031", "ADR-0035", "ADR-0039", "ADR-0040", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -685,6 +685,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "✨〰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -730,7 +731,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B8). Literal flimmern with Beine as subject. The idiom jemandem flimmert es vor den Augen needs its expletive es, which a real subject replaces, so the words resolve one by one (de/idiom)."
+				"rationale": "Ruled on #743 (VP-B8). Literal flimmern with Beine as subject. The idiom jemandem flimmert es vor den Augen needs its expletive es, which a real subject replaces, so the words resolve one by one (de/idiom). The legs' restless trembling is DWDS flimmern 1a, 'sich sichtbar zitternd, unruhig bewegen', merged with 1, 'unruhig, funkelnd glänzen', under ADR 0031."
 			}
 		},
 		{

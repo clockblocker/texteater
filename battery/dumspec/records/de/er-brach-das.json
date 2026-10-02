@@ -55,8 +55,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🪵💥" },
 			"notes": {
-				"rationale": "brach is the verb brechen on its own. The sentence breaks off before its object is complete, so it realizes no fixed expression such as das Eis brechen, and none is guessed."
+				"rationale": "brach is the verb brechen on its own. The sentence breaks off before its object is complete, so it realizes no fixed expression such as das Eis brechen, and none is guessed. The object breaks off, so brach takes its most probable sense, DWDS brechen 2, breaking something hard into pieces."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

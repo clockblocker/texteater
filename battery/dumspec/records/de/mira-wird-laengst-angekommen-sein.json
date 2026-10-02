@@ -36,6 +36,7 @@
 		{
 			"memberSegmentIndices": [2, 6, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🛬" },
 			"notes": {
 				"rationale": "wird and sein are the future and perfect auxiliaries of angekommen, so the target is the whole future perfect [wird, angekommen, sein]."
 			},

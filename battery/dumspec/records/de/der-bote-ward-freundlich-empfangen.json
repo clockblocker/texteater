@@ -38,8 +38,9 @@
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🤝" },
 			"notes": {
-				"rationale": "ward is the passive auxiliary of empfangen, so the target is the whole passive [ward, empfangen]. ward is the archaic third person singular past indicative of werden, the old preterite that wurde replaced (Duden: veraltet, noch dichterisch). It is Canonical, and its archaic form makes the whole Surface Archaic."
+				"rationale": "ward is the passive auxiliary of empfangen, so the target is the whole passive [ward, empfangen]. ward is the archaic third person singular past indicative of werden, the old preterite that wurde replaced (Duden: veraltet, noch dichterisch). It is Canonical, and its archaic form makes the whole Surface Archaic. DWDS empfangen 4, 'einen Gast offiziell begrüßen', not 1, receiving a thing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

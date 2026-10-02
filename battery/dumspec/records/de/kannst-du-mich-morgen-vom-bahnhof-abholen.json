@@ -421,8 +421,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤝🚶" },
 			"notes": {
-				"rationale": "Consistency partner of meine-schwester-holt-mich-…: the same abholen after the same vom phrase, here written whole as an infinitive."
+				"rationale": "Consistency partner of meine-schwester-holt-mich-…: the same abholen after the same vom phrase, here written whole as an infinitive. DWDS abholen 2, meeting someone at an agreed place and accompanying them, not 1, collecting a thing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
