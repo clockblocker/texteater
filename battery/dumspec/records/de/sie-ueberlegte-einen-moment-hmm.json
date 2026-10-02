@@ -18,7 +18,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			},
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -27,7 +33,7 @@
 			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🤔" },
 			"notes": {
-				"rationale": "Expressive sound lengthening is a licensed Variant and remains Standard occurrence evidence. hm while thinking is Duden's hm that 'drückt Nachdenklichkeit oder Bedenken aus'."
+				"rationale": "hmm stretches hm, the only spelling Duden gives, for effect, so the Surface is a Variant tagged Expressive, not Licensed, and the member is Standard (de/variant-and-historical-status, de/member-orthography). hm while thinking is Duden's hm that 'drückt Nachdenklichkeit oder Bedenken aus'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -45,7 +51,7 @@
 					"normalizedSurface": "hmm",
 					"spelling": {
 						"kind": "Variant",
-						"variantTags": ["Licensed"]
+						"variantTags": ["Expressive"]
 					},
 					"surfaceFeatures": null
 				},

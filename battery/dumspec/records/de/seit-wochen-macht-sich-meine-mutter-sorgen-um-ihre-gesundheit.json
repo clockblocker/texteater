@@ -88,7 +88,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039"],
+		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -392,6 +392,9 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
+			"notes": {
+				"rationale": "ihre is the possessive DET ihr before Gesundheit, Acc.Fem.Sg. ihr- serves a feminine singular possessor and a plural one alike, so its Surface marks neither possessor gender nor possessor number (ADR 0044): meine Mutter is the possessor here, but the form does not show it."
+			},
 			"reading": {
 				"emojiDescription": "🔐"
 			},
@@ -425,9 +428,9 @@
 						"case": "Acc",
 						"degree": null,
 						"gender": "Fem",
-						"gender[psor]": "Fem",
+						"gender[psor]": null,
 						"number": "Sing",
-						"number[psor]": "Sing"
+						"number[psor]": null
 					}
 				},
 				"members": [

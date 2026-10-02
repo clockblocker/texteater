@@ -89,7 +89,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0022", "ADR-0029", "ADR-0034"],
+		"adrs": ["ADR-0002", "ADR-0003", "ADR-0022", "ADR-0029", "ADR-0034"],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -114,6 +114,10 @@
 			{
 				"rule": "de/verb-core-features",
 				"hash": "584917189382edfe"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "044ad2bbec5191e7"
 			}
 		],
 		"references": [
@@ -132,6 +136,9 @@
 				"kind": "ADV"
 			},
 			"reading": { "emojiDescription": "🔙📅" },
+			"notes": {
+				"rationale": "gestern 'yesterday' is a temporal ADV, and its sentence-initial capital is position casing: the Lemma and the normalized Surface are gestern, and the member is Standard (de/canonical-form-is-the-headword, ADR 0002)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -148,7 +155,7 @@
 							"pronType": null
 						}
 					},
-					"normalizedSurface": "Gestern",
+					"normalizedSurface": "gestern",
 					"spelling": {
 						"kind": "Canonical"
 					},

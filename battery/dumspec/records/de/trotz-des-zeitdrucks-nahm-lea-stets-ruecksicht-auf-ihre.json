@@ -26,7 +26,7 @@
 	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039"],
+		"adrs": ["ADR-0003", "ADR-0034", "ADR-0039", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",
@@ -263,6 +263,9 @@
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "🔐" },
+			"notes": {
+				"rationale": "ihre is the possessive DET ihr before Kollegen, Acc.Plur. ihr- serves a feminine singular possessor and a plural one alike, so its Surface marks neither possessor gender nor possessor number (ADR 0044): Lea is the possessor here, but the form does not show it."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -291,9 +294,9 @@
 						"case": "Acc",
 						"degree": null,
 						"gender": null,
-						"gender[psor]": "Fem",
+						"gender[psor]": null,
 						"number": "Plur",
-						"number[psor]": "Sing"
+						"number[psor]": null
 					}
 				},
 				"members": [{ "attested": "ihre", "orthography": "Standard" }],
