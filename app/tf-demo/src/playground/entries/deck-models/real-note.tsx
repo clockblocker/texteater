@@ -11,7 +11,6 @@ import {
 	renderUniversalNote,
 } from "@/notes/universal/note/render";
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
-import { nounHeadingArticle } from "../../../../shared/grammatical-gender";
 import type { PlaygroundSnapshot } from "../../../../tooling/playground-snapshot";
 import { playgroundNotesQuery } from "../playground-note";
 import { type DummyNote, type NoteLink, noteId, sourceOf } from "./dummy";
@@ -40,7 +39,7 @@ export function FixtureNotesProvider({ children }: { children: ReactNode }) {
 /**
  * The fixture behind a ported Reading, or null while the fake db loads or
  * when the Note is not ported. The fixtures carry no noun genders yet; the
- * port gives its noun one, so the Heading shows an article to follow.
+ * port gives its noun one, so the Heading takes a gender tone.
  */
 export function usePortedReading(note: DummyNote | null): ReadingNote | null {
 	const snapshot = useContext(FixtureContext);
@@ -75,7 +74,6 @@ export function usePortedFollow(
 	onFollow: (link: NoteLink) => void,
 ): {
 	follow: (target: WorkspaceTarget) => void;
-	article: (article: string) => void;
 } {
 	const snapshot = useContext(FixtureContext);
 	return {
@@ -83,12 +81,6 @@ export function usePortedFollow(
 			const link = linkFor(snapshot, target, word);
 			if (link) onFollow(link);
 		},
-		article: (article) =>
-			onFollow({
-				kind: "Note",
-				noteId: noteId("Reading", article),
-				label: `Reading of ${article}`,
-			}),
 	};
 }
 
@@ -163,14 +155,6 @@ function capabilitiesOf(
 		...(defaultCapabilities(note) as ReadingPresentationCapabilities),
 		presentation,
 		follow: follow.follow,
-		nounArticle: {
-			follow: () => {
-				const article = nounHeadingArticle(note.reading.lemma);
-				if (article) follow.article(article);
-			},
-			pending: false,
-			error: null,
-		},
 	};
 }
 

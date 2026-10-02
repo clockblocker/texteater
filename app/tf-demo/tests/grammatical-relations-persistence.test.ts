@@ -34,8 +34,6 @@ const lemma: Dumling.Lemma<"de", "Lexeme", "PRON"> = {
 	kind: "PRON",
 	canonicalForm: "mich",
 	coreFeatures: {
-		extPos: null,
-		foreign: null,
 		person: "1",
 		polite: null,
 		poss: null,
@@ -50,15 +48,6 @@ const reading: Dumling.Reading<"de", "Lexeme", "PRON"> = {
 	lemma,
 	emojiDescription: "👤",
 };
-const noun = {
-	unitKind: "Lemma",
-	language: "de",
-	family: "Lexeme",
-	kind: "NOUN",
-	canonicalForm: "Frau",
-	coreFeatures: { gender: "Fem", hyph: null },
-} as const;
-
 /** Stores a Lemma row as the dictionary does, without its `unitKind`. */
 async function insertLemma(
 	t: TestConvexDb,
@@ -192,8 +181,6 @@ test("a stem determiner's forms stay inside its Lemma: diesem never reaches jene
 		coreFeatures: {
 			case: null,
 			definite: null,
-			extPos: null,
-			foreign: null,
 			gender: null,
 			number: null,
 			numType: null,
@@ -206,74 +193,6 @@ test("a stem determiner's forms stay inside its Lemma: diesem never reaches jene
 	// Every form of dieser belongs to this one Reading Note; no alternative
 	// opens another Lemma's note.
 	expect(reviewedAlternatives(dieser)).toEqual([]);
-});
-
-test("noun heading navigation materializes the authored DET Reading without relations or encounters", async () => {
-	const t = createTestConvex();
-	const lemmaId = await insertLemma(t, noun);
-	const id = await t.mutation(api.reviewedNavigation.followNounArticle, {
-		lemmaId,
-	});
-	const articleLemma = await t.run(async (ctx) => {
-		const article = await ctx.db.get(id);
-		return article ? ctx.db.get(article.lemmaId) : null;
-	});
-	expect(articleLemma).toMatchObject({ kind: "DET", canonicalForm: "die" });
-	expect((await knowledgeRows(t))[0]?.knowledge.definition).toContain(
-		"Artikel",
-	);
-	for (const table of [
-		"surfaces",
-		"attestations",
-		"visitorClicks",
-		"semanticRelationEdges",
-	] as const)
-		expect(await rows(t, table)).toHaveLength(0);
-	const before = await snapshot(t);
-	expect(
-		await t.mutation(api.reviewedNavigation.followNounArticle, { lemmaId }),
-	).toBe(id);
-	expect(await snapshot(t)).toEqual(before);
-});
-
-test("noun heading navigation rejects non-nouns before writing", async () => {
-	const { t, sourceLemmaId } = await database();
-	const before = await snapshot(t);
-	await expect(
-		t.mutation(api.reviewedNavigation.followNounArticle, {
-			lemmaId: sourceLemmaId,
-		}),
-	).rejects.toThrow("no noun heading article");
-	expect(await snapshot(t)).toEqual(before);
-});
-
-test("noun composition creates its article Reading with authored Knowledge before navigation", async () => {
-	const t = createTestConvex();
-	const lemmaId = await insertLemma(t, noun);
-	const reference = nounArticleReference({
-		article: "Definite",
-		// The heading article is the nominative singular cell of the noun's gender.
-		case: "Nom",
-		number: "Sing",
-		gender: "Fem",
-		spelled: "die",
-	});
-	await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
-	expect(await rows(t, "accumulatedKnowledge")).toHaveLength(1);
-	const id = await t.mutation(api.reviewedNavigation.followNounArticle, {
-		lemmaId,
-	});
-	expect((await knowledgeRows(t))[0]?.knowledge.definition).toContain(
-		"Artikel",
-	);
-	expect(await rows(t, "readings")).toHaveLength(1);
-	expect(await rows(t, "semanticRelationEdges")).toHaveLength(0);
-	expect(await rows(t, "visitorClicks")).toHaveLength(0);
-	const before = await snapshot(t);
-	expect(
-		await t.mutation(api.reviewedNavigation.followNounArticle, { lemmaId }),
-	).toBe(id);
-	expect(await snapshot(t)).toEqual(before);
 });
 
 for (const [article, gender, spelled, canonical] of [

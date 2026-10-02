@@ -4,7 +4,6 @@ import { useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { useNounArticleNavigation } from "@/hooks/use-noun-article-navigation";
 import type { RouteNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
@@ -134,7 +133,6 @@ function PaginatedRouteNote({
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const convex = useConvex();
-	const nounArticle = useNounArticleNavigation();
 	const loadRoutePage = useCallback(
 		async (cursor: string) => {
 			const next = await convex.query(api.routeNotes.get, {
@@ -152,15 +150,12 @@ function PaginatedRouteNote({
 
 	return renderNote({
 		noteData: pagination.note,
-		capabilities: {
-			nounArticle,
-			...routeNoteCapabilities(follow, presentation, {
-				hasMore: pagination.hasMore,
-				isLoading: pagination.isLoading,
-				error: pagination.error,
-				loadMore: pagination.hasMore ? pagination.loadMore : null,
-			}),
-		},
+		capabilities: routeNoteCapabilities(follow, presentation, {
+			hasMore: pagination.hasMore,
+			isLoading: pagination.isLoading,
+			error: pagination.error,
+			loadMore: pagination.hasMore ? pagination.loadMore : null,
+		}),
 	});
 }
 

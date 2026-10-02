@@ -1,6 +1,5 @@
 import { LinkButton, NoteSection } from "lego";
 
-import { displayedSurface } from "../../../../../../../shared/surface-display";
 import type { GrammaticalDefaultRenderer } from "../../../renderer";
 import { featureSummary } from "../../common/feature-values";
 import { RouteAside } from "../../common/features";
@@ -16,7 +15,10 @@ export const renderDefaultAttestationRoutes = (({
 }) => {
 	const { surface } = noteData.presented;
 	const inflection = featureSummary(surface.inflectionalFeatures);
-	const spelling = surface.spelling === "Canonical" ? null : surface.spelling;
+	const spelling =
+		surface.spelling.kind === "Canonical"
+			? null
+			: `Variant: ${surface.spelling.variantTags.join(", ")}`;
 	return (
 		<NoteSection aria-label="Route" label="Route">
 			<ul className="grid gap-2">
@@ -29,7 +31,7 @@ export const renderDefaultAttestationRoutes = (({
 						}
 					>
 						<RouteMark hop="leadsTo" />
-						{displayedSurface(surface)}
+						{surface.normalizedSurface}
 					</LinkButton>
 					{spelling ||
 					inflection ||

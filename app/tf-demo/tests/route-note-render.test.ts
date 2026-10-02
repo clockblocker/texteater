@@ -84,7 +84,7 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 	expect(attestationMarkup).not.toContain('role="alert"');
 });
 
-test("an Attestation holding a piece of a fused word reaches its Fusion, and its noun Surface shows the article", () => {
+test("an Attestation holding a piece of a fused word reaches its Fusion", () => {
 	const fusion = {
 		spelling: "im",
 		components: [
@@ -99,8 +99,8 @@ test("an Attestation holding a piece of a fused word reaches its Fusion, and its
 			coreFeatures: { gender: "Masc" },
 		},
 		inflectionalFeatures: {
-			article: "Definite",
 			case: "Dat",
+			gender: "Masc",
 			number: "Sing",
 		},
 	};
@@ -161,7 +161,6 @@ test("an Attestation holding a piece of a fused word reaches its Fusion, and its
 	expect(markup.replaceAll(/<[^>]+>/g, "")).toContain("im = in + dem");
 	expect(markup).toContain('data-realized="true"');
 	expect(markup).toContain("„im“ ist „in dem“.");
-	expect(markup).toContain("dem Wald");
 	const bare = {
 		...attestation,
 		presented: { ...attestation.presented, fusions: [] },
@@ -272,7 +271,7 @@ function presentedSurface(
 		unitKind: "Surface",
 		language: "de",
 		normalizedSurface,
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 
 		surfaceFeatures: {},
 		lemma: presentedLemma(canonicalForm, kind),

@@ -101,7 +101,7 @@ export const renderDefaultLemmaRoutes = (({
 									hop="reachedFrom"
 									className="me-1.5"
 								/>
-								{surface.displayed}
+								{surface.normalizedSurface}
 							</LinkButton>
 						</li>
 					))}

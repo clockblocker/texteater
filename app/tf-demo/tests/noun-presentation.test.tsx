@@ -8,9 +8,8 @@ import {
 } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { api } from "../convex/_generated/api";
-import { coreGender, nounHeadingArticle } from "../shared/grammatical-gender";
+import { coreGender } from "../shared/grammatical-gender";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
-import { displayedSurface } from "../shared/surface-display";
 import { renderNote } from "../src/notes";
 import { ReaderSentence } from "../src/views/reader-sentence";
 
@@ -22,12 +21,6 @@ type SurfaceNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.routeNotes.get>>,
 	{ readonly kind: "Surface" }
 >;
-type NounArticleNavigation = NonNullable<
-	Extract<
-		Parameters<typeof renderNote>[0],
-		{ readonly noteData: ReadingNote }
-	>["capabilities"]
->["nounArticle"];
 
 const lemma = {
 	language: "de",
@@ -49,133 +42,37 @@ test("only noun and pronoun Core Features supply colour", () => {
 			coreFeatures: { "gender[psor]": "Fem", gender: null },
 		}),
 	).toBeUndefined();
-	expect(nounHeadingArticle(lemma)).toBe("der");
-	expect(
-		nounHeadingArticle({ ...lemma, coreFeatures: { gender: null } }),
-	).toBeUndefined();
 });
 
-test("a noun Surface is displayed with the article its features derive", () => {
-	const wald = (
-		language: string,
-		inflectionalFeatures: Record<string, string | null>,
-		kind = "NOUN",
-	) =>
-		displayedSurface({
-			language,
-			normalizedSurface: language === "he" ? "בית" : "Wald",
-			inflectionalFeatures,
-			lemma: { family: "Lexeme", kind, coreFeatures: { gender: "Masc" } },
-		});
-	expect(
-		wald("de", { article: "Definite", case: "Dat", number: "Sing" }),
-	).toBe("dem Wald");
-	expect(
-		wald("de", { article: "Indefinite", case: "Acc", number: "Sing" }),
-	).toBe("einen Wald");
-	expect(wald("de", { article: "None", case: "Dat", number: "Sing" })).toBe(
-		"Wald",
-	);
-	expect(wald("en", { article: "Definite", number: "Sing" })).toBe("Wald");
-	expect(wald("he", { definite: "Def" })).toBe("הבית");
-	expect(wald("he", { definite: "Ind" })).toBe("בית");
-	expect(
-		wald("de", { article: "Definite", case: "Dat", number: "Sing" }, "ADJ"),
-	).toBe("Wald");
-});
-
-test("a name cited with its article is displayed with it, a bare one without", () => {
-	const name = (
-		normalizedSurface: string,
-		coreFeatures: Record<string, string | null>,
-		inflectionalFeatures: Record<string, string | null> | null,
-		language = "de",
-	) =>
-		displayedSurface({
-			language,
-			normalizedSurface,
-			inflectionalFeatures,
-			lemma: { family: "Lexeme", kind: "PROPN", coreFeatures },
-		});
-	const schweiz = { article: "Definite", gender: "Fem" };
-	expect(name("Schweiz", schweiz, { case: "Dat", number: "Sing" })).toBe(
-		"der Schweiz",
-	);
-	expect(name("Schweiz", schweiz, { case: "Acc", number: "Sing" })).toBe(
-		"die Schweiz",
-	);
-	expect(
-		name(
-			"Niederlanden",
-			{ article: "Definite", gender: null },
-			{ case: "Dat", number: "Plur" },
-		),
-	).toBe("den Niederlanden");
-	// Without a case, as in direct address, no article form is shown.
-	expect(name("Schweiz", schweiz, null)).toBe("Schweiz");
-	expect(
-		name(
-			"Berlin",
-			{ article: null, gender: "Neut" },
-			{ case: "Dat", number: "Sing" },
-		),
-	).toBe("Berlin");
-	expect(
-		name("ירדן", { article: "Definite", gender: "Masc" }, null, "he"),
-	).toBe("הירדן");
-	expect(
-		name("Netherlands", { article: "Definite" }, { number: "Plur" }, "en"),
-	).toBe("Netherlands");
-	const heading = (coreFeatures: Record<string, string | null>) =>
-		nounHeadingArticle({
-			language: "de",
-			family: "Lexeme",
-			kind: "PROPN",
-			coreFeatures,
-		});
-	expect(heading(schweiz)).toBe("die");
-	expect(heading({ article: "Definite", gender: "Masc" })).toBe("der");
-	expect(heading({ article: "Definite", gender: null })).toBe("die");
-	expect(heading({ article: null, gender: "Neut" })).toBeUndefined();
-});
-
-test("noun Reading heading has separate article and noun destinations", () => {
+// The heading shows no article until #683 derives it from gender.
+test("noun Reading heading takes its gender tone and links its Lemma", () => {
 	const followed: unknown[] = [];
-	const note = renderReading(readingNote(), {
-		follow: (id) => followed.push(id),
-		pending: false,
-		error: null,
-	});
+	const note = renderReading(readingNote(), (target) =>
+		followed.push(target),
+	);
 	const markup = renderToStaticMarkup(blockOf(note, "Header"));
 	expect(markup).toContain("[--link:var(--gender-masculine)]");
-	expect(markup).toContain("der, open its authored DET Reading");
 	expect(markup).toContain("Aufstieg, open its Lemma");
 	expect(markup).toContain("⛰️⬆️");
-	click(note, "der, open its authored DET Reading");
-	expect(followed).toEqual(["lemma-1"]);
+	expect(markup).not.toContain("der ");
+	click(note, "Aufstieg, open its Lemma");
+	expect(followed).toEqual([{ kind: "Lemma", lemmaId: "lemma-1" }]);
 });
 
-test("Surface heading links its existing article once and follows the exact analysis", () => {
-	const follows: unknown[] = [];
-	const follow = (...args: unknown[]) => follows.push(args);
-	const article = {
-		presented: { normalizedSurface: "einem" },
-		target: { kind: "Surface", language: "de", normalizedSurface: "einem" },
-		presentationContext: { activeAnalysisKey: "det-dative" },
-	};
+test("Surface heading takes the gender tone of its active analysis", () => {
+	const follow = () => {};
 	const analysis = {
 		analysisKey: "noun-dative",
 		presented: {
 			language: "de",
 			normalizedSurface: "Aufstieg",
 			inflectionalFeatures: {
-				article: "Indefinite",
 				case: "Dat",
+				gender: "Masc",
 				number: "Sing",
 			},
 			lemma,
 		},
-		article,
 	};
 	const surfaceNote = (analyses: readonly unknown[]) =>
 		({
@@ -205,12 +102,9 @@ test("Surface heading links its existing article once and follows the exact anal
 			}),
 			"Header",
 		);
-	const element = heading([analysis]);
-	const markup = renderToStaticMarkup(element);
+	const markup = renderToStaticMarkup(heading([analysis]));
 	expect(markup).toContain("[--link:var(--gender-masculine)]");
-	expect(markup).toContain(">einem</button> Aufstieg");
-	click(element, "einem, open its DET Surface");
-	expect(follows).toEqual([[article.target, article.presentationContext]]);
+	expect(markup).toContain(">Aufstieg</");
 	const ambiguous = [
 		analysis,
 		{
@@ -342,7 +236,7 @@ function readingNote(sourceContexts: readonly unknown[] = []): ReadingNote {
 
 function renderReading(
 	note: ReadingNote,
-	nounArticle?: NounArticleNavigation,
+	follow: (target: unknown) => void = () => {},
 ): ReactElement {
 	return renderNote({
 		noteData: note,
@@ -356,8 +250,7 @@ function renderReading(
 				loadMore: null,
 			},
 			personalAnnotation: { isSaving: false, error: null, save: null },
-			...(nounArticle ? { nounArticle } : {}),
-			follow: () => {},
+			follow,
 		},
 	});
 }

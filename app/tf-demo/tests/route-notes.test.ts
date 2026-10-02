@@ -1,8 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import type { FunctionArgs, FunctionReturnType } from "convex/server";
-import { makeSurfaceId } from "dumdict";
 import type * as Dumling from "dumling/types";
-import { nounArticleReference } from "legacy-dumgen";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { projectSentenceView } from "../convex/modules/text/sentenceView";
@@ -83,7 +81,7 @@ function insertSurface(
 			lemmaId,
 			language,
 			normalizedSurface,
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
 			inflectionalFeatures: null,
 		}),
@@ -517,10 +515,9 @@ async function exhaustRoutePages(
 }
 
 function lemmaCoreFeatures({ canonicalForm, kind, pronType }: LemmaSeed) {
-	if (kind === "NOUN") return { gender: null, hyph: null };
+	if (kind === "NOUN") return { gender: null };
 	if (kind === "VERB") {
 		return {
-			verbType: null,
 			lexicallyReflexive: null,
 			hasSepPrefix: null,
 		};
@@ -536,8 +533,6 @@ function lemmaCoreFeatures({ canonicalForm, kind, pronType }: LemmaSeed) {
 						)
 					? "Tot"
 					: "Ind"),
-		extPos: null,
-		foreign: null,
 		person: null,
 		polite: null,
 		poss: null,
@@ -546,82 +541,6 @@ function lemmaCoreFeatures({ canonicalForm, kind, pronType }: LemmaSeed) {
 		gender: "Masc",
 	};
 }
-
-test("noun Surface article opens the exact DET analysis, including feminine der", async () => {
-	const t = createTestConvex();
-	const reference = nounArticleReference({
-		article: "Definite",
-		case: "Dat",
-		number: "Sing",
-		gender: "Fem",
-		spelled: "der",
-	});
-	const { unitKind: _lemmaUnit, ...articleLemma } = reference.reading.lemma;
-	const articleSurfaceId = await t.run(async (ctx) => {
-		const nounId = await ctx.db.insert("lemmas", {
-			lemmaKey: "lemma-frau",
-			language: "de",
-			family: "Lexeme",
-			kind: "NOUN",
-			canonicalForm: "Frau",
-			coreFeatures: { gender: "Fem", hyph: null },
-		});
-		const articleLemmaId = await ctx.db.insert("lemmas", {
-			...articleLemma,
-			lemmaKey: "lemma-der-dat-fem",
-		});
-		await ctx.db.insert("surfaces", {
-			surfaceKey: "surface-der-frau",
-			language: "de",
-			lemmaId: nounId,
-			normalizedSurface: "der Frau",
-			spelling: "Canonical",
-			surfaceFeatures: null,
-			inflectionalFeatures: {
-				article: "Definite",
-				case: "Dat",
-				number: "Sing",
-			},
-		});
-		return ctx.db.insert("surfaces", {
-			surfaceKey: makeSurfaceId("de", reference.surface),
-			language: reference.surface.language,
-			lemmaId: articleLemmaId,
-			normalizedSurface: reference.surface.normalizedSurface,
-			spelling: reference.surface.spelling,
-			surfaceFeatures: reference.surface.surfaceFeatures,
-			inflectionalFeatures: reference.surface.inflectionalFeatures,
-		});
-	});
-
-	const note = await routeNote(t, {
-		kind: "Surface",
-		language: "de",
-		normalizedSurface: "der Frau",
-	});
-	expect(note).toMatchObject({
-		analyses: [
-			{
-				article: {
-					target: {
-						kind: "Surface",
-						language: "de",
-						normalizedSurface: "der",
-					},
-					presentationContext: {
-						activeAnalysisKey: articleSurfaceId,
-					},
-					presented: {
-						lemma: {
-							canonicalForm: "der",
-							coreFeatures: { gender: "Fem", case: "Dat" },
-						},
-					},
-				},
-			},
-		],
-	});
-});
 
 test("sentence gender belongs to the visitor's encountered occurrence, including its article", async () => {
 	const t = createTestConvex();
@@ -639,7 +558,7 @@ test("sentence gender belongs to the visitor's encountered occurrence, including
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Frau",
-			coreFeatures: { gender: "Fem", hyph: null },
+			coreFeatures: { gender: "Fem" },
 		}),
 	);
 	await attest(

@@ -7,7 +7,6 @@ import { useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback, useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { useNounArticleNavigation } from "@/hooks/use-noun-article-navigation";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import type { ReadingNoteTarget } from "@/lib/navigation";
 import { visitorErrorMessage } from "@/lib/visitor-error";
@@ -130,7 +129,6 @@ function ReadingNoteContainer({
 	const ensureKnowledge = useMutation(
 		api.knowledgeGeneration.ensureForReading,
 	);
-	const nounArticle = useNounArticleNavigation();
 	const followAlternative = useMutation(
 		api.reviewedNavigation.followGrammaticalAlternative,
 	);
@@ -181,7 +179,6 @@ function ReadingNoteContainer({
 		});
 	}
 	const capabilities = {
-		nounArticle,
 		grammaticalAlternatives: {
 			follow: (readingKey: string) =>
 				alternativeMutation.mutateAsync(readingKey),

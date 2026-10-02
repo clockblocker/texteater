@@ -11,7 +11,6 @@ export type ShadowNoteReferrer =
 	NoteDataFor<"Shadow">["references"]["page"][number];
 
 export type ReadingPresentationCapabilities = {
-	readonly nounArticle?: NounArticleNavigation;
 	readonly grammaticalAlternatives?: {
 		readonly follow: (readingKey: string) => Promise<void>;
 		readonly pending: boolean;
@@ -56,7 +55,6 @@ export type DefinitionCapabilities = {
 };
 
 export type RoutePresentationCapabilities = {
-	readonly nounArticle?: NounArticleNavigation;
 	readonly presentation?: "Card" | "Sheet";
 	readonly activeAnalysisKey?: Id<"surfaces">;
 	readonly pagination: {
@@ -69,12 +67,6 @@ export type RoutePresentationCapabilities = {
 		target: WorkspaceTarget,
 		presentationContext?: NotePresentationContext,
 	) => void;
-};
-
-export type NounArticleNavigation = {
-	readonly follow: (lemmaId: Id<"lemmas">) => void;
-	readonly pending: boolean;
-	readonly error: string | null;
 };
 
 export type SurfacePresentationCapabilities = {

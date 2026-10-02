@@ -13,7 +13,6 @@ import type { ReadingPresentationCapabilities } from "../../../../note/capabilit
 import type { ReadingNotePending } from "../../../../note/data";
 import type { ReadingDefaultRenderer } from "../../../renderer";
 import { genderTone } from "../../common/feature-values";
-import { NounArticle } from "../../common/noun-article";
 
 export const DefaultReadingHeaderRenderer = (({
 	noteData,
@@ -77,13 +76,6 @@ export function ReadingHeader({
 							{note.reading.emojiDescription}{" "}
 						</span>
 					)}
-					<NounArticle
-						lemma={lemma}
-						lemmaId={lemma.lemmaId}
-						navigation={
-							pending ? undefined : capabilities.nounArticle
-						}
-					/>
 					{pending ? (
 						<span data-reading-headword="">{headword}</span>
 					) : (
@@ -105,11 +97,6 @@ export function ReadingHeader({
 					<Ipa transcription={note.knowledge.transcription} />
 				) : null}
 			</NoteTitleRow>
-			{capabilities.nounArticle?.error ? (
-				<p role="alert" className="text-sm text-destructive">
-					{capabilities.nounArticle.error}
-				</p>
-			) : null}
 		</header>
 	);
 }

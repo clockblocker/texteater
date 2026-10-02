@@ -34,7 +34,6 @@ export const renderDefaultSurfaceRoutes = (({
 			<ul className="grid gap-2">
 				{shown.map((analysis) => {
 					const { lemma } = analysis.presented;
-					const { article } = analysis;
 					const isActive = analysis.analysisKey === activeAnalysisKey;
 					const tone = genderTone(lemma) ?? "default";
 					const inflection = featureSummary(
@@ -45,30 +44,6 @@ export const renderDefaultSurfaceRoutes = (({
 							key={analysis.analysisKey}
 							data-active={isActive || undefined}
 						>
-							{article ? (
-								<div className="mb-2">
-									<LinkButton
-										tone={
-											tone === "default" ? "link" : tone
-										}
-										onClick={() =>
-											PresentationCapabilities.follow(
-												article.target,
-												article.presentationContext,
-											)
-										}
-									>
-										{article.presented.normalizedSurface}
-									</LinkButton>
-									<RouteAside>
-										Article ·{" "}
-										{featureSummary(
-											article.presented
-												.inflectionalFeatures,
-										)}
-									</RouteAside>
-								</div>
-							) : null}
 							<LinkButton
 								aria-current={isActive ? "true" : undefined}
 								onClick={() =>

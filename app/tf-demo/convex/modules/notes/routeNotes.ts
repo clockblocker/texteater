@@ -1,8 +1,4 @@
 import { v } from "convex/values";
-import { makeSurfaceId } from "dumdict/planning";
-import { deriveNounArticle } from "legacy-dumgen/authored";
-import { parseGermanSurface } from "../../../server/operationalParsing";
-import { displayedSurface } from "../../../shared/surface-display";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
@@ -70,7 +66,8 @@ const attestationRouteNoteValidator = v.object({
 	presented: presentedAttestationValidator,
 	surfaceTarget: surfaceTargetValidator,
 	reading: v.object({
-		emojiDescription: v.string(),
+		/** A Foreign Reading has none (ADR 0045). */
+		emojiDescription: v.optional(v.string()),
 		target: readingTargetValidator,
 	}),
 });
@@ -78,8 +75,6 @@ const attestationRouteNoteValidator = v.object({
 const surfaceRouteConnectionValidator = v.object({
 	surfaceId: v.id("surfaces"),
 	normalizedSurface: v.string(),
-	/** The Surface as the learner reads it: a noun with its article. */
-	displayed: v.string(),
 	canonicalForm: v.string(),
 	family: familyValidator,
 	kind: kindValidator,
@@ -92,18 +87,6 @@ const surfaceRouteNoteValidator = v.object({
 	analyses: v.array(
 		v.object({
 			analysisKey: v.id("surfaces"),
-			article: v.optional(
-				v.union(
-					v.null(),
-					v.object({
-						presented: presentedSurfaceValidator,
-						target: surfaceTargetValidator,
-						presentationContext: v.object({
-							activeAnalysisKey: v.id("surfaces"),
-						}),
-					}),
-				),
-			),
 			surfaceId: v.id("surfaces"),
 			lemmaId: v.id("lemmas"),
 			presented: presentedSurfaceValidator,
@@ -133,7 +116,8 @@ const lemmaRouteNoteValidator = v.object({
 		readings: v.array(
 			v.object({
 				readingId: v.id("readings"),
-				emojiDescription: v.string(),
+				/** A Foreign Reading has none (ADR 0045). */
+				emojiDescription: v.optional(v.string()),
 				target: readingTargetValidator,
 			}),
 		),
@@ -275,34 +259,6 @@ async function loadSurfaceRouteNote(
 	const lemmas = await Promise.all(
 		surfaces.map((surface) => ctx.db.get(surface.lemmaId)),
 	);
-	const articles = await Promise.all(
-		surfaces.map(async (surface, index) => {
-			const lemma = lemmas[index];
-			if (!lemma) return null;
-			const value = parseGermanSurface(surfaceValue(surface, lemma));
-			const reference = deriveNounArticle(value);
-			if (!reference) return null;
-			const component = await ctx.db
-				.query("surfaces")
-				.withIndex("by_surface_key", (q) =>
-					q.eq("surfaceKey", makeSurfaceId("de", reference.surface)),
-				)
-				.unique();
-			if (!component)
-				throw new Error(
-					"Article Surface was not materialized with its noun Surface",
-				);
-			return {
-				presented: presentSurface(reference.surface),
-				target: {
-					kind: "Surface" as const,
-					language: "de" as const,
-					normalizedSurface: reference.surface.normalizedSurface,
-				},
-				presentationContext: { activeAnalysisKey: component._id },
-			};
-		}),
-	);
 	const analyses = surfaces.flatMap((surface, index) => {
 		const lemma = lemmas[index];
 		if (
@@ -319,7 +275,6 @@ async function loadSurfaceRouteNote(
 					surface._id === activeRedirect && activeAnalysisKey
 						? activeAnalysisKey
 						: surface._id,
-				article: articles[index] ?? null,
 				surfaceId: surface._id,
 				lemmaId: lemma._id,
 				presented: presentSurface(surfaceValue(surface, lemma)),
@@ -456,9 +411,6 @@ async function loadLemmaRouteNote(
 							{
 								surfaceId: surface._id,
 								normalizedSurface: surface.normalizedSurface,
-								displayed: displayedSurface(
-									surfaceValue(surface, lemma),
-								),
 								canonicalForm: lemma.canonicalForm,
 								family: lemma.family,
 								kind: lemma.kind,
