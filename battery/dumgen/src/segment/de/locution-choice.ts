@@ -4,9 +4,10 @@
  * expression and assembly still splits it, because its link stayed under a
  * floor: an idiom host share of 0.3 to 0.7 (die Katze im Sack … gekauft),
  * an expression Noul of 0.5 to 0.7 (bitte schön), or a fixedness Noul under
- * 0.5 for one member (Blase … Trübsal, the m of zum Beispiel). Code turns
- * each such link between two of the membership's units into a merge
- * candidate and shows the judge the unit the merge would make, fused pieces
+ * 0.5 for one member (Blase … Trübsal, the m of zum Beispiel), or a fused
+ * word's pieces split between units (Im Allgemeinen gives [I] and [m,
+ * Allgemeinen]). Code turns each such link between two of the membership's
+ * units into a merge candidate and shows the judge the unit the merge would make, fused pieces
  * and a member noun's opening preposition included (de/fused-word-pieces).
  * The judge then takes de/fixed-member-test on each of the two units: is it
  * a fixed part of one established expression with the other, needed in its
@@ -38,7 +39,7 @@ import {
 	articleHosts,
 	type Membership,
 } from "./assembly.js";
-import { reflexiveForms } from "./candidates.js";
+import { fusedSiblings, reflexiveForms } from "./candidates.js";
 import { boundPieces, type CodeRule, withCodeRules } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
 import { argmax, groupKey, partitionOf } from "./partition.js";
@@ -62,6 +63,8 @@ export const locutionSettings: LocutionSettings = {
 const idiomFlag = 0.25;
 /** Below its floor, an expression Noul that still flags a merge. */
 const expressionFlag = 0.5;
+/** The fixedness that makes a piece a possible expression member: nomination's own flag for the `expressions` request. */
+const fixedFlag = 0.3;
 
 /** Two units of the membership the judge weighs as one wording. */
 export type MergeCandidate = {
@@ -97,8 +100,9 @@ function keptApart(
 
 /**
  * The pairs of units a sub-floor link joins: an idiom host share of at
- * least 0.25, first or re-asked, or an expression Noul of at least 0.5,
- * between pieces of two units, neither a Saying, holding a bound piece, nor
+ * least 0.25, first or re-asked, an expression Noul of at least 0.5, or a
+ * fused word's pieces split between a unit of its own and one with a
+ * possibly fixed word, between pieces of two units, neither a Saying, holding a bound piece, nor
  * one word the Rules keep apart.
  */
 export function mergeCandidates(
@@ -150,6 +154,24 @@ export function mergeCandidates(
 	}
 	for (const link of nomination.links)
 		if (link.probability >= expressionFlag) flag(link.left, link.right);
+	// de/fused-word-pieces: in a fixed expression both pieces of a fused
+	// word are members, so a piece left alone beside a sibling in a unit
+	// with a possibly fixed word (Im Allgemeinen gives [I] and [m,
+	// Allgemeinen]) is a candidate.
+	for (const [id, run] of fusedSiblings(nomination.sentence)) {
+		if (groupOf.get(id)?.length !== 1) continue;
+		for (const sibling of run) {
+			const group = groupOf.get(sibling);
+			if (
+				group &&
+				group.length > 1 &&
+				group.some(
+					(piece) => (nomination.fixed.get(piece) ?? 0) >= fixedFlag,
+				)
+			)
+				flag(id, sibling);
+		}
+	}
 	return [...pairs.values()].sort(
 		(a, b) =>
 			(a.left[0] ?? 0) - (b.left[0] ?? 0) ||

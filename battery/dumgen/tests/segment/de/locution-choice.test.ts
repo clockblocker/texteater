@@ -188,3 +188,37 @@ test("Zum Beispiel: the Locution Choice asks about the heard links and, both uni
 		route: expect.objectContaining({ family: "Locution", kind: "ADV" }),
 	});
 });
+
+test("a fused word split between units is a candidate when the other unit holds a possibly fixed word: Im Allgemeinen", async () => {
+	// I0 m1 _2 Allgemeinen3 _4 ist5 _6 er7 _8 pünktlich9 .10
+	const segments = [
+		{ kind: "ResolvableText", text: "I", surface: "in" },
+		{ kind: "ResolvableText", text: "m", surface: "dem" },
+		...segmentsOf(" Allgemeinen ist er pünktlich."),
+	] as const;
+	const judge = fakeJudge({
+		f_3: noul(0.7),
+		s_article_2: picked("p3", { p3: 0.6, none: 0.4 }),
+		lc_1_x_2_3_l: fixedSide,
+		lc_1_x_2_3_r: fixedSide,
+	});
+	const units = await segmentGermanUnits(
+		{ segments: [...segments] },
+		judge.ask,
+		withLocution,
+	);
+	expect(units.map((unit) => unit.segments)).toEqual([
+		[0, 1, 3],
+		[5],
+		[7],
+		[9],
+	]);
+	// Without a possibly fixed word beside it, the fused piece asks nothing.
+	const plain = fakeJudge({ s_article_2: picked("p3") });
+	await segmentGermanUnits(
+		{ segments: [...segments] },
+		plain.ask,
+		withLocution,
+	);
+	expect(plain.stages()).not.toContain("locution");
+});
