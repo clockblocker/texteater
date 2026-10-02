@@ -1,10 +1,9 @@
 /**
  * jev (TypeSafe System One) as `segment.inUnits` reaches it: one request of
  * state and questions to a pinned model, answered with the model that
- * answered and the tokens it used. `createSegment` sends every request of
+ * answered and the tokens it used. `createDumgen` sends every request of
  * the segmenter through a `JevAsk` in chunks of `questionsPerRequest`.
- * `createTypeSafeAsk` sends them to the TypeSafe API; the lab answers them
- * from its disk cache; a test passes a fake.
+ * `createTypeSafeAsk` sends them to the TypeSafe API; a test passes a fake.
  */
 import type { EntryType, Questions } from "promptsmith/typesafe";
 import type { Answers } from "./ask.js";

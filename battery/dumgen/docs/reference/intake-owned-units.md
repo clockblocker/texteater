@@ -14,14 +14,15 @@ Sentence Analysis of ADR 0005 and ADR 0006 is frozen in
 2. tf-demo reads German only for now. A Text submitted in another language is
    rejected before any jev call; `language` stays a parameter so Hebrew can
    follow.
-3. `createSegment({ ask: createTypeSafeAsk({ apiKey }), onCall })
-   .inUnits({ language: "de", paragraphs })` gives each Sentence its
-   normalized text, its Segments and its biggest units. jev is the only
+3. `createDumgen({ jev: createTypeSafeAsk({ apiKey }), onOperation })
+   .segment.inUnits({ language: "de", paragraphs })` is an Effect that
+   gives each Sentence its normalized text, its Segments and its biggest
+   units; tf-demo `yield*`s it inside its intake program. jev is the only
    model; the key is the Convex deployment's `TYPESAFE_API_KEY`.
-4. A Sentence whose segmentation fails keeps its written words, each
-   ResolvableText Segment its own `Unresolved` unit, and the Text is stored
-   anyway. Only a non-German language, a blank Sentence or a throwing
-   `onCall` fails the whole call.
+4. A Sentence whose jev calls fail comes back marked `failed`, with its
+   Segments and no units, and the Text is stored anyway; the reason is only
+   in the operation's trace. Only a non-German language, a blank Sentence,
+   a bug or an interruption fails the whole call.
 5. Intake is not deterministic, so a stored submission is never segmented
    again: resubmitting the same key and source returns the stored Text.
 
@@ -35,13 +36,16 @@ Sentence Analysis of ADR 0005 and ADR 0006 is frozen in
   stands for. Units and Attestation Membership name Segments by this index
   (Dumgen ADR 0004, amended 2026-10-02).
 - Every write checks that each ResolvableText Segment belongs to exactly one
-  unit and that units name only ResolvableText Segments.
+  unit and that units name only ResolvableText Segments. A Sentence whose
+  segmentation failed is stored with `segmentationFailed` and no units
+  instead (#861).
 - A Definition Text's single Sentence goes through the same
   `segment.inUnits` in a scheduled action. Notes fixtures skip jev and store
   each word as its own `Unresolved` unit.
-- `intakeRuns` keeps one row per submission attempt: each Sentence's outcome
-  (Segmented, Failed or NotStarted), the jev calls, failures, tokens and
-  durations. It never keeps text, prompts or model output.
+- `intakeRuns` keeps one row per submission attempt, read from the
+  operation's trace: each Sentence's outcome (Segmented, Failed or
+  NotStarted), the jev calls, failures, tokens and durations. It never
+  keeps text, prompts or model output.
 
 ## What hover and a click read
 
@@ -49,7 +53,8 @@ Sentence Analysis of ADR 0005 and ADR 0006 is frozen in
   reader builds one map per Sentence, so hover and focus light every member
   of the unit, discontinuous ones included, with no network call. A Segment
   that belongs to an Occurrence Attestation groups with the occurrence's
-  members instead.
+  members instead. A Sentence whose segmentation failed shows as not
+  segmented: hover previews no word.
 - While click resolution is rebuilt (#848), tf-demo's `ClickResolution` port
   runs `selectUnitOnly`: a click selects the whole unit, and its Resolution
   Session ends `Unresolved` at once. No Note is made and no model is asked.
