@@ -2,6 +2,7 @@ import { rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
 	evaluateSharedRss,
+	mib,
 	RSS_SHARED_BUDGET_BYTES,
 } from "../dum-runtime-verification/policy";
 import { findRepositoryRoot } from "../lib/workspaces";
@@ -20,8 +21,26 @@ export type SharedRssSample = readonly {
 	readonly peakBytes: number;
 }[];
 
-const median = (values: number[]) =>
-	[...values].sort((a, b) => a - b)[Math.floor(values.length / 2)]!;
+export function median(samples: readonly number[]): number {
+	if (samples.length === 0 || samples.length % 2 === 0) {
+		throw new Error("RSS median requires a non-empty odd sample count.");
+	}
+	const ordered = [...samples].sort((left, right) => left - right);
+	const value = ordered[Math.floor(ordered.length / 2)];
+	if (value === undefined) throw new Error("RSS samples unexpectedly empty.");
+	return value;
+}
+
+export function processEnvWithoutBunInspect(): Record<
+	string,
+	string | undefined
+> {
+	const environment = { ...process.env };
+	delete environment.BUN_INSPECT;
+	delete environment.BUN_INSPECT_CONNECT_TO;
+	delete environment.BUN_INSPECT_NOTIFY;
+	return environment;
+}
 
 /** Subtract within each process before taking medians; shared dependencies are charged once. */
 export function summarizeSharedRss(samples: readonly SharedRssSample[]) {
@@ -90,13 +109,9 @@ console.log(JSON.stringify(points));
 	);
 	const samples: SharedRssSample[] = [];
 	for (let index = 0; index < SHARED_RSS_SAMPLE_COUNT; index++) {
-		const env = { ...process.env };
-		delete env.BUN_INSPECT;
-		delete env.BUN_INSPECT_CONNECT_TO;
-		delete env.BUN_INSPECT_NOTIFY;
 		const child = Bun.spawn([process.execPath, runner], {
 			cwd: runtimeRoot,
-			env,
+			env: processEnvWithoutBunInspect(),
 			stdout: "pipe",
 			stderr: "pipe",
 		});
@@ -112,7 +127,6 @@ console.log(JSON.stringify(points));
 }
 
 export function formatSharedRss(report: SharedRssReport): string {
-	const mib = (value: number) => (value / 1048576).toFixed(3);
 	return (
 		[
 			`${report.passed ? "PASS" : "FAIL"} shared Dum import RSS: +${mib(report.addedPeakMedianBytes)} MiB after Effect; ceiling ${mib(report.budgetBytes)} MiB`,

@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { ParsingError } from "dumval/runtime";
-import { operationalEntrypoints } from "../dum-entrypoint-rss/inventory";
 import {
 	compareDifferentialTarget,
 	type DifferentialTarget,
@@ -10,7 +9,6 @@ import {
 	evaluateEntrypointRss,
 	evaluateSharedRss,
 	formatRssGateReport,
-	RSS_ENTRYPOINT_POLICIES,
 	RSS_SHARED_BUDGET_BYTES,
 } from "../dum-runtime-verification/policy";
 
@@ -78,14 +76,6 @@ describe("operational RSS CI contract", () => {
 		);
 	});
 
-	test("has one exact policy for every operational public entrypoint", () => {
-		expect(Object.keys(RSS_ENTRYPOINT_POLICIES).sort()).toEqual(
-			operationalEntrypoints()
-				.map(({ specifier }) => specifier)
-				.sort(),
-		);
-	});
-
 	test("shared chain has one inclusive 30 MiB ceiling after Effect", () => {
 		expect(RSS_SHARED_BUDGET_BYTES).toBe(30 * 1024 * 1024);
 		expect(evaluateSharedRss(RSS_SHARED_BUDGET_BYTES).passed).toBe(true);
@@ -96,33 +86,25 @@ describe("operational RSS CI contract", () => {
 			expect(evaluateSharedRss(invalid).passed).toBe(false);
 	});
 	test("isolated RSS is diagnostic while every surface still enforces schema isolation", () => {
-		for (const policy of Object.values(RSS_ENTRYPOINT_POLICIES)) {
-			const observation = {
-				importOnlyDeltaBytes: 100 * 1024 * 1024,
-				importPlusOperationDeltaBytes: 120 * 1024 * 1024,
-				reachability: {
-					heavyweightDependencies: [],
-					schemaEntrypoints: [],
-				},
-			};
-			expect(evaluateEntrypointRss(policy, observation)).toMatchObject({
-				passed: true,
-				status: "diagnostic",
-			});
-			for (const reachability of [
-				{ heavyweightDependencies: ["zod"], schemaEntrypoints: [] },
-				{
-					heavyweightDependencies: [],
-					schemaEntrypoints: ["dumrel/schema"],
-				},
-			])
-				expect(
-					evaluateEntrypointRss(policy, {
-						...observation,
-						reachability,
-					}).passed,
-				).toBe(false);
-		}
+		const observation = {
+			importOnlyDeltaBytes: 100 * 1024 * 1024,
+			importPlusOperationDeltaBytes: 120 * 1024 * 1024,
+			reachability: {
+				heavyweightDependencies: [],
+				schemaEntrypoints: [],
+			},
+		};
+		expect(evaluateEntrypointRss(observation).passed).toBe(true);
+		for (const reachability of [
+			{ heavyweightDependencies: ["zod"], schemaEntrypoints: [] },
+			{
+				heavyweightDependencies: [],
+				schemaEntrypoints: ["dumrel/schema"],
+			},
+		])
+			expect(
+				evaluateEntrypointRss({ ...observation, reachability }).passed,
+			).toBe(false);
 	});
 
 	test("reports absolute, empty-baseline, and delta RSS without conflating them", () => {
@@ -136,7 +118,6 @@ describe("operational RSS CI contract", () => {
 					importPlusOperationDeltaBytes: 3 * 1024 * 1024,
 					passed: true,
 					specifier: "dumling/reading",
-					status: "diagnostic",
 					violations: [],
 				},
 			],

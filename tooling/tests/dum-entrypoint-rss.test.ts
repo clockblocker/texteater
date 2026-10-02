@@ -1,12 +1,13 @@
 import { expect, test } from "bun:test";
 import { join } from "node:path";
+import { summarizeSamples } from "../dum-entrypoint-rss/benchmark";
 import {
 	DUM_ENTRYPOINTS,
 	DUM_PACKAGE_PATHS,
 	operationalEntrypoints,
 } from "../dum-entrypoint-rss/inventory";
-import { median, summarizeSamples } from "../dum-entrypoint-rss/measurement";
 import { runRepresentativeOperation } from "../dum-entrypoint-rss/operations";
+import { median } from "../dum-entrypoint-rss/shared";
 import { findRepositoryRoot } from "../lib/workspaces";
 
 const packages = Object.keys(

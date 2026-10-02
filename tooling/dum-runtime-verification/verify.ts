@@ -3,7 +3,6 @@ import {
 	formatDumDeclarationReachabilityIssues,
 } from "../dum-declaration-reachability";
 import { buildPackages, createReport } from "../dum-entrypoint-rss/benchmark";
-import { operationalEntrypoints } from "../dum-entrypoint-rss/inventory";
 import { formatSharedRss } from "../dum-entrypoint-rss/shared";
 import { findRepositoryRoot } from "../lib/workspaces";
 import { compareDifferentialTarget } from "./differential";
@@ -11,22 +10,8 @@ import { DUM_DIFFERENTIAL_TARGETS } from "./differential-targets";
 import {
 	evaluateEntrypointRss,
 	formatRssGateReport,
-	RSS_ENTRYPOINT_POLICIES,
 	type RssGateReportEntry,
-	type RssPolicy,
 } from "./policy";
-
-function sameMembers(
-	left: readonly string[],
-	right: readonly string[],
-): boolean {
-	return (
-		left.length === right.length &&
-		[...left]
-			.sort()
-			.every((value, index) => value === [...right].sort()[index])
-	);
-}
 
 function verifyDifferentialInventory(): boolean {
 	let passed = true;
@@ -63,30 +48,10 @@ async function verifyRss(): Promise<boolean> {
 		);
 	}
 	const report = await createReport(root);
-	const policyBySpecifier = RSS_ENTRYPOINT_POLICIES as Readonly<
-		Record<string, RssPolicy>
-	>;
-	const expectedSpecifiers = operationalEntrypoints().map(
-		({ specifier }) => specifier,
-	);
-	if (!sameMembers(expectedSpecifiers, Object.keys(policyBySpecifier))) {
-		process.stderr.write(
-			"FAIL RSS policy does not exactly match the operational entrypoint inventory.\n",
-		);
-		return false;
-	}
-
 	const entries: RssGateReportEntry[] = [];
 	for (const measured of report.entrypoints) {
 		if (measured.classification !== "operational") continue;
-		const policy = policyBySpecifier[measured.specifier];
-		if (policy === undefined) {
-			process.stderr.write(
-				`FAIL missing RSS policy: ${measured.specifier}\n`,
-			);
-			return false;
-		}
-		const result = evaluateEntrypointRss(policy, {
+		const result = evaluateEntrypointRss({
 			importOnlyDeltaBytes: measured.importOnly.deltaBytes,
 			importPlusOperationDeltaBytes:
 				measured.importPlusOperation.deltaBytes,

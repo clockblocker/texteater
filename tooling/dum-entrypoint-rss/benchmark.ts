@@ -8,7 +8,6 @@ import {
 	type OperationalEntryPoint,
 	operationalEntrypoints,
 } from "./inventory";
-import { type RssMeasurement, summarizeSamples } from "./measurement";
 import { preparePublishedRuntime } from "./published-runtime";
 import {
 	auditEntrypointReachability,
@@ -18,6 +17,8 @@ import {
 import {
 	formatSharedRss,
 	measureSharedRss,
+	median,
+	processEnvWithoutBunInspect,
 	type SharedRssReport,
 } from "./shared";
 
@@ -31,6 +32,14 @@ const packages = [
 ] as const;
 
 type MeasurementMode = "baseline" | "import-only" | "import-plus-operation";
+
+export type RssMeasurement = {
+	readonly baselineMedianBytes: number;
+	readonly deltaBytes: number;
+	readonly deltaMiB: number;
+	readonly medianBytes: number;
+	readonly samplesBytes: readonly number[];
+};
 
 export type MeasuredOperationalEntryPoint = OperationalEntryPoint & {
 	readonly importOnly: RssMeasurement;
@@ -84,12 +93,29 @@ async function run(command: readonly string[], cwd: string): Promise<string> {
 	return stdout;
 }
 
-function processEnvWithoutBunInspect(): Record<string, string | undefined> {
-	const environment = { ...process.env };
-	delete environment.BUN_INSPECT;
-	delete environment.BUN_INSPECT_CONNECT_TO;
-	delete environment.BUN_INSPECT_NOTIFY;
-	return environment;
+export function summarizeSamples(
+	samplesBytes: readonly number[],
+	baselineSamplesBytes: readonly number[],
+	bytesPerMiB = 1024 * 1024,
+): RssMeasurement {
+	if (
+		samplesBytes.length !== SAMPLE_COUNT ||
+		baselineSamplesBytes.length !== SAMPLE_COUNT
+	) {
+		throw new Error(
+			`The RSS benchmark contract requires ${SAMPLE_COUNT} fresh processes.`,
+		);
+	}
+	const medianBytes = median(samplesBytes);
+	const baselineMedianBytes = median(baselineSamplesBytes);
+	const deltaBytes = medianBytes - baselineMedianBytes;
+	return {
+		baselineMedianBytes,
+		deltaBytes,
+		deltaMiB: Math.round((deltaBytes / bytesPerMiB) * 1000) / 1000,
+		medianBytes,
+		samplesBytes: [...samplesBytes],
+	};
 }
 
 export async function buildPackages(root: string): Promise<void> {
@@ -213,9 +239,7 @@ export async function createReport(root: string): Promise<Report> {
 	const runtimeRoot = await preparePublishedRuntime(root);
 	try {
 		const baselineSamplesBytes = await sample(runtimeRoot, "baseline");
-		const baselineMedianBytes = [...baselineSamplesBytes].sort(
-			(left, right) => left - right,
-		)[Math.floor(SAMPLE_COUNT / 2)] as number;
+		const baselineMedianBytes = median(baselineSamplesBytes);
 		const sourceCommit = (
 			await run(["git", "rev-parse", "HEAD"], root)
 		).trim();

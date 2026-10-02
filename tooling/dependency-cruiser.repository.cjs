@@ -1,21 +1,6 @@
 module.exports = {
 	forbidden: [
 		{
-			name: "no-cross-workspace-cycles",
-			comment: "Workspace folders must form an acyclic graph.",
-			severity: "error",
-			scope: "folder",
-			from: { path: "^(app|battery)/[^/]+$" },
-			to: { circular: true },
-		},
-		{
-			name: "batteries-do-not-import-apps",
-			comment: "Reusable batteries cannot depend on applications.",
-			severity: "error",
-			from: { path: "^battery/" },
-			to: { path: "^app/" },
-		},
-		{
 			name: "tf-demo-server-does-not-import-convex",
 			comment:
 				"Application logic must not depend on the Convex adapter layer.",

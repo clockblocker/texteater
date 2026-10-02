@@ -1,10 +1,7 @@
 /** Whole-chain import headroom over preloaded Effect; observed baseline is about 22 MiB. */
 export const RSS_SHARED_BUDGET_BYTES = 30 * 1024 * 1024;
 
-/** Isolated entrypoint RSS is diagnostic; schema isolation is always enforced. */
-export type RssPolicy = { readonly status: "diagnostic" };
 const MiB = 1024 * 1024;
-const diagnostic = { status: "diagnostic" } as const;
 
 export function evaluateSharedRss(addedPeakMedianBytes: number) {
 	const passed =
@@ -21,24 +18,6 @@ export function evaluateSharedRss(addedPeakMedianBytes: number) {
 	};
 }
 
-/** Every operational export retains schema isolation; isolated RSS remains diagnostic. */
-export const RSS_ENTRYPOINT_POLICIES = {
-	dumling: diagnostic,
-	"dumling/compiled-validation": diagnostic,
-	"dumrel/compiled-validation": diagnostic,
-	"dumval/runtime": diagnostic,
-	"dumling/validation": diagnostic,
-	dumrel: diagnostic,
-	dumdict: diagnostic,
-	"dumdict/runtime": diagnostic,
-	"dumdict/pending": diagnostic,
-	"dumdict/memory": diagnostic,
-	"dumdict/planning": diagnostic,
-	"legacy-dumgen": diagnostic,
-	"legacy-dumgen/authored": diagnostic,
-	"legacy-dumgen/validation": diagnostic,
-} as const satisfies Record<string, RssPolicy>;
-
 export interface RssObservation {
 	readonly importOnlyDeltaBytes: number;
 	readonly importPlusOperationDeltaBytes: number;
@@ -50,12 +29,11 @@ export interface RssObservation {
 
 export interface RssPolicyResult {
 	readonly passed: boolean;
-	readonly status: RssPolicy["status"];
 	readonly violations: readonly string[];
 }
 
+/** Isolated entrypoint RSS is diagnostic; every operational export still enforces schema isolation. */
 export function evaluateEntrypointRss(
-	policy: RssPolicy,
 	observation: RssObservation,
 ): RssPolicyResult {
 	const violations: string[] = [];
@@ -65,11 +43,7 @@ export function evaluateEntrypointRss(
 		violations.push(
 			"operational surface reaches a schema-authoring entrypoint",
 		);
-	return {
-		passed: violations.length === 0,
-		status: policy.status,
-		violations,
-	};
+	return { passed: violations.length === 0, violations };
 }
 
 export interface RssGateReportEntry extends RssPolicyResult {
@@ -80,7 +54,7 @@ export interface RssGateReportEntry extends RssPolicyResult {
 	readonly specifier: string;
 }
 
-function mib(bytes: number): string {
+export function mib(bytes: number): string {
 	return (bytes / MiB).toFixed(3);
 }
 
@@ -93,7 +67,7 @@ export function formatRssGateReport(report: {
 	];
 	for (const entry of report.entries) {
 		lines.push(
-			`${entry.passed ? "PASS" : "FAIL"} ${entry.specifier} [${entry.status}]`,
+			`${entry.passed ? "PASS" : "FAIL"} ${entry.specifier}`,
 			`  import-only: ${mib(entry.absoluteImportOnlyMedianBytes)} MiB absolute; +${mib(entry.importOnlyDeltaBytes)} MiB delta over empty baseline`,
 			`  import+operation: ${mib(entry.absoluteImportPlusOperationMedianBytes)} MiB absolute; +${mib(entry.importPlusOperationDeltaBytes)} MiB delta over empty baseline`,
 		);

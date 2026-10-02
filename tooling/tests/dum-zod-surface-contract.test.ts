@@ -1,8 +1,71 @@
 import { expect, test } from "bun:test";
-import {
-	DUM_OPERATIONAL_ZOD_FREE_EXPORT_SURFACES,
-	DUM_PUBLIC_ZOD_SURFACES,
-} from "../dum-zod-surface-contract";
+import { operationalEntrypoints } from "../dum-entrypoint-rss/inventory";
+
+const DUM_PUBLIC_ZOD_SURFACES = {
+	"dumrel/schema": [
+		"conjugationClassSchema",
+		"conjugationClassesSchema",
+		"directSemanticRelationSchema",
+		"governedCaseSchema",
+		"governmentProjectionSchema",
+		"governmentRelationSchema",
+		"knowledgeChangeSchema",
+		"knowledgeRequestMaskSchema",
+		"knowledgeRouteSchema",
+		"knowledgeSelectionInputSchema",
+		"knowledgeSettingsSchema",
+		"lexemeUnitShadowSchema",
+		"morphologicalTreeNodeSchema",
+		"morphologicalTreeSchema",
+		"nounPluralSchema",
+		"participleMeaningSchema",
+		"participleProjectionSchema",
+		"participleRelationSchema",
+		"participleSourceSchema",
+		"pendingSemanticRelationSchema",
+		"pluralPatternSchema",
+		"readingKnowledgeSchema",
+		"readingWithKnowledgeSchema",
+		"semanticProjectionInputSchema",
+		"semanticRelationProjectionSchema",
+		"semanticRelationSchema",
+		"semanticRelationsSchema",
+		"translationLanguageSchema",
+		"unitShadowSchema",
+		"valencyComplementSchema",
+		"valencyFrameSchema",
+		"valencyReferentSchema",
+		"valencySlotSchema",
+		"valencySlotStatusSchema",
+	],
+	"dumdict/schema": [
+		"changePreconditionSchema",
+		"commitChangesRequestSchema",
+		"commitChangesResultSchema",
+		"commitConflictCodeSchema",
+		"dumdictPlanSchema",
+		"lemmaRecordSchema",
+		"pendingSemanticRelationLocatorSchema",
+		"pendingSemanticRelationRecordSchema",
+		"plannedChangeOpSchema",
+		"readingEntrySchema",
+		"readingPatchOpSchema",
+		"surfaceEntrySchema",
+	],
+	"legacy-dumgen/schemas": [
+		"analysisTargetSchema",
+		"classifyInputSchema",
+		"comparisonInputSchema",
+		"encounterSchema",
+		"knowledgeInputSchema",
+		"knowledgeProductionSchema",
+		"knowledgeRequestMaskSchema",
+		"segmentInputSchema",
+		"segmentSchema",
+		"segmentationDecisionSchema",
+		"segmentedSentenceSchema",
+	],
+} as const;
 
 function looksLikeSchemaExport(name: string): boolean {
 	return (
@@ -41,7 +104,7 @@ test("concrete Dumling schema routes expose exact composable units", async () =>
 });
 
 test("operational surfaces do not advertise Zod schemas", async () => {
-	for (const specifier of DUM_OPERATIONAL_ZOD_FREE_EXPORT_SURFACES) {
+	for (const { specifier } of operationalEntrypoints()) {
 		const schemaExports = Object.keys(await import(specifier)).filter(
 			looksLikeSchemaExport,
 		);
