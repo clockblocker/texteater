@@ -1,0 +1,2432 @@
+{
+	"runId": "20261002T074623--candidates4--final-1_closed-1--dev--all",
+	"arm": "candidates4",
+	"options": {
+		"final": "1",
+		"closed": "1"
+	},
+	"set": "dev",
+	"setHash": "adb64b2bdaf31f4f",
+	"setGitHead": "bb136b6caa6f9a230211c3140d615f0044169210",
+	"subset": "all",
+	"gitHead": "bb136b6caa6f9a230211c3140d615f0044169210",
+	"repetitions": 3,
+	"model": "jev-1.13.0",
+	"primary": "step0+saying+maxim@0.7",
+	"policies": [
+		{
+			"policy": "v3",
+			"cases": 1276,
+			"repetitions": 3,
+			"tally": {
+				"scored": 5934,
+				"match": 4004,
+				"wrongSegments": 563,
+				"wrongRoute": 332,
+				"toleratedRoute": 89,
+				"missing": 1035,
+				"stub": 132,
+				"split": 289,
+				"merged": 242,
+				"crossed": 32,
+				"variantUnits": 0,
+				"variantRoutes": 0,
+				"multiScored": 1833,
+				"multiMembership": 1137,
+				"multiMatch": 1035,
+				"singleScored": 4101,
+				"singleMembership": 3199,
+				"singleMatch": 2969,
+				"discontinuousScored": 738,
+				"discontinuousMembership": 431,
+				"goldPairs": 9729,
+				"recalledPairs": 4753,
+				"fullPairs": 379,
+				"fullTruePairs": 324,
+				"decidedPairs": 5218,
+				"truePairs": 4753,
+				"overMerged": 184,
+				"underMerged": 321,
+				"hoverSegments": 9579,
+				"hoverPrecisionSum": 9400.192647058819,
+				"hoverRecallSum": 8155.518428793429,
+				"hoverHighlighted": 19701,
+				"hoverUnasserted": 308,
+				"fullHoverSegments": 2709,
+				"fullHoverPrecisionSum": 2664.833333333333,
+				"fullHoverRecallSum": 2443.4999999999995,
+				"multiHoverSegments": 5478,
+				"multiHoverPrecisionSum": 5394.359313725489,
+				"multiHoverRecallSum": 4054.5184287934276,
+				"contractCases": 3708,
+				"contractPass": 2919,
+				"fullCases": 195,
+				"fullPass": 64,
+				"errors": 357
+			},
+			"rates": {
+				"membership": 0.7307044152342433,
+				"hoverPrecision": 0.9813334008830586,
+				"hoverRecall": 0.8513955975355912,
+				"hoverF1": 0.9117582991782965,
+				"fullHoverPrecision": 0.9836963209056231,
+				"fullHoverRecall": 0.9019933554817274,
+				"fullHoverF1": 0.9410748294158134,
+				"multiHoverPrecision": 0.9847315286099835,
+				"multiHoverRecall": 0.7401457518790485,
+				"multiHoverF1": 0.8450976378277776,
+				"multiMembership": 0.6202945990180033,
+				"singleMembership": 0.7800536454523287,
+				"discontinuousMembership": 0.5840108401084011,
+				"pairRecall": 0.4885394182341453,
+				"pairPrecision": 0.8548812664907651,
+				"pairF1": 0.6217608547186955,
+				"assertedPairPrecision": 0.9108853967037179,
+				"assertedPairF1": 0.6359804643072189,
+				"tolerantUnitAccuracy": 0.6897539602291878,
+				"tolerantRouteGivenMembership": 0.9439575645756457,
+				"unitAccuracy": 0.6747556454330974,
+				"routeGivenMembership": 0.9234317343173432,
+				"variantRate": 0,
+				"meanVariants": null,
+				"multiUnitAccuracy": 0.5646481178396072,
+				"singleUnitAccuracy": 0.7239697634723238,
+				"casePass": 0.7872168284789643,
+				"fullPass": 0.3282051282051282
+			},
+			"membershipByRepetition": [
+				0.7295247724974722,
+				0.7295247724974722,
+				0.7330637007077856
+			],
+			"unitAccuracyByRepetition": [
+				0.6729019211324571,
+				0.6729019211324571,
+				0.6784630940343782
+			],
+			"hoverRecords": {
+				"all": 1235,
+				"full": 65,
+				"multi": 513
+			},
+			"pairRecords": {
+				"recall": 513,
+				"fullPrecision": 40,
+				"assertedPrecision": 433
+			},
+			"overMergedByRepetition": [
+				62,
+				63,
+				59
+			],
+			"underMergedByRepetition": [
+				107,
+				108,
+				106
+			],
+			"membershipFlips": 25,
+			"membershipFlipBase": 1978,
+			"flips": 18,
+			"flipBase": 1236,
+			"varyingOutputs": 133
+		},
+		{
+			"policy": "step0",
+			"cases": 1276,
+			"repetitions": 3,
+			"tally": {
+				"scored": 5934,
+				"match": 4094,
+				"wrongSegments": 484,
+				"wrongRoute": 321,
+				"toleratedRoute": 89,
+				"missing": 1035,
+				"stub": 132,
+				"split": 242,
+				"merged": 210,
+				"crossed": 32,
+				"variantUnits": 0,
+				"variantRoutes": 0,
+				"multiScored": 1833,
+				"multiMembership": 1184,
+				"multiMatch": 1079,
+				"singleScored": 4101,
+				"singleMembership": 3231,
+				"singleMatch": 3015,
+				"discontinuousScored": 738,
+				"discontinuousMembership": 437,
+				"goldPairs": 9729,
+				"recalledPairs": 4837,
+				"fullPairs": 382,
+				"fullTruePairs": 327,
+				"decidedPairs": 5267,
+				"truePairs": 4837,
+				"overMerged": 149,
+				"underMerged": 274,
+				"hoverSegments": 9579,
+				"hoverPrecisionSum": 9416.192647058819,
+				"hoverRecallSum": 8220.851762126764,
+				"hoverHighlighted": 19837,
+				"hoverUnasserted": 270,
+				"fullHoverSegments": 2709,
+				"fullHoverPrecisionSum": 2664.833333333333,
+				"fullHoverRecallSum": 2446.4999999999995,
+				"multiHoverSegments": 5478,
+				"multiHoverPrecisionSum": 5394.359313725489,
+				"multiHoverRecallSum": 4119.851762126761,
+				"contractCases": 3708,
+				"contractPass": 2998,
+				"fullCases": 195,
+				"fullPass": 64,
+				"errors": 357
+			},
+			"rates": {
+				"membership": 0.7440175261206606,
+				"hoverPrecision": 0.9830037213758032,
+				"hoverRecall": 0.858216072880965,
+				"hoverF1": 0.9163811903587078,
+				"fullHoverPrecision": 0.9836963209056231,
+				"fullHoverRecall": 0.9031007751937983,
+				"fullHoverF1": 0.9416772071588393,
+				"multiHoverPrecision": 0.9847315286099835,
+				"multiHoverRecall": 0.7520722457332532,
+				"multiHoverF1": 0.8528185660422111,
+				"multiMembership": 0.6459356246590289,
+				"singleMembership": 0.7878566203365033,
+				"discontinuousMembership": 0.592140921409214,
+				"pairRecall": 0.4971733991160448,
+				"pairPrecision": 0.856020942408377,
+				"pairF1": 0.6290165848199594,
+				"assertedPairPrecision": 0.9183595974938294,
+				"assertedPairF1": 0.6451053614297145,
+				"tolerantUnitAccuracy": 0.7049207954162454,
+				"tolerantRouteGivenMembership": 0.9474518686296716,
+				"unitAccuracy": 0.689922480620155,
+				"routeGivenMembership": 0.9272933182332956,
+				"variantRate": 0,
+				"meanVariants": null,
+				"multiUnitAccuracy": 0.5886524822695035,
+				"singleUnitAccuracy": 0.7351865398683248,
+				"casePass": 0.8085221143473571,
+				"fullPass": 0.3282051282051282
+			},
+			"membershipByRepetition": [
+				0.7426693629929222,
+				0.7431749241658241,
+				0.7462082912032356
+			],
+			"unitAccuracyByRepetition": [
+				0.6875631951466128,
+				0.6885743174924166,
+				0.6936299292214358
+			],
+			"hoverRecords": {
+				"all": 1235,
+				"full": 65,
+				"multi": 513
+			},
+			"pairRecords": {
+				"recall": 513,
+				"fullPrecision": 40,
+				"assertedPrecision": 435
+			},
+			"overMergedByRepetition": [
+				50,
+				51,
+				48
+			],
+			"underMergedByRepetition": [
+				92,
+				92,
+				90
+			],
+			"membershipFlips": 24,
+			"membershipFlipBase": 1978,
+			"flips": 17,
+			"flipBase": 1236,
+			"varyingOutputs": 130
+		},
+		{
+			"policy": "step0+closed",
+			"cases": 1276,
+			"repetitions": 3,
+			"tally": {
+				"scored": 5934,
+				"match": 4133,
+				"wrongSegments": 484,
+				"wrongRoute": 282,
+				"toleratedRoute": 72,
+				"missing": 1035,
+				"stub": 132,
+				"split": 242,
+				"merged": 210,
+				"crossed": 32,
+				"variantUnits": 0,
+				"variantRoutes": 0,
+				"multiScored": 1833,
+				"multiMembership": 1184,
+				"multiMatch": 1079,
+				"singleScored": 4101,
+				"singleMembership": 3231,
+				"singleMatch": 3054,
+				"discontinuousScored": 738,
+				"discontinuousMembership": 437,
+				"goldPairs": 9729,
+				"recalledPairs": 4837,
+				"fullPairs": 382,
+				"fullTruePairs": 327,
+				"decidedPairs": 5267,
+				"truePairs": 4837,
+				"overMerged": 149,
+				"underMerged": 274,
+				"hoverSegments": 9579,
+				"hoverPrecisionSum": 9416.192647058819,
+				"hoverRecallSum": 8220.851762126764,
+				"hoverHighlighted": 19837,
+				"hoverUnasserted": 270,
+				"fullHoverSegments": 2709,
+				"fullHoverPrecisionSum": 2664.833333333333,
+				"fullHoverRecallSum": 2446.4999999999995,
+				"multiHoverSegments": 5478,
+				"multiHoverPrecisionSum": 5394.359313725489,
+				"multiHoverRecallSum": 4119.851762126761,
+				"contractCases": 3708,
+				"contractPass": 2998,
+				"fullCases": 195,
+				"fullPass": 64,
+				"errors": 357
+			},
+			"rates": {
+				"membership": 0.7440175261206606,
+				"hoverPrecision": 0.9830037213758032,
+				"hoverRecall": 0.858216072880965,
+				"hoverF1": 0.9163811903587078,
+				"fullHoverPrecision": 0.9836963209056231,
+				"fullHoverRecall": 0.9031007751937983,
+				"fullHoverF1": 0.9416772071588393,
+				"multiHoverPrecision": 0.9847315286099835,
+				"multiHoverRecall": 0.7520722457332532,
+				"multiHoverF1": 0.8528185660422111,
+				"multiMembership": 0.6459356246590289,
+				"singleMembership": 0.7878566203365033,
+				"discontinuousMembership": 0.592140921409214,
+				"pairRecall": 0.4971733991160448,
+				"pairPrecision": 0.856020942408377,
+				"pairF1": 0.6290165848199594,
+				"assertedPairPrecision": 0.9183595974938294,
+				"assertedPairF1": 0.6451053614297145,
+				"tolerantUnitAccuracy": 0.7086282440175261,
+				"tolerantRouteGivenMembership": 0.9524348810872028,
+				"unitAccuracy": 0.69649477586788,
+				"routeGivenMembership": 0.9361268403171008,
+				"variantRate": 0,
+				"meanVariants": null,
+				"multiUnitAccuracy": 0.5886524822695035,
+				"singleUnitAccuracy": 0.7446964155084126,
+				"casePass": 0.8085221143473571,
+				"fullPass": 0.3282051282051282
+			},
+			"membershipByRepetition": [
+				0.7426693629929222,
+				0.7431749241658241,
+				0.7462082912032356
+			],
+			"unitAccuracyByRepetition": [
+				0.6941354903943378,
+				0.6956521739130435,
+				0.6996966632962589
+			],
+			"hoverRecords": {
+				"all": 1235,
+				"full": 65,
+				"multi": 513
+			},
+			"pairRecords": {
+				"recall": 513,
+				"fullPrecision": 40,
+				"assertedPrecision": 435
+			},
+			"overMergedByRepetition": [
+				50,
+				51,
+				48
+			],
+			"underMergedByRepetition": [
+				92,
+				92,
+				90
+			],
+			"membershipFlips": 24,
+			"membershipFlipBase": 1978,
+			"flips": 17,
+			"flipBase": 1236,
+			"varyingOutputs": 126
+		},
+		{
+			"policy": "step0+saying",
+			"cases": 1276,
+			"repetitions": 3,
+			"tally": {
+				"scored": 5934,
+				"match": 4125,
+				"wrongSegments": 463,
+				"wrongRoute": 311,
+				"toleratedRoute": 89,
+				"missing": 1035,
+				"stub": 132,
+				"split": 208,
+				"merged": 223,
+				"crossed": 32,
+				"variantUnits": 0,
+				"variantRoutes": 0,
+				"multiScored": 1833,
+				"multiMembership": 1210,
+				"multiMatch": 1115,
+				"singleScored": 4101,
+				"singleMembership": 3226,
+				"singleMatch": 3010,
+				"discontinuousScored": 738,
+				"discontinuousMembership": 437,
+				"goldPairs": 9729,
+				"recalledPairs": 6091,
+				"fullPairs": 382,
+				"fullTruePairs": 327,
+				"decidedPairs": 6533,
+				"truePairs": 6091,
+				"overMerged": 160,
+				"underMerged": 240,
+				"hoverSegments": 9579,
+				"hoverPrecisionSum": 9406.33849206349,
+				"hoverRecallSum": 8457.169105894109,
+				"hoverHighlighted": 22363,
+				"hoverUnasserted": 276,
+				"fullHoverSegments": 2709,
+				"fullHoverPrecisionSum": 2664.833333333333,
+				"fullHoverRecallSum": 2446.4999999999995,
+				"multiHoverSegments": 5478,
+				"multiHoverPrecisionSum": 5388.874999999997,
+				"multiHoverRecallSum": 4356.169105894104,
+				"contractCases": 3708,
+				"contractPass": 3021,
+				"fullCases": 195,
+				"fullPass": 64,
+				"errors": 357
+			},
+			"rates": {
+				"membership": 0.7475564543309741,
+				"hoverPrecision": 0.9819749965615922,
+				"hoverRecall": 0.8828864292613121,
+				"hoverF1": 0.9297981998373802,
+				"fullHoverPrecision": 0.9836963209056231,
+				"fullHoverRecall": 0.9031007751937983,
+				"fullHoverF1": 0.9416772071588393,
+				"multiHoverPrecision": 0.9837303760496526,
+				"multiHoverRecall": 0.795211592897792,
+				"multiHoverF1": 0.8794820887645256,
+				"multiMembership": 0.6601200218221495,
+				"singleMembership": 0.786637405510851,
+				"discontinuousMembership": 0.592140921409214,
+				"pairRecall": 0.6260663994244012,
+				"pairPrecision": 0.856020942408377,
+				"pairF1": 0.7232042729448843,
+				"assertedPairPrecision": 0.9323434869125976,
+				"assertedPairF1": 0.7491083507563645,
+				"tolerantUnitAccuracy": 0.7101449275362319,
+				"tolerantRouteGivenMembership": 0.9499549143372408,
+				"unitAccuracy": 0.6951466127401416,
+				"routeGivenMembership": 0.9298917944093779,
+				"variantRate": 0,
+				"meanVariants": null,
+				"multiUnitAccuracy": 0.6082924168030551,
+				"singleUnitAccuracy": 0.7339673250426725,
+				"casePass": 0.8147249190938511,
+				"fullPass": 0.3282051282051282
+			},
+			"membershipByRepetition": [
+				0.7457027300303337,
+				0.7472194135490394,
+				0.749747219413549
+			],
+			"unitAccuracyByRepetition": [
+				0.69211324570273,
+				0.6946410515672397,
+				0.698685540950455
+			],
+			"hoverRecords": {
+				"all": 1235,
+				"full": 65,
+				"multi": 513
+			},
+			"pairRecords": {
+				"recall": 513,
+				"fullPrecision": 40,
+				"assertedPrecision": 440
+			},
+			"overMergedByRepetition": [
+				53,
+				55,
+				52
+			],
+			"underMergedByRepetition": [
+				82,
+				80,
+				78
+			],
+			"membershipFlips": 26,
+			"membershipFlipBase": 1978,
+			"flips": 18,
+			"flipBase": 1236,
+			"varyingOutputs": 126
+		},
+		{
+			"policy": "step0+saying+closed",
+			"cases": 1276,
+			"repetitions": 3,
+			"tally": {
+				"scored": 5934,
+				"match": 4164,
+				"wrongSegments": 463,
+				"wrongRoute": 272,
+				"toleratedRoute": 72,
+				"missing": 1035,
+				"stub": 132,
+				"split": 208,
+				"merged": 223,
+				"crossed": 32,
+				"variantUnits": 0,
+				"variantRoutes": 0,
+				"multiScored": 1833,
+				"multiMembership": 1210,
+				"multiMatch": 1115,
+				"singleScored": 4101,
+				"singleMembership": 3226,
+				"singleMatch": 3049,
+				"discontinuousScored": 738,
+				"discontinuousMembership": 437,
+				"goldPairs": 9729,
+				"recalledPairs": 6091,
+				"fullPairs": 382,
+				"fullTruePairs": 327,
+				"decidedPairs": 6533,
+				"truePairs": 6091,
+				"overMerged": 160,
+				"underMerged": 240,
+				"hoverSegments": 9579,
+				"hoverPrecisionSum": 9406.33849206349,
+				"hoverRecallSum": 8457.169105894109,
+				"hoverHighlighted": 22363,
+				"hoverUnasserted": 276,
+				"fullHoverSegments": 2709,
+				"fullHoverPrecisionSum": 2664.833333333333,
+				"fullHoverRecallSum": 2446.4999999999995,
+				"multiHoverSegments": 5478,
+				"multiHoverPrecisionSum": 5388.874999999997,
+				"multiHoverRecallSum": 4356.169105894104,
+				"contractCases": 3708,
+				"contractPass": 3021,
+				"fullCases": 195,
+				"fullPass": 64,
+				"errors": 357
+			},
+			"rates": {
+				"membership": 0.7475564543309741,
+				"hoverPrecision": 0.9819749965615922,
+				"hoverRecall": 0.8828864292613121,
+				"hoverF1": 0.9297981998373802,
+				"fullHoverPrecision": 0.9836963209056231,
+				"fullHoverRecall": 0.9031007751937983,
+				"fullHoverF1": 0.9416772071588393,
+				"multiHoverPrecision": 0.9837303760496526,
+				"multiHoverRecall": 0.795211592897792,
+				"multiHoverF1": 0.8794820887645256,
+				"multiMembership": 0.6601200218221495,
+				"singleMembership": 0.786637405510851,
+				"discontinuousMembership": 0.592140921409214,
+				"pairRecall": 0.6260663994244012,
+				"pairPrecision": 0.856020942408377,
+				"pairF1": 0.7232042729448843,
+				"assertedPairPrecision": 0.9323434869125976,
+				"assertedPairF1": 0.7491083507563645,
+				"tolerantUnitAccuracy": 0.7138523761375126,
+				"tolerantRouteGivenMembership": 0.9549143372407575,
+				"unitAccuracy": 0.7017189079878665,
+				"routeGivenMembership": 0.9386834986474302,
+				"variantRate": 0,
+				"meanVariants": null,
+				"multiUnitAccuracy": 0.6082924168030551,
+				"singleUnitAccuracy": 0.7434772006827604,
+				"casePass": 0.8147249190938511,
+				"fullPass": 0.3282051282051282
+			},
+			"membershipByRepetition": [
+				0.7457027300303337,
+				0.7472194135490394,
+				0.749747219413549
+			],
+			"unitAccuracyByRepetition": [
+				0.698685540950455,
+				0.7017189079878665,
+				0.704752275025278
+			],
+			"hoverRecords": {
+				"all": 1235,
+				"full": 65,
+				"multi": 513
+			},
+			"pairRecords": {
+				"recall": 513,
+				"fullPrecision": 40,
+				"assertedPrecision": 440
+			},
+			"overMergedByRepetition": [
+				53,
+				55,
+				52
+			],
+			"underMergedByRepetition": [
+				82,
+				80,
+				78
+			],
+			"membershipFlips": 26,
+			"membershipFlipBase": 1978,
+			"flips": 18,
+			"flipBase": 1236,
+			"varyingOutputs": 123
+		},
+		{
+			"policy": "step0+saying+maxim@0.7",
+			"cases": 1276,
+			"repetitions": 3,
+			"tally": {
+				"scored": 5934,
+				"match": 4146,
+				"wrongSegments": 442,
+				"wrongRoute": 311,
+				"toleratedRoute": 89,
+				"missing": 1035,
+				"stub": 132,
+				"split": 194,
+				"merged": 216,
+				"crossed": 32,
+				"variantUnits": 0,
+				"variantRoutes": 0,
+				"multiScored": 1833,
+				"multiMembership": 1229,
+				"multiMatch": 1134,
+				"singleScored": 4101,
+				"singleMembership": 3228,
+				"singleMatch": 3012,
+				"discontinuousScored": 738,
+				"discontinuousMembership": 436,
+				"goldPairs": 9729,
+				"recalledPairs": 7039,
+				"fullPairs": 382,
+				"fullTruePairs": 327,
+				"decidedPairs": 7475,
+				"truePairs": 7039,
+				"overMerged": 155,
+				"underMerged": 226,
+				"hoverSegments": 9579,
+				"hoverPrecisionSum": 9411.40833333333,
+				"hoverRecallSum": 8634.709523809532,
+				"hoverHighlighted": 24247,
+				"hoverUnasserted": 276,
+				"fullHoverSegments": 2709,
+				"fullHoverPrecisionSum": 2664.833333333333,
+				"fullHoverRecallSum": 2446.4999999999995,
+				"multiHoverSegments": 5478,
+				"multiHoverPrecisionSum": 5392.241666666666,
+				"multiHoverRecallSum": 4533.7095238095235,
+				"contractCases": 3708,
+				"contractPass": 3040,
+				"fullCases": 195,
+				"fullPass": 64,
+				"errors": 357
+			},
+			"rates": {
+				"membership": 0.7510953825412875,
+				"hoverPrecision": 0.9825042627970905,
+				"hoverRecall": 0.9014207666572223,
+				"hoverF1": 0.9402176116011098,
+				"fullHoverPrecision": 0.9836963209056231,
+				"fullHoverRecall": 0.9031007751937983,
+				"fullHoverF1": 0.9416772071588393,
+				"multiHoverPrecision": 0.9843449555798952,
+				"multiHoverRecall": 0.8276213077417897,
+				"multiHoverF1": 0.8992053283736402,
+				"multiMembership": 0.6704855428259684,
+				"singleMembership": 0.787125091441112,
+				"discontinuousMembership": 0.5907859078590786,
+				"pairRecall": 0.7235070408058382,
+				"pairPrecision": 0.856020942408377,
+				"pairF1": 0.784205389827165,
+				"assertedPairPrecision": 0.9416722408026755,
+				"assertedPairF1": 0.8182980702162288,
+				"tolerantUnitAccuracy": 0.7136838557465454,
+				"tolerantRouteGivenMembership": 0.950190711240745,
+				"unitAccuracy": 0.698685540950455,
+				"routeGivenMembership": 0.9302221225039264,
+				"variantRate": 0,
+				"meanVariants": null,
+				"multiUnitAccuracy": 0.618657937806874,
+				"singleUnitAccuracy": 0.7344550109729334,
+				"casePass": 0.819848975188781,
+				"fullPass": 0.3282051282051282
+			},
+			"membershipByRepetition": [
+				0.7492416582406471,
+				0.750252780586451,
+				0.7537917087967644
+			],
+			"unitAccuracyByRepetition": [
+				0.6956521739130435,
+				0.6976744186046512,
+				0.7027300303336703
+			],
+			"hoverRecords": {
+				"all": 1235,
+				"full": 65,
+				"multi": 513
+			},
+			"pairRecords": {
+				"recall": 513,
+				"fullPrecision": 40,
+				"assertedPrecision": 439
+			},
+			"overMergedByRepetition": [
+				52,
+				53,
+				50
+			],
+			"underMergedByRepetition": [
+				77,
+				76,
+				73
+			],
+			"membershipFlips": 24,
+			"membershipFlipBase": 1978,
+			"flips": 17,
+			"flipBase": 1236,
+			"varyingOutputs": 122
+		},
+		{
+			"policy": "step0+saying+maxim@0.7+closed",
+			"cases": 1276,
+			"repetitions": 3,
+			"tally": {
+				"scored": 5934,
+				"match": 4185,
+				"wrongSegments": 442,
+				"wrongRoute": 272,
+				"toleratedRoute": 72,
+				"missing": 1035,
+				"stub": 132,
+				"split": 194,
+				"merged": 216,
+				"crossed": 32,
+				"variantUnits": 0,
+				"variantRoutes": 0,
+				"multiScored": 1833,
+				"multiMembership": 1229,
+				"multiMatch": 1134,
+				"singleScored": 4101,
+				"singleMembership": 3228,
+				"singleMatch": 3051,
+				"discontinuousScored": 738,
+				"discontinuousMembership": 436,
+				"goldPairs": 9729,
+				"recalledPairs": 7039,
+				"fullPairs": 382,
+				"fullTruePairs": 327,
+				"decidedPairs": 7475,
+				"truePairs": 7039,
+				"overMerged": 155,
+				"underMerged": 226,
+				"hoverSegments": 9579,
+				"hoverPrecisionSum": 9411.40833333333,
+				"hoverRecallSum": 8634.709523809532,
+				"hoverHighlighted": 24247,
+				"hoverUnasserted": 276,
+				"fullHoverSegments": 2709,
+				"fullHoverPrecisionSum": 2664.833333333333,
+				"fullHoverRecallSum": 2446.4999999999995,
+				"multiHoverSegments": 5478,
+				"multiHoverPrecisionSum": 5392.241666666666,
+				"multiHoverRecallSum": 4533.7095238095235,
+				"contractCases": 3708,
+				"contractPass": 3040,
+				"fullCases": 195,
+				"fullPass": 64,
+				"errors": 357
+			},
+			"rates": {
+				"membership": 0.7510953825412875,
+				"hoverPrecision": 0.9825042627970905,
+				"hoverRecall": 0.9014207666572223,
+				"hoverF1": 0.9402176116011098,
+				"fullHoverPrecision": 0.9836963209056231,
+				"fullHoverRecall": 0.9031007751937983,
+				"fullHoverF1": 0.9416772071588393,
+				"multiHoverPrecision": 0.9843449555798952,
+				"multiHoverRecall": 0.8276213077417897,
+				"multiHoverF1": 0.8992053283736402,
+				"multiMembership": 0.6704855428259684,
+				"singleMembership": 0.787125091441112,
+				"discontinuousMembership": 0.5907859078590786,
+				"pairRecall": 0.7235070408058382,
+				"pairPrecision": 0.856020942408377,
+				"pairF1": 0.784205389827165,
+				"assertedPairPrecision": 0.9416722408026755,
+				"assertedPairF1": 0.8182980702162288,
+				"tolerantUnitAccuracy": 0.717391304347826,
+				"tolerantRouteGivenMembership": 0.9551267668835539,
+				"unitAccuracy": 0.7052578361981799,
+				"routeGivenMembership": 0.9389724029616334,
+				"variantRate": 0,
+				"meanVariants": null,
+				"multiUnitAccuracy": 0.618657937806874,
+				"singleUnitAccuracy": 0.7439648866130212,
+				"casePass": 0.819848975188781,
+				"fullPass": 0.3282051282051282
+			},
+			"membershipByRepetition": [
+				0.7492416582406471,
+				0.750252780586451,
+				0.7537917087967644
+			],
+			"unitAccuracyByRepetition": [
+				0.7022244691607684,
+				0.704752275025278,
+				0.7087967644084934
+			],
+			"hoverRecords": {
+				"all": 1235,
+				"full": 65,
+				"multi": 513
+			},
+			"pairRecords": {
+				"recall": 513,
+				"fullPrecision": 40,
+				"assertedPrecision": 439
+			},
+			"overMergedByRepetition": [
+				52,
+				53,
+				50
+			],
+			"underMergedByRepetition": [
+				77,
+				76,
+				73
+			],
+			"membershipFlips": 24,
+			"membershipFlipBase": 1978,
+			"flips": 17,
+			"flipBase": 1236,
+			"varyingOutputs": 118
+		}
+	],
+	"focus": {
+		"focusSet": "membership-focus",
+		"policy": "step0+saying+maxim@0.7",
+		"focus": {
+			"units": 167,
+			"scored": 501,
+			"membership": 59,
+			"tolerant": 55,
+			"held": 22,
+			"flips": 19
+		},
+		"groups": {
+			"not nominated": {
+				"units": 9,
+				"scored": 27,
+				"membership": 0,
+				"tolerant": 0,
+				"held": 0,
+				"flips": 0
+			},
+			"rejected": {
+				"units": 60,
+				"scored": 180,
+				"membership": 22,
+				"tolerant": 18,
+				"held": 8,
+				"flips": 8
+			},
+			"accepted": {
+				"units": 78,
+				"scored": 234,
+				"membership": 34,
+				"tolerant": 34,
+				"held": 13,
+				"flips": 11
+			},
+			"assembly": {
+				"units": 5,
+				"scored": 15,
+				"membership": 3,
+				"tolerant": 3,
+				"held": 1,
+				"flips": 0
+			},
+			"ambiguous": {
+				"units": 15,
+				"scored": 45,
+				"membership": 0,
+				"tolerant": 0,
+				"held": 0,
+				"flips": 0
+			},
+			"disputed gold": {
+				"units": 0,
+				"scored": 0,
+				"membership": 0,
+				"tolerant": 0,
+				"held": 0,
+				"flips": 0
+			}
+		},
+		"guardrail": {
+			"units": 283,
+			"scored": 849,
+			"membership": 840,
+			"tolerant": 823,
+			"held": 280,
+			"flips": 0
+		},
+		"otherCases": {
+			"units": 1528,
+			"scored": 4584,
+			"membership": 3558,
+			"tolerant": 3357,
+			"held": 1187,
+			"flips": 5
+		}
+	},
+	"cost": {
+		"jevInputTokensPerSentence": 10704.3908045977,
+		"jevCallsPerSentence": 3.180512016718913,
+		"jevQuestionsPerSentence": 29.00287356321839,
+		"lunaCallsPerSentence": 0,
+		"lunaInputTokensPerSentence": 0,
+		"lunaOutputTokensPerSentence": 0,
+		"latencyP50": 895.6669579999871,
+		"latencyP95": 1438.7979999999952,
+		"errors": 357
+	},
+	"routeErrors": {
+		"policy": "step0+saying+maxim@0.7",
+		"total": 311,
+		"tolerated": 89,
+		"byPair": {
+			"PART/ADV": 27,
+			"CCONJ/ADV": 18,
+			"NOUN/PROPN": 22,
+			"ADJ/ADV": 17,
+			"PRON/DET": 5
+		},
+		"confusions": {
+			"Lexeme/PART → Lexeme/ADV": {
+				"count": 18,
+				"tolerated": "PART/ADV"
+			},
+			"Lexeme/CCONJ → Lexeme/ADV": {
+				"count": 18,
+				"tolerated": "CCONJ/ADV"
+			},
+			"Lexeme/ADJ → Lexeme/PART": {
+				"count": 17
+			},
+			"Lexeme/INTJ → Lexeme/PART": {
+				"count": 15
+			},
+			"Lexeme/PROPN → Lexeme/NOUN": {
+				"count": 12,
+				"tolerated": "NOUN/PROPN"
+			},
+			"Lexeme/ADJ → Foreign/Foreign": {
+				"count": 10
+			},
+			"Lexeme/NOUN → Lexeme/PROPN": {
+				"count": 10,
+				"tolerated": "NOUN/PROPN"
+			},
+			"Lexeme/SCONJ → Lexeme/ADV": {
+				"count": 9
+			},
+			"Lexeme/ADV → Lexeme/ADJ": {
+				"count": 9,
+				"tolerated": "ADJ/ADV"
+			},
+			"Locution/ADV → Locution/CCONJ": {
+				"count": 9
+			},
+			"Lexeme/SCONJ → Locution/SCONJ": {
+				"count": 9
+			},
+			"Locution/CCONJ → Locution/ADV": {
+				"count": 9
+			},
+			"Lexeme/ADV → Lexeme/PART": {
+				"count": 9,
+				"tolerated": "PART/ADV"
+			},
+			"Lexeme/NOUN → Lexeme/NUM": {
+				"count": 9
+			},
+			"Lexeme/ADJ → Lexeme/ADV": {
+				"count": 8,
+				"tolerated": "ADJ/ADV"
+			},
+			"Lexeme/VERB → Locution/VERB": {
+				"count": 8
+			},
+			"Locution/ADV → Lexeme/ADV": {
+				"count": 6
+			},
+			"Lexeme/PART → Lexeme/CCONJ": {
+				"count": 6
+			},
+			"Lexeme/CCONJ → Lexeme/SCONJ": {
+				"count": 6
+			},
+			"Lexeme/ADJ → Lexeme/NOUN": {
+				"count": 6
+			},
+			"Locution/VERB → Lexeme/VERB": {
+				"count": 6
+			},
+			"Lexeme/ADJ → Lexeme/NUM": {
+				"count": 6
+			},
+			"Lexeme/ADP → Lexeme/SCONJ": {
+				"count": 6
+			},
+			"Lexeme/INTJ → Locution/INTJ": {
+				"count": 5
+			},
+			"Lexeme/ADV → Lexeme/SCONJ": {
+				"count": 4
+			},
+			"Lexeme/PRON → Lexeme/DET": {
+				"count": 4,
+				"tolerated": "PRON/DET"
+			},
+			"Lexeme/ADV → Lexeme/VERB": {
+				"count": 4
+			},
+			"Locution/INTJ → Locution/ADV": {
+				"count": 3
+			},
+			"Locution/INTJ → Lexeme/INTJ": {
+				"count": 3
+			},
+			"Lexeme/CCONJ → Locution/ADV": {
+				"count": 3
+			},
+			"Lexeme/ADP → Lexeme/NOUN": {
+				"count": 3
+			},
+			"Lexeme/ADV → Lexeme/PROPN": {
+				"count": 3
+			},
+			"Lexeme/PRON → Lexeme/ADV": {
+				"count": 3
+			},
+			"Lexeme/NUM → Lexeme/ADJ": {
+				"count": 3
+			},
+			"Lexeme/ADJ → Lexeme/DET": {
+				"count": 3
+			},
+			"Lexeme/NUM → Lexeme/ADV": {
+				"count": 3
+			},
+			"Lexeme/NOUN → Lexeme/SYM": {
+				"count": 3
+			},
+			"Locution/SCONJ → Lexeme/PART": {
+				"count": 3
+			},
+			"Lexeme/INTJ → Lexeme/VERB": {
+				"count": 3
+			},
+			"Locution/ADV → Locution/INTJ": {
+				"count": 3
+			},
+			"Lexeme/ADV → Lexeme/NUM": {
+				"count": 3
+			},
+			"Lexeme/ADV → Locution/ADV": {
+				"count": 3
+			},
+			"Lexeme/ADP → Foreign/Foreign": {
+				"count": 3
+			},
+			"Lexeme/PART → Lexeme/NOUN": {
+				"count": 3
+			},
+			"Locution/ADP → Locution/ADV": {
+				"count": 3
+			},
+			"Lexeme/PART → Lexeme/ADJ": {
+				"count": 3
+			},
+			"Lexeme/SYM → Lexeme/CCONJ": {
+				"count": 2
+			},
+			"Lexeme/PRON → Lexeme/NOUN": {
+				"count": 2
+			},
+			"Lexeme/SCONJ → Lexeme/CCONJ": {
+				"count": 2
+			},
+			"Lexeme/ADP → Lexeme/DET": {
+				"count": 2
+			},
+			"Lexeme/INTJ → Lexeme/NOUN": {
+				"count": 1
+			},
+			"Lexeme/VERB → Locution/DET": {
+				"count": 1
+			},
+			"Lexeme/VERB → Locution/ADV": {
+				"count": 1
+			},
+			"Lexeme/DET → Lexeme/PRON": {
+				"count": 1,
+				"tolerated": "PRON/DET"
+			},
+			"Lexeme/ADJ → Lexeme/ADP": {
+				"count": 1
+			},
+			"Lexeme/PART → Lexeme/VERB": {
+				"count": 1
+			},
+			"Lexeme/ADP → Lexeme/NUM": {
+				"count": 1
+			},
+			"Lexeme/ADP → Lexeme/PART": {
+				"count": 1
+			}
+		}
+	},
+	"grouping": {
+		"policy": "step0+saying+maxim@0.7",
+		"over": [
+			"[schlüssig Lexeme/ADJ] + [machen Lexeme/VERB] (0,1,2) de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun «Aber wie es auch liegen mag, Marcell, wir müssen uns nun darüber schlüssig machen, wie du zu dieser ganzen Tragikomödie dich stellen willst, so oder so.»",
+			"[eine Lexeme/NOUN] + [Ziel Lexeme/NOUN] (0,1,2) de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art «Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das trifft bei Odradek nicht zu.»",
+			"[eine Lexeme/NOUN] + [Tätigkeit Lexeme/NOUN] (0,1,2) de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art «Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das trifft bei Odradek nicht zu.»",
+			"[trifft zu Lexeme/VERB] + [bei Lexeme/ADP] (0,1,2) de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art «Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das trifft bei Odradek nicht zu.»",
+			"[Danke Lexeme/INTJ] + [für Lexeme/INTJ] (0,1,2) de/als-beide-kisten-endlich-oben-standen-erwiderte-der «Als beide Kisten endlich oben standen, erwiderte der erleichterte Bewohner: „Danke, danke für die Hilfe!“»",
+			"[Darf Lexeme/VERB] + [ich Lexeme/PRON] + [um bitten Lexeme/VERB] (0,1,2) de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf «Als das Gespräch lauter wurde, fragte die Vorsitzende: „Darf ich um Ruhe bitten?“»",
+			"[Tut leid Lexeme/VERB] + [mir Lexeme/PRON] (0,1,2) de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir «Als sie vom Tod seines Hundes erfuhr, sagte sie leise: „Tut mir leid.“»",
+			"[Das Lexeme/PRON] + [tut leid Lexeme/VERB] + [mir Lexeme/PRON] (0) de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir «Als sie von seiner Krankheit hörte, sagte sie: „Das tut mir leid.“»",
+			"[tut leid Lexeme/VERB] + [mir Lexeme/PRON] (1,2) de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir «Als sie von seiner Krankheit hörte, sagte sie: „Das tut mir leid.“»",
+			"[Da hin Lexeme/ADV] + [gehe Lexeme/VERB] (0) de/da-gehe-ich-morgen-hin «Da gehe ich morgen hin.»",
+			"[gehe Lexeme/VERB] + [hin Lexeme/ADV] (1,2) de/da-gehe-ich-morgen-hin «Da gehe ich morgen hin.»",
+			"[kann Lexeme/VERB] + [für Lexeme/ADV] (1) de/da-kann-ich-nichts-fuer «Da kann ich nichts für.»",
+			"[Da von Lexeme/ADV] + [weiß Lexeme/VERB] (0,1) de/da-weiss-ich-nichts-von «Da weiß ich nichts von.»",
+			"[Geht Lexeme/VERB] + ['s Lexeme/PRON] (0,1,2) de/das-radio-geht-s-wieder «Das Radio? Geht's wieder?»",
+			"[schritt her Lexeme/VERB] + [neben Lexeme/ADP] (2) de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein «Der junge Schwarzkopf schritt, in seinem grauen Filzhut, sein Buch in der Hand, neben ihr her und betrachtete sie manchmal von der Seite.»",
+			"[durch Lexeme/ADP] + [verbundenen Lexeme/ADJ] (0,1,2) de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand «Der Musiktempel, zwischen Nadelbäumen versteckt, stand schweigend dem Kurhaus, der Konditorei und den beiden, durch ein langes Zwischengebäude miteinander verbundenen Schweizerhäusern gegenüber.»",
+			"[des Lexeme/NOUN] + [Jugendbuchs ?] (0,1,2) de/die-seiten-des-kinder-und-jugendbuchs-fehlen «Die Seiten des Kinder‐ und Jugendbuchs fehlen.»",
+			"[biss Lexeme/VERB] + [in Lexeme/ADP] + [den Rasen Lexeme/NOUN] (0,1,2) de/er-biss-in-den-rasen «Er biss in den Rasen.»",
+			"[biss in s Locution/VERB] + [Kunstgras Lexeme/NOUN] (0,1,2) de/er-biss-ins-kunstgras «Er biss ins Kunstgras.»",
+			"[stellt ?] + [vor Lexeme/ADP] (0,1,2) de/er-stellt-die-kiste-vor-die-tuer «Er stellt die Kiste vor die Tür.»",
+			"[sich Lexeme/PRON] + [abwenden Lexeme/VERB] (0,1,2) de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der «Es kam auch vor, daß ihn mitten im Sprechen eine Welle der Scham überflutete, so daß er rot wurde, zu stottern begann, sich abwenden mußte ...»",
+			"[stellte zu r Verfügung Locution/VERB] + [Daten ?] (0,1,2) de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur «Für den Workshop stellte das Team aktuelle Daten zur Verfügung.»",
+			"[m Locution/ADV] + [der Zug ?] (1) de/im-allgemeinen-ist-der-zug-puenktlich «Im Allgemeinen ist der Zug pünktlich.»",
+			"[habe ?] + [geglorpt Unresolved] (0,1,2) de/im-erfundenen-bericht-habe-die-maschine-bereits-geglorpt «Im erfundenen Bericht habe die Maschine bereits geglorpt.»",
+			"[hat gezogen ?] + [hat gezogen Locution/VERB] (0,2) de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten «Im ersten Duell hat Anna den Kürzeren gezogen; im zweiten hat auch Ben gezogen.»",
+			"[hat den Kürzeren gezogen ?] + [hat gezogen Locution/VERB] (1) de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten «Im ersten Duell hat Anna den Kürzeren gezogen; im zweiten hat auch Ben gezogen.»",
+			"[Es Lexeme/PRON] + [tut Lexeme/VERB] + [mir Lexeme/PRON] (0,1,2) de/in-der-abgebrochenen-sprachnachricht-war-nur-die «In der abgebrochenen Sprachnachricht war nur die Entschuldigung „Es tut mir …“ zu hören.»",
+			"[In Fällen das Gesetz schweigt entscheidet das Gericht ?] + [wo Lexeme/ADV] (0,1,2) de/in-faellen-wo-das-gesetz-schweigt-entscheidet-das-gericht «In Fällen, wo das Gesetz schweigt, entscheidet das Gericht.»",
+			"[Je desto Locution/SCONJ] + [früher besser ?] (0,1,2) de/je-frueher-desto-besser «Je früher, desto besser.»",
+			"[Je desdo Locution/SCONJ] + [höher der Druck größer das Risiko ?] (0) de/je-hoeher-der-druck-desdo-groesser-das-risiko «Je höher der Druck, desdo größer das Risiko.»",
+			"[Je desto Locution/SCONJ] + [länger ?] (0) de/je-laenger-der-weg-desto-mueder-die-reisenden «Je länger der Weg, desto müder die Reisenden.»",
+			"[Je desto Locution/SCONJ] + [länger ?] (0) de/je-laenger-wir-warteten-desto-unruhiger-wurden-die-kinder «Je länger wir warteten, desto unruhiger wurden die Kinder.»",
+			"[sah Lexeme/VERB] + [aus Locution/ADP] (0,1,2) de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus «K. wartete noch ein Weilchen, sah von seinem Kopfkissen aus die alte Frau, die ihm gegenüber wohnte und die ihn mit einer an ihr ganz ungewöhnlichen Neugierde beobachtete, dann aber, gleichzeitig befremdet und hungrig, läutete er.»",
+			"[einer Neugierde Lexeme/NOUN] + [an Lexeme/ADP] (1) de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus «K. wartete noch ein Weilchen, sah von seinem Kopfkissen aus die alte Frau, die ihm gegenüber wohnte und die ihn mit einer an ihr ganz ungewöhnlichen Neugierde beobachtete, dann aber, gleichzeitig befremdet und hungrig, läutete er.»",
+			"[Kaffee Tee ?] + [oder das ist hier die Frage Saying/Saying] (0,1,2) de/kaffee-oder-tee-das-ist-hier-die-frage «Kaffee oder Tee, das ist hier die Frage.»",
+			"[schämt sich Lexeme/VERB] + [für ?] (0,1,2) de/mara-schaemt-sich-fuer-den-irrtum «Mara schämt sich für den Irrtum.»",
+			"[hat sich eingependelt Lexeme/VERB] + [auf ?] (0,1,2) de/mittlerweile-hat-sich-der-preis-auf-rund-4150-us-dollar-pro «Mittlerweile hat sich der Preis auf rund 4150 US-Dollar pro Feinunze eingependelt (Stand 27. November).»",
+			"[Nein Lexeme/INTJ] + [danke Lexeme/INTJ] (0,1,2) de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt «„Möchten Sie noch Kuchen?“ – „Nein danke, ich bin satt.“»",
+			"[erinnerte ?] + [Wer zuletzt lacht lacht a m besten Saying/Saying] (0,1,2) de/nach-dem-unerwarteten-sieg-erinnerte-der-kapitaen-die «Nach dem unerwarteten Sieg erinnerte der Kapitän die Spötter: „Wer zuletzt lacht, lacht am besten.“»",
+			"[tut leid Lexeme/VERB] + [mir Lexeme/PRON] (0,1,2) de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir «Nachdem er die Vase zerbrochen hatte, sagte er: „Es tut mir, wirklich, leid, dass das passiert ist.“»",
+			"[bitte um Verzeihung Locution/INTJ] + [für ?] (0,1,2) de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin «Nachdem sie den Termin verwechselt hatte, sagte die Ärztin: „Ich bitte um Verzeihung für die Wartezeit.“»",
+			"[um bitten ?] + [zu Locution/SCONJ] (0,1,2) de/nora-loeste-die-aufgabe-ohne-jemanden-um-hilfe-zu-bitten «Nora löste die Aufgabe, ohne jemanden um Hilfe zu bitten.»",
+			"[bekommt Lexeme/VERB] + [geöffnet ?] (0,1,2) de/sie-bekommt-das-glas-endlich-geoeffnet «Sie bekommt das Glas endlich geöffnet.»",
+			"[blickt Lexeme/VERB] + [auf Lexeme/ADP] (0,1,2) de/sie-blickt-auf-die-uhr-und-steht-danach-auf «Sie blickt auf die Uhr und steht danach auf.»",
+			"[ging Lexeme/VERB] + [hinaus Lexeme/ADV] (0,1,2) de/sie-ging-erst-in-die-kueche-und-dann-hinaus «Sie ging erst in die Küche und dann hinaus.»",
+			"[hat in Anspruch genommen Locution/VERB] + [Hilfe ?] (0,1,2) de/sie-hat-hilfe-in-anspruch-genommen «Sie hat Hilfe in Anspruch genommen.»",
+			"[es Lexeme/PRON] + [herrschte Lexeme/VERB] (0,1,2) de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren «Sie hatte ihren großen Strohhut aufgesetzt und ihren Sonnenschirm aufgespannt, denn es herrschte, obgleich ein kleiner Seewind ging, heftige Hitze.»",
+			"[ein Lexeme/NOUN] + [Jugendbuch ?] (0,1,2) de/sie-kauft-ein-kinder-oder-jugendbuch «Sie kauft ein Kinder- oder Jugendbuch.»",
+			"[nahm zu r Kenntnis Locution/VERB] + [den Antrag ?] (1,2) de/sie-nahm-den-antrag-gruendlich-zur-kenntnis «Sie nahm den Antrag gründlich zur Kenntnis.»",
+			"[einem ?] + [he Locution/INTJ] (0,1,2) de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt «Sie warnte ihn mit einem he he vor dem Schritt.»",
+			"[über Lexeme/ADP] + [alle Lexeme/DET] + [Zweifel Lexeme/NOUN] (0,1,2) de/so-ueber-alle-zweifel-war-das-entschieden-dass-er «So über alle Zweifel war das entschieden, daß er gemächlich schlendernd durch den schmeichelnden Frühlingstag nach Hause spazierte, wie zum ersehnten Schlummer nach einer wüsten Nacht.»",
+			"[war Lexeme/VERB] + [entschieden Lexeme/ADJ] (0,1,2) de/so-ueber-alle-zweifel-war-das-entschieden-dass-er «So über alle Zweifel war das entschieden, daß er gemächlich schlendernd durch den schmeichelnden Frühlingstag nach Hause spazierte, wie zum ersehnten Schlummer nach einer wüsten Nacht.»",
+			"[nahm Rücksicht auf Locution/VERB] + [Kollegen Lexeme/NOUN] (0,1,2) de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre «Trotz des Zeitdrucks nahm Lea stets Rücksicht auf ihre Kollegen.»",
+			"[Um zu ?] + [um zu Locution/SCONJ] (0,1,2) de/um-das-haus-blieb-es-zu-laut-um-dort-ruhig-schlafen-zu «Um das Haus blieb es zu laut, um dort ruhig schlafen zu können.»",
+			"[Um willen Locution/ADP] + [des Friedens ?] (0,1,2) de/um-des-friedens-willen-schwiegen-beide-seiten «Um des Friedens willen schwiegen beide Seiten.»",
+			"[stellen zu r Verfügung Locution/VERB] + [die Daten ?] (0,1,2) de/wir-stellen-die-daten-zur-verfuegung «Wir stellen die Daten zur Verfügung.»",
+			"[Wo hin Lexeme/ADV] + [gehst Lexeme/VERB] (0,1,2) de/wo-gehst-du-hin «Wo gehst du hin?»",
+			"[Wo mit Lexeme/ADV] + [hast gemacht ?] (0,1) de/wo-hast-du-das-mit-gemacht «Wo hast du das mit gemacht?»",
+			"[hast gemacht ?] + [mit Lexeme/ADV] (2) de/wo-hast-du-das-mit-gemacht «Wo hast du das mit gemacht?»",
+			"[Wo her Lexeme/ADV] + [kommst Lexeme/VERB] (0,1,2) de/wo-kommst-du-her «Wo kommst du her?»",
+			"[setzt auf Lexeme/VERB] + [sich ?] (0,1,2) de/zahnaerztin-shimaa-mahmoud-setzt-sich-eine-gesichtsmaske-auf «Zahnärztin Shimaa Mahmoud setzt sich eine Gesichtsmaske auf.»"
+		],
+		"under": [
+			"zu dich stellen Lexeme/VERB → [zu] [dich] [stellen] (0,1,2) de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun «Aber wie es auch liegen mag, Marcell, wir müssen uns nun darüber schlüssig machen, wie du zu dieser ganzen Tragikomödie dich stellen willst, so oder so.»",
+			"eine Art Lexeme/NOUN → [eine] [Art] (0,1,2) de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art «Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das trifft bei Odradek nicht zu.»",
+			"eine Art Lexeme/NOUN → [eine] [Art] (0,1,2) de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art «Alles, was stirbt, hat vorher eine Art Ziel, eine Art Tätigkeit gehabt und daran hat es sich zerrieben; das trifft bei Odradek nicht zu.»",
+			"danke für Lexeme/INTJ → [danke] [für] (0,1,2) de/als-beide-kisten-endlich-oben-standen-erwiderte-der «Als beide Kisten endlich oben standen, erwiderte der erleichterte Bewohner: „Danke, danke für die Hilfe!“»",
+			"übrig blieb Lexeme/VERB → [übrig] [blieb] (0,1,2) de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu «Als er die Treppe hinunterging, wußte er, daß ihm nichts zu tun übrig blieb, als ein Ende zu machen.»",
+			"ein Ende machen Locution/VERB → [ein Ende] [machen] (0,1,2) de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu «Als er die Treppe hinunterging, wußte er, daß ihm nichts zu tun übrig blieb, als ein Ende zu machen.»",
+			"bitte schön Locution/INTJ → [bitte] [schön] (0,1,2) de/am-schalter-bestellte-sie-zwei-fahrkarten-nach-bonn-bitte «Am Schalter bestellte sie: „Zwei Fahrkarten nach Bonn, bitte schön.“»",
+			"und so weiter Locution/ADV → [und] [so weiter] (0,1,2) de/anna-kauft-obst-gemuese-und-so-weiter-auf-dem-markt «Anna kauft Obst, Gemüse und so weiter auf dem Markt.»",
+			"heult mit den Wölfen Locution/VERB → [heult mit] [den Wölfen] (2) de/aus-opportunismus-folgt-sie-immer-der-mehrheit-sie-heult-mit «Aus Opportunismus folgt sie immer der Mehrheit. Sie heult mit den hungrigen Wölfen.»",
+			"Blase Trübsal Locution/VERB → [Blase] [Trübsal] (0,1,2) de/blase-jetzt-nicht-laenger-truebsal «Blase jetzt nicht länger Trübsal!»",
+			"Da hin Lexeme/ADV → [Da] [hin] (1,2) de/da-gehe-ich-morgen-hin «Da gehe ich morgen hin.»",
+			"Da für Lexeme/ADV → [Da] [für] (0,1,2) de/da-kann-ich-nichts-fuer «Da kann ich nichts für.»",
+			"zu m Beispiel Locution/ADV → [zu] [m] [Beispiel] (0,2) de/das-museum-oeffnet-zum-beispiel-am-montag «Das Museum öffnet zum Beispiel am Montag.»",
+			"sowohl wie Locution/CCONJ → [sowohl] [wie] (0) de/das-verfahren-eignet-sich-sowohl-fuer-kleine-teams-wie-fuer «Das Verfahren eignet sich sowohl für kleine Teams wie für große Abteilungen.»",
+			"bleibt stehen Locution/VERB → [bleibt] [stehen] (0,1,2) de/der-alte-aufzug-bleibt-nie-zwischen-den-etagen-stehen «Der alte Aufzug bleibt nie zwischen den Etagen stehen.»",
+			"Mit freundlichen Locution/INTJ → [Mit] [freundlichen] (0,1,2) de/der-beschaedigte-briefentwurf-endete-sichtbar-mit-mit «Der beschädigte Briefentwurf endete sichtbar mit „Mit freundlichen …“.»",
+			"stand gegenüber Lexeme/VERB → [stand] [gegenüber] (0,1,2) de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand «Der Musiktempel, zwischen Nadelbäumen versteckt, stand schweigend dem Kurhaus, der Konditorei und den beiden, durch ein langes Zwischengebäude miteinander verbundenen Schweizerhäusern gegenüber.»",
+			"den Schweizerhäusern Lexeme/NOUN → [den] [Schweizerhäusern] (0,1,2) de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand «Der Musiktempel, zwischen Nadelbäumen versteckt, stand schweigend dem Kurhaus, der Konditorei und den beiden, durch ein langes Zwischengebäude miteinander verbundenen Schweizerhäusern gegenüber.»",
+			"der alte Lexeme/ADJ → [der] [alte] (0) de/der-neue-brunnen-ist-tiefer-als-der-alte «Der neue Brunnen ist tiefer als der alte.»",
+			"tanzte auf der Nahse herum Locution/VERB → [tanzte herum] [auf] [der Nahse] (0,1,2) de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum «Der Praktikant tanzte dem Chef auf der Nahse herum.»",
+			"erhielt überreicht Lexeme/VERB → [erhielt] [überreicht] (0,1,2) de/der-preistraeger-erhielt-die-urkunde-ueberreicht «Der Preisträger erhielt die Urkunde überreicht.»",
+			"erteilt Zustimmung Locution/VERB → [erteilt] [Zustimmung] (0) de/der-rat-erteilt-zustimmung «Der Rat erteilt Zustimmung.»",
+			"hat Anerkenung gefunden Locution/VERB → [hat gefunden] [Anerkenung] (0,1,2) de/der-vorschlag-hat-anerkenung-gefunden «Der Vorschlag hat Anerkenung gefunden.»",
+			"blieb stehen Locution/VERB → [blieb] [stehen] (0,1,2) de/die-abk-blieb-stehen-obwohl-der-satz-ueberarbeitet-wurde «Die Abk. blieb stehen, obwohl der Satz überarbeitet wurde.»",
+			"der Frau Lexeme/NOUN → [der] [Frau] (0,1,2) de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die «Die Köchin der Frau Grubach, seiner Zimmervermieterin, die ihm jeden Tag gegen acht Uhr früh das Frühstück brachte, kam diesmal nicht.»",
+			"die Menschen denen wir eine Stütze sind die geben uns den Halt i m Leben Saying/Saying → [die] [Menschen] [denen] [wir] [eine Stütze] [sind] [die] [geben] [uns] [den Halt] [i] [m Leben] (0,1,2) de/die-menschen-denen-wir-eine-stuetze-sind-die-geben-uns-den «die Menschen, denen wir eine Stütze sind, die geben uns den Halt im Leben.»",
+			"treffen eine Vereinbarung Locution/VERB → [treffen] [eine Vereinbarung] (0,1,2) de/die-parteien-treffen-eine-vereinbarung «Die Parteien treffen eine Vereinbarung.»",
+			"auf Grund Lexeme/ADP → [auf] [Grund] (0,1,2) de/die-redaktion-fuehrt-aufgrund-als-leitform-auf-grund-des «Die Redaktion führt „aufgrund“ als Leitform; auf Grund des Wetters bleibt zulässig.»",
+			"des Kinder‐ Lexeme/NOUN → [des] [Kinder‐] (0,1,2) de/die-seiten-des-kinder-und-jugendbuchs-fehlen «Die Seiten des Kinder‐ und Jugendbuchs fehlen.»",
+			"hat von ausgeschlossen Lexeme/VERB → [hat] [von ausgeschlossen] (0,1,2) de/die-tansanische-wahlkommission-hat-die-chadema-partei-des «Die tansanische Wahlkommission hat die CHADEMA-Partei des Oppositionsführers Tundu Lissu von den Präsidentschafts- und Parlamentswahlen 2025 ausgeschlossen.»",
+			"lief auf hinaus Lexeme/VERB → [lief hinaus] [auf] (0,1,2) de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss «Die Verhandlung lief schließlich auf einen Kompromiss hinaus.»",
+			"wurde Licht in s Dunkel gebracht Locution/VERB → [wurde gebracht] [Licht in s Dunkel] (0,1,2) de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht «Durch die Akten wurde endlich Licht ins Dunkel gebracht.»",
+			"von an Locution/ADP → [von] [an] (0,1,2) de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher «Eine Unruhe trieb ihn von da an rastlos umher.»",
+			"trieb umher Lexeme/VERB → [trieb] [umher] (1) de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher «Eine Unruhe trieb ihn von da an rastlos umher.»",
+			"Gespräch mit führen Locution/VERB → [Gespräch] [mit] [führen] (0,1,2) de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos «Er konnte kein Gespräch mit Kameraden führen, ohne grundlos zu verstummen oder zerstreut mehrmals den Gegenstand zu wechseln.»",
+			"stellt eine Frage Locution/VERB → [stellt] [eine Frage] (0,1,2) de/er-stellt-eine-frage-und-stellt-die-vase-ab «Er stellt eine Frage und stellt die Vase ab.»",
+			"Es war Lexeme/VERB → [Es] [war] (0,1,2) de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am «Es war gegen halb 12 Uhr; die Badegäste mußten sich noch am Strande befinden.»",
+			"examiniert worden war Lexeme/VERB → [examiniert worden] [war] (0,1) de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder «Es war klar, daß Doktor Mantelsack heute außerhalb jeder Ordnung fragte und sich gar nicht darum kümmerte, wer am längsten nicht examiniert worden war.»",
+			"an weitergeleitet werden Lexeme/VERB → [an] [weitergeleitet werden] (0,1,2) de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der «Fest steht: Das alte Umlagesystem, bei dem die Beiträge der Angestellten direkt an die Rentner weitergeleitet werden, ist an seine Grenzen gekommen.»",
+			"Heult mit den Wölfen Locution/VERB → [Heult] [mit] [den Wölfen] (0,1,2) de/heult-nicht-laenger-mit-den-woelfen «Heult nicht länger mit den Wölfen!»",
+			"I m Allgemeinen Locution/ADV → [I] [m] [Allgemeinen] (0,1,2) de/im-allgemeinen-ist-der-zug-puenktlich «Im Allgemeinen ist der Zug pünktlich.»",
+			"Das Alter verklärt oder versteinert Saying/Saying → [Das Alter] [verklärt] [oder] [versteinert] (0,1,2) de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert «Im Lektorat stand erst „Das Alter verklärt oder versteinert“; später wiederholte sie: „Das Alter verklärt oder versteinert.“»",
+			"den Löfel abgab Locution/VERB → [den Löfel] [abgab] (0,1,2) de/im-nachruf-stand-dass-er-den-loefel-schliesslich-abgab «Im Nachruf stand, dass er den Löfel schließlich abgab.»",
+			"ist aufgefunden worden Lexeme/VERB → [ist] [aufgefunden worden] (0,1,2) de/in-suedkorea-ist-der-junge-musiker-und-schauspieler-cha-in «In Südkorea ist der junge Musiker und Schauspieler Cha In-ha (Artikelbild) tot in seinem Haus in der Hauptstadt Seoul aufgefunden worden.»",
+			"von aus Locution/ADP → [von] [aus] (0,1,2) de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus «K. wartete noch ein Weilchen, sah von seinem Kopfkissen aus die alte Frau, die ihm gegenüber wohnte und die ihn mit einer an ihr ganz ungewöhnlichen Neugierde beobachtete, dann aber, gleichzeitig befremdet und hungrig, läutete er.»",
+			"die Frau Lexeme/NOUN → [die] [Frau] (0,1,2) de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus «K. wartete noch ein Weilchen, sah von seinem Kopfkissen aus die alte Frau, die ihm gegenüber wohnte und die ihn mit einer an ihr ganz ungewöhnlichen Neugierde beobachtete, dann aber, gleichzeitig befremdet und hungrig, läutete er.»",
+			"Komm zu m Ende Locution/VERB → [Komm] [zu] [m Ende] (0,1,2) de/komm-endlich-zum-ende «Komm endlich zum Ende!»",
+			"hat alle Hände voll zu tun Locution/VERB → [hat] [alle Hände voll tun] [zu] (0,1,2) de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun «Mit dem Umzug hat die Familie alle Hände voll zu tun.»",
+			"Mit sich zanken Lexeme/VERB → [Mit] [sich zanken] (0,1,2) de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich «Mit einer Dame, die so gut erzogen wurde, kann man sich überhaupt nicht zanken.«»",
+			"wird kein Blatt vor den Mund nehmen Locution/VERB → [wird Blatt vor den Mund nehmen] [kein] (0,1,2) de/morgen-wird-sie-wohl-kein-blatt-vor-den-mund-nehmen «Morgen wird sie wohl kein Blatt vor den Mund nehmen.»",
+			"Wie dem auch sei Locution/ADV → [Wie sei] [dem] [auch] (0) de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat «Nach dem Einwand und dem zitierten Spruch ‚Morgenstund hat Gold im Mund‘ beendete sie den Exkurs: „Wie dem auch sei, wir stimmen jetzt ab.“»",
+			"hat die Katze i m Sack gekauft Locution/VERB → [hat gekauft] [die Katze i m Sack] (0,1,2) de/nach-der-formel-guten-morgen-hat-sie-ohne-pruefung-die-katze «Nach der Formel „Guten Morgen“ hat sie ohne Prüfung die Katze im Sack gekauft.»",
+			"hat sich in s Fäustchen gelacht Locution/VERB → [hat in s Fäustchen gelacht] [sich] (0,1) de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins «Nach der überraschenden Nachricht hat sie sich heimlich ins Fäustchen gelacht.»",
+			"Dann wollen wir mal Locution/INTJ → [Dann] [wollen] [wir] [mal] (0,1,2) de/nachdem-alle-ihre-werkzeuge-bereitgelegt-hatten-sagte-der «Nachdem alle ihre Werkzeuge bereitgelegt hatten, sagte der Meister: „Dann wollen wir mal.“»",
+			"Ich bitte um Verzeihung Locution/INTJ → [Ich] [bitte um Verzeihung] (0,1,2) de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin «Nachdem sie den Termin verwechselt hatte, sagte die Ärztin: „Ich bitte um Verzeihung für die Wartezeit.“»",
+			"ohne zu Locution/SCONJ → [ohne] [zu] (0,1,2) de/nora-loeste-die-aufgabe-ohne-jemanden-um-hilfe-zu-bitten «Nora löste die Aufgabe, ohne jemanden um Hilfe zu bitten.»",
+			"Oh là là Lexeme/INTJ → [Oh] [là là] (1) de/oh-la-la-du-hast-dich-aber-schick-gemacht «Oh là là, du hast dich aber schick gemacht!»",
+			"fror wie ein Schneider Locution/VERB → [fror] [wie] [ein Schneider] (0,1,2) de/ohne-mantel-fror-sie-wie-ein-schneider «Ohne Mantel fror sie wie ein Schneider.»",
+			"Pass auf auf Lexeme/VERB → [Pass auf] [auf] (0,1,2) de/pass-auf-dich-auf «Pass auf dich auf!»",
+			"gingen entlang Lexeme/VERB → [gingen] [entlang] (0,1,2) de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den «Sie gingen die »Vorderreihe« entlang und spazierten durch den Kurgarten, der stumm und schattenlos mit seinen Kieswegen und Rosenanlagen dalag.»",
+			"die Vorderreihe Lexeme/PROPN → [die] [Vorderreihe] (0,1,2) de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den «Sie gingen die »Vorderreihe« entlang und spazierten durch den Kurgarten, der stumm und schattenlos mit seinen Kieswegen und Rosenanlagen dalag.»",
+			"ein Kinder- Lexeme/NOUN → [ein] [Kinder-] (0,1,2) de/sie-kauft-ein-kinder-oder-jugendbuch «Sie kauft ein Kinder- oder Jugendbuch.»",
+			"leistet Abbite Locution/VERB → [leistet] [Abbite] (0,1,2) de/sie-leistet-abbite «Sie leistet Abbite.»",
+			"oder Ähnliches Locution/ADV → [oder] [Ähnliches] (0,1,2) de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern «Sie mag Äpfel, Birnen oder Ähnliches sehr gern.»",
+			"meint es gut mit Locution/VERB → [meint es mit] [gut] (0,1,2) de/sie-meint-es-gut-mit-dir «Sie meint es gut mit dir.»",
+			"protestiert egen Lexeme/VERB → [protestiert] [egen] (0,1,2) de/sie-protestiert-egen-den-neuen-plan «Sie protestiert egen den neuen Plan.»",
+			"he he Locution/INTJ → [he] [he] (0,1,2) de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt «Sie warnte ihn mit einem he he vor dem Schritt.»",
+			"nach Hause Locution/ADV → [nach] [Hause] (0,1,2) de/so-ueber-alle-zweifel-war-das-entschieden-dass-er «So über alle Zweifel war das entschieden, daß er gemächlich schlendernd durch den schmeichelnden Frühlingstag nach Hause spazierte, wie zum ersehnten Schlummer nach einer wüsten Nacht.»",
+			"Kinder und Kindeskinder Locution/NOUN → [Kinder] [und] [Kindeskinder] (0,1,2) de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner «Sollte er also einstmals etwa noch vor den Füßen meiner Kinder und Kindeskinder mit nachschleifendem Zwirnsfaden die Treppe hinunterkollern?»",
+			"Unter keinen Umständen Locution/ADV → [Unter] [keinen Umständen] (1) de/unter-keinen-umstaenden-geben-wir-das-passwort-weiter «Unter keinen Umständen geben wir das Passwort weiter.»",
+			"frage mich Lexeme/VERB → [frage] [mich] (0,1,2) de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird «Vergeblich frage ich mich, was mit ihm geschehen wird.»",
+			"mit geschehen wird Lexeme/VERB → [mit] [geschehen wird] (0,1,2) de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird «Vergeblich frage ich mich, was mit ihm geschehen wird.»",
+			"Vertrauen ist Mut und Treue ist Kraft Saying/Saying → [Vertrauen] [ist Mut und Treue ist Kraft] (0,1,2) de/vertrauen-schrieb-sie-ist-mut-und-treue-ist-kraft «„Vertrauen“, schrieb sie, „ist Mut, und Treue ist Kraft.“»",
+			"hütete das Bett Locution/VERB → [hütete] [das Bett] (0,1,2) de/waehrend-der-waerter-das-historische-bett-huetete-huetete «Während der Wärter das historische Bett hütete, hütete die kranke Kuratorin das Bett.»",
+			"zu m Locution/ADV → [zu] [m] (0,1,2) de/was-zum «Was zum …?»",
+			"zu m Locution/ADV → [zu] [m] (0,1,2) de/was-zum-2 «Was zum…?»",
+			"Hand und Fuß hätte Locution/VERB → [Hand Fuß hätte] [und] (0,1,2) de/wenn-der-vorschlag-hand-und-fuss-haette-stimmte-ich-zu «Wenn der Vorschlag Hand und Fuß hätte, stimmte ich zu.»",
+			"Wie geht 's Locution/INTJ → [Wie] [geht 's] (0,1,2) de/wie-geht-s-dir-heute «Wie geht's dir heute?»",
+			"Wie weise muss man sein um immer gut zu sein Saying/Saying → [Wie] [weise] [muss] [man] [sein] [um zu] [immer] [gut] [sein] (0,1,2) de/wie-weise-muss-man-sein-um-immer-gut-zu-sein «Wie weise muss man sein, um immer gut zu sein!»",
+			"liefen entlang Lexeme/VERB → [liefen] [entlang] (0,1,2) de/wir-liefen-den-fluss-entlang-bis-zur-bruecke «Wir liefen den Fluss entlang bis zur Brücke.»",
+			"Wo gehobelt wird da fallen Späne Saying/Saying → [Wo gehobelt wird da] [fallen Späne] (0,1,2) de/wo-gehobelt-wird-da-erklaerte-der-meister-und-setzte-das «„Wo gehobelt wird, da“, erklärte der Meister und setzte das Sprichwort nach der Pause fort, „fallen Späne.“»",
+			"Wo mit Lexeme/ADV → [Wo] [mit] (2) de/wo-hast-du-das-mit-gemacht «Wo hast du das mit gemacht?»",
+			"eine Frage stellen Locution/VERB → [eine Frage] [stellen] (0,1) de/woerterbucheintrag-eine-frage-stellen «Wörterbucheintrag: eine Frage stellen»"
+		]
+	},
+	"breakdowns": {
+		"phenomenon": {
+			"one piece Lexeme/CCONJ": {
+				"scored": 222,
+				"membership": 183,
+				"tolerant": 174,
+				"match": 156
+			},
+			"one piece Lexeme/ADV": {
+				"scored": 441,
+				"membership": 339,
+				"tolerant": 325,
+				"match": 313
+			},
+			"one piece Lexeme/PRON": {
+				"scored": 1017,
+				"membership": 851,
+				"tolerant": 848,
+				"match": 845
+			},
+			"one piece Lexeme/VERB": {
+				"scored": 519,
+				"membership": 339,
+				"tolerant": 339,
+				"match": 339
+			},
+			"one piece Lexeme/PROPN": {
+				"scored": 105,
+				"membership": 93,
+				"tolerant": 93,
+				"match": 93
+			},
+			"one piece Lexeme/ADJ": {
+				"scored": 408,
+				"membership": 294,
+				"tolerant": 268,
+				"match": 260
+			},
+			"VERB with reflexive": {
+				"scored": 63,
+				"membership": 36,
+				"tolerant": 36,
+				"match": 36
+			},
+			"governed preposition (VERB)": {
+				"scored": 126,
+				"membership": 66,
+				"tolerant": 56,
+				"match": 56
+			},
+			"one piece Lexeme/DET": {
+				"scored": 177,
+				"membership": 117,
+				"tolerant": 117,
+				"match": 116
+			},
+			"one piece Lexeme/NOUN": {
+				"scored": 231,
+				"membership": 147,
+				"tolerant": 135,
+				"match": 125
+			},
+			"Locution/ADV": {
+				"scored": 81,
+				"membership": 59,
+				"tolerant": 41,
+				"match": 41
+			},
+			"one piece Lexeme/INTJ": {
+				"scored": 162,
+				"membership": 150,
+				"tolerant": 131,
+				"match": 131
+			},
+			"Locution/INTJ": {
+				"scored": 111,
+				"membership": 87,
+				"tolerant": 81,
+				"match": 81
+			},
+			"NOUN with article or parts": {
+				"scored": 408,
+				"membership": 308,
+				"tolerant": 308,
+				"match": 308
+			},
+			"one piece Lexeme/ADP": {
+				"scored": 240,
+				"membership": 178,
+				"tolerant": 162,
+				"match": 162
+			},
+			"contains a fused piece": {
+				"scored": 207,
+				"membership": 120,
+				"tolerant": 119,
+				"match": 117
+			},
+			"one piece Lexeme/PART": {
+				"scored": 141,
+				"membership": 108,
+				"tolerant": 95,
+				"match": 77
+			},
+			"Locution/VERB": {
+				"scored": 234,
+				"membership": 130,
+				"tolerant": 124,
+				"match": 124
+			},
+			"one piece Lexeme/SCONJ": {
+				"scored": 192,
+				"membership": 183,
+				"tolerant": 172,
+				"match": 172
+			},
+			"VERB with auxiliary": {
+				"scored": 177,
+				"membership": 67,
+				"tolerant": 67,
+				"match": 67
+			},
+			"particle verb, split <5 pieces": {
+				"scored": 81,
+				"membership": 60,
+				"tolerant": 53,
+				"match": 53
+			},
+			"Saying/Saying": {
+				"scored": 216,
+				"membership": 168,
+				"tolerant": 168,
+				"match": 168
+			},
+			"PROPN with article or parts": {
+				"scored": 87,
+				"membership": 81,
+				"tolerant": 81,
+				"match": 69
+			},
+			"governed preposition (ADJ)": {
+				"scored": 12,
+				"membership": 9,
+				"tolerant": 6,
+				"match": 6
+			},
+			"one piece Lexeme/NUM": {
+				"scored": 81,
+				"membership": 81,
+				"tolerant": 75,
+				"match": 75
+			},
+			"one piece Locution/INTJ": {
+				"scored": 3,
+				"membership": 3,
+				"tolerant": 0,
+				"match": 0
+			},
+			"one piece Lexeme/SYM": {
+				"scored": 135,
+				"membership": 135,
+				"tolerant": 133,
+				"match": 133
+			},
+			"one piece Locution/ADV": {
+				"scored": 21,
+				"membership": 21,
+				"tolerant": 15,
+				"match": 15
+			},
+			"Locution/SCONJ": {
+				"scored": 93,
+				"membership": 72,
+				"tolerant": 69,
+				"match": 69
+			},
+			"governed preposition (NOUN)": {
+				"scored": 6,
+				"membership": 6,
+				"tolerant": 6,
+				"match": 6
+			},
+			"Locution/CCONJ": {
+				"scored": 57,
+				"membership": 56,
+				"tolerant": 47,
+				"match": 47
+			},
+			"particle verb, adjacent": {
+				"scored": 27,
+				"membership": 21,
+				"tolerant": 21,
+				"match": 21
+			},
+			"VERB with expletive es": {
+				"scored": 39,
+				"membership": 36,
+				"tolerant": 36,
+				"match": 36
+			},
+			"Locution/NUM": {
+				"scored": 18,
+				"membership": 18,
+				"tolerant": 18,
+				"match": 18
+			},
+			"causative lassen": {
+				"scored": 15,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"particle verb, split ≥5 pieces": {
+				"scored": 39,
+				"membership": 29,
+				"tolerant": 26,
+				"match": 26
+			},
+			"participle-shaped ADJ": {
+				"scored": 15,
+				"membership": 3,
+				"tolerant": 3,
+				"match": 3
+			},
+			"Locution/ADP": {
+				"scored": 24,
+				"membership": 12,
+				"tolerant": 9,
+				"match": 9
+			},
+			"Locution/PRON": {
+				"scored": 3,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"one piece Locution/CCONJ": {
+				"scored": 3,
+				"membership": 3,
+				"tolerant": 0,
+				"match": 0
+			},
+			"one piece Locution/SCONJ": {
+				"scored": 3,
+				"membership": 3,
+				"tolerant": 0,
+				"match": 0
+			},
+			"Locution/NOUN": {
+				"scored": 3,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"Locution/DET": {
+				"scored": 9,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			}
+		},
+		"route": {
+			"Lexeme/CCONJ": {
+				"scored": 222,
+				"membership": 183,
+				"tolerant": 174,
+				"match": 156
+			},
+			"Lexeme/ADV": {
+				"scored": 468,
+				"membership": 349,
+				"tolerant": 332,
+				"match": 314
+			},
+			"Lexeme/PRON": {
+				"scored": 1053,
+				"membership": 854,
+				"tolerant": 849,
+				"match": 845
+			},
+			"Lexeme/VERB": {
+				"scored": 927,
+				"membership": 557,
+				"tolerant": 547,
+				"match": 547
+			},
+			"Lexeme/PROPN": {
+				"scored": 192,
+				"membership": 174,
+				"tolerant": 174,
+				"match": 162
+			},
+			"Lexeme/ADJ": {
+				"scored": 435,
+				"membership": 317,
+				"tolerant": 274,
+				"match": 266
+			},
+			"Lexeme/DET": {
+				"scored": 177,
+				"membership": 117,
+				"tolerant": 117,
+				"match": 116
+			},
+			"Lexeme/NOUN": {
+				"scored": 639,
+				"membership": 455,
+				"tolerant": 443,
+				"match": 433
+			},
+			"Locution/ADV": {
+				"scored": 81,
+				"membership": 59,
+				"tolerant": 41,
+				"match": 41
+			},
+			"Lexeme/INTJ": {
+				"scored": 171,
+				"membership": 155,
+				"tolerant": 131,
+				"match": 131
+			},
+			"Locution/INTJ": {
+				"scored": 111,
+				"membership": 87,
+				"tolerant": 81,
+				"match": 81
+			},
+			"Lexeme/ADP": {
+				"scored": 243,
+				"membership": 178,
+				"tolerant": 162,
+				"match": 162
+			},
+			"Lexeme/PART": {
+				"scored": 141,
+				"membership": 108,
+				"tolerant": 95,
+				"match": 77
+			},
+			"Locution/VERB": {
+				"scored": 234,
+				"membership": 130,
+				"tolerant": 124,
+				"match": 124
+			},
+			"Lexeme/SCONJ": {
+				"scored": 201,
+				"membership": 192,
+				"tolerant": 172,
+				"match": 172
+			},
+			"Saying/Saying": {
+				"scored": 216,
+				"membership": 168,
+				"tolerant": 168,
+				"match": 168
+			},
+			"Lexeme/NUM": {
+				"scored": 81,
+				"membership": 81,
+				"tolerant": 75,
+				"match": 75
+			},
+			"Lexeme/SYM": {
+				"scored": 135,
+				"membership": 135,
+				"tolerant": 133,
+				"match": 133
+			},
+			"Locution/SCONJ": {
+				"scored": 93,
+				"membership": 72,
+				"tolerant": 69,
+				"match": 69
+			},
+			"Locution/CCONJ": {
+				"scored": 57,
+				"membership": 56,
+				"tolerant": 47,
+				"match": 47
+			},
+			"Locution/NUM": {
+				"scored": 18,
+				"membership": 18,
+				"tolerant": 18,
+				"match": 18
+			},
+			"Locution/ADP": {
+				"scored": 24,
+				"membership": 12,
+				"tolerant": 9,
+				"match": 9
+			},
+			"Locution/PRON": {
+				"scored": 3,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"Locution/NOUN": {
+				"scored": 3,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"Locution/DET": {
+				"scored": 9,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			}
+		},
+		"shape": {
+			"one piece": {
+				"scored": 4101,
+				"membership": 3228,
+				"tolerant": 3082,
+				"match": 3012
+			},
+			"discontinuous": {
+				"scored": 738,
+				"membership": 436,
+				"tolerant": 402,
+				"match": 399
+			},
+			"contiguous": {
+				"scored": 1095,
+				"membership": 793,
+				"tolerant": 751,
+				"match": 735
+			}
+		},
+		"rule": {
+			"de/attributive-adjective-stands-alone": {
+				"scored": 849,
+				"membership": 545,
+				"tolerant": 537,
+				"match": 528
+			},
+			"de/comparability-is-lexical": {
+				"scored": 1752,
+				"membership": 1226,
+				"tolerant": 1186,
+				"match": 1162
+			},
+			"de/core-features-are-identity": {
+				"scored": 348,
+				"membership": 329,
+				"tolerant": 323,
+				"match": 316
+			},
+			"de/expletive-es-joins-its-verb": {
+				"scored": 507,
+				"membership": 382,
+				"tolerant": 375,
+				"match": 370
+			},
+			"de/funktionsverbgefuege-are-collocations": {
+				"scored": 282,
+				"membership": 184,
+				"tolerant": 181,
+				"match": 181
+			},
+			"de/governed-preposition-joins-its-governor": {
+				"scored": 777,
+				"membership": 455,
+				"tolerant": 446,
+				"match": 437
+			},
+			"de/idiom": {
+				"scored": 273,
+				"membership": 150,
+				"tolerant": 147,
+				"match": 144
+			},
+			"de/locutions-and-sayings-are-made-of-lexemes": {
+				"scored": 342,
+				"membership": 153,
+				"tolerant": 150,
+				"match": 150
+			},
+			"de/modal-is-a-verb": {
+				"scored": 867,
+				"membership": 597,
+				"tolerant": 576,
+				"match": 573
+			},
+			"de/modification-attests-partially": {
+				"scored": 93,
+				"membership": 66,
+				"tolerant": 66,
+				"match": 66
+			},
+			"de/only-der-and-ein-are-articles": {
+				"scored": 882,
+				"membership": 564,
+				"tolerant": 558,
+				"match": 545
+			},
+			"de/pronominal-adverb-stands-alone": {
+				"scored": 279,
+				"membership": 203,
+				"tolerant": 203,
+				"match": 196
+			},
+			"de/proper-noun-article": {
+				"scored": 624,
+				"membership": 531,
+				"tolerant": 528,
+				"match": 509
+			},
+			"de/relative-w-adverb-fills-a-slot": {
+				"scored": 276,
+				"membership": 174,
+				"tolerant": 169,
+				"match": 160
+			},
+			"de/verb-owns-its-scattered-members": {
+				"scored": 1188,
+				"membership": 655,
+				"tolerant": 642,
+				"match": 631
+			},
+			"de/copula-stays-apart": {
+				"scored": 663,
+				"membership": 562,
+				"tolerant": 550,
+				"match": 541
+			},
+			"de/empty-inflection-is-structural": {
+				"scored": 195,
+				"membership": 181,
+				"tolerant": 180,
+				"match": 178
+			},
+			"de/aber-is-cconj": {
+				"scored": 249,
+				"membership": 226,
+				"tolerant": 223,
+				"match": 220
+			},
+			"de/verb-core-features": {
+				"scored": 852,
+				"membership": 614,
+				"tolerant": 608,
+				"match": 594
+			},
+			"(no Rule cited)": {
+				"scored": 2445,
+				"membership": 2209,
+				"tolerant": 2115,
+				"match": 2086
+			},
+			"de/adjective-stays-adj": {
+				"scored": 960,
+				"membership": 682,
+				"tolerant": 668,
+				"match": 647
+			},
+			"de/canonical-form-is-the-headword": {
+				"scored": 489,
+				"membership": 411,
+				"tolerant": 397,
+				"match": 388
+			},
+			"de/interjection-counts-its-words": {
+				"scored": 60,
+				"membership": 60,
+				"tolerant": 47,
+				"match": 45
+			},
+			"de/noun-owns-its-article": {
+				"scored": 1695,
+				"membership": 1111,
+				"tolerant": 1080,
+				"match": 1058
+			},
+			"de/title-before-a-name": {
+				"scored": 132,
+				"membership": 127,
+				"tolerant": 127,
+				"match": 118
+			},
+			"de/fixed-member-test": {
+				"scored": 447,
+				"membership": 227,
+				"tolerant": 220,
+				"match": 214
+			},
+			"de/fused-word-pieces": {
+				"scored": 594,
+				"membership": 311,
+				"tolerant": 291,
+				"match": 281
+			},
+			"de/causative-lassen": {
+				"scored": 120,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"de/nicht-is-part": {
+				"scored": 471,
+				"membership": 322,
+				"tolerant": 320,
+				"match": 313
+			},
+			"de/participial-adjective": {
+				"scored": 819,
+				"membership": 448,
+				"tolerant": 430,
+				"match": 421
+			},
+			"de/pron-or-det-by-use": {
+				"scored": 762,
+				"membership": 361,
+				"tolerant": 354,
+				"match": 341
+			},
+			"de/quantifier-by-use": {
+				"scored": 486,
+				"membership": 24,
+				"tolerant": 18,
+				"match": 18
+			},
+			"de/auxiliary-joins-the-verb-it-serves": {
+				"scored": 636,
+				"membership": 410,
+				"tolerant": 405,
+				"match": 397
+			},
+			"de/fixed-members-only": {
+				"scored": 510,
+				"membership": 208,
+				"tolerant": 205,
+				"match": 202
+			},
+			"de/no-target": {
+				"scored": 54,
+				"membership": 36,
+				"tolerant": 36,
+				"match": 36
+			},
+			"de/verbal-participle": {
+				"scored": 534,
+				"membership": 316,
+				"tolerant": 315,
+				"match": 310
+			},
+			"de/verbal-surface-is-whole": {
+				"scored": 549,
+				"membership": 337,
+				"tolerant": 336,
+				"match": 328
+			},
+			"de/routine-formula-is-intj": {
+				"scored": 60,
+				"membership": 36,
+				"tolerant": 33,
+				"match": 33
+			},
+			"de/bracket-particle-or-circumposition": {
+				"scored": 366,
+				"membership": 322,
+				"tolerant": 310,
+				"match": 304
+			},
+			"de/saying-needs-uptake": {
+				"scored": 36,
+				"membership": 33,
+				"tolerant": 33,
+				"match": 33
+			},
+			"de/bare-infinitive-zu": {
+				"scored": 198,
+				"membership": 135,
+				"tolerant": 128,
+				"match": 128
+			},
+			"de/largest-fixed-unit": {
+				"scored": 807,
+				"membership": 385,
+				"tolerant": 381,
+				"match": 371
+			},
+			"de/member-orthography": {
+				"scored": 315,
+				"membership": 261,
+				"tolerant": 235,
+				"match": 232
+			},
+			"de/variant-and-historical-status": {
+				"scored": 627,
+				"membership": 460,
+				"tolerant": 439,
+				"match": 432
+			},
+			"de/comparison-als": {
+				"scored": 48,
+				"membership": 42,
+				"tolerant": 39,
+				"match": 39
+			},
+			"de/open-referent": {
+				"scored": 585,
+				"membership": 383,
+				"tolerant": 380,
+				"match": 371
+			},
+			"de/sein-perfect-or-copula": {
+				"scored": 198,
+				"membership": 102,
+				"tolerant": 101,
+				"match": 98
+			},
+			"de/modal-particle-is-part": {
+				"scored": 234,
+				"membership": 183,
+				"tolerant": 171,
+				"match": 150
+			},
+			"de/abbreviation-is-one-segment": {
+				"scored": 165,
+				"membership": 112,
+				"tolerant": 99,
+				"match": 96
+			},
+			"de/dass-conjunction": {
+				"scored": 15,
+				"membership": 15,
+				"tolerant": 9,
+				"match": 9
+			},
+			"de/adjectival-noun-lemma": {
+				"scored": 57,
+				"membership": 18,
+				"tolerant": 18,
+				"match": 18
+			},
+			"de/partial-coverage": {
+				"scored": 132,
+				"membership": 93,
+				"tolerant": 90,
+				"match": 90
+			},
+			"de/digits-spell-the-numeral": {
+				"scored": 51,
+				"membership": 48,
+				"tolerant": 42,
+				"match": 42
+			},
+			"de/foreign-unless-duden-or-german-grammar": {
+				"scored": 30,
+				"membership": 29,
+				"tolerant": 17,
+				"match": 17
+			},
+			"de/correlator-anchors": {
+				"scored": 168,
+				"membership": 141,
+				"tolerant": 134,
+				"match": 128
+			},
+			"de/split-adverb-is-one-target": {
+				"scored": 42,
+				"membership": 13,
+				"tolerant": 13,
+				"match": 13
+			},
+			"de/degree-word-is-adv": {
+				"scored": 183,
+				"membership": 115,
+				"tolerant": 115,
+				"match": 112
+			},
+			"de/relative-wo-place-or-time": {
+				"scored": 12,
+				"membership": 9,
+				"tolerant": 9,
+				"match": 9
+			},
+			"de/bare-w-word-is-shorthand": {
+				"scored": 30,
+				"membership": 30,
+				"tolerant": 30,
+				"match": 30
+			},
+			"de/possessive-after-article": {
+				"scored": 3,
+				"membership": 3,
+				"tolerant": 1,
+				"match": 0
+			},
+			"de/bleiben-with-an-infinitive": {
+				"scored": 18,
+				"membership": 6,
+				"tolerant": 6,
+				"match": 6
+			},
+			"de/r-adverb-is-her-or-hin-shorthand": {
+				"scored": 66,
+				"membership": 66,
+				"tolerant": 62,
+				"match": 62
+			},
+			"de/focus-word-is-adv": {
+				"scored": 177,
+				"membership": 108,
+				"tolerant": 107,
+				"match": 107
+			},
+			"de/was-fuer": {
+				"scored": 51,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"de/unresolved-over-repair": {
+				"scored": 9,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"de/substantivized-infinitive-is-a-noun": {
+				"scored": 162,
+				"membership": 57,
+				"tolerant": 53,
+				"match": 53
+			},
+			"de/dr-adverb-is-da-shorthand": {
+				"scored": 27,
+				"membership": 27,
+				"tolerant": 27,
+				"match": 24
+			},
+			"de/neuter-adjectival-noun": {
+				"scored": 39,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"de/complex-preposition": {
+				"scored": 42,
+				"membership": 0,
+				"tolerant": 0,
+				"match": 0
+			},
+			"de/recipient-passive": {
+				"scored": 3,
+				"membership": 3,
+				"tolerant": 3,
+				"match": 3
+			},
+			"de/shared-article-in-coordination": {
+				"scored": 51,
+				"membership": 45,
+				"tolerant": 45,
+				"match": 45
+			}
+		}
+	},
+	"calibration": {
+		"routes": {
+			"bins": [
+				{
+					"from": 0,
+					"to": 0.2,
+					"count": 17,
+					"correct": 11
+				},
+				{
+					"from": 0.2,
+					"to": 0.4,
+					"count": 116,
+					"correct": 73
+				},
+				{
+					"from": 0.4,
+					"to": 0.5,
+					"count": 155,
+					"correct": 89
+				},
+				{
+					"from": 0.5,
+					"to": 0.6,
+					"count": 185,
+					"correct": 130
+				},
+				{
+					"from": 0.6,
+					"to": 0.7,
+					"count": 188,
+					"correct": 137
+				},
+				{
+					"from": 0.7,
+					"to": 0.8,
+					"count": 250,
+					"correct": 204
+				},
+				{
+					"from": 0.8,
+					"to": 0.9,
+					"count": 467,
+					"correct": 420
+				},
+				{
+					"from": 0.9,
+					"to": 0.95,
+					"count": 425,
+					"correct": 405
+				},
+				{
+					"from": 0.95,
+					"to": 1,
+					"count": 2757,
+					"correct": 2719
+				}
+			],
+			"riskCoverage": [
+				{
+					"floor": 0,
+					"kept": 1,
+					"accuracy": 0.9184210526315789
+				},
+				{
+					"floor": 0.3,
+					"kept": 0.9875,
+					"accuracy": 0.9207195203197868
+				},
+				{
+					"floor": 0.5,
+					"kept": 0.9368421052631579,
+					"accuracy": 0.9398408239700374
+				},
+				{
+					"floor": 0.6,
+					"kept": 0.8962719298245614,
+					"accuracy": 0.9505749938830438
+				},
+				{
+					"floor": 0.7,
+					"kept": 0.8550438596491228,
+					"accuracy": 0.9612721210566813
+				},
+				{
+					"floor": 0.8,
+					"kept": 0.800219298245614,
+					"accuracy": 0.971224993148808
+				},
+				{
+					"floor": 0.9,
+					"kept": 0.6978070175438597,
+					"accuracy": 0.9817724701445631
+				},
+				{
+					"floor": 0.95,
+					"kept": 0.6046052631578948,
+					"accuracy": 0.9862169024301777
+				}
+			]
+		},
+		"routeShare": {
+			"bins": [
+				{
+					"from": 0,
+					"to": 0.2,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.2,
+					"to": 0.4,
+					"count": 39,
+					"correct": 3
+				},
+				{
+					"from": 0.4,
+					"to": 0.5,
+					"count": 97,
+					"correct": 49
+				},
+				{
+					"from": 0.5,
+					"to": 0.6,
+					"count": 230,
+					"correct": 163
+				},
+				{
+					"from": 0.6,
+					"to": 0.7,
+					"count": 209,
+					"correct": 156
+				},
+				{
+					"from": 0.7,
+					"to": 0.8,
+					"count": 244,
+					"correct": 194
+				},
+				{
+					"from": 0.8,
+					"to": 0.9,
+					"count": 398,
+					"correct": 344
+				},
+				{
+					"from": 0.9,
+					"to": 0.95,
+					"count": 405,
+					"correct": 386
+				},
+				{
+					"from": 0.95,
+					"to": 1,
+					"count": 2938,
+					"correct": 2893
+				}
+			],
+			"riskCoverage": [
+				{
+					"floor": 0,
+					"kept": 1,
+					"accuracy": 0.9184210526315789
+				},
+				{
+					"floor": 0.3,
+					"kept": 0.9973684210526316,
+					"accuracy": 0.920844327176781
+				},
+				{
+					"floor": 0.5,
+					"kept": 0.9701754385964912,
+					"accuracy": 0.9349005424954792
+				},
+				{
+					"floor": 0.6,
+					"kept": 0.9197368421052632,
+					"accuracy": 0.9473056747734859
+				},
+				{
+					"floor": 0.7,
+					"kept": 0.8739035087719298,
+					"accuracy": 0.9578419071518193
+				},
+				{
+					"floor": 0.8,
+					"kept": 0.8203947368421053,
+					"accuracy": 0.9684576316492917
+				},
+				{
+					"floor": 0.9,
+					"kept": 0.7331140350877193,
+					"accuracy": 0.9808555189949147
+				},
+				{
+					"floor": 0.95,
+					"kept": 0.644298245614035,
+					"accuracy": 0.9846834581347855
+				}
+			]
+		},
+		"links": {
+			"bins": [
+				{
+					"from": 0,
+					"to": 0.2,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.2,
+					"to": 0.4,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.4,
+					"to": 0.5,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.5,
+					"to": 0.6,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.6,
+					"to": 0.7,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.7,
+					"to": 0.8,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.8,
+					"to": 0.9,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.9,
+					"to": 0.95,
+					"count": 0,
+					"correct": 0
+				},
+				{
+					"from": 0.95,
+					"to": 1,
+					"count": 0,
+					"correct": 0
+				}
+			],
+			"riskCoverage": [
+				{
+					"floor": 0,
+					"kept": null,
+					"accuracy": null
+				},
+				{
+					"floor": 0.3,
+					"kept": null,
+					"accuracy": null
+				},
+				{
+					"floor": 0.5,
+					"kept": null,
+					"accuracy": null
+				},
+				{
+					"floor": 0.6,
+					"kept": null,
+					"accuracy": null
+				},
+				{
+					"floor": 0.7,
+					"kept": null,
+					"accuracy": null
+				},
+				{
+					"floor": 0.8,
+					"kept": null,
+					"accuracy": null
+				},
+				{
+					"floor": 0.9,
+					"kept": null,
+					"accuracy": null
+				},
+				{
+					"floor": 0.95,
+					"kept": null,
+					"accuracy": null
+				}
+			]
+		},
+		"linkCount": 0
+	}
+}
