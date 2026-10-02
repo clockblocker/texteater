@@ -6,7 +6,7 @@ import {
 	projectSemanticRelations,
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { selectGrammaticalAlternatives } from "../../../server/authoredMembers";
+import { selectGrammaticalAlternatives } from "dumspec/inventories";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,

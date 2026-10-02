@@ -6,7 +6,7 @@ import {
 	deriveGrammaticalComponent,
 	type GrammaticalComponent,
 	selectAuthoredArticle,
-} from "../../server/authoredMembers";
+} from "dumspec/inventories";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,

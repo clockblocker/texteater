@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import type * as Dumling from "dumling/types";
-import { germanArticleCell } from "dumspec/inventories";
+import { authoredComponent, germanArticleCell } from "dumspec/inventories";
 import { api } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import {
@@ -12,7 +12,6 @@ import {
 	reviewedAlternatives,
 } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
-import { authoredComponent } from "../server/authoredMembers";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey,
