@@ -60,8 +60,10 @@
  *   same preposition twice and the judge hears both as one verb's
  *   particle, the one that ends the clause is the particle, and the
  *   earlier one heads a phrase: it joins the verb only when its
- *   preposition answer names that verb. Pass auf dich auf gives [Pass,
- *   auf, auf]; fängt an der Kreuzung an leaves the first an free.
+ *   preposition answer names that verb. With such answers, Pass auf dich
+ *   auf gives [Pass, auf, auf], and Er fängt an der Ecke wieder an gives
+ *   [fängt, an] with the first an free. When the two particle answers
+ *   don't name one verb at the satellite floor, the rule changes nothing.
  * - `saying-closed` (de/saying-needs-uptake,
  *   de/locutions-and-sayings-are-made-of-lexemes): a Saying is one unit
  *   over exactly its own words, so a link between a word inside a Saying
