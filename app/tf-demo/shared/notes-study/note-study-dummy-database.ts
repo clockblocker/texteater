@@ -5,7 +5,7 @@ import type * as Dumrel from "dumrel/types";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../../server/linguisticIdentity";
 import {
 	parseGermanAttestation,
@@ -357,7 +357,7 @@ function databaseUnitFor(fixture: NoteStudyFixture): NoteStudyDatabaseUnit {
 	];
 	return {
 		reading,
-		readingKey: readingFingerprint(reading),
+		readingKey: readingIdentityKey(reading),
 		lemmaKey: lemmaIdentityKey(reading.lemma),
 		citationSurface: fixtureSurface(reading.lemma),
 		presentationSurfaces: [...new Set(presentationSurfaceTexts)].map(
@@ -485,7 +485,7 @@ function relatedUnitFor(
 	} satisfies NoteStudyFixture;
 	return {
 		reading,
-		readingKey: readingFingerprint(reading),
+		readingKey: readingIdentityKey(reading),
 		lemmaKey: lemmaIdentityKey(reading.lemma),
 		citationSurface: fixtureSurface(reading.lemma),
 		presentationSurfaces: [],

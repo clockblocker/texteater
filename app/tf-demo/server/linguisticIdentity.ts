@@ -2,9 +2,9 @@ import {
 	lemmaIdentityKey as dumlingLemmaIdentityKey,
 	readingIdentityKey as dumlingReadingIdentityKey,
 	foldCase,
-	parseUnit,
 } from "dumling";
 import type * as Dumling from "dumling/types";
+import { parseUnitAs } from "./operationalParsing";
 
 function stableValue(value: unknown): unknown {
 	if (Array.isArray(value)) return value.map(stableValue);
@@ -35,10 +35,7 @@ export function lemmaIdentityKey<L extends Dumling.Language>(
 ): string;
 export function lemmaIdentityKey(lemma: unknown): string;
 export function lemmaIdentityKey(lemma: unknown): string {
-	const parsed = parseUnit(lemma);
-	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Lemma") throw new Error("Expected a Lemma.");
-	return dumlingLemmaIdentityKey(parsed.chain.value);
+	return dumlingLemmaIdentityKey(parseUnitAs(lemma, "Lemma"));
 }
 
 /**
@@ -64,10 +61,6 @@ export function emojiDescriptionOf(
  * tf-demo's database key for a Reading: Dumling's Reading identity key of the
  * parsed value, its Lemma's case-folded key and its Emoji Description.
  */
-export function readingIdentityKey(reading: Dumling.Reading): string {
-	const parsed = parseUnit(reading);
-	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Reading")
-		throw new Error("Expected a Reading.");
-	return dumlingReadingIdentityKey(parsed.chain.value);
+export function readingIdentityKey(reading: unknown): string {
+	return dumlingReadingIdentityKey(parseUnitAs(reading, "Reading"));
 }

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../server/linguisticIdentity";
 
 describe("global linguistic and visitor-scoped identities", () => {
@@ -15,7 +15,7 @@ describe("global linguistic and visitor-scoped identities", () => {
 			coreFeatures: { gender: "Neut" },
 		} as const;
 		const lemmaKey = lemmaIdentityKey(lemma);
-		const readingKey = readingFingerprint({
+		const readingKey = readingIdentityKey({
 			unitKind: "Reading",
 			lemma,
 			emojiDescription: "🏠",
@@ -40,13 +40,13 @@ describe("global linguistic and visitor-scoped identities", () => {
 		} as const;
 
 		expect(
-			readingFingerprint({
+			readingIdentityKey({
 				unitKind: "Reading",
 				lemma,
 				emojiDescription: "  🏠  ",
 			}),
 		).toBe(
-			readingFingerprint({
+			readingIdentityKey({
 				unitKind: "Reading",
 				lemma,
 				emojiDescription: "🏠",

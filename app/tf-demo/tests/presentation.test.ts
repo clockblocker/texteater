@@ -18,7 +18,7 @@ import { get as getTextView, occurrenceFocus } from "../convex/textViews";
 import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../server/linguisticIdentity";
 import {
 	MAX_SOURCE_SENTENCES,
@@ -41,7 +41,7 @@ afterEach(() => {
 	jest.useRealTimers();
 });
 
-type ReadingValue = Parameters<typeof readingFingerprint>[0];
+type ReadingValue = Parameters<typeof readingIdentityKey>[0];
 
 const bankLemma = {
 	unitKind: "Lemma",
@@ -79,7 +79,7 @@ function germanAdposition(canonicalForm: string) {
 
 async function insertReading(t: TestConvexDb, reading: ReadingValue) {
 	const { lemma, emojiDescription } = reading;
-	const readingKey = readingFingerprint(reading);
+	const readingKey = readingIdentityKey(reading);
 	return t.run(async (ctx) => {
 		const lemmaId = await ctx.db.insert("lemmas", {
 			lemmaKey: lemmaIdentityKey(lemma),

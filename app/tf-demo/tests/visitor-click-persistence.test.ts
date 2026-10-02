@@ -7,7 +7,7 @@ import type schema from "../convex/schema";
 import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../server/linguisticIdentity";
 import {
 	createTestConvex,
@@ -187,7 +187,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			foldedCanonicalForm: foldedCanonicalForm(bankLemma),
 		});
 		const readingId = await ctx.db.insert("readings", {
-			readingKey: readingFingerprint(bankReading),
+			readingKey: readingIdentityKey(bankReading),
 			lemmaId,
 			emojiDescription: bankReading.emojiDescription,
 		});

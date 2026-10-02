@@ -9,7 +9,7 @@ import type * as Dumrel from "dumrel/types";
 import { selectGrammaticalAlternatives } from "dumspec/inventories";
 import {
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../../../server/linguisticIdentity";
 import {
 	parseGermanLemma,
@@ -367,7 +367,7 @@ async function loadTargetedRelationProjections(
 			const accumulated = await ctx.db
 				.query("accumulatedKnowledge")
 				.withIndex("by_owner_reading_key", (q) =>
-					q.eq("ownerReadingKey", readingFingerprint(reading)),
+					q.eq("ownerReadingKey", readingIdentityKey(reading)),
 				)
 				.unique();
 			const stored = parseReadingKnowledge({
@@ -465,7 +465,7 @@ export async function loadRelationProjections(
 						.withIndex("by_reading_key", (q) =>
 							q.eq(
 								"readingKey",
-								readingFingerprint(projection.targetReading),
+								readingIdentityKey(projection.targetReading),
 							),
 						)
 						.unique()
@@ -703,7 +703,7 @@ export async function loadParticipialAdjectives(
 			lemmaIdentityKey(edge.source) !== verb.lemmaKey
 		)
 			return [];
-		const reading = readings.get(readingFingerprint(edge.target));
+		const reading = readings.get(readingIdentityKey(edge.target));
 		return reading
 			? [
 					{
@@ -731,7 +731,7 @@ export async function loadGrammaticalAlternatives(
 	return reviewedAlternatives(parseStoredGermanLemma(lemmaDoc)).map(
 		({ feature, reading }) => ({
 			feature,
-			readingKey: readingFingerprint(reading),
+			readingKey: readingIdentityKey(reading),
 			canonicalForm: reading.lemma.canonicalForm,
 		}),
 	);

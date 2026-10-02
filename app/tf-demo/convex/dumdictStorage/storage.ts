@@ -5,9 +5,8 @@ import type * as Dumrel from "dumrel/types";
 import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../../server/linguisticIdentity";
-import { parseGermanReading } from "../../server/operationalParsing";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { pendingRecordLocatorIndexKey } from "../model/dumdictPendingIndexes";
@@ -55,10 +54,6 @@ export function assertLemmaRecordHasNoKnowledge(record: AnyRecord): void {
 	if (record.knowledge !== undefined) {
 		throw new Error("Lemma Records cannot contain Knowledge.");
 	}
-}
-
-export function readingIdentityKey(value: unknown): string {
-	return readingFingerprint(parseGermanReading(value));
 }
 
 export function requireDirectSemanticRelation(
@@ -196,7 +191,7 @@ export async function findCanonicalReading(
 		.withIndex("by_reading_key", (q) =>
 			q.eq(
 				"readingKey",
-				readingFingerprint({
+				readingIdentityKey({
 					unitKind: "Reading",
 					lemma: reading.lemma,
 					emojiDescription,

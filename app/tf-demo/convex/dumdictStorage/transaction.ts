@@ -1,5 +1,4 @@
 import { makeSurfaceId } from "dumdict/planning";
-import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	authoredReading,
@@ -11,9 +10,10 @@ import {
 	emojiDescriptionOf,
 	foldedCanonicalForm,
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 	stableFingerprint,
 } from "../../server/linguisticIdentity";
+import { parseUnitAs } from "../../server/operationalParsing";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import {
@@ -47,7 +47,6 @@ import {
 	MAX_PLANNED_CHANGES,
 	MAX_RELATIONS_PER_READING,
 	pendingLocatorKey,
-	readingIdentityKey,
 	requireDirectSemanticRelation,
 	withoutSemanticRelationTargets,
 } from "./storage";
@@ -517,15 +516,13 @@ async function applyChange(
 			const entry = withAuthoredArticleKnowledge(change.entry);
 			const reading = requireRecord(entry.reading, "Reading");
 			// Stored and compared as Dumling parses it (ADR 0031).
-			const parsed = parseUnit(reading);
-			if (!parsed.success || parsed.chain.unitKind !== "Reading")
-				throw new Error("Invalid Reading");
-			const emojiDescription = emojiDescriptionOf(parsed.chain.value);
+			const parsedReading = parseUnitAs(reading, "Reading");
+			const emojiDescription = emojiDescriptionOf(parsedReading);
 			const storedLemma = await findLemma(ctx, reading.lemma);
 			if (!storedLemma || (await findReading(ctx, reading))) {
 				return false;
 			}
-			const readingKey = readingFingerprint(parsed.chain.value);
+			const readingKey = readingIdentityKey(parsedReading);
 			const canonical = await findCanonicalReading(ctx, reading);
 			if (
 				canonical &&
@@ -591,17 +588,15 @@ async function applyChange(
 				return false;
 			}
 			const surface = requireRecord(entry.surface, "Owned Surface value");
-			const parsed = parseUnit(surface);
-			if (!parsed.success || parsed.chain.unitKind !== "Surface")
-				throw new Error("Invalid Surface");
+			const parsedSurface = parseUnitAs(surface, "Surface");
 			if (
 				surfaceKey !==
-				makeSurfaceId(parsed.chain.language, parsed.chain.value)
+				makeSurfaceId(parsedSurface.language, parsedSurface)
 			)
 				throw new Error(
 					"Surface Entry key does not match its current value",
 				);
-			const reference = deriveGrammaticalComponent(parsed.chain.value);
+			const reference = deriveGrammaticalComponent(parsedSurface);
 			if (reference)
 				await materializeGrammaticalComponent(ctx, reference);
 			const language = requireString(
@@ -611,7 +606,7 @@ async function applyChange(
 			if (language !== "de" && language !== "en" && language !== "he") {
 				throw new Error("Unsupported Surface language.");
 			}
-			const { spelling } = parsed.chain.value;
+			const { spelling } = parsedSurface;
 			const canonical = await findCanonicalSurface(ctx, surfaceKey);
 			if (canonical && canonical.lemmaId !== storedLemma.canonical._id) {
 				throw new Error(

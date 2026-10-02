@@ -1,36 +1,38 @@
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 
-export function parseGermanLemma(input: unknown): Dumling.Lemma<"de"> {
+/**
+ * Parses a Dumling unit and checks its unit kind and, when `language` is
+ * given, its language. Dumling's `parseUnit` with an `expected` route cannot
+ * serve: that route also fixes the Family and Kind.
+ */
+export function parseUnitAs<
+	U extends Dumling.UnitKind,
+	L extends Dumling.Language = Dumling.Language,
+>(input: unknown, unitKind: U, language?: L): Dumling.Unit<U, L> {
 	const parsed = parseUnit(input);
 	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Lemma" || parsed.chain.language !== "de")
-		throw new Error("Expected a German Lemma.");
-	return parsed.chain.value;
+	if (
+		parsed.chain.unitKind !== unitKind ||
+		(language !== undefined && parsed.chain.language !== language)
+	)
+		throw new Error(
+			`Expected a Dumling ${unitKind}${language ? ` in ${language}` : ""}.`,
+		);
+	return parsed.chain.value as Dumling.Unit<U, L>;
+}
+
+export function parseGermanLemma(input: unknown): Dumling.Lemma<"de"> {
+	return parseUnitAs(input, "Lemma", "de");
 }
 export function parseGermanReading(input: unknown): Dumling.Reading<"de"> {
-	const parsed = parseUnit(input);
-	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Reading" || parsed.chain.language !== "de")
-		throw new Error("Expected a German Reading.");
-	return parsed.chain.value;
+	return parseUnitAs(input, "Reading", "de");
 }
 export function parseGermanSurface(input: unknown): Dumling.Surface<"de"> {
-	const parsed = parseUnit(input);
-	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Surface" || parsed.chain.language !== "de")
-		throw new Error("Expected a German Surface.");
-	return parsed.chain.value;
+	return parseUnitAs(input, "Surface", "de");
 }
 export function parseGermanAttestation(
 	input: unknown,
 ): Dumling.Attestation<"de"> {
-	const parsed = parseUnit(input);
-	if (!parsed.success) throw parsed.error;
-	if (
-		parsed.chain.unitKind !== "Attestation" ||
-		parsed.chain.language !== "de"
-	)
-		throw new Error("Expected a German Attestation.");
-	return parsed.chain.value;
+	return parseUnitAs(input, "Attestation", "de");
 }

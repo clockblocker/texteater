@@ -15,7 +15,7 @@ import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
 import {
 	foldedCanonicalForm,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../server/linguisticIdentity";
 import {
 	actionContext,
@@ -84,13 +84,13 @@ function inTransaction<Result>(
 
 async function readingIdFor(
 	t: TestConvexDb,
-	reading: Parameters<typeof readingFingerprint>[0],
+	reading: Parameters<typeof readingIdentityKey>[0],
 ): Promise<Id<"readings">> {
 	const row = await t.run((ctx) =>
 		ctx.db
 			.query("readings")
 			.withIndex("by_reading_key", (q) =>
-				q.eq("readingKey", readingFingerprint(reading)),
+				q.eq("readingKey", readingIdentityKey(reading)),
 			)
 			.unique(),
 	);
@@ -1053,7 +1053,7 @@ describe("tf-demo post-reset contract", () => {
 		expect(
 			(await tableRows(t, "accumulatedKnowledge")).find(
 				({ ownerReadingKey }) =>
-					ownerReadingKey === readingFingerprint(laufenReading),
+					ownerReadingKey === readingIdentityKey(laufenReading),
 			),
 		).toMatchObject({
 			knowledge: { definition: "sich laufend fortbewegen" },

@@ -1,5 +1,6 @@
 import { type Infer, v } from "convex/values";
-import { checkIfGrundform, parseUnit } from "dumling";
+import { checkIfGrundform } from "dumling";
+import { parseUnitAs } from "../../server/operationalParsing";
 import {
 	attestationMemberValidator,
 	familyValidator,
@@ -63,12 +64,9 @@ export const presentedAttestationValidator = v.object({
 export function presentLemma(
 	value: unknown,
 ): Infer<typeof presentedLemmaValidator> {
-	const parsed = parseUnit(value);
-	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Lemma" || parsed.chain.language === "en")
-		throw new Error("Expected a Lemma.");
-	const { language, family, kind, canonicalForm, coreFeatures } =
-		parsed.chain.value;
+	const lemma = parseUnitAs(value, "Lemma");
+	if (lemma.language === "en") throw new Error("Expected a Lemma.");
+	const { language, family, kind, canonicalForm, coreFeatures } = lemma;
 	return {
 		language,
 		family,
@@ -80,11 +78,8 @@ export function presentLemma(
 export function presentSurface(
 	value: unknown,
 ): Infer<typeof presentedSurfaceValidator> {
-	const parsed = parseUnit(value);
-	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Surface" || parsed.chain.language === "en")
-		throw new Error("Expected a Surface.");
-	const surface = parsed.chain.value;
+	const surface = parseUnitAs(value, "Surface");
+	if (surface.language === "en") throw new Error("Expected a Surface.");
 	const assessment = checkIfGrundform(surface);
 	return {
 		language: surface.language,
@@ -104,11 +99,7 @@ export function presentSurface(
 export function presentAttestation(
 	value: unknown,
 ): Infer<typeof presentedAttestationValidator> {
-	const parsed = parseUnit(value);
-	if (!parsed.success) throw parsed.error;
-	if (parsed.chain.unitKind !== "Attestation")
-		throw new Error("Expected an Attestation.");
-	const attestation = parsed.chain.value;
+	const attestation = parseUnitAs(value, "Attestation");
 	return {
 		members: attestation.members.map((member) =>
 			member.orthography === "Fused"

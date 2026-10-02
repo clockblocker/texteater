@@ -8,7 +8,7 @@ import schema from "../convex/schema";
 import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../server/linguisticIdentity";
 import {
 	createTestConvex,
@@ -29,7 +29,7 @@ import {
 type TableName = keyof typeof schema.tables;
 
 const lemmaKey = lemmaIdentityKey(lemma);
-const readingKey = readingFingerprint(reading);
+const readingKey = readingIdentityKey(reading);
 const surfaceKey = makeSurfaceId("de", surface);
 const note = { attestedTranslations: [], attestations: [], notes: "" };
 
@@ -364,7 +364,7 @@ test("a New homonym Reading of a stored Lemma commits against the Surface its Le
 	const result = await t.mutation(internal.persistence.persistResolvedClick, {
 		...bankOccurrenceCommit(second.selection, second.guard, "New"),
 		reading: bench,
-		readingKey: readingFingerprint(bench),
+		readingKey: readingIdentityKey(bench),
 	});
 
 	if (bank.status !== "Committed" || result.status !== "Committed")
@@ -544,7 +544,7 @@ test("a readingKey for a different Reading is rejected without durable writes", 
 	const { selection, guard } = await selectIn(t, ["Banken"]);
 	const before = await snapshot(t);
 	const args = bankOccurrenceCommit(selection, guard, "New");
-	args.readingKey = readingFingerprint({
+	args.readingKey = readingIdentityKey({
 		...reading,
 		emojiDescription: "🏧",
 	});
@@ -637,7 +637,7 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 	const result = await t.mutation(internal.persistence.persistResolvedClick, {
 		...bankOccurrenceCommit(selection, guard, "New"),
 		reading: verbReading,
-		readingKey: readingFingerprint(verbReading),
+		readingKey: readingIdentityKey(verbReading),
 		occurrence: {
 			surfaceKey: makeSurfaceId("de", verbSurface),
 			lemmaKey: lemmaIdentityKey(verbLemma),

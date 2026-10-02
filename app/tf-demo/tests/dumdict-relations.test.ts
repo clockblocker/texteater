@@ -19,7 +19,7 @@ import schema from "../convex/schema";
 import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
-	readingIdentityKey as readingFingerprint,
+	readingIdentityKey,
 } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
@@ -111,7 +111,7 @@ async function insertReading(
 ): Promise<Id<"readings">> {
 	return t.run(async (ctx) => {
 		const readingId = await ctx.db.insert("readings", {
-			readingKey: readingFingerprint(reading),
+			readingKey: readingIdentityKey(reading),
 			lemmaId,
 			emojiDescription: reading.emojiDescription,
 		});
@@ -181,11 +181,11 @@ function readingEntryContext(
 /** The stored Reading Entry a patch reads. */
 function readingEntry(
 	t: TestConvexDb,
-	reading: Parameters<typeof readingFingerprint>[0],
+	reading: Parameters<typeof readingIdentityKey>[0],
 ) {
 	return t.run(
 		async (ctx) =>
-			(await findReadingByKey(ctx, readingFingerprint(reading)))?.entry,
+			(await findReadingByKey(ctx, readingIdentityKey(reading)))?.entry,
 	);
 }
 
@@ -216,13 +216,13 @@ function snapshot(t: TestConvexDb) {
 
 async function readingIdFor(
 	t: TestConvexDb,
-	reading: Parameters<typeof readingFingerprint>[0],
+	reading: Parameters<typeof readingIdentityKey>[0],
 ): Promise<Id<"readings">> {
 	const row = await t.run((ctx) =>
 		ctx.db
 			.query("readings")
 			.withIndex("by_reading_key", (q) =>
-				q.eq("readingKey", readingFingerprint(reading)),
+				q.eq("readingKey", readingIdentityKey(reading)),
 			)
 			.unique(),
 	);
@@ -232,13 +232,13 @@ async function readingIdFor(
 
 async function accumulatedKnowledgeFor(
 	t: TestConvexDb,
-	reading: Parameters<typeof readingFingerprint>[0],
+	reading: Parameters<typeof readingIdentityKey>[0],
 ) {
 	return t.run((ctx) =>
 		ctx.db
 			.query("accumulatedKnowledge")
 			.withIndex("by_owner_reading_key", (q) =>
-				q.eq("ownerReadingKey", readingFingerprint(reading)),
+				q.eq("ownerReadingKey", readingIdentityKey(reading)),
 			)
 			.unique(),
 	);
@@ -247,14 +247,14 @@ async function accumulatedKnowledgeFor(
 /** A Reading's stored Knowledge with its direct Lemma-target edges folded in. */
 async function readingKnowledge(
 	t: TestConvexDb,
-	reading: Parameters<typeof readingFingerprint>[0],
+	reading: Parameters<typeof readingIdentityKey>[0],
 ): Promise<
 	| (Record<string, unknown> & {
 			semanticRelations?: Record<string, unknown[]>;
 	  })
 	| undefined
 > {
-	const key = readingFingerprint(reading);
+	const key = readingIdentityKey(reading);
 	return t.run(async (ctx) => {
 		const accumulated = (
 			await ctx.db
@@ -308,7 +308,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			intent: "addNewNote" as const,
 			lemmaKey: lemmaIdentityKey(gehenLemma),
 			proposedLemma: gehenLemma,
-			readingKey: readingFingerprint(gehenReading),
+			readingKey: readingIdentityKey(gehenReading),
 			surfaceKeys: Array.from(
 				{ length: 16 },
 				(_, index) => `surface-${index}`,
@@ -342,7 +342,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				intent: "addNewNote",
 				lemmaKey: lemmaIdentityKey(gehenLemma),
 				proposedLemma: gehenLemma,
-				readingKey: readingFingerprint(gehenReading),
+				readingKey: readingIdentityKey(gehenReading),
 				surfaceKeys: [],
 				explicitLemmaTargetKeys: Array.from({ length: 49 }, () =>
 					lemmaIdentityKey(gehenLemma),
@@ -410,7 +410,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			intent: "addNewNote",
 			lemmaKey: lemmaIdentityKey(gehenLemma),
 			proposedLemma: gehenLemma,
-			readingKey: readingFingerprint({
+			readingKey: readingIdentityKey({
 				unitKind: "Reading",
 				lemma: gehenLemma,
 				emojiDescription: "🥾",
@@ -479,8 +479,8 @@ describe("tf-demo Dumdict relation storage", () => {
 			(await rows(t, "accumulatedKnowledge"))
 				.filter(({ ownerReadingKey }) =>
 					[
-						readingFingerprint(laufenReading),
-						readingFingerprint(gehenReading),
+						readingIdentityKey(laufenReading),
+						readingIdentityKey(gehenReading),
 					].includes(String(ownerReadingKey)),
 				)
 				.map(({ ownerReadingKey, status }) => ({
@@ -490,7 +490,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		).toEqual(
 			expect.arrayContaining([
 				{
-					ownerReadingKey: readingFingerprint(laufenReading),
+					ownerReadingKey: readingIdentityKey(laufenReading),
 					status: "Partial",
 				},
 			]),
@@ -1164,11 +1164,11 @@ describe("tf-demo Dumdict relation storage", () => {
 		await expect(
 			readingEntryContext(t, {
 				intent: "applyGeneratedKnowledge",
-				readingKey: readingFingerprint(gehenReading),
+				readingKey: readingIdentityKey(gehenReading),
 				pendingLocatorKeys: [],
 				pendingTargetCanonicalForms: [],
 				relationTargetLemmaKeys: [],
-				relationTargetReadingKeys: [readingFingerprint(gehenReading)],
+				relationTargetReadingKeys: [readingIdentityKey(gehenReading)],
 			}),
 		).rejects.toThrow("at most 100 neighbourhood Lemmas");
 	});
@@ -1186,7 +1186,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		await expect(
 			readingEntryContext(t, {
 				intent: "applyGeneratedKnowledge",
-				readingKey: readingFingerprint(gehenReading),
+				readingKey: readingIdentityKey(gehenReading),
 				pendingLocatorKeys: [],
 				pendingTargetCanonicalForms: [],
 				relationTargetLemmaKeys: [lemmaIdentityKey(laufenLemma)],
@@ -1284,7 +1284,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				},
 			},
 			locator: {
-				sourceReadingKey: readingFingerprint(gehenReading),
+				sourceReadingKey: readingIdentityKey(gehenReading),
 				relation: "synonym",
 				targetPendingId: "pending-entry:v2:de:Lexeme:VERB:forged",
 			},
@@ -1331,21 +1331,21 @@ describe("tf-demo Dumdict relation storage", () => {
 				},
 			},
 			locator: {
-				sourceReadingKey: readingFingerprint(gehenReading),
+				sourceReadingKey: readingIdentityKey(gehenReading),
 				relation: "antonym",
 				targetPendingId: "pending-entry:v2:de:Lexeme:VERB:laufen",
 			},
 		} as const;
 		await t.run(async (ctx) => {
 			await ctx.db.insert("accumulatedKnowledge", {
-				ownerReadingKey: readingFingerprint(gehenReading),
+				ownerReadingKey: readingIdentityKey(gehenReading),
 				knowledge: directKnowledge,
 				status: "Partial",
 				updatedAt: 1,
 			});
 			await ctx.db.insert("pendingSemanticRelations", {
 				locatorKey: locatorKey(pendingRecord.locator),
-				sourceReadingKey: readingFingerprint(gehenReading),
+				sourceReadingKey: readingIdentityKey(gehenReading),
 				targetFoldedCanonicalForm: "laufen",
 				record: pendingRecord,
 			});
