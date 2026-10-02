@@ -1,14 +1,8 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
-import { nounArticleReference } from "legacy-dumgen";
 import { internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
-import {
-	migrateCompositionAttestation,
-	migrateCompositionOwnership,
-	migrateNounArticle,
-} from "../convex/model/nounArticleMigration";
 import { loadSourceContextPage } from "../convex/modules/notes/readingNote";
 import schema from "../convex/schema";
 import {
@@ -557,30 +551,7 @@ test("a readingKey for a different Reading is rejected without durable writes", 
 	expect(await snapshot(t)).toEqual(before);
 });
 
-test("a noun article materializes its Reading without a second occurrence", async () => {
-	const articleLemma = {
-		unitKind: "Lemma",
-		language: "de",
-		family: "Lexeme",
-		kind: "DET",
-		canonicalForm: "die",
-		coreFeatures: {
-			case: "Nom",
-			definite: "Def",
-			gender: null,
-			number: "Plur",
-			numType: null,
-			person: null,
-			polite: null,
-			poss: null,
-			pronType: "Art",
-		},
-	} as const;
-	const articleReading = {
-		unitKind: "Reading",
-		lemma: articleLemma,
-		emojiDescription: "👉",
-	} as const;
+test("a noun's owned article is a member of its one occurrence, and derives no DET Reading until #683", async () => {
 	const t = createTestConvex();
 	const { selection, guard, segmentIds } = await selectIn(
 		t,
@@ -594,9 +565,10 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 	);
 
 	if (result.status !== "Committed") throw new Error("Expected a commit.");
-	expect(await rows(t, "lemmas")).toHaveLength(2);
-	expect(await rows(t, "readings")).toHaveLength(2);
-	expect(await rows(t, "surfaces")).toHaveLength(2);
+	// The article's DET cell comes from dumspec once #683 rebuilds it
+	// (system ADR 0040); a noun Surface no longer carries an article.
+	expect(await rows(t, "lemmas")).toHaveLength(1);
+	expect(await rows(t, "readings")).toHaveLength(1);
 	expect(await rows(t, "attestations")).toHaveLength(1);
 	expect(await rows(t, "visitorClicks")).toHaveLength(1);
 	const members = (await rows(t, "segments")).filter(({ _id }) =>
@@ -609,214 +581,7 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 		);
 		expect(member.resolutionState).toBeUndefined();
 	}
-	const component = (await rows(t, "readings")).find(
-		(row) => row.readingKey === readingFingerprint(articleReading),
-	);
-	expect(component).toBeDefined();
-	expect(result.readingId).not.toBe(component?._id);
 	await expectCompleted(t, "request-1", result.attestationId);
-});
-
-test("article owner migration preserves Surface and occurrence IDs and is repeatable", async () => {
-	const correct = nounArticleReference({
-		article: "Definite",
-		case: "Dat",
-		number: "Sing",
-		gender: "Fem",
-		spelled: "der",
-	});
-	const oldLemma = { ...correct.reading.lemma, canonicalForm: "der" };
-	const oldReference = {
-		reading: { ...correct.reading, lemma: oldLemma },
-		surface: { ...correct.surface, lemma: oldLemma },
-	};
-	const oldSurface = {
-		...surface,
-		normalizedSurface: "der Bank",
-		inflectionalFeatures: {
-			article: "Definite",
-			case: "Dat",
-			number: "Sing",
-		},
-	} as const;
-	const t = createTestConvex();
-	const seeded = await t.run(async (ctx) => {
-		const lemmaId = await insertBankLemma(ctx);
-		const readingId = await insertBankReading(ctx, lemmaId);
-		const surfaceId = await ctx.db.insert("surfaces", {
-			surfaceKey: "legacy-noun-surface-key",
-			lemmaId,
-			language: oldSurface.language,
-			normalizedSurface: oldSurface.normalizedSurface,
-			spelling: oldSurface.spelling,
-			surfaceFeatures: oldSurface.surfaceFeatures,
-			inflectionalFeatures: oldSurface.inflectionalFeatures,
-			articleReference: oldReference,
-		});
-		const ownedSurfaceId = await ctx.db.insert("ownedSurfaces", {
-			surfaceId,
-			record: { notes: "keep this", attestedTranslations: [] },
-		});
-		const attestationId = await ctx.db.insert("attestations", {
-			surfaceId,
-			readingId,
-			realizationCoverage: "Full",
-		});
-		return { surfaceId, ownedSurfaceId, attestationId };
-	});
-	const migrate = () =>
-		t.run(async (ctx) => {
-			const row = await ctx.db.get(seeded.surfaceId);
-			if (!row) throw new Error("Missing Surface.");
-			await migrateNounArticle(ctx, row);
-		});
-
-	await migrate();
-
-	const updated = await t.run((ctx) => ctx.db.get(seeded.surfaceId));
-	expect(updated).toMatchObject({
-		_id: seeded.surfaceId,
-		surfaceKey: makeSurfaceId("de", oldSurface),
-	});
-	expect(updated?.articleReference).toBeUndefined();
-	expect(
-		(await t.run((ctx) => ctx.db.get(seeded.attestationId)))?.surfaceId,
-	).toBe(seeded.surfaceId);
-	expect(
-		(await t.run((ctx) => ctx.db.get(seeded.ownedSurfaceId)))?.record,
-	).toEqual({ notes: "keep this", attestedTranslations: [] });
-	const migrated = await snapshot(t);
-	await migrate();
-	expect(await snapshot(t)).toEqual(migrated);
-});
-
-test("composition cutover reconciles collisions while preserving encounters, annotations and saved Surface IDs", async () => {
-	const value = {
-		...surface,
-		normalizedSurface: "der Bank",
-		inflectionalFeatures: {
-			article: "Definite",
-			case: "Dat",
-			number: "Sing",
-		},
-	} as const;
-	const t = createTestConvex();
-	const { sentenceIds, segmentIds } = await submitText(t, [["Bank"]]);
-	const sentenceId = sentenceIds[0];
-	const segmentId = segmentIds[0]?.[0];
-	if (!sentenceId || !segmentId) throw new Error("Expected a Segment.");
-	const seeded = await t.run(async (ctx) => {
-		const lemmaId = await insertBankLemma(ctx);
-		const readingId = await insertBankReading(ctx, lemmaId);
-		const common = {
-			language: "de" as const,
-			lemmaId,
-			normalizedSurface: value.normalizedSurface,
-			spelling: value.spelling,
-			surfaceFeatures: value.surfaceFeatures,
-			inflectionalFeatures: value.inflectionalFeatures,
-		};
-		const oldId = await ctx.db.insert("surfaces", {
-			...common,
-			surfaceKey: "legacy-collision-key",
-			articleReference: { obsolete: true },
-		});
-		const currentId = await ctx.db.insert("surfaces", {
-			...common,
-			surfaceKey: makeSurfaceId("de", value),
-		});
-		const ownedOldId = await ctx.db.insert("ownedSurfaces", {
-			surfaceId: oldId,
-			record: { notes: "old note", attestedTranslations: ["old"] },
-		});
-		const ownedCurrentId = await ctx.db.insert("ownedSurfaces", {
-			surfaceId: currentId,
-			record: { notes: "current note", attestedTranslations: ["new"] },
-		});
-		const attestationId = await ctx.db.insert("attestations", {
-			surfaceId: oldId,
-			readingId,
-			realizationCoverage: "Full",
-		});
-		await ctx.db.patch(segmentId, {
-			attestationMembership: { attestationId, orthography: "Standard" },
-		});
-		const sentence = await ctx.db.get(sentenceId);
-		if (!sentence) throw new Error("Missing Sentence.");
-		await ctx.db.insert("visitorClicks", {
-			requestId: "click-old",
-			visitorId: "visitor",
-			textId: sentence.textId,
-			sentenceId,
-			segmentId,
-			attestationId,
-			clickedAt: 1,
-		});
-		await ctx.db.insert("personalAnnotations", {
-			visitorId: "visitor",
-			readingId,
-			text: "remember this",
-			updatedAt: 1,
-		});
-		await ctx.db.insert("accumulatedKnowledge", {
-			ownerReadingKey: readingKey,
-			knowledge: { definition: "keep" },
-			status: "Partial",
-			updatedAt: 1,
-		});
-		return { oldId, currentId, ownedOldId, ownedCurrentId, attestationId };
-	});
-	const protectedTables = [
-		"visitorClicks",
-		"personalAnnotations",
-		"accumulatedKnowledge",
-		"segments",
-	] as const;
-	const protectedRows = await snapshot(t, protectedTables);
-	const migrateSurface = () =>
-		t.run(async (ctx) => {
-			const row = await ctx.db.get(seeded.oldId);
-			if (!row) throw new Error("Missing Surface.");
-			await migrateNounArticle(ctx, row);
-		});
-	const migrateAttestation = () =>
-		t.run(async (ctx) => {
-			const row = await ctx.db.get(seeded.attestationId);
-			if (!row) throw new Error("Missing Attestation.");
-			await migrateCompositionAttestation(ctx, row);
-		});
-
-	await migrateSurface();
-	const redirected = await t.run((ctx) => ctx.db.get(seeded.oldId));
-	expect(redirected).toMatchObject({ redirectedTo: seeded.currentId });
-	expect(redirected?.articleReference).toBeUndefined();
-	await t.run(async (ctx) => {
-		const row = await ctx.db.get(seeded.ownedOldId);
-		if (!row) throw new Error("Missing owned Surface.");
-		await migrateCompositionOwnership(ctx, row);
-	});
-	await migrateAttestation();
-
-	expect(
-		(await t.run((ctx) => ctx.db.get(seeded.attestationId)))?.surfaceId,
-	).toBe(seeded.currentId);
-	expect(
-		(await t.run((ctx) => ctx.db.get(seeded.ownedCurrentId)))?.record,
-	).toEqual({
-		notes: "current note\n\nold note",
-		attestedTranslations: ["new", "old"],
-	});
-	expect(await t.run((ctx) => ctx.db.get(seeded.ownedOldId))).toBeNull();
-	const afterCutover = await snapshot(t, protectedTables);
-	for (const table of protectedTables) {
-		expect(afterCutover[table], table).toEqual(
-			expect.arrayContaining(protectedRows[table] ?? []),
-		);
-	}
-	const migrated = await snapshot(t);
-	await migrateSurface();
-	await migrateAttestation();
-	expect(await snapshot(t)).toEqual(migrated);
 });
 
 test("an in-flight legacy Surface proposal cannot reintroduce articleReference", async () => {

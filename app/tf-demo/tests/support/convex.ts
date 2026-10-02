@@ -6,6 +6,7 @@ import { convexTest, type TestConvex } from "convex-test";
 import { internal } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 import schema from "../../convex/schema";
+import { type StoredUnit, unresolvedUnits } from "../../server/storedSegments";
 
 /**
  * The single Convex database stand-in for tf-demo tests. It runs the real
@@ -161,12 +162,17 @@ function segmentKind(text: string) {
 /**
  * Stores one Visitor-submitted German Text through the production mutation.
  * Plain strings become Segments whose kind follows their characters, so
- * `["Ich", " ", "gehe", "."]` is four Segments.
+ * `["Ich", " ", "gehe", "."]` is four Segments. Without `units`, each
+ * ResolvableText Segment is its own Unresolved unit.
  */
 export async function submitText(
 	t: TestConvexDb,
 	sentences: readonly (readonly SegmentSpec[])[],
-	options: { readonly submissionKey?: string } = {},
+	options: {
+		readonly submissionKey?: string;
+		/** Each Sentence's units, by position. */
+		readonly units?: readonly (readonly StoredUnit[])[];
+	} = {},
 ): Promise<{
 	textId: Id<"texts">;
 	sentenceIds: Id<"sentences">[];
@@ -194,6 +200,9 @@ export async function submitText(
 				language: "de" as const,
 				stitchedText: segments.map(({ text }) => text).join(""),
 				segments: segments.map((segment) => ({ ...segment })),
+				units: [
+					...(options.units?.[position] ?? unresolvedUnits(segments)),
+				],
 			})),
 		},
 	);

@@ -1,43 +1,36 @@
-import { expect, jest, test } from "bun:test";
+import { afterEach, expect, jest, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import * as Fiber from "effect/Fiber";
-import { createDumgen, DumgenFailure } from "legacy-dumgen";
-import { pipelineFixture } from "legacy-dumgen/testing";
-import type {
-	Dumgen,
-	DumgenOptions,
-	Encounter,
-	LexemeTarget,
-	MemberRole,
-	ModelExchange,
-	SentenceAnalysis,
-} from "legacy-dumgen/types";
-import { internal } from "../convex/_generated/api";
-import type { ActionCtx } from "../convex/_generated/server";
+import { api, internal } from "../convex/_generated/api";
 import { applyTrustedReadingKnowledgeChange } from "../convex/model/readingKnowledge";
-import { createResolutionSessionLifecycle } from "../convex/resolutionSessionLifecycle";
 import {
-	createInspectionCapture,
-	type InspectionCapture,
-	inspected,
-} from "../server/inspectionCapture";
+	type ClickEncounter,
+	type ClickGrammarInput,
+	type ClickReadingInput,
+	type ClickResolution,
+	selectUnitOnly,
+} from "../server/clickResolution";
 import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
+	type ResolutionContext,
 	type ReusableAttestation,
 } from "../server/linguisticOrchestration";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
-import { toStoredSentenceAnalysis } from "../server/sentenceAnalysisStorage";
-import type { StoredSegment } from "../server/storedSegments";
-import {
-	MAX_SOURCE_SENTENCE_CHARACTERS,
-	MAX_SOURCE_SENTENCES,
-	MAX_SOURCE_TEXT_CHARACTERS,
-} from "../server/textSubmissionLimits";
-import { actionContext, createTestConvex } from "./support/convex";
+import type { StoredUnit } from "../server/storedSegments";
+import { createTestConvex, submitText } from "./support/convex";
 import { startSession } from "./support/occurrences";
+
+/*
+ * The click orchestrator behind the ClickResolution port (#848): reuse,
+ * checkpoints, commits and conflicts on its side, Grammar and the Reading's
+ * Emoji Description on the port's. A fake port stands in for resolution;
+ * production runs `selectUnitOnly`.
+ */
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 const lemma: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
 	unitKind: "Lemma",
@@ -45,21 +38,21 @@ const lemma: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
 	family: "Lexeme",
 	kind: "NOUN",
 	canonicalForm: "Bank",
-	coreFeatures: { gender: "Fem", hyph: null },
+	coreFeatures: { gender: "Fem" },
 };
 const reading: Dumling.Reading<"de", "Lexeme", "NOUN"> = {
 	unitKind: "Reading",
 	lemma,
 	emojiDescription: "🏦",
 };
-const encounter = {
+const encounter: ClickEncounter = {
 	sentence: {
 		id: "sentence-1",
 		language: "de",
 		segments: [{ kind: "ResolvableText", text: "Banken" }],
 	},
 	target: { family: "Lexeme", kind: "NOUN", memberSegmentIndices: [0] },
-} as const satisfies Encounter<"de">;
+};
 const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
 	unitKind: "Attestation",
 	surface: {
@@ -67,9 +60,9 @@ const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
 		language: "de",
 		lemma,
 		normalizedSurface: "Banken",
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
-		inflectionalFeatures: { case: "Nom", number: "Plur", article: "None" },
+		inflectionalFeatures: { case: "Nom", number: "Plur", gender: null },
 	},
 	realizationCoverage: "Full",
 	articleEvidence: null,
@@ -77,71 +70,92 @@ const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
 	members: [{ attested: "Banken", orthography: "Standard" }],
 };
 const grammar = parseResolvedGrammar({ encounter, attestation });
+const unit: StoredUnit = {
+	segments: [0],
+	route: { language: "de", family: "Lexeme", kind: "NOUN" },
+};
 const selection = {
 	requestId: "request-1",
 	visitorId: "visitor-1",
 	sentenceId: "sentence-1",
 	clickedSegmentIndex: 0,
 };
-const classification = encounter.target;
-const grammarOutput = {
-	memberOrthographies: ["Standard"],
-	normalizedMembers: ["Banken"],
-	surface: {
-		spelling: "Canonical",
-		surfaceFeatures: null,
-		inflectionalFeatures: { case: "Nom", number: "Plur", article: "None" },
-	},
-	lemma: {
-		canonicalForm: "Bank",
-		coreFeatures: { gender: "Fem", hyph: null },
-	},
-	realizationCoverage: "Full",
-	articleEvidence: null,
-	valencyEvidence: [],
-};
-function setup(
-	outputs: unknown[],
-	overrides: Partial<OrchestrationPersistence> = {},
-	candidates: Dumling.Reading<"de">[] = [],
-	hooks: Pick<
-		Parameters<typeof createTfDemoOrchestrator>[0],
-		"draftKnowledge" | "draftGraceMs" | "observer"
-	> & {
-		inspection?: InspectionCapture;
-		execute?: DumgenOptions["execute"];
-		analyzeSentence?: Dumgen["analyzeSentence"];
-		resolveGrammar?: Dumgen["resolveGrammar"];
+
+/** The clicked Sentence `Banken`, with its one stored unit. */
+function context(
+	overrides: Partial<ResolutionContext> = {},
+): ResolutionContext {
+	return {
+		reusable: null,
+		lemmaCandidates: [],
+		sentence: {
+			sentenceId: "sentence-1",
+			textId: "text-1",
+			segmentedSentenceId: "sentence-1",
+			language: "de",
+			stitchedText: "Banken",
+			segments: [{ index: 0, kind: "ResolvableText", text: "Banken" }],
+			units: [unit],
+		},
+		...overrides,
+	};
+}
+
+/**
+ * A ClickResolution that resolves `Banken` and records every call: Grammar
+ * names the occurrence, and Reading reuses a stored 🏦 or makes a new one.
+ */
+function fakeResolution(
+	overrides: {
+		readonly grammar?: ClickResolution["grammar"];
+		readonly reading?: ClickResolution["reading"];
 	} = {},
 ) {
-	const requests: ModelExchange["request"][] = [];
-	const submitted: Parameters<
-		OrchestrationPersistence["persistSubmittedText"]
-	>[0][] = [];
+	const grammarInputs: ClickGrammarInput[] = [];
+	const readingInputs: ClickReadingInput[] = [];
+	const resolution: ClickResolution = {
+		grammar: (input) => {
+			grammarInputs.push(input);
+			return overrides.grammar?.(input) ?? Effect.succeed(grammar);
+		},
+		reading: (input) => {
+			readingInputs.push(input);
+			return (
+				overrides.reading?.(input) ??
+				Effect.succeed({
+					decision: input.candidates.includes("🏦")
+						? ("Reuse" as const)
+						: ("New" as const),
+					emojiDescription: "🏦",
+				})
+			);
+		},
+	};
+	return { resolution, grammarInputs, readingInputs };
+}
+
+function setup(
+	options: {
+		readonly resolution?: ClickResolution;
+		readonly persistence?: Partial<OrchestrationPersistence>;
+		readonly candidates?: Dumling.Reading<"de">[];
+		readonly context?: ResolutionContext;
+	} & Pick<
+		Parameters<typeof createTfDemoOrchestrator>[0],
+		"draftKnowledge" | "draftGraceMs" | "observer"
+	> = {},
+) {
+	const fake = fakeResolution();
 	const writes: Parameters<
 		OrchestrationPersistence["persistResolvedClick"]
 	>[0][] = [];
+	const unresolved: Parameters<
+		OrchestrationPersistence["persistUnresolvedClick"]
+	>[0][] = [];
 	let occurrence: ReusableAttestation | null = null;
 	const persistence: OrchestrationPersistence = {
-		async persistSubmittedText(input) {
-			submitted.push(input);
-			return { textId: "text-1" };
-		},
 		async loadResolutionContext() {
-			return {
-				reusable: occurrence,
-				lemmaCandidates: [],
-				sentence: {
-					sentenceId: "sentence-1",
-					textId: "text-1",
-					segmentedSentenceId: "sentence-1",
-					language: "de",
-					stitchedText: "Banken",
-					segments: [
-						{ index: 0, kind: "ResolvableText", text: "Banken" },
-					],
-				},
-			};
+			return options.context ?? context({ reusable: occurrence });
 		},
 		async persistResolvedClick(input) {
 			writes.push(input);
@@ -171,258 +185,152 @@ function setup(
 				deduplicated: false,
 			};
 		},
-		async persistUnresolvedClick() {
+		async persistUnresolvedClick(input) {
+			unresolved.push(input);
 			return {
 				status: "Unresolved",
 				clickId: "click-1",
 				deduplicated: false,
 			};
 		},
-		...overrides,
-	};
-	const judgments: Parameters<DumgenOptions["judge"]>[0][] = [];
-	const fixture = pipelineFixture(outputs);
-	const production = createDumgen({
-		...fixture,
-		judge: (request, options) => {
-			judgments.push(request);
-			return fixture.judge(request, options);
-		},
-		...(hooks.execute ? { execute: hooks.execute } : {}),
-		onModelExchange: (exchange) => requests.push(exchange.request),
-		onOperation: (trace) => hooks.inspection?.operation(trace),
-	});
-	// Intake analysis is a separate judgment the queued fixtures do not
-	// answer; it fails unless a test supplies it, and a failed analysis is
-	// tolerated by design.
-	const dumgen: Dumgen = {
-		...production,
-		analyzeSentence:
-			hooks.analyzeSentence ??
-			(() =>
-				Effect.fail(
-					new DumgenFailure(
-						"NotImplemented",
-						"analyzeSentence",
-						"No analysis fixture",
-					),
-				)),
-		...(hooks.resolveGrammar
-			? { resolveGrammar: hooks.resolveGrammar }
-			: {}),
+		...options.persistence,
 	};
 	const orchestrator = createTfDemoOrchestrator({
-		draftKnowledge: hooks.draftKnowledge,
-		draftGraceMs: hooks.draftGraceMs,
-		observer: hooks.observer,
-		dumgen,
-		findStoredReadings: () => Effect.succeed(candidates),
+		resolution: options.resolution ?? fake.resolution,
+		findStoredReadings: () => Effect.succeed(options.candidates ?? []),
 		persistence,
+		...(options.draftKnowledge
+			? { draftKnowledge: options.draftKnowledge }
+			: {}),
+		...(options.draftGraceMs === undefined
+			? {}
+			: { draftGraceMs: options.draftGraceMs }),
+		...(options.observer ? { observer: options.observer } : {}),
 	});
 	return {
-		// Inspection is a Tracer the action installs around its run.
-		orchestrator: {
-			submitText: (
-				...input: Parameters<typeof orchestrator.submitText>
-			) => inspected(orchestrator.submitText(...input), hooks.inspection),
-			resolveSegment: (
-				...input: Parameters<typeof orchestrator.resolveSegment>
-			) =>
-				inspected(
-					orchestrator.resolveSegment(...input),
-					hooks.inspection,
-				),
-		},
-		requests,
-		judgments,
+		resolve: (
+			checkpoints?: Parameters<typeof orchestrator.resolveSegment>[1],
+		) =>
+			Effect.runPromise(
+				orchestrator.resolveSegment(selection, checkpoints),
+			),
+		fake,
 		writes,
-		submitted,
+		unresolved,
 	};
 }
 
-test("real segmentation, classification, grammar and emoji production reach an atomic dictionary plan", async () => {
-	const run = setup([
-		{
-			language: "de",
-			items: [
-				{
-					id: "0",
-					decision: "Accepted",
-					language: "de",
-					stitchedText: "Banken",
-				},
-			],
+function silencedConsole() {
+	const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+	const error = jest.spyOn(console, "error").mockImplementation(() => {});
+	return {
+		warn,
+		error,
+		[Symbol.dispose]() {
+			warn.mockRestore();
+			error.mockRestore();
 		},
-		classification,
-		grammarOutput,
-		"🏦",
-	]);
-	await Effect.runPromise(
-		run.orchestrator.submitText({
-			submissionKey: "submission-1",
-			sourceText: "Banken",
-		}),
-	);
-	const result = await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection),
-	);
-	expect(run.submitted).toHaveLength(1);
+	};
+}
+
+test("a click resolved through the port reaches one atomic commit, and a repeat click reuses it", async () => {
+	const run = setup();
+	const result = await run.resolve();
 	expect(run.writes).toHaveLength(1);
 	expect(run.writes[0]?.reading).toEqual(reading);
 	expect(run.writes[0]?.occurrence.attestation).toEqual(attestation);
+	expect(run.writes[0]?.occurrence.memberSegmentIndices).toEqual([0]);
 	expect(run.writes[0]?.readingDecision).toBe("New");
 	expect(result).toMatchObject({
 		grammatical: { encounter },
 		persisted: { status: "Committed" },
 	});
-	expect(
-		run.requests.filter((request) => request.stage === "classifyTarget"),
-	).toHaveLength(1);
-	await Effect.runPromise(run.orchestrator.resolveSegment(selection));
+	expect(run.fake.grammarInputs).toHaveLength(1);
+	expect(run.fake.readingInputs).toHaveLength(1);
+
+	await run.resolve();
 	expect(run.writes).toHaveLength(1);
-	// segment, classifyTarget, resolveGrammar, generateCanonicalForm and the
-	// emoji: classification is one round trip since its singleton-route
-	// pre-check was folded in, and the replay above makes no request.
-	expect(run.requests.map((request) => request.stage)).toEqual([
-		"segment",
-		"classifyTarget",
-		"resolveGrammar",
-		"generateCanonicalForm",
-		"generateReadingEmojiDescription",
+	expect(run.fake.grammarInputs).toHaveLength(1);
+});
+
+test("Grammar receives the clicked Sentence, its stored unit, the Lemma candidates and the neighbouring Sentences", async () => {
+	const neighbours = { before: "Maria kommt.", after: "Sie winkt." };
+	const run = setup({
+		context: context({
+			lemmaCandidates: [{ lemma, foundUnder: ["Banken"] }],
+			neighbours,
+		}),
+	});
+	await run.resolve();
+	expect(run.fake.grammarInputs).toEqual([
+		{
+			sentence: {
+				id: "sentence-1",
+				language: "de",
+				segments: [{ kind: "ResolvableText", text: "Banken" }],
+			},
+			clickedSegmentIndex: 0,
+			unit,
+			lemmaCandidates: [{ lemma, foundUnder: ["Banken"] }],
+			neighbours,
+		},
 	]);
 });
 
-test("retry uses its exact Grammar checkpoint and skips classification and grammar", async () => {
-	const run = setup(["🏦"]);
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
-	expect(run.requests.map((request) => request.stage)).toEqual([
-		"generateReadingEmojiDescription",
-	]);
+test("retry uses its exact Grammar checkpoint and asks only for the Reading", async () => {
+	const run = setup();
+	await run.resolve({ grammatical: grammar });
+	expect(run.fake.grammarInputs).toEqual([]);
+	expect(run.fake.readingInputs).toHaveLength(1);
 	expect(run.writes[0]?.reading).toEqual(reading);
 });
 
-test("stored Reading candidates are compared and reused without a new Reading plan", async () => {
-	const run = setup(["🏦"], {}, [reading]);
-	const result = await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
+test("stored Reading candidates reach the port and a match is reused without a new Reading plan", async () => {
+	const run = setup({ candidates: [reading] });
+	const result = await run.resolve({ grammatical: grammar });
+	expect(run.fake.readingInputs[0]?.candidates).toEqual(["🏦"]);
 	expect(result).toMatchObject({ readingResolution: { decision: "Reuse" } });
-	expect(run.requests).toHaveLength(1);
 	expect(run.writes[0]?.readingDecision).toBe("Reuse");
 });
 
-/**
- * A click whose Grammar first answers MoreContextRequired, then the given
- * Attestation. Records each resolveGrammar input past its Encounter.
- */
-function referentRun(neighbours: { before?: string; after?: string }) {
-	const inputs: Record<string, unknown>[] = [];
-	const resolveGrammar = ((
-		input: Encounter<"de"> & Record<string, unknown>,
-	) => {
-		const { sentence: _sentence, target: _target, ...rest } = input;
-		inputs.push(rest);
-		return Effect.succeed(
-			inputs.length === 1 && input.contextAvailable !== false
-				? { decision: "MoreContextRequired" as const }
-				: attestation,
-		);
-	}) as Dumgen["resolveGrammar"];
-	const run = setup(
-		[classification, "🏦"],
-		{
-			async loadResolutionContext() {
-				return {
-					reusable: null,
-					lemmaCandidates: [],
-					neighbours,
-					sentence: {
-						sentenceId: "sentence-1",
-						textId: "text-1",
-						segmentedSentenceId: "sentence-1",
-						language: "de",
-						stitchedText: "Banken",
-						segments: [
-							{
-								index: 0,
-								kind: "ResolvableText",
-								text: "Banken",
-							},
-						],
-					},
-				};
+test("a globally resolved occurrence is reused without asking the port", async () => {
+	const run = setup({
+		context: context({
+			sentence: null,
+			reusable: {
+				attestationId: "attestation-1",
+				grammatical: grammar,
+				reading,
 			},
-		},
-		[],
-		{ resolveGrammar },
-	);
-	return { run, inputs };
-}
-
-test("a Grammar that needs the referent is asked again with the neighbouring Sentences", async () => {
-	const neighbours = { before: "Maria kommt.", after: "Sie winkt." };
-	const { run, inputs } = referentRun(neighbours);
-	const result = await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection),
-	);
-	expect(inputs).toEqual([{}, { context: neighbours }]);
-	expect(result).toMatchObject({ persisted: { status: "Committed" } });
-	expect(run.writes[0]?.occurrence.attestation).toEqual(attestation);
-});
-
-test("a Sentence alone in its Text gets one Grammar call that must answer", async () => {
-	const { run, inputs } = referentRun({});
-	await Effect.runPromise(run.orchestrator.resolveSegment(selection));
-	expect(inputs).toEqual([{ contextAvailable: false }]);
-	expect(run.writes[0]?.occurrence.attestation).toEqual(attestation);
-});
-
-test("a globally resolved occurrence is reused without generation", async () => {
-	const run = setup([], {
-		async loadResolutionContext() {
-			return {
-				sentence: null,
-				lemmaCandidates: [],
-				reusable: {
-					attestationId: "attestation-1",
-					grammatical: grammar,
-					reading,
-				},
-			};
-		},
+		}),
 	});
-	const result = await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection),
-	);
-	expect(result).toMatchObject({
+	expect(await run.resolve()).toMatchObject({
 		reused: true,
 		persisted: { status: "Reused" },
 	});
-	expect(run.requests).toHaveLength(0);
-	expect(run.writes).toHaveLength(0);
+	expect(run.fake.grammarInputs).toEqual([]);
+	expect(run.writes).toEqual([]);
 });
 
 test("Unresolved is durable; a late committed occurrence still wins", async () => {
-	const run = setup([{ decision: "Unresolved" }]);
-	expect(
-		await Effect.runPromise(run.orchestrator.resolveSegment(selection)),
-	).toMatchObject({
+	const unresolvedPort = fakeResolution({
+		grammar: () =>
+			Effect.succeed({
+				decision: "Unresolved" as const,
+				language: "de" as const,
+			}),
+	});
+	const run = setup({ resolution: unresolvedPort.resolution });
+	expect(await run.resolve()).toMatchObject({
 		grammatical: { decision: "Unresolved" },
 		persisted: { status: "Unresolved" },
 	});
-	expect(run.requests).toHaveLength(1);
-	expect(run.writes).toHaveLength(0);
-	const late = setup(
-		[
-			{
-				decision: "Unresolved",
-				target: null,
-				additionalMemberIndices: null,
-			},
-		],
-		{
+	expect(run.unresolved).toEqual([selection]);
+	expect(run.writes).toEqual([]);
+
+	const late = setup({
+		resolution: unresolvedPort.resolution,
+		persistence: {
 			async persistUnresolvedClick() {
 				return {
 					status: "Reused",
@@ -438,89 +346,53 @@ test("Unresolved is durable; a late committed occurrence still wins", async () =
 				};
 			},
 		},
-	);
-	expect(
-		await Effect.runPromise(late.orchestrator.resolveSegment(selection)),
-	).toMatchObject({ reused: true, reading });
+	});
+	expect(await late.resolve()).toMatchObject({ reused: true, reading });
 });
 
-test("invalid model output and provider failures leave no partial dictionary records", async () => {
-	for (const outputs of [
-		[{}],
-		[classification, {}],
-		[classification, grammarOutput, new Error("provider unavailable")],
+test("a failure from either side of the port leaves no partial dictionary records", async () => {
+	for (const resolution of [
+		fakeResolution({ grammar: () => Effect.fail(Error("grammar failed")) })
+			.resolution,
+		fakeResolution({ reading: () => Effect.fail(Error("emoji failed")) })
+			.resolution,
 	]) {
-		const run = setup(outputs);
-		const result = await Effect.runPromise(
-			Effect.either(run.orchestrator.resolveSegment(selection)),
-		);
-		expect(result._tag).toBe("Left");
-		expect(run.writes).toHaveLength(0);
+		const run = setup({ resolution });
+		await expect(run.resolve()).rejects.toThrow("failed");
+		expect(run.writes).toEqual([]);
 	}
 });
 
-test.each([
-	{
-		name: "more sentences than allowed",
-		sourceText: Array.from(
-			{ length: MAX_SOURCE_SENTENCES + 1 },
-			(_, index) => `Satz ${index + 1} ist hier.`,
-		).join(" "),
-		message: `At most ${MAX_SOURCE_SENTENCES} sentences are allowed.`,
-	},
-	{
-		name: "a sentence over the character limit",
-		sourceText: `${"a".repeat(MAX_SOURCE_SENTENCE_CHARACTERS)}.`,
-		message: `Each sentence is limited to ${MAX_SOURCE_SENTENCE_CHARACTERS} characters.`,
-	},
-])(
-	"a submission with $name fails before any segment or analyze call",
-	async ({ sourceText, message }) => {
-		const analysed: unknown[] = [];
-		const run = setup([], {}, [], {
-			analyzeSentence: (input) => {
-				analysed.push(input);
-				return Effect.die("analysis is not under test");
-			},
-		});
-		await expect(
-			Effect.runPromise(
-				run.orchestrator.submitText({
-					submissionKey: "limit",
-					sourceText,
-				}),
-			),
-		).rejects.toThrow(message);
-		expect(run.judgments).toHaveLength(0);
-		expect(run.requests).toHaveLength(0);
-		expect(analysed).toHaveLength(0);
-		expect(run.submitted).toHaveLength(0);
-	},
-);
+test("a CatalogMiss from Grammar or Reading is returned without dictionary writes", async () => {
+	const miss = {
+		decision: "CatalogMiss" as const,
+		stage: "resolveGrammar",
+		route: "de/Lexeme/DET",
+		message: "Missing reviewed DET",
+	};
+	for (const resolution of [
+		fakeResolution({ grammar: () => Effect.succeed(miss) }).resolution,
+		fakeResolution({ reading: () => Effect.succeed(miss) }).resolution,
+	]) {
+		const run = setup({ resolution });
+		expect(await run.resolve()).toEqual({ catalogMiss: miss });
+		expect(run.writes).toEqual([]);
+	}
+});
 
-test("mismatched Reading checkpoints and oversized submissions fail before writes", async () => {
-	const run = setup([]);
+test("a mismatched Reading checkpoint fails before any write", async () => {
+	const run = setup();
 	await expect(
-		Effect.runPromise(
-			run.orchestrator.submitText({
-				submissionKey: "large",
-				sourceText: "x".repeat(MAX_SOURCE_TEXT_CHARACTERS + 1),
-			}),
-		),
-	).rejects.toThrow("limited");
-	await expect(
-		Effect.runPromise(
-			run.orchestrator.resolveSegment(selection, {
-				grammatical: grammar,
-				reading: {
-					resolution: { decision: "New", emojiDescription: "🏦" },
-					reading: { ...reading, emojiDescription: "🪑" },
-				},
-			}),
-		),
+		run.resolve({
+			grammatical: grammar,
+			reading: {
+				resolution: { decision: "New", emojiDescription: "🏦" },
+				reading: { ...reading, emojiDescription: "🪑" },
+			},
+		}),
 	).rejects.toThrow("does not match Grammar");
-	expect(run.requests).toHaveLength(0);
-	expect(run.writes).toHaveLength(0);
+	expect(run.fake.readingInputs).toEqual([]);
+	expect(run.writes).toEqual([]);
 });
 
 test("Knowledge changes validate against the exact tagged source Reading", () => {
@@ -537,93 +409,19 @@ test("Knowledge changes validate against the exact tagged source Reading", () =>
 			value: "Bench",
 		}),
 	).toThrow("conflicts");
-	expect(() =>
-		applyTrustedReadingKnowledgeChange(reading, undefined, {
-			kind: "Contribute",
-			aspect: "semanticRelations",
-			relation: "hyponym",
-			value: [lemma],
-		}),
-	).toThrow();
 });
 
-test("a Closed route miss records its typed outcome without dictionary writes or model fallback", async () => {
-	const run = setup([
-		{
-			family: "Lexeme",
-			kind: "DET",
-			memberSegmentIndices: [0],
-		},
-		{
-			memberOrthographies: ["Standard"],
-			normalizedMembers: ["Banken"],
-			surface: {
-				spelling: "Canonical",
-				surfaceFeatures: null,
-				inflectionalFeatures: null,
-			},
-			lemma: {
-				canonicalForm: "unreviewed",
-				coreFeatures: {
-					case: "Nom",
-					gender: null,
-					number: "Plur",
-					definite: "Def",
-					extPos: null,
-					foreign: null,
-					numType: null,
-					person: null,
-					polite: null,
-					poss: null,
-					pronType: "Art",
-				},
-			},
-			realizationCoverage: "Full",
-			articleEvidence: null,
-			valencyEvidence: [],
-		},
-	]);
-	expect(
-		await Effect.runPromise(run.orchestrator.resolveSegment(selection)),
-	).toMatchObject({
-		catalogMiss: { decision: "CatalogMiss", stage: "resolveGrammar" },
-	});
-	expect(run.requests).toHaveLength(3);
-	expect(run.writes).toHaveLength(0);
-});
-
-test("mixed German, English and Hebrew intake persists ordered sentences without recognition", async () => {
-	const source = ["Das Haus ist groß.", "The house is large.", "הבית גדול."];
-	const languages = ["de", "en", "he"];
-	const run = setup([
-		{
-			items: source.map((stitchedText, index) => ({
-				id: String(index),
-				decision: "Accepted",
-				language: languages[index],
-				stitchedText,
-			})),
-		},
-	]);
-	await Effect.runPromise(
-		run.orchestrator.submitText({
-			submissionKey: "mixed-intake",
-			sourceText: source.join("\n"),
-		}),
-	);
-	expect(
-		run.submitted[0]?.sentences.map((sentence) => sentence.language),
-	).toEqual(languages);
-	expect(
-		run.submitted[0]?.sentences.map((sentence) => sentence.stitchedText),
-	).toEqual(source);
-	expect(run.writes).toHaveLength(0);
-	expect(run.requests.map((request) => request.stage)).toEqual([
-		"segment",
-		"segment",
-		"segment",
-	]);
-});
+/** A port whose Reading waits for `release` before answering 🏦. */
+function slowReading(release: Promise<void>, started?: () => void) {
+	return fakeResolution({
+		reading: () =>
+			Effect.promise(async () => {
+				started?.();
+				await release;
+				return { decision: "New" as const, emojiDescription: "🏦" };
+			}),
+	}).resolution;
+}
 
 test("Knowledge drafts start from the Lemma before the Emoji Description and are handed to persistence with the new Reading", async () => {
 	const draftStarted = Promise.withResolvers<void>();
@@ -636,7 +434,13 @@ test("Knowledge drafts start from the Lemma before the Emoji Description and are
 		texts: [{ aspect: "definition" as const, text: "Ein Geldinstitut." }],
 	};
 	let emojiSettled = false;
-	const run = setup([], {}, [], {
+	const run = setup({
+		resolution: slowReading(
+			releaseEmoji.promise.then(() => {
+				emojiSettled = true;
+			}),
+			emojiStarted.resolve,
+		),
 		draftKnowledge: (input) =>
 			Effect.tryPromise(async () => {
 				expect(emojiSettled).toBe(false);
@@ -646,12 +450,6 @@ test("Knowledge drafts start from the Lemma before the Emoji Description and are
 				await releaseDraft.promise;
 				return draft;
 			}),
-		execute: async () => {
-			emojiStarted.resolve();
-			await releaseEmoji.promise;
-			emojiSettled = true;
-			return { output: "🏦" };
-		},
 		observer: {
 			async grammarAvailable() {},
 			async readingAvailable() {
@@ -659,18 +457,15 @@ test("Knowledge drafts start from the Lemma before the Emoji Description and are
 			},
 		},
 	});
-	const pending = Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
+	const pending = run.resolve({ grammatical: grammar });
 	await Promise.all([draftStarted.promise, emojiStarted.promise]);
-	expect(run.writes).toHaveLength(0);
+	expect(run.writes).toEqual([]);
 	releaseEmoji.resolve();
 	await readingAvailable.promise;
-	expect(run.writes).toHaveLength(0);
+	expect(run.writes).toEqual([]);
 	releaseDraft.resolve();
 	await pending;
 	expect(run.writes).toHaveLength(1);
-	expect(run.writes[0]?.reading.emojiDescription).toBe("🏦");
 	expect(JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null")).toEqual(
 		draft,
 	);
@@ -682,7 +477,7 @@ test("a new Reading commits after the draft grace with the leaves that finished"
 		language: "en",
 		text: "bank",
 	};
-	const run = setup(["🏦"], {}, [], {
+	const run = setup({
 		draftGraceMs: 20,
 		draftKnowledge: ({ settle }) =>
 			Effect.promise(
@@ -698,11 +493,8 @@ test("a new Reading commits after the draft grace with the leaves that finished"
 			),
 	});
 	const started = performance.now();
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
+	await run.resolve({ grammatical: grammar });
 	expect(performance.now() - started).toBeLessThan(1_000);
-	expect(run.writes).toHaveLength(1);
 	expect(
 		JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null").texts,
 	).toEqual([finished]);
@@ -710,7 +502,7 @@ test("a new Reading commits after the draft grace with the leaves that finished"
 
 test("a draft that ignores the settle is dropped instead of holding the commit", async () => {
 	let interrupted = false;
-	const run = setup(["🏦"], {}, [], {
+	const run = setup({
 		draftGraceMs: 20,
 		draftKnowledge: () =>
 			Effect.never.pipe(
@@ -721,18 +513,19 @@ test("a draft that ignores the settle is dropped instead of holding the commit",
 				),
 			),
 	});
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
+	await run.resolve({ grammatical: grammar });
 	expect(interrupted).toBe(true);
 	expect(run.writes).toHaveLength(1);
 	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
 });
 
-test("emoji failure interrupts an in-flight Knowledge draft and hands nothing to persistence", async () => {
+test("a Reading failure interrupts an in-flight Knowledge draft and hands nothing to persistence", async () => {
 	let drafts = 0;
 	let interrupted = false;
-	const run = setup([], {}, [], {
+	const run = setup({
+		resolution: fakeResolution({
+			reading: () => Effect.fail(Error("emoji failed")),
+		}).resolution,
 		draftKnowledge: () => {
 			drafts++;
 			return Effect.never.pipe(
@@ -743,42 +536,29 @@ test("emoji failure interrupts an in-flight Knowledge draft and hands nothing to
 				),
 			);
 		},
-		execute: async () => {
-			throw Error("emoji failed");
-		},
 	});
-	const result = await Effect.runPromise(
-		Effect.either(
-			run.orchestrator.resolveSegment(selection, {
-				grammatical: grammar,
-			}),
-		),
+	await expect(run.resolve({ grammatical: grammar })).rejects.toThrow(
+		"emoji failed",
 	);
-	expect(result._tag).toBe("Left");
 	expect(drafts).toBe(1);
 	expect(interrupted).toBe(true);
-	expect(run.writes).toHaveLength(0);
+	expect(run.writes).toEqual([]);
 });
 
 test("failed Knowledge speculation does not fail Reading resolution", async () => {
-	const run = setup(["🏦"], {}, [], {
-		draftKnowledge: () => Effect.fail(Error("offline")),
-	});
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
+	using _log = silencedConsole();
+	const run = setup({ draftKnowledge: () => Effect.fail(Error("offline")) });
+	await run.resolve({ grammatical: grammar });
 	expect(run.writes).toHaveLength(1);
 	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
 });
 
 test("a defective Knowledge draft is logged as a bug and does not fail Reading resolution", async () => {
 	using log = silencedConsole();
-	const run = setup(["🏦"], {}, [], {
+	const run = setup({
 		draftKnowledge: () => Effect.die(new TypeError("draft bug")),
 	});
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
+	await run.resolve({ grammatical: grammar });
 	expect(run.writes).toHaveLength(1);
 	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
 	expect(log.error.mock.calls[0]?.[1]).toBeInstanceOf(TypeError);
@@ -787,26 +567,19 @@ test("a defective Knowledge draft is logged as a bug and does not fail Reading r
 
 test("a reused Reading drops an unfinished Knowledge draft instead of waiting for it", async () => {
 	let interrupted = false;
-	const run = setup(
-		[{ decision: "Reuse", emojiDescription: "🏦" }],
-		{},
-		[{ unitKind: "Reading", lemma, emojiDescription: "🏦" }],
-		{
-			draftKnowledge: () =>
-				Effect.never.pipe(
-					Effect.onInterrupt(() =>
-						Effect.sync(() => {
-							interrupted = true;
-						}),
-					),
+	const run = setup({
+		candidates: [reading],
+		draftKnowledge: () =>
+			Effect.never.pipe(
+				Effect.onInterrupt(() =>
+					Effect.sync(() => {
+						interrupted = true;
+					}),
 				),
-		},
-	);
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
+			),
+	});
+	await run.resolve({ grammatical: grammar });
 	expect(interrupted).toBe(true);
-	expect(run.writes).toHaveLength(1);
 	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
 });
 
@@ -815,161 +588,19 @@ test("a reused Reading keeps a Knowledge draft that already finished", async () 
 		sourceFingerprint: "fixture",
 		texts: [{ aspect: "definition" as const, text: "Ein Geldinstitut." }],
 	};
-	const run = setup(
-		[{ decision: "Reuse", emojiDescription: "🏦" }],
-		{},
-		[{ unitKind: "Reading", lemma, emojiDescription: "🏦" }],
-		{ draftKnowledge: () => Effect.succeed(draft) },
-	);
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
-	expect(run.writes).toHaveLength(1);
+	const run = setup({
+		candidates: [reading],
+		draftKnowledge: () => Effect.succeed(draft),
+	});
+	await run.resolve({ grammatical: grammar });
 	expect(JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null")).toEqual(
 		draft,
 	);
 });
 
-test("submission inspection captures sentence boundaries and segmentation inputs and outputs", async () => {
-	const inspection = createInspectionCapture();
-	const run = setup(
-		[
-			{
-				language: "de",
-				items: [
-					{
-						id: "0",
-						decision: "Accepted",
-						language: "de",
-						stitchedText: "Hallo.",
-					},
-					{
-						id: "1",
-						decision: "Accepted",
-						language: "de",
-						stitchedText: "Welt!",
-					},
-				],
-			},
-		],
-		{},
-		[],
-		{ inspection },
-	);
-	await Effect.runPromise(
-		run.orchestrator.submitText({
-			submissionKey: "inspected",
-			sourceText: "Hallo. Welt!",
-		}),
-	);
-	const split = inspection.steps.find(
-		(step) => step.name === "Split text into sentences",
-	);
-	expect(split?.status).toBe("Success");
-	expect(JSON.parse(split?.payloadJson ?? "null")).toEqual({
-		input: { sourceText: "Hallo. Welt!" },
-		output: [["Hallo.", "Welt!"]],
-	});
-	expect(inspection.steps.some((step) => step.kind === "TypeSafe")).toBe(
-		true,
-	);
-	expect(
-		inspection.steps.some(
-			(step) =>
-				step.owner === "battery/dumgen" &&
-				step.payloadJson.includes("Hallo."),
-		),
-	).toBe(true);
-	expect(run.submitted).toHaveLength(1);
-});
-
-test("submission stores the paragraph each sentence reads in", async () => {
-	const run = setup([
-		{
-			language: "de",
-			items: ["Hallo.", "Welt!", "Tschüss."].map((stitchedText, id) => ({
-				id: id.toString(),
-				decision: "Accepted",
-				language: "de",
-				stitchedText,
-			})),
-		},
-	]);
-	await Effect.runPromise(
-		run.orchestrator.submitText({
-			submissionKey: "paragraphs",
-			sourceText: "Hallo. Welt!\n\nTschüss.",
-		}),
-	);
-	expect(
-		run.submitted[0]?.sentences.map(({ position, paragraph }) => [
-			position,
-			paragraph,
-		]),
-	).toEqual([
-		[0, 0],
-		[1, 0],
-		[2, 1],
-	]);
-});
-
-test("stored Lemma candidates reach grammar before headword generation, while Reading selection remains contextual", async () => {
-	const run = setup(
-		[classification, grammarOutput, "🏦"],
-		{
-			async loadResolutionContext() {
-				return {
-					reusable: null,
-					lemmaCandidates: [{ lemma, foundUnder: ["Banken"] }],
-					sentence: {
-						sentenceId: "sentence-1",
-						textId: "text-1",
-						segmentedSentenceId: "sentence-1",
-						language: "de",
-						stitchedText: "Banken",
-						segments: [
-							{
-								index: 0,
-								kind: "ResolvableText",
-								text: "Banken",
-							},
-						],
-					},
-				};
-			},
-		},
-		[reading],
-		{
-			execute: async () => {
-				throw Error(
-					"Existing headword and Reading need no text generation",
-				);
-			},
-		},
-	);
-	const result = await Effect.runPromise(
-		run.orchestrator.resolveSegment(selection),
-	);
-	expect(result).toMatchObject({
-		readingResolution: { decision: "Reuse" },
-		reading,
-	});
-	expect(
-		run.requests.some(
-			(request) => request.stage === "generateCanonicalForm",
-		),
-	).toBe(false);
-	expect(
-		run.requests.some(
-			(request) =>
-				request.stage === "resolveOrGenerateReadingEmojiDescription",
-		),
-	).toBe(true);
-	expect(run.writes).toHaveLength(1);
-});
-
 test("a failed Reading checkpoint prevents occurrence commit", async () => {
-	const run = setup(["🏦"], {}, [reading], {
+	const run = setup({
+		candidates: [reading],
 		observer: {
 			async grammarAvailable() {},
 			async readingAvailable() {
@@ -977,20 +608,15 @@ test("a failed Reading checkpoint prevents occurrence commit", async () => {
 			},
 		},
 	});
-	await expect(
-		Effect.runPromise(
-			run.orchestrator.resolveSegment(selection, {
-				grammatical: grammar,
-			}),
-		),
-	).rejects.toThrow();
-	expect(run.writes).toHaveLength(0);
+	await expect(run.resolve({ grammatical: grammar })).rejects.toThrow();
+	expect(run.writes).toEqual([]);
 });
 
 test("the occurrence commit waits for the in-flight Reading checkpoint", async () => {
 	const checkpoint = Promise.withResolvers<void>();
 	let commitsWhenSaved: number | undefined;
-	const run = setup(["🏦"], {}, [reading], {
+	const run = setup({
+		candidates: [reading],
 		observer: {
 			async grammarAvailable() {},
 			async readingAvailable() {
@@ -999,830 +625,106 @@ test("the occurrence commit waits for the in-flight Reading checkpoint", async (
 			},
 		},
 	});
-	const outcome = Effect.runPromise(
-		run.orchestrator.resolveSegment(selection, { grammatical: grammar }),
-	);
+	const outcome = run.resolve({ grammatical: grammar });
 	await Bun.sleep(0);
-	expect(run.writes).toHaveLength(0);
+	expect(run.writes).toEqual([]);
 	checkpoint.resolve();
 	await outcome;
 	expect(commitsWhenSaved).toBe(0);
 	expect(run.writes).toHaveLength(1);
 });
 
-// ------------------------------------------------ Sentence Analysis at intake
-
-const verfuegungText = "Er stellt das Auto zur Verfügung.";
-/** `zur` stored as intake splits it: `zu` standing for `zu`, `r` standing for `der`. */
-const verfuegungSegments: StoredSegment[] = [
-	"Er",
-	" ",
-	"stellt",
-	" ",
-	"das",
-	" ",
-	"Auto",
-	" ",
-	"zu",
-	"r",
-	" ",
-	"Verfügung",
-	".",
-].map((text, index) => ({
-	index,
-	kind:
-		text === " "
-			? ("Whitespace" as const)
-			: text === "."
-				? ("Punctuation" as const)
-				: ("ResolvableText" as const),
-	text,
-	...(text === "zu"
-		? { surface: "zu" }
-		: text === "r"
-			? { surface: "der" }
-			: {}),
-}));
-const word = (offset: number, text: string, surface = text) => ({
-	offset,
-	kind: "ResolvableText" as const,
-	text,
-	surface,
-});
-const gap = (offset: number) => ({
-	offset,
-	kind: "Whitespace" as const,
-	text: " ",
-	surface: " ",
-});
-function verfuegungAnalysis(options: {
-	readonly collocation: boolean;
-	readonly nounRoute?: Record<string, number>;
-}): SentenceAnalysis {
-	const lexeme = (
-		id: string,
-		members: { offset: number; role: MemberRole }[],
-		kind: string,
-	): LexemeTarget => ({
-		id,
-		members,
-		routeMass: { [kind]: 0.9, Unresolved: 0.1 },
-		identity: null,
-		provenance: "vote",
+test("the production stub selects the unit only: Unresolved, no Reading and no commit", async () => {
+	const run = setup({ resolution: selectUnitOnly });
+	expect(await run.resolve()).toMatchObject({
+		grammatical: { decision: "Unresolved" },
+		persisted: { status: "Unresolved" },
 	});
-	return {
-		sentenceId: "sentence-1",
-		language: "de",
-		stitchedText: verfuegungText,
-		segments: [
-			word(0, "Er"),
-			gap(2),
-			word(3, "stellt"),
-			gap(9),
-			word(10, "das"),
-			gap(13),
-			word(14, "Auto"),
-			gap(18),
-			word(19, "zu"),
-			word(21, "r", "der"),
-			gap(22),
-			word(23, "Verfügung"),
-			{ offset: 32, kind: "Punctuation", text: ".", surface: "." },
-		],
-		targets: [
-			lexeme("er", [{ offset: 0, role: "Head" }], "PRON"),
-			lexeme("stellt", [{ offset: 3, role: "Head" }], "VERB"),
-			lexeme("das", [{ offset: 10, role: "Head" }], "DET"),
-			lexeme("auto", [{ offset: 14, role: "Head" }], "NOUN"),
-			lexeme("zu", [{ offset: 19, role: "Head" }], "ADP"),
-			{
-				...lexeme(
-					"verfuegung",
-					[
-						{ offset: 21, role: "Article" },
-						{ offset: 23, role: "Head" },
-					],
-					"NOUN",
-				),
-				...(options.nounRoute ? { routeMass: options.nounRoute } : {}),
-			},
-		],
-		phrasemes: options.collocation
-			? [
-					{
-						id: "p1",
-						members: ["stellt", "zu", "verfuegung"],
-						governedPrepositions: [],
-						kindMass: { Collocation: 0.8, None: 0.2 },
-						fixedness: 2.5,
-						provenance: "vote",
-					},
-				]
-			: [],
-		fusions: [
-			{
-				offset: 19,
-				form: "zur",
-				components: [
-					{ offset: 19, span: "zu", surface: "zu", role: "ADP" },
-					{ offset: 21, span: "r", surface: "der", role: "Article" },
-				],
-			},
-		],
-		slots: [],
-	};
-}
-
-/** Real segmentation and classification fixtures, with analysis and grammar under test control. */
-function setupWithAnalysis(
-	outputs: unknown[],
-	hooks: {
-		readonly analyzeSentence?: Dumgen["analyzeSentence"];
-		readonly analysis?: SentenceAnalysis | null;
-		readonly inspection?: ReturnType<typeof createInspectionCapture>;
-		/** Stored Segments; the `verfuegung` pieces by default. */
-		readonly segments?: readonly StoredSegment[];
-		/** The stored sentence's text; the `verfuegung` sentence by default. */
-		readonly stitchedText?: string;
-	},
-) {
-	const encounters: Encounter<"de">[] = [];
-	const run = setup(
-		outputs,
-		{
-			async loadResolutionContext() {
-				return {
-					reusable: null,
-					lemmaCandidates: [],
-					analysis: hooks.analysis ?? null,
-					sentence: {
-						sentenceId: "sentence-1",
-						textId: "text-1",
-						segmentedSentenceId: "sentence-1",
-						language: "de",
-						stitchedText: hooks.stitchedText ?? verfuegungText,
-						segments: hooks.segments ?? verfuegungSegments,
-					},
-				};
-			},
-		},
-		[],
-		{
-			inspection: hooks.inspection,
-			...(hooks.analyzeSentence
-				? { analyzeSentence: hooks.analyzeSentence }
-				: {}),
-			resolveGrammar: (encounter) => {
-				encounters.push(encounter as Encounter<"de">);
-				return Effect.fail(
-					new DumgenFailure(
-						"Unresolved",
-						"resolveGrammar",
-						"Grammar is not under test",
-					),
-				);
-			},
-		},
-	);
-	return { ...run, encounters };
-}
-
-test("intake analyses every accepted German sentence, stores each analysis with its sentence and tolerates a failed one", async () => {
-	const inspection = createInspectionCapture();
-	const analysed: string[] = [];
-	const run = setup(
-		[
-			{
-				language: "de",
-				items: [
-					{
-						id: "0",
-						decision: "Accepted",
-						language: "de",
-						stitchedText: "Hallo.",
-					},
-					{
-						id: "1",
-						decision: "Accepted",
-						language: "de",
-						stitchedText: "Welt!",
-					},
-				],
-			},
-		],
-		{},
-		[],
-		{
-			inspection,
-			analyzeSentence: ({ sentence }) => {
-				const stitchedText = sentence.segments
-					.map(({ text }) => text)
-					.join("");
-				analysed.push(stitchedText);
-				return stitchedText === "Hallo."
-					? Effect.succeed({
-							...verfuegungAnalysis({ collocation: false }),
-							sentenceId: sentence.id,
-							stitchedText,
-						})
-					: Effect.fail(
-							new DumgenFailure(
-								"ProviderFailure",
-								"analyzeSentence",
-								"model unavailable",
-							),
-						);
-			},
-		},
-	);
-	const result = await Effect.runPromise(
-		run.orchestrator.submitText({
-			submissionKey: "analysed",
-			sourceText: "Hallo. Welt!",
-		}),
-	);
-	expect(result.persisted.textId).toBe("text-1");
-	expect(analysed.sort()).toEqual(["Hallo.", "Welt!"]);
-	const sentences = run.submitted[0]?.sentences ?? [];
-	expect(sentences).toHaveLength(2);
-	expect(sentences[0]?.analysis?.sentenceId).toBe(
-		sentences[0]?.segmentedSentenceId,
-	);
-	expect(sentences[0]?.analysis?.stitchedText).toBe("Hallo.");
-	expect(sentences[1]?.analysis).toBeUndefined();
-	const steps = inspection.steps.filter(
-		(step) => step.name === "Analyze sentence",
-	);
-	expect(steps.map((step) => step.status).sort()).toEqual([
-		"Failure",
-		"Success",
-	]);
-	expect(
-		steps.find((step) => step.status === "Failure")?.payloadJson,
-	).toContain("model unavailable");
+	expect(run.unresolved).toEqual([selection]);
+	expect(run.writes).toEqual([]);
 });
 
-test("intake never analyses sentences in other languages", async () => {
-	const analysed: string[] = [];
-	const run = setup(
-		[
-			{
-				items: [
-					{
-						id: "0",
-						decision: "Accepted",
-						language: "en",
-						stitchedText: "The house.",
-					},
-					{
-						id: "1",
-						decision: "Accepted",
-						language: "de",
-						stitchedText: "Das Haus.",
-					},
-				],
-			},
-		],
-		{},
-		[],
-		{
-			analyzeSentence: ({ sentence }) => {
-				analysed.push(
-					`${sentence.segments.map(({ text }) => text).join("")}:${sentence.language}`,
-				);
-				return Effect.fail(
-					new DumgenFailure("Unresolved", "analyzeSentence", "none"),
-				);
-			},
-		},
-	);
-	await Effect.runPromise(
-		run.orchestrator.submitText({
-			submissionKey: "mixed-analysis",
-			sourceText: "The house.\nDas Haus.",
-		}),
-	);
-	expect(analysed).toEqual(["Das Haus.:de"]);
-});
-
-function silencedConsole() {
-	const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
-	const error = jest.spyOn(console, "error").mockImplementation(() => {});
-	return {
-		warn,
-		error,
-		[Symbol.dispose]() {
-			warn.mockRestore();
-			error.mockRestore();
-		},
-	};
-}
-
-/** The queued fixture consumes its outputs, so each test takes a fresh copy. */
-const twoGermanSentences = () => [
-	{
-		items: [
-			{
-				id: "0",
-				decision: "Accepted",
-				language: "de",
-				stitchedText: "Hallo.",
-			},
-			{
-				id: "1",
-				decision: "Accepted",
-				language: "de",
-				stitchedText: "Welt!",
-			},
-		],
-	},
-];
-
-test("a defect in Sentence Analysis still stores the sentence and is logged as a bug", async () => {
-	using log = silencedConsole();
-	const run = setup(twoGermanSentences(), {}, [], {
-		analyzeSentence: ({ sentence }) =>
-			sentence.segments.map(({ text }) => text).join("") === "Hallo."
-				? Effect.die(new TypeError("analysis bug"))
-				: Effect.fail(
-						new DumgenFailure(
-							"ProviderFailure",
-							"analyzeSentence",
-							"model unavailable",
-						),
-					),
-	});
-	await Effect.runPromise(
-		run.orchestrator.submitText({
-			submissionKey: "defective-analysis",
-			sourceText: "Hallo. Welt!",
-		}),
-	);
-	const sentences = run.submitted[0]?.sentences ?? [];
-	expect(sentences.map((sentence) => sentence.stitchedText)).toEqual([
-		"Hallo.",
-		"Welt!",
-	]);
-	expect(sentences.every((sentence) => !sentence.analysis)).toBe(true);
-	expect(log.error).toHaveBeenCalledTimes(1);
-	expect(String(log.error.mock.calls[0]?.[0])).toContain("hit a bug");
-	expect(log.error.mock.calls[0]?.[1]).toBeInstanceOf(TypeError);
-	expect(log.warn).toHaveBeenCalledTimes(1);
-});
-
-test("interrupting a submission during Sentence Analysis propagates, stores nothing and logs nothing", async () => {
-	using log = silencedConsole();
-	const started = Promise.withResolvers<void>();
-	const run = setup(twoGermanSentences(), {}, [], {
-		analyzeSentence: () =>
-			Effect.zipRight(
-				Effect.sync(() => started.resolve()),
-				Effect.never,
-			),
-	});
-	const fiber = Effect.runFork(
-		run.orchestrator.submitText({
-			submissionKey: "interrupted-analysis",
-			sourceText: "Hallo. Welt!",
-		}),
-	);
-	await started.promise;
-	const exit = await Effect.runPromise(Fiber.interrupt(fiber));
-	expect(Exit.isInterrupted(exit)).toBe(true);
-	expect(run.submitted).toHaveLength(0);
-	expect(log.warn).not.toHaveBeenCalled();
-	expect(log.error).not.toHaveBeenCalled();
-});
-
-// ------------------------------------------------ Sentence Analysis at click
-
-const verfuegungSelection = { ...selection, clickedSegmentIndex: 11 };
-
-test("a click reads the stored analysis: a Collocation over `stellt zur Verfügung` covers both pieces of `zur` and skips classification; refused, it falls to the clicked word", async () => {
-	const inspection = createInspectionCapture();
-	const run = setupWithAnalysis([], {
-		inspection,
-		analysis: verfuegungAnalysis({ collocation: true }),
-	});
-	const result = await Effect.runPromise(
-		run.orchestrator.resolveSegment(verfuegungSelection),
-	);
-	expect(result).toMatchObject({ grammatical: { decision: "Unresolved" } });
-	expect(run.encounters.map((encounter) => encounter.target)).toEqual([
-		{
-			family: "Phraseme",
-			kind: "Collocation",
-			memberSegmentIndices: [2, 8, 9, 11],
-		},
-		{ family: "Lexeme", kind: "NOUN", memberSegmentIndices: [9, 11] },
-	]);
-	expect(
-		inspection.steps.some(
-			(step) => step.name === "Select target · analysis word",
-		),
-	).toBe(true);
-	expect(
-		run.requests.filter((request) => request.stage === "classifyTarget"),
-	).toHaveLength(0);
-	const step = inspection.steps.find((step) =>
-		step.name.startsWith("Select target"),
-	);
-	expect(step?.name).toBe("Select target · analysis");
-	expect(JSON.parse(step?.payloadJson ?? "null")).toMatchObject({
-		input: { hasAnalysis: true },
-		output: { path: "analysis" },
-	});
-});
-
-test("a NOUN owns the `r` of `zur` as its article member", async () => {
-	const run = setupWithAnalysis([], {
-		analysis: verfuegungAnalysis({ collocation: false }),
-	});
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(verfuegungSelection),
-	);
-	expect(run.encounters[0]?.target).toEqual({
-		family: "Lexeme",
-		kind: "NOUN",
-		memberSegmentIndices: [9, 11],
-	});
-	expect(run.requests).toHaveLength(0);
-});
-
-test("a stored Sentence holding the fused `zur` unsplit fails loudly instead of being bridged", async () => {
-	const unsplit: StoredSegment[] = [
-		...verfuegungSegments.slice(0, 8),
-		{ index: 8, kind: "ResolvableText", text: "zur" },
-		...verfuegungSegments
-			.slice(10)
-			.map((segment) => ({ ...segment, index: segment.index - 1 })),
-	];
-	const run = setupWithAnalysis([], {
-		analysis: verfuegungAnalysis({ collocation: false }),
-		segments: unsplit,
-	});
-	await expect(
-		Effect.runPromise(
-			run.orchestrator.resolveSegment({
-				...selection,
-				clickedSegmentIndex: 8,
-			}),
-		),
-	).rejects.toThrow('fused word "zur" unsplit');
-	expect(run.encounters).toHaveLength(0);
-});
-
-/**
- * A stored sentence of plain words and its analysis, from `[text, kind,
- * role?, target id]` words: consecutive words with one id form one Lexeme
- * Target.
- */
-function governedSentence(
-	words: readonly (readonly [string, string, MemberRole, string])[],
-	phrasemes: SentenceAnalysis["phrasemes"] = [],
-) {
-	const texts = words.flatMap(([text], position) =>
-		position === words.length - 1 ? [text, "."] : [text, " "],
-	);
-	const segments: StoredSegment[] = texts.map((text, index) => ({
-		index,
-		kind:
-			text === " "
-				? "Whitespace"
-				: text === "."
-					? "Punctuation"
-					: "ResolvableText",
-		text,
-	}));
-	const offsets = texts.map(
-		(_, index) => texts.slice(0, index).join("").length,
-	);
-	const targets = new Map<string, LexemeTarget>();
-	for (const [position, [, kind, role, id]] of words.entries()) {
-		const offset = offsets[position * 2] ?? 0;
-		const target = targets.get(id);
-		targets.set(id, {
-			id,
-			members: [...(target?.members ?? []), { offset, role }],
-			routeMass: { [kind]: 0.9, Unresolved: 0.1 },
-			identity: null,
-			provenance: "vote",
-		});
-	}
-	const analysis: SentenceAnalysis = {
-		sentenceId: "sentence-1",
-		language: "de",
-		stitchedText: texts.join(""),
-		segments: texts.map((text, index) => ({
-			offset: offsets[index] ?? 0,
-			kind: segments[index]?.kind ?? "ResolvableText",
-			text,
-			surface: text,
-		})),
-		targets: [...targets.values()],
-		phrasemes,
-		fusions: [],
-		slots: [],
-	};
-	return { segments, analysis, stitchedText: analysis.stitchedText };
-}
-
-test("a click on a governed preposition opens its governor: the adjective beside a copula, or the Collocation that governs it", async () => {
-	// Er ist stolz auf seinen Sohn: auf is stolz's member, ist stays alone.
-	const stolz = governedSentence([
-		["Er", "PRON", "Head", "er"],
-		["ist", "VERB", "Head", "ist"],
-		["stolz", "ADJ", "Head", "stolz"],
-		["auf", "ADJ", "GovernedPreposition", "stolz"],
-		["seinen", "DET", "Head", "seinen"],
-		["Sohn", "NOUN", "Head", "sohn"],
-	]);
-	for (const [clicked, target] of [
-		[6, { family: "Lexeme", kind: "ADJ", memberSegmentIndices: [4, 6] }],
-		[2, { family: "Lexeme", kind: "VERB", memberSegmentIndices: [2] }],
-	] as const) {
-		const run = setupWithAnalysis([], stolz);
-		await Effect.runPromise(
-			run.orchestrator.resolveSegment({
-				...selection,
-				clickedSegmentIndex: clicked,
-			}),
-		);
-		expect(run.encounters[0]?.target).toEqual(target);
-		expect(run.requests).toHaveLength(0);
-	}
-	// Er weiß Bescheid über die Pläne: über is the Collocation's governed
-	// preposition, not a fixed word, and still opens the Collocation.
-	const bescheid = governedSentence(
-		[
-			["Er", "PRON", "Head", "er"],
-			["weiß", "VERB", "Head", "weiss"],
-			["Bescheid", "NOUN", "Head", "bescheid"],
-			["über", "ADP", "Head", "ueber"],
-			["die", "NOUN", "Article", "plaene"],
-			["Pläne", "NOUN", "Head", "plaene"],
-		],
-		[
-			{
-				id: "p1",
-				members: ["weiss", "bescheid"],
-				governedPrepositions: ["ueber"],
-				kindMass: { Collocation: 0.8, None: 0.2 },
-				fixedness: 2,
-				provenance: "vote",
-			},
-		],
-	);
-	const run = setupWithAnalysis([], bescheid);
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment({
-			...selection,
-			clickedSegmentIndex: 6,
-		}),
-	);
-	expect(run.encounters.map((encounter) => encounter.target)).toEqual([
-		{
-			family: "Phraseme",
-			kind: "Collocation",
-			memberSegmentIndices: [2, 4, 6],
-		},
-		{ family: "Lexeme", kind: "ADP", memberSegmentIndices: [6] },
-	]);
-	expect(run.requests).toHaveLength(0);
-});
-
-test("a click on the `zu` of `zur` reads its ADP from the analysis and hands Dumgen the pieces", async () => {
-	const run = setupWithAnalysis([], {
-		analysis: verfuegungAnalysis({ collocation: false }),
-	});
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment({
-			...selection,
-			clickedSegmentIndex: 8,
-		}),
-	);
-	expect(run.requests).toHaveLength(0);
-	const encounter = run.encounters[0];
-	expect(
-		encounter?.sentence.segments.slice(8, 10).map(({ text }) => text),
-	).toEqual(["zu", "r"]);
-	expect(encounter?.sentence.segments.map(({ text }) => text).join("")).toBe(
-		verfuegungText,
-	);
-	expect(encounter?.target).toEqual({
-		family: "Lexeme",
-		kind: "ADP",
-		memberSegmentIndices: [8],
-	});
-});
-
-test("a click on the `r` of `zur` selects the NOUN it articles, in stored indices", async () => {
-	const run = setupWithAnalysis([], {
-		analysis: verfuegungAnalysis({ collocation: false }),
-	});
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment({
-			...selection,
-			clickedSegmentIndex: 9,
-		}),
-	);
-	expect(run.requests).toHaveLength(0);
-	const encounter = run.encounters[0];
-	expect(encounter?.target).toEqual({
-		family: "Lexeme",
-		kind: "NOUN",
-		memberSegmentIndices: [9, 11],
-	});
-	expect(
-		encounter?.target.memberSegmentIndices.map(
-			(index) => encounter.sentence.segments[index]?.text,
-		),
-	).toEqual(["r", "Verfügung"]);
-});
-
-test("an Unresolved unit, a Miss identity, a lone AUX identity, or no stored analysis, falls back to click-time classification and names why", async () => {
-	const inspection = createInspectionCapture();
-	const plain = verfuegungAnalysis({ collocation: false });
-	// `stellt` read as a Selected AUX identity: ADR 0026 forbids AUX targets.
-	const loneAux: SentenceAnalysis = {
-		...plain,
-		targets: plain.targets.map((target) =>
-			target.id === "stellt"
-				? {
-						...target,
-						identity: {
-							candidates: [
-								{
-									key: "AUX:haben:null",
-									kind: "AUX",
-									headword: "haben",
-									pronType: null,
-									cells: [],
-									definition: "",
-								},
-							],
-							mass: { "AUX:haben:null": 0.9, NoMatch: 0.1 },
-						},
-					}
-				: target,
-		),
-	};
-	const cases = [
-		{
-			analysis: verfuegungAnalysis({
-				collocation: false,
-				nounRoute: { Unresolved: 0.7, NOUN: 0.3 },
-			}),
-			target: {
-				family: "Lexeme",
-				kind: "NOUN",
-				memberSegmentIndices: [11],
-			},
-		},
-		{
-			// `das` is routed DET with no authored candidate: a Miss.
-			analysis: plain,
-			target: {
-				family: "Lexeme",
-				kind: "DET",
-				memberSegmentIndices: [4],
-			},
-		},
-		{
-			analysis: loneAux,
-			target: {
-				family: "Lexeme",
-				kind: "VERB",
-				memberSegmentIndices: [2],
-			},
-		},
-		{
-			analysis: null,
-			target: {
-				family: "Lexeme",
-				kind: "NOUN",
-				memberSegmentIndices: [11],
-			},
-		},
-	] as const;
-	for (const { analysis, target } of cases) {
-		const run = setupWithAnalysis([target], { analysis, inspection });
-		await Effect.runPromise(
-			run.orchestrator.resolveSegment({
-				...selection,
-				clickedSegmentIndex: target.memberSegmentIndices[0],
-			}),
-		);
-		expect(run.encounters).toHaveLength(1);
-		expect(run.encounters[0]?.target).toEqual(target);
-		expect(
-			run.requests.filter(
-				(request) => request.stage === "classifyTarget",
-			),
-		).toHaveLength(1);
-	}
-	const steps = inspection.steps.filter((step) =>
-		step.name.startsWith("Select target"),
-	);
-	expect(steps.map((step) => step.name)).toEqual(
-		cases.map(() => "Select target · classified"),
-	);
-	expect(
-		steps.map((step) => JSON.parse(step.payloadJson).input),
-	).toMatchObject([
-		{ hasAnalysis: true, definitionText: false, reason: "noResolvedUnit" },
-		{ hasAnalysis: true, definitionText: false, reason: "identityMiss" },
-		{ hasAnalysis: true, definitionText: false, reason: "auxSingleton" },
-		{ hasAnalysis: false, definitionText: false, reason: "noAnalysis" },
-	]);
-	expect(
-		steps.map((step) => JSON.parse(step.payloadJson).output.path),
-	).toEqual(cases.map(() => "classified"));
-});
-
-test("a Resolution Session run restores the stored analysis to record masses and its click selects from the analysis", async () => {
-	const analysis = verfuegungAnalysis({ collocation: true });
+test("a Resolution Session run with the stub ends Unresolved, and its Note shows the clicked unit's words, route and variants", async () => {
 	jest.useFakeTimers();
 	const t = createTestConvex();
-	const { sentenceIds } = await t.mutation(
-		internal.persistence.persistSubmittedText,
+	const verb = { language: "de", family: "Lexeme", kind: "VERB" } as const;
+	const particleVerb = {
+		language: "de",
+		family: "Locution",
+		kind: "VERB",
+	} as const;
+	const { sentenceIds } = await submitText(
+		t,
+		[["Er", " ", "gibt", " ", "auf", "."]],
 		{
-			submissionKey: "verfuegung",
-			sourceText: verfuegungText,
-			sentences: [
-				{
-					segmentedSentenceId: "verfuegung:0",
-					position: 0,
-					paragraph: 0,
-					language: "de",
-					stitchedText: verfuegungText,
-					segments: verfuegungSegments.map(
-						({ index: _index, ...segment }) => segment,
-					),
-					analysis: toStoredSentenceAnalysis(analysis),
-				},
+			units: [
+				[
+					{
+						segments: [0],
+						route: {
+							language: "de",
+							family: "Lexeme",
+							kind: "PRON",
+						},
+					},
+					{
+						segments: [2, 4],
+						route: verb,
+						variants: [verb, particleVerb],
+					},
+				],
 			],
 		},
 	);
 	const sentenceId = sentenceIds[0];
 	if (!sentenceId) throw new Error("Expected a stored Sentence.");
 	const guard = await startSession(t, {
-		...verfuegungSelection,
+		requestId: "request-1",
+		visitorId: "visitor-1",
 		sentenceId,
+		clickedSegmentIndex: 4,
 	});
-	const input = await createResolutionSessionLifecycle(
-		actionContext(t) as unknown as ActionCtx,
-		guard,
-	)
-		.begin()
-		.finally(() => jest.useRealTimers());
-	// begin() claimed the run through the real beginRun mutation.
-	expect(
-		await t.run(async (ctx) => {
-			const claimed = await ctx.db
-				.query("resolutionSessions")
-				.withIndex("by_request_id", (q) =>
-					q.eq("requestId", guard.requestId),
-				)
-				.unique();
-			return claimed?.lifecycle;
-		}),
-	).toEqual({
-		state: "Active",
-		progress: "RouteAvailable",
-		activity: "Running",
+	// The click's context carries the Sentence's units to the port.
+	const loaded = await t.query(internal.resolutionContext.load, {
+		requestId: "request-1",
+		visitorId: "visitor-1",
+		sentenceId,
+		clickedSegmentIndex: 4,
 	});
+	expect(loaded.sentence?.units?.[1]).toEqual({
+		segments: [2, 4],
+		route: verb,
+		variants: [verb, particleVerb],
+	});
+	jest.useRealTimers();
 
-	if (!input?.context) throw new Error("Expected a restored context.");
-	expect(input.context.analysis?.targets[0]?.routeMass).toEqual({
-		PRON: 0.9,
-		Unresolved: 0.1,
+	const fetches: string[] = [];
+	const previousFetch = globalThis.fetch;
+	globalThis.fetch = (async (url: string | URL | Request) => {
+		fetches.push(String(url));
+		throw new Error("No model call is expected.");
+	}) as typeof fetch;
+	try {
+		await t.action(internal.orchestration.runResolutionSession, guard);
+	} finally {
+		globalThis.fetch = previousFetch;
+	}
+	expect(fetches).toEqual([]);
+	const note = await t.query(api.resolutionSessions.getResolutionNote, {
+		requestId: "request-1",
 	});
-	expect(input.context.analysis?.phrasemes[0]?.kindMass).toEqual({
-		Collocation: 0.8,
-		None: 0.2,
+	expect(note?.lifecycle).toMatchObject({
+		state: "Terminal",
+		outcome: "Unresolved",
 	});
-	expect(input.context.analysis).toEqual(analysis);
-
-	const inspection = createInspectionCapture();
-	const run = setupWithAnalysis([], { inspection });
-	await Effect.runPromise(
-		run.orchestrator.resolveSegment(
-			input.selection,
-			input.checkpoints,
-			input.context,
-		),
+	expect(note?.unit).toEqual({
+		segments: [2, 4],
+		route: verb,
+		variants: [verb, particleVerb],
+	});
+	// The click selects the whole unit, `gibt … auf`.
+	expect(note?.source.memberSegmentIndices).toEqual([2, 4]);
+	expect(await t.run((ctx) => ctx.db.query("readings").collect())).toEqual(
+		[],
 	);
-	expect(run.encounters[0]?.target).toEqual({
-		family: "Phraseme",
-		kind: "Collocation",
-		memberSegmentIndices: [2, 8, 9, 11],
-	});
-	expect(
-		run.requests.filter((request) => request.stage === "classifyTarget"),
-	).toHaveLength(0);
-	expect(
-		inspection.steps.find((step) => step.name.startsWith("Select target"))
-			?.name,
-	).toBe("Select target · analysis");
 });

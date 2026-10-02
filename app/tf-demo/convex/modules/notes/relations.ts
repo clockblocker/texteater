@@ -6,7 +6,7 @@ import {
 	projectSemanticRelations,
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { selectGrammaticalAlternatives } from "legacy-dumgen/authored";
+import { selectGrammaticalAlternatives } from "../../../server/authoredMembers";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
@@ -743,36 +743,29 @@ export async function loadGrammaticalAlternatives(
  */
 export function reviewedAlternatives(lemma: Dumling.Lemma<"de">) {
 	if (lemma.family !== "Lexeme") return [];
-	try {
-		if (lemma.kind === "PRON")
-			return (["case", "person", "number"] as const).flatMap((feature) =>
-				selectGrammaticalAlternatives({
-					source: lemma,
-					vary: [feature],
-				}).map((reading) => ({ feature, reading })),
-			);
-		if (lemma.kind === "DET")
-			// Plural cells have no gender, so a number step also frees gender;
-			// only the cells that change number belong to that step.
-			return (["case", "gender", "number"] as const).flatMap((feature) =>
-				selectGrammaticalAlternatives({
-					source: lemma,
-					vary:
-						feature === "number" ? ["number", "gender"] : [feature],
-				})
-					.filter(
-						(reading) =>
-							feature !== "number" ||
-							readingNumber(reading) !==
-								lemma.coreFeatures.number,
-					)
-					.map((reading) => ({ feature, reading })),
-			);
-		return [];
-	} catch (error) {
-		if (error instanceof Error && error.name === "InvalidInput") return [];
-		throw error;
-	}
+	if (lemma.kind === "PRON")
+		return (["case", "person", "number"] as const).flatMap((feature) =>
+			selectGrammaticalAlternatives({
+				source: lemma,
+				vary: [feature],
+			}).map((reading) => ({ feature, reading })),
+		);
+	if (lemma.kind === "DET")
+		// Plural cells have no gender, so a number step also frees gender;
+		// only the cells that change number belong to that step.
+		return (["case", "gender", "number"] as const).flatMap((feature) =>
+			selectGrammaticalAlternatives({
+				source: lemma,
+				vary: feature === "number" ? ["number", "gender"] : [feature],
+			})
+				.filter(
+					(reading) =>
+						feature !== "number" ||
+						readingNumber(reading) !== lemma.coreFeatures.number,
+				)
+				.map((reading) => ({ feature, reading })),
+		);
+	return [];
 }
 function readingNumber(reading: Dumling.Reading<"de">) {
 	return (reading.lemma.coreFeatures as { number?: string | null }).number;

@@ -7,15 +7,15 @@ import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import * as Option from "effect/Option";
 import type {
-	ComparisonInput,
-	Dumgen,
-	Encounter,
-	KnowledgeDraft,
+	ClickEncounter,
+	ClickResolution,
+	ClickSentence,
 	LemmaCandidate,
-	SegmentedSentence,
-	SentenceContext,
-} from "legacy-dumgen/types";
+	NeighbourSentences,
+	ReadingResolution,
+} from "./clickResolution";
 import { inspectionStep } from "./inspectionCapture";
+import type { KnowledgeDraft } from "./knowledgeProduction";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -28,6 +28,8 @@ import {
 	assertStoredSentence,
 	encounterSentenceOf,
 	type StoredSegment,
+	type StoredUnit,
+	unitsByMember,
 } from "./storedSegments";
 
 /**
@@ -43,6 +45,8 @@ export type PersistedSentence = {
 	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly StoredSegment[];
+	/** The biggest units intake stored with the Sentence, if it still has them. */
+	readonly units?: readonly StoredUnit[];
 	/** Whether the Sentence belongs to a hidden Definition Text; absent reads as false. */
 	readonly definitionText?: boolean;
 };
@@ -121,11 +125,6 @@ type ResolvedGrammatical = ResolvedGrammar;
 type NonResolvedGrammatical = {
 	readonly decision: "Unresolved";
 	readonly language: "de";
-};
-
-type ReadingResolution = {
-	readonly decision: "Reuse" | "New";
-	readonly emojiDescription: string;
 };
 
 export type ResolveSegmentResult =
@@ -217,12 +216,9 @@ export type ResolutionProgressObserver = {
 export type ResolutionContext = {
 	readonly reusable: ReusableAttestation | null;
 	readonly sentence: PersistedSentence | null;
-	readonly lemmaCandidates: readonly LemmaCandidate<"de">[];
-	/**
-	 * The Sentences before and after this one in its Text, as far as they
-	 * exist. Grammar gets them only when it answers MoreContextRequired.
-	 */
-	readonly neighbours?: SentenceContext;
+	readonly lemmaCandidates: readonly LemmaCandidate[];
+	/** The Sentences before and after this one in its Text, as far as they exist. */
+	readonly neighbours?: NeighbourSentences;
 };
 
 export type ResolutionCheckpoints = {
@@ -236,14 +232,16 @@ export type ResolutionCheckpoints = {
 export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
 
 /**
- * Composes Dumgen resolution behind one persistence port. The dictionary is
- * consulted only to compare stored Readings; dictionary planning happens where
- * it commits, inside the persistence port's transaction. Convex supplies the
- * production port; tests can use an in-memory port without changing workflow
- * or conflict semantics.
+ * Composes click resolution behind the ClickResolution port and one
+ * persistence port. The dictionary is consulted only to compare stored
+ * Readings; dictionary planning happens where it commits, inside the
+ * persistence port's transaction. Convex supplies the production ports;
+ * tests can use in-memory ones without changing workflow or conflict
+ * semantics.
  */
 export function createTfDemoOrchestrator(options: {
-	readonly dumgen: Dumgen;
+	/** Grammar, then the Reading's Emoji Description; production runs `selectUnitOnly`. */
+	readonly resolution: ClickResolution;
 	/** The Readings the Shared Demo Dictionary already stores for a Lemma. */
 	readonly findStoredReadings: (
 		lemma: Dumling.Lemma<"de">,
@@ -258,7 +256,7 @@ export function createTfDemoOrchestrator(options: {
 	 * draft returns the ones that finished.
 	 */
 	readonly draftKnowledge?: (input: {
-		encounter: Encounter<"de">;
+		encounter: ClickEncounter;
 		lemma: Dumling.Lemma<"de">;
 		visitorId: string;
 		settle: AbortSignal;
@@ -527,131 +525,62 @@ export function createTfDemoOrchestrator(options: {
 			};
 
 			function resolveGrammatical(request: ResolveSegmentInput) {
-				return Effect.gen(function* () {
-					const stored = context.sentence;
-					if (!stored) {
-						throw new Error(
-							"The requested sentence does not exist.",
-						);
-					}
-					const sentence = parseGermanSentence(stored);
-					const neighbours = context.neighbours ?? {};
-					/**
-					 * One call with the Sentence alone; a pronoun whose referent
-					 * lies outside it gets a second call with the Sentences
-					 * around it. A Sentence without neighbours must answer at once.
-					 */
-					const grammarOf = (encounter: Encounter<"de">) =>
-						neighbours.before || neighbours.after
-							? Effect.flatMap(
-									options.dumgen.resolveGrammar(
-										encounter,
-										context.lemmaCandidates,
-									),
-									(result) =>
-										"decision" in result
-											? options.dumgen.resolveGrammar(
-													{
-														...encounter,
-														context: neighbours,
-													},
-													context.lemmaCandidates,
-												)
-											: Effect.succeed(result),
-								)
-							: options.dumgen.resolveGrammar(
-									{ ...encounter, contextAvailable: false },
-									context.lemmaCandidates,
-								);
-					const resolve = (target: Encounter<"de">["target"]) => {
-						const encounter: Encounter<"de"> = { sentence, target };
-						return Effect.map(
-							grammarOf(encounter),
-							(attestation) => ({
-								decision: "Resolved" as const,
-								language: "de" as const,
-								encounter,
-								attestation,
-							}),
-						);
-					};
-					return yield* Effect.gen(function* () {
-						const target = yield* options.dumgen
-							.classifyTarget({
-								sentence,
+				const stored = context.sentence;
+				if (!stored)
+					throw new Error("The requested sentence does not exist.");
+				const sentence = clickSentenceOf(stored);
+				const unit = unitsByMember(stored.units).get(
+					request.clickedSegmentIndex,
+				);
+				return options.resolution
+					.grammar({
+						sentence,
+						clickedSegmentIndex: request.clickedSegmentIndex,
+						...(unit ? { unit } : {}),
+						lemmaCandidates: context.lemmaCandidates,
+						neighbours: context.neighbours ?? {},
+					})
+					.pipe(
+						Effect.withSpan(
+							"Resolve grammar",
+							inspectionStep("app/tf-demo · ClickResolution", {
 								clickedSegmentIndex:
 									request.clickedSegmentIndex,
-							})
-							.pipe(
-								Effect.withSpan(
-									"Select target · classified",
-									inspectionStep(
-										"app/tf-demo · linguisticOrchestration",
-										{
-											clickedSegmentIndex:
-												request.clickedSegmentIndex,
-										},
-									),
-								),
-							);
-						return yield* resolve(target);
-					}).pipe(
-						Effect.catchTag("Unresolved", () =>
-							Effect.succeed({
-								decision: "Unresolved" as const,
-								language: "de" as const,
-							}),
-						),
-						Effect.catchTag("CatalogMiss", (failure) =>
-							Effect.succeed({
-								decision: "CatalogMiss" as const,
-								stage: failure.stage,
-								route: failure.route ?? "de",
-								message: failure.message,
+								unit,
 							}),
 						),
 					);
-				});
 			}
 
 			function resolveReading(
 				resolved: ResolvedGrammatical,
 				resolvedLemma: Dumling.Lemma<"de">,
 			) {
-				return Effect.gen(function* () {
-					if (!storedReadings)
-						throw new Error("Reading candidates were not loaded.");
-					if (
-						resolved.encounter.target.family !==
-							resolvedLemma.family ||
-						resolved.encounter.target.kind !== resolvedLemma.kind
-					)
-						throw new Error(
-							"Reading route does not match the Encounter.",
-						);
-					const candidates = storedReadings.flatMap(
-						(reading) => emojiDescriptionOf(reading) ?? [],
+				if (!storedReadings)
+					throw new Error("Reading candidates were not loaded.");
+				if (
+					resolved.encounter.target.family !== resolvedLemma.family ||
+					resolved.encounter.target.kind !== resolvedLemma.kind
+				)
+					throw new Error(
+						"Reading route does not match the Encounter.",
 					);
-					const operation =
-						options.dumgen.resolveOrGenerateReadingEmojiDescription(
-							{
-								encounter: resolved.encounter,
+				return options.resolution
+					.reading({
+						grammar: resolved,
+						lemma: resolvedLemma,
+						candidates: storedReadings.flatMap(
+							(reading) => emojiDescriptionOf(reading) ?? [],
+						),
+					})
+					.pipe(
+						Effect.withSpan(
+							"Resolve Reading",
+							inspectionStep("app/tf-demo · ClickResolution", {
 								lemma: resolvedLemma,
-								candidates,
-							} as ComparisonInput<"de">,
-						);
-					const resolution = yield* operation.pipe(
-						Effect.catchTag("CatalogMiss", (failure) =>
-							Effect.succeed({
-								decision: "CatalogMiss" as const,
-								stage: failure.stage,
-								route: failure.route ?? "de",
-								message: failure.message,
 							}),
 						),
 					);
-					return resolution;
-				});
 			}
 		}).pipe(Effect.scoped);
 	}
@@ -686,7 +615,7 @@ function withoutFailedWork(subject: string, consequence: string) {
 		});
 }
 
-/** Transitional test-port boundary; production Dumgen and Dumdict return Effects. */
+/** Test-port boundary: production Dumdict returns Effects, a test may return a Promise. */
 function effectFrom<Value, Error>(
 	value: Effect.Effect<Value, Error> | Promise<Value>,
 ): Effect.Effect<Value, Error | Cause.UnknownException> {
@@ -697,9 +626,7 @@ function surfaceIdentityKey(surface: Dumling.Surface<"de">): string {
 	return makeSurfaceId("de", surface);
 }
 
-function parseGermanSentence(
-	stored: PersistedSentence,
-): SegmentedSentence<"de"> {
+function clickSentenceOf(stored: PersistedSentence): ClickSentence {
 	if (stored.language !== "de") {
 		throw new Error("Only German click resolution is enabled in tf-demo.");
 	}
@@ -710,11 +637,11 @@ function parseGermanSentence(
 /** The stored Segments an Encounter's target names, for committing membership. */
 function storedMemberIndices(
 	stored: PersistedSentence | null,
-	encounter: Encounter<"de">,
+	encounter: ClickEncounter,
 ): readonly number[] {
 	if (!stored)
 		throw new Error("The stored Sentence is needed to commit membership.");
-	const sentence = parseGermanSentence(stored);
+	const sentence = clickSentenceOf(stored);
 	return encounter.target.memberSegmentIndices.map((index) => {
 		if (sentence.segments[index] === undefined)
 			throw new Error("An Encounter member is not a stored Segment.");

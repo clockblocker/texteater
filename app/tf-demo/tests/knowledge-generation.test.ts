@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
 import type { FunctionArgs } from "convex/server";
+import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
+import type { ActionCtx } from "../convex/_generated/server";
+import { generateKnowledge } from "../convex/knowledgeGenerationActions";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import * as containment from "../convex/model/generatedKnowledgeContainment";
 import {
@@ -23,11 +26,16 @@ import {
 	knowledgeRequestComplete,
 	missingKnowledgeRequest,
 } from "../server/knowledgeCompletion";
+import type {
+	KnowledgeInput,
+	KnowledgeProducer,
+} from "../server/knowledgeProduction";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
 import {
+	actionContext,
 	createTestConvex,
 	submitText,
 	type TestConvexDb,
@@ -340,7 +348,7 @@ function publish(t: TestConvexDb, args: PublishArgs) {
 	return t.mutation(internal.knowledgeGeneration.publish, args);
 }
 
-test("a Full Reading still tops up government its new sentence attests, and only once", async () => {
+test("intake attests no government, so a Full Reading with its translations demands no top-up", async () => {
 	const input = (occurrence: Occurrence) => ({
 		attemptKey: "government-top-up",
 		visitorId: "visitor-1",
@@ -354,20 +362,10 @@ test("a Full Reading still tops up government its new sentence attests, and only
 		status: "Full",
 		coveredTranslationLanguages: ["en", "ru"],
 	});
+	// `segment.inUnits` attests no governed preposition, so "Angst vor
+	// Hunden" leaves nothing for a Full Reading to top up.
 	await schedule(t, input(occurrence));
-	expect(await attempts(t)).toHaveLength(1);
-	expect(
-		await t.mutation(internal.knowledgeGeneration.begin, {
-			attemptKey: "government-top-up",
-		}),
-	).toEqual(
-		expect.objectContaining({
-			kind: "Generate",
-			topUpOnly: true,
-			translationLanguages: [],
-			government: [{ preposition: "vor", case: "Dat" }],
-		}),
-	);
+	expect(await attempts(t)).toEqual([]);
 
 	const covered = createTestConvex();
 	const coveredOccurrence = await seedOccurrence(covered, ANGST_READING);
@@ -395,7 +393,7 @@ test("a Full Reading still tops up government its new sentence attests, and only
 	expect(await attempts(covered)).toEqual([]);
 });
 
-test("a Full Reading still takes the Plural Pattern its new sentence attests, with no model call", async () => {
+test("a Full Reading still demands the Plural Pattern its new sentence attests", async () => {
 	const input = (occurrence: Occurrence) => ({
 		attemptKey: "plural-top-up",
 		visitorId: "visitor-1",
@@ -427,24 +425,17 @@ test("a Full Reading still takes the Plural Pattern its new sentence attests, wi
 	await insertAccumulatedKnowledge(t, occurrence, full(["En"]));
 	await schedule(t, input(occurrence));
 	expect(await attempts(t)).toHaveLength(1);
-	const provider = stubProvider(async () => {
-		throw new Error("An attested plural needs no model call.");
-	});
-	try {
-		await t.action(
-			internal.knowledgeGenerationActions.runKnowledgeGeneration,
-			{ attemptKey: "plural-top-up" },
-		);
-	} finally {
-		provider.restore();
-	}
-	expect(provider.requests).toEqual([]);
-	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
-	const [accumulated] = await rows(t, "accumulatedKnowledge");
-	expect(accumulated).toMatchObject({
-		status: "Full",
-		knowledge: { pluralPattern: ["En", "S"] },
-	});
+	expect(
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "plural-top-up",
+		}),
+	).toEqual(
+		expect.objectContaining({
+			kind: "Generate",
+			topUpOnly: true,
+			pluralPattern: "S",
+		}),
+	);
 
 	// A stored pattern, a marker or a dative plural demands nothing.
 	for (const [stored, grammaticalCase] of [
@@ -468,98 +459,67 @@ test("a Full Reading still takes the Plural Pattern its new sentence attests, wi
 	}
 });
 
-const VOR_DAT = {
-	kind: "Preposition",
-	preposition: { canonicalForm: "vor" },
-	governedCase: "Dat",
-} as const;
-
-test.each([
-	{
-		name: "a sentence Contributes the governed preposition the proposed frame omits",
-		frame: [],
-		stored: [
-			{
-				status: "Optional",
-				complements: [{ ...VOR_DAT, referent: "Either" }],
-			},
-		],
-	},
-	{
-		name: "a sentence never changes the status the proposed frame gave",
-		frame: [
-			{
-				status: "Required",
-				complement: {
-					kind: "Preposition",
-					preposition: "vor",
-					case: "Dat",
-					referent: "Something",
-				},
-			},
-		],
-		stored: [
-			{
-				status: "Required",
-				complements: [{ ...VOR_DAT, referent: "Something" }],
-			},
-		],
-	},
-])(
-	"the Knowledge call that creates a Reading proposes its frame once: $name",
-	async ({ frame, stored }) => {
-		jest.useRealTimers();
-		const t = createTestConvex();
-		const occurrence = await seedOccurrence(t, ANGST_READING);
-		await addToDictionary(t, occurrence);
-		await insertAttempt(t, occurrence, "frame", { state: "Scheduled" });
-		const provider = stubProvider(
-			async ({ aspect, language }) => language ?? `${aspect} text`,
-			frame,
-		);
-		try {
-			await t.action(
-				internal.knowledgeGenerationActions.runKnowledgeGeneration,
-				{ attemptKey: "frame" },
-			);
-		} finally {
-			provider.restore();
-		}
-		expect(
-			provider.requests.filter(({ aspect }) => aspect === "valency"),
-		).toHaveLength(1);
-		expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
-		const [accumulated] = await rows(t, "accumulatedKnowledge");
-		expect(accumulated).toMatchObject({
-			status: "Full",
-			knowledge: { valency: stored },
-		});
-		expect(
-			Reflect.get(Object(accumulated?.knowledge), "valency"),
-		).toHaveLength(stored.length);
-	},
-);
-
-test("an empty proposed frame stores nothing and still completes the Reading", async () => {
-	jest.useRealTimers();
+test("a run that proposes an empty frame stores nothing and still completes the Reading", async () => {
 	const t = createTestConvex();
 	const occurrence = await seedDictionaryReading(t);
 	await insertAttempt(t, occurrence, "empty-frame", { state: "Scheduled" });
-	const provider = stubProvider(
-		async ({ aspect, language }) => language ?? `${aspect} text`,
-	);
+	const requests: KnowledgeInput["request"][] = [];
+	await generateWith(t, "empty-frame", (input) => {
+		requests.push(input.request);
+		// No valency change: the proposed frame is empty.
+		return Effect.succeed({
+			failures: [],
+			changes: [
+				{
+					kind: "Contribute",
+					aspect: "definition",
+					value: "Ein Geldinstitut.",
+				},
+				{
+					kind: "Contribute",
+					aspect: "transcription",
+					value: "baŋk",
+				},
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "en",
+					value: ["bank"],
+				},
+				{
+					kind: "Contribute",
+					aspect: "translations",
+					language: "ru",
+					value: ["банк"],
+				},
+			],
+			pendingRelations: [],
+		});
+	});
+	expect(Object.keys(requests[0] ?? {})).toContain("valency");
+	const [accumulated] = await rows(t, "accumulatedKnowledge");
+	expect(accumulated?.knowledge).not.toHaveProperty("valency");
+	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
+});
+
+test("the idle producer fails a run that arrives anyway, with the safe message", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "idle", { state: "Scheduled" });
+	const errors = spyOn(console, "error").mockImplementation(() => {});
 	try {
 		await t.action(
 			internal.knowledgeGenerationActions.runKnowledgeGeneration,
-			{ attemptKey: "empty-frame" },
+			{ attemptKey: "idle" },
 		);
 	} finally {
-		provider.restore();
+		errors.mockRestore();
 	}
-	expect(provider.requests.map(({ aspect }) => aspect)).toContain("valency");
-	const [accumulated] = await rows(t, "accumulatedKnowledge");
-	expect(accumulated?.status).toBe("Full");
-	expect(accumulated?.knowledge).not.toHaveProperty("valency");
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Failed",
+		failureMessage: "Knowledge generation failed. Please retry.",
+	});
+	expect(await rows(t, "knowledgeChanges")).toEqual([]);
 });
 
 test("existing requested content completes an empty generated batch and the first complete writer wins", async () => {
@@ -704,6 +664,19 @@ test("manual writes never downgrade Full and failures persist only a safe catego
 	});
 });
 
+/** Runs one attempt's Knowledge action body with `produce` as its producer. */
+function generateWith(
+	t: TestConvexDb,
+	attemptKey: string,
+	produce: KnowledgeProducer,
+) {
+	return generateKnowledge(
+		actionContext(t) as unknown as ActionCtx,
+		{ attemptKey },
+		produce,
+	);
+}
+
 /**
  * Stubs the model provider and restores it with the fixture API key. A
  * Valency Frame request gets `frame`; every other request gets text.
@@ -808,7 +781,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 		definition: null,
 		translations: { en: null, ru: null },
 		valency: null,
-		pluralPattern: null,
+		plural: null,
 	});
 	expect(
 		generationRequestFor(
@@ -874,7 +847,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 	).toEqual({
 		transcription: null,
 		translations: { en: null, ru: null },
-		pluralPattern: null,
+		plural: null,
 	});
 });
 
@@ -1922,7 +1895,7 @@ test("Knowledge settings default enabled and persist independently per visitor",
 test.each([false, true])(
 	"the generation action publishes before a slow translation and retries failed publication (failure=%s)",
 	async (failFirstPublication) => {
-		// Nothing is scheduled here; the action is run directly and polled.
+		// Nothing is scheduled here; the run is driven directly and polled.
 		jest.useRealTimers();
 		const t = createTestConvex();
 		const occurrence = await seedOccurrence(t);
@@ -1938,26 +1911,45 @@ test.each([false, true])(
 					firstPublication.resolve();
 			},
 		);
-		const provider = stubProvider(async (modelInput) => {
-			if (modelInput.language === "en") await slow.promise;
-			return modelInput.aspect === "definition"
-				? "Ein Geldinstitut."
-				: modelInput.language === "ru"
-					? "банк"
-					: "bank";
-		});
+		const definition = {
+			kind: "Contribute",
+			aspect: "definition",
+			value: "Ein Geldinstitut.",
+		} as const;
+		const russian = {
+			kind: "Contribute",
+			aspect: "translations",
+			language: "ru",
+			value: ["банк"],
+		} as const;
+		const english = {
+			...russian,
+			language: "en",
+			value: ["bank"],
+		} as const;
+		const transcription = {
+			kind: "Contribute",
+			aspect: "transcription",
+			value: "baŋk",
+		} as const;
 		const committedChanges = () =>
 			t.run((ctx) => ctx.db.query("knowledgeChanges").take(10));
 		let finished = false;
 		try {
-			const running = t
-				.action(
-					internal.knowledgeGenerationActions.runKnowledgeGeneration,
-					{ attemptKey: "progress" },
-				)
-				.then(() => {
-					finished = true;
-				});
+			const running = generateWith(t, "progress", (_input, options) =>
+				Effect.promise(async () => {
+					// The finished leaves are handed on before the slow one.
+					options.onContribution([definition, russian]);
+					await slow.promise;
+					return {
+						failures: [],
+						changes: [definition, russian, english, transcription],
+						pendingRelations: [],
+					};
+				}),
+			).then(() => {
+				finished = true;
+			});
 			if (!failFirstPublication) {
 				void (async () => {
 					while (!finished && (await committedChanges()).length === 0)
@@ -1975,8 +1967,8 @@ test.each([false, true])(
 			}
 			slow.resolve();
 			await running;
-			// The final publication always carries every change, the plural
-			// included; the mutation drops what this run already published.
+			// The final publication always carries every change; the mutation
+			// drops what this run already published.
 			const changes = await committedChanges();
 			expect(changes).toHaveLength(4);
 			const sequences = new Set(
@@ -1985,13 +1977,12 @@ test.each([false, true])(
 						knowledgeChangeKey.split(":")[2],
 				),
 			);
-			expect(sequences.size).toBeGreaterThan(1);
+			expect(sequences.size).toBe(failFirstPublication ? 1 : 2);
 			expect((await attempts(t))[0]).toMatchObject({
 				state: "Committed",
 			});
 		} finally {
 			slow.resolve();
-			provider.restore();
 			errors.mockRestore();
 		}
 	},

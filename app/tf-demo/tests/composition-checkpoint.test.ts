@@ -8,7 +8,7 @@ const surface = {
 	unitKind: "Surface",
 	language: "de",
 	normalizedSurface: "regnet",
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 	surfaceFeatures: null,
 	lemma: {
 		unitKind: "Lemma",
@@ -19,7 +19,6 @@ const surface = {
 		coreFeatures: {
 			hasSepPrefix: null,
 			lexicallyReflexive: null,
-			verbType: null,
 		},
 	},
 	inflectionalFeatures: {
@@ -96,12 +95,12 @@ test("legacy noun checkpoints discard component references but retain exact occu
 					family: "Lexeme",
 					kind: "NOUN",
 					canonicalForm: "Hund",
-					coreFeatures: { gender: "Masc", hyph: null },
+					coreFeatures: { gender: "Masc" },
 				},
 				inflectionalFeatures: {
-					article: "Definite",
 					case: "Nom",
 					number: "Sing",
+					gender: null,
 				},
 				articleReference: { obsolete: true },
 			},

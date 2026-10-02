@@ -612,6 +612,7 @@ test("Text projection shares current truth through Visitor Encounter history", a
 		kind: "ResolvableText",
 		text: "aktiv",
 		encountered: false,
+		unit: { segments: [6], route: "Unresolved" },
 	});
 });
 

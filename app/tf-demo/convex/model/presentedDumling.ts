@@ -1,6 +1,5 @@
 import { type Infer, v } from "convex/values";
 import { checkIfGrundform, parseUnit } from "dumling";
-import { germanFusionOneLiner } from "legacy-dumgen/authored";
 import {
 	attestationMemberValidator,
 	familyValidator,
@@ -146,6 +145,16 @@ function cloneFusion(fusion: {
 }
 
 /**
+ * The one-liner a German Fusion Block shows: the fused spelling and the
+ * words it stands for, „im“ ist „in dem“.
+ */
+function germanFusionOneLiner(fusion: Fusion): string {
+	return `„${fusion.spelling}“ ist „${fusion.components
+		.map(({ surface }) => surface)
+		.join(" ")}“.`;
+}
+
+/**
  * Every Fusion an Attestation reaches: through its `Fused` members, or
  * through a hidden article component (Hebrew `בבית`), in member order.
  */
@@ -186,7 +195,7 @@ function reachedFusions(attestation: {
 			realized: [component],
 			oneLiner:
 				attestation.surface.language === "de"
-					? (germanFusionOneLiner(fusion) ?? null)
+					? germanFusionOneLiner(fusion)
 					: null,
 		});
 	}

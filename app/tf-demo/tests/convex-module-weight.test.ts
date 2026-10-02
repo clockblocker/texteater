@@ -9,10 +9,10 @@ import { build } from "esbuild";
  * weight structural rather than accidental:
  *
  * - No isolate module may reach the generation runtime (Effect, promptsmith,
- *   the legacy-dumgen root, or the Effect-based dumdict service). Only
- *   "use node" actions load those.
+ *   Dumgen's segmenter, or the Effect-based dumdict service). Only "use node"
+ *   actions load those.
  * - Bytes from the Dum packages are budgeted separately from the rest, because
- *   the reviewed authored catalog behind `legacy-dumgen/authored` is data the
+ *   the reviewed authored catalog behind `dumspec/inventories` is data the
  *   dictionary transaction needs and dominates that share on its own.
  */
 const MAX_DUM_PACKAGE_BYTES = 960 * 1024;
@@ -21,14 +21,13 @@ const FORBIDDEN_INPUTS = [
 	/node_modules\/effect\//,
 	/node_modules\/promptsmith\//,
 	/battery\/promptsmith\//,
-	/\/legacy-dumgen\/dist\/index\.js$/,
-	/\/legacy-dumgen\/dist\/development\.js$/,
+	/\/dumgen\/dist\//,
 	/\/dumdict\/dist\/index\.js$/,
 	/\/dumdict\/dist\/runtime\.js$/,
 	/\/zod\//,
 ];
 const DUM_PACKAGE_INPUT =
-	/\/(?:legacy-dumgen|dumdict|dumling|dumrel|dumval)\/(?:dist|src)\//;
+	/\/(?:dumspec|dumdict|dumling|dumrel|dumval)\/(?:dist|src)\//;
 
 const convexRoot = join(import.meta.dir, "..", "convex");
 

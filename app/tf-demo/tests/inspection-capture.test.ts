@@ -1,6 +1,5 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import type { OperationTrace } from "legacy-dumgen/types";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import {
 	createInspectionCapture,
@@ -86,48 +85,11 @@ test("failed code steps retain their input and error without changing the failur
 	]);
 });
 
-test("steps hang under their action's root and a Dumgen operation under the root that ran it", async () => {
+test("steps hang under their action's root", async () => {
 	const capture = createInspectionCapture();
-	const configuration = { model: "test", settings: {} };
-	const trace: OperationTrace = {
-		version: 2,
-		id: "operation",
-		operation: "resolveGrammar",
-		input: { text: "Banken" },
-		startedAt: 1000,
-		durationMs: 80,
-		generationConfiguration: configuration,
-		judgmentConfiguration: configuration,
-		events: [],
-		outcome: "Failure",
-		calls: [0, 1].map((index) => ({
-			id: `call-${index}`,
-			operationId: "operation",
-			executor: index === 0 ? "Luna" : "TypeSafe",
-			dependsOn: [],
-			fingerprint: "fingerprint",
-			request: {
-				stage: `stage-${index}`,
-				route: "de",
-				systemPrompt: "Prompt",
-				input: {},
-				outputSchema: {},
-				configuration,
-				signal: new AbortController().signal,
-			},
-			startedAt: 1010 + index * 10,
-			durationMs: 40,
-			output: { answer: index },
-			transport: "Success",
-			validation: index === 0 ? "Valid" : "Invalid",
-		})),
-	};
 	await Effect.runPromise(
 		inspected(
-			Effect.sync(() => capture.operation(trace)).pipe(
-				Effect.withSpan("dumgen.operation", {
-					attributes: { "dumgen.operation.id": "operation" },
-				}),
+			Effect.void.pipe(
 				Effect.withSpan("Resolve", inspectionStep("app/tf-demo")),
 				Effect.withSpan("Session", {
 					...inspectionStep("app/tf-demo", { session: 1 }),
@@ -139,28 +101,10 @@ test("steps hang under their action's root and a Dumgen operation under the root
 	);
 	const root = capture.steps.find((step) => step.name === "Session");
 	expect(root?.parentId).toBeUndefined();
-	expect(
-		capture.steps.map((step) => [
-			step.name,
-			step.kind,
-			step.startedAt,
-			step.durationMs,
-			step.parentId,
-		]),
-	).toEqual([
-		["resolveGrammar", "Code", 1000, 80, root?.id],
-		["stage-0", "LLM", 1010, 40, "operation"],
-		["stage-1", "TypeSafe", 1020, 40, "operation"],
-		["Resolve", "Code", expect.any(Number), expect.any(Number), root?.id],
-		["Session", "Code", expect.any(Number), expect.any(Number), undefined],
+	expect(capture.steps.map((step) => [step.name, step.parentId])).toEqual([
+		["Resolve", root?.id],
+		["Session", undefined],
 	]);
-	expect(capture.steps[2]?.status).toBe("Failure");
-	expect(
-		JSON.parse(capture.steps[1]?.payloadJson ?? "null").input.systemPrompt,
-	).toBe("Prompt");
-	expect(
-		JSON.parse(capture.steps[1]?.payloadJson ?? "null").input.signal,
-	).toBeUndefined();
 });
 
 test("without the inspection Tracer, spans keep their inputs and outputs unserialized", async () => {

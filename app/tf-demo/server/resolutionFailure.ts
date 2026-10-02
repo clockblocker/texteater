@@ -1,5 +1,4 @@
 import type { Infer } from "convex/values";
-import { DumgenFailure } from "legacy-dumgen/validation";
 import type {
 	resolutionGenerationEventValidator,
 	safeGenerationFailureValidator,
@@ -32,22 +31,32 @@ export type ClassifiedResolutionFailure =
 			readonly errorFingerprint: string;
 	  };
 
+/**
+ * A model call a ClickResolution made that failed at its provider or
+ * answered unusably. The run records it as a Generation failure; any other
+ * error is an Internal one.
+ */
+export class ModelCallFailure extends Error {
+	override readonly name = "ModelCallFailure";
+	readonly category: "ProviderUnavailable" | "InvalidOutput";
+	constructor(
+		category: "ProviderUnavailable" | "InvalidOutput",
+		message: string,
+	) {
+		super(message);
+		this.category = category;
+	}
+}
+
 export function classifyResolutionFailure(
 	error: unknown,
 ): ClassifiedResolutionFailure {
-	if (
-		error instanceof DumgenFailure &&
-		(error._tag === "ProviderFailure" ||
-			error._tag === "InvalidModelOutput")
-	) {
+	if (error instanceof ModelCallFailure) {
 		return {
 			kind: "Generation",
 			failure: safeGenerationFailure({
 				attempts: 1,
-				category:
-					error._tag === "InvalidModelOutput"
-						? "InvalidOutput"
-						: "ProviderUnavailable",
+				category: error.category,
 				retryable: false,
 			}),
 		};

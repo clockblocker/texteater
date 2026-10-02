@@ -1,17 +1,16 @@
 import type * as Dumling from "dumling/types";
-import type { Encounter } from "legacy-dumgen/types";
-import { validateEncounter } from "legacy-dumgen/validation";
 import {
 	germanGovernorKinds,
 	germanVerbalKinds,
 } from "../shared/german-evidence-kinds";
+import { type ClickEncounter, validateClickEncounter } from "./clickEncounter";
 import { parseGermanAttestation } from "./operationalParsing";
 
 /** Durable grammar checkpoint retains the exact Encounter used for generation. */
 export type ResolvedGrammar = {
 	readonly decision: "Resolved";
 	readonly language: "de";
-	readonly encounter: Encounter<"de">;
+	readonly encounter: ClickEncounter;
 	readonly attestation: Dumling.Attestation<"de">;
 };
 export type CatalogMissSignal = {
@@ -24,9 +23,7 @@ export function parseResolvedGrammar(input: {
 	encounter: unknown;
 	attestation: unknown;
 }): ResolvedGrammar {
-	const encounter = validateEncounter(input.encounter);
-	if (encounter.sentence.language !== "de")
-		throw new Error("Expected a German Encounter.");
+	const encounter = validateClickEncounter(input.encounter);
 	const attestation = parseGermanAttestation(input.attestation);
 	if (
 		attestation.surface.lemma.family !== encounter.target.family ||
@@ -46,7 +43,7 @@ export function parseResolvedGrammar(input: {
 	return {
 		decision: "Resolved",
 		language: "de",
-		encounter: encounter as Encounter<"de">,
+		encounter,
 		attestation,
 	};
 }

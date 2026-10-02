@@ -1,108 +1,43 @@
-import type { DumgenOptions, ModelRequest } from "legacy-dumgen/types";
-
-type Fixture = Pick<DumgenOptions, "execute" | "judge">;
+import type { JevRequest } from "dumgen";
+import { fakeJev } from "./jev";
 
 /**
- * Answers the production Luna and TypeSafe HTTP transports from a Dumgen
- * fixture, so real actions run their real Dumgen against queued outputs.
- * Knowledge leaves, which carry an aspect, are answered apart from the queue:
- * text from `knowledge`, an empty Valency Frame, and a noun with no plural.
- * A fixture that throws becomes an HTTP 503.
+ * Answers the TypeSafe API (`POST /v1/systemone`) from a fake jev, so a real
+ * intake action runs its real `segment.inUnits` with no network. A request
+ * the jev refuses comes back as a 400, which the TypeSafe ask does not
+ * retry; any other URL is refused the same way.
  */
-export function fakeProviders(
-	fixture: Fixture,
-	knowledge: (input: { aspect: string; language?: string }) => string = ({
-		aspect,
-	}) => `${aspect} text`,
-) {
+export function fakeTypeSafe(jev: ReturnType<typeof fakeJev> = fakeJev()) {
 	const previous = {
 		fetch: globalThis.fetch,
-		OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 		TYPESAFE_API_KEY: process.env.TYPESAFE_API_KEY,
 	};
 	const requests: string[] = [];
-	process.env.OPENAI_API_KEY = "fixture";
 	process.env.TYPESAFE_API_KEY = "fixture";
 	globalThis.fetch = (async (url: string | URL | Request, init) => {
 		requests.push(String(url));
-		const body = JSON.parse(String(init?.body));
+		if (!String(url).endsWith("/v1/systemone"))
+			return new Response("unexpected request", { status: 400 });
 		try {
-			if (String(url).endsWith("/v1/systemone"))
-				return Response.json(await fixture.judge(body, {}));
-			const content = body.input[1].content;
-			const input = content.startsWith("{")
-				? JSON.parse(content)
-				: content;
-			const output =
-				input && typeof input === "object" && "aspect" in input
-					? input.aspect === "valency"
-						? { valency: [] }
-						: input.aspect === "pluralPattern"
-							? { plurality: "NoPlural", plurals: [] }
-							: { text: knowledge(input) }
-					: (
-							await fixture.execute({
-								stage:
-									input &&
-									typeof input === "object" &&
-									"sourceText" in input
-										? "segment"
-										: String(
-													body.input[0].content,
-												).includes(
-													"Reply with its Canonical Form",
-												)
-											? "generateCanonicalForm"
-											: "fixture",
-								input,
-							} as ModelRequest)
-						).output;
-			return Response.json({
-				status: "completed",
-				output: [
-					{
-						content: [
-							{
-								type: "output_text",
-								text:
-									body.text.format.type === "text"
-										? typeof output === "string"
-											? output
-											: JSON.stringify(output)
-										: JSON.stringify({ value: output }),
-							},
-						],
-					},
-				],
-			});
+			const request = JSON.parse(String(init?.body)) as JevRequest;
+			return Response.json(await jev.ask(request, { stage: "fixture" }));
 		} catch (error) {
-			return new Response(String(error), { status: 503 });
+			return new Response(String(error), { status: 400 });
 		}
 	}) as typeof fetch;
 	return {
+		jev,
 		requests,
 		restore() {
 			globalThis.fetch = previous.fetch;
-			for (const name of [
-				"OPENAI_API_KEY",
-				"TYPESAFE_API_KEY",
-			] as const) {
-				const value = previous[name];
-				if (value === undefined) delete process.env[name];
-				else process.env[name] = value;
-			}
+			if (previous.TYPESAFE_API_KEY === undefined)
+				delete process.env.TYPESAFE_API_KEY;
+			else process.env.TYPESAFE_API_KEY = previous.TYPESAFE_API_KEY;
 		},
 	};
 }
 
-/** Every provider request fails. */
+/** Every jev request fails. */
 export function unavailableProviders() {
-	return fakeProviders({
-		execute: async () => {
-			throw Error("unavailable");
-		},
-		judge: async () => {
-			throw Error("unavailable");
-		},
-	});
+	return fakeTypeSafe(fakeJev({ fail: () => true }));
 }

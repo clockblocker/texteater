@@ -72,7 +72,7 @@ export type SubmitTextInput = {
  * paragraphs. A Sentence's ID is its submission's key and position, so a
  * retried submission names the same Sentences.
  */
-export function submittedSentences(
+function submittedSentences(
 	submissionKey: string,
 	text: SegmentedText,
 ): SubmittedSentence[] {

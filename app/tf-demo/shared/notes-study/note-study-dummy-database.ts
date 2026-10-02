@@ -2,7 +2,6 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { splitFusedWords } from "legacy-dumgen/authored";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -241,23 +240,42 @@ const germanArticleKinds: readonly string[] = [
 	"PROPN",
 ];
 
+/**
+ * The fused words the fixtures' contexts use and the words each stands for.
+ * Its last letter is the article, as `segment.inUnits` splits it (`A` + `m`).
+ */
+const FIXTURE_FUSIONS: Readonly<Record<string, readonly [string, string]>> = {
+	am: ["an", "dem"],
+	im: ["in", "dem"],
+	zum: ["zu", "dem"],
+	zur: ["zu", "der"],
+};
+
 /** Context words as intake stores them: a fused word (`Am`) as its pieces. */
 function splitLiteral(text: string): readonly Segment[] {
-	return splitFusedWords(
-		"de",
-		text
-			.split(/( )/u)
-			.filter((part) => part !== "")
-			.map((part) => ({
-				kind:
-					part === " "
-						? ("Whitespace" as const)
-						: /^\p{P}+$/u.test(part)
-							? ("Punctuation" as const)
-							: ("ResolvableText" as const),
-				text: part,
-			})),
-	);
+	return text
+		.split(/( )/u)
+		.filter((part) => part !== "")
+		.flatMap((part): Segment[] => {
+			if (part === " ") return [{ kind: "Whitespace", text: part }];
+			if (/^\p{P}+$/u.test(part))
+				return [{ kind: "Punctuation", text: part }];
+			const fused = FIXTURE_FUSIONS[part.toLowerCase()];
+			if (!fused) return [{ kind: "ResolvableText", text: part }];
+			const [adposition, article] = fused;
+			return [
+				{
+					kind: "ResolvableText",
+					text: part.slice(0, -1),
+					surface: adposition,
+				},
+				{
+					kind: "ResolvableText",
+					text: part.slice(-1),
+					surface: article,
+				},
+			];
+		});
 }
 
 function targetTokens(fixture: NoteStudyFixture, line: NoteStudyLine) {

@@ -4,7 +4,6 @@ import * as Exit from "effect/Exit";
 import * as Option from "effect/Option";
 import * as Runtime from "effect/Runtime";
 import * as Tracer from "effect/Tracer";
-import type { OperationTrace } from "legacy-dumgen/types";
 import type {
 	CapturedInspectionStep,
 	InspectionStep,
@@ -86,21 +85,16 @@ function statusOf(
 	return Cause.isInterruptedOnly(exit.cause) ? "Interrupted" : "Failure";
 }
 
-const isStep = (span: Tracer.Span) =>
-	!span.name.startsWith("dumgen.") && span.attributes.has(OWNER);
+const isStep = (span: Tracer.Span) => span.attributes.has(OWNER);
 
 /**
  * A per-action Effect Tracer that builds DEV inspection steps. Every span
  * carrying an inspection owner becomes a step, and an action's steps hang
  * directly under its outermost one, the root the Resolution Inspector reads.
- * Dumgen steps come from each OperationTrace alone: `dumgen.*` spans render
- * nothing, and a `dumgen.operation` span only places its operation's steps
- * under the root that ran it, so every Dumgen call appears once.
  */
 export function createInspectionCapture() {
 	const steps: CapturedInspectionStep[] = [];
 	const spans = new WeakSet<Tracer.Span>();
-	const operationRoots = new Map<string, string | undefined>();
 
 	/** The outermost step above `span`. */
 	function rootOf(span: Tracer.Span): string | undefined {
@@ -171,11 +165,6 @@ export function createInspectionCapture() {
 				},
 				attribute(key, value) {
 					attributes.set(key, value);
-					if (
-						name === "dumgen.operation" &&
-						key === "dumgen.operation.id"
-					)
-						operationRoots.set(String(value), rootOf(span));
 				},
 				event() {},
 				addLinks(more) {
@@ -195,58 +184,6 @@ export function createInspectionCapture() {
 	return {
 		steps,
 		tracer,
-		operation(trace: OperationTrace) {
-			// Old traces have no absolute timestamps and cannot form a truthful waterfall.
-			if (trace.startedAt === undefined) return;
-			const parentId = operationRoots.get(trace.id);
-			operationRoots.delete(trace.id);
-			steps.push({
-				id: trace.id,
-				...(parentId === undefined ? {} : { parentId }),
-				name: trace.operation,
-				owner: "battery/dumgen",
-				kind: "Code",
-				startedAt: trace.startedAt,
-				durationMs: trace.durationMs,
-				status: trace.outcome,
-				payloadJson: inspectionJson({
-					input: trace.input,
-					output: trace.output,
-					failure: trace.failure,
-					events: trace.events,
-					generationConfiguration: trace.generationConfiguration,
-					judgmentConfiguration: trace.judgmentConfiguration,
-				}),
-			});
-			for (const call of trace.calls) {
-				if (call.startedAt === undefined) continue;
-				steps.push({
-					id: call.id,
-					parentId: trace.id,
-					name: call.request.stage,
-					kind: call.executor === "TypeSafe" ? "TypeSafe" : "LLM",
-					owner: `battery/promptsmith · ${call.request.configuration.model}`,
-					startedAt: call.startedAt,
-					durationMs: call.durationMs,
-					status:
-						call.transport === "Interrupted"
-							? "Interrupted"
-							: call.transport === "Failure" ||
-									call.validation === "Invalid"
-								? "Failure"
-								: "Success",
-					payloadJson: inspectionJson({
-						input: call.request,
-						output: call.output,
-						metadata: call.metadata,
-						failure: call.failure,
-						validation: call.validation,
-						dependsOn: call.dependsOn,
-						fingerprint: call.fingerprint,
-					}),
-				});
-			}
-		},
 	};
 }
 export type InspectionCapture = ReturnType<typeof createInspectionCapture>;

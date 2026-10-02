@@ -18,6 +18,7 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+import { unavailableProviders } from "./support/providers";
 
 beforeEach(() => {
 	// Sessions schedule their runs; no run executes here.
@@ -169,12 +170,9 @@ test("a submission past the per-Visitor limit is Rejected before any model call"
 	const drain = RATE_LIMITS.textSubmission.rate;
 	// Re-submitting an analysed Text starts no intake, so it never counts.
 	await submitText(t, [["Die", " ", "Banken", "."]]);
-	const previousFetch = globalThis.fetch;
-	const requests: string[] = [];
-	globalThis.fetch = (async (url: string | URL | Request) => {
-		requests.push(String(url));
-		return new Response("unavailable", { status: 503 });
-	}) as typeof fetch;
+	// Every jev request fails fast, so each new Text is stored unresolved.
+	const providers = unavailableProviders();
+	const { requests } = providers;
 	try {
 		for (let index = 0; index < drain + 1; index += 1)
 			expect(
@@ -206,6 +204,6 @@ test("a submission past the per-Visitor limit is Rejected before any model call"
 		});
 		expect(requests.length).toBe(before);
 	} finally {
-		globalThis.fetch = previousFetch;
+		providers.restore();
 	}
 });

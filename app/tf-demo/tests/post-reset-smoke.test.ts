@@ -1108,6 +1108,7 @@ test("submission retries reuse exact segmentation despite a fresh generated sent
 				language: "de" as const,
 				stitchedText: "Banken",
 				segments: [{ kind: "ResolvableText" as const, text: "Banken" }],
+				units: [{ segments: [0], route: "Unresolved" as const }],
 			},
 		],
 	};

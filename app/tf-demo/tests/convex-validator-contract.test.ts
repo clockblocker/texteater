@@ -258,7 +258,8 @@ test("the persistence adapter does not load exhaustive domain schemas", async ()
 	);
 	const storageSource = storageSources.join("\n");
 
-	expect(storageSource).not.toContain('from "legacy-dumgen/schema"');
+	// Types only: storage never loads the segmenter.
+	expect(storageSource).not.toMatch(/^import (?!type )[^;]*from "dumgen"/mu);
 	expect(storageSource).not.toContain('from "dumdict/schema"');
 	expect(storageSource).not.toContain('from "dumdict"');
 	expect(storageSource).not.toContain("zodOutputToConvex");
@@ -276,7 +277,7 @@ test("operational application modules use package-owned lightweight parsers", as
 	const operationalSource = operationalSources.join("\n");
 
 	expect(operationalSource).not.toMatch(
-		/from ["'](?:dumdict|legacy-dumgen|dumling|dumrel)\/(?:schema|dangerously-heavy-schema-tree|model-authoring)["']/u,
+		/from ["'](?:dumdict|dumgen|dumling|dumrel)\/(?:schema|dangerously-heavy-schema-tree|model-authoring)["']/u,
 	);
 });
 
@@ -297,7 +298,7 @@ test("persistence result validators retain table-specific Convex IDs", () => {
 	});
 });
 
-test("the current Dumgen factory executes without package-relative file I/O", async () => {
+test("Dumgen's segmenter runs without package-relative file I/O", async () => {
 	const child = Bun.spawn(
 		[
 			process.execPath,
@@ -305,11 +306,10 @@ test("the current Dumgen factory executes without package-relative file I/O", as
 			`
  const original = process.getBuiltinModule.bind(process);
  process.getBuiltinModule = id => id === "node:fs" ? {...original(id), readFileSync() {throw Error("filesystem unavailable");}} : original(id);
- const {createDumgen} = await import("legacy-dumgen");
- const Effect = await import("effect/Effect");
- const dumgen = createDumgen({execute: async () => {throw Error("controlled provider failure");}});
- const result = await Effect.runPromiseExit(dumgen.segment({sourceSentences: ["Die Banken sind geöffnet."]}));
- if (result._tag !== "Failure") throw Error("Expected controlled failure");
+ const {createSegment} = await import("dumgen");
+ const segment = createSegment({ask: async () => {throw Error("controlled provider failure");}});
+ const text = await segment.inUnits({language: "de", paragraphs: [{sentences: ["Die Banken sind geöffnet."]}]});
+ if (!text.paragraphs[0]?.sentences[0]?.failure) throw Error("Expected the controlled failure's fallback");
  `,
 		],
 		{

@@ -473,9 +473,10 @@ test("a fused article commits as a Fused member of its noun, and the noun's Atte
 	const surface = {
 		...bankenSurface,
 		normalizedSurface: "Bank",
+		// The Lemma marks the gender, so the singular Surface does not.
 		inflectionalFeatures: {
 			case: "Dat",
-			gender: "Fem",
+			gender: null,
 			number: "Sing",
 		},
 	} as const;

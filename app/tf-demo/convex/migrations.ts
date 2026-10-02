@@ -1,15 +1,10 @@
 import { Migrations } from "@convex-dev/migrations";
 
-import { components, internal } from "./_generated/api";
+import { components } from "./_generated/api";
 import {
 	findDefinitionText,
 	syncDefinitionText,
 } from "./model/definitionTexts";
-import {
-	migrateCompositionAttestation,
-	migrateCompositionOwnership,
-	migrateNounArticle,
-} from "./model/nounArticleMigration";
 import schema from "./schema";
 
 export const migrations = new Migrations(components.migrations, { schema });
@@ -28,28 +23,3 @@ export const materializeDefinitionTexts = migrations.define({
 });
 
 export const run = migrations.runner();
-
-export const correctNounArticleOwners = migrations.define({
-	table: "surfaces",
-	migrateOne: migrateNounArticle,
-});
-
-export const deriveSurfaceComponents = migrations.define({
-	table: "surfaces",
-	migrateOne: migrateNounArticle,
-});
-export const reconcileCompositionOwnership = migrations.define({
-	table: "ownedSurfaces",
-	migrateOne: migrateCompositionOwnership,
-});
-export const reconcileCompositionAttestations = migrations.define({
-	table: "attestations",
-	migrateOne: migrateCompositionAttestation,
-});
-
-/** Run in order: re-key values, merge dictionary ownership, then redirect occurrences. */
-export const runCompositionCutover = migrations.runner([
-	internal.migrations.deriveSurfaceComponents,
-	internal.migrations.reconcileCompositionOwnership,
-	internal.migrations.reconcileCompositionAttestations,
-]);

@@ -2,10 +2,11 @@ import { makeSurfaceId } from "dumdict/planning";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
+	authoredReading,
 	deriveGrammaticalComponent,
+	type GrammaticalComponent,
 	selectAuthoredArticle,
-	selectAuthoredReading,
-} from "legacy-dumgen/authored";
+} from "../../server/authoredMembers";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -839,7 +840,7 @@ export async function applyDumdictPlanInTransaction(
 /** Materializes the grammatical component without creating another occurrence. */
 export async function materializeGrammaticalComponent(
 	ctx: MutationCtx,
-	reference: NonNullable<ReturnType<typeof deriveGrammaticalComponent>>,
+	reference: GrammaticalComponent,
 ) {
 	const { reading, surface } = reference;
 	const empty = { notes: "", attestedTranslations: [], attestations: [] };
@@ -870,7 +871,7 @@ export async function completeAuthoredComponentKnowledge(
 	ctx: MutationCtx,
 	reading: unknown,
 ) {
-	const authored = selectAuthoredReading(reading);
+	const authored = authoredReading(reading);
 	if (!authored) return false;
 	const stored = await findReading(ctx, authored.reading);
 	if (!stored) return false;

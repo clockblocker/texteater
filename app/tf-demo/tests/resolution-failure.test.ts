@@ -2,8 +2,20 @@ import { expect, test } from "bun:test";
 import type { GenerationEvent } from "../server/resolutionFailure";
 import {
 	classifyResolutionFailure,
+	ModelCallFailure,
 	projectResolutionGenerationEvent,
 } from "../server/resolutionFailure";
+
+test("a failed model call becomes a Generation failure without its message", () => {
+	const classified = classifyResolutionFailure(
+		new ModelCallFailure("InvalidOutput", "secret model answer"),
+	);
+	expect(classified).toEqual({
+		kind: "Generation",
+		failure: { attempts: 1, category: "InvalidOutput", retryable: false },
+	});
+	expect(JSON.stringify(classified)).not.toContain("secret");
+});
 
 test("unexpected failures become sanitized correlated Internal failures", () => {
 	const first = classifyResolutionFailure(

@@ -1500,6 +1500,10 @@ describe("Resolution Session", () => {
 							{ kind: "ResolvableText", text: "Banken" },
 							{ kind: "Punctuation", text: "." },
 						],
+						units: [
+							{ segments: [0], route: "Unresolved" },
+							{ segments: [2], route: "Unresolved" },
+						],
 					},
 				],
 			}),

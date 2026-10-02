@@ -1,5 +1,4 @@
 import type { Infer } from "convex/values";
-import { splitText } from "dumgen";
 import {
 	assertStoredUnits,
 	MAX_SEGMENTS_PER_SENTENCE,
@@ -78,12 +77,6 @@ export async function persistSubmittedText(
 	input: SubmittedText,
 ): Promise<PersistedSubmittedText> {
 	assertNonEmpty(input.submissionKey, "submissionKey");
-	assertTextSubmissionWithinLimits(
-		input.sourceText,
-		splitText(input.sourceText).paragraphs.flatMap(
-			({ sentences }) => sentences,
-		),
-	);
 	assertTextSubmissionWithinLimits(
 		input.sourceText,
 		input.sentences.map(({ stitchedText }) => stitchedText),

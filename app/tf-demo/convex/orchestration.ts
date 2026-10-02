@@ -5,8 +5,8 @@ import { createSegment, createTypeSafeAsk, type SegmentCall } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Runtime from "effect/Runtime";
+import { selectUnitOnly } from "../server/clickResolution";
 import {
-	type InspectionCapture,
 	inspected,
 	inspectionStep,
 	spanHops,
@@ -34,10 +34,6 @@ import {
 	type ReusedResolvedClickCommit,
 	type UnresolvedClickCommit,
 } from "../server/linguisticOrchestration";
-import {
-	createProductionDumgen,
-	createProductionKnowledgeDraft,
-} from "../server/modelExecution";
 import {
 	parseGermanLemma,
 	parseGermanReading,
@@ -263,7 +259,7 @@ export const runResolutionSession = internalAction({
 					spanHops(runtime),
 				),
 				resolve: (selection, checkpoints, observer, context) =>
-					orchestratorFor(ctx, guard, observer, inspection)
+					orchestratorFor(ctx, guard, observer)
 						.resolveSegment(selection, checkpoints, context)
 						.pipe(
 							Effect.withSpan(
@@ -293,56 +289,18 @@ export const runResolutionSession = internalAction({
 	},
 });
 
+/**
+ * The click orchestrator for one action. Its ClickResolution is the stub
+ * while resolution is rebuilt (#848): a click selects its unit, and no
+ * Reading, Knowledge draft or model call follows.
+ */
 function orchestratorFor(
 	ctx: ActionCtx,
 	sessionGuard: ResolutionSessionGuard | null,
 	observer?: ResolutionProgressObserver,
-	inspection?: InspectionCapture,
 ) {
-	const persistence = createConvexPersistence(ctx, sessionGuard);
 	return createTfDemoOrchestrator({
-		draftKnowledge: ({ encounter, lemma, visitorId, settle }) =>
-			Effect.gen(function* () {
-				const { settings, authorization } = yield* Effect.tryPromise(
-					() =>
-						ctx.runQuery(
-							internal.knowledgeSettings.getDraftContext,
-							{
-								visitorId,
-							},
-						),
-				);
-				const { generationRequestFor } = yield* Effect.promise(
-					() => import("../server/generatedKnowledgeRequest"),
-				);
-				return yield* createProductionKnowledgeDraft(
-					{
-						encounter,
-						lemma,
-						request: generationRequestFor(
-							{ lemma },
-							authorization.rollbackStopped
-								? []
-								: authorization.qualifiedKinds,
-							{
-								translationLanguages: (
-									["en", "ru"] as const
-								).filter(
-									(language) =>
-										settings.translations[language],
-								),
-							},
-						),
-					},
-					inspection,
-					{ settle },
-				);
-			}),
-		dumgen: createProductionDumgen(
-			observer?.generationEvent,
-			{},
-			inspection,
-		),
+		resolution: selectUnitOnly,
 		findStoredReadings: async (lemma) =>
 			(
 				await ctx.runQuery(
@@ -350,7 +308,7 @@ function orchestratorFor(
 					{ lemmaKey: lemmaIdentityKey(lemma) },
 				)
 			).map(parseGermanReading),
-		persistence,
+		persistence: createConvexPersistence(ctx, sessionGuard),
 		...(observer ? { observer } : {}),
 	});
 }

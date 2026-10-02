@@ -12,6 +12,7 @@ import {
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
 import { listLibraryTexts } from "../convex/texts";
+import { unresolvedUnits } from "../server/storedSegments";
 import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
 import { proseSegments } from "../tooling/playground-example-collection";
 import {
@@ -65,6 +66,16 @@ async function scheduled(t: TestConvexDb, name: string) {
 	)
 		.filter((job) => job.name === name)
 		.map(({ args }) => args[0]);
+}
+
+/** A definition as the materializer hands it on: one Sentence, its Segments and units. */
+function segmentedDefinition(definition: string) {
+	const segments = proseSegments(definition);
+	return {
+		stitchedText: definition,
+		segments,
+		units: unresolvedUnits(segments),
+	};
 }
 
 /** The materializer runs that are waiting to fire. */
@@ -155,8 +166,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 			runNumber: firstRun,
 			definition: "Ein Gebäude.",
 			language: "de",
-			segmentedSentenceId: "definition:test",
-			segments: proseSegments("Ein Gebäude."),
+			...segmentedDefinition("Ein Gebäude."),
 		}),
 	).toBe("Ready");
 	const [text] = await tableRows(t, "texts");
@@ -210,8 +220,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 			runNumber: secondRun,
 			definition: "Ein Gebäude.",
 			language: "de",
-			segmentedSentenceId: "definition:stale",
-			segments: proseSegments("Ein Gebäude."),
+			...segmentedDefinition("Ein Gebäude."),
 		}),
 	).toBe("Stale");
 	await t.mutation(internal.definitionTexts.persistSegmented, {
@@ -219,8 +228,7 @@ test("materialization writes a hidden Definition Text, then a changed or retract
 		runNumber: secondRun,
 		definition: "Ein Bauwerk.",
 		language: "de",
-		segmentedSentenceId: "definition:test-2",
-		segments: proseSegments("Ein Bauwerk."),
+		...segmentedDefinition("Ein Bauwerk."),
 	});
 	const [replacement] = await tableRows(t, "texts");
 	expect(replacement?.sourceText).toBe("Ein Bauwerk.");
@@ -259,8 +267,7 @@ test("a definition that changed mid-run is rescheduled in the settling transacti
 			runNumber,
 			definition: "Alt.",
 			language: "de",
-			segmentedSentenceId: "definition:alt",
-			segments: proseSegments("Alt."),
+			...segmentedDefinition("Alt."),
 		}),
 	).toBe("Stale");
 	expect(
@@ -323,8 +330,7 @@ test("a materialization that never settles is run again by its watchdog, and its
 			...late,
 			definition: "Neu.",
 			language: "de",
-			segmentedSentenceId: "definition:late",
-			segments: proseSegments("Neu."),
+			...segmentedDefinition("Neu."),
 		}),
 	).toBe("Stale");
 	expect(
@@ -340,8 +346,7 @@ test("a materialization that never settles is run again by its watchdog, and its
 		runNumber: rerun,
 		definition: "Neu.",
 		language: "de",
-		segmentedSentenceId: "definition:neu",
-		segments: proseSegments("Neu."),
+		...segmentedDefinition("Neu."),
 	});
 	expect(
 		await t.mutation(internal.definitionTexts.settle, {
@@ -724,8 +729,7 @@ async function materializeDefinition(
 		runNumber,
 		definition,
 		language: "de",
-		segmentedSentenceId: `definition:${readingKey}`,
-		segments: proseSegments(definition),
+		...segmentedDefinition(definition),
 	});
 	await t.mutation(internal.definitionTexts.settle, {
 		ownerReadingKey: readingKey,

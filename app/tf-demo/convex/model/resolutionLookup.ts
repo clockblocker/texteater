@@ -107,6 +107,7 @@ export async function loadSentenceForResolution(
 			text,
 			...(surface === undefined ? {} : { surface }),
 		})),
+		...(sentence.units ? { units: sentence.units } : {}),
 		definitionText: text?.origin?.kind === "Definition",
 	};
 }

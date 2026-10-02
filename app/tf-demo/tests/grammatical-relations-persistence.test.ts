@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import type * as Dumling from "dumling/types";
-import { nounArticleReference } from "legacy-dumgen";
+import { germanArticleCell } from "dumspec/inventories";
 import { api } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import {
@@ -12,6 +12,7 @@ import {
 	reviewedAlternatives,
 } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
+import { authoredComponent } from "../server/authoredMembers";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey,
@@ -195,6 +196,19 @@ test("a stem determiner's forms stay inside its Lemma: diesem never reaches jene
 	expect(reviewedAlternatives(dieser)).toEqual([]);
 });
 
+/** The authored article cell `spelled` names for its Head's agreement (system ADR 0040). */
+function articleComponent(
+	spelled: string,
+	head: { case: string; number: string; gender: string | null },
+) {
+	const member = germanArticleCell(
+		{ attested: spelled, orthography: "Standard" },
+		head,
+	);
+	if (!member) throw new Error(`No article cell for ${spelled}.`);
+	return authoredComponent(member);
+}
+
 for (const [article, gender, spelled, canonical] of [
 	["Definite", "Masc", "der", "der"],
 	["Definite", "Fem", "die", "die"],
@@ -203,12 +217,10 @@ for (const [article, gender, spelled, canonical] of [
 ] as const) {
 	test(`noun composition immediately stores authored Knowledge for ${canonical}`, async () => {
 		const t = createTestConvex();
-		const reference = nounArticleReference({
-			article,
-			gender,
-			spelled,
+		const reference = articleComponent(spelled, {
 			case: "Nom",
 			number: "Sing",
+			gender,
 		});
 		await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
 		const knowledge = (await knowledgeRows(t))[0]?.knowledge;
@@ -230,12 +242,10 @@ for (const [article, gender, spelled, canonical] of [
 
 test("authored article completion repairs empty entries and preserves existing Knowledge", async () => {
 	const t = createTestConvex();
-	const reference = nounArticleReference({
-		article: "Definite",
-		gender: "Fem",
-		spelled: "der",
+	const reference = articleComponent("der", {
 		case: "Dat",
 		number: "Sing",
+		gender: "Fem",
 	});
 	const complete = () =>
 		t.run((ctx) =>

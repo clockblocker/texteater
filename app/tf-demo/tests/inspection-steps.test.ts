@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, expect, jest, spyOn, test } from "bun:test";
-import { pipelineFixture } from "legacy-dumgen/testing";
 import { api, internal } from "../convex/_generated/api";
 import {
 	createTestConvex,
@@ -12,13 +11,12 @@ import {
 	type Selection,
 	sessionGuard,
 } from "./support/occurrences";
-import { fakeProviders, unavailableProviders } from "./support/providers";
+import { fakeTypeSafe, unavailableProviders } from "./support/providers";
 
 /*
  * These pin the DEV inspection the Resolution Inspector shows for a
- * submission, a click and its Knowledge, run through the real actions with
- * the providers faked at HTTP. Every step hangs directly under its action's
- * root step, and a Dumgen call under its operation.
+ * submission and a click, run through the real actions with jev faked at
+ * HTTP. Every step hangs directly under its action's root step.
  */
 
 enableDeploymentFlags();
@@ -83,19 +81,6 @@ async function inspection(t: TestConvexDb, requestId: string) {
 		.sort();
 }
 
-/** Each provider request is one Dumgen call, shown once under its own ID. */
-async function expectEachCallOnce(
-	t: TestConvexDb,
-	requestId: string,
-	providerRequests: number,
-) {
-	const calls = (await savedSteps(t, requestId)).filter(
-		(step) => step.kind !== "Code",
-	);
-	expect(new Set(calls.map((step) => step.id)).size).toBe(calls.length);
-	expect(calls).toHaveLength(providerRequests);
-}
-
 async function bankenSource(t: TestConvexDb) {
 	const { sentenceIds } = await submitText(t, [["Die", " ", "Banken", "."]]);
 	const sentenceId = sentenceIds[0];
@@ -128,24 +113,9 @@ async function submissionRequestId(t: TestConvexDb) {
 const SELECTION =
 	"Select segment and schedule resolution [Code · app/tf-demo · resolutionSessions.selectSegment · Success]";
 
-test("an inspected submission shows its root, code steps and each Dumgen call once", async () => {
+test("an inspected submission shows its root and its code steps", async () => {
 	const t = createTestConvex();
-	const providers = fakeProviders(
-		pipelineFixture([
-			{
-				language: "de",
-				items: [
-					{
-						id: "0",
-						decision: "Accepted",
-						language: "de",
-						stitchedText: "Die Banken.",
-					},
-				],
-			},
-		]),
-	);
-	const warnings = spyOn(console, "warn").mockImplementation(() => {});
+	const providers = fakeTypeSafe();
 	try {
 		await t.action(api.orchestration.submitText, {
 			visitorId: "visitor-1",
@@ -155,20 +125,14 @@ test("an inspected submission shows its root, code steps and each Dumgen call on
 		});
 	} finally {
 		providers.restore();
-		warnings.mockRestore();
 	}
 	const requestId = await submissionRequestId(t);
 	expect(await inspection(t, requestId)).toEqual([
-		"Analyze submitted text > Analyze sentence [Code · app/tf-demo · linguisticOrchestration · Failure]",
 		"Analyze submitted text > Persist submitted text [Code · app/tf-demo · Success]",
-		"Analyze submitted text > Split text into sentences [Code · app/tf-demo · Intl.Segmenter (de, sentence) · Success]",
-		"Analyze submitted text > analyzeSentence > analyzeSentence [TypeSafe · battery/promptsmith · jev-latest · Failure]",
-		"Analyze submitted text > analyzeSentence [Code · battery/dumgen · Failure]",
-		"Analyze submitted text > segment > segment [TypeSafe · battery/promptsmith · jev-latest · Success]",
-		"Analyze submitted text > segment [Code · battery/dumgen · Success]",
-		"Analyze submitted text [Code · app/tf-demo · linguisticOrchestration · Success]",
+		"Analyze submitted text > Segment sentences in units [Code · battery/dumgen · segment.inUnits · Success]",
+		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitText · Success]",
+		"Analyze submitted text [Code · app/tf-demo · intake · Success]",
 	]);
-	await expectEachCallOnce(t, requestId, providers.requests.length);
 	const steps = await savedSteps(t, requestId);
 	const payload = (name: string) =>
 		steps.find((step) => step.name === name)?.payload;
@@ -178,25 +142,33 @@ test("an inspected submission shows its root, code steps and each Dumgen call on
 	});
 	expect(payload("Split text into sentences")).toEqual({
 		input: { sourceText: "Die Banken." },
-		output: [["Die Banken."]],
+		output: { paragraphs: [{ sentences: ["Die Banken."] }] },
+	});
+	expect(payload("Segment sentences in units")).toMatchObject({
+		input: { paragraphs: [{ sentences: ["Die Banken."] }] },
+		output: {
+			language: "de",
+			paragraphs: [{ sentences: [{ text: "Die Banken." }] }],
+		},
 	});
 	expect(payload("Persist submitted text")).toMatchObject({
 		input: { submissionKey: "submission", sourceText: "Die Banken." },
 		output: { textId: expect.any(String) },
 	});
-	expect(payload("segment")).toMatchObject({
-		input: { sourceSentences: ["Die Banken."] },
-	});
 });
 
 test("a failed inspected submission fails its root", async () => {
 	const t = createTestConvex();
-	const providers = unavailableProviders();
+	// The key already names another Text, so storing fails.
+	await submitText(t, [["Die", " ", "Bank", "."]], {
+		submissionKey: "taken",
+	});
+	const providers = fakeTypeSafe();
 	try {
 		await expect(
 			t.action(api.orchestration.submitText, {
 				visitorId: "visitor-1",
-				submissionKey: "unavailable",
+				submissionKey: "taken",
 				sourceText: "Die Banken.",
 				inspectionVisitorId: "visitor-1",
 			}),
@@ -206,126 +178,18 @@ test("a failed inspected submission fails its root", async () => {
 	}
 	const requestId = await submissionRequestId(t);
 	expect(await inspection(t, requestId)).toEqual([
-		"Analyze submitted text > Split text into sentences [Code · app/tf-demo · Intl.Segmenter (de, sentence) · Success]",
-		"Analyze submitted text > segment > segment [TypeSafe · battery/promptsmith · jev-latest · Failure]",
-		"Analyze submitted text > segment [Code · battery/dumgen · Failure]",
-		"Analyze submitted text [Code · app/tf-demo · linguisticOrchestration · Failure]",
+		"Analyze submitted text > Persist submitted text [Code · app/tf-demo · Failure]",
+		"Analyze submitted text > Segment sentences in units [Code · battery/dumgen · segment.inUnits · Success]",
+		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitText · Success]",
+		"Analyze submitted text [Code · app/tf-demo · intake · Failure]",
 	]);
-	await expectEachCallOnce(t, requestId, providers.requests.length);
 });
 
-test("an inspected click resolving a new Reading, then its Knowledge, shows each step and Dumgen call once", async () => {
-	const t = createTestConvex();
-	const selection = await bankenSource(t);
-	const guard = await select(t, selection("request-1"), true);
-	const providers = fakeProviders(
-		pipelineFixture([
-			{ family: "Lexeme", kind: "NOUN", memberSegmentIndices: [2] },
-			{
-				memberOrthographies: ["Standard"],
-				normalizedMembers: ["Banken"],
-				surface: {
-					spelling: "Canonical",
-					surfaceFeatures: null,
-					inflectionalFeatures: {
-						case: "Nom",
-						number: "Plur",
-						article: "None",
-					},
-				},
-				lemma: {
-					canonicalForm: "Bank",
-					coreFeatures: { gender: "Fem", hyph: null },
-				},
-				realizationCoverage: "Full",
-				articleEvidence: null,
-				valencyEvidence: [],
-			},
-			"🏦",
-		]),
-	);
-	const info = spyOn(console, "info").mockImplementation(() => {});
-	try {
-		await t.action(internal.orchestration.runResolutionSession, {
-			...guard,
-			inspect: true,
-		});
-		const click = [
-			"Resolution session > Commit resolved occurrence [Code · app/tf-demo · persistence · Success]",
-			"Resolution session > Find stored Readings [Code · battery/dumdict · Success]",
-			"Resolution session > Load checkpoints and start run [Code · app/tf-demo · resolutionSessions · Success]",
-			"Resolution session > Record Succeeded [Code · app/tf-demo · resolutionSessions · Success]",
-			"Resolution session > Resolve selected segment [Code · app/tf-demo · linguisticOrchestration · Success]",
-			"Resolution session > Save GrammarAvailable [Code · app/tf-demo · resolutionSessions · Success]",
-			"Resolution session > Save ReadingAvailable [Code · app/tf-demo · resolutionSessions · Success]",
-			"Resolution session > Select target · classified [Code · app/tf-demo · linguisticOrchestration · Success]",
-			"Resolution session > classifyTarget > classifyTarget [TypeSafe · battery/promptsmith · jev-latest · Success]",
-			"Resolution session > classifyTarget [Code · battery/dumgen · Success]",
-			"Resolution session > draftKnowledge > draftKnowledge [LLM · battery/promptsmith · gpt-5.6-luna · Success]",
-			"Resolution session > draftKnowledge > draftKnowledge [LLM · battery/promptsmith · gpt-5.6-luna · Success]",
-			"Resolution session > draftKnowledge > draftKnowledge [LLM · battery/promptsmith · gpt-5.6-luna · Success]",
-			"Resolution session > draftKnowledge > draftKnowledge [LLM · battery/promptsmith · gpt-5.6-luna · Success]",
-			"Resolution session > draftKnowledge [Code · battery/dumgen · Success]",
-			"Resolution session > resolveGrammar > generateCanonicalForm [LLM · battery/promptsmith · gpt-5.6-luna · Success]",
-			"Resolution session > resolveGrammar > resolveGrammar [TypeSafe · battery/promptsmith · jev-latest · Success]",
-			"Resolution session > resolveGrammar [Code · battery/dumgen · Success]",
-			"Resolution session > resolveOrGenerateReadingEmojiDescription > generateReadingEmojiDescription [LLM · battery/promptsmith · gpt-5.6-luna · Success]",
-			"Resolution session > resolveOrGenerateReadingEmojiDescription [Code · battery/dumgen · Success]",
-			"Resolution session [Code · app/tf-demo · orchestration.runResolutionSession · Success]",
-			SELECTION,
-		];
-		expect(await inspection(t, "request-1")).toEqual(click);
-		await expectEachCallOnce(t, "request-1", providers.requests.length);
-
-		// The Knowledge attempt shares the click's request ID.
-		const jobs = await t.run((ctx) =>
-			ctx.db.system.query("_scheduled_functions").collect(),
-		);
-		const knowledge = jobs.find(
-			({ name }) =>
-				name === "knowledgeGenerationActions:runKnowledgeGeneration",
-		);
-		expect(knowledge?.args).toEqual([
-			{ attemptKey: "request-1", inspect: true },
-		]);
-		const clickRequests = providers.requests.length;
-		await t.action(
-			internal.knowledgeGenerationActions.runKnowledgeGeneration,
-			{ attemptKey: "request-1", inspect: true },
-		);
-		const steps = await inspection(t, "request-1");
-		expect(
-			steps.filter((step) => step.startsWith("Generate and publish")),
-		).toEqual([
-			"Generate and publish Knowledge > Claim attempt and load input [Code · app/tf-demo · knowledgeGenerationActions · Success]",
-			...Array(4).fill(
-				"Generate and publish Knowledge > Publish Knowledge contribution [Code · app/tf-demo · knowledgeGenerationActions · Success]",
-			),
-			"Generate and publish Knowledge > Publish generated Knowledge [Code · app/tf-demo · knowledgeGenerationActions · Success]",
-			// Four text leaves and the new Reading's Valency Frame and plural.
-			...Array(6).fill(
-				"Generate and publish Knowledge > produceKnowledge > produceKnowledge [LLM · battery/promptsmith · gpt-5.6-luna · Success]",
-			),
-			"Generate and publish Knowledge > produceKnowledge [Code · battery/dumgen · Success]",
-			"Generate and publish Knowledge [Code · app/tf-demo · knowledgeGenerationActions · Success]",
-		]);
-		expect(
-			steps.filter((step) => !step.startsWith("Generate and publish")),
-		).toEqual(click);
-		expect(providers.requests.length).toBe(clickRequests + 6);
-		await expectEachCallOnce(t, "request-1", providers.requests.length);
-	} finally {
-		providers.restore();
-		info.mockRestore();
-	}
-});
-
-test("an inspected click whose model is unavailable fails its root and its failed steps", async () => {
+test("an inspected click selects its unit through ClickResolution and calls no model", async () => {
 	const t = createTestConvex();
 	const selection = await bankenSource(t);
 	const guard = await select(t, selection("request-1"), true);
 	const providers = unavailableProviders();
-	const info = spyOn(console, "info").mockImplementation(() => {});
 	try {
 		await t.action(internal.orchestration.runResolutionSession, {
 			...guard,
@@ -333,22 +197,30 @@ test("an inspected click whose model is unavailable fails its root and its faile
 		});
 	} finally {
 		providers.restore();
-		info.mockRestore();
 	}
+	expect(providers.requests).toEqual([]);
 	expect(await inspection(t, "request-1")).toEqual([
+		"Resolution session > Commit unresolved encounter [Code · app/tf-demo · persistence · Success]",
 		"Resolution session > Load checkpoints and start run [Code · app/tf-demo · resolutionSessions · Success]",
-		"Resolution session > Record GenerationFailed [Code · app/tf-demo · resolutionSessions · Success]",
-		"Resolution session > Resolve selected segment [Code · app/tf-demo · linguisticOrchestration · Failure]",
-		"Resolution session > Select target · classified [Code · app/tf-demo · linguisticOrchestration · Failure]",
-		"Resolution session > classifyTarget > classifyTarget [TypeSafe · battery/promptsmith · jev-latest · Failure]",
-		"Resolution session > classifyTarget [Code · battery/dumgen · Failure]",
-		"Resolution session [Code · app/tf-demo · orchestration.runResolutionSession · Failure]",
+		"Resolution session > Record Succeeded [Code · app/tf-demo · resolutionSessions · Success]",
+		"Resolution session > Resolve grammar [Code · app/tf-demo · ClickResolution · Success]",
+		"Resolution session > Resolve selected segment [Code · app/tf-demo · linguisticOrchestration · Success]",
+		"Resolution session [Code · app/tf-demo · orchestration.runResolutionSession · Success]",
 		SELECTION,
 	]);
-	await expectEachCallOnce(t, "request-1", providers.requests.length);
+	// No Reading was made, so no Knowledge attempt was scheduled.
+	const jobs = await t.run((ctx) =>
+		ctx.db.system.query("_scheduled_functions").collect(),
+	);
+	expect(
+		jobs.filter(
+			({ name }) =>
+				name === "knowledgeGenerationActions:runKnowledgeGeneration",
+		),
+	).toEqual([]);
 });
 
-test("an inspected click reusing another session's occurrence makes no Dumgen call", async () => {
+test("an inspected click reusing another session's occurrence makes no ClickResolution call", async () => {
 	const t = createTestConvex();
 	const selection = await bankenSource(t);
 	const running = await select(t, selection("request-1"), true);

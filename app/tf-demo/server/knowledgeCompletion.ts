@@ -1,5 +1,5 @@
 import type * as Dumrel from "dumrel/types";
-import type { KnowledgeFailure, KnowledgeRequest } from "legacy-dumgen/types";
+import type { KnowledgeFailure, KnowledgeRequest } from "./knowledgeProduction";
 
 /**
  * What covers a Knowledge request: the Reading's stored content and the

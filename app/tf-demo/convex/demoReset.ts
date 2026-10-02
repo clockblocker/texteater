@@ -433,9 +433,10 @@ export const getTextAnalysisCandidates = internalQuery({
 
 /**
  * One bounded step of stripping a Text: from the first Sentence at or after
- * `fromPosition` that still has analysis, it removes its units, then its
- * Resolution Sessions, then up to `STRIP_SEGMENT_BATCH` Segments with their
- * Visitor Encounters and the Attestations they leave memberless.
+ * `fromPosition` that still has analysis, it deletes its Resolution
+ * Sessions, then clears its units and deletes up to `STRIP_SEGMENT_BATCH`
+ * Segments with their Visitor Encounters and the Attestations they leave
+ * memberless.
  * `nextPosition` is where the next step resumes.
  */
 export const stripTextAnalysisGraphBatch = internalMutation({
@@ -473,10 +474,6 @@ async function stripSentenceAnalysisBatch(
 	sentence: Doc<"sentences">,
 ): Promise<number> {
 	const sentenceId = sentence._id;
-	if (sentence.units !== undefined) {
-		await ctx.db.patch(sentenceId, { units: undefined });
-		return 1;
-	}
 	const sessions = await ctx.db
 		.query("resolutionSessions")
 		.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId))
@@ -485,6 +482,10 @@ async function stripSentenceAnalysisBatch(
 		await deleteResolutionSessions(ctx, sessions);
 		return sessions.length;
 	}
+	// The units index into the Segments below, so they go with them; a
+	// field, not a row, they are not counted.
+	if (sentence.units !== undefined)
+		await ctx.db.patch(sentenceId, { units: undefined });
 
 	const segments = await ctx.db
 		.query("segments")

@@ -2,8 +2,6 @@ import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { type DumdictPlan, makeSurfaceId, type StoreRevision } from "dumdict";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "legacy-dumgen";
-import { executeOutput, rejectJudgment } from "legacy-dumgen/testing";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { ReadingEntryContextArgs } from "../convex/dumdictStorage/contextRequest";
@@ -1425,17 +1423,9 @@ describe("tf-demo Dumdict relation storage", () => {
 			},
 		};
 		const orchestrator = createTfDemoOrchestrator({
-			dumgen: {
-				...createDumgen({
-					judge: rejectJudgment,
-					execute: executeOutput(async () => {
-						throw new Error("Unexpected model execution.");
-					}),
-				}),
-				classifyTarget: () =>
-					Effect.succeed(grammatical.encounter.target),
-				resolveGrammar: () => Effect.succeed(grammatical.attestation),
-				resolveOrGenerateReadingEmojiDescription: () =>
+			resolution: {
+				grammar: () => Effect.succeed(grammatical),
+				reading: () =>
 					Effect.succeed({
 						decision: "Reuse" as const,
 						emojiDescription: gehenReading.emojiDescription,

@@ -1,12 +1,15 @@
 import { type Infer, v } from "convex/values";
 import type { ApplyGeneratedKnowledgeRequest } from "dumdict/planning";
 import { translationLanguageValues } from "dumrel";
-import type { KnowledgeFailure, KnowledgeRequest } from "legacy-dumgen/types";
 import {
 	answeredRelationKinds,
 	knowledgeRequestComplete,
 	withoutAnsweredValency,
 } from "../server/knowledgeCompletion";
+import type {
+	KnowledgeFailure,
+	KnowledgeRequest,
+} from "../server/knowledgeProduction";
 import { parseGermanReading } from "../server/operationalParsing";
 import { internalMutation, mutation } from "./_generated/server";
 import { createDumdictTransaction } from "./dumdictTransaction";

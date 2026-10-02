@@ -59,7 +59,7 @@ export function createResolutionSessionLifecycle(
 					{ guard },
 				);
 				if (!input) return null;
-				const { reusable, sentence } = input.context;
+				const { reusable, sentence, neighbours } = input.context;
 				const restored: ResolutionSessionRunInput = {
 					selection: input.selection,
 					context: {
@@ -73,6 +73,7 @@ export function createResolutionSessionLifecycle(
 								foundUnder,
 							}),
 						),
+						neighbours,
 					},
 					checkpoints: {
 						...(input.checkpoints.grammatical

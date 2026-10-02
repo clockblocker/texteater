@@ -122,6 +122,12 @@ export function ResolutionNoteFrame({
 	onRetry?: () => Promise<unknown>;
 }) {
 	const { lifecycle } = note;
+	// While resolution is rebuilt, a click shows the unit it selected (#848).
+	if (
+		note.unit &&
+		(lifecycle.state === "Active" || lifecycle.outcome === "Unresolved")
+	)
+		return <UnitCard note={note} unit={note.unit} />;
 	if (lifecycle.state === "Active" || lifecycle.outcome === "Complete") {
 		return (
 			<NoteSkeletonFor kind="Attestation" presentation={presentation} />
@@ -163,6 +169,71 @@ export function ResolutionNoteFrame({
 						) : null}
 					</div>
 				)}
+			</div>
+		</div>
+	);
+}
+
+type StoredUnit = NonNullable<ResolutionNote["unit"]>;
+type UnitRoute = Exclude<StoredUnit["route"], "Unresolved">;
+
+/** `Lexeme · VERB`; a Family with one Kind is named once. */
+function routeLabel(route: StoredUnit["route"]): string {
+	if (route === "Unresolved") return "Unresolved";
+	return route.family === route.kind
+		? route.family
+		: `${route.family} · ${route.kind}`;
+}
+
+/** The unit's words in order; a gap between members reads as an ellipsis. */
+function unitWords(
+	segments: ResolutionNote["source"]["segments"],
+	members: readonly number[],
+): string {
+	return members
+		.map((index, position) => {
+			const previous = members[position - 1];
+			const text = segments[index]?.text ?? "";
+			if (previous === undefined) return text;
+			const between = segments.slice(previous + 1, index);
+			if (between.length === 0) return text;
+			return between.every(({ kind }) => kind === "Whitespace")
+				? ` ${text}`
+				: ` … ${text}`;
+		})
+		.join("");
+}
+
+/**
+ * What a click shows while resolution is rebuilt (#848): the whole unit it
+ * selected, its route and any route variants. No Note is made and no model
+ * is asked.
+ */
+function UnitCard({ note, unit }: { note: ResolutionNote; unit: StoredUnit }) {
+	const variants: readonly UnitRoute[] = (unit.variants ?? []).filter(
+		(variant) =>
+			unit.route === "Unresolved" ||
+			routeLabel(variant) !== routeLabel(unit.route),
+	);
+	return (
+		<div className="min-h-full bg-paper px-note-gutter pt-note-top compact:p-3.5">
+			<div className="mx-auto flex w-full max-w-note flex-col gap-3">
+				<h1 className="text-xl font-semibold tracking-tight text-balance">
+					{unitWords(note.source.segments, unit.segments)}
+				</h1>
+				<dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+					<dt className="text-ink-muted">Route</dt>
+					<dd>{routeLabel(unit.route)}</dd>
+					{variants.length > 0 ? (
+						<>
+							<dt className="text-ink-muted">Also possible</dt>
+							<dd>{variants.map(routeLabel).join(", ")}</dd>
+						</>
+					) : null}
+				</dl>
+				<p className="text-xs text-ink-muted" role="status">
+					Readings are paused while click resolution is rebuilt.
+				</p>
 			</div>
 		</div>
 	);

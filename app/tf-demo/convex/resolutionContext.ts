@@ -13,6 +13,7 @@ import {
 	lemmaValueValidator,
 	reusableAttestationValidator,
 	storedSegmentValidator,
+	storedUnitValidator,
 } from "./model/validators";
 
 export const resolutionContextValidator = v.object({
@@ -26,6 +27,8 @@ export const resolutionContextValidator = v.object({
 			language: languageValidator,
 			stitchedText: v.string(),
 			segments: v.array(storedSegmentValidator),
+			/** The biggest units intake stored, absent after Analysis Stripping. */
+			units: v.optional(v.array(storedUnitValidator)),
 			/** Whether the Sentence belongs to a hidden Definition Text. */
 			definitionText: v.boolean(),
 		}),
@@ -93,7 +96,8 @@ export async function loadResolutionContext(
 	}
 	// Every word is looked up so a target's far member, such as a separated
 	// prefix, still finds its Lemma; each spelling keeps the Sentence text it
-	// came from, and Dumgen offers only Lemmas found under the target's own.
+	// came from, so ClickResolution can offer only Lemmas found under the
+	// target's own.
 	const foundUnder = new Map<string, Set<string>>();
 	for (const text of [
 		words[clicked] ? spellingOf(words[clicked]) : "",

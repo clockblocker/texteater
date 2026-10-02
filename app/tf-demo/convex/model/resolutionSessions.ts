@@ -6,6 +6,7 @@ import {
 	type ResolutionGrammarProjection,
 	type ResolutionReadingProjection,
 } from "../../server/resolutionSessionProjection";
+import { type StoredUnit, unitsByMember } from "../../server/storedSegments";
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
@@ -30,6 +31,7 @@ import {
 	type resolvedGrammaticalValidator,
 	type safeGenerationFailureValidator,
 	segmentKindValidator,
+	storedUnitValidator,
 } from "./validators";
 import { ensureVisitorEncounter } from "./visitorClicks";
 
@@ -220,6 +222,11 @@ export const resolutionNoteValidator = v.object({
 	lifecycle: resolutionNoteLifecycleValidator,
 	route: resolutionRouteValidator,
 	source: resolutionSourceValidator,
+	/**
+	 * The biggest unit intake stored at the clicked Segment: what a click
+	 * selects, and what its card shows while resolution is rebuilt (#848).
+	 */
+	unit: v.optional(storedUnitValidator),
 	grammar: v.optional(resolutionGrammarProjectionValidator),
 	reading: v.optional(resolutionReadingProjectionValidator),
 	updatedAt: v.number(),
@@ -271,12 +278,20 @@ export async function loadResolutionNote(
 		.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 		.unique();
 	if (!session) return null;
+	const [sentence, segments] = await Promise.all([
+		ctx.db.get(session.sentenceId),
+		loadStoredSegments(ctx, session.sentenceId),
+	]);
+	const unit = unitsByMember(sentence?.units).get(
+		session.clickedSegmentIndex,
+	);
 	return {
 		kind: "ResolutionNote",
 		target: { kind: "Resolution", requestId },
 		lifecycle: await resolutionNoteLifecycle(ctx, session),
 		route: session.route,
-		source: await resolutionSource(ctx, session),
+		source: await resolutionSource(ctx, session, segments, unit),
+		...(unit ? { unit } : {}),
 		// The Session stores what projectResolutionGrammar and
 		// projectResolutionReading produced.
 		...(session.grammar
@@ -291,21 +306,23 @@ export async function loadResolutionNote(
 
 /**
  * The members are the committed ones once the occurrence exists, the ones
- * Grammar chose while the run is pending, and the clicked Segment before that.
+ * Grammar chose while the run is pending, and before that the clicked
+ * Segment's stored unit, or the clicked Segment alone without one.
  */
 async function resolutionSource(
 	ctx: QueryCtx,
 	session: ResolutionSession,
+	segments: readonly Doc<"segments">[],
+	unit: StoredUnit | undefined,
 ): Promise<ResolutionSource> {
-	const [segments, committed] = await Promise.all([
-		loadStoredSegments(ctx, session.sentenceId),
-		session.attestationId
-			? loadCompleteOccurrenceMembers(ctx, session.attestationId)
-			: null,
-	]);
+	const committed = session.attestationId
+		? await loadCompleteOccurrenceMembers(ctx, session.attestationId)
+		: null;
 	const encounterMembers =
 		session.grammaticalCheckpoint?.encounter.target.memberSegmentIndices;
-	let memberSegmentIndices = [session.clickedSegmentIndex];
+	let memberSegmentIndices = unit
+		? [...unit.segments]
+		: [session.clickedSegmentIndex];
 	if (committed) {
 		memberSegmentIndices = committed.memberSegmentIndices;
 	} else if (encounterMembers) {
