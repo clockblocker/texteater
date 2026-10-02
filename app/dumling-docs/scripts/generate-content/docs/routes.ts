@@ -1,9 +1,5 @@
-import { join, relative } from "node:path";
-import {
-	generatedDocsDir,
-	publicDir,
-	sourceTypedDocsDir,
-} from "../shared/paths";
+import { relative } from "node:path";
+import { sourceTypedDocsDir } from "../shared/paths";
 
 function normalizePathSegments(path: string): string {
 	return path.replaceAll("\\", "/");
@@ -30,22 +26,4 @@ export function routeIdForGeneratedDocSourcePath(sourcePath: string): string {
 		relative(sourceTypedDocsDir, sourcePath).replace(/\.doc\.ts$/u, ""),
 	);
 	return normalizeRouteId(relativePath);
-}
-
-export function generatedRouteIdForPath(sourcePath: string): string {
-	return normalizeRouteId(
-		relative(generatedDocsDir, sourcePath).replace(/\.md$/u, ""),
-	);
-}
-
-export function generatedPathForTypedDoc(routeId: string): string {
-	return routeId === "index"
-		? join(generatedDocsDir, "index.md")
-		: join(generatedDocsDir, `${routeId}.md`);
-}
-
-export function publicMarkdownPathForRouteId(routeId: string): string {
-	return routeId === "index"
-		? join(publicDir, "index.md")
-		: join(publicDir, `${routeId}.md`);
 }

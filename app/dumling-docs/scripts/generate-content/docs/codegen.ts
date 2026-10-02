@@ -1,53 +1,54 @@
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import { defineCodegen } from "codegen";
-import { generatedDocsDir, publicDir, siteRoot } from "../shared/paths";
+import {
+	generatedDocsDir,
+	generatedEntitiesDir,
+	publicDir,
+	siteRoot,
+} from "../shared/paths";
+import type { Frontmatter, PageOutput } from "../shared/types";
 import { serializeFrontmatter } from "./frontmatter";
-import type { DocsInitialOwnership } from "./initial-ownership";
 import { navItemsForPages, renderNavJson, renderNavMarkdown } from "./nav";
-import type { DocsOutput } from "./types";
 
-type DocsArtifactMeta =
+type PageArtifactMeta =
 	| {
-			frontmatter: DocsOutput["frontmatter"];
-			kind: "generated-doc";
+			frontmatter: Frontmatter;
+			kind: "generated-page";
 			routeId: string;
-			sourcePath: string;
 	  }
 	| {
-			kind: "public-doc";
+			kind: "public-page";
 			routeId: string;
 	  }
 	| {
 			kind: "navigation";
 	  };
 
-function artifactPath(root: string, path: string): string {
-	return relative(root, path).replaceAll("\\", "/");
-}
+const generatedRoots = {
+	attestations: generatedEntitiesDir,
+	docs: generatedDocsDir,
+} as const;
 
-const noInitialOwnership: DocsInitialOwnership = {
-	generatedDocs: [],
-	publicDocs: [],
-};
-
-export function defineDocsCodegen(
-	outputs: readonly DocsOutput[],
-	initialOwnership: DocsInitialOwnership = noInitialOwnership,
+/**
+ * Writes each page as `${routeId}.md` twice: with frontmatter under the
+ * generator's own root, and as the public copy. Only the docs get navigation.
+ */
+export function definePagesCodegen(
+	name: keyof typeof generatedRoots,
+	pages: readonly PageOutput[],
 ) {
 	const codegenInputs = {} as const;
 	const codegenOutputs = {
-		generatedDocs: {
-			root: generatedDocsDir,
+		generated: {
+			root: generatedRoots[name],
 			ownership: {
-				manifest: join(siteRoot, ".codegen/docs-generated.json"),
-				initialFiles: initialOwnership.generatedDocs,
+				manifest: join(siteRoot, `.codegen/${name}-generated.json`),
 			},
 		},
-		publicDocs: {
+		public: {
 			root: publicDir,
 			ownership: {
-				manifest: join(siteRoot, ".codegen/docs-public.json"),
-				initialFiles: initialOwnership.publicDocs,
+				manifest: join(siteRoot, `.codegen/${name}-public.json`),
 			},
 		},
 	} as const;
@@ -55,56 +56,51 @@ export function defineDocsCodegen(
 	return defineCodegen<
 		typeof codegenInputs,
 		typeof codegenOutputs,
-		DocsArtifactMeta
+		PageArtifactMeta
 	>({
 		inputs: codegenInputs,
 		outputs: codegenOutputs,
 		build: () =>
-			outputs.flatMap((output) => {
+			pages.flatMap((page) => {
 				const provenance = [
 					{
 						kind: "source" as const,
-						path: output.sourcePath,
+						path: page.sourcePath,
 					},
 				];
+				const path = `${page.routeId}.md`;
 
 				return [
 					{
-						content: `${serializeFrontmatter(output.frontmatter)}\n${output.body}`,
-						id: `docs:generated:${output.routeId}`,
+						content: `${serializeFrontmatter(page.frontmatter)}\n${page.body}`,
+						id: `${name}:generated:${page.routeId}`,
 						meta: {
-							frontmatter: output.frontmatter,
-							kind: "generated-doc",
-							routeId: output.routeId,
-							sourcePath: output.sourcePath,
-						} satisfies DocsArtifactMeta,
+							frontmatter: page.frontmatter,
+							kind: "generated-page",
+							routeId: page.routeId,
+						} satisfies PageArtifactMeta,
 						provenance,
-						to: {
-							path: artifactPath(
-								generatedDocsDir,
-								output.generatedPath,
-							),
-							target: "generatedDocs",
-						},
+						to: { path, target: "generated" },
 					},
 					{
-						content: output.body,
-						id: `docs:public:${output.routeId}`,
+						content: page.body,
+						id: `${name}:public:${page.routeId}`,
 						meta: {
-							kind: "public-doc",
-							routeId: output.routeId,
-						} satisfies DocsArtifactMeta,
+							kind: "public-page",
+							routeId: page.routeId,
+						} satisfies PageArtifactMeta,
 						provenance,
-						to: {
-							path: artifactPath(publicDir, output.publicPath),
-							target: "publicDocs",
-						},
+						to: { path, target: "public" },
 					},
 				];
 			}),
 		aggregate: (primary) => {
-			const pages = primary.flatMap((artifact) =>
-				artifact.meta.kind === "generated-doc"
+			if (name !== "docs") {
+				return [];
+			}
+
+			const navPages = primary.flatMap((artifact) =>
+				artifact.meta.kind === "generated-page"
 					? [
 							{
 								frontmatter: artifact.meta.frontmatter,
@@ -113,9 +109,9 @@ export function defineDocsCodegen(
 						]
 					: [],
 			);
-			const items = navItemsForPages(pages);
+			const items = navItemsForPages(navPages);
 			const provenance = primary.flatMap((artifact) =>
-				artifact.meta.kind === "generated-doc"
+				artifact.meta.kind === "generated-page"
 					? [
 							{
 								id: artifact.id,
@@ -129,21 +125,21 @@ export function defineDocsCodegen(
 				{
 					content: renderNavJson(items),
 					id: "docs:nav:json",
-					meta: { kind: "navigation" } satisfies DocsArtifactMeta,
+					meta: { kind: "navigation" } satisfies PageArtifactMeta,
 					provenance,
 					to: {
 						path: "nav.json",
-						target: "publicDocs",
+						target: "public",
 					},
 				},
 				{
 					content: renderNavMarkdown(items),
 					id: "docs:nav:markdown",
-					meta: { kind: "navigation" } satisfies DocsArtifactMeta,
+					meta: { kind: "navigation" } satisfies PageArtifactMeta,
 					provenance,
 					to: {
 						path: "nav.md",
-						target: "publicDocs",
+						target: "public",
 					},
 				},
 			];

@@ -3,15 +3,11 @@ import { rules } from "dumspec";
 import type { TypedDocDocument } from "../../../../src/lib/docs/document-shapes.ts";
 import { specRecords } from "../../../../src/lib/docs/spec-examples.ts";
 import { pathRelativeToSiteRoot } from "../../shared/paths";
-import {
-	generatedPathForTypedDoc,
-	publicHrefForRouteId,
-	publicMarkdownPathForRouteId,
-} from "../routes";
+import type { PageOutput } from "../../shared/types";
+import { publicHrefForRouteId } from "../routes";
 import { checkRoutePages } from "../spec/route-page-check";
 import { loadSchemaRoutes } from "../spec/schema-routes";
 import { buildSpecPages, type SpecPage } from "../spec/spec-pages";
-import type { DocsOutput } from "../types";
 import { listTypedDocEntrypoints } from "./list-typed-doc-entrypoints";
 import type {
 	GeneratedDocSource,
@@ -317,7 +313,7 @@ function specPageDraft(
 	};
 }
 
-export async function discoverTypedDocs(): Promise<DocsOutput[]> {
+export async function discoverTypedDocs(): Promise<PageOutput[]> {
 	const entrypoints = listTypedDocEntrypoints();
 	const sources = await Promise.all(
 		entrypoints.map((sourcePath) => loadTypedDocSource(sourcePath)),
@@ -424,8 +420,6 @@ export async function discoverTypedDocs(): Promise<DocsOutput[]> {
 				routeId: draft.routeId,
 				title: draft.title,
 			},
-			generatedPath: generatedPathForTypedDoc(draft.routeId),
-			publicPath: publicMarkdownPathForRouteId(draft.routeId),
 			routeId: draft.routeId,
 			sourcePath: draft.sourcePath,
 		};

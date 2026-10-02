@@ -1,5 +1,5 @@
+import type { PageOutput } from "../shared/types";
 import { publicHrefForRouteId } from "./routes";
-import type { DocsOutput } from "./types";
 
 export type NavItem = {
 	href: string;
@@ -8,7 +8,7 @@ export type NavItem = {
 	title: string;
 };
 
-type NavPage = Pick<DocsOutput, "frontmatter" | "routeId">;
+type NavPage = Pick<PageOutput, "frontmatter" | "routeId">;
 
 export function navItemsForPages(pages: readonly NavPage[]): NavItem[] {
 	return pages

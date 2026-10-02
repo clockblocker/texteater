@@ -1,12 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { join } from "node:path";
-import { docsInitialOwnershipForGeneratedPaths } from "../scripts/generate-content/docs/initial-ownership";
 import {
 	navItemsForPages,
 	renderNavJson,
 	renderNavMarkdown,
 } from "../scripts/generate-content/docs/nav";
-import { generatedDocsDir } from "../scripts/generate-content/shared/paths";
 
 describe("planned docs navigation", () => {
 	const pages = [
@@ -70,17 +67,5 @@ describe("planned docs navigation", () => {
 				"",
 			].join("\n"),
 		);
-	});
-
-	test("first-run ownership adopts prior docs and navigation outputs", () => {
-		expect(
-			docsInitialOwnershipForGeneratedPaths([
-				join(generatedDocsDir, "index.md"),
-				join(generatedDocsDir, "u/feature.md"),
-			]),
-		).toEqual({
-			generatedDocs: ["index.md", "u/feature.md"],
-			publicDocs: ["index.md", "nav.json", "nav.md", "u/feature.md"],
-		});
 	});
 });

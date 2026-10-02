@@ -9,7 +9,9 @@ export interface Frontmatter {
 	title: string;
 }
 
-export interface SourcePage {
+/** One generated page, which `definePagesCodegen` writes as `${routeId}.md`. */
+export interface PageOutput {
+	body: string;
 	frontmatter: Frontmatter;
 	routeId: string;
 	sourcePath: string;

@@ -1,20 +1,9 @@
-import { join } from "node:path";
 import { runCodegen } from "codegen";
 import { allSpecExamples } from "../../../src/lib/docs/spec-examples";
-import { publicMarkdownPathForRouteId } from "../docs/routes";
-import {
-	generatedEntitiesDir,
-	pathRelativeToSiteRoot,
-	specRecordPath,
-} from "../shared/paths";
-import type { Frontmatter, SourcePage } from "../shared/types";
-import {
-	type AttestationOutput,
-	assertUniqueAttestationOutputs,
-	defineAttestationsCodegen,
-} from "./codegen";
+import { definePagesCodegen } from "../docs/codegen";
+import { pathRelativeToSiteRoot, specRecordPath } from "../shared/paths";
+import type { PageOutput } from "../shared/types";
 import { attestationSlugForSource } from "./entity/attestation-slug";
-import { discoverAttestationsInitialOwnership } from "./initial-ownership";
 import { renderAttestationBody } from "./render/render-attestation-body";
 
 /** The page title: the sentence with spaces as `_`, keeping only letters, marks, digits, connectors and brackets. */
@@ -27,11 +16,25 @@ function semanticAttestationBasename(sentenceMarkdown: string): string {
 		.replace(/^_+|_+$/gu, "");
 }
 
+export function assertUniqueAttestationOutputs(
+	outputs: readonly PageOutput[],
+): PageOutput[] {
+	const byRouteId = new Map<string, PageOutput>();
+	for (const output of outputs) {
+		const existing = byRouteId.get(output.routeId);
+		if (existing !== undefined) {
+			throw new Error(
+				`Attestation route collision at ${output.routeId}: ${existing.sourcePath} and ${output.sourcePath}.`,
+			);
+		}
+		byRouteId.set(output.routeId, output);
+	}
+	return [...byRouteId.values()];
+}
+
 /** Generates one attestation page per target of every dumspec Spec Record. */
-export async function generateAttestations(): Promise<SourcePage[]> {
-	const pages: SourcePage[] = [];
-	const outputs: AttestationOutput[] = [];
-	const initialOwnership = discoverAttestationsInitialOwnership();
+export async function generateAttestations(): Promise<void> {
+	const outputs: PageOutput[] = [];
 
 	for (const example of allSpecExamples()) {
 		const source = {
@@ -41,31 +44,25 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 		};
 		const language = example.attestation.surface.language;
 		const routeId = `${language}/attestation/${attestationSlugForSource(source)}`;
-		const frontmatter: Frontmatter = {
-			generatedFrom: pathRelativeToSiteRoot(source.sourcePath),
-			order: 1000,
-			routeId,
-			title: semanticAttestationBasename(source.sentenceMarkdown),
-		};
 
 		outputs.push({
 			body: renderAttestationBody(source),
-			frontmatter,
-			generatedPath: join(generatedEntitiesDir, `${routeId}.md`),
-			publicPath: publicMarkdownPathForRouteId(routeId),
+			frontmatter: {
+				generatedFrom: pathRelativeToSiteRoot(source.sourcePath),
+				order: 1000,
+				routeId,
+				title: semanticAttestationBasename(source.sentenceMarkdown),
+			},
 			routeId,
 			sourcePath: source.sourcePath,
 		});
-		pages.push({ frontmatter, routeId, sourcePath: source.sourcePath });
 	}
 
 	await runCodegen(
-		defineAttestationsCodegen(
+		definePagesCodegen(
+			"attestations",
 			assertUniqueAttestationOutputs(outputs),
-			initialOwnership,
 		),
 		{ mode: "write" },
 	);
-
-	return pages;
 }
