@@ -709,11 +709,81 @@
 							"probabilities": { "c0": 1, "Other": 0 }
 						}
 					}
+				},
+				{
+					"stage": "route-extra",
+					"answers": {
+						"r_1_4": {
+							"type": "choice",
+							"choice": "Lexeme/ADV",
+							"confidence": 0.94,
+							"probabilities": {
+								"Lexeme/PRON": 0,
+								"Lexeme/NOUN": 0,
+								"Locution/ADP": 0,
+								"Lexeme/ADP": 0,
+								"Locution/CCONJ": 0,
+								"Foreign/Foreign": 0,
+								"Lexeme/VERB": 0.05,
+								"Locution/VERB": 0,
+								"Locution/NOUN": 0,
+								"Locution/DET": 0,
+								"Locution/NUM": 0,
+								"Locution/SCONJ": 0,
+								"Lexeme/CCONJ": 0,
+								"Locution/ADV": 0,
+								"Lexeme/PART": 0,
+								"Lexeme/ADJ": 0,
+								"Lexeme/DET": 0,
+								"Lexeme/NUM": 0,
+								"Lexeme/PROPN": 0,
+								"Locution/INTJ": 0,
+								"Lexeme/ADV": 0.95,
+								"Lexeme/INTJ": 0,
+								"Lexeme/SCONJ": 0,
+								"Saying/Saying": 0,
+								"Locution/ADJ": 0,
+								"Lexeme/SYM": 0,
+								"Locution/PRON": 0
+							}
+						},
+						"r_2": {
+							"type": "choice",
+							"choice": "Lexeme/VERB",
+							"confidence": 0.99,
+							"probabilities": {
+								"Lexeme/PRON": 0,
+								"Lexeme/ADP": 0,
+								"Foreign/Foreign": 0,
+								"Lexeme/VERB": 1,
+								"Lexeme/PROPN": 0,
+								"Lexeme/DET": 0,
+								"Lexeme/CCONJ": 0,
+								"Lexeme/PART": 0,
+								"Lexeme/ADJ": 0,
+								"Lexeme/ADV": 0,
+								"Lexeme/NUM": 0,
+								"Lexeme/INTJ": 0,
+								"Lexeme/SCONJ": 0,
+								"Lexeme/NOUN": 0,
+								"Lexeme/SYM": 0
+							}
+						},
+						"ta_2": { "type": "noul", "noul": 0.08 }
+					}
 				}
 			],
 			"units": [
 				{
-					"segments": [0, 2, 6],
+					"segments": [0, 6],
+					"route": {
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV"
+					}
+				},
+				{
+					"segments": [2],
 					"route": {
 						"language": "de",
 						"family": "Lexeme",

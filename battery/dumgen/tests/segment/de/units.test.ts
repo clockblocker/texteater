@@ -88,6 +88,7 @@ const reference: UnitSettings = {
 	...productionUnitSettings,
 	floors: { ...productionUnitSettings.floors, idiom: 0.6, fixed: 0.3 },
 	saying: { floor: 0.4, maxim: false },
+	rules: [],
 };
 
 test("the Saying assembly is a setting: production counts the maxim, the reference's adopted setting does not", async () => {

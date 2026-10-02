@@ -10,7 +10,9 @@
  * 2026-10-02 (#843): on dev it matched or beat the reference on every
  * grouping measure and gained Sayings beyond noise. The floors, the Saying
  * assembly and the inventory are settings, so the reference's adopted
- * setting (#762) stays expressible for experiments.
+ * setting (#762) stays expressible for experiments. Over its membership
+ * run X3's ten code rules (#851, `code-rules.ts`), each enforcing one
+ * dumspec Rule: on dev they held 44 more gold units and lost none.
  */
 import type { Ask } from "../ask.js";
 import type { Segment, Unit } from "../segmented-sentence.js";
@@ -50,7 +52,7 @@ export type UnitSettings = {
 	readonly rules: readonly CodeRule[];
 };
 
-/** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7. */
+/** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7, and every code rule. */
 export const productionUnitSettings: UnitSettings = {
 	floors: {
 		satellite: 0.5,
@@ -62,7 +64,18 @@ export const productionUnitSettings: UnitSettings = {
 	saying: { floor: 0.7, maxim: true },
 	inventory: authoredInventory,
 	unasked: "ask",
-	rules: [],
+	rules: [
+		"split-adverb",
+		"anchors",
+		"quantifier",
+		"pronoun",
+		"article-head",
+		"sein-chain",
+		"was-fuer",
+		"infixed-zu",
+		"binomial",
+		"answer-apart",
+	],
 };
 
 /** Groups one German Sentence's Segments into its biggest units and routes each. */

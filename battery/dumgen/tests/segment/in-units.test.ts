@@ -17,7 +17,10 @@ import fixture from "./fixtures/in-units-lab-answers.json";
 
 /**
  * Four dev Sentences with the cached jev answers each request got in the
- * lab's candidates4 maxim+closed run, and the units that run returned.
+ * lab's candidates4 maxim+closed run, and the units production returns
+ * from them: that run's own, except Wo kommst du her?, which X3's
+ * split-adverb rule (#851) cuts into [Wo, her] and [kommst]. Its new group's
+ * route-extra answer comes from the lab cache's 2026-10-02 dev fill.
  */
 const recorded = fixture as unknown as {
 	readonly recordedFrom: { readonly model: string };

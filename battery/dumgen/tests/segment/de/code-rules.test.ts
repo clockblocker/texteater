@@ -39,9 +39,10 @@ function fixedWords(...ids: number[]): Record<string, Answer> {
 	return answers;
 }
 
-test("production applies no code rule yet; each rule is a setting", () => {
-	expect(productionUnitSettings.rules).toEqual([]);
-	expect(codeRules).toContain("split-adverb");
+test("production applies every code rule (#851); each is a setting", () => {
+	expect([...productionUnitSettings.rules].sort()).toEqual(
+		[...codeRules].sort(),
+	);
 });
 
 test("split-adverb: an accepted split adverb is its two pieces, and the verb stays bare", async () => {
@@ -198,7 +199,10 @@ test("was-fuer: final asks whether was … für is was für ein, and the judge's
 	});
 	// Without the rule, final asks nothing about was … für.
 	const plain = fakeJudge(answers);
-	await segmentGermanUnits({ segments }, plain.ask);
+	await segmentGermanUnits({ segments }, plain.ask, {
+		...productionUnitSettings,
+		rules: [],
+	});
 	expect(
 		Object.keys(
 			plain.requests.find(({ stage }) => stage === "final")?.questions ??

@@ -16,7 +16,10 @@ it and score it against frozen gold. Results live in the lab tickets
   (`nomination.ts`) asks what jev judges about code's candidates,
   membership (`assembly.ts`) assembles units under floors, and routing
   (`routing.ts`) routes them. Its default, `productionUnitSettings`, is
-  candidates4's maxim+closed policy (#843).
+  candidates4's maxim+closed policy (#843) with X3's code rules
+  (`code-rules.ts`, #851): each enforces one dumspec Rule over the
+  assembled membership, dropping a link its Rule forbids or adding one its
+  Rule decides from the words alone.
 - `src/segment-in-units/de/arms/` holds the three arms. `candidates4`
   (`--opt final=1 --opt closed=1`) outputs v3, step0, step0+saying and
   step0+saying+maxim@0.7, each step-0 policy also `+closed`; production is
@@ -24,7 +27,10 @@ it and score it against frozen gold. Results live in the lab tickets
   `productionUnitSettings` sets it, so it follows a changed default, and
   takes #851's offline levers: `--opt grid=x1` (floors × Saying assembly ×
   step 0), `--opt pool=mean,median` (answers pooled across the cache's
-  repetitions 0 to 2, `lab/pool.ts`) and `--opt variants=<margins>`.
+  repetitions 0 to 2, `lab/pool.ts`), `--opt variants=<margins>` and
+  `--opt x3=<rules>|all` (each code rule added to production's own, and
+  all together; `was-fuer` asks its Noul in `final`, a fresh request for
+  a Sentence with was … für).
   `reference` is the #755 reference.
   The retired arms and candidates4's other levers are at ec467e8d, and
   reference-floors at 5335f033.
@@ -107,12 +113,14 @@ bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
 - **Gold mode** (`segment-in-units/de:dev`, `:heldout`): a case's gold
   Segments go in, and production's unit stage (`segmentGermanUnits`) groups
   and routes them. `--units reference` runs the reference arm at its
-  adopted floors instead, for comparison. `--parity <labRunId>` compares
-  every case and repetition with a lab run's `step0+saying+maxim@0.7+closed`
-  output (the reference's primary with `--units reference`) and exits 1 on
-  any difference or failure. Offline, gold mode matches fa59d50e's
-  candidates4 runs exactly, except the one dev case whose `voller` became
-  an ADP after the fill and so misses the cache.
+  adopted floors instead, for comparison. `--parity <labRunId>[:policy]`
+  compares every case and repetition with a lab run's output, by default
+  its `step0+saying+maxim@0.7+closed` (the reference's primary with
+  `--units reference`), and exits 1 on any difference or failure. Offline,
+  gold mode matches the `production` arm's `production` policy. Before
+  X3's code rules it matched fa59d50e's candidates4 runs exactly, except
+  the one dev case whose `voller` became an ADP after the fill and so
+  misses the cache.
 - **Raw mode** (`:raw`), the production headline: the record's Sentence goes
   in as written, `segmentGermanSentence` cuts it, and the unit stage groups
   the Segments. Predicted Segments align to gold ones by exact span, text
