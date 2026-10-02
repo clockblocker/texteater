@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [8, 10, 12],
 			"route": { "family": "Locution", "kind": "NUM" },
+			"reading": { "emojiDescription": "🔢➡🔢" },
 			"notes": {
 				"rationale": "The supplied one-member interval is a Range; never split or replace the authoritative member."
 			},

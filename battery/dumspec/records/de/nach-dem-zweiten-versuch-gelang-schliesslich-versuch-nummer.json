@@ -32,6 +32,7 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "3⃣" },
 			"notes": {
 				"rationale": "The unmarked zweiten is an ordinal ADJ, but the classified cardinal label drei remains NUM."
 			},

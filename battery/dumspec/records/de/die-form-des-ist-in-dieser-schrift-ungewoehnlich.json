@@ -32,6 +32,10 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "➗1⃣0⃣0⃣" },
+			"notes": {
+				"rationale": "The sentence names the sign, which takes its ordinary Reading, per hundred."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "1⃣➕🌓" },
 			"notes": {
 				"rationale": "The fixed NUM route and exact fraction glyph establish the codec-supported Frac identity."
 			},

@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "✖" },
 			"notes": {
 				"rationale": "Explicit nominal agreement licenses Inflection even though the glyph itself is invariant."
 			},

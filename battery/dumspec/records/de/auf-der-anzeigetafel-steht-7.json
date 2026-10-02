@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "7⃣" },
 			"notes": {
 				"rationale": "7 is the numeral sieben written in digits, so the target is NUM sieben and the digit spelling a Licensed Variant (de/digits-spell-the-numeral)."
 			},

@@ -32,6 +32,10 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "🏷" },
+			"notes": {
+				"rationale": "The sentence names the sign, which takes its ordinary Reading, the mark set before a keyword."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

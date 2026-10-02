@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "🪦" },
 			"notes": {
 				"rationale": "† is a symbol for a death, still in use. Neither its age nor the sentence calling it historical makes it archaic grammar, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},

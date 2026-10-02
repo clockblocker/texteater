@@ -722,6 +722,7 @@
 				"family": "Lexeme",
 				"kind": "NUM"
 			},
+			"reading": { "emojiDescription": "8⃣" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

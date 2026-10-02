@@ -25,6 +25,10 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "🔟⬆➖6⃣" },
+			"notes": {
+				"rationale": "µ is the prefix mikro-, a millionth of the unit (µm), so it mirrors Million's description with a negative power."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

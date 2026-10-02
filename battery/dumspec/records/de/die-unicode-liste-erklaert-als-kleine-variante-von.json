@@ -37,8 +37,9 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "➗1⃣0⃣0⃣" },
 			"notes": {
-				"rationale": "﹪ (U+FE6A, small percent sign) is a code point of its own, not a spelling of %: a Variant is a spelling that a standard accepts or once accepted, a dialect uses, or that stretches letters for effect, and a small form is none of these (de/variant-and-historical-status). It is a SYM Lemma of its own, Canonical, as the minus sign − (U+2212) is apart from the hyphen-minus."
+				"rationale": "﹪ (U+FE6A, small percent sign) is a code point of its own, not a spelling of %: a Variant is a spelling that a standard accepts or once accepted, a dialect uses, or that stretches letters for effect, and a small form is none of these (de/variant-and-historical-status). It is a SYM Lemma of its own, Canonical, as the minus sign − (U+2212) is apart from the hyphen-minus. ﹪ is a small form of the percent sign and means what % means, so it copies the description of %."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

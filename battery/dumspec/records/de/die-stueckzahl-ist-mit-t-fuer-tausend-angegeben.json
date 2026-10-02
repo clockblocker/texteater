@@ -36,6 +36,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "1⃣0⃣0⃣0⃣" },
 			"notes": {
 				"rationale": "T abbreviates Tausend, as the sentence itself says, so it is a Shorthand member whose Surface is the expansion, not a Variant spelling of the numeral and not an abbreviation Lemma: abbr Yes is kept for names whose initialism is their usual form (de/abbreviation-is-one-segment). T takes no period."
 			},

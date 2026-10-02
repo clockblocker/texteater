@@ -35,8 +35,9 @@
 		{
 			"memberSegmentIndices": [19],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "➕" },
 			"notes": {
-				"rationale": "Only the supplied second occurrence belongs to this target; identical context material is not added."
+				"rationale": "Only the supplied second occurrence belongs to this target; identical context material is not added. The sentence names the sign, which takes its ordinary Reading, the plus of an addition."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

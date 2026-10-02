@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "4⃣" },
 			"notes": {
 				"rationale": "The classified word-form cardinal is invariant and uses Citation."
 			},

@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [6, 8, 10],
 			"route": { "family": "Locution", "kind": "NUM" },
+			"reading": { "emojiDescription": "1⃣🔸5⃣" },
 			"notes": {
 				"rationale": "All three authoritative members realize one spoken decimal NUM; preserve membership and source order."
 			},

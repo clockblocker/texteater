@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "3⃣" },
 			"notes": {
 				"rationale": "A standalone cardinal can head this phrase without becoming PRON; the route is fixed upstream."
 			},

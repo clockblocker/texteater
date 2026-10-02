@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "🔢" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

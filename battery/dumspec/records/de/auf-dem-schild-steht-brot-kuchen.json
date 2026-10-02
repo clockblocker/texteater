@@ -28,8 +28,9 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "➕" },
 			"notes": {
-				"rationale": "The independent graphical coordinator is SYM; the neighboring ordinary words remain outside membership."
+				"rationale": "The independent graphical coordinator is SYM; the neighboring ordinary words remain outside membership. & stands for und, so it copies the CCONJ und's description."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

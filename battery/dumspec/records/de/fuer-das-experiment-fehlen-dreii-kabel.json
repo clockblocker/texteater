@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "3⃣" },
 			"notes": {
 				"rationale": "Repair the duplicated final i and mark the occurrence Typo."
 			},

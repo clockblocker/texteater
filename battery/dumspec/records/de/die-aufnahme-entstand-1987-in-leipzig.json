@@ -31,6 +31,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "1⃣9⃣8⃣7⃣" },
 			"notes": {
 				"rationale": "1987 names a year before 2000, which German speaks in hundreds, so the target is the year Lemma neunzehnhundertsiebenundachtzig and the digit spelling a Licensed Variant (de/digits-spell-the-numeral). It takes the NUM route that the cardinal digit records use, and its Canonical Form says it is a year. Ruled on #743 (A8)."
 			},

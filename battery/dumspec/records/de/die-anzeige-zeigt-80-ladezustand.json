@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "➗1⃣0⃣0⃣" },
 			"notes": {
 				"rationale": "The neighboring number is not a member and does not make the percent sign a NUM Lemma."
 			},

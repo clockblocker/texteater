@@ -31,6 +31,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "2⃣0⃣2⃣4⃣" },
 			"notes": {
 				"rationale": "2024 names a year from 2000 on, which German speaks as the cardinal, so the target is NUM zweitausendvierundzwanzig and the digit spelling a Licensed Variant (de/digits-spell-the-numeral). Ruled on #743 (A8)."
 			},

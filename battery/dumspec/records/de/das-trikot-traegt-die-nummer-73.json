@@ -31,6 +31,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "7⃣3⃣" },
 			"notes": {
 				"rationale": "73 is the numeral dreiundsiebzig written in digits, so the target is NUM dreiundsiebzig and the digit spelling a Licensed Variant (de/digits-spell-the-numeral)."
 			},

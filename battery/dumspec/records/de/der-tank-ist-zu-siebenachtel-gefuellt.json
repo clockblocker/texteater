@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "7⃣➗8⃣" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

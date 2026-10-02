@@ -20,7 +20,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -28,6 +28,10 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "🔟⬆6⃣" },
+			"notes": {
+				"rationale": "Millionen as an indefinite count in the millions (Duden Million, plural sense) shares the Reading of tausend mal tausend (Duden Million 1): one number concept under ADR 0031."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

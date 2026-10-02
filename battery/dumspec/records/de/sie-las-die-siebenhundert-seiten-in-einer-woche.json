@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "7⃣0⃣0⃣" },
 			"notes": {
 				"rationale": "A cardinal is NUM whatever its size, so siebenhundert is NUM like fünf. It does not inflect, so its Surface marks nothing."
 			},

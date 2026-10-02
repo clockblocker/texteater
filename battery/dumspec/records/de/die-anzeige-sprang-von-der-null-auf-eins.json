@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "1⃣" },
 			"notes": {
 				"rationale": "The unmarked nominalized Null contrasts with the classified numeric value eins; do not copy the NOUN route."
 			},

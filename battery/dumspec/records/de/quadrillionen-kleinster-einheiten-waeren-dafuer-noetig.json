@@ -26,6 +26,10 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "🔟⬆2⃣4⃣" },
+			"notes": {
+				"rationale": "A Quadrillion is Duden's tausend Trilliarden, 10 to the 24th."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "2⃣" },
 			"notes": {
 				"rationale": "The licensed disambiguating form zwo is Standard occurrence evidence and a Variant Surface of zwei."
 			},

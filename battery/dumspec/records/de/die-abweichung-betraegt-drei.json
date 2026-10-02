@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "➗🔟⬆4⃣" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

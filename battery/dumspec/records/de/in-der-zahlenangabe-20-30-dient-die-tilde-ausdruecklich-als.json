@@ -36,6 +36,10 @@
 		{
 			"memberSegmentIndices": [7],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "🔢➡🔢" },
+			"notes": {
+				"rationale": "The sentence makes ~ a range sign read bis, so it copies the range Locutions' description; ~ for ungefähr would be another Reading."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

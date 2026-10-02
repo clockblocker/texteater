@@ -28,6 +28,10 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "📧" },
+			"notes": {
+				"rationale": "The sentence names the sign, which takes its ordinary Reading, the at sign of an e-mail address."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

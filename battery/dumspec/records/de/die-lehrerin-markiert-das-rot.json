@@ -26,6 +26,10 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "➕" },
+			"notes": {
+				"rationale": "The sentence names the sign, which takes its ordinary Reading, the plus of an addition."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

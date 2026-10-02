@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [8, 10, 12],
 			"route": { "family": "Locution", "kind": "NUM" },
+			"reading": { "emojiDescription": "3⃣🔸1⃣4⃣" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

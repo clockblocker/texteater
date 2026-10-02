@@ -36,8 +36,9 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "🔢➡🔢" },
 			"notes": {
-				"rationale": "Upstream already classified this numeric-range glyph as SYM rather than sentence PUNCT."
+				"rationale": "Upstream already classified this numeric-range glyph as SYM rather than sentence PUNCT. Here – reads bis between two numbers, a range as in zehn bis zwölf, so it copies the range Locutions' description."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

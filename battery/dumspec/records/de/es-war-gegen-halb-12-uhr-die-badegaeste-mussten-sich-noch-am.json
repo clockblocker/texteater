@@ -363,6 +363,7 @@
 				"family": "Lexeme",
 				"kind": "NUM"
 			},
+			"reading": { "emojiDescription": "1⃣2⃣" },
 			"notes": {
 				"rationale": "12 is the numeral zwölf written in digits, so the target is NUM zwölf with the headword as Canonical Form, and the digit spelling is a Licensed Variant (de/digits-spell-the-numeral, de/canonical-form-is-the-headword). Ruled on #743 (MB-A8, A8)."
 			},

@@ -28,8 +28,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "NUM" },
+			"reading": { "emojiDescription": "🔟⬆1⃣8⃣" },
 			"notes": {
-				"rationale": "The initial German quantity word is a feminine plural NUM Inflection in nominative context; its ordinary initial capitalization normalizes to lowercase."
+				"rationale": "The initial German quantity word is a feminine plural NUM Inflection in nominative context; its ordinary initial capitalization normalizes to lowercase. A Trillion is Duden's eine Million Billionen, 10 to the 18th, not the English trillion."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

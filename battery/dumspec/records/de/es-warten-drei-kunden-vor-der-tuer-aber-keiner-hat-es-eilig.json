@@ -244,6 +244,7 @@
 				"family": "Lexeme",
 				"kind": "NUM"
 			},
+			"reading": { "emojiDescription": "3⃣" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

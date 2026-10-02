@@ -29,6 +29,10 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "SYM" },
+			"reading": { "emojiDescription": "🌡" },
+			"notes": {
+				"rationale": "Here ° is the degree of temperature, so an angle's degree would be another Reading."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
