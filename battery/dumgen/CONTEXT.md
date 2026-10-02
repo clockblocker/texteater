@@ -96,8 +96,8 @@ settings, case outputs, failures and evaluation results. See the
 
 ### Legacy intake
 
-These terms name the intake Dumgen still ships, from [Dumgen ADR 0005] and
-[Dumgen ADR 0006]; the [intake-owned units reference] holds its contract.
+These terms name the intake LegacyDumgen still ships, from [Dumgen ADR 0005]
+and [Dumgen ADR 0006]; the [intake-owned units reference] holds its contract.
 [Dumgen ADR 0007] supersedes both, and the segmentation rewrite removes these
 terms with the code. The legacy intake still names Phraseme Kinds, which
 [ADR 0039] replaced with Locution and Saying.

@@ -1,7 +1,7 @@
 # Intake-first click pipeline (2026-09-18)
 
-Lab code lives in `battery/dumgen/prototypes/intake/`; commands run from
-`battery/dumgen`. The click-path prototypes are in
+Lab code lives in `battery/legacy-dumgen/prototypes/intake/`; commands run
+from `battery/legacy-dumgen`. The click-path prototypes are in
 [click-path-prototypes.md](click-path-prototypes.md).
 
 Production owns the design since 2026-09-21: `analyzeSentence` in
@@ -384,7 +384,7 @@ production `analyzeSentence` operation and writes the tf-demo playground's
 `lattice.json`: one Sentence Analysis per sentence (offset-keyed Segments,
 Lexeme Targets with roles, Route Mass and Identity Mass, Phraseme Targets)
 with the gold for both layers keyed by offset. The DTO and the Resolution Selector are the
-package's own (`dumgen`, `dumgen/types`); the tf-demo playground entry
+package's own (`legacy-dumgen`, `legacy-dumgen/types`); the tf-demo playground entry
 `lattice` imports them and renders nothing the selector did not derive. The
 same 16 sentences are the `sentence-analysis/de` corpus.
 

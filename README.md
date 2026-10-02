@@ -12,7 +12,8 @@ The main workspaces are:
 - `battery/dumling`: grammatical values and operations
 - `battery/dumrel`: Knowledge and relation algebra
 - `battery/dumdict`: dictionary workflows
-- `battery/dumgen`: prompt construction and generation
+- `battery/dumgen`: German `segment.inUnits`, rebuilt from scratch (#701)
+- `battery/legacy-dumgen`: the frozen legacy Dumgen pipeline, outside the gates
 
 ## Install
 

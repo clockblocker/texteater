@@ -2,7 +2,8 @@
 
 The contract behind Dumgen ADR 0005 and ADR 0006: what intake produces for a
 sentence, what a click reads, what the corpora carry, and what the host
-stores. Terms are the Dumgen glossary's.
+stores. Terms are the Dumgen glossary's. The code is LegacyDumgen's, frozen
+in `battery/legacy-dumgen` (#701); paths below are relative to it.
 
 ## The Sentence Analysis
 
@@ -71,7 +72,7 @@ type Slot = {
 
 The offset is the persisted occurrence coordinate. A rule change may re-split
 a word and shift Segment indices; offsets into the same Stitched Text do not
-move. Types are exported from `dumgen/types`; the module is
+move. Types are exported from `legacy-dumgen/types`; the module is
 `src/concrete-lang/de/sentence-analysis/`.
 
 Invariants enforced in code, never asked:
@@ -119,7 +120,7 @@ Invariants enforced in code, never asked:
 
 ## The Resolution Selector
 
-One pure function per policy version, shipped with the package (`dumgen`
+One pure function per policy version, shipped with the package (`legacy-dumgen`
 exports), scored by the sentence corpus. Given a Lexeme Target:
 
 - Route: the argmax of the Route Mass. `Unresolved` can win. Family follows

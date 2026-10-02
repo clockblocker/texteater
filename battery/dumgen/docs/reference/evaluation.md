@@ -9,9 +9,11 @@ experiment and saves a Promptsmith run in `<output>/<runId>/`: `manifest.json`,
 
 An experiment is spec-backed when its cases project from dumspec Spec Records
 (ADR 0037). Today that is every `grammatical-resolution/*` experiment,
-`sentence-analysis/de`, and their slices. Codegen writes each projected case's
-origin into the route's `src/generated/grammar-cases/<family>/<kind>.json`,
-or `src/generated/sentence-cases.json`, as
+`sentence-analysis/de`, and their slices, all LegacyDumgen's: they run from
+`battery/legacy-dumgen`, and the paths in this section are relative to it.
+Codegen writes each projected case's origin into the route's
+`src/generated/grammar-cases/<family>/<kind>.json`, or
+`src/generated/sentence-cases.json`, as
 `origins[caseId] = { record, target, status }`: the record id, the target's
 index in `targets`, and its Review Status. A sentence-analysis case analyses
 a whole Full record, so its `target` is null and it is Reviewed only when
@@ -20,7 +22,7 @@ every target of the record is. A case the sidecar owns, such as an
 Knowledge, Reading Emoji Description and intake included (system ADR 0037,
 amended 2026-09-27); Adjudications, sidecars and runs stay here.
 To make another stage spec-backed, emit `origins` with `codegen/case-origin.ts`
-and add the route's origins to `caseOrigins` in `src/development.ts`.
+and add the route's origins to `caseOrigins` in `src/legacy-experiments.ts`.
 
 For a spec-backed run, `evaluate` also prints `review`:
 
