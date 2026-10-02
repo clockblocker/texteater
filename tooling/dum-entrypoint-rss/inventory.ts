@@ -23,14 +23,14 @@ export type DumEntryPoint = OperationalEntryPoint | ExemptEntryPoint;
 
 /**
  * Canonical classification of every public export from Dumling, Dumrel,
- * Dumdict, and Dumgen. Tests compare this list to the package manifests so a
+ * Dumdict, and LegacyDumgen. Tests compare this list to the package manifests so a
  * new public subpath cannot silently escape the memory audit.
  */
 export const DUM_PACKAGE_PATHS = {
 	dumling: "dumling",
 	dumrel: "dumrel",
 	dumdict: "dumdict",
-	dumgen: "dumgen",
+	"legacy-dumgen": "legacy-dumgen",
 	dumval: "dumval",
 } as const;
 export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
@@ -165,7 +165,7 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
-		specifier: "dumgen",
+		specifier: "legacy-dumgen",
 		classification: "operational",
 		rationale:
 			"Published application runtime; must exclude schema authoring.",
@@ -175,12 +175,12 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
-		specifier: "dumgen/types",
+		specifier: "legacy-dumgen/types",
 		classification: "type-only",
 		rationale: "Structural declarations, with empty JavaScript.",
 	},
 	{
-		specifier: "dumgen/authored",
+		specifier: "legacy-dumgen/authored",
 		classification: "operational",
 		rationale:
 			"Model-free authored selection; must exclude Effect, promptsmith, and schema authoring.",
@@ -190,7 +190,7 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
-		specifier: "dumgen/validation",
+		specifier: "legacy-dumgen/validation",
 		classification: "operational",
 		rationale:
 			"Encounter validation; must exclude Effect, promptsmith, and schema authoring.",
@@ -200,23 +200,23 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
-		specifier: "dumgen/schemas",
+		specifier: "legacy-dumgen/schemas",
 		classification: "schema-authoring-exempt",
 		rationale: "Explicit schema or experiment authoring surface.",
 	},
 	{
-		specifier: "dumgen/development",
+		specifier: "legacy-dumgen/development",
 		classification: "schema-authoring-exempt",
 		rationale: "Explicit schema or experiment authoring surface.",
 	},
 	{
-		specifier: "dumgen/testing",
+		specifier: "legacy-dumgen/testing",
 		classification: "development-support",
 		rationale:
 			"Deterministic model doubles for sibling workspaces' tests; never loaded at application runtime.",
 	},
 	{
-		specifier: "dumgen/package.json",
+		specifier: "legacy-dumgen/package.json",
 		classification: "metadata",
 		rationale: "Package metadata.",
 	},

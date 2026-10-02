@@ -9,7 +9,7 @@ FAIL shared Dum import RSS: +37.469 MiB after Effect; ceiling 30.000 MiB
   dumling: +2.453 MiB at this step; +2.453 MiB since Effect
   dumrel: +0.594 MiB at this step; +3.109 MiB since Effect
   dumdict/runtime: +1.500 MiB at this step; +4.938 MiB since Effect
-  dumgen: +32.531 MiB at this step; +37.469 MiB since Effect
+  legacy-dumgen: +32.531 MiB at this step; +37.469 MiB since Effect
   Seven-process median of paired peak deltas. Local import replay; not deployed tf-demo or operation memory.
 ```
 
@@ -38,13 +38,13 @@ Empty-module samples: `17809408`, `17219584`, `17219584`, `17137664`, `17154048`
 | `dumdict/planning` | operational | plan reading entry | 8.797 | 18.703 | none |
 | `dumdict/package.json` | metadata | Package metadata. | — | — | — |
 | `dumdict/memory` | operational | session storage | 25.391 | 25.766 | none |
-| `dumgen` | operational | resolve supplied target | 58.203 | 60.375 | none |
-| `dumgen/types` | type-only | Structural declarations, with empty JavaScript. | — | — | — |
-| `dumgen/authored` | operational | select authored article | 16.766 | 16.750 | none |
-| `dumgen/validation` | operational | validate encounter | 8.891 | 9.563 | none |
-| `dumgen/schemas` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
-| `dumgen/development` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
-| `dumgen/package.json` | metadata | Package metadata. | — | — | — |
+| `legacy-dumgen` | operational | resolve supplied target | 58.203 | 60.375 | none |
+| `legacy-dumgen/types` | type-only | Structural declarations, with empty JavaScript. | — | — | — |
+| `legacy-dumgen/authored` | operational | select authored article | 16.766 | 16.750 | none |
+| `legacy-dumgen/validation` | operational | validate encounter | 8.891 | 9.563 | none |
+| `legacy-dumgen/schemas` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
+| `legacy-dumgen/development` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
+| `legacy-dumgen/package.json` | metadata | Package metadata. | — | — | — |
 | `dumling/compiled-validation` | operational | Validate through the shared rule protocol | 3.250 | 5.047 | none |
 | `dumrel/compiled-validation` | operational | Validate through the shared rule protocol | 4.188 | 6.063 | none |
 | `dumval/runtime` | operational | Validate through the shared rule protocol | 1.453 | 2.141 | none |
@@ -53,9 +53,9 @@ Empty-module samples: `17809408`, `17219584`, `17219584`, `17137664`, `17154048`
 
 ## Interpretation
 
-The shared import budget replaces the previous per-entrypoint 5/5.3 MiB limits. It measures Dumling → Dumrel → Dumdict runtime → Dumgen after effect/Effect. Shared dependencies are counted once. This is a local package-import replay, not deployed tf-demo RSS, and excludes provider SDK, app initialization, and operations. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.
+The shared import budget replaces the previous per-entrypoint 5/5.3 MiB limits. It measures Dumling → Dumrel → Dumdict runtime → LegacyDumgen after effect/Effect. Shared dependencies are counted once. This is a local package-import replay, not deployed tf-demo RSS, and excludes provider SDK, app initialization, and operations. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.
 
-The explicit schema/model-authoring escape hatches are `dumling/schema/*`, `dumrel/schema`, `dumdict/schema`, `dumgen/schemas`, `dumgen/development`, `dumval/compiler`. They are exempt from the operational budget; any schema reachability from an operational package root remains a violation rather than gaining an exemption.
+The explicit schema/model-authoring escape hatches are `dumling/schema/*`, `dumrel/schema`, `dumdict/schema`, `legacy-dumgen/schemas`, `legacy-dumgen/development`, `dumval/compiler`. They are exempt from the operational budget; any schema reachability from an operational package root remains a violation rather than gaining an exemption.
 
 A vocabulary or settings subpath is operational runtime data, so it is measured. Type-only JavaScript and `package.json` metadata are inventoried for exhaustiveness but not benchmarked.
 

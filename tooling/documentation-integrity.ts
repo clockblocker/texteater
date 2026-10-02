@@ -79,11 +79,11 @@ const coordinationTokens = new Set([
 ]);
 
 const retainedEvidenceCompanionPaths = new Set([
-	"battery/dumgen/docs/prototypes/german-relation-human-gate/README.md",
-	"battery/dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
-	"battery/dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
-	"battery/dumgen/docs/prototypes/reading-resolution-meaning-isolation/README.md",
-	"battery/dumgen/docs/research/issue-58-de-he-clickable-boundaries.md",
+	"battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/README.md",
+	"battery/legacy-dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
+	"battery/legacy-dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
+	"battery/legacy-dumgen/docs/prototypes/reading-resolution-meaning-isolation/README.md",
+	"battery/legacy-dumgen/docs/research/issue-58-de-he-clickable-boundaries.md",
 ]);
 
 function normalizeRepositoryPath(path: string): string {
@@ -137,7 +137,7 @@ function isProducedArtifact(path: string): boolean {
 		path.startsWith("battery/dumling/resources/") ||
 		path.startsWith("battery/dumgen/docs/learning/") ||
 		path.startsWith("battery/dumgen/.laboratory/sessions/") ||
-		/^battery\/dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
+		/^battery\/(?:legacy-)?dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
 			path,
 		) ||
 		// Written by codegen/migrate-{target,sentence}-cases.ts beside their drafts.

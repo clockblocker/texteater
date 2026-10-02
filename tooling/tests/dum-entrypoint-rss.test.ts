@@ -55,8 +55,8 @@ test("schema and model-authoring surfaces are explicitly exempt", () => {
 		"dumling/schema/*",
 		"dumrel/schema",
 		"dumdict/schema",
-		"dumgen/schemas",
-		"dumgen/development",
+		"legacy-dumgen/schemas",
+		"legacy-dumgen/development",
 		"dumval/compiler",
 	]);
 	const documentedInventory = schemaAuthoringSurfaces

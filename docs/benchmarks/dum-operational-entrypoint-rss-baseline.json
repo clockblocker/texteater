@@ -26,7 +26,7 @@
 				"cumulativePeakMedianBytes": 5177344
 			},
 			{
-				"specifier": "dumgen",
+				"specifier": "legacy-dumgen",
 				"addedPeakMedianBytes": 34111488,
 				"cumulativePeakMedianBytes": 39288832
 			}
@@ -50,7 +50,7 @@
 					"peakBytes": 45891584
 				},
 				{
-					"specifier": "dumgen",
+					"specifier": "legacy-dumgen",
 					"peakBytes": 79953920
 				}
 			],
@@ -72,7 +72,7 @@
 					"peakBytes": 44498944
 				},
 				{
-					"specifier": "dumgen",
+					"specifier": "legacy-dumgen",
 					"peakBytes": 81346560
 				}
 			],
@@ -94,7 +94,7 @@
 					"peakBytes": 46039040
 				},
 				{
-					"specifier": "dumgen",
+					"specifier": "legacy-dumgen",
 					"peakBytes": 79986688
 				}
 			],
@@ -116,7 +116,7 @@
 					"peakBytes": 46071808
 				},
 				{
-					"specifier": "dumgen",
+					"specifier": "legacy-dumgen",
 					"peakBytes": 79544320
 				}
 			],
@@ -138,7 +138,7 @@
 					"peakBytes": 46170112
 				},
 				{
-					"specifier": "dumgen",
+					"specifier": "legacy-dumgen",
 					"peakBytes": 80281600
 				}
 			],
@@ -160,7 +160,7 @@
 					"peakBytes": 45629440
 				},
 				{
-					"specifier": "dumgen",
+					"specifier": "legacy-dumgen",
 					"peakBytes": 80445440
 				}
 			],
@@ -182,7 +182,7 @@
 					"peakBytes": 46120960
 				},
 				{
-					"specifier": "dumgen",
+					"specifier": "legacy-dumgen",
 					"peakBytes": 80379904
 				}
 			]
@@ -598,7 +598,7 @@
 			}
 		},
 		{
-			"specifier": "dumgen",
+			"specifier": "legacy-dumgen",
 			"classification": "operational",
 			"rationale": "Published application runtime; must exclude schema authoring.",
 			"operation": {
@@ -629,23 +629,23 @@
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
 					"common-utils",
-					"dumgen",
 					"dumling",
 					"dumling/compiled-validation",
 					"dumling/validation",
 					"dumrel",
 					"dumrel/compiled-validation",
-					"dumval/runtime"
+					"dumval/runtime",
+					"legacy-dumgen"
 				]
 			}
 		},
 		{
-			"specifier": "dumgen/types",
+			"specifier": "legacy-dumgen/types",
 			"classification": "type-only",
 			"rationale": "Structural declarations, with empty JavaScript."
 		},
 		{
-			"specifier": "dumgen/authored",
+			"specifier": "legacy-dumgen/authored",
 			"classification": "operational",
 			"rationale": "Model-free authored selection; must exclude Effect, promptsmith, and schema authoring.",
 			"operation": {
@@ -676,14 +676,14 @@
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
 					"common-utils",
-					"dumgen/authored",
 					"dumling",
-					"dumval/runtime"
+					"dumval/runtime",
+					"legacy-dumgen/authored"
 				]
 			}
 		},
 		{
-			"specifier": "dumgen/validation",
+			"specifier": "legacy-dumgen/validation",
 			"classification": "operational",
 			"rationale": "Encounter validation; must exclude Effect, promptsmith, and schema authoring.",
 			"operation": {
@@ -713,26 +713,26 @@
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
-					"dumgen/validation",
 					"dumling/compiled-validation",
 					"dumling/validation",
 					"dumrel/compiled-validation",
-					"dumval/runtime"
+					"dumval/runtime",
+					"legacy-dumgen/validation"
 				]
 			}
 		},
 		{
-			"specifier": "dumgen/schemas",
+			"specifier": "legacy-dumgen/schemas",
 			"classification": "schema-authoring-exempt",
 			"rationale": "Explicit schema or experiment authoring surface."
 		},
 		{
-			"specifier": "dumgen/development",
+			"specifier": "legacy-dumgen/development",
 			"classification": "schema-authoring-exempt",
 			"rationale": "Explicit schema or experiment authoring surface."
 		},
 		{
-			"specifier": "dumgen/package.json",
+			"specifier": "legacy-dumgen/package.json",
 			"classification": "metadata",
 			"rationale": "Package metadata."
 		},

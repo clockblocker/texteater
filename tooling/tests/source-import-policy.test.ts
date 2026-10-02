@@ -216,7 +216,7 @@ test("Laboratory's evaluation authoring seam does not allow model-authoring impo
 	const root = await temporaryRepository();
 	await addWorkspace(root, {
 		kind: "battery",
-		name: "dumgen",
+		name: "legacy-dumgen",
 		exports: {
 			".": "./dist/index.js",
 			"./development": "./dist/development.js",
@@ -225,18 +225,18 @@ test("Laboratory's evaluation authoring seam does not allow model-authoring impo
 	const lab = await addWorkspace(root, {
 		kind: "app",
 		name: "laboratory",
-		dependencies: { dumgen: "workspace:^" },
+		dependencies: { "legacy-dumgen": "workspace:^" },
 	});
 	await writeSource(
 		lab,
 		"src/evaluations.ts",
-		'import { x } from "dumgen/development";',
+		'import { x } from "legacy-dumgen/development";',
 	);
 	expect(await issuesFor(root)).toEqual([]);
 	await writeSource(
 		lab,
 		"src/workbench.ts",
-		'import { x } from "dumgen/development";',
+		'import { x } from "legacy-dumgen/development";',
 	);
 	expect(
 		(await issuesFor(root)).some((issue) =>

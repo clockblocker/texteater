@@ -9,13 +9,13 @@ import { canonicalDumdictValidationSchemas } from "../../battery/dumdict/codegen
 import { validationRegistry as dictionary } from "../../battery/dumdict/src/generated/linked-validation";
 import { dumdictValidationOperations } from "../../battery/dumdict/src/parsing/validation-operations";
 import { successfulInputs } from "../../battery/dumdict/tests/internal/differential-fixtures";
-import { canonicalDumgenValidationSchemas } from "../../battery/dumgen/codegen/validation-schemas";
-import { validationRegistry as production } from "../../battery/dumgen/src/generated/linked-validation";
 import { loadRoutes } from "../../battery/dumling/codegen/routes";
 import { validationRegistry as units } from "../../battery/dumling/src/generated/linked-validation";
 import { unitFixtures } from "../../battery/dumling/tests/unit-fixtures";
 import { validationRegistry as knowledge } from "../../battery/dumrel/src/generated/linked-validation";
 import { samples as knowledgeSamples } from "../../battery/dumrel/tests/compiled-schema-fixtures";
+import { canonicalDumgenValidationSchemas } from "../../battery/legacy-dumgen/codegen/validation-schemas";
+import { validationRegistry as production } from "../../battery/legacy-dumgen/src/generated/linked-validation";
 import type { DifferentialTarget } from "./differential";
 
 const operations: ValidationOperations = {

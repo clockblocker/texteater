@@ -35,9 +35,9 @@ export const RSS_ENTRYPOINT_POLICIES = {
 	"dumdict/pending": diagnostic,
 	"dumdict/memory": diagnostic,
 	"dumdict/planning": diagnostic,
-	dumgen: diagnostic,
-	"dumgen/authored": diagnostic,
-	"dumgen/validation": diagnostic,
+	"legacy-dumgen": diagnostic,
+	"legacy-dumgen/authored": diagnostic,
+	"legacy-dumgen/validation": diagnostic,
 } as const satisfies Record<string, RssPolicy>;
 
 export interface RssObservation {

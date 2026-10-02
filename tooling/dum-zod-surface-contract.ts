@@ -51,7 +51,7 @@ export const DUM_PUBLIC_ZOD_SURFACES = {
 		"readingPatchOpSchema",
 		"surfaceEntrySchema",
 	],
-	"dumgen/schemas": [
+	"legacy-dumgen/schemas": [
 		"analysisTargetSchema",
 		"classifyInputSchema",
 		"comparisonInputSchema",

@@ -7,9 +7,9 @@ import { validationRegistry as knowledge } from "dumrel/compiled-validation";
 import { ParsingError, parseValidationArtifact } from "dumval/runtime";
 import { encodedDumdictValidationArtifacts } from "../../battery/dumdict/src/generated/validation-artifacts";
 import { dumdictValidationOperations } from "../../battery/dumdict/src/parsing/validation-operations";
-import { encodedValidation as production } from "../../battery/dumgen/src/generated/validation";
 import { encodedValidation as linguistic } from "../../battery/dumling/src/generated/validation";
 import { encodedValidation as relations } from "../../battery/dumrel/src/generated/validation";
+import { encodedValidation as production } from "../../battery/legacy-dumgen/src/generated/validation";
 import { preparePublishedRuntime } from "../dum-entrypoint-rss/published-runtime";
 import { DUM_DIFFERENTIAL_TARGETS } from "../dum-runtime-verification/differential-targets";
 
@@ -100,7 +100,7 @@ console.log("shared");
 		).toBe("shared");
 		for (const [provider, consumer] of [
 			["dumling", "dumrel"],
-			["dumrel", "dumgen"],
+			["dumrel", "legacy-dumgen"],
 			["dumrel", "dumdict/runtime"],
 		]) {
 			const path = join(

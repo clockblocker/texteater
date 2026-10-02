@@ -22,7 +22,13 @@ import {
 } from "./shared";
 
 export const SAMPLE_COUNT = 5;
-const packages = ["dumval", "dumling", "dumrel", "dumdict", "dumgen"] as const;
+const packages = [
+	"dumval",
+	"dumling",
+	"dumrel",
+	"dumdict",
+	"legacy-dumgen",
+] as const;
 
 type MeasurementMode = "baseline" | "import-only" | "import-plus-operation";
 
@@ -181,7 +187,7 @@ export function markdownFor(report: Report): string {
 		"",
 		"## Interpretation",
 		"",
-		"The shared import budget replaces the previous per-entrypoint 5/5.3 MiB limits. It measures Dumling → Dumrel → Dumdict runtime → Dumgen after effect/Effect. Shared dependencies are counted once. This is a local package-import replay, not deployed tf-demo RSS, and excludes provider SDK, app initialization, and operations. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.",
+		"The shared import budget replaces the previous per-entrypoint 5/5.3 MiB limits. It measures Dumling → Dumrel → Dumdict runtime → LegacyDumgen after effect/Effect. Shared dependencies are counted once. This is a local package-import replay, not deployed tf-demo RSS, and excludes provider SDK, app initialization, and operations. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.",
 		"",
 		`The explicit schema/model-authoring escape hatches are ${schemaAuthoringSurfaces}. They are exempt from the operational budget; any schema reachability from an operational package root remains a violation rather than gaining an exemption.`,
 		"",
