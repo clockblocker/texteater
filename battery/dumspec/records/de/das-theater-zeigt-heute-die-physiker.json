@@ -18,8 +18,10 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035"],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +30,7 @@
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🎭⚛" },
 			"notes": {
-				"rationale": "A title cited with its article owns it like der Struwwelpeter, because the article inflects (in den Physikern): Canonical Form Physiker with Core article Definite (ADR 0035). The title is a plural-only name, so it agrees as a plural and has no gender. It is contextual Inflection, not a Citation mention."
+				"rationale": "A title cited with its article owns it like der Struwwelpeter, because the article inflects (in den Physikern): Canonical Form Physiker with Core article Definite (de/proper-noun-article, ADR 0035). The title is a plural-only name, so it agrees as a plural and has no gender."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

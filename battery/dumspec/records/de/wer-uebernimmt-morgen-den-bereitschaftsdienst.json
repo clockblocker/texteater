@@ -16,7 +16,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0044"],
 		"rules": [],
 		"references": []
 	},
@@ -25,7 +25,9 @@
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "❓👤" },
-			"notes": { "rationale": "Question role. Scalar PronType Int." },
+			"notes": {
+				"rationale": "Wer asks for the person who takes the duty over: interrogative wer, with pronType Int and its inherent gender Masc in Core. Its Surface marks Nom, the subject's case (ADR 0044)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -13,7 +13,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0031"],
-		"rules": [],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
 		"references": []
 	},
 	"targets": [
@@ -22,7 +22,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "💪" },
 			"notes": {
-				"rationale": "No overt infinitive. kann is the clause's main predicate and remains VERB. Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026). Sie kann das, she knows how, is Duden können 2a 'beherrschen', the 'can' Reading under ADR 0031."
+				"rationale": "kann has no infinitive here: it is the clause's main predicate, and das its object. A modal is the same VERB Lemma with an object or with an infinitive (de/modal-is-a-verb, ADR 0026). Sie kann das, she knows how, is Duden können 2a 'beherrschen', the 'can' Reading under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

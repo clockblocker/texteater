@@ -23,7 +23,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0044"],
 		"rules": [],
 		"references": []
 	},
@@ -33,7 +33,7 @@
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"reading": { "emojiDescription": "👈" },
 			"notes": {
-				"rationale": "Formal singular addressee; Surface remains morphologically plural."
+				"rationale": "Ihnen addresses Frau Weber formally: the Dat cell of formal Sie, third person plural with polite Form, whether one person or several are addressed, since the verb, sich and Ihr agree with it as a plural (ADR 0044)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

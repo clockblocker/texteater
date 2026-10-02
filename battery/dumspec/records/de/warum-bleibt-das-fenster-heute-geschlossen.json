@@ -18,7 +18,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0029"],
 		"rules": [],
 		"references": []
 	},
@@ -28,7 +28,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "❓🤔" },
 			"notes": {
-				"rationale": "The direct question establishes the interrogative pronominal identity."
+				"rationale": "Warum opens a direct question and asks for the reason: the interrogative Reading of the ADV warum, which has no comparison forms. A w-adverb is one ADV Lemma whose interrogative and relative uses are Readings (ADR 0029)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

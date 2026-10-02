@@ -18,7 +18,7 @@
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "2⃣" },
 			"notes": {
-				"rationale": "שתי is the construct or feminine form of שתיים and is intentionally awkward for feature-boundary testing."
+				"rationale": "שתי is the construct form of the feminine numeral שתיים, the form that stands before a counted feminine noun: שתי מחברות, two notebooks. Its Surface marks the construct state and the feminine gender it shares with מחברות, and number Dual, which the numeral's dual ending shows."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

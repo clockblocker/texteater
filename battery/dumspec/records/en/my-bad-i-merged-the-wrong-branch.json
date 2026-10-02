@@ -20,14 +20,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0039"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🤦" },
 			"notes": {
-				"rationale": "My bad is categorized by discourse function Apology, not by the adjective bad. My bad is Wiktionary 'my fault; mea culpa', owning a mistake, not the 🙇 of a formal apology."
+				"rationale": "My bad is a routine formula, a Locution INTJ; owning a mistake is its Formula Role, Reading Knowledge, never identity (ADR 0039). My bad is Wiktionary 'my fault; mea culpa', owning a mistake, not the 🙇 of a formal apology."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

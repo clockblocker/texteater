@@ -40,7 +40,14 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
+			},
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -49,7 +56,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🅰➡🅱" },
 			"notes": {
-				"rationale": "The licensed pre-reform spelling remains Standard on the Surface and maps to current muss in the Lemma."
+				"rationale": "muß is the spelling of muss valid only before 1996, so the Surface that spells it is a Variant tagged Historical, while the member is Standard (de/variant-and-historical-status, de/member-orthography). The Canonical Form has today's muss and keeps the internal comma (de/saying-needs-uptake)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

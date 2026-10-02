@@ -33,7 +33,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -42,7 +44,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🤐🥇" },
 			"notes": {
-				"rationale": "The visibly lost second clause is unrealized; Partial does not add it to normalized members."
+				"rationale": "Only Reden ist Silber survives on the torn note, and the ellipsis shows the rest is lost: Schweigen ist Gold is fixed material missing from the sentence, so the Saying is attested Partial over the three words present, and the normalized Surface holds only those (de/partial-coverage)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

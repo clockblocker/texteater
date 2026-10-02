@@ -30,7 +30,7 @@
 			"route": { "family": "Lexeme", "kind": "SYM" },
 			"reading": { "emojiDescription": "🏷" },
 			"notes": {
-				"rationale": "The feminine article directly governs the symbol itself, so the occurrence is Inflection rather than a Citation mention. The sentence names the sign, which takes its ordinary Reading, the mark set before a keyword."
+				"rationale": "die agrees with # as a feminine noun phrase, the object of nennt, so the sign's Surface marks Acc.Fem.Sg, though the glyph itself never changes. The sentence names the sign, which takes its ordinary Reading, the mark set before a keyword."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

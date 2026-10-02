@@ -21,8 +21,10 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -31,7 +33,7 @@
 			"route": { "family": "Locution", "kind": "ADV" },
 			"reading": { "emojiDescription": "⚖" },
 			"notes": {
-				"rationale": "Both correlating anchors are ordered members of one invariant ADV Lexeme; adjective predicates remain unmarked."
+				"rationale": "einerseits … andererseits is a correlator made of its two anchors, a Locution ADV with no comparison forms (de/correlator-anchors, ADR 0039). The adjective predicates günstig and riskant stay outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

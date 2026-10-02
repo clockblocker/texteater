@@ -17,7 +17,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/recipient-passive", "hash": "0196915ee6d1a36d" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -26,7 +28,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🚚" },
 			"notes": {
-				"rationale": "Recipient passive: bekommt is the auxiliary member, geliefert the head. voice Pass, passive Recipient (ADR 0026)."
+				"rationale": "bekommt with geliefert is the recipient passive: the participle adds nothing lexical, so bekommt is the auxiliary and joins liefern in one target [bekommt, geliefert], with voice Pass and passive Recipient (de/recipient-passive, ADR 0026)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

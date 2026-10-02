@@ -37,7 +37,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -45,7 +47,7 @@
 			"memberSegmentIndices": [22, 26],
 			"route": { "family": "Locution", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "The earlier ordinary coordinators are unmarked context; only the supplied anchors belong to this Lexeme."
+				"rationale": "entweder … oder joins Saft and Wasser, a correlator made of its two anchors, a Locution CCONJ (de/correlator-anchors). The oder inside the quoted question Kaffee oder Tee? has no entweder and joins its pair on its own, and doch is a CCONJ of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

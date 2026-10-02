@@ -15,7 +15,14 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -24,7 +31,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🔒" },
 			"notes": {
-				"rationale": "Productive werden-passive. wurde member. geschlossen head stays Part."
+				"rationale": "wurde … geschlossen reports the closing itself, so wurde is the passive auxiliary of geschlossen and the target is the whole passive [wurde, geschlossen], with voice Pass and passive Process; tense Past describes the finite wurde (de/verbal-participle, de/verbal-surface-is-whole). Die Tür ist geschlossen, a state, would give the copula and an ADJ instead (de/sein-perfect-or-copula)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

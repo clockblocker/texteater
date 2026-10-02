@@ -20,7 +20,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0002"],
 		"rules": [],
 		"references": []
 	},
@@ -30,7 +30,7 @@
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "🔟⬆1⃣8⃣" },
 			"notes": {
-				"rationale": "The initial German quantity word is a feminine plural NUM Inflection in nominative context; its ordinary initial capitalization normalizes to lowercase. A Trillion is Duden's eine Million Billionen, 10 to the 18th, not the English trillion."
+				"rationale": "Trillionen is the plural of Trillion, the subject of würden … füllen, so its Surface marks Nom.Fem.Plur. Trillion is written with a capital, as Duden's headword is, so the sentence-initial capital is the word's own and the normalized Surface keeps it: casing never follows the word's position (ADR 0002). A Trillion is Duden's eine Million Billionen, 10 to the 18th, not the English trillion."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

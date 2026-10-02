@@ -25,7 +25,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
+			{
+				"rule": "de/modification-attests-partially",
+				"hash": "91fc596acb3813f1"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -64,7 +70,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
+				"rationale": "The line plays on the proverb Gebranntes Kind scheut das Feuer. It is a Saying of its own only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID, DWDS) lists it: cite it in sources.references before review (de/saying-needs-uptake). Otherwise it is a changed wording that speakers still recognize, so it attests Gebranntes Kind scheut das Feuer, Partial, over its kept words, and the replacing words resolve on their own (de/modification-attests-partially)."
 			}
 		}
 	],

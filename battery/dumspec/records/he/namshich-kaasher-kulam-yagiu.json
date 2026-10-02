@@ -20,7 +20,7 @@
 			"route": { "family": "Lexeme", "kind": "SCONJ" },
 			"reading": { "emojiDescription": "⏰" },
 			"notes": {
-				"rationale": "כאשר is SCONJ with temporal case because the schema exposes that feature for Hebrew subordinators. כאשר 'when' opens a time clause, the ⏰ of wann."
+				"rationale": "כאשר is the SCONJ 'when'. Its Core marks case Tem, the one case value Hebrew SCONJ has, kept for a subordinator that names a time; ש and relative ה, which open clauses of every kind, leave it null. כאשר 'when' opens a time clause, the ⏰ of wann."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

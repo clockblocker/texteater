@@ -31,7 +31,7 @@
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🛒💻" },
 			"notes": {
-				"rationale": "Registered styling is Canonical, ordinary contextual use is Inflection, and absent reliable agreement the name's gender stays null."
+				"rationale": "eBay is the online marketplace's name in its registered styling, a lowercase e before a capital B, and that styling is its Canonical spelling. It is the object of erwähnt, so its Surface marks Acc.Sg."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

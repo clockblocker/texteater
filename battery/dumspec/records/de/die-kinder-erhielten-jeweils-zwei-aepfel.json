@@ -28,7 +28,7 @@
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "2⃣" },
 			"notes": {
-				"rationale": "The unmarked jeweils supplies distributive meaning, but the exact German NUM codec has no Dist value; the numeral identity remains Card."
+				"rationale": "zwei is the cardinal NUM counting Äpfel. jeweils, an ADV of its own, makes the count hold for each child; the numeral itself does not change, and it does not inflect here, so its Surface marks nothing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

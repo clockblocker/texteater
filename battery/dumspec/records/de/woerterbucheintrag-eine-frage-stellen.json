@@ -15,7 +15,16 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
+			},
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -24,7 +33,7 @@
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "❓" },
 			"notes": {
-				"rationale": "An explicit dictionary entry is Citation rather than a contextual Inflection. Cited as a dictionary entry with no context, eine Frage stellen takes its only Duden sense, asking someone a question (Duden Frage: jemandem eine Frage stellen)."
+				"rationale": "eine Frage stellen is cited as a dictionary entry, so its Surface leaves its inflection empty (de/empty-inflection-is-structural). It is a Collocation: stellen only supports the noun Frage (de/funktionsverbgefuege-are-collocations). Cited as a dictionary entry with no context, eine Frage stellen takes its only Duden sense, asking someone a question (Duden Frage: jemandem eine Frage stellen)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

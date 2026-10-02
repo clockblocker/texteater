@@ -17,14 +17,18 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0002", "ADR-0035", "ADR-0040"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🪚" },
 			"notes": {
-				"rationale": "Tool saw is a noun citation surface; the model can keep it distinct from the verb surface saw."
+				"rationale": "saw here is the tool, the NOUN saw, which owns its article The (ADR 0040). The past tense saw of see is a VERB, another Lemma, since Kind is identity (ADR 0002)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

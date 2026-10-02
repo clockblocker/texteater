@@ -13,7 +13,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -22,7 +28,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🧳" },
 			"notes": {
-				"rationale": "wird member. reisen head. Head stays Inf."
+				"rationale": "wird is the future auxiliary of reisen, so the target is the whole future [wird, reisen]: the Surface marks future Yes, and its tense and person describe the finite wird (de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

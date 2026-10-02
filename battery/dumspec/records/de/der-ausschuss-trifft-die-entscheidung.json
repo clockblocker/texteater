@@ -16,8 +16,13 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0039"],
-		"rules": [],
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -26,7 +31,7 @@
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "⚖✅" },
 			"notes": {
-				"rationale": "The noun's own article comes with the noun (ADR 0028), and its article is a feature of the noun's Surface (ADR 0035): die instead of eine is not a lexical substitution, so the occurrence realizes eine Entscheidung treffen in Full."
+				"rationale": "eine Entscheidung treffen is a Collocation: treffen only supports the noun Entscheidung, and the noun's own article is a member (de/funktionsverbgefuege-are-collocations). die for eine is a change of article that grammar causes, the decision being a known one, and every fixed word is present, so the occurrence attests eine Entscheidung treffen in Full; normalizedSurface records the wording, and no feature describes the article (ADR 0039)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

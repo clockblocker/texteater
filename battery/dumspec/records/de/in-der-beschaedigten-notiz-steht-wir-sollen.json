@@ -25,7 +25,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
-		"rules": [],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
 		"references": []
 	},
 	"targets": [
@@ -34,7 +34,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "📋" },
 			"notes": {
-				"rationale": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target. The infinitive is torn off, so sollen takes its ordinary instruction Reading (Duden sollen 1a)."
+				"rationale": "sollen is the modal, a VERB with a meaning of its own, one Lemma whether it governs an infinitive or an object (de/modal-is-a-verb, ADR 0026). The infinitive is torn off, so sollen takes its ordinary instruction Reading (Duden sollen 1a)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -15,7 +15,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
-		"rules": [],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
 		"references": []
 	},
 	"targets": [
@@ -24,7 +24,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "❗" },
 			"notes": {
-				"rationale": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target."
+				"rationale": "müssen is the modal, a VERB with a meaning of its own, one Lemma whether it governs an infinitive or an object; the infinitive it governs, eintreten, is a target of its own (de/modal-is-a-verb, ADR 0026)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

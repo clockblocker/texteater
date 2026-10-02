@@ -109,7 +109,8 @@
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
-			}
+			},
+			{ "rule": "de/modal-particle-is-part", "hash": "cd0286be11031c26" }
 		],
 		"references": []
 	},
@@ -371,7 +372,7 @@
 			},
 			"reading": { "emojiDescription": "⏰✅" },
 			"notes": {
-				"rationale": "Route tentative: temporal schon 'already'. schon is DWDS schon I.1, temporal 'bereits': the tidying was done before the arrival."
+				"rationale": "schon here is temporal 'already': the tidying was done before the arrival. That changes what is claimed, so it is no modal particle but the ADV schon (de/modal-particle-is-part), DWDS schon I.1, temporal 'bereits'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

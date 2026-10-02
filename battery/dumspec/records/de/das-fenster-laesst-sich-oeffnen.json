@@ -39,7 +39,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👌" },
 			"notes": {
-				"rationale": "The modal-passive sich lassen ('can be done'): the window can be opened. sich is a member by the reflexive test, so lässt sich is VERB sich lassen and öffnen a target of its own (de/causative-lassen, de/verb-owns-its-scattered-members, #723 ruling 10). Its identity waits on #766; until then it follows the convention for a reflexive member, lexicallyReflexive Yes and the Canonical Form sich lassen. Modal-passive sich lassen 'can be done' (Duden lassen: die Möglichkeit zu etwas bieten; das Fenster lässt sich öffnen)."
+				"rationale": "The modal-passive sich lassen ('can be done'): the window can be opened. sich is a member by the reflexive test, so lässt sich is VERB sich lassen and öffnen a target of its own (de/causative-lassen, de/verb-owns-its-scattered-members, #723 ruling 10). Its Core names the case of its reflexive, lexicallyReflexive Acc, as for every lexical reflexive (de/verb-core-features). Modal-passive sich lassen 'can be done' (Duden lassen: die Möglichkeit zu etwas bieten; das Fenster lässt sich öffnen)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

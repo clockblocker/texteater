@@ -20,7 +20,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
+			},
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -29,7 +35,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "✅" },
 			"notes": {
-				"rationale": "Dictionary headword of a modal verb. Citation Surface. VERB with verbType Mod (ADR 0026). A mentioned word takes its ordinary Reading, here dürfen 'be allowed to' (Duden dürfen 1a)."
+				"rationale": "dürfen is cited as a dictionary headword, so its Surface leaves its inflection empty (de/empty-inflection-is-structural). It is the modal, a VERB Lemma like any modal (de/modal-is-a-verb, ADR 0026). A mentioned word takes its ordinary Reading, here dürfen 'be allowed to' (Duden dürfen 1a)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

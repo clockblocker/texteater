@@ -26,7 +26,7 @@
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "CCONJ" },
 			"notes": {
-				"rationale": "Route fixed. Joins clauses. Citation only. Ordinary Lemma."
+				"rationale": "und joins the two main clauses Anna liest and Ben kocht, so it is the CCONJ und. German CCONJ has no Core or inflectional features, so its Surface marks nothing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

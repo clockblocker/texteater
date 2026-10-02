@@ -22,7 +22,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -31,7 +36,7 @@
 			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "❗" },
 			"notes": {
-				"rationale": "The exclamative DET is invariant here, so the exact codec uses Citation."
+				"rationale": "Welch before ein Glück is exclamative welch, a DET with pronType Exc in Core. Before ein it stays uninflected, an invariant use, so its Surface leaves its inflection empty (de/empty-inflection-is-structural)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

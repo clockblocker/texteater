@@ -17,7 +17,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0031"],
-		"rules": [],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
 		"references": []
 	},
 	"targets": [
@@ -26,7 +26,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target. möchte 'would like' (Duden mögen 1d 'den Wunsch haben') is folded into one Reading 👍 with mögen 'like' (2a 'gernhaben'), by the user's split ruling (2026-10-02, ADR 0031)."
+				"rationale": "möchte is the Konjunktiv II of the modal mögen, a VERB with a meaning of its own and one Lemma whether it governs an infinitive or an object; the infinitive it governs, bleiben, is a target of its own (de/modal-is-a-verb, ADR 0026). möchte 'would like' (Duden mögen 1d 'den Wunsch haben') is folded into one Reading 👍 with mögen 'like' (2a 'gernhaben'), by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

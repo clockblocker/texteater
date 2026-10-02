@@ -18,7 +18,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0002"],
 		"rules": [],
 		"references": []
 	},
@@ -28,7 +28,7 @@
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "🔟⬆2⃣4⃣" },
 			"notes": {
-				"rationale": "A Quadrillion is Duden's tausend Trilliarden, 10 to the 24th."
+				"rationale": "Quadrillionen is the plural of Quadrillion, the subject of wären, so its Surface marks Nom.Fem.Plur. Quadrillion is written with a capital, as Duden's headword is, so the sentence-initial capital is the word's own and the normalized Surface keeps it: casing never follows the word's position (ADR 0002). A Quadrillion is Duden's tausend Trilliarden, 10 to the 24th."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

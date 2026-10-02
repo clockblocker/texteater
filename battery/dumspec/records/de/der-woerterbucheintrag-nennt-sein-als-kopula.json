@@ -19,7 +19,16 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026"],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +37,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🟰" },
 			"notes": {
-				"rationale": "Dictionary citation of sein as a copula. A copula is the VERB sein (ADR 0026). Citation Surface. A mentioned word takes its ordinary Reading, and the sentence names it as the copula, 🟰."
+				"rationale": "sein is cited as a dictionary headword, so its Surface leaves its inflection empty (de/empty-inflection-is-structural). Named as the copula it is the VERB sein, since sein is AUX only as the auxiliary of another verb (de/auxiliary-joins-the-verb-it-serves, ADR 0026). A mentioned word takes its ordinary Reading, and the sentence names it as the copula, 🟰."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

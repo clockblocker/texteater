@@ -15,7 +15,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0031"],
-		"rules": [],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
 		"references": []
 	},
 	"targets": [
@@ -24,7 +24,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target. Read as Duden mögen 1e 'wollen, geneigt sein', Tobias wants to come along later, folded into one Reading 👍 with mögen 'like' (2a) by the user's split ruling (2026-10-02, ADR 0031); the sentence alone also allows the concessive 1b or the conjecture 1a."
+				"rationale": "mag is the modal mögen, a VERB with a meaning of its own, one Lemma whether it governs an infinitive or an object; the infinitive it governs, mitkommen, is a target of its own (de/modal-is-a-verb, ADR 0026). Read as Duden mögen 1e 'wollen, geneigt sein', Tobias wants to come along later, folded into one Reading 👍 with mögen 'like' (2a) by the user's split ruling (2026-10-02, ADR 0031); the sentence alone also allows the concessive 1b or the conjecture 1a."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

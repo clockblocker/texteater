@@ -43,7 +43,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -52,7 +54,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🚫🦥" },
 			"notes": {
-				"rationale": "Internal and terminal punctuation is context, not lexical membership or Canonical Form."
+				"rationale": "Was du heute kannst besorgen, das verschiebe nicht auf morgen is a Proverb, one Saying target over all its words. Its Canonical Form is written as a sentence, keeping the internal comma and dropping the final full stop (de/saying-needs-uptake). Punctuation is never a member, and the lead-in mahnte der Vater stays outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

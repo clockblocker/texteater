@@ -21,14 +21,18 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0035", "ADR-0039"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [7, 9, 11, 12, 14],
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": { "emojiDescription": "🚫🤏" },
 			"notes": {
-				"rationale": "לא דובים ולא יער is classified as an idiom; it is proverb-like, but used here as a fixed idiomatic denial. Wiktionary: 'לא היה ולא נברא, אין שמץ של אמת בדבר', not a shred of it is real."
+				"rationale": "לא דובים ולא יער comes from the Talmud (Sotah 47a), where one opinion on Elisha's bears (2 Kings 2:24) holds there were neither bears nor a forest; speakers use it apart from that source, so it is a Saying over all its words, both Fused pieces of ולא included (ADR 0039, ADR 0035). Wiktionary: 'לא היה ולא נברא, אין שמץ של אמת בדבר', not a shred of it is real."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

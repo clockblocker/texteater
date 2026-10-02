@@ -17,7 +17,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -26,7 +32,7 @@
 			"route": { "family": "Lexeme", "kind": "DET" },
 			"reading": { "emojiDescription": "👉" },
 			"notes": {
-				"rationale": "The codec has no invariant contextual Surface; use Citation for this uninflected DET while preserving its demonstrative identity."
+				"rationale": "Derlei 'such' determines Vorfälle, so it is the demonstrative DET derlei, with pronType Dem in Core (de/pron-or-det-by-use). It never inflects, so its Surface leaves its inflection empty (de/empty-inflection-is-structural), and its sentence-initial capital is position casing: the member is Standard."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

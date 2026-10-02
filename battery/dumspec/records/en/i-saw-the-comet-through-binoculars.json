@@ -17,14 +17,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0002"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👀" },
 			"notes": {
-				"rationale": "Saw is the past finite surface of see, not the citation noun saw."
+				"rationale": "saw is the past tense of see, a VERB Surface; the tool saw is a NOUN, another Lemma, since Kind is identity (ADR 0002)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

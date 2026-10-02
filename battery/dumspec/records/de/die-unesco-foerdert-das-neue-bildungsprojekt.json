@@ -19,7 +19,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" },
+			{
+				"rule": "de/abbreviation-is-one-segment",
+				"hash": "8b5d215a31ab7264"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +34,7 @@
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🇺🇳📚" },
 			"notes": {
-				"rationale": "An abbreviated organization in an ordinary subject occurrence is Inflection; its acronym shape never turns the contextual use into Citation."
+				"rationale": "die UNESCO is cited with its article, so UNESCO has Core article Definite and owns Die (de/proper-noun-article). It is an initialism used as the name itself, so it stays its own Lemma and the Surface keeps its letters (de/abbreviation-is-one-segment). fördert makes it nominative singular."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

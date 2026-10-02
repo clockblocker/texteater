@@ -9,14 +9,14 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0041"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "👩‍👧" },
 			"notes": {
-				"rationale": "This captures an accepted spelling variant: selected spelling אמא, normalized surface אימא, so `surface.spelling: \"Variant\"` is the right mark."
+				"rationale": "Hebrew Wiktionary files אִמָּא under אמא and gives אימא as its full spelling (כתיב מלא), the Canonical Form here. אמא is no mistake, so its Surface is a Variant tagged Licensed, and the member is Standard (ADR 0041)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

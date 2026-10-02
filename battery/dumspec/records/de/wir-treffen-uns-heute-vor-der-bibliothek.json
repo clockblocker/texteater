@@ -21,7 +21,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -30,7 +35,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "👇📅" },
 			"notes": {
-				"rationale": "The classified temporal adverb is invariant and therefore uses Citation."
+				"rationale": "heute 'today' is a temporal ADV. Duden gives it no comparison forms, so it is not comparable, and its Surface marks no Degree and has no inflection (de/comparability-is-lexical)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

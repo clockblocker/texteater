@@ -22,7 +22,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0039"],
 		"rules": [],
 		"references": []
 	},
@@ -32,7 +32,7 @@
 			"route": { "family": "Locution", "kind": "NUM" },
 			"reading": { "emojiDescription": "🔢➡🔢" },
 			"notes": {
-				"rationale": "The supplied one-member interval is a Range; never split or replace the authoritative member."
+				"rationale": "zehn bis zwölf names one range, ten to twelve o'clock: a Locution NUM over both numerals and bis, as ADR 0039 lists zwölf bis sechzehn. Uhr after it stays outside."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

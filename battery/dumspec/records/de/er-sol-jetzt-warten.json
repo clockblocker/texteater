@@ -15,7 +15,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0031"],
-		"rules": [],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
 		"references": []
 	},
 	"targets": [
@@ -24,7 +24,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "📋" },
 			"notes": {
-				"rationale": "Modal verbs are VERB Lemmas with verbType Mod, one identity whether they govern an infinitive or an object (ADR 0026). The governed infinitive is a separate target. sollen 'be supposed to, be told to' (Duden sollen 1a); the Reading also takes the Konjunktiv II eventuality (1h, 1j), folded in by the user's split ruling (2026-10-02, ADR 0031)."
+				"rationale": "sol is a Typo of soll, the modal sollen. A modal is a VERB with a meaning of its own, one Lemma whether it governs an infinitive or an object, and the infinitive it governs, warten, is a target of its own (de/modal-is-a-verb, ADR 0026). sollen 'be supposed to, be told to' (Duden sollen 1a); the Reading also takes the Konjunktiv II eventuality (1h, 1j), folded in by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

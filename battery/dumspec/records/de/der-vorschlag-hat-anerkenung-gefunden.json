@@ -17,7 +17,21 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -26,7 +40,7 @@
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "👏" },
 			"notes": {
-				"rationale": "The fixed perfect auxiliary is a Surface member but contributes no head morphology; the nominal typo is repaired and the support-verb head remains Partizip II."
+				"rationale": "Anerkennung finden is a Collocation: finden only supports the noun Anerkennung (de/funktionsverbgefuege-are-collocations). hat is its perfect auxiliary and joins it, so the Surface describes the whole perfect, finite present with perfect Yes (de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole). Anerkenung is a Typo of Anerkennung: the member keeps its letters, and the Surface spells the noun right (de/member-orthography)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

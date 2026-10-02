@@ -26,7 +26,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0031"],
-		"rules": [],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
 		"references": []
 	},
 	"targets": [
@@ -35,7 +35,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Both uses of mögen are one VERB Mod identity (ADR 0026); governing an infinitive is a Unit role, not a different Lemma. heute mag sie lieber kochen, today she would rather cook, is Duden mögen 1e 'wollen, geneigt sein', one Reading with möchte (1d) under ADR 0031, and with mögen 'like' (2a) by the user's split ruling (2026-10-02)."
+				"rationale": "mögen with the object Schokolade and mögen with the infinitive kochen are one VERB Lemma: governing an infinitive is a role inside the verbal unit, not a second Lemma (de/modal-is-a-verb, ADR 0026). heute mag sie lieber kochen, today she would rather cook, is Duden mögen 1e 'wollen, geneigt sein', one Reading with möchte (1d) under ADR 0031, and with mögen 'like' (2a) by the user's split ruling (2026-10-02)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -26,7 +26,7 @@
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "1⃣➕🌓" },
 			"notes": {
-				"rationale": "The fixed NUM route and exact fraction glyph establish the codec-supported Frac identity."
+				"rationale": "eineinhalb, one and a half, is a NUM before Stunden. It never inflects, so its Surface marks nothing."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

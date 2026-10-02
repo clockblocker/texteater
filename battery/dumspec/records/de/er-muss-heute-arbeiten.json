@@ -28,7 +28,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "❗" },
 			"notes": {
-				"rationale": "A modal is a VERB with verbType Mod, one Lemma whether it governs an infinitive or an object (ADR 0026). The infinitive it governs is a target of its own."
+				"rationale": "A modal is a VERB with a meaning of its own, one Lemma whether it governs an infinitive or an object (de/modal-is-a-verb, ADR 0026). The infinitive it governs is a target of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

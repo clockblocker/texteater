@@ -30,7 +30,7 @@
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
-				"rationale": "Contextual ADP stays Citation; the occurrence records the dative its complement takes."
+				"rationale": "mit heads the free phrase mit dem Bus, the means of travel. No word governs it, so it is a single-member ADP; its Lemma carries no case, and the occurrence records the dative its complement took (ADP Case Table)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

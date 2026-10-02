@@ -113,7 +113,8 @@
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
 				"hash": "17cec6bff2108a22"
-			}
+			},
+			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" }
 		],
 		"references": []
 	},
@@ -437,7 +438,7 @@
 			},
 			"reading": { "emojiDescription": "📈⚠" },
 			"notes": {
-				"rationale": "Route tentative: degree zu 'too' as ADV per the #734 ruling; it stays apart from spät and is no infinitive zu."
+				"rationale": "zu 'too' says to what degree spät holds, so it is a degree word: a single-member ADV that stays apart from spät (de/degree-word-is-adv). It is no infinitive zu."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

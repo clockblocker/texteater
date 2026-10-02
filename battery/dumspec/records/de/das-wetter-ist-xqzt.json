@@ -14,8 +14,10 @@
 	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0035"],
-		"rules": [],
+		"adrs": ["ADR-0026", "ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -25,7 +27,7 @@
 			"reading": { "emojiDescription": "🌦" },
 			"grundform": true,
 			"notes": {
-				"rationale": "The noun owns its article: Das is the first member of the Wetter Attestation, and the Surface is the noun's own letters with article Definite."
+				"rationale": "Das opens the phrase, and the noun Wetter owns it, so the article is the first member of the Wetter Attestation; the Surface is the noun's own letters, Nom.Sg, and the article's cell das Nom.Neut.Sg is derived (de/noun-owns-its-article, ADR 0040)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

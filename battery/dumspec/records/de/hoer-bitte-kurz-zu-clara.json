@@ -18,7 +18,13 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
+			},
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -27,7 +33,7 @@
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "👩" },
 			"notes": {
-				"rationale": "A direct-address occurrence is contextual Inflection with singular Number and null Case, never Citation."
+				"rationale": "Clara addresses the listener: a vocative, so its Surface leaves case empty and marks only number Sing (de/empty-inflection-is-structural). Clara is a first name cited bare, with Core gender Fem (de/proper-noun-article)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

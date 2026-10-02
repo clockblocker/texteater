@@ -15,14 +15,18 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": ["ADR-0035"], "rules": [], "references": [] },
+	"sources": {
+		"adrs": ["ADR-0002", "ADR-0035", "ADR-0040"],
+		"rules": [],
+		"references": []
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🌬" },
 			"notes": {
-				"rationale": "Wind as weather is a noun citation surface sharing spelling with the verb wind."
+				"rationale": "wind here is moving air, the NOUN wind, which owns its article The (ADR 0040). The verb wind of winding a clock is another Lemma, since Kind is identity (ADR 0002)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

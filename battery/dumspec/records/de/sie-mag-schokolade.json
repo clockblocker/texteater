@@ -13,7 +13,7 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0031"],
-		"rules": [],
+		"rules": [{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }],
 		"references": []
 	},
 	"targets": [
@@ -22,7 +22,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "👍" },
 			"notes": {
-				"rationale": "Modal verbs keep verbType Mod with an object or without an overt infinitive (ADR 0026). mögen 'like' (Duden mögen 2a 'gernhaben'); the Reading also takes 'would like' (1d) and 'want, be inclined' (1e), folded in by the user's split ruling (2026-10-02, ADR 0031)."
+				"rationale": "mag governs the object Schokolade, not an infinitive, and is still the modal mögen: a modal is one VERB Lemma with an object or an infinitive (de/modal-is-a-verb, ADR 0026). mögen 'like' (Duden mögen 2a 'gernhaben'); the Reading also takes 'would like' (1d) and 'want, be inclined' (1e), folded in by the user's split ruling (2026-10-02, ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -48,8 +48,19 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022"],
+		"rules": [
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -58,7 +69,7 @@
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "🏭" },
 			"notes": {
-				"rationale": "soll modal. Not member. werden passive member."
+				"rationale": "hergestellt werden is the process passive infinitive of herstellen under soll: werden is its passive auxiliary and joins it, so the target is [hergestellt, werden] with voice Pass and passive Process (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves). Under a modal the Surface is an infinitive with no finite features (de/verbal-surface-is-whole, ADR 0022). soll is the modal sollen, a VERB of its own (de/modal-is-a-verb)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

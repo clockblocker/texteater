@@ -19,7 +19,9 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
+		],
 		"references": []
 	},
 	"targets": [
@@ -28,7 +30,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🔙📅" },
 			"notes": {
-				"rationale": "The missing final n is repaired in normalizedMembers while the occurrence is marked Typo."
+				"rationale": "gester is a Typo of gestern, missing its final n: the member keeps its letters, marked Typo, and the Surface spells gestern (de/member-orthography)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

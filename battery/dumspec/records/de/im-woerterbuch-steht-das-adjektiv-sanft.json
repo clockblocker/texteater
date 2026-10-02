@@ -20,7 +20,16 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0031"],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/empty-inflection-is-structural",
+				"hash": "2ea5f1e19a7417ae"
+			},
+			{
+				"rule": "de/comparability-is-lexical",
+				"hash": "b72c043c004f9dc9"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -29,7 +38,7 @@
 			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🪶" },
 			"notes": {
-				"rationale": "Dictionary mention. Citation Surface. No inflection bag. A mentioned word takes its ordinary Reading, Duden sanft 2 'behutsam, zart', with sanft 1, a gentle nature, as one concept under ADR 0031."
+				"rationale": "sanft is cited as a dictionary headword, so its Surface marks no case, gender or number (de/empty-inflection-is-structural). sanft compares (sanfter, am sanftesten), so even the cited Surface marks Degree Pos (de/comparability-is-lexical). A mentioned word takes its ordinary Reading, Duden sanft 2 'behutsam, zart', with sanft 1, a gentle nature, as one concept under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
