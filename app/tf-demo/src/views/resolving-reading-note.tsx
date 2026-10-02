@@ -122,10 +122,9 @@ export function ResolvingReadingNote({
 }) {
 	const visitorId = useAnonymousVisitorId();
 	const { follow } = useWorkspaceInteraction();
-	const settingsQuery = useQuery({
-		...convexQuery(api.knowledgeSettings.get, { visitorId }),
-		gcTime: 10_000,
-	});
+	const settingsQuery = useQuery(
+		convexQuery(api.knowledgeSettings.get, { visitorId }),
+	);
 	const noteData = resolvingReadingNoteData(note, { animateArrivals });
 	if (!noteData) return null;
 	return renderNote({

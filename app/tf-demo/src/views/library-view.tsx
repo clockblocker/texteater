@@ -45,10 +45,7 @@ export function LibraryView() {
 	const [interactionError, setInteractionError] = useState<string | null>(
 		null,
 	);
-	const textsQuery = useQuery({
-		...convexQuery(api.texts.list, {}),
-		gcTime: 10_000,
-	});
+	const textsQuery = useQuery(convexQuery(api.texts.list, {}));
 	const submitText = usePendingAction(api.orchestration.submitText);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {

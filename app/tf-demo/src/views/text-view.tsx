@@ -46,10 +46,9 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 		onMissing: () => setNotice(MISSING_SOURCE_CONTEXT_NOTICE),
 	});
 
-	const textQuery = useQuery({
-		...convexQuery(api.textViews.get, { textId: target.textId, visitorId }),
-		gcTime: 10_000,
-	});
+	const textQuery = useQuery(
+		convexQuery(api.textViews.get, { textId: target.textId, visitorId }),
+	);
 
 	const textDetail = textQuery.data;
 	const sentences: readonly SentenceView[] =

@@ -35,17 +35,15 @@ export function UnitReadingNoteView({
 	resolutionRequestId?: string;
 }) {
 	const visitorId = useAnonymousVisitorId();
-	const noteQuery = useQuery({
-		...convexQuery(api.readingNotes.get, {
+	const noteQuery = useQuery(
+		convexQuery(api.readingNotes.get, {
 			readingId: target.readingId,
 			visitorId,
 		}),
-		gcTime: 10_000,
-	});
-	const settingsQuery = useQuery({
-		...convexQuery(api.knowledgeSettings.get, { visitorId }),
-		gcTime: 10_000,
-	});
+	);
+	const settingsQuery = useQuery(
+		convexQuery(api.knowledgeSettings.get, { visitorId }),
+	);
 
 	if (noteQuery.isPending || settingsQuery.isPending) {
 		return resolutionRequestId ? (
@@ -89,12 +87,11 @@ function ResolvingReadingNoteStandIn({
 	requestId: string;
 	presentation: "Card" | "Sheet";
 }) {
-	const noteQuery = useQuery({
-		...convexQuery(api.resolutionSessions.getResolutionNote, {
+	const noteQuery = useQuery(
+		convexQuery(api.resolutionSessions.getResolutionNote, {
 			requestId,
 		}),
-		gcTime: 10_000,
-	});
+	);
 	const note = noteQuery.data;
 	if (!note?.grammar)
 		return <ReadingNoteSkeleton presentation={presentation} />;
@@ -153,7 +150,10 @@ function ReadingNoteContainer({
 			}),
 		[convex, note.target.readingId, visitorId],
 	);
-	const pagination = usePaginatedNoteLoading(note, loadSourceContextPage);
+	const { note: loadedNote, pagination } = usePaginatedNoteLoading(
+		note,
+		loadSourceContextPage,
+	);
 	const attestationId = note.sourceContexts.page[0]?.attestationId;
 	useEffect(() => {
 		if (!attestationId) return;
@@ -190,11 +190,8 @@ function ReadingNoteContainer({
 		presentation,
 		knowledgeSettings,
 		sourceContexts: {
-			items: pagination.note.sourceContexts.page,
-			hasMore: pagination.hasMore,
-			isLoading: pagination.isLoading,
-			error: pagination.error,
-			loadMore: pagination.hasMore ? pagination.loadMore : null,
+			items: loadedNote.sourceContexts.page,
+			...pagination,
 		},
 		personalAnnotation: {
 			isSaving: personalAnnotationMutation.isPending,
@@ -221,5 +218,5 @@ function ReadingNoteContainer({
 		follow,
 	};
 
-	return renderNote({ noteData: pagination.note, capabilities });
+	return renderNote({ noteData: loadedNote, capabilities });
 }

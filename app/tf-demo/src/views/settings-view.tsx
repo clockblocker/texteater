@@ -25,10 +25,9 @@ import { KnowledgeSettingsForm } from "./unit-reading-knowledge-settings";
 
 export function SettingsView({ target }: { target: SettingsTarget }) {
 	const visitorId = useAnonymousVisitorId();
-	const settingsQuery = useQuery({
-		...convexQuery(api.knowledgeSettings.get, { visitorId }),
-		gcTime: 10_000,
-	});
+	const settingsQuery = useQuery(
+		convexQuery(api.knowledgeSettings.get, { visitorId }),
+	);
 
 	return (
 		<div className="flex-1 bg-muted/30 px-4 py-8 sm:px-6 sm:py-12">
@@ -161,10 +160,9 @@ function TextDataControls({
 	textId: string;
 	visitorId: string;
 }) {
-	const textQuery = useQuery({
-		...convexQuery(api.textViews.get, { textId, visitorId }),
-		gcTime: 10_000,
-	});
+	const textQuery = useQuery(
+		convexQuery(api.textViews.get, { textId, visitorId }),
+	);
 
 	if (textQuery.isPending) {
 		return (

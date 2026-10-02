@@ -28,12 +28,11 @@ export function ResolutionNoteView({
 	const retryResolution = useConvexMutation(
 		api.resolutionSessions.retryResolution,
 	);
-	const noteQuery = useQuery({
-		...convexQuery(api.resolutionSessions.getResolutionNote, {
+	const noteQuery = useQuery(
+		convexQuery(api.resolutionSessions.getResolutionNote, {
 			requestId: target.requestId,
 		}),
-		gcTime: 10_000,
-	});
+	);
 	const note: ResolutionNote | null = noteQuery.data ?? null;
 
 	useResolutionDeck(note, presentCards);
@@ -69,12 +68,11 @@ export function ResolutionStepNoteView({
 	presentation?: Presentation;
 }) {
 	const { presentCards } = useWorkspaceInteraction();
-	const noteQuery = useQuery({
-		...convexQuery(api.resolutionSessions.getResolutionNote, {
+	const noteQuery = useQuery(
+		convexQuery(api.resolutionSessions.getResolutionNote, {
 			requestId: target.requestId,
 		}),
-		gcTime: 10_000,
-	});
+	);
 	const note: ResolutionNote | null = noteQuery.data ?? null;
 	useResolutionDeck(note, presentCards);
 

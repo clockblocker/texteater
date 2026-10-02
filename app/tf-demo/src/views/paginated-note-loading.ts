@@ -33,10 +33,6 @@ export type PaginatedNoteSnapshot<Note extends PaginatedNote> = {
 export type PaginatedNoteLoader<Note extends PaginatedNote> = {
 	readonly current: () => PaginatedNoteSnapshot<Note>;
 	readonly loadMore: () => Promise<void>;
-	readonly reset: (
-		note: Note,
-		loadPage?: PaginatedNoteTransport<Note>,
-	) => void;
 	readonly refresh: (
 		note: Note,
 		loadPage?: PaginatedNoteTransport<Note>,
@@ -87,12 +83,6 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 		subscribe(listener) {
 			listeners.add(listener);
 			return () => listeners.delete(listener);
-		},
-		reset(note, nextLoadPage = loadPage) {
-			revision += 1;
-			loadPage = nextLoadPage;
-			seedKey = paginationSeedKey(note);
-			publish(initialSnapshot(note));
 		},
 		refresh(note, nextLoadPage = loadPage) {
 			loadPage = nextLoadPage;
@@ -146,14 +136,26 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 	};
 }
 
+/**
+ * Returns the merged Note and the pagination capability its Note renders,
+ * whose `loadMore` is null once the last page has arrived.
+ */
 export function usePaginatedNoteLoading<Note extends PaginatedNote>(
 	initialNote: Note,
 	loadPage: PaginatedNoteTransport<Note>,
-): PaginatedNoteSnapshot<Note> & { readonly loadMore: () => Promise<void> } {
+): {
+	readonly note: Note;
+	readonly pagination: {
+		readonly hasMore: boolean;
+		readonly isLoading: boolean;
+		readonly error: string | null;
+		readonly loadMore: (() => Promise<void>) | null;
+	};
+} {
 	const [loader] = useState(() =>
 		createPaginatedNoteLoader(initialNote, loadPage),
 	);
-	const snapshot = useSyncExternalStore(
+	const { note, hasMore, isLoading, error } = useSyncExternalStore(
 		loader.subscribe,
 		loader.current,
 		loader.current,
@@ -161,7 +163,15 @@ export function usePaginatedNoteLoading<Note extends PaginatedNote>(
 	useEffect(() => {
 		loader.refresh(initialNote, loadPage);
 	}, [initialNote, loadPage, loader]);
-	return { ...snapshot, loadMore: loader.loadMore };
+	return {
+		note,
+		pagination: {
+			hasMore,
+			isLoading,
+			error,
+			loadMore: hasMore ? loader.loadMore : null,
+		},
+	};
 }
 
 function initialSnapshot<Note extends PaginatedNote>(

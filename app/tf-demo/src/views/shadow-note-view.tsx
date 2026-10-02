@@ -27,12 +27,11 @@ export function ShadowNoteView({
 	target: ShadowNoteTarget;
 	presentation?: "Card" | "Sheet";
 }) {
-	const noteQuery = useQuery({
-		...convexQuery(api.shadowNotes.get, {
+	const noteQuery = useQuery(
+		convexQuery(api.shadowNotes.get, {
 			shadowId: target.shadowId,
 		}),
-		gcTime: 10_000,
-	});
+	);
 	if (noteQuery.isPending)
 		return <ShadowNoteSkeleton presentation={presentation} />;
 	if (noteQuery.data?.kind !== "Shadow") {
@@ -75,7 +74,10 @@ function ShadowNoteContainer({
 			}),
 		[convex, note.target.shadowId],
 	);
-	const pagination = usePaginatedNoteLoading(note, loadShadowPage);
+	const { note: loadedNote, pagination } = usePaginatedNoteLoading(
+		note,
+		loadShadowPage,
+	);
 	const [activeLocator, setActiveLocator] = useState<string | null>(null);
 	const [controls, dispatchControls] = useReducer(reduceShadowControls, {
 		targetShadowId: note.target.shadowId,
@@ -113,13 +115,7 @@ function ShadowNoteContainer({
 
 	const capabilities = {
 		presentation,
-		references: {
-			items: pagination.note.references.page,
-			hasMore: pagination.hasMore,
-			isLoading: pagination.isLoading,
-			error: pagination.error,
-			loadMore: pagination.hasMore ? pagination.loadMore : null,
-		},
+		references: { items: loadedNote.references.page, ...pagination },
 		cleanup: {
 			activeLocator,
 			actionError: controls.actionError,
@@ -128,5 +124,5 @@ function ShadowNoteContainer({
 		},
 		follow,
 	};
-	return renderNote({ noteData: pagination.note, capabilities });
+	return renderNote({ noteData: loadedNote, capabilities });
 }

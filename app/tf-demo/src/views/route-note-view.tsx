@@ -28,13 +28,12 @@ export function RouteNoteView({
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const visitorId = useAnonymousVisitorId();
-	const noteQuery = useQuery({
-		...convexQuery(api.routeNotes.get, {
+	const noteQuery = useQuery(
+		convexQuery(api.routeNotes.get, {
 			...routeNoteQueryArgs(target, activeAnalysisKey),
 			visitorId,
 		}),
-		gcTime: 10_000,
-	});
+	);
 	if (noteQuery.isPending)
 		return (
 			<NoteSkeletonFor kind={target.kind} presentation={presentation} />
@@ -109,19 +108,17 @@ function PaginatedSurfaceNote({
 			activeAnalysisKey,
 		],
 	);
-	const pagination = usePaginatedNoteLoading(initialNote, loadSurfacePage);
+	const { note, pagination } = usePaginatedNoteLoading(
+		initialNote,
+		loadSurfacePage,
+	);
 	const capabilities = {
 		presentation,
 		activeAnalysisKey,
-		pagination: {
-			hasMore: pagination.hasMore,
-			isLoading: pagination.isLoading,
-			error: pagination.error,
-			loadMore: pagination.hasMore ? pagination.loadMore : null,
-		},
+		pagination,
 		follow,
 	};
-	return renderNote({ noteData: pagination.note, capabilities });
+	return renderNote({ noteData: note, capabilities });
 }
 
 function PaginatedRouteNote({
@@ -146,16 +143,14 @@ function PaginatedRouteNote({
 		},
 		[convex, initialNote.target.lemmaId],
 	);
-	const pagination = usePaginatedNoteLoading(initialNote, loadRoutePage);
+	const { note, pagination } = usePaginatedNoteLoading(
+		initialNote,
+		loadRoutePage,
+	);
 
 	return renderNote({
-		noteData: pagination.note,
-		capabilities: routeNoteCapabilities(follow, presentation, {
-			hasMore: pagination.hasMore,
-			isLoading: pagination.isLoading,
-			error: pagination.error,
-			loadMore: pagination.hasMore ? pagination.loadMore : null,
-		}),
+		noteData: note,
+		capabilities: routeNoteCapabilities(follow, presentation, pagination),
 	});
 }
 

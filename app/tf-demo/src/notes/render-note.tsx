@@ -96,8 +96,8 @@ function ReadingWithConfiguredLayout({
 }) {
 	const visitorId = useAnonymousVisitorId();
 	const lemma = input.noteData.reading.lemma;
-	const layoutQuery = useQuery({
-		...convexQuery(api.readingBlockLayouts.getFamilyKind, {
+	const layoutQuery = useQuery(
+		convexQuery(api.readingBlockLayouts.getFamilyKind, {
 			visitorId,
 			route: {
 				targetLanguage: lemma.language as "de",
@@ -105,8 +105,7 @@ function ReadingWithConfiguredLayout({
 				kind: lemma.kind,
 			},
 		}),
-		gcTime: 10_000,
-	});
+	);
 	if (layoutQuery.isPending) {
 		return (
 			<ReadingNoteSkeleton

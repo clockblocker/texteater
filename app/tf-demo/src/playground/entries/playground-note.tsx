@@ -19,7 +19,6 @@ export const playgroundNotesQuery = {
 			throw new Error("Could not load playground fixtures.");
 		return response.json();
 	},
-	gcTime: 10_000,
 } as const;
 
 export function PlaygroundNote({
