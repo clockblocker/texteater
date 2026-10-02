@@ -1,0 +1,311 @@
+{
+	"note": "Held-out candidates for German segment.inUnits, second batch, drafted 2026-10-02 in records/de with Full coverage at Segmentation depth (members, routes and rationales; no new Attestations or Readings). None is in the frozen dev set (dev@90c1afa7a4df706d) or in heldout-2026-10-02, none was used for tuning or is named by a Rule, and none is a near-copy of a dev or batch-1 sentence. 30 are #700 records that had no targets; seven are Drafts outside dev whose existing target is kept and completed around. Every row is held-out: approving it sets reviewDepth Segmentation, and the lab counts it as held-out at its next freeze. Rows continue batch 1's numbering. Government comes from E-VALBU, or Duden where E-VALBU has no entry, as each record's references show. Consistency sets keep batch 1's labels where they continue a batch-1 set: S2 Collocations, S3 Sayings, S4 split particle verbs and correlators, S5 auxiliaries and modals in one clause, S6 an article across an extended attribute, S7 literal controls, S8 a preposition spelled like a particle, S10 the state passive. New sets: S11 a governed preposition apart from its governor, S12 rechnen mit governed and free, S13 a reflexive that is lexical, free or absent in the state, S14 a pronominal adverb standing alone, S15 a fused zum outside any fixed expression. A blind second annotator, who saw the Rules but not these drafts, matched every grouping and route. Its doubts: H44's sich (Duden gives sich vorstellen 'introduce oneself' a sub-sense of its own, while E-VALBU vorstellen 2 takes sich as an ordinary Kakk; both annotators kept sich free by de/verb-owns-its-scattered-members) and H41's mich (E-VALBU gives gewöhnen, sich an entry of its own, so it is lexical). H70's südlich is missing from the ADP Case Table, which matters only from the Attestation layer on.",
+	"reserves": [
+		"de/sie-ist-auf-seinen-erfolg-neidisch (not drafted: Duden codes no auf government for neidisch, the same gap as schämen für)",
+		"de/ich-bin-sehr-gespannt-auf-deine-antwort (not drafted: Duden codes no auf government for gespannt)",
+		"de/er-ist-von-seiner-arbeit-regelrecht-besessen (not drafted: von may be the agent of besitzen's participle or governed by ADJ besessen)",
+		"de/das-angebot-kommt-mir-sehr-gelegen (not drafted: Collocation gelegen kommen, or kommen as a copula, since Duden gives ist/kommt mir gelegen)",
+		"de/mit-diesem-zug-setzt-sie-den-koenig-schachmatt (not drafted: Collocation schachmatt setzen or a literal resultative)",
+		"de/der-vertrag-den-beide-parteien-nach-langen-verhandlungen (not drafted: de/complex-preposition decides only preposition + noun + preposition, not im Beisein + genitive)",
+		"de/bevor-die-lieferung-am-fruehen-morgen-abgeholt-wird-ist-jede (not drafted: no Rule or gold decides bis zum Rand, bis and zu apart or one ADP)",
+		"de/obwohl-er-sich-spaeter-entschuldigte-ist-er-wegen-der (not drafted: no Rule or gold decides noch immer as two ADVs or one Locution)"
+	],
+	"rows": [
+		{
+			"row": "H35",
+			"record": "de/ich-bedanke-mich-bei-dir-fuer-die-hilfe",
+			"bucket": "governed-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S11", "S13"]
+		},
+		{
+			"row": "H36",
+			"record": "de/sie-weiss-ueber-das-projekt-gut-bescheid",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S2", "S11"]
+		},
+		{
+			"row": "H37",
+			"record": "de/fuer-den-knappen-zeitplan-gilt-zeit-ist-geld",
+			"bucket": "saying",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S3", "S11"]
+		},
+		{
+			"row": "H38",
+			"record": "de/der-antrag-ueber-den-der-ausschuss-fast-drei-stunden-beraten",
+			"bucket": "governed-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S10", "S11"]
+		},
+		{
+			"row": "H39",
+			"record": "de/die-aufgabe-an-der-bereits-zwei-erfahrene-teams-gearbeitet",
+			"bucket": "governed-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S11"]
+		},
+		{
+			"row": "H40",
+			"record": "de/er-hat-sich-gestern-an-seinen-bruder-erinnert",
+			"bucket": "reflexive",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S11", "S13"]
+		},
+		{
+			"row": "H41",
+			"record": "de/ich-habe-mich-an-die-kaelte-gewoehnt",
+			"bucket": "reflexive",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S11", "S13"]
+		},
+		{
+			"row": "H42",
+			"record": "de/die-buerger-stehen-gegen-die-unterdrueckung-auf",
+			"bucket": "particle-or-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4", "S8", "S11"]
+		},
+		{
+			"row": "H43",
+			"record": "de/sie-nimmt-an-dem-kurs-teil",
+			"bucket": "particle-or-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4", "S8", "S11"]
+		},
+		{
+			"row": "H44",
+			"record": "de/er-stellt-sich-vor-dem-publikum-vor",
+			"bucket": "particle-or-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4", "S8", "S13"]
+		},
+		{
+			"row": "H45",
+			"record": "de/sie-ist-nicht-nur-klug-sondern-auch-fleissig",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "H46",
+			"record": "de/das-ist-so-oder-so-noetig",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": []
+		},
+		{
+			"row": "H47",
+			"record": "de/das-messer-ist-scharf-genug-um-das-brot-zu-schneiden",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "H48",
+			"record": "de/einerseits-lokal-andererseits-digital",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "H49",
+			"record": "de/auf-eva-kann-man-zaehlen-sie-ist-zuverlaessig",
+			"bucket": "governed-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S11"]
+		},
+		{
+			"row": "H50",
+			"record": "de/der-ausflug-ist-abhaengig-vom-wetter",
+			"bucket": "governed-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S11"]
+		},
+		{
+			"row": "H51",
+			"record": "de/ich-bin-mit-ihm-entfernt-verwandt",
+			"bucket": "governed-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S11"]
+		},
+		{
+			"row": "H52",
+			"record": "de/sie-rechnet-mit-starkem-regen",
+			"bucket": "governed-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S11", "S12"]
+		},
+		{
+			"row": "H53",
+			"record": "de/das-kaninchen-frass-auf-der-wiese-dabei-biss-es-ins-gras",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S7", "S14"]
+		},
+		{
+			"row": "H54",
+			"record": "de/sie-rechnet-mit-dem-taschenrechner",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S7", "S12"]
+		},
+		{
+			"row": "H55",
+			"record": "de/sie-waren-stolz-darauf-ganz-normal-zu-sein",
+			"bucket": "pronominal-adverb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S14"]
+		},
+		{
+			"row": "H56",
+			"record": "de/worauf-wartest-du",
+			"bucket": "pronominal-adverb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S14"]
+		},
+		{
+			"row": "H57",
+			"record": "de/obwohl-einige-plaetze-kurzfristig-frei-geworden-sind-sind",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S5", "S10"]
+		},
+		{
+			"row": "H58",
+			"record": "de/mira-wird-laengst-angekommen-sein",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "H59",
+			"record": "de/sie-koennte-den-zug-verpasst-haben",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "H60",
+			"record": "de/der-saal-muss-heute-gereinigt-werden",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "H61",
+			"record": "de/der-antrag-ist-gestern-genehmigt-worden",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S5", "S10"]
+		},
+		{
+			"row": "H62",
+			"record": "de/er-kriegt-alles-erklaert",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "H63",
+			"record": "de/ich-kann-mich-erinnern",
+			"bucket": "reflexive",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S5", "S13"]
+		},
+		{
+			"row": "H64",
+			"record": "de/er-hat-sich-verliebt",
+			"bucket": "reflexive",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S10", "S13"]
+		},
+		{
+			"row": "H65",
+			"record": "de/er-ist-verliebt",
+			"bucket": "reflexive",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S10", "S13"]
+		},
+		{
+			"row": "H66",
+			"record": "de/zum-abendessen-gab-es-gekochte-eier-mit-brot",
+			"bucket": "ordinary",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S15"]
+		},
+		{
+			"row": "H67",
+			"record": "de/sie-hebt-geld-bei-der-bank-ab",
+			"bucket": "split-verb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4", "S7"]
+		},
+		{
+			"row": "H68",
+			"record": "de/der-um-zwei-meter-verrueckte-schrank-passt-jetzt-besser",
+			"bucket": "article-across-attribute",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S6"]
+		},
+		{
+			"row": "H69",
+			"record": "de/in-muenchen-bestellte-er-zum-fruehstueck-eine-semmel",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S7", "S15"]
+		},
+		{
+			"row": "H70",
+			"record": "de/kreuzberg-liegt-suedlich-der-spree",
+			"bucket": "ordinary",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "H71",
+			"record": "de/ja-ich-komme-mit",
+			"bucket": "ordinary",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		}
+	]
+}
