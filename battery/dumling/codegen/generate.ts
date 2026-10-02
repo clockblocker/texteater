@@ -2,10 +2,10 @@ import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import {
 	compileZodValidationArtifacts,
+	emitInlineOutputType,
 	emitLinkedValidationRegistry,
 } from "dumval/compiler";
 import { UnitKindSchema, VariantTagSchema } from "../src/schemas/units.js";
-import { outputType } from "./emit-types.js";
 import { registrations } from "./operations.js";
 import { loadRoutes } from "./routes.js";
 
@@ -20,14 +20,11 @@ const compiled = compileZodValidationArtifacts({
 	schemas,
 	operations: registrations,
 });
-function rootFor(key: string) {
-	const root = compiled.roots[key];
-	if (!root) throw Error(`Missing compiled route ${key}`);
-	return root;
-}
+// Every Dumling operation keeps its input's structural type.
+const typePreservingOperations = registrations.map(({ name }) => name);
 const lines = routes.map(
 	(route) =>
-		`${JSON.stringify(route.key)}:{${kinds.map((kind) => `${kind}:${outputType(rootFor(`${kind}/${route.key}`), compiled.definitions)};`).join("\n")}};`,
+		`${JSON.stringify(route.key)}:{${kinds.map((kind) => `${kind}:${emitInlineOutputType({ artifact: compiled, root: `${kind}/${route.key}`, typePreservingOperations })};`).join("\n")}};`,
 );
 const types = `// Generated from canonical Zod unit schemas. Run bun run generate.\nexport interface UnitMap {${lines.join("\n")}}\n
 export type UnitKind=${kinds.map((value) => JSON.stringify(value)).join("|")};

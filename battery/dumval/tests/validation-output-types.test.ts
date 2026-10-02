@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import {
 	compileZodValidationArtifacts,
+	emitInlineOutputType,
 	emitValidationOutputTypes,
 } from "../src/compiler.js";
 
@@ -167,6 +168,64 @@ test("output emission refuses a recursive shape without an export name", () => {
 			typePreservingOperations: [],
 		}),
 	).toThrow(/Recursive output type .* needs an export name/);
+});
+
+test("one root emits inline, through type-preserving operations, and refuses a recursive shape", () => {
+	const trim = (value: string) => value.trim();
+	const point = z.strictObject({ x: z.number(), y: z.number() });
+	const node = z.strictObject({
+		get children() {
+			return z.array(node);
+		},
+	});
+	const artifact = compileZodValidationArtifacts({
+		schemas: {
+			segment: z.strictObject({
+				from: point,
+				to: point,
+				label: z.string().overwrite(trim).optional().nullable(),
+			}),
+			tree: z.strictObject({ root: node }),
+		},
+		operations: [
+			{
+				construct: "overwrite",
+				implementation: trim,
+				name: "example.trim",
+				version: 1,
+			},
+		],
+	});
+	expect(
+		emitInlineOutputType({
+			artifact,
+			root: "segment",
+			typePreservingOperations: ["example.trim"],
+		}),
+	).toBe(
+		'{"from": {"x": number; "y": number;}; "to": {"x": number; "y": number;}; "label"?: ((string) | undefined) | null;}',
+	);
+	expect(() =>
+		emitInlineOutputType({
+			artifact,
+			root: "segment",
+			typePreservingOperations: [],
+		}),
+	).toThrow("No output-type contract for example.trim");
+	expect(() =>
+		emitInlineOutputType({
+			artifact,
+			root: "tree",
+			typePreservingOperations: [],
+		}),
+	).toThrow(/Recursive output type .* needs an export name/);
+	expect(() =>
+		emitInlineOutputType({
+			artifact,
+			root: "missing",
+			typePreservingOperations: [],
+		}),
+	).toThrow("Missing root missing");
 });
 
 test("a recursive shape another artifact owns is referenced by its name", () => {

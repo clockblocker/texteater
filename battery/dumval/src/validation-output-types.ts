@@ -97,6 +97,34 @@ export function emitValidationOutputTypes(options: {
 }
 
 /**
+ * Emit one root of `artifact` with every reference inlined, for a package that
+ * declares the surrounding type itself. A recursive shape needs an export
+ * name, so it is refused.
+ */
+export function emitInlineOutputType(options: {
+	artifact: Artifact;
+	root: string;
+	/** Operations whose output has the same structural type as their input. */
+	typePreservingOperations: readonly string[];
+}): string {
+	const root = options.artifact.roots[options.root];
+	if (!root) throw Error(`Missing root ${options.root}`);
+	const pending = new Set<string>();
+	return structuralEmitter(
+		options.artifact,
+		options.typePreservingOperations,
+		(id, emitDefinition) => {
+			if (pending.has(id))
+				throw Error(`Recursive output type ${id} needs an export name`);
+			pending.add(id);
+			const expression = emitDefinition();
+			pending.delete(id);
+			return expression;
+		},
+	).emit(root);
+}
+
+/**
  * Emits a constraint as TypeScript. Without `reference`, every reference is
  * inlined, which yields a shape's canonical text. A recursive reference then
  * yields a marker counting the references back to its target, so the same
