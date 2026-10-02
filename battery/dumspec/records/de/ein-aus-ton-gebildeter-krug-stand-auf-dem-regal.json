@@ -34,7 +34,7 @@
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "20805b8ea5d73309"
+				"hash": "2d20d7f0e21161bc"
 			}
 		],
 		"references": []
@@ -51,7 +51,7 @@
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
-				"rationale": "aus Ton is the participle's own prepositional phrase, a free word inside the attribute (de/participial-adjective)."
+				"rationale": "aus Ton names the material and is drafted as a free word inside the attribute: Duden's bilden 1b has Figuren aus/in Ton bilden, where the preposition alternates and no prepositional object is marked, and no E-VALBU entry for bilden was found (de/governed-preposition-joins-its-governor). Open: whether bilden governs aus, which would make it [aus, gebildeter] ADJ."
 			}
 		},
 		{

@@ -1,0 +1,283 @@
+{
+	"note": "Held-out candidates for German segment.inUnits, drafted 2026-10-02 in records/de with Full coverage at Segmentation depth (members, routes and rationales; no Attestations). None is in the frozen dev set (dev@90c1afa7a4df706d) and none was used for tuning or is named by a Rule. Every row is held-out: approving it sets reviewDepth Segmentation, and the lab counts it as held-out at its next freeze. A row with an openQuestion waits for its ruling; H12 asks whether the participle gebildeter (bilden) governs aus in aus Ton, and its #828 case number is provisional until the question is posted there. Consistency sets: S1 den Faden verlieren, idiom and literal, S2 Collocations, S3 Sayings, S4 split particle verbs and correlators, S5 auxiliaries and modals in one clause, S6 an article across an extended attribute, S7 literal controls for idioms, S8 a preposition spelled like a particle, S9 bisschen and its article, S10 the state passive.",
+	"reserves": [
+		"de/die-opfer-derer-wir-heute-gedenken-sind-nicht-vergessen (dropped: route-only targets would take it out of loadSpecRecords, which the derer inventory test reads)",
+		"de/wir-gedenken-derer-die-im-krieg-gestorben-sind (dropped for the same reason; its im is still one Segment)",
+		"de/die-zahl-derer-die-das-angebot-nutzen-steigt (not drafted; same derer test)"
+	],
+	"rows": [
+		{
+			"row": "H1",
+			"record": "de/er-ertrug-zwei-luegen-schweigend-nach-der-dritten-platzte",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "H2",
+			"record": "de/der-tyrann-biss-endlich-ins-gras",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "H3",
+			"record": "de/waehrend-der-rede-habe-ich-den-faden-verloren",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S1"]
+		},
+		{
+			"row": "H4",
+			"record": "de/obwohl-er-anderer-meinung-war-heulte-er-mit-den-woelfen",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "H5",
+			"record": "de/du-gehst-mir-auf-den-keks",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "H6",
+			"record": "de/der-lehrer-stellt-den-schuelern-material-zur-verfuegung",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S2"]
+		},
+		{
+			"row": "H7",
+			"record": "de/im-projekt-durfte-nun-jeder-mitentscheiden-viele-koeche",
+			"bucket": "saying",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S3"]
+		},
+		{
+			"row": "H8",
+			"record": "de/weder-regen-noch-wind-haelt-uns-auf",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "H9",
+			"record": "de/der-brief-hat-geschrieben-werden-muessen",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "H10",
+			"record": "de/er-wird-den-brief-geschrieben-haben-muessen",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "H11",
+			"record": "de/der-die-augen-reizende-rauch-zog-durch-das-zimmer",
+			"bucket": "article-across-attribute",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S6"]
+		},
+		{
+			"row": "H12",
+			"record": "de/ein-aus-ton-gebildeter-krug-stand-auf-dem-regal",
+			"bucket": "article-across-attribute",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S6"],
+			"openQuestion": { "issue": 828, "question": 8 }
+		},
+		{
+			"row": "H13",
+			"record": "de/das-vom-architekten-entworfene-haus-steht-am-hang",
+			"bucket": "article-across-attribute",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S6"]
+		},
+		{
+			"row": "H14",
+			"record": "de/beim-naehen-verlor-sie-den-roten-faden",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S1", "S7"]
+		},
+		{
+			"row": "H15",
+			"record": "de/vor-ihr-lag-ein-grosser-eisblock-mit-einem-hammer-brach-sie",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S7"]
+		},
+		{
+			"row": "H16",
+			"record": "de/vor-dem-waschen-warf-er-das-handtuch-in-die-maschine",
+			"bucket": "overgroup-control",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S7"]
+		},
+		{
+			"row": "H17",
+			"record": "de/mila-faengt-an-der-kreuzung-endlich-an",
+			"bucket": "particle-or-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4", "S8"]
+		},
+		{
+			"row": "H18",
+			"record": "de/im-garten-zog-eine-amsel-einen-wurm-aus-dem-rasen",
+			"bucket": "particle-or-preposition",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S8"]
+		},
+		{
+			"row": "H19",
+			"record": "de/die-maenner-hielten-das-boot-fest-das-seil-mit-aller-kraft",
+			"bucket": "split-verb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "H20",
+			"record": "de/wir-muessen-bald-eine-entscheidung-treffen",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S2"]
+		},
+		{
+			"row": "H21",
+			"record": "de/wir-muessen-diesen-faktor-in-betracht-ziehen",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S2"]
+		},
+		{
+			"row": "H22",
+			"record": "de/das-ist-auf-jeden-fall-richtig",
+			"bucket": "locution",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "H23",
+			"record": "de/wir-muessen-hoeflich-bleiben-zeit-ist-geld",
+			"bucket": "saying",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S3"]
+		},
+		{
+			"row": "H24",
+			"record": "de/der-brief-wird-geschrieben-worden-sein",
+			"bucket": "verb-cluster",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "H25",
+			"record": "de/das-bisschen-geld-reicht-nicht",
+			"bucket": "article-satellite",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S9"]
+		},
+		{
+			"row": "H26",
+			"record": "de/sie-trinkt-den-kaffee-mit-einem-bisschen-milch",
+			"bucket": "article-satellite",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S9"]
+		},
+		{
+			"row": "H27",
+			"record": "de/sein-bisschen-geld-ist-schnell-ausgegeben",
+			"bucket": "article-satellite",
+			"split": "held-out",
+			"change": "complete",
+			"consistencySets": ["S9", "S10"]
+		},
+		{
+			"row": "H28",
+			"record": "de/als-die-ersten-fahrgaeste-den-bahnsteig-erreichten-ist-der",
+			"bucket": "ordinary",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S5"]
+		},
+		{
+			"row": "H29",
+			"record": "de/die-mannschaft-gab-den-vorsprung-in-der-letzten-minute-auf",
+			"bucket": "split-verb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "H30",
+			"record": "de/findet-das-treffen-morgen-statt",
+			"bucket": "split-verb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "H31",
+			"record": "de/meine-schwester-steht-jeden-morgen-um-sechs-auf",
+			"bucket": "split-verb",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S4"]
+		},
+		{
+			"row": "H32",
+			"record": "de/nachdem-der-letzte-besucher-das-gebaeude-verlassen-hat-ist",
+			"bucket": "ordinary",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S10"]
+		},
+		{
+			"row": "H33",
+			"record": "de/seine-reaktion-die-selbst-seine-engsten-freunde-ueberrascht",
+			"bucket": "ordinary",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": []
+		},
+		{
+			"row": "H34",
+			"record": "de/obwohl-sie-und-ihr-partner-seit-jahren-in-verschiedenen",
+			"bucket": "ordinary",
+			"split": "held-out",
+			"change": "new",
+			"consistencySets": ["S10"]
+		}
+	]
+}

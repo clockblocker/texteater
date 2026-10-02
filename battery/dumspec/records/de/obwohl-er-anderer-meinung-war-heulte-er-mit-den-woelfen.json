@@ -57,7 +57,7 @@
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"notes": {
-				"rationale": "anderer declines like an attributive adjective before Meinung (STTS ADJA). anderer Meinung sein is a compositional genitive predicate, not a fixed unit, so anderer and Meinung stay apart (de/fixed-members-only)."
+				"rationale": "anderer declines like an attributive adjective before Meinung (STTS ADJA), and the Authored Inventory has no DET ander. anderer Meinung sein is a compositional genitive predicate, not a fixed unit, so anderer and Meinung stay apart (de/fixed-members-only)."
 			}
 		},
 		{

@@ -35,7 +35,7 @@
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "20805b8ea5d73309"
+				"hash": "2d20d7f0e21161bc"
 			},
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
