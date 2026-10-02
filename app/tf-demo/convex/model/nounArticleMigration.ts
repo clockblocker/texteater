@@ -1,5 +1,5 @@
 import { makeSurfaceId } from "dumdict/planning";
-import { deriveNounArticle } from "dumgen/authored";
+import { deriveNounArticle } from "legacy-dumgen/authored";
 import { parseGermanSurface } from "../../server/operationalParsing";
 import {
 	germanGovernorKinds,

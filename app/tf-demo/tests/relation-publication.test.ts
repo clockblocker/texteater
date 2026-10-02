@@ -198,17 +198,17 @@ test("historical fingerprints remain bound to the relocated frozen sources", asy
 			)
 			.digest("hex");
 	expect(historicalFingerprints.prompt).toBe(
-		`sha256:${await sha256("../../../battery/dumgen/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts.txt")}`,
+		`sha256:${await sha256("../../../battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/production/knowledge-analysis/de/lexeme/prompt-source.ts.txt")}`,
 	);
 	expect(historicalFingerprints.schema).toBe(
-		`sha256:${await sha256("../../../battery/dumgen/docs/prototypes/german-relation-human-gate/frozen-source/knowledge-generation/de/schemas.ts.txt")}`,
+		`sha256:${await sha256("../../../battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/frozen-source/knowledge-generation/de/schemas.ts.txt")}`,
 	);
 	expect(historicalFingerprints.evaluator).toBe(
-		`sha256:${await sha256("../../../battery/dumgen/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts.txt")}`,
+		`sha256:${await sha256("../../../battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/frozen-source/promptsmith/laboratory/experiments/knowledge-analysis/de/evaluator.ts.txt")}`,
 	);
 	const modelPolicy = await Bun.file(
 		new URL(
-			"../../../battery/dumgen/docs/prototypes/german-relation-human-gate/frozen-source/ai-sdk/model-policy.ts.txt",
+			"../../../battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/frozen-source/ai-sdk/model-policy.ts.txt",
 			import.meta.url,
 		),
 	).text();

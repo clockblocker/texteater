@@ -11,8 +11,8 @@
  * the 25-sentence prose of the 2026-09-23 audit (E6).
  */
 import { parseArgs } from "node:util";
-import type { OperationTrace } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import type { OperationTrace } from "legacy-dumgen/types";
 import { createTfDemoOrchestrator } from "../server/linguisticOrchestration";
 import { createProductionDumgen } from "../server/modelExecution";
 

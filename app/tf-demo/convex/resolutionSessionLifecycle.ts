@@ -1,4 +1,4 @@
-import type { SentenceAnalysis } from "dumgen/types";
+import type { SentenceAnalysis } from "legacy-dumgen/types";
 import type { SpanHops } from "../server/inspectionCapture";
 import type { ResolutionContext } from "../server/linguisticOrchestration";
 import {

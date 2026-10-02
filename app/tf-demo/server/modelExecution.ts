@@ -1,5 +1,5 @@
-import { createDumgen, draftKnowledge } from "dumgen";
-import type { DumgenOptions } from "dumgen/types";
+import { createDumgen, draftKnowledge } from "legacy-dumgen";
+import type { DumgenOptions } from "legacy-dumgen/types";
 import { createOpenAIExecutor } from "promptsmith/openai";
 import { configurationSchema } from "promptsmith/schemas";
 import { createTypeSafeExecutor } from "promptsmith/typesafe";

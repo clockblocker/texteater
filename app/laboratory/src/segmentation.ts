@@ -1,5 +1,5 @@
-import type { Dumgen, ModelExchange, OperationTrace } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import type { Dumgen, ModelExchange, OperationTrace } from "legacy-dumgen/types";
 import { generation, operationStage } from "./model-trace";
 import type { SegmentationResponse } from "./shared/contract";
 

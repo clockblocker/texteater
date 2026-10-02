@@ -1,5 +1,4 @@
 import { type Infer, v } from "convex/values";
-import { selectGrammaticalAlternatives } from "dumgen/authored";
 import type * as Dumling from "dumling/types";
 import {
 	parseReadingKnowledge,
@@ -7,6 +6,7 @@ import {
 	projectSemanticRelations,
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { selectGrammaticalAlternatives } from "legacy-dumgen/authored";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,

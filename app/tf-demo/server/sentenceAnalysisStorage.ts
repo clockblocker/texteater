@@ -1,5 +1,5 @@
 import type { Infer } from "convex/values";
-import type { SentenceAnalysis, Slot } from "dumgen/types";
+import type { SentenceAnalysis, Slot } from "legacy-dumgen/types";
 import type { storedSentenceAnalysisValidator } from "../convex/model/validators";
 
 export type StoredSentenceAnalysis = Infer<

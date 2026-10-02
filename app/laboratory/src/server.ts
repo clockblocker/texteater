@@ -1,14 +1,14 @@
-import { createDumgen, DumgenFailure } from "dumgen";
+import * as Cause from "effect/Cause";
+import * as Effect from "effect/Effect";
+import * as Runtime from "effect/Runtime";
+import { createDumgen, DumgenFailure } from "legacy-dumgen";
 import type {
 	DumgenOptions,
 	ModelConfiguration,
 	ModelExchange,
 	ModelExecutor,
 	OperationTrace,
-} from "dumgen/types";
-import * as Cause from "effect/Cause";
-import * as Effect from "effect/Effect";
-import * as Runtime from "effect/Runtime";
+} from "legacy-dumgen/types";
 import { createOpenAIExecutor } from "promptsmith/openai";
 import { configurationSchema } from "promptsmith/schemas";
 import {

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import { type DumdictPlan, makeSurfaceId, type StoreRevision } from "dumdict";
-import { createDumgen } from "dumgen";
-import { executeOutput, rejectJudgment } from "dumgen/testing";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
+import { createDumgen } from "legacy-dumgen";
+import { executeOutput, rejectJudgment } from "legacy-dumgen/testing";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { ReadingEntryContextArgs } from "../convex/dumdictStorage/contextRequest";

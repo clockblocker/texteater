@@ -1,4 +1,4 @@
-import type { ModelExchange, OperationTrace } from "dumgen/types";
+import type { ModelExchange, OperationTrace } from "legacy-dumgen/types";
 import type { ClassificationStageResult } from "./shared/contract";
 
 export function attemptedPromptPaths(

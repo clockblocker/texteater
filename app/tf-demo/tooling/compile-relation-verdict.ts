@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 const workspace = resolve(import.meta.dir, "../../..");
 const gateDirectory = resolve(
 	workspace,
-	"battery/dumgen/docs/prototypes/german-relation-human-gate",
+	"battery/legacy-dumgen/docs/prototypes/german-relation-human-gate",
 );
 const manifestPath = resolve(gateDirectory, "candidate-manifest.json");
 const locationsPath = resolve(gateDirectory, "artifact-locations.json");
@@ -181,7 +181,7 @@ export async function currentRelationFingerprints() {
 			paths.push(`${directory}/${path}`);
 		return paths;
 	}
-	const dumgen = "battery/dumgen/src";
+	const dumgen = "battery/legacy-dumgen/src";
 	return {
 		prompt: await digest([`${dumgen}/generated/prompts.ts`]),
 		schema: await digest([
@@ -337,7 +337,7 @@ export async function compileRelationVerdict(
 		"verdict artifact path",
 	);
 	const verdictArtifactPath =
-		"battery/dumgen/docs/prototypes/german-relation-human-gate/verdict.json";
+		"battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/verdict.json";
 
 	let compiledVerdict: JsonRecord | null = null;
 	const invalidationReasons: string[] = [];

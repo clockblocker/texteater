@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import type { FunctionArgs, FunctionReturnType } from "convex/server";
 import { makeSurfaceId } from "dumdict";
-import { nounArticleReference } from "dumgen";
 import type * as Dumling from "dumling/types";
+import { nounArticleReference } from "legacy-dumgen";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { projectSentenceView } from "../convex/modules/text/sentenceView";

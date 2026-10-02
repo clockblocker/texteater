@@ -2,14 +2,14 @@ import { expect, test } from "bun:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { getExperiment } from "dumgen/development";
-import { grammarFixture } from "dumgen/testing";
+import { getExperiment } from "legacy-dumgen/development";
+import { grammarFixture } from "legacy-dumgen/testing";
 import type {
 	EvaluationExecutor,
 	OperationEvaluationRun,
 } from "promptsmith/evaluation";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
-import { runEvaluationCli } from "../../../battery/dumgen/cli/evaluate";
+import { runEvaluationCli } from "../../../battery/legacy-dumgen/cli/evaluate";
 import { createEvaluationService } from "../src/evaluations";
 
 test("CLI and Laboratory share cases, evaluation records and configured storage", async () => {

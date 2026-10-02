@@ -1,11 +1,11 @@
 import { makeSurfaceId } from "dumdict/planning";
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 import {
 	deriveGrammaticalComponent,
 	selectAuthoredArticle,
 	selectAuthoredReading,
-} from "dumgen/authored";
-import { parseUnit } from "dumling";
-import type * as Dumling from "dumling/types";
+} from "legacy-dumgen/authored";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,

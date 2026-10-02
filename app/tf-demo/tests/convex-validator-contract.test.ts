@@ -244,7 +244,7 @@ test("the persistence adapter does not load exhaustive domain schemas", async ()
 	);
 	const storageSource = storageSources.join("\n");
 
-	expect(storageSource).not.toContain('from "dumgen/schema"');
+	expect(storageSource).not.toContain('from "legacy-dumgen/schema"');
 	expect(storageSource).not.toContain('from "dumdict/schema"');
 	expect(storageSource).not.toContain('from "dumdict"');
 	expect(storageSource).not.toContain("zodOutputToConvex");
@@ -262,7 +262,7 @@ test("operational application modules use package-owned lightweight parsers", as
 	const operationalSource = operationalSources.join("\n");
 
 	expect(operationalSource).not.toMatch(
-		/from ["'](?:dumdict|dumgen|dumling|dumrel)\/(?:schema|dangerously-heavy-schema-tree|model-authoring)["']/u,
+		/from ["'](?:dumdict|legacy-dumgen|dumling|dumrel)\/(?:schema|dangerously-heavy-schema-tree|model-authoring)["']/u,
 	);
 });
 
@@ -291,7 +291,7 @@ test("the current Dumgen factory executes without package-relative file I/O", as
 			`
  const original = process.getBuiltinModule.bind(process);
  process.getBuiltinModule = id => id === "node:fs" ? {...original(id), readFileSync() {throw Error("filesystem unavailable");}} : original(id);
- const {createDumgen} = await import("dumgen");
+ const {createDumgen} = await import("legacy-dumgen");
  const Effect = await import("effect/Effect");
  const dumgen = createDumgen({execute: async () => {throw Error("controlled provider failure");}});
  const result = await Effect.runPromiseExit(dumgen.segment({sourceSentences: ["Die Banken sind geöffnet."]}));

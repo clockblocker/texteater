@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import type { SentenceAnalysis } from "dumgen/types";
+import type { SentenceAnalysis } from "legacy-dumgen/types";
 import { selectAnalysisTarget } from "../server/sentenceAnalysisSelection";
 import {
 	assertPiecesStored,

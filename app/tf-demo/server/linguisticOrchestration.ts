@@ -1,5 +1,12 @@
 import { makeSurfaceId } from "dumdict/runtime";
-import { validateEncounter } from "dumgen";
+import type * as Dumling from "dumling/types";
+import * as Cause from "effect/Cause";
+import * as Duration from "effect/Duration";
+import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
+import * as Fiber from "effect/Fiber";
+import * as Option from "effect/Option";
+import { validateEncounter } from "legacy-dumgen";
 import type {
 	ComparisonInput,
 	Dumgen,
@@ -10,14 +17,7 @@ import type {
 	SentenceAnalysis,
 	SentenceContext,
 	Task,
-} from "dumgen/types";
-import type * as Dumling from "dumling/types";
-import * as Cause from "effect/Cause";
-import * as Duration from "effect/Duration";
-import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import * as Fiber from "effect/Fiber";
-import * as Option from "effect/Option";
+} from "legacy-dumgen/types";
 import { inspectionStep } from "./inspectionCapture";
 import { analysisOutcomeOf, type IntakeRunRecorder } from "./intakeRun";
 import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";

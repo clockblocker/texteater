@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import type { OperationTrace } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import type { OperationTrace } from "legacy-dumgen/types";
 import { createInspectionCapture } from "../server/inspectionCapture";
 import {
 	createProductionDumgen,

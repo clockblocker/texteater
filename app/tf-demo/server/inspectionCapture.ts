@@ -1,10 +1,10 @@
-import type { OperationTrace } from "dumgen/types";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Option from "effect/Option";
 import * as Runtime from "effect/Runtime";
 import * as Tracer from "effect/Tracer";
+import type { OperationTrace } from "legacy-dumgen/types";
 import type {
 	CapturedInspectionStep,
 	InspectionStep,

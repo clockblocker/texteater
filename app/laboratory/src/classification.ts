@@ -1,16 +1,16 @@
 import { createDumdictService } from "dumdict";
 import { createMemoryStorage } from "dumdict/memory";
-import { DumgenFailure, validateEncounter } from "dumgen";
+import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
+import { DumgenFailure, validateEncounter } from "legacy-dumgen";
 import type {
 	ComparisonInput,
 	Dumgen,
 	Encounter,
 	ModelExchange,
 	OperationTrace,
-} from "dumgen/types";
-import { parseUnit } from "dumling";
-import type * as Dumling from "dumling/types";
-import * as Effect from "effect/Effect";
+} from "legacy-dumgen/types";
 import { stableJson } from "promptsmith";
 import {
 	attemptedPromptPaths,

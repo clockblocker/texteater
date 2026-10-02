@@ -1,6 +1,6 @@
 import type { Infer } from "convex/values";
-import { splitFusedWords, unsplitFusedWordIn } from "dumgen/authored";
-import type { SegmentedSentence, SentenceAnalysis } from "dumgen/types";
+import { splitFusedWords, unsplitFusedWordIn } from "legacy-dumgen/authored";
+import type { SegmentedSentence, SentenceAnalysis } from "legacy-dumgen/types";
 import type {
 	storedSegmentInputValidator,
 	storedSegmentValidator,

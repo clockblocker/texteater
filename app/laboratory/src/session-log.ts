@@ -1,7 +1,7 @@
 import { appendFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
-import { defaultRunOutputDirectory } from "dumgen/development";
-import type { ModelExchange, OperationTrace } from "dumgen/types";
+import { defaultRunOutputDirectory } from "legacy-dumgen/development";
+import type { ModelExchange, OperationTrace } from "legacy-dumgen/types";
 
 export type LaboratoryOperation = "segmentation-chain" | "click-resolution";
 

@@ -1,10 +1,10 @@
 import type { Infer } from "convex/values";
-import type { OperationTrace, SentenceOutcome } from "dumgen/types";
-import { DumgenFailure } from "dumgen/validation";
 import * as Cause from "effect/Cause";
 import * as Exit from "effect/Exit";
 import * as Option from "effect/Option";
 import * as Runtime from "effect/Runtime";
+import type { OperationTrace, SentenceOutcome } from "legacy-dumgen/types";
+import { DumgenFailure } from "legacy-dumgen/validation";
 import type { intakeRunValidator } from "../convex/model/intakeRuns";
 
 export type IntakeRun = Infer<typeof intakeRunValidator>;

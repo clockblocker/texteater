@@ -9,7 +9,7 @@ import {
 	selectPhrasemeKind,
 	selectRoute,
 	targetOf,
-} from "dumgen";
+} from "legacy-dumgen";
 import type {
 	LexemeTarget as AnalysisTarget,
 	Fusion,
@@ -18,7 +18,7 @@ import type {
 	PhrasemeTarget,
 	AnalyzedSegment as Segment,
 	SentenceAnalysis as SegmentedSentence,
-} from "dumgen/types";
+} from "legacy-dumgen/types";
 import {
 	ReaderPlainSegment,
 	ReaderSegment,

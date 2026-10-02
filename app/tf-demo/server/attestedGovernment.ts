@@ -1,5 +1,5 @@
-import { slotsAt } from "dumgen/authored";
-import type { GovernedPrepositionDraft } from "dumgen/types";
+import { slotsAt } from "legacy-dumgen/authored";
+import type { GovernedPrepositionDraft } from "legacy-dumgen/types";
 import {
 	fromStoredSentenceAnalysis,
 	type StoredSentenceAnalysis,

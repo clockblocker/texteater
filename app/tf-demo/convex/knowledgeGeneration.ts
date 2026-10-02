@@ -1,7 +1,7 @@
 import { type Infer, v } from "convex/values";
 import type { ApplyGeneratedKnowledgeRequest } from "dumdict/planning";
-import type { KnowledgeFailure, KnowledgeRequest } from "dumgen/types";
 import { translationLanguageValues } from "dumrel";
+import type { KnowledgeFailure, KnowledgeRequest } from "legacy-dumgen/types";
 import {
 	answeredRelationKinds,
 	knowledgeRequestComplete,

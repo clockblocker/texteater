@@ -1,6 +1,10 @@
 import { expect, jest, test } from "bun:test";
-import { createDumgen, DumgenFailure } from "dumgen";
-import { pipelineFixture } from "dumgen/testing";
+import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
+import * as Exit from "effect/Exit";
+import * as Fiber from "effect/Fiber";
+import { createDumgen, DumgenFailure } from "legacy-dumgen";
+import { pipelineFixture } from "legacy-dumgen/testing";
 import type {
 	Dumgen,
 	DumgenOptions,
@@ -9,11 +13,7 @@ import type {
 	MemberRole,
 	ModelExchange,
 	SentenceAnalysis,
-} from "dumgen/types";
-import type * as Dumling from "dumling/types";
-import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import * as Fiber from "effect/Fiber";
+} from "legacy-dumgen/types";
 import { internal } from "../convex/_generated/api";
 import type { ActionCtx } from "../convex/_generated/server";
 import { applyTrustedReadingKnowledgeChange } from "../convex/model/readingKnowledge";

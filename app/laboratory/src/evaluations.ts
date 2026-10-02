@@ -2,8 +2,8 @@ import {
 	defaultRunOutputDirectory,
 	evaluateExperiment,
 	listExperiments,
-} from "dumgen/development";
-import type { DumgenOptions } from "dumgen/types";
+} from "legacy-dumgen/development";
+import type { DumgenOptions } from "legacy-dumgen/types";
 import type {
 	EvaluationExecutor,
 	ModelConfiguration,

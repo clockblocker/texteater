@@ -1,6 +1,6 @@
-import type { GovernedPrepositionDraft } from "dumgen/types";
 import { translationLanguageValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import type { GovernedPrepositionDraft } from "legacy-dumgen/types";
 import {
 	attestedGovernment,
 	uncoveredGovernment,

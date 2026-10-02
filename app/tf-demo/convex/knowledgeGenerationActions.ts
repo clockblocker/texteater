@@ -1,8 +1,8 @@
 "use node";
 
 import { v } from "convex/values";
-import type { KnowledgeInput, KnowledgeProduction } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import type { KnowledgeInput, KnowledgeProduction } from "legacy-dumgen/types";
 import {
 	inspected,
 	inspectionStep,

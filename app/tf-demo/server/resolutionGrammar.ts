@@ -1,6 +1,6 @@
-import type { Encounter } from "dumgen/types";
-import { validateEncounter } from "dumgen/validation";
 import type * as Dumling from "dumling/types";
+import type { Encounter } from "legacy-dumgen/types";
+import { validateEncounter } from "legacy-dumgen/validation";
 import {
 	germanGovernorKinds,
 	germanVerbalKinds,

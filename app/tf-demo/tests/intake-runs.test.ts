@@ -1,8 +1,8 @@
 import { expect, spyOn, test } from "bun:test";
 import { v } from "convex/values";
-import { createDumgen, DumgenFailure } from "dumgen";
-import type { Dumgen, DumgenOptions } from "dumgen/types";
 import * as Effect from "effect/Effect";
+import { createDumgen, DumgenFailure } from "legacy-dumgen";
+import type { Dumgen, DumgenOptions } from "legacy-dumgen/types";
 import type { Questions, SystemOneResult } from "promptsmith/typesafe";
 import { api } from "../convex/_generated/api";
 import { internalMutation } from "../convex/_generated/server";

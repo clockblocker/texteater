@@ -1,6 +1,6 @@
 import { type Infer, v } from "convex/values";
-import { germanFusionOneLiner } from "dumgen/authored";
 import { checkIfGrundform, parseUnit } from "dumling";
+import { germanFusionOneLiner } from "legacy-dumgen/authored";
 import {
 	attestationMemberValidator,
 	familyValidator,

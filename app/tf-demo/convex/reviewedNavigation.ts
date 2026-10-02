@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { selectNounHeadingArticle } from "dumgen/authored";
+import { selectNounHeadingArticle } from "legacy-dumgen/authored";
 import { readingIdentityKey } from "../server/linguisticIdentity";
 import {
 	parseGermanLemma,

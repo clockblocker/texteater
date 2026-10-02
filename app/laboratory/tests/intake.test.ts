@@ -1,12 +1,12 @@
 import { expect, test } from "bun:test";
-import { createDumgen } from "dumgen";
-import { intakeFixture } from "dumgen/testing";
 import { Effect } from "effect";
+import { createDumgen } from "legacy-dumgen";
+import { intakeFixture } from "legacy-dumgen/testing";
 import { segmentForLaboratory } from "../src/segmentation.js";
 
 test("Laboratory admits English intake with a complete operation trace", async () => {
-	const operations: import("dumgen/types").OperationTrace[] = [];
-	const exchanges: import("dumgen/types").ModelExchange[] = [];
+	const operations: import("legacy-dumgen/types").OperationTrace[] = [];
+	const exchanges: import("legacy-dumgen/types").ModelExchange[] = [];
 	const dumgen = createDumgen({
 		...intakeFixture({
 			items: [

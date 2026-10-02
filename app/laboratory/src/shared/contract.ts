@@ -1,3 +1,4 @@
+import type * as Dumling from "dumling/types";
 import type {
 	Segment as DumgenSegment,
 	SegmentedSentence as DumgenSentence,
@@ -5,8 +6,7 @@ import type {
 	Encounter,
 	ModelExchange,
 	OperationTrace,
-} from "dumgen/types";
-import type * as Dumling from "dumling/types";
+} from "legacy-dumgen/types";
 export type Attestation = Dumling.Attestation<"de">;
 export type Lemma = Dumling.Lemma<"de">;
 export type Surface = Dumling.Surface<"de">;

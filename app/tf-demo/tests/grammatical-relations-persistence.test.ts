@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
-import { nounArticleReference } from "dumgen";
 import type * as Dumling from "dumling/types";
+import { nounArticleReference } from "legacy-dumgen";
 import { api } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import {

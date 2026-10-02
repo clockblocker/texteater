@@ -4,8 +4,8 @@ import {
 	resolvedWordAt,
 	selectIdentity,
 	targetOf,
-} from "dumgen";
-import type { SentenceAnalysis } from "dumgen/types";
+} from "legacy-dumgen";
+import type { SentenceAnalysis } from "legacy-dumgen/types";
 import { type StoredSegment, storedSegmentRanges } from "./storedSegments";
 
 /** Selection reads offsets, which a stored Segment's text alone determines. */

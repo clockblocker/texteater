@@ -1,8 +1,8 @@
-import { splitFusedWords } from "dumgen/authored";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { splitFusedWords } from "legacy-dumgen/authored";
 import {
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,

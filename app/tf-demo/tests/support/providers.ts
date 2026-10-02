@@ -1,4 +1,4 @@
-import type { DumgenOptions, ModelRequest } from "dumgen/types";
+import type { DumgenOptions, ModelRequest } from "legacy-dumgen/types";
 
 type Fixture = Pick<DumgenOptions, "execute" | "judge">;
 
