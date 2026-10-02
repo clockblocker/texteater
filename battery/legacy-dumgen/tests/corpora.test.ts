@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { required } from "common-utils";
-import { createDumgen, validateEncounter } from "dumgen";
-import { getExperiment, listExperiments } from "dumgen/development";
+import { createDumgen, validateEncounter } from "legacy-dumgen";
+import { getExperiment, listExperiments } from "legacy-dumgen/development";
 import { Effect } from "effect";
 import { assembleSystemPrompt } from "promptsmith";
 import { germanFusionTable } from "../src/concrete-lang/de/fusion-entries.js";

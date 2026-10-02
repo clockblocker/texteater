@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
-import { createDumgen, validateEncounter } from "dumgen";
-import { getExperiment } from "dumgen/development";
-import { comparisonInputSchema } from "dumgen/schemas";
+import { createDumgen, validateEncounter } from "legacy-dumgen";
+import { getExperiment } from "legacy-dumgen/development";
+import { comparisonInputSchema } from "legacy-dumgen/schemas";
 import { authoredMembers } from "dumspec/inventories";
 import { Effect } from "effect";
 import pronounProjection from "../src/generated/grammar-cases/lexeme/pronoun.json";

@@ -1,0 +1,21 @@
+{
+	"extends": "../../tooling/typescript/battery.json",
+	"include": [
+		"src/**/*.ts",
+		"tests/**/*.ts",
+		"codegen/**/*.ts",
+		"cli/**/*.ts"
+	],
+	"compilerOptions": {
+		"paths": {
+			"dumling/schema/*": ["../dumling/src/generated/schemas/*"],
+			"dumrel/schema": ["../dumrel/src/schemas.ts"],
+			"legacy-dumgen": ["./src/index.ts"],
+			"legacy-dumgen/authored": ["./src/authored.ts"],
+			"legacy-dumgen/development": ["./src/development.ts"],
+			"legacy-dumgen/schemas": ["./src/schemas.ts"],
+			"legacy-dumgen/types": ["./src/types.ts"],
+			"legacy-dumgen/validation": ["./src/validation.ts"]
+		}
+	}
+}

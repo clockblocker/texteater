@@ -3,7 +3,7 @@ import {
 	createDumgen,
 	selectGrammaticalAlternatives,
 	validateEncounter,
-} from "dumgen";
+} from "legacy-dumgen";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
@@ -183,7 +183,7 @@ test("covered Knowledge and reviewed claims require no inventory preload or prov
 		reading: member.reading,
 		request: { definition: null, semanticRelations: { synonym: null } },
 	};
-	const { knowledgeInputSchema } = await import("dumgen/schemas");
+	const { knowledgeInputSchema } = await import("legacy-dumgen/schemas");
 	const result = await Effect.runPromise(
 		createDumgen({
 			judge: rejectJudgment,

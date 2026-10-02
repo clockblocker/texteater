@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { getExperiment } from "dumgen/development";
+import { getExperiment } from "legacy-dumgen/development";
 import { Effect } from "effect";
 import { grammarFixture } from "../src/testing.js";
 import type { OperationTrace } from "../src/types.js";

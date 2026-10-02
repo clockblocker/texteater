@@ -6,7 +6,7 @@ import {
 	disagreementsFileName,
 	evaluateExperiment,
 	reviewEvaluationRun,
-} from "dumgen/development";
+} from "legacy-dumgen/development";
 import { loadSpecRecords } from "dumspec";
 import {
 	projectGrammarCases,

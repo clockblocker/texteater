@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { getExperiment } from "dumgen/development";
+import { getExperiment } from "legacy-dumgen/development";
 import { Effect } from "effect";
 import { governablePrepositionLemma } from "../src/concrete-lang/de/governable-prepositions.js";
 import { grammarFixture } from "../src/testing.js";

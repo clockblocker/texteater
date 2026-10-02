@@ -4,9 +4,9 @@ import {
 	createDumgen,
 	selectGrammaticalAlternatives,
 	validateEncounter,
-} from "dumgen";
-import { comparisonInputSchema } from "dumgen/schemas";
-import type { ComparisonInput, Encounter } from "dumgen/types";
+} from "legacy-dumgen";
+import { comparisonInputSchema } from "legacy-dumgen/schemas";
+import type { ComparisonInput, Encounter } from "legacy-dumgen/types";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { authoredMembers } from "dumspec/inventories";
@@ -41,7 +41,7 @@ const encounter = {
 	target: { family: "Lexeme", kind: "NOUN", memberSegmentIndices: [0] },
 } as const satisfies Encounter<"de">;
 function controlled(output: unknown) {
-	const calls: import("dumgen/types").ModelExchange["request"][] = [];
+	const calls: import("legacy-dumgen/types").ModelExchange["request"][] = [];
 	return {
 		calls,
 		dumgen: createDumgen({
@@ -72,7 +72,7 @@ async function tag(task: Effect.Effect<unknown, unknown>) {
 		: "Success";
 }
 test("direct targets and classified targets share one grammar path", async () => {
-	const calls: import("dumgen/types").ModelExchange["request"][] = [];
+	const calls: import("legacy-dumgen/types").ModelExchange["request"][] = [];
 	const dumgen = createDumgen({
 		judge: (request, options) =>
 			Object.hasOwn(request.questions, "route")
