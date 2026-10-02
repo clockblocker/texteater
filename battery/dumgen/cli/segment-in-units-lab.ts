@@ -13,6 +13,14 @@
  *   bun run segment-in-units-lab noise --run <runId> [--reps 3] [--offset 1000]
  *   bun run segment-in-units-lab sweep --run <runId> [--policy <baseline>] [--replay <runId>[:policy]]
  *   bun run segment-in-units-lab ledger [--table]
+ *   bun run segment-in-units-lab round [--repin --reason "<why>"]
+ *   bun run segment-in-units-lab round --open <id> --cap <tokens> --stop-line <tokens> [--note "<text>"]
+ *
+ * `run`, `noise` and `limit-qpc` count against the current round
+ * (`lab/round.ts`): `--estimate` prices a run offline and stops, a live run
+ * refuses to start when its projected spend would cross the round's stop
+ * line or when dumspec's prompt inputs moved since the round was pinned
+ * (`--repin` accepts today's dumspec), and every run stops at the line.
  *
  * Frozen sets, raw runs and the answer cache live under
  * `.runs/segment-in-units-lab/` (gitignored). Each run's manifest, outcomes
@@ -108,6 +116,27 @@ import {
 	type RunManifest,
 } from "../src/segment-in-units/lab/provenance.js";
 import {
+	currentPin,
+	enterRound,
+	guardProjectedSpend,
+	type Pin,
+	pinDrift,
+	pinText,
+	priceProjection,
+	projectedSpend,
+	projectionText,
+	type Round,
+	readRounds,
+	repinned,
+	roundOf,
+	roundSpend,
+	roundStatus,
+	roundsPath,
+	standInAnswers,
+	stopLineOf,
+	writeRounds,
+} from "../src/segment-in-units/lab/round.js";
+import {
 	conformTo734,
 	rerouted,
 } from "../src/segment-in-units/lab/ruling734.js";
@@ -132,11 +161,7 @@ const cli = "cli/segment-in-units-lab.ts";
 const labRoot = join(packageRoot, ".runs", "segment-in-units-lab");
 const evidenceRoot = join(packageRoot, "evidence", "segment-in-units-lab");
 const ledgerPath = join(evidenceRoot, "ledger.jsonl");
-/**
- * The jev stop line in fresh input tokens over the whole ledger, as set for
- * rounds 1 and 2 of #744; `--token-budget` moves it for a new round.
- */
-const defaultTokenBudget = 343_000_000;
+const roundBook = roundsPath(evidenceRoot);
 
 const { positionals, values } = parseArgs({
 	args: Bun.argv.slice(2),
@@ -166,6 +191,13 @@ const { positionals, values } = parseArgs({
 		model: { type: "string" },
 		"allow-floating-model": { type: "boolean", default: false },
 		"token-budget": { type: "string" },
+		estimate: { type: "boolean", default: false },
+		repin: { type: "boolean", default: false },
+		reason: { type: "string" },
+		open: { type: "string" },
+		cap: { type: "string" },
+		"stop-line": { type: "string" },
+		note: { type: "string" },
 		offset: { type: "string" },
 		noise: { type: "string" },
 		replay: { type: "string" },
@@ -270,8 +302,44 @@ function guardDirty(provenance: Provenance) {
 }
 
 /**
+ * The round a command counts against and the dumspec state it reads. A
+ * live command refuses drifted prompt inputs unless `--repin`; an offline
+ * one reports them.
+ */
+async function account(live: boolean, command: string) {
+	const entered = await enterRound({
+		evidenceRoot,
+		repository,
+		live,
+		repin: values.repin,
+		reason: values.reason ?? `${command} --repin`,
+	});
+	if (entered.warning) console.warn(`\n*** ${entered.warning}\n`);
+	const stopLine = stopLineOf(entered.round, values["token-budget"]);
+	const spent = roundSpend(
+		await readLedger(ledgerPath),
+		entered.round.id,
+	).jevFreshInputTokens;
+	return { ...entered, stopLine, spent };
+}
+
+/** What `--estimate` prints: the projection against what the round has left. */
+function printEstimate(
+	round: Round,
+	spent: number,
+	stopLine: number,
+	projected: number,
+) {
+	console.log(
+		`round ${round.id}: spent ${spent}, this run ${projected}, stop line ${stopLine}: ${spent + projected <= stopLine ? "fits" : "CROSSES THE STOP LINE"}; nothing was asked`,
+	);
+}
+
+/**
  * Runs an arm and writes everything a run leaves: the raw run, the
- * manifest, the outcomes, the ledger line and the summary.
+ * manifest, the outcomes, the ledger line and the summary. A live run first
+ * prices itself offline and refuses to cross the round's stop line;
+ * `--estimate` stops after the price.
  */
 async function execute(args: {
 	readonly kind: "run" | "noise";
@@ -294,15 +362,49 @@ async function execute(args: {
 	const set = await loadSet(labRoot, args.setName);
 	let cases = subset(set, args.subsetName);
 	if (args.limit !== null) cases = cases.slice(0, args.limit);
-	const tokenBudget = Number(values["token-budget"] ?? defaultTokenBudget);
-	const spentBefore = ledgerTotals(
-		await readLedger(ledgerPath),
-	).jevFreshInputTokens;
+	const live = !values.offline;
+	const {
+		round,
+		pin,
+		stopLine,
+		spent: spentBefore,
+	} = await account(live && !values.estimate, args.kind);
+	if (live || values.estimate) {
+		const projecting = new Jev({
+			cacheDirectory: join(labRoot, "cache"),
+			concurrency: Number(values.concurrency),
+			...(values.qpc ? { questionsPerCall: Number(values.qpc) } : {}),
+			...(args.model ? { model: args.model } : {}),
+			allowFloatingModel: values["allow-floating-model"],
+			offline: true,
+			project: standInAnswers,
+		});
+		await runArm({
+			runId: "projection",
+			arm,
+			options: args.options,
+			set,
+			subset: args.subsetName,
+			cases,
+			repetitions: args.repetitions,
+			repetitionOffset: args.repetitionOffset,
+			jev: projecting,
+			concurrency: Number(values.concurrency),
+			gitHead: args.provenance.gitHead,
+		});
+		const priced = priceProjection(projecting.projection);
+		console.log(projectionText(priced));
+		if (values.estimate) {
+			printEstimate(round, spentBefore, stopLine, projectedSpend(priced));
+			return undefined;
+		}
+		guardProjectedSpend({ round, spent: spentBefore, stopLine, priced });
+	}
 	let spentNow = 0;
 	const beforeSpend = () => {
-		if (spentBefore + spentNow >= tokenBudget)
+		if (spentBefore + spentNow >= stopLine)
 			throw Error(
-				`jev token budget line reached: ${spentBefore + spentNow} of ${tokenBudget} fresh input tokens`,
+				`Round ${round.id} reached its stop line: ${spentBefore + spentNow} of ${stopLine} fresh jev input tokens`,
 			);
 	};
 	const jev = new Jev({
@@ -334,7 +436,7 @@ async function execute(args: {
 		.filter(Boolean)
 		.join("--");
 	console.log(
-		`${runId}: ${cases.length} cases × ${args.repetitions} (repetitions from ${args.repetitionOffset}), model ${jev.model}, ledger so far ${spentBefore} fresh jev input tokens`,
+		`${runId}: ${cases.length} cases × ${args.repetitions} (repetitions from ${args.repetitionOffset}), model ${jev.model}, round ${round.id} so far ${spentBefore} of ${stopLine} fresh jev input tokens, ${pinText(pin)}`,
 	);
 	let last = 0;
 	const labRun = await runArm({
@@ -391,6 +493,8 @@ async function execute(args: {
 		repetitions: args.repetitions,
 		repetitionOffset: args.repetitionOffset,
 		...(args.baseline ? { baseline: args.baseline } : {}),
+		round: round.id,
+		pin,
 	};
 	await writeManifest(evidenceRoot, manifest, patch);
 	const outcomes = outcomesOf(labRun, plainCases(set.cases));
@@ -403,6 +507,8 @@ async function execute(args: {
 		runId,
 		at: new Date().toISOString(),
 		command: args.kind,
+		round: round.id,
+		pin: pin.hash,
 		arm: arm.id,
 		options: args.options,
 		set: set.name,
@@ -427,7 +533,7 @@ async function execute(args: {
 
 async function run() {
 	const provenance = await provenanceOf({ packageRoot, repository, cli });
-	guardDirty(provenance);
+	if (!values.estimate) guardDirty(provenance);
 	if (values.parent && !(await readManifest(evidenceRoot, values.parent)))
 		console.warn(
 			`--parent ${values.parent} has no committed manifest; the table cannot compare against it`,
@@ -468,6 +574,14 @@ async function replayRun() {
 		original.setHash,
 	);
 	const byId = new Map(set.cases.map((labCase) => [labCase.id, labCase]));
+	// Offline: a pin drift is reported, never refused.
+	const { pin } = await account(false, "replay");
+	const recordedPin = (await readManifest(evidenceRoot, runId))?.pin;
+	const drift = recordedPin ? pinDrift(recordedPin, pin) : [];
+	if (drift.length > 0)
+		console.warn(
+			`\n*** ${runId} read dumspec at ${pinText(recordedPin as Pin)}; today's ${pinText(pin)} differs in ${drift.join(", ")}, so requests built from them miss the cache\n`,
+		);
 	const jev = new Jev({
 		cacheDirectory: join(labRoot, "cache"),
 		model: original.model,
@@ -560,7 +674,7 @@ async function noise() {
 			`--run ${baselineId} needs a committed manifest and outcomes; runs made before manifests cannot be rerun exactly`,
 		);
 	const provenance = await provenanceOf({ packageRoot, repository, cli });
-	guardDirty(provenance);
+	if (!values.estimate) guardDirty(provenance);
 	const drift = [
 		provenance.codeHash !== baseline.codeHash ? "code" : "",
 		provenance.dumspecHash !== baseline.dumspecHash ? "dumspec" : "",
@@ -579,7 +693,7 @@ async function noise() {
 		repetitionOffset < baseline.repetitionOffset + baseline.repetitions
 	)
 		throw Error("--offset must lie past the baseline's repetitions");
-	const { manifest, outcomes } = await execute({
+	const executed = await execute({
 		kind: "noise",
 		armId: baseline.arm,
 		options: baseline.options,
@@ -594,6 +708,8 @@ async function noise() {
 		provenance,
 		model: baseline.modelRequested,
 	});
+	if (!executed) return;
+	const { manifest, outcomes } = executed;
 	const promptsMatch =
 		stableJson(manifest.promptHashes) === stableJson(baseline.promptHashes);
 	const floors = Object.fromEntries(
@@ -1116,6 +1232,7 @@ async function compare() {
 		const entry: CompareEntry = {
 			at: new Date().toISOString(),
 			command: "compare",
+			round: roundOf(await readRounds(roundBook)).id,
 			left: { runId: left.runId, policy: left.policy },
 			right: { runId: right.runId, policy: right.policy },
 			subset: values.subset ?? null,
@@ -1322,8 +1439,82 @@ async function ledger() {
 		return;
 	}
 	const totals = ledgerTotals(entries);
+	const round = roundOf(await readRounds(roundBook));
+	const status = roundStatus(round, entries);
 	console.log(
-		`${entries.length} entries; jev fresh input ${totals.jevFreshInputTokens} tokens (stop line ${values["token-budget"] ?? defaultTokenBudget}); luna fresh ${totals.lunaFreshCalls} calls, ${totals.lunaFreshInputTokens} input / ${totals.lunaFreshOutputTokens} output tokens`,
+		`${entries.length} entries; jev fresh input ${totals.jevFreshInputTokens} tokens over every round; luna fresh ${totals.lunaFreshCalls} calls, ${totals.lunaFreshInputTokens} input / ${totals.lunaFreshOutputTokens} output tokens`,
+	);
+	console.log(
+		`round ${round.id}: ${status.jevFreshInputTokens} fresh jev input tokens in ${status.lines} lines, ${status.leftToStopLine} left to the stop line at ${status.stopLineTokens}`,
+	);
+}
+
+/**
+ * The current round: what it has spent and has left, and its pin against
+ * today's dumspec. `--repin` pins it at today's dumspec, `--open` opens a
+ * new current round pinned at it.
+ */
+async function roundCommand() {
+	const book = await readRounds(roundBook);
+	const pin = await currentPin(repository);
+	if (values.open) {
+		const capTokens = Number(values.cap);
+		const stopLine = Number(values["stop-line"]);
+		if (!(capTokens > 0) || !(stopLine > 0))
+			throw Error(
+				"--open needs --cap and --stop-line in fresh jev input tokens",
+			);
+		if (book.rounds.some((round) => round.id === values.open))
+			throw Error(`Round ${values.open} exists already`);
+		if (stopLine > capTokens)
+			throw Error(
+				`--stop-line ${stopLine} is past the cap of ${capTokens} tokens`,
+			);
+		await writeRounds(roundBook, {
+			current: values.open,
+			rounds: [
+				...book.rounds,
+				{
+					id: values.open,
+					opened: new Date().toISOString().slice(0, 10),
+					note: values.note ?? "",
+					capTokens,
+					stopLineTokens: stopLine,
+					pin,
+					repins: [],
+				},
+			],
+		});
+		console.log(`opened round ${values.open}, pinned at ${pinText(pin)}`);
+		return;
+	}
+	let round = roundOf(book);
+	const drift = pinDrift(round.pin, pin);
+	if (values.repin && drift.length > 0) {
+		const next = repinned(
+			book,
+			round.id,
+			pin,
+			values.reason ?? "round --repin",
+		);
+		await writeRounds(roundBook, next);
+		round = roundOf(next);
+		console.log(`re-pinned round ${round.id} at ${pinText(pin)}`);
+	}
+	const status = roundStatus(
+		round,
+		await readLedger(ledgerPath),
+		stopLineOf(round, values["token-budget"]),
+	);
+	console.log(
+		[
+			`round ${round.id} (opened ${round.opened}), in fresh jev input tokens`,
+			`  spent     ${status.jevFreshInputTokens} in ${status.lines} ledger lines, ${status.jevFreshCalls} fresh calls${status.lunaFreshCalls > 0 ? `, ${status.lunaFreshCalls} fresh Luna calls` : ""}`,
+			`  stop line ${status.stopLineTokens}: ${status.leftToStopLine} left`,
+			`  cap       ${status.capTokens}: ${status.leftToCap} left, of which ${status.reservedForFinal} are kept for the final held-out run`,
+			`  pinned    ${pinText(round.pin)} at ${round.pin.at}${round.repins.length > 0 ? `, re-pinned ${round.repins.length}×` : ""}`,
+			`  today     ${pinText(pin)}: ${pinDrift(round.pin, pin).length === 0 ? "matches the pin" : `differs in ${pinDrift(round.pin, pin).join(", ")}; live runs refuse without --repin`}`,
+		].join("\n"),
 	);
 }
 
@@ -1446,12 +1637,31 @@ async function limitQuestionsPerCall() {
 	const cases = [...set.cases]
 		.sort((a, b) => pieces(b) - pieces(a))
 		.slice(0, Number(values.limit ?? 12));
-	const tokenBudget = Number(values["token-budget"] ?? defaultTokenBudget);
-	if (
-		ledgerTotals(await readLedger(ledgerPath)).jevFreshInputTokens >=
-		tokenBudget
-	)
-		throw Error("jev token budget line reached");
+	const { round, pin, stopLine, spent } = await account(
+		!values.estimate,
+		"limit-qpc",
+	);
+	const sizes = (values.sizes ?? "").split(",").map(Number);
+	const projecting = new Jev({
+		cacheDirectory: join(labRoot, "cache"),
+		...(values.model ? { model: values.model } : {}),
+		allowFloatingModel: values["allow-floating-model"],
+		offline: true,
+		project: standInAnswers,
+	});
+	await questionsPerCall({
+		cases,
+		jev: projecting,
+		sizes,
+		baselineRepetitions: 3,
+	});
+	const priced = priceProjection(projecting.projection);
+	console.log(projectionText(priced));
+	if (values.estimate) {
+		printEstimate(round, spent, stopLine, projectedSpend(priced));
+		return;
+	}
+	guardProjectedSpend({ round, spent, stopLine, priced });
 	const provenance = await provenanceOf({ packageRoot, repository, cli });
 	const calls: CallRecord[] = [];
 	let fresh = 0;
@@ -1460,6 +1670,12 @@ async function limitQuestionsPerCall() {
 		concurrency: Number(values.concurrency),
 		...(values.model ? { model: values.model } : {}),
 		allowFloatingModel: values["allow-floating-model"],
+		beforeSpend: () => {
+			if (spent + fresh >= stopLine)
+				throw Error(
+					`Round ${round.id} reached its stop line: ${spent + fresh} of ${stopLine} fresh jev input tokens`,
+				);
+		},
 		onSpend: (tokens) => {
 			fresh += tokens;
 		},
@@ -1467,7 +1683,7 @@ async function limitQuestionsPerCall() {
 	const results = await questionsPerCall({
 		cases,
 		jev,
-		sizes: (values.sizes ?? "").split(",").map(Number),
+		sizes,
 		baselineRepetitions: 3,
 	});
 	console.log(
@@ -1501,6 +1717,8 @@ async function limitQuestionsPerCall() {
 		runId,
 		at: new Date().toISOString(),
 		command: "limit-qpc",
+		round: round.id,
+		pin: pin.hash,
 		set: set.name,
 		setHash: set.hash,
 		cases: cases.length,
@@ -1523,7 +1741,8 @@ else if (command === "noise") await noise();
 else if (command === "sweep") await sweep();
 else if (command === "ledger") await ledger();
 else if (command === "limit-qpc") await limitQuestionsPerCall();
+else if (command === "round") await roundCommand();
 else
 	throw Error(
-		"Commands: freeze, run, replay, report, compare, noise, sweep, ledger, limit-qpc",
+		"Commands: freeze, run, replay, report, compare, noise, sweep, ledger, round, limit-qpc",
 	);

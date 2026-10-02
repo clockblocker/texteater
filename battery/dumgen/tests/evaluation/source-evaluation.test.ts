@@ -1,15 +1,15 @@
 import { expect, test } from "bun:test";
-import type {
-	SegmentInUnitsInput,
-	SegmentInUnitsOutput,
-} from "../../src/evaluation/spec-corpus/segment-in-units.js";
 import {
 	evaluateSource,
 	evaluateSourceAndUnits,
 	type GermanSource,
 	germanSourceOf,
 	sourceSpans,
-} from "../../src/segment-in-units/de/source-evaluation.js";
+} from "../../src/evaluation/source-evaluation.js";
+import type {
+	SegmentInUnitsInput,
+	SegmentInUnitsOutput,
+} from "../../src/evaluation/spec-corpus/segment-in-units.js";
 
 const route = { language: "de", family: "Lexeme", kind: "NOUN" };
 const gold: SegmentInUnitsInput = {

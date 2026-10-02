@@ -1,0 +1,23 @@
+{
+	"current": "2026-10-02-5usd",
+	"rounds": [
+		{
+			"id": "2026-10-02-5usd",
+			"opened": "2026-10-02",
+			"note": "The 2026-10-02 plan (#701, #845): tf-demo compiles and production German segment.inUnits. The main session granted 119,047,619 fresh jev input tokens; ordinary runs stop at 104,000,000, and the last 15,047,619 are kept for the final held-out run (#852). The cache fill of fa59d50e (6,890,292 tokens) opened it.",
+			"capTokens": 119047619,
+			"stopLineTokens": 104000000,
+			"pin": {
+				"dumspecCommit": "a95cecf17658757d7d650e0aca364cfd461627e9",
+				"dumspecDirty": false,
+				"hash": "5dd8dd10a89667c611dbf2f0e482650bdc8484ad70dbd9dd38a3fd53377e1cc5",
+				"inputs": {
+					"inventories": "8d7cb8423e919a11234c8a235f477dc501f0ca26f2760e7ea30b7b9877088688",
+					"rules": "ae68eb65fc0d93d2768648a585e6b0690913b344a12a72f8187d3691faac5ed9"
+				},
+				"at": "2026-10-02T09:24:34.056Z"
+			},
+			"repins": []
+		}
+	]
+}

@@ -9,6 +9,12 @@
  * The model is pinned: the client requests a jev version, refuses an answer
  * from any other, and so keys the cache by the model that answered. A
  * floating alias (`jev-latest`) needs `allowFloatingModel`.
+ *
+ * A projecting client (`project`) asks nothing and writes nothing: it
+ * answers a cache miss from the same request's answer at another
+ * repetition, or else with the projector's stand-in answers, and keeps
+ * every miss in `projection`, so a live run can price itself first
+ * (`lab/round.ts`).
  */
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -34,6 +40,43 @@ export type CallRecord = {
 	readonly cached: boolean;
 	readonly error?: string;
 };
+
+/**
+ * Stand-in answers for a request the cache misses, so a projection pass can
+ * go on to the requests that depend on them.
+ */
+export type Projector = (request: {
+	readonly stage: string;
+	readonly questions: Questions;
+}) => Answers;
+
+/** One request a projection pass found in the cache, for pricing the misses. */
+type ProjectionSample = {
+	readonly stage: string;
+	/** Characters of the request (state and questions) as JSON. */
+	readonly chars: number;
+	readonly inputTokens: number;
+};
+
+/**
+ * One request a projection pass would send. `inputTokens` is known when the
+ * same request is cached at another repetition; otherwise the request is
+ * priced by its size.
+ */
+type ProjectedRequest = {
+	readonly stage: string;
+	readonly chars: number;
+	readonly questions: number;
+	readonly inputTokens?: number;
+};
+
+export type Projection = {
+	readonly samples: ProjectionSample[];
+	readonly requests: ProjectedRequest[];
+};
+
+/** Repetitions a projection pass reads a missed request's answer from. */
+const projectedRepetitions = [0, 1, 2] as const;
 
 type Cached = {
 	readonly model: string;
@@ -117,6 +160,8 @@ export type JevOptions = {
 	readonly offline?: boolean;
 	/** Receives the input tokens of every fresh request. */
 	readonly onSpend?: (inputTokens: number) => void;
+	/** Project instead of asking: a miss is answered as `Projector` says and kept in `projection`. */
+	readonly project?: Projector;
 };
 
 export class Jev {
@@ -124,6 +169,8 @@ export class Jev {
 	readonly questionsPerCall: number;
 	/** Every model an answer came from, cached ones included. */
 	readonly resolvedModels = new Set<string>();
+	/** What a projecting client saw: cached requests and the ones it would send. */
+	readonly projection: Projection = { samples: [], requests: [] };
 	readonly #options: JevOptions;
 	readonly #semaphore: Semaphore;
 	readonly #requests = new Map<string, Set<string>>();
@@ -220,6 +267,12 @@ export class Jev {
 		}
 		if (hit) {
 			this.resolvedModels.add(hit.model);
+			if (this.#options.project)
+				this.projection.samples.push({
+					stage: args.stage,
+					chars: stableJson({ state: args.state, questions }).length,
+					inputTokens: hit.usage.input_tokens,
+				});
 			args.calls.push({
 				executor: "jev",
 				stage: args.stage,
@@ -231,6 +284,8 @@ export class Jev {
 			});
 			return hit.answers;
 		}
+		if (this.#options.project)
+			return this.#projectMiss(args, questions, this.#options.project);
 		if (this.#options.offline)
 			throw Error(`jev cache miss in offline mode (${args.stage})`);
 		const result = await this.#semaphore.use(async () => {
@@ -316,5 +371,51 @@ export class Jev {
 			cached: false,
 		});
 		return result.answers;
+	}
+
+	/**
+	 * A projecting client's miss: the same request's answer and price at
+	 * another repetition when cached, the projector's answers otherwise.
+	 */
+	async #projectMiss(
+		args: {
+			readonly stage: string;
+			readonly state: EntryType;
+			readonly repetition: number;
+		},
+		questions: Questions,
+		project: Projector,
+	): Promise<Answers> {
+		const request = {
+			stage: args.stage,
+			chars: stableJson({ state: args.state, questions }).length,
+			questions: Object.keys(questions).length,
+		};
+		for (const repetition of projectedRepetitions) {
+			if (repetition === args.repetition) continue;
+			const key = hashOf({
+				model: this.model,
+				state: args.state,
+				questions,
+				repetition,
+			});
+			const other = await readCache<Cached>(
+				join(
+					this.#options.cacheDirectory,
+					"jev",
+					key.slice(0, 2),
+					`${key}.json`,
+				),
+			);
+			if (other) {
+				this.projection.requests.push({
+					...request,
+					inputTokens: other.usage.input_tokens,
+				});
+				return other.answers;
+			}
+		}
+		this.projection.requests.push(request);
+		return project({ stage: args.stage, questions });
 	}
 }

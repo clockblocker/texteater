@@ -11,7 +11,7 @@ import {
 	hoverRates,
 	sumHover,
 } from "../../src/evaluation/spec-corpus/segment-in-units-grouping.js";
-import { segmentInUnitsMetrics } from "../../src/segment-in-units/de/experiment.js";
+import { segmentInUnitsMetrics } from "../../src/evaluation/spec-corpus/segment-in-units-metrics.js";
 import type { LabCase } from "../../src/segment-in-units/lab/corpus.js";
 import { pinnedJevModel } from "../../src/segment-in-units/lab/jev.js";
 import {

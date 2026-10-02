@@ -24,8 +24,13 @@ it and score it against frozen gold. Results live in the lab tickets
   The retired arms and candidates4's other levers are at ec467e8d, and
   reference-floors at 5335f033.
 - `src/segment-in-units/lab/` holds the frozen sets, the cached jev
-  client, metrics, run evidence, the promptsmith export and the ledger.
-  The CLI is `cli/segment-in-units-lab.ts`.
+  client, metrics, run evidence, the promptsmith export, the ledger and
+  the rounds (`round.ts`). The CLI is `cli/segment-in-units-lab.ts`.
+- `src/evaluation/experiments.ts` is the table of experiments
+  `cli/evaluate.ts` runs, in gold, raw and text mode (see Evaluate). It
+  reads the lab's sets and cache; `segment-in-units-raw.ts`,
+  `source-evaluation.ts` and `split-text.ts` beside it score raw and text
+  mode.
 - Besides the production segmenter, the lab imports only the #731 harness
   (`src/evaluation/spec-corpus/`), promptsmith and dumspec. Keep it that
   way. Typecheck it with `bun run check:segment-in-units` and test it with
@@ -45,6 +50,8 @@ bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:po
 bun run segment-in-units-lab noise --run <runId> [--reps 3] [--offset 1000]
 bun run segment-in-units-lab sweep --run <runId> [--policy <p>] [--replay <runId>[:policy]]
 bun run segment-in-units-lab ledger [--table]
+bun run segment-in-units-lab round [--repin --reason "<why>"]
+bun run segment-in-units-lab round --open <id> --cap <tokens> --stop-line <tokens> [--note "<text>"]
 ```
 
 - `run` refuses a dirty tree unless `--allow-dirty` is passed. A tree is
@@ -68,8 +75,9 @@ bun run segment-in-units-lab ledger [--table]
   version. A floating alias needs `--allow-floating-model`. An answer from a
   version other than the one requested fails the call.
 - `--offline` answers from the cache only. A cache miss becomes a case
-  error. `--token-budget` moves the ledger's stop line in fresh jev input
-  tokens.
+  error. `--estimate` prices a `run`, `noise` or `limit-qpc` offline and
+  stops (see Rounds). `--token-budget` moves the round's stop line, up to
+  its cap.
 - The `reference` arm takes its resolver floors as options (`--opt
   expression=0.6`; `floorsOf` in `arms/reference.ts`). Its default is the
   setting #762 adopted; `--opt floors=run` replays the #755 reference run.
@@ -77,6 +85,80 @@ bun run segment-in-units-lab ledger [--table]
   unasked=unresolved` routes groups no batched route request asked about
   `Unresolved` instead of asking, so a setting runs offline. `sweep` reads
   every policy of a run against its baseline.
+
+## Evaluate
+
+`cli/evaluate.ts` runs the production segmenter over the lab's frozen
+sets, one experiment per set and mode, and saves a promptsmith run:
+
+```sh
+bun run evaluate --experiment segment-in-units/de:dev --revision <rev> --offline \
+  [--units production|reference] [--parity <labRunId>[:policy]]
+bun run evaluate --experiment segment-in-units/de:heldout:raw --revision <rev>
+bun run evaluate --experiment segment-in-units/de:dev:raw --estimate
+bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
+```
+
+- **Gold mode** (`segment-in-units/de:dev`, `:heldout`): a case's gold
+  Segments go in, and production's unit stage (`segmentGermanUnits`) groups
+  and routes them. `--units reference` runs the reference arm at its
+  adopted floors instead, for comparison. `--parity <labRunId>` compares
+  every case and repetition with a lab run's `step0+saying+maxim@0.7+closed`
+  output (the reference's primary with `--units reference`) and exits 1 on
+  any difference or failure. Offline, gold mode matches fa59d50e's
+  candidates4 runs exactly, except the one dev case whose `voller` became
+  an ADP after the fill and so misses the cache.
+- **Raw mode** (`:raw`), the production headline: the record's Sentence goes
+  in as written, `segmentGermanSentence` cuts it, and the unit stage groups
+  the Segments. Predicted Segments align to gold ones by exact span, text
+  and kind. A predicted ResolvableText Segment no gold Segment matches joins
+  the scoring as a Segment no gold unit asserts, and a gold Segment no
+  prediction matches hovers only itself. The metrics add the Segment
+  stage's to gold mode's: boundary P/R/F1 over the cuts between Segments,
+  exact-piece P/R/F1 over ResolvableText Segments, surface accuracy, the
+  Sentences cut exactly, and those cut exactly as gold, surfaces included,
+  whose unit-stage requests are gold mode's and replay its cache.
+- **Text mode** (`split-text/de:ud-drafts`): `splitText` cuts each Text of
+  `battery/dumspec/ud-drafts` into paragraphs and Sentences, scored by
+  sentence-boundary P/R/F1 in the Text's visible characters, so trimmed
+  whitespace and joined hard wraps don't count. #738's Text Records will
+  replace ud-drafts. Code splits; no model runs.
+- Every mode reports membership, multi-piece membership and hover B-cubed
+  as the lab does, over the repetitions that ran. Each case runs three
+  times, answered from the lab's cache by repetition.
+- A segment.inUnits run writes a ledger line (`command: "evaluate"`) and
+  counts against the round like a lab run: `--estimate`, the stop line, the
+  projection and the pin all apply. A live run fills the cache
+  concurrently before promptsmith replays it case by case.
+
+## Rounds
+
+The main session grants jev spend per experiment round, in fresh input
+tokens. `evidence/segment-in-units-lab/rounds.json` holds the rounds and
+names the current one; `round` prints what it has spent and has left.
+
+- Every ledger line names its `round`. A round's spend sums its own lines
+  only, never the whole ledger. Lines written before rounds have none; the
+  fill of fa59d50e was tagged with `2026-10-02-5usd`, which it opened.
+- Ordinary runs stop at the round's stop line. The tokens between the
+  stop line and the cap are the final held-out run's, which raises the
+  line with `--token-budget <cap>`; nothing passes the cap.
+- A live `run`, `noise`, `limit-qpc` or `evaluate` first prices itself: an
+  offline pass answers each cache miss from the same request at another
+  repetition, priced exactly, or with stand-in answers (a Choice's first
+  option, a high Noul), priced by size from a fit of the cached requests.
+  It refuses to start when the round's spend plus the price, its estimated
+  part ×1.25, would cross the stop line, and stops at the line while it
+  runs. `--estimate` prints the price and asks nothing.
+- The pin: the unit stage's requests quote dumspec's Authored Inventories,
+  so a peer edit to them changes prompts and misses the cache. A round
+  records the last commit of `battery/dumspec/src` and a hash of the
+  prompt inputs: the built `dumspec/inventories` entry with its chunks, and
+  the Rules. Each run manifest and ledger line keeps the pin it read. A
+  live run refuses to start when today's inputs differ from the round's
+  pin, unless `--repin`, which pins the round at today's dumspec and keeps
+  the old pin in `repins`. `replay` and offline runs report the drift.
+  Rebuild dumspec's dist before checking: the pin reads the build.
 
 ## Artifacts
 
@@ -86,7 +168,8 @@ of each frozen set, each run's evidence and the ledger:
 
 ```text
 evidence/segment-in-units-lab/
-  ledger.jsonl               one line per model-calling command and per compare --record
+  ledger.jsonl               one line per model-calling command (run, noise, limit-qpc, evaluate) and per compare --record, each naming its round
+  rounds.json                the rounds: budget, stop line and pin, and the current round
   sets/<name>@<hash>.json.gz a frozen set; gunzip it to .runs/segment-in-units-lab/sets/<name>.json to restore it
   runs/<runId>/
     manifest.json            provenance: see RunManifest in lab/provenance.ts

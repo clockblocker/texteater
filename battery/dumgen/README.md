@@ -19,15 +19,22 @@ The legacy pipeline, with `createDumgen`, moved to
 ```sh
 bun run --cwd battery/dumgen evaluate --list
 bun run --cwd battery/dumgen evaluate --experiment segment-in-units/de:dev --revision YOUR_COMMIT --offline
+bun run --cwd battery/dumgen evaluate --experiment segment-in-units/de:heldout:raw --estimate
+bun run --cwd battery/dumgen evaluate --experiment split-text/de:ud-drafts --revision YOUR_COMMIT
 bun run --cwd battery/dumgen evaluate --open RUN_ID
 ```
 
+Gold mode feeds gold Segments to the unit stage, raw mode (`:raw`) cuts
+the record's Sentence first, and text mode scores `splitText`.
 `--offline` answers jev from the lab's cache only; without it, a cache miss
 asks jev and needs `TYPESAFE_API_KEY`, which the `evaluate` script reads from
-the repository-root `.env.local` when the shell does not export it. Runs go
-to `--output`, `DUMGEN_RUN_DIRECTORY` or the untracked `.runs/dumgen/`; the
-[evaluation reference](docs/reference/evaluation.md) describes them, and the
-[lab reference](docs/reference/segment-in-units-jev-lab.md) describes the lab.
+the repository-root `.env.local` when the shell does not export it, and the
+run counts against the lab's current round. `--estimate` prices a run and
+asks nothing. Runs go to `--output`, `DUMGEN_RUN_DIRECTORY` or the untracked
+`.runs/dumgen/`; the [evaluation reference](docs/reference/evaluation.md)
+describes them, and the
+[lab reference](docs/reference/segment-in-units-jev-lab.md) describes the
+modes, the lab and its rounds.
 
 Prompt authoring follows the
 [prompting philosophy](docs/reference/human-owned/prompting-philosophy.md).

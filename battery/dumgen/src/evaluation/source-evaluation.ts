@@ -3,12 +3,13 @@
  * spans, and units over predicted Segments by the gold Segments they map
  * to (#701's raw mode).
  */
+
+import type { GermanSegmentation } from "../segment/de/segments.js";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 	Unit,
-} from "../../evaluation/spec-corpus/segment-in-units.js";
-import type { GermanSegmentation } from "../../segment/de/segments.js";
+} from "./spec-corpus/segment-in-units.js";
 
 type Segment = SegmentInUnitsInput["segments"][number];
 

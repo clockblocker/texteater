@@ -1,8 +1,10 @@
 /**
- * The lab ledger: one JSON line per lab command that called a model, with
- * the fresh (uncached) tokens it spent, and one per recorded comparison.
- * The repository tracks tokens only. The ledger is committed with the run
- * evidence.
+ * The lab ledger: one JSON line per lab command or `evaluate` run that
+ * could call a model, with the fresh (uncached) tokens it spent, and one
+ * per recorded comparison. The repository tracks tokens only. The ledger
+ * is committed with the run evidence. Each line names the experiment round
+ * it belongs to (`lab/round.ts`); lines written before rounds have none,
+ * and a round's spend counts only its own lines.
  */
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
@@ -25,11 +27,17 @@ export type Spend = {
 	};
 };
 
-/** A command that called models: `run`, `noise` or `limit-qpc`. */
+/** A command that could call models: `run`, `noise`, `limit-qpc` or `evaluate`. */
 export type SpendEntry = Spend & {
 	readonly runId: string;
 	readonly at: string;
-	readonly command: "run" | "noise" | "limit-qpc";
+	readonly command: "run" | "noise" | "limit-qpc" | "evaluate";
+	/** The round the spend counts against; absent on lines written before rounds. */
+	readonly round?: string;
+	/** `evaluate`: the experiment id. */
+	readonly experiment?: string;
+	/** The hash of the dumspec prompt inputs the run read (`Pin.hash`). */
+	readonly pin?: string;
 	readonly arm?: string;
 	readonly options?: Readonly<Record<string, string>>;
 	readonly set?: string;
@@ -62,6 +70,7 @@ export type BucketDelta = {
 export type CompareEntry = BucketDelta & {
 	readonly at: string;
 	readonly command: "compare";
+	readonly round?: string;
 	readonly left: ComparedSide;
 	readonly right: ComparedSide;
 	readonly subset: string | null;

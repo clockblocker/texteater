@@ -11,6 +11,7 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { authoredRealizations, rules } from "dumspec";
 import { hashOf } from "./jev.js";
+import type { Pin } from "./round.js";
 
 /**
  * The Dumgen sources a lab run executes, relative to the package root: the
@@ -181,6 +182,10 @@ export type RunManifest = {
 	readonly repetitionOffset: number;
 	/** The run a noise rerun repeats. */
 	readonly baseline?: string;
+	/** The experiment round the run's spend counts against; absent before rounds (#845). */
+	readonly round?: string;
+	/** The dumspec state the run's requests were built from; absent before rounds. */
+	readonly pin?: Pin;
 	readonly extra?: Readonly<Record<string, unknown>>;
 };
 
