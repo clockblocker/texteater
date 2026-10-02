@@ -26,21 +26,8 @@ export async function generateDocs(
 	const initialOwnership = discoverDocsInitialOwnership();
 	const outputs = await discoverTypedDocs();
 	assertUniqueRouteIds(outputs);
-	const result = await runCodegen(
-		defineDocsCodegen(outputs, initialOwnership),
-		{
-			mode,
-		},
-	);
-	// Generated docs are ignored build outputs, so a clean checkout legitimately
-	// plans creates. Existing outputs must still match their typed sources.
-	const hasStaleExistingOutput = result.plan.changes.some(
-		(change) => change.kind === "update" || change.kind === "delete",
-	);
-	if (mode === "check" && hasStaleExistingOutput) {
-		throw new Error(
-			"Committed Dumling docs are stale. Run `bun run generate:docs`.",
-		);
-	}
+	// Generated docs are ignored build outputs, so check mode plans them without
+	// comparing against whatever an earlier run left in this working tree.
+	await runCodegen(defineDocsCodegen(outputs, initialOwnership), { mode });
 	return outputs.map((output) => sourcePageFromDocsOutput(output));
 }
