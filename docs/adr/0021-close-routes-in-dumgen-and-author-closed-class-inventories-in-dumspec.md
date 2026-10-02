@@ -8,8 +8,9 @@ Some closed-class units are authored instead of generated. A Note's drill-down
 routes from a Lexeme to its article, auxiliary and reflexive in code, so those
 units must exist without generation, stay readable from a package that is
 green while Dumgen is rewritten, and be reviewed where the gold is. So
-`dumspec` owns them as Authored Inventories, beside the gold (ADR 0037), and
-Dumgen decides how production uses them.
+`dumspec` owns them as Authored Inventories, beside the gold (ADR 0037),
+together with the facts and selectors over them. Dumgen enforces closure when
+it resolves an encounter.
 
 **Authored Inventories live in `dumspec`.** In German they are the AUX
 Readings, the PRON and DET pillar cells and stems, the unit that explains
@@ -45,17 +46,29 @@ Reading publishes its stored Knowledge with no model call. This trades
 catalog maintenance for deterministic content, and it removes encounter-time
 generation as a way to hide an incomplete member.
 
-**Dumgen owns Route Closure.** A production route starts Open and becomes
-Closed only once an operational implementation and a reviewed Fixed Catalog
-exist. Closing a route is a production decision based on reviewed content
-and available resolution behavior. It is route policy, not a flag on
-linguistic values, and it changes neither the validity nor the identity of a
-value. Dumgen also owns the Catalog Miss, the selection of an authored member
-for an encounter, and grammatical navigation (ADR 0019), and it reads the
-inventories from `dumspec`. Callers neither preload an inventory nor select a
-catalog: applications start blank and request Units and Knowledge for
-encounters. Dumdict applies dictionary changes and enforces dictionary
-invariants; catalog-specific approval belongs to Dumgen.
+**`dumspec` states Route Closure, and Dumgen enforces it.** A production
+route starts Open and becomes Closed only once an operational implementation
+and a reviewed Fixed Catalog exist. Closing a route is a production decision
+based on reviewed content and available resolution behavior. It is route
+policy, not a flag on linguistic values, and it changes neither the validity
+nor the identity of a value. The closure facts are pure functions over the
+inventories, in `dumspec/inventories`: `closedRoute` says whether a route is
+Closed (in German, Lexeme AUX, DET and PRON), and `authoredFor` returns the
+authored members of a Lemma. The selectors that find an authored member
+(`authoredReading`, `selectAuthoredArticle`), grammatical navigation
+(`selectGrammaticalAlternatives`,
+[ADR 0019](./0019-select-grammatical-alternatives-from-reviewed-members.md))
+and the model-free component derivation live there too, so tf-demo and
+Dumgen share one copy
+([ADR 0025](./0025-publish-transaction-side-entry-points-for-dum-packages.md)).
+Dumgen owns the Catalog Miss: its click resolution returns `CatalogMiss`
+from these facts when no authored member matches on a Closed Route
+([#859](https://github.com/clockblocker/texteater/issues/859)). When several
+members match (`es` has a referential and a nonreferential Reading), Dumgen's
+judge picks one. Callers neither preload an inventory nor select a catalog:
+applications start blank and request Units and Knowledge for encounters.
+Dumdict applies dictionary changes and enforces dictionary invariants;
+catalog-specific approval belongs to Dumgen.
 
 **Closed Routes and Fixed Populations.** A missing member on a Closed Route
 returns an observable Catalog Miss. It never becomes `Unresolved` and never
@@ -124,6 +137,12 @@ scope for now. Decided by the user on 2026-10-02
 - Authored content in Dumgen, the first version of this ADR. Rejected on
   2026-09-27: drill-down needs the units while Dumgen is rewritten, and the
   gold they are reviewed against already lives in `dumspec`.
+- The closure facts and selectors in Dumgen, over `dumspec`'s inventories.
+  Rejected in [#863](https://github.com/clockblocker/texteater/issues/863):
+  they are pure functions over `dumspec`'s data
+  ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
+  and tf-demo's dictionary transaction reads them in an isolate that must not
+  load Dumgen.
 
 ## Consequences
 

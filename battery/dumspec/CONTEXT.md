@@ -24,6 +24,10 @@ generated from those cells and never authored. The inventories are in
 _Avoid_: Fixed Catalog (Dumgen's term for the members that bound a Closed
 Route), closed set, catalog member
 
+**Grammatical Navigation**:
+Selection of an Authored Inventory's reviewed members by preserving fixed
+Core Features and varying explicitly named coordinates. See [ADR 0019].
+
 **ADP Case Table**:
 A language's closed, authored list of its adpositions with the cases each
 takes. The cases are a fact about the language, so no ADP Lemma records them.
@@ -186,6 +190,7 @@ frame marks it Required or Optional. It is a unit of its own, never a member of
 the governor. See [ADR 0034].
 _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 
+[ADR 0019]: ../../docs/adr/0019-select-grammatical-alternatives-from-reviewed-members.md
 [ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
 [ADR 0026]: ../../docs/adr/0026-treat-modals-as-verbs-and-confine-aux-to-grammar-readings.md
 [ADR 0029]: ../../docs/adr/0029-keep-preposition-government-out-of-lemma-identity.md

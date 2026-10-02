@@ -14,15 +14,19 @@ This replaces explicit Counterpart claims, Grammatical Series compilation and
 grammatical relation projection. Those abstractions connected distinct
 spellings without reliably preserving their claimed axis. Semantic Relation
 algebra stays in Dumrel. The reviewed members are `dumspec`'s Authored
-Inventories, and Dumgen owns the selection
-([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md));
+Inventories, and the selection lives beside them in `dumspec/inventories`.
+`selectGrammaticalAlternatives`, which tf-demo's Note navigation calls, is a
+pure function over the inventories, next to the selectors that tf-demo's
+dictionary transaction and Dumgen share
+([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)).
 Dumling owns values and validation.
 
-German composition stores grammatical coordinates on the Surface. Dumgen
+German composition stores grammatical coordinates on the Surface. `dumspec`
 derives a contextual component Surface and exact reviewed Reading when
-requested; neither value is embedded in the parent or included in its
-identity. A noun Surface carries case and number, with gender on the Lemma.
-Its article is a satellite member whose DET cell is derived
+requested (`deriveGrammaticalComponent`); neither value is embedded in the
+parent or included in its identity. A noun Surface carries case and number,
+with gender on the Lemma. Its article is a satellite member whose DET cell is
+derived
 ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)).
 German verbal Surfaces use nullable `expletive: Subject` for realized
 nonreferential subject `es`, retaining the ordinary verb Lemma. Null means

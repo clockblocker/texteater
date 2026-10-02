@@ -93,12 +93,14 @@ _Avoid_: surrounding text, paragraph context
 
 **Authored Content**:
 Reviewed Lemmas, fixed Readings, Knowledge and semantic relation claims that
-Dumgen selects under its production policy. Dumspec's Authored Inventories
-hold the closed-class members, and Dumgen reads them. See [ADR 0021].
+resolution returns instead of generating them. Dumspec's Authored Inventories
+hold the closed-class members and the selectors that find them; Dumgen judges
+only between the members a selector leaves. See [ADR 0021].
 
 **Fixed Catalog**:
-The reviewed Authored Content that bounds a Closed Route. Its members are
-authored in Dumspec, and Dumgen decides the closure. See [ADR 0021].
+The reviewed Authored Content that bounds a Closed Route. Its members and
+which routes are Closed are authored in Dumspec, and Dumgen enforces the
+closure by returning a Catalog Miss. See [ADR 0021].
 
 **Fixed Population**:
 Reviewed Authored Content within an Open Route. See [ADR 0021].
@@ -110,10 +112,6 @@ A production route that resolves only within its Fixed Catalog. See
 **Catalog Miss**:
 Absence of a required authored value on a Closed Route or for an exact
 authored Reading in a Fixed Population. See [ADR 0021].
-
-**Grammatical Navigation**:
-Selection of reviewed members by preserving fixed Core Features and varying
-explicitly named coordinates. See [ADR 0019].
 
 **Knowledge Production**:
 Proposed Knowledge changes and Pending Semantic Relations for a
@@ -186,7 +184,6 @@ The pure function that turns a Sentence Analysis's masses into resolved
 values, including the largest unit at an offset. See [Dumgen ADR 0005].
 _Avoid_: stored resolution, threshold migration
 
-[ADR 0019]: ../../docs/adr/0019-select-grammatical-alternatives-from-reviewed-members.md
 [ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
