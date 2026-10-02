@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🌟" },
 			"notes": {
 				"rationale": "glänzende is used attributively, so it is an ADJ with Canonical Form glänzend (ADR 0036). It compares (glänzender), so it is comparable and marks Pos (ADR 0042)."
 			},

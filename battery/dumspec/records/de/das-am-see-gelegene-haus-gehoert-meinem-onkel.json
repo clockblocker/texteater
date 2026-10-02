@@ -31,6 +31,7 @@
 		{
 			"memberSegmentIndices": [7],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "📍" },
 			"notes": {
 				"rationale": "Locative gelegen 'situated' is an attributive ADJ (ADR 0035), the same Lemma as gelegen 'convenient'; Nom Sing Neut."
 			},

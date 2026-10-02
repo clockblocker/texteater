@@ -290,6 +290,7 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🤫" },
 			"notes": {
 				"rationale": "heimlich modifies the idiom from inside its span and stays out (de/fixed-members-only)."
 			},

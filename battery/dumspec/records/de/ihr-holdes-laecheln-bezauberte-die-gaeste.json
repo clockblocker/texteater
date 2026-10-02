@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🌸" },
 			"notes": {
 				"rationale": "holdes is the regular strong neuter nominative singular of hold. hold is a dated, poetic word, which is true of its Lemma, not of this form, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},

@@ -613,6 +613,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "❄" },
 			"notes": {
 				"rationale": "Attributive kalten is a single-member ADJ (de/attributive-adjective-stands-alone); kalt compares, so it marks Pos."
 			},

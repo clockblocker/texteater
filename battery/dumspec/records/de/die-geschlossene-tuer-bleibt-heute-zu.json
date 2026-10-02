@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🔒" },
 			"notes": {
 				"rationale": "An attributive participle is an ADJ (ADR 0036): Canonical Form geschlossen, the uninflected participle, not schließen."
 			},

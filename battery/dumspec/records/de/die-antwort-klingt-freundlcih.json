@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "😊" },
 			"notes": {
 				"rationale": "Letters transposed. Mark Typo. Repair Surface and Lemma."
 			},

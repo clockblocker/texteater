@@ -19,7 +19,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -27,6 +27,10 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🧓" },
+			"notes": {
+				"rationale": "alte Häuser, standing for a long time, shares one Reading with alt 'bejahrt' (der alte Hund): both say how long a thing or a being has existed, one concept under ADR 0031."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

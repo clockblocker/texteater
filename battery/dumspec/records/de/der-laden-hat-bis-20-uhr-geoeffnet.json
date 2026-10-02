@@ -196,6 +196,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🔓" },
 			"notes": {
 				"rationale": "geöffnet describes the shop's state, so it is the Participial Adjective geöffnet with Participle Source öffnen. Duden lists it as an adjective ('offen') with no comparison forms, and DWDS has no adjective entry, so it is not comparable and its predicative Surface has no inflection (de/comparability-is-lexical)."
 			},

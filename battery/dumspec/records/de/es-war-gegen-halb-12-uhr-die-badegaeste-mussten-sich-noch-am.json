@@ -320,6 +320,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🌓" },
 			"notes": {
 				"rationale": "halb before an hour means thirty minutes before it (DWDS halb 1c: es ist halb zwölf Uhr, = 11:30). Duden files this sense under its Adjektiv halb, which stands uninflected before the numeral as before a name (halb Europa). It is no adverbial use, so it stays ADJ; it has no comparison forms."
 			},

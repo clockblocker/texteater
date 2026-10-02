@@ -32,6 +32,7 @@
 		{
 			"memberSegmentIndices": [10, 12],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "⏰" },
 			"notes": {
 				"rationale": "am before a superlative is one Segment and a member of the word whose degree it marks: [am, frühesten] is the adverbially used ADJ früh (Sup). An adverbially used adjective stays ADJ."
 			},

@@ -427,6 +427,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🤒" },
 			"notes": {
 				"rationale": "krank is a predicative ADJ; kränker, am kränksten make it comparable, so it marks Pos (de/comparability-is-lexical)."
 			},

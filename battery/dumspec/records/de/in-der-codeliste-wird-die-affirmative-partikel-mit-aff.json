@@ -44,6 +44,7 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
 				"rationale": "aff. is the code list's abbreviation of the adjective affirmativ, the word the sentence glosses it with. An abbreviation is one Segment with its period and stands for its expansion, so aff. is a Shorthand member of affirmativ, not an abbreviation Lemma aff. (de/abbreviation-is-one-segment). Duden gives affirmativ no comparison forms, so the cited label marks no Degree (de/comparability-is-lexical)."
 			},

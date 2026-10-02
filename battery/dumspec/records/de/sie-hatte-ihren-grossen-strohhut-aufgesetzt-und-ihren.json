@@ -406,6 +406,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🐘" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -907,6 +908,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🤏" },
 			"notes": {
 				"rationale": "kleiner is the positive with its strong ending after ein, not the comparative: attributive, Pos."
 			},
@@ -1009,6 +1011,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "💥" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

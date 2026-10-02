@@ -22,7 +22,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [
 			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
 			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" }
@@ -57,8 +57,9 @@
 		{
 			"memberSegmentIndices": [12, 14],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🧓" },
 			"notes": {
-				"rationale": "The noun Brunnen is elided, so the adjective standing in for it is the Head of its phrase and owns the article: [der, alte] is ADJ alt. It stays lowercase and ADJ; a nominalized der Alte would be a NOUN."
+				"rationale": "The noun Brunnen is elided, so the adjective standing in for it is the Head of its phrase and owns the article: [der, alte] is ADJ alt. It stays lowercase and ADJ; a nominalized der Alte would be a NOUN. der alte, old as against der neue, shares one Reading with alt 'bejahrt' (der alte Hund): both say how long a thing or a being has existed, one concept under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

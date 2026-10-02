@@ -109,6 +109,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🐘" },
 			"notes": {
 				"rationale": "groß is the predicative ADJ zu grades, a target of its own. It is comparable (größer, am größten), so its Surface marks Pos (de/comparability-is-lexical)."
 			},

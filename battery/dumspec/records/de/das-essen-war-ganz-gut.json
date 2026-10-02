@@ -113,6 +113,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
 				"rationale": "gut is the predicative ADJ ganz grades, a target of its own. It is comparable (besser, am besten), so its Surface marks Pos (de/comparability-is-lexical)."
 			},

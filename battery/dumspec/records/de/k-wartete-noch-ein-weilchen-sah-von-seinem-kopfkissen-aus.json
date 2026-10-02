@@ -838,6 +838,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🧓" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1639,6 +1640,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🤨" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1715,6 +1717,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🍽" },
 			"notes": {
 				"rationale": "A depictive adjective about er, coordinated with befremdet, so ADJ (de/adjective-stays-adj). Neither Duden nor DWDS gives comparison forms, so it is not comparable and marks no inflection (de/comparability-is-lexical)."
 			},

@@ -1048,6 +1048,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "💔" },
 			"notes": {
 				"rationale": "entfremdet ('estranged') describes the hands while they hang, a depictive Partizip II with no auxiliary: a single-member ADJ with Participle Source entfremden (de/participial-adjective, de/sein-perfect-or-copula). Taken as non-comparable."
 			},

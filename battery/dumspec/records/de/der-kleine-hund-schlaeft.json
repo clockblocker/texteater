@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🤏" },
 			"notes": {
 				"rationale": "Attributive ADJ. Context gives nominative masculine singular."
 			},

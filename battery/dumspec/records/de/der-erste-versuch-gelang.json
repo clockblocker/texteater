@@ -27,6 +27,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "1⃣" },
 			"notes": {
 				"rationale": "Ordinal ADJ, cited as Duden's headword erste. Keep agreement."
 			},

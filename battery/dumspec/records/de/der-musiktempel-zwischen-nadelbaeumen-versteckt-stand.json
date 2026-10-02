@@ -729,6 +729,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "2⃣" },
 			"notes": {
 				"rationale": "beiden follows the article den before Schweizerhäusern, so it is ADJ beide, Dat.Plur, not a DET: beide after a determiner is an adjective (de/pron-or-det-by-use). It has no comparison forms."
 			},

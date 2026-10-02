@@ -605,6 +605,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "✅" },
 			"notes": {
 				"rationale": "entschieden after copular war is the ADJ entschieden with Participle Source entscheiden (de/sein-perfect-or-copula). Here it means 'decided, settled', Duden's Partizip headword, which gives no comparison forms. The comparable 'resolute' (entschiedener, am entschiedensten) is Duden's Adjektiv headword, a Lemma of its own. So this Lemma is not comparable, and its predicative Surface marks no Degree (de/comparability-is-lexical, ADR 0036). Ruled on #743 (MB-A6, A9)."
 			},
@@ -694,6 +695,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🐢" },
 			"notes": {
 				"rationale": "Adverbial gemächlich stays ADJ (de/adjective-stays-adj) and compares, so it marks Pos."
 			},
@@ -1192,6 +1194,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🌠" },
 			"notes": {
 				"rationale": "Attributive Partizip II: ADJ ersehnt from ersehnen (de/participial-adjective)."
 			},

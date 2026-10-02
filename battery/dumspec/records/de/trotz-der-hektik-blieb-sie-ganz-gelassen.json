@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "😌" },
 			"notes": {
 				"rationale": "gelassen is a lexicalized participle, no form of lassen here, so it is a single-member ADJ, predicative after the copula blieb."
 			},
