@@ -173,11 +173,19 @@ an owned article or an agreeing adjective shows, as an adjectival noun's does
 the agreement check never passes an unmarked gender: `der junge Schwarzkopf`
 attests PROPN `Schwarzkopf` over `[der, Schwarzkopf]` with Surface gender
 Masc. Without such an article or adjective the Surface's gender is null.
-First names on their own, places, rivers, brands and work titles keep Core
-gender (*Anna*, *das alte Berlin*, *der Rhein*, *das iPhone*). A work title
-names one work and has one gender by convention, even when it is a full name:
-a title named after its hero takes his gender, so *„Tonio Kröger“* is Masc,
-like *der „Werther“*. Decided on
+First names on their own, places, rivers, brands with an established gender
+and work titles keep Core gender (*Anna*, *das alte Berlin*, *der Rhein*,
+*das iPhone*). A work title names one work and has one gender by convention,
+even when it is a full name: a title named after its hero takes his gender,
+so *„Tonio Kröger“* is Masc, like *der „Werther“*. Decided on
 [#743](https://github.com/clockblocker/texteater/issues/743); full names were
 added the same day, and work titles on
 [#825](https://github.com/clockblocker/texteater/issues/825#issuecomment-5932162619).
+
+Amended on 2026-10-02: a proper noun's Core gender may be null. Its Surface
+takes gender from what the sentence shows: an owned article or an agreeing
+adjective. A gender that usage or a dictionary fixes may stay in Core
+(*der Rhein*, *das iPhone*). A brand with no established gender (*eBay*: no
+Duden entry, used without an article) has none in Core, like a coined name.
+Decided by the user on 2026-10-02
+([#595](https://github.com/clockblocker/texteater/issues/595)).
