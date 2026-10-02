@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
-	bleibenCandidates,
 	locutionSettings,
 	wordingOf,
 } from "../../../src/segment/de/locution-choice.js";
@@ -87,35 +86,25 @@ test("without the setting, or with no candidate, no locution request is sent", a
 	expect(judge.stages()).not.toContain("locution");
 });
 
-test("bleiben with an infinitive is asked and, on yes, one Locution", async () => {
-	// Der0 _1 Aufzug2 _3 bleibt4 _5 nie6 _7 stehen8 .9
-	const { groups, judge } = await run("Der Aufzug bleibt nie stehen.", {
-		s_article_1: picked("p2"),
-		lb_3_5: noul(0.9),
+test("no merge reaches a unit of one word the Rules keep apart: a pronoun, nicht or a modal", async () => {
+	// Es0 _1 tut2 _3 uns4 _5 leid6 .7: Es and tut … leid heard as one expression.
+	const { judge } = await run("Es tut uns leid.", {
+		f_1: noul(0.6),
+		f_2: noul(0.9),
+		f_4: noul(0.9),
+		e_1_2: noul(0.65),
+		e_2_4: noul(0.95),
 	});
-	expect(
-		Object.keys(
-			judge.requests.find(({ stage }) => stage === "locution")
-				?.questions ?? {},
-		),
-	).toEqual(["lb_3_5"]);
-	expect(groups).toEqual([[0, 2], [4, 8], [6]]);
-});
-
-test("bleiben candidates: the infinitive before it or ending its clause, no participle or adverb", () => {
-	const of = (text: string) =>
-		bleibenCandidates({
-			sentence: sentenceOf({ segments: segmentsOf(text) }),
-		}).map(
-			({ bleiben, infinitive }) => `${bleiben.text} ${infinitive.text}`,
-		);
-	expect(of("Der Wagen ist liegen geblieben.")).toEqual(["geblieben liegen"]);
-	expect(of("Die Uhr blieb stehen, als es klingelte.")).toEqual([
-		"blieb stehen",
-	]);
-	expect(of("Das Tor blieb geschlossen.")).toEqual([]);
-	expect(of("Wir bleiben heute drinnen.")).toEqual([]);
-	expect(of("Er bleibt, um zu essen.")).toEqual([]);
+	expect(judge.stages()).not.toContain("locution");
+	// Er0 _1 kann2 _3 nicht4 _5 schwimmen6 .7
+	const modal = await run("Er kann nicht schwimmen.", {
+		f_2: noul(0.6),
+		f_3: noul(0.6),
+		f_4: noul(0.6),
+		e_2_4: noul(0.6),
+		e_3_4: noul(0.6),
+	});
+	expect(modal.judge.stages()).not.toContain("locution");
 });
 
 test("the wording shows the pieces as written, with … for a gap", () => {

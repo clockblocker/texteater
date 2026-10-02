@@ -16,25 +16,29 @@
  * joined by no expression at all? Both units fixed, the merge joins them
  * into a Locution, and the code rules apply again over it.
  *
- * Code also proposes bleiben with an infinitive, a Noul each
- * (de/bleiben-with-an-infinitive): one Locution only when the pair has its
- * own dictionary headword and meaning (liegen bleiben, 'break down'), not
- * bleiben meaning stay (sitzen geblieben, 'stayed seated').
+ * No merge touches a piece a code rule decides (`boundPieces`) or a
+ * Saying, nor a unit of one word the Rules keep apart whatever the judge
+ * reads: nicht (de/nicht-is-part), a modal (de/modal-is-a-verb), and a
+ * pronoun or determiner other than a reflexive, since a pronoun joins a
+ * Locution only as its lexical reflexive (de/verb-owns-its-scattered-members)
+ * or an object es that das cannot replace (de/fixed-member-test), which
+ * nomination's own links decide. A Sentence with no candidate asks nothing.
  *
- * No merge touches a piece a code rule decides (`boundPieces`), nor a
- * Saying. A Sentence with no candidate asks nothing. The first version
- * asked one Choice over the whole wording and merged on its `whole` share;
- * it read free objects and pronouns as fixed (df28add5).
+ * The first version asked one Choice over the whole wording and merged on
+ * its `whole` share; it read free objects and pronouns as fixed (df28add5).
+ * The second also asked bleiben with an infinitive
+ * (de/bleiben-with-an-infinitive), which the judge never accepted (cfd482be).
  */
 import { closedVerbForms } from "dumspec/inventories";
 import type { Questions } from "promptsmith/typesafe";
-import { type Answers, type Ask, askAny, choice, noul } from "../ask.js";
+import { type Answers, type Ask, askAny, choice } from "../ask.js";
 import {
 	type AssembledEdge,
 	absorbedEdges,
 	articleHosts,
 	type Membership,
 } from "./assembly.js";
+import { reflexiveForms } from "./candidates.js";
 import { boundPieces, type CodeRule, withCodeRules } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
 import { argmax, groupKey, partitionOf } from "./partition.js";
@@ -42,19 +46,16 @@ import { joinRefs, type Piece } from "./sentence.js";
 
 /** How the Locution Choice's answers become merges. */
 export type LocutionSettings = {
-	/** The `fixed` share each unit of a merge needs, and the bleiben Noul's floor. */
+	/** The `fixed` share each unit of a merge needs. */
 	readonly floor: number;
 	/** Whether a merged unit absorbs its members' fused pieces and a noun's opening preposition. */
 	readonly absorb: boolean;
-	/** Whether a bleiben pair the judge accepts merges. */
-	readonly bleiben: boolean;
 };
 
-/** The setting X5 screens first: both units fixed at 0.5, absorbing, with bleiben. */
+/** The setting X5 screens: both units fixed at 0.5, absorbing. */
 export const locutionSettings: LocutionSettings = {
 	floor: 0.5,
 	absorb: true,
-	bleiben: true,
 };
 
 /** Below its floor, an idiom host share that still flags a merge. */
@@ -68,81 +69,37 @@ export type MergeCandidate = {
 	readonly right: readonly number[];
 };
 
-/** A bleiben form and the infinitive it may form one verb with. */
-export type BleibenCandidate = {
-	readonly bleiben: Piece;
-	readonly infinitive: Piece;
-};
-
-const bleibenForms = new Set(
-	"bleibe bleibst bleibt bleiben bleibet blieb bliebst blieben bliebt bliebe bliebest bliebet geblieben".split(
-		" ",
+const modalForms = new Set(
+	["dürfen", "können", "mögen", "müssen", "sollen", "wollen"].flatMap(
+		(modal) => closedVerbForms[modal] ?? [],
 	),
 );
 
-/** Closed verb forms (sein, haben, werden, the modals): never the infinitive of bleiben's pair. */
-const closedForms = new Set(
-	Object.values(closedVerbForms).flatMap((forms) =>
-		forms.map((form) => form.toLowerCase()),
-	),
-);
-
-const lower = (piece: Piece) => piece.text.toLowerCase();
-
-/** Adverbs with an infinitive's ending. */
-const adverbsInEn = new Set(
-	"drinnen draußen oben unten innen außen hinten vorn morgen übermorgen gestern vorgestern eben neben zusammen selten".split(
-		" ",
-	),
-);
-
-/**
- * A lowercase word with an infinitive's ending that no closed verb or
- * bleiben form spells, and no participle in ge- (bleibt geschlossen is a
- * copula and its predicate, de/copula-stays-apart).
- */
-const infinitiveShaped = (piece: Piece) =>
-	/^\p{Ll}+(en|ern|eln)$/u.test(piece.text) &&
-	!/^ge/u.test(piece.text) &&
-	!piece.fusedWord &&
-	!adverbsInEn.has(lower(piece)) &&
-	!bleibenForms.has(lower(piece)) &&
-	!closedForms.has(lower(piece));
-
-/**
- * bleiben and an infinitive in its clause: the piece right before it
- * (liegen geblieben, stehen bleibt) or the clause's last piece when bleiben
- * opens the bracket (bleibt … stehen), never after zu.
- */
-export function bleibenCandidates(
-	nomination: Pick<Nomination, "sentence">,
-): BleibenCandidate[] {
-	const { pieces } = nomination.sentence;
-	const candidates: BleibenCandidate[] = [];
-	for (const bleiben of pieces) {
-		if (!bleibenForms.has(lower(bleiben))) continue;
-		const clause = pieces.filter(
-			(piece) => piece.clause === bleiben.clause,
-		);
-		const before = pieces[bleiben.id - 2];
-		const last = clause[clause.length - 1];
-		for (const infinitive of [
-			before?.clause === bleiben.clause ? before : undefined,
-			last && last.id > bleiben.id ? last : undefined,
-		]) {
-			if (!infinitive || !infinitiveShaped(infinitive)) continue;
-			const zu = pieces[infinitive.id - 2];
-			if (zu && lower(zu) === "zu") continue;
-			candidates.push({ bleiben, infinitive });
-		}
-	}
-	return candidates;
+/** A unit of one word the Rules keep out of any Locution the judge proposes: nicht, a modal, a non-reflexive pronoun or determiner. */
+function keptApart(
+	nomination: Pick<Nomination, "sentence" | "inventory">,
+	group: readonly number[],
+): boolean {
+	const [only] = group;
+	const piece =
+		group.length === 1 && only !== undefined
+			? nomination.sentence.pieces[only - 1]
+			: undefined;
+	if (!piece) return false;
+	const word = piece.text.toLowerCase();
+	return (
+		word === "nicht" ||
+		modalForms.has(word) ||
+		(!reflexiveForms.has(word) &&
+			nomination.inventory.identityCandidates(piece.text).length > 0)
+	);
 }
 
 /**
  * The pairs of units a sub-floor link joins: an idiom host share of at
  * least 0.25, first or re-asked, or an expression Noul of at least 0.5,
- * between pieces of two units, neither a Saying nor holding a bound piece.
+ * between pieces of two units, neither a Saying, holding a bound piece, nor
+ * one word the Rules keep apart.
  */
 export function mergeCandidates(
 	nomination: Nomination,
@@ -158,7 +115,8 @@ export function mergeCandidates(
 			.flatMap((edge) => edge.pieces),
 	);
 	const open = (group: readonly number[]) =>
-		group.every((id) => !bound.has(id) && !saying.has(id));
+		group.every((id) => !bound.has(id) && !saying.has(id)) &&
+		!keptApart(nomination, group);
 	const pairs = new Map<string, MergeCandidate>();
 	const flag = (a: number, b: number) => {
 		const left = groupOf.get(a);
@@ -201,8 +159,6 @@ export function mergeCandidates(
 
 export const mergeId = (candidate: MergeCandidate) =>
 	`lc_${candidate.left.join("_")}_x_${candidate.right.join("_")}`;
-export const bleibenId = (candidate: BleibenCandidate) =>
-	`lb_${candidate.bleiben.id}_${candidate.infinitive.id}`;
 
 /** The pieces as written, with … where pieces outside them stand between. */
 export function wordingOf(
@@ -250,11 +206,10 @@ export function mergedPieces(
 	return [...members].sort((a, b) => a - b);
 }
 
-/** The `locution` request's questions: a Choice per unit of each merge, a Noul per bleiben pair. */
+/** The `locution` request's questions: a Choice per unit of each merge. */
 export function locutionQuestions(
 	nomination: Nomination,
 	merges: readonly MergeCandidate[],
-	bleiben: readonly BleibenCandidate[],
 ): Questions {
 	const { sentence, ref } = nomination;
 	const questions: Questions = {};
@@ -271,17 +226,12 @@ export function locutionQuestions(
 			);
 		}
 	}
-	for (const pair of bleiben)
-		questions[bleibenId(pair)] = noul(
-			`In \`sentence\`, do ${ref(pair.bleiben)} and ${ref(pair.infinitive)} together form one verb with its own dictionary headword and a meaning beyond staying in a position, bleiben with an infinitive (liegen bleiben, 'break down'; stecken bleiben, 'get stuck'), rather than bleiben meaning stay with an infinitive that only says how (sie ist sitzen geblieben, 'stayed seated')?`,
-		);
 	return questions;
 }
 
 /** What the `locution` request was asked and answered. */
 export type LocutionAnswers = {
 	readonly merges: readonly MergeCandidate[];
-	readonly bleiben: readonly BleibenCandidate[];
 	readonly answers: Answers;
 };
 
@@ -294,21 +244,12 @@ export async function askLocutionChoice(
 ): Promise<LocutionAnswers> {
 	const bound = boundPieces(nomination, ruled, rules);
 	const merges = mergeCandidates(nomination, ruled, bound);
-	const groupOf = new Map<number, readonly number[]>();
-	for (const group of ruled.partition)
-		for (const id of group) groupOf.set(id, group);
-	const bleiben = bleibenCandidates(nomination).filter(
-		(pair) =>
-			groupOf.get(pair.bleiben.id) !== groupOf.get(pair.infinitive.id) &&
-			!bound.has(pair.bleiben.id) &&
-			!bound.has(pair.infinitive.id),
-	);
 	const answers = await askAny(ask, {
 		stage: "locution",
 		state: nomination.state,
-		questions: locutionQuestions(nomination, merges, bleiben),
+		questions: locutionQuestions(nomination, merges),
 	});
-	return { merges, bleiben, answers };
+	return { merges, answers };
 }
 
 /** The links the answers accept under `settings`, each joining two pieces. */
@@ -331,12 +272,6 @@ export function acceptedMerges(
 			) >= settings.floor
 		)
 			links.push([merge.left[0] ?? 0, merge.right[0] ?? 0]);
-	if (settings.bleiben)
-		for (const pair of located.bleiben) {
-			const answer = located.answers[bleibenId(pair)];
-			if (answer?.type === "noul" && answer.noul >= settings.floor)
-				links.push([pair.bleiben.id, pair.infinitive.id]);
-		}
 	return links;
 }
 

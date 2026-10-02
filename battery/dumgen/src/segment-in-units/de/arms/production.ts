@@ -23,8 +23,8 @@
  *   Groups no batch asked about route `Unresolved`, as in the grid.
  * - `--opt x5=<variant>,<variant>` (X5): production with the Locution
  *   Choice (`locution-choice.ts`), `production+x5@<variant>`. A variant is
- *   the whole share a merge needs, then any of `noabsorb`, `nobleiben` and
- *   `sc` (the `saying-closed` code rule added), joined by `-`: `0.5`,
+ *   the `fixed` share each unit of a merge needs, then any of `noabsorb`
+ *   and `sc` (the `saying-closed` code rule added), joined by `-`: `0.5`,
  *   `0.6-noabsorb`, `0.5-sc`. Every variant reads one `locution` request
  *   per rule set, so the variants of one run ask once. Groups no batch
  *   asked about route as `--opt unasked` says.
@@ -156,19 +156,16 @@ function locutionVariantsOf(option: string | undefined): LocutionVariant[] {
 			const share = Number(floor);
 			if (
 				!Number.isFinite(share) ||
-				flags.some(
-					(flag) => !["noabsorb", "nobleiben", "sc"].includes(flag),
-				)
+				flags.some((flag) => !["noabsorb", "sc"].includes(flag))
 			)
 				throw Error(
-					`--opt x5=${option}: a variant is a floor, then noabsorb, nobleiben or sc, joined by -`,
+					`--opt x5=${option}: a variant is a floor, then noabsorb or sc, joined by -`,
 				);
 			return {
 				name,
 				settings: {
 					floor: share,
 					absorb: !flags.includes("noabsorb"),
-					bleiben: !flags.includes("nobleiben"),
 				},
 				rules: flags.includes("sc") ? ["saying-closed"] : [],
 			};
