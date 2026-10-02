@@ -29,14 +29,26 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/bare-infinitive-zu",
+				"hash": "920eb73475a80ef0"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "1a5d9f3240c41e69"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 12, 14, 16, 20],
+			"memberSegmentIndices": [6, 12, 14, 16, 18, 20],
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🤹" },
+			"notes": {
+				"rationale": "alle Hände voll zu tun haben spells zu in its Canonical Form, so zu is a member of the Locution, not a PART of its own (de/bare-infinitive-zu), and the normalized Surface keeps it: hat alle Hände voll zu tun. The expression needs this zu in its slot, so it is fixed (de/fixed-member-test). mit dem Umzug and die Familie are free. Ruled 2026-10-02 (#701, grouping audit Q4)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -50,7 +62,7 @@
 						"canonicalForm": "alle Hände voll zu tun haben",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "hat alle Hände voll tun",
+					"normalizedSurface": "hat alle Hände voll zu tun",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -71,6 +83,7 @@
 					{ "attested": "alle", "orthography": "Standard" },
 					{ "attested": "Hände", "orthography": "Standard" },
 					{ "attested": "voll", "orthography": "Standard" },
+					{ "attested": "zu", "orthography": "Standard" },
 					{ "attested": "tun", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",

@@ -56,7 +56,7 @@
 			},
 			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
-			{ "rule": "de/bare-infinitive-zu", "hash": "a1c44338fa4ffc37" }
+			{ "rule": "de/bare-infinitive-zu", "hash": "920eb73475a80ef0" }
 		],
 		"references": []
 	},
