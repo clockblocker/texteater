@@ -350,3 +350,16 @@ gives `[Angst, vor]` NOUN, and `legt das Buch auf den Tisch` and `wohnt in
 Bonn` keep the preposition inside their Adverbial free. The `im` of `wartet
 im Keller` heads a free adjunct, so it is no member of `warten` either.
 Decided on [#743](https://github.com/clockblocker/texteater/issues/743).
+
+Amended on 2026-10-02: a routine formula
+([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)) is a
+governor too, through its head word, so the Lexeme INTJ joins VERB, ADJ, NOUN
+and Locutions above. It takes in the preposition its head word governs, as
+`Angst haben` takes in `vor`: `Vielen Dank für Ihre Hilfe` gives `[Vielen,
+Dank, für]` INTJ `vielen Dank`, and `danke für die Hilfe` gives `[danke,
+für]` INTJ `danke`, which governs what its Grundform `danken` does. A
+locative or adjunct preposition stays free: the `in` of `willkommen in
+Leipzig` is no member. An INTJ records no `valencyEvidence`, so the member
+carries no evidence, and `normalizedSurface` stays Fixed-only. Decided by the
+user on [#701](https://github.com/clockblocker/texteater/issues/701)
+(grouping audit Q1).

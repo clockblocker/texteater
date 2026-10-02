@@ -185,11 +185,11 @@ const verbs: Rule[] = [
 	{
 		id: "de/governed-preposition-joins-its-governor",
 		statement:
-			"A preposition that a verb, adjective or noun selects for its complement is a member of that word's target, also when it stands apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in and is never part of the Lemma. A participial ADJ governs the preposition its source verb governs in the same sense. Government is read from E-VALBU, and from Duden where E-VALBU has no entry. An adjunct's preposition is not a member, and neither is the preposition inside an Adverbial complement, since the verb requires a place or direction, not that preposition.",
-		adrs: ["ADR-0029", "ADR-0034", "ADR-0036"],
+			"A preposition that a verb, adjective or noun, or a routine formula's head word, selects for its complement is a member of that word's target, also when it stands apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in and is never part of the Lemma. A participial ADJ governs the preposition its source verb does in the same sense. Government is read from E-VALBU, or Duden where it has no entry. An adjunct's preposition is not a member, nor is one inside an Adverbial complement, since the verb requires a place or direction, not that preposition.",
+		adrs: ["ADR-0029", "ADR-0034", "ADR-0036", "ADR-0039"],
 		routes: [
-			...lexeme("VERB", "ADJ", "NOUN"),
-			...locution("VERB", "ADJ", "NOUN"),
+			...lexeme("VERB", "ADJ", "NOUN", "INTJ"),
+			...locution("VERB", "ADJ", "NOUN", "INTJ"),
 		],
 		records: [
 			"de/pass-auf-dich-auf",
@@ -202,6 +202,8 @@ const verbs: Rule[] = [
 			"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
 			"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
 			"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich",
+			"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank",
+			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
 		],
 	},
 	{

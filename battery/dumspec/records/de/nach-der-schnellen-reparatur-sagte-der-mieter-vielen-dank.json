@@ -34,16 +34,25 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "32797f3b5f083780"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [16, 18],
+			"memberSegmentIndices": [16, 18, 20],
 			"route": { "family": "Locution", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🙏" },
 			"notes": {
-				"rationale": "The free für complement remains outside the fixed thanks formula. vielen Dank is one of Duden's thanks formulas, so it takes the 🙏 of danke."
+				"rationale": "vielen Dank is one of Duden's thanks formulas, so it takes the 🙏 of danke. Its head word Dank governs für (Duden Dank: Anerkennung für etwas Gutes, jemandem [für etwas] Dank sagen), so für is a member of the formula, as vor joins Angst haben, and stays out of the normalized Surface vielen Dank; Ihre Hilfe is free (de/governed-preposition-joins-its-governor). An INTJ records no valencyEvidence, so the member carries none. Ruled 2026-10-02 (#701, grouping audit Q1)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -64,7 +73,8 @@
 				},
 				"members": [
 					{ "attested": "Vielen", "orthography": "Standard" },
-					{ "attested": "Dank", "orthography": "Standard" }
+					{ "attested": "Dank", "orthography": "Standard" },
+					{ "attested": "für", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
 			}

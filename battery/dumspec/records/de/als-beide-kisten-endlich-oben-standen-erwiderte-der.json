@@ -42,7 +42,16 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "32797f3b5f083780"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -75,9 +84,12 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [26],
+			"memberSegmentIndices": [26, 28],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
 			"reading": { "emojiDescription": "🙏" },
+			"notes": {
+				"rationale": "The second danke governs für, as its Grundform danken does (Duden danke: jemandem [für etwas] danke sagen; DWDS danke: Danke für diesen guten Artikel), so für is a member of this formula and stays out of the normalized Surface danke; die Hilfe is free (de/governed-preposition-joins-its-governor). The first Danke has no complement and stays alone. An INTJ records no valencyEvidence, so the member carries none. Ruled 2026-10-02 (#701, grouping audit Q1)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -95,7 +107,10 @@
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "danke", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "danke", "orthography": "Standard" },
+					{ "attested": "für", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full"
 			}
 		}
