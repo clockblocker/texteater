@@ -35,6 +35,7 @@
 		"common-utils": "workspace:^",
 		"convex": "^1.44.0",
 		"dumdict": "workspace:^",
+		"dumgen": "workspace:^",
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
 		"dumspec": "workspace:^",

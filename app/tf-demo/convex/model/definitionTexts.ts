@@ -1,14 +1,15 @@
 import type { FunctionReference } from "convex/server";
 import { makeFunctionReference } from "convex/server";
 
-import type { Infer } from "convex/values";
 import {
+	assertStoredUnits,
 	MAX_SEGMENTS_PER_SENTENCE,
-	storedSegmentsWithoutAnalysis,
+	type StoredSegmentValue,
+	type StoredUnit,
+	unresolvedUnits,
 } from "../../server/storedSegments";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
-import type { segmentInputValidator } from "./validators";
 
 const materializeDefinitionText = makeFunctionReference<
 	"action",
@@ -158,9 +159,9 @@ export function ownsDefinitionTextRun(
 }
 
 /**
- * Writes one segmented definition as a hidden Definition Text and marks the
- * state row Ready. A German fused word is stored as its pieces, as intake
- * stores it. Callers must have removed any previous live Text first.
+ * Writes one segmented definition as a hidden Definition Text, its Sentence
+ * with its Segments and units as intake stores them, and marks the state row
+ * Ready. Callers must have removed any previous live Text first.
  */
 export async function writeDefinitionText(
 	ctx: MutationCtx,
@@ -169,15 +170,17 @@ export async function writeDefinitionText(
 		readonly definition: string;
 		readonly language: "de" | "en" | "he";
 		readonly segmentedSentenceId: string;
-		readonly segments: readonly Infer<typeof segmentInputValidator>[];
+		readonly segments: readonly StoredSegmentValue[];
+		readonly units: readonly StoredUnit[];
 	},
 ): Promise<{ textId: Id<"texts">; sentenceId: Id<"sentences"> }> {
-	const segments = storedSegmentsWithoutAnalysis(input);
+	const { segments, units } = input;
 	if (segments.length === 0 || segments.length > MAX_SEGMENTS_PER_SENTENCE) {
 		throw new Error(
 			`A Definition Sentence must contain 1-${MAX_SEGMENTS_PER_SENTENCE} Segments.`,
 		);
 	}
+	assertStoredUnits(segments, units);
 	const stitchedText = segments.map(({ text }) => text).join("");
 	const textId = await ctx.db.insert("texts", {
 		submissionKey: `definition:${input.ownerReadingKey}:${input.segmentedSentenceId}`,
@@ -190,6 +193,7 @@ export async function writeDefinitionText(
 		position: 0,
 		language: input.language,
 		stitchedText,
+		units: units.map((unit) => ({ ...unit, segments: [...unit.segments] })),
 	});
 	await Promise.all(
 		segments.map((segment, index) =>
@@ -226,9 +230,8 @@ export async function ensureInlineDefinitionText(
 		readonly ownerReadingKey: string;
 		readonly knowledge: unknown;
 		readonly language: "de" | "en" | "he";
-		readonly segment: (
-			text: string,
-		) => readonly Infer<typeof segmentInputValidator>[];
+		/** Code segmentation for fixtures; each ResolvableText Segment becomes its own Unresolved unit. */
+		readonly segment: (text: string) => readonly StoredSegmentValue[];
 	},
 ): Promise<void> {
 	const definition = definitionOf(input.knowledge);
@@ -245,11 +248,13 @@ export async function ensureInlineDefinitionText(
 			`Definition of ${input.ownerReadingKey} changed; strip its Definition Text before reloading fixtures.`,
 		);
 	}
+	const segments = input.segment(definition);
 	await writeDefinitionText(ctx, {
 		ownerReadingKey: input.ownerReadingKey,
 		definition,
 		language: input.language,
 		segmentedSentenceId: `definition:${input.ownerReadingKey}`,
-		segments: input.segment(definition),
+		segments,
+		units: unresolvedUnits(segments),
 	});
 }

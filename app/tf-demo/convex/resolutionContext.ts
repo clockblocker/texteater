@@ -6,7 +6,6 @@ import { lemmaValue } from "./model/occurrenceAttestations";
 import {
 	findAttestationForSegmentValue,
 	loadNeighbourSentences,
-	loadSentenceAnalysis,
 	loadSentenceForResolution,
 } from "./model/resolutionLookup";
 import {
@@ -14,7 +13,6 @@ import {
 	lemmaValueValidator,
 	reusableAttestationValidator,
 	storedSegmentValidator,
-	storedSentenceAnalysisValidator,
 } from "./model/validators";
 
 export const resolutionContextValidator = v.object({
@@ -39,8 +37,6 @@ export const resolutionContextValidator = v.object({
 			foundUnder: v.array(v.string()),
 		}),
 	),
-	/** Intake's Sentence Analysis, read before click-time classification. */
-	analysis: v.union(v.null(), storedSentenceAnalysisValidator),
 	/** The Sentences around this one, for a pronoun whose referent is outside it. */
 	neighbours: v.object({
 		before: v.optional(v.string()),
@@ -65,7 +61,6 @@ export async function loadResolutionContext(
 			reusable,
 			sentence: null,
 			lemmaCandidates: [],
-			analysis: null,
 			neighbours: {},
 		};
 	// A resumed Grammar still needs the Sentence to commit stored membership.
@@ -75,13 +70,9 @@ export async function loadResolutionContext(
 			reusable: null,
 			sentence,
 			lemmaCandidates: [],
-			analysis: null,
 			neighbours: {},
 		};
-	const [analysis, neighbours] = await Promise.all([
-		loadSentenceAnalysis(ctx, input.sentenceId),
-		loadNeighbourSentences(ctx, input.sentenceId),
-	]);
+	const neighbours = await loadNeighbourSentences(ctx, input.sentenceId);
 	const words = sentence.segments.filter(
 		(segment) => segment.kind === "ResolvableText",
 	);
@@ -174,7 +165,6 @@ export async function loadResolutionContext(
 				lemma: lemmaValue(lemma),
 				foundUnder: [...foundUnder],
 			})),
-		analysis,
 		neighbours,
 	};
 }

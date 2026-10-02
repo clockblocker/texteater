@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { unitsByMember } from "../../../server/storedSegments";
 import { coreGender } from "../../../shared/grammatical-gender";
 
 import type { Doc, Id } from "../../_generated/dataModel";
@@ -7,6 +8,7 @@ import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	languageValidator,
 	storedSegmentValidator,
+	storedUnitValidator,
 } from "../../model/validators";
 import { loadEncounteredSegmentIds } from "../../model/visitorClicks";
 
@@ -27,6 +29,12 @@ export const sentenceSegmentViewValidator = storedSegmentValidator.extend({
 	encountered: v.boolean(),
 	gender: v.optional(grammaticalGenderValidator),
 	resolutionState: v.optional(presentedSegmentResolutionStateValidator),
+	/**
+	 * The biggest unit a ResolvableText Segment belongs to, as intake stored
+	 * it: its members by index in this Sentence, route and variants. Absent
+	 * for other Segments and once Analysis Stripping removed the units.
+	 */
+	unit: v.optional(storedUnitValidator),
 });
 
 export const sentenceViewValidator = v.object({
@@ -41,9 +49,10 @@ export const sentenceViewValidator = v.object({
 
 /**
  * One Sentence as a Visitor sees it in the reader: every Segment, the
- * occurrence it belongs to, and the resolution state this Visitor has
- * earned by encountering it. An occurrence counts as encountered when any
- * of its members was.
+ * biggest unit and the occurrence it belongs to, and the resolution state
+ * this Visitor has earned by encountering it. An occurrence counts as
+ * encountered when any of its members was. Every member of a unit carries
+ * the whole unit, so a reader groups them without another query.
  */
 export async function projectSentenceView(
 	ctx: QueryCtx,
@@ -78,6 +87,7 @@ export async function projectSentenceView(
 			}),
 		),
 	);
+	const unitOf = unitsByMember(sentence.units);
 	return {
 		sentenceId: sentence._id,
 		position: sentence.position,
@@ -89,6 +99,7 @@ export async function projectSentenceView(
 		...(sentence.heading ? { heading: sentence.heading } : {}),
 		segments: segments.map((segment) => {
 			const attestationId = segment.attestationMembership?.attestationId;
+			const unit = unitOf.get(segment.index);
 			const encountered = Boolean(
 				encounteredSegmentIds.has(segment._id) ||
 					(attestationId &&
@@ -109,6 +120,7 @@ export async function projectSentenceView(
 				...(encountered && segment.resolutionState
 					? { resolutionState: segment.resolutionState.kind }
 					: {}),
+				...(unit ? { unit } : {}),
 			};
 		}),
 	};

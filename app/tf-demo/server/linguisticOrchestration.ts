@@ -6,7 +6,6 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Fiber from "effect/Fiber";
 import * as Option from "effect/Option";
-import { validateEncounter } from "legacy-dumgen";
 import type {
 	ComparisonInput,
 	Dumgen,
@@ -14,12 +13,9 @@ import type {
 	KnowledgeDraft,
 	LemmaCandidate,
 	SegmentedSentence,
-	SentenceAnalysis,
 	SentenceContext,
-	Task,
 } from "legacy-dumgen/types";
 import { inspectionStep } from "./inspectionCapture";
-import { analysisOutcomeOf, type IntakeRunRecorder } from "./intakeRun";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -29,33 +25,16 @@ import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type { GenerationEvent } from "./resolutionFailure";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
 import {
-	type ClassificationReason,
-	selectAnalysisTarget,
-} from "./sentenceAnalysisSelection";
-import { splitInParagraphs } from "./sentenceSplitting";
-import {
 	assertStoredSentence,
 	encounterSentenceOf,
 	type StoredSegment,
-	type StoredSegmentValue,
-	storedSegmentsOf,
-	storedSegmentsWithoutAnalysis,
 } from "./storedSegments";
-import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
 /**
  * Drafts usually land before the Emoji Description (~1.3 s against ~2 s), but
  * one provider stall can hold a leaf for up to the Luna deadline.
  */
 const DRAFT_GRACE_MS = 1_500;
-
-/**
- * Accepted German sentences analysed at once during intake. Their requests
- * draw from the same Dumgen request budget as segmentation. Measured with
- * tooling/measure-intake-concurrency.ts (#558): 8 is within noise of 16 on
- * 16- and 25-sentence texts, and 4 is slower.
- */
-const SENTENCE_ANALYSIS_CONCURRENCY = 8;
 
 export type PersistedSentence = {
 	readonly sentenceId: string;
@@ -66,19 +45,6 @@ export type PersistedSentence = {
 	readonly segments: readonly StoredSegment[];
 	/** Whether the Sentence belongs to a hidden Definition Text; absent reads as false. */
 	readonly definitionText?: boolean;
-};
-
-export type SubmittedSentence = {
-	readonly segmentedSentenceId: string;
-	readonly position: number;
-	/** The paragraph the Sentence reads in; Sentences sharing one run together. */
-	readonly paragraph: number;
-	readonly language: "de" | "en" | "he";
-	readonly stitchedText: string;
-	/** A fused word arrives split when the Sentence has an analysis. */
-	readonly segments: readonly StoredSegmentValue[];
-	/** Intake's Sentence Analysis; absent for other languages or when it failed. */
-	readonly analysis?: SentenceAnalysis;
 };
 
 export type ResolvedClickPersistence = {
@@ -211,11 +177,6 @@ export type ResolveSegmentResult =
  * competing results return the committed occurrence instead of duplicating it.
  */
 export type OrchestrationPersistence = {
-	persistSubmittedText(input: {
-		readonly submissionKey: string;
-		readonly sourceText: string;
-		readonly sentences: readonly SubmittedSentence[];
-	}): Promise<{ readonly textId: string }>;
 	loadResolutionContext(
 		input: ResolveSegmentInput,
 	): Promise<ResolutionContext>;
@@ -233,11 +194,6 @@ export type OrchestrationPersistence = {
 		readonly sentenceId: string;
 		readonly clickedSegmentIndex: number;
 	}): Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
-};
-
-export type SubmitTextInput = {
-	readonly submissionKey: string;
-	readonly sourceText: string;
 };
 
 export type ResolveSegmentInput = {
@@ -262,8 +218,6 @@ export type ResolutionContext = {
 	readonly reusable: ReusableAttestation | null;
 	readonly sentence: PersistedSentence | null;
 	readonly lemmaCandidates: readonly LemmaCandidate<"de">[];
-	/** The stored Sentence Analysis, read before click-time classification. */
-	readonly analysis?: SentenceAnalysis | null;
 	/**
 	 * The Sentences before and after this one in its Text, as far as they
 	 * exist. Grammar gets them only when it answers MoreContextRequired.
@@ -311,10 +265,6 @@ export function createTfDemoOrchestrator(options: {
 	}) => Effect.Effect<KnowledgeDraft, unknown>;
 	/** How long a new Reading waits for unfinished drafts before committing. */
 	readonly draftGraceMs?: number;
-	/** Measurement seam; production uses SENTENCE_ANALYSIS_CONCURRENCY. */
-	readonly analysisConcurrency?: number;
-	/** Receives each started Sentence Analysis outcome by sentence position. */
-	readonly intake?: Pick<IntakeRunRecorder, "analysed">;
 }) {
 	const draftGrace = Duration.millis(options.draftGraceMs ?? DRAFT_GRACE_MS);
 	/** Waits out the grace, then settles the leaves in flight; a draft that ignores the settle is dropped. */
@@ -338,122 +288,6 @@ export function createTfDemoOrchestrator(options: {
 			return null;
 		});
 	}
-	function submitText(input: SubmitTextInput) {
-		return Effect.gen(function* () {
-			assertNonEmpty(input.submissionKey, "submissionKey");
-			assertNonEmpty(input.sourceText, "sourceText");
-
-			const paragraphs = yield* Effect.sync(() =>
-				splitInParagraphs(input.sourceText),
-			).pipe(
-				Effect.withSpan(
-					"Split text into sentences",
-					inspectionStep(
-						"app/tf-demo · Intl.Segmenter (de, sentence)",
-						{ sourceText: input.sourceText },
-					),
-				),
-			);
-			const sourceSentences = paragraphs.flat();
-			const paragraphOf = paragraphs.flatMap((sentences, paragraph) =>
-				sentences.map(() => paragraph),
-			);
-			assertTextSubmissionWithinLimits(input.sourceText, sourceSentences);
-			const firstSourceSentence = sourceSentences[0];
-			if (firstSourceSentence === undefined)
-				throw new Error("Text submission contains no sentences.");
-			const segmentation = yield* effectFrom(
-				options.dumgen.segment({
-					sourceSentences: [
-						firstSourceSentence,
-						...sourceSentences.slice(1),
-					],
-				}),
-			);
-
-			const accepted = segmentation.flatMap((decision, position) =>
-				decision.decision === "Accepted"
-					? [{ sentence: decision.sentence, position }]
-					: [],
-			);
-			// One analysis call per accepted German sentence. A failed analysis
-			// is recorded and dropped; the text is never held back by it.
-			const sentences = yield* Effect.forEach(
-				accepted,
-				({ sentence, position }) =>
-					Effect.map(
-						analyzeAcceptedSentence(sentence, position),
-						(analysis): SubmittedSentence => {
-							const stitchedText = sentence.segments
-								.map(({ text }) => text)
-								.join("");
-							return {
-								segmentedSentenceId: sentence.id,
-								position,
-								paragraph: paragraphOf[position] ?? position,
-								language: sentence.language,
-								stitchedText,
-								// A fused word is stored as its pieces with or
-								// without an analysis (ADR 0035).
-								segments:
-									analysis?.stitchedText === stitchedText
-										? storedSegmentsOf(analysis)
-										: storedSegmentsWithoutAnalysis(
-												sentence,
-											),
-								...(analysis ? { analysis } : {}),
-							};
-						},
-					),
-				{
-					concurrency:
-						options.analysisConcurrency ??
-						SENTENCE_ANALYSIS_CONCURRENCY,
-				},
-			);
-			const submission = {
-				submissionKey: input.submissionKey,
-				sourceText: input.sourceText,
-				sentences,
-			};
-			const persisted = yield* Effect.tryPromise(() =>
-				options.persistence.persistSubmittedText(submission),
-			).pipe(
-				Effect.withSpan(
-					"Persist submitted text",
-					inspectionStep("app/tf-demo", submission),
-				),
-			);
-
-			return { decisions: segmentation, persisted };
-		});
-	}
-
-	function analyzeAcceptedSentence(
-		sentence: SegmentedSentence<"de" | "en" | "he">,
-		position: number,
-	): Effect.Effect<SentenceAnalysis | null> {
-		if (sentence.language !== "de") return Effect.succeed(null);
-		const german: SegmentedSentence<"de"> = { ...sentence, language: "de" };
-		return options.dumgen.analyzeSentence({ sentence: german }).pipe(
-			Effect.withSpan(
-				"Analyze sentence",
-				inspectionStep("app/tf-demo · linguisticOrchestration", {
-					sentenceId: sentence.id,
-				}),
-			),
-			Effect.onExit((exit) =>
-				Effect.sync(() =>
-					options.intake?.analysed(position, analysisOutcomeOf(exit)),
-				),
-			),
-			withoutFailedWork(
-				`Sentence Analysis for ${sentence.id}`,
-				"the sentence is stored without one",
-			),
-		);
-	}
-
 	function resolveSegment(
 		input: ResolveSegmentInput,
 		checkpoints: ResolutionCheckpoints = {},
@@ -742,28 +576,25 @@ export function createTfDemoOrchestrator(options: {
 						);
 					};
 					return yield* Effect.gen(function* () {
-						const target = yield* selectTarget(
-							stored,
-							sentence,
-							request.clickedSegmentIndex,
-						);
-						// Grammar may refuse a Phraseme the analysis named; the
-						// clicked word beneath it still resolves.
-						return yield* resolve(target).pipe(
-							Effect.catchTag("Unresolved", (failure) => {
-								const word =
-									target.family === "Phraseme"
-										? selectWord(
-												stored,
-												sentence,
+						const target = yield* options.dumgen
+							.classifyTarget({
+								sentence,
+								clickedSegmentIndex:
+									request.clickedSegmentIndex,
+							})
+							.pipe(
+								Effect.withSpan(
+									"Select target · classified",
+									inspectionStep(
+										"app/tf-demo · linguisticOrchestration",
+										{
+											clickedSegmentIndex:
 												request.clickedSegmentIndex,
-											)
-										: null;
-								return word
-									? Effect.flatMap(word, resolve)
-									: Effect.fail(failure);
-							}),
-						);
+										},
+									),
+								),
+							);
+						return yield* resolve(target);
 					}).pipe(
 						Effect.catchTag("Unresolved", () =>
 							Effect.succeed({
@@ -781,125 +612,6 @@ export function createTfDemoOrchestrator(options: {
 						),
 					);
 				});
-			}
-
-			/**
-			 * The stored Sentence Analysis answers the click when its largest
-			 * unit is resolved at the clicked Segment; otherwise, or without an
-			 * analysis, click-time classification runs as before. The inspection
-			 * step names the path taken. Stored and Encounter indices are the
-			 * same, since both hold a fused word as its pieces.
-			 */
-			function selectTarget(
-				stored: PersistedSentence,
-				sentence: SegmentedSentence<"de">,
-				clickedSegmentIndex: number,
-			) {
-				const selection = analysedTarget(
-					stored,
-					sentence,
-					clickedSegmentIndex,
-				);
-				const fromAnalysis = selection.target;
-				const owner = "app/tf-demo · linguisticOrchestration";
-				const input = {
-					clickedSegmentIndex,
-					hasAnalysis: Boolean(context.analysis),
-					definitionText: stored.definitionText ?? false,
-					...(selection.target ? {} : { reason: selection.reason }),
-				};
-				const selected: Task<{
-					readonly path: "analysis" | "classified";
-					readonly target: Encounter<"de">["target"];
-				}> = fromAnalysis
-					? Effect.succeed({
-							path: "analysis" as const,
-							target: fromAnalysis,
-						})
-					: Effect.map(
-							options.dumgen.classifyTarget({
-								sentence,
-								clickedSegmentIndex,
-							}),
-							(target) => ({
-								path: "classified" as const,
-								target,
-							}),
-						);
-				const name = fromAnalysis
-					? "Select target · analysis"
-					: "Select target · classified";
-				return selected.pipe(
-					Effect.withSpan(name, inspectionStep(owner, input)),
-					Effect.map(({ target }) => target),
-				);
-			}
-
-			/**
-			 * The clicked word beneath a refused Phraseme, read from the
-			 * analysis, or null when the analysis has no resolved word there.
-			 */
-			function selectWord(
-				stored: PersistedSentence,
-				sentence: SegmentedSentence<"de">,
-				clickedSegmentIndex: number,
-			) {
-				const selection = analysedTarget(
-					stored,
-					sentence,
-					clickedSegmentIndex,
-					"word",
-				);
-				if (!selection.target) return null;
-				return Effect.succeed({
-					path: "analysis" as const,
-					target: selection.target,
-				}).pipe(
-					Effect.withSpan(
-						"Select target · analysis word",
-						inspectionStep(
-							"app/tf-demo · linguisticOrchestration",
-							{
-								clickedSegmentIndex,
-								reason: "phrasemeRefused",
-							},
-						),
-					),
-					Effect.map(({ target }) => target),
-				);
-			}
-
-			/** The analysis target, or why the click is classified instead. */
-			function analysedTarget(
-				stored: PersistedSentence,
-				sentence: SegmentedSentence<"de">,
-				clickedSegmentIndex: number,
-				layer: "largest" | "word" = "largest",
-			):
-				| { readonly target: Encounter<"de">["target"] }
-				| {
-						readonly target: null;
-						readonly reason: ClassificationReason;
-				  } {
-				const selection = selectAnalysisTarget(
-					context.analysis,
-					stored,
-					clickedSegmentIndex,
-					layer,
-				);
-				if (!selection.target) return selection;
-				try {
-					const encounter = validateEncounter({
-						sentence,
-						target: selection.target,
-					});
-					// The Encounter's sentence is German, so its target is too.
-					return {
-						target: encounter.target as Encounter<"de">["target"],
-					};
-				} catch {
-					return { target: null, reason: "invalidEncounter" };
-				}
 			}
 
 			function resolveReading(
@@ -944,7 +656,7 @@ export function createTfDemoOrchestrator(options: {
 		}).pipe(Effect.scoped);
 	}
 
-	return Object.freeze({ submitText, resolveSegment });
+	return Object.freeze({ resolveSegment });
 }
 
 /**

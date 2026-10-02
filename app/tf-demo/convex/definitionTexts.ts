@@ -20,7 +20,8 @@ import { loadStoredSegments } from "./model/storedSegments";
 import {
 	definitionTextStateValidator,
 	languageValidator,
-	segmentInputValidator,
+	storedSegmentInputValidator,
+	storedUnitValidator,
 } from "./model/validators";
 
 const MAX_SENTENCES_PER_DEFINITION = 8;
@@ -169,8 +170,9 @@ export const persistSegmented = internalMutation({
 		runNumber: v.number(),
 		definition: v.string(),
 		language: languageValidator,
-		segmentedSentenceId: v.string(),
-		segments: v.array(segmentInputValidator),
+		stitchedText: v.string(),
+		segments: v.array(storedSegmentInputValidator),
+		units: v.array(storedUnitValidator),
 	},
 	returns: v.union(v.literal("Ready"), v.literal("Stale")),
 	handler: async (ctx, { runNumber, ...args }) => {
@@ -186,7 +188,10 @@ export const persistSegmented = internalMutation({
 				"A live Definition Text must be removed before its replacement is written.",
 			);
 		}
-		await writeDefinitionText(ctx, args);
+		await writeDefinitionText(ctx, {
+			...args,
+			segmentedSentenceId: `definition:${args.ownerReadingKey}#${runNumber}`,
+		});
 		return "Ready";
 	},
 });

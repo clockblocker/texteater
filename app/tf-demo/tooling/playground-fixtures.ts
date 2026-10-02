@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { createPendingSemanticRelationRecord } from "dumdict/pending";
 import { makeSurfaceId } from "dumdict/runtime";
+import type * as Dumling from "dumling/types";
 import type { Doc, Id } from "../convex/_generated/dataModel";
 import {
 	internalMutation,
@@ -19,6 +20,10 @@ import {
 import { unitReadingEmojiDescription } from "../convex/modules/notes/unitReadingFamilies";
 import { persistSubmittedText } from "../convex/modules/text/submission";
 import { emojiDescriptionOf } from "../server/linguisticIdentity";
+import {
+	type StoredUnit,
+	unitsAroundOccurrence,
+} from "../server/storedSegments";
 import {
 	makeUrl,
 	NOTE_STUDY_DATABASE,
@@ -271,6 +276,17 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 	};
 }
 
+/** The unit route a fixture Lemma's occurrence takes; a Morpheme has none. */
+function unitRouteOf(lemma: Dumling.Lemma<"de">): StoredUnit["route"] {
+	return lemma.family === "Morpheme"
+		? "Unresolved"
+		: ({
+				language: "de",
+				family: lemma.family,
+				kind: lemma.kind,
+			} as StoredUnit["route"]);
+}
+
 async function ensureOccurrence(
 	ctx: MutationCtx,
 	unit: NoteStudyDatabaseUnit,
@@ -306,6 +322,11 @@ async function ensureOccurrence(
 							language: "de",
 							stitchedText: sourceText,
 							segments: [...occurrence.segments],
+							units: unitsAroundOccurrence(
+								occurrence.segments,
+								occurrence.memberSegmentIndices,
+								unitRouteOf(unit.reading.lemma),
+							),
 						},
 					],
 				});

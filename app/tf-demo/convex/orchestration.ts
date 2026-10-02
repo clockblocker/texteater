@@ -1,6 +1,7 @@
 "use node";
 
 import { ConvexError, type Infer, type Value, v } from "convex/values";
+import { createSegment, createTypeSafeAsk, type SegmentCall } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Runtime from "effect/Runtime";
@@ -11,10 +12,14 @@ import {
 	spanHops,
 } from "../server/inspectionCapture";
 import {
-	attemptOutcomeOf,
+	createIntake,
+	sourceSentencesOf,
+	unsupportedLanguageMessage,
+} from "../server/intake";
+import {
 	createIntakeRunRecorder,
+	failureTagOf,
 	type IntakeRun,
-	type IntakeRunRecorder,
 	recordIntakeRun,
 } from "../server/intakeRun";
 import { lemmaIdentityKey } from "../server/linguisticIdentity";
@@ -38,19 +43,22 @@ import {
 	parseGermanReading,
 } from "../server/operationalParsing";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
-import {
-	fromStoredSentenceAnalysis,
-	toStoredSentenceAnalysis,
-} from "../server/sentenceAnalysisStorage";
-import { splitInSentences } from "../server/sentenceSplitting";
 import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
-import { type ActionCtx, action, internalAction } from "./_generated/server";
+import {
+	type ActionCtx,
+	action,
+	env,
+	internalAction,
+} from "./_generated/server";
 import { inspectionEnabled } from "./deploymentFlags";
 import { inspectionFor } from "./inspectionAction";
 import type { ResolutionSessionGuard } from "./model/resolutionSessions";
-import { resolutionSessionGuardValidator } from "./model/validators";
+import {
+	languageValidator,
+	resolutionSessionGuardValidator,
+} from "./model/validators";
 import {
 	convexId,
 	createResolutionSessionLifecycle,
@@ -86,26 +94,42 @@ function visitorErrorIn(error: unknown): ConvexError<Value> | undefined {
 	return undefined;
 }
 
+/** The production jev for intake: TypeSafe with the deployment's key. */
+function productionSegment(onCall: (call: SegmentCall) => void) {
+	const apiKey = env.TYPESAFE_API_KEY;
+	if (!apiKey)
+		throw new Error(
+			"TYPESAFE_API_KEY is not set, so intake cannot segment the Text.",
+		);
+	return createSegment({ ask: createTypeSafeAsk({ apiKey }), onCall });
+}
+
 export const submitText = action({
 	args: {
 		submissionKey: v.string(),
 		sourceText: v.string(),
 		visitorId: v.string(),
+		/** The Text's language; German when absent. Only German is read for now. */
+		language: v.optional(languageValidator),
 		inspectionVisitorId: v.optional(v.string()),
 	},
 	returns: submitTextResultValidator,
 	handler: async (ctx, args): Promise<SubmitTextActionResult> => {
-		// Only text and rate limit violations become Rejected, checked here
-		// before any model work; every other failure still throws.
-		const sentences = splitInSentences(args.sourceText);
+		// Only the language, text and rate limit violations become Rejected,
+		// checked here before any model work; every other failure still throws.
+		const language = args.language ?? "de";
+		const unsupported = unsupportedLanguageMessage(language);
+		if (unsupported !== undefined)
+			return { status: "Rejected", message: unsupported };
+		const sentences = sourceSentencesOf(args.sourceText);
 		const limitViolation = textSubmissionLimitViolation(
 			args.sourceText,
 			sentences,
 		);
 		if (limitViolation !== undefined)
 			return { status: "Rejected", message: limitViolation };
-		// Intake is not deterministic, so re-analysing a stored Text would
-		// pay for every model call and then often disagree with it.
+		// Intake is not deterministic, so re-segmenting a stored Text would
+		// pay for every jev call and then often disagree with it.
 		const analyzed = await ctx.runQuery(
 			internal.persistence.analyzedSubmission,
 			{ submissionKey: args.submissionKey, sourceText: args.sourceText },
@@ -116,7 +140,6 @@ export const submitText = action({
 			{ visitorId: args.visitorId },
 		);
 		if (!limit.ok) return { status: "Rejected", message: limit.message };
-		const sentenceCount = sentences.length;
 		const inspectionVisitorId = inspectionEnabled()
 			? args.inspectionVisitorId
 			: undefined;
@@ -133,7 +156,7 @@ export const submitText = action({
 			requestId,
 			Boolean(inspectionVisitorId),
 		);
-		const intake = createIntakeRunRecorder(sentenceCount);
+		const run = createIntakeRunRecorder(sentences.length);
 		const createdAt = Date.now();
 		const start = performance.now();
 		let state: "Complete" | "PermanentFailure" = "PermanentFailure";
@@ -141,16 +164,47 @@ export const submitText = action({
 			outcome: "Accepted",
 		};
 		try {
+			const intake = createIntake({
+				segment: productionSegment(run.call),
+				persistence: {
+					persistSubmittedText: (input) =>
+						ctx.runMutation(
+							internal.persistence.persistSubmittedText,
+							{
+								...input,
+								sentences: input.sentences.map((sentence) => ({
+									...sentence,
+									segments: sentence.segments.map(
+										(segment) => ({
+											...segment,
+										}),
+									),
+									units: sentence.units.map((unit) => ({
+										...unit,
+										segments: [...unit.segments],
+										...(unit.variants
+											? { variants: [...unit.variants] }
+											: {}),
+									})),
+								})),
+							},
+						),
+				},
+				onSegmented: run.segmented,
+			});
 			const result = await Effect.runPromise(
 				inspected(
-					orchestratorFor(ctx, null, undefined, inspection, intake)
-						.submitText(args)
+					intake
+						.submitText({
+							submissionKey: args.submissionKey,
+							sourceText: args.sourceText,
+							language,
+						})
 						.pipe(
 							Effect.withSpan("Analyze submitted text", {
-								...inspectionStep(
-									"app/tf-demo · linguisticOrchestration",
-									{ sourceText: args.sourceText },
-								),
+								...inspectionStep("app/tf-demo · intake", {
+									sourceText: args.sourceText,
+								}),
 								root: true,
 							}),
 						),
@@ -162,7 +216,7 @@ export const submitText = action({
 			attempt = { outcome: "Accepted", textId };
 			return { status: "Accepted", textId };
 		} catch (error) {
-			attempt = attemptOutcomeOf(error);
+			attempt = { outcome: "Failed", failureTag: failureTagOf(error) };
 			throw visitorErrorIn(error) ?? error;
 		} finally {
 			await inspection?.flush();
@@ -173,8 +227,8 @@ export const submitText = action({
 				);
 			}
 			await recordIntakeRun(
-				(run) => ctx.runMutation(internal.intakeRuns.record, run),
-				intake.summary({
+				(record) => ctx.runMutation(internal.intakeRuns.record, record),
+				run.summary({
 					runId: requestId,
 					submissionKey: args.submissionKey,
 					...attempt,
@@ -244,7 +298,6 @@ function orchestratorFor(
 	sessionGuard: ResolutionSessionGuard | null,
 	observer?: ResolutionProgressObserver,
 	inspection?: InspectionCapture,
-	intake?: IntakeRunRecorder,
 ) {
 	const persistence = createConvexPersistence(ctx, sessionGuard);
 	return createTfDemoOrchestrator({
@@ -287,7 +340,7 @@ function orchestratorFor(
 			}),
 		dumgen: createProductionDumgen(
 			observer?.generationEvent,
-			intake ? { onOperation: intake.operation } : {},
+			{},
 			inspection,
 		),
 		findStoredReadings: async (lemma) =>
@@ -299,7 +352,6 @@ function orchestratorFor(
 			).map(parseGermanReading),
 		persistence,
 		...(observer ? { observer } : {}),
-		...(intake ? { intake } : {}),
 	});
 }
 
@@ -322,20 +374,6 @@ function createConvexPersistence(
 	sessionGuard: ResolutionSessionGuard | null,
 ): OrchestrationPersistence {
 	return {
-		async persistSubmittedText(input) {
-			return ctx.runMutation(internal.persistence.persistSubmittedText, {
-				...input,
-				sentences: input.sentences.map(({ analysis, ...sentence }) => ({
-					...sentence,
-					segments: sentence.segments.map((segment) => ({
-						...segment,
-					})),
-					...(analysis
-						? { analysis: toStoredSentenceAnalysis(analysis) }
-						: {}),
-				})),
-			});
-		},
 		async loadResolutionContext(input) {
 			const context = await ctx.runQuery(
 				internal.resolutionContext.load,
@@ -352,9 +390,6 @@ function createConvexPersistence(
 						foundUnder,
 					}),
 				),
-				analysis: context.analysis
-					? fromStoredSentenceAnalysis(context.analysis)
-					: null,
 			} as ResolutionContext;
 		},
 		async persistResolvedClick(input) {

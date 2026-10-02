@@ -1,4 +1,3 @@
-import type { SentenceAnalysis } from "legacy-dumgen/types";
 import type { SpanHops } from "../server/inspectionCapture";
 import type { ResolutionContext } from "../server/linguisticOrchestration";
 import {
@@ -13,7 +12,6 @@ import {
 	projectResolutionGrammar,
 	projectResolutionReading,
 } from "../server/resolutionSessionProjection";
-import { fromStoredSentenceAnalysis } from "../server/sentenceAnalysisStorage";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import type { ActionCtx } from "./_generated/server";
@@ -62,10 +60,6 @@ export function createResolutionSessionLifecycle(
 				);
 				if (!input) return null;
 				const { reusable, sentence } = input.context;
-				// Convex stores masses as `[{key, share}]`; the selector reads records.
-				const analysis: SentenceAnalysis | null = input.context.analysis
-					? fromStoredSentenceAnalysis(input.context.analysis)
-					: null;
 				const restored: ResolutionSessionRunInput = {
 					selection: input.selection,
 					context: {
@@ -79,7 +73,6 @@ export function createResolutionSessionLifecycle(
 								foundUnder,
 							}),
 						),
-						analysis,
 					},
 					checkpoints: {
 						...(input.checkpoints.grammatical

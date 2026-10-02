@@ -121,62 +121,6 @@ type Occurrence = {
 	readonly readingKey: string;
 };
 
-/** "Angst vor Hunden": intake says the NOUN Angst governs vor + Dat. */
-function governedAnalysis(segmentedSentenceId: string) {
-	const segment = (
-		offset: number,
-		text: string,
-		kind: "ResolvableText" | "Whitespace" = "ResolvableText",
-	) => ({ offset, kind, text, surface: text });
-	const target = (id: string, offset: number, kind: string) => ({
-		id,
-		members: [{ offset, role: "Head" as const }],
-		routeMass: [{ key: kind, share: 1 }],
-		identity: null,
-		provenance: "vote",
-	});
-	return {
-		sentenceId: segmentedSentenceId,
-		language: "de" as const,
-		stitchedText: "Angst vor Hunden",
-		segments: [
-			segment(0, "Angst"),
-			segment(5, " ", "Whitespace"),
-			segment(6, "vor"),
-			segment(9, " ", "Whitespace"),
-			segment(10, "Hunden"),
-		],
-		targets: [
-			target("t1", 0, "NOUN"),
-			target("t2", 6, "ADP"),
-			target("t3", 10, "NOUN"),
-		],
-		phrasemes: [],
-		fusions: [],
-		slots: [
-			{
-				governor: "t1",
-				marker: 6,
-				filler: null,
-				complement: {
-					kind: "Preposition" as const,
-					preposition: {
-						unitKind: "Lemma" as const,
-						language: "de" as const,
-						family: "Lexeme",
-						kind: "ADP",
-						canonicalForm: "vor",
-						coreFeatures: {},
-					},
-					governedCase: "Dat" as const,
-					referent: "Something" as const,
-				},
-				realizedCase: "Dat" as const,
-			},
-		],
-	};
-}
-
 /**
  * Stores one saved occurrence of a Reading: its Sentence, Lemma, Surface,
  * Reading, and Attestation, with the first Segment as the only member.
@@ -239,14 +183,6 @@ async function seedOccurrence(
 		await ctx.db.patch(segmentId, {
 			attestationMembership: { attestationId, orthography: "Standard" },
 		});
-		if (governed) {
-			const sentence = await ctx.db.get(sentenceId);
-			if (!sentence) throw new Error("Expected a stored Sentence.");
-			await ctx.db.insert("sentenceAnalyses", {
-				sentenceId,
-				analysis: governedAnalysis(sentence.segmentedSentenceId),
-			});
-		}
 		return {
 			readingId,
 			lemmaId,

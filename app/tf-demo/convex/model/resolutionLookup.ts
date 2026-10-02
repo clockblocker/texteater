@@ -143,18 +143,6 @@ export async function loadNeighbourSentences(
 	};
 }
 
-/** The stored Sentence Analysis, or null when intake produced none. */
-export async function loadSentenceAnalysis(
-	ctx: QueryCtx,
-	sentenceId: Id<"sentences">,
-) {
-	const row = await ctx.db
-		.query("sentenceAnalyses")
-		.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId))
-		.unique();
-	return row?.analysis ?? null;
-}
-
 export async function findAttestationForSegmentValue(
 	ctx: QueryCtx,
 	{

@@ -1,8 +1,7 @@
 import { translationLanguageValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import type { GovernedPrepositionDraft } from "legacy-dumgen/types";
 import {
-	attestedGovernment,
+	type GovernedPrepositionDraft,
 	uncoveredGovernment,
 } from "../../server/attestedGovernment";
 import {
@@ -13,7 +12,6 @@ import type { KnowledgeCoverage } from "../../server/knowledgeCompletion";
 import type { Doc } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import type { loadOccurrenceAttestation } from "./occurrenceAttestations";
-import { loadSentenceAnalysis } from "./resolutionLookup";
 
 /**
  * Knowledge coverage: what one occurrence's demand still lacks from its
@@ -61,19 +59,16 @@ export function coveredTranslationLanguages(
 	});
 }
 
-/** The governed prepositions intake attested for this occurrence (ADR 0034). */
+/**
+ * The governed prepositions intake attested for this occurrence (ADR 0034).
+ * None since intake runs `segment.inUnits`, which attests no government;
+ * a Reading's Valency Frame comes from its Knowledge alone.
+ */
 export async function occurrenceGovernment(
-	ctx: MutationCtx,
-	occurrence: Occurrence,
+	_ctx: MutationCtx,
+	_occurrence: Occurrence,
 ): Promise<GovernedPrepositionDraft[]> {
-	return attestedGovernment(
-		await loadSentenceAnalysis(ctx, occurrence.sentence._id),
-		{
-			stitchedText: occurrence.sentence.stitchedText,
-			segments: occurrence.segments,
-		},
-		occurrence.memberSegmentIndices,
-	);
+	return [];
 }
 
 /** The Plural Pattern a noun occurrence's plural Surface attests (#597). */

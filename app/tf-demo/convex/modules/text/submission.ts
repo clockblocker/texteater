@@ -1,7 +1,7 @@
 import type { Infer } from "convex/values";
-import { splitInSentences } from "../../../server/sentenceSplitting";
+import { splitText } from "dumgen";
 import {
-	assertPiecesStored,
+	assertStoredUnits,
 	MAX_SEGMENTS_PER_SENTENCE,
 } from "../../../server/storedSegments";
 import {
@@ -28,21 +28,6 @@ export type PersistedSubmittedText = {
 	sentenceIds: Array<Id<"sentences">>;
 	deduplicated: boolean;
 };
-
-/** One analysis per Sentence: a retry never duplicates or overwrites it. */
-async function ensureSentenceAnalysis(
-	ctx: MutationCtx,
-	sentenceId: Id<"sentences">,
-	analysis: Infer<typeof sentenceInputValidator>["analysis"],
-): Promise<void> {
-	if (!analysis) return;
-	const existing = await ctx.db
-		.query("sentenceAnalyses")
-		.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId))
-		.unique();
-	if (existing) return;
-	await ctx.db.insert("sentenceAnalyses", { sentenceId, analysis });
-}
 
 function assertIndex(value: number, name: string): void {
 	if (!Number.isSafeInteger(value) || value < 0) {
@@ -83,7 +68,11 @@ export async function findAnalyzedSubmission(
 	return text._id;
 }
 
-/** Persist one analyzed Text while making submission-key retries idempotent. */
+/**
+ * Persist one segmented Text, each Sentence with its Segments and units,
+ * while making submission-key retries idempotent. The first complete write
+ * wins: a retry that finds the same Segments keeps the stored units.
+ */
 export async function persistSubmittedText(
 	ctx: MutationCtx,
 	input: SubmittedText,
@@ -91,7 +80,9 @@ export async function persistSubmittedText(
 	assertNonEmpty(input.submissionKey, "submissionKey");
 	assertTextSubmissionWithinLimits(
 		input.sourceText,
-		splitInSentences(input.sourceText),
+		splitText(input.sourceText).paragraphs.flatMap(
+			({ sentences }) => sentences,
+		),
 	);
 	assertTextSubmissionWithinLimits(
 		input.sourceText,
@@ -130,12 +121,13 @@ export async function persistSubmittedText(
 			if (segment.text.length === 0) {
 				throw new Error("segment.text must not be empty.");
 			}
-			if (segment.kind === "Whitespace" && segment.text !== " ") {
+			if (segment.kind === "Whitespace" && !/^\s+$/u.test(segment.text)) {
 				throw new Error(
-					"Whitespace Segments must contain one ASCII space.",
+					"Whitespace Segments must hold whitespace only.",
 				);
 			}
 		}
+		assertStoredUnits(sentence.segments, sentence.units);
 	}
 
 	const existingText = await ctx.db
@@ -194,15 +186,6 @@ export async function persistSubmittedText(
 					"Existing Text analysis is incomplete or differs from the submitted analysis; retry after stripping completes.",
 				);
 			}
-			await Promise.all(
-				existingSentences.map((existing, sentenceIndex) =>
-					ensureSentenceAnalysis(
-						ctx,
-						existing._id,
-						submittedSentences[sentenceIndex]?.analysis,
-					),
-				),
-			);
 			return {
 				textId: existingText._id,
 				sentenceIds: existingSentences.map(({ _id }) => _id),
@@ -262,12 +245,12 @@ export async function persistSubmittedText(
 					paragraph: submitted.paragraph,
 					language: submitted.language,
 					stitchedText: submitted.stitchedText,
+					units: submitted.units,
 				};
 				const sentenceId =
 					existing?._id ??
 					(await ctx.db.insert("sentences", sentenceValue));
 				if (existing) await ctx.db.replace(existing._id, sentenceValue);
-				assertPiecesStored(submitted);
 				await Promise.all(
 					submitted.segments.map((segment, index) =>
 						ctx.db.insert("segments", {
@@ -276,11 +259,6 @@ export async function persistSubmittedText(
 							...segment,
 						}),
 					),
-				);
-				await ensureSentenceAnalysis(
-					ctx,
-					sentenceId,
-					submitted.analysis,
 				);
 				return sentenceId;
 			}),
@@ -323,8 +301,8 @@ export async function persistSubmittedText(
 					paragraph: sentence.paragraph,
 					language: sentence.language,
 					stitchedText: sentence.stitchedText,
+					units: sentence.units,
 				});
-				assertPiecesStored(sentence);
 				await Promise.all(
 					sentence.segments.map((segment, index) =>
 						ctx.db.insert("segments", {
@@ -333,11 +311,6 @@ export async function persistSubmittedText(
 							...segment,
 						}),
 					),
-				);
-				await ensureSentenceAnalysis(
-					ctx,
-					sentenceId,
-					sentence.analysis,
 				);
 				return sentenceId;
 			}),

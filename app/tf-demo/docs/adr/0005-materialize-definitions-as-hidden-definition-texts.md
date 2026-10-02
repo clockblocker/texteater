@@ -14,6 +14,12 @@ generator's target language and skips intake; it is persisted once and never
 recomputed, because a language's segmenter may be a non-deterministic model
 call.
 
+Amended 2026-10-02 ([#847](https://github.com/clockblocker/texteater/issues/847)):
+the segmenter is Dumgen's `segment.inUnits`, given the whole definition as
+one German Sentence with no `splitText`. The Definition Text stores that
+Sentence's Segments and its biggest units, as intake stores a Visitor
+Text's Sentences. A Reading in another language gets no Definition Text.
+
 A Corrected definition writes a new Definition Text after stripping and
 deleting the previous one, and a Retracted definition strips and deletes with
 no successor, so ADR 0001's rule that only stripping and reset end

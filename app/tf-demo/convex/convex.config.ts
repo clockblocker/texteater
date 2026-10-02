@@ -9,6 +9,8 @@ const app = defineApp({
 		TF_DEMO_ADMIN: v.optional(v.string()),
 		/** "1" honours requests to capture Resolution Inspector records. */
 		TF_INSPECTION: v.optional(v.string()),
+		/** The TypeSafe key that `segment.inUnits` asks jev with at intake. */
+		TYPESAFE_API_KEY: v.optional(v.string()),
 	},
 });
 app.use(migrations);

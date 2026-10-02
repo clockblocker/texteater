@@ -36,7 +36,7 @@ import {
 	storedGrammaticalCheckpointValidator,
 	storedKnowledgeSettingsValidator,
 	storedSegmentValidator,
-	storedSentenceAnalysisValidator,
+	storedUnitValidator,
 	structuralShadowAspectValidator,
 	surfaceSpellingValidator,
 	textOriginValidator,
@@ -121,16 +121,17 @@ export default defineSchema({
 		 */
 		paragraph: v.optional(v.number()),
 		language: languageValidator,
+		/** The Sentence's normalized text; its Segments concatenate to it. */
 		stitchedText: v.string(),
+		/**
+		 * The Sentence's biggest units, as intake's `segment.inUnits` gave
+		 * them: Segments by index, each unit's route or Unresolved, and its
+		 * route variants. Analysis Stripping removes them with the Segments.
+		 */
+		units: v.optional(v.array(storedUnitValidator)),
 	})
 		.index("by_segmented_sentence_id", ["segmentedSentenceId"])
 		.index("by_text_id_and_position", ["textId", "position"]),
-
-	/** One Sentence Analysis per Sentence, read at click time before classification. */
-	sentenceAnalyses: defineTable({
-		sentenceId: v.id("sentences"),
-		analysis: storedSentenceAnalysisValidator,
-	}).index("by_sentence_id", ["sentenceId"]),
 
 	segments: defineTable({
 		sentenceId: v.id("sentences"),

@@ -1,4 +1,5 @@
 import { ConvexError, type Infer, v } from "convex/values";
+import type { Route } from "dumgen";
 import type * as Dumling from "dumling/types";
 import {
 	directSemanticRelationValues,
@@ -240,7 +241,7 @@ export const segmentInputValidator = v.object({
 export const storedSegmentInputValidator = v.object({
 	kind: segmentKindValidator,
 	text: v.string(),
-	/** The word a fusion component stands for: `in` for the `i` of `im`. */
+	/** The word the Segment stands for: `in` for the `i` of `im`, `es` for `'s`. */
 	surface: v.optional(v.string()),
 });
 
@@ -349,125 +350,44 @@ export const attestationValueValidator = v.object({
 	surface: surfaceValueValidator,
 });
 
-const memberRoleValues = [
-	"Head",
-	"SeparableParticle",
-	"GovernedPreposition",
-	"Reflexive",
-	"Expletive",
-	"Article",
-	"Auxiliary",
-	"Unresolved",
-] as const;
+/**
+ * Where a click on a stored unit routes (Dumgen ADR 0007): German, a Family
+ * other than Morpheme, and one of its Kinds.
+ */
+export const unitRouteValidator = v.union(
+	v.object({
+		language: v.literal("de"),
+		family: v.literal("Lexeme"),
+		kind: literalUnion(lemmaRouteKinds.de.Lexeme),
+	}),
+	v.object({
+		language: v.literal("de"),
+		family: v.literal("Locution"),
+		kind: literalUnion(lemmaRouteKinds.de.Locution),
+	}),
+	v.object({
+		language: v.literal("de"),
+		family: v.literal("Saying"),
+		kind: v.literal("Saying"),
+	}),
+	v.object({
+		language: v.literal("de"),
+		family: v.literal("Foreign"),
+		kind: v.literal("Foreign"),
+	}),
+);
+// A stored route is exactly a Route `segment.inUnits` gives.
+true satisfies SameMembers<Infer<typeof unitRouteValidator>, Route>;
 
 /**
- * A probability mass as stored: `{ key, share }` pairs rather than a record,
- * because identity keys carry headwords such as `für` and Convex record keys
- * must be ASCII. The server port converts to and from Dumgen's records.
+ * One biggest unit intake stores with its Sentence (Dumgen ADR 0007): the
+ * indices of its Segments in the Sentence, ascending (#767), its route or
+ * `Unresolved`, and any route variants, its route first.
  */
-export const storedMassValidator = v.array(
-	v.object({ key: v.string(), share: v.number() }),
-);
-
-const governedCaseValidator = v.union(
-	v.literal("Acc"),
-	v.literal("Dat"),
-	v.literal("Gen"),
-);
-
-/** The Sentence Analysis intake stores with one Sentence (Dumgen ADR 0006). */
-export const storedSentenceAnalysisValidator = v.object({
-	sentenceId: v.string(),
-	language: v.literal("de"),
-	stitchedText: v.string(),
-	segments: v.array(
-		v.object({
-			offset: v.number(),
-			kind: segmentKindValidator,
-			text: v.string(),
-			surface: v.string(),
-		}),
-	),
-	targets: v.array(
-		v.object({
-			id: v.string(),
-			members: v.array(
-				v.object({
-					offset: v.number(),
-					role: literalUnion(memberRoleValues),
-				}),
-			),
-			routeMass: storedMassValidator,
-			identity: v.union(
-				v.null(),
-				v.object({
-					candidates: v.array(
-						v.object({
-							key: v.string(),
-							kind: v.union(
-								v.literal("DET"),
-								v.literal("PRON"),
-								v.literal("AUX"),
-							),
-							headword: v.string(),
-							pronType: v.union(v.null(), v.string()),
-							cells: v.array(v.string()),
-							definition: v.string(),
-						}),
-					),
-					mass: storedMassValidator,
-				}),
-			),
-			provenance: v.string(),
-		}),
-	),
-	phrasemes: v.array(
-		v.object({
-			id: v.string(),
-			members: v.array(v.string()),
-			/** Prepositions only the expression governs; outside its fixedness (ADR 0034). */
-			governedPrepositions: v.array(v.string()),
-			kindMass: storedMassValidator,
-			fixedness: v.number(),
-			provenance: v.string(),
-		}),
-	),
-	fusions: v.array(
-		v.object({
-			offset: v.number(),
-			form: v.string(),
-			components: v.array(
-				v.object({
-					offset: v.number(),
-					span: v.string(),
-					surface: v.string(),
-					role: v.string(),
-				}),
-			),
-		}),
-	),
-	/**
-	 * The preposition slots the sentence realizes (ADR 0034), each with the
-	 * one Preposition complement it realizes, as Attestation evidence names it.
-	 */
-	slots: v.array(
-		v.object({
-			governor: v.string(),
-			marker: v.union(v.null(), v.number()),
-			filler: v.union(v.null(), v.string()),
-			complement: v.object({
-				kind: v.literal("Preposition"),
-				preposition: lemmaValueValidator,
-				governedCase: governedCaseValidator,
-				referent: v.union(
-					v.literal("Someone"),
-					v.literal("Something"),
-					v.literal("Either"),
-				),
-			}),
-			realizedCase: governedCaseValidator,
-		}),
-	),
+export const storedUnitValidator = v.object({
+	segments: v.array(v.number()),
+	route: v.union(v.literal("Unresolved"), unitRouteValidator),
+	variants: v.optional(v.array(unitRouteValidator)),
 });
 
 export const sentenceInputValidator = v.object({
@@ -475,10 +395,11 @@ export const sentenceInputValidator = v.object({
 	position: v.number(),
 	paragraph: v.number(),
 	language: languageValidator,
+	/** The Sentence's normalized text; its Segments concatenate to it. */
 	stitchedText: v.string(),
 	segments: v.array(storedSegmentInputValidator),
-	/** Present for an accepted German sentence whose intake analysis succeeded. */
-	analysis: v.optional(storedSentenceAnalysisValidator),
+	/** Every ResolvableText Segment belongs to exactly one unit. */
+	units: v.array(storedUnitValidator),
 });
 
 export const semanticRelationValidator = literalUnion(semanticRelationValues);

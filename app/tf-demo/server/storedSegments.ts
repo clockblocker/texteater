@@ -1,23 +1,20 @@
 import type { Infer } from "convex/values";
-import { splitFusedWords, unsplitFusedWordIn } from "legacy-dumgen/authored";
-import type { SegmentedSentence, SentenceAnalysis } from "legacy-dumgen/types";
 import type {
 	storedSegmentInputValidator,
 	storedSegmentValidator,
+	storedUnitValidator,
 } from "../convex/model/validators";
 
 /**
- * The stored Segment module. It owns what tf-demo stores for a Segment: its
- * shape, the rule that a fused word is stored as its pieces, the per-Sentence
- * bound, and the conversions between a stored Segment, a character offset in
- * the Stitched Text, and an Encounter Segment.
+ * The stored Segment module. It owns what tf-demo stores for a Sentence:
+ * its Segments as intake's `segment.inUnits` cut them, a fused word as its
+ * pieces when segmentation split it, the per-Sentence bound, the units that
+ * index into the Segments, and the conversion to a click's Sentence.
  *
- * Stored rows are keyed by `index`. Dumgen ADR 0004 makes the character
- * offset the persisted coordinate and leaves migrating the hosts to the
- * production effort, so `index` is the current storage key, not the
- * Segment's identity. Code that needs an offset derives it here with
- * `storedSegmentRanges`. Reading the stored rows is the Convex layer's
- * `loadStoredSegments`.
+ * Stored rows are keyed by `index`, the Segment's index in its Sentence,
+ * which is also how units and Attestation memberships name a Segment
+ * (Dumgen ADR 0004, amended for #767). Reading the stored rows is the
+ * Convex layer's `loadStoredSegments`.
  */
 
 /** A Segment to store; `surface` marks a fusion component. */
@@ -25,6 +22,9 @@ export type StoredSegmentValue = Infer<typeof storedSegmentInputValidator>;
 
 /** A stored Segment at its storage key. */
 export type StoredSegment = Infer<typeof storedSegmentValidator>;
+
+/** One biggest unit as a Sentence stores it. */
+export type StoredUnit = Infer<typeof storedUnitValidator>;
 
 /** Intake stores at most this many Segments in one Sentence. */
 export const MAX_SEGMENTS_PER_SENTENCE = 512;
@@ -41,73 +41,16 @@ export function spellingOf(segment: {
 }
 
 /**
- * The Segments to store for one analysed Sentence: intake's analysed
- * Segments, so a fused word arrives split and each component keeps the
- * surface it stands for (Dumgen ADR 0004, ADR 0035): `im` is `i` standing for
- * `in` beside `m` standing for `dem`. Abbreviations and clitics stay as the
- * word they are; only fusion components carry a surface.
- */
-export function storedSegmentsOf(
-	analysis: SentenceAnalysis,
-): readonly StoredSegmentValue[] {
-	const fused = new Set(
-		analysis.fusions.flatMap(({ components }) =>
-			components.map(({ offset }) => offset),
-		),
-	);
-	return [...analysis.segments]
-		.sort((left, right) => left.offset - right.offset)
-		.map(({ offset, kind, text, surface }) =>
-			fused.has(offset) ? { kind, text, surface } : { kind, text },
-		);
-}
-
-/**
- * The Segments to store for a Sentence no analysis describes, such as a
- * Definition Text, an English Sentence, or a German Sentence whose analysis
- * failed: a fused word is still stored as its pieces by its Language's fusion
- * table, exactly as Dumgen's segmentation cuts them (`im` is `i` + `m`,
- * `I'll` is `I` + `'ll`).
- */
-export function storedSegmentsWithoutAnalysis(
-	sentence: Pick<SegmentedSentence, "language" | "segments">,
-): readonly StoredSegmentValue[] {
-	return splitFusedWords(sentence.language, sentence.segments).map(
-		({ kind, text, surface }) =>
-			surface === undefined ? { kind, text } : { kind, text, surface },
-	);
-}
-
-/**
- * Fails loudly when a Sentence would hold a fused word unsplit by its
- * Language's fusion table: every host stores the pieces (ADR 0035), and no
- * bridge reads a whole `im` or `I'll`.
- */
-export function assertPiecesStored(sentence: {
-	readonly language: string;
-	readonly segments: readonly Pick<StoredSegment, "kind" | "text">[];
-}): void {
-	const index = unsplitFusedWordIn(sentence.language, sentence.segments);
-	if (index !== undefined)
-		throw new Error(
-			`A stored Sentence holds the fused word "${sentence.segments[index]?.text}" unsplit; store its pieces.`,
-		);
-}
-
-/**
  * Checks that stored Segments form their Sentence: contiguous zero-based
- * indices, non-empty text, texts that concatenate to the Stitched Text, and
- * no unsplit fused word.
+ * indices, non-empty text, and texts that concatenate to the Stitched Text.
  */
 export function assertStoredSentence(stored: {
-	readonly language: string;
 	readonly stitchedText: string;
 	readonly segments: readonly Pick<
 		StoredSegment,
 		"index" | "kind" | "text"
 	>[];
 }): void {
-	assertPiecesStored(stored);
 	const ordered = [...stored.segments].sort(
 		(left, right) => left.index - right.index,
 	);
@@ -129,38 +72,98 @@ export function assertStoredSentence(stored: {
 }
 
 /**
- * Each stored Segment's `[start, end)` range in the Stitched Text, the bridge
- * from index-keyed stored Segments to offset-keyed analysed ones. Null when
- * the stored Segments do not concatenate to the Stitched Text.
+ * Checks that units cover a Sentence's Segments as `segment.inUnits` leaves
+ * them: each unit names ascending indices of ResolvableText Segments, and
+ * every ResolvableText Segment belongs to exactly one unit.
  */
-export function storedSegmentRanges(stored: {
-	readonly stitchedText: string;
-	readonly segments: readonly Pick<StoredSegment, "index" | "text">[];
-}): Map<number, { start: number; end: number }> | null {
-	const ranges = new Map<number, { start: number; end: number }>();
-	let cursor = 0;
-	for (const segment of [...stored.segments].sort(
-		(left, right) => left.index - right.index,
-	)) {
-		ranges.set(segment.index, {
-			start: cursor,
-			end: cursor + segment.text.length,
+export function assertStoredUnits(
+	segments: readonly Pick<StoredSegment, "kind">[],
+	units: readonly StoredUnit[],
+): void {
+	const owned = new Set<number>();
+	for (const unit of units) {
+		if (unit.segments.length === 0)
+			throw new Error("A unit must name at least one Segment.");
+		unit.segments.forEach((index, position) => {
+			if (
+				!Number.isSafeInteger(index) ||
+				segments[index]?.kind !== "ResolvableText"
+			)
+				throw new Error(
+					`Unit member ${index} is not a ResolvableText Segment.`,
+				);
+			if (position > 0 && index <= (unit.segments[position - 1] ?? -1))
+				throw new Error(
+					"A unit names its Segments in ascending order.",
+				);
+			if (owned.has(index))
+				throw new Error(`Segment ${index} belongs to two units.`);
+			owned.add(index);
 		});
-		cursor += segment.text.length;
 	}
-	return cursor === stored.stitchedText.length ? ranges : null;
+	segments.forEach((segment, index) => {
+		if (segment.kind === "ResolvableText" && !owned.has(index))
+			throw new Error(`Segment ${index} belongs to no unit.`);
+	});
+}
+
+/** Each ResolvableText Segment as its own `Unresolved` unit. */
+export function unresolvedUnits(
+	segments: readonly Pick<StoredSegment, "kind">[],
+): StoredUnit[] {
+	return segments.flatMap((segment, index) =>
+		segment.kind === "ResolvableText"
+			? [{ segments: [index], route: "Unresolved" as const }]
+			: [],
+	);
 }
 
 /**
- * The Sentence Dumgen resolves a click against: the stored Segments as they
- * are, so a fused word reaches Dumgen as its pieces (`i` + `m`) and an
- * Encounter index is the stored index. The caller validates the stored
- * Segments.
+ * Units for a Sentence whose one occurrence is known in advance, as
+ * fixtures store it: the occurrence's members form one unit on `route`,
+ * and every other ResolvableText Segment is its own Unresolved unit.
+ */
+export function unitsAroundOccurrence(
+	segments: readonly Pick<StoredSegment, "kind">[],
+	members: readonly number[],
+	route: StoredUnit["route"],
+): StoredUnit[] {
+	const occurrence: StoredUnit = {
+		segments: [...members].sort((left, right) => left - right),
+		route,
+	};
+	return [
+		...unresolvedUnits(segments).filter(
+			(unit) => !members.includes(unit.segments[0] ?? -1),
+		),
+		occurrence,
+	].sort((left, right) => (left.segments[0] ?? 0) - (right.segments[0] ?? 0));
+}
+
+/** Each unit member's index, mapped to the unit holding it. */
+export function unitsByMember(
+	units: readonly StoredUnit[] | undefined,
+): ReadonlyMap<number, StoredUnit> {
+	return new Map(
+		(units ?? []).flatMap((unit) =>
+			unit.segments.map((index) => [index, unit] as const),
+		),
+	);
+}
+
+/**
+ * The Sentence a click resolves against: the stored Segments as they are,
+ * so a fused word arrives as its pieces (`i` + `m`) and a click's index is
+ * the stored index. The caller validates the stored Segments.
  */
 export function encounterSentenceOf(stored: {
 	readonly segmentedSentenceId: string;
 	readonly segments: readonly StoredSegment[];
-}): SegmentedSentence<"de"> {
+}): {
+	readonly id: string;
+	readonly language: "de";
+	readonly segments: readonly Pick<StoredSegment, "kind" | "text">[];
+} {
 	return Object.freeze({
 		id: stored.segmentedSentenceId,
 		language: "de",

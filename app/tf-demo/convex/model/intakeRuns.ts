@@ -1,20 +1,10 @@
 import { v } from "convex/values";
-import { languageValidator, literalUnion } from "./validators";
-
-const stageValidator = v.object({
-	calls: v.number(),
-	failed: v.number(),
-	interrupted: v.number(),
-	totalDurationMs: v.number(),
-	maxDurationMs: v.number(),
-	/** Total RequestQueued wait of the stage's requests. */
-	queueWaitMs: v.number(),
-});
+import { literalUnion } from "./validators";
 
 /**
- * One text submission attempt's summary (#527): outcomes, tags, counts and
- * durations, never source text, prompts or model output. Failed carries its
- * DumgenFailure tag or Defect. Full traces stay in DEV inspection.
+ * One text submission attempt's summary (#527): outcomes, tags, counts,
+ * tokens and durations, never source text, prompts or model output. Failed
+ * carries the thrown error's name. Full traces stay in DEV inspection.
  */
 export const intakeRunValidator = v.object({
 	/** The attempt's requestId. */
@@ -22,35 +12,30 @@ export const intakeRunValidator = v.object({
 	submissionKey: v.string(),
 	/** Absent when the attempt failed before a Text existed. */
 	textId: v.optional(v.id("texts")),
-	outcome: literalUnion(["Accepted", "Failed", "Interrupted"] as const),
+	outcome: literalUnion(["Accepted", "Failed"] as const),
 	failureTag: v.optional(v.string()),
 	sentenceCount: v.number(),
+	/**
+	 * How each Sentence's `segment.inUnits` ended: Segmented, or Failed when
+	 * it fell back to one Unresolved unit per ResolvableText Segment.
+	 */
 	sentences: v.array(
 		v.object({
 			segmentation: literalUnion([
-				"Accepted",
-				"UnsupportedLanguage",
-				"Unintelligible",
+				"Segmented",
 				"Failed",
-				"Interrupted",
 				"NotStarted",
 			] as const),
-			/** Present for Accepted. */
-			language: v.optional(languageValidator),
-			segmentationTag: v.optional(v.string()),
-			analysis: literalUnion([
-				"Analysed",
-				"Failed",
-				"Interrupted",
-				"NotStarted",
-				"NotApplicable",
-			] as const),
-			analysisTag: v.optional(v.string()),
 		}),
 	),
-	stages: v.object({
-		segment: stageValidator,
-		analyzeSentence: stageValidator,
+	/** The jev requests `segment.inUnits` sent, summed from its `onCall`. */
+	jev: v.object({
+		calls: v.number(),
+		failed: v.number(),
+		inputTokens: v.number(),
+		outputTokens: v.number(),
+		totalDurationMs: v.number(),
+		maxDurationMs: v.number(),
 	}),
 	durationMs: v.number(),
 	createdAt: v.number(),

@@ -32,6 +32,7 @@ type Env = {
   readonly CONVEX_SITE_URL: string;
   readonly TF_DEMO_ADMIN: string | undefined;
   readonly TF_INSPECTION: string | undefined;
+  readonly TYPESAFE_API_KEY: string | undefined;
 };
 
 /**

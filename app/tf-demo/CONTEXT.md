@@ -63,27 +63,25 @@ Sentence. Its database ID is application identity and never enters the public
 Dumling Attestation value. See [tf-demo ADR 0001].
 
 **Attestation Membership**:
-The exclusive link from one Segment to at most one Occurrence Attestation,
-carrying the member's orthography. Ordered memberships reconstruct the
-Attestation's members. See [tf-demo ADR 0001], [ADR 0035] and
-[Dumgen ADR 0004].
-_Avoid_: Segment index link
+The exclusive link from one Segment, named by its index in its Sentence, to
+at most one Occurrence Attestation, carrying the member's orthography.
+Ordered memberships reconstruct the Attestation's members. See
+[tf-demo ADR 0001], [ADR 0035] and [Dumgen ADR 0004].
 
 **Stored Segment**:
-One Segment of a stored Sentence. tf-demo stores a fused word as its pieces,
-one Segment per component, and refuses a stored Sentence that holds a whole
-fused word. See [ADR 0035].
+One Segment of a stored Sentence, as intake's `segment.inUnits` cut it. A
+fused word is stored as its pieces when segmentation split it, one Segment
+per component; a word segmentation kept whole, or every word of a Sentence
+whose segmentation failed, keeps its written spelling. See [ADR 0035] and
+[Dumgen ADR 0004].
 _Avoid_: token, word
 
-**Sentence Analysis**:
-What the legacy intake produced for one German Sentence, stored with it and
-read at selection time so that a click selects the largest resolved unit at
-the clicked Segment. It is a hint for resolution, not linguistic identity.
-[Dumgen ADR 0007] replaces it with biggest units whose grouping segmentation
-fixes, each with its route or a few route variants that a click picks among;
-tf-demo keeps the legacy form until its rebuild after the segmentation
-rewrite. See [Dumgen ADR 0006].
-_Avoid_: precomputed resolution, Unit map, Analysis Target list
+**Stored Unit**:
+One biggest unit intake stores with its Sentence: its Segments by index, its
+route or Unresolved, and the route variants a click may pick among. Every
+ResolvableText Segment belongs to exactly one. It is a hint for selection and
+resolution, not linguistic identity. See [Dumgen ADR 0007].
+_Avoid_: Sentence Analysis, precomputed resolution, Unit map
 
 **Shared Demo Dictionary**:
 The universal tf-demo set of Lemmas, Surfaces, Readings, and Knowledge. Visitor
@@ -204,7 +202,6 @@ that ends Occurrence Attestations. See [tf-demo ADR 0001] and
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0040]: ../../docs/adr/0040-make-the-article-a-satellite-of-its-phrase-head.md
 [Dumgen ADR 0004]: ../../battery/dumgen/docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
-[Dumgen ADR 0006]: ../../battery/dumgen/docs/adr/0006-segment-in-two-layers-lexeme-targets-and-phraseme-targets.md
 [Dumgen ADR 0007]: ../../battery/dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
 [tf-demo ADR 0001]: ./docs/adr/0001-persist-occurrence-attestations-by-segment-membership.md
 [tf-demo ADR 0002]: ./docs/adr/0002-persist-one-visitor-encounter-per-segment.md

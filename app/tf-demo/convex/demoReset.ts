@@ -5,7 +5,7 @@ import {
 import { v } from "convex/values";
 
 import { internal } from "./_generated/api";
-import type { Id, TableNames } from "./_generated/dataModel";
+import type { Doc, Id, TableNames } from "./_generated/dataModel";
 import {
 	type ActionCtx,
 	action,
@@ -85,7 +85,6 @@ export const resetDemoTableNames = [
 	"surfaces",
 	"lemmas",
 	"segments",
-	"sentenceAnalyses",
 	"sentences",
 	"texts",
 ] as const satisfies readonly TableNames[];
@@ -434,9 +433,9 @@ export const getTextAnalysisCandidates = internalQuery({
 
 /**
  * One bounded step of stripping a Text: from the first Sentence at or after
- * `fromPosition` that still has analysis, it deletes its Sentence Analysis,
- * then its Resolution Sessions, then up to `STRIP_SEGMENT_BATCH` Segments
- * with their Visitor Encounters and the Attestations they leave memberless.
+ * `fromPosition` that still has analysis, it removes its units, then its
+ * Resolution Sessions, then up to `STRIP_SEGMENT_BATCH` Segments with their
+ * Visitor Encounters and the Attestations they leave memberless.
  * `nextPosition` is where the next step resumes.
  */
 export const stripTextAnalysisGraphBatch = internalMutation({
@@ -455,7 +454,7 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 				q.eq("textId", textId).gte("position", fromPosition),
 			);
 		for await (const sentence of sentences) {
-			const deleted = await stripSentenceAnalysisBatch(ctx, sentence._id);
+			const deleted = await stripSentenceAnalysisBatch(ctx, sentence);
 			if (deleted > 0) {
 				return {
 					deleted,
@@ -471,17 +470,12 @@ export const stripTextAnalysisGraphBatch = internalMutation({
 /** Deletes one bounded step of a Sentence's analysis; 0 when none is left. */
 async function stripSentenceAnalysisBatch(
 	ctx: MutationCtx,
-	sentenceId: Id<"sentences">,
+	sentence: Doc<"sentences">,
 ): Promise<number> {
-	const analyses = await ctx.db
-		.query("sentenceAnalyses")
-		.withIndex("by_sentence_id", (q) => q.eq("sentenceId", sentenceId))
-		.take(STRIP_SEGMENT_BATCH);
-	if (analyses.length > 0) {
-		await Promise.all(
-			analyses.map((analysis) => ctx.db.delete(analysis._id)),
-		);
-		return analyses.length;
+	const sentenceId = sentence._id;
+	if (sentence.units !== undefined) {
+		await ctx.db.patch(sentenceId, { units: undefined });
+		return 1;
 	}
 	const sessions = await ctx.db
 		.query("resolutionSessions")
