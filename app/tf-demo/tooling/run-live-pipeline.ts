@@ -9,17 +9,17 @@ const args = process.argv.slice(2);
 if (args.includes("--help")) {
 	console.log(`Usage: bun run test:pipeline:live [--list]
 
-One Aufstieg probe through real segmentation, a browser click, scheduled
-resolution, dictionary commit and Reading Note rendering. Requires running
-tf-demo and Convex servers with provider credentials configured in Convex.
+One German Text through live intake (jev segment.inUnits), the reader, a
+hover over each multi-Segment unit and a click's Unit Card. Requires running
+tf-demo and Convex servers with TYPESAFE_API_KEY configured in Convex.
 
 TF_DEMO_LIVE_APP_URL     App URL (default ${appUrl})
 TF_DEMO_LIVE_CONVEX_URL  Matching Convex URL (default ${convexUrl})
 
-Every execution requires interactive authorization. It incurs model costs and
-adds a uniquely keyed probe Text and its analysis to the selected database.
-It never resets the database. Results remain for inspection. Existing resolved
-occurrences cannot count as a fresh generation. No retries or CI execution.
+Every execution requires interactive authorization. It spends jev tokens on
+intake and adds a uniquely keyed probe Text and its units to the selected
+database. It never resets the database. Results remain for inspection. No
+retries or CI execution.
 --list lists the single test without authorization, network calls or generation.`);
 	process.exit(0);
 }
@@ -33,7 +33,7 @@ if (!listOnly) {
 		);
 	}
 	console.log(
-		`Live Aufstieg pipeline\nApp: ${appUrl}\nConvex: ${convexUrl}\nThis run calls the model and writes probe data. Data will be retained.`,
+		`Live intake pipeline\nApp: ${appUrl}\nConvex: ${convexUrl}\nThis run calls jev and writes probe data. Data will be retained.`,
 	);
 	const prompt = createInterface({
 		input: process.stdin,
@@ -41,9 +41,9 @@ if (!listOnly) {
 	});
 	try {
 		const answer = await prompt.question(
-			'Type "AUTHORIZE Aufstieg" to run once: ',
+			'Type "AUTHORIZE intake" to run once: ',
 		);
-		if (answer !== "AUTHORIZE Aufstieg")
+		if (answer !== "AUTHORIZE intake")
 			throw new Error("Live run was not authorized.");
 	} finally {
 		prompt.close();
