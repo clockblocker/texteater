@@ -21,16 +21,22 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
-				"rationale": "Registered internal capitalization is Standard and must not be regularized."
+				"rationale": "iPhone is a brand, so it keeps Core gender Neut (das iPhone, ADR 0040), and it owns the article that opens its phrase, across the adjective neue: [das, iPhone], as das alte Berlin gives [das, Berlin] (de/proper-noun-article, de/noun-owns-its-article). das derives the DET cell das Acc.Neut.Sg. Ruled on #828 (case 3). Its Core article stays null, as for a name cited bare; open: no Rule says whether a brand is cited with its article. Registered internal capitalization is Standard and must not be regularized.",
+				"knownMistakes": [
+					"Making das a DET target of its own: a click on an article never resolves to its DET."
+				]
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -58,10 +64,11 @@
 					}
 				},
 				"members": [
+					{ "attested": "das", "orthography": "Standard" },
 					{ "attested": "iPhone", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": { "kind": "Owned", "member": 0 }
 			}
 		}
 	],
