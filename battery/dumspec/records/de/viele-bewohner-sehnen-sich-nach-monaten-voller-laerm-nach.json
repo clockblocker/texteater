@@ -69,7 +69,18 @@
 				"hash": "584917189382edfe"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: voller",
+				"url": "https://www.duden.de/rechtschreibung/voller",
+				"supports": "Target [voller]: Präposition mit Genitiv, selten auch mit Dativ (ein Korb voller Früchte), a headword of its own."
+			},
+			{
+				"title": "DWDS: voller",
+				"url": "https://www.dwds.de/wb/voller",
+				"supports": "Target [voller]: Präposition (mit Genitiv, mit Dativ)."
+			}
+		]
 	},
 	"targets": [
 		{
@@ -295,9 +306,9 @@
 		},
 		{
 			"memberSegmentIndices": [12],
-			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"route": { "family": "Lexeme", "kind": "ADP" },
 			"notes": {
-				"rationale": "open: Lemma of undeclined voller ('full of'), voller or voll; the route ADJ is not in doubt."
+				"rationale": "voller in Monaten voller Lärm ('months full of noise') is ADP voller: Duden and DWDS give it its own headword as a Präposition taking the genitive, rarely the dative (ein Korb voller Früchte), not a form of ADJ voll. Bare Lärm shows no case, so the occurrence records none, as von da an does, and Lärm keeps case null. Decided by agents under the user's delegation (2026-10-02, #828 case 2)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -308,18 +319,14 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "ADJ",
+						"kind": "ADP",
 						"canonicalForm": "voller",
-						"coreFeatures": {
-							"comparable": null
-						}
+						"coreFeatures": {}
 					},
 					"normalizedSurface": "voller",
 					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"surfaceFeatures": null
 				},
-				"articleEvidence": null,
 				"valencyEvidence": [],
 				"members": [
 					{ "attested": "voller", "orthography": "Standard" }
@@ -332,7 +339,7 @@
 			"route": { "family": "Lexeme", "kind": "NOUN" },
 			"reading": { "emojiDescription": "🔊" },
 			"notes": {
-				"rationale": "Case after undeclined voller left null, as #743 JT-B5 ruled for voll Oberflächlichkeit. Lärm is DWDS 'laute Geräusche verschiedenster Art, Krach', the opposite of the Ruhe 🔇 the sentence longs for, not 'Aufsehen, Gerede'."
+				"rationale": "Bare Lärm after ADP voller shows no case, so its case is null, as #743 JT-B5 ruled for voll Oberflächlichkeit. Lärm is DWDS 'laute Geräusche verschiedenster Art, Krach', the opposite of the Ruhe 🔇 the sentence longs for, not 'Aufsehen, Gerede'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

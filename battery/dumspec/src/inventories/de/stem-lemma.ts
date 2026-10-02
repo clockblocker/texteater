@@ -29,7 +29,7 @@ export const licensed: SurfaceSpelling = {
  * a cell (eins beside eines, unsre beside unsere, genitive jeden beside
  * jedes) are Licensed Variants, as the user ruled on 2026-10-02. A form
  * whose status awaits a ruling has none: a weak form after an article (der
- * meine), and bare viel and wenig beside vieles and weniges.
+ * meine).
  */
 export type AuthoredSpelling = {
 	readonly spelled: string;

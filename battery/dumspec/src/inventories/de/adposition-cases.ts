@@ -215,6 +215,10 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	laut: prep(genitiveOrDative),
 	längs: prep(genitiveOrDative),
 	mittels: prep(genitiveOrDative),
+	// ein Korb voller Früchte; Duden: a Präposition with the genitive, rarely
+	// the dative; DWDS: with the genitive or dative. A bare complement shows
+	// no case (voller Lärm).
+	voller: prep(genitiveOrDative),
 	// Case by position.
 	entlang: {
 		// den Fluss entlang; Duden: Dat is Swiss, elsewhere rare.

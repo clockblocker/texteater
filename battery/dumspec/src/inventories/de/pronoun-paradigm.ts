@@ -21,8 +21,7 @@ export type PronounForm = {
 	readonly variants?: readonly string[];
 	/**
 	 * Other forms of the cell whose spelling awaits a ruling: a weak form
-	 * after an article (der meine) and bare viel and wenig beside vieles and
-	 * weniges.
+	 * after an article (der meine).
 	 */
 	readonly unruled?: readonly string[];
 };

@@ -402,10 +402,19 @@ describe("the German authored inventory", () => {
 		expect(tagsOf("selben", "DET")).toEqual([]);
 		expect(tagsOf("selbe", "DET")).toEqual([]);
 		// What awaits a ruling carries no spelling: a weak form after an
-		// article and bare PRON viel and wenig beside vieles and weniges.
+		// article.
 		expect(tagsOf("meinen", "PRON", "Gen")).toEqual(["meiner none"]);
 		expect(tagsOf("unsren", "PRON", "Nom")).toEqual(["unserer none"]);
-		expect(tagsOf("viel", "PRON", "Acc")).toEqual(["viel none"]);
+		// Bare PRON viel and wenig are Canonical with no cell, as DET viel's
+		// uninflected spelling is; vieles, vielem and weniges keep their cells
+		// (decided by agents under the user's delegation, 2026-10-02).
+		for (const stem of ["viel", "wenig"]) {
+			expect(tagsOf(stem, "PRON", null)).toEqual([`${stem} Canonical`]);
+			expect(tagsOf(stem, "PRON", "Acc")).toEqual([]);
+		}
+		expect(tagsOf("vieles", "PRON", "Nom")).toEqual(["viel Canonical"]);
+		expect(tagsOf("vielem", "PRON", "Dat")).toEqual(["viel Canonical"]);
+		expect(tagsOf("weniges", "PRON", "Acc")).toEqual(["wenig Canonical"]);
 		// mehr and weniger are the comparatives of DET viel and wenig.
 		expect(tagsOf("weniger", "DET", null)).toEqual(["wenig Canonical"]);
 		expect(tagsOf("mehr", "DET", null)).toEqual(["viel Canonical"]);

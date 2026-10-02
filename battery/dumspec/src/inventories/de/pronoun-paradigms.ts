@@ -334,6 +334,9 @@ add(
 // wenig stand alone as neuter mass singular (vieles, bare viel) or plural; the
 // genitive is adjectival -en. Masc/Fem singular has no standalone use. Like
 // the DETs, both cite their usual bare form (de/canonical-form-is-the-headword).
+// Bare viel and wenig (Er weiß viel) spell the Lemma without a cell, as DET
+// viel's uninflected spelling does; vieles, vielem and weniges stay Canonical
+// in their cells (decided by agents under the user's delegation, 2026-10-02).
 for (const [stem, ipa, emoji, definition, en, ru] of [
 	[
 		"viel",
@@ -352,23 +355,17 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 		"немногое; немногие",
 	],
 ] as const) {
-	// Bare viel and wenig are the usual forms and the Canonical Form, so
-	// whether they are Canonical or Licensed beside vieles and weniges awaits
-	// a ruling.
-	const t = strongPronoun(stem, ipa),
-		bare = (cell: (typeof t.Neut)[number]) => ({
-			...cell,
-			unruled: [stem],
-		});
+	const t = strongPronoun(stem, ipa);
 	const table: PronounTable = {
 		Masc: absent,
 		Fem: absent,
-		Neut: [bare(t.Neut[0]), bare(t.Neut[1]), bare(t.Neut[2]), t.Masc[1]],
+		Neut: [t.Neut[0], t.Neut[1], t.Neut[2], t.Masc[1]],
 		Plur: t.Plur,
 	};
 	add(table, description("Ind", emoji, definition, [en], [ru]), {
 		// Transcriptions reviewed with the bare headword, as on the DETs.
 		citation: form(stem, stem === "viel" ? "fiːl" : "ˈveːnɪç"),
+		uninflected: [stem],
 	});
 }
 // meist has no PRON: standing alone it still follows its article (das meiste,
