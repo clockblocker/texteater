@@ -37,17 +37,27 @@ const idiomUnderFloor = {
 	s_idiom_6: picked("p2", { p2: 0.4, none: 0.6 }),
 };
 
-test("an idiom host share under the floor asks the Locution Choice; a whole answer merges with the opening preposition", async () => {
+const fixedSide = picked("fixed", { fixed: 0.8, free: 0.2 });
+
+test("an idiom host share under the floor asks the Locution Choice; both units fixed merge, with the opening preposition", async () => {
 	const { groups, units, judge } = await run(kauf, {
 		...idiomUnderFloor,
-		lc_2_x_6: picked("whole", { whole: 0.8, free: 0.2 }),
+		lc_2_x_6_l: fixedSide,
+		lc_2_x_6_r: fixedSide,
 		r_2_5_6: picked("Locution/VERB", {
 			"Locution/VERB": 0.6,
 			"Lexeme/VERB": 0.4,
 		}),
 	});
 	const locution = judge.requests.find(({ stage }) => stage === "locution");
-	expect(Object.keys(locution?.questions ?? {})).toEqual(["lc_2_x_6"]);
+	expect(Object.keys(locution?.questions ?? {})).toEqual([
+		"lc_2_x_6_l",
+		"lc_2_x_6_r",
+	]);
+	// The judge sees the unit the merge would make, the opening in included.
+	expect(JSON.stringify(locution?.questions)).toContain(
+		'one established multiword expression, \\"nahm … in Kauf\\"',
+	);
 	expect(groups).toEqual([[0], [2, 8, 10], [4, 6]]);
 	expect(units.find((unit) => unit.segments.length === 3)?.route).toEqual(
 		expect.objectContaining({ family: "Locution", kind: "VERB" }),
@@ -56,10 +66,11 @@ test("an idiom host share under the floor asks the Locution Choice; a whole answ
 	expect(judge.stages().at(-1)).toBe("route-extra");
 });
 
-test("a merge needs the whole share at the floor; otherwise the units stand", async () => {
+test("a merge needs both units fixed at the floor; a free unit keeps them apart", async () => {
 	const { groups } = await run(kauf, {
 		...idiomUnderFloor,
-		lc_2_x_6: picked("outside", { whole: 0.4, outside: 0.6 }),
+		lc_2_x_6_l: fixedSide,
+		lc_2_x_6_r: picked("free", { fixed: 0.4, free: 0.6 }),
 	});
 	expect(groups).toEqual([[0], [2], [4, 6], [8], [10]]);
 });
@@ -113,4 +124,78 @@ test("the wording shows the pieces as written, with … for a gap", () => {
 	});
 	expect(wordingOf({ sentence }, [2, 6, 7])).toBe("hat … Schwein gehabt");
 	expect(wordingOf({ sentence }, [1, 2])).toBe("Er hat");
+});
+
+// Zu0 m1 _2 Beispiel3 _4 fängt5 _6 die7 _8 Schule9 _10 morgen11 _12 an13 .14
+const zumBeispiel = [
+	{ kind: "ResolvableText", text: "Zu", surface: "zu" },
+	{ kind: "ResolvableText", text: "m", surface: "dem" },
+	...segmentsOf(" Beispiel fängt die Schule morgen an."),
+] as const;
+
+/**
+ * tf-demo's live smoke (#851): nomination hears zum Beispiel, but under the
+ * floors (fixedness Zu 0.63 to 0.68, m 0.37 to 0.43, Beispiel 0.81;
+ * expression Zu~Beispiel 0.49 to 0.63, m~Beispiel 0.65 to 0.70).
+ */
+const zumBeispielHeard: Record<string, Answer> = {
+	f_1: noul(0.65),
+	f_2: noul(0.4),
+	f_3: noul(0.81),
+	e_1_2: noul(0.62),
+	e_1_3: noul(0.55),
+	e_2_3: noul(0.68),
+	s_particle_8: picked("p4"),
+	s_article_5: picked("p6"),
+};
+
+test("Zum Beispiel, capitalized and fused: under the floors production splits it three ways; an accepted link keeps the fused halves together", async () => {
+	const segments = [...zumBeispiel];
+	const sentence = sentenceOf({ segments });
+	expect(sentence.pieces.slice(0, 2).map((piece) => piece.fusedWord)).toEqual(
+		["Zum", "Zum"],
+	);
+	const production = await segmentGermanUnits(
+		{ segments },
+		fakeJudge(zumBeispielHeard).ask,
+	);
+	expect(production.map((unit) => unit.segments)).toEqual([
+		[0],
+		[1],
+		[3],
+		[5, 13],
+		[7, 9],
+		[11],
+	]);
+	// One expression link over the floors, and the fused halves follow it.
+	const linked = await segmentGermanUnits(
+		{ segments },
+		fakeJudge({ ...zumBeispielHeard, f_2: noul(0.6), e_2_3: noul(0.75) })
+			.ask,
+	);
+	expect(linked.map((unit) => unit.segments)).toContainEqual([0, 1, 3]);
+});
+
+test("Zum Beispiel: the Locution Choice asks about the heard links and, both units fixed, makes [Zu, m, Beispiel] one Locution", async () => {
+	const judge = fakeJudge({
+		...zumBeispielHeard,
+		lc_1_x_3_l: fixedSide,
+		lc_1_x_3_r: fixedSide,
+		lc_2_x_3_l: fixedSide,
+		lc_2_x_3_r: fixedSide,
+		r_1_2_3: picked("Locution/ADV"),
+	});
+	const units = await segmentGermanUnits(
+		{ segments: [...zumBeispiel] },
+		judge.ask,
+		withLocution,
+	);
+	const locution = judge.requests.find(({ stage }) => stage === "locution");
+	expect(JSON.stringify(locution?.questions)).toContain(
+		'expression, \\"Zum Beispiel\\"',
+	);
+	expect(units[0]).toEqual({
+		segments: [0, 1, 3],
+		route: expect.objectContaining({ family: "Locution", kind: "ADV" }),
+	});
 });

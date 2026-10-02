@@ -4,23 +4,27 @@
  * expression and assembly still splits it, because its link stayed under a
  * floor: an idiom host share of 0.3 to 0.7 (die Katze im Sack … gekauft),
  * an expression Noul of 0.5 to 0.7 (bitte schön), or a fixedness Noul under
- * 0.5 for one member (Blase … Trübsal). Code turns each such link between
- * two of the membership's units into one question about the two units
- * read together as one wording, and the judge weighs that wording whole: one
- * established expression with every word fixed (de/fixed-member-test,
- * de/largest-fixed-unit), an expression with some words outside it, the
- * words used literally (de/idiom), or a free combination
- * (de/fixed-members-only). A merge the judge reads as whole joins the two
- * units into a Locution, with its members' fused pieces and a member noun's
- * opening preposition (de/fused-word-pieces), and the code rules apply
- * again over it.
+ * 0.5 for one member (Blase … Trübsal, the m of zum Beispiel). Code turns
+ * each such link between two of the membership's units into a merge
+ * candidate and shows the judge the unit the merge would make, fused pieces
+ * and a member noun's opening preposition included (de/fused-word-pieces).
+ * The judge then takes de/fixed-member-test on each of the two units: is it
+ * a fixed part of one established expression with the other, needed in its
+ * slot so that another word of its kind would break the expression, or a
+ * free subject, object, complement or modifier the expression only takes
+ * (de/fixed-members-only); or are the words meant literally (de/idiom), or
+ * joined by no expression at all? Both units fixed, the merge joins them
+ * into a Locution, and the code rules apply again over it.
  *
  * Code also proposes bleiben with an infinitive, a Noul each
- * (de/bleiben-with-an-infinitive): one Locution only when the pair has a
- * dictionary meaning of its own (stecken bleiben), not bleiben meaning stay.
+ * (de/bleiben-with-an-infinitive): one Locution only when the pair has its
+ * own dictionary headword and meaning (liegen bleiben, 'break down'), not
+ * bleiben meaning stay (sitzen geblieben, 'stayed seated').
  *
  * No merge touches a piece a code rule decides (`boundPieces`), nor a
- * Saying. A Sentence with no candidate asks nothing.
+ * Saying. A Sentence with no candidate asks nothing. The first version
+ * asked one Choice over the whole wording and merged on its `whole` share;
+ * it read free objects and pronouns as fixed (df28add5).
  */
 import { closedVerbForms } from "dumspec/inventories";
 import type { Questions } from "promptsmith/typesafe";
@@ -38,7 +42,7 @@ import { joinRefs, type Piece } from "./sentence.js";
 
 /** How the Locution Choice's answers become merges. */
 export type LocutionSettings = {
-	/** The share of `whole` a merge needs, and the bleiben Noul's floor. */
+	/** The `fixed` share each unit of a merge needs, and the bleiben Noul's floor. */
 	readonly floor: number;
 	/** Whether a merged unit absorbs its members' fused pieces and a noun's opening preposition. */
 	readonly absorb: boolean;
@@ -46,7 +50,7 @@ export type LocutionSettings = {
 	readonly bleiben: boolean;
 };
 
-/** The setting X5 screens first: a whole share of 0.5, absorbing, with bleiben. */
+/** The setting X5 screens first: both units fixed at 0.5, absorbing, with bleiben. */
 export const locutionSettings: LocutionSettings = {
 	floor: 0.5,
 	absorb: true,
@@ -223,16 +227,30 @@ export function wordingOf(
 	return text;
 }
 
-const mergeCriteria = {
-	whole: "Yes: one idiom, support-verb collocation, fixed phrase or routine formula in its fixed sense, and every one of these words belongs to it (nahm … in Kauf; war auf dem Holzweg; hat … Schwein gehabt; Hals- und Beinbruch)",
-	outside:
-		"No: an established expression lies within this wording, but some of these words stand outside it: a subject, object or other complement the expression takes, or a free adverb or modifier (Die Firma … nahm … in Kauf: die Firma stands outside)",
+const memberCriteria = {
+	fixed: "A fixed part of one established expression with the other words, an idiom, support-verb collocation, fixed phrase or routine formula: the expression needs this very word, and an ordinary synonym or another word of its kind would break it (Kauf in nahm … in Kauf; Holzweg in war auf dem Holzweg)",
+	free: "A free part: a subject, object, complement or modifier that the expression only takes, where another word of its kind could stand in the same sense, das for es included (die Kosten in nahm die Kosten in Kauf)",
 	literal:
-		"No: these words could form an expression, but here they are meant literally (sie gingen auf dem Holzweg durch den Wald)",
-	free: "No: an ordinary free combination of words, with no established expression among them (kaufte einen Hut; las die Zeitung)",
+		"The words are meant literally here, so no expression joins them (Holzweg in ging auf dem Holzweg durch den Wald)",
+	none: "No established expression joins these words (Hut in kaufte einen Hut)",
 };
 
-/** The `locution` request's questions: a Choice per merge, a Noul per bleiben pair. */
+/** The pieces a merge would make one unit: both units and what they absorb. */
+export function mergedPieces(
+	nomination: Nomination,
+	merge: MergeCandidate,
+): number[] {
+	const members = new Set([...merge.left, ...merge.right]);
+	for (const edge of absorbedEdges(
+		nomination,
+		articleHosts(nomination),
+		members,
+	))
+		for (const id of edge.pieces) members.add(id);
+	return [...members].sort((a, b) => a - b);
+}
+
+/** The `locution` request's questions: a Choice per unit of each merge, a Noul per bleiben pair. */
 export function locutionQuestions(
 	nomination: Nomination,
 	merges: readonly MergeCandidate[],
@@ -241,15 +259,21 @@ export function locutionQuestions(
 	const { sentence, ref } = nomination;
 	const questions: Questions = {};
 	for (const merge of merges) {
-		const ids = [...merge.left, ...merge.right].sort((a, b) => a - b);
-		questions[mergeId(merge)] = choice(
-			`In \`sentence\`, read the pieces ${joinRefs(sentence, ref, ids)} together, as "${wordingOf(nomination, ids)}". Is that wording one established multiword expression in its fixed sense here, with every one of these words a fixed part of it? A word's article, auxiliary, particle or reflexive counts with that word.`,
-			mergeCriteria,
-		);
+		const whole = wordingOf(nomination, mergedPieces(nomination, merge));
+		for (const [side, unit, other] of [
+			["l", merge.left, merge.right],
+			["r", merge.right, merge.left],
+		] as const) {
+			const wording = wordingOf(nomination, unit);
+			questions[`${mergeId(merge)}_${side}`] = choice(
+				`In \`sentence\`, ${joinRefs(sentence, ref, unit)} ("${wording}") may belong with ${joinRefs(sentence, ref, other)} ("${wordingOf(nomination, other)}") to one established multiword expression, "${whole}". What is "${wording}" there? A word's article, auxiliary, particle or reflexive counts with that word.`,
+				memberCriteria,
+			);
+		}
 	}
 	for (const pair of bleiben)
 		questions[bleibenId(pair)] = noul(
-			`In \`sentence\`, do ${ref(pair.bleiben)} and ${ref(pair.infinitive)} together form one verb with a dictionary meaning of its own, bleiben with an infinitive (stecken bleiben, 'get stuck'; hängen bleiben, 'be remembered'), rather than bleiben meaning stay with an infinitive that only says how (sie blieb noch sitzen, 'stayed seated')?`,
+			`In \`sentence\`, do ${ref(pair.bleiben)} and ${ref(pair.infinitive)} together form one verb with its own dictionary headword and a meaning beyond staying in a position, bleiben with an infinitive (liegen bleiben, 'break down'; stecken bleiben, 'get stuck'), rather than bleiben meaning stay with an infinitive that only says how (sie ist sitzen geblieben, 'stayed seated')?`,
 		);
 	return questions;
 }
@@ -293,14 +317,20 @@ export function acceptedMerges(
 	settings: LocutionSettings,
 ): (readonly [number, number])[] {
 	const links: (readonly [number, number])[] = [];
-	for (const merge of located.merges) {
-		const answer = located.answers[mergeId(merge)];
+	const fixed = (id: string) => {
+		const answer = located.answers[id];
+		return answer?.type === "choice"
+			? (answer.probabilities.fixed ?? 0)
+			: 0;
+	};
+	for (const merge of located.merges)
 		if (
-			answer?.type === "choice" &&
-			(answer.probabilities.whole ?? 0) >= settings.floor
+			Math.min(
+				fixed(`${mergeId(merge)}_l`),
+				fixed(`${mergeId(merge)}_r`),
+			) >= settings.floor
 		)
 			links.push([merge.left[0] ?? 0, merge.right[0] ?? 0]);
-	}
 	if (settings.bleiben)
 		for (const pair of located.bleiben) {
 			const answer = located.answers[bleibenId(pair)];
