@@ -1,82 +1,10 @@
 import { type NoteStudyFixture, noteToken } from "../note-study-fixture";
 
-export const phrasemeFixtures = [
-	{
-		presentationKey: "Der-Weg-ist-das-Ziel",
-		family: "Phraseme",
-		kind: "Aphorism",
-		emoji: "🧭",
-		title: [noteToken("Der Weg ist das Ziel", "reference", "Aphorismus")],
-		titleText: "Der Weg ist das Ziel",
-		summary: "Leitsatz über den Wert des Weges zum Ziel.",
-		contexts: [
-			[
-				"Als der Aufstieg anstrengender wurde, sagte die Wanderführerin: „",
-				noteToken("Der Weg ist das Ziel", "reference", "Aphorismus"),
-				".“",
-			],
-			[
-				"Das Projekt brachte nicht den erhofften Preis, aber wir hatten viel gelernt — ",
-				noteToken(
-					"der Weg ist das Ziel",
-					"reference",
-					"Aphorismus in den Satz eingebettet",
-				),
-				".",
-			],
-		],
-		definition:
-			"Ein fester, nicht produktiv gebildeter Leitsatz: Nicht nur das Ergebnis, sondern auch der Weg dorthin ist wertvoll.",
-		relations: [
-			{
-				relation: "nearSynonym",
-				label: "Naher Sinn",
-				mark: "≈",
-				content: [
-					noteToken(
-						"Der Weg ist wichtiger als das Ziel",
-						"shadow",
-						"Unit Shadow, sinngleicher Leitsatz",
-					),
-				],
-			},
-			{
-				relation: "nearAntonym",
-				label: "Gegensätzlicher Leitsatz",
-				mark: "≉",
-				content: [
-					noteToken(
-						"Der Zweck heiligt die Mittel",
-						"reference",
-						"Aphorismus",
-					),
-				],
-			},
-		],
-		structure: [
-			[
-				noteToken("Der", "reference", "bestimmter Artikel"),
-				" ",
-				noteToken("Weg", "masculine", "maskulines Nomen"),
-				" ",
-				noteToken("ist", "reference", "Kopulaverb"),
-				" ",
-				noteToken("das", "reference", "bestimmter Artikel"),
-				" ",
-				noteToken("Ziel", "neuter", "neutrales Nomen"),
-			],
-		],
-		translations: ["The journey is the destination.", "Путь — это цель."],
-		tags: [
-			noteToken("#Phraseme", "reference", "Familie"),
-			noteToken("#Aphorismus", "reference", "Art"),
-			noteToken("#Festform", "reference", "Gebrauch"),
-		],
-	},
+export const locutionFixtures = [
 	{
 		presentationKey: "Eine-Entscheidung-treffen",
-		family: "Phraseme",
-		kind: "Collocation",
+		family: "Locution",
+		kind: "VERB",
 		emoji: "✅",
 		title: [
 			noteToken("eine Entscheidung treffen", "reference", "Kollokation"),
@@ -154,17 +82,24 @@ export const phrasemeFixtures = [
 		],
 		translations: ["to make a decision", "принять решение"],
 		tags: [
-			noteToken("#Phraseme", "reference", "Familie"),
-			noteToken("#Kollokation", "reference", "Art"),
+			noteToken("#Locution", "reference", "Familie"),
+			noteToken("#Verb", "reference", "Art"),
+			noteToken("#Kollokation", "reference", "Locution-Typ"),
 		],
 	},
 	{
 		presentationKey: "Wie-dem-auch-sei",
-		family: "Phraseme",
-		kind: "DiscourseFormula",
+		family: "Locution",
+		kind: "ADV",
 		emoji: "↪️",
-		title: [noteToken("Wie dem auch sei", "reference", "Diskursformel")],
-		titleText: "Wie dem auch sei",
+		title: [
+			noteToken(
+				"wie dem auch sei",
+				"reference",
+				"feste adverbiale Wendung",
+			),
+		],
+		titleText: "wie dem auch sei",
 		summary:
 			"Formel zum Beenden eines Einwands und Fortführen des Gesprächs.",
 		contexts: [
@@ -172,7 +107,7 @@ export const phrasemeFixtures = [
 				noteToken(
 					"Wie dem auch sei",
 					"reference",
-					"Diskursformel am Satzanfang",
+					"feste Wendung am Satzanfang",
 				),
 				", wir müssen den Bericht heute noch abschicken.",
 			],
@@ -181,7 +116,7 @@ export const phrasemeFixtures = [
 				noteToken(
 					"Wie dem auch sei",
 					"reference",
-					"Diskursformel als Übergang",
+					"feste Wendung als Übergang",
 				),
 				", morgen rufe ich dort noch einmal an.",
 			],
@@ -194,7 +129,7 @@ export const phrasemeFixtures = [
 				label: "Synonym",
 				mark: "=",
 				content: [
-					noteToken("wie auch immer", "reference", "Diskursformel"),
+					noteToken("wie auch immer", "reference", "feste Wendung"),
 				],
 			},
 			{
@@ -205,7 +140,7 @@ export const phrasemeFixtures = [
 					noteToken(
 						"sei's drum",
 						"shadow",
-						"Unit Shadow, umgangssprachliche Diskursformel",
+						"Unit Shadow, umgangssprachliche feste Wendung",
 					),
 				],
 			},
@@ -226,15 +161,15 @@ export const phrasemeFixtures = [
 			"Как бы то ни было; в любом случае.",
 		],
 		tags: [
-			noteToken("#Phraseme", "reference", "Familie"),
-			noteToken("#Diskursformel", "reference", "Art"),
+			noteToken("#Locution", "reference", "Familie"),
+			noteToken("#Adverb", "reference", "Art"),
 			noteToken("#Übergang", "reference", "Gesprächsfunktion"),
 		],
 	},
 	{
 		presentationKey: "Tomaten-auf-den-Augen-haben",
-		family: "Phraseme",
-		kind: "Idiom",
+		family: "Locution",
+		kind: "VERB",
 		emoji: "🍅",
 		title: [noteToken("Tomaten auf den Augen haben", "reference", "Idiom")],
 		titleText: "Tomaten auf den Augen haben",
@@ -306,102 +241,10 @@ export const phrasemeFixtures = [
 			"не видеть очевидного; словно глаза не видят",
 		],
 		tags: [
-			noteToken("#Phraseme", "reference", "Familie"),
-			noteToken("#Idiom", "reference", "Art"),
+			noteToken("#Locution", "reference", "Familie"),
+			noteToken("#Verb", "reference", "Art"),
+			noteToken("#Idiom", "reference", "Locution-Typ"),
 			noteToken("#Umgangssprache", "reference", "Register"),
-		],
-	},
-	{
-		presentationKey: "Morgenstund-hat-Gold-im-Mund",
-		family: "Phraseme",
-		kind: "Proverb",
-		emoji: "🌅",
-		title: [
-			noteToken(
-				"Morgenstund hat Gold im Mund",
-				"reference",
-				"Sprichwort",
-			),
-		],
-		titleText: "Morgenstund hat Gold im Mund",
-		summary: "Sprichwort über die Vorteile eines frühen Anfangs.",
-		contexts: [
-			[
-				"Als wir noch vor Sonnenaufgang losfuhren, sagte meine Großmutter: „",
-				noteToken(
-					"Morgenstund hat Gold im Mund",
-					"reference",
-					"Sprichwort",
-				),
-				".“",
-			],
-			[
-				"Die Bäckerin beginnt um vier Uhr mit der Arbeit; für sie gilt wirklich: ",
-				noteToken(
-					"Morgenstund hat Gold im Mund",
-					"reference",
-					"Sprichwort als Kommentar",
-				),
-				".",
-			],
-		],
-		definition:
-			"Ein festes, nicht produktiv gebildetes Sprichwort: Wer früh beginnt, hat oft einen Vorteil oder schafft besonders viel.",
-		relations: [
-			{
-				relation: "nearSynonym",
-				label: "Verwandtes Sprichwort",
-				mark: "≈",
-				content: [
-					noteToken(
-						"Der frühe Vogel fängt den Wurm",
-						"reference",
-						"Sprichwort",
-					),
-				],
-			},
-			{
-				relation: "nearAntonym",
-				label: "Gegensätzliche Perspektive",
-				mark: "≉",
-				content: [
-					noteToken(
-						"Gut Ding will Weile haben",
-						"reference",
-						"Sprichwort",
-					),
-				],
-			},
-		],
-		structure: [
-			[
-				noteToken(
-					"Morgenstund",
-					"feminine",
-					"dichterische Kurzform von Morgenstunde",
-				),
-				" ",
-				noteToken("hat", "reference", "Verb"),
-				" ",
-				noteToken("Gold", "neuter", "Akkusativobjekt"),
-				" ",
-				noteToken("im", "reference", "Präposition mit Artikel"),
-				" ",
-				noteToken("Mund", "masculine", "maskulines Nomen"),
-			],
-		],
-		translations: [
-			"The morning hour has gold in its mouth.",
-			"Утренний час — с золотом во рту.",
-		],
-		translatedExplanations: [
-			"The early bird catches the worm.",
-			"Кто рано встаёт, тому Бог подаёт.",
-		],
-		tags: [
-			noteToken("#Phraseme", "reference", "Familie"),
-			noteToken("#Sprichwort", "reference", "Art"),
-			noteToken("#Festform", "reference", "Gebrauch"),
 		],
 	},
 ] as const satisfies readonly NoteStudyFixture[];

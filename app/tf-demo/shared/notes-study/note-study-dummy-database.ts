@@ -4,6 +4,7 @@ import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { splitFusedWords } from "legacy-dumgen/authored";
 import {
+	emojiDescriptionOf,
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 } from "../../server/linguisticIdentity";
@@ -63,71 +64,69 @@ export type NoteStudyPendingRelation = {
 	readonly target: Dumrel.UnitShadow;
 };
 
-const NULL_CORE_FEATURES_BY_KIND = {
-	ADJ: { abbr: null, foreign: null, numType: null, variant: null },
-	ADP: {
-		abbr: null,
-		adpType: null,
-		extPos: null,
-		foreign: null,
-		partType: null,
-	},
-	ADV: { foreign: null, numType: null, pronType: null },
-	AUX: { verbType: null },
-	CCONJ: { conjType: null },
-	DET: {
+type NoteStudyRoute = Pick<Dumling.Lemma<"de">, "family" | "kind">;
+type RouteKey<Route extends NoteStudyRoute = NoteStudyRoute> =
+	Route extends unknown ? `${Route["family"]}/${Route["kind"]}` : never;
+
+/** The unknown Core Features of every studied route. */
+const NULL_CORE_FEATURES_BY_ROUTE = {
+	"Lexeme/ADJ": { comparable: null },
+	"Lexeme/ADP": {},
+	"Lexeme/ADV": { comparable: null },
+	"Lexeme/AUX": {},
+	"Lexeme/CCONJ": {},
+	"Lexeme/DET": {
 		case: null,
-		definite: null,
-		extPos: null,
-		foreign: null,
 		gender: null,
 		number: null,
-		numType: null,
 		person: null,
 		polite: null,
 		poss: null,
 		pronType: null,
 	},
-	INTJ: { partType: null },
-	NOUN: { gender: null, hyph: null },
-	NUM: { abbr: null, foreign: null, numType: null },
-	PART: { abbr: null, foreign: null, partType: null, polarity: null },
-	PRON: {
-		extPos: null,
-		foreign: null,
+	"Lexeme/INTJ": { partType: null },
+	"Lexeme/NOUN": { gender: null },
+	"Lexeme/NUM": {},
+	"Lexeme/PRON": {
+		case: null,
+		gender: null,
+		number: null,
 		person: null,
 		polite: null,
 		poss: null,
 		pronType: null,
-		case: null,
-		number: null,
-		gender: null,
 	},
-	PROPN: { abbr: null, article: null, foreign: null, gender: null },
-	PUNCT: { punctType: null },
-	SCONJ: { conjType: null },
-	SYM: { foreign: null, numType: null },
-	VERB: {
-		hasSepPrefix: null,
-		lexicallyReflexive: null,
-		verbType: null,
-	},
-	X: { abbr: null, foreign: null, hyph: null, numType: null },
-	Aphorism: {},
-	Collocation: {},
-	DiscourseFormula: { discourseFormulaRole: null },
-	Idiom: {},
-	Proverb: {},
-	Circumfix: {},
-	Duplifix: {},
-	Infix: {},
-	Interfix: {},
-	Prefix: { hasSepPrefix: null },
-	Root: {},
-	Suffix: {},
-	Suffixoid: {},
-	Transfix: {},
-} as const;
+	"Lexeme/PROPN": { article: null, gender: null },
+	"Lexeme/SCONJ": {},
+	"Lexeme/SYM": {},
+	"Lexeme/VERB": { hasSepPrefix: null, lexicallyReflexive: null },
+	"Locution/ADV": { comparable: null },
+	"Locution/VERB": {},
+	"Saying/Saying": {},
+	"Morpheme/Circumfix": {},
+	"Morpheme/Interfix": {},
+	"Morpheme/Prefix": { hasSepPrefix: null },
+	"Morpheme/Root": {},
+	"Morpheme/Suffix": {},
+	"Morpheme/Suffixoid": {},
+} as const satisfies Partial<Record<RouteKey, object>>;
+
+/**
+ * The Core Features a studied Reading knows; the rest stay unknown. An
+ * answer word is an INTJ with partType Res, as dumspec's gold has it.
+ */
+const KNOWN_CORE_FEATURES: Partial<Record<string, object>> = {
+	Doch: { partType: "Res" },
+};
+
+function nullCoreFeatures(route: NoteStudyRoute): object {
+	const key = `${route.family}/${route.kind}`;
+	if (!Object.hasOwn(NULL_CORE_FEATURES_BY_ROUTE, key))
+		throw new Error(`Missing Notes Study Core Features for ${key}.`);
+	return NULL_CORE_FEATURES_BY_ROUTE[
+		key as keyof typeof NULL_CORE_FEATURES_BY_ROUTE
+	];
+}
 
 /** Dumling identity inventory. It deliberately does not contain UI copy. */
 const NOTE_STUDY_READING_IDENTITIES = [
@@ -140,45 +139,32 @@ const NOTE_STUDY_READING_IDENTITIES = [
 	["Ach", "Lexeme", "INTJ", "ach", "😮"],
 	["Daemmerung", "Lexeme", "NOUN", "Dämmerung", "🌒"],
 	["Drei", "Lexeme", "NUM", "drei", "3️⃣"],
-	["Doch", "Lexeme", "PART", "doch", "💬"],
+	["Doch", "Lexeme", "INTJ", "doch", "💬"],
 	["Einander", "Lexeme", "PRON", "einander", "🤝"],
 	["Berlin", "Lexeme", "PROPN", "Berlin", "🐻"],
 	["Obwohl", "Lexeme", "SCONJ", "obwohl", "↔️"],
 	["%", "Lexeme", "SYM", "%", "💯"],
 	["Anrufen", "Lexeme", "VERB", "anrufen", "📞"],
-	["Lorem", "Lexeme", "X", "Lorem", "🧩"],
-	[
-		"Der-Weg-ist-das-Ziel",
-		"Phraseme",
-		"Aphorism",
-		"Der Weg ist das Ziel",
-		"🧭",
-	],
 	[
 		"Eine-Entscheidung-treffen",
-		"Phraseme",
-		"Collocation",
+		"Locution",
+		"VERB",
 		"eine Entscheidung treffen",
 		"✅",
 	],
-	[
-		"Wie-dem-auch-sei",
-		"Phraseme",
-		"DiscourseFormula",
-		"Wie dem auch sei",
-		"↪️",
-	],
+	["Wie-dem-auch-sei", "Locution", "ADV", "wie dem auch sei", "↪️"],
 	[
 		"Tomaten-auf-den-Augen-haben",
-		"Phraseme",
-		"Idiom",
+		"Locution",
+		"VERB",
 		"Tomaten auf den Augen haben",
 		"🍅",
 	],
+	["Der-Weg-ist-das-Ziel", "Saying", "Saying", "Der Weg ist das Ziel", "🧭"],
 	[
 		"Morgenstund-hat-Gold-im-Mund",
-		"Phraseme",
-		"Proverb",
+		"Saying",
+		"Saying",
 		"Morgenstund hat Gold im Mund",
 		"🌅",
 	],
@@ -215,7 +201,10 @@ function readingFor(fixture: NoteStudyFixture): Dumling.Reading<"de"> {
 			family: identity.family,
 			kind: identity.kind,
 			canonicalForm: identity.canonicalForm,
-			coreFeatures: NULL_CORE_FEATURES_BY_KIND[identity.kind],
+			coreFeatures: {
+				...nullCoreFeatures(identity),
+				...KNOWN_CORE_FEATURES[fixture.presentationKey],
+			},
 		},
 		emojiDescription: identity.emojiDescription,
 	};
@@ -242,6 +231,15 @@ function knowledgeFor(fixture: NoteStudyFixture): Dumrel.ReadingKnowledge {
 	if (!parsed.success) throw parsed.error;
 	return parsed.value;
 }
+
+/** Lexeme Kinds whose Attestation says where its article is (ADR 0040). */
+const germanArticleKinds: readonly string[] = [
+	"ADJ",
+	"NOUN",
+	"NUM",
+	"PRON",
+	"PROPN",
+];
 
 /** Context words as intake stores them: a fused word (`Am`) as its pieces. */
 function splitLiteral(text: string): readonly Segment[] {
@@ -301,7 +299,8 @@ function occurrenceFor(
 			orthography: "Standard",
 		})),
 		realizationCoverage: "Full",
-		...(reading.lemma.kind === "NOUN" || reading.lemma.kind === "PROPN"
+		...(reading.lemma.family === "Lexeme" &&
+		germanArticleKinds.includes(reading.lemma.kind)
 			? { articleEvidence: null }
 			: {}),
 		...(germanVerbalKinds.includes(reading.lemma.kind)
@@ -357,7 +356,7 @@ function databaseUnitFor(fixture: NoteStudyFixture): NoteStudyDatabaseUnit {
 /** Committed, runtime-validated Dumling/Dumrel values used by the local seed. */
 export const NOTE_STUDY_DATABASE = NOTE_STUDY_FIXTURES.map(databaseUnitFor);
 
-/** Explicit target routes; missing identities fail instead of defaulting to Lexeme/X. */
+/** Explicit target routes; a missing identity fails instead of defaulting. */
 const RELATED_ROUTES = {
 	still: { family: "Lexeme", kind: "ADJ" },
 	gelassen: { family: "Lexeme", kind: "ADJ" },
@@ -387,7 +386,7 @@ const RELATED_ROUTES = {
 	Tageslicht: { family: "Lexeme", kind: "NOUN" },
 	Lichtzustand: { family: "Lexeme", kind: "NOUN" },
 	Tageslauf: { family: "Lexeme", kind: "NOUN" },
-	nein: { family: "Lexeme", kind: "PART" },
+	nein: { family: "Lexeme", kind: "INTJ" },
 	"sich gegenseitig": { family: "Lexeme", kind: "PRON" },
 	sich: { family: "Lexeme", kind: "PRON" },
 	"sich selbst": { family: "Lexeme", kind: "PRON" },
@@ -400,30 +399,29 @@ const RELATED_ROUTES = {
 	durchklingeln: { family: "Lexeme", kind: "VERB" },
 	kontaktieren: { family: "Lexeme", kind: "VERB" },
 	"3": { family: "Lexeme", kind: "NUM" },
-	"Der Zweck heiligt die Mittel": { family: "Phraseme", kind: "Aphorism" },
-	"Der Weg ist wichtiger als das Ziel": {
-		family: "Phraseme",
-		kind: "Aphorism",
-	},
-	"eine Entscheidung fällen": { family: "Phraseme", kind: "Collocation" },
-	"eine Entscheidung aufschieben": {
-		family: "Phraseme",
-		kind: "Collocation",
-	},
-	"zu einem Entschluss kommen": { family: "Phraseme", kind: "Collocation" },
-	"wie auch immer": { family: "Phraseme", kind: "DiscourseFormula" },
-	"sei's drum": { family: "Phraseme", kind: "DiscourseFormula" },
+	"eine Entscheidung fällen": { family: "Locution", kind: "VERB" },
+	"eine Entscheidung aufschieben": { family: "Locution", kind: "VERB" },
+	"zu einem Entschluss kommen": { family: "Locution", kind: "VERB" },
+	"wie auch immer": { family: "Locution", kind: "ADV" },
+	"sei's drum": { family: "Locution", kind: "ADV" },
 	"den Wald vor lauter Bäumen nicht sehen": {
-		family: "Phraseme",
-		kind: "Idiom",
+		family: "Locution",
+		kind: "VERB",
 	},
-	"den Durchblick haben": { family: "Phraseme", kind: "Idiom" },
-	"Der frühe Vogel fängt den Wurm": { family: "Phraseme", kind: "Proverb" },
-	"Gut Ding will Weile haben": { family: "Phraseme", kind: "Proverb" },
+	"den Durchblick haben": { family: "Locution", kind: "VERB" },
+	"Der Zweck heiligt die Mittel": { family: "Saying", kind: "Saying" },
+	"Der Weg ist wichtiger als das Ziel": { family: "Saying", kind: "Saying" },
+	"Der frühe Vogel fängt den Wurm": { family: "Saying", kind: "Saying" },
+	"Gut Ding will Weile haben": { family: "Saying", kind: "Saying" },
 } as const satisfies Record<
 	string,
 	Pick<Dumling.Lemma<"de">, "family" | "kind">
 >;
+
+/** Lexeme and Locution share one relation space (ADR 0039). */
+function relationSpace(family: Dumling.Family<"de">) {
+	return family === "Locution" ? "Lexeme" : family;
+}
 
 function relatedRoute(canonicalForm: string, source: Dumling.Reading<"de">) {
 	const route = RELATED_ROUTES[canonicalForm as keyof typeof RELATED_ROUTES];
@@ -431,7 +429,7 @@ function relatedRoute(canonicalForm: string, source: Dumling.Reading<"de">) {
 		throw new Error(
 			`Missing Notes Study relation identity ${canonicalForm}.`,
 		);
-	if (route.family !== source.lemma.family)
+	if (relationSpace(route.family) !== relationSpace(source.lemma.family))
 		throw new Error(
 			`Notes Study relation from ${source.lemma.canonicalForm} to ${canonicalForm} crosses Families.`,
 		);
@@ -450,7 +448,7 @@ function relatedUnitFor(
 			language: "de",
 			...route,
 			canonicalForm: token.text,
-			coreFeatures: NULL_CORE_FEATURES_BY_KIND[route.kind],
+			coreFeatures: nullCoreFeatures(route),
 		},
 		emojiDescription: "🔗",
 	});
@@ -583,7 +581,7 @@ export function makeUrl(unit: Dumling.Reading<"de">): string {
 		.replaceAll("Ü", "Ue")
 		.replaceAll("ß", "ss")
 		.replaceAll(" ", "_");
-	return `${canonical}/reading/${unit.emojiDescription}`;
+	return `${canonical}/reading/${emojiDescriptionOf(unit) ?? ""}`;
 }
 
 export const NOTE_STUDY_DATABASE_BY_URL = new Map(
@@ -607,7 +605,7 @@ function fixtureSurface(
 		language: "de",
 		lemma,
 		normalizedSurface: text,
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 	};
 	const bare = parseUnit(input);

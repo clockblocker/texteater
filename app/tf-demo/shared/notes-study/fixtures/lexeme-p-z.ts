@@ -2,44 +2,6 @@ import { type NoteStudyFixture, noteToken } from "../note-study-fixture";
 
 export const lexemePZFixtures = [
 	{
-		presentationKey: "Doch",
-		family: "Lexeme",
-		kind: "PART",
-		emoji: "💬",
-		title: [noteToken("doch", "reference", "Antwortpartikel")],
-		titleText: "doch",
-		ipa: "/dɔx/",
-		pronunciationHref: "https://youglish.com/pronounce/doch/german",
-		summary: "Widerspricht einer verneinten Aussage oder Frage.",
-		contexts: [
-			[
-				"„Kommst du nicht mit?“ — „",
-				noteToken("Doch", "reference", "Antwortpartikel"),
-				", ich bin gleich fertig.“",
-			],
-			[
-				"„Du hast die E-Mail nicht gelesen.“ — „",
-				noteToken("Doch", "reference", "Antwortpartikel"),
-				", ich habe sie gestern beantwortet.“",
-			],
-		],
-		definition:
-			"Antwortpartikel, mit der man einer verneinten Aussage widerspricht oder eine verneinte Frage bejaht.",
-		relations: [
-			{
-				relation: "antonym",
-				label: "Antonym",
-				mark: "≠",
-				content: [noteToken("nein", "reference", "Antwortpartikel")],
-			},
-		],
-		translations: [
-			"yes (contradicting a negative)",
-			"напротив; как раз да",
-		],
-		tags: [noteToken("#Antwortpartikel"), noteToken("#Unveränderlich")],
-	},
-	{
 		presentationKey: "Einander",
 		family: "Lexeme",
 		kind: "PRON",
@@ -401,34 +363,5 @@ export const lexemePZFixtures = [
 			},
 		],
 		tags: [noteToken("#Verb"), noteToken("#Trennbar"), noteToken("#Stark")],
-	},
-	{
-		presentationKey: "Lorem",
-		family: "Lexeme",
-		kind: "X",
-		emoji: "🧩",
-		title: [
-			noteToken("Lorem", "reference", "fremdsprachiger Platzhaltertoken"),
-		],
-		titleText: "Lorem",
-		summary: "Platzhaltertoken ohne eigene deutsche Wortbedeutung.",
-		contexts: [
-			[
-				"Im Layoutentwurf stand noch „",
-				noteToken("Lorem", "reference", "Platzhaltertoken"),
-				" ",
-				noteToken("ipsum", "reference", "Teil des Platzhaltertexts"),
-				"“, weil der endgültige Text fehlte.",
-			],
-			[
-				"Als der Export plötzlich mit „",
-				noteToken("Lorem", "reference", "Platzhaltertoken"),
-				"“ begann, war klar, dass Beispieltext übrig geblieben war.",
-			],
-		],
-		definition:
-			"Fremdsprachiger Platzhaltertoken aus „Lorem ipsum“ ohne eigenständige deutsche Wortbedeutung; die X-Route hat kein produktives Formenschema.",
-		translations: ["lorem (placeholder word)", "lorem (слово-заполнитель)"],
-		tags: [noteToken("#Sonstiges"), noteToken("#Platzhalter")],
 	},
 ] as const satisfies readonly NoteStudyFixture[];

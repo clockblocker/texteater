@@ -11,17 +11,44 @@ import {
 const routeKey = ({ family, kind }: { family: string; kind: string }) =>
 	`${family}/${kind}`;
 
-const nonGermanReadingKinds = new Set([
-	"Duplifix",
-	"Infix",
-	"PUNCT",
-	"ToneMarking",
-	"Transfix",
-]);
+/**
+ * The routes the study covers. A Locution's Idiom or Collocation and a
+ * Saying's Proverb or Winged Word are Reading Knowledge, not Kinds (ADR
+ * 0039), and the answer word `doch` is an INTJ beside `ach`, so those routes
+ * hold two fixtures each.
+ */
+const STUDIED_ROUTES = [
+	"Lexeme/ADJ",
+	"Lexeme/ADP",
+	"Lexeme/ADV",
+	"Lexeme/AUX",
+	"Lexeme/CCONJ",
+	"Lexeme/DET",
+	"Lexeme/INTJ",
+	"Lexeme/INTJ",
+	"Lexeme/NOUN",
+	"Lexeme/NUM",
+	"Lexeme/PRON",
+	"Lexeme/PROPN",
+	"Lexeme/SCONJ",
+	"Lexeme/SYM",
+	"Lexeme/VERB",
+	"Locution/ADV",
+	"Locution/VERB",
+	"Locution/VERB",
+	"Saying/Saying",
+	"Saying/Saying",
+	"Morpheme/Circumfix",
+	"Morpheme/Interfix",
+	"Morpheme/Prefix",
+	"Morpheme/Root",
+	"Morpheme/Suffix",
+	"Morpheme/Suffixoid",
+];
 
 describe("German note-study fixtures", () => {
 	test("normalizes identity, bilingual Knowledge, and occurrences", () => {
-		expect(NOTE_STUDY_DATABASE).toHaveLength(27);
+		expect(NOTE_STUDY_DATABASE).toHaveLength(26);
 		expect(NOTE_STUDY_RELATED_DATABASE).toHaveLength(43);
 		expect(NOTE_STUDY_RESOLVED_RELATIONS).toHaveLength(43);
 		expect(NOTE_STUDY_PENDING_RELATIONS).toHaveLength(9);
@@ -50,17 +77,10 @@ describe("German note-study fixtures", () => {
 		);
 	});
 
-	test("covers every studied German Unit Reading Family/Kind once", () => {
-		const expectedRoutes = NOTE_STUDY_FIXTURES.filter(
-			({ kind }) => !nonGermanReadingKinds.has(kind),
-		)
-			.map(routeKey)
-			.sort();
-		const fixtureRoutes = NOTE_STUDY_FIXTURES.map(routeKey).sort();
-
-		expect(NOTE_STUDY_FIXTURES).toHaveLength(27);
-		expect(fixtureRoutes).toEqual(expectedRoutes);
-		expect(new Set(fixtureRoutes).size).toBe(fixtureRoutes.length);
+	test("covers the studied German Unit Reading routes", () => {
+		expect(NOTE_STUDY_FIXTURES.map(routeKey).sort()).toEqual(
+			[...STUDIED_ROUTES].sort(),
+		);
 	});
 
 	test("keeps stable presentation keys and the Dämmerung route", () => {
@@ -212,11 +232,11 @@ describe("German note-study fixtures", () => {
 		}
 		expect(routesWith("structure")).toEqual(
 			[
-				"Phraseme/Aphorism",
-				"Phraseme/Collocation",
-				"Phraseme/DiscourseFormula",
-				"Phraseme/Idiom",
-				"Phraseme/Proverb",
+				"Locution/ADV",
+				"Locution/VERB",
+				"Locution/VERB",
+				"Saying/Saying",
+				"Saying/Saying",
 			].sort(),
 		);
 		expect(routesWithForms).toEqual(
@@ -283,10 +303,7 @@ describe("German note-study fixtures", () => {
 
 	test("omits relations where the Reading Block catalog does", () => {
 		for (const fixture of NOTE_STUDY_FIXTURES) {
-			if (
-				fixture.family === "Morpheme" ||
-				(fixture.family === "Lexeme" && fixture.kind === "X")
-			) {
+			if (fixture.family === "Morpheme") {
 				expect(fixture.relations).toBeUndefined();
 			}
 		}

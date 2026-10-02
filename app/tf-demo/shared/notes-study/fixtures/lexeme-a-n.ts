@@ -478,6 +478,44 @@ export const lexemeANFixtures = [
 		tags: [noteToken("#Interjektion"), noteToken("#Ausruf")],
 	},
 	{
+		presentationKey: "Doch",
+		family: "Lexeme",
+		kind: "INTJ",
+		emoji: "💬",
+		title: [noteToken("doch", "reference", "Antwortpartikel")],
+		titleText: "doch",
+		ipa: "/dɔx/",
+		pronunciationHref: "https://youglish.com/pronounce/doch/german",
+		summary: "Widerspricht einer verneinten Aussage oder Frage.",
+		contexts: [
+			[
+				"„Kommst du nicht mit?“ — „",
+				noteToken("Doch", "reference", "Antwortpartikel"),
+				", ich bin gleich fertig.“",
+			],
+			[
+				"„Du hast die E-Mail nicht gelesen.“ — „",
+				noteToken("Doch", "reference", "Antwortpartikel"),
+				", ich habe sie gestern beantwortet.“",
+			],
+		],
+		definition:
+			"Antwortpartikel, mit der man einer verneinten Aussage widerspricht oder eine verneinte Frage bejaht.",
+		relations: [
+			{
+				relation: "antonym",
+				label: "Antonym",
+				mark: "≠",
+				content: [noteToken("nein", "reference", "Antwortpartikel")],
+			},
+		],
+		translations: [
+			"yes (contradicting a negative)",
+			"напротив; как раз да",
+		],
+		tags: [noteToken("#Antwortpartikel"), noteToken("#Unveränderlich")],
+	},
+	{
 		presentationKey: "Daemmerung",
 		family: "Lexeme",
 		kind: "NOUN",
