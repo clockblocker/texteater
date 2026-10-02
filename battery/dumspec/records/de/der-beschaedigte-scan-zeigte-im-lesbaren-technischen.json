@@ -47,7 +47,7 @@
 			"memberSegmentIndices": [25],
 			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
-				"rationale": "The English programmers' placeholder word, not in Duden and uninflected: Foreign en. The unreadable ???? stays OpaqueText."
+				"rationale": "The English programmers' placeholder word, not in Duden and uninflected: Foreign en. The unreadable ???? is four Punctuation marks, one Segment per mark, and no click reaches them."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
