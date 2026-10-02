@@ -266,11 +266,11 @@ export const governmentId = (flag: GovernmentFlag) =>
 /** The Choice for the preposition families; its last option moves nothing. */
 const governedCriteria = {
 	governed:
-		"Governed: in this sense the word requires this very preposition for one of its complements, as E-VALBU or Duden list it with the word. A wo(r)- question with the preposition asks for the phrase (worauf? wovor? wofür?), da(r)- with the preposition can replace it (darauf, davor, dafür), and another preposition would change the sense or not fit (denkt an ihre Mutter, achtet auf den Verkehr, abhängig von seinen Eltern, die Hoffnung auf Frieden, danke für die Blumen)",
+		"Governed: the word selects this very preposition in this sense, a prepositional complement as E-VALBU counts it. Its stand-in is da(r)- with the preposition (darauf, davon), never dort or dorthin, and with another preposition the word would lose this sense or the sentence would break (denkt an ihre Mutter, not *denkt zu ihrer Mutter; achtet auf den Verkehr; abhängig von seinen Eltern; die Hoffnung auf Frieden; danke für die Blumen)",
 	fixed: "Fixed: the preposition is a fixed word of an idiom or collocation the word belongs to here, and an ordinary synonym would break it (auf dem Holzweg sein, zur Sprache bringen)",
-	place: "Place or direction: the phrase says where, where to or where from, and the word needs or allows a place or direction there, not this preposition: another place or direction preposition, or dort or dorthin, could take its place with the same sense of the word (legt den Schlüssel unter die Matte: neben die Matte, dorthin; wohnt in Rostock; schaut in den Spiegel)",
+	place: "Place or direction: the word needs or allows a place, a direction or a level, an adverbial complement as E-VALBU counts it, and the preposition only says which one. Its stand-in is dort, dorthin, dahin or daher, and another preposition of place or direction fits with the same sense of the word (schaut auf das Meer: schaut zum Horizont, schaut dorthin; legt den Schlüssel unter die Matte; wohnt in Rostock)",
 	adjunct:
-		"Free adjunct: a phrase of time, cause, purpose, manner, means, agent, accompaniment or circumstance that the word does not require and that could go with almost any verb in the same way (nach dem Konzert, seit Dienstag, wegen des Streiks, mit dem Fahrrad, durch einen Tunnel verbunden, bei Regen, für ihre Freundin)",
+		"Free adjunct: time, cause, purpose, manner, means, agent, accompaniment, or the case or circumstance something holds in; the word does not ask for it, and it could be added to almost any clause (nach dem Konzert, seit Dienstag, wegen des Streiks, mit dem Fahrrad, durch einen Tunnel verbunden, bei Kindern, für ihre Freundin)",
 	elsewhere:
 		"Elsewhere: another word of the sentence governs the preposition, it is part of a two-part preposition or circumposition (um … willen, von … an), or the word takes no preposition at all",
 	particle:
@@ -284,6 +284,32 @@ const literalCriteria = {
 	none: "No idiom: the words form no established expression with this verb",
 	idiom: "An idiom: an established expression whose meaning here is not the sum of its words (jemandem unter die Arme greifen 'help'; aus der Haut fahren 'lose one's temper'), also when one of its words is changed or played on",
 };
+
+const personalPronouns = new Set(
+	"ich mich mir du dich dir er ihn ihm sie es ihr wir uns euch ihnen sich man".split(
+		" ",
+	),
+);
+
+/**
+ * The phrase a preposition may open: it and the pieces after it in its
+ * clause, up to the first noun, number or personal pronoun, at most six.
+ */
+function phraseOf(nomination: Nomination, piece: Piece): readonly number[] {
+	const { pieces } = nomination.sentence;
+	const ids = [piece.id];
+	for (const next of pieces.slice(piece.id, piece.id + 5)) {
+		if (next.clause !== piece.clause) break;
+		ids.push(next.id);
+		if (
+			nounLike(next) ||
+			/^\p{N}/u.test(next.text) ||
+			personalPronouns.has(lower(next))
+		)
+			return ids;
+	}
+	return [piece.id];
+}
 
 /** The pieces as written, in order, with … where others stand between. */
 function wordingOf(nomination: Nomination, ids: readonly number[]): string {
@@ -344,8 +370,13 @@ export function governmentQuestions(
 			unit.length > 1
 				? `${ref(host)} (in "${wordingOf(nomination, unit)}")`
 				: ref(host);
+		const phrase = phraseOf(nomination, piece);
+		const opens =
+			phrase.length > 1
+				? ` ${ref(piece)} may open "${wordingOf(nomination, phrase)}".`
+				: "";
 		questions[governmentId(flag)] = choice(
-			`In \`sentence\`, does ${named} govern the preposition ${ref(piece)} here, or is ${ref(piece)} free?`,
+			`In \`sentence\`,${opens} Does ${named} govern the preposition ${ref(piece)} here, or is ${ref(piece)} free?`,
 			governedCriteria,
 		);
 	}
@@ -447,11 +478,23 @@ export function withGovernmentChoice(
 	const splits = new Set<string>();
 	const literal = new Set<number>();
 	const joins: AssembledEdge[] = [];
+	const { pieces } = nomination.sentence;
+	const spelled = (id: number) => pieces[id - 1]?.text.toLowerCase();
 	for (const action of actions) {
 		if ("split" in action) splits.add(pairKey(...action.split));
 		else if ("join" in action) {
-			if (action.join.every(open))
-				joins.push({ pieces: action.join, source: "government" });
+			if (!action.join.every(open)) continue;
+			const [piece, host] = action.join;
+			joins.push({ pieces: action.join, source: "government" });
+			// One governor: a nearer twin takes the preposition from the farther one (Danke, danke für).
+			for (const edge of membership.edges)
+				if (
+					edge.source === "satellite" &&
+					edge.pieces[0] === piece &&
+					edge.pieces[1] !== host &&
+					spelled(edge.pieces[1]) === spelled(host)
+				)
+					splits.add(pairKey(...edge.pieces));
 		} else
 			for (const id of groupOf.get(action.literal.host) ?? [])
 				literal.add(id);
