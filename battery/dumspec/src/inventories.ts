@@ -9,7 +9,10 @@
  * Syncretisms generated from the pronoun cells (system ADR 0046). It also
  * exports German lookups: the ADP Case Table, the conjunction Locutions the
  * Rules cite, the der or ein cell an article derives to, and the Syncretism a
- * classifier's answer names.
+ * classifier's answer names. Its selectors find the authored member of a
+ * Lemma or Reading, tell a Closed Route (system ADR 0021), step between
+ * Paradigm Cells (system ADR 0019) and derive the grammatical component a
+ * Surface brings without a model.
  *
  * This entry reads no files and loads neither Zod nor the record checks, so a
  * host inside a database transaction or another short-lived isolate can
@@ -43,6 +46,12 @@ export {
 	reflexiveDrillDown,
 	reflexivityUnit,
 } from "./inventories/de/drill-down.js";
+export {
+	authoredComponent,
+	deriveGrammaticalComponent,
+	type GrammaticalComponent,
+} from "./inventories/de/grammatical-components.js";
+export { selectGrammaticalAlternatives } from "./inventories/de/grammatical-navigation.js";
 export { authoredMembers } from "./inventories/de/inventory.js";
 export type { AuthoredMember } from "./inventories/de/member.js";
 export { member as subjectExpletiveEs } from "./inventories/de/members/lexeme/pronoun/personal/es-subject-expletive.js";
@@ -56,6 +65,12 @@ export {
 	authoredRealizations,
 	type RealizationSpelling,
 } from "./inventories/de/realizations.js";
+export {
+	authoredFor,
+	authoredReading,
+	closedRoute,
+	selectAuthoredArticle,
+} from "./inventories/de/selection.js";
 export type {
 	AuthoredSpelling,
 	ReviewedMember,
