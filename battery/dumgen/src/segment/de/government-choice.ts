@@ -25,7 +25,11 @@
  * - `weak`: a preposition alone whose slot named a host under the floor.
  * - `literal`: an idiom unit that took in a member noun's preposition
  *   (de/idiom): the same words used literally are separate units, nimmt
- *   das Kind auf den Arm.
+ *   das Kind auf den Arm, the preposition included.
+ * - `duel`: one host flagged with the same preposition twice. A Preposition
+ *   complement appears at most once in a frame (ADR 0034), so the judge
+ *   picks the phrase that is the complement (sehnen sich nach Monaten …
+ *   nach Ruhe), and its answer settles both flags.
  *
  * A split drops only the satellite link between the preposition and its
  * host, or for `literal` the idiom unit's expression links and the
@@ -51,6 +55,7 @@ export const governmentFamilies = [
 	"rival",
 	"weak",
 	"literal",
+	"duel",
 ] as const;
 
 export type GovernmentFamily = (typeof governmentFamilies)[number];
@@ -83,6 +88,8 @@ export type GovernmentFlag = {
 	readonly piece: number;
 	readonly host: number;
 	readonly noun?: number;
+	/** For `duel`: every preposition of that spelling flagged with the host. */
+	readonly rivals?: readonly number[];
 };
 
 const lower = (piece: Piece) => piece.text.toLowerCase();
@@ -259,14 +266,31 @@ export function flaggedPrepositions(
 			)
 				flag("rival", piece, twin.id);
 	}
+	// ADR 0034: a Preposition complement appears once in a frame.
+	const byHost = new Map<string, number[]>();
+	for (const { piece, host } of flags.values()) {
+		const key = `${host},${pieces[piece - 1]?.text.toLowerCase()}`;
+		byHost.set(key, [...(byHost.get(key) ?? []), piece]);
+	}
+	const duels: GovernmentFlag[] = [];
+	for (const [key, rivals] of byHost) {
+		const host = Number(key.split(",")[0]);
+		const sorted = [...new Set(rivals)].sort((a, b) => a - b);
+		const [first] = sorted;
+		if (first !== undefined && sorted.length > 1)
+			duels.push({ family: "duel", piece: first, host, rivals: sorted });
+	}
 	return [
 		...flags.values(),
 		...literalFlags(nomination, membership, groupOf, open),
+		...duels,
 	];
 }
 
 export const governmentId = (flag: GovernmentFlag) =>
-	`g_${flag.family}_${flag.piece}_${flag.host}`;
+	flag.family === "duel"
+		? `g_duel_${flag.host}_${(flag.rivals ?? []).join("_")}`
+		: `g_${flag.family}_${flag.piece}_${flag.host}`;
 
 /** The Choice for the preposition families; its last option moves nothing. */
 const governedCriteria = {
@@ -361,11 +385,34 @@ export function governmentQuestions(
 			);
 			continue;
 		}
+		if (flag.family === "duel") {
+			questions[governmentId(flag)] = choice(
+				`In \`sentence\`, ${ref(host)} takes at most one complement with the preposition "${piece.text}". Which of these phrases is that complement?`,
+				{
+					...Object.fromEntries(
+						(flag.rivals ?? []).map((id) => {
+							const rival = sentence.pieces[id - 1];
+							return [
+								`p${id}`,
+								rival
+									? `"${wordingOf(nomination, phraseOf(nomination, rival))}", opened by ${ref(rival)}`
+									: `p${id}`,
+							];
+						}),
+					),
+					none: `Neither: ${ref(host)} governs none of them`,
+				},
+			);
+			continue;
+		}
 		// The host's unit names a verb with its particle (geht … hinaus),
 		// without the prepositions asked about and their fused pieces.
 		const asked = new Set(
 			flags
-				.filter((other) => other.host === flag.host)
+				.filter(
+					(other) =>
+						other.host === flag.host && other.family !== "duel",
+				)
 				.flatMap((other) => siblings.get(other.piece) ?? [other.piece]),
 		);
 		const unit = (groupOf.get(flag.host) ?? [flag.host]).filter(
@@ -416,7 +463,8 @@ export async function askGovernmentChoice(
 type Action =
 	| { readonly join: readonly [number, number] }
 	| { readonly split: readonly [number, number] }
-	| { readonly literal: GovernmentFlag };
+	| { readonly literal: GovernmentFlag }
+	| { readonly duel: GovernmentFlag; readonly winner: number };
 
 /** What one answered flag does under the floor. */
 function actionOf(
@@ -439,6 +487,16 @@ function actionOf(
 			return share("literal", "none") >= floor
 				? { literal: flag }
 				: undefined;
+		case "duel": {
+			const top = argmax(
+				Object.fromEntries(
+					Object.entries(shares).filter(([key]) => key !== "none"),
+				),
+			);
+			return top.key && top.share >= floor
+				? { duel: flag, winner: Number(top.key.slice(1)) }
+				: undefined;
+		}
 	}
 }
 
@@ -485,10 +543,30 @@ export function withGovernmentChoice(
 	const joins: AssembledEdge[] = [];
 	const { pieces } = nomination.sentence;
 	const spelled = (id: number) => pieces[id - 1]?.text.toLowerCase();
+	const siblings = fusedSiblings(nomination.sentence);
+	// A settled duel decides its prepositions with that host before any other answer.
+	const settled = new Set<string>();
 	for (const action of actions) {
-		if ("split" in action) splits.add(pairKey(...action.split));
-		else if ("join" in action) {
-			if (!action.join.every(open)) continue;
+		if (!("duel" in action)) continue;
+		const { host, rivals = [] } = action.duel;
+		for (const id of rivals) {
+			settled.add(pairKey(id, host));
+			if (id !== action.winner) splits.add(pairKey(id, host));
+			else if (open(id) && open(host))
+				joins.push({ pieces: [id, host], source: "government" });
+		}
+	}
+	for (const action of actions) {
+		if ("duel" in action) continue;
+		if ("split" in action) {
+			if (!settled.has(pairKey(...action.split)))
+				splits.add(pairKey(...action.split));
+		} else if ("join" in action) {
+			if (
+				!action.join.every(open) ||
+				settled.has(pairKey(...action.join))
+			)
+				continue;
 			const [piece, host] = action.join;
 			joins.push({ pieces: action.join, source: "government" });
 			// One governor: a nearer twin takes the preposition from the farther one (Danke, danke für).
@@ -500,9 +578,13 @@ export function withGovernmentChoice(
 					spelled(edge.pieces[1]) === spelled(host)
 				)
 					splits.add(pairKey(...edge.pieces));
-		} else
-			for (const id of groupOf.get(action.literal.host) ?? [])
-				literal.add(id);
+		} else {
+			const { piece, host } = action.literal;
+			for (const id of groupOf.get(host) ?? []) literal.add(id);
+			// de/idiom: used literally, the words are separate units, the preposition too.
+			for (const id of siblings.get(piece) ?? [piece])
+				splits.add(pairKey(id, host));
+		}
 	}
 	const absorbed = (edge: AssembledEdge) =>
 		edge.source === "expression" ||

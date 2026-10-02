@@ -75,6 +75,23 @@ test("a free preposition gives its host to the rival the host governs", async ()
 	expect(groups).toEqual([[0], [2, 4, 10], [6], [8], [12]]);
 });
 
+test("ADR 0034: of one preposition twice, the duel's answer picks the complement over both flags' own answers", async () => {
+	const { groups, judge } = await run(
+		"Sie sehnen sich nach Jahren nach Ruhe.",
+		{
+			s_reflexive_3: picked("p2"),
+			s_preposition_4: picked("p2", { p2: 0.98, none: 0.02 }),
+			s_preposition_6: picked("p2", { p2: 0.77, none: 0.23 }),
+			g_joined_4_2: picked("governed", { governed: 0.95, adjunct: 0.05 }),
+			g_rival_6_2: picked("governed", { governed: 0.9, adjunct: 0.1 }),
+			g_duel_2_4_6: picked("p6", { p6: 0.8, p4: 0.15, none: 0.05 }),
+		},
+	);
+	const asked = judge.requests.find(({ stage }) => stage === "government");
+	expect(Object.keys(asked?.questions ?? {})).toContain("g_duel_2_4_6");
+	expect(groups).toEqual([[0], [2, 4, 10], [6], [8], [12]]);
+});
+
 // Er0 _1 nimmt2 _3 das4 _5 Kind6 _7 auf8 _9 den10 _11 Arm12 .13
 const arm = "Er nimmt das Kind auf den Arm.";
 const armHeard = {
@@ -91,6 +108,16 @@ test("de/idiom: the same words used literally are separate units; the family is 
 	const off = await run(arm, literal, withGovernment(["joined"]));
 	expect(off.groups).toEqual([[0], [2, 8, 10, 12], [4, 6]]);
 	const { groups } = await run(arm, literal);
+	expect(groups).toEqual([[0], [2], [4, 6], [8], [10, 12]]);
+});
+
+test("de/idiom: used literally, the idiom's preposition leaves the verb its slot joined it to", async () => {
+	const { groups } = await run(arm, {
+		...armHeard,
+		s_preposition_5: picked("p2", { p2: 0.7, none: 0.3 }),
+		g_joined_5_2: picked("fixed", { fixed: 0.6, governed: 0.4 }),
+		g_literal_5_2: picked("literal", { literal: 0.9, idiom: 0.1 }),
+	});
 	expect(groups).toEqual([[0], [2], [4, 6], [8], [10, 12]]);
 });
 
