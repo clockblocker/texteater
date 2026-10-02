@@ -37,6 +37,7 @@
 		"dumdict": "workspace:^",
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
+		"dumspec": "workspace:^",
 		"effect": "3.22.1",
 		"legacy-dumgen": "workspace:^",
 		"lego": "workspace:^",

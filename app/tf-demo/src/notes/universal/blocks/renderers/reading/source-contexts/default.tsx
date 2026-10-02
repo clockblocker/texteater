@@ -13,8 +13,8 @@ export type SourceContextCaption = (
 	sourceContext: SourceContext,
 	lemma: {
 		readonly language: string;
+		readonly family: string;
 		readonly canonicalForm: string;
-		readonly coreFeatures: unknown;
 	},
 ) => ReactNode;
 

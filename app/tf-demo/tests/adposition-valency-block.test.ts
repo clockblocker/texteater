@@ -10,55 +10,79 @@ type ReadingNote = Extract<
 	{ readonly kind: "Reading" }
 >;
 type RealizedCase = "Acc" | "Dat" | "Gen";
+type AdpositionFamily = "Lexeme" | "Locution";
 
-// An ADP Reading has no Valency Frame: its block renders from Dumling's ADP
+// An ADP Reading has no Valency Frame: its block renders from dumspec's ADP
 // Case Table, and each Source Context shows the case it realized (ADR 0034).
+// The Lemma records no position, so a Lexeme ADP shows one line for each
+// position the table lists, the preposition first.
 const lines = [
-	["auf", "Prep", "auf `etw` · Akk: wohin? · Dat: wo?"],
-	["für", "Prep", "für `etw` · Akk"],
-	["mit", "Prep", "mit `etw` · Dat"],
-	["wegen", "Prep", "wegen `etw` · Gen · Dat: umgangssprachlich"],
-	["entlang", "Post", "`etw` entlang · Akk"],
-	["entlang", "Prep", "entlang `etw` · Gen · Dat"],
-	["um ... willen", "Circ", "um `etw` willen · Gen"],
+	["Lexeme", "auf", ["auf `etw` · Akk: wohin? · Dat: wo?"]],
+	["Lexeme", "für", ["für `etw` · Akk"]],
+	["Lexeme", "mit", ["mit `etw` · Dat"]],
+	[
+		"Lexeme",
+		"wegen",
+		["wegen `etw` · Gen · Dat: umgangssprachlich", "`etw` wegen · Gen"],
+	],
+	[
+		"Lexeme",
+		"entlang",
+		[
+			"entlang `etw` · Gen · Dat",
+			"`etw` entlang · Akk · Dat: umgangssprachlich",
+		],
+	],
+	["Lexeme", "zuliebe", ["`etw` zuliebe · Dat"]],
+	["Locution", "um … willen", ["um `etw` willen · Gen"]],
+	["Locution", "im Vergleich zu", ["im Vergleich zu `etw` · Dat"]],
 ] as const;
-for (const [canonicalForm, adpType, line] of lines)
-	test(`the ADP Valency Block reads ${line}`, () => {
-		expect(valencyLine(renderAdposition(canonicalForm, adpType))).toBe(
-			line,
+for (const [family, canonicalForm, expected] of lines)
+	test(`the ADP Valency Block of ${canonicalForm} reads ${expected.join(" | ")}`, () => {
+		expect(valencyLines(renderAdposition(family, canonicalForm))).toEqual(
+			expected,
 		);
 	});
 
 test("an adposition the ADP Case Table does not list has no Valency Block", () => {
-	expect(renderAdposition("versus", "Prep")).not.toContain(
+	expect(renderAdposition("Lexeme", "quend")).not.toContain(
 		'aria-label="Valency"',
 	);
 });
 
 test("each Source Context shows its realized case and marks a colloquial one", () => {
 	expect(
-		realizedCaseMarks(renderAdposition("auf", "Prep", ["Dat", "Acc"])),
+		realizedCaseMarks(renderAdposition("Lexeme", "auf", ["Dat", "Acc"])),
 	).toEqual(["Dat", "Akk"]);
 	expect(
-		realizedCaseMarks(renderAdposition("wegen", "Prep", ["Dat", "Gen"])),
+		realizedCaseMarks(renderAdposition("Lexeme", "wegen", ["Dat", "Gen"])),
 	).toEqual(["Dat · umgangssprachlich", "Gen"]);
 	expect(
-		realizedCaseMarks(renderAdposition("entlang", "Post", ["Acc"])),
-	).toEqual(["Akk"]);
-	expect(realizedCaseMarks(renderAdposition("auf", "Prep", [null]))).toEqual(
-		[],
-	);
+		realizedCaseMarks(
+			renderAdposition("Lexeme", "entlang", ["Acc", "Dat"]),
+		),
+	).toEqual(["Akk", "Dat"]);
+	expect(
+		realizedCaseMarks(renderAdposition("Lexeme", "auf", [null])),
+	).toEqual([]);
 });
 
-/** The rendered line, with the complement token written back as backticked text. */
-function valencyLine(markup: string): string {
-	const line = markup.match(
-		/<section[^>]*aria-label="Valency"[^>]*>.*?<p data-slot="valency-line"[^>]*>(.*?)<\/p>/,
+/** The rendered lines, with the complement token written back as backticked text. */
+function valencyLines(markup: string): string[] {
+	const section = markup.match(
+		/<section[^>]*aria-label="Valency"[^>]*>(.*?)<\/section>/,
 	)?.[1];
-	if (line === undefined) throw new Error("no Valency Block rendered");
-	return line
-		.replace(/<span data-slot="valency-token"[^>]*>(.*?)<\/span>/g, "`$1`")
-		.replace(/<[^>]+>/g, "");
+	if (section === undefined) throw new Error("no Valency Block rendered");
+	return [
+		...section.matchAll(/<p data-slot="valency-line"[^>]*>(.*?)<\/p>/g),
+	].map((match) =>
+		(match[1] ?? "")
+			.replace(
+				/<span data-slot="valency-token"[^>]*>(.*?)<\/span>/g,
+				"`$1`",
+			)
+			.replace(/<[^>]+>/g, ""),
+	);
 }
 
 function realizedCaseMarks(markup: string): string[] {
@@ -68,11 +92,11 @@ function realizedCaseMarks(markup: string): string[] {
 }
 
 function renderAdposition(
+	family: AdpositionFamily,
 	canonicalForm: string,
-	adpType: "Prep" | "Post" | "Circ",
 	realizedCases: readonly (RealizedCase | null)[] = [],
 ): string {
-	const note = readingNote(canonicalForm, adpType, realizedCases);
+	const note = readingNote(family, canonicalForm, realizedCases);
 	return renderToStaticMarkup(
 		renderNote({
 			noteData: note,
@@ -97,8 +121,8 @@ function renderAdposition(
 }
 
 function readingNote(
+	family: AdpositionFamily,
 	canonicalForm: string,
-	adpType: "Prep" | "Post" | "Circ",
 	realizedCases: readonly (RealizedCase | null)[],
 ): ReadingNote {
 	return {
@@ -116,16 +140,10 @@ function readingNote(
 				ownerKey: "lemma-key-1",
 				lemmaId: "lemma-1",
 				language: "de",
-				family: "Lexeme",
+				family,
 				kind: "ADP",
 				canonicalForm,
-				coreFeatures: {
-					abbr: null,
-					adpType,
-					extPos: null,
-					foreign: null,
-					partType: null,
-				},
+				coreFeatures: {},
 			},
 		},
 		knowledgeState: { status: "Full", activity: "Idle" },
