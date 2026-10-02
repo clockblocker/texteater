@@ -6,7 +6,7 @@ import {
 	asSingleLineSentence,
 	hrefForAttestedAttestation,
 	withLinkedAttestationSpan,
-} from "../typed/renderers/attested-attestation/helpers/attested-attestation";
+} from "../attested-attestation";
 
 /** One target of a Spec Record, with the page example that links it. */
 export type RecordTarget = Readonly<{

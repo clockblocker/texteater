@@ -1,5 +1,6 @@
 import type { AttestedAttestation } from "../../../../src/lib/docs/document-shapes.ts";
-import type { TypedDocsGenerationConfig } from "./config";
+import { describeLemma } from "../../../../src/lib/unit-presentation";
+import { withLinkedAttestationSpan } from "../attested-attestation";
 import type { RuleBlock, RuleDocument } from "./load-typed-doc-source";
 
 export type RenderedChildPage = {
@@ -8,30 +9,11 @@ export type RenderedChildPage = {
 	title: string;
 };
 
-function renderRuleExample(
-	example: AttestedAttestation,
-	config: TypedDocsGenerationConfig,
-	sourceTitle: string,
-): string {
-	const renderer =
-		config.attestedAttestationRenderers[
-			config.defaultAttestedAttestationRenderer
-		];
-	if (renderer === undefined) {
-		throw new Error(
-			`${sourceTitle} references unknown attested-attestation renderer "${config.defaultAttestedAttestationRenderer}".`,
-		);
-	}
-
-	return renderer(example);
+function renderRuleExample(example: AttestedAttestation): string {
+	return `- ${JSON.stringify(withLinkedAttestationSpan(example))} -> ${describeLemma(example.attestation.surface.lemma)}`;
 }
 
-function renderRuleBlock(
-	block: RuleBlock,
-	config: TypedDocsGenerationConfig,
-	sourceTitle: string,
-	includeExamples: boolean,
-): string[] {
+function renderRuleBlock(block: RuleBlock, includeExamples: boolean): string[] {
 	const parts: string[] = [];
 
 	if (block.heading !== undefined) {
@@ -45,12 +27,7 @@ function renderRuleBlock(
 	const examples = block.examples ?? [];
 	if (includeExamples && examples.length > 0) {
 		parts.push(
-			[
-				"Examples:",
-				...examples.map((example) =>
-					renderRuleExample(example, config, sourceTitle),
-				),
-			].join("\n"),
+			["Examples:", ...examples.map(renderRuleExample)].join("\n"),
 		);
 	}
 
@@ -59,7 +36,6 @@ function renderRuleBlock(
 
 export function renderRuleDocumentBody(
 	document: RuleDocument,
-	config: TypedDocsGenerationConfig,
 	options: { includeExamples?: boolean } = {},
 ): string {
 	const includeExamples = options.includeExamples ?? true;
@@ -71,12 +47,7 @@ export function renderRuleDocumentBody(
 	}
 	if (includeExamples && examples.length > 0) {
 		sections.push(
-			[
-				"Examples:",
-				...examples.map((example) =>
-					renderRuleExample(example, config, document.meta.title),
-				),
-			].join("\n"),
+			["Examples:", ...examples.map(renderRuleExample)].join("\n"),
 		);
 	}
 
@@ -88,8 +59,6 @@ export function renderRuleDocumentBody(
 					examples: subsection.examples ?? [],
 					heading: subsection.heading,
 				},
-				config,
-				document.meta.title,
 				includeExamples,
 			),
 		);

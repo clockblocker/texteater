@@ -12,7 +12,6 @@ import { checkRoutePages } from "../spec/route-page-check";
 import { loadSchemaRoutes } from "../spec/schema-routes";
 import { buildSpecPages, type SpecPage } from "../spec/spec-pages";
 import type { DocsOutput } from "../types";
-import type { TypedDocsGenerationConfig } from "./config";
 import { listTypedDocEntrypoints } from "./list-typed-doc-entrypoints";
 import type {
 	GeneratedDocSource,
@@ -197,7 +196,6 @@ function childPagesForRoute(
 
 function renderDraftBody(
 	draft: EmittedDocDraft,
-	config: TypedDocsGenerationConfig,
 	childPages: readonly RenderedChildPage[],
 ): string {
 	const sections = [`# ${draft.title}`];
@@ -205,7 +203,7 @@ function renderDraftBody(
 		sections.push(draft.lead);
 	}
 	for (const part of draft.parts) {
-		const body = renderRuleDocumentBody(part.document, config, {
+		const body = renderRuleDocumentBody(part.document, {
 			includeExamples: part.includeExamples,
 		});
 		if (body.length > 0) {
@@ -320,9 +318,7 @@ function specPageDraft(
 	};
 }
 
-export async function discoverTypedDocs(
-	config: TypedDocsGenerationConfig,
-): Promise<DocsOutput[]> {
+export async function discoverTypedDocs(): Promise<DocsOutput[]> {
 	const entrypoints = listTypedDocEntrypoints();
 	const sourceGroups = await Promise.all(
 		entrypoints.map((sourcePath) => loadTypedDocSource(sourcePath)),
@@ -421,7 +417,7 @@ export async function discoverTypedDocs(
 		const childPages = childPagesForRoute(draft.routeId, pagesByRouteId);
 
 		return {
-			body: renderDraftBody(draft, config, childPages),
+			body: renderDraftBody(draft, childPages),
 			frontmatter: {
 				description: draft.description,
 				generatedFrom: pathRelativeToSiteRoot(draft.sourcePath),

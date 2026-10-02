@@ -1,14 +1,13 @@
 import { expect, test } from "bun:test";
+import { hrefForAttestedAttestation } from "../scripts/generate-content/docs/attested-attestation";
 import { checkRoutePages } from "../scripts/generate-content/docs/spec/route-page-check";
 import { loadSchemaRoutes } from "../scripts/generate-content/docs/spec/schema-routes";
 import { routePageId } from "../scripts/generate-content/docs/spec/spec-pages";
-import { typedDocsGenerationConfig } from "../scripts/generate-content/docs/typed/config";
 import { discoverTypedDocs } from "../scripts/generate-content/docs/typed/generate-typed-docs";
-import { hrefForAttestedAttestation } from "../scripts/generate-content/docs/typed/renderers/attested-attestation/helpers/attested-attestation";
 import { allSpecExamples } from "../src/lib/docs/spec-examples";
 
 const routes = await loadSchemaRoutes();
-const docs = await discoverTypedDocs(typedDocsGenerationConfig);
+const docs = await discoverTypedDocs();
 const pageRouteIds = docs.map((doc) => doc.routeId);
 
 test("every schema route has one page and every Kind page has a route", () => {

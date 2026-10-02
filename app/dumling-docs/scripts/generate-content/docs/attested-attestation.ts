@@ -1,5 +1,5 @@
-import type { AttestedAttestation } from "../../../../../../../src/lib/docs/document-shapes.ts";
-import { attestationSlugForSource } from "../../../../../attestations/entity/attestation-slug.ts";
+import type { AttestedAttestation } from "../../../src/lib/docs/document-shapes.ts";
+import { attestationSlugForSource } from "../attestations/entity/attestation-slug.ts";
 
 export function asSingleLineSentence(sentenceMarkdown: string): string {
 	return sentenceMarkdown

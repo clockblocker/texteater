@@ -2,7 +2,6 @@ import { type RunMode, runCodegen } from "codegen";
 import type { SourcePage } from "../shared/types";
 import { defineDocsCodegen } from "./codegen";
 import { discoverDocsInitialOwnership } from "./initial-ownership";
-import { typedDocsGenerationConfig } from "./typed/config";
 import { discoverTypedDocs } from "./typed/generate-typed-docs";
 import type { DocsOutput } from "./types";
 import { sourcePageFromDocsOutput } from "./types";
@@ -25,7 +24,7 @@ export async function generateDocs(
 	mode: RunMode = "write",
 ): Promise<SourcePage[]> {
 	const initialOwnership = discoverDocsInitialOwnership();
-	const outputs = await discoverTypedDocs(typedDocsGenerationConfig);
+	const outputs = await discoverTypedDocs();
 	assertUniqueRouteIds(outputs);
 	const result = await runCodegen(
 		defineDocsCodegen(outputs, initialOwnership),
