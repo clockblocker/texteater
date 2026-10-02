@@ -11,6 +11,7 @@ import {
 } from "../src/views/resolution-note-view";
 import { resolvingReadingNoteData } from "../src/views/resolving-reading-note";
 import { segmentSelectionDeckCards } from "../src/views/segment-selection-deck";
+import { renderCardTail } from "../src/views/subject-presentation";
 
 const route = {
 	textId: "text-1" as never,
@@ -528,4 +529,81 @@ test("a converged deck hands the Resolution to the stored Reading Card", () => {
 		target: { kind: "Reading", readingId: "reading-1" },
 		presentationContext: { resolutionRequestId: "request-1" },
 	});
+});
+
+test("a unit selection settles on one Unit Card with no step left loading", () => {
+	const unit = {
+		segments: [0, 2],
+		route: {
+			language: "de" as const,
+			family: "Lexeme" as const,
+			kind: "NOUN",
+		},
+	};
+	const base = {
+		kind: "ResolutionNote" as const,
+		target: { kind: "Resolution" as const, requestId: "request-1" },
+		route,
+		source,
+		unit,
+	};
+	const routed = {
+		...base,
+		lifecycle: {
+			state: "Active" as const,
+			progress: "RouteAvailable" as const,
+			activity: "Running" as const,
+		},
+		updatedAt: 1,
+	};
+	const unresolved = {
+		...base,
+		lifecycle: {
+			state: "Terminal" as const,
+			progress: "RouteAvailable" as const,
+			outcome: "Unresolved" as const,
+		},
+		updatedAt: 2,
+	};
+
+	// Neither the running nor the settled Session deals an Attestation step.
+	for (const note of [routed, unresolved])
+		expect(resolutionDeckCards(note)).toEqual([
+			{
+				key: "request-1:Resolver",
+				target: { kind: "Resolution", requestId: "request-1" },
+			},
+		]);
+
+	const settled = renderToStaticMarkup(
+		createElement(ResolutionNoteFrame, {
+			note: unresolved,
+			presentation: "Card",
+		}),
+	);
+	expect(settled).toContain(">Die Banken<");
+	expect(settled).toContain("Lexeme · NOUN");
+	expect(settled).not.toContain('data-slot="note-skeleton"');
+	expect(
+		renderCardTail({
+			kind: "Note",
+			target: { kind: "Resolution", requestId: "request-1" },
+		}),
+	).toBe("Unit");
+});
+
+test("an Unresolved Session without a unit deals no step Card either", () => {
+	const cards = resolutionDeckCards({
+		kind: "ResolutionNote",
+		target: { kind: "Resolution", requestId: "request-1" },
+		lifecycle: {
+			state: "Terminal",
+			progress: "RouteAvailable",
+			outcome: "Unresolved",
+		},
+		route,
+		source,
+		updatedAt: 1,
+	});
+	expect(stepKinds(cards)).toEqual(["Resolution"]);
 });

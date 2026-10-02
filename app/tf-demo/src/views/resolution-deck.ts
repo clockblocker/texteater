@@ -35,6 +35,16 @@ export function resolutionDeckCards(
 	if (lifecycle.state === "Terminal" && lifecycle.outcome === "Complete") {
 		return completedCards(note, lifecycle);
 	}
+	// The Resolution Card shows a selected unit until Grammar arrives, and an
+	// Unresolved Session makes no Attestation, so no step Card is dealt to
+	// wait for one (#850).
+	if (
+		(lifecycle.state === "Terminal" &&
+			lifecycle.outcome === "Unresolved") ||
+		(note.unit && !note.grammar)
+	) {
+		return [resolutionCard(note.target.requestId)];
+	}
 	const steps = availableStepCards(note);
 	if (lifecycle.state === "Terminal" || steps.length === 0) {
 		return [resolutionCard(note.target.requestId), ...steps];

@@ -96,8 +96,10 @@ export function renderCardTail(subject: WorkspaceSubject) {
 			return "Attestation";
 		case "Shadow":
 			return "Shadow";
+		// While click resolution is rebuilt, a Resolution Card shows the unit
+		// its click selected, and it settles at once (#848, #850).
 		case "Resolution":
-			return "Resolving";
+			return "Unit";
 		case "ResolutionStep":
 			return target.stepKind;
 	}

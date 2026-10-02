@@ -240,6 +240,14 @@ test("hovering or focusing a word highlights its whole unit with no network call
 	await expect(card.getByRole("status")).toHaveText(
 		"Readings are paused while click resolution is rebuilt.",
 	);
+	// The deck settles at once: one Unit Card, and nothing left loading (#850).
+	await expect(
+		card.getByRole("button", { name: "Lift Unit Card", exact: true }),
+	).toBeVisible();
+	await expect(page.locator('[data-presentation-form="Card"]')).toHaveCount(
+		1,
+	);
+	await expect(page.locator('[data-slot="note-skeleton"]')).toHaveCount(0);
 	await expect(word("gibt")).toHaveAttribute("data-state", "selected");
 	await expect(word("frei")).toHaveAttribute("data-state", "selected");
 	await expect(word("gibt")).toHaveAttribute("aria-pressed", "true");
