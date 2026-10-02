@@ -18,12 +18,11 @@ import {
 import { DataControls } from "@/components/data-controls";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { useMotionPreference } from "@/lib/motion-preference";
-import type { SettingsTarget } from "@/lib/navigation";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { api } from "../../convex/_generated/api";
 import { KnowledgeSettingsForm } from "./unit-reading-knowledge-settings";
 
-export function SettingsView({ target }: { target: SettingsTarget }) {
+export function SettingsView({ textId }: { textId?: string }) {
 	const visitorId = useAnonymousVisitorId();
 	const settingsQuery = useQuery(
 		convexQuery(api.knowledgeSettings.get, { visitorId }),
@@ -91,11 +90,8 @@ export function SettingsView({ target }: { target: SettingsTarget }) {
 					</CardContent>
 				</Card>
 
-				{target.textId ? (
-					<TextDataControls
-						textId={target.textId}
-						visitorId={visitorId}
-					/>
+				{textId ? (
+					<TextDataControls textId={textId} visitorId={visitorId} />
 				) : (
 					<DataControls />
 				)}

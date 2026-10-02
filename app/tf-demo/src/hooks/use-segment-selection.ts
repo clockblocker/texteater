@@ -1,10 +1,7 @@
 import { useMutation } from "convex/react";
 import { useState } from "react";
 
-import {
-	shouldRequestRouteNote,
-	useRouteNotePreference,
-} from "@/lib/route-note-preference";
+import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { segmentSelectionDeckCards } from "@/views/segment-selection-deck";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
@@ -50,10 +47,7 @@ export function useSegmentSelection(visitorId: string) {
 				sentenceId,
 				clickedSegmentIndex,
 				inspect: import.meta.env.DEV,
-				routeNoteRequested: shouldRequestRouteNote(
-					routeNotesEnabled,
-					altKey,
-				),
+				routeNoteRequested: routeNotesEnabled || altKey,
 			});
 			if (import.meta.env.DEV) {
 				void recordSelectionTiming({

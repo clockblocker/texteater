@@ -2,18 +2,8 @@ import { expect, test } from "bun:test";
 
 import {
 	readRouteNotePreference,
-	shouldRequestRouteNote,
 	writeRouteNotePreference,
 } from "../src/lib/route-note-preference";
-
-test("Route Note preference and one-shot modifier follow the OR truth table", () => {
-	expect([
-		shouldRequestRouteNote(false, false),
-		shouldRequestRouteNote(false, true),
-		shouldRequestRouteNote(true, false),
-		shouldRequestRouteNote(true, true),
-	]).toEqual([false, true, true, true]);
-});
 
 test("Route Note preference is client-local and optional", () => {
 	const values = new Map<string, string>();

@@ -1,10 +1,5 @@
 import type { Id } from "../convex/_generated/dataModel";
 
-export type SettingsTarget = {
-	readonly kind: "Settings";
-	readonly textId?: string;
-};
-
 /**
  * A Text to open. `focusAttestationId` is a one-shot arrival gesture: on
  * landing, the reader scrolls to that occurrence's Sentence and selects its

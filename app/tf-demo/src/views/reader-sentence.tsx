@@ -1,3 +1,4 @@
+import type { FunctionReturnType } from "convex/server";
 import {
 	ReaderPlainSegment,
 	ReaderSegment,
@@ -7,7 +8,12 @@ import {
 import { useMemo, useState } from "react";
 
 import { segmentKey } from "@/hooks/use-segment-selection";
-import type { SentenceSegmentView } from "@/lib/action-results";
+import type { api } from "../../convex/_generated/api";
+
+/** A stored Segment as a Visitor sees it in the reader. */
+type SentenceSegmentView = NonNullable<
+	FunctionReturnType<typeof api.textViews.get>
+>["sentences"][number]["segments"][number];
 
 type SegmentDisplayState =
 	| "unknown-preview"

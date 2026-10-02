@@ -1,5 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
+import type { FunctionReturnType } from "convex/server";
 import { Button, NoteLinesSkeleton } from "lego";
 import { BookOpenIcon } from "lucide-react";
 import {
@@ -13,8 +14,6 @@ import {
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { usePendingAction } from "@/hooks/use-pending-action";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
-import type { SentenceView } from "@/lib/action-results";
-import { actuateSourceContextFocus } from "@/lib/source-context-focus";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
@@ -31,6 +30,10 @@ const READER_BODY_CLASS =
 
 const MISSING_SOURCE_CONTEXT_NOTICE =
 	"This Source Context is no longer available. The Text is still open, and no new resolution was started.";
+
+type SentenceView = NonNullable<
+	FunctionReturnType<typeof api.textViews.get>
+>["sentences"][number];
 
 export function TextView({ target }: { target: TextSubjectTarget }) {
 	const visitorId = useAnonymousVisitorId();
@@ -51,11 +54,7 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 	);
 
 	const textDetail = textQuery.data;
-	const sentences: readonly SentenceView[] =
-		textDetail?.sentences.map((sentence) => ({
-			...sentence,
-			sourceText: textDetail.sourceText,
-		})) ?? [];
+	const sentences = textDetail?.sentences ?? [];
 	const error =
 		selection.error ??
 		segmentationError ??
@@ -297,7 +296,7 @@ export function SentenceList({
 		if (!revealSentenceId) return;
 		const frame = window.requestAnimationFrame(() => {
 			const sentence = sentenceElements.current.get(revealSentenceId);
-			if (sentence) actuateSourceContextFocus(sentence);
+			sentence?.scrollIntoView({ block: "center", behavior: "auto" });
 			latestOnRevealed.current?.();
 		});
 		return () => window.cancelAnimationFrame(frame);

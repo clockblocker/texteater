@@ -3,13 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 const STORAGE_KEY = "tf-demo.route-notes-enabled.v1";
 const CHANGE_EVENT = "tf-demo:route-note-preference";
 
-export function shouldRequestRouteNote(
-	preferenceEnabled: boolean,
-	altKey: boolean,
-): boolean {
-	return preferenceEnabled || altKey;
-}
-
 export function readRouteNotePreference(storage?: Pick<Storage, "getItem">) {
 	const source =
 		storage ??

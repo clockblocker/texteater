@@ -1,7 +1,6 @@
 import { NoteLinesSkeleton, NoteSection } from "lego";
 import { useEffect, useRef } from "react";
 
-import { actuateSourceContextFocus } from "@/lib/source-context-focus";
 import { ReaderSentence } from "@/views/reader-sentence";
 import type { DefinitionCapabilities } from "../../../../note/capabilities";
 import type { ReadingDefaultRenderer } from "../../../renderer";
@@ -111,7 +110,7 @@ function DefinitionSentence({
 		if (!focused) return;
 		const frame = window.requestAnimationFrame(() => {
 			const paragraph = sentenceElement.current;
-			if (paragraph) actuateSourceContextFocus(paragraph);
+			paragraph?.scrollIntoView({ block: "center", behavior: "auto" });
 		});
 		return () => window.cancelAnimationFrame(frame);
 		// The focus is fixed for the life of this Presentation.

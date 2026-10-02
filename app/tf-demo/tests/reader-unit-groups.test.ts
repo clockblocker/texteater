@@ -1,11 +1,14 @@
 import { expect, test } from "bun:test";
+import type { FunctionReturnType } from "convex/server";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-
-import type { SentenceSegmentView } from "../src/lib/action-results";
+import type { api } from "../convex/_generated/api";
 import { segmentGroups } from "../src/views/reader-sentence";
 import { SentenceList } from "../src/views/text-view";
 
+type SentenceSegmentView = NonNullable<
+	FunctionReturnType<typeof api.textViews.get>
+>["sentences"][number]["segments"][number];
 type Unit = NonNullable<SentenceSegmentView["unit"]>;
 
 const verb: Unit["route"] = { language: "de", family: "Lexeme", kind: "VERB" };

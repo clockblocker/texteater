@@ -36,10 +36,7 @@ export function PlaygroundNote({
 		const text = snapshot.texts[target.textId];
 		return text ? (
 			<TextPresentation
-				sentences={text.sentences.map((sentence) => ({
-					...sentence,
-					sourceText: text.sourceText,
-				}))}
+				sentences={text.sentences}
 				selectedSegmentKey={null}
 				onSegmentClick={async (sentence, index) => {
 					const attestationId = sentence.segments.find(

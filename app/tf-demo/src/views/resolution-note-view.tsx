@@ -4,7 +4,6 @@ import { useMutation as useConvexMutation } from "convex/react";
 import { Button } from "lego";
 import { useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import type { ResolutionTarget } from "@/lib/navigation";
 import { NotFoundView } from "@/views/not-found-view";
 import { NoteSkeletonFor } from "@/views/note-skeletons";
 import { resolutionDeckCards } from "@/views/resolution-deck";
@@ -13,6 +12,7 @@ import type { ResolutionStepTarget } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { ResolutionNote } from "../../convex/model/resolutionSessions";
+import type { ResolutionTarget } from "../../shared/navigation";
 
 type Presentation = "Card" | "Sheet";
 

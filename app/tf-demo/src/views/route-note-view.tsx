@@ -4,7 +4,6 @@ import { useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import type { RouteNoteTarget } from "@/lib/navigation";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { NoteSkeletonFor } from "@/views/note-skeletons";
@@ -12,6 +11,7 @@ import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
+import type { RouteNoteTarget } from "../../shared/navigation";
 
 type RouteNote = NonNullable<FunctionReturnType<typeof api.routeNotes.get>>;
 type PaginatedRouteNote = Extract<RouteNote, { kind: "Lemma" }>;

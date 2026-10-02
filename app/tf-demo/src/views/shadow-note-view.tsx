@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback, useReducer, useRef, useState } from "react";
-import type { ShadowNoteTarget } from "@/lib/navigation";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
@@ -11,6 +10,7 @@ import { ShadowNoteSkeleton } from "@/views/note-skeletons";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
+import type { ShadowNoteTarget } from "../../shared/navigation";
 import {
 	isCurrentShadowAction,
 	reduceShadowControls,

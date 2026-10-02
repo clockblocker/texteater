@@ -93,12 +93,7 @@ function ApplicationShell() {
 				{playgroundOpen ? (
 					<PlaygroundView />
 				) : settingsOpen ? (
-					<SettingsView
-						target={{
-							kind: "Settings",
-							...(activeTextId ? { textId: activeTextId } : {}),
-						}}
-					/>
+					<SettingsView textId={activeTextId ?? undefined} />
 				) : (
 					<section
 						aria-label="Workspace"

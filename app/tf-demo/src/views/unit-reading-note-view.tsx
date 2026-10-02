@@ -8,7 +8,6 @@ import type { FunctionReturnType } from "convex/server";
 import { useCallback, useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
-import type { ReadingNoteTarget } from "@/lib/navigation";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
@@ -18,6 +17,7 @@ import { ResolvingReadingNote } from "@/views/resolving-reading-note";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
+import type { ReadingNoteTarget } from "../../shared/navigation";
 
 type UnitReadingNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.readingNotes.get>>,
