@@ -1,89 +1,77 @@
 {
 	"name": "membership-focus",
-	"description": "Every dev gold unit the candidate reference (step0+saying+closed) got wrong on membership by majority over 3 repetitions, or that flipped between them (#755). Later membership experiments run on these cases and are judged on these units first.",
+	"description": "Every dev gold unit the candidate reference at its adopted floors (idiom=0.6,fixed=0.3,saying=0.4, #762) got wrong on membership by majority over 3 repetitions, or that flipped between them (#755, #761), on dev@adb64b2bdaf31f4f, refrozen at bb136b6c (#701). Taken from an offline replay: the 112 dev cases the answer cache does not cover (69 new, 43 whose prompts changed) are not in it. No record counts as disputed gold, since #739 has closed. Later membership experiments run on these cases and are judged on these units first.",
 	"set": {
 		"name": "dev",
-		"hash": "90c1afa7a4df706d"
+		"hash": "adb64b2bdaf31f4f"
 	},
-	"sourceRun": "20260929T193402--candidates4--final-1_closed-1--dev--all",
-	"policy": "step0+saying+closed",
-	"attribution": "segment-in-units-attribution/20260929T193402--candidates4--final-1_closed-1--dev--all--dev--all.json",
+	"sourceRun": "20261002T074558--reference--dev--all",
+	"policy": "idiom=0.6,fixed=0.3,saying=0.4",
+	"attribution": "segment-in-units-attribution/20261002T074558--reference--dev--all--dev--all.json",
 	"counts": {
-		"units": 185,
-		"wrongByMajority": 166,
-		"flips": 29,
-		"both": 10,
-		"disputedGold": 55,
-		"cases": 141
+		"units": 167,
+		"wrongByMajority": 148,
+		"flips": 26,
+		"both": 7,
+		"disputedGold": 0,
+		"cases": 119,
+		"unattributedCases": 112
 	},
 	"cases": [
 		"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun",
-		"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
 		"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
 		"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
 		"de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
 		"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
-		"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
+		"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
 		"de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
 		"de/am-schalter-bestellte-sie-zwei-fahrkarten-nach-bonn-bitte",
 		"de/anna-kauft-obst-gemuese-und-so-weiter-auf-dem-markt",
-		"de/anstatt-dass-er-klagte-half-er-sofort",
-		"de/aus-opportunismus-folgt-sie-immer-der-mehrheit-sie-heult-mit",
 		"de/blase-jetzt-nicht-laenger-truebsal",
 		"de/da-gehe-ich-morgen-hin",
 		"de/da-kann-ich-nichts-fuer",
 		"de/da-weiss-ich-nichts-von",
-		"de/das-kind-sortiert-das-lego-nach-farben",
 		"de/das-museum-oeffnet-zum-beispiel-am-montag",
 		"de/das-radio-geht-s-wieder",
-		"de/das-verfahren-eignet-sich-sowohl-fuer-kleine-teams-wie-fuer",
 		"de/das-wetter-nimmt-einfluss-auf-die-planung",
+		"de/den-kindern-zuliebe-blieb-sie-noch-eine-stunde",
+		"de/der-alte-aufzug-bleibt-nie-zwischen-den-etagen-stehen",
 		"de/der-arme-rechnet-dem-reichen-die-grossmut-niemals-als-tugend",
 		"de/der-beschaedigte-briefentwurf-endete-sichtbar-mit-mit",
-		"de/der-fonds-investiert-eine-million-euro",
 		"de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
 		"de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
 		"de/der-neue-brunnen-ist-tiefer-als-der-alte",
 		"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum",
 		"de/der-preistraeger-erhielt-die-urkunde-ueberreicht",
-		"de/der-rat-erteilt-zustimmung",
-		"de/der-tisch-besteht-aus-massivem-holz",
+		"de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr",
 		"de/der-vorschlag-hat-anerkenung-gefunden",
-		"de/die-aufnahme-brach-mitten-in-der-dankesformel-vielen",
+		"de/die-abk-blieb-stehen-obwohl-der-satz-ueberarbeitet-wurde",
 		"de/die-guete-die-nicht-grenzenlos-ist-verdient-den-namen-nicht",
 		"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die",
-		"de/die-leidenschaft-ist-immer-ein-leiden-auch-die-befriedigte",
 		"de/die-menschen-denen-wir-eine-stuetze-sind-die-geben-uns-den",
-		"de/die-parteien-treffen-eine-vereinbarung",
 		"de/die-redaktion-fuehrt-aufgrund-als-leitform-auf-grund-des",
 		"de/die-seiten-des-kinder-und-jugendbuchs-fehlen",
 		"de/die-tansanische-wahlkommission-hat-die-chadema-partei-des",
 		"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss",
-		"de/die-werkstatt-repariert-den-thermomix-noch-heute",
 		"de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht",
-		"de/ein-aphorismus-ist-der-letzte-ring-einer-langen",
 		"de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher",
 		"de/er-biss-in-den-rasen",
 		"de/er-biss-ins-kunstgras",
 		"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos",
-		"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
 		"de/er-stellt-die-kiste-vor-die-tuer",
 		"de/er-stellt-eine-frage-und-stellt-die-vase-ab",
-		"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
 		"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
 		"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am",
-		"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
 		"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
 		"de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der",
 		"de/fuer-den-workshop-stellte-das-team-aktuelle-daten-zur",
-		"de/geduld-mit-der-streitsucht-der-einfaeltigen-es-ist-nicht",
 		"de/heult-nicht-laenger-mit-den-woelfen",
-		"de/ich-lese-und-dann-wir-gehen-viel-spazieren",
+		"de/ich-lasse-mir-morgen-die-haare-schneiden",
+		"de/ich-will-mir-morgen-die-haare-schneiden-lassen",
 		"de/im-allgemeinen-ist-der-zug-puenktlich",
 		"de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten",
 		"de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert",
 		"de/im-nachruf-stand-dass-er-den-loefel-schliesslich-abgab",
-		"de/im-seminar-zitierte-sie-verkuerzt-die-verstehen-sehr-wenig",
 		"de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
 		"de/in-faellen-wo-das-gesetz-schweigt-entscheidet-das-gericht",
 		"de/in-suedkorea-ist-der-junge-musiker-und-schauspieler-cha-in",
@@ -94,9 +82,9 @@
 		"de/kaffee-oder-tee-das-ist-hier-die-frage",
 		"de/komm-endlich-zum-ende",
 		"de/mara-schaemt-sich-fuer-den-irrtum",
-		"de/mina-verliess-den-raum-ohne-sich-zu-verabschieden",
 		"de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun",
 		"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich",
+		"de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen",
 		"de/mittlerweile-hat-sich-der-preis-auf-rund-4150-us-dollar-pro",
 		"de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt",
 		"de/morgen-wird-sie-wohl-kein-blatt-vor-den-mund-nehmen",
@@ -104,32 +92,28 @@
 		"de/nach-dem-grammatikbeispiel-eine-entscheidung-treffen-folgte",
 		"de/nach-dem-unerwarteten-sieg-erinnerte-der-kapitaen-die",
 		"de/nach-der-formel-guten-morgen-hat-sie-ohne-pruefung-die-katze",
-		"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank",
 		"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins",
 		"de/nachdem-alle-ihre-werkzeuge-bereitgelegt-hatten-sagte-der",
 		"de/nachdem-der-ausschuss-eine-entscheidung-getroffen-hat-lass",
-		"de/nachdem-die-bibliothekarin-das-seltene-buch-gefunden-hatte",
 		"de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
 		"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin",
 		"de/nora-loeste-die-aufgabe-ohne-jemanden-um-hilfe-zu-bitten",
 		"de/oh-la-la-du-hast-dich-aber-schick-gemacht",
 		"de/ohne-mantel-fror-sie-wie-ein-schneider",
 		"de/pass-auf-dich-auf",
-		"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang",
 		"de/sie-bekommt-das-glas-endlich-geoeffnet",
 		"de/sie-blickt-auf-die-uhr-und-steht-danach-auf",
-		"de/sie-faehrt-zum-archiv-um-die-akte-zu-pruefen",
 		"de/sie-ging-erst-in-die-kueche-und-dann-hinaus",
-		"de/sie-ging-frueher-um-den-zug-zu-erreichen",
 		"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den",
 		"de/sie-hat-hilfe-in-anspruch-genommen",
 		"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren",
 		"de/sie-kauft-ein-kinder-oder-jugendbuch",
 		"de/sie-leistet-abbite",
+		"de/sie-macht-ihre-ansprueche-geltend",
 		"de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern",
 		"de/sie-meint-es-gut-mit-dir",
 		"de/sie-nahm-den-antrag-gruendlich-zur-kenntnis",
-		"de/sie-testet-das-neue-iphone-im-labor",
+		"de/sie-protestiert-egen-den-neuen-plan",
 		"de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt",
 		"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
 		"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner",
@@ -140,14 +124,10 @@
 		"de/unter-keinen-umstaenden-geben-wir-das-passwort-weiter",
 		"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
 		"de/vertrauen-schrieb-sie-ist-mut-und-treue-ist-kraft",
-		"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach",
 		"de/waehrend-der-waerter-das-historische-bett-huetete-huetete",
-		"de/warten-lernen-wir-gewoehnlich-erst-wenn-wir-nichts-mehr-zu",
 		"de/was-zum",
 		"de/was-zum-2",
 		"de/wenn-der-vorschlag-hand-und-fuss-haette-stimmte-ich-zu",
-		"de/wenn-man-nur-die-alten-liest-ist-man-sicher-immer-neu-zu",
-		"de/wer-sich-seiner-eigenen-kindheit-nicht-mehr-deutlich",
 		"de/wie-geht-s-dir-heute",
 		"de/wie-weise-muss-man-sein-um-immer-gut-zu-sein",
 		"de/wir-liefen-den-fluss-entlang-bis-zur-bruecke",
@@ -156,7 +136,6 @@
 		"de/wo-gehst-du-hin",
 		"de/wo-hast-du-das-mit-gemacht",
 		"de/wo-kommst-du-her",
-		"de/woerterbucheintrag-eine-frage-stellen",
 		"de/zahnaerztin-shimaa-mahmoud-setzt-sich-eine-gesichtsmaske-auf"
 	],
 	"units": [
@@ -167,7 +146,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -177,7 +156,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -187,28 +166,8 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
-		},
-		{
-			"caseId": "de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
-			"unit": 18,
-			"text": "wandte",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": true,
-			"cause": "accepted"
-		},
-		{
-			"caseId": "de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum",
-			"unit": 19,
-			"text": "sich",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": true,
-			"cause": "accepted"
 		},
 		{
 			"caseId": "de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
@@ -217,7 +176,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "ambiguous"
 		},
 		{
@@ -227,7 +186,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -237,7 +196,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "ambiguous"
 		},
 		{
@@ -247,7 +206,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -257,7 +216,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -267,7 +226,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -281,10 +240,40 @@
 			"cause": "accepted"
 		},
 		{
+			"caseId": "de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
+			"unit": 1,
+			"text": "danke für",
+			"bucket": "multi-piece Lexeme",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
+			"cause": "ambiguous"
+		},
+		{
 			"caseId": "de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
 			"unit": 0,
-			"text": "Darf ich bitten",
-			"bucket": "discontinuous Locution",
+			"text": "Darf",
+			"bucket": "one piece",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
+			"cause": "accepted"
+		},
+		{
+			"caseId": "de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
+			"unit": 1,
+			"text": "ich",
+			"bucket": "one piece",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
+			"cause": "accepted"
+		},
+		{
+			"caseId": "de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
+			"unit": 2,
+			"text": "um bitten",
+			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
@@ -297,37 +286,27 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu",
-			"unit": 13,
-			"text": "ein Ende machen",
-			"bucket": "discontinuous Locution",
+			"caseId": "de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
+			"unit": 0,
+			"text": "Tut leid",
+			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
-			"unit": 13,
-			"text": "zu",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
-			"caseId": "de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
-			"unit": 16,
-			"text": "verwandelt",
+			"caseId": "de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir",
+			"unit": 1,
+			"text": "mir",
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -343,10 +322,20 @@
 		{
 			"caseId": "de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
 			"unit": 1,
-			"text": "tut mir leid",
-			"bucket": "contiguous Locution",
-			"wrongByMajority": false,
-			"flips": true,
+			"text": "tut leid",
+			"bucket": "multi-piece Lexeme",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
+			"cause": "accepted"
+		},
+		{
+			"caseId": "de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir",
+			"unit": 2,
+			"text": "mir",
+			"bucket": "one piece",
+			"wrongByMajority": true,
+			"flips": false,
 			"disputedGold": false,
 			"cause": "accepted"
 		},
@@ -369,26 +358,6 @@
 			"flips": false,
 			"disputedGold": false,
 			"cause": "rejected"
-		},
-		{
-			"caseId": "de/anstatt-dass-er-klagte-half-er-sofort",
-			"unit": 0,
-			"text": "Anstatt",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "accepted"
-		},
-		{
-			"caseId": "de/aus-opportunismus-folgt-sie-immer-der-mehrheit-sie-heult-mit",
-			"unit": 0,
-			"text": "heult mit den Wölfen",
-			"bucket": "discontinuous Locution",
-			"wrongByMajority": false,
-			"flips": true,
-			"disputedGold": false,
-			"cause": "assembly"
 		},
 		{
 			"caseId": "de/blase-jetzt-nicht-laenger-truebsal",
@@ -461,21 +430,11 @@
 			"cause": "accepted"
 		},
 		{
-			"caseId": "de/das-kind-sortiert-das-lego-nach-farben",
-			"unit": 0,
-			"text": "LEGO",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "accepted"
-		},
-		{
 			"caseId": "de/das-museum-oeffnet-zum-beispiel-am-montag",
 			"unit": 0,
 			"text": "zu m Beispiel",
 			"bucket": "contiguous Locution",
-			"wrongByMajority": true,
+			"wrongByMajority": false,
 			"flips": true,
 			"disputedGold": false,
 			"cause": "rejected"
@@ -501,24 +460,34 @@
 			"cause": "accepted"
 		},
 		{
-			"caseId": "de/das-verfahren-eignet-sich-sowohl-fuer-kleine-teams-wie-fuer",
+			"caseId": "de/das-wetter-nimmt-einfluss-auf-die-planung",
 			"unit": 0,
-			"text": "sowohl wie",
-			"bucket": "discontinuous Locution",
+			"text": "nimmt Einfluss auf",
+			"bucket": "contiguous Locution",
 			"wrongByMajority": false,
 			"flips": true,
 			"disputedGold": false,
-			"cause": "rejected"
+			"cause": "accepted"
 		},
 		{
-			"caseId": "de/das-wetter-nimmt-einfluss-auf-die-planung",
+			"caseId": "de/den-kindern-zuliebe-blieb-sie-noch-eine-stunde",
 			"unit": 0,
-			"text": "nimmt Einfluss",
-			"bucket": "contiguous Locution",
+			"text": "zuliebe",
+			"bucket": "one piece",
+			"wrongByMajority": false,
+			"flips": true,
+			"disputedGold": false,
+			"cause": "accepted"
+		},
+		{
+			"caseId": "de/der-alte-aufzug-bleibt-nie-zwischen-den-etagen-stehen",
+			"unit": 0,
+			"text": "bleibt stehen",
+			"bucket": "discontinuous Locution",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
-			"cause": "accepted"
+			"cause": "not nominated"
 		},
 		{
 			"caseId": "de/der-arme-rechnet-dem-reichen-die-grossmut-niemals-als-tugend",
@@ -526,7 +495,7 @@
 			"text": "Der Arme rechnet dem Reichen die Großmut niemals als Tugend an",
 			"bucket": "Saying",
 			"wrongByMajority": true,
-			"flips": false,
+			"flips": true,
 			"disputedGold": false,
 			"cause": "rejected"
 		},
@@ -541,23 +510,13 @@
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/der-fonds-investiert-eine-million-euro",
-			"unit": 0,
-			"text": "Million",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "accepted"
-		},
-		{
 			"caseId": "de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein",
 			"unit": 2,
 			"text": "schritt her",
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": false,
 			"flips": true,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -567,7 +526,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": false,
 			"flips": true,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -577,7 +536,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "not nominated"
 		},
 		{
@@ -587,7 +546,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "not nominated"
 		},
 		{
@@ -597,7 +556,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -607,7 +566,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -641,22 +600,12 @@
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/der-rat-erteilt-zustimmung",
+			"caseId": "de/der-verkaeufer-haut-die-kundschaft-staendig-uebers-ohr",
 			"unit": 0,
-			"text": "erteilt Zustimmung",
-			"bucket": "contiguous Locution",
+			"text": "haut über s Ohr",
+			"bucket": "discontinuous Locution",
 			"wrongByMajority": false,
 			"flips": true,
-			"disputedGold": false,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/der-tisch-besteht-aus-massivem-holz",
-			"unit": 0,
-			"text": "aus",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
 			"disputedGold": false,
 			"cause": "accepted"
 		},
@@ -666,19 +615,19 @@
 			"text": "hat Anerkenung gefunden",
 			"bucket": "contiguous Locution",
 			"wrongByMajority": true,
-			"flips": false,
+			"flips": true,
 			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/die-aufnahme-brach-mitten-in-der-dankesformel-vielen",
+			"caseId": "de/die-abk-blieb-stehen-obwohl-der-satz-ueberarbeitet-wurde",
 			"unit": 0,
-			"text": "Vielen herzlichen",
+			"text": "blieb stehen",
 			"bucket": "contiguous Locution",
 			"wrongByMajority": true,
-			"flips": true,
+			"flips": false,
 			"disputedGold": false,
-			"cause": "rejected"
+			"cause": "not nominated"
 		},
 		{
 			"caseId": "de/die-guete-die-nicht-grenzenlos-ist-verdient-den-namen-nicht",
@@ -697,16 +646,6 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/die-leidenschaft-ist-immer-ein-leiden-auch-die-befriedigte",
-			"unit": 0,
-			"text": "Die Leidenschaft ist immer ein Leiden auch die befriedigte",
-			"bucket": "Saying",
-			"wrongByMajority": true,
-			"flips": false,
 			"disputedGold": false,
 			"cause": "rejected"
 		},
@@ -715,16 +654,6 @@
 			"unit": 0,
 			"text": "die Menschen denen wir eine Stütze sind die geben uns den Halt i m Leben",
 			"bucket": "Saying",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/die-parteien-treffen-eine-vereinbarung",
-			"unit": 0,
-			"text": "treffen eine Vereinbarung",
-			"bucket": "contiguous Locution",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
@@ -771,32 +700,12 @@
 			"cause": "assembly"
 		},
 		{
-			"caseId": "de/die-werkstatt-repariert-den-thermomix-noch-heute",
-			"unit": 0,
-			"text": "Thermomix",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "accepted"
-		},
-		{
 			"caseId": "de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht",
 			"unit": 0,
 			"text": "wurde Licht in s Dunkel gebracht",
 			"bucket": "discontinuous Locution",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/ein-aphorismus-ist-der-letzte-ring-einer-langen",
-			"unit": 0,
-			"text": "Ein Aphorismus ist der letzte Ring einer langen Gedankenkette",
-			"bucket": "Saying",
-			"wrongByMajority": true,
-			"flips": false,
+			"wrongByMajority": false,
+			"flips": true,
 			"disputedGold": false,
 			"cause": "rejected"
 		},
@@ -807,7 +716,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": false,
 			"flips": true,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -817,7 +726,7 @@
 			"bucket": "discontinuous Locution",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -877,27 +786,7 @@
 			"bucket": "discontinuous Locution",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
-			"unit": 12,
-			"text": "ein wenig",
-			"bucket": "contiguous Locution",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": true,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er",
-			"unit": 28,
-			"text": "m Niedergleiten",
-			"bucket": "multi-piece Lexeme",
-			"wrongByMajority": false,
-			"flips": true,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -921,23 +810,13 @@
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
-			"unit": 9,
-			"text": "ein wenig",
-			"bucket": "contiguous Locution",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": true,
-			"cause": "rejected"
-		},
-		{
 			"caseId": "de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der",
 			"unit": 18,
 			"text": "sich",
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -947,7 +826,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -957,28 +836,8 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
-		},
-		{
-			"caseId": "de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
-			"unit": 5,
-			"text": "so",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": true,
-			"cause": "accepted"
-		},
-		{
-			"caseId": "de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
-			"unit": 8,
-			"text": "daß",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": true,
-			"cause": "accepted"
 		},
 		{
 			"caseId": "de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
@@ -987,7 +846,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": true,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -1011,16 +870,6 @@
 			"cause": "accepted"
 		},
 		{
-			"caseId": "de/geduld-mit-der-streitsucht-der-einfaeltigen-es-ist-nicht",
-			"unit": 0,
-			"text": "Geduld mit der Streitsucht der Einfältigen Es ist nicht leicht zu begreifen dass man nicht begreift",
-			"bucket": "Saying",
-			"wrongByMajority": false,
-			"flips": true,
-			"disputedGold": false,
-			"cause": "rejected"
-		},
-		{
 			"caseId": "de/heult-nicht-laenger-mit-den-woelfen",
 			"unit": 0,
 			"text": "Heult mit den Wölfen",
@@ -1031,13 +880,23 @@
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/ich-lese-und-dann-wir-gehen-viel-spazieren",
-			"unit": 5,
-			"text": "gehen spazieren",
-			"bucket": "discontinuous Locution",
+			"caseId": "de/ich-lasse-mir-morgen-die-haare-schneiden",
+			"unit": 0,
+			"text": "lasse schneiden",
+			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
+			"cause": "not nominated"
+		},
+		{
+			"caseId": "de/ich-will-mir-morgen-die-haare-schneiden-lassen",
+			"unit": 1,
+			"text": "schneiden lassen",
+			"bucket": "multi-piece Lexeme",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
 			"cause": "not nominated"
 		},
 		{
@@ -1081,16 +940,6 @@
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/im-seminar-zitierte-sie-verkuerzt-die-verstehen-sehr-wenig",
-			"unit": 0,
-			"text": "Die verstehen sehr wenig",
-			"bucket": "Saying",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "rejected"
-		},
-		{
 			"caseId": "de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
 			"unit": 0,
 			"text": "Es",
@@ -1103,8 +952,18 @@
 		{
 			"caseId": "de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
 			"unit": 1,
-			"text": "tut mir",
-			"bucket": "contiguous Locution",
+			"text": "tut",
+			"bucket": "one piece",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
+			"cause": "accepted"
+		},
+		{
+			"caseId": "de/in-der-abgebrochenen-sprachnachricht-war-nur-die",
+			"unit": 2,
+			"text": "mir",
+			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
@@ -1167,7 +1026,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1177,7 +1036,7 @@
 			"bucket": "discontinuous Locution",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "ambiguous"
 		},
 		{
@@ -1187,7 +1046,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -1197,7 +1056,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": false,
 			"flips": true,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1207,7 +1066,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": false,
 			"flips": true,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1233,18 +1092,8 @@
 		{
 			"caseId": "de/mara-schaemt-sich-fuer-den-irrtum",
 			"unit": 0,
-			"text": "sich",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "accepted"
-		},
-		{
-			"caseId": "de/mina-verliess-den-raum-ohne-sich-zu-verabschieden",
-			"unit": 0,
-			"text": "ohne",
-			"bucket": "one piece",
+			"text": "schämt sich",
+			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
@@ -1253,7 +1102,7 @@
 		{
 			"caseId": "de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun",
 			"unit": 0,
-			"text": "hat alle Hände voll tun",
+			"text": "hat alle Hände voll zu tun",
 			"bucket": "discontinuous Locution",
 			"wrongByMajority": true,
 			"flips": false,
@@ -1267,7 +1116,17 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
+			"cause": "rejected"
+		},
+		{
+			"caseId": "de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen",
+			"unit": 1,
+			"text": "ließ sich",
+			"bucket": "multi-piece Lexeme",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -1328,7 +1187,7 @@
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
-			"cause": "rejected"
+			"cause": "assembly"
 		},
 		{
 			"caseId": "de/nach-dem-unerwarteten-sieg-erinnerte-der-kapitaen-die",
@@ -1345,24 +1204,14 @@
 			"unit": 0,
 			"text": "hat die Katze i m Sack gekauft",
 			"bucket": "discontinuous Locution",
-			"wrongByMajority": true,
-			"flips": false,
+			"wrongByMajority": false,
+			"flips": true,
 			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank",
-			"unit": 0,
-			"text": "Vielen Dank",
-			"bucket": "contiguous Locution",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "accepted"
-		},
-		{
 			"caseId": "de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins",
-			"unit": 0,
+			"unit": 3,
 			"text": "hat sich in s Fäustchen gelacht",
 			"bucket": "discontinuous Locution",
 			"wrongByMajority": true,
@@ -1391,10 +1240,10 @@
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/nachdem-die-bibliothekarin-das-seltene-buch-gefunden-hatte",
+			"caseId": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
 			"unit": 0,
-			"text": "Besten Dank",
-			"bucket": "contiguous Locution",
+			"text": "Es",
+			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
@@ -1402,21 +1251,21 @@
 		},
 		{
 			"caseId": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
-			"unit": 0,
-			"text": "Es",
-			"bucket": "one piece",
+			"unit": 1,
+			"text": "tut leid",
+			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
-			"flips": true,
+			"flips": false,
 			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
 			"caseId": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir",
-			"unit": 1,
-			"text": "tut mir leid",
-			"bucket": "discontinuous Locution",
+			"unit": 2,
+			"text": "mir",
+			"bucket": "one piece",
 			"wrongByMajority": true,
-			"flips": true,
+			"flips": false,
 			"disputedGold": false,
 			"cause": "accepted"
 		},
@@ -1471,16 +1320,6 @@
 			"cause": "assembly"
 		},
 		{
-			"caseId": "de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang",
-			"unit": 2,
-			"text": "i m Vergleich zu",
-			"bucket": "contiguous Locution",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": true,
-			"cause": "assembly"
-		},
-		{
 			"caseId": "de/sie-bekommt-das-glas-endlich-geoeffnet",
 			"unit": 0,
 			"text": "bekommt",
@@ -1492,8 +1331,8 @@
 		},
 		{
 			"caseId": "de/sie-blickt-auf-die-uhr-und-steht-danach-auf",
-			"unit": 0,
-			"text": "auf",
+			"unit": 1,
+			"text": "blickt",
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
@@ -1501,9 +1340,9 @@
 			"cause": "accepted"
 		},
 		{
-			"caseId": "de/sie-faehrt-zum-archiv-um-die-akte-zu-pruefen",
-			"unit": 0,
-			"text": "zu",
+			"caseId": "de/sie-blickt-auf-die-uhr-und-steht-danach-auf",
+			"unit": 2,
+			"text": "auf",
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
@@ -1531,23 +1370,13 @@
 			"cause": "accepted"
 		},
 		{
-			"caseId": "de/sie-ging-frueher-um-den-zug-zu-erreichen",
-			"unit": 0,
-			"text": "um",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "accepted"
-		},
-		{
 			"caseId": "de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den",
 			"unit": 1,
 			"text": "gingen entlang",
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -1557,7 +1386,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "not nominated"
 		},
 		{
@@ -1577,7 +1406,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1587,7 +1416,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1611,6 +1440,16 @@
 			"cause": "rejected"
 		},
 		{
+			"caseId": "de/sie-macht-ihre-ansprueche-geltend",
+			"unit": 0,
+			"text": "macht geltend",
+			"bucket": "discontinuous Locution",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
+			"cause": "accepted"
+		},
+		{
 			"caseId": "de/sie-mag-aepfel-birnen-oder-aehnliches-sehr-gern",
 			"unit": 0,
 			"text": "oder Ähnliches",
@@ -1622,13 +1461,13 @@
 		},
 		{
 			"caseId": "de/sie-meint-es-gut-mit-dir",
-			"unit": 0,
-			"text": "meint",
-			"bucket": "one piece",
+			"unit": 1,
+			"text": "meint es gut mit",
+			"bucket": "contiguous Locution",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
-			"cause": "accepted"
+			"cause": "rejected"
 		},
 		{
 			"caseId": "de/sie-nahm-den-antrag-gruendlich-zur-kenntnis",
@@ -1641,14 +1480,14 @@
 			"cause": "accepted"
 		},
 		{
-			"caseId": "de/sie-testet-das-neue-iphone-im-labor",
+			"caseId": "de/sie-protestiert-egen-den-neuen-plan",
 			"unit": 0,
-			"text": "iPhone",
-			"bucket": "one piece",
+			"text": "protestiert egen",
+			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
-			"cause": "accepted"
+			"cause": "not nominated"
 		},
 		{
 			"caseId": "de/sie-warnte-ihn-mit-einem-he-he-vor-dem-schritt",
@@ -1667,7 +1506,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1677,7 +1516,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1687,7 +1526,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1697,7 +1536,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1707,7 +1546,7 @@
 			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "accepted"
 		},
 		{
@@ -1717,7 +1556,7 @@
 			"bucket": "contiguous Locution",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -1727,14 +1566,24 @@
 			"bucket": "contiguous Locution",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
 			"caseId": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre",
-			"unit": 0,
+			"unit": 2,
 			"text": "nahm Rücksicht auf",
 			"bucket": "discontinuous Locution",
+			"wrongByMajority": true,
+			"flips": false,
+			"disputedGold": false,
+			"cause": "accepted"
+		},
+		{
+			"caseId": "de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre",
+			"unit": 6,
+			"text": "Kollegen",
+			"bucket": "one piece",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
@@ -1773,12 +1622,12 @@
 		{
 			"caseId": "de/unter-keinen-umstaenden-geben-wir-das-passwort-weiter",
 			"unit": 0,
-			"text": "keinen",
-			"bucket": "one piece",
-			"wrongByMajority": true,
-			"flips": false,
+			"text": "Unter keinen Umständen",
+			"bucket": "contiguous Locution",
+			"wrongByMajority": false,
+			"flips": true,
 			"disputedGold": false,
-			"cause": "accepted"
+			"cause": "rejected"
 		},
 		{
 			"caseId": "de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
@@ -1787,7 +1636,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -1797,7 +1646,7 @@
 			"bucket": "multi-piece Lexeme",
 			"wrongByMajority": true,
 			"flips": false,
-			"disputedGold": true,
+			"disputedGold": false,
 			"cause": "rejected"
 		},
 		{
@@ -1811,30 +1660,10 @@
 			"cause": "rejected"
 		},
 		{
-			"caseId": "de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach",
-			"unit": 0,
-			"text": "sehnen sich nach",
-			"bucket": "multi-piece Lexeme",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "ambiguous"
-		},
-		{
 			"caseId": "de/waehrend-der-waerter-das-historische-bett-huetete-huetete",
 			"unit": 0,
 			"text": "hütete das Bett",
 			"bucket": "discontinuous Locution",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/warten-lernen-wir-gewoehnlich-erst-wenn-wir-nichts-mehr-zu",
-			"unit": 0,
-			"text": "Warten lernen wir gewöhnlich erst wenn wir nichts mehr zu erwarten haben",
-			"bucket": "Saying",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
@@ -1865,26 +1694,6 @@
 			"unit": 0,
 			"text": "Hand und Fuß hätte",
 			"bucket": "contiguous Locution",
-			"wrongByMajority": true,
-			"flips": false,
-			"disputedGold": false,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/wenn-man-nur-die-alten-liest-ist-man-sicher-immer-neu-zu",
-			"unit": 0,
-			"text": "Wenn man nur die Alten liest ist man sicher immer neu zu bleiben",
-			"bucket": "Saying",
-			"wrongByMajority": false,
-			"flips": true,
-			"disputedGold": false,
-			"cause": "rejected"
-		},
-		{
-			"caseId": "de/wer-sich-seiner-eigenen-kindheit-nicht-mehr-deutlich",
-			"unit": 0,
-			"text": "Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert ist ein schlechter Erzieher",
-			"bucket": "Saying",
 			"wrongByMajority": true,
 			"flips": false,
 			"disputedGold": false,
@@ -1989,16 +1798,6 @@
 			"flips": false,
 			"disputedGold": false,
 			"cause": "accepted"
-		},
-		{
-			"caseId": "de/woerterbucheintrag-eine-frage-stellen",
-			"unit": 0,
-			"text": "eine Frage stellen",
-			"bucket": "contiguous Locution",
-			"wrongByMajority": true,
-			"flips": true,
-			"disputedGold": false,
-			"cause": "rejected"
 		},
 		{
 			"caseId": "de/zahnaerztin-shimaa-mahmoud-setzt-sich-eine-gesichtsmaske-auf",

@@ -59,12 +59,12 @@ test("the focus groups are the #755 causes, with disputed gold apart", () => {
 		]),
 	);
 	expect(counts).toEqual({
-		"not nominated": 1,
-		rejected: 55,
-		accepted: 57,
+		"not nominated": 9,
+		rejected: 60,
+		accepted: 78,
 		assembly: 5,
-		ambiguous: 12,
-		"disputed gold": 55,
+		ambiguous: 15,
+		"disputed gold": 0,
 	});
 	expect(() =>
 		groupOf({ ...unitOf("x", 0, "rejected"), cause: "guessed" }),

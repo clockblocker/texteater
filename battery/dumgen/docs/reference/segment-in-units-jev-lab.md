@@ -37,6 +37,11 @@ bun run segment-in-units-lab ledger [--table]
   have uncommitted changes. Commit first, so that `gitHead` names the code.
   dumspec records are outside this check, because a run reads the frozen
   set.
+- `freeze --force` keeps each set it replaces at `sets/<name>@<hash>.json`,
+  and `report`, `compare`, `sweep` and `segment-in-units-attribution` read
+  a run's set by its hash, so a run stays scored against the gold it ran
+  on. `withheldRecords` in `lab/corpus.ts` keeps a record out of both sets
+  while its gold waits for a person's approval.
 - jev is pinned to `pinnedJevModel` in `lab/jev.ts`. `--model` picks another
   version. A floating alias needs `--allow-floating-model`. An answer from a
   version other than the one requested fails the call.
@@ -55,12 +60,13 @@ bun run segment-in-units-lab ledger [--table]
 ## Artifacts
 
 Frozen sets, raw runs, promptsmith exports and the answer cache live in
-`.runs/segment-in-units-lab/`, which is gitignored. Commit each run's
-evidence and the ledger:
+`.runs/segment-in-units-lab/`, which is gitignored. Commit a gzipped copy
+of each frozen set, each run's evidence and the ledger:
 
 ```text
 evidence/segment-in-units-lab/
   ledger.jsonl               one line per model-calling command and per compare --record
+  sets/<name>@<hash>.json.gz a frozen set; gunzip it to .runs/segment-in-units-lab/sets/<name>.json to restore it
   runs/<runId>/
     manifest.json            provenance: see RunManifest in lab/provenance.ts
     diff.patch               only when run with --allow-dirty
@@ -154,6 +160,14 @@ The pilot writes its manifest, configuration, requests and results to
   `lab/focus.ts` read outcome rows, so a variant scored in memory compares
   the same way. The focus set is fixed: never re-derive it from a later
   run.
+- The 2026-10-02 refreeze (#701) broke that rule once, with the user's
+  approval, because the gold under `dev@90c1afa7a4df706d` had changed.
+  `dev@adb64b2bdaf31f4f` and `heldout@c23a5cc90ca8afc9` were frozen at
+  bb136b6c. The focus set was then taken again from an offline replay of
+  the reference at its adopted floors. The 112 dev cases the cache did not
+  cover are outside it, and no unit counts as disputed, because #739 has
+  closed. Focus, guardrail and set-level figures don't compare across the
+  refreeze, and runs on the old sets no longer get a focus block.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   committed outcomes otherwise. Outcomes are scored against the frozen
   gold, so `--relabel` needs the raw run.
