@@ -39,9 +39,9 @@ function fixedWords(...ids: number[]): Record<string, Answer> {
 	return answers;
 }
 
-test("production applies every code rule (#851); each is a setting", () => {
+test("production applies every code rule (#851) but saying-closed, which X5 screens; each is a setting", () => {
 	expect([...productionUnitSettings.rules].sort()).toEqual(
-		[...codeRules].sort(),
+		codeRules.filter((rule) => rule !== "saying-closed").sort(),
 	);
 });
 
@@ -257,4 +257,19 @@ test("answer-apart: an answer word before a formula is no merged interjection", 
 		[5, 7],
 	]);
 	expect(result.with).toEqual([[0], [2], [5, 7]]);
+});
+
+test("saying-closed: a word outside a Saying span keeps its own unit", async () => {
+	// The judge reads rief as Ende's idiom verb.
+	// Sie0 _1 rief2 :3 _4 Ende5 _6 gut7 ,8 _9 alles10 _11 gut12 .13
+	const result = await groups(
+		segmentsOf("Sie rief: Ende gut, alles gut."),
+		{
+			s_idiom_3: picked("p2", { p2: 0.9, none: 0.1 }),
+			y4_3_4_5_6: picked("whole"),
+		},
+		"saying-closed",
+	);
+	expect(result.without).toEqual([[0], [2, 5, 7, 10, 12]]);
+	expect(result.with).toEqual([[0], [2], [5, 7, 10, 12]]);
 });

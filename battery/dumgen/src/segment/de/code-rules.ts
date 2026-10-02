@@ -47,6 +47,12 @@
  * - `answer-apart` (de/interjection-counts-its-words): an answer word
  *   before a formula keeps its own unit, with no punctuation between
  *   (Nein danke); routing reads it when it merges interjections.
+ * - `saying-closed` (de/saying-needs-uptake,
+ *   de/locutions-and-sayings-are-made-of-lexemes): a Saying is one unit
+ *   over exactly its own words, so a link between a word inside a Saying
+ *   span and one outside it drops: erinnerte … „Wer zuletzt lacht, lacht am
+ *   besten“ keeps erinnerte out, though the judge read an of am as its
+ *   governed preposition.
  */
 import {
 	closedVerbForms,
@@ -75,6 +81,7 @@ export const codeRules = [
 	"infixed-zu",
 	"binomial",
 	"answer-apart",
+	"saying-closed",
 ] as const;
 
 export type CodeRule = (typeof codeRules)[number];
@@ -90,6 +97,8 @@ type Decision = {
 	readonly closed?: readonly ClosedUnit[];
 	readonly drop?: (edge: AssembledEdge) => boolean;
 	readonly add?: readonly (readonly [number, number])[];
+	/** Pieces the rule keeps out of any expression a judge proposes. */
+	readonly bound?: readonly number[];
 };
 
 const lower = (piece: Piece) => piece.text.toLowerCase();
@@ -224,6 +233,7 @@ function pronouns(nomination: Nomination): Decision {
 		drop: (edge) =>
 			edge.source === "expression" &&
 			edge.pieces.some((id) => free.has(id)),
+		bound: [...free],
 	};
 }
 
@@ -427,6 +437,30 @@ function binomialLinks(
 	return links;
 }
 
+/** Each Saying span's pieces, keyed to its first piece, from the `saying` edges. */
+function sayingSpanOf(edges: readonly AssembledEdge[]): Map<number, number> {
+	const spanOf = new Map<number, number>();
+	for (const { pieces, source } of edges)
+		if (source === "saying") {
+			spanOf.set(pieces[0], pieces[0]);
+			spanOf.set(pieces[1], pieces[0]);
+		}
+	return spanOf;
+}
+
+function sayingsClosed(edges: readonly AssembledEdge[]): Decision {
+	const spanOf = sayingSpanOf(edges);
+	return {
+		drop: (edge) => {
+			if (edge.source === "saying") return false;
+			const [left, right] = edge.pieces.map((id) => spanOf.get(id));
+			return (
+				(left !== undefined || right !== undefined) && left !== right
+			);
+		},
+	};
+}
+
 /**
  * Whether two adjacent interjection pieces stay apart: an answer word
  * before a formula (de/interjection-counts-its-words).
@@ -438,13 +472,12 @@ export function answerBeforeFormula(left: Piece, right: Piece): boolean {
 	);
 }
 
-/** The membership with each rule applied; with no rule, the membership itself. */
-export function withCodeRules(
+/** Each rule's decision over one membership. */
+function decisionsOf(
 	nomination: Nomination,
 	membership: Membership,
 	rules: readonly CodeRule[],
-): Membership {
-	if (rules.length === 0) return membership;
+): Decision[] {
 	const decide: Record<CodeRule, () => Decision> = {
 		"split-adverb": () => splitAdverbs(nomination),
 		anchors: () => anchors(nomination),
@@ -458,8 +491,37 @@ export function withCodeRules(
 		binomial: () => ({}),
 		// Read by routing, where interjections merge.
 		"answer-apart": () => ({}),
+		"saying-closed": () => sayingsClosed(membership.edges),
 	};
-	const decisions = rules.map((rule) => decide[rule]());
+	return rules.map((rule) => decide[rule]());
+}
+
+/**
+ * The pieces the rules decide on their own: those of a unit a rule closes,
+ * and those a rule keeps out of expressions (a personal pronoun that is no
+ * reflexive). The Locution Choice proposes no merge that touches them.
+ */
+export function boundPieces(
+	nomination: Nomination,
+	membership: Membership,
+	rules: readonly CodeRule[],
+): ReadonlySet<number> {
+	return new Set(
+		decisionsOf(nomination, membership, rules).flatMap((decision) => [
+			...(decision.closed ?? []).flatMap((unit) => unit.pieces),
+			...(decision.bound ?? []),
+		]),
+	);
+}
+
+/** The membership with each rule applied; with no rule, the membership itself. */
+export function withCodeRules(
+	nomination: Nomination,
+	membership: Membership,
+	rules: readonly CodeRule[],
+): Membership {
+	if (rules.length === 0) return membership;
+	const decisions = decisionsOf(nomination, membership, rules);
 	const closedOf = new Map<number, number>();
 	const closed = decisions.flatMap((decision) => decision.closed ?? []);
 	for (const [index, unit] of closed.entries())

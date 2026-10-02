@@ -21,6 +21,13 @@
  *   `production+x3` (`code-rules.ts`). `all` lists every rule. `was-fuer` asks its Noul
  *   in `final`, so a Sentence with was … für misses the cache once.
  *   Groups no batch asked about route `Unresolved`, as in the grid.
+ * - `--opt x5=<variant>,<variant>` (X5): production with the Locution
+ *   Choice (`locution-choice.ts`), `production+x5@<variant>`. A variant is
+ *   the whole share a merge needs, then any of `noabsorb`, `nobleiben` and
+ *   `sc` (the `saying-closed` code rule added), joined by `-`: `0.5`,
+ *   `0.6-noabsorb`, `0.5-sc`. Every variant reads one `locution` request
+ *   per rule set, so the variants of one run ask once. Groups no batch
+ *   asked about route as `--opt unasked` says.
  */
 import { stableJson } from "promptsmith";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
@@ -40,6 +47,12 @@ import {
 	codeRules,
 	withCodeRules,
 } from "../../../segment/de/code-rules.js";
+import {
+	askLocutionChoice,
+	type LocutionAnswers,
+	type LocutionSettings,
+	withLocutionChoice,
+} from "../../../segment/de/locution-choice.js";
 import { type Nomination, nominate } from "../../../segment/de/nomination.js";
 import {
 	askRouteBatches,
@@ -118,13 +131,49 @@ export function membershipUnder(
 	);
 }
 
+/** One X5 variant: the Locution Choice's setting and the code rules it adds. */
+type LocutionVariant = {
+	readonly name: string;
+	readonly settings: LocutionSettings;
+	readonly rules: readonly CodeRule[];
+};
+
 type Levers = {
 	readonly grid: boolean;
 	readonly pool: readonly Pooling[];
 	readonly margins: readonly number[];
 	readonly unasked: "ask" | "unresolved";
 	readonly rules: readonly CodeRule[];
+	readonly locution: readonly LocutionVariant[];
 };
+
+function locutionVariantsOf(option: string | undefined): LocutionVariant[] {
+	return (option ?? "")
+		.split(",")
+		.filter(Boolean)
+		.map((name) => {
+			const [floor, ...flags] = name.split("-");
+			const share = Number(floor);
+			if (
+				!Number.isFinite(share) ||
+				flags.some(
+					(flag) => !["noabsorb", "nobleiben", "sc"].includes(flag),
+				)
+			)
+				throw Error(
+					`--opt x5=${option}: a variant is a floor, then noabsorb, nobleiben or sc, joined by -`,
+				);
+			return {
+				name,
+				settings: {
+					floor: share,
+					absorb: !flags.includes("noabsorb"),
+					bleiben: !flags.includes("nobleiben"),
+				},
+				rules: flags.includes("sc") ? ["saying-closed"] : [],
+			};
+		});
+}
 
 function rulesOf(option: string | undefined): CodeRule[] {
 	const listed = (option ?? "").split(",").filter(Boolean);
@@ -145,6 +194,7 @@ function leversOf(options: ArmOptions): Levers {
 		"unasked",
 		"primary",
 		"x3",
+		"x5",
 	]);
 	for (const key of Object.keys(options))
 		if (!known.has(key)) throw Error(`production takes no --opt ${key}`);
@@ -176,6 +226,7 @@ function leversOf(options: ArmOptions): Levers {
 		margins,
 		unasked,
 		rules: rulesOf(options.x3),
+		locution: locutionVariantsOf(options.x5),
 	};
 }
 
@@ -279,6 +330,51 @@ async function outputsOf(
 			).units(),
 		};
 	}
+	// One `locution` request per rule set, shared by the variants that read it.
+	const located = new Map<string, Promise<LocutionAnswers>>();
+	for (const variant of levers.locution) {
+		const rules = [...new Set([...settings.rules, ...variant.rules])];
+		const read = await readOf(rules.includes("was-fuer"));
+		const base = membershipOf(
+			read.nomination,
+			settings.floors,
+			settings.saying,
+		);
+		const ruled = withCodeRules(read.nomination, base, rules);
+		const key = [...rules].sort().join(",");
+		const asked =
+			located.get(key) ??
+			askLocutionChoice(read.nomination, ruled, ask, rules);
+		located.set(key, asked);
+		const membership = withLocutionChoice(
+			read.nomination,
+			base,
+			ruled,
+			await asked,
+			rules,
+			variant.settings,
+		);
+		const extra =
+			levers.unasked === "ask"
+				? await askUnaskedRoutes(
+						read.nomination,
+						read.answers,
+						membership.partition,
+						ask,
+					)
+				: undefined;
+		outputs[`${prefix}production+x5@${variant.name}`] = {
+			units: routeMembership(
+				read.nomination,
+				membership,
+				read.answers,
+				extra,
+				rules.includes("answer-apart")
+					? answerBeforeFormula
+					: undefined,
+			).units(),
+		};
+	}
 	if (levers.grid) {
 		const { nomination, answers } = await readOf(false);
 		for (const [name, assembly] of Object.entries(x1Grid)) {
@@ -346,6 +442,7 @@ function heardOf(
 					margins: [],
 					unasked: "ask",
 					rules: [],
+					locution: [],
 				},
 			);
 			return answers;

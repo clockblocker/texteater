@@ -23,6 +23,11 @@ import {
 	withCodeRules,
 } from "./code-rules.js";
 import { authoredInventory, type GermanInventory } from "./inventory.js";
+import {
+	askLocutionChoice,
+	type LocutionSettings,
+	withLocutionChoice,
+} from "./locution-choice.js";
 import { nominate } from "./nomination.js";
 import {
 	askRouteBatches,
@@ -50,6 +55,12 @@ export type UnitSettings = {
 	 * enforcing one dumspec Rule. `was-fuer` also asks its Noul in `final`.
 	 */
 	readonly rules: readonly CodeRule[];
+	/**
+	 * The Locution Choice (#851, X5, `locution-choice.ts`): a `locution`
+	 * request over the units sub-floor links still join, and the merges it
+	 * accepts. None when absent.
+	 */
+	readonly locution?: LocutionSettings;
 };
 
 /** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7, and every code rule. */
@@ -87,11 +98,18 @@ export async function segmentGermanUnits(
 	const nomination = await nominate(sentence, ask, settings.inventory, {
 		wasFuer: settings.rules.includes("was-fuer"),
 	});
-	const membership = withCodeRules(
-		nomination,
-		membershipOf(nomination, settings.floors, settings.saying),
-		settings.rules,
-	);
+	const base = membershipOf(nomination, settings.floors, settings.saying);
+	const ruled = withCodeRules(nomination, base, settings.rules);
+	const membership = settings.locution
+		? withLocutionChoice(
+				nomination,
+				base,
+				ruled,
+				await askLocutionChoice(nomination, ruled, ask, settings.rules),
+				settings.rules,
+				settings.locution,
+			)
+		: ruled;
 	const answers = await askRouteBatches(nomination, ask);
 	const extra =
 		settings.unasked === "ask"

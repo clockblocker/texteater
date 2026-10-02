@@ -153,7 +153,9 @@ type EdgeSource =
 	| "sibling"
 	| "preposition"
 	/** A code rule's link (`code-rules.ts`). */
-	| "rule";
+	| "rule"
+	/** A merge the Locution Choice accepted (`locution-choice.ts`). */
+	| "locution";
 
 export type AssembledEdge = {
 	readonly pieces: readonly [number, number];
@@ -168,6 +170,42 @@ export type Assembly = {
 };
 
 /**
+ * What a multiword unit's members absorb (de/fused-word-pieces,
+ * de/fixed-member-test): the other pieces of a member's fused word, and
+ * the preposition opening a member noun's phrase, before its article, with
+ * that preposition's fused pieces.
+ */
+export function absorbedEdges(
+	nomination: Pick<Nomination, "sentence" | "inventory">,
+	articleOf: ReadonlyMap<number, number>,
+	members: ReadonlySet<number>,
+	siblings: ReadonlyMap<number, readonly number[]> = fusedSiblings(
+		nomination.sentence,
+	),
+): AssembledEdge[] {
+	const { sentence, inventory } = nomination;
+	const edges: AssembledEdge[] = [];
+	for (const id of members) {
+		for (const sibling of siblings.get(id) ?? [])
+			edges.push({ pieces: [id, sibling], source: "sibling" });
+		const piece = sentence.pieces[id - 1];
+		if (!piece || !nounLike(piece)) continue;
+		const start = Math.min(articleOf.get(id) ?? id, id);
+		const before = sentence.pieces[start - 2];
+		if (
+			before &&
+			before.clause === piece.clause &&
+			inventory.isAdposition(before.surface)
+		) {
+			edges.push({ pieces: [id, before.id], source: "preposition" });
+			for (const sibling of siblings.get(before.id) ?? [])
+				edges.push({ pieces: [id, sibling], source: "sibling" });
+		}
+	}
+	return edges;
+}
+
+/**
  * Connected components of every link, with fused siblings and a member
  * noun's opening preposition absorbed into expressions, and the Family each
  * group was built as.
@@ -177,7 +215,7 @@ export function assemble(
 	articleOf: ReadonlyMap<number, number>,
 	input: AssemblyInput,
 ): Assembly {
-	const { sentence, inventory } = nomination;
+	const { sentence } = nomination;
 	const ids = sentence.pieces.map((piece) => piece.id);
 	const siblings = fusedSiblings(sentence);
 	const tagged: AssembledEdge[] = [
@@ -208,31 +246,16 @@ export function assemble(
 			expression.push([span[0] ?? id, id]);
 			tagged.push({ pieces: [span[0] ?? id, id], source: "saying" });
 		}
-	if (input.absorb) {
-		const members = new Set(expression.flat());
-		for (const id of [...members]) {
-			for (const sibling of siblings.get(id) ?? []) {
-				expression.push([id, sibling]);
-				tagged.push({ pieces: [id, sibling], source: "sibling" });
-			}
-			const piece = sentence.pieces[id - 1];
-			if (!piece || !nounLike(piece)) continue;
-			const start = Math.min(articleOf.get(id) ?? id, id);
-			const before = sentence.pieces[start - 2];
-			if (
-				before &&
-				before.clause === piece.clause &&
-				inventory.isAdposition(before.surface)
-			) {
-				expression.push([id, before.id]);
-				tagged.push({ pieces: [id, before.id], source: "preposition" });
-				for (const sibling of siblings.get(before.id) ?? []) {
-					expression.push([id, sibling]);
-					tagged.push({ pieces: [id, sibling], source: "sibling" });
-				}
-			}
+	if (input.absorb)
+		for (const edge of absorbedEdges(
+			nomination,
+			articleOf,
+			new Set(expression.flat()),
+			siblings,
+		)) {
+			expression.push(edge.pieces);
+			tagged.push(edge);
 		}
-	}
 	for (const id of expression.flat()) locutionPieces.add(id);
 	return {
 		edges: tagged,
