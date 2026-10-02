@@ -61,16 +61,37 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/modification-attests-partially",
+				"hash": "91fc596acb3813f1"
+			},
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "044ad2bbec5191e7"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: doppelt",
+				"url": "https://www.duden.de/rechtschreibung/doppelt",
+				"supports": "Target 0, the proverb doppelt [genäht] hält besser; das ist doppelt gemoppelt 'unnötigerweise zweifach ausgedrückt' is a separate idiom."
+			},
+			{
+				"title": "DWDS: doppeltgemoppelt",
+				"url": "https://www.dwds.de/wb/doppeltgemoppelt",
+				"supports": "Target 0, Doppelt (genäht) hält besser (variabel, Spruch); doppeltgemoppelt is an Adjektiv, so gemoppelt has no entry of its own."
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [46, 48, 50, 52],
 			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
-				"rationale": "The arbitrary unmarked quotation and ordinary assertion remain contextual contrast."
+				"rationale": "Mia's line is Duden's proverb doppelt [genäht] hält besser with gemoppelt for genäht; no collection that de/saying-needs-uptake counts lists the line itself. The bracketed genäht stays in the Canonical Form, as [guten] Morgen gives guten Morgen. gemoppelt is a rhyme echo of doppelt with no Lemma of its own (DWDS has only the ADJ doppeltgemoppelt), so by the exception in de/modification-attests-partially it joins the Saying as a member: all four words, Partial, since genäht is missing (#828). The sense is the proverb's 'doubling is safer', not the idiom's 'needlessly twice': Mia packs both copies. No member field marks gemoppelt as the word that replaced genäht, so only this note says so. The arbitrary unmarked quotation and ordinary assertion remain contextual contrast."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -82,7 +103,7 @@
 						"language": "de",
 						"family": "Saying",
 						"kind": "Saying",
-						"canonicalForm": "Doppelt gemoppelt hält besser",
+						"canonicalForm": "Doppelt genäht hält besser",
 						"coreFeatures": {}
 					},
 					"normalizedSurface": "Doppelt gemoppelt hält besser",
@@ -95,7 +116,7 @@
 					{ "attested": "hält", "orthography": "Standard" },
 					{ "attested": "besser", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Partial"
 			}
 		}
 	],

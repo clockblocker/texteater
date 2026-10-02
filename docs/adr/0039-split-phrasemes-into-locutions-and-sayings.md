@@ -240,3 +240,15 @@ Amended on 2026-10-01: the satellite example *die Schweiz* cited the article
 inside the Canonical Form, which the gold never did; it is `Schweiz` with
 Core `article: Definite`. Decided on
 [#766](https://github.com/clockblocker/texteater/issues/766).
+
+Amended on 2026-10-02: under Modification, a replacing word that has no
+Lemma of its own joins the changed unit as a member instead of resolving on
+its own. *Doppelt gemoppelt hält besser* is Duden's proverb *doppelt [genäht]
+hält besser* with *gemoppelt* for *genäht*. No reference collection lists the
+line itself, and *gemoppelt* is a rhyme echo of *doppelt*, like *gäbe* in
+*gang und gäbe*, with nothing to resolve to on its own. So the line attests
+the Saying `Doppelt genäht hält besser` over `[Doppelt, gemoppelt, hält,
+besser]`, Partial, and grouping, and so hover, covers all four words. A
+replacing word with a Lemma of its own still resolves on its own, as *Kaffee*
+and *Tee* do, and the uptake test is unchanged. Decided on
+[#828](https://github.com/clockblocker/texteater/issues/828#issuecomment-5946341018).

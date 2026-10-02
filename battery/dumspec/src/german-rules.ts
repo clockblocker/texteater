@@ -1191,7 +1191,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/modification-attests-partially",
 		statement:
-			"A changed wording still attests the unit, with Partial coverage, as long as speakers still recognize it: the kept words are its members, and the replacing words resolve on their own. A Saying survives any such change; a Locution breaks when a word that carries its meaning is replaced.",
+			"A changed wording still attests the unit, with Partial coverage, as long as speakers still recognize it: the kept words are its members, and the replacing words resolve on their own. A Saying survives any such change; a Locution breaks when a word that carries its meaning is replaced. The one exception is a replacing word that has no Lemma of its own, such as the rhyme echo gemoppelt: it joins the changed unit as a member, so Doppelt gemoppelt hält besser attests Doppelt genäht hält besser over all four words, still Partial.",
 		adrs: ["ADR-0039", "ADR-0003"],
 		routes: everyMultiword,
 		records: [
@@ -1200,6 +1200,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/wer-rastet-rostet",
 			"de/er-biss-ins-kunstgras",
 			"de/er-biss-in-den-rasen",
+			"de/die-blosse-meldung-der-bus-kommt-spaeter-war-nur-eine",
 		],
 	},
 ];
