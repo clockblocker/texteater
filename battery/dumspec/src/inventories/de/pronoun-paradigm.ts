@@ -21,7 +21,6 @@ export type PronounForm = {
 	readonly variants?: readonly string[];
 };
 export type PronounDescription = StemDescription<Core>;
-export type ReviewedPronoun = ReviewedMember;
 export type AgreementColumn = "Masc" | "Neut" | "Fem" | "Plur";
 export type PronounTable = Readonly<
 	Record<
@@ -75,7 +74,7 @@ export function pronounMember(
 	form: PronounForm,
 	description: PronounDescription,
 	cell: Partial<PronounCell> = {},
-): ReviewedPronoun {
+): ReviewedMember {
 	const coreFeatures: Core = { ...emptyCore, ...description.core, ...cell };
 	const lemma: Dumling.Lemma<"de", "Lexeme", "PRON"> = {
 		unitKind: "Lemma",
@@ -132,8 +131,8 @@ export function pronounMember(
 export function pronounParadigm(
 	table: PronounTable,
 	description: PronounDescription,
-): ReviewedPronoun[] {
-	const result: ReviewedPronoun[] = [];
+): ReviewedMember[] {
+	const result: ReviewedMember[] = [];
 	for (const column of ["Masc", "Neut", "Fem", "Plur"] as const) {
 		for (const [index, grammaticalCase] of (
 			["Nom", "Acc", "Dat", "Gen"] as const
@@ -164,7 +163,7 @@ export function pronounStem(
 		readonly citation?: PronounForm;
 		readonly uninflected?: readonly string[];
 	} = {},
-): ReviewedPronoun {
+): ReviewedMember {
 	return pronounStemOf(options.citation ?? citationForm(table), description, [
 		...tableSpellings(table),
 		...(options.uninflected ?? []).map((spelled) => ({
@@ -179,7 +178,7 @@ export function pronounStemOf(
 	citation: PronounForm,
 	description: PronounDescription,
 	spellings: readonly AuthoredSpelling[],
-): ReviewedPronoun {
+): ReviewedMember {
 	return stemMember({
 		kind: "PRON",
 		route: {
@@ -201,7 +200,7 @@ export function pronounLocution(
 	table: PronounTable,
 	description: StemDescription<Record<string, never>>,
 	locutionType: Dumrel.LocutionType | null,
-): ReviewedPronoun {
+): ReviewedMember {
 	return stemMember({
 		kind: "PRON",
 		route: { family: "Locution", locutionType },

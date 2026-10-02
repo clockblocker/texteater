@@ -232,8 +232,6 @@ export interface TextRecord {
 	legacy?: readonly LegacyCase[];
 }
 
-export type RuleRoute = SpecRoute;
-
 /** A classification Rule (ADR 0037). */
 export interface Rule {
 	id: RuleId;
@@ -250,7 +248,7 @@ export interface Rule {
 	longStatement?: string;
 	adrs: readonly AdrId[];
 	/** Empty when the Rule applies to every route of its language. */
-	routes: readonly RuleRoute[];
+	routes: readonly SpecRoute[];
 	/**
 	 * Records that show the Rule, minimal pairs included. Empty while the Rule
 	 * still needs one.

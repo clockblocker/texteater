@@ -91,7 +91,6 @@ export type {
 	Rule,
 	RuleCitation,
 	RuleId,
-	RuleRoute,
 	Segment,
 	SegmentationTarget,
 	SegmentKind,

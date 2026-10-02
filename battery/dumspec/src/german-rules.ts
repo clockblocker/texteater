@@ -1,8 +1,8 @@
-import type { Rule, RuleRoute } from "./types.js";
+import type { Rule, SpecRoute } from "./types.js";
 
-const lexeme = (...kinds: RuleRoute["kind"][]): RuleRoute[] =>
+const lexeme = (...kinds: SpecRoute["kind"][]): SpecRoute[] =>
 	kinds.map((kind) => ({ language: "de", family: "Lexeme", kind }));
-const locution = (...kinds: RuleRoute["kind"][]): RuleRoute[] =>
+const locution = (...kinds: SpecRoute["kind"][]): SpecRoute[] =>
 	kinds.map((kind) => ({ language: "de", family: "Locution", kind }));
 const everyLocution = locution(
 	"VERB",
@@ -17,7 +17,7 @@ const everyLocution = locution(
 	"NUM",
 	"INTJ",
 );
-const saying: RuleRoute[] = [
+const saying: SpecRoute[] = [
 	{ language: "de", family: "Saying", kind: "Saying" },
 ];
 const everyMultiword = [...everyLocution, ...saying];

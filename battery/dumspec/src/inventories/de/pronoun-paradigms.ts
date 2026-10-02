@@ -8,13 +8,13 @@ import {
 	pronounParadigm,
 	pronounStem,
 	pronounStemOf,
-	type ReviewedPronoun,
 	strongPronoun,
 } from "./pronoun-paradigm.js";
 import {
 	type AuthoredSpelling,
 	canonical,
 	licensed,
+	type ReviewedMember,
 	type SurfaceCell,
 } from "./stem-lemma.js";
 
@@ -27,7 +27,7 @@ const description = (
 	en: string[],
 	ru: string[],
 ): PronounDescription => ({ core: { pronType }, emoji, definition, en, ru });
-const reviewed: ReviewedPronoun[] = [];
+const reviewed: ReviewedMember[] = [];
 // A pillar's forms cannot be derived from another paradigm (system ADR 0032).
 // Pillars are one Lemma per cell: the personal and der-series cells are member
 // files, and attributive dessen and deren, and einer are pushed explicitly
@@ -944,4 +944,4 @@ for (const [stem, ipa, person, polite, en, ru] of [
 }
 
 /** Reviewed coverage matrix, including exact identities and their alternate realizations. */
-export const reviewedPronouns: readonly ReviewedPronoun[] = reviewed;
+export const reviewedPronouns: readonly ReviewedMember[] = reviewed;
