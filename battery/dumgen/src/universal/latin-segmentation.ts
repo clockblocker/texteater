@@ -1,4 +1,3 @@
-import type { Segment, SegmentKind } from "../types.js";
 import {
 	type FusionTable,
 	fusedWordSegments,
@@ -10,6 +9,8 @@ import {
 	assertStitchedText,
 	finalizeSegmentation,
 	pushSegment,
+	type Segment,
+	type SegmentKind,
 	type SourceSegmentation,
 	type SourceSegmentationTraceEntry,
 } from "./segmentation.js";

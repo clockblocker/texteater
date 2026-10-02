@@ -1,7 +1,7 @@
 {
 	"name": "dumgen",
 	"version": "0.1.0",
-	"description": "Encounter-based linguistic production over Dumling and Dumrel.",
+	"description": "German segment.inUnits: groups a Sentence's Segments into its biggest units and routes each one.",
 	"private": true,
 	"type": "module",
 	"packageManager": "bun@1.4.2",
@@ -14,29 +14,9 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		},
-		"./types": {
-			"types": "./dist/types.d.ts",
-			"import": "./dist/types.js"
-		},
-		"./schemas": {
-			"types": "./dist/schemas.d.ts",
-			"import": "./dist/schemas.js"
-		},
 		"./development": {
 			"types": "./dist/development.d.ts",
 			"import": "./dist/development.js"
-		},
-		"./authored": {
-			"types": "./dist/authored.d.ts",
-			"import": "./dist/authored.js"
-		},
-		"./validation": {
-			"types": "./dist/validation.d.ts",
-			"import": "./dist/validation.js"
-		},
-		"./testing": {
-			"types": "./dist/testing.d.ts",
-			"import": "./dist/testing.js"
 		},
 		"./package.json": "./package.json"
 	},
@@ -50,34 +30,25 @@
 	},
 	"scripts": {
 		"build": "turbo run build:package",
-		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run validate:catalog && bun run generate:check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts src/development.ts src/authored.ts src/validation.ts src/testing.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --external:dumspec --splitting --outdir=dist --platform=node --format=esm --packages=external",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/development.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
-		"generate": "bun codegen/generate.ts",
-		"generate:check": "bun codegen/generate.ts --check",
-		"generate:hebrew-word-list": "bun codegen/hebrew-word-list.ts",
+		"check:segment-in-units": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.segment-in-units.json --noEmit",
 		"test": "bun test",
 		"lint": "bun run --silent biome check .",
 		"fix": "bun run --silent biome check --write .",
 		"validate": "bun ../../tooling/validate-package.ts",
-		"validate:catalog": "bun codegen/validate-authored-catalog.ts",
 		"evaluate": "bun --env-file=../../.env.local cli/evaluate.ts",
 		"spec-coverage": "bun cli/spec-coverage.ts",
 		"segment-in-units-lab": "bun --env-file=../../.env.local cli/segment-in-units-lab.ts",
-		"segment-in-units-attribution": "bun cli/segment-in-units-attribution.ts",
-		"check:segment-in-units": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.segment-in-units.json --noEmit",
-		"typesafe:dummy": "bun cli/typesafe-dummy.ts"
+		"segment-in-units-attribution": "bun cli/segment-in-units-attribution.ts"
 	},
 	"dependencies": {
-		"common-utils": "workspace:^",
 		"dumling": "workspace:^",
-		"dumrel": "workspace:^",
 		"dumspec": "workspace:^",
-		"effect": "3.22.1",
-		"zod": "^4.4.0",
 		"promptsmith": "workspace:^",
-		"dumval": "workspace:^"
+		"zod": "^4.4.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",

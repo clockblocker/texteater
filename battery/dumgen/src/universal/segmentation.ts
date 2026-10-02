@@ -1,4 +1,12 @@
-import type { DumgenLanguage, Segment, SegmentKind } from "../types.js";
+import type * as Dumling from "dumling/types";
+
+/** One piece of a Sentence: lossless text of one kind, and for a fused-word piece the word it stands for. */
+export type Segment = {
+	kind: "ResolvableText" | "OpaqueText" | "Whitespace" | "Punctuation";
+	text: string;
+	surface?: string | undefined;
+};
+export type SegmentKind = Segment["kind"];
 
 export type SourceSegmentationTraceEntry = Readonly<{
 	readonly kind: SegmentKind;
@@ -16,7 +24,7 @@ export type SourceSegmenter = (stitchedText: string) => SourceSegmentation;
 export type SourceSegmentationTrace = Readonly<{
 	readonly phase: "source-segmentation";
 	readonly itemIndex: number;
-	readonly language: DumgenLanguage;
+	readonly language: Dumling.Language;
 	readonly stitchedText: string;
 	readonly segments: readonly Segment[];
 	readonly rules: readonly string[];

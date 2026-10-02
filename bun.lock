@@ -201,12 +201,8 @@
       "name": "dumgen",
       "version": "0.1.0",
       "dependencies": {
-        "common-utils": "workspace:^",
         "dumling": "workspace:^",
-        "dumrel": "workspace:^",
         "dumspec": "workspace:^",
-        "dumval": "workspace:^",
-        "effect": "3.22.1",
         "promptsmith": "workspace:^",
         "zod": "^4.4.0",
       },

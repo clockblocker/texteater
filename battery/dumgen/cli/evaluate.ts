@@ -1,16 +1,10 @@
-import { join } from "node:path";
 import { parseArgs } from "node:util";
 import {
 	defaultRunOutputDirectory,
-	disagreementsFileName,
 	evaluateExperiment,
 	evaluationMetrics,
 	listExperiments,
-	reviewEvaluationRun,
-	unavailableExperiments,
 } from "dumgen/development";
-import type { EvaluationExecutor } from "promptsmith/evaluation";
-import { createOpenAIExecutor } from "promptsmith/openai";
 import { loadRun } from "promptsmith/storage";
 import {
 	createTypeSafeExecutor,
@@ -19,7 +13,6 @@ import {
 export async function runEvaluationCli(
 	argv: string[],
 	dependencies: {
-		execute?: EvaluationExecutor;
 		judge?: TypeSafeExecutor;
 		write?: (value: unknown) => void;
 	} = {},
@@ -29,10 +22,7 @@ export async function runEvaluationCli(
 		options: {
 			list: { type: "boolean" },
 			experiment: { type: "string" },
-			model: { type: "string" },
 			"judgment-model": { type: "string" },
-			"judgment-timeout": { type: "string" },
-			settings: { type: "string" },
 			output: { type: "string" },
 			revision: { type: "string" },
 			open: { type: "string" },
@@ -44,9 +34,6 @@ export async function runEvaluationCli(
 		((value) => console.log(JSON.stringify(value, null, 2)));
 	if (values.list) {
 		const experiments = listExperiments();
-		const unavailable = unavailableExperiments();
-		if (unavailable)
-			console.error(`Legacy experiments unavailable: ${unavailable}`);
 		write(experiments);
 		return experiments;
 	}
@@ -65,14 +52,6 @@ export async function runEvaluationCli(
 		);
 	if (!values.revision)
 		throw Error("--revision is required to identify the evaluated source");
-	const configuration = values.model
-		? {
-				model: values.model,
-				settings: values.settings ? JSON.parse(values.settings) : {},
-			}
-		: undefined;
-	if (values.settings && !values.model)
-		throw Error("--settings requires --model");
 	const controller = new AbortController();
 	const interrupt = () => controller.abort();
 	process.once("SIGINT", interrupt);
@@ -83,36 +62,18 @@ export async function runEvaluationCli(
 				dependencies.judge ??
 				((request, options) =>
 					createTypeSafeExecutor()(request, options)),
-			judgmentConfiguration: {
-				model: values["judgment-model"],
-				timeoutMs: values["judgment-timeout"]
-					? Number(values["judgment-timeout"])
-					: undefined,
-			},
-			configuration,
+			...(values["judgment-model"]
+				? { judgmentModel: values["judgment-model"] }
+				: {}),
+			offline: values.offline ?? false,
 			sourceRevision: values.revision,
 			outputDirectory,
-			execute: dependencies.execute ?? createOpenAIExecutor(),
-			offline: values.offline ?? false,
 			signal: controller.signal,
 		});
-		const review = reviewEvaluationRun(run);
-		const metrics = evaluationMetrics(run);
 		write({
 			manifest: run.manifest,
 			summary: run.summary,
-			...(metrics && { metrics }),
-			...(review && {
-				review: {
-					scores: review.scores,
-					disagreements: review.disagreements.length,
-					disagreementsFile: join(
-						outputDirectory,
-						run.manifest.runId,
-						disagreementsFileName,
-					),
-				},
-			}),
+			metrics: evaluationMetrics(run),
 		});
 		return run;
 	} finally {
