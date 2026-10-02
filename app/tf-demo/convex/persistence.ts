@@ -2,6 +2,7 @@ import { type Infer, v } from "convex/values";
 import { makeSurfaceId } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import {
+	emojiDescriptionOf,
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
@@ -426,7 +427,7 @@ export const persistResolvedClick = internalMutation({
 		}
 		if (
 			reading.emojiDescription !==
-			parseGermanReading(args.reading).emojiDescription
+			emojiDescriptionOf(parseGermanReading(args.reading))
 		) {
 			throw new Error(
 				"Stored Reading does not match the selected Reading value.",

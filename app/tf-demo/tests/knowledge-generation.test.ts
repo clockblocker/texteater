@@ -87,7 +87,7 @@ const BANK_LEMMA = {
 	family: "Lexeme",
 	kind: "NOUN",
 	canonicalForm: "Bank",
-	coreFeatures: { gender: "Fem", hyph: null },
+	coreFeatures: { gender: "Fem" },
 } as const;
 const BANK_READING = {
 	unitKind: "Reading",
@@ -166,13 +166,7 @@ function governedAnalysis(segmentedSentenceId: string) {
 						family: "Lexeme",
 						kind: "ADP",
 						canonicalForm: "vor",
-						coreFeatures: {
-							abbr: null,
-							adpType: "Prep",
-							extPos: null,
-							foreign: null,
-							partType: null,
-						},
+						coreFeatures: {},
 					},
 					governedCase: "Dat" as const,
 					referent: "Something" as const,
@@ -232,7 +226,7 @@ async function seedOccurrence(
 			lemmaId,
 			language: "de",
 			...surface,
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
 		});
 		const attestationId = await ctx.db.insert("attestations", {
@@ -483,8 +477,8 @@ test("a Full Reading still takes the Plural Pattern its new sentence attests, wi
 	const pizzas = (grammaticalCase: string) => ({
 		normalizedSurface: "Pizzas",
 		inflectionalFeatures: {
-			article: "None",
 			case: grammaticalCase,
+			gender: null,
 			number: "Plur",
 		},
 	});
@@ -866,7 +860,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 				family: "Lexeme",
 				kind: "NOUN",
 				canonicalForm: "Bank",
-				coreFeatures: { gender: "Fem", hyph: null },
+				coreFeatures: { gender: "Fem" },
 			},
 			emojiDescription: "🏦",
 		},
@@ -890,7 +884,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 					family: "Lexeme",
 					kind: "NOUN",
 					canonicalForm: "Bank",
-					coreFeatures: { gender: "Fem", hyph: null },
+					coreFeatures: { gender: "Fem" },
 				},
 				emojiDescription: "🏦",
 			},
@@ -909,7 +903,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Angst",
-			coreFeatures: { gender: "Fem", hyph: null },
+			coreFeatures: { gender: "Fem" },
 		},
 		emojiDescription: "😨",
 	} as const;
@@ -1980,7 +1974,7 @@ test("Knowledge settings default enabled and persist independently per visitor",
 					family: "Lexeme",
 					kind: "NOUN",
 					canonicalForm: "Bank",
-					coreFeatures: { gender: "Fem", hyph: null },
+					coreFeatures: { gender: "Fem" },
 				},
 				emojiDescription: "🏦",
 			},

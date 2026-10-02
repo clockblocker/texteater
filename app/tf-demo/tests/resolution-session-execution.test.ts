@@ -165,7 +165,7 @@ function grammaticalInput(canonicalForm = "Bank") {
 			surface: {
 				unitKind: "Surface",
 				normalizedSurface: "Banken",
-				spelling: "Canonical" as const,
+				spelling: { kind: "Canonical" as const },
 
 				lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
 			},

@@ -99,7 +99,7 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 				lemmaId,
 				language: "de",
 				normalizedSurface: "Deutschland",
-				spelling: "Canonical",
+				spelling: { kind: "Canonical" },
 				surfaceFeatures: {},
 			}),
 			readingId: await ctx.db.insert("readings", {

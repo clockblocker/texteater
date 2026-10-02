@@ -14,7 +14,7 @@ export const bankLemma = {
 	family: "Lexeme",
 	kind: "NOUN",
 	canonicalForm: "Bank",
-	coreFeatures: { gender: "Fem", hyph: null },
+	coreFeatures: { gender: "Fem" },
 } as const;
 export const bankReading = {
 	unitKind: "Reading",
@@ -25,9 +25,9 @@ export const bankenSurface = {
 	unitKind: "Surface",
 	language: "de",
 	normalizedSurface: "Banken",
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 	surfaceFeatures: null,
-	inflectionalFeatures: { case: "Nom", number: "Plur", article: "None" },
+	inflectionalFeatures: { case: "Nom", gender: null, number: "Plur" },
 	lemma: bankLemma,
 } as const;
 
@@ -131,15 +131,6 @@ export async function commitBankOccurrence(
 	return result;
 }
 
-/** The definite `die Banken`, whose article joins the noun's occurrence. */
-export const dieBankenSurface = {
-	...bankenSurface,
-	inflectionalFeatures: {
-		...bankenSurface.inflectionalFeatures,
-		article: "Definite",
-	},
-} as const;
-
 /**
  * Commit input resolving `die` and `Banken`, at the two given Segment
  * indices, to one Bank occurrence.
@@ -157,7 +148,7 @@ export function dieBankenOccurrenceCommit(
 			memberSegmentIndices: [...memberSegmentIndices],
 			attestation: {
 				...commit.occurrence.attestation,
-				surface: dieBankenSurface,
+				// The article is a member the noun owns, not a Surface feature (ADR 0040).
 				articleEvidence: { kind: "Owned" as const, member: 0 },
 				valencyEvidence: [],
 				members: [
@@ -165,7 +156,6 @@ export function dieBankenOccurrenceCommit(
 					{ attested: "Banken", orthography: "Standard" as const },
 				],
 			},
-			surfaceKey: makeSurfaceId("de", dieBankenSurface),
 		},
 	};
 }

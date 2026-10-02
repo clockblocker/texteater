@@ -14,6 +14,7 @@ import {
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadStoredSegments } from "./storedSegments";
+import type { StoredSurfaceSpelling } from "./validators";
 
 type ServerCtx = QueryCtx | MutationCtx;
 
@@ -28,12 +29,13 @@ type LemmaRecord = {
 type SurfaceRecord = {
 	language: "de" | "en" | "he";
 	normalizedSurface: string;
-	spelling: "Canonical" | "Variant";
+	spelling: StoredSurfaceSpelling;
 	surfaceFeatures: unknown;
 	inflectionalFeatures?: unknown;
 };
 
-type ReadingRecord = { emojiDescription: string };
+/** A Foreign Reading has no Emoji Description (ADR 0045). */
+type ReadingRecord = { emojiDescription?: string };
 
 export function lemmaValue(lemma: LemmaRecord) {
 	return {
@@ -72,7 +74,9 @@ export function readingValue(reading: ReadingRecord, lemma: LemmaRecord) {
 	return {
 		unitKind: "Reading" as const,
 		lemma: lemmaValue(lemma),
-		emojiDescription: reading.emojiDescription,
+		...(reading.emojiDescription === undefined
+			? {}
+			: { emojiDescription: reading.emojiDescription }),
 	};
 }
 

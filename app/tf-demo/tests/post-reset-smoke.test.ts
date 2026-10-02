@@ -25,7 +25,6 @@ import { enableDeploymentFlags } from "./support/deploymentFlags";
 enableDeploymentFlags();
 
 const verbFeatures = {
-	verbType: null,
 	lexicallyReflexive: null,
 	hasSepPrefix: null,
 } as const;
@@ -124,7 +123,7 @@ async function insertReading(t: TestConvexDb, readingKey: string) {
 			lemmaId,
 			language: "de",
 			normalizedSurface: readingKey,
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: {},
 		});
 		const attestationId = await ctx.db.insert("attestations", {

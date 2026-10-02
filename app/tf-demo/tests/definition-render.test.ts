@@ -63,7 +63,7 @@ function render(
 				family: "Lexeme",
 				kind: "NOUN",
 				canonicalForm: "Haus",
-				coreFeatures: { gender: "Neut", hyph: null },
+				coreFeatures: { gender: "Neut" },
 			},
 		},
 		knowledgeState: {

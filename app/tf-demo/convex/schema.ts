@@ -194,7 +194,8 @@ export default defineSchema({
 	readings: defineTable({
 		readingKey: v.string(),
 		lemmaId: v.id("lemmas"),
-		emojiDescription: v.string(),
+		/** A Foreign Reading has none (ADR 0045). */
+		emojiDescription: v.optional(v.string()),
 	})
 		.index("by_reading_key", ["readingKey"])
 		.index("by_lemma_id", ["lemmaId"]),

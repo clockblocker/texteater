@@ -20,7 +20,11 @@ import type {
 } from "legacy-dumgen/types";
 import { inspectionStep } from "./inspectionCapture";
 import { analysisOutcomeOf, type IntakeRunRecorder } from "./intakeRun";
-import { lemmaIdentityKey, readingIdentityKey } from "./linguisticIdentity";
+import {
+	emojiDescriptionOf,
+	lemmaIdentityKey,
+	readingIdentityKey,
+} from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type { GenerationEvent } from "./resolutionFailure";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
@@ -600,7 +604,7 @@ export function createTfDemoOrchestrator(options: {
 				: resolved;
 			if (
 				lemmaIdentityKey(reading.lemma) !== lemmaKey ||
-				reading.emojiDescription !== resolved.emojiDescription
+				emojiDescriptionOf(reading) !== emojiDescriptionOf(resolved)
 			) {
 				throw new Error(
 					"The Reading checkpoint does not match Grammar.",
@@ -913,8 +917,8 @@ export function createTfDemoOrchestrator(options: {
 						throw new Error(
 							"Reading route does not match the Encounter.",
 						);
-					const candidates = storedReadings.map(
-						(reading) => reading.emojiDescription,
+					const candidates = storedReadings.flatMap(
+						(reading) => emojiDescriptionOf(reading) ?? [],
 					);
 					const operation =
 						options.dumgen.resolveOrGenerateReadingEmojiDescription(

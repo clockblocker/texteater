@@ -194,8 +194,8 @@ describe("Shadow descriptor and storage seam", () => {
 			normalizeShadowDescriptor({
 				...nounShadow,
 				language: "he",
-				family: "Phraseme",
-				kind: "Collocation",
+				family: "Locution",
+				kind: "VERB",
 			}),
 		).toThrow("not a supported Dumling Lemma route");
 		expect(
@@ -361,7 +361,7 @@ describe("Shadow backfills and presentation", () => {
 			malformed: 0,
 		});
 		expect(await auditStructural()).toMatchObject({
-			valid: 4,
+			valid: 2,
 			missing: 0,
 			mismatched: 0,
 			malformed: 0,
@@ -372,7 +372,7 @@ describe("Shadow backfills and presentation", () => {
 		expect(await auditPending()).toMatchObject({ valid: 0, mismatched: 1 });
 		expect(await auditStructural()).toMatchObject({
 			valid: 0,
-			mismatched: 4,
+			mismatched: 2,
 		});
 	});
 
@@ -468,7 +468,6 @@ describe("Shadow backfills and presentation", () => {
 				kind: "VERB",
 				canonicalForm: "gehen",
 				coreFeatures: {
-					verbType: null,
 					lexicallyReflexive: null,
 					hasSepPrefix: null,
 				},
@@ -529,7 +528,7 @@ describe("Shadow backfills and presentation", () => {
 			["candidate-2", "de", "Bank", "Lexeme", "NOUN", "🏦"],
 			["wrong-language", "en", "Bank", "Lexeme", "NOUN", "🇬🇧"],
 			["wrong-form", "de", "Banken", "Lexeme", "NOUN", "🏦"],
-			["wrong-family", "de", "Bank", "Phraseme", "NOUN", "🧩"],
+			["wrong-family", "de", "Bank", "Locution", "NOUN", "🧩"],
 			["wrong-kind", "de", "Bank", "Lexeme", "VERB", "🏦"],
 		] as const;
 		const { shadowId, candidates } = await t.run(async (ctx) => {

@@ -1,5 +1,14 @@
 import { checkIfGrundform } from "dumling";
 import type * as Dumling from "dumling/types";
+
+/** A Surface's spelling: Canonical, or a Variant with its tags (ADR 0041). */
+type SurfaceSpelling =
+	| { kind: "Canonical" }
+	| {
+			kind: "Variant";
+			variantTags: [Dumling.VariantTag, ...Dumling.VariantTag[]];
+	  };
+
 /**
  * What a Resolution Session shows of its resolved German Lemma, one branch per
  * Kind so Family, Kind and Core Features stay correlated.
@@ -12,7 +21,7 @@ export type ResolutionGrammarProjection<
 			members: { attested: string; orthography: "Standard" | "Typo" }[];
 			realizationCoverage: "Full" | "Partial";
 			normalizedSurface: string;
-			spelling: "Canonical" | "Variant";
+			spelling: SurfaceSpelling;
 			canonicalForm: string;
 			family: Lemma["family"];
 			kind: Lemma["kind"];
@@ -22,22 +31,23 @@ export type ResolutionGrammarProjection<
 
 export type ResolutionReadingProjection<
 	Lemma extends Dumling.Lemma<"de"> = Dumling.Lemma<"de">,
-> = Lemma extends unknown
+> = Lemma extends { family: "Foreign" }
 	? {
-			emojiDescription: string;
+			/** A Foreign Reading has no Emoji Description (ADR 0045). */
+			emojiDescription?: undefined;
 			canonicalForm: string;
 			family: Lemma["family"];
 			kind: Lemma["kind"];
 		}
-	: never;
+	: {
+			emojiDescription: string;
+			canonicalForm: string;
+			family: Lemma["family"];
+			kind: Lemma["kind"];
+		};
 
 type ResolvedGrammaticalProjectionInput = {
 	readonly attestation: Dumling.Attestation<"de">;
-};
-
-type ReadingProjectionInput = {
-	readonly emojiDescription: string;
-	readonly lemma: Dumling.Lemma<"de">;
 };
 
 export function projectResolutionGrammar(
@@ -64,10 +74,12 @@ export function projectResolutionGrammar(
 }
 
 export function projectResolutionReading(
-	reading: ReadingProjectionInput,
+	reading: Dumling.Reading<"de">,
 ): ResolutionReadingProjection {
 	return {
-		emojiDescription: reading.emojiDescription,
+		...("emojiDescription" in reading
+			? { emojiDescription: reading.emojiDescription }
+			: {}),
 		canonicalForm: reading.lemma.canonicalForm,
 		family: reading.lemma.family,
 		kind: reading.lemma.kind,

@@ -13,7 +13,7 @@ const segmentKindValues = [
 	"Whitespace",
 	"Punctuation",
 ] as const;
-export const lexemeKindValues = [
+const lexemeKindValues = [
 	"ADJ",
 	"ADP",
 	"ADV",
@@ -30,9 +30,8 @@ export const lexemeKindValues = [
 	"SCONJ",
 	"SYM",
 	"VERB",
-	"X",
 ] as const;
-export const morphemeKindValues = [
+const germanMorphemeKindValues = [
 	"Circumfix",
 	"Duplifix",
 	"Infix",
@@ -41,16 +40,81 @@ export const morphemeKindValues = [
 	"Root",
 	"Suffix",
 	"Suffixoid",
-	"ToneMarking",
 	"Transfix",
 ] as const;
-export const phrasemeKindValues = [
-	"Aphorism",
-	"Collocation",
-	"DiscourseFormula",
-	"Idiom",
-	"Proverb",
+const morphemeKindValues = [
+	...germanMorphemeKindValues,
+	"ToneMarking",
 ] as const;
+
+/**
+ * Every Dumling Lemma route as language → Family → Kinds. A Kind name may
+ * appear in two Families: Lexeme VERB and Locution VERB are different routes
+ * (ADR 0039).
+ */
+const lemmaRouteKinds = {
+	de: {
+		Lexeme: lexemeKindValues,
+		Locution: [
+			"ADJ",
+			"ADP",
+			"ADV",
+			"CCONJ",
+			"DET",
+			"INTJ",
+			"NOUN",
+			"NUM",
+			"PRON",
+			"SCONJ",
+			"VERB",
+		],
+		Saying: ["Saying"],
+		Foreign: ["Foreign"],
+		Morpheme: germanMorphemeKindValues,
+	},
+	en: {
+		Lexeme: lexemeKindValues,
+		Locution: ["ADP", "ADV", "INTJ", "NOUN", "SCONJ", "VERB"],
+		Saying: ["Saying"],
+		Foreign: ["Foreign"],
+		Morpheme: morphemeKindValues,
+	},
+	he: {
+		Lexeme: lexemeKindValues,
+		Locution: ["ADV", "INTJ"],
+		Saying: ["Saying"],
+		Foreign: ["Foreign"],
+		Morpheme: morphemeKindValues,
+	},
+} as const;
+type ListedRoutes = typeof lemmaRouteKinds;
+type ListedRoute = {
+	[L in keyof ListedRoutes]: {
+		[F in keyof ListedRoutes[L]]: ListedRoutes[L][F] extends readonly string[]
+			? `${L}/${F & string}/${ListedRoutes[L][F][number]}`
+			: never;
+	}[keyof ListedRoutes[L]];
+}[keyof ListedRoutes];
+type DumlingRoute = Dumling.UnitRoute extends infer Route
+	? Route extends Dumling.UnitRoute
+		? `${Route["language"]}/${Route["family"]}/${Route["kind"]}`
+		: never
+	: never;
+
+/** Whether a language, Family and Kind name one Dumling Lemma route. */
+export function isLemmaRoute(
+	language: string,
+	family: string,
+	kind: string,
+): boolean {
+	if (!Object.hasOwn(lemmaRouteKinds, language)) return false;
+	const families: Partial<Record<string, readonly string[]>> =
+		lemmaRouteKinds[language as keyof ListedRoutes];
+	return (
+		Object.hasOwn(families, family) && !!families[family]?.includes(kind)
+	);
+}
+
 const memberOrthographyValues = [
 	"Standard",
 	"Typo",
@@ -58,11 +122,18 @@ const memberOrthographyValues = [
 	"Shorthand",
 ] as const;
 const realizationCoverageValues = ["Full", "Partial"] as const;
-const surfaceSpellingValues = ["Canonical", "Variant"] as const;
+const variantTagValues = [
+	"Licensed",
+	"Historical",
+	"Regional",
+	"Expressive",
+] as const;
+/** Dumrel stores the direct relations and projects each inverse. */
 const semanticRelationValues = [
 	...directSemanticRelationValues,
 	"hyponym",
 	"meronym",
+	"exonym",
 ] as const;
 
 import { READING_BLOCK_KIND_VALUES } from "../../shared/reading-block-layout";
@@ -78,11 +149,18 @@ export const languageValidator = literalUnion(
 	enabledSegmentationLanguageValues,
 );
 
-const familyValues = ["Lexeme", "Morpheme", "Phraseme"] as const;
+const familyValues = [
+	"Lexeme",
+	"Locution",
+	"Saying",
+	"Foreign",
+	"Morpheme",
+] as const;
 const kindValues = [
 	...lexemeKindValues,
 	...morphemeKindValues,
-	...phrasemeKindValues,
+	"Saying",
+	"Foreign",
 ] as const;
 
 export const familyValidator = literalUnion(familyValues);
@@ -104,9 +182,14 @@ type SameMembers<A, B> = [A] extends [B]
 		? true
 		: false
 	: false;
-// The validators admit every Dumling Family and Kind, and nothing else.
+// The validators admit every Dumling Family, Kind and route, and nothing else.
 true satisfies SameMembers<Infer<typeof familyValidator>, Dumling.Family>;
 true satisfies SameMembers<Infer<typeof kindValidator>, Dumling.Kind>;
+true satisfies SameMembers<ListedRoute, DumlingRoute>;
+true satisfies SameMembers<
+	(typeof variantTagValues)[number],
+	Dumling.VariantTag
+>;
 
 export const grammaticalLanguageValidator = v.literal(
 	grammaticalResolutionLanguageValues[0],
@@ -220,7 +303,15 @@ export const realizationCoverageValidator = literalUnion(
 	realizationCoverageValues,
 );
 
-export const surfaceSpellingValidator = literalUnion(surfaceSpellingValues);
+/** A Canonical spelling, or a Variant with the tags that license it. */
+export const surfaceSpellingValidator = v.union(
+	v.object({ kind: v.literal("Canonical") }),
+	v.object({
+		kind: v.literal("Variant"),
+		variantTags: v.array(literalUnion(variantTagValues)),
+	}),
+);
+export type StoredSurfaceSpelling = Infer<typeof surfaceSpellingValidator>;
 
 export const translationLanguageValidator = literalUnion(
 	translationLanguageValues,
@@ -406,11 +497,7 @@ export const relationPublicationFingerprintsValidator = v.object({
 export const relationTargetShadowValidator = v.object({
 	language: v.literal("de"),
 	canonicalForm: v.string(),
-	family: v.union(
-		v.literal("Lexeme"),
-		v.literal("Phraseme"),
-		v.literal("Morpheme"),
-	),
+	family: familyValidator,
 	kind: v.string(),
 });
 
@@ -466,6 +553,7 @@ export const knowledgeSettingsValidator = v.object({
 		nearAntonym: v.boolean(),
 		hypernym: v.boolean(),
 		holonym: v.boolean(),
+		endonym: v.boolean(),
 	}),
 });
 
@@ -493,10 +581,11 @@ export const occurrenceAttestationInputValidator = v.object({
 	lemmaKey: v.string(),
 });
 
+/** A Foreign Reading has no Emoji Description (ADR 0045). */
 export const readingValueValidator = v.object({
 	unitKind: v.literal("Reading"),
 	lemma: lemmaValueValidator,
-	emojiDescription: v.string(),
+	emojiDescription: v.optional(v.string()),
 });
 
 export const catalogMissStageValidator = v.string();
@@ -666,7 +755,8 @@ export const resolutionGrammarProjectionValidator = v.object({
 });
 
 export const resolutionReadingProjectionValidator = v.object({
-	emojiDescription: v.string(),
+	/** A Foreign Reading has none (ADR 0045). */
+	emojiDescription: v.optional(v.string()),
 	canonicalForm: v.string(),
 	family: v.string(),
 	kind: v.string(),

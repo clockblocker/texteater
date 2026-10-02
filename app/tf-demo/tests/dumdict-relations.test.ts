@@ -40,7 +40,6 @@ afterEach(() => {
 });
 
 const verbFeatures = {
-	verbType: null,
 	lexicallyReflexive: null,
 	hasSepPrefix: null,
 } as const;
@@ -82,7 +81,7 @@ function surface(normalizedSurface: string) {
 		inflectionalFeatures: null,
 		language: "de" as const,
 		normalizedSurface,
-		spelling: "Canonical" as const,
+		spelling: { kind: "Canonical" as const },
 
 		surfaceFeatures: null,
 		lemma: gehenLemma,

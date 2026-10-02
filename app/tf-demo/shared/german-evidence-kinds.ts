@@ -1,10 +1,8 @@
-/** German Kinds whose Attestation names its subject-expletive member (ADR 0022). */
-export const germanVerbalKinds: readonly string[] = [
-	"VERB",
-	"AUX",
-	"Idiom",
-	"Collocation",
-];
+/**
+ * German Kinds whose Attestation names its subject-expletive member (ADR
+ * 0022): a Lexeme or Locution VERB, and AUX.
+ */
+export const germanVerbalKinds: readonly string[] = ["VERB", "AUX"];
 
 /**
  * German Kinds whose Attestation names the valency slots it realizes, such as

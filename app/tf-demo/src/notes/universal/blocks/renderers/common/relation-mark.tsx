@@ -10,6 +10,8 @@ const RELATION_MARKS: Record<Dumrel.SemanticRelation, string> = {
 	hyponym: "↓",
 	holonym: "⊂",
 	meronym: "⊃",
+	endonym: "⌂",
+	exonym: "↗",
 };
 
 /** The glyph a Reading Note uses for one semantic relation. */

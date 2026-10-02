@@ -16,7 +16,9 @@ import {
 	loadUnitReadingNote,
 	readingNoteValidator,
 } from "../convex/modules/notes/readingNote";
+import { unitReadingEmojiDescription } from "../convex/modules/notes/unitReadingFamilies";
 import { persistSubmittedText } from "../convex/modules/text/submission";
+import { emojiDescriptionOf } from "../server/linguisticIdentity";
 import {
 	makeUrl,
 	NOTE_STUDY_DATABASE,
@@ -102,10 +104,11 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 		.withIndex("by_reading_key", (q) => q.eq("readingKey", unit.readingKey))
 		.unique();
 	if (!reading) {
+		const emojiDescription = emojiDescriptionOf(unit.reading);
 		const readingId = await ctx.db.insert("readings", {
 			readingKey: unit.readingKey,
 			lemmaId: lemma._id,
-			emojiDescription: unit.reading.emojiDescription,
+			...(emojiDescription === undefined ? {} : { emojiDescription }),
 		});
 		reading = await ctx.db.get(readingId);
 		if (!reading) throw new Error("Failed to create Notes Study Reading.");
@@ -523,7 +526,8 @@ export const list = query({
 							readingKey: unit.readingKey,
 							readingId: reading._id,
 							canonicalForm: lemma.canonicalForm,
-							emojiDescription: reading.emojiDescription,
+							emojiDescription:
+								unitReadingEmojiDescription(reading),
 							family: lemma.family,
 							kind: lemma.kind,
 						}
@@ -598,7 +602,7 @@ export const playground = query({
 				return {
 					readingKey: unit.readingKey,
 					canonicalForm: lemma.canonicalForm,
-					emojiDescription: reading.emojiDescription,
+					emojiDescription: unitReadingEmojiDescription(reading),
 					family: lemma.family,
 					kind: lemma.kind,
 					readingId: reading._id,

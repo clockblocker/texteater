@@ -43,7 +43,7 @@ async function seedReading(t: TestConvexDb) {
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Haus",
-			coreFeatures: { gender: "Neut", hyph: null },
+			coreFeatures: { gender: "Neut" },
 		});
 		await ctx.db.insert("readings", {
 			readingKey: READING_KEY,
@@ -580,7 +580,7 @@ test(
 					lemmaId,
 					language: "de",
 					normalizedSurface: segment.text.toLowerCase(),
-					spelling: "Canonical",
+					spelling: { kind: "Canonical" },
 					surfaceFeatures: {},
 				});
 				const attestationId = await ctx.db.insert("attestations", {
@@ -692,7 +692,7 @@ async function insertUnit(t: TestConvexDb, readingKey: string) {
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: readingKey,
-			coreFeatures: { gender: "Neut", hyph: null },
+			coreFeatures: { gender: "Neut" },
 		});
 		const readingId = await ctx.db.insert("readings", {
 			readingKey,
@@ -704,7 +704,7 @@ async function insertUnit(t: TestConvexDb, readingKey: string) {
 			lemmaId,
 			language: "de",
 			normalizedSurface: readingKey,
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: {},
 		});
 		return { readingId, surfaceId };

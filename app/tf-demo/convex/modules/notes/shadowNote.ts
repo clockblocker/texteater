@@ -25,6 +25,7 @@ import { projectPendingRelations } from "./pendingRelations";
 import {
 	isUnitReadingFamily,
 	type UnitReadingFamily,
+	unitReadingEmojiDescription,
 } from "./unitReadingFamilies";
 
 const SHADOW_REFERENCE_PAGE_SIZE = 50;
@@ -377,7 +378,7 @@ async function loadShadowReferencePage(
 			reading: {
 				readingId: reading._id,
 				canonicalForm: lemma.canonicalForm,
-				emojiDescription: reading.emojiDescription,
+				emojiDescription: unitReadingEmojiDescription(reading),
 				target: {
 					kind: "Reading",
 					readingId: reading._id,

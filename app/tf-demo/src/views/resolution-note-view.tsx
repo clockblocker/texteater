@@ -128,8 +128,11 @@ export function ResolutionNoteFrame({
 		);
 	}
 
+	// A Foreign Reading has no Emoji Description (ADR 0045).
 	const title = note.reading
-		? `${note.reading.emojiDescription} ${note.reading.canonicalForm}`
+		? [note.reading.emojiDescription, note.reading.canonicalForm]
+				.filter(Boolean)
+				.join(" ")
 		: (note.grammar?.canonicalForm ?? note.route.selectedSegment);
 	return (
 		<div className="min-h-full bg-paper px-note-gutter pt-note-top compact:p-3.5">

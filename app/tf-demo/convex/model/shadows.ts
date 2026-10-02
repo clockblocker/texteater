@@ -3,21 +3,10 @@ import { lemmaIdentityKey } from "../../server/linguisticIdentity";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
-import {
-	lexemeKindValues,
-	morphemeKindValues,
-	phrasemeKindValues,
-	type StructuralShadowAspect,
-} from "./validators";
+import { isLemmaRoute, type StructuralShadowAspect } from "./validators";
 
 export const MAX_STRUCTURAL_REFERENCES_PER_READING = 200;
 const descriptorKeys = ["canonicalForm", "family", "kind", "language"];
-const lexemeKinds = new Set<string>(lexemeKindValues);
-const morphemeKinds = new Set<string>(morphemeKindValues);
-// Collocation is a Phraseme Kind only in German.
-const commonPhrasemeKinds = new Set<string>(
-	phrasemeKindValues.filter((kind) => kind !== "Collocation"),
-);
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -91,15 +80,9 @@ export function normalizeShadowDescriptor(value: unknown): ShadowDescriptor {
 		family: normalizedString(descriptor.family, "Unit Shadow family"),
 		kind: normalizedString(descriptor.kind, "Unit Shadow kind"),
 	};
-	const validRoute =
-		(normalized.family === "Lexeme" && lexemeKinds.has(normalized.kind)) ||
-		(normalized.family === "Morpheme" &&
-			morphemeKinds.has(normalized.kind)) ||
-		(normalized.family === "Phraseme" &&
-			(commonPhrasemeKinds.has(normalized.kind) ||
-				(normalized.language === "de" &&
-					normalized.kind === "Collocation")));
-	if (!validRoute) {
+	if (
+		!isLemmaRoute(normalized.language, normalized.family, normalized.kind)
+	) {
 		throw new Error(
 			`${normalized.language}/${normalized.family}/${normalized.kind} is not a supported Dumling Lemma route.`,
 		);
@@ -164,10 +147,7 @@ function visitMorphologicalNode(
 	if (node.nodeKind === "morphemeReading") return;
 	if (node.nodeKind === "unitShadow") {
 		const descriptor = normalizeShadowDescriptor(node.unitShadow);
-		if (
-			descriptor.family !== "Lexeme" &&
-			descriptor.family !== "Phraseme"
-		) {
+		if (descriptor.family === "Morpheme") {
 			throw new Error(
 				`Morphological Tree Unit Shadow at ${path} must be lexical.`,
 			);

@@ -7,6 +7,7 @@ import {
 	selectAuthoredReading,
 } from "legacy-dumgen/authored";
 import {
+	emojiDescriptionOf,
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 	stableFingerprint,
@@ -512,7 +513,7 @@ async function applyChange(
 			const parsed = parseUnit(reading);
 			if (!parsed.success || parsed.chain.unitKind !== "Reading")
 				throw new Error("Invalid Reading");
-			const { emojiDescription } = parsed.chain.value;
+			const emojiDescription = emojiDescriptionOf(parsed.chain.value);
 			const storedLemma = await findLemma(ctx, reading.lemma);
 			if (!storedLemma || (await findReading(ctx, reading))) {
 				return false;
@@ -533,7 +534,9 @@ async function applyChange(
 				(await ctx.db.insert("readings", {
 					readingKey,
 					lemmaId: storedLemma.canonical._id,
-					emojiDescription,
+					...(emojiDescription === undefined
+						? {}
+						: { emojiDescription }),
 				}));
 			await ctx.db.insert("readingEntries", {
 				readingId,
@@ -601,13 +604,7 @@ async function applyChange(
 			if (language !== "de" && language !== "en" && language !== "he") {
 				throw new Error("Unsupported Surface language.");
 			}
-			const spelling = requireString(
-				surface.spelling,
-				"Surface spelling",
-			);
-			if (spelling !== "Canonical" && spelling !== "Variant") {
-				throw new Error("Unsupported Surface spelling.");
-			}
+			const { spelling } = parsed.chain.value;
 			const canonical = await findCanonicalSurface(ctx, surfaceKey);
 			if (canonical && canonical.lemmaId !== storedLemma.canonical._id) {
 				throw new Error(

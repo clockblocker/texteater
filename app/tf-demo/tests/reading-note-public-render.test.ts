@@ -149,7 +149,7 @@ function readingNote(): ReadingNote {
 				kind: "VERB",
 				canonicalForm: "sich freuen",
 				coreFeatures: {
-					lexicallyReflexive: "Yes",
+					lexicallyReflexive: "Acc",
 					hasSepPrefix: null,
 				},
 			},

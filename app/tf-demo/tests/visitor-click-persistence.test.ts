@@ -475,8 +475,8 @@ test("a fused article commits as a Fused member of its noun, and the noun's Atte
 		normalizedSurface: "Bank",
 		inflectionalFeatures: {
 			case: "Dat",
+			gender: "Fem",
 			number: "Sing",
-			article: "Definite",
 		},
 	} as const;
 	const commit = bankOccurrenceCommit(selection, guard);

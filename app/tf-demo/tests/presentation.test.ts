@@ -48,7 +48,7 @@ const bankLemma = {
 	family: "Lexeme",
 	kind: "NOUN",
 	canonicalForm: "Bank",
-	coreFeatures: { gender: "Fem", hyph: null },
+	coreFeatures: { gender: "Fem" },
 } as const;
 
 const anrufenLemma = {
@@ -60,7 +60,6 @@ const anrufenLemma = {
 	coreFeatures: {
 		hasSepPrefix: "an",
 		lexicallyReflexive: null,
-		verbType: null,
 	},
 } as const;
 
@@ -99,7 +98,7 @@ async function insertReading(t: TestConvexDb, reading: ReadingValue) {
 			lemmaId,
 			language: lemma.language,
 			normalizedSurface: lemma.canonicalForm,
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: {},
 		});
 		return { lemmaId, readingId, readingKey, surfaceId };
@@ -189,9 +188,9 @@ test("a Text view preserves the stored submission identity for re-segmentation",
 });
 
 test("projects Dumling feature values for learner inspection", () => {
-	expect(projectFeatures({ gender: "Fem", hyph: null })).toEqual([
+	expect(projectFeatures({ gender: "Fem", number: null })).toEqual([
 		{ name: "gender", value: "Fem" },
-		{ name: "hyph", value: "—" },
+		{ name: "number", value: "—" },
 	]);
 });
 
@@ -207,7 +206,6 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 			coreFeatures: {
 				hasSepPrefix: "auf",
 				lexicallyReflexive: null,
-				verbType: null,
 			},
 		},
 	);
@@ -220,7 +218,6 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 	expect(reading.lemma.coreFeatures).toEqual({
 		hasSepPrefix: "auf",
 		lexicallyReflexive: null,
-		verbType: null,
 	});
 	expect(knowledge).toEqual({
 		transcription: "aʊ̯fˌpasn̩",
@@ -240,7 +237,6 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		coreFeatures: {
 			hasSepPrefix: "auf",
 			lexicallyReflexive: null,
-			verbType: null,
 		},
 	} as const;
 	const targetLemma = {
@@ -249,7 +245,7 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 		family: "Lexeme",
 		kind: "NOUN",
 		canonicalForm: "Aufmerksamkeit",
-		coreFeatures: { gender: "Fem", hyph: null },
+		coreFeatures: { gender: "Fem" },
 	} as const;
 	const source = await insertReading(t, {
 		unitKind: "Reading",
@@ -353,7 +349,6 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 		coreFeatures: {
 			hasSepPrefix: "auf",
 			lexicallyReflexive: null,
-			verbType: null,
 		},
 	} as const;
 	const valency = [
@@ -663,9 +658,10 @@ test("a maximum-length Text view reads Visitor Encounters once per Sentence, not
 });
 
 test("only learner-facing Unit families can open Unit Reading Notes", () => {
-	expect(["Lexeme", "Phraseme", "Morpheme"].every(isUnitReadingFamily)).toBe(
-		true,
-	);
+	expect(
+		["Lexeme", "Locution", "Saying", "Morpheme"].every(isUnitReadingFamily),
+	).toBe(true);
+	expect(isUnitReadingFamily("Foreign")).toBe(false);
 	expect(isUnitReadingFamily("Construction")).toBe(false);
 });
 

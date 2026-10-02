@@ -79,7 +79,7 @@ const sourceReading = {
 		family: "Lexeme",
 		kind: "NOUN",
 		canonicalForm: "Bank",
-		coreFeatures: { gender: "Fem", hyph: null },
+		coreFeatures: { gender: "Fem" },
 	},
 	emojiDescription: "🏦",
 } as const;
@@ -389,7 +389,7 @@ test("rollback persistence and proposal monitoring are queryable through interna
 			lemmaId,
 			language: "de",
 			normalizedSurface: "Bank",
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: {},
 		});
 		const attestationId = await ctx.db.insert("attestations", {

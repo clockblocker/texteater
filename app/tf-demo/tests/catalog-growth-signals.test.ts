@@ -163,7 +163,7 @@ describe("Catalog Growth Signals", () => {
 				lemmaId,
 				language: "de",
 				normalizedSurface: "Bank",
-				spelling: "Canonical",
+				spelling: { kind: "Canonical" },
 				surfaceFeatures: {},
 			});
 			const attestationId = await ctx.db.insert("attestations", {

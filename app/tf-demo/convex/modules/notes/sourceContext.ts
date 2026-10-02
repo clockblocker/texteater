@@ -14,6 +14,7 @@ import {
 	grammaticalGenderValidator,
 	projectSentenceView,
 } from "../text/sentenceView";
+import { unitReadingEmojiDescription } from "./unitReadingFamilies";
 
 /** Where a source Sentence lives: a Visitor-submitted Text or one Reading's Definition. */
 export const sourceOriginValidator = v.union(
@@ -93,7 +94,7 @@ async function projectSourceOrigin(
 	return {
 		kind: "Definition",
 		readingId: reading._id,
-		emojiDescription: reading.emojiDescription,
+		emojiDescription: unitReadingEmojiDescription(reading),
 		canonicalForm: lemma.canonicalForm,
 	};
 }

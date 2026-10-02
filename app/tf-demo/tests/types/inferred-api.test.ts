@@ -19,11 +19,11 @@ export type ResolutionNoteLifecycle = ResolutionNote extends {
 	: "No lifecycle";
 export type VerbResolutionGrammar = Extract<
 	NonNullable<ResolutionNote["grammar"]>,
-	{ kind: "VERB" }
+	{ family: "Lexeme"; kind: "VERB" }
 >;
 export type VerbResolutionReading = Extract<
 	NonNullable<ResolutionNote["reading"]>,
-	{ kind: "VERB" }
+	{ family: "Lexeme"; kind: "VERB" }
 >;
 
 type ShadowNote = Extract<
@@ -67,7 +67,7 @@ describe("Convex API types the client reads", () => {
 
 	it("a Resolution Note projects its Lemma per Kind, without any", async () => {
 		expect(await inferred("VerbResolutionGrammar")).toMatchInlineSnapshot(
-			`"type VerbResolutionGrammar = { grundform: boolean | null; members: { attested: string; orthography: "Standard" | "Typo"; }[]; realizationCoverage: "Full" | "Partial"; normalizedSurface: string; spelling: "Canonical" | "Variant"; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Yes" | null; verbType: "Mod" | null; }; }"`,
+			`"type VerbResolutionGrammar = { grundform: boolean | null; members: { attested: string; orthography: "Standard" | "Typo"; }[]; realizationCoverage: "Full" | "Partial"; normalizedSurface: string; spelling: SurfaceSpelling; canonicalForm: string; family: "Lexeme"; kind: "VERB"; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; }"`,
 		);
 		expect(await inferred("VerbResolutionReading")).toMatchInlineSnapshot(
 			`"type VerbResolutionReading = { emojiDescription: string; canonicalForm: string; family: "Lexeme"; kind: "VERB"; }"`,
@@ -79,7 +79,7 @@ describe("Convex API types the client reads", () => {
 			`"type ShadowPendingRelation = { locatorKey: string; relation: SemanticRelation; }"`,
 		);
 		expect(await inferred("ShadowCandidateFamily")).toMatchInlineSnapshot(
-			`"type ShadowCandidateFamily = "Lexeme" | "Morpheme" | "Phraseme""`,
+			`"type ShadowCandidateFamily = "Lexeme" | "Locution" | "Morpheme" | "Saying""`,
 		);
 		expect(
 			await inferred("ShadowCandidateKindIsString"),
@@ -94,7 +94,7 @@ describe("Convex API types the client reads", () => {
 
 	it("a Lemma route note presents its Family and Kind as Dumling values", async () => {
 		expect(await inferred("PresentedLemmaFamily")).toMatchInlineSnapshot(
-			`"type PresentedLemmaFamily = "Lexeme" | "Morpheme" | "Phraseme""`,
+			`"type PresentedLemmaFamily = "Foreign" | "Lexeme" | "Locution" | "Morpheme" | "Saying""`,
 		);
 		expect(
 			await inferred("PresentedLemmaKindIsString"),

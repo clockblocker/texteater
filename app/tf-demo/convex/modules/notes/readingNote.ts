@@ -66,7 +66,8 @@ const readingValueLemmaValidator = v.object({
 const readingValueReadingValidator = v.object({
 	unitKind: v.literal("Reading"),
 	lemma: readingValueLemmaValidator,
-	emojiDescription: v.string(),
+	/** A Foreign Reading has none (ADR 0045). */
+	emojiDescription: v.optional(v.string()),
 });
 
 const readingNoteLemmaValidator = v.object({
@@ -225,6 +226,8 @@ const readingKnowledgeValidator = v.object({
 				hyponym: v.optional(v.array(readingValueLemmaValidator)),
 				meronym: v.optional(v.array(readingValueLemmaValidator)),
 				holonym: v.optional(v.array(readingValueLemmaValidator)),
+				endonym: v.optional(v.array(readingValueLemmaValidator)),
+				exonym: v.optional(v.array(readingValueLemmaValidator)),
 			}),
 			v.object({
 				targetKind: v.literal("reading"),
@@ -236,6 +239,8 @@ const readingKnowledgeValidator = v.object({
 				hyponym: v.optional(v.array(readingValueReadingValidator)),
 				meronym: v.optional(v.array(readingValueReadingValidator)),
 				holonym: v.optional(v.array(readingValueReadingValidator)),
+				endonym: v.optional(v.array(readingValueReadingValidator)),
+				exonym: v.optional(v.array(readingValueReadingValidator)),
 			}),
 		),
 	),
@@ -551,7 +556,7 @@ type GermanUnitReading = Extract<
 	{ lemma: { family: UnitReadingFamily } }
 >;
 
-type ReadingNoteIdentity<Value extends Dumling.Reading<"de">> =
+type ReadingNoteIdentity<Value extends GermanUnitReading> =
 	Value extends unknown
 		? Prettify<{
 				lemma: Prettify<{
@@ -573,7 +578,7 @@ type ReadingNoteIdentity<Value extends Dumling.Reading<"de">> =
 			}>
 		: never;
 
-function withReadingNoteIdentity<Value extends Dumling.Reading<"de">>(
+function withReadingNoteIdentity<Value extends GermanUnitReading>(
 	value: Value,
 	identity: {
 		readonly readingId: Id<"readings">;
@@ -600,7 +605,7 @@ function projectReadingIdentity(
 	reading: {
 		readonly _id: Id<"readings">;
 		readonly readingKey: string;
-		readonly emojiDescription: string;
+		readonly emojiDescription?: string;
 	},
 	lemma: {
 		readonly _id: Id<"lemmas">;

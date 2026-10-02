@@ -15,7 +15,6 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 			coreFeatures: {
 				hasSepPrefix: "Yes",
 				lexicallyReflexive: null,
-				verbType: null,
 			},
 		});
 		const attestationId = await ctx.db.insert("attestations", {
@@ -25,7 +24,7 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 				language: "de",
 				normalizedSurface: "aufmachen",
 				inflectionalFeatures: null,
-				spelling: "Canonical",
+				spelling: { kind: "Canonical" },
 				surfaceFeatures: null,
 			}),
 			readingId: await ctx.db.insert("readings", {

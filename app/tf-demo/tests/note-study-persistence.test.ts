@@ -76,7 +76,7 @@ test(
 							family: "Lexeme",
 							kind: "NOUN",
 							canonicalForm: "Aufstieg",
-							coreFeatures: { gender: "Masc", hyph: null },
+							coreFeatures: { gender: "Masc" },
 						},
 						emojiDescription: "🥾⛰",
 					},

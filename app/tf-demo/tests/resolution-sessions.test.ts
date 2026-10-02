@@ -2059,13 +2059,13 @@ function grammaticalInput(canonicalForm = "Bank") {
 			surface: {
 				unitKind: "Surface",
 				normalizedSurface: "Banken",
-				spelling: "Canonical" as const,
+				spelling: { kind: "Canonical" as const },
 
 				lemma: {
 					canonicalForm,
 					family: "Lexeme",
 					kind: "NOUN",
-					coreFeatures: { gender: "Fem", hyph: null },
+					coreFeatures: { gender: "Fem" },
 				},
 			},
 		},
@@ -2087,12 +2087,12 @@ function grammarProjection(canonicalForm = "Bank") {
 		members: [{ attested: "Banken", orthography: "Standard" as const }],
 		realizationCoverage: "Full" as const,
 		normalizedSurface: "Banken",
-		spelling: "Canonical" as const,
+		spelling: { kind: "Canonical" as const },
 		grundform: false as const,
 		canonicalForm,
 		family: "Lexeme" as const,
 		kind: "NOUN" as const,
-		coreFeatures: { gender: "Fem" as const, hyph: null },
+		coreFeatures: { gender: "Fem" as const },
 	};
 }
 

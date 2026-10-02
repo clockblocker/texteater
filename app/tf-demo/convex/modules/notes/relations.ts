@@ -23,6 +23,8 @@ import {
 	structuralShadowLocatorKey,
 } from "../../model/shadows";
 import { semanticRelationValidator } from "../../model/validators";
+import { projectReadingValue } from "./projections";
+import { unitReadingEmojiDescription } from "./unitReadingFamilies";
 
 const MAX_RELATIONS_PER_NOTE = 50;
 const MAX_RELATION_NEIGHBORHOOD_READINGS = 50;
@@ -357,14 +359,7 @@ async function loadTargetedRelationProjections(
 			const lemma = neighborhood.lemmas.get(reading.lemmaId);
 			if (!lemma)
 				throw new Error("Relation neighborhood has a missing Lemma.");
-			return [
-				reading._id,
-				parseGermanReading({
-					unitKind: "Reading",
-					lemma: parseStoredGermanLemma(lemma),
-					emojiDescription: reading.emojiDescription,
-				}),
-			] as const;
+			return [reading._id, projectReadingValue(reading, lemma)] as const;
 		}),
 	);
 	const entries: Dumrel.ReadingWithKnowledge[] = await Promise.all(
@@ -405,7 +400,7 @@ async function loadTargetedRelationProjections(
 					);
 				}
 				const value =
-					"emojiDescription" in target
+					"unitKind" in target
 						? target
 						: parseStoredGermanLemma(target);
 				const bucket = relations[edge.relation];
@@ -621,11 +616,7 @@ export async function loadParticipleLinks(
 	if (!participleSource) return [];
 	const projected = projectParticipleSources([
 		{
-			reading: parseGermanReading({
-				unitKind: "Reading",
-				lemma: parseStoredGermanLemma(sourceLemma),
-				emojiDescription: source.emojiDescription,
-			}),
+			reading: projectReadingValue(source, sourceLemma),
 			knowledge: { participleSource },
 		},
 	]);
@@ -695,11 +686,7 @@ export async function loadParticipialAdjectives(
 		if (!reading || !lemma) continue;
 		readings.set(reading.readingKey, reading);
 		entries.push({
-			reading: parseGermanReading({
-				unitKind: "Reading",
-				lemma: parseStoredGermanLemma(lemma),
-				emojiDescription: reading.emojiDescription,
-			}),
+			reading: projectReadingValue(reading, lemma),
 			knowledge: {
 				participleSource: Reflect.get(
 					row.knowledge ?? {},
@@ -722,7 +709,7 @@ export async function loadParticipialAdjectives(
 					{
 						readingId: reading._id,
 						canonicalForm: edge.target.lemma.canonicalForm,
-						emojiDescription: reading.emojiDescription,
+						emojiDescription: unitReadingEmojiDescription(reading),
 						target: {
 							kind: "Reading" as const,
 							readingId: reading._id,

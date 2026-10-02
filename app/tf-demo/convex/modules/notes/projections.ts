@@ -8,7 +8,7 @@ export { isUnitReadingFamily } from "./unitReadingFamilies";
 
 /** Reconstructs and validates the foundational Reading value at the database seam. */
 export function projectReadingValue(
-	reading: { readonly emojiDescription: string },
+	reading: { readonly emojiDescription?: string },
 	lemma: {
 		readonly language: string;
 		readonly family: string;
@@ -27,7 +27,9 @@ export function projectReadingValue(
 			canonicalForm: lemma.canonicalForm,
 			coreFeatures: lemma.coreFeatures,
 		},
-		emojiDescription: reading.emojiDescription,
+		...(reading.emojiDescription === undefined
+			? {}
+			: { emojiDescription: reading.emojiDescription }),
 	});
 }
 

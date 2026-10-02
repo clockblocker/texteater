@@ -32,6 +32,13 @@ export function lemmaIdentityKey(lemma: unknown): string {
 	return stableFingerprint(parsed.chain.value);
 }
 
+/** A Reading's Emoji Description; a Foreign Reading has none (ADR 0045). */
+export function emojiDescriptionOf(
+	reading: Dumling.Reading,
+): string | undefined {
+	return "emojiDescription" in reading ? reading.emojiDescription : undefined;
+}
+
 /** Dictionary Reading key includes the canonical unit tag and all Lemma features. */
 export function readingIdentityKey(reading: Dumling.Reading): string {
 	const parsed = parseUnit(reading);

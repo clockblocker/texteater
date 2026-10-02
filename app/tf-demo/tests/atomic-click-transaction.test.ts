@@ -484,7 +484,7 @@ test("a failure after the dictionary commit rolls back dictionary, occurrence, a
 			lemmaId,
 			language: "de",
 			normalizedSurface: "Haus",
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
 		});
 		const attestationId = await ctx.db.insert("attestations", {
@@ -567,8 +567,6 @@ test("a noun article materializes its Reading without a second occurrence", asyn
 		coreFeatures: {
 			case: "Nom",
 			definite: "Def",
-			extPos: null,
-			foreign: null,
 			gender: null,
 			number: "Plur",
 			numType: null,
@@ -846,7 +844,6 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 		coreFeatures: {
 			hasSepPrefix: null,
 			lexicallyReflexive: null,
-			verbType: null,
 		},
 	} as const;
 	const verbReading = {
@@ -859,7 +856,7 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 		language: "de",
 		lemma: verbLemma,
 		normalizedSurface: "es gibt",
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 		inflectionalFeatures: {
 			verbForm: "Fin",

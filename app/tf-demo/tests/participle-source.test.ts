@@ -30,7 +30,6 @@ const KOCHEN = {
 	coreFeatures: {
 		hasSepPrefix: null,
 		lexicallyReflexive: null,
-		verbType: null,
 	},
 } as const satisfies Dumling.Lemma<"de">;
 const KOCHEN_READING = {
@@ -47,10 +46,7 @@ const GEKOCHT_READING = {
 		kind: "ADJ",
 		canonicalForm: "gekocht",
 		coreFeatures: {
-			abbr: null,
-			foreign: null,
-			numType: null,
-			variant: null,
+			comparable: null,
 		},
 	},
 	emojiDescription: "🥔",
@@ -123,7 +119,7 @@ async function seedAdjective(t: TestConvexDb, visitorId: string) {
 			language: "de",
 			normalizedSurface: "gekochten",
 			inflectionalFeatures: null,
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 			surfaceFeatures: null,
 		});
 		const attestationId = await ctx.db.insert("attestations", {
@@ -295,7 +291,7 @@ test("a stored verb with other Core Features is not the source", async () => {
 		...KOCHEN_READING,
 		lemma: {
 			...KOCHEN,
-			coreFeatures: { ...KOCHEN.coreFeatures, lexicallyReflexive: "Yes" },
+			coreFeatures: { ...KOCHEN.coreFeatures, lexicallyReflexive: "Acc" },
 		},
 	});
 	const adjectiveNote = await t.query(api.readingNotes.get, {

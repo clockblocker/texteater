@@ -11,7 +11,7 @@ const mutter = {
 	family: "Lexeme",
 	kind: "NOUN",
 	canonicalForm: "Mutter",
-	coreFeatures: { gender: "Fem", hyph: null },
+	coreFeatures: { gender: "Fem" },
 } as const satisfies Dumling.Lemma<"de", "Lexeme", "NOUN">;
 
 const surface = (
@@ -23,11 +23,11 @@ const surface = (
 		unitKind: "Surface",
 		language: "de",
 		normalizedSurface,
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 		surfaceFeatures: null,
 		inflectionalFeatures: {
-			article: "Definite",
 			case: grammaticalCase,
+			gender: null,
 			number,
 		},
 		lemma: mutter,

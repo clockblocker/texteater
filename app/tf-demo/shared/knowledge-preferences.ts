@@ -12,18 +12,25 @@ export const DEFAULT_KNOWLEDGE_SETTINGS = {
 		nearAntonym: true,
 		hypernym: true,
 		holonym: true,
+		endonym: true,
 	},
 } satisfies Dumrel.KnowledgeSettings;
 type Booleans<T> = {
 	[K in keyof T]: T[K] extends boolean ? boolean : Booleans<T[K]>;
 };
 export type KnowledgePreferences = Booleans<typeof DEFAULT_KNOWLEDGE_SETTINGS>;
+/** The stored relation whose preference governs a projected inverse. */
 export function relationPreference(
 	relation: Dumrel.SemanticRelation,
 ): Dumrel.DirectSemanticRelation {
-	return relation === "hyponym"
-		? "hypernym"
-		: relation === "meronym"
-			? "holonym"
-			: relation;
+	switch (relation) {
+		case "hyponym":
+			return "hypernym";
+		case "meronym":
+			return "holonym";
+		case "exonym":
+			return "endonym";
+		default:
+			return relation;
+	}
 }

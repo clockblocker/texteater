@@ -34,12 +34,12 @@ const grammar = {
 	members: [{ attested: "Banken", orthography: "Standard" as const }],
 	realizationCoverage: "Full" as const,
 	normalizedSurface: "Banken",
-	spelling: "Canonical" as const,
+	spelling: { kind: "Canonical" as const },
 	grundform: false,
 	canonicalForm: "Bank",
 	family: "Lexeme" as const,
 	kind: "NOUN" as const,
-	coreFeatures: { gender: "Fem" as const, hyph: null },
+	coreFeatures: { gender: "Fem" as const },
 };
 
 const reading = {

@@ -5,6 +5,7 @@ const semanticRelationValues = [
 	...directSemanticRelationValues,
 	"hyponym",
 	"meronym",
+	"exonym",
 ];
 const enabledSegmentationLanguageValues = ["de", "en", "he"];
 const grammaticalResolutionLanguageValues = ["de"];
@@ -16,7 +17,7 @@ const segmentKindValues = [
 ];
 const memberOrthographyValues = ["Standard", "Typo", "Fused", "Shorthand"];
 const realizationCoverageValues = ["Full", "Partial"];
-const surfaceSpellingValues = ["Canonical", "Variant"];
+const surfaceSpellingKinds = ["Canonical", "Variant"];
 
 import {
 	presentedAttestationValidator,
@@ -67,6 +68,21 @@ function literalValues(validator: { json: unknown }): unknown[] {
 	);
 }
 
+/** The `kind` literal of each object branch of a union validator. */
+function objectKinds(validator: { json: unknown }): unknown[] {
+	const json = validator.json as {
+		type?: string;
+		value?: Array<{
+			type?: string;
+			value?: Record<string, { fieldType?: { value?: unknown } }>;
+		}>;
+	};
+	if (json.type !== "union" || !Array.isArray(json.value)) return [];
+	return json.value.flatMap((member) =>
+		member.type === "object" ? [member.value?.kind?.fieldType?.value] : [],
+	);
+}
+
 test("Dumdict plans validate a discriminated change union", () => {
 	const changes = fieldType(dictionaryPlanValidator, "changes") as {
 		value?: { type?: string };
@@ -89,9 +105,7 @@ test("Convex validators describe compact storage contracts", () => {
 	expect(literalValues(realizationCoverageValidator)).toEqual(
 		realizationCoverageValues,
 	);
-	expect(literalValues(surfaceSpellingValidator)).toEqual(
-		surfaceSpellingValues,
-	);
+	expect(objectKinds(surfaceSpellingValidator)).toEqual(surfaceSpellingKinds);
 	expect(grundformValidator.json.type).toBe("union");
 	expect(fieldType(segmentInputValidator, "kind")).toEqual(
 		segmentKindValidator.json,
@@ -117,9 +131,9 @@ test("Presented Dumling validators cover the exact stable presentation branches"
 		canonicalForm: "Bank",
 		family: "Lexeme",
 		kind: "NOUN",
-		coreFeatures: { gender: "Fem", hyph: null },
+		coreFeatures: { gender: "Fem" },
 	});
-	expect(Object.keys(projected.coreFeatures)).toEqual(["gender", "hyph"]);
+	expect(Object.keys(projected.coreFeatures)).toEqual(["gender"]);
 
 	expect(fieldType(presentedLemmaValidator, "coreFeatures")).toEqual(
 		presentedFeatureSetValidator.json,
