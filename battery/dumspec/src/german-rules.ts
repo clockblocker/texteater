@@ -75,10 +75,10 @@ const units: Rule[] = [
 	{
 		id: "de/unresolved-over-repair",
 		statement:
-			"A target is right only when its members are exactly the complete fixed unit the sentence realizes: no fixed member that is present is left out, and no free word is added. When membership is uncertain or contradictory, the answer is Unresolved; the group is never trimmed, extended or repaired.",
-		adrs: ["ADR-0003", "dumgen/ADR-0007"],
+			"A target is right only when its members are exactly the complete fixed unit the sentence realizes: no fixed member that is present is left out, and no free word is added. When membership is uncertain or contradictory, the answer is Unresolved; the group is never trimmed, extended or repaired. The one exception is haben with a participle that the sentence can't settle as perfect or state (de/sein-perfect-or-copula): it is grouped as the perfect, so a bare Er hat die Augen geschlossen gives [hat, geschlossen] VERB schließen.",
+		adrs: ["ADR-0003", "ADR-0036", "dumgen/ADR-0007"],
 		routes: [],
-		records: [],
+		records: ["de/er-hat-die-augen-geschlossen"],
 	},
 	{
 		id: "de/no-target",

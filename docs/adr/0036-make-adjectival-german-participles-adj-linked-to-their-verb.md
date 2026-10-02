@@ -126,3 +126,22 @@ adjective has, one that can stand inflected before a noun. A degree sense
 'apparently') are ADV (`de/adjective-stays-adj`,
 [#734](https://github.com/clockblocker/texteater/issues/734)). This narrows
 the adverbial case; it doesn't reverse it.
+
+Amended on 2026-10-02: when the sentence can't decide between the perfect and
+the state, `haben` plus a participle is the perfect. A bare *Er hat die Augen
+geschlossen* is one VERB target, `[hat, geschlossen]` VERB `schließen`. This
+is a segmentation default, not a claim about German. It decides membership:
+the perfect is one unit and the state two, and hover shows a unit's members
+from the segmentation, so the segmenter has to pick a grouping that no click
+can repair. Grouping a sentence meant as a state costs little, since `haben`
+and its predicative participle still belong together; splitting a real
+perfect breaks hover on the commonest German past tense. The learner still
+reaches ADJ `geschlossen` one link from the verb. A Syncretism
+([ADR 0046](./0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md))
+keeps membership fixed and route variants
+([Dumgen ADR 0007](../../battery/dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md))
+keep one grouping, so neither covers two analyses that differ in unit count.
+When the context decides the state, the 2026-09-30 amendment holds: *Er hat
+die ganze Zeit die Augen geschlossen* is VERB `haben` plus ADJ `geschlossen`.
+Decided on
+[#725](https://github.com/clockblocker/texteater/issues/725#issuecomment-5946127516).
