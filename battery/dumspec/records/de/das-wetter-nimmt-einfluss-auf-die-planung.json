@@ -21,14 +21,26 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6],
+			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🕹" },
+			"notes": {
+				"rationale": "Einfluss nehmen is a Funktionsverbgefüge: nehmen only supports the noun Einfluss, so the whole is a Locution VERB with Collocation as its Reading's Locution Type (de/funktionsverbgefuege-are-collocations). Einfluss governs auf with the accusative (Duden Einfluss 1 'Wirkung auf jemanden, etwas'), so auf is a member recorded in valencyEvidence and stays out of the normalized Surface, as in nahm Rücksicht auf (de/governed-preposition-joins-its-governor). die Planung is free. Rule-decided fix from the 2026-10-02 grouping audit (#701): auf was missing from the target."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -60,11 +72,30 @@
 				},
 				"members": [
 					{ "attested": "nimmt", "orthography": "Standard" },
-					{ "attested": "Einfluss", "orthography": "Standard" }
+					{ "attested": "Einfluss", "orthography": "Standard" },
+					{ "attested": "auf", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "auf",
+								"coreFeatures": {}
+							},
+							"governedCase": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
 			}
 		}
 	],

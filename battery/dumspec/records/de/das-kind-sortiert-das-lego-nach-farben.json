@@ -21,15 +21,24 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/proper-noun-article",
+				"hash": "c3eb61394edd1818"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"notes": {
-				"rationale": "An established product name in German is not Foreign merely because its brand origin is non-German."
+				"rationale": "An established product name in German is not Foreign merely because its brand origin is non-German. LEGO owns the article that opens its phrase: [das, LEGO], as das alte Berlin gives [das, Berlin] (de/proper-noun-article, de/noun-owns-its-article); das derives the DET cell das Acc.Neut.Sg. Rule-decided fix from the 2026-10-02 grouping audit (#701): membership only, das was missing from the target. Open: whether LEGO here is PROPN or NOUN (#828, case 4), so the route stays as it was."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -56,9 +65,15 @@
 						"number": "Sing"
 					}
 				},
-				"members": [{ "attested": "LEGO", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "das", "orthography": "Standard" },
+					{ "attested": "LEGO", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				}
 			}
 		}
 	],

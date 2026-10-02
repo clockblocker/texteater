@@ -24,13 +24,21 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/correlator-anchors",
+				"hash": "18606bad03311909"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [9],
-			"route": { "family": "Lexeme", "kind": "SCONJ" },
+			"memberSegmentIndices": [9, 13],
+			"route": { "family": "Locution", "kind": "SCONJ" },
+			"notes": {
+				"rationale": "ohne … zu is a correlator, a Locution SCONJ made of its anchors ohne and zu; sich and verabschieden belong to the clause it opens and stay outside (de/correlator-anchors). The zu is no single-member PART here. Rule-decided fix from the 2026-10-02 grouping audit (#701): the target was [ohne] alone."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -39,16 +47,19 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "SCONJ",
-						"canonicalForm": "ohne",
+						"canonicalForm": "ohne … zu",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "ohne",
+					"normalizedSurface": "ohne zu",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
 				},
-				"members": [{ "attested": "ohne", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "ohne", "orthography": "Standard" },
+					{ "attested": "zu", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full"
 			}
 		}

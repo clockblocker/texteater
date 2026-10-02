@@ -19,43 +19,84 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
-		"references": []
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			}
+		],
+		"references": [
+			{
+				"title": "E-VALBU: bestehen, Lesart 4 (bestehen aus)",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400397/4",
+				"supports": "Target [besteht, aus]: Satzbauplan Ksub, Kprp with Kprp aus + Dat, 'etwas ist aus etwas hergestellt, zusammengesetzt'."
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"memberSegmentIndices": [4, 6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "bestehen aus 'consist of' governs aus for its complement (E-VALBU bestehen 4, Kprp aus + Dat), so aus is a member of the verb's target (de/governed-preposition-joins-its-governor): valencyEvidence names it by index with aus + Dat, and the normalized Surface is besteht. Government is not a Lemma feature. Rule-decided fix from the 2026-10-02 grouping audit (#701): aus was a standalone ADP target."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "aus",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "aus",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "aus", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "besteht", "orthography": "Standard" },
+					{ "attested": "aus", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
 				"valencyEvidence": [
 					{
-						"member": null,
+						"member": 1,
 						"complement": {
-							"kind": "Case",
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "aus",
+								"coreFeatures": {}
+							},
 							"governedCase": "Dat",
-							"referent": "Either"
+							"referent": "Something"
 						},
 						"realizedCase": "Dat"
 					}
-				]
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "besteht",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "bestehen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],

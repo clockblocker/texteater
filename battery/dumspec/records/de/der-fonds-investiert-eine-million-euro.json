@@ -19,14 +19,22 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "NUM" },
 			"reading": { "emojiDescription": "🔟⬆6⃣" },
+			"notes": {
+				"rationale": "Million is the Head of eine Million Euro and owns the article that opens it, NUM being one of the Heads the Rule covers (de/noun-owns-its-article): eine derives the DET cell eine Acc.Fem.Sg, which fits Million's case and gender and not masculine Euro. Rule-decided fix from the 2026-10-02 grouping audit (#701): eine was missing from the target."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -50,10 +58,14 @@
 					}
 				},
 				"members": [
+					{ "attested": "eine", "orthography": "Standard" },
 					{ "attested": "Million", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				}
 			}
 		}
 	],

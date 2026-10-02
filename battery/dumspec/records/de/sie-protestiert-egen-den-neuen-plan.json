@@ -19,43 +19,88 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
-		"references": []
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			},
+			{
+				"rule": "de/member-orthography",
+				"hash": "66373ce319bd065a"
+			}
+		],
+		"references": [
+			{
+				"title": "E-VALBU: protestieren, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400818/1",
+				"supports": "Target [protestiert, egen]: Satzbauplan Ksub, (Kprp), (Kadv) with Kprp für / gegen + Akk, example 'Amerikanische Eltern protestieren gegen das Schulsystem'."
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "ADP" },
+			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "protestieren governs gegen for its complement (E-VALBU protestieren 1, Kprp für / gegen + Akk), so the preposition is a member of the verb's target (de/governed-preposition-joins-its-governor): valencyEvidence names it by index with gegen + Acc, and the normalized Surface is protestiert. egen is a typo for gegen, so the member keeps Typo orthography and the evidence names the ADP gegen (de/member-orthography). Rule-decided fix from the 2026-10-02 grouping audit (#701): egen was a standalone ADP target."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADP",
-						"canonicalForm": "gegen",
-						"coreFeatures": {}
-					},
-					"normalizedSurface": "gegen",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
-				},
-				"members": [{ "attested": "egen", "orthography": "Typo" }],
+				"members": [
+					{ "attested": "protestiert", "orthography": "Standard" },
+					{ "attested": "egen", "orthography": "Typo" }
+				],
 				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
 				"valencyEvidence": [
 					{
-						"member": null,
+						"member": 1,
 						"complement": {
-							"kind": "Case",
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "gegen",
+								"coreFeatures": {}
+							},
 							"governedCase": "Acc",
-							"referent": "Either"
+							"referent": "Something"
 						},
 						"realizedCase": "Acc"
 					}
-				]
+				],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "protestiert",
+					"spelling": { "kind": "Canonical" },
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "protestieren",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
 	],
