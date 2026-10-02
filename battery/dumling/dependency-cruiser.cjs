@@ -10,7 +10,7 @@ module.exports = {
 				"Concrete Family and Kind modules must use their language feature catalog instead of the universal feature catalog.",
 			severity: "error",
 			from: {
-				path: "^src/schemas/concrete-language/[^/]+/(?:construction|lexeme|morpheme|phraseme)/",
+				path: "^src/schemas/concrete-language/[^/]+/[^/]+/",
 			},
 			to: { path: "^src/schemas/universal/features/catalog\\.ts$" },
 		},

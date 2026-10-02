@@ -1,8 +1,9 @@
 import type { PrettifyDeep } from "common-utils";
 import { z } from "zod";
-
-export { featureValueSetSchema } from "./feature-value-set.js";
-export { nonEmptyFeatureBagSchema } from "./non-empty-feature-bag.js";
+import {
+	hasMarkedFeature,
+	nonEmptyFeatureBagError,
+} from "../../../validation/semantics.js";
 
 type FeatureSchemaShape = Record<string, z.ZodType>;
 
@@ -28,4 +29,16 @@ export function featureBagSchema<const Shape extends FeatureSchemaShape>(
 	};
 
 	return z.strictObject(nullableShape) as unknown as FeatureBagSchema<Shape>;
+}
+
+export function featureValueSetSchema<const Schema extends z.ZodType>(
+	schema: Schema,
+) {
+	return z.union([schema, z.tuple([schema], schema)]);
+}
+
+export function nonEmptyFeatureBagSchema<
+	const Schema extends z.ZodType<Record<string, unknown>>,
+>(schema: Schema) {
+	return schema.refine(hasMarkedFeature, { error: nonEmptyFeatureBagError });
 }

@@ -1,85 +1,51 @@
 import { z } from "zod";
 import { UNIVERSAL_FEATURE_SCHEMA } from "../../universal/features/catalog.js";
-import {
-	Aspect,
-	Case,
-	Degree,
-	Gender,
-	GrammaticalNumber,
-	Mood,
-	Person,
-	Polite,
-	PronType,
-	Tense,
-	VerbForm,
-	Voice,
-} from "../../universal/index.js";
 
 // Common
-const DeAspectSchema = UNIVERSAL_FEATURE_SCHEMA.aspect.extract([Aspect.Perf]);
+const DeAspectSchema = UNIVERSAL_FEATURE_SCHEMA.aspect.extract(["Perf"]);
 const DeGenderSchema = UNIVERSAL_FEATURE_SCHEMA.gender.extract([
-	Gender.Fem,
-	Gender.Masc,
-	Gender.Neut,
+	"Fem",
+	"Masc",
+	"Neut",
 ]);
-const DeMoodSchema = UNIVERSAL_FEATURE_SCHEMA.mood.extract([
-	Mood.Ind,
-	Mood.Sub,
-]);
-const DeImperativeMoodSchema = UNIVERSAL_FEATURE_SCHEMA.mood.extract([
-	Mood.Imp,
-]);
+const DeMoodSchema = UNIVERSAL_FEATURE_SCHEMA.mood.extract(["Ind", "Sub"]);
+const DeImperativeMoodSchema = UNIVERSAL_FEATURE_SCHEMA.mood.extract(["Imp"]);
 const DeNumberSchema = UNIVERSAL_FEATURE_SCHEMA.number.extract([
-	GrammaticalNumber.Plur,
-	GrammaticalNumber.Sing,
+	"Plur",
+	"Sing",
 ]);
-const DePersonSchema = UNIVERSAL_FEATURE_SCHEMA.person.extract([
-	Person["1"],
-	Person["2"],
-	Person["3"],
-]);
-const DeTenseSchema = UNIVERSAL_FEATURE_SCHEMA.tense.extract([
-	Tense.Past,
-	Tense.Pres,
-]);
-const DeVoiceSchema = UNIVERSAL_FEATURE_SCHEMA.voice.extract([
-	Voice.Pass,
-	Voice.Cau,
-]);
-const DeFiniteFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
-	VerbForm.Fin,
-]);
+const DePersonSchema = UNIVERSAL_FEATURE_SCHEMA.person.extract(["1", "2", "3"]);
+const DeTenseSchema = UNIVERSAL_FEATURE_SCHEMA.tense.extract(["Past", "Pres"]);
+const DeVoiceSchema = UNIVERSAL_FEATURE_SCHEMA.voice.extract(["Pass", "Cau"]);
+const DeFiniteFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract(["Fin"]);
 const DeInfinitiveFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
-	VerbForm.Inf,
+	"Inf",
 ]);
 const DeParticipleFormSchema = UNIVERSAL_FEATURE_SCHEMA.verbForm.extract([
-	VerbForm.Part,
+	"Part",
 ]);
-const DeHasSepPrefixSchema = UNIVERSAL_FEATURE_SCHEMA.hasSepPrefix;
-const DeLexicallyReflexiveSchema = UNIVERSAL_FEATURE_SCHEMA.lexicallyReflexive;
-const DeComparableSchema = UNIVERSAL_FEATURE_SCHEMA.comparable;
 const DeCaseSchema = UNIVERSAL_FEATURE_SCHEMA.case.extract([
-	Case.Acc,
-	Case.Dat,
-	Case.Gen,
-	Case.Nom,
+	"Acc",
+	"Dat",
+	"Gen",
+	"Nom",
 ]);
 const DeDegreeSchema = UNIVERSAL_FEATURE_SCHEMA.degree.extract([
-	Degree.Cmp,
-	Degree.Pos,
-	Degree.Sup,
+	"Cmp",
+	"Pos",
+	"Sup",
 ]);
-const DePoliteSchema = UNIVERSAL_FEATURE_SCHEMA.polite.extract([Polite.Form]);
+const DePoliteSchema = UNIVERSAL_FEATURE_SCHEMA.polite.extract(["Form"]);
 const DeDeterminerPronTypeSchema = UNIVERSAL_FEATURE_SCHEMA.pronType.extract([
-	PronType.Art,
-	PronType.Dem,
-	PronType.Emp,
-	PronType.Ind,
-	PronType.Int,
-	PronType.Neg,
-	PronType.Prs,
-	PronType.Rel,
-	PronType.Tot,
+	"Art",
+	"Dem",
+	"Emp",
+	"Ind",
+	"Int",
+	"Neg",
+	"Prs",
+	"Rel",
+	"Tot",
 ]);
 
 export const DE_FEATURE_SCHEMA = {
@@ -95,13 +61,9 @@ export const DE_FEATURE_SCHEMA = {
 	finiteForm: DeFiniteFormSchema,
 	infinitiveForm: DeInfinitiveFormSchema,
 	participleForm: DeParticipleFormSchema,
-	hasSepPrefix: DeHasSepPrefixSchema,
-	lexicallyReflexive: DeLexicallyReflexiveSchema,
-	comparable: DeComparableSchema,
 	case: DeCaseSchema,
 	degree: DeDegreeSchema,
 	polite: DePoliteSchema,
-	poss: UNIVERSAL_FEATURE_SCHEMA.poss,
 	determinerPronType: DeDeterminerPronTypeSchema,
 } as const;
 
@@ -148,19 +110,15 @@ export const DeVerbalInflectionalFeatureBagSchema = z.union(
 		z.strictObject({
 			...form,
 			...composition,
-			voice: DE_FEATURE_SCHEMA.voice.extract([Voice.Pass]),
+			voice: DE_FEATURE_SCHEMA.voice.extract(["Pass"]),
 			passive: UNIVERSAL_FEATURE_SCHEMA.passive,
 		}),
 		// Causative lassen (ADR 0026): a voice with no passive subtype.
 		z.strictObject({
 			...form,
 			...composition,
-			voice: DE_FEATURE_SCHEMA.voice.extract([Voice.Cau]),
+			voice: DE_FEATURE_SCHEMA.voice.extract(["Cau"]),
 			passive: z.null(),
 		}),
 	]),
 );
-
-export type DeVerbalInflectionalFeatureBag = z.infer<
-	typeof DeVerbalInflectionalFeatureBagSchema
->;
