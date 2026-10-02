@@ -28,7 +28,7 @@
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "🧩⏰" },
+			"reading": { "emojiDescription": "🧩🕰" },
 			"notes": {
 				"rationale": "wann names the time inside du willst, with no antecedent, so it is a relative ADV all the same. Unstressed wann in Komm wann vorbei opens no clause and is irgendwann instead."
 			},

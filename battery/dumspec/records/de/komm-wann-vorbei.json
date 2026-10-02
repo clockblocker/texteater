@@ -25,7 +25,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "❔⏰" },
+			"reading": { "emojiDescription": "❔🕰" },
 			"notes": {
 				"rationale": "wann neither asks nor opens a relative clause: it is the Shorthand of irgendwann, come by some time."
 			},

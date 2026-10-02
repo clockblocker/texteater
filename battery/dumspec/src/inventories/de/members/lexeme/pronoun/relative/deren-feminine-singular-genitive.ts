@@ -19,7 +19,7 @@ const lemma = {
 } satisfies Dumling.Lemma<"de">;
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🔗" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🧩" }, lemma },
 	knowledge: {
 		definition:
 			"Das Relativpronomen „deren“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort. Vor einem Nomen ordnet es dieses dem Bezugswort zu: die Zeugin, deren Aussage zählt.",

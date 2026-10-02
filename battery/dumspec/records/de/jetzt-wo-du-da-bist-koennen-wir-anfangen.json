@@ -32,7 +32,7 @@
 			},
 			{
 				"rule": "de/relative-wo-place-or-time",
-				"hash": "3bfcfd18bb2a7df0"
+				"hash": "76de685cddf4cefe"
 			}
 		],
 		"references": []
@@ -41,7 +41,7 @@
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "🧩⏰" },
+			"reading": { "emojiDescription": "🧩🕰" },
 			"notes": {
 				"rationale": "wo names the time of du da bist. The now-that overtone is an inference, not a second Reading or an SCONJ use."
 			},

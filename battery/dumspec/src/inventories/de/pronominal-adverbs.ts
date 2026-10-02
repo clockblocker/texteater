@@ -183,8 +183,9 @@ type Series = {
 	readonly linking: boolean;
 	readonly ipa: string;
 	/**
-	 * The series marker before the preposition's emoji. No Core feature
-	 * carries the series (system ADR 0029).
+	 * The series marker before the preposition's emoji: ❓ interrogative, 🧩
+	 * relative, and none on the demonstrative da(r)- and hier- forms. No Core
+	 * feature carries the series (system ADR 0029).
 	 */
 	readonly marker: string;
 	readonly definition: (form: string, preposition: string) => string;
@@ -214,7 +215,7 @@ const series: readonly Series[] = [
 		prefix: "hier",
 		linking: false,
 		ipa: "hiːɐ̯",
-		marker: "👉",
+		marker: "",
 		definition: (form, preposition) =>
 			`„${form}“ ist ein Pronominaladverb aus „hier“ und „${preposition}“. Es ersetzt „${preposition} + Sache“ und verweist auf das eben Genannte oder Vorliegende, meist in formeller Sprache.`,
 		en: (preposition) =>

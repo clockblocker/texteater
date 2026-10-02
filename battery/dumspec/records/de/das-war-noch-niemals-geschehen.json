@@ -239,7 +239,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🚫⏰" },
+			"reading": { "emojiDescription": "🚫🕰" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -271,7 +271,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "niemals is the negative time adverb the Authored Inventory holds beside nie, with its one Reading 🚫⏰; noch niemals is compositional, two targets."
+				"rationale": "niemals is the negative time adverb the Authored Inventory holds beside nie, with its one Reading 🚫🕰; noch niemals is compositional, two targets."
 			}
 		}
 	],

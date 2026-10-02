@@ -20,7 +20,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Attestation",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0044"],
@@ -37,7 +37,7 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "🔗" },
+			"reading": { "emojiDescription": "🧩" },
 			"notes": {
 				"rationale": "Attributive deren is the relative pillar cell Gen.Fem.Sg, one Lemma with standalone deren (de/pron-or-det-by-use). Its gender and number are its antecedent's, Zeugin, and Aussage is a separate target."
 			},

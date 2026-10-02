@@ -35,7 +35,7 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "🔗" },
+			"reading": { "emojiDescription": "🧩" },
 			"notes": {
 				"rationale": "der opens the relative clause on Techniker and is its subject: the relative PRON cell der Nom.Masc.Sg, agreeing with Techniker (de/pron-or-det-by-use, ADR 0044)."
 			},

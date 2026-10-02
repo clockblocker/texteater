@@ -57,7 +57,7 @@ const adverbs: readonly WhAdverb[] = [
 				ru: ["где; в котором"],
 			},
 			{
-				emoji: "⏰",
+				emoji: "🕰",
 				definition:
 					"Leitet einen Relativsatz ein und bezeichnet den Zeitpunkt, zu dem etwas geschieht, umgangssprachlich: in dem Moment, wo sie ankam.",
 				en: ["when; in which"],
@@ -100,7 +100,7 @@ const adverbs: readonly WhAdverb[] = [
 	{
 		text: "wann",
 		ipa: "van",
-		emoji: "⏰",
+		emoji: "🕰",
 		Int: {
 			definition: "Fragt nach dem Zeitpunkt.",
 			en: ["when"],
@@ -242,7 +242,7 @@ const indefiniteAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "irgendwann",
 		ipa: "ˈɪʁɡəntˌvan",
-		emoji: "⏰",
+		emoji: "🕰",
 		definition:
 			"Bezeichnet einen beliebigen, nicht näher bestimmten Zeitpunkt: Irgendwann kommt er zurück.",
 		en: ["sometime; at some point"],
@@ -251,7 +251,7 @@ const indefiniteAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "irgendeinmal",
 		ipa: "ˈɪʁɡəntˌaɪ̯nmaːl",
-		emoji: "⏰",
+		emoji: "🕰",
 		synonymOf: "irgendwann",
 		definition:
 			"Bezeichnet einen beliebigen, nicht näher bestimmten Zeitpunkt, selten gebraucht: Besuchen Sie mich irgendeinmal.",
@@ -270,19 +270,21 @@ const indefiniteAdverbs: readonly OneReadingAdverb[] = [
 ];
 
 // nie and niemals are the negative time adverbs, nirgends and nirgendwo the
-// negative place adverbs, one Lemma with one Reading each. Their marker is
-// the 🚫 of kein, keiner, niemand and nichts, before the ⏰ of wann and
-// irgendwann or the 📍 of wo and irgendwo. Duden defines niemals as nie and
-// nirgendwo as nirgends, so each stores that one synonym.
+// negative place adverbs, and keineswegs 'by no means' the negative manner
+// adverb, one Lemma with one Reading each. Their marker is the 🚫 of kein,
+// keiner, niemand and nichts, before the 🕰 of wann and irgendwann, the 📍 of
+// wo and irgendwo or the 🔧 of wie and irgendwie. Duden defines niemals as
+// nie and nirgendwo as nirgends, so each stores that one synonym.
 // https://www.duden.de/rechtschreibung/nie
 // https://www.duden.de/rechtschreibung/niemals
 // https://www.duden.de/rechtschreibung/nirgends
 // https://www.duden.de/rechtschreibung/nirgendwo
+// https://www.duden.de/rechtschreibung/keineswegs
 const negativeAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "nie",
 		ipa: "niː",
-		emoji: "⏰",
+		emoji: "🕰",
 		definition:
 			"Verneint eine Aussage für jeden Zeitpunkt, also zu keiner Zeit oder nicht ein einziges Mal: Das vergesse ich nie. Er war noch nie in Paris.",
 		en: ["never; not once"],
@@ -291,7 +293,7 @@ const negativeAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "niemals",
 		ipa: "ˈniːmaːls",
-		emoji: "⏰",
+		emoji: "🕰",
 		synonymOf: "nie",
 		definition:
 			"Verneint eine Aussage für jeden Zeitpunkt wie „nie“, oft nachdrücklicher: Das hätte ich niemals gedacht. Sie hat ihn niemals besucht.",
@@ -317,16 +319,10 @@ const negativeAdverbs: readonly OneReadingAdverb[] = [
 		en: ["nowhere"],
 		ru: ["нигде"],
 	},
-];
-
-// keineswegs 'by no means' negates a whole statement, not a time or a place,
-// and its one Reading is 🙅 alone.
-// https://www.duden.de/rechtschreibung/keineswegs
-const statementNegatingAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "keineswegs",
 		ipa: "ˈkaɪ̯nəsˈveːks",
-		emoji: "🙅",
+		emoji: "🔧",
 		definition:
 			"Verneint eine Aussage nachdrücklich: durchaus nicht, nicht im Geringsten: Die Reparatur ist keineswegs abgeschlossen.",
 		en: ["by no means; not at all"],
@@ -340,10 +336,11 @@ type ManyReadingAdverb = Pick<OneReadingAdverb, "text" | "ipa"> & {
 };
 
 // da, hier and dort point at a place, dann at the next step in time and so at
-// a manner or degree: the demonstratives that answer wo, wann and wie. da also
-// names a point in time (von da an). Each Reading is the one the gold names;
-// the demonstrative marker is empty, as on the da(r)- pronominal adverbs.
-// Conditional dann (wenn …, dann) is not authored yet.
+// a manner or degree: the demonstratives that answer wo, wann and wie, so
+// each Reading is the w-word's emoji with no marker, as on the da(r)- and
+// hier- pronominal adverbs (📍, 🕰, 🔧). da also names a point in time (von da
+// an). Each Reading is the one the gold names. Conditional dann (wenn …,
+// dann) is not authored yet.
 // https://www.dwds.de/wb/da
 // https://www.dwds.de/wb/hier
 // https://www.dwds.de/wb/dort
@@ -362,7 +359,7 @@ const demonstrativeAdverbs: readonly ManyReadingAdverb[] = [
 				ru: ["там; тут; вот"],
 			},
 			{
-				emoji: "🕰📍",
+				emoji: "🕰",
 				definition:
 					"Bezeichnet einen genannten oder gemeinten Zeitpunkt, zu dieser Zeit, in diesem Augenblick: Da ward ihm sein Gewehr zu schwer. Von da an war alles anders.",
 				en: ["then; at that moment"],
@@ -401,7 +398,7 @@ const demonstrativeAdverbs: readonly ManyReadingAdverb[] = [
 		ipa: "dan",
 		readings: [
 			{
-				emoji: "⏭",
+				emoji: "🕰",
 				definition:
 					"Bezeichnet, was in einer Abfolge als Nächstes kommt, danach, darauf: Erst lese ich, dann gehen wir spazieren.",
 				en: ["then; after that"],
@@ -414,7 +411,7 @@ const demonstrativeAdverbs: readonly ManyReadingAdverb[] = [
 		ipa: "zoː",
 		readings: [
 			{
-				emoji: "👉",
+				emoji: "🔧",
 				definition:
 					"Bezeichnet eine Art und Weise oder einen Grad, auf die man zeigt oder die der Zusammenhang nennt, auf diese Weise, in diesem Maß: Vielleicht ist es so. Der Hund tut mir so leid.",
 				en: ["so; like this, that way"],
@@ -609,7 +606,8 @@ const directionalAdverbs: readonly OneReadingAdverb[] = [
 	},
 ];
 
-// The da(r)- pronominal adverbs carry no marker either (pronominal-adverbs.ts).
+// The demonstratives carry no marker, as the da(r)- and hier- pronominal
+// adverbs carry none (pronominal-adverbs.ts).
 const marker: Readonly<Record<Use, string>> = {
 	Int: "❓",
 	Rel: "🧩",
@@ -684,7 +682,7 @@ function whAdverb(
  * wie, warum, wieso, weshalb, weswegen): one Lemma each, with an
  * interrogative and a relative Reading; relative wo has a place and a time
  * Reading. Then one Lemma each for the indefinite irgend- adverbs, the
- * negative nie, niemals, nirgends and nirgendwo, keineswegs, the
+ * negative nie, niemals, nirgends, nirgendwo and keineswegs, the
  * demonstrative da, hier, dort, dann and so, the demonstrative dahin, daher,
  * hierhin, hierher, dorthin and dorther, and the directional her- and hin-
  * adverbs (heraus, hinaus, herein, hinein, herüber, hinüber, herunter,
@@ -697,7 +695,6 @@ export const whAdverbs: readonly AuthoredMember[] = [
 	),
 	...indefiniteAdverbs.map((adverb) => whAdverb(adverb, "Ind", adverb)),
 	...negativeAdverbs.map((adverb) => whAdverb(adverb, "Neg", adverb)),
-	...statementNegatingAdverbs.map((adverb) => whAdverb(adverb, null, adverb)),
 	...demonstrativeAdverbs.flatMap((adverb) =>
 		adverb.readings.map((meaning) => whAdverb(adverb, "Dem", meaning)),
 	),

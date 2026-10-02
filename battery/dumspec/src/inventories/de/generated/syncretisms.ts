@@ -1340,7 +1340,7 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 		reading: {
 			unitKind: "Reading",
 			lemma: demDatRelGender,
-			emojiDescription: "🔗",
+			emojiDescription: "🧩",
 		},
 		knowledge: {
 			definition:
@@ -1395,7 +1395,7 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 		reading: {
 			unitKind: "Reading",
 			lemma: derenGenRelGenderNumber,
-			emojiDescription: "🔗",
+			emojiDescription: "🧩",
 		},
 		knowledge: {
 			definition:
@@ -1453,7 +1453,7 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 		reading: {
 			unitKind: "Reading",
 			lemma: dessenGenRelGender,
-			emojiDescription: "🔗",
+			emojiDescription: "🧩",
 		},
 		knowledge: {
 			definition:
@@ -1511,7 +1511,7 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 		reading: {
 			unitKind: "Reading",
 			lemma: dieAccRelGenderNumber,
-			emojiDescription: "🔗",
+			emojiDescription: "🧩",
 		},
 		knowledge: {
 			definition:
@@ -1569,7 +1569,7 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 		reading: {
 			unitKind: "Reading",
 			lemma: dieNomRelGenderNumber,
-			emojiDescription: "🔗",
+			emojiDescription: "🧩",
 		},
 		knowledge: {
 			definition:

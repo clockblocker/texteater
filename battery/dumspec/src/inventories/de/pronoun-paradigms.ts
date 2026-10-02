@@ -179,7 +179,7 @@ for (const pronType of ["Int", "Rel"] as const) {
 			: t,
 		description(
 			pronType,
-			pronType === "Int" ? "❓" : "🔗",
+			pronType === "Int" ? "❓" : "🧩",
 			pronType === "Int"
 				? "Fragt nach der Auswahl einer Person oder Sache aus einer bekannten Menge."
 				: "Leitet einen Relativsatz ein und verweist auf dessen Bezugswort.",
@@ -229,7 +229,7 @@ for (const pronType of ["Int", "Rel"] as const) {
 				ru: ["кто"],
 			},
 			Rel: {
-				emoji: "🔗👤",
+				emoji: "🧩👤",
 				definition:
 					"Leitet einen Relativsatz ein, meist ohne eigenes Bezugswort, und bezeichnet die gemeinte Person: Wer mitkommen will, meldet sich.",
 				en: ["whoever; the one who"],
@@ -252,7 +252,7 @@ for (const pronType of ["Int", "Rel"] as const) {
 				ru: ["что"],
 			},
 			Rel: {
-				emoji: "🔗📦",
+				emoji: "🧩📦",
 				definition:
 					"Leitet einen Relativsatz ein, ohne eigenes Bezugswort oder nach das, etwas, alles, nichts oder einem ganzen Satz, und bezeichnet die gemeinte Sache: Was er sagt, stimmt.",
 				en: ["whatever; what"],
@@ -277,7 +277,7 @@ for (const pronType of ["Int", "Rel"] as const) {
 				),
 			);
 		}
-		const emoji = pronType === "Int" ? "❓" : "🔗";
+		const emoji = pronType === "Int" ? "❓" : "🧩";
 		// Attributive wessen is the genitive of wer: it asks for or names a
 		// possessor person. It has one form, so it is an invariant Lemma, cited
 		// apart from the stem wer.
@@ -381,7 +381,7 @@ for (const [stem, ipa, emoji, definition, en, ru] of [
 		table,
 		description(
 			"Tot",
-			"💯",
+			"🌐",
 			"Bezeichnet die Gesamtheit einer Menge ohne Ausnahme.",
 			["all; the whole of"],
 			["всё; все"],
@@ -569,7 +569,7 @@ for (const [stem, ipa] of [
 		},
 		description(
 			"Tot",
-			"✌",
+			"2⃣",
 			"Bezeichnet die Gesamtheit zweier Personen oder Sachen.",
 			["both"],
 			["оба; обе"],

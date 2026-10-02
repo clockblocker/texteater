@@ -192,7 +192,7 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "🕰📍" },
+			"reading": { "emojiDescription": "🕰" },
 			"notes": {
 				"rationale": "da is the temporal ADV 'then, at that point': the clause stays verb-second (da ward ihm …), so it is not the conjunction da. It has no comparison forms (de/comparability-is-lexical)."
 			},

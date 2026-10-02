@@ -195,7 +195,7 @@ for (const pronType of ["Int", "Rel"] as const)
 				)
 			: description(
 					{ pronType },
-					"🔗",
+					"🧩",
 					"Der relative Determinierer „welcher“ verbindet einen Bezug mit einer weiterführenden Aussage.",
 					["which"],
 					["который"],
@@ -473,10 +473,13 @@ for (const [stem, ipa, definition, en, ru, emoji, citation] of [
 				},
 	);
 }
-for (const [stem, ipa, definition, en, ru] of [
+// The irgend- determiners take the ❔ marker of the irgend- pronouns and
+// adverbs (irgendeiner, irgendwo).
+for (const [stem, ipa, emoji, definition, en, ru] of [
 	[
 		"manch",
 		"ˈmanç",
+		"🔢",
 		"Der quantifizierende Determinierer „mancher“ grenzt die Menge der bezeichneten Bezüge ein.",
 		"many a",
 		"многие",
@@ -484,6 +487,7 @@ for (const [stem, ipa, definition, en, ru] of [
 	[
 		"irgendwelch",
 		"ˈɪʁɡəntˌvɛlç",
+		"❔",
 		"Der quantifizierende Determinierer „irgendwelcher“ grenzt die Menge der bezeichneten Bezüge ein.",
 		"any",
 		"какой-либо",
@@ -491,13 +495,13 @@ for (const [stem, ipa, definition, en, ru] of [
 ] as const)
 	add(
 		strongPronoun(stem, ipa),
-		description({ pronType: "Ind" }, "🔢", definition, [en], [ru]),
+		description({ pronType: "Ind" }, emoji, definition, [en], [ru]),
 	);
 add(
 	einWord("irgendein", "ˈɪʁɡəntˌaɪ̯n", false),
 	description(
 		{ pronType: "Ind" },
-		"🔢",
+		"❔",
 		"Der quantifizierende Determinierer „irgendein“ grenzt die Menge der bezeichneten Bezüge ein.",
 		["some"],
 		["какой-нибудь"],
@@ -548,7 +552,7 @@ for (const [stem, ipa, definition, en, ru] of [
 	const table = adjectivalGenitive(stem, ipa);
 	add(
 		table,
-		description({ pronType: "Tot" }, "💯", definition, [...en], [...ru]),
+		description({ pronType: "Tot" }, "🌐", definition, [...en], [...ru]),
 		{
 			citation: plural(table),
 			...(stem === "all" ? { uninflected: ["all"] } : {}),
@@ -597,7 +601,7 @@ for (const [stem, ipa, definition, en, ru] of [
 			],
 			Plur: stem === "jed" ? absent : t.Plur,
 		},
-		description({ pronType: "Tot" }, "💯", definition, [...en], [...ru]),
+		description({ pronType: "Tot" }, "🌐", definition, [...en], [...ru]),
 	);
 }
 // beide is plural. Weak beiden stands only after a determiner, where beide

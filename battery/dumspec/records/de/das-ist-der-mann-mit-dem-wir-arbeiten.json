@@ -31,7 +31,7 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "🔗" },
+			"reading": { "emojiDescription": "🧩" },
 			"notes": {
 				"rationale": "The der-series is a pillar (ADR 0044), so this cell is its own Lemma, with case, number and gender in Core. dem opens a relative clause on der Mann, so it is the relative Masc cell (de/open-referent)."
 			},

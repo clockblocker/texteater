@@ -33,6 +33,11 @@ model would draw that line reliably. The test holds for authored and drafted
 Readings as well as generated ones. Decided by the user on 2026-10-02
 ([#700](https://github.com/clockblocker/texteater/issues/700)).
 
+Amended on 2026-10-02: `so` is one Reading, 🔧, the manner emoji of `wie`.
+A demonstrative carries no series marker, so 👉 left it (ADR 0029). Decided
+by the user on 2026-10-02
+([#595](https://github.com/clockblocker/texteater/issues/595)).
+
 Equality compares normalized descriptions. Dumling's parse drops variation
 selectors (U+FE0E, U+FE0F) and skin-tone modifiers, so `🖱️` equals `🖱` and
 `🫳🏽` equals `🫳`. Order and ZWJ sequences are kept, because order can carry

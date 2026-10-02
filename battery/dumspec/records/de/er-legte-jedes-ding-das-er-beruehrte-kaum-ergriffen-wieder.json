@@ -255,7 +255,7 @@
 				"kind": "DET"
 			},
 			"reading": {
-				"emojiDescription": "💯"
+				"emojiDescription": "🌐"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -358,7 +358,7 @@
 				"kind": "PRON"
 			},
 			"reading": {
-				"emojiDescription": "🔗"
+				"emojiDescription": "🧩"
 			},
 			"attestation": {
 				"unitKind": "Attestation",

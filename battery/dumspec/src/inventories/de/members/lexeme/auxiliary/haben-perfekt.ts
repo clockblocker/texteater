@@ -12,7 +12,7 @@ const lemma = {
 /** One grammatical use of haben; the serving verb's form selects it (ADR 0026). */
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "✅" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🏁" }, lemma },
 	knowledge: {
 		transcription: "ˈhaːbn̩",
 		definition:

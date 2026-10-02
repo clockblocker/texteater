@@ -749,7 +749,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/relative-wo-place-or-time",
 		statement:
-			"Relative wo has two Readings, picked by what wo names inside its clause, not by the word it follows. It is the time Reading 🧩⏰ when wo names a time: in dem Moment, wo sie ankam; jetzt, wo du da bist; damals, wo; der Tag, wo. Otherwise it is the place Reading 🧩📍, abstract settings included, since English keeps where for them too: die Stadt, wo sie wohnt; in Fällen, wo; an dem Punkt, wo; eine Situation, wo.",
+			"Relative wo has two Readings, picked by what wo names inside its clause, not by the word it follows. It is the time Reading 🧩🕰 when wo names a time: in dem Moment, wo sie ankam; jetzt, wo du da bist; damals, wo; der Tag, wo. Otherwise it is the place Reading 🧩📍, abstract settings included, since English keeps where for them too: die Stadt, wo sie wohnt; in Fällen, wo; an dem Punkt, wo; eine Situation, wo.",
 		adrs: [],
 		routes: lexeme("ADV"),
 		records: [

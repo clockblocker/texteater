@@ -47,7 +47,7 @@
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
-				"rationale": "Wer heads a free relative clause with no antecedent and stands for a noun phrase, so it is the relative PRON wer with the gold's 🔗👤 Reading, as in Wer mitkommen will, meldet sich bis Freitag (de/pron-or-det-by-use). Its Surface marks Nom, its case as subject of kommt."
+				"rationale": "Wer heads a free relative clause with no antecedent and stands for a noun phrase, so it is the relative PRON wer with the gold's 🧩👤 Reading, as in Wer mitkommen will, meldet sich bis Freitag (de/pron-or-det-by-use). Its Surface marks Nom, its case as subject of kommt."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -85,7 +85,7 @@
 					"surfaceFeatures": null
 				}
 			},
-			"reading": { "emojiDescription": "🔗👤" }
+			"reading": { "emojiDescription": "🧩👤" }
 		},
 		{
 			"memberSegmentIndices": [2],

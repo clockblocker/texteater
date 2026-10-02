@@ -399,6 +399,55 @@ describe("the German authored inventory", () => {
 		expect(beidenCells("PRON")).toEqual(["Nom", "Acc", "Dat", "Gen"]);
 	});
 
+	test("PRON and DET share their series markers with the adverbs: relative 🧩, total 🌐, irgend- ❔, beide 2⃣ (ADR 0029)", () => {
+		const emojiOf = (kind: string, pronType: string) =>
+			new Set(
+				authoredMembers
+					.filter(
+						({ lemma }) =>
+							lemma.kind === kind &&
+							field(lemma.coreFeatures, "pronType") === pronType,
+					)
+					.map(({ reading }) => reading.emojiDescription),
+			);
+		for (const kind of ["PRON", "DET"]) {
+			for (const emoji of emojiOf(kind, "Rel"))
+				expect(emoji.startsWith("🧩"), `${kind} ${emoji}`).toBe(true);
+			expect(
+				[...emojiOf(kind, "Tot")].filter((emoji) => emoji !== "2⃣"),
+				kind,
+			).toEqual(["🌐"]);
+		}
+		const readingsOf = (kind: string, text: string) =>
+			authoredMembers
+				.filter(
+					({ lemma }) =>
+						lemma.kind === kind && lemma.canonicalForm === text,
+				)
+				.map(({ reading }) => reading.emojiDescription);
+		expect(readingsOf("DET", "irgendein")).toEqual(["❔"]);
+		expect(readingsOf("DET", "irgendwelcher")).toEqual(["❔"]);
+		expect(readingsOf("PRON", "irgendeiner")).toEqual(["❔"]);
+		expect(readingsOf("PRON", "irgendwelcher")).toEqual(["❔"]);
+		expect(readingsOf("DET", "beide")).toEqual(["2⃣"]);
+		expect(readingsOf("PRON", "beide")).toEqual(["2⃣"]);
+		// Infinitive zu keeps 🔗, as the mit of damit and womit does.
+		expect(readingsOf("PART", "zu")).toEqual(["🔗"]);
+		// Both perfect auxiliaries are 🏁.
+		expect(
+			authoredMembers
+				.filter(
+					({ lemma, knowledge }) =>
+						lemma.kind === "AUX" &&
+						knowledge.definition?.includes("Perfekt"),
+				)
+				.map(({ lemma, reading }) =>
+					[lemma.canonicalForm, reading.emojiDescription].join(" "),
+				)
+				.toSorted(),
+		).toEqual(["haben 🏁", "sein 🏁"]);
+	});
+
 	test("authors etwas as an invariant Ind DET and PRON (de/pron-or-det-by-use)", () => {
 		const etwas = authoredMembers.filter(
 			({ lemma }) => lemma.canonicalForm === "etwas",
@@ -822,7 +871,7 @@ describe("the German authored inventory", () => {
 		// Relative wo has a place and a time Reading; every other use has one.
 		expect(
 			readingsOf("wo").map(({ reading }) => reading.emojiDescription),
-		).toEqual(["❓📍", "🧩📍", "🧩⏰"]);
+		).toEqual(["❓📍", "🧩📍", "🧩🕰"]);
 		expect(
 			whAdverbs.filter((text) => text !== "wo").flatMap(readingsOf),
 		).toHaveLength(2 * (whAdverbs.length - 1));
@@ -863,13 +912,13 @@ describe("the German authored inventory", () => {
 			).toEqual([["ADV", { comparable: null }, "❔"]]);
 	});
 
-	test("authors the n-words nie, niemals, nirgends, nirgendwo and keineswegs as one ADV with one Reading", () => {
+	test("authors the n-words nie, niemals, nirgends, nirgendwo and keineswegs as one ADV with one 🚫 Reading", () => {
 		for (const [text, emoji] of [
-			["nie", "🚫⏰"],
-			["niemals", "🚫⏰"],
+			["nie", "🚫🕰"],
+			["niemals", "🚫🕰"],
 			["nirgends", "🚫📍"],
 			["nirgendwo", "🚫📍"],
-			["keineswegs", "🙅"],
+			["keineswegs", "🚫🔧"],
 		] as const)
 			expect(
 				authoredMembers
@@ -900,7 +949,7 @@ describe("the German authored inventory", () => {
 			});
 	});
 
-	test("authors the demonstratives da, hier, dort, dann and so with the Readings gold names", () => {
+	test("authors the demonstratives da, hier, dort, dann and so with the Readings gold names and no marker", () => {
 		const readingsOf = (text: string) =>
 			authoredMembers
 				.filter(
@@ -911,11 +960,15 @@ describe("the German authored inventory", () => {
 					expect(lemma.coreFeatures).toEqual({ comparable: null });
 					return reading.emojiDescription;
 				});
-		expect(readingsOf("da")).toEqual(["📍", "🕰📍"]);
+		expect(readingsOf("da")).toEqual(["📍", "🕰"]);
 		expect(readingsOf("hier")).toEqual(["📍"]);
 		expect(readingsOf("dort")).toEqual(["📍"]);
-		expect(readingsOf("dann")).toEqual(["⏭"]);
-		expect(readingsOf("so")).toEqual(["👉"]);
+		expect(readingsOf("dann")).toEqual(["🕰"]);
+		expect(readingsOf("so")).toEqual(["🔧"]);
+		// The hier- pronominal adverbs carry no marker either: hierfür is 🎁,
+		// like dafür.
+		expect(readingsOf("hierfür")).toEqual(["🎁"]);
+		expect(readingsOf("dafür")).toEqual(["🎁"]);
 	});
 
 	test("authors dahin, daher, hierhin, hierher, dorthin and dorther as one ADV with one Reading", () => {

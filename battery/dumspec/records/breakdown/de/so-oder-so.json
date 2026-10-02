@@ -36,7 +36,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "👉" },
+			"reading": { "emojiDescription": "🔧" },
 			"notes": {
 				"rationale": "The Breakdown reads so as the ADV so 'thus', with no comparison forms: the idiom's meaning belongs to the Locution. One Reading for manner (DWDS so I.2) and degree (I.3): the user ruled on 2026-10-02 that they are too subtle for an emoji to separate."
 			},
@@ -89,7 +89,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "👉" },
+			"reading": { "emojiDescription": "🔧" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "so", "orthography": "Standard" }],

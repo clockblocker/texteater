@@ -31,7 +31,7 @@
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "DET" },
-			"reading": { "emojiDescription": "🔗" },
+			"reading": { "emojiDescription": "🧩" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

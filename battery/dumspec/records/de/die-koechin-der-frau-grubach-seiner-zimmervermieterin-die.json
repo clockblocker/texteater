@@ -490,7 +490,7 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "🔗" },
+			"reading": { "emojiDescription": "🧩" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -618,7 +618,7 @@
 				"family": "Lexeme",
 				"kind": "DET"
 			},
-			"reading": { "emojiDescription": "💯" },
+			"reading": { "emojiDescription": "🌐" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

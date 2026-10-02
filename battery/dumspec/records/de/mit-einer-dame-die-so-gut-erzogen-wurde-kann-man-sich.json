@@ -371,7 +371,7 @@
 				"kind": "PRON"
 			},
 			"reading": {
-				"emojiDescription": "🔗"
+				"emojiDescription": "🧩"
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -420,7 +420,7 @@
 				"family": "Lexeme",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "👉" },
+			"reading": { "emojiDescription": "🔧" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -38,7 +38,7 @@
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "🔗" },
+			"reading": { "emojiDescription": "🧩" },
 			"notes": {
 				"rationale": "Attributive dessen is the relative pillar cell Gen.Sg, one Lemma with standalone dessen (de/pron-or-det-by-use). Its antecedent is der Autor, so it is the Masc cell (ADR 0044, de/open-referent), and Buch is a separate target."
 			},

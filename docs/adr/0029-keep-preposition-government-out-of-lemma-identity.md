@@ -76,3 +76,19 @@ identity. The demonstrative and negative adverbs stay authored
 ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)).
 Decided by the user on
 [#595](https://github.com/clockblocker/texteater/issues/595).
+
+Amended on 2026-10-02: one set of series markers runs through the authored
+adverbs, pronouns and determiners. Interrogative is ❓, relative 🧩,
+`irgend-` ❔, negative 🚫 and total 🌐, and a demonstrative carries none. The
+marker comes before the emoji of what the word asks about or stands for:
+📍 place, 🕰 time, 🔧 manner. So `wann` is ❓🕰, `irgendwann` ❔🕰, `nie` 🚫🕰,
+`nirgends` 🚫📍 and `keineswegs` 🚫🔧, and `dann` and temporal `da` are 🕰.
+🕰 replaced ⏰ as the time emoji. The `hier-` pronominal adverbs dropped 👉,
+so `hierfür` is 🎁 like `dafür`, and `so` is 🔧. On PRON and DET, the
+relative pronouns and relative `welcher` took 🧩 from 🔗, which stays with
+infinitive `zu` and the preposition `mit`. The total determiners (`alle`,
+`jeder`, `sämtliche` and their kin) and PRON `sämtliche` took 🌐 from 💯, as
+the total pronouns have it. DET `irgendein` and `irgendwelcher` took ❔ from
+🔢, and PRON `beide` took 2⃣ from ✌, like DET `beide`. The perfect auxiliaries `haben` and `sein` are both 🏁. Decided by
+the user on 2026-10-02
+([#595](https://github.com/clockblocker/texteater/issues/595)).

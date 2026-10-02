@@ -36,7 +36,7 @@
 			},
 			{
 				"rule": "de/relative-wo-place-or-time",
-				"hash": "3bfcfd18bb2a7df0"
+				"hash": "76de685cddf4cefe"
 			}
 		],
 		"references": []
@@ -45,7 +45,7 @@
 		{
 			"memberSegmentIndices": [7],
 			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "🧩⏰" },
+			"reading": { "emojiDescription": "🧩🕰" },
 			"notes": {
 				"rationale": "wo names the time at which sie ankam holds, so it is Rel, and that time picks the time Reading."
 			},
