@@ -8,8 +8,9 @@ import type {
 /**
  * German fusion Entries (Dumgen ADR 0004, issue 498). Reviewed data: the
  * eight standard preposition-article fusions, the Duden-listed colloquial
- * ones, the apostrophe clitics, and the abbreviation table. One-liners are
- * learner-facing German, like authored Knowledge definitions.
+ * ones, the apostrophe clitics, the particles an infixed zu follows, and
+ * the abbreviation table. One-liners are learner-facing German, like
+ * authored Knowledge definitions.
  *
  * Article components carry the case the preposition governs in the fusion.
  * The article's Paradigm Cell also depends on the noun's gender (dem Wald,
@@ -273,6 +274,105 @@ export const germanClitics: readonly CliticEntry[] = [
 			"„'ner“ ist der verkürzte Artikel „einer“ (bei 'ner Freundin).",
 		register: "Colloquial",
 	},
+];
+
+/**
+ * Separable verb particles that take an infinitive's infixed zu, which is a
+ * piece of its own (de/fused-word-pieces): abzuspannen is ab, zu and
+ * spannen. Longer particles are tried first, so hinauszulaufen is hinaus,
+ * zu and laufen. `da` and `hin` are left out: dazugehören and hinzufügen
+ * are particle verbs on dazu and hinzu whose zu is no infix, and their own
+ * infixed forms (dazuzulernen, hinzuzufügen) are found through dazu and
+ * hinzu.
+ */
+export const germanInfixParticles: readonly string[] = [
+	"ab",
+	"an",
+	"auf",
+	"aus",
+	"auseinander",
+	"bei",
+	"beiseite",
+	"bekannt",
+	"bereit",
+	"dabei",
+	"dagegen",
+	"daher",
+	"dahin",
+	"daneben",
+	"dar",
+	"davon",
+	"dazu",
+	"dazwischen",
+	"durch",
+	"ein",
+	"empor",
+	"entgegen",
+	"entlang",
+	"fehl",
+	"fertig",
+	"fest",
+	"fort",
+	"fern",
+	"frei",
+	"gegenüber",
+	"gut",
+	"heim",
+	"her",
+	"herab",
+	"heran",
+	"herauf",
+	"heraus",
+	"herbei",
+	"herein",
+	"herüber",
+	"herum",
+	"herunter",
+	"hervor",
+	"hinab",
+	"hinauf",
+	"hinaus",
+	"hinein",
+	"hinüber",
+	"hinunter",
+	"hinweg",
+	"hinzu",
+	"hoch",
+	"irre",
+	"kennen",
+	"klar",
+	"kund",
+	"leer",
+	"los",
+	"mit",
+	"nach",
+	"nahe",
+	"nieder",
+	"offen",
+	"preis",
+	"sicher",
+	"spazieren",
+	"statt",
+	"stand",
+	"teil",
+	"um",
+	"unter",
+	"vor",
+	"voran",
+	"voraus",
+	"vorbei",
+	"vorüber",
+	"voll",
+	"wahr",
+	"weg",
+	"weiter",
+	"wider",
+	"wieder",
+	"zu",
+	"zurecht",
+	"zurück",
+	"zusammen",
+	"zuvor",
 ];
 
 const abbreviation = (

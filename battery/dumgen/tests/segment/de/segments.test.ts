@@ -6,6 +6,7 @@ import {
 	prepareGermanSegments,
 	resolveGermanSegments,
 	segmentGermanSentence,
+	writtenGermanSegments,
 } from "../../../src/segment/de/segments.js";
 import { validateFusionTable } from "../../../src/segment/fusion-table.js";
 import { stitchedText } from "../../../src/segment/stitched-text.js";
@@ -74,7 +75,7 @@ test("a Sentence with no ambiguous run makes no call, and its Segments give back
 	);
 });
 
-test("one request distinguishes fused Am from unsplit superlative am by occurrence", async () => {
+test("fused Am is asked while am before a superlative with no noun after it is code's, one Segment", async () => {
 	const text = "Am Fenster ist es am schönsten.";
 	const prepared = prepareGermanSegments(text);
 	let calls = 0;
@@ -82,10 +83,8 @@ test("one request distinguishes fused Am from unsplit superlative am by occurren
 		calls++;
 		expect(request.stage).toBe("segments");
 		expect(request.state).toEqual(prepared.state);
-		expect(Object.keys(request.questions)).toHaveLength(2);
-		return choose(prepared, (_text, start) =>
-			start === 0 ? "Fusion" : "AsWritten",
-		);
+		expect(Object.keys(request.questions)).toEqual(["source_0"]);
+		return choose(prepared, () => "Fusion");
 	});
 	expect(calls).toBe(1);
 	expect(
@@ -214,9 +213,9 @@ test("unsupported recovery abstains while an intact apostrophe name keeps its sp
 });
 
 test("a weak or out-of-plan answer keeps the whole written run unresolved with no retry", () => {
-	const prepared = prepareGermanSegments("am Fenster");
+	const prepared = prepareGermanSegments("z.B. hier");
 	for (const answers of [
-		choose(prepared, () => "Fusion", 0.6),
+		choose(prepared, () => "Expansion0", 0.6),
 		choose(prepared, () => "Invented"),
 	]) {
 		const { segments, unresolved } = resolveGermanSegments(
@@ -224,8 +223,214 @@ test("a weak or out-of-plan answer keeps the whole written run unresolved with n
 			answers,
 		);
 		expect(unresolved).toEqual([0]);
-		expect(segments[0]).toEqual({ kind: "ResolvableText", text: "am" });
+		expect(segments[0]).toEqual({ kind: "ResolvableText", text: "z.B." });
 	}
+});
+
+test("a fused word splits unless jev confidently keeps it whole (de/fused-word-pieces)", () => {
+	const prepared = prepareGermanSegments("Im Chat stand es");
+	const split = [
+		{ kind: "ResolvableText" as const, text: "I", surface: "in" },
+		{ kind: "ResolvableText" as const, text: "m", surface: "dem" },
+	];
+	for (const answers of [
+		choose(prepared, () => "Fusion", 0.55),
+		choose(prepared, () => "AsWritten", 0.55),
+		choose(prepared, () => "Unresolved"),
+		choose(prepared, () => "Invented"),
+	]) {
+		const { segments, unresolved } = resolveGermanSegments(
+			prepared,
+			answers,
+		);
+		expect(unresolved).toEqual([]);
+		expect(segments.slice(0, 2)).toEqual(split);
+	}
+	const kept = resolveGermanSegments(
+		prepared,
+		choose(prepared, () => "AsWritten", 0.8),
+	);
+	expect(kept.segments[0]).toEqual({ kind: "ResolvableText", text: "Im" });
+	expect(kept.unresolved).toEqual([]);
+});
+
+test("without jev, a fused word keeps its spelling and is listed unresolved", () => {
+	const { segments, unresolved } = writtenGermanSegments(
+		"Er ist im Wald und versucht abzuspannen.",
+	);
+	expect(segments[4]).toEqual({ kind: "ResolvableText", text: "im" });
+	expect(unresolved).toEqual([4]);
+	expect(segments).toContainEqual({
+		kind: "ResolvableText",
+		text: "spannen",
+		surface: "spannen",
+	});
+});
+
+const resolvable = (text: string) =>
+	resolveGermanSegments(prepareGermanSegments(text), {}).segments.filter(
+		({ kind }) => kind !== "Whitespace",
+	);
+
+test("am stays one Segment before a superlative with no noun after it, and is asked before one that may have a noun", () => {
+	for (const [text, asked] of [
+		["Wer steht am nächsten?", false],
+		["Mina reist am liebsten im Frühling.", false],
+		[
+			"Ihnen kann es keiner recht machen und am wenigsten die Kinder.",
+			false,
+		],
+		["Sie lacht am besten, glaub mir.", false],
+		["Am nächsten Morgen kam er.", true],
+		["Er wohnt am höchsten gelegenen Punkt.", true],
+		["Wir treffen uns am ersten.", true],
+		["I am fine, sagte er.", true],
+	] as const) {
+		const prepared = prepareGermanSegments(text);
+		const written = Object.values(
+			prepared.state.written as Record<string, string>,
+		);
+		expect(written.filter((word) => /^am$/iu.test(word))).toHaveLength(
+			asked ? 1 : 0,
+		);
+	}
+	expect(resolvable("Wer steht am nächsten?")).toContainEqual({
+		kind: "ResolvableText",
+		text: "am",
+	});
+});
+
+test("an infinitive's infixed zu is a piece, decided by code (de/fused-word-pieces)", async () => {
+	const sentence = await segmentGermanSentence(
+		"Er fing an, abzuspannen, hinauszulaufen und hinzuzufügen.",
+		noCall,
+	);
+	const pieces = sentence.segments.filter(
+		({ kind }) => kind === "ResolvableText",
+	);
+	const infixed = (...texts: string[]) =>
+		texts.map((text) => ({
+			kind: "ResolvableText" as const,
+			text,
+			surface: text,
+		}));
+	expect(pieces.slice(3)).toEqual([
+		...infixed("ab", "zu", "spannen", "hinaus", "zu", "laufen"),
+		{ kind: "ResolvableText", text: "und" },
+		...infixed("hinzu", "zu", "fügen"),
+	]);
+	for (const whole of [
+		"die auszubildenden Lehrlinge",
+		"die anzuwendenden Regeln",
+		"die Wolle abzupfen",
+		"wird dazugehören",
+		"wird hinzufügen",
+		"abzugsfähigen Aufwand",
+		"Abzuspannen ist schwer",
+	])
+		expect(resolvable(whole).map(({ text }) => text)).toEqual(
+			whole.split(" "),
+		);
+});
+
+test("a short word's period inside the Sentence is its own: K., u., aff.", () => {
+	expect(
+		resolvable(
+			"K. wartete, Josef K. kam, Brot u. Käse, mit aff. abgekürzt.",
+		),
+	).toEqual([
+		{ kind: "ResolvableText", text: "K." },
+		{ kind: "ResolvableText", text: "wartete" },
+		{ kind: "Punctuation", text: "," },
+		{ kind: "ResolvableText", text: "Josef" },
+		{ kind: "ResolvableText", text: "K." },
+		{ kind: "ResolvableText", text: "kam" },
+		{ kind: "Punctuation", text: "," },
+		{ kind: "ResolvableText", text: "Brot" },
+		{ kind: "ResolvableText", text: "u." },
+		{ kind: "ResolvableText", text: "Käse" },
+		{ kind: "Punctuation", text: "," },
+		{ kind: "ResolvableText", text: "mit" },
+		{ kind: "ResolvableText", text: "aff." },
+		{ kind: "ResolvableText", text: "abgekürzt" },
+		{ kind: "Punctuation", text: "." },
+	]);
+	expect(resolvable("Das sagte Josef K.").slice(-2)).toEqual([
+		{ kind: "ResolvableText", text: "K" },
+		{ kind: "Punctuation", text: "." },
+	]);
+	expect(resolvable("Er wartet. Dann geht er.")[1]).toEqual({
+		kind: "ResolvableText",
+		text: "wartet",
+	});
+});
+
+test("a sign that stands for a word is clickable, alone or repeated; an emoji is not", () => {
+	const segments = resolvable(
+		"Ein © und ® vor № und ※ oder ٪ und ﹪, ein *, §§ und ‰‰, 10–12, fünf µm, mit ;-) und 😀.",
+	);
+	for (const text of [
+		"©",
+		"®",
+		"№",
+		"※",
+		"٪",
+		"﹪",
+		"*",
+		"§§",
+		"‰‰",
+		"–",
+		"µ",
+		"m",
+		";-)",
+	])
+		expect(segments).toContainEqual({ kind: "ResolvableText", text });
+	expect(segments).toContainEqual({ kind: "OpaqueText", text: "😀" });
+	expect(resolvable("Lehrer*innen und Berlin – Hamburg")).toEqual([
+		{ kind: "ResolvableText", text: "Lehrer" },
+		{ kind: "Punctuation", text: "*" },
+		{ kind: "ResolvableText", text: "innen" },
+		{ kind: "ResolvableText", text: "und" },
+		{ kind: "ResolvableText", text: "Berlin" },
+		{ kind: "Punctuation", text: "–" },
+		{ kind: "ResolvableText", text: "Hamburg" },
+	]);
+});
+
+test("three full stops are one ellipsis mark; other marks stay one per Segment", () => {
+	expect(resolvable("Er ruhte aus ...").slice(-1)).toEqual([
+		{ kind: "Punctuation", text: "..." },
+	]);
+	expect(resolvable("Was nun…?").slice(-2)).toEqual([
+		{ kind: "Punctuation", text: "…" },
+		{ kind: "Punctuation", text: "?" },
+	]);
+});
+
+test("a clitic's host is a piece standing for itself, a Sentence's opening capital aside", async () => {
+	const text = "Das Radio? Geht's wieder, wie geht's?";
+	const sentence = await segmentGermanSentence(text, async (request) =>
+		choose(
+			prepareGermanSegments(String(request.state.sentence)),
+			() => "Clitic0",
+		),
+	);
+	const pieces = sentence.segments.filter(
+		({ kind }) => kind === "ResolvableText",
+	);
+	expect(pieces).toContainEqual({
+		kind: "ResolvableText",
+		text: "Geht",
+		surface: "geht",
+	});
+	expect(pieces).toContainEqual({
+		kind: "ResolvableText",
+		text: "geht",
+		surface: "geht",
+	});
+	expect(
+		pieces.filter(({ text, surface }) => text === "'s" && surface === "es"),
+	).toHaveLength(2);
 });
 
 test("scanning keeps render kinds and whitespace as given; stitching is the caller's", () => {

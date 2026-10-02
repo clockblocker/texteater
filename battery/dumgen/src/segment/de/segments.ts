@@ -7,10 +7,18 @@
  * among them. Every other run needs no question, and a Sentence with none
  * makes no call.
  *
+ * Code decides where a dumspec Rule does: an infinitive's infixed zu is a
+ * piece (abzuspannen, de/fused-word-pieces), am before a superlative with
+ * no noun after it stays one Segment (am besten), a period inside the
+ * Sentence that ends a short word is the abbreviation's own (K., u.,
+ * de/abbreviation-is-one-segment), and a sign that stands for a word (%,
+ * §§, ©, ※, ;-)) is clickable.
+ *
  * No gold boundary, generated text or language parser enters the request,
  * and there is no stitching question and no language judge. Matching the
  * table is evidence, not interpretation: `Im` can be a name and `I'm` a
- * Foreign word in a German Sentence.
+ * Foreign word in a German Sentence. A fused word splits unless jev
+ * confidently keeps it whole, though: the Rule makes the split the norm.
  */
 import type { EntryType, Questions } from "promptsmith/typesafe";
 import { type Answers, type Ask, askAny, choice, choiceOf } from "../ask.js";
@@ -24,7 +32,7 @@ import {
 } from "../fusion-table.js";
 import type { Segment } from "../segmented-sentence.js";
 import { stitchedText } from "../stitched-text.js";
-import { germanFusionTable } from "./fusion-entries.js";
+import { germanFusionTable, germanInfixParticles } from "./fusion-entries.js";
 
 /** One complete way to cut a written run into Segments and recover them. */
 type Plan = {
@@ -39,6 +47,11 @@ type Run = {
 	readonly end: number;
 	readonly text: string;
 	readonly plans: readonly Plan[];
+	/**
+	 * The plan a weak, out-of-plan or Unresolved answer gets. Without one,
+	 * such an answer keeps the run's spelling and lists it unresolved.
+	 */
+	readonly fallback?: Plan;
 };
 
 /** The scanned runs and the one request that settles the ambiguous ones. */
@@ -70,8 +83,25 @@ const word = /^[\p{L}\p{M}\p{N}]+(?:[-‐‑'’‘´`][\p{L}\p{M}\p{N}]+)*[-‐
 const abbreviation = /^(?:\p{L}\.){2,}|^\p{L}\.(?: \p{L}\.)+/u;
 const number = /^\p{N}+(?:[,.]\p{N}+)+/u;
 const apostrophe = /['’‘´`]/u;
-const mathematicalOrCurrencySymbol = /^[\p{Sm}\p{Sc}]/u;
-const standaloneSign = /^[%‰‱§&@#°†‡](?=\s|$|\p{P})/u;
+/** The ellipsis written as three full stops is one mark, as … is. */
+const ellipsis = /^\.{3}/u;
+const mathematicalOrCurrencySymbol = /^([\p{Sm}\p{Sc}])\1*/u;
+/**
+ * A sign that stands for a word, alone or repeated (§§, ‰‰), before a
+ * space, a mark or the end; `*` inside a word (Lehrer*innen) stays a mark.
+ */
+const standaloneSign = /^([%‰‱§&@#°†‡*※٪﹪％¶⁂])\1*(?=\s|$|\p{P}|\p{S})/u;
+/** A Unicode symbol such as © ® №, unless it is an emoji. */
+const otherSymbol = /^\p{So}$/u;
+const emoji = /\p{Emoji_Presentation}|\u{FE0F}|\u{200D}/u;
+/** The micro sign µ (U+00B5) prefixes a unit (µm) and is a sign of its own. */
+const microSign = /^µ(?=\p{L})/u;
+/** A dash right between two digits reads bis (10–12). */
+const rangeDash = /^[–—]/u;
+/** A Western emoticon, standing apart: ;-) :) :-( :D. */
+const emoticon = /^[:;][-']?[()DPp](?=\s|$|[.,!?…])/u;
+/** A word of letters only, the shape a dotted short abbreviation has. */
+const letters = /^\p{L}+$/u;
 
 const spelled = (text: string, surface?: string): Segment => ({
 	kind: "ResolvableText",
@@ -89,7 +119,112 @@ const whole = (text: string): Plan => ({
 		"One intact word, name, initialism, literal spelling or Foreign word as written, with no German Fusion or shortened spelling to expand",
 });
 
-function plansFor(text: string): readonly Plan[] {
+/** Where a run stands in its Sentence: the text before and after it. */
+type Context = { readonly before: string; readonly after: string };
+
+/** The run opens a Sentence: nothing but opening marks since the last end. */
+const opensSentence = (before: string) =>
+	/(?:^|[.!?…:])[\s„"‚'»«“‘(\]]*$/u.test(before);
+
+/**
+ * The first word after a run, and what follows that word, or undefined
+ * when a mark or the end comes first.
+ */
+function nextWord(after: string) {
+	const found = after.match(/^ ([\p{L}\p{M}]+)/u);
+	if (!found?.[1]) return undefined;
+	return { word: found[1], after: after.slice(found[0].length) };
+}
+
+/** Ordinals that end like a superlative: am ersten, am zwanzigsten. */
+const ordinalSten =
+	/^(?:er|.*(?:zig|ßig|hundert|tausend|million|milliard))sten$/u;
+/** An inflected adjective that may stand between a superlative and its noun. */
+const adjectiveEnding = /^\p{Ll}{3,}(?:e|en|em|er|es)$/u;
+/** A determiner opens a noun phrase of its own, never one a superlative is in. */
+const determiner =
+	/^(?:ein|kein|mein|dein|sein|ihr|unser|euer|eur|dies|jen|jed|all|manch|welch|solch)(?:e|en|em|er|es)?$/u;
+const capitalized = /^\p{Lu}/u;
+
+/**
+ * `am` before a superlative with no noun after it is one Segment
+ * (de/fused-word-pieces): am besten, am meisten, am liebsten im Frühling.
+ * A capitalized word after the superlative, or an inflected adjective and
+ * then one, may be its noun (am nächsten Morgen, am höchsten gelegenen
+ * Punkt), so the run stays a question.
+ */
+function amBeforeSuperlative(after: string): boolean {
+	const superlative = nextWord(after);
+	if (
+		!superlative ||
+		!/^\p{Ll}+sten$/u.test(superlative.word) ||
+		ordinalSten.test(superlative.word)
+	)
+		return false;
+	const following = nextWord(superlative.after);
+	if (!following) return true;
+	if (capitalized.test(following.word)) return false;
+	if (
+		!adjectiveEnding.test(following.word) ||
+		determiner.test(following.word)
+	)
+		return true;
+	const third = nextWord(following.after);
+	return !third || !capitalized.test(third.word);
+}
+
+/** The separable particles, longest first (hinaus before hin…). */
+const infixParticles = [...germanInfixParticles].sort(
+	(a, b) => b.length - a.length,
+);
+
+/**
+ * An infinitive's infixed zu as its three pieces, each standing for
+ * itself (de/fused-word-pieces, de/bare-infinitive-zu): abzuspannen is ab,
+ * zu and spannen. The word must be lowercase, open with a separable
+ * particle and zu, and end in a stem with a vowel and an infinitive's n; a
+ * gerundive (auszubildenden) or a word on Zug (abzugsfähigen) is no
+ * infinitive and stays whole.
+ */
+function infixedZuPieces(text: string): readonly string[] | undefined {
+	if (!/^\p{Ll}+$/u.test(text)) return undefined;
+	for (const particle of infixParticles) {
+		if (!text.startsWith(`${particle}zu`)) continue;
+		const stem = text.slice(particle.length + 2);
+		if (stem.length < 3 || !stem.endsWith("n")) continue;
+		if (!/[aeiouäöüy]/u.test(stem.replace(/(?:e|er|el)?n$/u, ""))) continue;
+		if (/^g[^aeiouäöülnr]/u.test(stem)) continue;
+		const participle = stem.match(/^(.+)den$/u)?.[1];
+		if (
+			participle &&
+			/(?:e|er|el)n$/u.test(participle) &&
+			/[aeiouäöüy]/u.test(participle.replace(/(?:e|er|el)n$/u, ""))
+		)
+			continue;
+		return [particle, "zu", stem];
+	}
+	return undefined;
+}
+
+/**
+ * A short word whose period, inside the Sentence, is its own: a single
+ * letter before another word or a numeral (K. wartete, u. Käse, S. 12),
+ * or any word before a lowercase one, which no Sentence opens with (aff.
+ * abgekürzt). The abbreviation is one Segment with its period
+ * (de/abbreviation-is-one-segment).
+ */
+function dottedShortWord(found: string, rest: string): string | undefined {
+	if (!letters.test(found)) return undefined;
+	const after = rest.slice(found.length);
+	if (!/^\.\s+/u.test(after) || ellipsis.test(after)) return undefined;
+	const next = after.replace(/^\.\s+/u, "");
+	const single = Array.from(found).length === 1;
+	return (single && /^[\p{L}\p{N}]/u.test(next)) || /^\p{Ll}/u.test(next)
+		? `${found}.`
+		: undefined;
+}
+
+function plansFor(text: string, context: Context): readonly Plan[] {
 	const fusion = fusedWordSegments(germanFusionTable, text);
 	if (fusion) {
 		const plan: Plan = {
@@ -98,7 +233,8 @@ function plansFor(text: string): readonly Plan[] {
 			description:
 				"The German written word holds a preposition and its article",
 		};
-		if (text.toLowerCase() === "am")
+		if (text.toLowerCase() === "am") {
+			if (amBeforeSuperlative(context.after)) return [whole(text)];
 			return [
 				plan,
 				{
@@ -107,10 +243,22 @@ function plansFor(text: string): readonly Plan[] {
 						"am marks a superlative degree with no noun after the superlative (am schönsten, am liebsten), or is an intact name, literal spelling or Foreign word; it stands for no German preposition or article",
 				},
 			];
+		}
 		// A table entry supplies a possible German recovery; its spelling alone
 		// cannot exclude a name, literal mention or Foreign interpretation.
 		return [plan, whole(text)];
 	}
+
+	const infixed = infixedZuPieces(text);
+	if (infixed)
+		return [
+			{
+				key: "InfixedZu",
+				segments: infixed.map((piece) => spelled(piece, piece)),
+				description:
+					"An infinitive with its infixed zu: particle, zu and stem",
+			},
+		];
 
 	const abbreviated = abbreviationEntry(germanFusionTable, text);
 	if (abbreviated)
@@ -130,11 +278,19 @@ function plansFor(text: string): readonly Plan[] {
 	if (shortened) {
 		const host = attached ? text.slice(0, attached.host.length) : undefined;
 		const suffix = host === undefined ? text : text.slice(host.length);
+		// A host is a piece of its fused word and stands for itself, a
+		// Sentence's opening capital aside (Geht's is geht and 's).
+		const hostSurface =
+			host !== undefined &&
+			opensSentence(context.before) &&
+			/^\p{Lu}\p{Ll}*$/u.test(host)
+				? host.charAt(0).toLocaleLowerCase("de") + host.slice(1)
+				: host;
 		const plans = values(shortened.surface).map(
 			(surface, index): Plan => ({
 				key: `Clitic${index}`,
 				segments: [
-					...(host === undefined ? [] : [spelled(host)]),
+					...(host === undefined ? [] : [spelled(host, hostSurface)]),
 					spelled(suffix, surface),
 				],
 				description: `The shortened part ${suffix} stands for ${surface}`,
@@ -146,6 +302,44 @@ function plansFor(text: string): readonly Plan[] {
 	}
 
 	return [whole(text)];
+}
+
+/** The next written run of `text` at `start`, and its render kind. */
+function scan(
+	text: string,
+	start: number,
+): { readonly source: string; readonly kind: Segment["kind"] } {
+	const rest = text.slice(start);
+	const whitespace = rest.match(/^\s+/u)?.[0];
+	if (whitespace) return { source: whitespace, kind: "Whitespace" };
+	const dots = rest.match(ellipsis)?.[0];
+	if (dots) return { source: dots, kind: "Punctuation" };
+	const before = text.slice(0, start);
+	const grapheme =
+		graphemes.segment(rest)[Symbol.iterator]().next().value?.segment ?? "";
+	const found = rest.match(word)?.[0];
+	const resolvable =
+		leadingAbbreviation(germanFusionTable, rest) ??
+		rest.match(abbreviation)?.[0] ??
+		leadingFreeClitic(germanFusionTable, rest) ??
+		rest.match(number)?.[0] ??
+		(/(?:^|\s)$/u.test(before) ? rest.match(emoticon)?.[0] : undefined) ??
+		(/\p{N}$/u.test(before) && /^.\p{N}/u.test(rest)
+			? rest.match(rangeDash)?.[0]
+			: undefined) ??
+		rest.match(microSign)?.[0] ??
+		rest.match(mathematicalOrCurrencySymbol)?.[0] ??
+		rest.match(standaloneSign)?.[0] ??
+		(otherSymbol.test(grapheme) && !emoji.test(grapheme)
+			? grapheme
+			: undefined) ??
+		(found ? (dottedShortWord(found, rest) ?? found) : undefined);
+	if (resolvable) return { source: resolvable, kind: "ResolvableText" };
+	if (!grapheme) throw Error("Cannot scan a non-empty remainder");
+	return {
+		source: grapheme,
+		kind: /^\p{P}/u.test(grapheme) ? "Punctuation" : "OpaqueText",
+	};
 }
 
 /**
@@ -160,33 +354,14 @@ export function prepareGermanSegments(text: string): PreparedSegments {
 	const written: Record<string, string> = {};
 	let start = 0;
 	while (start < text.length) {
-		const rest = text.slice(start);
-		const whitespace = rest.match(/^\s+/u)?.[0];
-		const candidate =
-			whitespace ??
-			leadingAbbreviation(germanFusionTable, rest) ??
-			rest.match(abbreviation)?.[0] ??
-			leadingFreeClitic(germanFusionTable, rest) ??
-			rest.match(number)?.[0] ??
-			rest.match(mathematicalOrCurrencySymbol)?.[0] ??
-			rest.match(standaloneSign)?.[0] ??
-			rest.match(word)?.[0];
-		const grapheme = graphemes
-			.segment(rest)
-			[Symbol.iterator]()
-			.next().value;
-		const source = candidate ?? grapheme?.segment;
-		if (!source) throw Error("Cannot scan a non-empty remainder");
-		const kind = whitespace
-			? "Whitespace"
-			: candidate
-				? "ResolvableText"
-				: /^\p{P}/u.test(source)
-					? "Punctuation"
-					: "OpaqueText";
+		const { source, kind } = scan(text, start);
+		const end = start + source.length;
 		const plans: readonly Plan[] =
 			kind === "ResolvableText"
-				? plansFor(source)
+				? plansFor(source, {
+						before: text.slice(0, start),
+						after: text.slice(end),
+					})
 				: [
 						{
 							key: "AsWritten",
@@ -194,11 +369,13 @@ export function prepareGermanSegments(text: string): PreparedSegments {
 							description: kind,
 						},
 					];
+		const fallback = plans.find(({ key }) => key === "Fusion");
 		const run: Run = {
 			start,
-			end: start + source.length,
+			end,
 			text: source,
 			plans,
+			...(fallback ? { fallback } : {}),
 		};
 		const index = runs.length;
 		runs.push(run);
@@ -231,30 +408,23 @@ export function prepareGermanSegments(text: string): PreparedSegments {
 				},
 			);
 		}
-		start = run.end;
+		start = end;
 	}
 	return { text, runs, questions, state: { sentence: text, written } };
 }
 
 /**
- * Applies the plan each answer chose. A share under the floor, an unknown
- * plan or `Unresolved` keeps the whole written run, with no retry.
+ * The Segments of the prepared runs, each run cut by `planOf`; a run it
+ * gives no plan keeps its spelling and is listed unresolved.
  */
-export function resolveGermanSegments(
+function assemble(
 	prepared: PreparedSegments,
-	answers: Answers,
+	planOf: (run: Run, index: number) => Plan | undefined,
 ): GermanSegmentation {
 	const segments: Segment[] = [];
 	const unresolved: number[] = [];
 	for (const [index, run] of prepared.runs.entries()) {
-		let plan = run.plans[0];
-		if (`source_${index}` in prepared.questions) {
-			const answer = choiceOf(answers, `source_${index}`);
-			plan =
-				(answer.probabilities[answer.choice] ?? 0) >= planFloor
-					? run.plans.find(({ key }) => key === answer.choice)
-					: undefined;
-		}
+		let plan = planOf(run, index);
 		if (!plan) {
 			unresolved.push(segments.length);
 			plan = whole(run.text);
@@ -264,6 +434,26 @@ export function resolveGermanSegments(
 		segments.push(...plan.segments);
 	}
 	return { language: "de", text: prepared.text, segments, unresolved };
+}
+
+/**
+ * Applies the plan each answer chose. A share under the floor, an unknown
+ * plan or `Unresolved` gives the run its fallback, a fused word's split,
+ * or else keeps the whole written run, with no retry.
+ */
+export function resolveGermanSegments(
+	prepared: PreparedSegments,
+	answers: Answers,
+): GermanSegmentation {
+	return assemble(prepared, (run, index) => {
+		if (!(`source_${index}` in prepared.questions)) return run.plans[0];
+		const answer = choiceOf(answers, `source_${index}`);
+		const chosen =
+			(answer.probabilities[answer.choice] ?? 0) >= planFloor
+				? run.plans.find(({ key }) => key === answer.choice)
+				: undefined;
+		return chosen ?? run.fallback;
+	});
 }
 
 /**
@@ -285,21 +475,12 @@ export async function segmentGermanSentence(
 
 /**
  * The Segments code alone gives one German Sentence, for when jev cannot
- * be asked: every written run keeps its spelling, and each run a question
- * would have settled is listed unresolved.
+ * be asked: every run a question would have settled keeps its spelling
+ * and is listed unresolved, a fused word included.
  */
 export function writtenGermanSegments(sentence: string): GermanSegmentation {
 	const prepared = prepareGermanSegments(stitchedText(sentence));
-	const unsettled: Answers = Object.fromEntries(
-		Object.keys(prepared.questions).map((id) => [
-			id,
-			{
-				type: "choice",
-				choice: "Unresolved",
-				confidence: 1,
-				probabilities: { Unresolved: 1 },
-			},
-		]),
+	return assemble(prepared, (run, index) =>
+		`source_${index}` in prepared.questions ? undefined : run.plans[0],
 	);
-	return resolveGermanSegments(prepared, unsettled);
 }
