@@ -570,8 +570,7 @@
 						"kind": "ADV",
 						"canonicalForm": "nie",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Neg"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "nie",
@@ -611,8 +610,7 @@
 						"kind": "ADV",
 						"canonicalForm": "darauf",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "darauf",

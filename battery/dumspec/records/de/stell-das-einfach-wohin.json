@@ -43,8 +43,7 @@
 						"kind": "ADV",
 						"canonicalForm": "irgendwohin",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Ind"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "irgendwohin",

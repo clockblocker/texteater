@@ -598,8 +598,7 @@
 						"kind": "ADV",
 						"canonicalForm": "vorher",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -881,8 +880,7 @@
 						"kind": "ADV",
 						"canonicalForm": "daran",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null

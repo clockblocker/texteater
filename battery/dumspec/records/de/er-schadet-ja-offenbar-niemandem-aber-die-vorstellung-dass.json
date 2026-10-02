@@ -462,8 +462,7 @@
 						"kind": "ADV",
 						"canonicalForm": "offenbar",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -789,8 +788,7 @@
 						"kind": "ADV",
 						"canonicalForm": "auch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -831,8 +829,7 @@
 						"kind": "ADV",
 						"canonicalForm": "noch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -1143,8 +1140,7 @@
 						"kind": "ADV",
 						"canonicalForm": "fast",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null

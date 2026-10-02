@@ -513,10 +513,7 @@ export interface UnitMap {
 			family: "Lexeme";
 			kind: "ADV";
 			canonicalForm: string;
-			coreFeatures: {
-				comparable: "Yes" | null;
-				pronType: ("Dem" | "Ind" | "Neg") | null;
-			};
+			coreFeatures: { comparable: "Yes" | null };
 		};
 		Surface: {
 			unitKind: "Surface";
@@ -527,10 +524,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "ADV";
 				canonicalForm: string;
-				coreFeatures: {
-					comparable: "Yes" | null;
-					pronType: ("Dem" | "Ind" | "Neg") | null;
-				};
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			normalizedSurface: string;
 			spelling:
@@ -565,10 +559,7 @@ export interface UnitMap {
 				family: "Lexeme";
 				kind: "ADV";
 				canonicalForm: string;
-				coreFeatures: {
-					comparable: "Yes" | null;
-					pronType: ("Dem" | "Ind" | "Neg") | null;
-				};
+				coreFeatures: { comparable: "Yes" | null };
 			};
 			emojiDescription: string;
 		};
@@ -583,10 +574,7 @@ export interface UnitMap {
 					family: "Lexeme";
 					kind: "ADV";
 					canonicalForm: string;
-					coreFeatures: {
-						comparable: "Yes" | null;
-						pronType: ("Dem" | "Ind" | "Neg") | null;
-					};
+					coreFeatures: { comparable: "Yes" | null };
 				};
 				normalizedSurface: string;
 				spelling:

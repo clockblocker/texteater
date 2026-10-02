@@ -47,7 +47,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "viel is used adverbially, so it is the comparable ADV viel with no pronType, and the explicit degree contrast makes its Surface Pos (de/quantifier-by-use, de/comparability-is-lexical). Adverbial viel 'a lot' takes the 🔢 of DET viel, and DWDS viel II.1 'häufig, oft' (viel spazieren gehen) is merged into it under ADR 0031."
+				"rationale": "viel is used adverbially, so it is the comparable ADV viel, and the explicit degree contrast makes its Surface Pos (de/quantifier-by-use, de/comparability-is-lexical). Adverbial viel 'a lot' takes the 🔢 of DET viel, and DWDS viel II.1 'häufig, oft' (viel spazieren gehen) is merged into it under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -61,8 +61,7 @@
 						"kind": "ADV",
 						"canonicalForm": "viel",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"pronType": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "viel",

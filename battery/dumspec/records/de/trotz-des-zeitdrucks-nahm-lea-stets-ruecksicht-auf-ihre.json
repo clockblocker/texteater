@@ -246,8 +246,7 @@
 						"kind": "ADV",
 						"canonicalForm": "stets",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "stets",

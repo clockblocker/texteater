@@ -44,8 +44,7 @@
 						"kind": "ADV",
 						"canonicalForm": "davor",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "davor",

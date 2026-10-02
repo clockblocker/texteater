@@ -42,8 +42,7 @@
 						"kind": "ADV",
 						"canonicalForm": "warum",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "warum",

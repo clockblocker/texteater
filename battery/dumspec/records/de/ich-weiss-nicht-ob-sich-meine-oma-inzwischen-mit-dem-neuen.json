@@ -547,8 +547,7 @@
 						"kind": "ADV",
 						"canonicalForm": "inzwischen",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "inzwischen",

@@ -808,14 +808,8 @@ describe("the German authored inventory", () => {
 			"weswegen",
 		];
 		for (const text of whAdverbs) {
-			expect(
-				new Set(
-					readingsOf(text).map(({ lemma }) =>
-						field(lemma.coreFeatures, "pronType"),
-					),
-				),
-				text,
-			).toEqual(new Set([null]));
+			for (const { lemma } of readingsOf(text))
+				expect(lemma.coreFeatures, text).toEqual({ comparable: null });
 			expect(
 				new Set(
 					readingsOf(text).map(
@@ -842,13 +836,13 @@ describe("the German authored inventory", () => {
 			synonym: [
 				expect.objectContaining({
 					canonicalForm: "warum",
-					coreFeatures: expect.objectContaining({ pronType: null }),
+					coreFeatures: { comparable: null },
 				}),
 			],
 		});
 	});
 
-	test("authors each irgend- adverb as one Ind ADV with one Reading", () => {
+	test("authors each irgend- adverb as one ADV with one ❔ Reading", () => {
 		for (const text of [
 			"irgendwo",
 			"irgendwohin",
@@ -860,61 +854,92 @@ describe("the German authored inventory", () => {
 			expect(
 				authoredMembers
 					.filter(({ lemma }) => lemma.canonicalForm === text)
-					.map(({ lemma }) => [
-						lemma.kind,
-						field(lemma.coreFeatures, "pronType"),
-					]),
-				text,
-			).toEqual([["ADV", "Ind"]]);
-	});
-
-	test("authors nie and niemals as one Neg ADV with one Reading, niemals a synonym of nie", () => {
-		for (const text of ["nie", "niemals"])
-			expect(
-				authoredMembers
-					.filter(({ lemma }) => lemma.canonicalForm === text)
 					.map(({ lemma, reading }) => [
 						lemma.kind,
-						field(lemma.coreFeatures, "comparable"),
-						field(lemma.coreFeatures, "pronType"),
-						reading.emojiDescription,
+						lemma.coreFeatures,
+						[...reading.emojiDescription][0],
 					]),
 				text,
-			).toEqual([["ADV", null, "Neg", "🚫⏰"]]);
-		const relationsOf = (text: string) =>
-			authoredMembers.find(({ lemma }) => lemma.canonicalForm === text)
-				?.knowledge.semanticRelations;
-		expect(relationsOf("nie")).toBeUndefined();
-		expect(relationsOf("niemals")).toEqual({
-			synonym: [
-				expect.objectContaining({
-					canonicalForm: "nie",
-					coreFeatures: { comparable: null, pronType: "Neg" },
-				}),
-			],
-		});
+			).toEqual([["ADV", { comparable: null }, "❔"]]);
 	});
 
-	test("authors dahin, daher, hierhin and hierher as one Dem ADV with one Reading", () => {
+	test("authors the n-words nie, niemals, nirgends, nirgendwo and keineswegs as one ADV with one Reading", () => {
 		for (const [text, emoji] of [
-			["dahin", "🛬"],
-			["daher", "🛫"],
-			["hierhin", "🛬"],
-			["hierher", "🛫"],
+			["nie", "🚫⏰"],
+			["niemals", "🚫⏰"],
+			["nirgends", "🚫📍"],
+			["nirgendwo", "🚫📍"],
+			["keineswegs", "🙅"],
 		] as const)
 			expect(
 				authoredMembers
 					.filter(({ lemma }) => lemma.canonicalForm === text)
 					.map(({ lemma, reading }) => [
 						lemma.kind,
-						field(lemma.coreFeatures, "pronType"),
+						lemma.coreFeatures,
 						reading.emojiDescription,
 					]),
 				text,
-			).toEqual([["ADV", "Dem", emoji]]);
+			).toEqual([["ADV", { comparable: null }, emoji]]);
+		const relationsOf = (text: string) =>
+			authoredMembers.find(({ lemma }) => lemma.canonicalForm === text)
+				?.knowledge.semanticRelations;
+		for (const text of ["nie", "nirgends", "keineswegs"])
+			expect(relationsOf(text), text).toBeUndefined();
+		for (const [text, synonym] of [
+			["niemals", "nie"],
+			["nirgendwo", "nirgends"],
+		] as const)
+			expect(relationsOf(text), text).toEqual({
+				synonym: [
+					expect.objectContaining({
+						canonicalForm: synonym,
+						coreFeatures: { comparable: null },
+					}),
+				],
+			});
 	});
 
-	test("authors the her- and hin- adverbs as one ADV with no pronType and one Reading", () => {
+	test("authors the demonstratives da, hier, dort, dann and so with the Readings gold names", () => {
+		const readingsOf = (text: string) =>
+			authoredMembers
+				.filter(
+					({ lemma }) =>
+						lemma.kind === "ADV" && lemma.canonicalForm === text,
+				)
+				.map(({ lemma, reading }) => {
+					expect(lemma.coreFeatures).toEqual({ comparable: null });
+					return reading.emojiDescription;
+				});
+		expect(readingsOf("da")).toEqual(["📍", "🕰📍"]);
+		expect(readingsOf("hier")).toEqual(["📍"]);
+		expect(readingsOf("dort")).toEqual(["📍"]);
+		expect(readingsOf("dann")).toEqual(["⏭"]);
+		expect(readingsOf("so")).toEqual(["👉"]);
+	});
+
+	test("authors dahin, daher, hierhin, hierher, dorthin and dorther as one ADV with one Reading", () => {
+		for (const [text, emoji] of [
+			["dahin", "🛬"],
+			["daher", "🛫"],
+			["hierhin", "🛬"],
+			["hierher", "🛫"],
+			["dorthin", "🛬"],
+			["dorther", "🛫"],
+		] as const)
+			expect(
+				authoredMembers
+					.filter(({ lemma }) => lemma.canonicalForm === text)
+					.map(({ lemma, reading }) => [
+						lemma.kind,
+						lemma.coreFeatures,
+						reading.emojiDescription,
+					]),
+				text,
+			).toEqual([["ADV", { comparable: null }, emoji]]);
+	});
+
+	test("authors the her- and hin- adverbs as one ADV with no series marker and one Reading", () => {
 		for (const [text, emoji] of [
 			["heraus", "🐣"],
 			["hinaus", "🚪🏃"],
@@ -933,11 +958,11 @@ describe("the German authored inventory", () => {
 					.filter(({ lemma }) => lemma.canonicalForm === text)
 					.map(({ lemma, reading }) => [
 						lemma.kind,
-						field(lemma.coreFeatures, "pronType"),
+						lemma.coreFeatures,
 						reading.emojiDescription,
 					]),
 				text,
-			).toEqual([["ADV", null, emoji]]);
+			).toEqual([["ADV", { comparable: null }, emoji]]);
 	});
 
 	test("authors no colloquial r- adverb and no hinan", () => {

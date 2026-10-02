@@ -630,8 +630,7 @@
 						"kind": "ADV",
 						"canonicalForm": "noch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "noch",

@@ -306,8 +306,7 @@
 						"kind": "ADV",
 						"canonicalForm": "darüber",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "darüber",

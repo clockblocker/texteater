@@ -42,8 +42,7 @@
 						"kind": "ADV",
 						"canonicalForm": "allhier",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "allhier",

@@ -50,8 +50,7 @@
 						"kind": "ADV",
 						"canonicalForm": "selbst",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "selbst",

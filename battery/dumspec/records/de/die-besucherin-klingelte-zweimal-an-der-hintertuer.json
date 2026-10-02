@@ -41,8 +41,7 @@
 						"kind": "ADV",
 						"canonicalForm": "zweimal",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "zweimal",

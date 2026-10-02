@@ -112,8 +112,7 @@
 						"kind": "ADV",
 						"canonicalForm": "hinüber",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "hinüber",

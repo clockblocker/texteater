@@ -47,8 +47,7 @@
 						"kind": "ADV",
 						"canonicalForm": "hier",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "hier",

@@ -40,7 +40,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🧩🤔" },
 			"notes": {
-				"rationale": "weshalb names the reason inside its own clause, why die Fähre ausfällt, so it is a relative ADV (pronType Rel), antecedent or not."
+				"rationale": "weshalb names the reason inside its own clause, why die Fähre ausfällt, so it is the relative Reading of the ADV weshalb, antecedent or not."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -54,8 +54,7 @@
 						"kind": "ADV",
 						"canonicalForm": "weshalb",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "weshalb",

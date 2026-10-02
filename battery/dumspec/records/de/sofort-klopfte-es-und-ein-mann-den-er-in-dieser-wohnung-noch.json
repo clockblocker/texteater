@@ -222,8 +222,7 @@
 						"kind": "ADV",
 						"canonicalForm": "sofort",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "sofort",
@@ -644,8 +643,7 @@
 						"kind": "ADV",
 						"canonicalForm": "noch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "noch",
@@ -683,8 +681,7 @@
 						"kind": "ADV",
 						"canonicalForm": "niemals",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Neg"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "niemals",

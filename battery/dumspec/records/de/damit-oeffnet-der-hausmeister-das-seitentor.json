@@ -39,8 +39,7 @@
 						"kind": "ADV",
 						"canonicalForm": "damit",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "damit",

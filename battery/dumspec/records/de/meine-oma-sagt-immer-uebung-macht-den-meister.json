@@ -267,8 +267,7 @@
 						"kind": "ADV",
 						"canonicalForm": "immer",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "immer",

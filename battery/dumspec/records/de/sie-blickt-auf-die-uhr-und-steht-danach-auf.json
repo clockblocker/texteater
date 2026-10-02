@@ -312,8 +312,7 @@
 						"kind": "ADV",
 						"canonicalForm": "danach",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "danach",

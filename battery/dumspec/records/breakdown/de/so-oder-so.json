@@ -56,7 +56,7 @@
 						"canonicalForm": "so",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"coreFeatures": { "comparable": null, "pronType": null }
+						"coreFeatures": { "comparable": null }
 					},
 					"surfaceFeatures": null
 				}
@@ -106,7 +106,7 @@
 						"canonicalForm": "so",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"coreFeatures": { "comparable": null, "pronType": null }
+						"coreFeatures": { "comparable": null }
 					},
 					"surfaceFeatures": null
 				}

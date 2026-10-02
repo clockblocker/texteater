@@ -134,8 +134,7 @@
 						"kind": "ADV",
 						"canonicalForm": "heute",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "heute",

@@ -1,8 +1,6 @@
 import type * as Dumling from "dumling/types";
 import { type AuthoredMember, defineAuthoredMember } from "./member.js";
 
-type Core = Dumling.Lemma<"de", "Lexeme", "ADV">["coreFeatures"];
-
 /**
  * One preposition that forms pronominal adverbs. `vowel` inserts the linking r
  * after da and wo (daran, worauf); hier never takes it (hieran).
@@ -184,7 +182,10 @@ type Series = {
 	readonly prefix: string;
 	readonly linking: boolean;
 	readonly ipa: string;
-	readonly pronType: Core["pronType"];
+	/**
+	 * The series marker before the preposition's emoji. No Core feature
+	 * carries the series (system ADR 0029).
+	 */
 	readonly marker: string;
 	readonly definition: (form: string, preposition: string) => string;
 	readonly en: (preposition: Preposition) => readonly string[];
@@ -203,7 +204,6 @@ const series: readonly Series[] = [
 		prefix: "da",
 		linking: true,
 		ipa: "da",
-		pronType: "Dem",
 		marker: "",
 		definition: (form, preposition) =>
 			`„${form}“ ist ein Pronominaladverb aus „da“ und „${preposition}“. Es ersetzt „${preposition} + Sache“ (nicht Person) und verweist auf etwas zuvor Genanntes oder auf einen folgenden Nebensatz.`,
@@ -214,7 +214,6 @@ const series: readonly Series[] = [
 		prefix: "hier",
 		linking: false,
 		ipa: "hiːɐ̯",
-		pronType: "Dem",
 		marker: "👉",
 		definition: (form, preposition) =>
 			`„${form}“ ist ein Pronominaladverb aus „hier“ und „${preposition}“. Es ersetzt „${preposition} + Sache“ und verweist auf das eben Genannte oder Vorliegende, meist in formeller Sprache.`,
@@ -226,7 +225,6 @@ const series: readonly Series[] = [
 		prefix: "wo",
 		linking: true,
 		ipa: "vo",
-		pronType: null,
 		marker: "❓",
 		definition: (form, preposition) =>
 			`„${form}“ ist ein Frageadverb aus „wo“ und „${preposition}“. Es fragt nach „${preposition} + Sache“, nicht nach einer Person.`,
@@ -237,7 +235,6 @@ const series: readonly Series[] = [
 		prefix: "wo",
 		linking: true,
 		ipa: "vo",
-		pronType: null,
 		marker: "🧩",
 		definition: (form, preposition) =>
 			`„${form}“ ist ein Relativadverb aus „wo“ und „${preposition}“. Es leitet einen Relativsatz ein und ersetzt „${preposition} + Sache“, oft nach „das“, „etwas“, „alles“, „nichts“ oder nach einem ganzen Satz.`,
@@ -267,10 +264,7 @@ function pronominalAdverb(
 		kind: "ADV",
 		canonicalForm: form,
 		// A pronominal adverb has no comparison forms (ADR 0042).
-		coreFeatures: {
-			comparable: null,
-			pronType: entry.pronType,
-		},
+		coreFeatures: { comparable: null },
 	} satisfies Dumling.Lemma<"de", "Lexeme", "ADV">;
 	return defineAuthoredMember({
 		lemma,
@@ -311,8 +305,9 @@ function pronominalAdverb(
 /**
  * Every German pronominal adverb: da(r)- and hier- forms are demonstrative,
  * and each wo(r)- form is one Lemma with an interrogative and a relative
- * Reading (system ADR 0029). Classification keeps each one a singleton
- * ADV; a verb that governs the fused preposition does not absorb it.
+ * Reading (system ADR 0029). The series shows in each Reading's marker only.
+ * Classification keeps each one a singleton ADV; a verb that governs the
+ * fused preposition does not absorb it.
  */
 export const pronominalAdverbs: readonly AuthoredMember[] = series.flatMap(
 	(entry) =>

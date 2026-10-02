@@ -41,8 +41,7 @@
 						"kind": "ADV",
 						"canonicalForm": "dreimal",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "dreimal",

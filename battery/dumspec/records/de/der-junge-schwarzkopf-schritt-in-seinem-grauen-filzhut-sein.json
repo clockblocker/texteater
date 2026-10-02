@@ -1073,8 +1073,7 @@
 						"kind": "ADV",
 						"canonicalForm": "manchmal",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "manchmal",

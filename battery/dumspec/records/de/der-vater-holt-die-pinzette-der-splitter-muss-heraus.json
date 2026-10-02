@@ -102,8 +102,7 @@
 						"kind": "ADV",
 						"canonicalForm": "heraus",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "heraus",

@@ -28,7 +28,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "🎯" },
 			"notes": {
-				"rationale": "Ordinary sentence-initial capitalization is Standard; the pronominal adverb has PronType Dem."
+				"rationale": "Ordinary sentence-initial capitalization is Standard; dazu is one of the authored da(r)- pronominal adverbs."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -42,8 +42,7 @@
 						"kind": "ADV",
 						"canonicalForm": "dazu",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "dazu",

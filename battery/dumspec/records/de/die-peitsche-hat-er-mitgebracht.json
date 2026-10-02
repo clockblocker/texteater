@@ -365,8 +365,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"pronType": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null

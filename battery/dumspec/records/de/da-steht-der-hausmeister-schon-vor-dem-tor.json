@@ -46,8 +46,7 @@
 						"kind": "ADV",
 						"canonicalForm": "da",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "da",

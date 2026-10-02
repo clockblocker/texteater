@@ -112,7 +112,7 @@
 						"canonicalForm": "zuerst",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"coreFeatures": { "comparable": null, "pronType": null }
+						"coreFeatures": { "comparable": null }
 					},
 					"surfaceFeatures": null
 				}
@@ -230,7 +230,7 @@
 						"canonicalForm": "zuerst",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"coreFeatures": { "comparable": null, "pronType": null }
+						"coreFeatures": { "comparable": null }
 					},
 					"surfaceFeatures": null
 				}

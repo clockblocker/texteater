@@ -43,8 +43,7 @@
 						"kind": "ADV",
 						"canonicalForm": "woher",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wo her",

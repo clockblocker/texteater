@@ -313,8 +313,7 @@
 						"kind": "ADV",
 						"canonicalForm": "so",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "so",

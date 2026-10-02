@@ -10,10 +10,10 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
 export const DeAdverbFeatureBagsSchema = z.strictObject({
 	[FeatureBagKind.Core]: featureBagSchema({
+		// No pronType: it split no ADV Lemma. An adverb's series shows in its
+		// Reading's Emoji Description, and whether it is closed-class is a
+		// lookup in dumspec's Authored Inventory (system ADR 0029).
 		comparable: DE_FEATURE_SCHEMA.comparable,
-		// A w-adverb is one Lemma whose interrogative and relative uses are
-		// Readings, so Int and Rel are no ADV values (system ADR 0029).
-		pronType: DE_FEATURE_SCHEMA.pronType.extract(["Dem", "Ind", "Neg"]),
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({

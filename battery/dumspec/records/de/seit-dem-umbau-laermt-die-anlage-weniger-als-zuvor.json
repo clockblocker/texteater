@@ -54,8 +54,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wenig",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"pronType": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "weniger",
@@ -69,7 +68,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "weniger is the comparative of adverbial wenig, the comparable ADV wenig with no pronType, so its Surface marks Cmp (de/quantifier-by-use, de/comparability-is-lexical)."
+				"rationale": "weniger is the comparative of adverbial wenig, the comparable ADV wenig, so its Surface marks Cmp (de/quantifier-by-use, de/comparability-is-lexical)."
 			}
 		}
 	],

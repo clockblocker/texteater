@@ -942,8 +942,7 @@
 						"kind": "ADV",
 						"canonicalForm": "miteinander",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "miteinander",

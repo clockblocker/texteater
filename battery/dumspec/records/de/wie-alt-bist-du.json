@@ -38,8 +38,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wie",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wie",

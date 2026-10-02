@@ -57,7 +57,7 @@
 						"canonicalForm": "nur",
 						"family": "Lexeme",
 						"kind": "ADV",
-						"coreFeatures": { "comparable": null, "pronType": null }
+						"coreFeatures": { "comparable": null }
 					},
 					"surfaceFeatures": null
 				}

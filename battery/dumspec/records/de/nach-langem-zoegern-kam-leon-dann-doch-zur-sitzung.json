@@ -54,8 +54,7 @@
 						"kind": "ADV",
 						"canonicalForm": "doch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "doch",

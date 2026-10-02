@@ -42,8 +42,7 @@
 						"kind": "ADV",
 						"canonicalForm": "vielleicht",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "vielleicht",

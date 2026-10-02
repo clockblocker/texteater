@@ -159,8 +159,7 @@
 						"kind": "ADV",
 						"canonicalForm": "manchmal",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -306,8 +305,7 @@
 						"kind": "ADV",
 						"canonicalForm": "auch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null

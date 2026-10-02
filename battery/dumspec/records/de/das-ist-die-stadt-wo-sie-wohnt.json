@@ -52,8 +52,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wo",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wo",

@@ -20,7 +20,7 @@
 			"route": { "family": "Lexeme", "kind": "ADV" },
 			"reading": { "emojiDescription": "❓🔧" },
 			"notes": {
-				"rationale": "Exclamative wie is the degree use of interrogative wie; the exclamation comes from the sentence, not from a Reading or Lemma of its own, and a German ADV has no pronType Exc."
+				"rationale": "Exclamative wie is the degree use of interrogative wie; the exclamation comes from the sentence, not from a Reading or Lemma of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -34,8 +34,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wie",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wie",

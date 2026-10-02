@@ -49,8 +49,7 @@
 						"kind": "ADV",
 						"canonicalForm": "dafür",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "da für",

@@ -55,8 +55,7 @@
 						"kind": "ADV",
 						"canonicalForm": "eben",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "eben",

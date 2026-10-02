@@ -435,8 +435,7 @@
 						"kind": "ADV",
 						"canonicalForm": "vorhin",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "vorhin",
@@ -477,8 +476,7 @@
 						"kind": "ADV",
 						"canonicalForm": "so",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "so",

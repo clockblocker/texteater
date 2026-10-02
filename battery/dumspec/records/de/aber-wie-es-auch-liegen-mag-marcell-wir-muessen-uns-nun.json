@@ -453,8 +453,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wie",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wie",
@@ -542,8 +541,7 @@
 						"kind": "ADV",
 						"canonicalForm": "auch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "auch",
@@ -887,8 +885,7 @@
 						"kind": "ADV",
 						"canonicalForm": "nun",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "nun",
@@ -928,8 +925,7 @@
 						"kind": "ADV",
 						"canonicalForm": "darüber",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "darüber",
@@ -1067,8 +1063,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wie",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wie",

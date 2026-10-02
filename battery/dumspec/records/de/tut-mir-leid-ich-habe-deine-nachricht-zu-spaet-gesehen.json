@@ -452,8 +452,7 @@
 						"kind": "ADV",
 						"canonicalForm": "zu",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "zu",

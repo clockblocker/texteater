@@ -45,8 +45,7 @@
 						"kind": "ADV",
 						"canonicalForm": "dahin",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "da hin",

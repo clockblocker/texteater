@@ -43,8 +43,7 @@
 						"kind": "ADV",
 						"canonicalForm": "gestern",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "gestern",

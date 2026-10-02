@@ -50,8 +50,7 @@
 						"kind": "ADV",
 						"canonicalForm": "sogar",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "sogar",

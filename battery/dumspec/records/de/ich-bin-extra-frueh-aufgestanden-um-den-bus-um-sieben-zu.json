@@ -268,8 +268,7 @@
 						"kind": "ADV",
 						"canonicalForm": "extra",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "extra",

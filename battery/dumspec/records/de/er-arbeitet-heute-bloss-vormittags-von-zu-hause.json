@@ -52,8 +52,7 @@
 						"kind": "ADV",
 						"canonicalForm": "bloß",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "bloß",

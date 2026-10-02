@@ -1940,8 +1940,7 @@
 						"kind": "ADV",
 						"canonicalForm": "kaum",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "kaum",
@@ -1979,8 +1978,7 @@
 						"kind": "ADV",
 						"canonicalForm": "noch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "noch",

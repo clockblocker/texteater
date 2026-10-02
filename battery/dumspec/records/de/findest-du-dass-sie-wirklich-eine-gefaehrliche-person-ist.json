@@ -613,8 +613,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wirklich",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wirklich",
@@ -1261,8 +1260,7 @@
 						"kind": "ADV",
 						"canonicalForm": "so",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "so",
@@ -1488,8 +1486,7 @@
 						"kind": "ADV",
 						"canonicalForm": "eigentlich",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "eigentlich",
@@ -1530,8 +1527,7 @@
 						"kind": "ADV",
 						"canonicalForm": "nur",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "nur",

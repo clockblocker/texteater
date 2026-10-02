@@ -75,7 +75,7 @@ describe("Lemma identity (system ADR 0002)", () => {
 			family: "Lexeme",
 			kind: "ADV",
 			canonicalForm: "morgen",
-			coreFeatures: { comparable: null, pronType: null },
+			coreFeatures: { comparable: null },
 		} satisfies Lemma<"de", "Lexeme", "ADV">;
 		expect(sameLemma(noun, adverb)).toBe(false);
 	});

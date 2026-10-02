@@ -21,13 +21,13 @@ ADJ, NOUN or Locution, so clicking `auf` in `wartet auf den Zug` or `stolz auf
 seinen Sohn` opens the governor.
 
 A German pronominal adverb (`darauf`, `dafür`, `damit`, the `wo(r)-` and
-`hier-` compounds) is its own single-member ADV Lexeme (`pronType: Dem` for
-`da(r)-` and `hier-` forms; a `wo(r)-` form is one Lemma whose interrogative
-and relative uses are two Readings), never a governed member of the governing
+`hier-` compounds) is its own single-member ADV Lexeme (a `wo(r)-` form is
+one Lemma whose interrogative and relative uses are two Readings), never a
+governed member of the governing
 word and never a fixed Locution member with its governor outside a genuine
 idiom. The government relation stays on the governor. A reciprocal pronominal adverb, a preposition joined to `einander`
 (`miteinander`, `aufeinander`, `voneinander`), is an ADV Lexeme of its whole
-form in the same way, with no `pronType`. It never splits into an ADP and
+form in the same way. It never splits into an ADP and
 PRON `einander`: `aufeinander warten` gives [warten] VERB and [aufeinander]
 ADV.
 
@@ -65,3 +65,14 @@ Lemma of its own with a "sich X" Canonical Form. Merging it into its base
 verb was rejected, and so was recording the mark on a Reading or in
 Knowledge. Decided on
 [#766](https://github.com/clockblocker/texteater/issues/766).
+
+Amended on 2026-10-02: German ADV carries no `pronType`, so Dem, Ind and Neg
+left it too. On an adverb the value split no Lemma. The series a learner
+meets (`da`, `wo`, `irgendwo`, `nirgendwo`; `dann`, `wann`, `irgendwann`,
+`nie`) shows in each Reading's marker (❓ 🧩 ❔ 🚫 👉), and whether an adverb
+is closed-class is a lookup by spelling in dumspec's Authored Inventory, so
+nothing read the feature. PRON and DET keep `pronType`, where it is
+identity. The demonstrative and negative adverbs stay authored
+([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)).
+Decided by the user on
+[#595](https://github.com/clockblocker/texteater/issues/595).

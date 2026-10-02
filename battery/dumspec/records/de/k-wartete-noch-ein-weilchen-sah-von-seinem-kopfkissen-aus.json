@@ -518,8 +518,7 @@
 						"kind": "ADV",
 						"canonicalForm": "noch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "noch",
@@ -1412,8 +1411,7 @@
 						"kind": "ADV",
 						"canonicalForm": "ganz",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "ganz",
@@ -1551,8 +1549,7 @@
 						"kind": "ADV",
 						"canonicalForm": "dann",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "dann",
@@ -1627,8 +1624,7 @@
 						"kind": "ADV",
 						"canonicalForm": "gleichzeitig",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "gleichzeitig",

@@ -43,8 +43,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wohin",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wo hin",

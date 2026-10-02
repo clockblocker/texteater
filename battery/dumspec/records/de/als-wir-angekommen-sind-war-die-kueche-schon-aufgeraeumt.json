@@ -386,8 +386,7 @@
 						"kind": "ADV",
 						"canonicalForm": "schon",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "schon",

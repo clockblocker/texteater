@@ -855,8 +855,7 @@
 						"kind": "ADV",
 						"canonicalForm": "früh",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "früh",
@@ -1055,8 +1054,7 @@
 						"kind": "ADV",
 						"canonicalForm": "diesmal",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "diesmal",

@@ -100,8 +100,7 @@
 						"kind": "ADV",
 						"canonicalForm": "darauf",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "darauf",

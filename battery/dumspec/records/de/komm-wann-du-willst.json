@@ -44,8 +44,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wann",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wann",

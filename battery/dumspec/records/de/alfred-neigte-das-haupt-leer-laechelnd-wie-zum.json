@@ -925,8 +925,7 @@
 						"kind": "ADV",
 						"canonicalForm": "mehr",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "mehr",

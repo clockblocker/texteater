@@ -15,12 +15,14 @@ Dumgen decides how production uses them.
 Readings, the PRON and DET pillar cells and stems, the unit that explains
 reflexivity, the pronominal adverbs, and the interrogative and relative
 w-adverbs (`wo`, `wohin`, `woher`, `wann`, `wie`, `warum`, `wieso`,
-`weshalb`, `weswegen`), the directional `dahin`, `daher`, `hierhin` and `hierher`, the her- and hin-
-adverbs (`heraus`, `hinaus`, `herein`, `hinein`, `herüber`, `hinüber`,
+`weshalb`, `weswegen`), the demonstrative `da`, `hier`, `dort`, `dann` and
+`so`, the directional `dahin`, `daher`, `hierhin`, `hierher`, `dorthin` and
+`dorther`, the her- and hin- adverbs (`heraus`, `hinaus`, `herein`, `hinein`, `herüber`, `hinüber`,
 `herunter`, `hinunter`, `herauf`, `hinauf`, `heran`; colloquial `raus`,
 `rein`, `rüber`, `runter`, `rauf` and `ran` are their Shorthands), the `irgend-`
-adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), the Neg time
-adverbs `nie` and `niemals` (ruled by the user on 2026-10-02), the negation
+adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), the negative
+adverbs `nie`, `niemals`, `nirgends`, `nirgendwo` and `keineswegs` (ruled by
+the user on 2026-10-02), the negation
 particle `nicht`, infinitive `zu` and the modal particles (`aber`, `auch`,
 `bloß`, `denn`, `doch`, `eben`, `eigentlich`, `einfach`, `einmal`, `etwa`,
 `halt`, `ja`, `mal`, `nur`, `ruhig`, `schon`, `vielleicht`, `wohl`), which

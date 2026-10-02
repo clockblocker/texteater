@@ -214,8 +214,7 @@
 						"kind": "ADV",
 						"canonicalForm": "noch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "noch",
@@ -253,8 +252,7 @@
 						"kind": "ADV",
 						"canonicalForm": "niemals",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Neg"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "niemals",
@@ -273,7 +271,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "niemals is a negative adverb of the nie series, pronType Neg; noch niemals is compositional, two targets."
+				"rationale": "niemals is the negative time adverb the Authored Inventory holds beside nie, with its one Reading 🚫⏰; noch niemals is compositional, two targets."
 			}
 		}
 	],

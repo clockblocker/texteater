@@ -537,8 +537,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -622,8 +621,7 @@
 						"family": "Lexeme",
 						"kind": "ADV",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null

@@ -37,8 +37,7 @@
 						"kind": "ADV",
 						"canonicalForm": "draußen",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "draußen",

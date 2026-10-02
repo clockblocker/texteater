@@ -231,8 +231,7 @@
 						"kind": "ADV",
 						"canonicalForm": "glücklicherweise",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "glücklicherweise",
@@ -432,8 +431,7 @@
 						"kind": "ADV",
 						"canonicalForm": "so",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "so",
@@ -565,8 +563,7 @@
 						"kind": "ADV",
 						"canonicalForm": "daran",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "daran",

@@ -10886,26 +10886,10 @@
 									"type": "null"
 								}
 							]
-						},
-						"pronType": {
-							"anyOf": [
-								{
-									"type": "string",
-									"enum": [
-										"Dem",
-										"Ind",
-										"Neg"
-									]
-								},
-								{
-									"type": "null"
-								}
-							]
 						}
 					},
 					"required": [
-						"comparable",
-						"pronType"
+						"comparable"
 					],
 					"additionalProperties": false
 				}

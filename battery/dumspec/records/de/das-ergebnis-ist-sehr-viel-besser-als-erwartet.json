@@ -58,8 +58,7 @@
 						"kind": "ADV",
 						"canonicalForm": "sehr",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"pronType": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "sehr",

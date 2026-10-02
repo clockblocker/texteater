@@ -49,8 +49,7 @@
 						"kind": "ADV",
 						"canonicalForm": "davon",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "da von",

@@ -2,6 +2,11 @@ import type * as Dumling from "dumling/types";
 import { type AuthoredMember, defineAuthoredMember } from "./member.js";
 
 type Lemma = Dumling.Lemma<"de", "Lexeme", "ADV">;
+/**
+ * The series of a Reading: interrogative, relative, indefinite, negative or
+ * demonstrative. Its marker leads the Emoji Description, and no Core feature
+ * carries it (system ADR 0029).
+ */
 type Use = "Int" | "Rel" | "Ind" | "Neg" | "Dem";
 
 /** One Reading of a w-adverb's use: its definition and glosses. */
@@ -264,12 +269,15 @@ const indefiniteAdverbs: readonly OneReadingAdverb[] = [
 	},
 ];
 
-// nie and niemals are the negative time adverbs, one Neg Lemma with one
-// Reading each. Their marker is the 🚫 of kein, keiner, niemand and nichts,
-// before the ⏰ of wann and irgendwann. Duden defines niemals as nie, so it
-// stores that one synonym.
+// nie and niemals are the negative time adverbs, nirgends and nirgendwo the
+// negative place adverbs, one Lemma with one Reading each. Their marker is
+// the 🚫 of kein, keiner, niemand and nichts, before the ⏰ of wann and
+// irgendwann or the 📍 of wo and irgendwo. Duden defines niemals as nie and
+// nirgendwo as nirgends, so each stores that one synonym.
 // https://www.duden.de/rechtschreibung/nie
 // https://www.duden.de/rechtschreibung/niemals
+// https://www.duden.de/rechtschreibung/nirgends
+// https://www.duden.de/rechtschreibung/nirgendwo
 const negativeAdverbs: readonly OneReadingAdverb[] = [
 	{
 		text: "nie",
@@ -290,18 +298,144 @@ const negativeAdverbs: readonly OneReadingAdverb[] = [
 		en: ["never; at no time"],
 		ru: ["никогда"],
 	},
+	{
+		text: "nirgends",
+		ipa: "ˈnɪʁɡn̩ts",
+		emoji: "📍",
+		definition:
+			"Bezeichnet, dass etwas an keinem Ort, an keiner Stelle ist oder geschieht: Den Schlüssel finde ich nirgends. Nirgends ist es so schön wie hier.",
+		en: ["nowhere"],
+		ru: ["нигде"],
+	},
+	{
+		text: "nirgendwo",
+		ipa: "ˈnɪʁɡn̩tˈvoː",
+		emoji: "📍",
+		synonymOf: "nirgends",
+		definition:
+			"Bezeichnet wie „nirgends“, dass etwas an keinem Ort ist oder geschieht: Er fühlt sich nirgendwo zu Hause.",
+		en: ["nowhere"],
+		ru: ["нигде"],
+	},
 ];
 
-// dahin, daher, hierhin and hierher answer wohin and woher and are split the
-// same way (Da gehe ich hin, Hier kommst du her; Rule
-// de/split-adverb-is-one-target). They are demonstrative ADVs, not pronominal
-// adverbs: hin and her are no prepositions. Each has its directional Reading
-// only; causal daher (deshalb) is not authored yet.
+// keineswegs 'by no means' negates a whole statement, not a time or a place,
+// and its one Reading is 🙅 alone.
+// https://www.duden.de/rechtschreibung/keineswegs
+const statementNegatingAdverbs: readonly OneReadingAdverb[] = [
+	{
+		text: "keineswegs",
+		ipa: "ˈkaɪ̯nəsˈveːks",
+		emoji: "🙅",
+		definition:
+			"Verneint eine Aussage nachdrücklich: durchaus nicht, nicht im Geringsten: Die Reparatur ist keineswegs abgeschlossen.",
+		en: ["by no means; not at all"],
+		ru: ["отнюдь не; вовсе не; ни в коем случае"],
+	},
+];
+
+/** An adverb with one Reading or several, each under its own emoji. */
+type ManyReadingAdverb = Pick<OneReadingAdverb, "text" | "ipa"> & {
+	readonly readings: readonly EmojiMeaning[];
+};
+
+// da, hier and dort point at a place, dann at the next step in time and so at
+// a manner or degree: the demonstratives that answer wo, wann and wie. da also
+// names a point in time (von da an). Each Reading is the one the gold names;
+// the demonstrative marker is empty, as on the da(r)- pronominal adverbs.
+// Conditional dann (wenn …, dann) is not authored yet.
+// https://www.dwds.de/wb/da
+// https://www.dwds.de/wb/hier
+// https://www.dwds.de/wb/dort
+// https://www.dwds.de/wb/dann
+// https://www.dwds.de/wb/so
+const demonstrativeAdverbs: readonly ManyReadingAdverb[] = [
+	{
+		text: "da",
+		ipa: "daː",
+		readings: [
+			{
+				emoji: "📍",
+				definition:
+					"Bezeichnet einen Ort, auf den man zeigt oder der genannt ist, an dieser oder jener Stelle: Da steht der Hausmeister. Da drüben liegt es.",
+				en: ["there; here"],
+				ru: ["там; тут; вот"],
+			},
+			{
+				emoji: "🕰📍",
+				definition:
+					"Bezeichnet einen genannten oder gemeinten Zeitpunkt, zu dieser Zeit, in diesem Augenblick: Da ward ihm sein Gewehr zu schwer. Von da an war alles anders.",
+				en: ["then; at that moment"],
+				ru: ["тогда; в тот момент"],
+			},
+		],
+	},
+	{
+		text: "hier",
+		ipa: "hiːɐ̯",
+		readings: [
+			{
+				emoji: "📍",
+				definition:
+					"Bezeichnet den Ort, an dem der Sprecher ist oder auf den er zeigt, an dieser Stelle: Bitte warten Sie hier. Hier steht er.",
+				en: ["here"],
+				ru: ["здесь; тут"],
+			},
+		],
+	},
+	{
+		text: "dort",
+		ipa: "dɔʁt",
+		readings: [
+			{
+				emoji: "📍",
+				definition:
+					"Bezeichnet einen Ort, der vom Sprecher entfernt ist oder genannt wurde, an jener Stelle: Dort drüben steht das Haus. Wir waren gestern dort.",
+				en: ["there; over there"],
+				ru: ["там"],
+			},
+		],
+	},
+	{
+		text: "dann",
+		ipa: "dan",
+		readings: [
+			{
+				emoji: "⏭",
+				definition:
+					"Bezeichnet, was in einer Abfolge als Nächstes kommt, danach, darauf: Erst lese ich, dann gehen wir spazieren.",
+				en: ["then; after that"],
+				ru: ["потом; затем"],
+			},
+		],
+	},
+	{
+		text: "so",
+		ipa: "zoː",
+		readings: [
+			{
+				emoji: "👉",
+				definition:
+					"Bezeichnet eine Art und Weise oder einen Grad, auf die man zeigt oder die der Zusammenhang nennt, auf diese Weise, in diesem Maß: Vielleicht ist es so. Der Hund tut mir so leid.",
+				en: ["so; like this, that way"],
+				ru: ["так; настолько"],
+			},
+		],
+	},
+];
+
+// dahin, daher, hierhin, hierher, dorthin and dorther answer wohin and woher,
+// and da and hier split from hin or her the same way (Da gehe ich hin, Hier
+// kommst du her; Rule de/split-adverb-is-one-target). They are demonstrative
+// ADVs, not pronominal adverbs: hin and her are no prepositions. Each has its
+// directional Reading only; causal daher (deshalb) is not authored yet.
 // https://www.duden.de/rechtschreibung/dahin
 // https://www.duden.de/rechtschreibung/daher
 // https://www.duden.de/rechtschreibung/hierhin
 // https://www.duden.de/rechtschreibung/hierher
-const demonstrativeAdverbs: readonly OneReadingAdverb[] = [
+// https://www.duden.de/rechtschreibung/dorthin
+// https://www.duden.de/rechtschreibung/dorther
+const directionalDemonstratives: readonly OneReadingAdverb[] = [
 	{
 		text: "dahin",
 		ipa: "daˈhɪn",
@@ -338,9 +472,27 @@ const demonstrativeAdverbs: readonly OneReadingAdverb[] = [
 		en: ["here (towards the speaker); this way"],
 		ru: ["сюда (ко мне)"],
 	},
+	{
+		text: "dorthin",
+		ipa: "ˈdɔʁthɪn",
+		emoji: "🛬",
+		definition:
+			"Bezeichnet als Ziel einer Bewegung einen entfernten oder genannten Ort, nach dort: Wir fahren morgen dorthin. Stell die Leiter dorthin.",
+		en: ["there (direction); to that place"],
+		ru: ["туда"],
+	},
+	{
+		text: "dorther",
+		ipa: "ˈdɔʁtheːɐ̯",
+		emoji: "🛫",
+		definition:
+			"Bezeichnet als Herkunft oder Ausgangspunkt einen entfernten oder genannten Ort, von dort: Dorther kommt der Wind.",
+		en: ["from there"],
+		ru: ["оттуда"],
+	},
 ];
 
-// The her- and hin- adverbs are plain directional ADVs with no pronType:
+// The her- and hin- adverbs are plain directional ADVs with no series marker:
 // her- moves towards the speaker or viewpoint, hin- away from it. Colloquial
 // raus, rein, rüber, runter and rauf neutralize each pair, and ran shortens
 // heran alone (hinan is an elevated word for hinauf). An r- word is no Lemma
@@ -467,23 +619,18 @@ const marker: Readonly<Record<Use, string>> = {
 };
 
 /**
- * A w-adverb has no comparison forms (ADR 0042). pronType is Core for an
- * indefinite, negative or demonstrative adverb, and null for a directional
- * one and for a w-adverb, whose interrogative and relative uses are Readings
- * of one Lemma.
+ * A w-adverb and its kin have no comparison forms (ADR 0042), and German ADV
+ * has no pronType: the series is the Reading's marker, so a w-adverb's
+ * interrogative and relative uses are Readings of one Lemma (system ADR 0029).
  */
-function lemmaOf(text: string, use: Use | null): Lemma {
+function lemmaOf(text: string): Lemma {
 	return {
 		unitKind: "Lemma",
 		language: "de",
 		family: "Lexeme",
 		kind: "ADV",
 		canonicalForm: text,
-		coreFeatures: {
-			comparable: null,
-			pronType:
-				use === "Ind" || use === "Neg" || use === "Dem" ? use : null,
-		},
+		coreFeatures: { comparable: null },
 	};
 }
 
@@ -502,10 +649,8 @@ function whAdverb(
 	use: Use | null,
 	meaning: EmojiMeaning,
 ): AuthoredMember {
-	const lemma = lemmaOf(adverb.text, use);
-	const synonym = adverb.synonymOf
-		? [lemmaOf(adverb.synonymOf, use)]
-		: undefined;
+	const lemma = lemmaOf(adverb.text);
+	const synonym = adverb.synonymOf ? [lemmaOf(adverb.synonymOf)] : undefined;
 	return defineAuthoredMember({
 		lemma,
 		reading: {
@@ -538,13 +683,13 @@ function whAdverb(
  * The German interrogative and relative w-adverbs (wo, wohin, woher, wann,
  * wie, warum, wieso, weshalb, weswegen): one Lemma each, with an
  * interrogative and a relative Reading; relative wo has a place and a time
- * Reading. Then the indefinite irgend- adverbs,
- * one Ind Lemma each, the negative nie and niemals, one Neg Lemma each, the
- * demonstrative dahin, daher, hierhin and hierher,
- * one Dem Lemma each, and the directional her- and hin- adverbs (heraus,
- * hinaus, herein, hinein, herüber, hinüber, herunter, hinunter, herauf, hinauf
- * and heran), one Lemma each with no pronType. The wo(r)- pronominal adverbs
- * are in pronominal-adverbs.ts.
+ * Reading. Then one Lemma each for the indefinite irgend- adverbs, the
+ * negative nie, niemals, nirgends and nirgendwo, keineswegs, the
+ * demonstrative da, hier, dort, dann and so, the demonstrative dahin, daher,
+ * hierhin, hierher, dorthin and dorther, and the directional her- and hin-
+ * adverbs (heraus, hinaus, herein, hinein, herüber, hinüber, herunter,
+ * hinunter, herauf, hinauf and heran). Each Reading's marker shows its series.
+ * The wo(r)- pronominal adverbs are in pronominal-adverbs.ts.
  */
 export const whAdverbs: readonly AuthoredMember[] = [
 	...(["Int", "Rel"] as const).flatMap((use) =>
@@ -552,6 +697,12 @@ export const whAdverbs: readonly AuthoredMember[] = [
 	),
 	...indefiniteAdverbs.map((adverb) => whAdverb(adverb, "Ind", adverb)),
 	...negativeAdverbs.map((adverb) => whAdverb(adverb, "Neg", adverb)),
-	...demonstrativeAdverbs.map((adverb) => whAdverb(adverb, "Dem", adverb)),
+	...statementNegatingAdverbs.map((adverb) => whAdverb(adverb, null, adverb)),
+	...demonstrativeAdverbs.flatMap((adverb) =>
+		adverb.readings.map((meaning) => whAdverb(adverb, "Dem", meaning)),
+	),
+	...directionalDemonstratives.map((adverb) =>
+		whAdverb(adverb, "Dem", adverb),
+	),
 	...directionalAdverbs.map((adverb) => whAdverb(adverb, null, adverb)),
 ];

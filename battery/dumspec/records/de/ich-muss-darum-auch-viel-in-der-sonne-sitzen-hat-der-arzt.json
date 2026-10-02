@@ -335,8 +335,7 @@
 						"kind": "ADV",
 						"canonicalForm": "darum",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Dem"
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -377,8 +376,7 @@
 						"kind": "ADV",
 						"canonicalForm": "auch",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null
@@ -421,8 +419,7 @@
 						"kind": "ADV",
 						"canonicalForm": "viel",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"pronType": null
+							"comparable": "Yes"
 						}
 					},
 					"surfaceFeatures": null

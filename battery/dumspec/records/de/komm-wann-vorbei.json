@@ -41,8 +41,7 @@
 						"kind": "ADV",
 						"canonicalForm": "irgendwann",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Ind"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "irgendwann",

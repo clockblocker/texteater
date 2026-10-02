@@ -50,8 +50,7 @@
 						"kind": "ADV",
 						"canonicalForm": "gern",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"pronType": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "lieber",

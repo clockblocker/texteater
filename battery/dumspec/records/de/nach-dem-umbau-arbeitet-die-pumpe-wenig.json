@@ -53,8 +53,7 @@
 						"kind": "ADV",
 						"canonicalForm": "wenig",
 						"coreFeatures": {
-							"comparable": "Yes",
-							"pronType": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "wenig",

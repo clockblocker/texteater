@@ -590,8 +590,7 @@
 						"kind": "ADV",
 						"canonicalForm": "dann",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "dann",

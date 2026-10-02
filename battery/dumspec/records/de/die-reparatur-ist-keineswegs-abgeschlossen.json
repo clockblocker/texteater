@@ -37,8 +37,7 @@
 						"kind": "ADV",
 						"canonicalForm": "keineswegs",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": "Neg"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "keineswegs",

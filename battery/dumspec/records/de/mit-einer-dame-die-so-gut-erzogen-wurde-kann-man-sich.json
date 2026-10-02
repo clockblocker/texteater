@@ -433,8 +433,7 @@
 						"kind": "ADV",
 						"canonicalForm": "so",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "so",
@@ -687,8 +686,7 @@
 						"kind": "ADV",
 						"canonicalForm": "überhaupt",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "überhaupt",

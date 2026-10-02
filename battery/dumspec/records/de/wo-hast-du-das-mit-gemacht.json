@@ -51,8 +51,7 @@
 						"kind": "ADV",
 						"canonicalForm": "womit",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wo mit",

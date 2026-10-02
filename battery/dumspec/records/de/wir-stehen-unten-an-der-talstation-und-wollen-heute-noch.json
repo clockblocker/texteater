@@ -105,8 +105,7 @@
 						"kind": "ADV",
 						"canonicalForm": "hinauf",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "hinauf",

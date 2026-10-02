@@ -186,8 +186,7 @@
 						"kind": "ADV",
 						"canonicalForm": "morgen",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "morgen",

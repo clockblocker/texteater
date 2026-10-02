@@ -52,8 +52,7 @@
 						"kind": "ADV",
 						"canonicalForm": "circa",
 						"coreFeatures": {
-							"comparable": null,
-							"pronType": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "circa",
