@@ -25,10 +25,10 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "NUM" },
-			"reading": { "emojiDescription": "🔟⬆2⃣4⃣" },
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "Quadrillionen is the plural of Quadrillion, the subject of wären, so its Surface marks Nom.Fem.Plur. Quadrillion is written with a capital, as Duden's headword is, so the sentence-initial capital is the word's own and the normalized Surface keeps it: casing never follows the word's position (ADR 0002). A Quadrillion is Duden's tausend Trilliarden, 10 to the 24th."
+				"rationale": "Quadrillion is a feminine noun (Duden: die Quadrillion), and its plural Quadrillionen is the subject of wären, so its Surface marks Nom.Pl. The capital is the noun's own, as Duden's headword shows, so the normalized Surface keeps it: casing never follows the word's position (ADR 0002). A Quadrillion is Duden's tausend Trilliarden, 10 to the 24th, and like every numeral beyond zwölf its Reading is 🔢."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,16 +39,16 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "NUM",
+						"kind": "NOUN",
 						"canonicalForm": "Quadrillion",
-						"coreFeatures": {}
+						"coreFeatures": { "gender": "Fem" }
 					},
 					"normalizedSurface": "Quadrillionen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"gender": "Fem",
+						"gender": null,
 						"number": "Plur"
 					}
 				},
@@ -56,7 +56,8 @@
 					{ "attested": "Quadrillionen", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

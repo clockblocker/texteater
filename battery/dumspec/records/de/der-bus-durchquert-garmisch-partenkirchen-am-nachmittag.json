@@ -8,9 +8,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "durchquert" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "ResolvableText", "text": "Garmisch" },
-		{ "kind": "Punctuation", "text": "-" },
-		{ "kind": "ResolvableText", "text": "Partenkirchen" },
+		{ "kind": "ResolvableText", "text": "Garmisch-Partenkirchen" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "a", "surface": "an" },
 		{ "kind": "ResolvableText", "text": "m", "surface": "dem" },
@@ -29,11 +27,11 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [6, 8],
+			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": { "emojiDescription": "🏙" },
 			"notes": {
-				"rationale": "Garmisch-Partenkirchen is the market town's name, one Lexeme whatever its length (ADR 0039), cited bare, with Core gender Neut like any place name (de/proper-noun-article). It is the object of durchquert, so its Surface marks Acc.Sg."
+				"rationale": "Garmisch-Partenkirchen is the market town's name, one Lexeme whatever its length (ADR 0039) and one Segment, hyphen included, as E-Mail and U-Bahn are. It is cited bare, with Core gender Neut like any place name (de/proper-noun-article). It is the object of durchquert, so its Surface marks Acc.Sg. A town with no mainstream emoji of its own takes 🏙."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -51,7 +49,7 @@
 							"gender": "Neut"
 						}
 					},
-					"normalizedSurface": "Garmisch Partenkirchen",
+					"normalizedSurface": "Garmisch-Partenkirchen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -61,8 +59,10 @@
 					}
 				},
 				"members": [
-					{ "attested": "Garmisch", "orthography": "Standard" },
-					{ "attested": "Partenkirchen", "orthography": "Standard" }
+					{
+						"attested": "Garmisch-Partenkirchen",
+						"orthography": "Standard"
+					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null

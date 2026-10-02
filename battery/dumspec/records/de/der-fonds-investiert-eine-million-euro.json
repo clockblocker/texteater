@@ -30,10 +30,10 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8],
-			"route": { "family": "Lexeme", "kind": "NUM" },
-			"reading": { "emojiDescription": "🔟⬆6⃣" },
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "Million is the Head of eine Million Euro and owns the article that opens it, NUM being one of the Heads the Rule covers (de/noun-owns-its-article): eine derives the DET cell eine Acc.Fem.Sg, which fits Million's case and gender and not masculine Euro. Rule-decided fix from the 2026-10-02 grouping audit (#701): eine was missing from the target."
+				"rationale": "Million is a feminine noun (Duden: die Million) and the Head of eine Million Euro, so it owns the article that opens it (de/noun-owns-its-article): eine derives the DET cell eine Acc.Fem.Sg, which fits Million's case and gender and not masculine Euro. Its Surface marks Acc.Sg as the object of investiert. Like every numeral beyond zwölf, its Reading is 🔢."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -44,16 +44,16 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "NUM",
+						"kind": "NOUN",
 						"canonicalForm": "Million",
-						"coreFeatures": {}
+						"coreFeatures": { "gender": "Fem" }
 					},
 					"normalizedSurface": "Million",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Acc",
-						"gender": "Fem",
+						"gender": null,
 						"number": "Sing"
 					}
 				},
@@ -65,7 +65,8 @@
 				"articleEvidence": {
 					"kind": "Owned",
 					"member": 0
-				}
+				},
+				"valencyEvidence": []
 			}
 		}
 	],

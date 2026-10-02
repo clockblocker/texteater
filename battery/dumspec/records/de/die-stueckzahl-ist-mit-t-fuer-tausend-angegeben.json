@@ -35,10 +35,10 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
-			"route": { "family": "Lexeme", "kind": "NUM" },
-			"reading": { "emojiDescription": "1⃣0⃣0⃣0⃣" },
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "T abbreviates Tausend, as the sentence itself says, so it is a Shorthand member whose Surface is the expansion, not a Variant spelling of the numeral and not a Lemma of its own: only a name whose initialism is its usual form keeps its letters as a Lemma (de/abbreviation-is-one-segment). T takes no period."
+				"rationale": "T abbreviates Tausend, as the sentence itself says: the unit the Stückzahl is counted in, Duden's neuter noun das Tausend (Einheit von tausend Stück), not the numeral tausend. So T is a Shorthand member whose Surface is the expansion, not a Variant spelling of the noun and not a Lemma of its own: only a name whose initialism is its usual form keeps its letters as a Lemma (de/abbreviation-is-one-segment). T takes no period. mit makes its Surface Dat.Sg. Like every numeral beyond zwölf, its Reading is 🔢."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -49,18 +49,23 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "NUM",
+						"kind": "NOUN",
 						"canonicalForm": "Tausend",
-						"coreFeatures": {}
+						"coreFeatures": { "gender": "Neut" }
 					},
 					"normalizedSurface": "Tausend",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Sing"
+					}
 				},
 				"members": [{ "attested": "T", "orthography": "Shorthand" }],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

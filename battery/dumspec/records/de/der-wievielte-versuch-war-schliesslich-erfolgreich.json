@@ -20,17 +20,21 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "43184aac9186aceb"
+			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "DET" },
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "❓🔢" },
 			"notes": {
-				"rationale": "wievielte asks for a position in a sequence and determines Versuch, so it is the interrogative DET wievielte (de/pron-or-det-by-use), and its Surface marks Nom.Masc.Sg, agreeing with Versuch."
+				"rationale": "wievielte asks which position in a sequence Versuch holds and follows the article Der the way the ordinals erste and zweite do, so it is an ADJ like them rather than an interrogative DET, as de/pron-or-det-by-use makes beide after a determiner ADJ. It is cited as the headword wievielte, as erste is (de/canonical-form-is-the-headword), and its Surface marks Nom.Masc.Sg, agreeing with Versuch. ❓ marks the question and 🔢 the ordinal, which like every numeral outside null to zwölf has no digit emoji of its own."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -41,16 +45,10 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "DET",
+						"kind": "ADJ",
 						"canonicalForm": "wievielte",
 						"coreFeatures": {
-							"case": null,
-							"gender": null,
-							"number": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Int"
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "wievielte",
@@ -60,15 +58,15 @@
 						"case": "Nom",
 						"degree": null,
 						"gender": "Masc",
-						"gender[psor]": null,
-						"number": "Sing",
-						"number[psor]": null
+						"number": "Sing"
 					}
 				},
 				"members": [
 					{ "attested": "wievielte", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

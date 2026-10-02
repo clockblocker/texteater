@@ -27,10 +27,10 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "NUM" },
-			"reading": { "emojiDescription": "🔟⬆6⃣" },
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "Millionen as an indefinite count in the millions (Duden Million, plural sense) shares the Reading of tausend mal tausend (Duden Million 1): one number concept under ADR 0031."
+				"rationale": "Millionen is the plural of the feminine noun Million (Duden: die Million), and trotz makes its Surface Gen.Pl. As an indefinite count in the millions (Duden Million, plural sense) it shares the Reading of tausend mal tausend (Duden Million 1): one number concept under ADR 0031, 🔢 like every numeral beyond zwölf."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -41,16 +41,16 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "NUM",
+						"kind": "NOUN",
 						"canonicalForm": "Million",
-						"coreFeatures": {}
+						"coreFeatures": { "gender": "Fem" }
 					},
 					"normalizedSurface": "Millionen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Gen",
-						"gender": "Fem",
+						"gender": null,
 						"number": "Plur"
 					}
 				},
@@ -58,7 +58,8 @@
 					{ "attested": "Millionen", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

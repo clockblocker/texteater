@@ -19,16 +19,25 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			}
+		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4],
-			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "🪞" },
+			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "😳" },
 			"notes": {
-				"rationale": "VERB selects it. Target still PRON only."
+				"rationale": "sich schämen is lexically reflexive: the sense needs sich coreferent with Mara, and no other object can stand in its place, so sich is a member of the verb's target and part of the normalized Surface schämt sich (de/verb-owns-its-scattered-members). Its lexicallyReflexive is Acc, as in ich schäme mich (de/verb-core-features). Whether für is governed is left open: E-VALBU has no schämen entry, and Duden gives ich schäme mich für dich beside the genitive (sich seiner Nacktheit schämen) and wegen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -39,26 +48,36 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "sich",
+						"kind": "VERB",
+						"canonicalForm": "sich schämen",
 						"coreFeatures": {
-							"case": "Acc",
-							"number": null,
-							"person": "3",
-							"polite": null,
-							"poss": null,
-							"pronType": "Prs",
-							"gender": null
+							"hasSepPrefix": null,
+							"lexicallyReflexive": "Acc"
 						}
 					},
-					"normalizedSurface": "sich",
+					"normalizedSurface": "schämt sich",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
-				"members": [{ "attested": "sich", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "schämt", "orthography": "Standard" },
+					{ "attested": "sich", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"expletiveEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],

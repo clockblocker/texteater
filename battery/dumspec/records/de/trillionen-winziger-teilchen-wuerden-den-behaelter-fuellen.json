@@ -27,10 +27,10 @@
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
-			"route": { "family": "Lexeme", "kind": "NUM" },
-			"reading": { "emojiDescription": "🔟⬆1⃣8⃣" },
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
-				"rationale": "Trillionen is the plural of Trillion, the subject of würden … füllen, so its Surface marks Nom.Fem.Plur. Trillion is written with a capital, as Duden's headword is, so the sentence-initial capital is the word's own and the normalized Surface keeps it: casing never follows the word's position (ADR 0002). A Trillion is Duden's eine Million Billionen, 10 to the 18th, not the English trillion."
+				"rationale": "Trillion is a feminine noun (Duden: die Trillion), and its plural Trillionen is the subject of würden … füllen, so its Surface marks Nom.Pl. The capital is the noun's own, as Duden's headword shows, so the normalized Surface keeps it: casing never follows the word's position (ADR 0002). A Trillion is Duden's eine Million Billionen, 10 to the 18th, not the English trillion, and like every numeral beyond zwölf its Reading is 🔢."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -41,16 +41,16 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "NUM",
+						"kind": "NOUN",
 						"canonicalForm": "Trillion",
-						"coreFeatures": {}
+						"coreFeatures": { "gender": "Fem" }
 					},
 					"normalizedSurface": "Trillionen",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
-						"gender": "Fem",
+						"gender": null,
 						"number": "Plur"
 					}
 				},
@@ -58,7 +58,8 @@
 					{ "attested": "Trillionen", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": null
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],
