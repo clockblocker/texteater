@@ -11,7 +11,6 @@ import {
 import { isWorkspaceSubject, type WorkspaceSubject } from "./sheet-workspace";
 
 const V2_STORAGE_KEY = "tf-demo.workspace.v2";
-const V1_STORAGE_KEY = "tf-demo.workspace.v1";
 
 export type ApplicationWorkspaceStorage = Pick<Storage, "getItem" | "setItem">;
 
@@ -27,14 +26,7 @@ export function loadApplicationWorkspace(
 	if (!storage) return fallback;
 	try {
 		const v2 = storage.getItem(V2_STORAGE_KEY);
-		if (v2) {
-			const restored = parseV2(JSON.parse(v2));
-			if (restored) return restored;
-		}
-		const v1 = storage.getItem(V1_STORAGE_KEY);
-		return v1
-			? (migrateV1(JSON.parse(v1), fallback) ?? fallback)
-			: fallback;
+		return v2 ? (parseV2(JSON.parse(v2)) ?? fallback) : fallback;
 	} catch {
 		return fallback;
 	}
@@ -288,128 +280,6 @@ function layoutIdentifiers(layout: WorkspaceLayout): string[] {
 				...layoutIdentifiers(layout.children[0]),
 				...layoutIdentifiers(layout.children[1]),
 			];
-}
-
-function migrateV1(
-	value: unknown,
-	fallback: ApplicationWorkspaceSession,
-): ApplicationWorkspaceSession | null {
-	if (!isValidV1(value)) return null;
-	const retained = value.panes.filter((pane) => pane.sheets.length > 0);
-	if (retained.length === 0) return fallback;
-	const libraryPaneIndex = Math.max(
-		0,
-		retained.findIndex((pane) => pane.id === value.centralPaneId),
-	);
-	let nextId = 2;
-	const presentations: Record<
-		string,
-		WorkspacePresentation<ApplicationWorkspaceSubject>
-	> = {
-		"presentation-1": {
-			id: "presentation-1",
-			subject: { kind: "Library" },
-			form: "Sheet",
-			locked: true,
-		},
-	};
-	const panes: WorkspaceState<ApplicationWorkspaceSubject>["panes"] = {};
-	const paneByV1Id = new Map<string, string>();
-	for (const [index, oldPane] of retained.entries()) {
-		const paneId = `pane-${nextId++}`;
-		paneByV1Id.set(oldPane.id, paneId);
-		const presentationIds =
-			index === libraryPaneIndex ? ["presentation-1"] : [];
-		for (const sheet of oldPane.sheets) {
-			const presentationId = `presentation-${nextId++}`;
-			presentationIds.push(presentationId);
-			const subject = restoredSubject(sheet.subject);
-			if (!isWorkspaceSubject(subject)) return null;
-			presentations[presentationId] = {
-				id: presentationId,
-				subject,
-				form: "Sheet",
-				locked: sheet.locked,
-			};
-		}
-		panes[paneId] = { id: paneId, presentationIds };
-	}
-	let layout: WorkspaceLayout = { kind: "Pane", id: `pane-2` };
-	for (let index = 1; index < retained.length; index += 1) {
-		const paneId = paneByV1Id.get(retained[index]?.id ?? "");
-		if (!paneId) return null;
-		layout = {
-			kind: "Split",
-			id: `split-${nextId++}`,
-			axis: "horizontal",
-			children: [layout, { kind: "Pane", id: paneId }],
-		};
-	}
-	const activePaneId =
-		paneByV1Id.get(value.activePaneId) ??
-		paneByV1Id.get(value.centralPaneId) ??
-		paneByV1Id.get(retained[0]?.id ?? "");
-	if (!activePaneId) return null;
-	return {
-		workspace: {
-			layout,
-			panes,
-			presentations,
-			layers: {},
-			activePaneId,
-			nextId,
-		},
-		candidateKeyByPresentationId: {},
-	};
-}
-
-function isValidV1(value: unknown): value is {
-	readonly centralPaneId: string;
-	readonly activePaneId: string;
-	readonly panes: readonly {
-		readonly id: string;
-		readonly sheets: readonly {
-			readonly instanceId: string;
-			readonly locked: boolean;
-			readonly subject: WorkspaceSubject;
-		}[];
-	}[];
-} {
-	if (
-		!isRecord(value) ||
-		typeof value.centralPaneId !== "string" ||
-		typeof value.activePaneId !== "string" ||
-		!Array.isArray(value.panes) ||
-		value.panes.length === 0
-	)
-		return false;
-	const paneIds = new Set<string>();
-	const sheetIds = new Set<string>();
-	for (const pane of value.panes) {
-		if (
-			!isRecord(pane) ||
-			typeof pane.id !== "string" ||
-			!Array.isArray(pane.sheets) ||
-			paneIds.has(pane.id)
-		)
-			return false;
-		paneIds.add(pane.id);
-		let lockedCount = 0;
-		for (const sheet of pane.sheets) {
-			if (
-				!isRecord(sheet) ||
-				typeof sheet.instanceId !== "string" ||
-				typeof sheet.locked !== "boolean" ||
-				!isWorkspaceSubject(restoredSubject(sheet.subject)) ||
-				sheetIds.has(sheet.instanceId)
-			)
-				return false;
-			sheetIds.add(sheet.instanceId);
-			if (sheet.locked) lockedCount += 1;
-		}
-		if (lockedCount > 1) return false;
-	}
-	return paneIds.has(value.centralPaneId) && paneIds.has(value.activePaneId);
 }
 
 function browserStorage(): ApplicationWorkspaceStorage | null {
