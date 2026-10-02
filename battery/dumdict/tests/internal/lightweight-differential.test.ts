@@ -335,7 +335,7 @@ describe("lightweight Dumdict parser differential", () => {
 		expectParity("parseAsReadingEntry:en", normalized);
 		const parsed = parseAsReadingEntry(normalized, "en");
 		if (parsed instanceof ParsingError) throw new Error("expected success");
-		expect(parsed.reading.emojiDescription).toBe("🚶");
+		expect(parsed.reading).toHaveProperty("emojiDescription", "🚶");
 		for (const emojiDescription of [" text ", "😀😀😀😀😀"])
 			expectParity("parseAsReadingEntry:en", {
 				...base,

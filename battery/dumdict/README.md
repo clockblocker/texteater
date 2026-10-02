@@ -88,9 +88,10 @@ const walkLemmaRecord = {
 } satisfies LemmaRecord<"en">;
 ```
 
-A Dumling `Reading` is exactly `{ lemma, emojiDescription }`. Multiple Readings
-may share the same Lemma while their emoji descriptions distinguish them;
-Dumdict adds the learner note and workflow state around that canonical value:
+A Dumling `Reading` is exactly `{ lemma, emojiDescription }`, or `{ lemma }`
+for a Foreign Lemma, which has one Reading. Multiple Readings may share the
+same Lemma while their emoji descriptions distinguish them; Dumdict adds the
+learner note and workflow state around that canonical value:
 
 ```ts
 const walkReadingEntry = {
@@ -161,6 +162,7 @@ const storedRunReading = storage
 	.flatMap(({ readingEntries }) => readingEntries)
 	.find(
 		({ reading }) =>
+			"emojiDescription" in reading &&
 			reading.emojiDescription === runReading.emojiDescription,
 	);
 ```

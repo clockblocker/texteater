@@ -6,7 +6,6 @@ export const germanMasculineSeeLemma = {
 	canonicalForm: "See",
 	coreFeatures: {
 		gender: "Masc",
-		hyph: null,
 	},
 	language: "de",
 	family: "Lexeme",
@@ -19,7 +18,6 @@ export const germanKindLemma = {
 	canonicalForm: "Kind",
 	coreFeatures: {
 		gender: "Neut",
-		hyph: null,
 	},
 	language: "de",
 	family: "Lexeme",
@@ -32,7 +30,6 @@ export const germanHausLemma = {
 	canonicalForm: "Haus",
 	coreFeatures: {
 		gender: "Neut",
-		hyph: null,
 	},
 	language: "de",
 	family: "Lexeme",
@@ -44,7 +41,6 @@ export const germanGehenLemma = {
 	unitKind: "Lemma" as const,
 	canonicalForm: "gehen",
 	coreFeatures: {
-		verbType: null,
 		lexicallyReflexive: null,
 		hasSepPrefix: null,
 	},
@@ -54,17 +50,16 @@ export const germanGehenLemma = {
 } satisfies Dumling.Lemma<"de", "Lexeme", "VERB">;
 
 // Attestation: "In Berlin sowie im Umland (Agglomeration Berlin) betreibt die [BVG] die U-Bahn Berlin, die Straßenbahn Berlin, den Busverkehr in Berlin und den Fährverkehr in Berlin, nicht jedoch die S-Bahn."
-// UD-style: multi-word abbreviations keep the abbreviated form as canonicalForm and mark Abbr=Yes.
-// See https://universaldependencies.org/u/overview/morphology.html
-// We intentionally do not model a built-in link from "BVG" to "Berliner Verkehrsbetriebe" here.
+// The abbreviation is its own Lemma, because the text uses the letters as the
+// name; German records no Abbr (ADR 0032, amended 2026-10-01). How it expands
+// to "Berliner Verkehrsbetriebe" is a relation, not identity, so no link is
+// modelled here.
 export const germanBVGLemma = {
 	unitKind: "Lemma" as const,
 	canonicalForm: "BVG",
 	coreFeatures: {
-		abbr: "Yes",
 		article: null,
 		gender: null,
-		foreign: null,
 	},
 	language: "de",
 	family: "Lexeme",
@@ -72,14 +67,16 @@ export const germanBVGLemma = {
 } satisfies Dumling.Lemma<"de", "Lexeme", "PROPN">;
 
 // Attestation: "Ich komme [auf jeden Fall] morgen."
+// A fixed adverbial whose whole acts as an adverb: a Locution ADV with no
+// comparison forms (ADR 0039, ADR 0042).
 export const germanAufJedenFallLemma = {
 	unitKind: "Lemma" as const,
 	canonicalForm: "auf jeden Fall",
-	coreFeatures: { discourseFormulaRole: "Reaction" },
+	coreFeatures: { comparable: null },
 	language: "de",
-	family: "Phraseme",
-	kind: "DiscourseFormula",
-} satisfies Dumling.Lemma<"de", "Phraseme", "DiscourseFormula">;
+	family: "Locution",
+	kind: "ADV",
+} satisfies Dumling.Lemma<"de", "Locution", "ADV">;
 
 // Attestation: "[Ab]fahrt nur am Gleis 3."
 export const germanAbPrefixLemma = {

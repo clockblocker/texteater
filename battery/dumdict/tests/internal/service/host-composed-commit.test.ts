@@ -28,7 +28,7 @@ test("plans an unseen Surface and treats an existing Surface as a no-op", async 
 			language: "en",
 			lemma: englishWalkLemma,
 			normalizedSurface: "walked",
-			spelling: "Canonical",
+			spelling: { kind: "Canonical" },
 
 			surfaceFeatures: null,
 			inflectionalFeatures: {

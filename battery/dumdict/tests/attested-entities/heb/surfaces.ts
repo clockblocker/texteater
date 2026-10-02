@@ -25,7 +25,7 @@ export const hebrewKatvuPastThirdPluralInflectionSurface = {
 
 	lemma: hebrewKatavLemma,
 	surfaceFeatures: null,
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 } satisfies Dumling.Surface<"he", "Lexeme", "VERB">;
 
 // Attestation: "הם [כתבו] מכתב."
@@ -47,7 +47,7 @@ export const hebrewKatvuAttestedInflectionSurface = {
 
 	lemma: hebrewKatavLemma,
 	surfaceFeatures: null,
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 } satisfies Dumling.Surface<"he", "Lexeme", "VERB">;
 
 // Attestation: "עוד [שנה] עברה."
@@ -59,7 +59,7 @@ export const hebrewShanaCitationSurface = {
 
 	lemma: hebrewShanaLemma,
 	surfaceFeatures: null,
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 } satisfies Dumling.Surface<"he", "Lexeme", "NOUN">;
 
 // Attestation: "[ארה״ב] הודיעה על צעד חדש."
@@ -71,5 +71,5 @@ export const hebrewUsAbbreviationCitationSurface = {
 
 	lemma: hebrewUsAbbreviationLemma,
 	surfaceFeatures: null,
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 } satisfies Dumling.Surface<"he", "Lexeme", "PROPN">;

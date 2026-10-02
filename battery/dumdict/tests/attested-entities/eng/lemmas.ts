@@ -5,7 +5,6 @@ export const englishWalkLemma = {
 	unitKind: "Lemma" as const,
 	canonicalForm: "walk",
 	coreFeatures: {
-		style: null,
 		phrasal: null,
 		extPos: null,
 		abbr: null,
@@ -21,7 +20,6 @@ export const englishGiveUpLemma = {
 	canonicalForm: "give up",
 	coreFeatures: {
 		phrasal: "Yes",
-		style: null,
 		extPos: null,
 		abbr: null,
 	},
@@ -37,10 +35,8 @@ export const englishBankFinancialLemma = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		foreign: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -54,10 +50,8 @@ export const englishBankRiverLemma = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		foreign: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -71,10 +65,8 @@ export const englishPlantOrganismLemma = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		foreign: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -88,10 +80,8 @@ export const englishPlantFactoryLemma = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		foreign: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -105,10 +95,8 @@ export const englishLightIlluminationLemma = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		foreign: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -121,10 +109,10 @@ export const englishLightWeightLemma = {
 	canonicalForm: "light",
 	coreFeatures: {
 		abbr: null,
+		comparable: "Yes",
 		extPos: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -138,10 +126,8 @@ export const englishSpringSeasonLemma = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		foreign: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -155,10 +141,8 @@ export const englishSpringCoilLemma = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		foreign: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -172,10 +156,8 @@ export const englishRakeToolLemma = {
 	coreFeatures: {
 		abbr: null,
 		extPos: null,
-		foreign: null,
 		numForm: null,
 		numType: null,
-		style: null,
 	},
 	language: "en",
 	family: "Lexeme",
@@ -188,7 +170,6 @@ export const englishLookUpLemma = {
 	canonicalForm: "look up",
 	coreFeatures: {
 		phrasal: "Yes",
-		style: null,
 		extPos: null,
 		abbr: null,
 	},
@@ -202,7 +183,6 @@ export const englishLookLemma = {
 	unitKind: "Lemma" as const,
 	canonicalForm: "look",
 	coreFeatures: {
-		style: null,
 		phrasal: null,
 		extPos: null,
 		abbr: null,

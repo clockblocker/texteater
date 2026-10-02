@@ -5,7 +5,6 @@ export const germanGehenLemma = {
 	unitKind: "Lemma" as const,
 	canonicalForm: "gehen",
 	coreFeatures: {
-		verbType: null,
 		lexicallyReflexive: null,
 		hasSepPrefix: null,
 	},

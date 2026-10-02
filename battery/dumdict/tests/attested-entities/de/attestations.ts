@@ -4,13 +4,14 @@ import { germanAufJedenFallLemma, germanBVGLemma } from "./lemmas";
 
 const aufJedenFallSurface = {
 	unitKind: "Surface" as const,
+	inflectionalFeatures: null,
 	language: "de",
 	normalizedSurface: "auf jeden Fall",
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 
 	lemma: germanAufJedenFallLemma,
 	surfaceFeatures: null,
-} as const;
+} satisfies Dumling.Surface<"de", "Locution", "ADV">;
 
 // Attestation: "Ich komme [auf] [jeden] [Fall] morgen."
 export const germanAufJedenFallFullAttestation = {
@@ -22,7 +23,7 @@ export const germanAufJedenFallFullAttestation = {
 	],
 	realizationCoverage: "Full",
 	surface: aufJedenFallSurface,
-} satisfies Dumling.Attestation<"de", "Phraseme", "DiscourseFormula">;
+} satisfies Dumling.Attestation<"de", "Locution", "ADV">;
 
 // Attestation: "In Berlin ... betreibt die [BVG] die U-Bahn Berlin ..."
 export const germanBVGAbbreviationAttestation = {
@@ -35,7 +36,7 @@ export const germanBVGAbbreviationAttestation = {
 		inflectionalFeatures: null,
 		language: "de",
 		normalizedSurface: "BVG",
-		spelling: "Canonical",
+		spelling: { kind: "Canonical" },
 
 		lemma: germanBVGLemma,
 		surfaceFeatures: null,

@@ -19,7 +19,7 @@ const walkSurface = {
 	language: "en",
 	lemma: englishWalkLemma,
 	normalizedSurface: "walk",
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 
 	surfaceFeatures: null,
 } satisfies Dumling.Surface<"en">;

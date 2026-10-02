@@ -9,7 +9,6 @@ import {getBootedUpDumdict} from "../../src/testing/boot";
 const walkLemma = {unitKind: "Lemma" as const,
 	canonicalForm: "walk",
 	coreFeatures: {
-		style: null,
 		phrasal: null,
 		extPos: null,
 		abbr: null,
@@ -48,7 +47,7 @@ const walkSurface = {unitKind: "Surface" as const,
 
 	lemma: walkLemma,
 	surfaceFeatures: null,
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 } satisfies Dumling.Surface<"en", "Lexeme", "VERB">;
 
 // README_BLOCK:english-walk-entry-record:start
@@ -114,6 +113,7 @@ const storedRunReading = storage
 	.flatMap(({ readingEntries }) => readingEntries)
 	.find(
 		({ reading }) =>
+			"emojiDescription" in reading &&
 			reading.emojiDescription === runReading.emojiDescription,
 	);
 // README_BLOCK:quickstart-walk:end

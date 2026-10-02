@@ -122,6 +122,13 @@ export const storageRejectingReadingEntryContext = () => {
 	};
 };
 
+/** A Reading's Emoji Description; a Foreign Reading has none (ADR 0045). */
+export function emojiOf(
+	reading: import("dumling/types").Reading,
+): string | undefined {
+	return "emojiDescription" in reading ? reading.emojiDescription : undefined;
+}
+
 export function lemmaRelations(
 	relations: import("dumrel/types").SemanticRelations | undefined,
 ) {

@@ -4,7 +4,6 @@ import { readingFingerprint } from "../../src/core/identity";
 import { derivePendingEntryId } from "../../src/core/pending";
 
 const englishVerbFeatures = {
-	style: null,
 	phrasal: null,
 	extPos: null,
 	abbr: null,
@@ -59,7 +58,7 @@ export const englishSwimCitationSurface = {
 	language: "en",
 	lemma: englishSwimLemma,
 	normalizedSurface: "swim",
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 
 	surfaceFeatures: null,
 } satisfies Dumling.Surface<"en", "Lexeme", "VERB">;

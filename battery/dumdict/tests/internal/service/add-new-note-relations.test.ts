@@ -3,6 +3,7 @@ import * as Effect from "effect/Effect";
 import { projectSemanticRelations } from "../../../src";
 import {
 	derivePendingEntryId,
+	emojiOf,
 	englishRunDraft,
 	englishSwimCitationSurface,
 	englishSwimDraft,
@@ -112,16 +113,14 @@ describe("configured service relation writes", () => {
 		expect(result.status).toBe("applied");
 		expect(
 			lemmaRelations(
-				readings.find(
-					({ reading }) => reading.emojiDescription === "🏊",
-				)?.knowledge?.semanticRelations,
+				readings.find(({ reading }) => emojiOf(reading) === "🏊")
+					?.knowledge?.semanticRelations,
 			)?.nearSynonym,
 		).toEqual([englishWalkLemma]);
 		expect(
 			lemmaRelations(
-				readings.find(
-					({ reading }) => reading.emojiDescription === "🚶",
-				)?.knowledge?.semanticRelations,
+				readings.find(({ reading }) => emojiOf(reading) === "🚶")
+					?.knowledge?.semanticRelations,
 			)?.nearSynonym,
 		).toBeUndefined();
 		expect(projections(readings)).toContainEqual({
@@ -168,16 +167,14 @@ describe("configured service relation writes", () => {
 		const readings = notes.flatMap(({ readingEntries }) => readingEntries);
 		expect(
 			lemmaRelations(
-				readings.find(
-					({ reading }) => reading.emojiDescription === "🏃",
-				)?.knowledge?.semanticRelations,
+				readings.find(({ reading }) => emojiOf(reading) === "🏃")
+					?.knowledge?.semanticRelations,
 			)?.antonym,
 		).toEqual([englishWalkLemma]);
 		expect(
 			lemmaRelations(
-				readings.find(
-					({ reading }) => reading.emojiDescription === "🚶",
-				)?.knowledge?.semanticRelations,
+				readings.find(({ reading }) => emojiOf(reading) === "🚶")
+					?.knowledge?.semanticRelations,
 			)?.antonym,
 		).toBeUndefined();
 	});

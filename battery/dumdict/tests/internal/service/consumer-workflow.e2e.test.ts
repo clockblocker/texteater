@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import {
+	emojiOf,
 	englishSwimDraft,
 	englishSwimLemma,
 	englishSwimReading,
@@ -74,7 +75,7 @@ describe("consumer workflow", () => {
 		);
 
 		expect(
-			readings.candidates.map(({ reading }) => reading.emojiDescription),
+			readings.candidates.map(({ reading }) => emojiOf(reading)),
 		).toEqual(["🚶", "🚶‍➡"]);
 	});
 });

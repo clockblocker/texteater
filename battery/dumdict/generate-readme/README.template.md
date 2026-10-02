@@ -82,9 +82,10 @@ A `LemmaRecord` stores the grammatical identity:
 
 <!-- README_BLOCK:english-walk-entry-record -->
 
-A Dumling `Reading` is exactly `{ lemma, emojiDescription }`. Multiple Readings
-may share the same Lemma while their emoji descriptions distinguish them;
-Dumdict adds the learner note and workflow state around that canonical value:
+A Dumling `Reading` is exactly `{ lemma, emojiDescription }`, or `{ lemma }`
+for a Foreign Lemma, which has one Reading. Multiple Readings may share the
+same Lemma while their emoji descriptions distinguish them; Dumdict adds the
+learner note and workflow state around that canonical value:
 
 <!-- README_BLOCK:english-walk-reading-entry -->
 

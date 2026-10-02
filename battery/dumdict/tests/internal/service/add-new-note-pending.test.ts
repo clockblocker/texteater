@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import {
+	emojiOf,
 	englishRunDraft,
 	englishSwimDraft,
 	englishSwimLemma,
@@ -69,7 +70,7 @@ describe("pending lifecycle", () => {
 					.flatMap(({ readingEntries }) => readingEntries)
 					.find(
 						({ reading }) =>
-							reading.emojiDescription ===
+							emojiOf(reading) ===
 							englishWalkReading.emojiDescription,
 					)?.knowledge?.semanticRelations,
 			)?.nearSynonym,
@@ -78,8 +79,8 @@ describe("pending lifecycle", () => {
 			lemmaRelations(
 				notes
 					.flatMap(({ readingEntries }) => readingEntries)
-					.find(({ reading }) => reading.emojiDescription === "🏊")
-					?.knowledge?.semanticRelations,
+					.find(({ reading }) => emojiOf(reading) === "🏊")?.knowledge
+					?.semanticRelations,
 			)?.nearSynonym,
 		).toBeUndefined();
 	});

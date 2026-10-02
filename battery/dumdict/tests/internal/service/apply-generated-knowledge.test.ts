@@ -9,7 +9,7 @@ import {
 	germanGehenLemma,
 	germanGehenReading,
 } from "../../fixtures/de-notes";
-import { failure } from "./helpers";
+import { emojiOf, failure } from "./helpers";
 
 const germanRennenLemma = {
 	...germanGehenLemma,
@@ -65,8 +65,8 @@ describe("applyGeneratedKnowledge", () => {
 			storage
 				.loadAll()
 				.flatMap((note) => note.readingEntries)
-				.find((entry) => entry.reading.emojiDescription === "🚶")
-				?.knowledge?.semanticRelations,
+				.find((entry) => emojiOf(entry.reading) === "🚶")?.knowledge
+				?.semanticRelations,
 		).toEqual({ targetKind: "reading", synonym: [germanRennenReading] });
 	});
 

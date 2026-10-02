@@ -12,5 +12,5 @@ export const germanHausCitationSurface = {
 
 	lemma: germanHausLemma,
 	surfaceFeatures: null,
-	spelling: "Canonical",
+	spelling: { kind: "Canonical" },
 } satisfies Dumling.Surface<"de", "Lexeme", "NOUN">;

@@ -6,6 +6,7 @@ import {
 	type SerializedDictionaryNote,
 } from "../../../src";
 import {
+	emojiOf,
 	englishSwimDraft,
 	englishSwimLemma,
 	englishSwimReading,
@@ -82,16 +83,14 @@ describe("relations cleanup", () => {
 		expect(result.status).toBe("applied");
 		expect(
 			lemmaRelations(
-				readings.find(
-					({ reading }) => reading.emojiDescription === "🚶",
-				)?.knowledge?.semanticRelations,
+				readings.find(({ reading }) => emojiOf(reading) === "🚶")
+					?.knowledge?.semanticRelations,
 			)?.nearSynonym,
 		).toEqual([englishSwimLemma]);
 		expect(
 			lemmaRelations(
-				readings.find(
-					({ reading }) => reading.emojiDescription === "🏊",
-				)?.knowledge?.semanticRelations,
+				readings.find(({ reading }) => emojiOf(reading) === "🏊")
+					?.knowledge?.semanticRelations,
 			)?.nearSynonym,
 		).toBeUndefined();
 		expect(
@@ -102,11 +101,13 @@ describe("relations cleanup", () => {
 	});
 
 	test("keeps an ambiguous multi-Lemma shadow pending and inert", async () => {
+		// Another Core on the same route and Canonical Form, so two Lemmas
+		// match the shadow; the feature itself is arbitrary.
 		const alternateLemma = {
 			...englishSwimLemma,
 			coreFeatures: {
 				...englishSwimLemma.coreFeatures,
-				style: "Vrnc" as const,
+				abbr: "Yes" as const,
 			},
 		};
 		const alternateReading = {
@@ -132,16 +133,15 @@ describe("relations cleanup", () => {
 			);
 			expect(
 				lemmaRelations(
-					readings.find(
-						({ reading }) => reading.emojiDescription === "🚶",
-					)?.knowledge?.semanticRelations,
+					readings.find(({ reading }) => emojiOf(reading) === "🚶")
+						?.knowledge?.semanticRelations,
 				)?.nearSynonym,
 			).toBeUndefined();
 			for (const emoji of ["🏊", "🌊"])
 				expect(
 					lemmaRelations(
 						readings.find(
-							({ reading }) => reading.emojiDescription === emoji,
+							({ reading }) => emojiOf(reading) === emoji,
 						)?.knowledge?.semanticRelations,
 					)?.nearSynonym,
 				).toBeUndefined();

@@ -40,6 +40,7 @@ export const hebrewKatvuPointedVariantAttestation = {
 	surface: {
 		...hebrewKatvuAttestedInflectionSurface,
 		normalizedSurface: "כָּתְבוּ",
-		spelling: "Variant",
+		// Pointed spelling is accepted by the current standard (ADR 0041).
+		spelling: { kind: "Variant", variantTags: ["Licensed"] },
 	},
 } satisfies Dumling.Attestation<"he", "Lexeme", "VERB">;

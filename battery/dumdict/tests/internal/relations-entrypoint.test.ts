@@ -7,7 +7,7 @@ test("relation entrypoint consumes the new projection without authoring or retai
 		stdin: {
 			contents: `
  import {projectSemanticRelations} from "./src/relations.ts";
- const lemma={unitKind:"Lemma",language:"de",family:"Lexeme",kind:"NOUN",canonicalForm:"Bank",coreFeatures:{gender:"Fem",hyph:null}};
+ const lemma={unitKind:"Lemma",language:"de",family:"Lexeme",kind:"NOUN",canonicalForm:"Bank",coreFeatures:{gender:"Fem"}};
  const target={...lemma,canonicalForm:"Sitzbank"};
  const entry={reading:{unitKind:"Reading",lemma,emojiDescription:"🪑"},knowledge:{semanticRelations:{synonym:[target]}},attestedTranslations:[],attestations:[],notes:""};
  const result=projectSemanticRelations([entry]);

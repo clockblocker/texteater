@@ -94,6 +94,7 @@ export const englishLightWeightAttestation = {
 	unitKind: "Attestation" as const,
 	members: [{ attested: "light", orthography: "Standard" }],
 	realizationCoverage: "Full",
+	articleEvidence: null,
 	surface: englishLightWeightCitationSurface,
 } satisfies Dumling.Attestation<"en", "Lexeme", "ADJ">;
 
