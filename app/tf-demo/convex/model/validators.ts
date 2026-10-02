@@ -398,8 +398,12 @@ export const sentenceInputValidator = v.object({
 	/** The Sentence's normalized text; its Segments concatenate to it. */
 	stitchedText: v.string(),
 	segments: v.array(storedSegmentInputValidator),
-	/** Every ResolvableText Segment belongs to exactly one unit. */
+	/**
+	 * Every ResolvableText Segment belongs to exactly one unit, unless the
+	 * Sentence's segmentation failed, when there are none.
+	 */
 	units: v.array(storedUnitValidator),
+	segmentationFailed: v.optional(v.literal(true)),
 });
 
 export const semanticRelationValidator = literalUnion(semanticRelationValues);

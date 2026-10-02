@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { createSegment } from "dumgen";
+import { createDumgen } from "dumgen";
 import * as Effect from "effect/Effect";
 import { projectSentenceView } from "../convex/modules/text/sentenceView";
 import { persistSubmittedText } from "../convex/modules/text/submission";
@@ -23,14 +23,14 @@ function intakeWith(jev: ReturnType<typeof fakeJev>) {
 	const stored: SubmittedText[] = [];
 	const run = createIntakeRunRecorder(3);
 	const intake = createIntake({
-		segment: createSegment({ ask: jev.ask, onCall: run.call }),
+		segment: createDumgen({ jev: jev.ask, onOperation: run.operation })
+			.segment,
 		persistence: {
 			persistSubmittedText: async (input) => {
 				stored.push(input);
 				return { textId: "text-1" };
 			},
 		},
-		onSegmented: run.segmented,
 	});
 	const submit = (sourceText = SOURCE, language: "de" | "en" = "de") =>
 		Effect.runPromise(
@@ -186,27 +186,78 @@ test("storage refuses units that do not cover the ResolvableText Segments exactl
 	).rejects.toThrow("Segment 2 belongs to two units");
 });
 
-test("a Sentence whose jev request fails keeps its written words, each ResolvableText Segment its own Unresolved unit", async () => {
+test("a Sentence whose jev request fails is stored marked as not segmented, with its written words and no units", async () => {
 	const jev = fakeJev({
 		answers: germanAnswers,
 		fail: (request) => asksAbout(request, "Ja!"),
 	});
 	const { stored, submit } = intakeWith(jev);
 	await submit();
-	const sentences = stored[0]?.sentences ?? [];
-	expect(sentences[2]).toMatchObject({
+	const submission = stored[0];
+	if (!submission) throw new Error("Expected a submission.");
+	const sentences = submission.sentences;
+	expect(sentences[2]).toEqual({
+		segmentedSentenceId: "key#2",
+		position: 2,
+		paragraph: 1,
+		language: "de",
 		stitchedText: "Ja!",
 		segments: [
 			{ kind: "ResolvableText", text: "Ja" },
 			{ kind: "Punctuation", text: "!" },
 		],
-		units: [{ segments: [0], route: "Unresolved" }],
+		units: [],
+		segmentationFailed: true,
 	});
 	// The other Sentences are untouched by it.
 	expect(sentences[0]?.units).toEqual([
 		{ segments: [0], route: PRON },
 		{ segments: [2, 4], route: VERB },
 	]);
+	expect(sentences[0]).not.toHaveProperty("segmentationFailed");
+
+	// Storage keeps the mark, and the reader view shows the Sentence so.
+	const t = createTestConvex();
+	const { sentenceIds } = await t.run((ctx) =>
+		persistSubmittedText(ctx, submission),
+	);
+	const view = await t.run(async (ctx) => {
+		const sentence = await ctx.db.get(sentenceIds[2] ?? ("" as never));
+		if (!sentence) throw new Error("Expected the third Sentence.");
+		return projectSentenceView(ctx, sentence, "visitor-1");
+	});
+	expect(view).toMatchObject({ segmentationFailed: true });
+	expect(view.segments.map(({ unit }) => unit)).toEqual([
+		undefined,
+		undefined,
+	]);
+});
+
+test("storage refuses units on a Sentence marked as not segmented", async () => {
+	const t = createTestConvex();
+	await expect(
+		t.run((ctx) =>
+			persistSubmittedText(ctx, {
+				submissionKey: "marked",
+				sourceText: "Ja!",
+				sentences: [
+					{
+						segmentedSentenceId: "marked#0",
+						position: 0,
+						paragraph: 0,
+						language: "de",
+						stitchedText: "Ja!",
+						segments: [
+							{ kind: "ResolvableText", text: "Ja" },
+							{ kind: "Punctuation", text: "!" },
+						],
+						units: [{ segments: [0], route: "Unresolved" }],
+						segmentationFailed: true,
+					},
+				],
+			}),
+		),
+	).rejects.toThrow("A Sentence whose segmentation failed stores no units.");
 });
 
 test("the intake run sums jev tokens from every call and records how each Sentence ended", async () => {

@@ -17,7 +17,7 @@ export const intakeRunValidator = v.object({
 	sentenceCount: v.number(),
 	/**
 	 * How each Sentence's `segment.inUnits` ended: Segmented, or Failed when
-	 * it fell back to one Unresolved unit per ResolvableText Segment.
+	 * it was stored marked as not segmented.
 	 */
 	sentences: v.array(
 		v.object({
@@ -28,7 +28,7 @@ export const intakeRunValidator = v.object({
 			] as const),
 		}),
 	),
-	/** The jev requests `segment.inUnits` sent, summed from its `onCall`. */
+	/** The jev requests `segment.inUnits` sent, summed from its trace. */
 	jev: v.object({
 		calls: v.number(),
 		failed: v.number(),

@@ -152,6 +152,34 @@ test("a selected unit keeps its look on the member whose click came back Unresol
 	expect(buttonMarkup(markup, "auf")).toContain('data-state="selected"');
 });
 
+test("a Sentence intake could not segment shows as not segmented, each word without a unit", () => {
+	const markup = renderToStaticMarkup(
+		createElement(SentenceList, {
+			sentences: [
+				{
+					sentenceId: "sentence_1",
+					position: 0,
+					language: "de",
+					stitchedText: "Sie gibt den alten Plan auf.",
+					sourceText: "Sie gibt den alten Plan auf.",
+					segmentationFailed: true,
+					segments: sentenceSegments().map(
+						({ unit: _unit, ...segment }) => segment,
+					),
+				},
+			],
+			selectedSegmentKey: null,
+			onSegmentClick: async () => {},
+		}),
+	);
+
+	expect(markup).toContain('data-segmentation="failed"');
+	expect(markup).toContain('title="Not segmented"');
+	expect(buttonMarkup(markup, "gibt")).toContain(
+		'aria-label="gibt, in a sentence that is not segmented"',
+	);
+});
+
 function buttonMarkup(markup: string, text: string): string {
 	return markup.match(new RegExp(`<button[^>]*>${text}</button>`))?.[0] ?? "";
 }

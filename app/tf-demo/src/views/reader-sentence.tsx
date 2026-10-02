@@ -32,6 +32,8 @@ export type ReaderSentenceData = {
 	readonly language: "de" | "en" | "he";
 	readonly stitchedText: string;
 	readonly segments: readonly SentenceSegmentView[];
+	/** Intake could not segment the Sentence, so its words have no units. */
+	readonly segmentationFailed?: true;
 };
 
 /**
@@ -40,6 +42,9 @@ export type ReaderSentenceData = {
  * block: hover and focus preview every member of the word's group (see
  * `segmentGroups`), a click selects that group, and the members of a
  * focused occurrence wear the selected rule. Selection outranks preview.
+ * A Sentence intake could not segment shows as not segmented: hover and
+ * focus preview no word, since none has a unit, and a click selects only
+ * the word clicked.
  */
 export function ReaderSentence<S extends ReaderSentenceData>({
 	sentence,
@@ -68,7 +73,8 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 		() => segmentGroups(sentence.segments),
 		[sentence.segments],
 	);
-	const previewIndex = hoveredIndex ?? focusedIndex;
+	const notSegmented = sentence.segmentationFailed === true;
+	const previewIndex = notSegmented ? null : (hoveredIndex ?? focusedIndex);
 	const previewGroup =
 		previewIndex === null ? undefined : groups.get(previewIndex);
 	const selectedSegment = sentence.segments.find(
@@ -81,7 +87,12 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 		: undefined;
 
 	return (
-		<p className={className} ref={onSentenceElement}>
+		<p
+			className={className}
+			ref={onSentenceElement}
+			data-segmentation={notSegmented ? "failed" : undefined}
+			title={notSegmented ? "Not segmented" : undefined}
+		>
 			{sentence.segments.length === 0 ? (
 				<span>{sentence.stitchedText}</span>
 			) : null}
@@ -137,7 +148,11 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 					segment.resolutionState === "PermanentFailure"
 				}
 				aria-pressed={isSelected}
-				aria-label={segmentAccessibleLabel(segment)}
+				aria-label={
+					notSegmented
+						? `${segment.text}, in a sentence that is not segmented`
+						: segmentAccessibleLabel(segment)
+				}
 				onBlur={() => setFocusedIndex(null)}
 				onFocus={() => setFocusedIndex(segment.index)}
 				onMouseEnter={() => setHoveredIndex(segment.index)}

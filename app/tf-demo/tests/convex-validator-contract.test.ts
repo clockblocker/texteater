@@ -306,10 +306,11 @@ test("Dumgen's segmenter runs without package-relative file I/O", async () => {
 			`
  const original = process.getBuiltinModule.bind(process);
  process.getBuiltinModule = id => id === "node:fs" ? {...original(id), readFileSync() {throw Error("filesystem unavailable");}} : original(id);
- const {createSegment} = await import("dumgen");
- const segment = createSegment({ask: async () => {throw Error("controlled provider failure");}});
- const text = await segment.inUnits({language: "de", paragraphs: [{sentences: ["Die Banken sind geöffnet."]}]});
- if (!text.paragraphs[0]?.sentences[0]?.failure) throw Error("Expected the controlled failure's fallback");
+ const {createDumgen} = await import("dumgen");
+ const {runPromise} = await import("effect/Effect");
+ const dumgen = createDumgen({jev: async () => {throw Error("controlled provider failure");}});
+ const text = await runPromise(dumgen.segment.inUnits({language: "de", paragraphs: [{sentences: ["Die Banken sind geöffnet."]}]}));
+ if (!text.paragraphs[0]?.sentences[0]?.failed) throw Error("Expected the controlled failure's mark");
  `,
 		],
 		{

@@ -129,6 +129,11 @@ export default defineSchema({
 		 * route variants. Analysis Stripping removes them with the Segments.
 		 */
 		units: v.optional(v.array(storedUnitValidator)),
+		/**
+		 * Present when intake's `segment.inUnits` failed for the Sentence:
+		 * it stores no units, and the reader shows it as not segmented.
+		 */
+		segmentationFailed: v.optional(v.literal(true)),
 	})
 		.index("by_segmented_sentence_id", ["segmentedSentenceId"])
 		.index("by_text_id_and_position", ["textId", "position"]),

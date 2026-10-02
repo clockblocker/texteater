@@ -1,4 +1,4 @@
-import { type SegmentedText, type Segmenters, splitText } from "dumgen";
+import { type Dumgen, type SegmentedText, splitText } from "dumgen";
 import * as Effect from "effect/Effect";
 import { inspectionStep } from "./inspectionCapture";
 import type { StoredSegmentValue, StoredUnit } from "./storedSegments";
@@ -48,8 +48,16 @@ export type SubmittedSentence = {
 	readonly stitchedText: string;
 	/** A fused word arrives as its pieces when segmentation split it. */
 	readonly segments: readonly StoredSegmentValue[];
-	/** Every ResolvableText Segment belongs to exactly one unit. */
+	/**
+	 * Every ResolvableText Segment belongs to exactly one unit, unless the
+	 * Sentence's segmentation failed.
+	 */
 	readonly units: readonly StoredUnit[];
+	/**
+	 * Present when `segment.inUnits` failed for the Sentence: it has no
+	 * units, and the reader shows it as not segmented (#861).
+	 */
+	readonly segmentationFailed?: true;
 };
 
 export type SubmittedText = {
@@ -109,17 +117,18 @@ function submittedSentences(
 							}
 						: {}),
 				})),
+				...(sentence.failed
+					? { segmentationFailed: true as const }
+					: {}),
 			};
 		}),
 	);
 }
 
 export function createIntake(options: {
-	/** `createSegment({ ask })` with the host's jev; a test passes a fake `ask`. */
-	readonly segment: Segmenters;
+	/** `createDumgen({ jev }).segment` with the host's jev; a test passes a fake jev. */
+	readonly segment: Dumgen["segment"];
 	readonly persistence: IntakePersistence;
-	/** Receives the Segmented Text before it is stored, for the intake run's record. */
-	readonly onSegmented?: (text: SegmentedText) => void;
 }) {
 	function submitText(input: SubmitTextInput) {
 		return Effect.gen(function* () {
@@ -143,17 +152,18 @@ export function createIntake(options: {
 			if (sentences.length === 0)
 				throw new Error("Text submission contains no sentences.");
 
-			const segmented = yield* Effect.tryPromise(() =>
-				options.segment.inUnits({ language: "de", paragraphs }),
-			).pipe(
-				Effect.withSpan(
-					"Segment sentences in units",
-					inspectionStep("battery/dumgen · segment.inUnits", {
-						paragraphs,
-					}),
-				),
-			);
-			options.onSegmented?.(segmented);
+			// A Sentence whose calls fail comes back marked, so this step
+			// fails only on a bug or an interruption.
+			const segmented = yield* options.segment
+				.inUnits({ language: "de", paragraphs })
+				.pipe(
+					Effect.withSpan(
+						"Segment sentences in units",
+						inspectionStep("battery/dumgen · segment.inUnits", {
+							paragraphs,
+						}),
+					),
+				);
 			const submission: SubmittedText = {
 				submissionKey: input.submissionKey,
 				sourceText: input.sourceText,

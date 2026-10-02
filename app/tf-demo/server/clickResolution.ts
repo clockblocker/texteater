@@ -1,3 +1,4 @@
+import type { InvalidModelOutput, ProviderFailure } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import type { ClickSentence } from "./clickEncounter";
@@ -59,13 +60,20 @@ export type ClickReadingInput = {
 	readonly candidates: readonly string[];
 };
 
+/**
+ * Unresolved and Catalog Miss are answers; the error channel only says that
+ * no usable answer came back (#859).
+ */
 export type ClickResolution = {
 	readonly grammar: (
 		input: ClickGrammarInput,
-	) => Effect.Effect<ClickGrammar, unknown>;
+	) => Effect.Effect<ClickGrammar, ProviderFailure | InvalidModelOutput>;
 	readonly reading: (
 		input: ClickReadingInput,
-	) => Effect.Effect<ReadingResolution | CatalogMissSignal, unknown>;
+	) => Effect.Effect<
+		ReadingResolution | CatalogMissSignal,
+		ProviderFailure | InvalidModelOutput
+	>;
 };
 
 /**

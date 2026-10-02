@@ -1,5 +1,5 @@
 import type { Infer } from "convex/values";
-import type { SegmentCall, SegmentedText } from "dumgen";
+import type { OperationTrace } from "dumgen";
 import * as Cause from "effect/Cause";
 import type { intakeRunValidator } from "../convex/model/intakeRuns";
 
@@ -18,10 +18,9 @@ export function failureTagOf(cause: Cause.Cause<unknown>): string {
 }
 
 /**
- * Collects one submission attempt's summary: every jev request
- * `segment.inUnits` reported through `onCall`, with its tokens and time,
- * and how each Sentence's segmentation ended. It keeps no Text, prompt or
- * answer.
+ * Collects one submission attempt's summary from the trace of its
+ * `segment.inUnits`: every jev call with its tokens and time, and how each
+ * Sentence's segmentation ended. It keeps no Text, prompt or answer.
  */
 export function createIntakeRunRecorder(sentenceCount: number) {
 	const jev: IntakeRun["jev"] = {
@@ -34,24 +33,23 @@ export function createIntakeRunRecorder(sentenceCount: number) {
 	};
 	const outcomes = new Map<number, SentenceOutcome>();
 	return {
-		/** `createSegment`'s `onCall`. */
-		call(call: SegmentCall) {
-			jev.calls++;
-			if (call.error !== undefined) jev.failed++;
-			jev.inputTokens += call.inputTokens;
-			jev.outputTokens += call.outputTokens;
-			jev.totalDurationMs += call.durationMs;
-			jev.maxDurationMs = Math.max(jev.maxDurationMs, call.durationMs);
-		},
-		/** How each Sentence came back from `segment.inUnits`, by position. */
-		segmented(text: SegmentedText) {
-			let position = 0;
-			for (const { sentences } of text.paragraphs)
-				for (const sentence of sentences)
-					outcomes.set(
-						position++,
-						sentence.failure === undefined ? "Segmented" : "Failed",
-					);
+		/** `createDumgen`'s `onOperation`. A Sentence's index is its position. */
+		operation(trace: OperationTrace) {
+			if (trace.operation !== "segment.inUnits") return;
+			for (const call of trace.calls) {
+				if (call.executor !== "jev") continue;
+				jev.calls++;
+				if (call.failure !== undefined) jev.failed++;
+				jev.inputTokens += call.inputTokens;
+				jev.outputTokens += call.outputTokens;
+				jev.totalDurationMs += call.durationMs;
+				jev.maxDurationMs = Math.max(
+					jev.maxDurationMs,
+					call.durationMs,
+				);
+			}
+			for (const { sentence, outcome } of trace.sentences)
+				outcomes.set(sentence, outcome);
 		},
 		summary(
 			attempt: Pick<

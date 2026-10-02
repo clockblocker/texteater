@@ -1,6 +1,6 @@
 import type { Infer } from "convex/values";
 import {
-	assertStoredUnits,
+	assertSentenceUnits,
 	MAX_SEGMENTS_PER_SENTENCE,
 } from "../../../server/storedSegments";
 import {
@@ -120,7 +120,7 @@ export async function persistSubmittedText(
 				);
 			}
 		}
-		assertStoredUnits(sentence.segments, sentence.units);
+		assertSentenceUnits(sentence);
 	}
 
 	const existingText = await ctx.db
@@ -239,6 +239,9 @@ export async function persistSubmittedText(
 					language: submitted.language,
 					stitchedText: submitted.stitchedText,
 					units: submitted.units,
+					...(submitted.segmentationFailed
+						? { segmentationFailed: true as const }
+						: {}),
 				};
 				const sentenceId =
 					existing?._id ??
@@ -295,6 +298,9 @@ export async function persistSubmittedText(
 					language: sentence.language,
 					stitchedText: sentence.stitchedText,
 					units: sentence.units,
+					...(sentence.segmentationFailed
+						? { segmentationFailed: true as const }
+						: {}),
 				});
 				await Promise.all(
 					sentence.segments.map((segment, index) =>

@@ -1,4 +1,5 @@
 import { afterEach, expect, jest, test } from "bun:test";
+import { ProviderFailure } from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { api, internal } from "../convex/_generated/api";
@@ -31,6 +32,10 @@ import { startSession } from "./support/occurrences";
 afterEach(() => {
 	jest.useRealTimers();
 });
+
+/** A failure the ClickResolution port may report. */
+const providerFailure = (message: string) =>
+	new ProviderFailure({ stage: "test", message });
 
 const lemma: Dumling.Lemma<"de", "Lexeme", "NOUN"> = {
 	unitKind: "Lemma",
@@ -352,10 +357,12 @@ test("Unresolved is durable; a late committed occurrence still wins", async () =
 
 test("a failure from either side of the port leaves no partial dictionary records", async () => {
 	for (const resolution of [
-		fakeResolution({ grammar: () => Effect.fail(Error("grammar failed")) })
-			.resolution,
-		fakeResolution({ reading: () => Effect.fail(Error("emoji failed")) })
-			.resolution,
+		fakeResolution({
+			grammar: () => Effect.fail(providerFailure("grammar failed")),
+		}).resolution,
+		fakeResolution({
+			reading: () => Effect.fail(providerFailure("emoji failed")),
+		}).resolution,
 	]) {
 		const run = setup({ resolution });
 		await expect(run.resolve()).rejects.toThrow("failed");
@@ -524,7 +531,7 @@ test("a Reading failure interrupts an in-flight Knowledge draft and hands nothin
 	let interrupted = false;
 	const run = setup({
 		resolution: fakeResolution({
-			reading: () => Effect.fail(Error("emoji failed")),
+			reading: () => Effect.fail(providerFailure("emoji failed")),
 		}).resolution,
 		draftKnowledge: () => {
 			drafts++;

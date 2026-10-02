@@ -1,16 +1,28 @@
 "use node";
 
 import { v } from "convex/values";
-import { createSegment, createTypeSafeAsk } from "dumgen";
+import { createDumgen, createTypeSafeAsk, type OperationTrace } from "dumgen";
+import * as Effect from "effect/Effect";
 
 import { internal } from "./_generated/api";
 import { env, internalAction } from "./_generated/server";
 import { stripTextAnalysisGraph } from "./model/textAnalysisStripping";
 
+/** Logs why the definition's Sentence failed; only the trace knows. */
+function logFailedSentence(trace: OperationTrace) {
+	for (const outcome of trace.sentences)
+		if (outcome.outcome === "Failed")
+			console.warn(
+				`The definition was not segmented: ${outcome.failure.tag}: ${outcome.failure.message}`,
+			);
+}
+
 /**
  * Cuts a German definition into one Sentence's Segments and biggest units
  * with Dumgen's `segment.inUnits`, the definition taken whole as that
- * Sentence: no `splitText`, since a Definition Text holds one Sentence.
+ * Sentence: no `splitText`, since a Definition Text holds one Sentence. A
+ * Sentence whose segmentation failed comes back marked `failed`, with no
+ * units, and is stored so.
  */
 async function segmentDefinition(definition: string) {
 	const apiKey = env.TYPESAFE_API_KEY;
@@ -18,9 +30,15 @@ async function segmentDefinition(definition: string) {
 		throw new Error(
 			"TYPESAFE_API_KEY is not set, so the definition cannot be segmented.",
 		);
-	const segmented = await createSegment({
-		ask: createTypeSafeAsk({ apiKey }),
-	}).inUnits({ language: "de", paragraphs: [{ sentences: [definition] }] });
+	const segmented = await Effect.runPromise(
+		createDumgen({
+			jev: createTypeSafeAsk({ apiKey }),
+			onOperation: logFailedSentence,
+		}).segment.inUnits({
+			language: "de",
+			paragraphs: [{ sentences: [definition] }],
+		}),
+	);
 	const sentence = segmented.paragraphs[0]?.sentences[0];
 	if (!sentence) throw new Error("The definition yielded no Sentence.");
 	return sentence;
@@ -103,6 +121,9 @@ export const materialize = internalAction({
 									}
 								: {}),
 						})),
+						...(sentence.failed
+							? { segmentationFailed: true as const }
+							: {}),
 					},
 				);
 				outcome = { kind: "Ready" };

@@ -482,10 +482,14 @@ async function stripSentenceAnalysisBatch(
 		await deleteResolutionSessions(ctx, sessions);
 		return sessions.length;
 	}
-	// The units index into the Segments below, so they go with them; a
-	// field, not a row, they are not counted.
-	if (sentence.units !== undefined)
-		await ctx.db.patch(sentenceId, { units: undefined });
+	// The units index into the Segments below, so they go with them, and
+	// so does a failed segmentation's mark; fields, not rows, they are not
+	// counted.
+	if (sentence.units !== undefined || sentence.segmentationFailed)
+		await ctx.db.patch(sentenceId, {
+			units: undefined,
+			segmentationFailed: undefined,
+		});
 
 	const segments = await ctx.db
 		.query("segments")

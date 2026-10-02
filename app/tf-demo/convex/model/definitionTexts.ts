@@ -2,7 +2,7 @@ import type { FunctionReference } from "convex/server";
 import { makeFunctionReference } from "convex/server";
 
 import {
-	assertStoredUnits,
+	assertSentenceUnits,
 	MAX_SEGMENTS_PER_SENTENCE,
 	type StoredSegmentValue,
 	type StoredUnit,
@@ -160,8 +160,9 @@ export function ownsDefinitionTextRun(
 
 /**
  * Writes one segmented definition as a hidden Definition Text, its Sentence
- * with its Segments and units as intake stores them, and marks the state row
- * Ready. Callers must have removed any previous live Text first.
+ * with its Segments and units as intake stores them, a failed segmentation
+ * marked as intake marks it, and marks the state row Ready. Callers must
+ * have removed any previous live Text first.
  */
 export async function writeDefinitionText(
 	ctx: MutationCtx,
@@ -172,15 +173,20 @@ export async function writeDefinitionText(
 		readonly segmentedSentenceId: string;
 		readonly segments: readonly StoredSegmentValue[];
 		readonly units: readonly StoredUnit[];
+		readonly segmentationFailed?: true;
 	},
 ): Promise<{ textId: Id<"texts">; sentenceId: Id<"sentences"> }> {
-	const { segments, units } = input;
+	const { segments, units, segmentationFailed } = input;
 	if (segments.length === 0 || segments.length > MAX_SEGMENTS_PER_SENTENCE) {
 		throw new Error(
 			`A Definition Sentence must contain 1-${MAX_SEGMENTS_PER_SENTENCE} Segments.`,
 		);
 	}
-	assertStoredUnits(segments, units);
+	assertSentenceUnits({
+		segments,
+		units,
+		...(segmentationFailed ? { segmentationFailed } : {}),
+	});
 	const stitchedText = segments.map(({ text }) => text).join("");
 	const textId = await ctx.db.insert("texts", {
 		submissionKey: `definition:${input.ownerReadingKey}:${input.segmentedSentenceId}`,
@@ -194,6 +200,7 @@ export async function writeDefinitionText(
 		language: input.language,
 		stitchedText,
 		units: units.map((unit) => ({ ...unit, segments: [...unit.segments] })),
+		...(segmentationFailed ? { segmentationFailed } : {}),
 	});
 	await Promise.all(
 		segments.map((segment, index) =>

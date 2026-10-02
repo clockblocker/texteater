@@ -1,7 +1,7 @@
 "use node";
 
 import { ConvexError, type Infer, type Value, v } from "convex/values";
-import { createSegment, createTypeSafeAsk, type SegmentCall } from "dumgen";
+import { createDumgen, createTypeSafeAsk, type OperationTrace } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
@@ -93,14 +93,15 @@ function visitorErrorIn(
 }
 
 /**
- * The production jev for intake: TypeSafe with the deployment's key. With no
- * key, intake fails with a coded error that tells the Visitor how to fix it.
+ * The production Dumgen for intake: jev through TypeSafe with the
+ * deployment's key. With no key, intake fails with a coded error that tells
+ * the Visitor how to fix it.
  */
-function productionSegment(onCall: (call: SegmentCall) => void) {
+function productionDumgen(onOperation: (trace: OperationTrace) => void) {
 	const apiKey = env.TYPESAFE_API_KEY;
 	if (!apiKey)
 		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
-	return createSegment({ ask: createTypeSafeAsk({ apiKey }), onCall });
+	return createDumgen({ jev: createTypeSafeAsk({ apiKey }), onOperation });
 }
 
 export const submitText = action({
@@ -164,7 +165,7 @@ export const submitText = action({
 		};
 		try {
 			const intake = createIntake({
-				segment: productionSegment(run.call),
+				segment: productionDumgen(run.operation).segment,
 				persistence: {
 					persistSubmittedText: (input) =>
 						ctx.runMutation(
@@ -189,7 +190,6 @@ export const submitText = action({
 							},
 						),
 				},
-				onSegmented: run.segmented,
 			});
 			const exit = await Effect.runPromiseExit(
 				inspected(

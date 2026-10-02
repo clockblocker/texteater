@@ -107,6 +107,23 @@ export function assertStoredUnits(
 	});
 }
 
+/**
+ * Checks a Sentence's units as `assertStoredUnits` does, or that a Sentence
+ * whose segmentation failed stores none.
+ */
+export function assertSentenceUnits(sentence: {
+	readonly segments: readonly Pick<StoredSegment, "kind">[];
+	readonly units: readonly StoredUnit[];
+	readonly segmentationFailed?: true;
+}): void {
+	if (!sentence.segmentationFailed)
+		assertStoredUnits(sentence.segments, sentence.units);
+	else if (sentence.units.length > 0)
+		throw new Error(
+			"A Sentence whose segmentation failed stores no units.",
+		);
+}
+
 /** Each ResolvableText Segment as its own `Unresolved` unit. */
 export function unresolvedUnits(
 	segments: readonly Pick<StoredSegment, "kind">[],

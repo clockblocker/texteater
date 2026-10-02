@@ -44,6 +44,8 @@ export const sentenceViewValidator = v.object({
 	language: languageValidator,
 	stitchedText: v.string(),
 	heading: v.optional(v.string()),
+	/** Intake could not segment the Sentence: its Segments have no units. */
+	segmentationFailed: v.optional(v.literal(true)),
 	segments: v.array(sentenceSegmentViewValidator),
 });
 
@@ -97,6 +99,9 @@ export async function projectSentenceView(
 		language: sentence.language,
 		stitchedText: sentence.stitchedText,
 		...(sentence.heading ? { heading: sentence.heading } : {}),
+		...(sentence.segmentationFailed
+			? { segmentationFailed: true as const }
+			: {}),
 		segments: segments.map((segment) => {
 			const attestationId = segment.attestationMembership?.attestationId;
 			const unit = unitOf.get(segment.index);

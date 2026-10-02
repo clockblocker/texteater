@@ -173,6 +173,8 @@ export const persistSegmented = internalMutation({
 		stitchedText: v.string(),
 		segments: v.array(storedSegmentInputValidator),
 		units: v.array(storedUnitValidator),
+		/** The definition's segmentation failed: no units, shown not segmented. */
+		segmentationFailed: v.optional(v.literal(true)),
 	},
 	returns: v.union(v.literal("Ready"), v.literal("Stale")),
 	handler: async (ctx, { runNumber, ...args }) => {

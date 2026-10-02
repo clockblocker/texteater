@@ -143,7 +143,7 @@ test("a text over the sentence limit is Rejected with its reason before any work
 	expect(providers.requests).toEqual([]);
 });
 
-test("a Sentence jev cannot segment is stored with its written words, each word its own Unresolved unit", async () => {
+test("a Sentence jev cannot segment is stored with its written words, marked as not segmented and with no units", async () => {
 	typeSafe(
 		fakeJev({
 			answers: germanAnswers,
@@ -156,13 +156,20 @@ test("a Sentence jev cannot segment is stored with its written words, each word 
 	});
 	const [, failed] = await sentences(t);
 	expect(failed?.stitchedText).toBe("Er wohnt im Haus.");
+	expect(failed).toMatchObject({ units: [], segmentationFailed: true });
 	// `im` keeps its spelling: no jev answer split it.
-	expect(failed?.units).toEqual(
-		[0, 2, 4, 6].map((index) => ({
-			segments: [index],
-			route: "Unresolved",
-		})),
-	);
+	expect(
+		(
+			await t.run((ctx) =>
+				ctx.db
+					.query("segments")
+					.withIndex("by_sentence_id_and_index", (q) =>
+						q.eq("sentenceId", failed?._id ?? ("" as never)),
+					)
+					.collect(),
+			)
+		).map(({ text }) => text),
+	).toEqual(["Er", " ", "wohnt", " ", "im", " ", "Haus", "."]);
 	expect((await intakeRuns(t))[0]).toMatchObject({
 		outcome: "Accepted",
 		sentences: [{ segmentation: "Segmented" }, { segmentation: "Failed" }],
@@ -171,7 +178,7 @@ test("a Sentence jev cannot segment is stored with its written words, each word 
 	expect((await intakeRuns(t))[0]?.jev.failed).toBeGreaterThan(0);
 });
 
-test("with jev unavailable the Text is still stored, every Sentence unresolved", async () => {
+test("with jev unavailable the Text is still stored, every Sentence marked as not segmented", async () => {
 	const providers = unavailableProviders();
 	restore = providers.restore;
 	const t = createTestConvex();
@@ -180,9 +187,7 @@ test("with jev unavailable the Text is still stored, every Sentence unresolved",
 	});
 	expect(providers.requests.length).toBeGreaterThan(0);
 	const [sentence] = await sentences(t);
-	expect(sentence?.units?.every(({ route }) => route === "Unresolved")).toBe(
-		true,
-	);
+	expect(sentence).toMatchObject({ units: [], segmentationFailed: true });
 });
 
 test("without a TypeSafe key the submission fails with a NotConfigured error the Visitor sees, stores nothing and records a Failed run", async () => {
