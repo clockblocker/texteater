@@ -32,7 +32,7 @@ type Segment = {
 	readonly surface?: string;
 };
 
-export type NoteStudyOccurrence = {
+type NoteStudyOccurrence = {
 	readonly submissionKey: string;
 	readonly segmentedSentenceId: string;
 	readonly segments: readonly Segment[];
@@ -604,13 +604,6 @@ export function makeUrl(unit: Dumling.Reading<"de">): string {
 
 export const NOTE_STUDY_DATABASE_BY_URL = new Map(
 	NOTE_STUDY_DATABASE.map((unit) => [makeUrl(unit.reading), unit]),
-);
-
-export const NOTE_STUDY_READING_BY_LEMMA = new Map<string, Dumling.Lemma<"de">>(
-	NOTE_STUDY_DATABASE.map(({ lemmaKey, reading }) => [
-		lemmaKey,
-		reading.lemma,
-	]),
 );
 
 /** Fixture evidence intentionally leaves unrepresented inflection unknown. */

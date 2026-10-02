@@ -516,7 +516,7 @@ export function PresentationView({
  * of height with no change of form, a fold, rides
  * `HEADING_RESIZE`.
  */
-export function HeadingBlock({
+function HeadingBlock({
 	subject,
 	form,
 	ground,

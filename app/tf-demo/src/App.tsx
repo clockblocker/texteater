@@ -33,7 +33,7 @@ const ResolutionInspector = import.meta.env.DEV
 		)
 	: null;
 
-export function App() {
+function App() {
 	return (
 		<ApplicationWorkspaceProvider>
 			<ApplicationShell />

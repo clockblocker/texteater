@@ -24,18 +24,16 @@ export type Ease = "linear" | "easeIn" | "easeOut" | "easeInOut" | Bezier;
  *
  * `EASE_OUT` is the default and the one to reach for: almost everything
  * here enters or leaves, and a curve that starts fast spends its slow half
- * where nobody is looking. `EASE_IN_OUT` is for something that moves from
- * one place on screen to another — nothing does yet; the springs carry
- * that. `EASE_COLOUR` is the browser's own `ease`, which is what a colour
- * change wants.
+ * where nobody is looking. Something that moves from one place on screen to
+ * another rides a spring. `EASE_COLOUR` is the browser's own `ease`, which
+ * is what a colour change wants.
  */
-export function isBezier(ease: Ease): ease is Bezier {
+function isBezier(ease: Ease): ease is Bezier {
 	return typeof ease !== "string";
 }
 
-export const EASE_OUT: Bezier = [0.23, 1, 0.32, 1];
-export const EASE_IN_OUT: Bezier = [0.77, 0, 0.175, 1];
-export const EASE_COLOUR: Bezier = [0.25, 0.1, 0.25, 1];
+const EASE_OUT: Bezier = [0.23, 1, 0.32, 1];
+const EASE_COLOUR: Bezier = [0.25, 0.1, 0.25, 1];
 
 export type Tween = {
 	readonly kind: "tween";
@@ -99,11 +97,6 @@ export function motionOf(spec: Spec) {
 					: spec.ease,
 				...(spec.delayMs > 0 ? { delay: spec.delayMs / 1000 } : {}),
 			} as const);
-}
-
-/** A tween's whole timeline, delay included, in ms. */
-export function spanOf(spec: Tween): number {
-	return spec.delayMs + spec.ms;
 }
 
 /* ------------------------------------------------------------- geometry */
@@ -222,11 +215,6 @@ export const CONTEXT_PAGE = 5;
  */
 export const CONTEXT_STAGGER = 50;
 export const CONTEXT_STAGGER_MAX = 200;
-
-/** How long the `nth` arriving Source Context waits its turn, in ms. */
-export function contextDelayFor(nth: number): number {
-	return Math.min(CONTEXT_STAGGER_MAX, Math.max(0, nth) * CONTEXT_STAGGER);
-}
 
 /** `spec` with `delayMs` replaced: the same tween, waiting its turn. */
 export function after(spec: Tween, delayMs: number): Tween {
@@ -376,7 +364,7 @@ export const DECK_FOLLOW_SPRING = spring(700, 45);
  * little and resists more the further it is pulled, and never goes past
  * `SWIPE_RUBBER_PX`. The curve is iOS's scroll overshoot.
  */
-export const SWIPE_RUBBER_PX = 40;
+const SWIPE_RUBBER_PX = 40;
 
 export function rubberBand(d: number, limit = SWIPE_RUBBER_PX): number {
 	return Math.sign(d) * limit * (1 - 1 / ((Math.abs(d) / limit) * 0.55 + 1));

@@ -37,15 +37,15 @@ export const Z = {
 	held: 40,
 } as const;
 
-export const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
+const CARD_WIDTH = `${CARD_WIDTH_REM.toString()}rem`;
 
 /**
  * A Cover's box: flush with its Pane's top, over the Pane bar, and inset
  * by these from the Pane's sides and foot. A Ground fills its Pane.
  */
-export const SHEET_INSET_X_REM = 1.5;
+const SHEET_INSET_X_REM = 1.5;
 
-export const SHEET_INSET_Y_REM = 1.5;
+const SHEET_INSET_Y_REM = 1.5;
 
 /** How far the return band reaches below the Deck's cards. */
 export const RETURN_PAD_REM = 3;
@@ -85,10 +85,10 @@ export function deckLeftIn(paneWidth: number, cardWidth: number): number {
 }
 
 /** The Text's content column in a Sheet; a Note's is `CARD_WIDTH_REM`. */
-export const TEXT_COLUMN_REM = 42;
+const TEXT_COLUMN_REM = 42;
 
 /** A spawned Pane never takes more than this share of the Pane it splits. */
-export const SPAWN_SHARE = 0.5;
+const SPAWN_SHARE = 0.5;
 
 /**
  * How big the Pane a Card spawns opens: as wide as its content column plus
@@ -116,7 +116,7 @@ export type DropRegions = {
 };
 
 /** A side region takes at most this share of its Pane, whatever it would spawn. */
-export const EDGE_SHARE = 0.3;
+const EDGE_SHARE = 0.3;
 
 /** How wide a Pane's side regions are: the Pane it would spawn, capped at `EDGE_SHARE`. */
 export function edgeWidth(
@@ -181,7 +181,7 @@ export function inside(box: Box, x: number, y: number, grow = 0): boolean {
 	);
 }
 
-export function sameBox(a: Box | undefined, b: Box): boolean {
+function sameBox(a: Box | undefined, b: Box): boolean {
 	return (
 		a !== undefined &&
 		a.left === b.left &&

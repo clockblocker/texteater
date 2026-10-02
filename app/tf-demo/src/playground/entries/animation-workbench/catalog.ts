@@ -7,7 +7,7 @@ import type { DeckMotionOverrides } from "../deck-models/runtime-config";
  * a position to compare against, not a draft. "Create variant" copies the
  * selected one, so tuning a preset means starting from it.
  */
-export type Preset = {
+type Preset = {
 	readonly key: string;
 	readonly name: string;
 	readonly motion: DeckMotionOverrides;

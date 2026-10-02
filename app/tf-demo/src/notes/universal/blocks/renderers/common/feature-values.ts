@@ -22,7 +22,7 @@ export function genderTone(lemma: {
 }
 
 /** Non-null feature values as short readable pairs, e.g. `case Dat`. */
-export function featurePairs(
+function featurePairs(
 	features: PresentedFeatures,
 ): readonly { readonly name: string; readonly value: string }[] {
 	return Object.entries(features).flatMap(([name, value]) => {

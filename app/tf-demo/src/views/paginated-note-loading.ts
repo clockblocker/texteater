@@ -23,7 +23,7 @@ export type PaginatedNote =
 	| PaginatedRouteNote
 	| ShadowNoteData;
 
-export type PaginatedNoteSnapshot<Note extends PaginatedNote> = {
+type PaginatedNoteSnapshot<Note extends PaginatedNote> = {
 	readonly note: Note;
 	readonly hasMore: boolean;
 	readonly isLoading: boolean;

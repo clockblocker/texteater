@@ -68,7 +68,7 @@ type CoordinateRefinement<
 					};
 				};
 
-export type GrammaticalNoteDataFor<
+type GrammaticalNoteDataFor<
 	L extends SupportedTargetLanguage,
 	N extends GrammaticalNoteKind,
 	F extends NoteFamilyFor<L>,
@@ -142,7 +142,7 @@ export type ReadingRenderContext<
 	readonly PresentationCapabilities: ReadingPresentationCapabilities;
 };
 
-export type GrammaticalRenderContext<
+type GrammaticalRenderContext<
 	L extends SupportedTargetLanguage,
 	N extends Exclude<GrammaticalNoteKind, "Reading">,
 	F extends NoteFamilyFor<L>,
@@ -171,7 +171,7 @@ type InflectionalFeaturesFor<
 			: Record<never, never>
 		: never;
 type PresentedValue<Value> = Value | readonly Value[] | null;
-export type SurfaceAnalysis<
+type SurfaceAnalysis<
 	L extends SupportedTargetLanguage,
 	F extends NoteFamilyFor<L>,
 	K extends NoteLemmaKindFor<L, F>,
@@ -195,12 +195,12 @@ export type SurfaceAnalysis<
 			}>;
 	};
 };
-export type SurfaceAnalysisFor<L extends SupportedTargetLanguage> = {
+type SurfaceAnalysisFor<L extends SupportedTargetLanguage> = {
 	[F in NoteFamilyFor<L>]: {
 		[K in NoteLemmaKindFor<L, F>]: SurfaceAnalysis<L, F, K>;
 	}[NoteLemmaKindFor<L, F>];
 }[NoteFamilyFor<L>];
-export type ConcreteSurfaceNoteData<L extends SupportedTargetLanguage> = Omit<
+type ConcreteSurfaceNoteData<L extends SupportedTargetLanguage> = Omit<
 	NoteDataFor<"Surface">,
 	"target" | "analyses"
 > & {
@@ -209,7 +209,7 @@ export type ConcreteSurfaceNoteData<L extends SupportedTargetLanguage> = Omit<
 	};
 	readonly analyses: readonly SurfaceAnalysisFor<L>[];
 };
-export type SurfaceRenderContext<L extends SupportedTargetLanguage> = {
+type SurfaceRenderContext<L extends SupportedTargetLanguage> = {
 	readonly noteData: ConcreteSurfaceNoteData<L>;
 	readonly PresentationCapabilities: SurfacePresentationCapabilities;
 };
@@ -245,22 +245,6 @@ export type ReadingDefaultRenderer = <
 >(
 	context: ReadingRenderContext<L, F, K>,
 ) => ReactElement | null;
-export type SurfaceAnalysisDescriptionRenderer<
-	L extends SupportedTargetLanguage,
-	F extends NoteFamilyFor<L>,
-	K extends NoteLemmaKindFor<L, F>,
-> = (analysis: SurfaceAnalysis<L, F, K>) => ReactElement;
-export type SurfaceAnalysisDescriptionRendererRegistry<
-	L extends SupportedTargetLanguage,
-> = Partial<{
-	[F in NoteFamilyFor<L>]: Partial<{
-		[K in NoteLemmaKindFor<L, F>]: SurfaceAnalysisDescriptionRenderer<
-			L,
-			F,
-			K
-		>;
-	}>;
-}>;
 
 /** A default renderer usable for every family and kind of one route Note. */
 export type GrammaticalDefaultRenderer<

@@ -69,7 +69,7 @@ export type PaneNode = {
 	readonly preview?: true;
 };
 
-export type SplitNode = {
+type SplitNode = {
 	readonly kind: "Split";
 	readonly id: string;
 	readonly axis: "horizontal" | "vertical";
@@ -97,7 +97,7 @@ export type Destination =
  * loose. `held`: the Card is in hand and goes where the pointer says.
  * Nothing changes phase on a timer.
  */
-export type Phase = "pressed" | "swiping" | "held";
+type Phase = "pressed" | "swiping" | "held";
 
 /**
  * What letting go now does to the Card in hand, shown on the Card before

@@ -61,7 +61,7 @@ export function playgroundSegments(pathname: string): readonly string[] {
 		.map(decodeURIComponent);
 }
 
-export function playgroundPath(segments: readonly string[]): string {
+function playgroundPath(segments: readonly string[]): string {
 	return [PLAYGROUND_BASE, ...segments.map(encodeURIComponent)].join("/");
 }
 

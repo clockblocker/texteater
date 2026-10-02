@@ -8,7 +8,7 @@
 export type NoteKind = "Attestation" | "Reading" | "Lemma" | "Surface";
 
 /** Deck order, user-facing first: the meaning on top, the clicked form at the bottom. */
-export const NOTE_KINDS: readonly NoteKind[] = [
+const NOTE_KINDS: readonly NoteKind[] = [
 	"Reading",
 	"Lemma",
 	"Surface",

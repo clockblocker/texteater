@@ -53,7 +53,7 @@ export type DeckMotionOverrides = Partial<MotionParameters> & {
 	};
 };
 
-export function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
+function resolveDeckMotion(overrides: DeckMotionOverrides = {}) {
 	const p = { ...DEFAULT_DECK_MOTION, ...overrides };
 	const transition = (value: spec.Spec) =>
 		spec.motionOf(

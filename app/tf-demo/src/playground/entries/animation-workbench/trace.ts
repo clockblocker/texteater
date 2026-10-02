@@ -41,12 +41,12 @@ export const KEEP = 8;
 const GEOMETRY_EPSILON = 0.5;
 const OPACITY_EPSILON = 0.005;
 
-export function propertyOf(key: string): string {
+function propertyOf(key: string): string {
 	return key.slice(key.lastIndexOf(":") + 1);
 }
 
 /** The smallest change of a channel that is movement, not noise. */
-export function epsilonFor(key: string): number {
+function epsilonFor(key: string): number {
 	return propertyOf(key) === "opacity" ? OPACITY_EPSILON : GEOMETRY_EPSILON;
 }
 

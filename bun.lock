@@ -116,6 +116,7 @@
         "@types/react-dom": "^19",
         "@vitejs/plugin-react": "^6",
         "convex-test": "^0.0.59",
+        "oxc-parser": "^0.140.0",
         "prinfer": "^2.3.0",
         "vite": "^8",
       },

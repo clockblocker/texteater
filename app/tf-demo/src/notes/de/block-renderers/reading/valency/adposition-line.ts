@@ -33,7 +33,7 @@ export type AdpositionLinePart =
 	| { readonly part: "Token"; readonly text: string };
 
 /** One case the adposition takes, with its gloss: `Akk: wohin?`, `Dat: umgangssprachlich`. */
-export type AdpositionCaseNote = {
+type AdpositionCaseNote = {
 	readonly label: string;
 	readonly gloss: string | null;
 };

@@ -103,8 +103,11 @@ import {
 import {
 	BAR_REM,
 	HEADER_REM,
+	LEAVING,
+	LEAVING_OPACITY,
 	LOOSE_CARD_REM,
 	PILE_HEIGHT_REM,
+	rubberBand,
 	VELOCITY_SAMPLE_MS,
 } from "./motion-spec";
 import { PresentationView } from "./note-view";
@@ -256,11 +259,8 @@ function CompassRuntime({
 		OPEN_SCALE,
 		SETTLE_TIMEOUT_MS,
 		leanFor,
-		LEAVING,
-		LEAVING_OPACITY,
 		deckFollowFor,
 		DECK_FOLLOW_SPRING,
-		rubberBand,
 		SWIPE_BREAK_PX,
 		SWIPE_LET_GO_PX,
 		FLICK_SPEED,

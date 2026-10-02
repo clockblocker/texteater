@@ -1,5 +1,14 @@
 {
-	"entry": ["src/notes/index.ts", "tests/**/*.{ts,tsx}"],
+	"entry": [
+		"src/notes/index.ts",
+		"tests/**/*.{ts,tsx}",
+		"src/**/*.test.{ts,tsx}",
+		"src/**/*.type-test.ts",
+		"live-pipeline/**/*.live.ts",
+		"playwright.live.config.ts",
+		"tooling/print-playground-snapshot.ts",
+		"tooling/resolution-inspector.ts"
+	],
 	"ignoreDependencies": [],
 	"tags": ["-layoutdormant"]
 }

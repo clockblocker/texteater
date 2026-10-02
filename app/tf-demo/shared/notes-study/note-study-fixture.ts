@@ -2,7 +2,6 @@ import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 
 type NoteStudyRoute = Pick<Dumling.Lemma<"de">, "family" | "kind">;
-export type NoteStudyFamily = NoteStudyRoute["family"];
 
 export type NoteStudyTone =
 	| "reference"
@@ -21,19 +20,19 @@ export type NoteStudyToken = {
 
 export type NoteStudyLine = readonly (string | NoteStudyToken)[];
 
-export type NoteStudyRelation = {
+type NoteStudyRelation = {
 	readonly relation: Dumrel.SemanticRelation;
 	readonly label: string;
 	readonly mark: string;
 	readonly content: NoteStudyLine;
 };
 
-export type NoteStudyForm = {
+type NoteStudyForm = {
 	readonly label: string;
 	readonly content: NoteStudyLine;
 };
 
-export type NoteStudyFormTable = {
+type NoteStudyFormTable = {
 	readonly rowLabel: string;
 	readonly columnLabels: readonly string[];
 	readonly rows: readonly {

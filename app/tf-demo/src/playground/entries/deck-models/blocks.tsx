@@ -23,13 +23,13 @@ import { useDeckMotion } from "./runtime-config";
 /** A Note's Blocks and a Text's Sentences, and the Segments inside them. */
 
 /** How many Source Contexts a Card shows. A Sheet's page is the spec's. */
-export const CARD_CONTEXTS = 2;
+const CARD_CONTEXTS = 2;
 
 /**
  * A Segment: a word that deals when clicked and lifts when dragged, in
  * Sheet form. In Card form it is inert text (issue 485, provisional).
  */
-export function Segment({
+function Segment({
 	word,
 	live,
 	lit,
@@ -268,7 +268,7 @@ export function ContextsBlock({
 	);
 }
 
-export function contextKey(context: SourceContext): string {
+function contextKey(context: SourceContext): string {
 	return `${context.textId ?? "filler"}:${context.sentence.toString()}:${context.words.join(" ")}`;
 }
 
