@@ -1,0 +1,109 @@
+{
+	"runId": "129831bc-03b5-43ff-8b84-c5a25731b083",
+	"metrics": {
+		"evaluated": 567,
+		"rates": {
+			"membership": 0.9563218390804598,
+			"tolerantMatched": 0.9397701149425287,
+			"matched": 0.9301149425287356,
+			"contractPass": 0.8888888888888888,
+			"multiMembership": {
+				"rate": 0.9181034482758621,
+				"units": 696
+			},
+			"hover": {
+				"precision": 0.9840964884192549,
+				"recall": 0.9875120076849182,
+				"f1": 0.9858012896118391,
+				"segments": 3123
+			},
+			"fullHover": {
+				"precision": 0.9823685961410514,
+				"recall": 0.9884231536926146,
+				"f1": 0.9853865746781983,
+				"segments": 2505
+			},
+			"multiHover": {
+				"precision": 0.9842138801992812,
+				"recall": 0.9762773722627739,
+				"f1": 0.9802295618496775,
+				"segments": 1644
+			}
+		},
+		"totals": {
+			"membership": 2080,
+			"tolerantMatched": 2044,
+			"matched": 2023,
+			"scored": 2175,
+			"stubbed": 0,
+			"withVariants": 0,
+			"variantRoutes": 0,
+			"hover": {
+				"segments": 3123,
+				"precision": 3073.333333333333,
+				"recall": 3083.9999999999995,
+				"highlighted": 5934,
+				"unasserted": 21,
+				"multi": {
+					"segments": 1644,
+					"precision": 1618.0476190476184,
+					"recall": 1605.0000000000002,
+					"highlighted": 4374,
+					"unasserted": 0
+				}
+			},
+			"grouping": {
+				"goldPairs": 1350,
+				"recalledPairs": 1296,
+				"decidedPairs": 1416,
+				"truePairs": 1296
+			},
+			"pieces": {
+				"goldBoundaries": 8424,
+				"predictedBoundaries": 8424,
+				"matchedBoundaries": 8424,
+				"goldPieces": 4443,
+				"predictedPieces": 4443,
+				"exactPieces": 4443,
+				"exactSurfaces": 4443,
+				"exactSentence": 567,
+				"goldSegments": 567,
+				"unresolved": 0,
+				"unaligned": 0
+			}
+		},
+		"pieces": {
+			"boundaries": {
+				"precision": 1,
+				"recall": 1,
+				"f1": 1,
+				"gold": 8424
+			},
+			"pieces": {
+				"precision": 1,
+				"recall": 1,
+				"f1": 1,
+				"gold": 4443
+			},
+			"surfaces": 1,
+			"exactSentences": 1,
+			"goldSegments": 1,
+			"unresolved": 0,
+			"unaligned": 0
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 2368,
+			"freshCalls": 0,
+			"freshInputTokens": 0,
+			"allInputTokens": 6924490
+		},
+		"luna": {
+			"calls": 0,
+			"freshCalls": 0,
+			"freshInputTokens": 0,
+			"freshOutputTokens": 0
+		}
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"quality": {
+		"passed": 168,
+		"failed": 21,
+		"needsReview": 0,
+		"unscored": 0
+	},
+	"status": "Completed",
+	"finishedAt": "2026-10-02T12:20:42.558Z",
+	"total": 189,
+	"succeeded": 189,
+	"failed": 0,
+	"interrupted": 0,
+	"stability": {
+		"repetitions": 3,
+		"flipped": 0,
+		"varyingOutputs": 8,
+		"quality": {
+			"passed": 504,
+			"failed": 63,
+			"needsReview": 0,
+			"unscored": 0
+		}
+	}
+}

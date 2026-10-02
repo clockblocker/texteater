@@ -1,0 +1,77 @@
+{
+	"runId": "af82bfca-4534-4a35-bab1-97dafee4b7be",
+	"metrics": {
+		"evaluated": 567,
+		"rates": {
+			"membership": 0.9563218390804598,
+			"tolerantMatched": 0.9397701149425287,
+			"matched": 0.9301149425287356,
+			"contractPass": 0.8888888888888888,
+			"multiMembership": {
+				"rate": 0.9181034482758621,
+				"units": 696
+			},
+			"hover": {
+				"precision": 0.9840964884192549,
+				"recall": 0.9875120076849182,
+				"f1": 0.9858012896118391,
+				"segments": 3123
+			},
+			"fullHover": {
+				"precision": 0.9823685961410514,
+				"recall": 0.9884231536926146,
+				"f1": 0.9853865746781983,
+				"segments": 2505
+			},
+			"multiHover": {
+				"precision": 0.9842138801992812,
+				"recall": 0.9762773722627739,
+				"f1": 0.9802295618496775,
+				"segments": 1644
+			}
+		},
+		"totals": {
+			"membership": 2080,
+			"tolerantMatched": 2044,
+			"matched": 2023,
+			"scored": 2175,
+			"stubbed": 0,
+			"withVariants": 0,
+			"variantRoutes": 0,
+			"hover": {
+				"segments": 3123,
+				"precision": 3073.333333333333,
+				"recall": 3083.9999999999995,
+				"highlighted": 5934,
+				"unasserted": 21,
+				"multi": {
+					"segments": 1644,
+					"precision": 1618.0476190476184,
+					"recall": 1605.0000000000002,
+					"highlighted": 4374,
+					"unasserted": 0
+				}
+			},
+			"grouping": {
+				"goldPairs": 1350,
+				"recalledPairs": 1296,
+				"decidedPairs": 1416,
+				"truePairs": 1296
+			}
+		}
+	},
+	"spend": {
+		"jev": {
+			"calls": 2284,
+			"freshCalls": 323,
+			"freshInputTokens": 527713,
+			"allInputTokens": 6879352
+		},
+		"luna": {
+			"calls": 0,
+			"freshCalls": 0,
+			"freshInputTokens": 0,
+			"freshOutputTokens": 0
+		}
+	}
+}

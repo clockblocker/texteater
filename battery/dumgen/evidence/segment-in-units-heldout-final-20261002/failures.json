@@ -1,0 +1,91 @@
+{
+	"what": "Gold units final production misses by majority on held-out (gold mode = raw mode): 32 of 725 in 20 sentences, grouped by cause.",
+	"classes": [
+		{
+			"cause": "copula + participle or predicative ADJ joined as a verb (state read as perfect)",
+			"units": 6,
+			"sites": 3,
+			"examples": [
+				"ist … genehmigt",
+				"ist … ausgegeben",
+				"frei geworden sind"
+			]
+		},
+		{
+			"cause": "Locution or Saying swallowing a free argument",
+			"units": 6,
+			"sites": 3,
+			"examples": [
+				"stellt den Schülern Material zur Verfügung",
+				"Der Tyrann biss … ins Gras",
+				"Nach manchem Fehler lernt man schneller (manchem)"
+			]
+		},
+		{
+			"cause": "particle verb takes the same-spelled place preposition",
+			"units": 5,
+			"sites": 2,
+			"examples": [
+				"stellt sich vor dem Publikum vor (+ sich)",
+				"fängt an der Kreuzung … an"
+			]
+		},
+		{
+			"cause": "verb satellite split off (auxiliary, reflexive, second governed preposition, fixed es)",
+			"units": 4,
+			"sites": 4,
+			"examples": [
+				"sich … abgefunden hat (D4 reads state)",
+				"unterhalten sich … über",
+				"hat mit … über … gesprochen",
+				"hat es eilig"
+			]
+		},
+		{
+			"cause": "idiom read where gold has the literal or free reading",
+			"units": 3,
+			"sites": 2,
+			"examples": [
+				"verlor den roten Faden (beim Nähen)",
+				"folgte ihrem Herzen (X5)"
+			]
+		},
+		{
+			"cause": "bracket particle or fronted governed preposition not joined",
+			"units": 3,
+			"sites": 3,
+			"examples": [
+				"liefen den Fluss entlang",
+				"Fort geht …",
+				"Für … gilt"
+			]
+		},
+		{
+			"cause": "article left off its noun after a relative or participle",
+			"units": 2,
+			"sites": 2,
+			"examples": [
+				"der Ausschuss (über den der Ausschuss)",
+				"die Augen (Der die Augen reizende Rauch)"
+			]
+		},
+		{
+			"cause": "auxiliary chain with a modal",
+			"units": 1,
+			"sites": 1,
+			"examples": ["wird … geschrieben haben müssen"]
+		},
+		{
+			"cause": "focus particle inside an idiom",
+			"units": 1,
+			"sites": 1,
+			"examples": ["verstehe nur Bahnhof"]
+		},
+		{
+			"cause": "resultative predicative joined as a particle",
+			"units": 1,
+			"sites": 1,
+			"examples": ["schoß … entzwei"]
+		}
+	]
+}

@@ -1,0 +1,30 @@
+{
+	"what": "Held-out gold at the freeze (bb136b6c, heldout@c23a5cc90ca8afc9) against HEAD (1fcaadd3): each frozen case against the case HEAD projects for the same record (Segments, unit members, routes).",
+	"casesCompared": 189,
+	"casesChanged": 0,
+	"changed": [],
+	"newReviewedCasesAtHead": [],
+	"recordFilesChangedSinceFreeze": 50,
+	"heldOutRecordFilesChanged": [
+		"de/das-ist-auf-jeden-fall-richtig",
+		"de/das-ist-so-oder-so-noetig",
+		"de/der-antrag-ueber-den-der-ausschuss-fast-drei-stunden-beraten",
+		"de/der-autor-dessen-buch-fehlt-wartet-draussen",
+		"de/die-aufgabe-an-der-bereits-zwei-erfahrene-teams-gearbeitet",
+		"de/die-maenner-hielten-das-boot-fest-das-seil-mit-aller-kraft",
+		"de/die-zeugin-deren-aussage-zaehlt-bleibt-anonym",
+		"de/er-kriegt-alles-erklaert",
+		"de/im-projekt-durfte-nun-jeder-mitentscheiden-viele-koeche",
+		"de/meine-schwester-steht-jeden-morgen-um-sechs-auf",
+		"de/mit-keinem-wort-erwaehnte-sie-den-plan",
+		"de/nach-manchem-fehler-lernt-man-schneller",
+		"de/obwohl-einige-plaetze-kurzfristig-frei-geworden-sind-sind",
+		"de/und-minz-und-maunz-die-schreien",
+		"de/unsere-nachbarn-gruessen-sich-jeden-morgen-und-unterhalten-sich",
+		"de/viele-kamen-zu-spaet",
+		"de/wer-mitkommen-will-meldet-sich-bis-freitag",
+		"de/wer-war-das"
+	],
+	"heldOutRecordChange": "6ea8a981 only: the de/pron-or-det-by-use citation hash c2995798ac6c735d -> b7ac2bf4eaaf25be; no Segment, member or route changed",
+	"verdict": "no drift; scored against the frozen set only, no secondary table needed"
+}

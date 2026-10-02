@@ -1,0 +1,691 @@
+{
+	"what": "Per-lever attribution on held-out, offline over the jev cache (3 repetitions, majority McNemar against production at 1fcaadd3). Production and the baseline replay with 0 cache misses and match the evaluate runs exactly (95.63 / 92.74). A toggled-off lever changes a downstream request only where it moved a unit; such a request is answered question by question from the answers production heard for the same case and repetition (same stage, id and question), and a question never heard gets lab/pool.ts`s stand-in (adds nothing). Counts per config in `misses`. Script: /tmp/df/attr.ts (not kept).",
+	"rows": [
+		{
+			"name": "production",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "baseline",
+			"mem": "92.74",
+			"memFull": "93.19",
+			"strict": "90.39",
+			"vsProduction": "+2 −23 p 0.000019",
+			"vsProductionFull": "+1 −15",
+			"vsBaseline": "+0 −0 p 1.0",
+			"misses": "0/1961 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [
+				"Herzen @sie-folgte-ihrem-herzen#0",
+				"sich mit abgefunden hat @ich-weiss-nicht-ob-sich-meine-oma-inzwisch"
+			],
+			"lostVsProd": [
+				"wäre gewesen @das-waere-fast-schief-gewesen#0",
+				"einem bisschen @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"Milch @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"eingezeichnet @auf-der-karte-sind-drei-seen-eingezeichnet",
+				"auf jeden Fall @das-ist-auf-jeden-fall-richtig#2",
+				"gekocht @die-kartoffeln-sind-bereits-gekocht#0",
+				"hinaus laufen @er-versucht-hinauszulaufen#0",
+				"ist @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"geschlossen @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"sind @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"eingeladen @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"rechnet @sie-rechnet-mit-dem-taschenrechner#1",
+				"mit @sie-rechnet-mit-dem-taschenrechner#2",
+				"Tut leid @tut-mir-leid-das-war-mein-fehler#0",
+				"mir @tut-mir-leid-das-war-mein-fehler#1",
+				"biss @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"in @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"s Gras @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"geschrieben @der-brief-ist-schon-geschrieben#0",
+				"da liegt der Hase i m Pfeffer @genau-da-liegt-der-hase-im-pfeffer#0",
+				"bedanke mich bei für @ich-bedanke-mich-bei-dir-fuer-die-hilfe#1",
+				"um zu @ich-bin-extra-frueh-aufgestanden-um-den-bu",
+				"um @ich-bin-extra-frueh-aufgestanden-um-den-bu"
+			]
+		},
+		{
+			"name": "+X3",
+			"mem": "93.79",
+			"memFull": "93.87",
+			"strict": "91.17",
+			"vsProduction": "+2 −15 p 0.0023",
+			"vsProductionFull": "+1 −11",
+			"vsBaseline": "+8 −0 p 0.0078",
+			"misses": "0/1972 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [
+				"Herzen @sie-folgte-ihrem-herzen#0",
+				"sich mit abgefunden hat @ich-weiss-nicht-ob-sich-meine-oma-inzwisch"
+			],
+			"lostVsProd": [
+				"eingezeichnet @auf-der-karte-sind-drei-seen-eingezeichnet",
+				"auf jeden Fall @das-ist-auf-jeden-fall-richtig#2",
+				"gekocht @die-kartoffeln-sind-bereits-gekocht#0",
+				"ist @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"geschlossen @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"sind @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"eingeladen @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"rechnet @sie-rechnet-mit-dem-taschenrechner#1",
+				"mit @sie-rechnet-mit-dem-taschenrechner#2",
+				"biss @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"in @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"s Gras @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"geschrieben @der-brief-ist-schon-geschrieben#0",
+				"da liegt der Hase i m Pfeffer @genau-da-liegt-der-hase-im-pfeffer#0",
+				"bedanke mich bei für @ich-bedanke-mich-bei-dir-fuer-die-hilfe#1"
+			]
+		},
+		{
+			"name": "+X3+X5",
+			"mem": "93.93",
+			"memFull": "94.04",
+			"strict": "91.31",
+			"vsProduction": "+1 −13 p 0.0018",
+			"vsProductionFull": "+1 −10",
+			"vsBaseline": "+10 −1 p 0.012",
+			"misses": "0/2049 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [
+				"sich mit abgefunden hat @ich-weiss-nicht-ob-sich-meine-oma-inzwisch"
+			],
+			"lostVsProd": [
+				"eingezeichnet @auf-der-karte-sind-drei-seen-eingezeichnet",
+				"gekocht @die-kartoffeln-sind-bereits-gekocht#0",
+				"ist @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"geschlossen @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"sind @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"eingeladen @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"rechnet @sie-rechnet-mit-dem-taschenrechner#1",
+				"mit @sie-rechnet-mit-dem-taschenrechner#2",
+				"biss @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"in @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"s Gras @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"geschrieben @der-brief-ist-schon-geschrieben#0",
+				"bedanke mich bei für @ich-bedanke-mich-bei-dir-fuer-die-hilfe#1"
+			]
+		},
+		{
+			"name": "+X3+X5+D4",
+			"mem": "94.76",
+			"memFull": "94.55",
+			"strict": "92.14",
+			"vsProduction": "+0 −6 p 0.031",
+			"vsProductionFull": "+0 −6",
+			"vsBaseline": "+17 −2 p 0.00073",
+			"misses": "0/2148 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"rechnet @sie-rechnet-mit-dem-taschenrechner#1",
+				"mit @sie-rechnet-mit-dem-taschenrechner#2",
+				"biss @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"in @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"s Gras @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"bedanke mich bei für @ich-bedanke-mich-bei-dir-fuer-die-hilfe#1"
+			]
+		},
+		{
+			"name": "-X3",
+			"mem": "94.57",
+			"memFull": "94.95",
+			"strict": "92.23",
+			"vsProduction": "+0 −8 p 0.0078",
+			"vsProductionFull": "+0 −4",
+			"vsBaseline": "+15 −2 p 0.0023",
+			"misses": "11/2283 req, 2 reused, 22 stand-ins {\"locution\":[2,22]}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"wäre gewesen @das-waere-fast-schief-gewesen#0",
+				"einem bisschen @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"Milch @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"hinaus laufen @er-versucht-hinauszulaufen#0",
+				"Tut leid @tut-mir-leid-das-war-mein-fehler#0",
+				"mir @tut-mir-leid-das-war-mein-fehler#1",
+				"um zu @ich-bin-extra-frueh-aufgestanden-um-den-bu",
+				"um @ich-bin-extra-frueh-aufgestanden-um-den-bu"
+			]
+		},
+		{
+			"name": "-X3 (keep was-fuer)",
+			"mem": "94.57",
+			"memFull": "94.95",
+			"strict": "92.23",
+			"vsProduction": "+0 −8 p 0.0078",
+			"vsProductionFull": "+0 −4",
+			"vsBaseline": "+15 −2 p 0.0023",
+			"misses": "11/2283 req, 2 reused, 22 stand-ins {\"locution\":[2,22]}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"wäre gewesen @das-waere-fast-schief-gewesen#0",
+				"einem bisschen @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"Milch @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"hinaus laufen @er-versucht-hinauszulaufen#0",
+				"Tut leid @tut-mir-leid-das-war-mein-fehler#0",
+				"mir @tut-mir-leid-das-war-mein-fehler#1",
+				"um zu @ich-bin-extra-frueh-aufgestanden-um-den-bu",
+				"um @ich-bin-extra-frueh-aufgestanden-um-den-bu"
+			]
+		},
+		{
+			"name": "-X5",
+			"mem": "95.49",
+			"memFull": "95.46",
+			"strict": "92.87",
+			"vsProduction": "+1 −2 p 1.0",
+			"vsProductionFull": "+0 −1",
+			"vsBaseline": "+21 −1 p 0.000011",
+			"misses": "3/2207 req, 0 reused, 3 stand-ins {\"government\":[0,3]}",
+			"gainedVsProd": ["Herzen @sie-folgte-ihrem-herzen#0"],
+			"lostVsProd": [
+				"auf jeden Fall @das-ist-auf-jeden-fall-richtig#2",
+				"da liegt der Hase i m Pfeffer @genau-da-liegt-der-hase-im-pfeffer#0"
+			]
+		},
+		{
+			"name": "-X5 Choice only",
+			"mem": "95.49",
+			"memFull": "95.46",
+			"strict": "92.87",
+			"vsProduction": "+1 −2 p 1.0",
+			"vsProductionFull": "+0 −1",
+			"vsBaseline": "+21 −1 p 0.000011",
+			"misses": "3/2207 req, 0 reused, 3 stand-ins {\"government\":[0,3]}",
+			"gainedVsProd": ["Herzen @sie-folgte-ihrem-herzen#0"],
+			"lostVsProd": [
+				"auf jeden Fall @das-ist-auf-jeden-fall-richtig#2",
+				"da liegt der Hase i m Pfeffer @genau-da-liegt-der-hase-im-pfeffer#0"
+			]
+		},
+		{
+			"name": "-saying-closed only",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "-D4",
+			"mem": "94.80",
+			"memFull": "95.12",
+			"strict": "92.18",
+			"vsProduction": "+1 −7 p 0.070",
+			"vsProductionFull": "+1 −4",
+			"vsBaseline": "+16 −1 p 0.00027",
+			"misses": "3/2185 req, 0 reused, 3 stand-ins {\"government\":[0,3]}",
+			"gainedVsProd": [
+				"sich mit abgefunden hat @ich-weiss-nicht-ob-sich-meine-oma-inzwisch"
+			],
+			"lostVsProd": [
+				"eingezeichnet @auf-der-karte-sind-drei-seen-eingezeichnet",
+				"gekocht @die-kartoffeln-sind-bereits-gekocht#0",
+				"ist @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"geschlossen @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"sind @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"eingeladen @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"geschrieben @der-brief-ist-schon-geschrieben#0"
+			]
+		},
+		{
+			"name": "-D4 Choice only",
+			"mem": "94.80",
+			"memFull": "95.12",
+			"strict": "92.18",
+			"vsProduction": "+1 −7 p 0.070",
+			"vsProductionFull": "+1 −4",
+			"vsBaseline": "+16 −1 p 0.00027",
+			"misses": "3/2185 req, 0 reused, 3 stand-ins {\"government\":[0,3]}",
+			"gainedVsProd": [
+				"sich mit abgefunden hat @ich-weiss-nicht-ob-sich-meine-oma-inzwisch"
+			],
+			"lostVsProd": [
+				"eingezeichnet @auf-der-karte-sind-drei-seen-eingezeichnet",
+				"gekocht @die-kartoffeln-sind-bereits-gekocht#0",
+				"ist @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"geschlossen @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"sind @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"eingeladen @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"geschrieben @der-brief-ist-schon-geschrieben#0"
+			]
+		},
+		{
+			"name": "-stranded-adverb only",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "-X4",
+			"mem": "94.76",
+			"memFull": "94.55",
+			"strict": "92.14",
+			"vsProduction": "+0 −6 p 0.031",
+			"vsProductionFull": "+0 −6",
+			"vsBaseline": "+17 −2 p 0.00073",
+			"misses": "0/2148 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"rechnet @sie-rechnet-mit-dem-taschenrechner#1",
+				"mit @sie-rechnet-mit-dem-taschenrechner#2",
+				"biss @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"in @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"s Gras @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"bedanke mich bei für @ich-bedanke-mich-bei-dir-fuer-die-hilfe#1"
+			]
+		},
+		{
+			"name": "-X4 Choice only",
+			"mem": "94.76",
+			"memFull": "94.55",
+			"strict": "92.14",
+			"vsProduction": "+0 −6 p 0.031",
+			"vsProductionFull": "+0 −6",
+			"vsBaseline": "+17 −2 p 0.00073",
+			"misses": "0/2154 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"rechnet @sie-rechnet-mit-dem-taschenrechner#1",
+				"mit @sie-rechnet-mit-dem-taschenrechner#2",
+				"biss @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"in @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"s Gras @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"bedanke mich bei für @ich-bedanke-mich-bei-dir-fuer-die-hilfe#1"
+			]
+		},
+		{
+			"name": "-bracket-particle only",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "6/2278 req, 0 reused, 17 stand-ins {\"government\":[0,17]}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "X5@0.5 (pre-registered floor)",
+			"mem": "95.36",
+			"memFull": "95.23",
+			"strict": "92.74",
+			"vsProduction": "+0 −2 p 0.50",
+			"vsProductionFull": "+0 −2",
+			"vsBaseline": "+23 −4 p 0.00031",
+			"misses": "2/2288 req, 0 reused, 2 stand-ins {\"route-extra\":[0,2]}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"platzte der Kragen @er-ertrug-zwei-luegen-schweigend-nach-der-",
+				"sprichwörtliche @er-ertrug-zwei-luegen-schweigend-nach-der-"
+			]
+		},
+		{
+			"name": "X5@0.7",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+1 −1 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+22 −1 p 0.0000057",
+			"misses": "3/2283 req, 0 reused, 3 stand-ins {\"government\":[0,3]}",
+			"gainedVsProd": ["Herzen @sie-folgte-ihrem-herzen#0"],
+			"lostVsProd": [
+				"da liegt der Hase i m Pfeffer @genau-da-liegt-der-hase-im-pfeffer#0"
+			]
+		},
+		{
+			"name": "D4@0.6 (3 families)",
+			"mem": "95.45",
+			"memFull": "95.40",
+			"strict": "92.83",
+			"vsProduction": "+0 −2 p 0.50",
+			"vsProductionFull": "+0 −2",
+			"vsBaseline": "+21 −2 p 0.000066",
+			"misses": "0/2282 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"ist @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"geschlossen @nachdem-der-letzte-besucher-das-gebaeude-v"
+			]
+		},
+		{
+			"name": "D4@0.7 (3 families)",
+			"mem": "95.49",
+			"memFull": "95.46",
+			"strict": "92.87",
+			"vsProduction": "+1 −2 p 1.0",
+			"vsProductionFull": "+1 −2",
+			"vsBaseline": "+21 −1 p 0.000011",
+			"misses": "3/2278 req, 0 reused, 3 stand-ins {\"government\":[0,3]}",
+			"gainedVsProd": [
+				"sich mit abgefunden hat @ich-weiss-nicht-ob-sich-meine-oma-inzwisch"
+			],
+			"lostVsProd": [
+				"ist @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"geschlossen @nachdem-der-letzte-besucher-das-gebaeude-v"
+			]
+		},
+		{
+			"name": "X4@0.6",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "X4@0.7",
+			"mem": "95.54",
+			"memFull": "95.51",
+			"strict": "92.92",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2283 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "X4@0.5 no duel (v2 families)",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "-split-adverb only",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "-anchors only",
+			"mem": "95.36",
+			"memFull": "95.29",
+			"strict": "92.74",
+			"vsProduction": "+0 −2 p 0.50",
+			"vsProductionFull": "+0 −2",
+			"vsBaseline": "+21 −2 p 0.000066",
+			"misses": "3/2287 req, 0 reused, 6 stand-ins {\"locution\":[0,6]}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"um zu @ich-bin-extra-frueh-aufgestanden-um-den-bu",
+				"um @ich-bin-extra-frueh-aufgestanden-um-den-bu"
+			]
+		},
+		{
+			"name": "-quantifier only",
+			"mem": "95.36",
+			"memFull": "95.29",
+			"strict": "92.87",
+			"vsProduction": "+0 −2 p 0.50",
+			"vsProductionFull": "+0 −2",
+			"vsBaseline": "+21 −2 p 0.000066",
+			"misses": "0/2281 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"einem bisschen @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"Milch @sie-trinkt-den-kaffee-mit-einem-bisschen-m"
+			]
+		},
+		{
+			"name": "-pronoun only",
+			"mem": "95.36",
+			"memFull": "95.63",
+			"strict": "92.87",
+			"vsProduction": "+0 −2 p 0.50",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+21 −2 p 0.000066",
+			"misses": "8/2288 req, 2 reused, 16 stand-ins {\"locution\":[2,16]}",
+			"gainedVsProd": [],
+			"lostVsProd": [
+				"Tut leid @tut-mir-leid-das-war-mein-fehler#0",
+				"mir @tut-mir-leid-das-war-mein-fehler#1"
+			]
+		},
+		{
+			"name": "-article-head only",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "-sein-chain only",
+			"mem": "95.54",
+			"memFull": "95.63",
+			"strict": "92.92",
+			"vsProduction": "+0 −1 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+22 −2 p 0.000036",
+			"misses": "0/2282 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": ["wäre gewesen @das-waere-fast-schief-gewesen#0"]
+		},
+		{
+			"name": "-was-fuer only",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "-infixed-zu only",
+			"mem": "95.49",
+			"memFull": "95.63",
+			"strict": "92.87",
+			"vsProduction": "+0 −1 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+22 −2 p 0.000036",
+			"misses": "0/2281 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": ["hinaus laufen @er-versucht-hinauszulaufen#0"]
+		},
+		{
+			"name": "-binomial only",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		},
+		{
+			"name": "-answer-apart only",
+			"mem": "95.63",
+			"memFull": "95.63",
+			"strict": "93.01",
+			"vsProduction": "+0 −0 p 1.0",
+			"vsProductionFull": "+0 −0",
+			"vsBaseline": "+23 −2 p 0.000019",
+			"misses": "0/2284 req, 0 reused, 0 stand-ins {}",
+			"gainedVsProd": [],
+			"lostVsProd": []
+		}
+	],
+	"cumulative": {
+		"step baseline → +X3": {
+			"a": 8,
+			"b": 0,
+			"p": 0.0078125,
+			"g": [
+				"wäre gewesen @das-waere-fast-schief-gewesen#0",
+				"einem bisschen @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"Milch @sie-trinkt-den-kaffee-mit-einem-bisschen-m",
+				"hinaus laufen @er-versucht-hinauszulaufen#0",
+				"Tut leid @tut-mir-leid-das-war-mein-fehler#0",
+				"mir @tut-mir-leid-das-war-mein-fehler#1",
+				"um zu @ich-bin-extra-frueh-aufgestanden-um-den-bu",
+				"um @ich-bin-extra-frueh-aufgestanden-um-den-bu"
+			],
+			"l": [],
+			"full": {
+				"a": 4,
+				"b": 0
+			}
+		},
+		"step +X3 → +X3+X5": {
+			"a": 2,
+			"b": 1,
+			"p": 1,
+			"g": [
+				"auf jeden Fall @das-ist-auf-jeden-fall-richtig#2",
+				"da liegt der Hase i m Pfeffer @genau-da-liegt-der-hase-im-pfeffer#0"
+			],
+			"l": ["Herzen @sie-folgte-ihrem-herzen#0"],
+			"full": {
+				"a": 1,
+				"b": 0
+			}
+		},
+		"step +X3+X5 → +X3+X5+D4": {
+			"a": 7,
+			"b": 1,
+			"p": 0.0703125,
+			"g": [
+				"eingezeichnet @auf-der-karte-sind-drei-seen-eingezeichnet",
+				"gekocht @die-kartoffeln-sind-bereits-gekocht#0",
+				"ist @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"geschlossen @nachdem-der-letzte-besucher-das-gebaeude-v",
+				"sind @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"eingeladen @obwohl-einige-plaetze-kurzfristig-frei-gew",
+				"geschrieben @der-brief-ist-schon-geschrieben#0"
+			],
+			"l": [
+				"sich mit abgefunden hat @ich-weiss-nicht-ob-sich-meine-oma-inzwisch"
+			],
+			"full": {
+				"a": 4,
+				"b": 1
+			}
+		},
+		"step +X3+X5+D4 → production": {
+			"a": 6,
+			"b": 0,
+			"p": 0.03125,
+			"g": [
+				"rechnet @sie-rechnet-mit-dem-taschenrechner#1",
+				"mit @sie-rechnet-mit-dem-taschenrechner#2",
+				"biss @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"in @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"s Gras @das-kaninchen-frass-auf-der-wiese-dabei-bi",
+				"bedanke mich bei für @ich-bedanke-mich-bei-dir-fuer-die-hilfe#1"
+			],
+			"l": [],
+			"full": {
+				"a": 6,
+				"b": 0
+			}
+		}
+	},
+	"x4PreRegisteredV2": {
+		"what": "472ece32's government-choice.ts (joined, particle, rival, literal at 0.5, no duel, a literal answer keeps the preposition) over production's other stages; 0 cache misses",
+		"vsProductionV3": "+0 -2 (biss, in in Dabei biss es ins Gras)",
+		"mem": 95.36,
+		"at0.6": "same as 0.5"
+	},
+	"labLeverRun": {
+		"runId": "20261002T122547--production--verb-0-6-0-5-lassen-recipient-state-0-6-lassen-recipient-state_x5-0-5-sc-0-6-sc-0-7-sc--heldout--all",
+		"note": "lab variants run as prefixes: x5 = code rules + Locution Choice; verb = + Verb Choice over one five-family request (fresh on held-out, 71,136 tokens); neither applies the Government Choice",
+		"mem": {
+			"production": 95.6,
+			"production+x5@0.5-sc": 93.7,
+			"production+x5@0.6-sc": 93.9,
+			"production+x5@0.7-sc": 93.9,
+			"production+verb@0.6 (pre-registered, five families)": 94.6,
+			"production+verb@0.6-lassen-recipient-state": 94.6,
+			"production+verb@0.5-lassen-recipient-state (adopted)": 94.8
+		},
+		"compares": {
+			"verb@0.6 -> verb@0.5-lassen-recipient-state": "+2 -0, p 0.5 (ist … geschlossen)",
+			"x5@0.5-sc -> x5@0.6-sc": "+2 -0, p 0.5 (platzte der Kragen, sprichwörtliche)",
+			"x5@0.7-sc -> x5@0.6-sc": "+1 -1 (Hase im Pfeffer gained, Herzen lost)"
+		}
+	},
+	"borderlineShares": {
+		"D4 gain ist … geschlossen (nachdem-der-letzte-besucher)": "state 0.54 / 0.59 / 0.64: clears 0.5 in 3 reps, 0.6 in 2",
+		"D4 loss sich mit … abgefunden hat": "state 0.61 / 0.64 / 0.64 for a perfect: the judge is confidently wrong",
+		"D4 miss ist … ausgegeben": "state 0.38 / 0.44 / 0.44, under the floor",
+		"X5 loss folgte … Herzen": "fixed 0.64-0.74 on both units: not a floor effect",
+		"X5 at 0.5 platzte der Kragen": "right unit fixed 0.51-0.59: merges at 0.5 only",
+		"X4 gain biss es ins Gras (literal)": "literal 0.72-0.79: clear",
+		"X4 gain rechnet mit dem Taschenrechner": "adjunct 0.69-0.80: clear; control rechnet mit starkem Regen governed 0.92 kept",
+		"X4 miss fängt an der Kreuzung … an": "particle 0.48-0.53"
+	},
+	"segmentStage": "raw mode only: baseline raw lost zu in hinauszulaufen against gold mode (gold 672 -> raw 671 units by majority); final raw equals final gold on all 567 sentence-repetitions (+1 -0 over baseline beyond the gold-mode gains; also lets X3 infixed-zu win hinaus … laufen in raw)",
+	"x7": "no output change on held-out: production sets no variant margin (var% 0.0 before and after)",
+	"summary": {
+		"X7 variant restriction": {
+			"heldout": "0 (no-op)",
+			"recommend": "keep"
+		},
+		"X3 ten code rules": {
+			"heldout": "+8 -0, p 0.0078 (leave-one-out and in adoption order)",
+			"byRule": "anchors +2, quantifier +2, pronoun +2, sein-chain +1, infixed-zu +1; split-adverb, article-head, was-fuer, binomial, answer-apart 0; none loses",
+			"recommend": "keep"
+		},
+		"X5 Locution Choice + saying-closed (floor 0.6 post hoc)": {
+			"heldout": "+2 -1, p 1.0 (both ways)",
+			"postHoc": "0.6 vs pre-registered 0.5: +2 -0; vs 0.7: +1 -1",
+			"recommend": "keep provisionally; unconfirmed on held-out, confirm on fresh held-out data"
+		},
+		"D4 Verb Choice + stranded-adverb (floor 0.5 post hoc)": {
+			"heldout": "+7 -1, p 0.07",
+			"postHoc": "adopted vs pre-registered five families at 0.6: +2 -0; vs three at 0.6: +2 -0",
+			"recommend": "keep; the state family is the weak point (one confident loss), re-tune only with fresh held-out data"
+		},
+		"X4 bracket-particle + Government Choice v3 (0.5 post hoc)": {
+			"heldout": "+6 -0, p 0.031",
+			"postHoc": "v3 vs pre-registered v2: +2 -0; 0.6 identical, 0.7 identical by majority",
+			"recommend": "keep"
+		},
+		"Segment-stage fixes 14aff52d": {
+			"heldout": "raw +1 -0; exact-piece 99.80 -> 100%",
+			"recommend": "keep"
+		}
+	}
+}
