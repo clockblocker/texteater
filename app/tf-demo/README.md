@@ -27,8 +27,11 @@ bun x convex env set TYPESAFE_API_KEY
 
 Convex actions read deployment environment variables. Keys in your shell or
 the repository's `.env.local` are not automatically available there. TypeSafe
-is required during text intake; OpenAI is also required for generated
-resolution. Configure both again when switching to a new deployment.
+is required during text intake, where Dumgen's `segment.inUnits` asks jev for
+each Sentence's units. OpenAI is unused while click resolution is rebuilt
+([#848](https://github.com/clockblocker/texteater/issues/848)): a click selects
+its unit and calls no model. Configure both again when switching to a new
+deployment.
 
 Two deployment flags open anonymous entry points that a hosted deployment
 must keep closed. `bun run dev` sets both to `1` on the local deployment
@@ -38,8 +41,8 @@ through `bun run env:sync`:
   stripping every analysis, and shows their buttons.
 - `TF_INSPECTION=1` honours requests to capture Resolution Inspector records.
 
-The dictionary starts empty. Dumgen supplies reviewed Units and Knowledge on
-demand; grammatical navigation adds only the selected Reading.
+The dictionary starts empty. While click resolution is rebuilt, a click adds
+nothing to it; grammatical navigation adds only the selected Reading.
 
 The Notes playground uses an isolated in-memory fixture database. Fixtures
 are never loaded into the application’s Convex deployment.
