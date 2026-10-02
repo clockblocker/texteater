@@ -18,26 +18,41 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0034"],
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
 			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{
 				"rule": "de/verb-core-features",
 				"hash": "584917189382edfe"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: schämen, sich",
+				"url": "https://www.duden.de/rechtschreibung/schaemen",
+				"supports": "Target [schämt, sich, für]: ich schäme mich für dich, beside the genitive object (sie schämte sich ihres Verhaltens)."
+			},
+			{
+				"title": "DWDS: schämen",
+				"url": "https://www.dwds.de/wb/sch%C3%A4men",
+				"supports": "Target [schämt, sich, für]: sich für das, was man getan hat, schämen, beside the elevated sich einer Sache schämen."
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2, 4],
+			"memberSegmentIndices": [2, 4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": { "emojiDescription": "😳" },
 			"notes": {
-				"rationale": "sich schämen is lexically reflexive: the sense needs sich coreferent with Mara, and no other object can stand in its place, so sich is a member of the verb's target and part of the normalized Surface schämt sich (de/verb-owns-its-scattered-members). Its lexicallyReflexive is Acc, as in ich schäme mich (de/verb-core-features). Whether für is governed is left open: E-VALBU has no schämen entry, and Duden gives ich schäme mich für dich beside the genitive (sich seiner Nacktheit schämen) and wegen."
+				"rationale": "sich schämen is lexically reflexive: the sense needs sich coreferent with Mara, and no other object can stand in its place, so sich is a member of the verb's target and part of the normalized Surface schämt sich (de/verb-owns-its-scattered-members). Its lexicallyReflexive is Acc, as in ich schäme mich (de/verb-core-features). für is governed: E-VALBU has no schämen entry, so Duden decides, and it gives ich schäme mich für dich; DWDS lists sich für etwas schämen beside the elevated sich einer Sache schämen. für + Acc names what one is ashamed of, as the genitive object does, so für is a member recorded in valencyEvidence as für + Acc and stays out of the normalized Surface, as an does for sich erinnern (de/governed-preposition-joins-its-governor). den Irrtum fills the slot and stays outside. Decided by agents under the user's delegation (2026-10-02)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -73,11 +88,30 @@
 				},
 				"members": [
 					{ "attested": "schämt", "orthography": "Standard" },
-					{ "attested": "sich", "orthography": "Standard" }
+					{ "attested": "sich", "orthography": "Standard" },
+					{ "attested": "für", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": []
+				"valencyEvidence": [
+					{
+						"member": 2,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "für",
+								"coreFeatures": {}
+							},
+							"governedCase": "Acc",
+							"referent": "Either"
+						},
+						"realizedCase": "Acc"
+					}
+				]
 			}
 		}
 	],

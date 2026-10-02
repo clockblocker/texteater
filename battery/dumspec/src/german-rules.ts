@@ -205,6 +205,8 @@ const verbs: Rule[] = [
 			"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich",
 			"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank",
 			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
+			// Government read from Duden, since E-VALBU has no schämen.
+			"de/mara-schaemt-sich-fuer-den-irrtum",
 		],
 	},
 	{
