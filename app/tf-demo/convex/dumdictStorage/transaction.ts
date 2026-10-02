@@ -9,6 +9,7 @@ import {
 } from "dumspec/inventories";
 import {
 	emojiDescriptionOf,
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 	stableFingerprint,
@@ -491,6 +492,10 @@ async function applyChange(
 				throw new Error("Unsupported Lemma language.");
 			}
 			const canonical = await findCanonicalLemma(ctx, record.lemma);
+			const canonicalForm = requireString(
+				lemma.canonicalForm,
+				"Lemma canonicalForm",
+			);
 			const lemmaId =
 				canonical?._id ??
 				(await ctx.db.insert("lemmas", {
@@ -498,10 +503,11 @@ async function applyChange(
 					language,
 					family: requireFamily(lemma.family),
 					kind: requireKind(lemma.kind),
-					canonicalForm: requireString(
-						lemma.canonicalForm,
-						"Lemma canonicalForm",
-					),
+					canonicalForm,
+					foldedCanonicalForm: foldedCanonicalForm({
+						language,
+						canonicalForm,
+					}),
 					coreFeatures: lemma.coreFeatures,
 				}));
 			await ctx.db.insert("dictionaryLemmas", { lemmaId });
@@ -776,7 +782,7 @@ async function applyChange(
 					locator.sourceReadingKey,
 					"sourceReadingKey",
 				),
-				targetCanonicalForm: target.canonicalForm,
+				targetFoldedCanonicalForm: foldedCanonicalForm(target),
 				shadowId,
 				record,
 			});

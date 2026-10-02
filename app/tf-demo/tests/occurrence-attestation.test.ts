@@ -12,6 +12,7 @@ test("reconstructs mixed, discontinuous occurrence evidence in source order", as
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm: "aufmachen",
+			foldedCanonicalForm: "aufmachen",
 			coreFeatures: {
 				hasSepPrefix: "Yes",
 				lexicallyReflexive: null,

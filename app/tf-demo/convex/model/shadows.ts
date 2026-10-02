@@ -1,5 +1,8 @@
 import type * as Dumling from "dumling/types";
-import { lemmaIdentityKey } from "../../server/linguisticIdentity";
+import {
+	foldedCanonicalForm,
+	lemmaIdentityKey,
+} from "../../server/linguisticIdentity";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
@@ -91,11 +94,15 @@ export function normalizeShadowDescriptor(value: unknown): ShadowDescriptor {
 	return normalized as ShadowDescriptor;
 }
 
+/**
+ * The Shadow row key: the descriptor with its Canonical Form case-folded, so
+ * `LOL` and `lol` intern one Shadow, as they name one Lemma (system ADR 0002).
+ */
 export function shadowKeyFor(value: unknown): string {
 	const descriptor = normalizeShadowDescriptor(value);
 	return JSON.stringify([
 		descriptor.language,
-		descriptor.canonicalForm,
+		foldedCanonicalForm(descriptor),
 		descriptor.family,
 		descriptor.kind,
 	]);
@@ -121,7 +128,11 @@ export function shadowIsCompatible(
 		return (
 			shadow.shadowKey === shadowKeyFor(descriptor) &&
 			shadow.language === descriptor.language &&
-			shadow.canonicalForm === descriptor.canonicalForm &&
+			typeof shadow.canonicalForm === "string" &&
+			foldedCanonicalForm({
+				language: descriptor.language,
+				canonicalForm: shadow.canonicalForm,
+			}) === foldedCanonicalForm(descriptor) &&
 			shadow.family === descriptor.family &&
 			shadow.kind === descriptor.kind
 		);

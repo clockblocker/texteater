@@ -1,6 +1,7 @@
 import { type Infer, v } from "convex/values";
 import { derivePendingEntryId } from "dumdict/pending";
 import type * as Dumrel from "dumrel/types";
+import { foldedCanonicalForm } from "../server/linguisticIdentity";
 
 import type { Doc } from "./_generated/dataModel";
 import {
@@ -171,6 +172,7 @@ function runKey(
 	return JSON.stringify([attemptKey, runNumber, relation]);
 }
 
+/** A target Shadow's key, its Canonical Form case-folded (system ADR 0002). */
 function targetKey(
 	target: Infer<typeof relationTargetShadowValidator>,
 ): string {
@@ -178,7 +180,7 @@ function targetKey(
 		target.language,
 		target.family,
 		target.kind,
-		target.canonicalForm,
+		foldedCanonicalForm(target),
 	]);
 }
 

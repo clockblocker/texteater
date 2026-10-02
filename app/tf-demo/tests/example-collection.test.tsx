@@ -91,6 +91,7 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 			family: "Lexeme",
 			kind: "PROPN",
 			canonicalForm: "Deutschland",
+			foldedCanonicalForm: "deutschland",
 			coreFeatures: {},
 		});
 		const attestationId = await ctx.db.insert("attestations", {

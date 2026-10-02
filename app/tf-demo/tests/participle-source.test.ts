@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import { api, internal } from "../convex/_generated/api";
 import { RELATION_PUBLICATION_FINGERPRINTS } from "../convex/model/generatedKnowledgeContainment";
 import {
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
@@ -101,6 +102,7 @@ async function seedAdjective(t: TestConvexDb, visitorId: string) {
 			family: lemma.family,
 			kind: lemma.kind,
 			canonicalForm: lemma.canonicalForm,
+			foldedCanonicalForm: foldedCanonicalForm(lemma),
 			coreFeatures: lemma.coreFeatures,
 		});
 		const readingId = await ctx.db.insert("readings", {
@@ -185,6 +187,7 @@ function storeVerb(t: TestConvexDb, reading: Dumling.Reading<"de">) {
 			family: reading.lemma.family,
 			kind: reading.lemma.kind,
 			canonicalForm: reading.lemma.canonicalForm,
+			foldedCanonicalForm: foldedCanonicalForm(reading.lemma),
 			coreFeatures: reading.lemma.coreFeatures,
 		});
 		const readingId = await ctx.db.insert("readings", {

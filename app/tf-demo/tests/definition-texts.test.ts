@@ -12,6 +12,7 @@ import {
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
 import { listLibraryTexts } from "../convex/texts";
+import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { unresolvedUnits } from "../server/storedSegments";
 import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
 import { proseSegments } from "../tooling/playground-example-collection";
@@ -44,6 +45,7 @@ async function seedReading(t: TestConvexDb) {
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Haus",
+			foldedCanonicalForm: "haus",
 			coreFeatures: { gender: "Neut" },
 		});
 		await ctx.db.insert("readings", {
@@ -697,6 +699,10 @@ async function insertUnit(t: TestConvexDb, readingKey: string) {
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: readingKey,
+			foldedCanonicalForm: foldedCanonicalForm({
+				language: "de",
+				canonicalForm: readingKey,
+			}),
 			coreFeatures: { gender: "Neut" },
 		});
 		const readingId = await ctx.db.insert("readings", {

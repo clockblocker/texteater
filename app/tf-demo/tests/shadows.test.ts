@@ -19,6 +19,7 @@ import {
 	backfillPendingShadowReferencesPage,
 	backfillStructuralShadowReferencesPage,
 } from "../convex/shadows";
+import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
 
@@ -119,7 +120,7 @@ function insertPendingRelation(
 			record.locator.targetPendingId,
 		]),
 		sourceReadingKey: record.locator.sourceReadingKey,
-		targetCanonicalForm: "Bank",
+		targetFoldedCanonicalForm: "bank",
 		shadowId,
 		record,
 	});
@@ -136,6 +137,7 @@ async function insertSourceReading(
 		family: "Lexeme",
 		kind: "VERB",
 		canonicalForm: "laufen",
+		foldedCanonicalForm: "laufen",
 		coreFeatures: {},
 	});
 	return ctx.db.insert("readings", {
@@ -163,7 +165,7 @@ describe("Shadow descriptor and storage seam", () => {
 			...nounShadow,
 			canonicalForm: "Bank",
 		});
-		expect(shadowKeyFor(nounShadow)).toBe('["de","Bank","Lexeme","NOUN"]');
+		expect(shadowKeyFor(nounShadow)).toBe('["de","bank","Lexeme","NOUN"]');
 		expect(() =>
 			normalizeShadowDescriptor({ ...nounShadow, extra: true }),
 		).toThrow("exactly language");
@@ -301,7 +303,7 @@ describe("Shadow backfills and presentation", () => {
 			await ctx.db.insert("pendingSemanticRelations", {
 				locatorKey: '["reading-source","synonym","pending-1"]',
 				sourceReadingKey: "reading-source",
-				targetCanonicalForm: " Bank ",
+				targetFoldedCanonicalForm: " Bank ",
 				record: pendingRecord(),
 			});
 			await ctx.db.insert("accumulatedKnowledge", {
@@ -546,6 +548,10 @@ describe("Shadow backfills and presentation", () => {
 					lemmaKey: id,
 					language,
 					canonicalForm,
+					foldedCanonicalForm: foldedCanonicalForm({
+						language,
+						canonicalForm,
+					}),
 					family,
 					kind,
 					coreFeatures: id.startsWith("candidate-")
@@ -684,6 +690,10 @@ test("Reading deletion removes outgoing edges and preserves incoming edges until
 					family: "Lexeme",
 					kind: "NOUN",
 					canonicalForm,
+					foldedCanonicalForm: foldedCanonicalForm({
+						language: "de",
+						canonicalForm,
+					}),
 					coreFeatures: {},
 				});
 				await ctx.db.insert("dictionaryLemmas", { lemmaId });

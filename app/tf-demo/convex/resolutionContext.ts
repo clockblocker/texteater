@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { spellingOf } from "../server/storedSegments";
 import type { Doc, Id } from "./_generated/dataModel";
 import { internalQuery, type QueryCtx } from "./_generated/server";
@@ -120,7 +121,13 @@ export async function loadResolutionContext(
 				ctx.db
 					.query("lemmas")
 					.withIndex("by_shadow_descriptor", (q) =>
-						q.eq("language", "de").eq("canonicalForm", spelling),
+						q.eq("language", "de").eq(
+							"foldedCanonicalForm",
+							foldedCanonicalForm({
+								language: "de",
+								canonicalForm: spelling,
+							}),
+						),
 					)
 					.take(9),
 				ctx.db

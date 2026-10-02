@@ -214,6 +214,7 @@ test("rollback persistence and proposal monitoring are queryable through interna
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Bank",
+			foldedCanonicalForm: "bank",
 			coreFeatures: {},
 		});
 		const readingId = await ctx.db.insert("readings", {
@@ -251,10 +252,10 @@ test("rollback persistence and proposal monitoring are queryable through interna
 			locatorKey: JSON.stringify([
 				"reading-key",
 				"synonym",
-				"pending-entry:v2:de:Lexeme:NOUN:Geldinstitut",
+				"pending-entry:v2:de:Lexeme:NOUN:geldinstitut",
 			]),
 			sourceReadingKey: "reading-key",
-			targetCanonicalForm: "Geldinstitut",
+			targetFoldedCanonicalForm: "geldinstitut",
 			record: {},
 		});
 		return row;

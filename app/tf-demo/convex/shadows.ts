@@ -1,5 +1,6 @@
 import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
+import { foldedCanonicalForm } from "../server/linguisticIdentity";
 
 import {
 	internalMutation,
@@ -73,7 +74,8 @@ export const backfillPendingShadowReferencesPage = internalMutation({
 			if (
 				currentShadow &&
 				shadowIsCompatible(currentShadow, descriptor) &&
-				pending.targetCanonicalForm === descriptor.canonicalForm
+				pending.targetFoldedCanonicalForm ===
+					foldedCanonicalForm(descriptor)
 			) {
 				continue;
 			}
@@ -83,7 +85,7 @@ export const backfillPendingShadowReferencesPage = internalMutation({
 			);
 			await ctx.db.patch(pending._id, {
 				shadowId,
-				targetCanonicalForm: descriptor.canonicalForm,
+				targetFoldedCanonicalForm: foldedCanonicalForm(descriptor),
 			});
 			changed += 1;
 		}
@@ -210,7 +212,8 @@ export const auditPendingShadowReferencesPage = internalQuery({
 					if (
 						!shadow ||
 						!shadowIsCompatible(shadow, descriptor) ||
-						pending.targetCanonicalForm !== descriptor.canonicalForm
+						pending.targetFoldedCanonicalForm !==
+							foldedCanonicalForm(descriptor)
 					) {
 						return "mismatched" as const;
 					}

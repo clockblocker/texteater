@@ -22,6 +22,7 @@ function insertReading(t: TestConvexDb) {
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Bank",
+			foldedCanonicalForm: "bank",
 			coreFeatures: {},
 		});
 		return ctx.db.insert("readings", {

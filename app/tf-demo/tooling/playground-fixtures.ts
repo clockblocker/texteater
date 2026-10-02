@@ -19,7 +19,10 @@ import {
 } from "../convex/modules/notes/readingNote";
 import { unitReadingEmojiDescription } from "../convex/modules/notes/unitReadingFamilies";
 import { persistSubmittedText } from "../convex/modules/text/submission";
-import { emojiDescriptionOf } from "../server/linguisticIdentity";
+import {
+	emojiDescriptionOf,
+	foldedCanonicalForm,
+} from "../server/linguisticIdentity";
 import {
 	type StoredUnit,
 	unitsAroundOccurrence,
@@ -91,6 +94,7 @@ async function ensureUnit(ctx: MutationCtx, unit: NoteStudyDatabaseUnit) {
 			family: value.family,
 			kind: value.kind,
 			canonicalForm: value.canonicalForm,
+			foldedCanonicalForm: foldedCanonicalForm(value),
 			coreFeatures: value.coreFeatures,
 		});
 		lemma = await ctx.db.get(lemmaId);
@@ -510,7 +514,9 @@ export const load = internalMutation({
 				await ctx.db.insert("pendingSemanticRelations", {
 					locatorKey,
 					sourceReadingKey: pending.sourceReadingKey,
-					targetCanonicalForm: pending.target.canonicalForm,
+					targetFoldedCanonicalForm: foldedCanonicalForm(
+						pending.target,
+					),
 					shadowId: shadow._id,
 					record,
 				});

@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
+import { foldedCanonicalForm } from "../../../server/linguisticIdentity";
 
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -130,14 +131,14 @@ async function loadShadowInspection(
 		.withIndex("by_shadow_descriptor", (q) =>
 			q
 				.eq("language", descriptor.language)
-				.eq("canonicalForm", descriptor.canonicalForm)
+				.eq("foldedCanonicalForm", foldedCanonicalForm(descriptor))
 				.eq("family", family)
 				.eq("kind", descriptor.kind),
 		)
 		.take(MAX_SHADOW_CANDIDATE_LEMMAS + 1);
 	if (lemmas.length > MAX_SHADOW_CANDIDATE_LEMMAS) {
 		throw new Error(
-			`Shadow inspection supports at most ${MAX_SHADOW_CANDIDATE_LEMMAS} exactly matching Lemmas.`,
+			`Shadow inspection supports at most ${MAX_SHADOW_CANDIDATE_LEMMAS} matching Lemmas.`,
 		);
 	}
 

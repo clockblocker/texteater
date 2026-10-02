@@ -1757,6 +1757,7 @@ describe("Resolution Session", () => {
 				family: "Lexeme",
 				kind: "NOUN",
 				canonicalForm: "Banken",
+				foldedCanonicalForm: "banken",
 				coreFeatures: "secret-malformed-features",
 			}),
 		);

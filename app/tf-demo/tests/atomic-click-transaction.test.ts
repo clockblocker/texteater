@@ -6,6 +6,7 @@ import type { MutationCtx } from "../convex/_generated/server";
 import { loadSourceContextPage } from "../convex/modules/notes/readingNote";
 import schema from "../convex/schema";
 import {
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 } from "../server/linguisticIdentity";
@@ -99,7 +100,11 @@ async function selectIn(
 
 function insertBankLemma(ctx: MutationCtx) {
 	const { unitKind: _unitKind, ...fields } = lemma;
-	return ctx.db.insert("lemmas", { lemmaKey, ...fields });
+	return ctx.db.insert("lemmas", {
+		lemmaKey,
+		...fields,
+		foldedCanonicalForm: foldedCanonicalForm(lemma),
+	});
 }
 
 function insertBankReading(ctx: MutationCtx, lemmaId: Id<"lemmas">) {
@@ -466,6 +471,7 @@ test("a failure after the dictionary commit rolls back dictionary, occurrence, a
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Haus",
+			foldedCanonicalForm: "haus",
 			coreFeatures: {},
 		});
 		const readingId = await ctx.db.insert("readings", {

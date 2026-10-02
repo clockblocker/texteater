@@ -24,7 +24,7 @@ describe("global linguistic and visitor-scoped identities", () => {
 		expect(lemmaKey).not.toContain("visitor-a");
 		expect(readingKey).not.toContain("visitor-a");
 		expect(lemmaKey).toBe(
-			'{"canonicalForm":"Haus","coreFeatures":{"gender":"Neut"},"family":"Lexeme","kind":"NOUN","language":"de","unitKind":"Lemma"}',
+			'["de","Lexeme","NOUN","haus",[["gender","Neut"]]]',
 		);
 		expect(lemmaIdentityKey({ ...lemma })).toBe(lemmaKey);
 	});

@@ -5,6 +5,7 @@ import type { Id } from "../convex/_generated/dataModel";
 import { applyDumdictPlanInTransaction } from "../convex/dumdictTransaction";
 import type schema from "../convex/schema";
 import {
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 } from "../server/linguisticIdentity";
@@ -183,6 +184,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 		const lemmaId = await ctx.db.insert("lemmas", {
 			lemmaKey: lemmaIdentityKey(bankLemma),
 			...lemmaFields,
+			foldedCanonicalForm: foldedCanonicalForm(bankLemma),
 		});
 		const readingId = await ctx.db.insert("readings", {
 			readingKey: readingFingerprint(bankReading),

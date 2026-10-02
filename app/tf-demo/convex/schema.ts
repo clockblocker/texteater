@@ -163,13 +163,16 @@ export default defineSchema({
 		language: languageValidator,
 		family: familyValidator,
 		kind: kindValidator,
+		/** The display casing a Note renders. */
 		canonicalForm: v.string(),
+		/** The Canonical Form case-folded for identity (system ADR 0002). */
+		foldedCanonicalForm: v.string(),
 		coreFeatures: v.any(),
 	})
 		.index("by_lemma_key", ["lemmaKey"])
 		.index("by_shadow_descriptor", [
 			"language",
-			"canonicalForm",
+			"foldedCanonicalForm",
 			"family",
 			"kind",
 		]),
@@ -251,18 +254,21 @@ export default defineSchema({
 	pendingSemanticRelations: defineTable({
 		locatorKey: v.string(),
 		sourceReadingKey: v.string(),
-		targetCanonicalForm: v.string(),
+		/** The target Shadow's Canonical Form, case-folded; `record` keeps its casing. */
+		targetFoldedCanonicalForm: v.string(),
 		shadowId: v.optional(v.id("shadows")),
 		record: v.any(),
 	})
 		.index("by_locator_key", ["locatorKey"])
 		.index("by_source_reading_key", ["sourceReadingKey"])
-		.index("by_target_canonical_form", ["targetCanonicalForm"])
+		.index("by_target_folded_canonical_form", ["targetFoldedCanonicalForm"])
 		.index("by_shadow_id", ["shadowId"]),
 
 	shadows: defineTable({
+		/** Keys the descriptor with its Canonical Form case-folded (system ADR 0002). */
 		shadowKey: v.string(),
 		language: languageValidator,
+		/** The display casing of the first descriptor interned. */
 		canonicalForm: v.string(),
 		family: familyValidator,
 		kind: kindValidator,

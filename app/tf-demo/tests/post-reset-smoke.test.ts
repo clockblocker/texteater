@@ -13,7 +13,10 @@ import { inspectionPayloadChunks } from "../convex/model/inspection";
 import { stripTextAnalysisGraph } from "../convex/model/textAnalysisStripping";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
-import { readingIdentityKey as readingFingerprint } from "../server/linguisticIdentity";
+import {
+	foldedCanonicalForm,
+	readingIdentityKey as readingFingerprint,
+} from "../server/linguisticIdentity";
 import {
 	actionContext,
 	createTestConvex,
@@ -111,6 +114,10 @@ async function insertReading(t: TestConvexDb, readingKey: string) {
 			family: "Lexeme",
 			kind: "VERB",
 			canonicalForm: readingKey,
+			foldedCanonicalForm: foldedCanonicalForm({
+				language: "de",
+				canonicalForm: readingKey,
+			}),
 			coreFeatures: {},
 		});
 		const readingId = await ctx.db.insert("readings", {
@@ -268,7 +275,7 @@ const readingOwnedRows: Record<
 		await ctx.db.insert("pendingSemanticRelations", {
 			locatorKey: `locator:${owner.readingKey}`,
 			sourceReadingKey: owner.readingKey,
-			targetCanonicalForm: "laufen",
+			targetFoldedCanonicalForm: "laufen",
 			record: {},
 		}),
 	],

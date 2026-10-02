@@ -13,6 +13,7 @@ import {
 } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
 import {
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
@@ -58,6 +59,7 @@ async function insertLemma(
 		ctx.db.insert("lemmas", {
 			lemmaKey: lemmaIdentityKey(lemmaUnit),
 			...stored,
+			foldedCanonicalForm: foldedCanonicalForm(lemmaUnit),
 		}),
 	);
 }

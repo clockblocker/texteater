@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import {
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 } from "../../server/linguisticIdentity";
@@ -331,7 +332,10 @@ export async function loadCanonicalReadingKnowledge(
 	return Object.keys(knowledge).length === 0 ? undefined : knowledge;
 }
 
-/** Dictionary Lemmas a Unit Shadow with this canonical form could resolve to. */
+/**
+ * Dictionary Lemmas a Unit Shadow with this canonical form could resolve to,
+ * matched without letter case (system ADR 0002).
+ */
 export async function dictionaryLemmasWithCanonicalForm(
 	ctx: ServerCtx,
 	canonicalForm: string,
@@ -339,7 +343,12 @@ export async function dictionaryLemmasWithCanonicalForm(
 	const lemmas = await ctx.db
 		.query("lemmas")
 		.withIndex("by_shadow_descriptor", (q) =>
-			q.eq("language", "de").eq("canonicalForm", canonicalForm),
+			q
+				.eq("language", "de")
+				.eq(
+					"foldedCanonicalForm",
+					foldedCanonicalForm({ language: "de", canonicalForm }),
+				),
 		)
 		.take(MAX_CLEANUP_CANDIDATE_LEMMAS + 1);
 	if (lemmas.length > MAX_CLEANUP_CANDIDATE_LEMMAS)

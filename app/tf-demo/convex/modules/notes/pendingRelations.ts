@@ -1,6 +1,8 @@
 import { v } from "convex/values";
+import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { foldedCanonicalForm } from "../../../server/linguisticIdentity";
 
 import type { Id } from "../../_generated/dataModel";
 import { semanticRelationValidator } from "../../model/validators";
@@ -35,7 +37,7 @@ export function projectPendingRelations(
 	rows: readonly {
 		locatorKey: string;
 		sourceReadingKey: string;
-		targetCanonicalForm: string;
+		targetFoldedCanonicalForm: string;
 		shadowId?: Id<"shadows">;
 		record: unknown;
 	}[],
@@ -50,6 +52,7 @@ export function projectPendingRelations(
 		const targetCanonicalForm = optionalNonEmptyString(
 			target?.canonicalForm,
 		);
+		const language = target?.language;
 		const targetFamily = optionalNonEmptyString(target?.family);
 		const targetKind = optionalNonEmptyString(target?.kind);
 		return isSemanticRelation(relation) &&
@@ -63,8 +66,13 @@ export function projectPendingRelations(
 					relation,
 					locator.targetPendingId,
 				]) &&
-			row.targetCanonicalForm === targetCanonicalForm &&
 			targetCanonicalForm &&
+			isLanguage(language) &&
+			row.targetFoldedCanonicalForm ===
+				foldedCanonicalForm({
+					language,
+					canonicalForm: targetCanonicalForm,
+				}) &&
 			targetFamily &&
 			targetKind
 			? [
@@ -82,6 +90,10 @@ export function projectPendingRelations(
 				]
 			: [];
 	});
+}
+
+function isLanguage(value: unknown): value is Dumling.Language {
+	return value === "de" || value === "en" || value === "he";
 }
 
 function isSemanticRelation(value: unknown): value is Dumrel.SemanticRelation {

@@ -365,7 +365,7 @@ async function loadLemmaRouteNote(
 			.withIndex("by_shadow_descriptor", (q) =>
 				q
 					.eq("language", lemma.language)
-					.eq("canonicalForm", lemma.canonicalForm),
+					.eq("foldedCanonicalForm", lemma.foldedCanonicalForm),
 			)
 			.paginate({
 				cursor: cursor.cursor,

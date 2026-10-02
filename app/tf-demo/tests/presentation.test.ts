@@ -16,6 +16,7 @@ import {
 } from "../convex/readingNotes";
 import { get as getTextView, occurrenceFocus } from "../convex/textViews";
 import {
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 } from "../server/linguisticIdentity";
@@ -86,6 +87,7 @@ async function insertReading(t: TestConvexDb, reading: ReadingValue) {
 			family: lemma.family,
 			kind: lemma.kind,
 			canonicalForm: lemma.canonicalForm,
+			foldedCanonicalForm: foldedCanonicalForm(lemma),
 			coreFeatures: lemma.coreFeatures,
 		});
 		const readingId = await ctx.db.insert("readings", {
@@ -284,7 +286,7 @@ test("Unit Reading NoteData ignores visitor settings and keeps all pure data", a
 			relation: "synonym",
 		});
 		const shadowId = await ctx.db.insert("shadows", {
-			shadowKey: JSON.stringify(["de", "Merkmal", "Lexeme", "NOUN"]),
+			shadowKey: JSON.stringify(["de", "merkmal", "Lexeme", "NOUN"]),
 			language: "de",
 			canonicalForm: "Merkmal",
 			family: "Lexeme",

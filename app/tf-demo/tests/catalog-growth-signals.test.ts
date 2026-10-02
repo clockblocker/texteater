@@ -151,6 +151,7 @@ describe("Catalog Growth Signals", () => {
 				family: "Lexeme",
 				kind: "NOUN",
 				canonicalForm: "Bank",
+				foldedCanonicalForm: "bank",
 				coreFeatures: {},
 			});
 			const readingId: Id<"readings"> = await ctx.db.insert("readings", {

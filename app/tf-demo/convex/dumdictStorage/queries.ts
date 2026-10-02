@@ -1,4 +1,5 @@
 import { v } from "convex/values";
+import { foldedCanonicalForm } from "../../server/linguisticIdentity";
 
 import { internalQuery } from "../_generated/server";
 import { lemmaValue, readingValue } from "../model/occurrenceAttestations";
@@ -241,10 +242,10 @@ export async function loadReadingEntryContextSlice(
 				loadExactPendingRecords(ctx, args.pendingLocatorKeys),
 				ctx.db
 					.query("pendingSemanticRelations")
-					.withIndex("by_target_canonical_form", (q) =>
+					.withIndex("by_target_folded_canonical_form", (q) =>
 						q.eq(
-							"targetCanonicalForm",
-							args.proposedLemma.canonicalForm,
+							"targetFoldedCanonicalForm",
+							foldedCanonicalForm(args.proposedLemma),
 						),
 					)
 					.take(MAX_PENDING_RELATIONS_PER_SLICE + 1),
@@ -261,8 +262,8 @@ export async function loadReadingEntryContextSlice(
 						);
 						return descriptor.language ===
 							args.proposedLemma.language &&
-							descriptor.canonicalForm ===
-								args.proposedLemma.canonicalForm &&
+							foldedCanonicalForm(descriptor) ===
+								foldedCanonicalForm(args.proposedLemma) &&
 							descriptor.family === args.proposedLemma.family &&
 							descriptor.kind === args.proposedLemma.kind
 							? [

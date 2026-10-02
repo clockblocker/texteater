@@ -4,6 +4,7 @@ import type * as Dumling from "dumling/types";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { projectSentenceView } from "../convex/modules/text/sentenceView";
+import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import {
 	createTestConvex,
 	submitText,
@@ -59,6 +60,7 @@ function insertLemma(t: TestConvexDb, seed: LemmaSeed) {
 			family: seed.family,
 			kind: seed.kind,
 			canonicalForm: seed.canonicalForm,
+			foldedCanonicalForm: foldedCanonicalForm(seed),
 			coreFeatures: lemmaCoreFeatures(seed),
 		}),
 	);
@@ -523,6 +525,7 @@ test("sentence gender belongs to the visitor's encountered occurrence, including
 			family: "Lexeme",
 			kind: "NOUN",
 			canonicalForm: "Frau",
+			foldedCanonicalForm: "frau",
 			coreFeatures: { gender: "Fem" },
 		}),
 	);

@@ -31,6 +31,7 @@ import type {
 	KnowledgeProducer,
 } from "../server/knowledgeProduction";
 import {
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey,
 } from "../server/linguisticIdentity";
@@ -166,6 +167,7 @@ async function seedOccurrence(
 			family: reading.lemma.family,
 			kind: reading.lemma.kind,
 			canonicalForm: reading.lemma.canonicalForm,
+			foldedCanonicalForm: foldedCanonicalForm(reading.lemma),
 			coreFeatures: reading.lemma.coreFeatures,
 		});
 		const readingId = await ctx.db.insert("readings", {

@@ -17,6 +17,7 @@ import {
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
 import {
+	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey as readingFingerprint,
 } from "../server/linguisticIdentity";
@@ -94,6 +95,7 @@ async function insertDictionaryLemma(
 		const lemmaId = await ctx.db.insert("lemmas", {
 			lemmaKey: lemmaIdentityKey(lemma),
 			...stored,
+			foldedCanonicalForm: foldedCanonicalForm(lemma),
 		});
 		await ctx.db.insert("dictionaryLemmas", { lemmaId });
 		return lemmaId;
@@ -1050,6 +1052,7 @@ describe("tf-demo Dumdict relation storage", () => {
 					lemmaId: await ctx.db.insert("lemmas", {
 						lemmaKey: lemmaIdentityKey(lemma),
 						...stored,
+						foldedCanonicalForm: foldedCanonicalForm(lemma),
 					}),
 				});
 			}
@@ -1148,6 +1151,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				const lemmaId = await ctx.db.insert("lemmas", {
 					lemmaKey: lemmaIdentityKey(lemma),
 					...stored,
+					foldedCanonicalForm: foldedCanonicalForm(lemma),
 				});
 				await ctx.db.insert("dictionaryLemmas", { lemmaId });
 				await ctx.db.insert("semanticRelationEdges", {
@@ -1342,7 +1346,7 @@ describe("tf-demo Dumdict relation storage", () => {
 			await ctx.db.insert("pendingSemanticRelations", {
 				locatorKey: locatorKey(pendingRecord.locator),
 				sourceReadingKey: readingFingerprint(gehenReading),
-				targetCanonicalForm: "laufen",
+				targetFoldedCanonicalForm: "laufen",
 				record: pendingRecord,
 			});
 		});
