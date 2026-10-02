@@ -850,7 +850,7 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 		rules: ["de/pron-or-det-by-use", "de/core-features-are-identity"],
 		adrs: ["ADR-0044"],
 		model: modeled,
-		gold: "Yes",
+		gold: "No",
 		pipeline: waitsOnDumgen,
 	},
 	{
