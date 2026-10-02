@@ -16,10 +16,13 @@ it and score it against frozen gold. Results live in the lab tickets
   (`nomination.ts`) asks what jev judges about code's candidates,
   membership (`assembly.ts`) assembles units under floors, and routing
   (`routing.ts`) routes them. Its default, `productionUnitSettings`, is
-  candidates4's maxim+closed policy (#843) with X3's code rules
-  (`code-rules.ts`, #851): each enforces one dumspec Rule over the
+  candidates4's maxim+closed policy (#843) with the code rules of X3 and
+  X5 (`code-rules.ts`, #851): each enforces one dumspec Rule over the
   assembled membership, dropping a link its Rule forbids or adding one its
-  Rule decides from the words alone.
+  Rule decides from the words alone. Then X5's Locution Choice
+  (`locution-choice.ts`) asks one more request, `locution`, about the units
+  a sub-floor link still joins, and merges those whose two units both pass
+  de/fixed-member-test.
 - `src/segment-in-units/de/arms/` holds the three arms. `candidates4`
   (`--opt final=1 --opt closed=1`) outputs v3, step0, step0+saying and
   step0+saying+maxim@0.7, each step-0 policy also `+closed`; production is
@@ -30,7 +33,10 @@ it and score it against frozen gold. Results live in the lab tickets
   repetitions 0 to 2, `lab/pool.ts`), `--opt variants=<margins>` and
   `--opt x3=<rules>|all` (each code rule added to production's own, and
   all together; `was-fuer` asks its Noul in `final`, a fresh request for
-  a Sentence with was … für).
+  a Sentence with was … für) and `--opt x5=<floor>[-noabsorb][-sc],…`
+  (the Locution Choice at each floor over production's rules, `sc` adding
+  `saying-closed`; the variants of one rule set share one `locution`
+  request).
   `reference` is the #755 reference.
   The retired arms and candidates4's other levers are at ec467e8d, and
   reference-floors at 5335f033.

@@ -76,11 +76,8 @@ test("a merge needs both units fixed at the floor; a free unit keeps them apart"
 
 test("without the setting, or with no candidate, no locution request is sent", async () => {
 	const off = fakeJudge(idiomUnderFloor);
-	await segmentGermanUnits(
-		{ segments: segmentsOf(kauf) },
-		off.ask,
-		productionUnitSettings,
-	);
+	const { locution: _, ...without } = productionUnitSettings;
+	await segmentGermanUnits({ segments: segmentsOf(kauf) }, off.ask, without);
 	expect(off.stages()).not.toContain("locution");
 	const { judge } = await run(kauf, {});
 	expect(judge.stages()).not.toContain("locution");
@@ -221,4 +218,29 @@ test("a fused word split between units is a candidate when the other unit holds 
 		withLocution,
 	);
 	expect(plain.stages()).not.toContain("locution");
+});
+
+test("production asks the Locution Choice and merges at 0.6 (#851, X5)", async () => {
+	expect(productionUnitSettings.locution).toEqual({
+		floor: 0.6,
+		absorb: true,
+	});
+	const at = (share: number) =>
+		run(kauf, {
+			...idiomUnderFloor,
+			lc_2_x_6_l: fixedSide,
+			lc_2_x_6_r: picked("fixed", { fixed: share, free: 1 - share }),
+		}).then(({ groups }) => groups);
+	const judge = fakeJudge({
+		...idiomUnderFloor,
+		lc_2_x_6_l: fixedSide,
+		lc_2_x_6_r: picked("fixed", { fixed: 0.55, free: 0.45 }),
+	});
+	const units = await segmentGermanUnits(
+		{ segments: segmentsOf(kauf) },
+		judge.ask,
+	);
+	expect(judge.stages()).toContain("locution");
+	expect(units.map((unit) => unit.segments)).toEqual(await at(0.4));
+	expect(await at(0.55)).toContainEqual([2, 8, 10]);
 });

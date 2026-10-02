@@ -239,7 +239,7 @@ type Read = {
 	readonly answers: RouteAnswers;
 };
 
-/** Units under code rules over one read, as the unit stage routes them. */
+/** Units under code rules and production's Locution Choice over one read, as the unit stage routes them. */
 async function ruledUnits(
 	read: Read,
 	rules: readonly CodeRule[],
@@ -247,11 +247,23 @@ async function ruledUnits(
 	ask: Ask,
 ) {
 	const settings = productionUnitSettings;
-	const membership = withCodeRules(
+	const base = membershipOf(
 		read.nomination,
-		membershipOf(read.nomination, settings.floors, settings.saying),
-		rules,
+		settings.floors,
+		settings.saying,
 	);
+	const ruled = withCodeRules(read.nomination, base, rules);
+	// Production's Locution Choice (X5) runs over every rule set it is given.
+	const membership = settings.locution
+		? withLocutionChoice(
+				read.nomination,
+				base,
+				ruled,
+				await askLocutionChoice(read.nomination, ruled, ask, rules),
+				rules,
+				settings.locution,
+			)
+		: ruled;
 	const extra =
 		unasked === "ask"
 			? await askUnaskedRoutes(

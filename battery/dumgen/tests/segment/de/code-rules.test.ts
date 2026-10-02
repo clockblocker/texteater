@@ -39,9 +39,9 @@ function fixedWords(...ids: number[]): Record<string, Answer> {
 	return answers;
 }
 
-test("production applies every code rule (#851) but saying-closed, which X5 screens; each is a setting", () => {
+test("production applies every code rule (#851); each is a setting", () => {
 	expect([...productionUnitSettings.rules].sort()).toEqual(
-		codeRules.filter((rule) => rule !== "saying-closed").sort(),
+		[...codeRules].sort(),
 	);
 });
 

@@ -53,7 +53,7 @@ export type LocutionSettings = {
 	readonly absorb: boolean;
 };
 
-/** The setting X5 screens: both units fixed at 0.5, absorbing. */
+/** The setting X5 screened first: both units fixed at 0.5, absorbing. Production asks 0.6 (`units.ts`). */
 export const locutionSettings: LocutionSettings = {
 	floor: 0.5,
 	absorb: true,
