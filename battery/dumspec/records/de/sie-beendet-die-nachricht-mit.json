@@ -19,7 +19,16 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/one-segment-per-mark",
+				"hash": "443f90f605529c1d"
+			},
+			{
+				"rule": "de/sign-for-a-word",
+				"hash": "291f3a669b094e5c"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -27,6 +36,9 @@
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "SYM" },
 			"reading": { "emojiDescription": "😉" },
+			"notes": {
+				"rationale": "One Segment by the user's ruling (2026-10-02, #853): ?! is one Segment and ;-) is one as well. Written apart in ASCII marks, the emoticon is a sign that stands for a word, so it is a single-member SYM."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

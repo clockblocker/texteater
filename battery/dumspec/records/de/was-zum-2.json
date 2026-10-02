@@ -13,7 +13,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/one-segment-per-mark",
+				"hash": "443f90f605529c1d"
+			}
+		],
 		"references": []
 	},
 	"targets": [

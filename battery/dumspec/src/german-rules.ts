@@ -679,6 +679,26 @@ const fusedWords: Rule[] = [
 			"de/die-beiden-verweisen-auf-getrennte-regelungen",
 			// The sentence itself calls its emoji unclickable.
 			"de/vor-dem-nicht-anklickbaren-emoji-steht-ein",
+			// An emoticon is such a sign in several marks (de/one-segment-per-mark).
+			"de/sie-beendet-die-nachricht-mit",
+		],
+	},
+	{
+		id: "de/one-segment-per-mark",
+		statement:
+			"Each punctuation mark is a Punctuation Segment of its own unless convention writes several as one: three full stops (...) are one ellipsis, as … is, and ?! is one mark. Any other run is one Segment per mark, so …? is two: in Was zum…? the … stands for the left-out Teufel and the ? ends the question. An emoticon written apart in ASCII marks, such as ;-), :-) or :), is one ResolvableText Segment, a sign that stands for a word (de/sign-for-a-word).",
+		adrs: ["dumgen/ADR-0004"],
+		routes: [],
+		records: [
+			// …? was one Segment until 2026-10-02 (#853).
+			"de/was-zum-2",
+			"de/was-zum",
+			"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
+			// ???? is four marks.
+			"de/der-beschaedigte-scan-zeigte-im-lesbaren-technischen",
+			// The user's ruling (#853, 2026-10-02): "?! is one, the ;-) is
+			// one as well". #70, user-confirmed, had made ?! and ... one each.
+			"de/sie-beendet-die-nachricht-mit",
 		],
 	},
 ];
