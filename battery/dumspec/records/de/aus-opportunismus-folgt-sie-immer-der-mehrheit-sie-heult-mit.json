@@ -41,6 +41,7 @@
 		{
 			"memberSegmentIndices": [17, 19, 21, 25],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🐑👥" },
 			"notes": {
 				"rationale": "hungrigen modifies Wölfen and stays outside; every fixed word is present, so the Locution is Full."
 			},

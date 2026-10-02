@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [3, 5, 7],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "❓" },
 			"notes": {
-				"rationale": "An explicit dictionary entry is Citation rather than a contextual Inflection."
+				"rationale": "An explicit dictionary entry is Citation rather than a contextual Inflection. Cited as a dictionary entry with no context, eine Frage stellen takes its only Duden sense, asking someone a question (Duden Frage: jemandem eine Frage stellen)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

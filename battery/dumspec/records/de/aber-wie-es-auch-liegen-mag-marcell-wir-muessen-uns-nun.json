@@ -1424,6 +1424,7 @@
 				"family": "Locution",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "🔁" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1463,7 +1464,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "so oder so is an established pair (DWDS so: so oder so 'auf diese oder jene Weise' and 'in jedem Fall'); the literal sum, thus or thus, gives neither meaning, so it is a Locution ADV (de/idiom), with no comparison forms."
+				"rationale": "so oder so is an established pair (DWDS so: so oder so 'auf diese oder jene Weise' and 'in jedem Fall'); the literal sum, thus or thus, gives neither meaning, so it is a Locution ADV (de/idiom), with no comparison forms. so oder so here closes a demand to decide one way or the other (DWDS so: 'auf diese oder jene Weise'), folded with the gold's 'in jedem Fall' sense (Das ist so oder so nötig) into one Reading under ADR 0031."
 			}
 		}
 	],

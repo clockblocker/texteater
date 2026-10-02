@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [2, 4, 5],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "⚰" },
 			"notes": {
 				"rationale": "Kunstgras is still Gras, the compound's head, so the word that carries the image survives and the sentence attests ins Gras beißen, Partial. The fused article stays with the Locution."
 			},

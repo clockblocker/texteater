@@ -683,6 +683,7 @@
 				"family": "Locution",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🧒👶⏩" },
 			"notes": {
 				"rationale": "Kinder und Kindeskinder is the twin formula 'all one's descendants' (DWDS lists it as a Phrasem: die gesamte Nachkommenschaft einer Person); here it means generations to come. Read as one Locution NOUN whose meaning generalizes past its words (de/idiom); meiner stays outside as a free possessive. It is plural-only, so its Core gender is null. Ruled on #743 (SZ-B4) and #766."
 			},

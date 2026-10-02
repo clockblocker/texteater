@@ -35,6 +35,7 @@
 		{
 			"memberSegmentIndices": [6, 12, 14],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "📝📤" },
 			"notes": {
 				"rationale": "einen Antrag stellen is a Funktionsverbgefüge: stellen only supports the noun Antrag, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. The noun's own article einen is a member, as in eine Entscheidung treffen; the subject Nora and the adverb noch are free."
 			},

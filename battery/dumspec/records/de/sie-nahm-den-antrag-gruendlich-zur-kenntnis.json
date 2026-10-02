@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [2, 10, 11, 13],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "👀📝" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

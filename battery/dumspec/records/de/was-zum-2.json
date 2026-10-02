@@ -19,6 +19,7 @@
 		{
 			"memberSegmentIndices": [2, 3],
 			"route": { "family": "Locution", "kind": "ADV" },
+			"reading": { "emojiDescription": "❓🤬" },
 			"notes": {
 				"rationale": "Conventional truncation. The Locution is zum Teufel, which intensifies a question word (was, wer, wo zum Teufel); zu and m identify it and Teufel is unrealized fixed material. Was is a PRON of its own."
 			},

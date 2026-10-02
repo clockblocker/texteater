@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Locution", "kind": "ADV" },
+			"reading": { "emojiDescription": "🔝" },
 			"notes": {
 				"rationale": "An abbreviation is one Shorthand member whose Surface is its expansion, vor allem (ADR 0035)."
 			},

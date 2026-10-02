@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "⚖✅" },
 			"notes": {
 				"rationale": "The bare plural noun is the same noun member with plural number and no article, both features of its Surface (ADRs 0028 and 0035), so the occurrence realizes eine Entscheidung treffen in Full; the whole Surface takes the finite verb's features."
 			},

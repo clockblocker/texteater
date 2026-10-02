@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [2, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "📢⚖" },
 			"notes": {
 				"rationale": "machen only supports the adjective predicate geltend, which carries the meaning, so geltend machen is a Collocation. ihre Ansprüche is its free object and stays outside."
 			},

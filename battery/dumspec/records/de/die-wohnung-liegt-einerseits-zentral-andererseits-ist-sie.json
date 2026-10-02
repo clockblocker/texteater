@@ -35,6 +35,7 @@
 		{
 			"memberSegmentIndices": [6, 11],
 			"route": { "family": "Locution", "kind": "ADV" },
+			"reading": { "emojiDescription": "⚖" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

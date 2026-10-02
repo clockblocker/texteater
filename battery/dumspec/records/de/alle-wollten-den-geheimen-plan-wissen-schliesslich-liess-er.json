@@ -45,6 +45,7 @@
 		{
 			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🤫➡📢" },
 			"notes": {
 				"rationale": "verdammte modifies Katze and stays outside; every fixed word is present, so the Locution is Full."
 			},

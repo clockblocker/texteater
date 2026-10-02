@@ -43,6 +43,7 @@
 		{
 			"memberSegmentIndices": [19, 27],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🏳" },
 			"notes": {
 				"rationale": "Second occurrence. Fixed object omitted by coordination. Meaning stays clear."
 			},

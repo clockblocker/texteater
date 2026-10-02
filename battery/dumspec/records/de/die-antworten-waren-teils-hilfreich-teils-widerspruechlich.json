@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [6, 11],
 			"route": { "family": "Locution", "kind": "ADV" },
+			"reading": { "emojiDescription": "🧩🧩" },
 			"notes": {
 				"rationale": "The repeated spelling marks two separate anchor occurrences in source order."
 			},

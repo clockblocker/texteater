@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [6, 11],
 			"route": { "family": "Locution", "kind": "ADV" },
+			"reading": { "emojiDescription": "⚖" },
 			"notes": {
 				"rationale": "Both correlating anchors are ordered members of one invariant ADV Lexeme; adjective predicates remain unmarked."
 			},

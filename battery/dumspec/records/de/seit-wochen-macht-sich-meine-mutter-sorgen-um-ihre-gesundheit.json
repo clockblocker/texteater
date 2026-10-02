@@ -213,6 +213,7 @@
 				"family": "Locution",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "😟" },
 			"notes": {
 				"rationale": "sich Sorgen machen 'worry' (Duden: sich (Dativ) Sorgen machen): machen only supports Sorgen, and the dative reflexive is fixed, since jemandem Sorgen machen means causing worry. um + Acc is governed by the expression and a member. The subject meine Mutter stands between sich and Sorgen and stays out."
 			},

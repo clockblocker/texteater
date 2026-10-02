@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [0, 1, 3],
 			"route": { "family": "Locution", "kind": "ADV" },
+			"reading": { "emojiDescription": "🌐" },
 			"notes": {
 				"rationale": "The written-out multi-word Lemma with every member attested (issue 495)."
 			},

@@ -32,6 +32,10 @@
 		{
 			"memberSegmentIndices": [11, 12, 14, 16],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "⚰" },
+			"notes": {
+				"rationale": "Cited as a dictionary entry with no context, ins Gras beißen takes its only Duden sense, 'salopp: sterben'."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

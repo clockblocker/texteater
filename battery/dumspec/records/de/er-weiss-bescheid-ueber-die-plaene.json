@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [2, 4, 6],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🧠ℹ" },
 			"notes": {
 				"rationale": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation that is not one of its fixed members (ADR 0034). The Surface projects only the Fixed members: weiß Bescheid."
 			},

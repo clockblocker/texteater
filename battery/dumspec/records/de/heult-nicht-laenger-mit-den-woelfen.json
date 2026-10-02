@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [0, 6, 8, 10],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🐑👥" },
 			"notes": {
 				"rationale": "Heult starts sentence. Standard spelling. Normalize verb to heult."
 			},

@@ -501,6 +501,7 @@
 				"family": "Locution",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "⏰🏃" },
 			"notes": {
 				"rationale": "es eilig haben 'be in a hurry' is an Idiom whose object es das cannot replace, so es is fixed (de/fixed-member-test). The same spelling es, opposite verdict from the positional Es."
 			},

@@ -45,6 +45,7 @@
 		{
 			"memberSegmentIndices": [23, 29],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "👎" },
 			"notes": {
 				"rationale": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom."
 			},

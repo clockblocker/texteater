@@ -40,8 +40,9 @@
 		{
 			"memberSegmentIndices": [5, 7],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "📝🟰" },
 			"notes": {
-				"rationale": "stehen bleiben in Duden's sense 4, unverändert belassen werden (die Fehler sollten tatsächlich stehen bleiben): the abbreviation was left in the revised sentence. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive)."
+				"rationale": "stehen bleiben in Duden's sense 4, unverändert belassen werden (die Fehler sollten tatsächlich stehen bleiben): the abbreviation was left in the revised sentence. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive). This is Duden's stehen bleiben sense 4, 'unverändert belassen werden' (die Fehler sollten tatsächlich stehen bleiben), a Reading apart from sense 2, the lift or motor that stops 🛑."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

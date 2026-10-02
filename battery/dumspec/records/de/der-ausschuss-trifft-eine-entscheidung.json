@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "⚖✅" },
 			"notes": {
 				"rationale": "The conventional support-verb expression is non-idiomatic but lexically restricted. Its contextual Surface follows sentence order and takes the finite verb's features."
 			},

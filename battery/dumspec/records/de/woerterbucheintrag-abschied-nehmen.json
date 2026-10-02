@@ -20,6 +20,10 @@
 		{
 			"memberSegmentIndices": [3, 5],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "👋🚶" },
+			"notes": {
+				"rationale": "Cited as a dictionary entry with no context, Abschied nehmen takes Duden's first sense, 'sich vor einer längeren Trennung verabschieden'."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

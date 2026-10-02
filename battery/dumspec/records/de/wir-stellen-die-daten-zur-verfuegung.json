@@ -23,6 +23,7 @@
 		{
 			"memberSegmentIndices": [2, 8, 9, 11],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🫴" },
 			"notes": {
 				"rationale": "zur Verfügung stellen is a Collocation, a fixed expression, so both pieces of zur are its members; the free object die Daten stays outside."
 			},

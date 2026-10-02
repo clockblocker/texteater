@@ -42,6 +42,7 @@
 		{
 			"memberSegmentIndices": [15, 21, 23, 24, 26],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🔥📈" },
 			"notes": {
 				"rationale": "zusätzliches modifies Öl and stays outside; both pieces of ins are members."
 			},

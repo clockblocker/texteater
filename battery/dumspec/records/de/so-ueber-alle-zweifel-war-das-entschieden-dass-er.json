@@ -933,6 +933,7 @@
 				"family": "Locution",
 				"kind": "ADV"
 			},
+			"reading": { "emojiDescription": "➡🏠" },
 			"notes": {
 				"rationale": "nach Hause 'home' needs this noun in this old dative form: with an ordinary noun phrase (nach dem Haus) it means 'towards the house'. So it is a Locution ADV like zu Hause in ADR 0039, and the -e belongs to its fixed wording, not to an archaic Surface (de/fixed-member-test, de/largest-fixed-unit)."
 			},

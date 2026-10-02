@@ -341,6 +341,7 @@
 				"family": "Locution",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "😤" },
 			"notes": {
 				"rationale": "jemandem auf die Nerven gehen is an Idiom: auf and die are fixed through Nerven (de/fixed-member-test). The dative mir fills a slot and langsam is free."
 			},

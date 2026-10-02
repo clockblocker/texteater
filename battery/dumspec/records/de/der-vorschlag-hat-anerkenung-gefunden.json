@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "👏" },
 			"notes": {
 				"rationale": "The fixed perfect auxiliary is a Surface member but contributes no head morphology; the nominal typo is repaired and the support-verb head remains Partizip II."
 			},

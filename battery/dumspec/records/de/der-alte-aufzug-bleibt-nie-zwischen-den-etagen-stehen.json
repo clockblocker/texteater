@@ -38,8 +38,9 @@
 		{
 			"memberSegmentIndices": [6, 16],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "🛑" },
 			"notes": {
-				"rationale": "stehen bleiben in Duden's sense 2, nicht weiterlaufen, nicht weiter in Funktion sein (der Motor ist stehen geblieben): the lift never gets stuck between floors. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive)."
+				"rationale": "stehen bleiben in Duden's sense 2, nicht weiterlaufen, nicht weiter in Funktion sein (der Motor ist stehen geblieben): the lift never gets stuck between floors. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive). This is Duden's stehen bleiben sense 2, 'nicht weiterlaufen, nicht weiter in Funktion sein' (der Motor ist stehen geblieben), a Reading apart from sense 4, 'unverändert belassen werden' 📝🟰."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -206,6 +206,7 @@
 				"family": "Locution",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤥" },
 			"notes": {
 				"rationale": "jemandem einen Bären aufbinden 'pull someone's leg' is an Idiom (Duden). Its fixed members are the verb with its split particle auf, and the fixed einen Bären; the dative mir fills a slot and gern is free."
 			},

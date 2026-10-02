@@ -101,6 +101,7 @@
 		{
 			"memberSegmentIndices": [2, 4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
+			"reading": { "emojiDescription": "😇" },
 			"notes": {
 				"rationale": "es gut meinen (Duden: es gut mit jemandem meinen) is an Idiom: the object es is non-referential and das cannot replace it, so it is fixed (de/fixed-member-test). gut is fixed too: the slot takes only a narrow set of adverbs (*es laut mit dir meinen), and each makes a Locution of its own, es ernst meinen apart (#759 Q4). mit + Dat is governed by the expression, so it is a member recorded in valencyEvidence and left out of the Surface. Replaces the old single-member [meint] VERB meinen."
 			},
