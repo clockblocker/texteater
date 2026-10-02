@@ -30,17 +30,8 @@ export type {
 	StoredRun,
 } from "./operation-evaluation.js";
 export { runOperationExperiment } from "./operation-evaluation.js";
-export {
-	type EvaluationVerdict,
-	evaluationVerdict,
-	summarizeQuality,
-} from "./quality.js";
-export {
-	type ComparedVerdict,
-	summarizeCaseStability,
-	summarizeRunStability,
-} from "./stability.js";
-export { fingerprint } from "./stable-json.js";
+export { type EvaluationVerdict, summarizeQuality } from "./quality.js";
+export type { ComparedVerdict } from "./stability.js";
 
 export type ModelConfiguration = z.infer<typeof configurationSchema>;
 export type EvaluationRun = z.infer<typeof evaluationRunSchema>;

@@ -15,7 +15,6 @@ import type {
 	PromptInputSchema,
 	PromptOutputSchema,
 } from "./contracts";
-import { normalizeContaminationKeys } from "./local-demonstrations";
 
 type ParsedCaseEntry = {
 	readonly id: string;
@@ -263,20 +262,6 @@ export function tryGetSelectionState(
 	selection: object,
 ): SelectionState | undefined {
 	return selectionStates.get(selection);
-}
-
-export function selectedCaseSourcePaths(
-	selection: CaseSelection,
-): readonly string[] {
-	const seen = new Set<string>();
-	const paths: string[] = [];
-	for (const entry of getSelectionState(selection).entries) {
-		if (entry.sourcePath !== undefined && !seen.has(entry.sourcePath)) {
-			seen.add(entry.sourcePath);
-			paths.push(entry.sourcePath);
-		}
-	}
-	return Object.freeze(paths);
 }
 
 function createSelection(
@@ -551,6 +536,27 @@ function normalizeSources(
 		seen.add(locator);
 	}
 	return normalized;
+}
+
+function normalizeContaminationKeys(
+	location: string,
+	keys: readonly string[] | undefined,
+): readonly string[] {
+	if (keys === undefined) return Object.freeze([]);
+	const seen = new Set<string>();
+	const result: string[] = [];
+	for (const rawKey of keys) {
+		if (typeof rawKey !== "string" || rawKey.trim().length === 0) {
+			throw new Error(`${location} has an invalid contamination key.`);
+		}
+		const key = rawKey.trim();
+		if (seen.has(key)) {
+			throw new Error(`${location} repeats contamination key "${key}".`);
+		}
+		seen.add(key);
+		result.push(key);
+	}
+	return Object.freeze(result);
 }
 
 function deepFreeze<T>(value: T): T {

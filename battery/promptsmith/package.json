@@ -13,10 +13,6 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		},
-		"./codegen": {
-			"types": "./dist/codegen.d.ts",
-			"import": "./dist/codegen.js"
-		},
 		"./evaluation": {
 			"types": "./dist/evaluation.d.ts",
 			"import": "./dist/evaluation.js"
@@ -50,7 +46,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/codegen.ts src/evaluation.ts src/storage.ts src/openai.ts src/typesafe.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/evaluation.ts src/storage.ts src/openai.ts src/typesafe.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
@@ -63,14 +59,12 @@
 	},
 	"dependencies": {
 		"@typesafe-ai/sdk": "^0.6.0",
-		"codegen": "workspace:^",
 		"zod": "^4.4.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",
 		"@types/node": "^24.13.3",
 		"bun-types": "1.4.2",
-		"codegen": "workspace:^",
 		"dependency-cruiser": "^18.1.0",
 		"esbuild": "^0.28.1",
 		"knip": "^6.29.0",

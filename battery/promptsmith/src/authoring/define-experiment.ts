@@ -11,7 +11,6 @@ import {
 	getSelectionState,
 	tryGetSelectionState,
 } from "./golden-corpus";
-import { getLocalDemonstrationState } from "./local-demonstrations";
 import { assertEntriesUncontaminated } from "./selection-contamination";
 
 /**
@@ -52,25 +51,12 @@ export function defineExperiment<
 	}
 	if (demonstrations !== undefined) {
 		const selected = tryGetSelectionState(demonstrations);
-		const local =
-			selected === undefined
-				? getLocalDemonstrationState(demonstrations)
-				: undefined;
-		if (selected === undefined && local === undefined) {
+		if (selected === undefined) {
 			throw new Error("Experiment demonstrations were not validated.");
 		}
-		const demonstrationEntries =
-			selected?.entries ??
-			local?.entries.map((entry) => ({
-				...entry,
-				routeFingerprint: evaluation.corpus.fingerprintInput?.(
-					entry.value.input,
-				),
-			})) ??
-			[];
 		assertEntriesUncontaminated({
 			route: args.promptSource.route,
-			demonstrations: demonstrationEntries,
+			demonstrations: selected.entries,
 			evaluation: evaluation.entries,
 		});
 	}

@@ -54,7 +54,7 @@ export function repeatedCaseRecord<B extends object, T extends Repetition>(
  * A case flips when at least one repetition passed the evaluator's contract
  * and at least one other did not. Interrupted repetitions never count.
  */
-export function summarizeCaseStability(repetitions: readonly Repetition[]) {
+function summarizeCaseStability(repetitions: readonly Repetition[]) {
 	const quality = summarizeQuality(repetitions);
 	const completed = repetitions.filter(
 		(repetition) => repetition.status !== "Interrupted",

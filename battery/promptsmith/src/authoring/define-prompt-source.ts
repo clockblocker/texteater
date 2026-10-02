@@ -4,11 +4,10 @@ import type {
 	PromptSource,
 } from "./contracts";
 import { getGoldenCorpusState, tryGetSelectionState } from "./golden-corpus";
-import { getLocalDemonstrationState } from "./local-demonstrations";
 
 /**
- * Validates and freezes one Prompt Source. A corpus selection must come from
- * the source's own corpus; local demonstrations must share its schema objects.
+ * Validates and freezes one Prompt Source. Its demonstrations must be a
+ * selection from its own corpus.
  */
 export function definePromptSource<
 	InputSchema extends PromptInputSchema,
@@ -43,30 +42,18 @@ export function definePromptSource<
 	}
 	if (args.demonstrations !== undefined) {
 		const selection = tryGetSelectionState(args.demonstrations);
-		if (selection !== undefined) {
-			if (
-				canonicalCorpus === undefined ||
-				selection.corpus.identity !== canonicalCorpus.identity
-			) {
-				throw new Error(
-					`Prompt Source "${args.route}" can select demonstrations only from its canonical Golden Corpus.`,
-				);
-			}
-		} else {
-			const local = getLocalDemonstrationState(args.demonstrations);
-			if (local === undefined) {
-				throw new Error(
-					`Prompt Source "${args.route}" has demonstrations that were not validated by Prompt Assembly.`,
-				);
-			}
-			if (
-				local.inputSchema !== args.inputSchema ||
-				local.outputSchema !== args.outputSchema
-			) {
-				throw new Error(
-					`Prompt Source "${args.route}" and its local demonstrations must share the same schema instances.`,
-				);
-			}
+		if (selection === undefined) {
+			throw new Error(
+				`Prompt Source "${args.route}" has demonstrations that were not validated by Prompt Assembly.`,
+			);
+		}
+		if (
+			canonicalCorpus === undefined ||
+			selection.corpus.identity !== canonicalCorpus.identity
+		) {
+			throw new Error(
+				`Prompt Source "${args.route}" can select demonstrations only from its canonical Golden Corpus.`,
+			);
 		}
 	}
 	return Object.freeze({ ...args });

@@ -29,14 +29,6 @@ export type GoldenCase<Input, Output> = {
 	readonly contaminationKeys?: readonly string[];
 };
 
-/** A route-local example that teaches exchange shape without claiming corpus evidence. */
-export type LocalDemonstration<Input, Output> = {
-	readonly input: Input;
-	readonly idealOutput: Output;
-	readonly explanation?: string;
-	readonly contaminationKeys?: readonly string[];
-};
-
 export type GoldenCaseRegistry<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,
@@ -80,22 +72,6 @@ export type ParsedGoldenCase<
 	InputSchema extends PromptInputSchema,
 	OutputSchema extends PromptOutputSchema,
 > = GoldenCase<output<InputSchema>, output<OutputSchema>>;
-
-export type ParsedLocalDemonstration<
-	InputSchema extends PromptInputSchema,
-	OutputSchema extends PromptOutputSchema,
-> = LocalDemonstration<output<InputSchema>, output<OutputSchema>>;
-
-/** Ordered local examples parsed with the Prompt Source's exact schema instances. */
-export interface LocalDemonstrations<
-	InputSchema extends PromptInputSchema = PromptInputSchema,
-	OutputSchema extends PromptOutputSchema = PromptOutputSchema,
-> {
-	readonly cases: readonly ParsedLocalDemonstration<
-		InputSchema,
-		OutputSchema
-	>[];
-}
 
 type ResolvedGoldenGroups<
 	InputSchema extends PromptInputSchema,
@@ -181,32 +157,6 @@ export interface GoldenCorpus<
 }
 
 /**
- * Projects a representation-neutral case into a private model exchange and
- * converts the private result back into the canonical semantic output.
- */
-export interface PromptRepresentationAdapter<
-	CanonicalInputSchema extends PromptInputSchema,
-	CanonicalOutputSchema extends PromptOutputSchema,
-	PrivateInputSchema extends PromptInputSchema,
-	PrivateOutputSchema extends PromptOutputSchema,
-> {
-	materialize(
-		goldenCase: ParsedGoldenCase<
-			CanonicalInputSchema,
-			CanonicalOutputSchema
-		>,
-	): {
-		readonly input: input<PrivateInputSchema>;
-		readonly idealOutput: input<PrivateOutputSchema>;
-	};
-	canonicalize(args: {
-		readonly canonicalInput: output<CanonicalInputSchema>;
-		readonly privateInput: output<PrivateInputSchema>;
-		readonly output: output<PrivateOutputSchema>;
-	}): output<CanonicalOutputSchema>;
-}
-
-/**
  * The complete human-authored definition of one executable prompt route.
  * Schemas, body, corpus, and demonstrations share one route-local contract;
  * Prompt Assembly owns rendering.
@@ -221,9 +171,7 @@ export interface PromptSource<
 	readonly outputSchema: OutputSchema;
 	readonly body: string;
 	readonly goldenCorpus?: GoldenCorpus<InputSchema, OutputSchema>;
-	readonly demonstrations?:
-		| LocalDemonstrations<InputSchema, OutputSchema>
-		| CaseSelection<InputSchema, OutputSchema>;
+	readonly demonstrations?: CaseSelection<InputSchema, OutputSchema>;
 }
 
 export type ExperimentEvaluation<
