@@ -16,7 +16,12 @@
  * held 44 more gold units and lost none. Then X5's Locution Choice (#851, `locution-choice.ts`) asks
  * one `locution` request about the units a sub-floor link still joins and
  * merges those whose two units both pass de/fixed-member-test at 0.6: with
- * saying-closed, 12 more dev gold units held and none lost.
+ * saying-closed, 12 more dev gold units held and none lost. Last, D4's
+ * Verb Choice (#851, `verb-choice.ts`) asks one `verb` request about the
+ * lassen, bekommen, haben and sein forms whose auxiliary slot named an
+ * infinitive or participle: causative lassen and sich lassen, the
+ * recipient passive, and perfect or state. On dev, 11 more gold units held
+ * and none lost.
  */
 import type { Ask } from "../ask.js";
 import type { Segment, Unit } from "../segmented-sentence.js";
@@ -78,7 +83,7 @@ export type UnitSettings = {
 	readonly verb?: VerbSettings;
 };
 
-/** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7, every code rule and the Locution Choice at 0.6. */
+/** Candidates4 maxim+closed: v3's floors, the Saying Choice with the maxim at 0.7, every code rule, the Locution Choice at 0.6 and the Verb Choice's lassen, recipient and state families at 0.5. */
 export const productionUnitSettings: UnitSettings = {
 	floors: {
 		satellite: 0.5,
@@ -105,6 +110,10 @@ export const productionUnitSettings: UnitSettings = {
 		"saying-closed",
 	],
 	locution: { floor: 0.6, absorb: true },
+	// Picked on dev (#851, D4) after the pre-registered 0.6 over all five
+	// families failed: these three ask what no slot question names, and
+	// lost no dev unit at 0.5, 0.6 or 0.7. Held-out (#852) is the check.
+	verb: { floor: 0.5, families: ["lassen", "recipient", "state"] },
 };
 
 /** Groups one German Sentence's Segments into its biggest units and routes each. */
@@ -132,7 +141,7 @@ export async function segmentGermanUnits(
 		? withVerbChoice(
 				nomination,
 				located,
-				await askVerbChoice(nomination, ask),
+				await askVerbChoice(nomination, ask, settings.verb.families),
 				settings.rules,
 				settings.verb,
 			)

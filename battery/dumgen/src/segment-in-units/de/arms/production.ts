@@ -330,7 +330,11 @@ async function ruledUnits(
 		? withVerbChoice(
 				read.nomination,
 				located,
-				await askVerbChoice(read.nomination, ask),
+				await askVerbChoice(
+					read.nomination,
+					ask,
+					settings.verb.families,
+				),
 				rules,
 				settings.verb,
 			)
@@ -470,7 +474,7 @@ async function outputsOf(
 		const rules = settings.rules;
 		const read = await readOf(rules.includes("was-fuer"));
 		const located = await ruledMembership(read, rules, ask);
-		// One `verb` request, shared by every variant.
+		// One `verb` request over every family, shared by every variant.
 		const asked: VerbAnswers = await askVerbChoice(read.nomination, ask);
 		for (const variant of levers.verb)
 			outputs[`${prefix}production+verb@${variant.name}`] = {

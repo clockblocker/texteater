@@ -22,7 +22,11 @@ it and score it against frozen gold. Results live in the lab tickets
   Rule decides from the words alone. Then X5's Locution Choice
   (`locution-choice.ts`) asks one more request, `locution`, about the units
   a sub-floor link still joins, and merges those whose two units both pass
-  de/fixed-member-test.
+  de/fixed-member-test. Last, D4's Verb Choice (`verb-choice.ts`) asks
+  one `verb` request about the lassen, bekommen, haben and sein forms whose
+  auxiliary slot named an infinitive or participle, and joins or splits
+  each by its Rule (causative lassen and sich lassen, the recipient
+  passive, perfect or state).
 - `src/segment-in-units/de/arms/` holds the three arms. `candidates4`
   (`--opt final=1 --opt closed=1`) outputs v3, step0, step0+saying and
   step0+saying+maxim@0.7, each step-0 policy also `+closed`; production is
@@ -36,7 +40,9 @@ it and score it against frozen gold. Results live in the lab tickets
   a Sentence with was … für) and `--opt x5=<floor>[-noabsorb][-sc],…`
   (the Locution Choice at each floor over production's rules, `sc` adding
   `saying-closed`; the variants of one rule set share one `locution`
-  request).
+  request) and `--opt verb=<floor>[-<family>…],…` (the Verb Choice at each
+  floor over the families named, all five when none is; every variant
+  reads one `verb` request over all five families).
   `reference` is the #755 reference.
   The retired arms and candidates4's other levers are at ec467e8d, and
   reference-floors at 5335f033.

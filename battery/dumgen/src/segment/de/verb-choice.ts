@@ -28,9 +28,14 @@
  * An answer moves membership only past the floor, and `other` never does,
  * so an unclear flag keeps the judge's slot answer. A split drops only the
  * satellite link between the two pieces; a join never reaches a Saying or
- * a piece a code rule decides. The request depends on the nomination alone,
- * so every setting reads the same answers. A Sentence with no flag asks
- * nothing.
+ * a piece a code rule decides. The request depends on the nomination and
+ * the families asked, so settings that differ only in floor or applied
+ * families read the same answers. A Sentence with no flag asks nothing.
+ *
+ * On dev (#851) the expletive and reflexive families mostly re-asked what
+ * their slots ask and lost as many units as they won (wandte sich read
+ * lexical at 0.91, es herrschte selected at 0.92); production asks the
+ * other three.
  */
 import { authoredRealizations, closedVerbForms } from "dumspec/inventories";
 import type { Questions } from "promptsmith/typesafe";
@@ -56,7 +61,7 @@ export type VerbFamily = (typeof verbFamilies)[number];
 export type VerbSettings = {
 	/** The share an answer needs before it joins or splits. */
 	readonly floor: number;
-	/** The families whose answers apply; every flag is asked regardless. */
+	/** The families whose answers apply. */
 	readonly families: readonly VerbFamily[];
 };
 
@@ -307,12 +312,15 @@ export type VerbAnswers = {
 	readonly answers: Answers;
 };
 
-/** Asks the `verb` request; it reads the nomination only. */
+/** Asks the `verb` request about the flags of `families`, every family unless given. */
 export async function askVerbChoice(
 	nomination: Nomination,
 	ask: Ask,
+	families: readonly VerbFamily[] = verbFamilies,
 ): Promise<VerbAnswers> {
-	const flags = flaggedVerbs(nomination);
+	const flags = flaggedVerbs(nomination).filter((flag) =>
+		families.includes(flag.family),
+	);
 	const answers = await askAny(ask, {
 		stage: "verb",
 		state: nomination.state,

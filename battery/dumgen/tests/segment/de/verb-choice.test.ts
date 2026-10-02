@@ -54,6 +54,19 @@ test("de/causative-lassen: a causative answer joins lassen and its infinitive, w
 	expect(judge.stages().at(-1)).toBe("route-extra");
 });
 
+test("production asks only the lassen, recipient and state families", async () => {
+	// Er0 _1 verteidigt2 _3 sich4 .5
+	const reflexive = fakeJudge({ s_reflexive_3: picked("p2") });
+	await segmentGermanUnits(
+		{ segments: segmentsOf("Er verteidigt sich.") },
+		reflexive.ask,
+	);
+	expect(reflexive.stages()).not.toContain("verb");
+	const lassen = fakeJudge(dachHeard);
+	await segmentGermanUnits({ segments: segmentsOf(dach) }, lassen.ask);
+	expect(lassen.stages()).toContain("verb");
+});
+
 test("an answer under the floor, or other, keeps the slot's grouping", async () => {
 	const under = await run(dach, {
 		...dachHeard,
@@ -128,10 +141,7 @@ test("a Sentence with no flagged satellite asks no verb request; a participle-le
 	});
 	expect(judge.stages()).not.toContain("verb");
 	const off = fakeJudge(dachHeard);
-	await segmentGermanUnits(
-		{ segments: segmentsOf(dach) },
-		off.ask,
-		productionUnitSettings,
-	);
+	const { verb: _, ...without } = productionUnitSettings;
+	await segmentGermanUnits({ segments: segmentsOf(dach) }, off.ask, without);
 	expect(off.stages()).not.toContain("verb");
 });
