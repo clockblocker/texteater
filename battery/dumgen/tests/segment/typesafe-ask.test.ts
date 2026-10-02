@@ -4,11 +4,7 @@ import {
 	type Fetch,
 } from "../../src/segment/typesafe-ask.js";
 
-type Reply = {
-	readonly status: number;
-	readonly body: string;
-	readonly headers?: Readonly<Record<string, string>>;
-};
+type Reply = { readonly status: number; readonly body: string };
 
 const answered = JSON.stringify({
 	model: "jev-1.13.0",
@@ -26,12 +22,22 @@ function fakeFetch(replies: readonly Reply[]) {
 		return {
 			ok: reply.status >= 200 && reply.status < 300,
 			status: reply.status,
-			headers: {
-				get: (name: string) =>
-					reply.headers?.[name.toLowerCase()] ?? null,
-			},
 			text: async () => reply.body,
 		};
+	};
+	return { fetch, sent };
+}
+
+/** A fetch that never answers and rejects once its signal aborts. */
+function hangingFetch() {
+	const sent: AbortSignal[] = [];
+	const fetch: Fetch = (_, init) => {
+		sent.push(init.signal);
+		return new Promise((_, reject) =>
+			init.signal.addEventListener("abort", () =>
+				reject(Error("aborted")),
+			),
+		);
 	};
 	return { fetch, sent };
 }
@@ -42,6 +48,11 @@ const request = {
 	questions: { q: { type: "noul" as const, instructions: "Kam er?" } },
 };
 
+const context = () => ({
+	stage: "route",
+	signal: new AbortController().signal,
+});
+
 test("sends the System One request as the TypeSafe API takes it, and reads its answer", async () => {
 	const { fetch, sent } = fakeFetch([{ status: 200, body: answered }]);
 	const ask = createTypeSafeAsk({
@@ -49,7 +60,7 @@ test("sends the System One request as the TypeSafe API takes it, and reads its a
 		baseUrl: "https://jev.example/",
 		fetch,
 	});
-	expect(await ask(request, { stage: "route" })).toEqual({
+	expect(await ask(request, context())).toEqual({
 		model: "jev-1.13.0",
 		answers: { q: { type: "noul", noul: 0.8 } },
 		usage: { input_tokens: 120, output_tokens: 2 },
@@ -65,68 +76,69 @@ test("sends the System One request as the TypeSafe API takes it, and reads its a
 	expect(JSON.parse(sent[0]?.init.body ?? "")).toEqual(request);
 });
 
-test("retries a transient failure, and throws any other at once", async () => {
-	const transient = fakeFetch([
-		{ status: 503, body: "busy", headers: { "retry-after": "0" } },
-		{ status: 429, body: "slow down", headers: { "retry-after": "0" } },
-		{ status: 200, body: answered },
-	]);
-	const ask = createTypeSafeAsk({ apiKey: "key", fetch: transient.fetch });
-	expect((await ask(request, { stage: "route" })).model).toBe("jev-1.13.0");
-	expect(transient.sent).toHaveLength(3);
-
-	const rejected = fakeFetch([{ status: 401, body: "bad key" }]);
-	await expect(
-		createTypeSafeAsk({ apiKey: "key", fetch: rejected.fetch })(request, {
-			stage: "route",
-		}),
-	).rejects.toThrow("TypeSafe answered 401: bad key");
-	expect(rejected.sent).toHaveLength(1);
-
-	const exhausted = fakeFetch([
-		{ status: 500, body: "down", headers: { "retry-after": "0" } },
-		{ status: 500, body: "still down" },
-	]);
-	await expect(
-		createTypeSafeAsk({
-			apiKey: "key",
-			fetch: exhausted.fetch,
-			maxRetries: 1,
-		})(request, { stage: "route" }),
-	).rejects.toThrow("TypeSafe answered 500: still down");
-});
-
-test("a timed-out attempt is retried, and an answer that is not System One's throws", async () => {
-	let attempts = 0;
-	const hanging: Fetch = (_, init) => {
-		attempts++;
-		return new Promise((_, reject) =>
-			init.signal.addEventListener("abort", () =>
-				reject(Error("aborted")),
+test("sends each request once: a transient failure throws like any other, with no retry", async () => {
+	for (const status of [408, 429, 500, 503, 401]) {
+		const once = fakeFetch([
+			{ status, body: "no" },
+			{ status: 200, body: answered },
+		]);
+		await expect(
+			createTypeSafeAsk({ apiKey: "key", fetch: once.fetch })(
+				request,
+				context(),
 			),
-		);
+		).rejects.toThrow(`TypeSafe answered ${status}: no`);
+		expect(once.sent).toHaveLength(1);
+	}
+	let attempts = 0;
+	const failing: Fetch = async () => {
+		attempts++;
+		throw Error("ECONNRESET");
 	};
 	await expect(
-		createTypeSafeAsk({
-			apiKey: "key",
-			fetch: hanging,
-			timeoutMs: 5,
-			maxRetries: 0,
-		})(request, { stage: "route" }),
-	).rejects.toThrow("TypeSafe did not answer within 5 ms");
+		createTypeSafeAsk({ apiKey: "key", fetch: failing })(
+			request,
+			context(),
+		),
+	).rejects.toThrow("TypeSafe connection failed: ECONNRESET");
 	expect(attempts).toBe(1);
+});
 
+test("a request ends at its deadline or when the caller's signal aborts", async () => {
+	const late = hangingFetch();
+	await expect(
+		createTypeSafeAsk({ apiKey: "key", fetch: late.fetch, timeoutMs: 5 })(
+			request,
+			context(),
+		),
+	).rejects.toThrow("TypeSafe did not answer within 5 ms");
+	expect(late.sent).toHaveLength(1);
+
+	const cancelled = hangingFetch();
+	const caller = new AbortController();
+	const asked = createTypeSafeAsk({
+		apiKey: "key",
+		fetch: cancelled.fetch,
+	})(request, { stage: "route", signal: caller.signal });
+	caller.abort();
+	await expect(asked).rejects.toThrow("The TypeSafe request was aborted");
+	expect(cancelled.sent[0]?.aborted).toBe(true);
+});
+
+test("an answer that is not System One's throws, and so does a blank key", async () => {
 	const garbled = fakeFetch([{ status: 200, body: "<html>" }]);
 	await expect(
-		createTypeSafeAsk({ apiKey: "key", fetch: garbled.fetch })(request, {
-			stage: "route",
-		}),
+		createTypeSafeAsk({ apiKey: "key", fetch: garbled.fetch })(
+			request,
+			context(),
+		),
 	).rejects.toThrow("not JSON");
 	const shapeless = fakeFetch([{ status: 200, body: '{"answers":{}}' }]);
 	await expect(
-		createTypeSafeAsk({ apiKey: "key", fetch: shapeless.fetch })(request, {
-			stage: "route",
-		}),
+		createTypeSafeAsk({ apiKey: "key", fetch: shapeless.fetch })(
+			request,
+			context(),
+		),
 	).rejects.toThrow("unexpected body");
 	expect(() => createTypeSafeAsk({ apiKey: " " })).toThrow("API key");
 });

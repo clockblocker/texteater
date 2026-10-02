@@ -45,9 +45,11 @@ export type JevResponse = {
 /**
  * Sends one request to jev. `stage` names the segmenter's request
  * (`segments`, `candidates`, `route`, …) for a host's ledger or cache; it
- * is not part of the request body.
+ * is not part of the request body. When `signal` aborts, the request must
+ * settle promptly: Dumgen waits for it before it lets an interrupted
+ * operation end. Anything it throws or rejects with is a `ProviderFailure`.
  */
 export type JevAsk = (
 	request: JevRequest,
-	context: { readonly stage: string },
+	context: { readonly stage: string; readonly signal: AbortSignal },
 ) => Promise<JevResponse>;

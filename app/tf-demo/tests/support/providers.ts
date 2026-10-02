@@ -4,8 +4,8 @@ import { fakeJev } from "./jev";
 /**
  * Answers the TypeSafe API (`POST /v1/systemone`) from a fake jev, so a real
  * intake action runs its real `segment.inUnits` with no network. A request
- * the jev refuses comes back as a 400, which the TypeSafe ask does not
- * retry; any other URL is refused the same way.
+ * the jev refuses comes back as a 400, which the TypeSafe ask throws
+ * without a retry; any other URL is refused the same way.
  */
 export function fakeTypeSafe(jev: ReturnType<typeof fakeJev> = fakeJev()) {
 	const previous = {
@@ -20,7 +20,12 @@ export function fakeTypeSafe(jev: ReturnType<typeof fakeJev> = fakeJev()) {
 			return new Response("unexpected request", { status: 400 });
 		try {
 			const request = JSON.parse(String(init?.body)) as JevRequest;
-			return Response.json(await jev.ask(request, { stage: "fixture" }));
+			return Response.json(
+				await jev.ask(request, {
+					stage: "fixture",
+					signal: init?.signal ?? new AbortController().signal,
+				}),
+			);
 		} catch (error) {
 			return new Response(String(error), { status: 400 });
 		}

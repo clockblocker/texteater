@@ -164,7 +164,8 @@ export function createSegment(options: SegmentOptions): Segmenters {
 					state: request.state,
 					questions: Object.fromEntries(chunk),
 				},
-				{ stage },
+				// Nothing cancels a request yet; Dumgen's Effect adapter will.
+				{ stage, signal: new AbortController().signal },
 			);
 		} catch (error) {
 			const message = messageOf(error);
