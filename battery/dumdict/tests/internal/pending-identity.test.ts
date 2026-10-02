@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
+import { readingIdentityKey } from "dumling";
 import type * as Dumrel from "dumrel/types";
-import { readingFingerprint } from "../../src/core/identity";
 
 import type {
 	DumdictPendingSemanticRelation,
@@ -48,7 +48,7 @@ describe("Pending Semantic Relation identity", () => {
 
 		expect(record.pending.target.canonicalForm).toBe("caf\u00e9");
 		expect(record.locator).toEqual({
-			sourceReadingKey: readingFingerprint(englishWalkReading),
+			sourceReadingKey: readingIdentityKey(englishWalkReading),
 			relation: "nearSynonym",
 			targetPendingId: derivePendingEntryId(record.pending.target),
 		});

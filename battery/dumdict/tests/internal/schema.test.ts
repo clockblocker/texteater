@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
+import { readingIdentityKey } from "dumling";
 import { makeSurfaceId, type StoreRevision } from "../../src";
-import { readingFingerprint } from "../../src/core/identity";
 import {
 	commitChangesResultSchema,
 	dumdictPlanSchema,
@@ -383,7 +383,7 @@ describe("public storage-facing schemas", () => {
 				},
 			},
 			locator: {
-				sourceReadingKey: readingFingerprint(germanGehenReading),
+				sourceReadingKey: readingIdentityKey(germanGehenReading),
 				relation: "nearSynonym" as const,
 				targetPendingId: "pending-laufen",
 			},

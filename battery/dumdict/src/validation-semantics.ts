@@ -1,8 +1,9 @@
+import { readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { germanAdpositionAllows } from "dumspec/inventories";
-import { lemmaFingerprint, readingFingerprint } from "./core/identity";
+import { sameReading } from "./core/identity";
 
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
 import { makeSurfaceId } from "./dumling-id.js";
@@ -44,15 +45,6 @@ function lemmaUsesLanguage(
 	language: Dumling.Language,
 ): boolean {
 	return lemma.language === language;
-}
-
-function sameLemma(left: Dumling.Lemma, right: Dumling.Lemma): boolean {
-	if (left.language !== right.language) return false;
-	return lemmaFingerprint(left) === lemmaFingerprint(right);
-}
-
-function sameReading(left: Dumling.Reading, right: Dumling.Reading): boolean {
-	return readingFingerprint(left) === readingFingerprint(right);
 }
 
 function readingUsesLanguage(
@@ -272,7 +264,7 @@ function pendingLocatorIdentifiesSource(
 ): boolean {
 	return (
 		record.locator.sourceReadingKey ===
-		readingFingerprint(record.sourceReading)
+		readingIdentityKey(record.sourceReading)
 	);
 }
 

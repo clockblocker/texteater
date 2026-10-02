@@ -1,3 +1,4 @@
+import { foldCase, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type {
@@ -6,7 +7,6 @@ import type {
 	PendingSemanticRelationLocator,
 	PendingSemanticRelationRecord,
 } from "../../domain-types";
-import { readingFingerprint } from "../identity";
 
 function normalizeUnitShadow<L extends Dumling.Language>(
 	target: Dumrel.UnitShadow & { language: L },
@@ -19,6 +19,10 @@ function normalizeUnitShadow<L extends Dumling.Language>(
 	} as Dumrel.UnitShadow & { language: L };
 }
 
+/**
+ * A Pending Entry's ID names its Unit Shadow with the Canonical Form folded,
+ * so `LOL` and `lol` name one entry, as they name one Lemma (system ADR 0002).
+ */
 export function derivePendingEntryId<L extends Dumling.Language>(
 	target: Dumrel.UnitShadow & { language: L },
 ): PendingEntryId<L> {
@@ -27,7 +31,7 @@ export function derivePendingEntryId<L extends Dumling.Language>(
 		normalized.language,
 		normalized.family,
 		normalized.kind,
-		normalized.canonicalForm,
+		foldCase(normalized.canonicalForm, normalized.language),
 	].map(encodeURIComponent);
 	return `pending-entry:v2:${description.join(":")}` as PendingEntryId<L>;
 }
@@ -39,7 +43,7 @@ export function derivePendingSemanticRelationLocator<
 	pending: DumdictPendingSemanticRelation<L>,
 ): PendingSemanticRelationLocator<L> {
 	return {
-		sourceReadingKey: readingFingerprint(sourceReading),
+		sourceReadingKey: readingIdentityKey(sourceReading),
 		relation: pending.relation,
 		targetPendingId: derivePendingEntryId<L>(pending.target),
 	};

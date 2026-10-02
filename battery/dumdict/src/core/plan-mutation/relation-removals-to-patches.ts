@@ -1,3 +1,4 @@
+import { readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type {
@@ -6,7 +7,7 @@ import type {
 	ReadingKnowledgeChange,
 	StoreRevision,
 } from "../../domain-types";
-import { readingFingerprint, sameLemma, sameReading } from "../identity";
+import { sameReading } from "../identity";
 import type { PlannedRelationRemoval } from "../plan-relation-maintenance";
 
 type ReadingPatch<L extends Dumling.Language> = Extract<
@@ -20,7 +21,7 @@ export function relationRemovalsToPatches<L extends Dumling.Language>(
 	revision: StoreRevision,
 ): ReadingPatch<L>[] {
 	const readingByKey = new Map(
-		readings.map((entry) => [readingFingerprint(entry.reading), entry]),
+		readings.map((entry) => [readingIdentityKey(entry.reading), entry]),
 	);
 	const grouped = new Map<
 		string,
@@ -31,7 +32,7 @@ export function relationRemovalsToPatches<L extends Dumling.Language>(
 		}
 	>();
 	for (const removal of removals) {
-		const readingKey = readingFingerprint(removal.reading);
+		const readingKey = readingIdentityKey(removal.reading);
 		const entry = readingByKey.get(readingKey);
 		if (!entry) continue;
 		const key = `${readingKey}\0${removal.relation}\0${removal.targetKind}`;

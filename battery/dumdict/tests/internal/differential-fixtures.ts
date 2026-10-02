@@ -1,6 +1,6 @@
+import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import { makeSurfaceId } from "../../src";
-import { readingFingerprint } from "../../src/core/identity";
 import type { DumdictValidationRouteKey } from "../../src/parsing/validation-route-types";
 import { germanHausLemma } from "../attested-entities/de/lemmas";
 import { germanHausCitationSurface } from "../attested-entities/de/surfaces";
@@ -50,7 +50,7 @@ export function fixturesFor(language: Dumling.Language) {
 		},
 	};
 	const locator = {
-		sourceReadingKey: readingFingerprint(fixture.reading),
+		sourceReadingKey: readingIdentityKey(fixture.reading),
 		relation: pending.relation,
 		targetPendingId: `pending:${language}`,
 	};

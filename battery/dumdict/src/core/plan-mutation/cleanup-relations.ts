@@ -1,8 +1,8 @@
+import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type { PlannedChangeOp } from "../../domain-types";
 import type { CleanupRelationsRequest } from "../../public";
 import type { CleanupRelationsSlice } from "../../storage";
-import { readingFingerprint } from "../identity";
 import { pendingSemanticRelationLocatorKey } from "../pending";
 import {
 	planRelationMaintenance,
@@ -86,12 +86,12 @@ export function planCleanupRelations<L extends Dumling.Language>(
 	const affectedReadings = new Map<string, Dumling.Reading<L>>();
 	for (const addition of relationPlan.additions)
 		affectedReadings.set(
-			readingFingerprint(addition.reading),
+			readingIdentityKey(addition.reading),
 			addition.reading,
 		);
 	for (const removal of relationPlan.removals)
 		affectedReadings.set(
-			readingFingerprint(removal.reading),
+			readingIdentityKey(removal.reading),
 			removal.reading,
 		);
 

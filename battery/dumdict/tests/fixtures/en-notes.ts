@@ -1,6 +1,6 @@
+import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type { SerializedDictionaryNote } from "../../src";
-import { readingFingerprint } from "../../src/core/identity";
 import { derivePendingEntryId } from "../../src/core/pending";
 
 const englishVerbFeatures = {
@@ -124,7 +124,7 @@ export const enSerializedNotesWithPendingSwimRelation = [
 					},
 				},
 				locator: {
-					sourceReadingKey: readingFingerprint(englishWalkReading),
+					sourceReadingKey: readingIdentityKey(englishWalkReading),
 					relation: "nearSynonym",
 					targetPendingId: pendingSwimEntryId,
 				},

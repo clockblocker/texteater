@@ -1,6 +1,11 @@
+import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 
-import { readingLemma, sameLemma } from "../../core/identity";
+import {
+	readingLemma,
+	sameCanonicalForm,
+	shadowMatchesLemma,
+} from "../../core/identity";
 import {
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
@@ -19,19 +24,6 @@ import type {
 	StoredReadingsSlice,
 } from "../../storage";
 import type { InMemoryStorageState } from "./state";
-
-function pendingMatchesLemma<L extends Dumling.Language>(
-	record: InMemoryStorageState<L>["storedNotes"][number]["pendingRelations"][number],
-	lemma: InMemoryStorageState<L>["storedNotes"][number]["lemmaRecord"]["lemma"],
-) {
-	const target = record.pending.target;
-	return (
-		target.language === lemma.language &&
-		target.canonicalForm === lemma.canonicalForm &&
-		target.family === lemma.family &&
-		target.kind === lemma.kind
-	);
-}
 
 export function findStoredReadings<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
@@ -174,7 +166,9 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 	recordRead("pendingRelationsMatchingLemma");
 	const matchingPending = state
 		.allPendingRelations()
-		.filter((record) => pendingMatchesLemma(record, readingLemma(reading)));
+		.filter((record) =>
+			shadowMatchesLemma(record.pending.target, readingLemma(reading)),
+		);
 	recordRead("relationLemmas");
 	const relationLemmas = state.storedNotes.map(
 		({ lemmaRecord }) => lemmaRecord,
@@ -206,14 +200,21 @@ export function getInfoForRelationsCleanup<L extends Dumling.Language>(
 		canonicalForm: request.canonicalForm,
 		candidateLemmas: state.storedNotes
 			.map(({ lemmaRecord }) => lemmaRecord)
-			.filter(
-				({ lemma }) => lemma.canonicalForm === request.canonicalForm,
+			.filter(({ lemma }) =>
+				sameCanonicalForm(
+					lemma.canonicalForm,
+					request.canonicalForm,
+					state.language,
+				),
 			),
 		pendingRelations: state
 			.allPendingRelations()
-			.filter(
-				({ pending }) =>
-					pending.target.canonicalForm === request.canonicalForm,
+			.filter(({ pending }) =>
+				sameCanonicalForm(
+					pending.target.canonicalForm,
+					request.canonicalForm,
+					state.language,
+				),
 			),
 	};
 }

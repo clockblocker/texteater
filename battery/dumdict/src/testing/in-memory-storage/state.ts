@@ -1,6 +1,7 @@
+import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 
-import { sameLemma, sameReading } from "../../core/identity";
+import { sameReading } from "../../core/identity";
 import type {
 	PendingSemanticRelationRecord,
 	ReadingEntry,

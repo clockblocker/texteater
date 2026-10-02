@@ -1,3 +1,4 @@
+import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type {
@@ -5,7 +6,6 @@ import type {
 	ReadingKnowledgeChange,
 	StoreRevision,
 } from "../../domain-types";
-import { readingFingerprint } from "../identity";
 import type { PlannedRelationAddition } from "../plan-relation-maintenance";
 
 type ReadingPatch<L extends Dumling.Language> = Extract<
@@ -30,7 +30,7 @@ export function relationAdditionsToPatches<L extends Dumling.Language>(
 		{ reading: Dumling.Reading<L>; targets: Dumling.Reading<L>[] }
 	>();
 	for (const addition of additions) {
-		const key = `${readingFingerprint(addition.reading)}\0${addition.relation}`;
+		const key = `${readingIdentityKey(addition.reading)}\0${addition.relation}`;
 		if (addition.targetKind === "reading") {
 			const bucket = readingBuckets.get(key);
 			if (bucket) bucket.targets.push(addition.targetReading);

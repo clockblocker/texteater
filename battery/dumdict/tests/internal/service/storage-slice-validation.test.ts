@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
+import { readingIdentityKey } from "dumling";
 import * as Effect from "effect/Effect";
 import type { DumdictReadingDraft } from "../../../src";
-import { readingFingerprint } from "../../../src/core/identity";
 import {
 	validateReadingEntryContext,
 	validateStoredReadingsSlice,
@@ -209,7 +209,7 @@ describe("storage slice validation", () => {
 
 	test("one Reading whatever its variation selectors and skin-tone modifiers", () => {
 		const reading = (emojiDescription: string) =>
-			readingFingerprint({
+			readingIdentityKey({
 				...englishSwimDraft.reading,
 				emojiDescription,
 			});

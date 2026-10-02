@@ -1,3 +1,4 @@
+import { lemmaIdentityKey, readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type {
@@ -29,12 +30,7 @@ import type {
 	RelationsCleanupInfoSlice,
 	StoredReadingsSlice,
 } from "../storage";
-import {
-	lemmaFingerprint,
-	readingFingerprint,
-	sameLemma,
-	sameReading,
-} from "./identity";
+import { sameCanonicalForm, sameReading, shadowMatchesLemma } from "./identity";
 import {
 	assertPendingSemanticRelationRecordIdentity,
 	derivePendingSemanticRelationLocator,
@@ -136,35 +132,35 @@ function validateRelationInventory<L extends Dumling.Language>(
 	for (const record of lemmas) validateLemmaRecord(expected, record);
 	for (const entry of readings) validateReadingEntry(expected, entry);
 	assertNoDuplicates(
-		lemmas.map(({ lemma }) => lemmaFingerprint(lemma)),
+		lemmas.map(({ lemma }) => lemmaIdentityKey(lemma)),
 		"relation Lemma inventory",
 	);
 	assertNoDuplicates(
-		readings.map(({ reading }) => readingFingerprint(reading)),
+		readings.map(({ reading }) => readingIdentityKey(reading)),
 		"relation Reading inventory",
 	);
 	const lemmaKeys = new Set(
-		lemmas.map(({ lemma }) => lemmaFingerprint(lemma)),
+		lemmas.map(({ lemma }) => lemmaIdentityKey(lemma)),
 	);
 	const readingKeys = new Set(
-		readings.map(({ reading }) => readingFingerprint(reading)),
+		readings.map(({ reading }) => readingIdentityKey(reading)),
 	);
 	for (const entry of readings) {
-		if (!lemmaKeys.has(lemmaFingerprint(entry.reading.lemma)))
+		if (!lemmaKeys.has(lemmaIdentityKey(entry.reading.lemma)))
 			throw new Error(
 				"relation Reading inventory references an unstored owner Lemma.",
 			);
 		const relations = entry.knowledge?.semanticRelations;
 		if (relations?.targetKind === "reading") {
 			for (const target of relations.synonym ?? [])
-				if (!readingKeys.has(readingFingerprint(target)))
+				if (!readingKeys.has(readingIdentityKey(target)))
 					throw new Error(
 						"relation Reading inventory references an unstored target Reading.",
 					);
 		} else {
 			for (const relation of directSemanticRelationValues) {
 				for (const target of relations?.[relation] ?? []) {
-					if (!lemmaKeys.has(lemmaFingerprint(target)))
+					if (!lemmaKeys.has(lemmaIdentityKey(target)))
 						throw new Error(
 							"relation Reading inventory references an unstored target Lemma.",
 						);
@@ -298,13 +294,13 @@ function validateAddNewNoteContext<L extends Dumling.Language>(
 	const requestedLemmaKeys = new Set(
 		request.relations.flatMap((relation) =>
 			relation.target.kind === "existing"
-				? [lemmaFingerprint(relation.target.lemma)]
+				? [lemmaIdentityKey(relation.target.lemma)]
 				: [],
 		),
 	);
 	for (const record of context.explicitExistingLemmaTargets) {
 		validateLemmaRecord(expected, record);
-		if (!requestedLemmaKeys.has(lemmaFingerprint(record.lemma)))
+		if (!requestedLemmaKeys.has(lemmaIdentityKey(record.lemma)))
 			throw new Error(
 				"explicit existing Lemma target was not requested by this workflow.",
 			);
@@ -330,14 +326,7 @@ function validateAddNewNoteContext<L extends Dumling.Language>(
 	);
 	for (const record of context.pendingRelationsMatchingProposedLemma) {
 		validatePendingRecord(expected, record);
-		const target = record.pending.target;
-		const lemma = request.reading.lemma;
-		if (
-			target.language !== lemma.language ||
-			target.canonicalForm !== lemma.canonicalForm ||
-			target.family !== lemma.family ||
-			target.kind !== lemma.kind
-		)
+		if (!shadowMatchesLemma(record.pending.target, request.reading.lemma))
 			throw new Error(
 				"pending Semantic Relation does not match the proposed Lemma.",
 			);
@@ -450,29 +439,23 @@ export function validateRelationsCleanupInfoSlice<L extends Dumling.Language>(
 	slice: RelationsCleanupInfoSlice<L>,
 	requestedCanonicalForm?: string,
 ) {
-	if (
-		requestedCanonicalForm !== undefined &&
-		slice.canonicalForm !== requestedCanonicalForm
-	)
+	const matchesRequest = (canonicalForm: string) =>
+		requestedCanonicalForm === undefined ||
+		sameCanonicalForm(canonicalForm, requestedCanonicalForm, expected);
+	if (!matchesRequest(slice.canonicalForm))
 		throw new Error(
 			"relations cleanup slice canonical form does not match the request.",
 		);
 	for (const record of slice.candidateLemmas) {
 		validateLemmaRecord(expected, record);
-		if (
-			requestedCanonicalForm !== undefined &&
-			record.lemma.canonicalForm !== requestedCanonicalForm
-		)
+		if (!matchesRequest(record.lemma.canonicalForm))
 			throw new Error(
 				"relations cleanup candidate Lemma has a different canonical form.",
 			);
 	}
 	for (const record of slice.pendingRelations) {
 		validatePendingRecord(expected, record);
-		if (
-			requestedCanonicalForm !== undefined &&
-			record.pending.target.canonicalForm !== requestedCanonicalForm
-		)
+		if (!matchesRequest(record.pending.target.canonicalForm))
 			throw new Error(
 				"pending Unit Shadow has a different canonical form.",
 			);

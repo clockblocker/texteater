@@ -1,3 +1,4 @@
+import { readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import type {
 	PendingSemanticRelationRecord,
@@ -12,7 +13,7 @@ import {
 import type { ApplyGeneratedKnowledgeRequest } from "../../public";
 import type { ApplyGeneratedKnowledgeContext } from "../../storage";
 import { applyDumdictKnowledgeChange } from "../apply-reading-knowledge-change.js";
-import { readingFingerprint, sameLemma, sameReading } from "../identity";
+import { sameReading } from "../identity";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -129,7 +130,7 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 		{ reading: Dumling.Reading<L>; ops: ReadingPatchOp<L>[] }
 	>();
 	if (request.changes.length > 0) {
-		operations.set(readingFingerprint(request.reading), {
+		operations.set(readingIdentityKey(request.reading), {
 			reading: request.reading,
 			ops: request.changes.map(
 				(change): ReadingPatchOp<L> => ({
@@ -146,7 +147,7 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 		relationPlan.additions,
 		slice.revision,
 	)) {
-		const readingKey = readingFingerprint(relationPatch.reading);
+		const readingKey = readingIdentityKey(relationPatch.reading);
 		const patch = operations.get(readingKey) ?? {
 			reading: relationPatch.reading,
 			ops: [],
@@ -159,7 +160,7 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 		changedReadings,
 		slice.revision,
 	)) {
-		const readingKey = readingFingerprint(relationPatch.reading);
+		const readingKey = readingIdentityKey(relationPatch.reading);
 		const patch = operations.get(readingKey) ?? {
 			reading: relationPatch.reading,
 			ops: [],
@@ -228,7 +229,7 @@ export function planApplyGeneratedKnowledge<L extends Dumling.Language>(
 
 	const affectedReadings = new Map<string, Dumling.Reading<L>>();
 	for (const patch of operations.values())
-		affectedReadings.set(readingFingerprint(patch.reading), patch.reading);
+		affectedReadings.set(readingIdentityKey(patch.reading), patch.reading);
 	return {
 		status: "planned",
 		baseRevision: slice.revision,

@@ -1,7 +1,7 @@
+import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 
-import { sameLemma } from "../core/identity";
 import { pendingSemanticRelationLocatorKey } from "../core/pending";
 import {
 	type PlanMutationResult,

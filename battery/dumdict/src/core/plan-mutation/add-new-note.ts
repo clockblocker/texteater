@@ -1,3 +1,4 @@
+import { lemmaIdentityKey, readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type {
@@ -14,13 +15,7 @@ import {
 } from "../../parsing/lightweight-parsers";
 import type { AddNewNoteRequest } from "../../public";
 import type { AddNewNoteContext } from "../../storage";
-import {
-	lemmaFingerprint,
-	readingFingerprint,
-	readingLemma,
-	sameLemma,
-	sameReading,
-} from "../identity";
+import { readingLemma, sameReading } from "../identity";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,
@@ -111,13 +106,13 @@ function explicitTargetsArePresent<L extends Dumling.Language>(
 ) {
 	const lemmas = new Set(
 		slice.explicitExistingLemmaTargets.map(({ lemma }) =>
-			lemmaFingerprint(lemma),
+			lemmaIdentityKey(lemma),
 		),
 	);
 	return (request.draft.relations ?? []).every(
 		(relation) =>
 			relation.target.kind === "pending" ||
-			lemmas.has(lemmaFingerprint(relation.target.lemma)),
+			lemmas.has(lemmaIdentityKey(relation.target.lemma)),
 	);
 }
 
@@ -323,7 +318,7 @@ export function planAddNewNote<L extends Dumling.Language>(
 					reading,
 					...relationPlan.additions.map(({ reading }) => reading),
 				],
-				readingFingerprint,
+				readingIdentityKey,
 			),
 			surfaceIds: ownedSurfaceEntries.map(({ id }) => id),
 			pendingIds: [...pendingToCreate, ...pendingToDelete].map(

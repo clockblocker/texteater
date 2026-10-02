@@ -1,3 +1,4 @@
+import { lemmaIdentityKey, readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -6,13 +7,7 @@ import type {
 	PendingSemanticRelationRecord,
 	ReadingEntry,
 } from "../domain-types";
-import {
-	compareLemmas,
-	lemmaFingerprint,
-	readingFingerprint,
-	sameLemma,
-	sameReading,
-} from "./identity";
+import { compareLemmas, sameReading, shadowMatchesLemma } from "./identity";
 
 export type RelationRequest<L extends Dumling.Language> = {
 	sourceReading: Dumling.Reading<L>;
@@ -69,29 +64,17 @@ type Edge<L extends Dumling.Language> = PlannedRelationAddition<L>;
 
 function targetKey<L extends Dumling.Language>(edge: Edge<L>): string {
 	return edge.targetKind === "reading"
-		? readingFingerprint(edge.targetReading)
-		: lemmaFingerprint(edge.targetLemma);
+		? readingIdentityKey(edge.targetReading)
+		: lemmaIdentityKey(edge.targetLemma);
 }
 function edgeKey<L extends Dumling.Language>(edge: Edge<L>): string {
 	return JSON.stringify([
-		readingFingerprint(edge.reading),
+		readingIdentityKey(edge.reading),
 		edge.relation,
 		edge.targetKind ?? "lemma",
 		targetKey(edge),
 	]);
 }
-function shadowMatchesLemma<L extends Dumling.Language>(
-	shadow: Dumrel.UnitShadow & { language: L },
-	lemma: Dumling.Lemma<L>,
-): boolean {
-	return (
-		shadow.language === lemma.language &&
-		shadow.canonicalForm === lemma.canonicalForm &&
-		shadow.family === lemma.family &&
-		shadow.kind === lemma.kind
-	);
-}
-
 function existingEdges<L extends Dumling.Language>(
 	readings: readonly ReadingEntry<L>[],
 ): Edge<L>[] {
@@ -126,11 +109,11 @@ export function planRelationMaintenance<L extends Dumling.Language>(input: {
 		.map(({ lemma }) => lemma)
 		.sort(compareLemmas);
 	const lemmaByKey = new Map(
-		lemmas.map((lemma) => [lemmaFingerprint(lemma), lemma] as const),
+		lemmas.map((lemma) => [lemmaIdentityKey(lemma), lemma] as const),
 	);
 	const entryByReadingKey = new Map(
 		input.readings.map(
-			(entry) => [readingFingerprint(entry.reading), entry] as const,
+			(entry) => [readingIdentityKey(entry.reading), entry] as const,
 		),
 	);
 	const proposed: Edge<L>[] = [];
@@ -144,10 +127,10 @@ export function planRelationMaintenance<L extends Dumling.Language>(input: {
 				"Inferred relation orientations cannot be stored as direct claims.",
 			);
 		const sourceEntry = entryByReadingKey.get(
-			readingFingerprint(request.sourceReading),
+			readingIdentityKey(request.sourceReading),
 		);
 		const sourceLemma = lemmaByKey.get(
-			lemmaFingerprint(request.sourceReading.lemma),
+			lemmaIdentityKey(request.sourceReading.lemma),
 		);
 		if (!sourceEntry || !sourceLemma)
 			return rejected(
@@ -172,7 +155,7 @@ export function planRelationMaintenance<L extends Dumling.Language>(input: {
 					"Reading-targeted direct claims currently support Synonym only.",
 				);
 			const targetReading = entryByReadingKey.get(
-				readingFingerprint(request.target.reading),
+				readingIdentityKey(request.target.reading),
 			)?.reading;
 			if (!targetReading)
 				return rejected(
@@ -196,7 +179,7 @@ export function planRelationMaintenance<L extends Dumling.Language>(input: {
 		let targets: Dumling.Lemma<L>[];
 		if (request.target.kind === "lemma") {
 			const storedTarget = lemmaByKey.get(
-				lemmaFingerprint(request.target.lemma),
+				lemmaIdentityKey(request.target.lemma),
 			);
 			if (!storedTarget)
 				return rejected(
@@ -294,7 +277,7 @@ function groupEdgesByTarget<L extends Dumling.Language>(
 	const grouped = new Map<string, Edge<L>[]>();
 	for (const edge of edges) {
 		const key = JSON.stringify([
-			readingFingerprint(edge.reading),
+			readingIdentityKey(edge.reading),
 			edge.targetKind ?? "lemma",
 			targetKey(edge),
 		]);
