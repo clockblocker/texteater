@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
 	productionUnitSettings,
@@ -24,10 +25,12 @@ async function run(
 	settings = withVerb(),
 ) {
 	const judge = fakeJudge(answers);
-	const units = await segmentGermanUnits(
-		{ segments: segmentsOf(sentence) },
-		judge.ask,
-		settings,
+	const units = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: segmentsOf(sentence) },
+			judge.ask,
+			settings,
+		),
 	);
 	return { groups: units.map((unit) => unit.segments), judge };
 }
@@ -57,13 +60,17 @@ test("de/causative-lassen: a causative answer joins lassen and its infinitive, w
 test("production asks only the lassen, recipient and state families", async () => {
 	// Er0 _1 verteidigt2 _3 sich4 .5
 	const reflexive = fakeJudge({ s_reflexive_3: picked("p2") });
-	await segmentGermanUnits(
-		{ segments: segmentsOf("Er verteidigt sich.") },
-		reflexive.ask,
+	await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: segmentsOf("Er verteidigt sich.") },
+			reflexive.ask,
+		),
 	);
 	expect(reflexive.stages()).not.toContain("verb");
 	const lassen = fakeJudge(dachHeard);
-	await segmentGermanUnits({ segments: segmentsOf(dach) }, lassen.ask);
+	await Effect.runPromise(
+		segmentGermanUnits({ segments: segmentsOf(dach) }, lassen.ask),
+	);
 	expect(lassen.stages()).toContain("verb");
 });
 
@@ -142,6 +149,8 @@ test("a Sentence with no flagged satellite asks no verb request; a participle-le
 	expect(judge.stages()).not.toContain("verb");
 	const off = fakeJudge(dachHeard);
 	const { verb: _, ...without } = productionUnitSettings;
-	await segmentGermanUnits({ segments: segmentsOf(dach) }, off.ask, without);
+	await Effect.runPromise(
+		segmentGermanUnits({ segments: segmentsOf(dach) }, off.ask, without),
+	);
 	expect(off.stages()).not.toContain("verb");
 });

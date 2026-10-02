@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { Answer } from "../../src/segment/ask.js";
 import { productionUnitSettings } from "../../src/segment/de/units.js";
 import {
@@ -83,19 +84,21 @@ test("the pooled ask answers from every repetition that heard a question", async
 		new Map([["f_1", noul(0.9)]]),
 	];
 	const tally: PoolTally = [];
-	const answers = await pooledAsk(
-		heard,
-		"median",
-		tally,
-	)({
-		stage: "expressions",
-		state: {},
-		questions: {
-			f_1: { type: "noul", instructions: "?" },
-			e_1_2: { type: "noul", instructions: "?" },
-			e_1_3: { type: "noul", instructions: "?" },
-		},
-	});
+	const answers = await Effect.runPromise(
+		pooledAsk(
+			heard,
+			"median",
+			tally,
+		)({
+			stage: "expressions",
+			state: {},
+			questions: {
+				f_1: { type: "noul", instructions: "?" },
+				e_1_2: { type: "noul", instructions: "?" },
+				e_1_3: { type: "noul", instructions: "?" },
+			},
+		}),
+	);
 	expect(answers).toEqual({
 		f_1: noul(0.4),
 		e_1_2: noul(0.8),

@@ -64,18 +64,19 @@ export type Unit = {
 /**
  * One Sentence as intake leaves it: its Stitched Text, its Segments, which
  * concatenated give the text back, and its units. Every ResolvableText
- * Segment belongs to exactly one unit.
+ * Segment belongs to exactly one unit, unless the Sentence `failed`.
  */
 export type SegmentedSentence = {
 	readonly text: string;
 	readonly segments: readonly Segment[];
 	readonly units: readonly Unit[];
 	/**
-	 * Why the Sentence's segmentation failed, when it did. Each of its
-	 * ResolvableText Segments is then its own `Unresolved` unit, and its
-	 * written runs keep their spelling.
+	 * Present only when the Sentence's segmentation failed (#861): it has no
+	 * units, and its Segments are the Segment stage's, or code's alone when
+	 * that stage failed too, every written run kept whole. The reason is in
+	 * the operation's trace, not here; a click segments the Sentence again.
 	 */
-	readonly failure?: string;
+	readonly failed?: true;
 };
 
 /** A text's paragraphs, each with its Segmented Sentences in order. */

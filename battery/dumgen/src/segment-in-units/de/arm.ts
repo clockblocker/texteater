@@ -4,6 +4,8 @@
  * (`src/segment/de/`); they reach jev through its `ask` port, which the lab
  * backs with its cached jev client.
  */
+
+import * as Effect from "effect/Effect";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
@@ -48,12 +50,17 @@ export type Arm = {
 	) => Promise<ArmResult>;
 };
 
-/** The production stage's `ask` port, answered from the lab's cached jev at this repetition. */
+/**
+ * The production stage's `ask` port, answered from the lab's cached jev at
+ * this repetition. A failed request rejects with the lab's own error.
+ */
 export const askOf =
 	(context: Pick<ArmContext, "jev" | "repetition" | "calls">): Ask =>
 	(request) =>
-		context.jev.ask({
-			...request,
-			repetition: context.repetition,
-			calls: context.calls,
-		});
+		Effect.promise(() =>
+			context.jev.ask({
+				...request,
+				repetition: context.repetition,
+				calls: context.calls,
+			}),
+		);

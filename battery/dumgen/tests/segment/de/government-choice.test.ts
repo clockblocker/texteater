@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
 	type GovernmentFamily,
@@ -26,10 +27,12 @@ async function run(
 	settings = withGovernment(),
 ) {
 	const judge = fakeJudge(answers);
-	const units = await segmentGermanUnits(
-		{ segments: segmentsOf(sentence) },
-		judge.ask,
-		settings,
+	const units = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: segmentsOf(sentence) },
+			judge.ask,
+			settings,
+		),
 	);
 	return { groups: units.map((unit) => unit.segments), judge };
 }
@@ -124,12 +127,16 @@ test("de/idiom: used literally, the idiom's preposition leaves the verb its slot
 test("production asks the government request without its weak family; a Sentence with no flag asks none", async () => {
 	expect(productionUnitSettings.government?.families).not.toContain("weak");
 	const production = fakeJudge(uhrHeard);
-	await segmentGermanUnits({ segments: segmentsOf(uhr) }, production.ask);
+	await Effect.runPromise(
+		segmentGermanUnits({ segments: segmentsOf(uhr) }, production.ask),
+	);
 	expect(production.stages()).toContain("government");
 	const { judge } = await run("Sie wohnt hier.", {});
 	expect(judge.stages()).not.toContain("government");
 	const off = fakeJudge(uhrHeard);
 	const { government: _, ...without } = productionUnitSettings;
-	await segmentGermanUnits({ segments: segmentsOf(uhr) }, off.ask, without);
+	await Effect.runPromise(
+		segmentGermanUnits({ segments: segmentsOf(uhr) }, off.ask, without),
+	);
 	expect(off.stages()).not.toContain("government");
 });

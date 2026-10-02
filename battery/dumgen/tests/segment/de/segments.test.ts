@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { Answers, Ask } from "../../../src/segment/ask.js";
 import { germanFusionTable } from "../../../src/segment/de/fusion-entries.js";
 import {
@@ -10,6 +11,7 @@ import {
 } from "../../../src/segment/de/segments.js";
 import { validateFusionTable } from "../../../src/segment/fusion-table.js";
 import { stitchedText } from "../../../src/segment/stitched-text.js";
+import { asked } from "./fake-judge.js";
 
 function choose(
 	prepared: PreparedSegments,
@@ -34,9 +36,8 @@ function choose(
 	);
 }
 
-const noCall: Ask = async () => {
-	throw Error("An unambiguous Sentence should make no call");
-};
+const noCall: Ask = () =>
+	Effect.die(Error("An unambiguous Sentence should make no call"));
 
 test("the German fusion table keeps its invariants", () => {
 	expect(() => validateFusionTable(germanFusionTable)).not.toThrow();
@@ -51,9 +52,8 @@ test("stitching trims and makes each run of horizontal whitespace one space, kee
 });
 
 test("a Sentence with no ambiguous run makes no call, and its Segments give back its Stitched Text", async () => {
-	const sentence = await segmentGermanSentence(
-		"  Ein\tWald 👩‍💻 und für Haus.\n",
-		noCall,
+	const sentence = await Effect.runPromise(
+		segmentGermanSentence("  Ein\tWald 👩‍💻 und für Haus.\n", noCall),
 	);
 	expect(sentence.text).toBe("Ein Wald 👩‍💻 und für Haus.");
 	expect(sentence.language).toBe("de");
@@ -70,22 +70,27 @@ test("a Sentence with no ambiguous run makes no call, and its Segments give back
 		text: "für",
 	});
 	expect(sentence.unresolved).toEqual([]);
-	await expect(segmentGermanSentence(" \n ", noCall)).rejects.toThrow(
-		"non-empty",
-	);
+	await expect(
+		Effect.runPromise(segmentGermanSentence(" \n ", noCall)),
+	).rejects.toThrow("non-empty");
 });
 
 test("fused Am is asked while am before a superlative with no noun after it is code's, one Segment", async () => {
 	const text = "Am Fenster ist es am schönsten.";
 	const prepared = prepareGermanSegments(text);
 	let calls = 0;
-	const sentence = await segmentGermanSentence(text, async (request) => {
-		calls++;
-		expect(request.stage).toBe("segments");
-		expect(request.state).toEqual(prepared.state);
-		expect(Object.keys(request.questions)).toEqual(["source_0"]);
-		return choose(prepared, () => "Fusion");
-	});
+	const sentence = await Effect.runPromise(
+		segmentGermanSentence(
+			text,
+			asked(async (request) => {
+				calls++;
+				expect(request.stage).toBe("segments");
+				expect(request.state).toEqual(prepared.state);
+				expect(Object.keys(request.questions)).toEqual(["source_0"]);
+				return choose(prepared, () => "Fusion");
+			}),
+		),
+	);
 	expect(calls).toBe(1);
 	expect(
 		sentence.segments.filter(({ kind }) => kind === "ResolvableText"),
@@ -145,13 +150,18 @@ test("clitics and abbreviations select complete authored plans, keeping apostrop
 test("authored Fusion recovery keeps combining marks with their letters", async () => {
 	const text = "Im\tWald und fürs Haus 👩‍💻.\n";
 	let calls = 0;
-	const sentence = await segmentGermanSentence(text, async (request) => {
-		calls++;
-		return choose(
-			prepareGermanSegments(String(request.state.sentence)),
-			() => "Fusion",
-		);
-	});
+	const sentence = await Effect.runPromise(
+		segmentGermanSentence(
+			text,
+			asked(async (request) => {
+				calls++;
+				return choose(
+					prepareGermanSegments(String(request.state.sentence)),
+					() => "Fusion",
+				);
+			}),
+		),
+	);
 	expect(calls).toBe(1);
 	expect(sentence.text).toBe("Im Wald und fürs Haus 👩‍💻.");
 	expect(sentence.segments.slice(0, 3)).toEqual([
@@ -301,9 +311,11 @@ test("am stays one Segment before a superlative with no noun after it, and is as
 });
 
 test("an infinitive's infixed zu is a piece, decided by code (de/fused-word-pieces)", async () => {
-	const sentence = await segmentGermanSentence(
-		"Er fing an, abzuspannen, hinauszulaufen und hinzuzufügen.",
-		noCall,
+	const sentence = await Effect.runPromise(
+		segmentGermanSentence(
+			"Er fing an, abzuspannen, hinauszulaufen und hinzuzufügen.",
+			noCall,
+		),
 	);
 	const pieces = sentence.segments.filter(
 		({ kind }) => kind === "ResolvableText",
@@ -445,10 +457,15 @@ test("an emoticon written apart is one clickable Segment; marks glued to a word 
 
 test("a clitic's host is a piece standing for itself, a Sentence's opening capital aside", async () => {
 	const text = "Das Radio? Geht's wieder, wie geht's?";
-	const sentence = await segmentGermanSentence(text, async (request) =>
-		choose(
-			prepareGermanSegments(String(request.state.sentence)),
-			() => "Clitic0",
+	const sentence = await Effect.runPromise(
+		segmentGermanSentence(
+			text,
+			asked(async (request) =>
+				choose(
+					prepareGermanSegments(String(request.state.sentence)),
+					() => "Clitic0",
+				),
+			),
 		),
 	);
 	const pieces = sentence.segments.filter(

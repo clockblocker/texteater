@@ -47,6 +47,7 @@
 	"dependencies": {
 		"dumling": "workspace:^",
 		"dumspec": "workspace:^",
+		"effect": "4.0.0",
 		"promptsmith": "workspace:^",
 		"zod": "^4.4.0"
 	},

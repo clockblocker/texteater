@@ -28,7 +28,8 @@
  * tests, and splits or joins each as de/governed-preposition-joins-its-governor
  * and de/idiom decide: on dev, 16 more gold units held and 2 lost.
  */
-import type { Ask } from "../ask.js";
+import * as Effect from "effect/Effect";
+import type { Ask, AskFailure } from "../ask.js";
 import type { Segment, Unit } from "../segmented-sentence.js";
 import { type Floors, membershipOf, type SayingAssembly } from "./assembly.js";
 import {
@@ -142,12 +143,12 @@ export const productionUnitSettings: UnitSettings = {
 };
 
 /** Groups one German Sentence's Segments into its biggest units and routes each. */
-export async function segmentGermanUnits(
+export const segmentGermanUnits = Effect.fnUntraced(function* (
 	sentence: { readonly segments: readonly Segment[] },
 	ask: Ask,
 	settings: UnitSettings = productionUnitSettings,
-): Promise<Unit[]> {
-	const nomination = await nominate(sentence, ask, settings.inventory, {
+): Effect.fn.Return<Unit[], AskFailure> {
+	const nomination = yield* nominate(sentence, ask, settings.inventory, {
 		wasFuer: settings.rules.includes("was-fuer"),
 	});
 	const base = membershipOf(nomination, settings.floors, settings.saying);
@@ -157,7 +158,12 @@ export async function segmentGermanUnits(
 				nomination,
 				base,
 				ruled,
-				await askLocutionChoice(nomination, ruled, ask, settings.rules),
+				yield* askLocutionChoice(
+					nomination,
+					ruled,
+					ask,
+					settings.rules,
+				),
 				settings.rules,
 				settings.locution,
 			)
@@ -166,7 +172,7 @@ export async function segmentGermanUnits(
 		? withVerbChoice(
 				nomination,
 				located,
-				await askVerbChoice(nomination, ask, settings.verb.families),
+				yield* askVerbChoice(nomination, ask, settings.verb.families),
 				settings.rules,
 				settings.verb,
 			)
@@ -175,7 +181,7 @@ export async function segmentGermanUnits(
 		? withGovernmentChoice(
 				nomination,
 				verbed,
-				await askGovernmentChoice(
+				yield* askGovernmentChoice(
 					nomination,
 					verbed,
 					ask,
@@ -186,10 +192,10 @@ export async function segmentGermanUnits(
 				settings.government,
 			)
 		: verbed;
-	const answers = await askRouteBatches(nomination, ask);
+	const answers = yield* askRouteBatches(nomination, ask);
 	const extra =
 		settings.unasked === "ask"
-			? await askUnaskedRoutes(
+			? yield* askUnaskedRoutes(
 					nomination,
 					answers,
 					membership.partition,
@@ -205,4 +211,4 @@ export async function segmentGermanUnits(
 			? answerBeforeFormula
 			: undefined,
 	).units(settings.variantMargin);
-}
+});

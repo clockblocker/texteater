@@ -21,6 +21,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import * as Effect from "effect/Effect";
 import {
 	defineGoldenCaseCollection,
 	defineGoldenCaseGroup,
@@ -118,7 +119,7 @@ const unitStages: Readonly<
 	>
 > = {
 	production: (segments, context) =>
-		segmentGermanUnits({ segments }, askOf(context)),
+		Effect.runPromise(segmentGermanUnits({ segments }, askOf(context))),
 	async reference(segments, context) {
 		const result = await referenceArm.run(
 			{ language: "de", segments },
@@ -222,9 +223,8 @@ const rawMode: Mode<typeof rawInputSchema, typeof rawOutputSchema> = {
 	run:
 		(units) =>
 		async (input, context): Promise<RawOutput> => {
-			const segmentation = await segmentGermanSentence(
-				input.sentence,
-				askOf(context),
+			const segmentation = await Effect.runPromise(
+				segmentGermanSentence(input.sentence, askOf(context)),
 			);
 			const segments = segmentation.segments.map(
 				({ kind, text, surface }) => ({

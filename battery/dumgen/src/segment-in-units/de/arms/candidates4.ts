@@ -14,6 +14,7 @@
  * ec467e8d keeps them. `--opt primary=<policy>` picks the headline policy.
  */
 
+import * as Effect from "effect/Effect";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
 import {
 	articleHosts,
@@ -58,8 +59,12 @@ export const candidates4Arm: Arm = {
 				"candidates4 runs only with --opt final=1 --opt closed=1; its other levers are retired (ec467e8d)",
 			);
 		const ask = askOf(context);
-		const nomination = await nominate(input, ask, authoredInventory);
-		const answers = await askRouteBatches(nomination, ask);
+		const nomination = await Effect.runPromise(
+			nominate(input, ask, authoredInventory),
+		);
+		const answers = await Effect.runPromise(
+			askRouteBatches(nomination, ask),
+		);
 		const { sentence } = nomination;
 		const outputs: Record<string, SegmentInUnitsOutput> = {};
 		const base = policyInput(nomination, full07);

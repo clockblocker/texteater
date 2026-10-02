@@ -21,10 +21,12 @@
  * setting. A group no batch asked about gets `route-extra`, or routes
  * `Unresolved` unasked.
  */
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import {
 	type Answers,
 	type Ask,
+	type AskFailure,
 	askAny,
 	choice,
 	choiceOf,
@@ -228,15 +230,18 @@ function readRoutes(
 }
 
 /** Asks one route request over `groups` and reads it. */
-async function askRoutes(
+const askRoutes = Effect.fnUntraced(function* (
 	nomination: Nomination,
 	groups: Partition,
 	ask: Ask,
 	stage: string,
 	more: Questions = {},
-): Promise<{ readonly routes: Routes; readonly answers: Answers }> {
+): Effect.fn.Return<
+	{ readonly routes: Routes; readonly answers: Answers },
+	AskFailure
+> {
 	const { sentence, ref, state, inventory } = nomination;
-	const answers = await askAny(ask, {
+	const answers = yield* askAny(ask, {
 		stage,
 		state,
 		questions: {
@@ -248,7 +253,7 @@ async function askRoutes(
 		routes: readRoutes(sentence, groups, answers, inventory),
 		answers,
 	};
-}
+});
 
 const uniqueGroups = (partitions: readonly Partition[]) => {
 	const unique = new Map<string, readonly number[]>();
@@ -290,10 +295,10 @@ export type RouteAnswers = {
 	readonly closed: Answers;
 };
 
-export async function askRouteBatches(
+export const askRouteBatches = Effect.fnUntraced(function* (
 	nomination: Nomination,
 	ask: Ask,
-): Promise<RouteAnswers> {
+): Effect.fn.Return<RouteAnswers, AskFailure> {
 	const { sentence, ref, state } = nomination;
 	const articleOf = articleHosts(nomination);
 	const v3Partitions = Object.values(v3Policies).map(
@@ -301,7 +306,7 @@ export async function askRouteBatches(
 			assemble(nomination, articleOf, policyInput(nomination, policy))
 				.partition,
 	);
-	const v3 = await askRoutes(
+	const v3 = yield* askRoutes(
 		nomination,
 		[...uniqueGroups(v3Partitions).values()],
 		ask,
@@ -321,7 +326,7 @@ export async function askRouteBatches(
 			`In \`sentence\`, the word ${ref(piece)} is a unit on its own. Which route does it take? An abbreviation takes the route of what it stands for (z.B. = zum Beispiel, a Locution ADV).`,
 			routeCriteria(allRoutes, true),
 		);
-	const route2 = await askRoutes(
+	const route2 = yield* askRoutes(
 		nomination,
 		[...fresh.values()],
 		ask,
@@ -337,7 +342,7 @@ export async function askRouteBatches(
 				question.criteria,
 			);
 	}
-	const closed = await askAny(ask, {
+	const closed = yield* askAny(ask, {
 		stage: "closed",
 		state,
 		questions: closedQuestions,
@@ -357,7 +362,7 @@ export async function askRouteBatches(
 		route2: route2.answers,
 		closed,
 	};
-}
+});
 
 /** The groups of a partition no batched request asked about. */
 const unaskedGroups = (
@@ -367,21 +372,19 @@ const unaskedGroups = (
 	partition.filter((group) => !answers.asked.has(groupKey(group)));
 
 /** `route-extra`: the route request for the groups no batch asked about. */
-export async function askUnaskedRoutes(
+export const askUnaskedRoutes = Effect.fnUntraced(function* (
 	nomination: Nomination,
 	answers: RouteAnswers,
 	partition: Partition,
 	ask: Ask,
-): Promise<Routes> {
-	return (
-		await askRoutes(
-			nomination,
-			unaskedGroups(answers, partition),
-			ask,
-			"route-extra",
-		)
-	).routes;
-}
+): Effect.fn.Return<Routes, AskFailure> {
+	return (yield* askRoutes(
+		nomination,
+		unaskedGroups(answers, partition),
+		ask,
+		"route-extra",
+	)).routes;
+});
 
 /** Code names the Family from how the unit was built; jev only the Kind within it. */
 export const structuralRoute =

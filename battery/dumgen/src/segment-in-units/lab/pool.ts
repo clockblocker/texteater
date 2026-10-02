@@ -11,6 +11,7 @@
  * `Other` when the Choice offers it, else an `Unresolved` Choice with no
  * shares, which routes its group `Unresolved`.
  */
+import * as Effect from "effect/Effect";
 import type { Question } from "promptsmith/typesafe";
 import type { Answer, Ask } from "../../segment/ask.js";
 
@@ -112,12 +113,12 @@ export type Heard = Map<string, Answer>;
 /** `ask`, keeping every answer it hears in `heard`. */
 export const recording =
 	(ask: Ask, heard: Heard): Ask =>
-	async (request) => {
-		const answers = await ask(request);
-		for (const [id, answer] of Object.entries(answers))
-			if (!heard.has(id)) heard.set(id, answer);
-		return answers;
-	};
+	(request) =>
+		Effect.map(ask(request), (answers) => {
+			for (const [id, answer] of Object.entries(answers))
+				if (!heard.has(id)) heard.set(id, answer);
+			return answers;
+		});
 
 /** How many repetitions answered each pooled question: index 0 to 3. */
 export type PoolTally = number[];
@@ -128,20 +129,23 @@ export type PoolTally = number[];
  */
 export const pooledAsk =
 	(heard: readonly Heard[], pooling: Pooling, tally?: PoolTally): Ask =>
-	async ({ questions }) =>
-		Object.fromEntries(
-			Object.entries(questions).map(([id, question]) => {
-				const samples = heard.flatMap((answers) => {
-					const answer = answers.get(id);
-					return answer ? [answer] : [];
-				});
-				if (tally)
-					tally[samples.length] = (tally[samples.length] ?? 0) + 1;
-				return [
-					id,
-					samples.length === 0
-						? standIn(question)
-						: poolAnswer(samples, pooling),
-				];
-			}),
+	({ questions }) =>
+		Effect.sync(() =>
+			Object.fromEntries(
+				Object.entries(questions).map(([id, question]) => {
+					const samples = heard.flatMap((answers) => {
+						const answer = answers.get(id);
+						return answer ? [answer] : [];
+					});
+					if (tally)
+						tally[samples.length] =
+							(tally[samples.length] ?? 0) + 1;
+					return [
+						id,
+						samples.length === 0
+							? standIn(question)
+							: poolAnswer(samples, pooling),
+					];
+				}),
+			),
 		);

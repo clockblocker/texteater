@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
 	locutionSettings,
@@ -17,10 +18,12 @@ const withLocution = { ...productionUnitSettings, locution: locutionSettings };
 /** The units' Segment groups and the requests' stages, with the Locution Choice on. */
 async function run(sentence: string, answers: Record<string, Answer>) {
 	const judge = fakeJudge(answers);
-	const units = await segmentGermanUnits(
-		{ segments: segmentsOf(sentence) },
-		judge.ask,
-		withLocution,
+	const units = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: segmentsOf(sentence) },
+			judge.ask,
+			withLocution,
+		),
 	);
 	return {
 		groups: units.map((unit) => unit.segments),
@@ -77,7 +80,9 @@ test("a merge needs both units fixed at the floor; a free unit keeps them apart"
 test("without the setting, or with no candidate, no locution request is sent", async () => {
 	const off = fakeJudge(idiomUnderFloor);
 	const { locution: _, ...without } = productionUnitSettings;
-	await segmentGermanUnits({ segments: segmentsOf(kauf) }, off.ask, without);
+	await Effect.runPromise(
+		segmentGermanUnits({ segments: segmentsOf(kauf) }, off.ask, without),
+	);
 	expect(off.stages()).not.toContain("locution");
 	const { judge } = await run(kauf, {});
 	expect(judge.stages()).not.toContain("locution");
@@ -141,9 +146,8 @@ test("Zum Beispiel, capitalized and fused: under the floors production splits it
 	expect(sentence.pieces.slice(0, 2).map((piece) => piece.fusedWord)).toEqual(
 		["Zum", "Zum"],
 	);
-	const production = await segmentGermanUnits(
-		{ segments },
-		fakeJudge(zumBeispielHeard).ask,
+	const production = await Effect.runPromise(
+		segmentGermanUnits({ segments }, fakeJudge(zumBeispielHeard).ask),
 	);
 	expect(production.map((unit) => unit.segments)).toEqual([
 		[0],
@@ -154,10 +158,15 @@ test("Zum Beispiel, capitalized and fused: under the floors production splits it
 		[11],
 	]);
 	// One expression link over the floors, and the fused halves follow it.
-	const linked = await segmentGermanUnits(
-		{ segments },
-		fakeJudge({ ...zumBeispielHeard, f_2: noul(0.6), e_2_3: noul(0.75) })
-			.ask,
+	const linked = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments },
+			fakeJudge({
+				...zumBeispielHeard,
+				f_2: noul(0.6),
+				e_2_3: noul(0.75),
+			}).ask,
+		),
 	);
 	expect(linked.map((unit) => unit.segments)).toContainEqual([0, 1, 3]);
 });
@@ -171,10 +180,12 @@ test("Zum Beispiel: the Locution Choice asks about the heard links and, both uni
 		lc_2_x_3_r: fixedSide,
 		r_1_2_3: picked("Locution/ADV"),
 	});
-	const units = await segmentGermanUnits(
-		{ segments: [...zumBeispiel] },
-		judge.ask,
-		withLocution,
+	const units = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: [...zumBeispiel] },
+			judge.ask,
+			withLocution,
+		),
 	);
 	const locution = judge.requests.find(({ stage }) => stage === "locution");
 	expect(JSON.stringify(locution?.questions)).toContain(
@@ -199,10 +210,12 @@ test("a fused word split between units is a candidate when the other unit holds 
 		lc_1_x_2_3_l: fixedSide,
 		lc_1_x_2_3_r: fixedSide,
 	});
-	const units = await segmentGermanUnits(
-		{ segments: [...segments] },
-		judge.ask,
-		withLocution,
+	const units = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: [...segments] },
+			judge.ask,
+			withLocution,
+		),
 	);
 	expect(units.map((unit) => unit.segments)).toEqual([
 		[0, 1, 3],
@@ -212,10 +225,12 @@ test("a fused word split between units is a candidate when the other unit holds 
 	]);
 	// Without a possibly fixed word beside it, the fused piece asks nothing.
 	const plain = fakeJudge({ s_article_2: picked("p3") });
-	await segmentGermanUnits(
-		{ segments: [...segments] },
-		plain.ask,
-		withLocution,
+	await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: [...segments] },
+			plain.ask,
+			withLocution,
+		),
 	);
 	expect(plain.stages()).not.toContain("locution");
 });
@@ -236,9 +251,8 @@ test("production asks the Locution Choice and merges at 0.6 (#851, X5)", async (
 		lc_2_x_6_l: fixedSide,
 		lc_2_x_6_r: picked("fixed", { fixed: 0.55, free: 0.45 }),
 	});
-	const units = await segmentGermanUnits(
-		{ segments: segmentsOf(kauf) },
-		judge.ask,
+	const units = await Effect.runPromise(
+		segmentGermanUnits({ segments: segmentsOf(kauf) }, judge.ask),
 	);
 	expect(judge.stages()).toContain("locution");
 	expect(units.map((unit) => unit.segments)).toEqual(await at(0.4));

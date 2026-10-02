@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
 	type CodeRule,
@@ -20,10 +21,12 @@ async function groups(
 ) {
 	const of = async (rules: readonly CodeRule[]) =>
 		(
-			await segmentGermanUnits({ segments }, fakeJudge(answers).ask, {
-				...productionUnitSettings,
-				rules,
-			})
+			await Effect.runPromise(
+				segmentGermanUnits({ segments }, fakeJudge(answers).ask, {
+					...productionUnitSettings,
+					rules,
+				}),
+			)
 		).map((unit) => unit.segments);
 	return { without: await of([]), with: await of([rule]) };
 }
@@ -211,10 +214,12 @@ test("was-fuer: final asks whether was … für is was für ein, and the judge's
 	expect(result.without).toContainEqual([8, 10]);
 	expect(result.with).toEqual([[0, 6, 8], [2], [4], [10]]);
 	const judge = fakeJudge(answers);
-	const units = await segmentGermanUnits({ segments }, judge.ask, {
-		...productionUnitSettings,
-		rules: ["was-fuer"],
-	});
+	const units = await Effect.runPromise(
+		segmentGermanUnits({ segments }, judge.ask, {
+			...productionUnitSettings,
+			rules: ["was-fuer"],
+		}),
+	);
 	const final = judge.requests.find(({ stage }) => stage === "final");
 	expect(Object.keys(final?.questions ?? {})).toContain("w4_1_4");
 	expect(units).toContainEqual({
@@ -223,10 +228,12 @@ test("was-fuer: final asks whether was … für is was für ein, and the judge's
 	});
 	// Without the rule, final asks nothing about was … für.
 	const plain = fakeJudge(answers);
-	await segmentGermanUnits({ segments }, plain.ask, {
-		...productionUnitSettings,
-		rules: [],
-	});
+	await Effect.runPromise(
+		segmentGermanUnits({ segments }, plain.ask, {
+			...productionUnitSettings,
+			rules: [],
+		}),
+	);
 	expect(
 		Object.keys(
 			plain.requests.find(({ stage }) => stage === "final")?.questions ??

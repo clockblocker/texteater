@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { Answer } from "../../../src/segment/ask.js";
 import {
 	authoredInventory,
@@ -58,7 +59,9 @@ test("satellites join their verb and fixed words make a Locution, the split arti
 		r_2_3_4: picked("Lexeme/VERB"),
 		r_5_6_7: picked("Locution/ADV"),
 	});
-	const units = await segmentGermanUnits({ segments: zumGlueck }, judge.ask);
+	const units = await Effect.runPromise(
+		segmentGermanUnits({ segments: zumGlueck }, judge.ask),
+	);
 	expect(units).toEqual([
 		{ segments: [0], route: route("Lexeme", "PRON") },
 		{ segments: [2, 4, 6], route: route("Lexeme", "VERB") },
@@ -77,7 +80,9 @@ test("satellites join their verb and fixed words make a Locution, the split arti
 test("a Sentence with nothing to click makes no call", async () => {
 	const judge = fakeJudge();
 	expect(
-		await segmentGermanUnits({ segments: segmentsOf("… !") }, judge.ask),
+		await Effect.runPromise(
+			segmentGermanUnits({ segments: segmentsOf("… !") }, judge.ask),
+		),
 	).toEqual([]);
 	expect(judge.requests).toEqual([]);
 });
@@ -96,15 +101,19 @@ test("the Saying assembly is a setting: production counts the maxim, the referen
 		y4_1_2_3_4: picked("maxim", { maxim: 0.75, whole: 0.1, none: 0.15 }),
 	};
 	expect(
-		await segmentGermanUnits({ segments: maxim }, fakeJudge(answers).ask),
+		await Effect.runPromise(
+			segmentGermanUnits({ segments: maxim }, fakeJudge(answers).ask),
+		),
 	).toContainEqual({
 		segments: [0, 2, 5, 7],
 		route: route("Saying", "Saying"),
 	});
-	const units = await segmentGermanUnits(
-		{ segments: maxim },
-		fakeJudge(answers).ask,
-		reference,
+	const units = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: maxim },
+			fakeJudge(answers).ask,
+			reference,
+		),
 	);
 	expect(units.map(({ segments }) => segments)).toEqual([[0], [2], [5], [7]]);
 });
@@ -122,17 +131,21 @@ test("a floor that builds a group no batch asked about asks route-extra, or leav
 	const production = fakeJudge(looselyFixed);
 	expect(
 		(
-			await segmentGermanUnits({ segments: tiefUndFest }, production.ask)
+			await Effect.runPromise(
+				segmentGermanUnits({ segments: tiefUndFest }, production.ask),
+			)
 		).map(({ segments }) => segments),
 	).toEqual([[0], [2], [4], [6], [8]]);
 	expect(production.stages()).not.toContain("route-extra");
 
 	const asking = fakeJudge(looselyFixed);
 	expect(
-		await segmentGermanUnits(
-			{ segments: tiefUndFest },
-			asking.ask,
-			reference,
+		await Effect.runPromise(
+			segmentGermanUnits(
+				{ segments: tiefUndFest },
+				asking.ask,
+				reference,
+			),
 		),
 	).toContainEqual({ segments: [4, 8], route: route("Locution", "ADV") });
 	expect(asking.stages().at(-1)).toBe("route-extra");
@@ -142,10 +155,12 @@ test("a floor that builds a group no batch asked about asks route-extra, or leav
 
 	const unasked = fakeJudge(looselyFixed);
 	expect(
-		await segmentGermanUnits({ segments: tiefUndFest }, unasked.ask, {
-			...reference,
-			unasked: "unresolved",
-		}),
+		await Effect.runPromise(
+			segmentGermanUnits({ segments: tiefUndFest }, unasked.ask, {
+				...reference,
+				unasked: "unresolved",
+			}),
+		),
 	).toContainEqual({ segments: [4, 8], route: "Unresolved" });
 	expect(unasked.stages()).not.toContain("route-extra");
 });
@@ -160,13 +175,17 @@ test("a borderline unit carries route variants only under a variant margin", asy
 	};
 	const tief = async (variantMargin?: number) =>
 		(
-			await segmentGermanUnits(
-				{ segments: tiefUndFest },
-				fakeJudge(answers).ask,
-				{
-					...productionUnitSettings,
-					...(variantMargin === undefined ? {} : { variantMargin }),
-				},
+			await Effect.runPromise(
+				segmentGermanUnits(
+					{ segments: tiefUndFest },
+					fakeJudge(answers).ask,
+					{
+						...productionUnitSettings,
+						...(variantMargin === undefined
+							? {}
+							: { variantMargin }),
+					},
+				),
 			)
 		).find(({ segments }) => segments[0] === 4);
 	expect(await tief()).toEqual({
@@ -192,10 +211,12 @@ test("route variants span only the tolerated Kind pairs and never sit on a fused
 		segment: number,
 	) =>
 		(
-			await segmentGermanUnits({ segments }, fakeJudge(answers).ask, {
-				...productionUnitSettings,
-				variantMargin: 0.2,
-			})
+			await Effect.runPromise(
+				segmentGermanUnits({ segments }, fakeJudge(answers).ask, {
+					...productionUnitSettings,
+					variantMargin: 0.2,
+				}),
+			)
 		).find(({ segments: [first] }) => first === segment)?.variants;
 	// Er0 _1 kam2 _3 zu4 _5 spät6 .7: PART|ADV is a tolerated pair.
 	expect(
@@ -231,9 +252,11 @@ test("closed-class identity routes a covered spelling by its use, and a one-use 
 		r_4: picked("Lexeme/ADV"),
 		cc_3: picked("modal"),
 	});
-	const units = await segmentGermanUnits(
-		{ segments: segmentsOf("Das ist eben nicht so.") },
-		judge.ask,
+	const units = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: segmentsOf("Das ist eben nicht so.") },
+			judge.ask,
+		),
 	);
 	expect(units).toContainEqual({
 		segments: [4],
@@ -256,10 +279,12 @@ test("the inventory is a setting: pinning the AUX Lemmas drops causative lassen'
 	expect(pinned.isAuxiliary("hat")).toBe(true);
 	const slots = async (inventory = authoredInventory) => {
 		const judge = fakeJudge();
-		await segmentGermanUnits(
-			{ segments: segmentsOf("Er ließ das Auto reparieren.") },
-			judge.ask,
-			{ ...productionUnitSettings, inventory },
+		await Effect.runPromise(
+			segmentGermanUnits(
+				{ segments: segmentsOf("Er ließ das Auto reparieren.") },
+				judge.ask,
+				{ ...productionUnitSettings, inventory },
+			),
 		);
 		return Object.keys(judge.requests[0]?.questions ?? {});
 	};

@@ -38,8 +38,15 @@
  * other three.
  */
 import { authoredRealizations, closedVerbForms } from "dumspec/inventories";
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
-import { type Answers, type Ask, askAny, choice } from "../ask.js";
+import {
+	type Answers,
+	type Ask,
+	type AskFailure,
+	askAny,
+	choice,
+} from "../ask.js";
 import type { AssembledEdge, Membership } from "./assembly.js";
 import { reflexiveForms } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
@@ -313,21 +320,21 @@ export type VerbAnswers = {
 };
 
 /** Asks the `verb` request about the flags of `families`, every family unless given. */
-export async function askVerbChoice(
+export const askVerbChoice = Effect.fnUntraced(function* (
 	nomination: Nomination,
 	ask: Ask,
 	families: readonly VerbFamily[] = verbFamilies,
-): Promise<VerbAnswers> {
+): Effect.fn.Return<VerbAnswers, AskFailure> {
 	const flags = flaggedVerbs(nomination).filter((flag) =>
 		families.includes(flag.family),
 	);
-	const answers = await askAny(ask, {
+	const answers = yield* askAny(ask, {
 		stage: "verb",
 		state: nomination.state,
 		questions: verbQuestions(nomination, flags),
 	});
 	return { flags, answers };
-}
+});
 
 type Action =
 	| { readonly join: readonly [number, number] }

@@ -3,12 +3,13 @@ import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 
 /**
- * The production code, the package entry and everything under
- * `src/segment/`, runs where a host has no file system (a Convex action, a
- * short-lived isolate): none of it may import `node:*`, read files or the
- * environment, or reach the evaluator or the lab, and it imports packages
- * only from the list here. Only the TypeSafe ask touches the network; the
- * segmenter's stages reach jev through their `ask` port.
+ * The production code, the package entry with the files beside it and
+ * everything under `src/segment/`, runs where a host has no file system (a
+ * Convex action, a short-lived isolate): none of it may import `node:*`,
+ * read files or the environment, or reach the evaluator or the lab, and it
+ * imports packages only from the list here. Only the TypeSafe ask touches
+ * the network; the segmenter's stages reach jev through their `ask` port,
+ * and never Luna.
  */
 const src = resolve(import.meta.dir, "../../src");
 const segment = join(src, "segment");
@@ -16,6 +17,12 @@ const allowedPackages = new Set([
 	// Reads no files (dumspec ADR 0025).
 	"dumspec/inventories",
 	"dumling/types",
+	"effect/Cause",
+	"effect/Data",
+	"effect/Effect",
+	"effect/Exit",
+	"effect/Result",
+	"effect/Semaphore",
 	"promptsmith/typesafe",
 ]);
 const typeOnlyPackages = new Set(["dumling/types", "promptsmith/typesafe"]);
@@ -29,7 +36,14 @@ const network = /\bfetch\(/u;
 const networkFiles = new Set(["segment/typesafe-ask.ts"]);
 
 const files = [
-	join(src, "index.ts"),
+	...readdirSync(src, { withFileTypes: true })
+		.filter(
+			(entry) =>
+				entry.isFile() &&
+				entry.name.endsWith(".ts") &&
+				entry.name !== "development.ts",
+		)
+		.map((entry) => join(src, entry.name)),
 	...readdirSync(segment, { recursive: true, withFileTypes: true })
 		.filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
 		.map((entry) => join(entry.parentPath, entry.name)),
@@ -67,4 +81,14 @@ test("the production code imports nothing that needs a file system", () => {
 			problems.push(`${name} uses the network`);
 	}
 	expect(problems).toEqual([]);
+});
+
+test("segmentation never receives Luna", () => {
+	const reaching = files
+		.filter((file) => file.startsWith(`${segment}/`))
+		.filter((file) =>
+			/\bluna\.js"|\bLunaAsk\b/u.test(readFileSync(file, "utf8")),
+		)
+		.map((file) => relative(src, file));
+	expect(reaching).toEqual([]);
 });

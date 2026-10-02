@@ -14,7 +14,8 @@ _Avoid_: Piece, token, character offset as identity
 
 **Segmented Sentence**:
 One Sentence as intake leaves it: its Stitched Text, its Segments and its
-units from `segment.inUnits`.
+units from `segment.inUnits`. A Sentence whose segmentation failed is
+marked failed and has no units.
 _Avoid_: Sentence DTO
 
 **Segmented Text**:
@@ -36,8 +37,9 @@ The code that splits a Text into paragraphs and Sentences before
 The segmenter that routes clicks. It takes a text already split into
 Sentences and groups each Sentence's Segments into biggest units, each with
 its route or `Unresolved`. Its jev-based judges see one Sentence at a time.
-When they fail for a Sentence, each of its ResolvableText Segments is its
-own `Unresolved` unit. See [Dumgen ADR 0007] and [Dumgen ADR 0008].
+When their calls fail for a Sentence, that Sentence comes back marked
+failed, with its Segments and no units, and the others are kept. See
+[Dumgen ADR 0007] and [Dumgen ADR 0008].
 _Avoid_: Segment.Text, lattice, Sentence Analysis, for the current design
 
 **Membership**:

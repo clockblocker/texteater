@@ -5,15 +5,16 @@ German `segment.inUnits` ([#701](https://github.com/clockblocker/texteater/issue
 a Sentence's Segments go in, and its biggest units come back, each with its
 route or `Unresolved`. This package is being rebuilt from scratch. Its
 public entry exports `splitText`, which splits a Text into paragraphs and
-Sentences in code, and `createSegment({ ask }).inUnits`, which runs the
-German segmenter's stages under `src/segment/` on each Sentence: the
-Segment stage cuts it into Segments, and the unit stage groups and routes
-them. The stages reach jev only through the host's `ask` and read no files;
-`createTypeSafeAsk` is the production `ask`, a `fetch` to the TypeSafe API
-with the host's key. Beside them are the `segment.inUnits` jev lab that
-configures and measures them, the spec-corpus evaluator that scores them
-against dumspec, and the evaluation CLI.
-The legacy pipeline, with `createDumgen`, moved to
+Sentences in code, and `createDumgen({ jev }).segment.inUnits`, an Effect
+4 Effect that runs the German segmenter's stages under `src/segment/` on
+each Sentence: the Segment stage cuts it into Segments, and the unit stage
+groups and routes them. The stages reach jev only through the host's
+`JevAsk` and read no files; `createTypeSafeAsk` is the production `JevAsk`,
+a `fetch` to the TypeSafe API with the host's key. Beside them are the
+`segment.inUnits` jev lab that configures and measures them, the
+spec-corpus evaluator that scores them against dumspec, and the evaluation
+CLI.
+The legacy pipeline, with its own `createDumgen`, moved to
 [`legacy-dumgen`](../legacy-dumgen/README.md), where it stays frozen.
 
 ```sh

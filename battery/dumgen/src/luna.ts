@@ -1,0 +1,46 @@
+/**
+ * Luna, the generation model, as Dumgen reaches it: one Responses request
+ * of a system prompt and an input, answered with its output. The host
+ * supplies the transport; promptsmith's `createOpenAIExecutor` fits it once
+ * the call's signal is passed on, and it sends each request once.
+ *
+ * Only the operations that write reach Luna. Segmentation never receives
+ * this port (no Luna in segmentation): nothing under `src/segment/` may
+ * import it.
+ */
+
+/**
+ * One generation request: the model and its settings, the prompt and the
+ * input, and either free text or JSON under a schema back, as promptsmith's
+ * executors take it.
+ */
+export type LunaRequest = (
+	| { readonly outputFormat: "text"; readonly outputSchema?: never }
+	| {
+			readonly outputFormat?: "json";
+			readonly outputSchema: Readonly<Record<string, unknown>>;
+	  }
+) & {
+	readonly systemPrompt: string;
+	readonly input: unknown;
+	readonly cachePrompt?: boolean;
+	readonly configuration: {
+		readonly model: string;
+		readonly settings: Readonly<Record<string, unknown>>;
+	};
+};
+
+/** What Luna answered: its output, and whatever the transport reports beside it. */
+export type LunaResponse = {
+	readonly output: unknown;
+	readonly metadata?: unknown;
+};
+
+/**
+ * Sends one request to Luna. Like `JevAsk`, it must settle promptly once
+ * `signal` aborts, and anything it throws is a `ProviderFailure`.
+ */
+export type LunaAsk = (
+	request: LunaRequest,
+	context: { readonly stage: string; readonly signal: AbortSignal },
+) => Promise<LunaResponse>;

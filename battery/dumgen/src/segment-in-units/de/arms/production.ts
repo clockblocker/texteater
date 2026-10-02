@@ -41,6 +41,7 @@
  *   `government` request over all five families, asked over production's
  *   membership. Groups no batch asked about route as `--opt unasked` says.
  */
+import * as Effect from "effect/Effect";
 import { stableJson } from "promptsmith";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
 import type { Ask } from "../../../segment/ask.js";
@@ -364,7 +365,9 @@ async function ruledMembership(
 				read.nomination,
 				base,
 				ruled,
-				await askLocutionChoice(read.nomination, ruled, ask, rules),
+				await Effect.runPromise(
+					askLocutionChoice(read.nomination, ruled, ask, rules),
+				),
 				rules,
 				settings.locution,
 			)
@@ -383,10 +386,8 @@ async function productionMembership(
 		? withVerbChoice(
 				read.nomination,
 				located,
-				await askVerbChoice(
-					read.nomination,
-					ask,
-					settings.verb.families,
+				await Effect.runPromise(
+					askVerbChoice(read.nomination, ask, settings.verb.families),
 				),
 				rules,
 				settings.verb,
@@ -396,12 +397,14 @@ async function productionMembership(
 		? withGovernmentChoice(
 				read.nomination,
 				verbed,
-				await askGovernmentChoice(
-					read.nomination,
-					verbed,
-					ask,
-					rules,
-					settings.government.families,
+				await Effect.runPromise(
+					askGovernmentChoice(
+						read.nomination,
+						verbed,
+						ask,
+						rules,
+						settings.government.families,
+					),
 				),
 				rules,
 				settings.government,
@@ -435,11 +438,13 @@ async function routedUnits(
 ) {
 	const extra =
 		unasked === "ask"
-			? await askUnaskedRoutes(
-					read.nomination,
-					read.answers,
-					membership.partition,
-					ask,
+			? await Effect.runPromise(
+					askUnaskedRoutes(
+						read.nomination,
+						read.answers,
+						membership.partition,
+						ask,
+					),
 				)
 			: undefined;
 	return routeMembership(
@@ -468,12 +473,16 @@ async function outputsOf(
 		const known = reads.get(wasFuer);
 		if (known) return known;
 		const read = (async () => {
-			const nomination = await nominate(input, ask, settings.inventory, {
-				wasFuer,
-			});
+			const nomination = await Effect.runPromise(
+				nominate(input, ask, settings.inventory, {
+					wasFuer,
+				}),
+			);
 			return {
 				nomination,
-				answers: await askRouteBatches(nomination, ask),
+				answers: await Effect.runPromise(
+					askRouteBatches(nomination, ask),
+				),
 			};
 		})();
 		reads.set(wasFuer, read);
@@ -522,7 +531,9 @@ async function outputsOf(
 		const key = [...rules].sort().join(",");
 		const asked =
 			located.get(key) ??
-			askLocutionChoice(read.nomination, ruled, ask, rules);
+			Effect.runPromise(
+				askLocutionChoice(read.nomination, ruled, ask, rules),
+			);
 		located.set(key, asked);
 		const membership = withLocutionChoice(
 			read.nomination,
@@ -534,11 +545,13 @@ async function outputsOf(
 		);
 		const extra =
 			levers.unasked === "ask"
-				? await askUnaskedRoutes(
-						read.nomination,
-						read.answers,
-						membership.partition,
-						ask,
+				? await Effect.runPromise(
+						askUnaskedRoutes(
+							read.nomination,
+							read.answers,
+							membership.partition,
+							ask,
+						),
 					)
 				: undefined;
 		outputs[`${prefix}production+x5@${variant.name}`] = {
@@ -558,7 +571,9 @@ async function outputsOf(
 		const read = await readOf(rules.includes("was-fuer"));
 		const located = await ruledMembership(read, rules, ask);
 		// One `verb` request over every family, shared by every variant.
-		const asked: VerbAnswers = await askVerbChoice(read.nomination, ask);
+		const asked: VerbAnswers = await Effect.runPromise(
+			askVerbChoice(read.nomination, ask),
+		);
 		for (const variant of levers.verb)
 			outputs[`${prefix}production+verb@${variant.name}`] = {
 				units: (
@@ -583,11 +598,8 @@ async function outputsOf(
 		const read = await readOf(rules.includes("was-fuer"));
 		const membership = await productionMembership(read, rules, ask);
 		// One `government` request over every family, shared by every variant.
-		const asked = await askGovernmentChoice(
-			read.nomination,
-			membership,
-			ask,
-			rules,
+		const asked = await Effect.runPromise(
+			askGovernmentChoice(read.nomination, membership, ask, rules),
 		);
 		for (const variant of levers.government)
 			outputs[`${prefix}production+gov@${variant.name}`] = {
@@ -614,11 +626,13 @@ async function outputsOf(
 			const under = membershipUnder(nomination, assembly);
 			const more =
 				levers.unasked === "ask"
-					? await askUnaskedRoutes(
-							nomination,
-							answers,
-							under.partition,
-							ask,
+					? await Effect.runPromise(
+							askUnaskedRoutes(
+								nomination,
+								answers,
+								under.partition,
+								ask,
+							),
 						)
 					: undefined;
 			outputs[`${prefix}${name}`] = {

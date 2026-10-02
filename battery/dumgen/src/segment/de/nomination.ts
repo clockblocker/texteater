@@ -15,10 +15,12 @@
  * These are candidates v3's requests and candidates4's `final` request,
  * worded byte for byte as the lab sent them, so cached answers replay.
  */
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import {
 	type Answers,
 	type Ask,
+	type AskFailure,
 	askAny,
 	choice,
 	choiceOf,
@@ -303,18 +305,18 @@ function finalQuestions(
 }
 
 /** Asks the three nomination requests for one Sentence. */
-export async function nominate(
+export const nominate = Effect.fnUntraced(function* (
 	input: { readonly segments: readonly Segment[] },
 	ask: Ask,
 	inventory: GermanInventory,
 	options: FinalOptions = {},
-): Promise<Nomination> {
+): Effect.fn.Return<Nomination, AskFailure> {
 	const sentence = sentenceOf(input);
 	const { state, ref } = judgeState(sentence);
 	const slots = slotsOf(sentence, inventory);
 	const pairs = pairCandidatesOf(sentence, inventory);
 	const spans = sayingSpans(sentence);
-	const first = await askAny(ask, {
+	const first = yield* askAny(ask, {
 		stage: "candidates",
 		state,
 		questions: candidateQuestions(sentence, ref, slots, pairs, spans),
@@ -336,7 +338,7 @@ export async function nominate(
 			expressionQuestions[expressionId(a.id, b.id)] = noul(
 				`In \`sentence\`, are ${ref(a)} and ${ref(b)} fixed words of the same one established multiword expression (idiom, collocation, fixed adverbial, routine formula, proverb or quotation)?`,
 			);
-	const second = await askAny(ask, {
+	const second = yield* askAny(ask, {
 		stage: "expressions",
 		state,
 		questions: expressionQuestions,
@@ -348,7 +350,7 @@ export async function nominate(
 			probability: noulOf(second, expressionId(a.id, b.id)),
 		})),
 	);
-	const final = await askAny(ask, {
+	const final = yield* askAny(ask, {
 		stage: "final",
 		state,
 		questions: finalQuestions(sentence, ref, slots, options),
@@ -369,7 +371,7 @@ export async function nominate(
 		fixed,
 		accepted: matchedPairs(pairs, first, 0.5),
 	};
-}
+});
 
 /** The v3 Saying spans whose Noul clears the floor, most probable first, disjoint. */
 export function selectedSayings(

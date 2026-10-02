@@ -20,6 +20,7 @@
  * (`--opt expression=0.6`), and a policy is named after the floors it
  * moves from the run's.
  */
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
 import { type Answer, choice, choiceOf, noulOf } from "../../../segment/ask.js";
@@ -469,10 +470,8 @@ export function referenceStagesUnder(
 ): Stages<Nomination, Membership> {
 	return {
 		async nominate(input, context) {
-			const nomination = await nominate(
-				input,
-				askOf(context),
-				referenceInventory,
+			const nomination = await Effect.runPromise(
+				nominate(input, askOf(context), referenceInventory),
 			);
 			const connections = referenceConnections(nomination, floors);
 			return {
@@ -501,14 +500,18 @@ export function referenceStagesUnder(
 		async route(nomination, membership, context): Promise<ReferenceRouted> {
 			const ask = askOf(context);
 			const evidence = nomination.evidence;
-			const answers = await askRouteBatches(evidence, ask);
+			const answers = await Effect.runPromise(
+				askRouteBatches(evidence, ask),
+			);
 			const extra =
 				unasked === "ask"
-					? await askUnaskedRoutes(
-							evidence,
-							answers,
-							membership.partition,
-							ask,
+					? await Effect.runPromise(
+							askUnaskedRoutes(
+								evidence,
+								answers,
+								membership.partition,
+								ask,
+							),
 						)
 					: undefined;
 			const routed = routeMembership(
@@ -664,15 +667,17 @@ export const referenceArm: Arm = {
 			};
 		if (pickMargin !== undefined) {
 			const withVariants = { units: routed.units(pickMargin) };
-			const picks = await askOf(context)({
-				stage: "pick",
-				state: evidence.state,
-				questions: pickQuestions(
-					evidence,
-					routed.partition,
-					withVariants,
-				),
-			});
+			const picks = await Effect.runPromise(
+				askOf(context)({
+					stage: "pick",
+					state: evidence.state,
+					questions: pickQuestions(
+						evidence,
+						routed.partition,
+						withVariants,
+					),
+				}),
+			);
 			outputs[`${policy}+variants@${pickMargin}`] = withVariants;
 			outputs[`${policy}+variants@${pickMargin}+pick`] = pickedOutput(
 				routed.partition,

@@ -1,5 +1,11 @@
+import * as Effect from "effect/Effect";
 import type { Question } from "promptsmith/typesafe";
-import type { Answer, Ask, AskRequest } from "../../../src/segment/ask.js";
+import type {
+	Answer,
+	Answers,
+	Ask,
+	AskRequest,
+} from "../../../src/segment/ask.js";
 import { routeOf } from "../../../src/segment/de/routes.js";
 
 export const picked = (
@@ -8,13 +14,19 @@ export const picked = (
 ): Answer => ({ type: "choice", choice, confidence: 1, probabilities });
 export const noul = (value: number): Answer => ({ type: "noul", noul: value });
 
+/** A stage's `ask` from a test's function of each request; a throw is a Defect. */
+export const asked =
+	(answer: (request: AskRequest) => Answers | Promise<Answers>): Ask =>
+	(request) =>
+		Effect.promise(async () => answer(request));
+
 /**
  * A judge that answers by question id from `answers` and otherwise says no:
  * a Noul 0.1, a Choice its last option (`none`, `Other`, …).
  */
 export function fakeJudge(answers: Readonly<Record<string, Answer>> = {}) {
 	const requests: AskRequest[] = [];
-	const ask: Ask = async (request) => {
+	const ask = asked((request) => {
 		requests.push(request);
 		return Object.fromEntries(
 			Object.entries(request.questions).map(
@@ -29,7 +41,7 @@ export function fakeJudge(answers: Readonly<Record<string, Answer>> = {}) {
 				},
 			),
 		);
-	};
+	});
 	return { ask, stages: () => requests.map(({ stage }) => stage), requests };
 }
 

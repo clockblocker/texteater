@@ -2,13 +2,15 @@
  * The port through which the segmenters reach jev (TypeSafe System One). A
  * stage hands one request, its judge state and its questions, to an injected
  * `ask` and reads the answers; it never picks a model, counts tokens or
- * caches. The host supplies all of that: the lab wraps `ask` in its disk
- * cache, and a test passes a fake.
+ * caches. `segment.inUnits` backs it with Dumgen's call adapter, the lab
+ * with its disk cache, and a test with a fake.
  *
  * Nothing here reads files or imports `node:*`, so a host in a short-lived
  * isolate can run the segmenters.
  */
+import * as Effect from "effect/Effect";
 import type { EntryType, Question, Questions } from "promptsmith/typesafe";
+import type { InvalidModelOutput, ProviderFailure } from "../errors.js";
 
 export type Answer =
 	| { readonly type: "noul"; readonly noul: number }
@@ -38,14 +40,20 @@ export type AskRequest = {
 	readonly questions: Questions;
 };
 
-/** Answers every question of one request against its state. */
-export type Ask = (request: AskRequest) => Promise<Answers>;
+/** Why a request brought no answers: none came back, or unusable ones. */
+export type AskFailure = ProviderFailure | InvalidModelOutput;
+
+/** Answers every question of one request against its state, or fails. */
+export type Ask = (request: AskRequest) => Effect.Effect<Answers, AskFailure>;
 
 /** Asks only when the request has a question; an empty request answers nothing. */
-export const askAny = (ask: Ask, request: AskRequest): Promise<Answers> =>
+export const askAny = (
+	ask: Ask,
+	request: AskRequest,
+): Effect.Effect<Answers, AskFailure> =>
 	Object.keys(request.questions).length > 0
 		? ask(request)
-		: Promise.resolve({});
+		: Effect.succeed({});
 
 export const noul = (
 	instructions: EntryType,
@@ -61,12 +69,18 @@ export const choice = (
 	criteria: Record<string, EntryType>,
 ): Question => ({ type: "choice", instructions, criteria });
 
+/**
+ * The Noul answer to `id`. Dumgen's call adapter checks every answer
+ * against its question, so a missing one here means a stage read a
+ * question it never asked: a bug.
+ */
 export function noulOf(answers: Answers, id: string): number {
 	const answer = answers[id];
 	if (answer?.type !== "noul") throw Error(`No Noul answer ${id}`);
 	return answer.noul;
 }
 
+/** The Choice answer to `id`; like `noulOf`, a missing one is a bug. */
 export function choiceOf(
 	answers: Answers,
 	id: string,

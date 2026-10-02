@@ -31,8 +31,15 @@
  * (de/bleiben-with-an-infinitive), which the judge never accepted (cfd482be).
  */
 import { closedVerbForms } from "dumspec/inventories";
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
-import { type Answers, type Ask, askAny, choice } from "../ask.js";
+import {
+	type Answers,
+	type Ask,
+	type AskFailure,
+	askAny,
+	choice,
+} from "../ask.js";
 import {
 	type AssembledEdge,
 	absorbedEdges,
@@ -258,21 +265,21 @@ export type LocutionAnswers = {
 };
 
 /** Asks the `locution` request over a membership the code rules have applied to. */
-export async function askLocutionChoice(
+export const askLocutionChoice = Effect.fnUntraced(function* (
 	nomination: Nomination,
 	ruled: Membership,
 	ask: Ask,
 	rules: readonly CodeRule[],
-): Promise<LocutionAnswers> {
+): Effect.fn.Return<LocutionAnswers, AskFailure> {
 	const bound = boundPieces(nomination, ruled, rules);
 	const merges = mergeCandidates(nomination, ruled, bound);
-	const answers = await askAny(ask, {
+	const answers = yield* askAny(ask, {
 		stage: "locution",
 		state: nomination.state,
 		questions: locutionQuestions(nomination, merges),
 	});
 	return { merges, answers };
-}
+});
 
 /** The links the answers accept under `settings`, each joining two pieces. */
 export function acceptedMerges(

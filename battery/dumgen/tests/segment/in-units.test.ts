@@ -1,7 +1,9 @@
 import { expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import type { Question } from "promptsmith/typesafe";
+import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
+import type { OperationTrace } from "../../src/operation-trace.js";
 import type { Answer, Answers } from "../../src/segment/ask.js";
-import { createSegment, type SegmentCall } from "../../src/segment/in-units.js";
 import {
 	type JevAsk,
 	type JevRequest,
@@ -9,7 +11,7 @@ import {
 } from "../../src/segment/jev.js";
 import type {
 	Route,
-	SegmentedSentence,
+	SegmentedText,
 	Unit,
 } from "../../src/segment/segmented-sentence.js";
 import { splitText } from "../../src/segment/split-text.js";
@@ -40,7 +42,8 @@ type Sent = JevRequest & { readonly stage: string };
 /**
  * A jev that answers by question id from `answers` and otherwise says no:
  * a Noul 0.1, a Choice its last option (`none`, `Other`, …). `fail` makes a
- * stage's requests throw.
+ * stage's requests throw, and `retype` answers a question with the other
+ * type.
  */
 function fakeJev(
 	options: {
@@ -48,6 +51,7 @@ function fakeJev(
 		readonly fail?: (stage: string, request: JevRequest) => boolean;
 		readonly model?: string;
 		readonly drop?: (id: string) => boolean;
+		readonly retype?: (id: string) => boolean;
 	} = {},
 ) {
 	const sent: Sent[] = [];
@@ -68,19 +72,16 @@ function fakeJev(
 			if (options.drop?.(id)) continue;
 			const known = options.answers?.[id];
 			if (known) answers[id] = known;
-			else if (question.type === "noul")
+			else if (
+				(question.type === "noul") !==
+				(options.retype?.(id) ?? false)
+			)
 				answers[id] = { type: "noul", noul: 0.1 };
 			else {
 				const keys = Object.keys(
 					question.type === "choice" ? question.criteria : {},
 				);
-				const choice = keys.at(-1) ?? "";
-				answers[id] = {
-					type: "choice",
-					choice,
-					confidence: 1,
-					probabilities: { [choice]: 1 },
-				};
+				answers[id] = picked(keys.at(-1) ?? "");
 			}
 		}
 		return {
@@ -102,16 +103,20 @@ const picked = (choice: string): Answer => ({
 	probabilities: { [choice]: 1 },
 });
 
-const resolvable = (sentence: SegmentedSentence) =>
-	sentence.segments.flatMap((segment, index) =>
-		segment.kind === "ResolvableText" ? [index] : [],
+/** Runs `segment.inUnits` once and keeps the traces it reported. */
+async function inUnits(
+	options: DumgenOptions,
+	input: Parameters<ReturnType<typeof createDumgen>["segment"]["inUnits"]>[0],
+): Promise<{ text: SegmentedText; traces: OperationTrace[] }> {
+	const traces: OperationTrace[] = [];
+	const text = await Effect.runPromise(
+		createDumgen({
+			...options,
+			onOperation: (trace) => traces.push(trace),
+		}).segment.inUnits(input),
 	);
-
-const allUnresolved = (sentence: SegmentedSentence): Unit[] =>
-	resolvable(sentence).map((index) => ({
-		segments: [index],
-		route: "Unresolved",
-	}));
+	return { text, traces };
+}
 
 test("inUnits segments each Sentence of each paragraph and routes its units", async () => {
 	const jev = fakeJev({
@@ -121,14 +126,10 @@ test("inUnits segments each Sentence of each paragraph and routes its units", as
 			r_2_3: picked("Lexeme/VERB"),
 		},
 	});
-	const calls: SegmentCall[] = [];
-	const text = await createSegment({
-		ask: jev.ask,
-		onCall: (call) => calls.push(call),
-	}).inUnits({
-		language: "de",
-		...splitText("Er  gibt auf.\n\nJa!"),
-	});
+	const { text, traces } = await inUnits(
+		{ jev: jev.ask },
+		{ language: "de", ...splitText("Er  gibt auf.\n\nJa!") },
+	);
 	expect(text.language).toBe("de");
 	const [first, second] = text.paragraphs;
 	const sentence = first?.sentences[0];
@@ -147,38 +148,47 @@ test("inUnits segments each Sentence of each paragraph and routes its units", as
 			route: { language: "de", family: "Lexeme", kind: "VERB" },
 		},
 	]);
-	expect(sentence).not.toHaveProperty("failure");
+	expect(sentence).not.toHaveProperty("failed");
 	expect(second?.sentences.map(({ text }) => text)).toEqual(["Ja!"]);
-	// Every request names the pinned model, and the host hears of each one.
+	// Every request names the pinned model.
 	expect(new Set(jev.sent.map(({ model }) => model))).toEqual(
 		new Set([pinnedJevModel]),
 	);
-	expect(calls).toHaveLength(jev.sent.length);
-	expect(calls.find(({ stage }) => stage === "candidates")).toMatchObject({
-		paragraph: 0,
-		sentence: 0,
-		model: pinnedJevModel,
-		outputTokens: 1,
-	});
-	expect(calls.every(({ error }) => error === undefined)).toBe(true);
+	// The host hears of the operation once, with every call and outcome.
+	expect(traces).toHaveLength(1);
+	const [trace] = traces;
+	expect(trace?.operation).toBe("segment.inUnits");
+	expect(trace?.calls).toHaveLength(jev.sent.length);
+	expect(
+		trace?.calls.find(({ stage }) => stage === "candidates"),
+	).toMatchObject({ sentence: 0, executor: "jev", outputTokens: 1 });
+	expect(trace?.calls.every(({ failure }) => failure === undefined)).toBe(
+		true,
+	);
+	expect(trace?.calls.every(({ payload }) => payload === undefined)).toBe(
+		true,
+	);
+	expect(
+		[...(trace?.sentences ?? [])].sort((a, b) => a.sentence - b.sentence),
+	).toEqual([
+		{ sentence: 0, outcome: "Segmented" },
+		{ sentence: 1, outcome: "Segmented" },
+	]);
+	expect(trace?.waits).toEqual([]);
 });
 
-test("a request over 300 questions goes out in chunks of 300, in order, and their answers merge", async () => {
+test("a request over 300 questions goes out in chunks of 300, in order, its answers merged, under the request budget", async () => {
 	const words = Array.from({ length: 160 }, (_, index) => `wort${index}`);
 	const jev = fakeJev();
-	const calls: SegmentCall[] = [];
-	const [sentence] =
-		(
-			await createSegment({
-				ask: jev.ask,
-				onCall: (call) => calls.push(call),
-				concurrency: 2,
-			}).inUnits({
-				language: "de",
-				paragraphs: [{ sentences: [`${words.join(" ")}.`] }],
-			})
-		).paragraphs[0]?.sentences ?? [];
-	expect(sentence?.failure).toBeUndefined();
+	const { text, traces } = await inUnits(
+		{ jev: jev.ask, requestBudget: 2 },
+		{
+			language: "de",
+			paragraphs: [{ sentences: [`${words.join(" ")}.`] }],
+		},
+	);
+	const [sentence] = text.paragraphs[0]?.sentences ?? [];
+	expect(sentence?.failed).toBeUndefined();
 	expect(sentence?.units).toHaveLength(160);
 	const route = jev.sent.filter(({ stage }) => stage === "route");
 	expect(route.map(({ questions }) => Object.keys(questions).length)).toEqual(
@@ -192,117 +202,257 @@ test("a request over 300 questions goes out in chunks of 300, in order, and thei
 	).toBe(true);
 	expect(jev.mostInFlight()).toBeLessThanOrEqual(2);
 	expect(
-		calls
+		traces[0]?.calls
 			.filter(({ stage }) => stage === "route")
-			.map(({ questions, inputTokens }) => [questions, inputTokens]),
-	).toEqual([
-		[300, 3000],
-		[20, 200],
-	]);
+			.map(({ inputTokens }) => inputTokens),
+	).toEqual([3000, 200]);
 });
 
-test("a Sentence whose jev request fails falls back to one Unresolved unit per ResolvableText, and the Text goes on", async () => {
+test("one request budget bounds every Sentence's calls together, and each wait is recorded", async () => {
+	const jev = fakeJev();
+	const { traces } = await inUnits(
+		{ jev: jev.ask, requestBudget: 1 },
+		{
+			language: "de",
+			paragraphs: [
+				{ sentences: ["Der Hund bellt.", "Die Katze schläft."] },
+				{ sentences: ["Er kam."] },
+			],
+		},
+	);
+	expect(jev.mostInFlight()).toBe(1);
+	const [trace] = traces;
+	if (!trace) throw Error("A trace expected");
+	// Three Sentences start together, so all but the first call queue at once.
+	expect(trace.waits.length).toBeGreaterThan(0);
+	for (const wait of trace.waits) {
+		expect(trace.calls[wait.call]).toBeDefined();
+		expect(wait.waitMs).toBeGreaterThanOrEqual(0);
+	}
+	expect(new Set(trace.calls.map(({ sentence }) => sentence))).toEqual(
+		new Set([0, 1, 2]),
+	);
+});
+
+test("a Sentence whose jev request fails is marked failed with no units, its siblings are kept, and only the trace says why", async () => {
 	const jev = fakeJev({
 		fail: (stage, request) =>
 			stage === "route" && JSON.stringify(request.state).includes("Hund"),
 	});
-	const calls: SegmentCall[] = [];
-	const text = await createSegment({
-		ask: jev.ask,
-		onCall: (call) => calls.push(call),
-	}).inUnits({
-		language: "de",
-		paragraphs: [{ sentences: ["Der Hund bellt.", "Die Katze schläft."] }],
-	});
+	const { text, traces } = await inUnits(
+		{ jev: jev.ask },
+		{
+			language: "de",
+			paragraphs: [
+				{ sentences: ["Der Hund bellt.", "Die Katze schläft."] },
+			],
+		},
+	);
 	const [failed, fine] = text.paragraphs[0]?.sentences ?? [];
 	if (!failed || !fine) throw Error("Two Sentences expected");
-	expect(failed.failure).toBe("route: jev is down");
-	expect(failed.units).toEqual(allUnresolved(failed));
-	expect(failed.units).toHaveLength(3);
-	expect(fine.failure).toBeUndefined();
+	expect(failed).toEqual({
+		text: "Der Hund bellt.",
+		segments: [
+			{ kind: "ResolvableText", text: "Der" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "Hund" },
+			{ kind: "Whitespace", text: " " },
+			{ kind: "ResolvableText", text: "bellt" },
+			{ kind: "Punctuation", text: "." },
+		],
+		units: [],
+		failed: true,
+	});
+	expect(fine.failed).toBeUndefined();
 	expect(fine.units.some(({ route }) => route !== "Unresolved")).toBe(true);
-	expect(calls.filter(({ error }) => error !== undefined)).toEqual([
-		expect.objectContaining({
-			sentence: 0,
-			stage: "route",
-			inputTokens: 0,
-			error: "jev is down",
-		}),
-	]);
+	const [trace] = traces;
+	expect(trace?.sentences).toContainEqual({
+		sentence: 0,
+		outcome: "Failed",
+		failure: { tag: "ProviderFailure", message: "jev is down" },
+	});
+	expect(trace?.sentences).toContainEqual({
+		sentence: 1,
+		outcome: "Segmented",
+	});
+	expect(trace?.calls.filter(({ failure }) => failure !== undefined)).toEqual(
+		[
+			expect.objectContaining({
+				sentence: 0,
+				stage: "route",
+				inputTokens: 0,
+				failure: { tag: "ProviderFailure", message: "jev is down" },
+			}),
+		],
+	);
+	// The failed request was sent once: nothing is retried.
+	expect(
+		jev.sent.filter(
+			({ stage, state }) =>
+				stage === "route" && JSON.stringify(state).includes("Hund"),
+		),
+	).toHaveLength(1);
 });
 
 test("a failed Segment stage keeps each written word whole", async () => {
 	const jev = fakeJev({ fail: (stage) => stage === "segments" });
-	const [sentence] =
-		(
-			await createSegment({ ask: jev.ask }).inUnits({
-				language: "de",
-				paragraphs: [{ sentences: ["Er ist im  Haus."] }],
-			})
-		).paragraphs[0]?.sentences ?? [];
+	const { text } = await inUnits(
+		{ jev: jev.ask },
+		{ language: "de", paragraphs: [{ sentences: ["Er ist im  Haus."] }] },
+	);
+	const [sentence] = text.paragraphs[0]?.sentences ?? [];
 	if (!sentence) throw Error("A Sentence expected");
-	expect(sentence.failure).toBe("segments: jev is down");
+	expect(sentence.failed).toBe(true);
 	expect(sentence.text).toBe("Er ist im Haus.");
 	expect(sentence.segments).toContainEqual({
 		kind: "ResolvableText",
 		text: "im",
 	});
-	expect(sentence.units).toEqual(allUnresolved(sentence));
+	expect(sentence.units).toEqual([]);
 	expect(jev.sent.map(({ stage }) => stage)).toEqual(["segments"]);
 });
 
-test("an answer from an unpinned model, or one missing an answer, fails its Sentence and still reports its tokens", async () => {
-	const calls: SegmentCall[] = [];
-	const other = await createSegment({
-		ask: fakeJev({ model: "jev-9.9.9" }).ask,
-		onCall: (call) => calls.push(call),
-	}).inUnits({ language: "de", paragraphs: [{ sentences: ["Er kam."] }] });
-	expect(other.paragraphs[0]?.sentences[0]?.failure).toBe(
-		`candidates: jev answered as jev-9.9.9, not the pinned ${pinnedJevModel}`,
+test("within a Sentence, a failed chunk interrupts its sibling chunks", async () => {
+	const words = Array.from({ length: 160 }, (_, index) => `wort${index}`);
+	const aborted: string[] = [];
+	const settled: string[] = [];
+	const jev = fakeJev();
+	const ask: JevAsk = (request, context) => {
+		if (context.stage !== "route") return jev.ask(request, context);
+		const first = "r_1" in request.questions;
+		if (first) return Promise.reject(Error("jev is down"));
+		return new Promise((_, reject) =>
+			context.signal.addEventListener("abort", () => {
+				aborted.push(context.stage);
+				setTimeout(() => {
+					settled.push(context.stage);
+					reject(Error("aborted"));
+				}, 5);
+			}),
+		);
+	};
+	const { text, traces } = await inUnits(
+		{ jev: ask },
+		{
+			language: "de",
+			paragraphs: [{ sentences: [`${words.join(" ")}.`] }],
+		},
 	);
-	expect(calls[0]).toMatchObject({ model: "jev-9.9.9", outputTokens: 1 });
-	expect(calls[0]?.inputTokens).toBeGreaterThan(0);
-
-	const missing = await createSegment({
-		ask: fakeJev({ drop: (id) => id.startsWith("r_") }).ask,
-	}).inUnits({ language: "de", paragraphs: [{ sentences: ["Er kam."] }] });
-	expect(missing.paragraphs[0]?.sentences[0]?.failure).toStartWith(
-		"route: jev answered without r_",
-	);
+	expect(text.paragraphs[0]?.sentences[0]?.failed).toBe(true);
+	expect(aborted).toEqual(["route"]);
+	// The sibling settled before the operation reported its trace.
+	expect(settled).toEqual(["route"]);
+	expect(
+		traces[0]?.calls
+			.filter(({ stage }) => stage === "route")
+			.map(({ failure }) => failure?.tag),
+	).toEqual(["ProviderFailure", "Interrupted"]);
 });
 
-test("inUnits rejects another language and a blank Sentence before asking, and createSegment a floating model", async () => {
+test("an answer from an unpinned model, or one missing or mistyping an answer, fails its Sentence as InvalidModelOutput and keeps its tokens", async () => {
+	const other = await inUnits(
+		{ jev: fakeJev({ model: "jev-9.9.9" }).ask },
+		{ language: "de", paragraphs: [{ sentences: ["Er kam."] }] },
+	);
+	expect(other.text.paragraphs[0]?.sentences[0]?.failed).toBe(true);
+	expect(other.traces[0]?.sentences).toEqual([
+		{
+			sentence: 0,
+			outcome: "Failed",
+			failure: {
+				tag: "InvalidModelOutput",
+				message: `jev answered as jev-9.9.9, not the pinned ${pinnedJevModel}`,
+			},
+		},
+	]);
+	expect(other.traces[0]?.calls[0]).toMatchObject({ outputTokens: 1 });
+	expect(other.traces[0]?.calls[0]?.inputTokens).toBeGreaterThan(0);
+
+	const missing = await inUnits(
+		{ jev: fakeJev({ drop: (id) => id.startsWith("r_") }).ask },
+		{ language: "de", paragraphs: [{ sentences: ["Er kam."] }] },
+	);
+	expect(missing.traces[0]?.sentences[0]).toMatchObject({
+		outcome: "Failed",
+		failure: { tag: "InvalidModelOutput" },
+	});
+	const [missingFailure] = missing.traces[0]?.sentences ?? [];
+	expect(
+		missingFailure?.outcome === "Failed" && missingFailure.failure.message,
+	).toStartWith("jev answered without r_");
+
+	const mistyped = await inUnits(
+		{ jev: fakeJev({ retype: (id) => id.startsWith("r_") }).ask },
+		{ language: "de", paragraphs: [{ sentences: ["Er kam."] }] },
+	);
+	expect(mistyped.text.paragraphs[0]?.sentences[0]?.failed).toBe(true);
+	expect(mistyped.traces[0]?.sentences[0]).toMatchObject({
+		outcome: "Failed",
+		failure: { tag: "InvalidModelOutput" },
+	});
+});
+
+test("with payloads asked for, each call's trace keeps its request and answer", async () => {
+	const { traces } = await inUnits(
+		{ jev: fakeJev().ask, tracePayloads: true },
+		{ language: "de", paragraphs: [{ sentences: ["Er kam."] }] },
+	);
+	const [call] = traces[0]?.calls ?? [];
+	expect(call?.payload?.request).toMatchObject({
+		model: pinnedJevModel,
+		state: expect.any(Object),
+		questions: expect.any(Object),
+	});
+	expect(call?.payload?.response).toMatchObject({ model: pinnedJevModel });
+});
+
+test("another language or a blank Sentence is a Defect before anything is asked, and a floating model is refused", async () => {
 	const jev = fakeJev();
-	const segment = createSegment({ ask: jev.ask });
+	const traces: OperationTrace[] = [];
+	const dumgen = createDumgen({
+		jev: jev.ask,
+		onOperation: (trace) => traces.push(trace),
+	});
 	await expect(
-		segment.inUnits({
-			language: "en" as "de",
-			paragraphs: [{ sentences: ["Hello."] }],
-		}),
+		Effect.runPromise(
+			dumgen.segment.inUnits({
+				language: "en" as "de",
+				paragraphs: [{ sentences: ["Hello."] }],
+			}),
+		),
 	).rejects.toThrow('German ("de") only, not "en"');
 	await expect(
-		segment.inUnits({
-			language: "de",
-			paragraphs: [{ sentences: ["Gut.", " \t "] }],
-		}),
+		Effect.runPromise(
+			dumgen.segment.inUnits({
+				language: "de",
+				paragraphs: [{ sentences: ["Gut.", " \t "] }],
+			}),
+		),
 	).rejects.toThrow("Sentence 1 of paragraph 0 is blank");
 	expect(jev.sent).toEqual([]);
-	expect(() => createSegment({ ask: jev.ask, model: "jev-latest" })).toThrow(
-		"floats between jev versions",
+	// Each failed operation still reports its (empty) trace.
+	expect(traces.map(({ calls }) => calls.length)).toEqual([0, 0]);
+	expect(() =>
+		createDumgen({ jev: jev.ask, jevModel: "jev-latest" }),
+	).toThrow("floats between jev versions");
+	expect(() => createDumgen({ jev: jev.ask, requestBudget: 0 })).toThrow(
+		"requestBudget",
 	);
 });
 
-test("an exception from onCall is the host's, and inUnits passes it on", async () => {
+test("an exception from onOperation is the host's, and inUnits passes it on", async () => {
 	await expect(
-		createSegment({
-			ask: fakeJev().ask,
-			onCall: () => {
-				throw Error("ledger is full");
-			},
-		}).inUnits({
-			language: "de",
-			paragraphs: [{ sentences: ["Er kam."] }],
-		}),
+		Effect.runPromise(
+			createDumgen({
+				jev: fakeJev().ask,
+				onOperation: () => {
+					throw Error("ledger is full");
+				},
+			}).segment.inUnits({
+				language: "de",
+				paragraphs: [{ sentences: ["Er kam."] }],
+			}),
+		),
 	).rejects.toThrow("ledger is full");
 });
 
@@ -345,14 +495,12 @@ test("cached lab answers replay through inUnits to the lab's own units", async (
 				usage: { input_tokens: 0, output_tokens: 0 },
 			};
 		};
-		const [result] =
-			(
-				await createSegment({ ask }).inUnits({
-					language: "de",
-					paragraphs: [{ sentences: [sentence.text] }],
-				})
-			).paragraphs[0]?.sentences ?? [];
-		expect(result?.failure).toBeUndefined();
+		const { text } = await inUnits(
+			{ jev: ask },
+			{ language: "de", paragraphs: [{ sentences: [sentence.text] }] },
+		);
+		const [result] = text.paragraphs[0]?.sentences ?? [];
+		expect(result?.failed).toBeUndefined();
 		expect(result?.units).toEqual([...sentence.units]);
 		expect(sent).toEqual(calls.map(({ stage }) => stage));
 	}

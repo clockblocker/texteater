@@ -40,8 +40,15 @@
  * differ only in floor or applied families read the same answers. A
  * Sentence with no flag asks nothing.
  */
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
-import { type Answers, type Ask, askAny, choice } from "../ask.js";
+import {
+	type Answers,
+	type Ask,
+	type AskFailure,
+	askAny,
+	choice,
+} from "../ask.js";
 import type { AssembledEdge, Membership } from "./assembly.js";
 import { fusedSiblings, isArticle, nounLike } from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
@@ -442,23 +449,23 @@ export type GovernmentAnswers = {
 };
 
 /** Asks the `government` request about the flags of `families`, every family unless given. */
-export async function askGovernmentChoice(
+export const askGovernmentChoice = Effect.fnUntraced(function* (
 	nomination: Nomination,
 	membership: Membership,
 	ask: Ask,
 	rules: readonly CodeRule[],
 	families: readonly GovernmentFamily[] = governmentFamilies,
-): Promise<GovernmentAnswers> {
+): Effect.fn.Return<GovernmentAnswers, AskFailure> {
 	const flags = flaggedPrepositions(nomination, membership, rules).filter(
 		(flag) => families.includes(flag.family),
 	);
-	const answers = await askAny(ask, {
+	const answers = yield* askAny(ask, {
 		stage: "government",
 		state: nomination.state,
 		questions: governmentQuestions(nomination, membership, flags),
 	});
 	return { flags, answers };
-}
+});
 
 type Action =
 	| { readonly join: readonly [number, number] }

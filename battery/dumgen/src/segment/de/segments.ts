@@ -21,8 +21,16 @@
  * Foreign word in a German Sentence. A fused word splits unless jev
  * confidently keeps it whole, though: the Rule makes the split the norm.
  */
+import * as Effect from "effect/Effect";
 import type { EntryType, Questions } from "promptsmith/typesafe";
-import { type Answers, type Ask, askAny, choice, choiceOf } from "../ask.js";
+import {
+	type Answers,
+	type Ask,
+	type AskFailure,
+	askAny,
+	choice,
+	choiceOf,
+} from "../ask.js";
 import {
 	abbreviationEntry,
 	cliticEntry,
@@ -471,18 +479,18 @@ export function resolveGermanSegments(
  * Stitches one German Sentence and cuts it into Segments, asking jev once
  * for every ambiguous run together; a Sentence with none makes no call.
  */
-export async function segmentGermanSentence(
+export const segmentGermanSentence = Effect.fnUntraced(function* (
 	sentence: string,
 	ask: Ask,
-): Promise<GermanSegmentation> {
+): Effect.fn.Return<GermanSegmentation, AskFailure> {
 	const prepared = prepareGermanSegments(stitchedText(sentence));
-	const answers = await askAny(ask, {
+	const answers = yield* askAny(ask, {
 		stage: "segments",
 		state: prepared.state,
 		questions: prepared.questions,
 	});
 	return resolveGermanSegments(prepared, answers);
-}
+});
 
 /**
  * The Segments code alone gives one German Sentence, for when jev cannot
