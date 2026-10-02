@@ -138,13 +138,26 @@ the learner error *Du gehst mich auf den Keks* gets wrong.
 **Where a frame comes from.**
 
 The Knowledge call proposes the whole frame, statuses and alternatives
-included, when it creates a Reading. Later sentences add slots it missed, and
-mistakes go through Knowledge's Correct. Only that proposal and Correct group
-complements as alternatives. A Contribute appends a Slot only when no stored
-complement covers any of its complements, and never adds a complement to a
-stored Slot: contributing `von` + Dat to `reden` adds nothing. Correct
-replaces the frame. A Retract that names a complement removes it from its
-Slot, and the Slot once it is empty.
+included, when it creates a Reading: the Satzbauplan of the one Lesart its
+sentence shows. A governed preposition that sentence realizes is added when
+the proposal omits it, since that sentence anchors the sense the frame is
+proposed for (*bedanken* gets its `bei`). Mistakes go through Knowledge's
+Correct. Only the proposal and Correct group complements as alternatives. A
+Contribute appends a Slot only when no stored complement covers any of its
+complements, and never adds a complement to a stored Slot: contributing `von`
++ Dat to `reden` adds nothing. Correct replaces the frame. A Retract that
+names a complement removes it from its Slot, and the Slot once it is empty.
+
+A governed preposition a later sentence realizes and the frame lacks fills no
+Slot and is never appended; it is recorded only in that Attestation's
+`valencyEvidence`, and a real gap is fixed through Correct. Such a preposition
+may be an alternative the proposal missed (`über` + Acc | `von` + Dat on
+*denken*), another sense the judge filed under this Reading (*Ich glaube dir*
+and *Sie glaubt an Gott* under one 🙏) or a Slot the proposal left out, and
+one sentence can't tell these apart. Appending would get the third right and
+write a false frame for the first two: `glauben (jM) (etw) (an jN/etw)`.
+Free prepositions are never compared with the frame. Decided on
+[#677](https://github.com/clockblocker/texteater/issues/677).
 
 Statuses taken only from attestations were rejected. An imperative, a passive
 or an object dropped by context looks the same as an Optional slot, and the

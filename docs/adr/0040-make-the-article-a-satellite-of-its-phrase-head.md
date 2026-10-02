@@ -88,9 +88,11 @@ Partial coverage: `der Aufstieg und Abstieg`. A hidden component such as the
 `ה` of `בבית` stays hidden article evidence with Partial coverage. Both now
 apply to any Head, not only nouns.
 
-**DegreeMarker.** A satellite role joins the Member Roles for the word that
-marks an analytic comparative or superlative. The unit stays the Lexeme whose
-degree it marks:
+**DegreeMarker.** The word that marks an analytic comparative or superlative
+is a satellite, like the article: a member, not a Head, of the Lexeme whose
+degree it marks. No Member Role records it
+([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md));
+the Lexeme's Surface carries the degree:
 
 - `Mina reist am liebsten` attests ADV `gern` (Sup) over `[am, liebsten]`,
   and `am schnellsten` attests ADJ `schnell` (Sup) the same way.
@@ -130,9 +132,9 @@ whether noun `definite` survives beyond the construct state.
 ## Consequences
 
 - This amends ADR 0035's `A noun owns its article` section and its rejection
-  of an English article of its own. It amends the Member Roles of
-  [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md) with
-  DegreeMarker, and ADR 0032's article derivation, which now reads the
+  of an English article of its own. It adds DegreeMarker to the satellites of
+  [ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md), and it
+  amends ADR 0032's article derivation, which now reads the
   satellite's spelling instead of a noun feature.
 - Dumling drops `article` from the German and English NOUN inflectional
   features. The Surface check that the feature names an article form becomes
