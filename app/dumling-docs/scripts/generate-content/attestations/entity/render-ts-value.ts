@@ -1,4 +1,6 @@
-import { isRecord } from "./guards";
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return value !== null && typeof value === "object";
+}
 
 export function renderTsValue(value: unknown, indent = 0): string {
 	const indentation = "\t".repeat(indent);

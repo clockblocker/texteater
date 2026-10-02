@@ -1,36 +1,9 @@
 import { createHash } from "node:crypto";
-import type * as Dumling from "dumling/types";
-import { structuralIdentity } from "../../../../src/lib/unit-presentation";
 
-import { isAttestation } from "./guards";
-
-/** A filesystem-safe projection of structural identity, not a domain ID. */
-export function attestationSlugForEntity(
-	entity: Dumling.Lemma | Dumling.Surface | Dumling.Attestation,
-): string {
-	if (isAttestation(entity)) {
-		throw new Error(
-			"Attestation routes require docs-owned occurrence wrapper evidence.",
-		);
-	}
-	const digest = createHash("sha256")
-		.update(structuralIdentity(entity))
-		.digest("base64url");
-	return `sha256-${digest}`;
-}
-
+/** An opaque, filesystem-safe slug for one record target's sentence. */
 export function attestationSlugForSource(source: {
-	entity: Dumling.Lemma | Dumling.Surface | Dumling.Attestation;
-	sentenceMarkdown?: string;
+	sentenceMarkdown: string;
 }): string {
-	if (!isAttestation(source.entity)) {
-		return attestationSlugForEntity(source.entity);
-	}
-	if (source.sentenceMarkdown === undefined) {
-		throw new Error(
-			"Occurrence Attestation routes require docs-owned sentenceMarkdown.",
-		);
-	}
 	const occurrenceKey = JSON.stringify({
 		sentenceMarkdown: source.sentenceMarkdown,
 	});

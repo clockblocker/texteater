@@ -1,5 +1,6 @@
 import type * as Dumling from "dumling/types";
-export const lemma: Dumling.Lemma<"en", "Lexeme", "VERB"> = {
+
+const lemma: Dumling.Lemma<"en", "Lexeme", "VERB"> = {
 	unitKind: "Lemma",
 	language: "en",
 	canonicalForm: "walk",
@@ -11,7 +12,7 @@ export const lemma: Dumling.Lemma<"en", "Lexeme", "VERB"> = {
 		phrasal: null,
 	},
 };
-export const surface: Dumling.Surface<"en", "Lexeme", "VERB"> = {
+const surface: Dumling.Surface<"en", "Lexeme", "VERB"> = {
 	unitKind: "Surface",
 	language: "en",
 	lemma,

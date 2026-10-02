@@ -12,12 +12,8 @@ export function asSingleLineSentence(sentenceMarkdown: string): string {
 export function hrefForAttestedAttestation(
 	attestedAttestation: AttestedAttestation,
 ): string {
-	const attestation = attestedAttestation.attestation;
-	const language = attestation.surface.lemma.language;
-	const slug = attestationSlugForSource({
-		entity: attestation,
-		sentenceMarkdown: attestedAttestation.sentenceMarkdown,
-	});
+	const language = attestedAttestation.attestation.surface.lemma.language;
+	const slug = attestationSlugForSource(attestedAttestation);
 
 	return `/${language}/attestation/${slug}/`;
 }

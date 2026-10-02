@@ -2,8 +2,12 @@ import { join } from "node:path";
 import { runCodegen } from "codegen";
 import { allSpecExamples } from "../../../src/lib/docs/spec-examples";
 import { publicMarkdownPathForRouteId } from "../docs/routes";
-import { generatedEntitiesDir, specRecordPath } from "../shared/paths";
-import type { SourcePage } from "../shared/types";
+import {
+	generatedEntitiesDir,
+	pathRelativeToSiteRoot,
+	specRecordPath,
+} from "../shared/paths";
+import type { Frontmatter, SourcePage } from "../shared/types";
 import {
 	type AttestationOutput,
 	assertUniqueAttestationOutputs,
@@ -11,8 +15,17 @@ import {
 } from "./codegen";
 import { attestationSlugForSource } from "./entity/attestation-slug";
 import { discoverAttestationsInitialOwnership } from "./initial-ownership";
-import { generatedFrontmatterForAttestation } from "./render/generated-frontmatter";
 import { renderAttestationBody } from "./render/render-attestation-body";
+
+/** The page title: the sentence with spaces as `_`, keeping only letters, marks, digits, connectors and brackets. */
+function semanticAttestationBasename(sentenceMarkdown: string): string {
+	return sentenceMarkdown
+		.normalize("NFC")
+		.replace(/[^\p{L}\p{M}\p{N}\p{Pc}\p{Zs}[\]]+/gu, "")
+		.replace(/\p{Zs}+/gu, "_")
+		.replace(/_+/gu, "_")
+		.replace(/^_+|_+$/gu, "");
+}
 
 /** Generates one attestation page per target of every dumspec Spec Record. */
 export async function generateAttestations(): Promise<SourcePage[]> {
@@ -28,7 +41,12 @@ export async function generateAttestations(): Promise<SourcePage[]> {
 		};
 		const language = example.attestation.surface.language;
 		const routeId = `${language}/attestation/${attestationSlugForSource(source)}`;
-		const frontmatter = generatedFrontmatterForAttestation(source, routeId);
+		const frontmatter: Frontmatter = {
+			generatedFrom: pathRelativeToSiteRoot(source.sourcePath),
+			order: 1000,
+			routeId,
+			title: semanticAttestationBasename(source.sentenceMarkdown),
+		};
 
 		outputs.push({
 			body: renderAttestationBody(source),

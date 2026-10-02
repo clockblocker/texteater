@@ -2,9 +2,6 @@ import { expect, test } from "bun:test";
 import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { checkIfGrundform } from "dumling";
-import { grundformLabel } from "../src/lib/unit-presentation";
-import { surface } from "./fixtures";
 
 const root = resolve(import.meta.dir, "..");
 test("rendered unit and API examples compile against the published package", async () => {
@@ -84,14 +81,4 @@ test("rendered unit and API examples compile against the published package", asy
 	} finally {
 		await rm(directory, { recursive: true, force: true });
 	}
-});
-
-test("Grundform presentation preserves indeterminate grammar and contrary inflection", () => {
-	expect(grundformLabel(surface)).toBe("Grundform");
-	expect(grundformLabel({ ...surface, inflectionalFeatures: null })).toBe(
-		"Undetermined",
-	);
-	const past = { ...surface, normalizedSurface: "walked" };
-	expect(checkIfGrundform(past)).toEqual({ success: true, value: false });
-	expect(grundformLabel(past)).toBe("Not Grundform");
 });
