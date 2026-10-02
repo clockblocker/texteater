@@ -28,7 +28,7 @@
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"reading": { "emojiDescription": "🏙🐻" },
+			"reading": { "emojiDescription": "🐻" },
 			"notes": {
 				"rationale": "Berlin is a name cited bare, so its Lemma has no Core article, and it owns the article its phrase takes here, across the adjective alte: [das, Berlin]. das derives the DET cell das Acc.Neut.Sg.",
 				"knownMistakes": [

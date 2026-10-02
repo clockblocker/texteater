@@ -29,6 +29,14 @@
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "43184aac9186aceb"
+			},
+			{
+				"rule": "de/variant-and-historical-status",
+				"hash": "9e2c6c25c942a570"
 			}
 		],
 		"references": []
@@ -39,7 +47,7 @@
 			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🤏" },
 			"notes": {
-				"rationale": "Duden lists low key, written apart, as an adjective (low key in jemanden verliebt sein). The hyphenated low-key is the English spelling, not a mistake, so it is its own ADJ Lemma low-key, used adverbially, next to low key. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree. low-key überraschend is Duden low key 2, colloquial 'unbedeutend', used as in low key in jemanden verliebt sein: only slightly."
+				"rationale": "Duden lists low key, written apart, as an adjective (low key in jemanden verliebt sein), so it is German, not Foreign (de/foreign-unless-duden-or-german-grammar), and that headword is its Canonical Form (de/canonical-form-is-the-headword). The hyphenated low-key is the English spelling of the same word, not a mistake, so its Surface is a Variant of low key tagged Licensed, and its member is Standard, not Typo (de/variant-and-historical-status). This reverses 7eb1f043 (#729), which made low-key an ADJ Lemma of its own; ruled by the user on 2026-10-02. Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree. low-key überraschend is Duden low key 2, colloquial 'unbedeutend', used adverbially as in low key in jemanden verliebt sein: only slightly."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -51,11 +59,14 @@
 					"unitKind": "Surface",
 					"language": "de",
 					"normalizedSurface": "low-key",
-					"spelling": { "kind": "Canonical" },
+					"spelling": {
+						"kind": "Variant",
+						"variantTags": ["Licensed"]
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "low-key",
+						"canonicalForm": "low key",
 						"family": "Lexeme",
 						"kind": "ADJ",
 						"coreFeatures": {

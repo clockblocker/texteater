@@ -382,7 +382,7 @@
 				"family": "Lexeme",
 				"kind": "PROPN"
 			},
-			"reading": { "emojiDescription": "🛣🇩🇪" },
+			"reading": { "emojiDescription": "🛣" },
 			"notes": {
 				"rationale": "The guillemets mark »Vorderreihe« as a local name, Travemünde's promenade street, so it is a street name cited with its article: PROPN, Core article Definite, owning die; the guillemets are Punctuation (de/proper-noun-article). Ruled on #743 (MB-B4)."
 			},

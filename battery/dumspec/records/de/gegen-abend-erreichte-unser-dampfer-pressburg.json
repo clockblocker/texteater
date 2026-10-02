@@ -27,7 +27,7 @@
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
 			"reading": {
-				"emojiDescription": "🏙🇸🇰",
+				"emojiDescription": "🏙",
 				"knowledge": {
 					"semanticRelations": {
 						"endonym": [

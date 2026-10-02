@@ -27,7 +27,7 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"reading": { "emojiDescription": "🏙🇩🇪" },
+			"reading": { "emojiDescription": "🏙" },
 			"notes": {
 				"rationale": "The register entry cites the name, which takes its ordinary Reading, the city of Hamburg."
 			},

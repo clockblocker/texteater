@@ -28,7 +28,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "PROPN" },
-			"reading": { "emojiDescription": "🏙🐻" },
+			"reading": { "emojiDescription": "🐻" },
 			"notes": {
 				"rationale": "Berlin is the city's name, cited bare, with Core gender Neut (de/proper-noun-article). Stadt before it is a common noun in apposition, not part of the name."
 			},
