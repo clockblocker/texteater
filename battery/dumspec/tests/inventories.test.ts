@@ -1,13 +1,20 @@
 import { describe, expect, test } from "bun:test";
 import { parseUnit } from "dumling";
+import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { frameAdpositionCaseIssues } from "../src/check-adposition-cases.js";
-import { attestationParticleIssues, loadSpecRecords } from "../src/index.js";
+import {
+	attestationParticleIssues,
+	authoredReadingIssues,
+	loadSpecRecords,
+} from "../src/index.js";
 import {
 	type AuthoredMember,
+	type AuthoredRealization,
 	authoredMembers,
 	authoredRealizations,
+	closedVerbFormSpellings,
 	closedVerbForms,
 	germanParticleMember,
 	germanParticles,
@@ -45,6 +52,74 @@ function pronounSurface(
 				: {}),
 			...cell,
 		},
+	};
+}
+
+/** A route's inflectional bag with nothing marked, for a stem's cell. */
+function emptyBag({ family, kind }: AuthoredMember["lemma"]) {
+	if (family === "Locution")
+		return { case: null, gender: null, number: null };
+	return {
+		case: null,
+		...(kind === "DET" ? { degree: null } : {}),
+		gender: null,
+		"gender[psor]": null,
+		number: null,
+		"number[psor]": null,
+	};
+}
+
+/**
+ * The one-member Attestation a realization with a spelling builds: its
+ * Surface spells the word the member stands for, and a Fused piece sits in a
+ * sample host word (gehts).
+ */
+function realizationAttestation({
+	member,
+	spelled,
+	spelling,
+	historicalStatus,
+	orthography,
+	standsFor,
+	inflection,
+}: AuthoredRealization) {
+	const { lemma } = member;
+	return {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "de",
+			lemma,
+			normalizedSurface: standsFor ?? spelled,
+			spelling,
+			surfaceFeatures: historicalStatus ? { historicalStatus } : null,
+			inflectionalFeatures: inflection
+				? { ...emptyBag(lemma), ...inflection }
+				: null,
+		},
+		members: [
+			orthography === "Fused"
+				? {
+						attested: spelled,
+						orthography,
+						fusion: {
+							spelling: `geht${spelled}`,
+							components: [
+								{ span: "geht", surface: "geht" },
+								{ span: spelled, surface: standsFor },
+							],
+						},
+						component: 1,
+					}
+				: { attested: spelled, orthography: orthography ?? "Standard" },
+		],
+		realizationCoverage: "Full",
+		// The evidence fields the route's Attestation holds, here empty.
+		...(lemma.kind === "AUX"
+			? { expletiveEvidence: null, valencyEvidence: [] }
+			: lemma.kind === "PRON" && lemma.family === "Lexeme"
+				? { articleEvidence: null }
+				: {}),
 	};
 }
 
@@ -181,6 +256,185 @@ describe("the German authored inventory", () => {
 			expect(spelled).not.toBe("");
 			expect(["DET", "PRON", "AUX"]).toContain(member.lemma.kind);
 		}
+	});
+
+	test("every realization with a spelling builds a Surface and member Dumling accepts (ADR 0041, ADR 0035)", () => {
+		const spelled = authoredRealizations.filter(
+			(realization) => realization.spelling !== undefined,
+		);
+		expect(spelled.length).toBeGreaterThan(1000);
+		const failures = spelled.flatMap((realization) => {
+			if (
+				(realization.orthography === undefined) !==
+				(realization.standsFor === undefined)
+			)
+				return [
+					`${realization.spelled}: orthography without standsFor`,
+				];
+			const parsed = parseUnit(realizationAttestation(realization));
+			return parsed.success
+				? []
+				: [
+						`${name(realization.member)} ${realization.spelled}: ${parsed.error.message}`,
+					];
+		});
+		expect(failures).toEqual([]);
+	});
+
+	test("tags the spellings gold or a Rule fixes and leaves the rest unclassified", () => {
+		// inCase names a cell's case, or null for a spelling with no cell.
+		const tagsOf = (
+			spelled: string,
+			kind: string,
+			inCase?: string | null,
+		) => [
+			...new Set(
+				authoredRealizations
+					.filter(
+						(realization) =>
+							realization.spelled === spelled &&
+							realization.member.lemma.kind === kind &&
+							(inCase === undefined ||
+								(realization.inflection?.case ?? null) ===
+									inCase),
+					)
+					.map(
+						({
+							member,
+							spelling,
+							historicalStatus,
+							orthography,
+							standsFor,
+						}) =>
+							[
+								member.lemma.canonicalForm,
+								spelling?.kind === "Variant"
+									? spelling.variantTags.join(" ")
+									: (spelling?.kind ?? "none"),
+								...(historicalStatus ? [historicalStatus] : []),
+								...(orthography
+									? [orthography, standsFor]
+									: []),
+							].join(" "),
+					),
+			),
+		];
+		// Gold spells nix and standalone derer as Licensed Variants.
+		expect(tagsOf("nix", "PRON")).toEqual(["nichts Licensed"]);
+		expect(tagsOf("derer", "PRON")).toEqual([
+			"deren Licensed",
+			"derer Canonical",
+		]);
+		// Shortened articles and clitic s are member orthographies
+		// (de/member-orthography); the Surface is the full word.
+		for (const [short, article] of [
+			["n", "ein"],
+			["ne", "eine"],
+			["nen", "einen"],
+			["nem", "einem"],
+			["ner", "einer"],
+		] as const)
+			expect(tagsOf(short, "DET")).toEqual([
+				`${article} Canonical Shorthand ${article}`,
+			]);
+		expect(tagsOf("s", "PRON")).toEqual(["es Canonical Fused es"]);
+		// ward is Canonical and Archaic (de/variant-and-historical-status);
+		// gold has hätt as the Shorthand of hätte.
+		expect(tagsOf("ward", "AUX")).toEqual(["werden Canonical Archaic"]);
+		expect(tagsOf("wardst", "AUX")).toEqual(["werden Canonical Archaic"]);
+		expect(tagsOf("hätt", "AUX")).toEqual([
+			"haben Canonical Shorthand hätte",
+		]);
+		expect(tagsOf("hat", "AUX")).toEqual(["haben Canonical"]);
+		// A closed modal form spelled with ß before the 1996 reform is a
+		// Historical Variant, as gold has muß.
+		const historical = (closedVerbForms.müssen ?? []).filter(
+			(form) =>
+				closedVerbFormSpellings[form]?.spelling?.kind === "Variant",
+		);
+		expect(historical).toContain("muß");
+		expect(historical.every((form) => form.includes("ß"))).toBe(true);
+		expect(closedVerbFormSpellings.muß?.spelling).toEqual({
+			kind: "Variant",
+			variantTags: ["Historical"],
+		});
+		expect(closedVerbFormSpellings.ward?.historicalStatus).toBe("Archaic");
+		// What awaits a ruling carries no spelling: hab, a table's other
+		// spellings of a cell, the comparative weniger and wieviel.
+		expect(tagsOf("hab", "AUX")).toEqual(["haben none"]);
+		expect(tagsOf("eins", "PRON")).toEqual(["eines none"]);
+		expect(tagsOf("irgendeins", "PRON")).toEqual(["irgendeiner none"]);
+		// Genitive jeden and einiges stand beside jedes and einigen.
+		expect(tagsOf("jeden", "DET", "Gen")).toEqual(["jeder none"]);
+		expect(tagsOf("einiges", "DET", "Gen")).toEqual(["einige none"]);
+		expect(tagsOf("selben", "DET")).toEqual(["derselbe none"]);
+		expect(tagsOf("weniger", "DET", null)).toEqual(["wenig none"]);
+		expect(tagsOf("wieviel", "DET")).toEqual(["wieviel none"]);
+		// PRON beiden is the Dat cell's own form, and weak beiden beside
+		// beide in Nom awaits the ruling on standalone die beiden.
+		expect(tagsOf("beiden", "PRON", "Dat")).toEqual(["beide Canonical"]);
+		expect(tagsOf("beiden", "PRON", "Nom")).toEqual(["beide none"]);
+	});
+
+	test("DET beide has no weak beiden, which stands only after a determiner (de/pron-or-det-by-use)", () => {
+		const beidenCells = (kind: string) =>
+			authoredRealizations
+				.filter(
+					({ member, spelled }) =>
+						member.lemma.kind === kind &&
+						member.lemma.canonicalForm === "beide" &&
+						spelled === "beiden",
+				)
+				.map(({ inflection }) => inflection?.case);
+		expect(beidenCells("DET")).toEqual(["Dat"]);
+		expect(beidenCells("PRON")).toEqual(["Nom", "Acc", "Dat", "Gen"]);
+	});
+
+	test("authors etwas as an invariant Ind DET and PRON (de/pron-or-det-by-use)", () => {
+		const etwas = authoredMembers.filter(
+			({ lemma }) => lemma.canonicalForm === "etwas",
+		);
+		expect(
+			etwas.map(({ lemma, reading }) => [
+				lemma.kind,
+				field(lemma.coreFeatures, "pronType"),
+				reading.emojiDescription,
+			]),
+		).toEqual([
+			["DET", "Ind", "📦"],
+			["PRON", "Ind", "📦"],
+		]);
+		expect(
+			authoredRealizations
+				.filter(({ member }) => etwas.includes(member))
+				.map(({ spelled, inflection }) => [
+					spelled,
+					inflection ?? null,
+				]),
+		).toEqual([
+			["etwas", null],
+			["etwas", null],
+		]);
+	});
+
+	test("the authored-Reading check fails a Reading an authored Lemma lacks (ADR 0021)", () => {
+		const ja = germanParticleMember({
+			canonicalForm: "ja",
+			coreFeatures: { partType: "Mod", polarity: null },
+		});
+		if (!ja) throw Error("ja is authored");
+		const reading = (canonicalForm: string, emojiDescription: string) =>
+			({
+				...ja.reading,
+				lemma: { ...ja.lemma, canonicalForm },
+				emojiDescription,
+			}) as Dumling.Reading;
+		expect(authoredReadingIssues(reading("ja", "🤝"))).toEqual([]);
+		expect(
+			authoredReadingIssues(reading("ja", "🎉")).map(({ path }) => path),
+		).toEqual(["reading.emojiDescription"]);
+		// A Lemma no member is has no authored Readings to name.
+		expect(authoredReadingIssues(reading("sogar", "🎉"))).toEqual([]);
 	});
 
 	test("authors per cell only the pillars (system ADR 0032)", () => {

@@ -18,7 +18,10 @@ export type AuthoredMember = {
 		readonly locutionType?: string;
 	};
 };
-/** Provides the authoring type boundary; catalog validation runs in the build. */
+/**
+ * Types an authored member. dumspec's inventory tests check every member with
+ * Dumling and Dumrel and against its route's Knowledge policy (ADR 0021).
+ */
 export function defineAuthoredMember(member: AuthoredMember): AuthoredMember {
 	return member;
 }

@@ -40,6 +40,7 @@ import { member as article_eines_neuter_singular_genitive } from "./members/lexe
 import { member as m16 } from "./members/lexeme/determiner/demonstrative/derlei.js";
 import { member as m17 } from "./members/lexeme/determiner/emphatic/selber.js";
 import { member as m20 } from "./members/lexeme/determiner/exclamative/welch.js";
+import { member as determinerEtwas } from "./members/lexeme/determiner/quantifying/etwas.js";
 import { member as m30 } from "./members/lexeme/determiner/quantifying/lauter.js";
 import { member as m31 } from "./members/lexeme/determiner/quantifying/manch.js";
 import { member as m35 } from "./members/lexeme/determiner/quantifying/mehr.js";
@@ -157,6 +158,7 @@ export const authoredMembers = [
 	m16,
 	m17,
 	m20,
+	determinerEtwas,
 	m30,
 	m31,
 	m35,

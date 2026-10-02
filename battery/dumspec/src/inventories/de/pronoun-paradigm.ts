@@ -3,6 +3,7 @@ import type * as Dumrel from "dumrel/types";
 import { defineAuthoredMember } from "./member.js";
 import {
 	type AuthoredSpelling,
+	canonical,
 	citationForm,
 	type ReviewedMember,
 	type StemDescription,
@@ -113,9 +114,12 @@ export function pronounMember(
 				},
 			},
 		}),
-		spellings: [form.text, ...(form.variants ?? [])].map((spelled) => ({
-			spelled,
-		})),
+		// The cell's own form is Canonical; its variants (eins beside eines)
+		// carry no spelling yet.
+		spellings: [
+			{ spelled: form.text, spelling: canonical },
+			...(form.variants ?? []).map((spelled) => ({ spelled })),
+		],
 	};
 }
 
@@ -171,7 +175,10 @@ export function pronounStem(
 ): ReviewedPronoun {
 	return pronounStemOf(options.citation ?? citationForm(table), description, [
 		...tableSpellings(table),
-		...(options.uninflected ?? []).map((spelled) => ({ spelled })),
+		...(options.uninflected ?? []).map((spelled) => ({
+			spelled,
+			spelling: canonical,
+		})),
 	]);
 }
 

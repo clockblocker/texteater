@@ -1,4 +1,8 @@
-import { auxiliaryForms } from "./realizations.js";
+import {
+	auxiliaryFormSpellings,
+	auxiliaryForms,
+	type RealizationSpelling,
+} from "./realizations.js";
 
 /**
  * Every form of the six modal verbs (ADR 0026: a modal is a VERB Lemma),
@@ -136,4 +140,26 @@ export const closedVerbForms: Readonly<Record<string, readonly string[]>> = {
 	haben: auxiliaryForms.haben ?? [],
 	werden: auxiliaryForms.werden ?? [],
 	...modalForms,
+};
+
+/**
+ * The closed verb forms whose spelling is not plainly Canonical and
+ * Standard, keyed by form; every other form in `closedVerbForms` is. The
+ * auxiliaries' forms (ward, hätt, hab) are spelled as their AUX realizations
+ * are. The ß spellings of müssen are Historical Variants, valid only before
+ * the 1996 reform, as gold has muß, mußte and mußten
+ * (de/variant-and-historical-status).
+ */
+export const closedVerbFormSpellings: Readonly<
+	Record<string, RealizationSpelling>
+> = {
+	...auxiliaryFormSpellings,
+	...Object.fromEntries(
+		(modalForms.müssen ?? [])
+			.filter((form) => form.includes("ß"))
+			.map((form) => [
+				form,
+				{ spelling: { kind: "Variant", variantTags: ["Historical"] } },
+			]),
+	),
 };

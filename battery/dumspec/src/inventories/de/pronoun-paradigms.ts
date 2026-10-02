@@ -11,7 +11,11 @@ import {
 	type ReviewedPronoun,
 	strongPronoun,
 } from "./pronoun-paradigm.js";
-import type { AuthoredSpelling, SurfaceCell } from "./stem-lemma.js";
+import {
+	type AuthoredSpelling,
+	canonical,
+	type SurfaceCell,
+} from "./stem-lemma.js";
 
 type Core = Dumling.Lemma<"de", "Lexeme", "PRON">["coreFeatures"];
 const absent = [null, null, null, null] as const;
@@ -199,15 +203,24 @@ for (const pronType of ["Int", "Rel"] as const) {
 		number: null,
 		gender: null,
 	});
+	// Each cell has one spelling, Canonical.
+	const spelled = (
+		text: string,
+		grammaticalCase: SurfaceCell["case"],
+	): AuthoredSpelling => ({
+		spelled: text,
+		cell: cell(grammaticalCase),
+		spelling: canonical,
+	});
 	const stems = [
 		{
 			citation: form("wer", "veːɐ̯"),
 			gender: "Masc",
 			spellings: [
-				{ spelled: "wer", cell: cell("Nom") },
-				{ spelled: "wen", cell: cell("Acc") },
-				{ spelled: "wem", cell: cell("Dat") },
-				{ spelled: "wessen", cell: cell("Gen") },
+				spelled("wer", "Nom"),
+				spelled("wen", "Acc"),
+				spelled("wem", "Dat"),
+				spelled("wessen", "Gen"),
 			],
 			Int: {
 				emoji: "❓👤",
@@ -227,9 +240,9 @@ for (const pronType of ["Int", "Rel"] as const) {
 			citation: form("was", "vas"),
 			gender: "Neut",
 			spellings: [
-				{ spelled: "was", cell: cell("Nom") },
-				{ spelled: "was", cell: cell("Acc") },
-				{ spelled: "wessen", cell: cell("Gen") },
+				spelled("was", "Nom"),
+				spelled("was", "Acc"),
+				spelled("wessen", "Gen"),
 			],
 			Int: {
 				emoji: "❓📦",
@@ -603,13 +616,15 @@ for (const [stem, ipa, pronType, emoji, definition, en, ru] of [
 		number: "Sing",
 		gender: null,
 	});
+	// Each cell's inflected form is Canonical. The bare stem in Acc and Dat
+	// and the short genitive carry no spelling until a ruling.
 	const spellings: AuthoredSpelling[] = [
-		{ spelled: stem, cell: cell("Nom") },
-		{ spelled: `${stem}en`, cell: cell("Acc") },
+		{ spelled: stem, cell: cell("Nom"), spelling: canonical },
+		{ spelled: `${stem}en`, cell: cell("Acc"), spelling: canonical },
 		{ spelled: stem, cell: cell("Acc") },
-		{ spelled: `${stem}em`, cell: cell("Dat") },
+		{ spelled: `${stem}em`, cell: cell("Dat"), spelling: canonical },
 		{ spelled: stem, cell: cell("Dat") },
-		{ spelled: `${stem}es`, cell: cell("Gen") },
+		{ spelled: `${stem}es`, cell: cell("Gen"), spelling: canonical },
 		{ spelled: `${stem}s`, cell: cell("Gen") },
 	];
 	reviewed.push(
@@ -647,9 +662,21 @@ for (const [stem, ipa, pronType, emoji, definition, en, ru] of [
 				synonyms: [irgendjemand],
 			},
 			[
-				{ spelled: "irgendwer", cell: cell("Nom") },
-				{ spelled: "irgendwen", cell: cell("Acc") },
-				{ spelled: "irgendwem", cell: cell("Dat") },
+				{
+					spelled: "irgendwer",
+					cell: cell("Nom"),
+					spelling: canonical,
+				},
+				{
+					spelled: "irgendwen",
+					cell: cell("Acc"),
+					spelling: canonical,
+				},
+				{
+					spelled: "irgendwem",
+					cell: cell("Dat"),
+					spelling: canonical,
+				},
 			],
 		),
 	);
@@ -871,10 +898,26 @@ for (const [stem, ipa, person, polite, en, ru] of [
 				["каждый; все"],
 			),
 			[
-				{ spelled: "jedermann", cell: cell("Nom") },
-				{ spelled: "jedermann", cell: cell("Acc") },
-				{ spelled: "jedermann", cell: cell("Dat") },
-				{ spelled: "jedermanns", cell: cell("Gen") },
+				{
+					spelled: "jedermann",
+					cell: cell("Nom"),
+					spelling: canonical,
+				},
+				{
+					spelled: "jedermann",
+					cell: cell("Acc"),
+					spelling: canonical,
+				},
+				{
+					spelled: "jedermann",
+					cell: cell("Dat"),
+					spelling: canonical,
+				},
+				{
+					spelled: "jedermanns",
+					cell: cell("Gen"),
+					spelling: canonical,
+				},
 			],
 		),
 	);

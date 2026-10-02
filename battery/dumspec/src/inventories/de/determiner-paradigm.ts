@@ -3,6 +3,7 @@ import type * as Dumrel from "dumrel/types";
 import type { PronounForm, PronounTable } from "./pronoun-paradigm.js";
 import {
 	type AuthoredSpelling,
+	canonical,
 	citationForm,
 	type ReviewedMember,
 	type StemDescription,
@@ -40,7 +41,10 @@ export function determinerStem(
 ): ReviewedDeterminer {
 	const spellings: AuthoredSpelling[] = [
 		...tableSpellings(table),
-		...(options.uninflected ?? []).map((spelled) => ({ spelled })),
+		...(options.uninflected ?? []).map((spelled) => ({
+			spelled,
+			spelling: canonical,
+		})),
 	];
 	return stemMember({
 		kind: "DET",
@@ -72,7 +76,10 @@ export function determinerLocution(
 		description,
 		spellings: [
 			...tableSpellings(table),
-			...(options.uninflected ?? []).map((spelled) => ({ spelled })),
+			...(options.uninflected ?? []).map((spelled) => ({
+				spelled,
+				spelling: canonical,
+			})),
 		],
 	});
 }

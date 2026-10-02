@@ -5,6 +5,7 @@ import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
 import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
 import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
+import { authoredReadingIssues } from "./check-authored-readings.js";
 import { attestationParticleIssues } from "./check-particles.js";
 import { unitRoutes } from "./generated/routes.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
@@ -474,6 +475,14 @@ function checkTargetLayers(
 	const reading = checkReading(target.reading, attestation);
 	for (const failure of reading.issues)
 		issue("Reading", "Reading", `${path}.${failure.path}`, failure.message);
+	if (reading.value)
+		for (const found of authoredReadingIssues(reading.value))
+			issue(
+				"Reading",
+				"AuthoredReading",
+				`${path}.${found.path}`,
+				found.message,
+			);
 	let knowledge: Dumrel.ReadingKnowledge | undefined;
 	if (
 		reading.value !== undefined &&

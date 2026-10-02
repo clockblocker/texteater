@@ -4,24 +4,57 @@ import { reflexivityUnit } from "./drill-down.js";
 import { authoredMembers } from "./inventory.js";
 import type { AuthoredMember } from "./member.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
+import { canonical, type SurfaceSpelling } from "./stem-lemma.js";
 
+/**
+ * How one spelling is written, where gold or a Rule fixes it. `spelling` is
+ * the Surface's spelling (ADR 0041): Canonical, or a Variant with its tags.
+ * A spelling whose status awaits a ruling has none. `historicalStatus` marks
+ * an archaic form (de/variant-and-historical-status). A clitic alias names
+ * its member orthography, Shorthand or Fused, and the word it stands for
+ * (ADR 0035, de/member-orthography); any other spelling is a Standard member.
+ */
+export type RealizationSpelling = {
+	readonly spelling?: SurfaceSpelling;
+	readonly historicalStatus?: "Archaic";
+	readonly orthography?: "Shorthand" | "Fused";
+	readonly standsFor?: string;
+};
 /** One spelling that realizes an authored DET, PRON or AUX member. */
-export type AuthoredRealization = {
+export type AuthoredRealization = RealizationSpelling & {
 	readonly member: AuthoredMember;
+	/** The letters a member attests. */
 	readonly spelled: string;
 	/** The cell a stem Lemma's Surface marks with this spelling (system ADR 0032). */
 	readonly inflection?: Readonly<Record<string, string | null>>;
 };
-/** Other spellings of authored determiners, keyed by Canonical Form. */
-// Free clitic article forms (fusion Entry table) and the comparative of
-// uninflected wenig.
-const determinerAliases: Readonly<Record<string, readonly string[]>> = {
-	ein: ["n"],
-	eine: ["ne"],
-	einen: ["nen"],
-	einem: ["nem"],
-	einer: ["ner"],
-	wenig: ["weniger"],
+type Alias = RealizationSpelling & { readonly spelled: string };
+
+const licensed: SurfaceSpelling = {
+	kind: "Variant",
+	variantTags: ["Licensed"],
+};
+/** A Shorthand member of the word it shortens, whose Surface is Canonical. */
+const shorthand = (spelled: string, standsFor: string): Alias => ({
+	spelled,
+	spelling: canonical,
+	orthography: "Shorthand",
+	standsFor,
+});
+
+/**
+ * Other spellings of authored determiners, keyed by Canonical Form. The
+ * shortened articles are Shorthand members of the article they stand for
+ * ('ne Frage; ADR 0035). weniger, the comparative of uninflected wenig, has
+ * no spelling until a ruling.
+ */
+const determinerAliases: Readonly<Record<string, readonly Alias[]>> = {
+	ein: [shorthand("n", "ein")],
+	eine: [shorthand("ne", "eine")],
+	einen: [shorthand("nen", "einen")],
+	einem: [shorthand("nem", "einem")],
+	einer: [shorthand("ner", "einer")],
+	wenig: [{ spelled: "weniger" }],
 };
 /** Every form of the three grammatical auxiliaries; the spelling names the Lemma, the served verb's form picks the Reading (ADR 0026). */
 export const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
@@ -152,9 +185,36 @@ export const auxiliaryForms: Readonly<Record<string, readonly string[]>> = {
 		"erhieltet",
 	],
 };
-const pronounAliases: Readonly<Record<string, readonly string[]>> = {
-	nichts: ["nix"],
-	es: ["s"],
+/**
+ * The auxiliary forms whose spelling is not plainly Canonical and Standard;
+ * every other form is. ward and wardst are Canonical and Archaic, the archaic
+ * preterite (de/variant-and-historical-status). hätt is the Shorthand of
+ * hätte, as gold has it (de/member-orthography). hab has no spelling until a
+ * ruling: it is the imperative and also a shortened habe.
+ */
+export const auxiliaryFormSpellings: Readonly<
+	Record<string, RealizationSpelling>
+> = {
+	ward: { spelling: canonical, historicalStatus: "Archaic" },
+	wardst: { spelling: canonical, historicalStatus: "Archaic" },
+	hätt: { spelling: canonical, orthography: "Shorthand", standsFor: "hätte" },
+	hab: {},
+};
+/**
+ * Other spellings of pronouns, keyed by Canonical Form. nix is a Licensed
+ * Variant of nichts, as gold has it. s is a Fused piece standing for es, as
+ * in gehts (ADR 0035).
+ */
+const pronounAliases: Readonly<Record<string, readonly Alias[]>> = {
+	nichts: [{ spelled: "nix", spelling: licensed }],
+	es: [
+		{
+			spelled: "s",
+			spelling: canonical,
+			orthography: "Fused",
+			standsFor: "es",
+		},
+	],
 };
 /**
  * Other spellings of one pronoun Lemma rather than of every Lemma
@@ -167,15 +227,21 @@ const pronounAliases: Readonly<Record<string, readonly string[]>> = {
  * https://www.duden.de/sprachwissen/sprachratgeber/Demonstrativpronomen-deren-derer
  * https://blog.leo.org/2018/08/24/zwei-woerter-aufgrund-derenderer-manche-ins-zweifeln-geraten/
  */
-function pronounAliasesOf(lemma: Dumling.Lemma<"de">): readonly string[] {
+function pronounAliasesOf(lemma: Dumling.Lemma<"de">): readonly Alias[] {
 	const core: Readonly<Record<string, unknown>> = lemma.coreFeatures;
 	if (
 		lemma.canonicalForm === "deren" &&
 		(core.pronType === "Rel" || core.pronType === "Dem")
 	)
-		return ["derer"];
+		return [{ spelled: "derer", spelling: licensed }];
 	return pronounAliases[lemma.canonicalForm] ?? [];
 }
+
+/** An auxiliary form with its spelling: Canonical unless listed otherwise. */
+const auxiliaryAlias = (spelled: string): Alias => ({
+	spelled,
+	...(auxiliaryFormSpellings[spelled] ?? { spelling: canonical }),
+});
 
 /**
  * Every spelling that realizes an authored DET, PRON or AUX member: a stem's
@@ -198,26 +264,30 @@ export const authoredRealizations: readonly AuthoredRealization[] =
 			lemma.kind === "DET"
 				? (determinerAliases[lemma.canonicalForm] ?? [])
 				: lemma.kind === "AUX"
-					? (auxiliaryForms[lemma.canonicalForm] ?? [])
+					? (auxiliaryForms[lemma.canonicalForm] ?? []).map(
+							auxiliaryAlias,
+						)
 					: pronounAliasesOf(lemma);
 		const reviewed = (
 			lemma.kind === "DET" ? reviewedDeterminers : reviewedPronouns
 		).find((entry) => entry.member === member);
-		// A stem Lemma's canonical spelling is one of its cells, never cell-less.
+		// A stem Lemma's canonical spelling is one of its cells, never
+		// cell-less. Any other member's own spelling is Canonical.
 		const spellings = reviewed?.spellings ?? [
-			{ spelled: lemma.canonicalForm },
+			{ spelled: lemma.canonicalForm, spelling: canonical },
 		];
 		const cellless = new Set(
 			spellings.filter(({ cell }) => !cell).map(({ spelled }) => spelled),
 		);
 		return [
-			...spellings.map(({ spelled, cell }) => ({
+			...spellings.map(({ spelled, cell, spelling }) => ({
 				member,
 				spelled,
+				...(spelling ? { spelling } : {}),
 				...(cell ? { inflection: { ...cell } } : {}),
 			})),
 			...aliases
-				.filter((spelled) => !cellless.has(spelled))
-				.map((spelled) => ({ member, spelled })),
+				.filter(({ spelled }) => !cellless.has(spelled))
+				.map((alias) => ({ member, ...alias })),
 		];
 	});

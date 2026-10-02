@@ -39,6 +39,16 @@ const withVariants = (entry: PronounForm, ...variants: string[]) => ({
 	...entry,
 	variants: [...(entry.variants ?? []), ...variants],
 });
+/** A member whose spellings carry no Surface spelling until a ruling. */
+const unclassified = ({
+	member,
+	spellings,
+}: ReviewedDeterminer): ReviewedDeterminer => ({
+	member,
+	spellings: spellings.map(({ spelled, cell }) =>
+		cell ? { spelled, cell } : { spelled },
+	),
+});
 
 /** ein-words: bare stem in Masc Nom and Neut Nom/Acc, strong endings elsewhere. */
 function einWord(stem: string, ipa: string, plural: boolean): PronounTable {
@@ -84,8 +94,8 @@ function weak(stem: string, ipa: string): PronounTable {
 // The definite and indefinite articles are pillars, authored one Lemma per
 // cell under members/lexeme/determiner/article. Every other declining
 // determiner is a stem with borrowed article endings: one Lemma here whose
-// Surfaces mark the cell (system ADR 0032). Invariant ones (derlei, manch,
-// lauter, mehr, selber, welch) keep their single-Lemma files.
+// Surfaces mark the cell (system ADR 0032). Invariant ones (derlei, etwas,
+// manch, lauter, mehr, selber, welch) keep their single-Lemma files.
 
 for (const [stem, ipa, definition, en, ru] of [
 	[
@@ -217,27 +227,33 @@ for (const pronType of ["Int", "Rel"] as const)
 	);
 }
 // Uninflected wieviel stands before a singular noun (wieviel Geld); its
-// declined cells are plural only.
-add(
-	{
-		Masc: absent,
-		Neut: absent,
-		Fem: absent,
-		Plur: [
-			form("wieviele", "viˈfiːlə"),
-			form("wieviele", "viˈfiːlə"),
-			form("wievielen", "viˈfiːlən"),
-			form("wievieler", "viˈfiːlɐ"),
-		],
-	},
-	description(
-		{ pronType: "Int" },
-		"❓🔢",
-		"Der interrogative Determinierer „wieviel“ fragt nach Auswahl oder Menge.",
-		["how much", "how many"],
-		["сколько"],
+// declined cells are plural only. Duden now spells wie viel and wie viele
+// apart, so whether these spellings are Historical awaits a source, and none
+// carries a Surface spelling yet (ADR 0041).
+reviewed.push(
+	unclassified(
+		determinerStem(
+			{
+				Masc: absent,
+				Neut: absent,
+				Fem: absent,
+				Plur: [
+					form("wieviele", "viˈfiːlə"),
+					form("wieviele", "viˈfiːlə"),
+					form("wievielen", "viˈfiːlən"),
+					form("wievieler", "viˈfiːlɐ"),
+				],
+			},
+			description(
+				{ pronType: "Int" },
+				"❓🔢",
+				"Der interrogative Determinierer „wieviel“ fragt nach Auswahl oder Menge.",
+				["how much", "how many"],
+				["сколько"],
+			),
+			{ citation: form("wieviel", "viːˈfiːl"), uninflected: ["wieviel"] },
+		),
 	),
-	{ citation: form("wieviel", "viːˈfiːl"), uninflected: ["wieviel"] },
 );
 add(
 	weak("wievielt", "viˈfiːlt"),
@@ -584,17 +600,18 @@ for (const [stem, ipa, definition, en, ru] of [
 		description({ pronType: "Tot" }, "💯", definition, [...en], [...ru]),
 	);
 }
-// beide is plural; weak beiden follows an article (die beiden Geräte).
+// beide is plural. Weak beiden stands only after a determiner, where beide
+// is ADJ (die beiden Geräte; de/pron-or-det-by-use), so DET beide has none.
 add(
 	{
 		Masc: absent,
 		Neut: absent,
 		Fem: absent,
 		Plur: [
-			form("beide", "ˈbaɪ̯də", "beiden"),
-			form("beide", "ˈbaɪ̯də", "beiden"),
+			form("beide", "ˈbaɪ̯də"),
+			form("beide", "ˈbaɪ̯də"),
 			form("beiden", "ˈbaɪ̯dən"),
-			form("beider", "ˈbaɪ̯dɐ", "beiden"),
+			form("beider", "ˈbaɪ̯dɐ"),
 		],
 	},
 	description(

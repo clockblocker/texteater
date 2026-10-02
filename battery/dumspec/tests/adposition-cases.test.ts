@@ -231,8 +231,10 @@ test("the table lists each Lexeme ADP's positions with a case set each", () => {
 		Prep: ["Gen", "Dat"],
 		Post: [],
 	});
+	// inkl. is one Segment whose Surface is inklusive
+	// (de/abbreviation-is-one-segment), so no ADP Lemma is inkl.
+	expect(germanAdpositionEntry(adposition("inkl."))).toBeNull();
 	// Positions follow Duden, the single standard.
-	expect(positions("inkl.")).toEqual(positions("inklusive"));
 	expect(positions("entgegen")).toEqual({ Prep: ["Dat"], Post: ["Dat"] });
 	expect(positions("zugunsten")).toEqual({ Prep: ["Gen"], Post: ["Dat"] });
 	expect(positions("zuungunsten")).toEqual({ Prep: ["Gen"], Post: ["Dat"] });

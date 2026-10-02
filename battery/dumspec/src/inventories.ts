@@ -31,6 +31,7 @@ export {
 	germanArticleSpellings,
 } from "./inventories/de/article-cells.js";
 export {
+	closedVerbFormSpellings,
 	closedVerbForms,
 	modalVerbs,
 } from "./inventories/de/closed-verb-paradigms.js";
@@ -51,6 +52,7 @@ export { reviewedPronouns } from "./inventories/de/pronoun-paradigms.js";
 export {
 	type AuthoredRealization,
 	authoredRealizations,
+	type RealizationSpelling,
 } from "./inventories/de/realizations.js";
 export type {
 	AuthoredSpelling,

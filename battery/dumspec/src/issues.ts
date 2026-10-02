@@ -13,6 +13,7 @@ export type SpecCheck =
 	| "AdpositionCase"
 	| "ArticleAgreement"
 	| "ClosedPart"
+	| "AuthoredReading"
 	| "Segments"
 	| "Members"
 	| "Coverage"

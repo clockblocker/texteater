@@ -7,6 +7,10 @@ export {
 	type ArticleAgreementIssue,
 	attestationArticleAgreementIssues,
 } from "./check-article-agreement.js";
+export {
+	type AuthoredReadingIssue,
+	authoredReadingIssues,
+} from "./check-authored-readings.js";
 export { checkPromptCitations, type PromptIssue } from "./check-citations.js";
 export {
 	attestationParticleIssues,
@@ -21,6 +25,7 @@ export {
 	type AuthoredSpelling,
 	authoredMembers,
 	authoredRealizations,
+	closedVerbFormSpellings,
 	closedVerbForms,
 	type GermanAdpositionCase,
 	type GermanAdpositionCases,
@@ -36,6 +41,7 @@ export {
 	germanParticleMember,
 	germanParticles,
 	modalVerbs,
+	type RealizationSpelling,
 	type ReviewedMember,
 	reflexiveDrillDown,
 	reflexivityUnit,

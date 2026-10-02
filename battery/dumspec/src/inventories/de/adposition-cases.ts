@@ -211,7 +211,6 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 	einschließlich: { Prep: genitiveOrDative, Post: caseless }, // Sophia einschließlich.
 	exklusive: prep(genitiveOrDative),
 	fern: prep(genitiveOrDative), // Dat rarer.
-	"inkl.": { Prep: genitiveOrDative, Post: caseless }, // Duden: kurz für inklusive.
 	inklusive: { Prep: genitiveOrDative, Post: caseless }, // Porto inklusive.
 	laut: prep(genitiveOrDative),
 	längs: prep(genitiveOrDative),

@@ -1,4 +1,6 @@
 import { readFileSync } from "node:fs";
+import { lemmaIdentityKey } from "dumling";
+import { authoredMembers } from "../src/inventories.js";
 import type { SpecCheck } from "../src/issues.js";
 import { ruleStatementHash, rules } from "../src/rules.js";
 
@@ -19,18 +21,30 @@ export const ruleCitation = {
 	hash: ruleStatementHash(citedRule.statement),
 };
 
+/** An authored Lemma's first authored Reading, or 👀 for any other Lemma. */
+function emojiDescriptionOf(lemma: RecordJson): string {
+	const key = lemmaIdentityKey(lemma);
+	return (
+		authoredMembers.find((member) => lemmaIdentityKey(member.lemma) === key)
+			?.reading.emojiDescription ?? "👀"
+	);
+}
+
 /**
  * Marks a seed record reviewed through Reading and gives it what that needs
- * beyond a Draft: a Reading on every target and a Rule citation.
+ * beyond a Draft: a Reading on every target, an authored one where the
+ * Authored Inventory holds the Lemma, and a Rule citation.
  */
 export function review(record: RecordJson): RecordJson {
 	record.reviewDepth = "Reading";
 	// A Foreign Reading is its Lemma alone (ADR 0045).
-	for (const target of record.targets)
+	for (const target of record.targets) {
+		const { lemma } = target.attestation.surface;
 		target.reading =
-			target.attestation.surface.lemma.family === "Foreign"
+			lemma.family === "Foreign"
 				? {}
-				: { emojiDescription: "👀" };
+				: { emojiDescription: emojiDescriptionOf(lemma) };
+	}
 	record.sources.rules = [ruleCitation];
 	return record;
 }

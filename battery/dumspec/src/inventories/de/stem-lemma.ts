@@ -13,10 +13,21 @@ export type SurfaceCell = {
 	readonly number: "Sing" | "Plur" | null;
 	readonly gender: "Masc" | "Neut" | "Fem" | null;
 };
-/** A reviewed spelling; a stem Lemma's spellings name the cell they realize. */
+/** How a Surface is spelled: Canonical, or a Variant with its tags (ADR 0041). */
+export type SurfaceSpelling = Dumling.Surface<"de">["spelling"];
+/** The spelling of a form's main spelling (Rule de/variant-and-historical-status). */
+export const canonical: SurfaceSpelling = { kind: "Canonical" };
+/**
+ * A reviewed spelling; a stem Lemma's spellings name the cell they realize.
+ * `spelling` is the Surface's spelling where gold or a Rule fixes it, and a
+ * form's main spelling is Canonical. A table's other spellings of a cell
+ * (eins beside eines, genitive jeden beside jedes) have none until a ruling
+ * says whether each is a Variant and with which tags.
+ */
 export type AuthoredSpelling = {
 	readonly spelled: string;
 	readonly cell?: SurfaceCell;
+	readonly spelling?: SurfaceSpelling;
 };
 /** One reviewed PRON or DET member with every spelling that realizes it. */
 export type ReviewedMember = {
@@ -35,7 +46,10 @@ export type StemDescription<Core> = {
 
 const cases = ["Nom", "Acc", "Dat", "Gen"] as const;
 
-/** Every occupied cell's spellings, variants included, with the cell each realizes. */
+/**
+ * Every occupied cell's spellings, variants included, with the cell each
+ * realizes. A cell's own form is Canonical; its variants carry no spelling.
+ */
 export function tableSpellings(table: PronounTable): AuthoredSpelling[] {
 	const spellings: AuthoredSpelling[] = [];
 	for (const column of ["Masc", "Neut", "Fem", "Plur"] as const)
@@ -47,7 +61,8 @@ export function tableSpellings(table: PronounTable): AuthoredSpelling[] {
 				number: column === "Plur" ? "Plur" : "Sing",
 				gender: column === "Plur" ? null : column,
 			};
-			for (const spelled of [form.text, ...(form.variants ?? [])])
+			spellings.push({ spelled: form.text, cell, spelling: canonical });
+			for (const spelled of form.variants ?? [])
 				spellings.push({ spelled, cell });
 		}
 	return spellings;
@@ -147,8 +162,10 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 				...locutionType.coverage,
 			},
 		}),
-		spellings: input.spellings.filter((spelling) => {
-			const key = JSON.stringify(spelling);
+		// The first of a spelling and cell wins, so a cell's own form keeps
+		// its Canonical spelling over a variant spelled alike.
+		spellings: input.spellings.filter(({ spelled, cell }) => {
+			const key = JSON.stringify([spelled, cell ?? null]);
 			if (seen.has(key)) return false;
 			seen.add(key);
 			return true;
