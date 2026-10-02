@@ -1112,7 +1112,7 @@ const locutionsAndSayings: Rule[] = [
 	{
 		id: "de/routine-formula-is-intj",
 		statement:
-			"A routine formula, a fixed conversational routine such as a greeting, farewell, thanks, apology or wish (guten Morgen), is an INTJ: a Lexeme when it is one word (danke), a Locution otherwise. What it does in conversation is its Formula Role, Reading Knowledge, so one Lemma may carry several Readings. An expression that also serves as an adverbial inside a clause, with the same meaning, keeps Kind ADV even standing alone (Gott sei Dank). Words that only stand together are no formula, and each resolves on its own.",
+			"A routine formula, a fixed conversational routine such as a greeting, farewell, thanks, apology or wish (guten Morgen), is an INTJ: a Lexeme when it is one word (danke), a Locution otherwise. What it does in conversation is its Formula Role, Reading Knowledge, so one Lemma may carry several Readings. An expression that also serves as an adverbial inside a clause, with the same meaning, keeps Kind ADV even standing alone (Gott sei Dank). Words that only stand together are no formula, nor is a formula with a complement and sense it lacks (darf ich um Ruhe bitten): they resolve word by word.",
 		adrs: ["ADR-0039"],
 		routes: [...lexeme("INTJ"), ...locution("INTJ", "ADV")],
 		records: [
@@ -1130,6 +1130,7 @@ const locutionsAndSayings: Rule[] = [
 			"de/sie-besteht-auf-einer-entschuldigung",
 			"de/entschuldigung-ist-hier-noch-frei",
 			"de/draussen-faellt-starker-regen",
+			"de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf",
 		],
 	},
 	{

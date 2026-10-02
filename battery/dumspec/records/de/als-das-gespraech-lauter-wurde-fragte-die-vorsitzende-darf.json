@@ -36,16 +36,37 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0026", "ADR-0034", "ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "32797f3b5f083780"
+			},
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "20805b8ea5d73309"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: bitten",
+				"url": "https://www.duden.de/rechtschreibung/bitten",
+				"supports": "Target 2, the plain verb: darf ich um Aufmerksamkeit bitten! under sense 1, 'eine Bitte aussprechen'. darf ich bitten? appears only without an object, as an invitation to dance."
+			},
+			{
+				"title": "DWDS: bitten",
+				"url": "https://www.dwds.de/wb/bitten",
+				"supports": "Target 2, the plain verb: der Redner bittet ums Wort, um Ruhe, um Gehör under sense 1a. darf ich bitten? (= Aufforderung zum Tanz) appears only without an object."
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [19, 21, 27],
-			"route": { "family": "Locution", "kind": "INTJ" },
+			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "VERB" },
 			"notes": {
-				"rationale": "The free request complement is context between the classified fixed members."
+				"rationale": "Darf is the modal dürfen, a VERB with a meaning of its own, one Lemma whether it governs an infinitive or an object; the infinitive it governs, bitten, is a target of its own (de/modal-is-a-verb, ADR 0026). With um Ruhe, Darf ich … bitten? is no formula (target 2)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -55,21 +76,174 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Locution",
-						"kind": "INTJ",
-						"canonicalForm": "darf ich bitten",
-						"coreFeatures": {}
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "dürfen",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
 					},
-					"normalizedSurface": "darf ich bitten",
+					"normalizedSurface": "darf",
 					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
+				},
+				"members": [{ "attested": "Darf", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": []
+			}
+		},
+		{
+			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"reading": { "emojiDescription": "👈" },
+			"notes": {
+				"rationale": "ich, the speaker as subject of darf, is the personal pronoun ich, Nom.Sg."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "ich",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"person": "1",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"normalizedSurface": "ich",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
+				},
+				"members": [{ "attested": "ich", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		},
+		{
+			"memberSegmentIndices": [23, 27],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The Vorsitzende asks for quiet: bitten um is the plain verb, Duden bitten 1 (darf ich um Aufmerksamkeit bitten!) and DWDS bitten 1a (der Redner bittet … um Ruhe). Duden and DWDS list the formula darf ich bitten? only without an object, as an invitation to dance, so with the object um Ruhe and a sense the formula lacks the words resolve word by word (de/routine-formula-is-intj, ruled on #828, case 6). um is governed by bitten, a member recorded in valencyEvidence as um + Acc and kept out of the normalized Surface bitten, as in sie-wurde-um-geduld-gebeten (de/governed-preposition-joins-its-governor). bitten is the infinitive Darf governs.",
+				"knownMistakes": [
+					"Grouping Darf ich … bitten as the Locution INTJ darf ich bitten with um Ruhe free: the formula takes no object, and here the words mean only their sum."
+				]
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"canonicalForm": "bitten",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"normalizedSurface": "bitten",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"mood": null,
+						"number": null,
+						"person": null,
+						"tense": null,
+						"verbForm": "Inf",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					}
 				},
 				"members": [
-					{ "attested": "Darf", "orthography": "Standard" },
-					{ "attested": "ich", "orthography": "Standard" },
+					{ "attested": "um", "orthography": "Standard" },
 					{ "attested": "bitten", "orthography": "Standard" }
 				],
-				"realizationCoverage": "Full"
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [
+					{
+						"member": 0,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "um",
+								"coreFeatures": {}
+							},
+							"governedCase": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				]
+			}
+		},
+		{
+			"memberSegmentIndices": [25],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Ruhe is what bitten asks for, a bare NOUN in the Acc that um takes, with no article."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Ruhe",
+						"coreFeatures": { "gender": "Fem" }
+					},
+					"normalizedSurface": "Ruhe",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [{ "attested": "Ruhe", "orthography": "Standard" }],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
 	],
