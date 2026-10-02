@@ -297,3 +297,32 @@ test("saying-closed: a word outside a Saying span keeps its own unit", async () 
 	expect(result.without).toEqual([[0], [2, 5, 7, 10, 12]]);
 	expect(result.with).toEqual([[0], [2], [5, 7, 10, 12]]);
 });
+
+test("bracket-particle: of one preposition twice in a clause, the one closing it is the particle, and the earlier one joins only as the preposition its answer names", async () => {
+	// Pass0 _1 auf2 _3 dich4 _5 auf6 !7
+	const pass = await groups(
+		segmentsOf("Pass auf dich auf!"),
+		{
+			s_particle_2: picked("p1", { p1: 0.89, none: 0.11 }),
+			s_preposition_2: picked("p1", { p1: 0.73, none: 0.27 }),
+			s_particle_4: picked("p1", { p1: 0.82, none: 0.18 }),
+			s_preposition_4: picked("p1", { p1: 0.78, none: 0.22 }),
+		},
+		"bracket-particle",
+	);
+	expect(pass.without).toEqual([[0, 2], [4], [6]]);
+	expect(pass.with).toEqual([[0, 2, 6], [4]]);
+	// Er0 _1 fängt2 _3 an4 _5 der6 _7 Ecke8 _9 wieder10 _11 an12 .13
+	const ecke = await groups(
+		segmentsOf("Er fängt an der Ecke wieder an."),
+		{
+			s_particle_3: picked("p2", { p2: 0.8, none: 0.2 }),
+			s_preposition_3: picked("none", { p2: 0.2, none: 0.8 }),
+			s_particle_7: picked("p2", { p2: 0.7, none: 0.3 }),
+			s_article_4: picked("p5"),
+		},
+		"bracket-particle",
+	);
+	expect(ecke.without).toEqual([[0], [2, 4], [6, 8], [10], [12]]);
+	expect(ecke.with).toEqual([[0], [2, 12], [4], [6, 8], [10]]);
+});

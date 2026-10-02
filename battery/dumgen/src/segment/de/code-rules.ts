@@ -53,6 +53,15 @@
  * - `answer-apart` (de/interjection-counts-its-words): an answer word
  *   before a formula keeps its own unit, with no punctuation between
  *   (Nein danke); routing reads it when it merges interjections.
+ * - `bracket-particle` (de/verb-owns-its-scattered-members,
+ *   de/bracket-particle-or-circumposition,
+ *   de/governed-preposition-joins-its-governor): a verb has one separable
+ *   particle, and it closes the verb's bracket. When one clause holds the
+ *   same preposition twice and the judge hears both as one verb's
+ *   particle, the one that ends the clause is the particle, and the
+ *   earlier one heads a phrase: it joins the verb only when its
+ *   preposition answer names that verb. Pass auf dich auf gives [Pass,
+ *   auf, auf]; fängt an der Kreuzung an leaves the first an free.
  * - `saying-closed` (de/saying-needs-uptake,
  *   de/locutions-and-sayings-are-made-of-lexemes): a Saying is one unit
  *   over exactly its own words, so a link between a word inside a Saying
@@ -72,8 +81,8 @@ import {
 	wasFuerId,
 	wasFuerPairs,
 } from "./candidates.js";
-import type { Nomination } from "./nomination.js";
-import { groupKey, partitionOf } from "./partition.js";
+import { type Nomination, slotId } from "./nomination.js";
+import { argmax, groupKey, partitionOf } from "./partition.js";
 import type { Piece } from "./sentence.js";
 
 export const codeRules = [
@@ -89,6 +98,7 @@ export const codeRules = [
 	"binomial",
 	"answer-apart",
 	"saying-closed",
+	"bracket-particle",
 ] as const;
 
 export type CodeRule = (typeof codeRules)[number];
@@ -186,6 +196,69 @@ function strandedAdverbs(nomination: Nomination): Decision {
 }
 
 const splitAdverbHeads = new Set(["da", "wo", "hier"]);
+
+/** The share a satellite's host needs: production's satellite floor. */
+const satelliteFloor = 0.5;
+
+/** A piece's top host in one of its slots, when it beats none and clears the satellite floor. */
+function slotHostOf(
+	nomination: Nomination,
+	kind: "particle" | "preposition",
+	piece: Piece,
+): number | undefined {
+	const slot = nomination.slots.find(
+		(candidate) =>
+			candidate.kind === kind && candidate.piece.id === piece.id,
+	);
+	const answer = slot ? nomination.first[slotId(slot)] : undefined;
+	if (answer?.type !== "choice") return undefined;
+	const top = argmax(
+		Object.fromEntries(
+			Object.entries(answer.probabilities).filter(
+				([key]) => key !== "none",
+			),
+		),
+	);
+	return top.key &&
+		top.share >= satelliteFloor &&
+		top.share > (answer.probabilities.none ?? 0)
+		? Number(top.key.slice(1))
+		: undefined;
+}
+
+function bracketParticles(nomination: Nomination): Decision {
+	const { pieces } = nomination.sentence;
+	const clauseOf = bracketClauses(nomination);
+	const last = new Map<number, number>();
+	for (const piece of pieces) last.set(clauseOf.get(piece.id) ?? 0, piece.id);
+	const add: [number, number][] = [];
+	const dropped = new Set<string>();
+	for (const late of pieces) {
+		const clause = clauseOf.get(late.id);
+		if (late.fusedWord || last.get(clause ?? 0) !== late.id) continue;
+		const host = slotHostOf(nomination, "particle", late);
+		if (host === undefined) continue;
+		for (const early of pieces) {
+			if (
+				early.id >= late.id ||
+				early.fusedWord ||
+				clauseOf.get(early.id) !== clause ||
+				lower(early) !== lower(late) ||
+				slotHostOf(nomination, "particle", early) !== host
+			)
+				continue;
+			add.push([late.id, host]);
+			if (slotHostOf(nomination, "preposition", early) !== host)
+				dropped.add(`${early.id},${host}`);
+		}
+	}
+	return {
+		add,
+		drop: (edge) =>
+			edge.source === "satellite" &&
+			dropped.has(`${edge.pieces[0]},${edge.pieces[1]}`),
+	};
+}
 
 /** The anchors right after a correlator's own two: nicht nur … sondern auch, sowohl … als auch. */
 const extraAnchors: Readonly<
@@ -549,6 +622,7 @@ function decisionsOf(
 		// Read by routing, where interjections merge.
 		"answer-apart": () => ({}),
 		"saying-closed": () => sayingsClosed(membership.edges),
+		"bracket-particle": () => bracketParticles(nomination),
 	};
 	return rules.map((rule) => decide[rule]());
 }
