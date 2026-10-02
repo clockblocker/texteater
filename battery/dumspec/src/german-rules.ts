@@ -417,7 +417,7 @@ const participles: Rule[] = [
 	{
 		id: "de/sein-perfect-or-copula",
 		statement:
-			"sein or haben with a participle is a perfect only when the clause reports the verb's own event. The context decides, and a simple past that says the same supports it: ist abgefahren is fuhr ab, hat um 8 geöffnet is öffnete um 8. Otherwise the participle is an ADJ describing a state and the verb stays apart: copular sein, the state passive included (Das Fenster ist geöffnet gives [ist] VERB and [geöffnet] ADJ; Sie ist verärgert gives verärgert ADJ with no reflexive), or the VERB haben (Der Laden hat bis 20 Uhr geöffnet gives [hat] VERB and [geöffnet] ADJ).",
+			"sein or haben with a participle is a perfect only when the clause reports the verb's own event, and sein only when the verb's perfect takes sein (kommen, werden). The context decides, and a simple past that says the same supports it: ist abgefahren is fuhr ab. Otherwise the participle is an ADJ describing a state and the verb stays apart: copular sein, the state passive included (Das Fenster ist geöffnet gives [ist] VERB and [geöffnet] ADJ; Sie ist verärgert gives verärgert ADJ with no reflexive), or the VERB haben (Der Laden hat bis 20 Uhr geöffnet gives [hat] VERB and [geöffnet] ADJ).",
 		adrs: ["ADR-0036"],
 		routes: lexeme("VERB", "ADJ"),
 		records: [
@@ -431,6 +431,10 @@ const participles: Rule[] = [
 			"de/der-laden-hat-heute-erst-um-8-geoeffnet",
 			"de/er-hat-die-ganze-zeit-die-augen-geschlossen",
 			"de/er-hat-ploetzlich-die-augen-geschlossen",
+			// A verb whose perfect takes haben has no sein perfect: entscheiden
+			// and verleiden give copular sein and an ADJ.
+			"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er",
+			"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen",
 		],
 	},
 	{
@@ -1027,7 +1031,7 @@ const conjunctionsAndParticles: Rule[] = [
 	{
 		id: "de/focus-word-is-adv",
 		statement:
-			"A focus word picks out one phrase and sets it against alternatives: nur, bloß, lediglich, allein, erst, schon, noch, auch, sogar, selbst, gerade, ausgerechnet, eben 'precisely'. It is a single-member ADV, never PART, and never joins the phrase it picks out, also when both stand before the finite verb: Selbst der erfahrenste Techniker gives [Selbst] ADV selbst. The same spelling as a modal particle is PART (de/modal-particle-is-part), and nicht is PART (de/nicht-is-part).",
+			"A focus word picks out one phrase and sets it against alternatives: nur, bloß, lediglich, allein, erst, schon, noch, auch, sogar, selbst, gerade, ausgerechnet, eben 'precisely'. It is a single-member ADV, never PART, and never joins the phrase it picks out, also when both stand before the finite verb: Selbst der erfahrenste Techniker gives [Selbst] ADV selbst. The same spelling as a modal particle is PART (de/modal-particle-is-part), and nicht is PART (de/nicht-is-part). Where a focus word is fixed in a Locution or Saying (nur Bahnhof verstehen), the Locution and Saying Rules decide the unit.",
 		adrs: [],
 		routes: lexeme("ADV", "PART"),
 		records: [
@@ -1041,6 +1045,9 @@ const conjunctionsAndParticles: Rule[] = [
 			"de/es-brennt-die-hand-es-brennt-das-haar",
 			"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist",
 			"de/er-ass-nur-ein-wenig",
+			// A focus word fixed in an Idiom or a correlator is its member.
+			"de/bei-dieser-formel-verstehe-ich-nur-bahnhof",
+			"de/sie-hat-sowohl-den-film-gesehen-als-auch-das-buch-gelesen",
 		],
 	},
 	{

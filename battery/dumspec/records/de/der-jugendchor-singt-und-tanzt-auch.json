@@ -20,7 +20,7 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/focus-word-is-adv", "hash": "d38200289df9682c" }
+			{ "rule": "de/focus-word-is-adv", "hash": "c7d154ba1801d992" }
 		],
 		"references": []
 	},

@@ -22,7 +22,7 @@
 		"adrs": ["ADR-0036", "ADR-0040"],
 		"rules": [
 			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" },
-			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
+			{ "rule": "de/sein-perfect-or-copula", "hash": "2f0a185d7f35c1e9" },
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" }

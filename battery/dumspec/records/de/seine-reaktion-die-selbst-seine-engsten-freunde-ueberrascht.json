@@ -49,7 +49,7 @@
 				"hash": "17cec6bff2108a22"
 			},
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
-			{ "rule": "de/focus-word-is-adv", "hash": "d38200289df9682c" },
+			{ "rule": "de/focus-word-is-adv", "hash": "c7d154ba1801d992" },
 			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
