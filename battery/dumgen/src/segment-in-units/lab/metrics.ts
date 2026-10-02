@@ -3,9 +3,9 @@
  * it per assembly policy the way ADR 0008 ranks it: membership first (all,
  * one-piece, multi-piece and discontinuous gold units, and the shape of
  * each miss), then its consistency across repetitions, then the route,
- * tolerant and strict. Grouping sits beside membership (#701): Segment
- * pairs kept together, returned units merged across gold units and gold
- * units split. Also Full-record sentence passes, case flips, cost and
+ * tolerant and strict. Grouping sits beside membership (#701): what
+ * hovering each Segment highlights (B-cubed), Segment pairs kept together,
+ * returned units merged across gold units and gold units split. Also Full-record sentence passes, case flips, cost and
  * latency, and breakdowns by gold route and cited Rule and the calibration
  * of route and membership judgments.
  */
@@ -18,7 +18,12 @@ import {
 	tolerantMatch,
 	type UnitCheck,
 } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
-import type { GroupingCheck } from "../../evaluation/spec-corpus/segment-in-units-grouping.js";
+import {
+	checkHover,
+	type GroupingCheck,
+	type HoverCheck,
+	hoverRates,
+} from "../../evaluation/spec-corpus/segment-in-units-grouping.js";
 import { toleratedPairOf } from "../../evaluation/spec-corpus/segment-in-units-route-tolerance.js";
 import {
 	expletiveForms,
@@ -74,6 +79,24 @@ export type Tally = {
 	overMerged: number;
 	/** Scored gold units split across two or more returned units. */
 	underMerged: number;
+	/**
+	 * B-cubed (#701): the hovered Segments of scored gold units, their
+	 * precision and recall summed, the Segments they highlight, and the
+	 * highlighted Segments no gold unit asserts.
+	 */
+	hoverSegments: number;
+	hoverPrecisionSum: number;
+	hoverRecallSum: number;
+	hoverHighlighted: number;
+	hoverUnasserted: number;
+	/** The same on Full records only. */
+	fullHoverSegments: number;
+	fullHoverPrecisionSum: number;
+	fullHoverRecallSum: number;
+	/** The same over Segments of multi-piece gold units. */
+	multiHoverSegments: number;
+	multiHoverPrecisionSum: number;
+	multiHoverRecallSum: number;
 	contractCases: number;
 	contractPass: number;
 	fullCases: number;
@@ -110,6 +133,17 @@ const emptyTally = (): Tally => ({
 	truePairs: 0,
 	overMerged: 0,
 	underMerged: 0,
+	hoverSegments: 0,
+	hoverPrecisionSum: 0,
+	hoverRecallSum: 0,
+	hoverHighlighted: 0,
+	hoverUnasserted: 0,
+	fullHoverSegments: 0,
+	fullHoverPrecisionSum: 0,
+	fullHoverRecallSum: 0,
+	multiHoverSegments: 0,
+	multiHoverPrecisionSum: 0,
+	multiHoverRecallSum: 0,
 	contractCases: 0,
 	contractPass: 0,
 	fullCases: 0,
@@ -194,6 +228,7 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 			if (pieces > 1 && !contiguous(labCase, unit))
 				tally.discontinuousScored++;
 		}
+		addHover(tally, labCase, hoverOf(labCase, score));
 		tally.contractCases++;
 		if (labCase.facts.coverage === "Full") tally.fullCases++;
 		return;
@@ -235,6 +270,7 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 			if (check.verdict === "Match") tally.singleMatch++;
 		}
 	}
+	addHover(tally, labCase, evaluation.hover);
 	addGrouping(tally, labCase, evaluation.grouping);
 	if (evaluation.contractPass !== undefined) {
 		tally.contractCases++;
@@ -245,6 +281,34 @@ function add(tally: Tally, labCase: LabCase, score: CaseScore): void {
 		if (evaluation.sentence.pass && evaluation.contractPass)
 			tally.fullPass++;
 	}
+}
+
+/** A score's B-cubed sums; a failed case scores as an empty answer. */
+function hoverOf(labCase: LabCase, score: CaseScore): HoverCheck {
+	return (
+		score.evaluation?.hover ??
+		checkHover({
+			segments: labCase.input.segments,
+			ideal: labCase.idealOutput.units,
+			returned: [],
+		})
+	);
+}
+
+function addHover(tally: Tally, labCase: LabCase, hover: HoverCheck): void {
+	tally.hoverSegments += hover.segments;
+	tally.hoverPrecisionSum += hover.precision;
+	tally.hoverRecallSum += hover.recall;
+	tally.hoverHighlighted += hover.highlighted;
+	tally.hoverUnasserted += hover.unasserted;
+	if (labCase.facts.coverage === "Full") {
+		tally.fullHoverSegments += hover.segments;
+		tally.fullHoverPrecisionSum += hover.precision;
+		tally.fullHoverRecallSum += hover.recall;
+	}
+	tally.multiHoverSegments += hover.multi.segments;
+	tally.multiHoverPrecisionSum += hover.multi.precision;
+	tally.multiHoverRecallSum += hover.multi.recall;
 }
 
 function addGrouping(
@@ -282,6 +346,13 @@ export const isStub = (unit: Unit) =>
  * so do `variantRate` (how many of them carry variants) and
  * `meanVariants` (how many routes those carry).
  *
+ * Hover (#701), the headline beside membership: B-cubed precision, recall
+ * and F1 over the Segments of scored gold units on every record
+ * (`hoverPrecision`, `hoverRecall`, `hoverF1`), on Full records only
+ * (`fullHover…`) and over multi-piece gold units only (`multiHover…`). An
+ * asserted unit is complete, so a highlighted Segment outside it counts
+ * against precision on a Partial record too.
+ *
  * Grouping (#701): `pairRecall` over the Segment pairs of scored gold
  * units on every record; `pairPrecision` over returned pairs on Full
  * records only, since a Partial record cannot show two unannotated Segments
@@ -294,8 +365,32 @@ export function rates(tally: Tally) {
 	const pairRecall = ratio(tally.recalledPairs, tally.goldPairs);
 	const pairPrecision = ratio(tally.fullTruePairs, tally.fullPairs);
 	const assertedPairPrecision = ratio(tally.truePairs, tally.decidedPairs);
+	const hover = hoverRates({
+		segments: tally.hoverSegments,
+		precision: tally.hoverPrecisionSum,
+		recall: tally.hoverRecallSum,
+	});
+	const fullHover = hoverRates({
+		segments: tally.fullHoverSegments,
+		precision: tally.fullHoverPrecisionSum,
+		recall: tally.fullHoverRecallSum,
+	});
+	const multiHover = hoverRates({
+		segments: tally.multiHoverSegments,
+		precision: tally.multiHoverPrecisionSum,
+		recall: tally.multiHoverRecallSum,
+	});
 	return {
 		membership: ratio(membership, tally.scored),
+		hoverPrecision: hover.precision,
+		hoverRecall: hover.recall,
+		hoverF1: hover.f1,
+		fullHoverPrecision: fullHover.precision,
+		fullHoverRecall: fullHover.recall,
+		fullHoverF1: fullHover.f1,
+		multiHoverPrecision: multiHover.precision,
+		multiHoverRecall: multiHover.recall,
+		multiHoverF1: multiHover.f1,
 		multiMembership: ratio(tally.multiMembership, tally.multiScored),
 		singleMembership: ratio(tally.singleMembership, tally.singleScored),
 		discontinuousMembership: ratio(
@@ -357,6 +452,16 @@ export type PolicySummary = {
 	readonly membershipByRepetition: readonly number[];
 	/** Strict unit accuracy of each repetition. */
 	readonly unitAccuracyByRepetition: readonly number[];
+	/**
+	 * The records each hover rate is counted over: those with a scored gold
+	 * unit, the Full ones among them, and those with a multi-piece one. The
+	 * hovered Segments themselves are summed over repetitions in the tally.
+	 */
+	readonly hoverRecords: {
+		readonly all: number;
+		readonly full: number;
+		readonly multi: number;
+	};
 	/**
 	 * The records each pair rate is counted over: those with a gold pair,
 	 * the Full ones with a returned pair, and those with a returned pair the
@@ -425,6 +530,7 @@ export function summarizePolicy(
 	let membershipFlipBase = 0;
 	let varyingOutputs = 0;
 	let counted = 0;
+	const hoverRecords = { all: 0, full: 0, multi: 0 };
 	const pairRecords = {
 		recall: 0,
 		fullPrecision: 0,
@@ -441,9 +547,11 @@ export function summarizePolicy(
 			(): boolean[] => [],
 		);
 		let decidedPairs = false;
+		let hover: HoverCheck | undefined;
 		for (const [index, repetition] of caseRun.repetitions.entries()) {
 			const score = scoreCase(labCase, repetition, policy);
 			add(tally, labCase, score);
+			hover = hoverOf(labCase, score);
 			if ((score.evaluation?.grouping.decidedPairs ?? 0) > 0)
 				decidedPairs = true;
 			labCase.idealOutput.units.forEach((unit, unitIndex) => {
@@ -470,6 +578,12 @@ export function summarizePolicy(
 				membershipFlips++;
 		}
 		if (outputs.size > 1) varyingOutputs++;
+		// The hovered Segments come from the gold, the same every repetition.
+		if (hover && hover.segments > 0) {
+			hoverRecords.all++;
+			if (labCase.facts.coverage === "Full") hoverRecords.full++;
+		}
+		if (hover && hover.multi.segments > 0) hoverRecords.multi++;
 		if (
 			labCase.idealOutput.units.some(
 				(unit) => !isStub(unit) && unit.segments.length > 1,
@@ -493,6 +607,7 @@ export function summarizePolicy(
 		unitAccuracyByRepetition: byRepetition.map(
 			(entry) => rates(entry).unitAccuracy,
 		),
+		hoverRecords,
 		pairRecords,
 		overMergedByRepetition: byRepetition.map((entry) => entry.overMerged),
 		underMergedByRepetition: byRepetition.map((entry) => entry.underMerged),

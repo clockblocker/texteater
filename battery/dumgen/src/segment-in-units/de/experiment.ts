@@ -30,6 +30,11 @@ import {
 	evaluateSegmentInUnits,
 	type SegmentInUnitsEvaluation,
 } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
+import {
+	type HoverCheck,
+	hoverRates,
+	sumHover,
+} from "../../evaluation/spec-corpus/segment-in-units-grouping.js";
 import { type LabSet, loadSet, type SetName, setPath } from "../lab/corpus.js";
 import { type CallRecord, Jev } from "../lab/jev.js";
 import { referenceArm } from "./arms/reference.js";
@@ -214,8 +219,10 @@ const headline = [
 /**
  * The evaluator's counts summed over every repetition it scored, and the
  * ADR 0008 headline rates over the scored gold units: membership, then the
- * tolerant and the strict route. A repetition that failed before scoring
- * shows in the run's summary instead.
+ * tolerant and the strict route. Beside them, the evaluator's hover B-cubed
+ * (#701) on every record, on Full records only and over multi-piece gold
+ * units, each with the hovered Segments it is counted over. A repetition
+ * that failed before scoring shows in the run's summary instead.
  */
 export function segmentInUnitsMetrics(run: {
 	readonly cases: readonly (Scored & {
@@ -236,6 +243,17 @@ export function segmentInUnitsMetrics(run: {
 	const contract = evaluations.flatMap((evaluation) =>
 		"contractPass" in evaluation ? [evaluation.contractPass === true] : [],
 	);
+	const hoverOf = (scope: readonly Partial<SegmentInUnitsEvaluation>[]) =>
+		sumHover(
+			scope.flatMap(({ hover }): HoverCheck[] => (hover ? [hover] : [])),
+		);
+	const hover = hoverOf(evaluations);
+	const fullHover = hoverOf(
+		evaluations.filter(
+			(evaluation: Partial<SegmentInUnitsEvaluation>) =>
+				evaluation.coverage === "Full",
+		),
+	);
 	return {
 		evaluated: evaluations.length,
 		rates: {
@@ -243,6 +261,15 @@ export function segmentInUnitsMetrics(run: {
 				headline.map((key) => [key, count(key) / count("scored")]),
 			),
 			contractPass: contract.filter(Boolean).length / contract.length,
+			hover: { ...hoverRates(hover), segments: hover.segments },
+			fullHover: {
+				...hoverRates(fullHover),
+				segments: fullHover.segments,
+			},
+			multiHover: {
+				...hoverRates(hover.multi),
+				segments: hover.multi.segments,
+			},
 		},
 		totals,
 	};

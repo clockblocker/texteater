@@ -96,19 +96,40 @@ The pilot writes its manifest, configuration, requests and results to
   unscored. Outcome letters mark an acceptable route miss `A` and any
   other `R`; `k` keeps each repetition's variant count.
 - Grouping sits beside membership (#701), because hovering a Segment
-  highlights its whole unit. **pairR** counts the Segment pairs inside
-  scored gold units that one returned unit keeps together, on every
-  record. **pairP** counts the returned pairs that one gold unit holds, on
-  Full records only, since a Partial record cannot show two unannotated
-  Segments wrongly joined. **assertedP** does the same for returned pairs
-  that touch an asserted unit on any record: every asserted unit is
-  complete. **over** counts returned units that join Segments of two or
-  more gold units, and **under** counts gold units split across returned
-  units. Each figure names the records it is counted over. `report` also
-  gives membership of discontinuous gold units and writes every over- and
-  under-merge once, one line each with its repetitions, to `grouping.over`
-  and `grouping.under` in `summary.json`. `compare` prints each side's grouping and its membership
-  per phenomenon tag; both need the raw run.
+  highlights its whole unit. Its headline is **hover**, B-cubed over what
+  each hover shows. A hovered Segment p highlights H(p), itself and the
+  Segments of every returned unit holding it, against G(p), the Segments
+  of its gold unit. precision(p) = |H∩G|/|H| and recall(p) = |H∩G|/|G|,
+  each averaged over hovered Segments and summed over repetitions, with
+  the F1 of the two means. Only Segments of scored gold units are hovered.
+  Every asserted unit is complete, Partial records included, so a
+  highlighted Segment outside G(p) counts against precision whether or not
+  a gold unit asserts it: every hovered Segment's precision is decided.
+  **unasserted** counts the highlighted Segments no gold unit asserts,
+  which only this rule judges. A Stub's Segments are not hovered, but one
+  highlighted beside a scored Segment is false. A failed case scores as an
+  empty answer, where each Segment highlights only itself. **Full** reads
+  Full records alone, as a check on that rule, and **multi** reads
+  Segments of multi-piece gold units, where a hover shows more than the
+  Segment itself. Each gives [records, hovered Segments]. `report` prints
+  hover P/R/F1 beside mem%. The evaluator carries each case's sums as
+  `hover`, and the `segment-in-units/de:dev` and `:heldout` experiments of
+  `cli/evaluate.ts` print the same rates.
+- The pair rates read the same grouping by Segment pairs, which weigh a
+  unit by its pairs, so long units dominate. **pairR** counts the Segment
+  pairs inside scored gold units that one returned unit keeps together, on
+  every record. **pairP** counts the returned pairs that one gold unit
+  holds, on Full records only, since a Partial record cannot show two
+  unannotated Segments wrongly joined. **assertedP** does the same for
+  returned pairs that touch an asserted unit on any record: every asserted
+  unit is complete. **over** counts returned units that join Segments of
+  two or more gold units, and **under** counts gold units split across
+  returned units. Each figure names the records it is counted over.
+  `report` also gives membership of discontinuous gold units and writes
+  every over- and under-merge once, one line each with its repetitions, to
+  `grouping.over` and `grouping.under` in `summary.json`. `compare` prints
+  each side's grouping and its membership per phenomenon tag; both need
+  the raw run.
 - The `reference` arm's `--opt variants=<margins>` adds a policy per
   margin whose units carry variants where the top two shares of the
   distribution that decided the route lie within it, read from the same

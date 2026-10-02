@@ -174,15 +174,25 @@ const { positionals, values } = parseArgs({
 const percent = (value: number) =>
 	Number.isNaN(value) ? "–" : `${(100 * value).toFixed(1)}`;
 
+/** B-cubed precision/recall/F1, as `report` and `compare` print it. */
+const hoverText = (precision: number, recall: number, f1: number) =>
+	`${percent(precision)}/${percent(recall)}/${percent(f1)}`;
+
 /**
- * One policy's grouping (#701): pair precision on Full records, on the pairs
- * any record decides, pair recall and F1, each with [records, pairs]; the
- * over- and under-merges per repetition; membership of discontinuous,
- * multi-piece and one-piece gold units.
+ * One policy's grouping (#701): hover B-cubed on every record, on Full
+ * records and over multi-piece gold units, each with [records, Segments],
+ * and the highlighted Segments no gold unit asserts; pair precision on Full
+ * records, on the pairs any record decides, pair recall and F1, each with
+ * [records, pairs]; the over- and under-merges per repetition; membership
+ * of discontinuous, multi-piece and one-piece gold units.
  */
 function groupingText(summary: PolicySummary): string {
-	const { rates, tally, pairRecords } = summary;
+	const { rates, tally, hoverRecords, pairRecords } = summary;
 	return [
+		`hover ${hoverText(rates.hoverPrecision, rates.hoverRecall, rates.hoverF1)} [${hoverRecords.all}, ${tally.hoverSegments}]`,
+		`Full ${hoverText(rates.fullHoverPrecision, rates.fullHoverRecall, rates.fullHoverF1)} [${hoverRecords.full}, ${tally.fullHoverSegments}]`,
+		`multi ${hoverText(rates.multiHoverPrecision, rates.multiHoverRecall, rates.multiHoverF1)} [${hoverRecords.multi}, ${tally.multiHoverSegments}]`,
+		`unasserted ${tally.hoverUnasserted}/${tally.hoverHighlighted}`,
 		`pairP ${percent(rates.pairPrecision)} [${pairRecords.fullPrecision} Full, ${tally.fullPairs}]`,
 		`assertedP ${percent(rates.assertedPairPrecision)} [${pairRecords.assertedPrecision}, ${tally.decidedPairs}]`,
 		`pairR ${percent(rates.pairRecall)} [${pairRecords.recall}, ${tally.goldPairs}]`,
@@ -194,7 +204,7 @@ function groupingText(summary: PolicySummary): string {
 }
 
 const groupingLegend =
-	"grouping (#701), summed over repetitions: pairP = Segment pairs a returned unit joins that one gold unit holds, Full records only; assertedP = the same over pairs touching an asserted unit on any record; pairR = gold pairs kept together; [records, pairs]; over = returned units joining Segments of 2+ gold units, under = gold units split, per repetition in brackets";
+	"grouping (#701), summed over repetitions: hover = B-cubed P/R/F1 of what hovering each Segment of a scored gold unit highlights, every record; Full = Full records only; multi = Segments of multi-piece gold units only; [records, Segments]; unasserted = highlighted Segments no gold unit asserts, of all highlighted, counted against P; pairP = Segment pairs a returned unit joins that one gold unit holds, Full records only; assertedP = the same over pairs touching an asserted unit on any record; pairR = gold pairs kept together; [records, pairs]; over = returned units joining Segments of 2+ gold units, under = gold units split, per repetition in brackets";
 
 /**
  * One merge on one line, the way `report` prints it and `summary.json`
@@ -554,7 +564,7 @@ async function report(runId: string) {
 	);
 	// ADR 0008: membership first, then its consistency, then the route.
 	console.log(
-		`${"policy".padEnd(30)}   mem% multiMem% singleMem%  memFlips   tol% route|mem tol%  strict% route|mem%   var%     k   case%     full% caseFlips varying  M/A/R/S/Mi/Stub  split/merged/crossed  mem% by rep`,
+		`${"policy".padEnd(30)}   mem% ${"hover P/R/F1".padStart(14)} multiMem% singleMem%  memFlips   tol% route|mem tol%  strict% route|mem%   var%     k   case%     full% caseFlips varying  M/A/R/S/Mi/Stub  split/merged/crossed  mem% by rep`,
 	);
 	for (const row of rows) {
 		const { rates, tally } = row;
@@ -562,6 +572,11 @@ async function report(runId: string) {
 			[
 				row.policy.padEnd(30),
 				percent(rates.membership).padStart(6),
+				hoverText(
+					rates.hoverPrecision,
+					rates.hoverRecall,
+					rates.hoverF1,
+				).padStart(14),
 				percent(rates.multiMembership).padStart(9),
 				percent(rates.singleMembership).padStart(10),
 				`${row.membershipFlips}/${row.membershipFlipBase}`.padStart(9),
@@ -589,7 +604,7 @@ async function report(runId: string) {
 		);
 	}
 	console.log(
-		"mem%: gold Segment set exact, any route; memFlips: units whose membership differs between repetitions; tol%: membership with an acceptable route, the same, a tolerated confusion or the gold among the variants (ADR 0008); strict%: same route too, a borderline unit's first; var%: units with membership that carry route variants, k their mean count; case%: contract (membership) passes",
+		"mem%: gold Segment set exact, any route; hover P/R/F1: B-cubed of what hovering each Segment of a scored gold unit highlights (grouping below); memFlips: units whose membership differs between repetitions; tol%: membership with an acceptable route, the same, a tolerated confusion or the gold among the variants (ADR 0008); strict%: same route too, a borderline unit's first; var%: units with membership that carry route variants, k their mean count; case%: contract (membership) passes",
 	);
 	console.log(groupingLegend);
 	for (const row of rows)

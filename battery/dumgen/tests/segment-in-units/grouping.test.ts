@@ -5,7 +5,13 @@ import type {
 	Unit,
 } from "../../src/evaluation/spec-corpus/segment-in-units.js";
 import { evaluateSegmentInUnits } from "../../src/evaluation/spec-corpus/segment-in-units-evaluation.js";
-import { checkGrouping } from "../../src/evaluation/spec-corpus/segment-in-units-grouping.js";
+import {
+	checkGrouping,
+	checkHover,
+	hoverRates,
+	sumHover,
+} from "../../src/evaluation/spec-corpus/segment-in-units-grouping.js";
+import { segmentInUnitsMetrics } from "../../src/segment-in-units/de/experiment.js";
 import type { LabCase } from "../../src/segment-in-units/lab/corpus.js";
 import { pinnedJevModel } from "../../src/segment-in-units/lab/jev.js";
 import {
@@ -212,6 +218,157 @@ describe("Segment pairs and merges against a Partial record", () => {
 	});
 });
 
+describe("what hovering each Segment highlights, B-cubed", () => {
+	const hover = (segments: number[][], ideal = separableGold) =>
+		checkHover({
+			segments: separable,
+			ideal,
+			returned: segments.map((members) => ({
+				segments: members,
+				route: "Unresolved",
+			})),
+		});
+
+	test("the gold grouping shows each Segment exactly its gold unit", () => {
+		expect(hover([[0], [2, 6], [4]])).toEqual({
+			segments: 4,
+			precision: 4,
+			recall: 4,
+			highlighted: 6,
+			unasserted: 0,
+			multi: {
+				segments: 2,
+				precision: 2,
+				recall: 2,
+				highlighted: 4,
+				unasserted: 0,
+			},
+		});
+	});
+
+	test("whitespace and punctuation in a returned unit are not highlighted", () => {
+		expect(hover([[0, 1], [2, 3, 6, 7], [4]])).toEqual(
+			hover([[0], [2, 6], [4]]),
+		);
+	});
+
+	test("a split separable verb halves the recall of each of its Segments", () => {
+		// Er 1/1, fängt 1/½, heute 1/1, an 1/½.
+		expect(hover([[0], [2], [4], [6]])).toMatchObject({
+			segments: 4,
+			precision: 4,
+			recall: 3,
+			multi: { segments: 2, precision: 2, recall: 1 },
+		});
+	});
+
+	test("an empty answer, which is how a failed case scores, highlights each Segment alone", () => {
+		expect(hover([])).toEqual(hover([[0], [2], [4], [6]]));
+	});
+
+	test("an adverb swallowed into the verb costs every Segment of the merged unit precision", () => {
+		// Er 1/1, fängt ⅔/1, heute ⅓/1, an ⅔/1.
+		const check = hover([[0], [2, 4, 6]]);
+		expect(check.segments).toBe(4);
+		expect(check.precision).toBeCloseTo(8 / 3);
+		expect(check.recall).toBe(4);
+		expect(check.highlighted).toBe(10);
+		expect(check.multi.precision).toBeCloseTo(4 / 3);
+		const rates = hoverRates(check);
+		expect(rates.precision).toBeCloseTo(2 / 3);
+		expect(rates.recall).toBe(1);
+		expect(rates.f1).toBeCloseTo(0.8);
+	});
+
+	test("a Segment two returned units hold highlights both", () => {
+		// an sits in [2, 6] and [4, 6]: it highlights fängt, heute and itself.
+		const check = hover([[0], [2, 6], [4, 6]]);
+		// Er 1/1, fängt 1/1, heute ½/1, an ⅔/1.
+		expect(check.precision).toBeCloseTo(1 + 1 + 1 / 2 + 2 / 3);
+		expect(check.recall).toBe(4);
+	});
+
+	test("on a Partial record only Segments of asserted units are hovered, and an unasserted Segment highlighted with them counts against precision", () => {
+		// Nora0 _1 hat2 _3 bereits4 _5 gegessen6 .7; only hat … gegessen is asserted.
+		const segments = segmentsOf("Nora hat bereits gegessen.");
+		const check = (members: number[][]) =>
+			checkHover({
+				segments,
+				ideal: [{ segments: [2, 6], route: route("VERB") }],
+				returned: members.map((entry) => ({
+					segments: entry,
+					route: "Unresolved",
+				})),
+			});
+		expect(
+			check([
+				[0, 4],
+				[2, 6],
+			]),
+		).toMatchObject({
+			segments: 2,
+			precision: 2,
+			recall: 2,
+			highlighted: 4,
+			unasserted: 0,
+		});
+		const joined = check([[0, 2, 6], [4]]);
+		expect(joined).toMatchObject({
+			segments: 2,
+			recall: 2,
+			highlighted: 6,
+			unasserted: 2,
+		});
+		expect(joined.precision).toBeCloseTo(4 / 3);
+	});
+
+	test("Stub Segments are not hovered, and one highlighted with a scored Segment counts against precision", () => {
+		// Er0 _1 sagt2 _3 very4 _5 cool6 _7 qzxv8 .9
+		const segments = segmentsOf("Er sagt very cool qzxv.");
+		const ideal: Unit[] = [
+			{ segments: [0], route: route("PRON") },
+			{ segments: [2], route: route("VERB") },
+			{ segments: [4, 6], route: route("Foreign", "Foreign") },
+			{ segments: [8], route: "Unresolved" },
+		];
+		const check = (members: number[][]) =>
+			checkHover({
+				segments,
+				ideal,
+				returned: members.map((entry) => ({
+					segments: entry,
+					route: "Unresolved",
+				})),
+			});
+		expect(check([[0], [2], [4], [6, 8]])).toMatchObject({
+			segments: 2,
+			precision: 2,
+			recall: 2,
+			multi: { segments: 0 },
+		});
+		expect(check([[0, 4], [2]])).toMatchObject({
+			segments: 2,
+			precision: 1.5,
+			recall: 2,
+			unasserted: 0,
+		});
+	});
+
+	test("sums add answers, and rates are undefined over no Segments", () => {
+		const total = sumHover([
+			hover([[0], [2, 6], [4]]),
+			hover([[0], [2], [4], [6]]),
+		]);
+		expect(total).toMatchObject({
+			segments: 8,
+			precision: 8,
+			recall: 7,
+			multi: { segments: 4, precision: 4, recall: 3 },
+		});
+		expect(hoverRates(sumHover([])).f1).toBeNaN();
+	});
+});
+
 test("the evaluator carries the grouping of each case", () => {
 	const input: SegmentInUnitsInput = { language: "de", segments: separable };
 	const evaluation = evaluateSegmentInUnits({
@@ -235,6 +392,11 @@ test("the evaluator carries the grouping of each case", () => {
 	expect(evaluation.grouping.underMerged).toEqual([
 		{ unit: 1, text: "fängt an", fragments: ["fängt", "an"] },
 	]);
+	expect(evaluation.hover).toMatchObject({
+		segments: 4,
+		precision: 4,
+		recall: 3,
+	});
 });
 
 describe("a run's grouping summary", () => {
@@ -338,6 +500,101 @@ describe("a run's grouping summary", () => {
 		expect(summary.rates.pairF1).toBeCloseTo((2 * 0.5 * 0.75) / 1.25);
 		expect(summary.rates.assertedPairPrecision).toBe(3 / 7);
 		expect(summary.rates.discontinuousMembership).toBe(1 / 4);
+	});
+
+	test("averages hover over every hovered Segment, on Full records and over multi-piece units, with the records each is counted over", () => {
+		// Full: gold (4 Segments at 1/1), then heute swallowed (8/3, 4).
+		// Partial: Nora joined (4/3, 2), then split (2, 1).
+		const summary = summarizePolicy(labRun, cases, "p");
+		expect(summary.tally).toMatchObject({
+			hoverSegments: 12,
+			hoverRecallSum: 11,
+			hoverHighlighted: 24,
+			hoverUnasserted: 2,
+			fullHoverSegments: 8,
+			fullHoverRecallSum: 8,
+			multiHoverSegments: 8,
+			multiHoverRecallSum: 7,
+		});
+		expect(summary.tally.hoverPrecisionSum).toBeCloseTo(10);
+		expect(summary.hoverRecords).toEqual({ all: 2, full: 1, multi: 2 });
+		expect(summary.rates.hoverPrecision).toBeCloseTo(10 / 12);
+		expect(summary.rates.hoverRecall).toBe(11 / 12);
+		expect(summary.rates.hoverF1).toBeCloseTo(
+			(2 * (10 / 12) * (11 / 12)) / (10 / 12 + 11 / 12),
+		);
+		expect(summary.rates.fullHoverPrecision).toBeCloseTo(20 / 3 / 8);
+		expect(summary.rates.fullHoverRecall).toBe(1);
+		expect(summary.rates.multiHoverPrecision).toBeCloseTo(20 / 3 / 8);
+		expect(summary.rates.multiHoverRecall).toBe(7 / 8);
+	});
+
+	test("a failed repetition scores hover as an empty answer", () => {
+		const failed: LabRun = {
+			...labRun,
+			repetitions: 1,
+			cases: [
+				{
+					id: full.id,
+					repetitions: [
+						{ calls: [], wallMs: 0, error: "jev failed" },
+					],
+				},
+			],
+		};
+		const { tally } = summarizePolicy(failed, cases, "p");
+		expect(tally).toMatchObject({
+			errors: 1,
+			hoverSegments: 4,
+			hoverPrecisionSum: 4,
+			hoverRecallSum: 3,
+		});
+	});
+
+	test("the evaluate CLI's metrics read hover from the evaluator", () => {
+		const evaluate = evaluateSegmentInUnits({
+			[full.id]: full.facts,
+			[partial.id]: partial.facts,
+		});
+		const evaluated = (labCase: LabCase, units: SegmentInUnitsOutput) => ({
+			evaluation: evaluate({
+				caseId: labCase.id,
+				input: labCase.input,
+				idealOutput: labCase.idealOutput,
+				output: units,
+			}),
+		});
+		const metrics = segmentInUnitsMetrics({
+			cases: [
+				{
+					repetitions: [
+						evaluated(full, output([0], [2, 6], [4])),
+						evaluated(full, output([0], [2, 4, 6])),
+					],
+				},
+				{
+					repetitions: [
+						evaluated(partial, output([0, 2, 6], [4])),
+						evaluated(partial, output([0], [2], [4], [6])),
+					],
+				},
+			],
+		});
+		const summary = summarizePolicy(labRun, cases, "p");
+		expect(metrics.rates.hover).toEqual({
+			precision: summary.rates.hoverPrecision,
+			recall: summary.rates.hoverRecall,
+			f1: summary.rates.hoverF1,
+			segments: 12,
+		});
+		expect(metrics.rates.fullHover).toMatchObject({
+			recall: 1,
+			segments: 8,
+		});
+		expect(metrics.rates.multiHover).toMatchObject({
+			recall: 7 / 8,
+			segments: 8,
+		});
 	});
 
 	test("lists each merge once with the repetitions that made it", () => {

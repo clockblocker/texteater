@@ -4,8 +4,8 @@
  * does not count. Membership comes first and the route second, tolerating
  * the Kind confusions of Dumgen ADR 0008 and accepting a borderline unit
  * whose route variants hold the gold route. Beside the per-unit verdicts,
- * each case carries its grouping: Segment pairs and the units merged
- * across or split (#701).
+ * each case carries its grouping: what hovering each Segment highlights
+ * (B-cubed), Segment pairs and the units merged across or split (#701).
  */
 import type * as Dumspec from "dumspec/types";
 import type {
@@ -18,7 +18,9 @@ import type {
 import {
 	awaitsForeignScoring,
 	checkGrouping,
+	checkHover,
 	type GroupingCheck,
+	type HoverCheck,
 } from "./segment-in-units-grouping.js";
 import {
 	acceptableRoute,
@@ -106,6 +108,8 @@ export type SegmentInUnitsEvaluation = {
 	/** Their variant routes, summed; over `withVariants`, the mean variant count. */
 	readonly variantRoutes: number;
 	readonly units: readonly UnitCheck[];
+	/** B-cubed sums of what hovering each Segment of a scored gold unit highlights. */
+	readonly hover: HoverCheck;
 	/** The Segment pairs kept together and the units merged across or split. */
 	readonly grouping: GroupingCheck;
 	readonly sentence?: SentenceCheck;
@@ -218,6 +222,11 @@ export function evaluateSegmentInUnits(
 				0,
 			),
 			units,
+			hover: checkHover({
+				segments,
+				ideal: args.idealOutput.units,
+				returned: args.output.units,
+			}),
 			grouping: checkGrouping({
 				segments,
 				ideal: args.idealOutput.units,
