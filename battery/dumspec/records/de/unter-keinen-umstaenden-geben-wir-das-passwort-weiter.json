@@ -24,17 +24,33 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/canonical-form-is-the-headword",
+				"hash": "044ad2bbec5191e7"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Umstand",
+				"url": "https://www.duden.de/rechtschreibung/Umstand",
+				"supports": "Target 0, unter keinen Umständen, listed as an idiom next to unter allen Umständen and unter Umständen"
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "DET" },
+			"memberSegmentIndices": [0, 2, 4],
+			"route": { "family": "Locution", "kind": "ADV" },
 			"reading": { "emojiDescription": "🚫" },
 			"notes": {
-				"rationale": "keinen determines Umständen, so it is the negative DET kein (de/pron-or-det-by-use), and its Surface marks Dat.Plur, the case unter gives Umständen here."
+				"rationale": "unter keinen Umständen is an idiom Duden lists under Umstand, a Locution ADV with no comparison forms, like auf keinen Fall (de/idiom). keinen is a fixed member (de/fixed-member-test): allen in its slot gives unter allen Umständen, a different idiom with the opposite meaning, and diesen makes the phrase compositional. So a click on any of the three words selects the whole Locution (de/largest-fixed-unit), and keinen has no DET target of its own (de/locutions-and-sayings-are-made-of-lexemes). The Canonical Form is Duden's headword, lowercase unter despite the sentence-initial Unter (de/canonical-form-is-the-headword). Ruled 2026-10-02 (#701, grouping audit Q3)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -44,33 +60,20 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
-						"kind": "DET",
-						"canonicalForm": "kein",
-						"coreFeatures": {
-							"case": null,
-							"gender": null,
-							"number": null,
-							"person": null,
-							"polite": null,
-							"poss": null,
-							"pronType": "Neg"
-						}
+						"family": "Locution",
+						"kind": "ADV",
+						"canonicalForm": "unter keinen Umständen",
+						"coreFeatures": { "comparable": null }
 					},
-					"normalizedSurface": "keinen",
+					"inflectionalFeatures": null,
+					"normalizedSurface": "unter keinen Umständen",
 					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": {
-						"case": "Dat",
-						"degree": null,
-						"gender": null,
-						"gender[psor]": null,
-						"number": "Plur",
-						"number[psor]": null
-					}
+					"surfaceFeatures": null
 				},
 				"members": [
-					{ "attested": "keinen", "orthography": "Standard" }
+					{ "attested": "Unter", "orthography": "Standard" },
+					{ "attested": "keinen", "orthography": "Standard" },
+					{ "attested": "Umständen", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
 			}
