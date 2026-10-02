@@ -611,6 +611,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🗂" },
 			"notes": {
 				"rationale": "eine Art before a bare noun is the hedge 'something like' (Duden: Wendung eine Art [von]; DWDS: Art 4c). Art is the Head that inflects with its article (mit einer Art Ziel), so it is NOUN Art owning eine (de/noun-owns-its-article), with Ziel a NOUN of its own in narrow apposition. Ruled on #743 (SZ-B2)."
 			},
@@ -710,6 +711,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🗂" },
 			"notes": {
 				"rationale": "Second eine Art of the pair, as the first. Ruled on #743 (SZ-B2)."
 			},

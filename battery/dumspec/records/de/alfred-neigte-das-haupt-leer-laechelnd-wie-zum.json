@@ -636,6 +636,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👍" },
 			"notes": {
 				"rationale": "The article piece m of zum is the owned Fused article of Einverständnis, deriving dem Dat.Neut.Sg (de/fused-word-pieces, de/noun-owns-its-article)."
 			},

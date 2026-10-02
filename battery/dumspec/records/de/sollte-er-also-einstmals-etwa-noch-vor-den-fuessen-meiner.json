@@ -570,6 +570,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🦶" },
 			"notes": {
 				"rationale": "Füßen owns den (de/noun-owns-its-article)."
 			},

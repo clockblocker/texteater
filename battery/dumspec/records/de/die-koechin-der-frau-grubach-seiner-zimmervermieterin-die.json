@@ -292,6 +292,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👩" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -336,7 +337,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B10). Frau is a title before a name, a common NOUN of its own (de/title-before-a-name). With an article the title is the phrase's Head and inflects while the name does not (des Herrn Müller), so Frau owns der."
+				"rationale": "Ruled on #743 (VP-B10). Frau is a title before a name, a common NOUN of its own (de/title-before-a-name). With an article the title is the phrase's Head and inflects while the name does not (des Herrn Müller), so Frau owns der. Frau before a name is DWDS Frau 1c, the form of address under sense 1 'adult woman', so it shares the 👩 Reading of die alte Frau and der Frauen."
 			}
 		},
 		{
@@ -837,6 +838,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "☕🥐" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

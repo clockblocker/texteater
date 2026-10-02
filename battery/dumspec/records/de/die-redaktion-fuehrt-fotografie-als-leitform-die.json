@@ -42,6 +42,7 @@
 		{
 			"memberSegmentIndices": [15, 17],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "📷" },
 			"notes": {
 				"rationale": "Context names editorial headword; attested equal standard variant stays Variant."
 			},

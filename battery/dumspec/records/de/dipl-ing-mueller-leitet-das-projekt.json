@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🎓⚙" },
 			"notes": {
 				"rationale": "A title abbreviation is one Shorthand member whose Surface is its expansion, Diplom-Ingenieur; the name stays outside (ADR 0035)."
 			},

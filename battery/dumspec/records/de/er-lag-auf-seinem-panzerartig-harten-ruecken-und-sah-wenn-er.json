@@ -1413,6 +1413,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🫃🍽" },
+			"notes": {
+				"rationale": "Bauch is the front of the trunk (DWDS Bauch 1); 🍽 pins 🫃 to the belly, which alone reads 'pregnant'."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1652,6 +1656,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
+			},
+			"reading": { "emojiDescription": "🛏🧣" },
+			"notes": {
+				"rationale": "Bettdecke is the cover one sleeps under (DWDS); the bed 🛏 with the warm cloth 🧣 draws the cover itself, where 🛌 reads 'sleeping'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

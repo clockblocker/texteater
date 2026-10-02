@@ -30,6 +30,7 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "👩‍⚕" },
 			"notes": {
 				"rationale": "The article is a member of its noun's Attestation, and a click on it opens Ärztin. Its DET cell is derived: Die is die Nom.Fem.Sg.",
 				"knownMistakes": [

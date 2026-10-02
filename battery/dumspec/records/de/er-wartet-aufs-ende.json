@@ -100,6 +100,7 @@
 		{
 			"memberSegmentIndices": [5, 7],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔚" },
 			"notes": {
 				"rationale": "A colloquial fusion splits like a standard one: s is the noun's owned Fused article, and auf belongs to warten (ADR 0035)."
 			},

@@ -69,6 +69,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🤔" },
 			"notes": {
 				"rationale": "der Betracht, a bare noun with no article, which Duden lists only inside its fixed expressions."
 			},

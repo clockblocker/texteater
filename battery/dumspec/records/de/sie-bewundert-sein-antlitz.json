@@ -22,8 +22,9 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "👁👃👄" },
 			"notes": {
-				"rationale": "Antlitz (an elevated word for face) is an archaic word, not an archaic form. It is dated in every use, which is true of its Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status)."
+				"rationale": "Antlitz (an elevated word for face) is an archaic word, not an archaic form. It is dated in every use, which is true of its Lemma, not of this Surface, so the Surface carries no historical status (de/variant-and-historical-status). Antlitz is an elevated word for Gesicht (DWDS); the face is drawn by its features, since every face emoji carries an expression and 🙂 reads 'smiling'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

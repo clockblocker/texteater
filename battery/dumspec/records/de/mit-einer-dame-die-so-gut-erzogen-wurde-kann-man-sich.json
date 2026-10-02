@@ -316,6 +316,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👩👒" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -360,7 +361,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Dame owns einer, dative after mit (de/noun-owns-its-article)."
+				"rationale": "Dame owns einer, dative after mit (de/noun-owns-its-article). Dame is a woman of cultivated manners here (DWDS Dame 1b); the figure 👩 carries the person, since the hat 👒 alone reads 'hat'."
 			}
 		},
 		{

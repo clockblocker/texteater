@@ -648,6 +648,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🧑‍⚕" },
 			"notes": {
 				"rationale": "Arzt owns der."
 			},

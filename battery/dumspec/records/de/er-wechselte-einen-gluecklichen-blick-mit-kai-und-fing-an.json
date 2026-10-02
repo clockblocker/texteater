@@ -365,6 +365,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👀" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

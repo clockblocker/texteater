@@ -573,6 +573,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🧶🎩" },
+			"notes": {
+				"rationale": "Filzhut is a brimmed hat made of felt (DWDS); 🧶 pins the material, since 🎩 alone reads 'top hat'."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -672,6 +676,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "📖" },
 			"notes": {
 				"rationale": "Accusative of the absolute construction; sein is a DET, so Buch owns no article."
 			},

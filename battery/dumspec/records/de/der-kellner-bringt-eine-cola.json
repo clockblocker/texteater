@@ -76,6 +76,7 @@
 		{
 			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🥤" },
 			"notes": {
 				"rationale": "Cola is the free object, a NOUN that owns its article eine."
 			},

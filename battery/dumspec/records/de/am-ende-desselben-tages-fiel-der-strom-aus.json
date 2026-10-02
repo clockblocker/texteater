@@ -163,6 +163,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🔚" },
 			"notes": {
 				"rationale": "Here m is an article: it opens the phrase dem Ende, whose Head Ende owns it. Contrast am selben Morgen, where m belongs to derselbe (#618)."
 			},
