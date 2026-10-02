@@ -1,6 +1,11 @@
 import { afterEach, expect, test } from "bun:test";
+import { ConvexError } from "convex/values";
 import { api } from "../convex/_generated/api";
-import { GERMAN_ONLY_MESSAGE } from "../server/intake";
+import {
+	GERMAN_ONLY_MESSAGE,
+	INTAKE_NOT_CONFIGURED_MESSAGE,
+} from "../server/intake";
+import { visitorErrorMessage } from "../src/lib/visitor-error";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
 import { asksAbout, fakeJev, germanAnswers } from "./support/jev";
 import { fakeTypeSafe, unavailableProviders } from "./support/providers";
@@ -180,19 +185,28 @@ test("with jev unavailable the Text is still stored, every Sentence unresolved",
 	);
 });
 
-test("without a TypeSafe key the submission throws, stores nothing and records a Failed run", async () => {
+test("without a TypeSafe key the submission fails with a NotConfigured error the Visitor sees, stores nothing and records a Failed run", async () => {
 	const providers = typeSafe();
 	delete process.env.TYPESAFE_API_KEY;
 	const t = createTestConvex();
-	await expect(submit(t, "Die Banken sind geschlossen.")).rejects.toThrow(
-		"TYPESAFE_API_KEY",
+	const failure = await submit(t, "Die Banken sind geschlossen.").then(
+		() => undefined,
+		(error: unknown) => error,
 	);
+	expect(failure).toBeInstanceOf(ConvexError);
+	expect(failure).toMatchObject({
+		data: {
+			code: "NotConfigured",
+			message: INTAKE_NOT_CONFIGURED_MESSAGE,
+		},
+	});
+	expect(visitorErrorMessage(failure)).toBe(INTAKE_NOT_CONFIGURED_MESSAGE);
 	expect(providers.requests).toEqual([]);
 	expect(await storedTexts(t)).toEqual([]);
 	expect(await intakeRuns(t)).toEqual([
 		expect.objectContaining({
 			outcome: "Failed",
-			failureTag: "Error",
+			failureTag: "ConvexError",
 			sentences: [{ segmentation: "NotStarted" }],
 		}),
 	]);

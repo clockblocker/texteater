@@ -25,6 +25,10 @@ export function unsupportedLanguageMessage(
 	return language === "de" ? undefined : GERMAN_ONLY_MESSAGE;
 }
 
+/** What a Visitor reads when the deployment has no TypeSafe key for intake. */
+export const INTAKE_NOT_CONFIGURED_MESSAGE =
+	"Intake isn't configured: TYPESAFE_API_KEY is missing on the Convex deployment. Run `bun run env:sync` and restart the dev server.";
+
 /** A Text's Sentences in reading order, as `splitText` splits them. */
 export function sourceSentencesOf(text: string): string[] {
 	return splitText(text).paragraphs.flatMap(({ sentences }) => [

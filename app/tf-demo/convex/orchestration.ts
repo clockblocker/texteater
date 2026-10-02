@@ -13,6 +13,7 @@ import {
 } from "../server/inspectionCapture";
 import {
 	createIntake,
+	INTAKE_NOT_CONFIGURED_MESSAGE,
 	sourceSentencesOf,
 	unsupportedLanguageMessage,
 } from "../server/intake";
@@ -54,6 +55,7 @@ import type { ResolutionSessionGuard } from "./model/resolutionSessions";
 import {
 	languageValidator,
 	resolutionSessionGuardValidator,
+	visitorError,
 } from "./model/validators";
 import {
 	convexId,
@@ -90,13 +92,14 @@ function visitorErrorIn(error: unknown): ConvexError<Value> | undefined {
 	return undefined;
 }
 
-/** The production jev for intake: TypeSafe with the deployment's key. */
+/**
+ * The production jev for intake: TypeSafe with the deployment's key. With no
+ * key, intake fails with a coded error that tells the Visitor how to fix it.
+ */
 function productionSegment(onCall: (call: SegmentCall) => void) {
 	const apiKey = env.TYPESAFE_API_KEY;
 	if (!apiKey)
-		throw new Error(
-			"TYPESAFE_API_KEY is not set, so intake cannot segment the Text.",
-		);
+		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
 	return createSegment({ ask: createTypeSafeAsk({ apiKey }), onCall });
 }
 
