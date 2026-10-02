@@ -135,6 +135,14 @@ test("article-head: an article belongs to the noun right after it, unless the ju
 	);
 	expect(art.without).toContainEqual([4, 8]);
 	expect(art.with).toEqual([[0], [2], [4, 6], [8]]);
+	// Die0 _1 Berliner2 _3 Polizei4 _5 kam6 .7: a capitalized adjective stays the judge's.
+	const berliner = await groups(
+		segmentsOf("Die Berliner Polizei kam."),
+		{ s_article_1: picked("p3") },
+		"article-head",
+	);
+	expect(berliner.with).toEqual(berliner.without);
+	expect(berliner.with).toContainEqual([0, 4]);
 	// Der0 _1 Mann2 ,3 _4 der5 _6 Angst7 _8 hat9 .10: relative der stays alone.
 	const relative = await groups(
 		segmentsOf("Der Mann, der Angst hat."),

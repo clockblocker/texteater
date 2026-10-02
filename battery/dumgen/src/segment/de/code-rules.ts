@@ -25,7 +25,9 @@
  * - `article-head` (de/noun-owns-its-article,
  *   de/shared-article-in-coordination): an article the judge reads as an
  *   article belongs to the noun right after it, when one follows: eine Art
- *   Ziel, der Frau Grubach, des Kinder- und Jugendbuchs.
+ *   Ziel, der Frau Grubach, des Kinder- und Jugendbuchs. A capitalized word
+ *   with an adjective's ending before another one is left to the judge (die
+ *   Berliner Polizei, das Rote Kreuz).
  * - `sein-chain` (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves,
  *   on dumspec's AUX forms of sein): worden, gewesen and geworden take sein
  *   as their perfect's auxiliary, so the nearest sein form in their clause
@@ -225,8 +227,14 @@ function pronouns(nomination: Nomination): Decision {
 	};
 }
 
+/** An adjective's ending: a capitalized word with one before a noun may be its adjective (die Berliner Polizei, das Rote Kreuz). */
+const adjectiveEnding = /(e|er|en|es|em)$/u;
+
+/** Only whitespace or quote marks between two Segments. */
+const quoteMark = /^[„“”"»«‚‘’›‹]$/u;
+
 function articleHeads(nomination: Nomination): Decision {
-	const { pieces } = nomination.sentence;
+	const { pieces, segments } = nomination.sentence;
 	const moved = new Map<number, number>();
 	for (const slot of nomination.slots) {
 		if (slot.kind !== "article") continue;
@@ -235,8 +243,28 @@ function articleHeads(nomination: Nomination): Decision {
 		// The judge reads it as an article when its hosts outweigh none.
 		if ((answer.probabilities.none ?? 0) >= 0.5) continue;
 		const next = pieces[slot.piece.id];
-		if (next && next.clause === slot.piece.clause && nounLike(next))
-			moved.set(slot.piece.id, next.id);
+		if (
+			!next ||
+			next.clause !== slot.piece.clause ||
+			!nounLike(next) ||
+			!segments
+				.slice(slot.piece.segment + 1, next.segment)
+				.every(
+					(segment) =>
+						segment.kind === "Whitespace" ||
+						quoteMark.test(segment.text),
+				)
+		)
+			continue;
+		const after = pieces[next.id];
+		if (
+			adjectiveEnding.test(next.text) &&
+			after &&
+			after.clause === next.clause &&
+			nounLike(after)
+		)
+			continue;
+		moved.set(slot.piece.id, next.id);
 	}
 	return {
 		drop: (edge) =>
