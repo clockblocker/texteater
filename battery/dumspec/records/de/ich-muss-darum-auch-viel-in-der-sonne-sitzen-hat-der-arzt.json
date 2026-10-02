@@ -306,10 +306,10 @@
 				"kind": "ADV"
 			},
 			"reading": {
-				"emojiDescription": "🔄"
+				"emojiDescription": "🤔"
 			},
 			"notes": {
-				"rationale": "darum 'therefore' is the pronominal adverb in its causal sense and stands alone (de/pronominal-adverb-stands-alone)."
+				"rationale": "darum 'therefore' is the pronominal adverb in its causal Reading 🤔, 'that's why', not the generic 🔄 of um, and stands alone (de/pronominal-adverb-stands-alone)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

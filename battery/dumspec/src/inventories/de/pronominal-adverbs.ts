@@ -297,6 +297,208 @@ function pronominalAdverb(
 	});
 }
 
+/** Knowledge of one authored ADV Reading whose Lemma has no comparison forms. */
+function adverbReading(
+	form: string,
+	ipa: string,
+	emoji: string,
+	definition: string,
+	en: readonly string[],
+	ru: readonly string[],
+): AuthoredMember {
+	const lemma = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "ADV",
+		canonicalForm: form,
+		coreFeatures: { comparable: null },
+	} satisfies Dumling.Lemma<"de", "Lexeme", "ADV">;
+	return defineAuthoredMember({
+		lemma,
+		reading: { unitKind: "Reading", emojiDescription: emoji, lemma },
+		knowledge: {
+			transcription: ipa,
+			definition,
+			translations: { en: [...en], ru: [...ru] },
+		},
+		coverage: {
+			transcription: "Authored",
+			definition: "Authored",
+			translations: { en: "Authored", ru: "Authored" },
+			semanticRelationTargetKind: "lemma",
+			semanticRelations: {
+				synonym: "ReviewedEmpty",
+				nearSynonym: "ReviewedEmpty",
+				antonym: "ReviewedEmpty",
+				nearAntonym: "ReviewedEmpty",
+			},
+		},
+	});
+}
+
+// Each da(r)- form has one generic Reading, its preposition's emoji. Causal
+// darum, 'that's why' (Ich muss darum viel in der Sonne sitzen), is a second
+// Reading: the demonstrative of warum, so 🤔 with no marker, as causal daher
+// is (wh-adverbs.ts). Other senses are authored when gold attests them.
+// https://www.duden.de/rechtschreibung/darum
+const causalDarum = adverbReading(
+	"darum",
+	"daˈʁʊm",
+	"🤔",
+	"Bezeichnet den Grund, der sich aus dem Vorigen ergibt, aus diesem Grund, deshalb: Es regnete, darum blieben wir zu Hause.",
+	["that's why; therefore"],
+	["поэтому"],
+);
+
+/**
+ * A reciprocal pronominal adverb: a preposition joined to einander (system
+ * ADR 0029), with its English and Russian glosses and a usage example.
+ */
+type Reciprocal = {
+	readonly preposition: string;
+	readonly en: string;
+	readonly ru: string;
+	readonly example: string;
+};
+
+// Duden lists a reciprocal adverb for every preposition here but zwischen.
+// Each has one Reading: the 🤝 of einander, the reciprocal pronoun, before
+// its preposition's emoji, as ❓ comes before it on the wo(r)- forms. Senses
+// that drifted from 'P + each other' (durcheinander 'in a mess') are
+// authored when gold attests them.
+// https://www.duden.de/rechtschreibung/miteinander
+const reciprocals: readonly Reciprocal[] = [
+	{
+		preposition: "an",
+		en: "to each other; on each other",
+		ru: "друг к другу; друг о друге",
+		example: "Sie denken oft aneinander.",
+	},
+	{
+		preposition: "auf",
+		en: "on each other; for each other",
+		ru: "друг на друга; друг на друге",
+		example: "Wir warten aufeinander.",
+	},
+	{
+		preposition: "aus",
+		en: "apart; away from each other",
+		ru: "врозь; друг от друга",
+		example: "Die Freunde gingen auseinander.",
+	},
+	{
+		preposition: "bei",
+		en: "together; with each other",
+		ru: "вместе; рядом друг с другом",
+		example: "Die Kinder sitzen beieinander.",
+	},
+	{
+		preposition: "durch",
+		en: "through each other; mixed together",
+		ru: "вперемешку; друг через друга",
+		example: "Alle redeten durcheinander.",
+	},
+	{
+		preposition: "für",
+		en: "for each other",
+		ru: "друг для друга; друг за друга",
+		example: "Sie sind füreinander da.",
+	},
+	{
+		preposition: "gegen",
+		en: "against each other",
+		ru: "друг против друга",
+		example: "Die Teams spielen gegeneinander.",
+	},
+	{
+		preposition: "hinter",
+		en: "one behind the other; in a row",
+		ru: "друг за другом; подряд",
+		example: "Sie gingen hintereinander durch die Tür.",
+	},
+	{
+		preposition: "in",
+		en: "into each other; in each other",
+		ru: "друг в друга; друг в друге",
+		example: "Die Ringe greifen ineinander.",
+	},
+	{
+		preposition: "mit",
+		en: "with each other; together",
+		ru: "друг с другом; вместе",
+		example: "Wir reden miteinander.",
+	},
+	{
+		preposition: "nach",
+		en: "one after another; after each other",
+		ru: "друг за другом; по очереди",
+		example: "Die Gäste kamen nacheinander an.",
+	},
+	{
+		preposition: "neben",
+		en: "next to each other; side by side",
+		ru: "рядом друг с другом",
+		example: "Sie wohnen nebeneinander.",
+	},
+	{
+		preposition: "über",
+		en: "about each other; on top of each other",
+		ru: "друг о друге; друг над другом",
+		example: "Sie lachen übereinander.",
+	},
+	{
+		preposition: "um",
+		en: "about each other; around each other",
+		ru: "друг о друге; друг вокруг друга",
+		example: "Sie kümmern sich umeinander.",
+	},
+	{
+		preposition: "unter",
+		en: "among each other; one below the other",
+		ru: "между собой; друг под другом",
+		example: "Das klären wir untereinander.",
+	},
+	{
+		preposition: "von",
+		en: "from each other; of each other",
+		ru: "друг от друга; друг о друге",
+		example: "Sie lernen voneinander.",
+	},
+	{
+		preposition: "vor",
+		en: "in front of each other; of each other",
+		ru: "друг перед другом",
+		example: "Sie haben keine Geheimnisse voreinander.",
+	},
+	{
+		preposition: "zu",
+		en: "to each other; towards each other",
+		ru: "друг к другу",
+		example: "Sie passen gut zueinander.",
+	},
+];
+
+const reciprocalMarker = "🤝";
+
+function reciprocalAdverb(reciprocal: Reciprocal): AuthoredMember {
+	const preposition = prepositions.find(
+		({ text }) => text === reciprocal.preposition,
+	);
+	if (!preposition) throw Error(`No preposition ${reciprocal.preposition}`);
+	const form = `${preposition.text}einander`;
+	// The preposition's ipa drops the linking r it takes after da and wo.
+	const ipa = `${preposition.ipa.replace(/^ʁ/u, "")}ʔaɪ̯ˈnandɐ`;
+	return adverbReading(
+		form,
+		ipa,
+		`${reciprocalMarker}${preposition.emoji}`,
+		`„${form}“ ist ein reziprokes Pronominaladverb aus „${preposition.text}“ und „einander“. Es ersetzt „${preposition.text} + einander“ und bezeichnet eine wechselseitige Beziehung zwischen den Beteiligten: ${reciprocal.example}`,
+		[reciprocal.en],
+		[reciprocal.ru],
+	);
+}
+
 // Colloquial dran, drauf, draus, drin, drüber, drum and drunter shorten the
 // da(r)- forms. A dr- word is no Lemma or spelling of its own but the Shorthand
 // member of the da(r)- word it shortens (Rule de/dr-adverb-is-da-shorthand), so
@@ -307,10 +509,14 @@ function pronominalAdverb(
  * Every German pronominal adverb: da(r)- and hier- forms are demonstrative,
  * and each wo(r)- form is one Lemma with an interrogative and a relative
  * Reading (system ADR 0029). The series shows in each Reading's marker only.
- * Classification keeps each one a singleton ADV; a verb that governs the
- * fused preposition does not absorb it.
+ * darum has a causal Reading too. Then the reciprocal pronominal adverbs, a
+ * preposition joined to einander. Classification keeps each one a singleton
+ * ADV; a verb that governs the fused preposition does not absorb it.
  */
-export const pronominalAdverbs: readonly AuthoredMember[] = series.flatMap(
-	(entry) =>
+export const pronominalAdverbs: readonly AuthoredMember[] = [
+	...series.flatMap((entry) =>
 		prepositions.map((preposition) => pronominalAdverb(entry, preposition)),
-);
+	),
+	causalDarum,
+	...reciprocals.map(reciprocalAdverb),
+];

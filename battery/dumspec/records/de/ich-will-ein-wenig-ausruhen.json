@@ -64,6 +64,7 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": { "emojiDescription": "🤏" },
 			"notes": {
 				"rationale": "ein wenig is one Lexeme PRON ein wenig in every use (de/quantifier-by-use, #734's 2026-09-30 decision). Its ein is fixed lexical material that never inflects, so it gives no Article evidence, and its adverbial use marks no case. ausruhen stays its own word."
 			},

@@ -381,17 +381,20 @@ const emphaticAdverbs: readonly (ManyReadingAdverb & {
 	},
 ];
 
-// da, hier and dort point at a place, dann at the next step in time and so at
-// a manner or degree: the demonstratives that answer wo, wann and wie, so
-// each Reading is the w-word's emoji with no marker, as on the da(r)- and
-// hier- pronominal adverbs (📍, 🕰, 🔧). da also names a point in time (von da
-// an). Each Reading is the one the gold names. Conditional dann (wenn …,
-// dann) is not authored yet.
+// da, hier and dort point at a place, dann and damals at a time, and so at a
+// manner or degree: the demonstratives that answer wo, wann and wie, so each
+// Reading is the w-word's emoji with no marker, as on the da(r)- and hier-
+// pronominal adverbs (📍, 🕰, 🔧). da also names a point in time (von da an).
+// daher names a starting point (🛫, like woher) and a reason, 'that's why'
+// (🤔, like warum), as causal darum does. Each Reading is one the gold names
+// or the user ruled; conditional dann (wenn …, dann) is not authored yet.
 // https://www.dwds.de/wb/da
 // https://www.dwds.de/wb/hier
 // https://www.dwds.de/wb/dort
 // https://www.dwds.de/wb/dann
+// https://www.dwds.de/wb/damals
 // https://www.dwds.de/wb/so
+// https://www.duden.de/rechtschreibung/daher
 const demonstrativeAdverbs: readonly ManyReadingAdverb[] = [
 	{
 		text: "da",
@@ -453,6 +456,39 @@ const demonstrativeAdverbs: readonly ManyReadingAdverb[] = [
 		],
 	},
 	{
+		text: "damals",
+		ipa: "ˈdaːmaːls",
+		readings: [
+			{
+				emoji: "🕰",
+				definition:
+					"Bezeichnet eine vergangene Zeit, von der die Rede ist, zu jener Zeit: Damals wohnten wir noch in Köln. Ich kannte sie schon damals.",
+				en: ["then; at that time; back then"],
+				ru: ["тогда; в то время"],
+			},
+		],
+	},
+	{
+		text: "daher",
+		ipa: "daˈheːɐ̯",
+		readings: [
+			{
+				emoji: "🛫",
+				definition:
+					"Bezeichnet als Herkunft oder Ausgangspunkt einen genannten oder gezeigten Ort: Daher kommt er. Da komme ich her.",
+				en: ["from there"],
+				ru: ["оттуда"],
+			},
+			{
+				emoji: "🤔",
+				definition:
+					"Bezeichnet den Grund, der sich aus dem Vorigen ergibt, aus diesem Grund, deshalb: Er war krank und konnte daher nicht kommen.",
+				en: ["that's why; hence; therefore"],
+				ru: ["поэтому; отсюда"],
+			},
+		],
+	},
+	{
 		text: "so",
 		ipa: "zoː",
 		readings: [
@@ -471,7 +507,8 @@ const demonstrativeAdverbs: readonly ManyReadingAdverb[] = [
 // and da and hier split from hin or her the same way (Da gehe ich hin, Hier
 // kommst du her; Rule de/split-adverb-is-one-target). They are demonstrative
 // ADVs, not pronominal adverbs: hin and her are no prepositions. Each has its
-// directional Reading only; causal daher (deshalb) is not authored yet.
+// directional Reading only, but daher, with causal daher too, is authored
+// with the demonstratives above.
 // https://www.duden.de/rechtschreibung/dahin
 // https://www.duden.de/rechtschreibung/daher
 // https://www.duden.de/rechtschreibung/hierhin
@@ -487,15 +524,6 @@ const directionalDemonstratives: readonly OneReadingAdverb[] = [
 			"Bezeichnet als Ziel einer Bewegung einen genannten oder gezeigten Ort: Wir fahren dahin. Da gehe ich morgen hin.",
 		en: ["there (direction); to that place"],
 		ru: ["туда"],
-	},
-	{
-		text: "daher",
-		ipa: "daˈheːɐ̯",
-		emoji: "🛫",
-		definition:
-			"Bezeichnet als Herkunft oder Ausgangspunkt einen genannten oder gezeigten Ort: Daher kommt er. Da komme ich her.",
-		en: ["from there"],
-		ru: ["оттуда"],
 	},
 	{
 		text: "hierhin",
@@ -729,8 +757,8 @@ function whAdverb(
  * interrogative and a relative Reading; relative wo has a place and a time
  * Reading. Then one Lemma each for the indefinite irgend- adverbs, the
  * negative nie, niemals, nirgends, nirgendwo and keineswegs, the
- * demonstrative da, hier, dort, dann and so, the demonstrative dahin, daher,
- * hierhin, hierher, dorthin and dorther, the directional her- and hin-
+ * demonstrative da, hier, dort, dann, damals, daher and so, the demonstrative
+ * dahin, hierhin, hierher, dorthin and dorther, the directional her- and hin-
  * adverbs (heraus, hinaus, herein, hinein, herüber, hinüber, herunter,
  * hinunter, herauf, hinauf and heran), and emphatic selbst and selber. Each
  * Reading's marker shows its series.

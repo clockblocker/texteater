@@ -1048,17 +1048,20 @@ describe("the German authored inventory", () => {
 		expect(readingsOf("hier")).toEqual(["📍"]);
 		expect(readingsOf("dort")).toEqual(["📍"]);
 		expect(readingsOf("dann")).toEqual(["🕰"]);
+		expect(readingsOf("damals")).toEqual(["🕰"]);
 		expect(readingsOf("so")).toEqual(["🔧"]);
+		// daher and darum also name a reason, 'that's why': the 🤔 of warum.
+		expect(readingsOf("daher")).toEqual(["🛫", "🤔"]);
+		expect(readingsOf("darum")).toEqual(["🔄", "🤔"]);
 		// The hier- pronominal adverbs carry no marker either: hierfür is 🎁,
 		// like dafür.
 		expect(readingsOf("hierfür")).toEqual(["🎁"]);
 		expect(readingsOf("dafür")).toEqual(["🎁"]);
 	});
 
-	test("authors dahin, daher, hierhin, hierher, dorthin and dorther as one ADV with one Reading", () => {
+	test("authors dahin, hierhin, hierher, dorthin and dorther as one ADV with one Reading", () => {
 		for (const [text, emoji] of [
 			["dahin", "🛬"],
-			["daher", "🛫"],
 			["hierhin", "🛬"],
 			["hierher", "🛫"],
 			["dorthin", "🛬"],
@@ -1074,6 +1077,79 @@ describe("the German authored inventory", () => {
 					]),
 				text,
 			).toEqual([["ADV", { comparable: null }, emoji]]);
+	});
+
+	test("authors a reciprocal pronominal adverb for each preposition but zwischen, 🤝 before the preposition's emoji (system ADR 0029)", () => {
+		const reciprocals = authoredMembers.filter(
+			({ lemma }) =>
+				lemma.kind === "ADV" &&
+				lemma.canonicalForm.endsWith("einander"),
+		);
+		expect(
+			reciprocals.map(({ lemma }) => lemma.canonicalForm).toSorted(),
+		).toEqual(
+			[
+				"an",
+				"auf",
+				"aus",
+				"bei",
+				"durch",
+				"für",
+				"gegen",
+				"hinter",
+				"in",
+				"mit",
+				"nach",
+				"neben",
+				"über",
+				"um",
+				"unter",
+				"von",
+				"vor",
+				"zu",
+			]
+				.map((preposition) => `${preposition}einander`)
+				.toSorted(),
+		);
+		for (const { lemma, reading } of reciprocals) {
+			expect(lemma.kind, lemma.canonicalForm).toBe("ADV");
+			expect(lemma.coreFeatures).toEqual({ comparable: null });
+			expect(reading.emojiDescription.startsWith("🤝")).toBe(true);
+		}
+		const emojiOf = (text: string) =>
+			authoredMembers
+				.filter(({ lemma }) => lemma.canonicalForm === text)
+				.map(({ reading }) => reading.emojiDescription);
+		expect(emojiOf("miteinander")).toEqual(["🤝🔗"]);
+		expect(emojiOf("damit")).toEqual(["🔗"]);
+		// Standalone einander stays one PRON Lemma.
+		expect(emojiOf("einander")).toEqual(["🤝"]);
+	});
+
+	test("authors ein wenig as one invariant Ind PRON with one Reading (de/quantifier-by-use)", () => {
+		expect(
+			authoredMembers
+				.filter(({ lemma }) => lemma.canonicalForm === "ein wenig")
+				.map(({ lemma, reading }) => [
+					lemma.kind,
+					lemma.coreFeatures as Readonly<Record<string, unknown>>,
+					reading.emojiDescription,
+				]),
+		).toEqual([
+			[
+				"PRON",
+				{
+					person: null,
+					polite: null,
+					poss: null,
+					pronType: "Ind",
+					case: null,
+					number: null,
+					gender: null,
+				},
+				"🤏",
+			],
+		]);
 	});
 
 	test("authors the her- and hin- adverbs as one ADV with no series marker and one Reading", () => {

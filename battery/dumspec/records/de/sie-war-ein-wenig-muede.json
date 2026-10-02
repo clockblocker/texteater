@@ -68,6 +68,7 @@
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
+			"reading": { "emojiDescription": "🤏" },
 			"notes": {
 				"rationale": "ein wenig is one Lexeme PRON ein wenig in every use (de/quantifier-by-use, #734's 2026-09-30 decision). Its ein is fixed lexical material that never inflects, so it gives no Article evidence, and its degree use marks no case. müde stays its own target."
 			},

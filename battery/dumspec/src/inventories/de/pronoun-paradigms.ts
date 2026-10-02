@@ -719,6 +719,24 @@ for (const [text, ipa, en, ru] of [
 		),
 	);
 
+// ein wenig is one invariant Lemma in every use (de/quantifier-by-use): its ein
+// never inflects (mit ein wenig Geduld). Naming an amount (ein wenig Zucker)
+// and grading (ein wenig müde) are shades of one meaning, so it has one
+// Reading.
+// https://www.duden.de/rechtschreibung/wenig
+reviewed.push(
+	pronounMember(
+		form("ein wenig", "aɪ̯n ˈveːnɪç"),
+		description(
+			"Ind",
+			"🤏",
+			"Bezeichnet eine kleine, nicht näher bestimmte Menge oder einen geringen Grad, etwas, ein bisschen: Gib mir ein wenig Zucker. Sie war ein wenig müde.",
+			["a little; a bit"],
+			["немного; чуть-чуть"],
+		),
+	),
+);
+
 // Standalone einander is one invariant reciprocal Lemma (system ADR 0044); case
 // is supplied by the governing verb or preposition and is not part of identity.
 reviewed.push(

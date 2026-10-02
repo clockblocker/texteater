@@ -13,11 +13,12 @@ Dumgen decides how production uses them.
 
 **Authored Inventories live in `dumspec`.** In German they are the AUX
 Readings, the PRON and DET pillar cells and stems, the unit that explains
-reflexivity, the pronominal adverbs, and the interrogative and relative
-w-adverbs (`wo`, `wohin`, `woher`, `wann`, `wie`, `warum`, `wieso`,
-`weshalb`, `weswegen`), the demonstrative `da`, `hier`, `dort`, `dann` and
-`so`, the directional `dahin`, `daher`, `hierhin`, `hierher`, `dorthin` and
-`dorther`, the her- and hin- adverbs (`heraus`, `hinaus`, `herein`, `hinein`, `herüber`, `hinüber`,
+reflexivity, the pronominal adverbs, reciprocal ones included, and the
+interrogative and relative w-adverbs (`wo`, `wohin`, `woher`, `wann`, `wie`,
+`warum`, `wieso`, `weshalb`, `weswegen`), the demonstrative `da`, `hier`,
+`dort`, `dann`, `damals` and `so`, the directional `dahin`, `daher`,
+`hierhin`, `hierher`, `dorthin` and `dorther`, the her- and hin- adverbs
+(`heraus`, `hinaus`, `herein`, `hinein`, `herüber`, `hinüber`,
 `herunter`, `hinunter`, `herauf`, `hinauf`, `heran`; colloquial `raus`,
 `rein`, `rüber`, `runter`, `rauf` and `ran` are their Shorthands), the `irgend-`
 adverbs (`irgendwo`, `irgendwann`, `irgendwie` and their kin), the negative
@@ -74,6 +75,15 @@ Amended on 2026-10-02: the emphatic adverbs `selbst`, with the Readings 🫵
 spellings of other Lemmas or as other Kinds
 ([ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)).
 Decided by the user on 2026-10-02
+([#595](https://github.com/clockblocker/texteater/issues/595)).
+
+Amended on 2026-10-02: `damals` 🕰 joined the demonstrative adverbs.
+`darum` and `daher` gained a causal Reading 🤔 'that's why' beside 🔄 and
+🛫; a da(r)- form's other senses are authored when gold attests them. The
+reciprocal pronominal adverbs (`miteinander`, `aufeinander`) joined, one
+Reading each ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)).
+PRON `ein wenig` joined with one Reading, 🤏, since an amount and a degree
+are shades of one meaning. Decided by the user on 2026-10-02
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
 
 ## Considered Options

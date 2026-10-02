@@ -92,3 +92,10 @@ the total pronouns have it. DET `irgendein` and `irgendwelcher` took ❔ from
 🔢, and PRON `beide` took 2⃣ from ✌, like DET `beide`. The perfect auxiliaries `haben` and `sein` are both 🏁. Decided by
 the user on 2026-10-02
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
+
+Amended on 2026-10-02: a reciprocal pronominal adverb's Reading puts 🤝,
+the Reading of `einander`, before its preposition's emoji, the way ❓ comes
+first on the `wo(r)-` forms: `miteinander` is 🤝🔗 and `aufeinander` 🤝🔝.
+Causal `darum` and `daher` ('that's why') are 🤔, the emoji of `warum`,
+with no marker, since a demonstrative carries none. Decided by the user on
+2026-10-02 ([#595](https://github.com/clockblocker/texteater/issues/595)).
