@@ -40,7 +40,8 @@ _Avoid_: case, example, gold case, fixture
 **Breakdown Record**:
 One Locution's or Saying's Breakdown (Dumling), the gold for
 `segment.inLexemes`: the Lemma's wording as a sentence, broken down into
-Lexeme targets that each name their Reading. See [ADR 0041] and
+Lexeme targets that each name their Reading. `segment.inLexemes` is deferred
+for now, so no run is scored against this gold. See [ADR 0041] and
 [Dumgen ADR 0007].
 _Avoid_: inner layer, component record
 

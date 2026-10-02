@@ -25,8 +25,8 @@ _Avoid_: Segment.Text, lattice, Sentence Analysis, for the current design
 
 **`segment.inLexemes`**:
 The segmenter that breaks one Locution or Saying down into its Lexemes, once
-per Lemma. It returns the same shape as `segment.inUnits` one level down. See
-[Dumgen ADR 0007].
+per Lemma. It returns the same shape as `segment.inUnits` one level down and
+is deferred for now. See [Dumgen ADR 0007].
 _Avoid_: Segment.Unit, Lexical Breakdown, inner layer
 
 **`segment.inMorphemes`**:
