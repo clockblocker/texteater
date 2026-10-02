@@ -7,7 +7,8 @@ Description gold, raw texts for intake, and the classification Rules
 holds only the model's types and schemas. Dumgen and the docs site read
 Dumspec; neither owns it. Each entry links the ADRs that hold the term's
 precise definition, edge cases and examples, and each language's
-classification terms have a section of their own.
+classification terms have a section of their own. The
+[Emoji Description conventions] say how Reading gold is written.
 
 ## Language
 
@@ -197,4 +198,5 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [Dumgen ADR 0007]: ../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
+[Emoji Description conventions]: ./docs/reference/emoji-description-conventions.md
 [inventories]: ./src/inventories/
