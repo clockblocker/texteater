@@ -19,14 +19,62 @@
 		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "9f44b34f99bd5145"
+			},
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "The possessive mein is a determiner with a meaning of its own, not an article (de/only-der-and-ein-are-articles)."
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [4, 14],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "aufstehen: the separable particle auf at the end of the clause joins steht (de/verb-owns-its-scattered-members)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "jeden determines Morgen directly, so it is DET, not an article (de/pron-or-det-by-use, de/only-der-and-ein-are-articles)."
+			}
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "NUM" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
@@ -60,10 +108,7 @@
 							"members": [{ "offset": 0 }],
 							"identity": "DET:mein"
 						},
-						{
-							"kind": "NOUN",
-							"members": [{ "offset": 6 }]
-						},
+						{ "kind": "NOUN", "members": [{ "offset": 6 }] },
 						{
 							"kind": "VERB",
 							"members": [
@@ -76,18 +121,9 @@
 							"members": [{ "offset": 22 }],
 							"identity": "DET:jeder"
 						},
-						{
-							"kind": "NOUN",
-							"members": [{ "offset": 28 }]
-						},
-						{
-							"kind": "ADP",
-							"members": [{ "offset": 35 }]
-						},
-						{
-							"kind": "NUM",
-							"members": [{ "offset": 38 }]
-						}
+						{ "kind": "NOUN", "members": [{ "offset": 28 }] },
+						{ "kind": "ADP", "members": [{ "offset": 35 }] },
+						{ "kind": "NUM", "members": [{ "offset": 38 }] }
 					],
 					"phrasemes": [],
 					"slots": []
@@ -114,23 +150,15 @@
 							"verbType": null
 						}
 					},
-					"request": {
-						"translations": { "en": null, "ru": null }
-					}
+					"request": { "translations": { "en": null, "ru": null } }
 				},
 				"idealOutput": {
 					"translations": { "en": "get up", "ru": "вставать" }
 				},
 				"explanation": "A separable verb translates as one infinitive with its particle.",
 				"reviewedAlternatives": {
-					"accepted": {
-						"en": [],
-						"ru": ["встать"]
-					},
-					"rejected": {
-						"en": ["gets up"],
-						"ru": ["встаёт"]
-					}
+					"accepted": { "en": [], "ru": ["встать"] },
+					"rejected": { "en": ["gets up"], "ru": ["встаёт"] }
 				}
 			}
 		}

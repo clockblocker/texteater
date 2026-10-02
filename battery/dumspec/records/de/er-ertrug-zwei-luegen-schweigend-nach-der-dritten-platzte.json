@@ -30,14 +30,94 @@
 		{ "kind": "ResolvableText", "text": "Kragen" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0036", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "dc0d3ef97ace5bc0"
+			},
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" }
+		],
+		"references": [
+			{
+				"title": "Duden: Kragen",
+				"url": "https://www.duden.de/rechtschreibung/Kragen",
+				"supports": "Target [platzte, der, Kragen]: jemandem platzt der Kragen (salopp: jemand wird über etwas so wütend, dass er bzw. sie es nicht länger hinnehmen kann)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "NUM" },
+			"notes": {
+				"rationale": "zwei is a numeral, not an article, so Lügen owns none and stays a bare NOUN."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "The participle schweigend is used adverbially, outside a perfect or passive, so it is an ADJ (de/participial-adjective, as in er saß schweigend am Fenster)."
+			}
+		},
+		{
+			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [13, 15],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "Lüge is elided after der dritten, so the ordinal stands in for it, is the Head of its phrase and owns der (ADR 0040, de/noun-owns-its-article). Ordinals are ADJ in the gold (erste, zweite)."
+			}
+		},
+		{
+			"memberSegmentIndices": [17, 21, 25],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "jemandem platzt der Kragen (Duden Kragen, salopp: so angry one can take no more) is an Idiom, a Locution VERB over platzte, der and Kragen. ihm fills the open dative slot and stays a PRON of its own. sprichwörtliche is a free adjective inside the fixed noun phrase; every fixed word is present, so the Locution stays Full (de/partial-coverage: free words between members)."
+			}
+		},
+		{
+			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "The dative experiencer slot of jemandem platzt der Kragen is open, so ihm is free."
+			}
+		},
+		{
+			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "sprichwörtliche flags the figurative use and modifies Kragen; it is not a fixed word, so it stands alone (de/attributive-adjective-stands-alone, de/fixed-members-only)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

@@ -28,14 +28,75 @@
 		{ "kind": "ResolvableText", "text": "Brei" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0026", "ADR-0035", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+		],
+		"references": [
+			{
+				"title": "Duden: Koch",
+				"url": "https://www.duden.de/rechtschreibung/Koch_Kuechenchef",
+				"supports": "Target [viele, Köche, verderben, den, Brei]: viele Köche verderben den Brei (aus einer Sache, bei der zu viele Leute mitreden und mitentscheiden, wird nichts Gutes)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "Outside a fixed expression the preposition piece of Im is a single-member ADP (de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [1, 3],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "The article piece m (dem) belongs to Projekt, the Head of its phrase (de/fused-word-pieces, de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The modal is a VERB of its own, and mitentscheiden a separate target (de/modal-is-a-verb)."
+			}
+		},
+		{
+			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "ADV" }
+		},
+		{
+			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "jeder stands for a noun phrase, so it is PRON (de/pron-or-det-by-use)."
+			}
+		},
+		{
+			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [15, 17, 19, 21, 23],
+			"route": { "family": "Saying", "kind": "Saying" },
+			"notes": {
+				"rationale": "viele Köche verderben den Brei is a Proverb that Duden lists under Koch, applied to a project where everyone may decide. It is one Saying target over all its words, viele and den included (de/saying-needs-uptake)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

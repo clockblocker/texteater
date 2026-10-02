@@ -2,94 +2,62 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Sie trinkt den Kaffee mit einem bisschen Milch.",
 	"segments": [
-		{
-			"kind": "ResolvableText",
-			"text": "Sie"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "trinkt"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "den"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "Kaffee"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "mit"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "einem"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "bisschen"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "Milch"
-		},
-		{
-			"kind": "Punctuation",
-			"text": "."
-		}
+		{ "kind": "ResolvableText", "text": "Sie" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "trinkt" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "den" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Kaffee" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "mit" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "einem" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bisschen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Milch" },
+		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
-	"provenance": {
-		"kind": "Authored"
-	},
+	"coverage": "Full",
+	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0040"],
 		"rules": [
-			{
-				"rule": "de/quantifier-by-use",
-				"hash": "b5504b9423a22bbb"
-			}
+			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [4, 6],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
 			"memberSegmentIndices": [10, 12],
-			"route": {
-				"family": "Lexeme",
-				"kind": "PRON"
-			},
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Quantity bisschen is one Lexeme PRON bisschen in every use (de/quantifier-by-use, #734's 2026-09-30 decision). The inflected einem after mit is licensed too, a genuine article and satellite of bisschen. Its Attestation waits for the follow-up that settles article evidence, agreement and case from reviewed examples; no nominal case is invented for a degree use."
+			}
+		},
+		{
+			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Milch is what bisschen quantifies, its own target (de/quantifier-by-use), so it does not own einem."
 			}
 		}
 	],

@@ -28,14 +28,68 @@
 		{ "kind": "ResolvableText", "text": "spannend" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0036", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [4, 10],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "festhalten: fest closes the verbal bracket as the separable particle of the particle verb Duden lists, so it joins hielten (de/verb-owns-its-scattered-members)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [13, 15],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "das Seil is the object of spannend, so Seil owns its article."
+			}
+		},
+		{
+			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "aller determines Kraft directly (de/pron-or-det-by-use). mit aller Kraft is compositional, so its words stay apart (de/fixed-members-only)."
+			}
+		},
+		{
+			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "spannend is the present participle of spannen used adverbially, outside a perfect or passive, so it is an ADJ (de/participial-adjective). Its object das Seil is a free word."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

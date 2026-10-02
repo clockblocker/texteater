@@ -15,14 +15,45 @@
 		{ "kind": "ResolvableText", "text": "Keks" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0034"],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0034", "ADR-0039"],
+		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" }
+		],
+		"references": [
+			{
+				"title": "Duden: Keks",
+				"url": "https://www.duden.de/rechtschreibung/Keks",
+				"supports": "Target [gehst, auf, den, Keks]: jemandem auf den Keks gehen (das geht mir langsam auf den Keks)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2, 6, 8, 10],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "jemandem auf den Keks gehen 'annoy' (Duden Keks) is an Idiom, a Locution VERB over gehst, auf, den and Keks. Its dative is an open slot of the Valency Frame (ADR 0039), so mir stands between the members as a PRON of its own."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

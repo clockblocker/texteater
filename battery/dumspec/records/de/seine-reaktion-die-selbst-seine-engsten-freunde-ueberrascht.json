@@ -37,14 +37,103 @@
 		{ "kind": "ResolvableText", "text": "übertrieben" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0036"],
-		"rules": [],
+		"adrs": ["ADR-0026", "ADR-0036", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/focus-word-is-adv", "hash": "d38200289df9682c" },
+			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "9f44b34f99bd5145"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "The possessive sein is a determiner with a meaning of its own, not an article (de/only-der-and-ein-are-articles)."
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "selbst 'even' picks out seine engsten Freunde, a focus word, so it is a single-member ADV (de/focus-word-is-adv)."
+			}
+		},
+		{
+			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "DET" }
+		},
+		{
+			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [15, 17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "überrascht hat is the perfect of überraschen (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves)."
+			}
+		},
+		{
+			"memberSegmentIndices": [20],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "A copula never joins its predicate (de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [24, 28],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Fehlers owns des across the adjective kleinen (de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "völlig grades übertrieben and never joins it (de/degree-word-is-adv)."
+			}
+		},
+		{
+			"memberSegmentIndices": [32],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

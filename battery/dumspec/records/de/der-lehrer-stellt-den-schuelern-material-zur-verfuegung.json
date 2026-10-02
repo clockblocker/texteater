@@ -20,14 +20,44 @@
 		{ "kind": "ResolvableText", "text": "Verfügung" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [4, 12, 13, 15],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "zur Verfügung stellen is a Collocation: stellen only supports Verfügung, so it is a Locution VERB over stellt and both pieces of zur with Verfügung (de/funktionsverbgefuege-are-collocations, de/fused-word-pieces). Its free dative and accusative, den Schülern and Material, stand between the members and stay out."
+			}
+		},
+		{
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": { "rationale": "Material is the free object, bare." }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
@@ -64,10 +94,7 @@
 								{ "offset": 4, "role": "Head" }
 							]
 						},
-						{
-							"kind": "VERB",
-							"members": [{ "offset": 11 }]
-						},
+						{ "kind": "VERB", "members": [{ "offset": 11 }] },
 						{
 							"kind": "NOUN",
 							"members": [
@@ -75,14 +102,8 @@
 								{ "offset": 22, "role": "Head" }
 							]
 						},
-						{
-							"kind": "NOUN",
-							"members": [{ "offset": 31 }]
-						},
-						{
-							"kind": "ADP",
-							"members": [{ "offset": 40 }]
-						},
+						{ "kind": "NOUN", "members": [{ "offset": 31 }] },
+						{ "kind": "ADP", "members": [{ "offset": 40 }] },
 						{
 							"kind": "NOUN",
 							"members": [
@@ -92,10 +113,7 @@
 						}
 					],
 					"phrasemes": [
-						{
-							"kind": "Collocation",
-							"words": [11, 40, 44]
-						}
+						{ "kind": "Collocation", "words": [11, 40, 44] }
 					],
 					"slots": []
 				},
@@ -117,9 +135,7 @@
 						"canonicalForm": "Schüler",
 						"coreFeatures": { "gender": "Masc", "hyph": null }
 					},
-					"request": {
-						"translations": { "en": null, "ru": null }
-					}
+					"request": { "translations": { "en": null, "ru": null } }
 				},
 				"idealOutput": {
 					"translations": { "en": "pupil", "ru": "ученик" }

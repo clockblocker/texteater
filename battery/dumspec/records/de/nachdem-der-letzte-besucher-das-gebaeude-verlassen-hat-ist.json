@@ -49,14 +49,112 @@
 		{ "kind": "ResolvableText", "text": "kann" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
-		"rules": [],
+		"adrs": ["ADR-0026", "ADR-0036", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "dc0d3ef97ace5bc0"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "SCONJ" }
+		},
+		{
+			"memberSegmentIndices": [2, 6],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Besucher owns der across the adjective letzte (de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [8, 10],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [12, 14],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "verlassen hat is the perfect of verlassen (de/verbal-participle)."
+			}
+		},
+		{
+			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "schließen builds its perfect with haben, so ist … geschlossen is a state, the state passive, even with its agent: copular sein stays apart (de/sein-perfect-or-copula)."
+			}
+		},
+		{
+			"memberSegmentIndices": [19, 23],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [21],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [25],
+			"route": { "family": "Lexeme", "kind": "ADV" }
+		},
+		{
+			"memberSegmentIndices": [27],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [29, 31],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [33],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "In the state passive the participle is an ADJ describing a state (de/sein-perfect-or-copula, de/participial-adjective)."
+			}
+		},
+		{
+			"memberSegmentIndices": [36],
+			"route": { "family": "Lexeme", "kind": "SCONJ" }
+		},
+		{
+			"memberSegmentIndices": [38],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [40],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "The participle unbemerkt is used adverbially, outside a perfect or passive, so it is an ADJ (de/participial-adjective)."
+			}
+		},
+		{
+			"memberSegmentIndices": [42],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [44],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The modal is a VERB of its own, and the infinitive zurückkehren a separate target (de/modal-is-a-verb)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

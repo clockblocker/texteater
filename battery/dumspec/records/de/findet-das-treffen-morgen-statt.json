@@ -13,14 +13,36 @@
 		{ "kind": "ResolvableText", "text": "statt" },
 		{ "kind": "Punctuation", "text": "?" }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "stattfinden: the separable particle statt at the end of the question joins Findet (de/verb-owns-its-scattered-members). It is no preposition or conjunction here, since nothing follows it."
+			}
+		},
+		{
+			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

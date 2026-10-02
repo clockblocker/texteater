@@ -18,14 +18,64 @@
 		{ "kind": "ResolvableText", "text": "Faden" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{
+				"rule": "de/substantivized-infinitive-is-a-noun",
+				"hash": "24bb91c7f80c0f5f"
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "dc0d3ef97ace5bc0"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "Outside a fixed expression the preposition piece of Beim is a single-member ADP (de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [1, 3],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Nähen is a substantivized infinitive, a NOUN that owns the article piece m (de/substantivized-infinitive-is-a-noun, de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [5],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "While sewing, losing the red thread is literal, so den Faden verlieren is not attested: the same words used literally are separate units (de/idiom; ADR 0039 names einen Faden while sewing)."
+			}
+		},
+		{
+			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [9, 13],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Literal Faden owns den across the adjective roten (de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

@@ -2,71 +2,49 @@
 	"$schema": "../../schema/spec-record.de.json",
 	"sentence": "Das bisschen Geld reicht nicht.",
 	"segments": [
-		{
-			"kind": "ResolvableText",
-			"text": "Das"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "bisschen"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "Geld"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "reicht"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "nicht"
-		},
-		{
-			"kind": "Punctuation",
-			"text": "."
-		}
+		{ "kind": "ResolvableText", "text": "Das" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "bisschen" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "Geld" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "reicht" },
+		{ "kind": "Whitespace", "text": " " },
+		{ "kind": "ResolvableText", "text": "nicht" },
+		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
-	"provenance": {
-		"kind": "Authored"
-	},
+	"coverage": "Full",
+	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0040"],
 		"rules": [
-			{
-				"rule": "de/quantifier-by-use",
-				"hash": "b5504b9423a22bbb"
-			}
+			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" },
+			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" }
 		],
 		"references": []
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
-			"route": {
-				"family": "Lexeme",
-				"kind": "PRON"
-			},
+			"route": { "family": "Lexeme", "kind": "PRON" },
 			"notes": {
 				"rationale": "Quantity bisschen is one Lexeme PRON bisschen in every use (de/quantifier-by-use, #734's 2026-09-30 decision). The genuine article das is its satellite; Geld stays its own word. Its Attestation waits for the follow-up that settles article evidence, agreement and case from reviewed examples; no nominal case is invented for a degree use."
 			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Geld is what bisschen quantifies, its own target (de/quantifier-by-use), so it does not own Das."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "PART" }
 		}
 	],
 	"noTarget": []

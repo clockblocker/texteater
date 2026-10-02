@@ -17,14 +17,56 @@
 		{ "kind": "ResolvableText", "text": "ziehen" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0026", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
+			},
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "9f44b34f99bd5145"
+			},
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The modal is a VERB of its own, and the infinitive it governs is a separate target (de/modal-is-a-verb)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "dieser is a determiner with a meaning of its own, not an article, so Faktor does not own it (de/only-der-and-ein-are-articles)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [8, 10, 12],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "in Betracht ziehen 'consider' is a Collocation: ziehen only supports Betracht, so it is a Locution VERB over in, Betracht and ziehen. diesen Faktor is its free object."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

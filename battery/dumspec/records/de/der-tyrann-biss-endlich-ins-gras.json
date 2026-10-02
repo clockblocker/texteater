@@ -16,14 +16,43 @@
 		{ "kind": "ResolvableText", "text": "Gras" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0020"],
-		"rules": [],
+		"adrs": ["ADR-0020", "ADR-0035", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [4, 8, 9, 11],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "A tyrant who finally bites the grass has died: ins Gras beißen 'sterben' is an Idiom, a Locution VERB. In a fixed expression both pieces of ins are members (de/fused-word-pieces), and endlich between them is free."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "endlich modifies the clause and is no fixed word of ins Gras beißen."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

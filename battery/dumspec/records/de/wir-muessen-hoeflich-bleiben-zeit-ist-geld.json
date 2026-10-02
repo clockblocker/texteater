@@ -18,14 +18,59 @@
 		{ "kind": "ResolvableText", "text": "Geld" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0026", "ADR-0039"],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+		],
+		"references": [
+			{
+				"title": "Duden: Zeit",
+				"url": "https://www.duden.de/rechtschreibung/Zeit",
+				"supports": "Target [Zeit, ist, Geld]: Zeit ist Geld (man soll die Zeit nicht ungenutzt lassen; Zeitverlust bedeutet materiellen Verlust)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The modal is a VERB of its own (de/modal-is-a-verb)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "Copular bleiben never joins its predicate höflich (de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [9, 11, 13],
+			"route": { "family": "Saying", "kind": "Saying" },
+			"notes": {
+				"rationale": "Zeit ist Geld is a Proverb that Duden lists under Zeit, quoted after the colon as a complete saying, so it is one Saying target over all its words (de/saying-needs-uptake)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

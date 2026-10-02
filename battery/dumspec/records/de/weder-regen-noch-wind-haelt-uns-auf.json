@@ -17,14 +17,52 @@
 		{ "kind": "ResolvableText", "text": "auf" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0039"],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0039"],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 4],
+			"route": { "family": "Locution", "kind": "CCONJ" },
+			"notes": {
+				"rationale": "weder … noch is a fixed correlator, one Locution CCONJ made of its two anchors only; the nouns it connects stay out (de/correlator-anchors)."
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [8, 12],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "aufhalten 'stop, hold up': the separable particle auf at the end of the clause joins hält (de/verb-owns-its-scattered-members)."
+			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "uns is the object of aufhalten, not a reflexive: the subject is Regen and Wind."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
