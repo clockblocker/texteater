@@ -4,16 +4,14 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
 	checkRecord,
+	isSpecRecordId,
 	type RecordCheck,
-	ruleStatementHash,
+	ruleCitationStatus,
 	rules,
+	setReviewDepth,
 } from "dumspec";
 import type * as Dumspec from "dumspec/types";
-import { applyEdits, type FormattingOptions, modify } from "jsonc-parser";
 import type { CitationStatus, RuleCitationView } from "./shared/contract";
-
-/** A sentence record's id, as dumspec's `checkRecord` accepts it. */
-const recordIdPattern = /^(de|en|he)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)+$/u;
 
 /** One record file as it is on disk now. */
 export interface StoredRecord {
@@ -42,22 +40,24 @@ export type SaveResult =
 const sha256 = (text: string) =>
 	createHash("sha256").update(text).digest("hex");
 
-const rulesById = new Map(rules.map((rule) => [rule.id, rule]));
+const citationStatus = {
+	Current: "current",
+	Stale: "stale",
+	Unknown: "unknown",
+} as const satisfies Record<
+	ReturnType<typeof ruleCitationStatus>,
+	CitationStatus
+>;
 
 /** Whether each Rule a record cites is current, reworded, or unknown. */
 export function citationStatuses(
 	citations: readonly Dumspec.RuleCitation[],
 ): RuleCitationView[] {
-	return citations.map(({ rule, hash }) => {
-		const cited = rulesById.get(rule);
-		const status: CitationStatus =
-			cited === undefined
-				? "unknown"
-				: ruleStatementHash(cited.statement) === hash
-					? "current"
-					: "stale";
-		return { rule, hash, status };
-	});
+	return citations.map((citation) => ({
+		rule: citation.rule,
+		hash: citation.hash,
+		status: citationStatus[ruleCitationStatus(citation, rules)],
+	}));
 }
 
 function withDepth(
@@ -90,30 +90,6 @@ export function depthChangeProblem(
 	if (notCurrent.length > 0)
 		return `Cites ${notCurrent.map(({ rule, status }) => `${status} Rule ${rule}`).join(", ")}; re-check it against the Rule and cite the current hash first`;
 	return undefined;
-}
-
-const formatting: FormattingOptions = {
-	insertSpaces: false,
-	tabSize: 4,
-	eol: "\n",
-};
-
-/** The record's text with only its `reviewDepth` changed. */
-function editDepth(
-	text: string,
-	depth: Dumspec.AnnotationLayer | undefined,
-): string {
-	return applyEdits(
-		text,
-		modify(text, ["reviewDepth"], depth, {
-			formattingOptions: formatting,
-			// Where every reviewed record keeps it: right after `coverage`.
-			getInsertionIndex: (properties) => {
-				const coverage = properties.indexOf("coverage");
-				return coverage === -1 ? properties.length : coverage + 1;
-			},
-		}),
-	);
 }
 
 /** dumspec's package directory, whose biome configuration formats records. */
@@ -168,7 +144,7 @@ export function createRecordStore(recordsDirectory: string) {
 	let saving: Promise<unknown> = Promise.resolve();
 
 	async function read(id: Dumspec.SpecRecordId): Promise<StoredRecord> {
-		if (!recordIdPattern.test(id))
+		if (!isSpecRecordId(id))
 			return { id, problem: `${id} is not a sentence record id` };
 		let text: string;
 		try {
@@ -215,7 +191,10 @@ export function createRecordStore(recordsDirectory: string) {
 		if (problem) return { outcome: "refused", reason: problem };
 
 		const path = pathOf(id);
-		const next = await formatRecordText(editDepth(current.text, depth), id);
+		const next = await formatRecordText(
+			setReviewDepth(current.text, depth),
+			id,
+		);
 		if (!Bun.deepEquals(JSON.parse(next), withDepth(current.json, depth)))
 			return {
 				outcome: "refused",

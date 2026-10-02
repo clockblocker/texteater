@@ -72,7 +72,6 @@
       "dependencies": {
         "@biomejs/biome": "2.5.13",
         "dumspec": "workspace:^",
-        "jsonc-parser": "^3.3.1",
         "lego": "workspace:^",
         "react": "^19.2.6",
         "react-dom": "^19.2.6",
@@ -246,6 +245,7 @@
       "dependencies": {
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
+        "jsonc-parser": "^3.3.1",
         "zod": "^4.4.0",
       },
       "devDependencies": {

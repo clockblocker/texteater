@@ -1,7 +1,6 @@
 import { type AdrStatuses, staleAdrStatus } from "./check-citations.js";
+import { ruleIdPattern } from "./ids.js";
 import type { Rule, RuleId, SpecRecordId } from "./types.js";
-
-const idPattern = /^(de|en|he)\/[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 
 /**
  * The statement length past which a Rule is likely spelling out boundary
@@ -33,7 +32,7 @@ export function checkRules(
 			issues.push({ rule: rule.id, message });
 		if (seen.has(rule.id)) issue("Another Rule has this id");
 		seen.add(rule.id);
-		const language = idPattern.exec(rule.id)?.[1];
+		const language = ruleIdPattern.exec(rule.id)?.[1];
 		if (!language)
 			issue("A Rule id is <language>/<kebab-case name>, in ASCII");
 		if (rule.statement.trim() === "") issue("The statement is empty");

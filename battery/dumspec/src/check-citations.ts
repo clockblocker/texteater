@@ -21,6 +21,25 @@ export type AdrStatuses = ReadonlyMap<AdrId, string>;
 /** An ADR status that reopens whatever cites the ADR. */
 export const staleAdrStatus = /^(?:superseded|deprecated)\b/u;
 
+/** The hash a citation of Rule `id` stores now; undefined for no such Rule. */
+function currentHash(id: RuleId, rules: readonly Rule[]): string | undefined {
+	const rule = rules.find((candidate) => candidate.id === id);
+	return rule && ruleStatementHash(rule.statement);
+}
+
+/**
+ * Whether a Rule Citation names one of `rules` and pins its current
+ * statement: Current, Stale once the Rule is reworded, or Unknown.
+ */
+export function ruleCitationStatus(
+	citation: RuleCitation,
+	rules: readonly Rule[],
+): "Current" | "Stale" | "Unknown" {
+	const hash = currentHash(citation.rule, rules);
+	if (hash === undefined) return "Unknown";
+	return hash === citation.hash ? "Current" : "Stale";
+}
+
 type RuleCitationCheck =
 	| { check: "UnknownCitation" | "StaleCitation"; message: string }
 	| undefined;
@@ -28,25 +47,24 @@ type RuleCitationCheck =
 /** Whether a Rule citation names a Rule, and whether its hash is current. */
 function checkRuleCitation(
 	citation: RuleCitation,
-	rulesById: ReadonlyMap<RuleId, Rule>,
+	rules: readonly Rule[],
 	reopen: string,
 ): RuleCitationCheck {
-	const rule = rulesById.get(citation.rule);
-	if (rule === undefined)
-		return {
-			check: "UnknownCitation",
-			message: `No Rule ${citation.rule}`,
-		};
-	const hash = ruleStatementHash(rule.statement);
-	if (hash === citation.hash) return undefined;
-	return {
-		check: "StaleCitation",
-		message: `Rule ${rule.id} changed since ${reopen} and cite hash ${hash}`,
-	};
+	switch (ruleCitationStatus(citation, rules)) {
+		case "Current":
+			return undefined;
+		case "Unknown":
+			return {
+				check: "UnknownCitation",
+				message: `No Rule ${citation.rule}`,
+			};
+		case "Stale":
+			return {
+				check: "StaleCitation",
+				message: `Rule ${citation.rule} changed since ${reopen} and cite hash ${currentHash(citation.rule, rules)}`,
+			};
+	}
 }
-
-const byId = (rules: readonly Rule[]) =>
-	new Map(rules.map((rule) => [rule.id, rule]));
 
 /**
  * A record that cites sources: a Spec or Breakdown Record, reviewed through
@@ -69,7 +87,6 @@ export function checkCitations(
 	records: readonly CitingRecord[],
 	context: { adrStatuses: AdrStatuses; rules: readonly Rule[] },
 ): SpecIssue[] {
-	const rulesById = byId(context.rules);
 	const issues: SpecIssue[] = [];
 	for (const { id, reviewDepth, status: recordStatus, sources } of records) {
 		if (sources === undefined) continue;
@@ -96,7 +113,7 @@ export function checkCitations(
 			const path = `sources.rules.${index}`;
 			const checked = checkRuleCitation(
 				citation,
-				rulesById,
+				context.rules,
 				"review; re-review the record",
 			);
 			if (checked?.check === "UnknownCitation")
@@ -128,7 +145,6 @@ export function checkPromptCitations(
 	prompts: readonly CitingPrompt[],
 	rules: readonly Rule[],
 ): PromptIssue[] {
-	const rulesById = byId(rules);
 	const issues: PromptIssue[] = [];
 	for (const prompt of prompts) {
 		const issue = (
@@ -156,7 +172,7 @@ export function checkPromptCitations(
 			for (const citation of paragraph.implements) {
 				const checked = checkRuleCitation(
 					citation,
-					rulesById,
+					rules,
 					"this paragraph was checked; re-read the paragraph against it",
 				);
 				if (checked) issue(index, checked.check, checked.message);

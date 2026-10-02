@@ -9,6 +9,7 @@ import { authoredReadingIssues } from "./check-authored-readings.js";
 import { attestationParticleIssues } from "./check-particles.js";
 import { attestationSyncretismIssues } from "./check-syncretisms.js";
 import { unitRoutes } from "./generated/routes.js";
+import { specRecordIdPattern } from "./ids.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
 import { annotationLayers, layerRank } from "./layers.js";
 import { looseRouteSchema, recordFileSchema } from "./record-schema.js";
@@ -26,7 +27,6 @@ import type {
 	SpecTarget,
 } from "./types.js";
 
-const idPattern = /^(de|en|he)(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)+$/u;
 const fileSchema = recordFileSchema({
 	route: looseRouteSchema,
 	attestation: z.unknown(),
@@ -147,7 +147,9 @@ export function uncitedIssue(
  */
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const { found, issue } = issueCollector(id);
-	const language = idPattern.exec(id)?.[1] as Dumling.Language | undefined;
+	const language = specRecordIdPattern.exec(id)?.[1] as
+		| Dumling.Language
+		| undefined;
 	if (!language)
 		issue(
 			undefined,

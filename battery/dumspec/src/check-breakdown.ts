@@ -9,6 +9,7 @@ import {
 	settleLayers,
 	uncitedIssue,
 } from "./check-record.js";
+import { breakdownRecordIdPattern } from "./ids.js";
 import { layerRank } from "./layers.js";
 import {
 	breakdownRecordFileSchema,
@@ -21,7 +22,6 @@ import type {
 	SpecTarget,
 } from "./types.js";
 
-const idPattern = /^breakdown\/(de|en|he)\/[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const fileSchema = breakdownRecordFileSchema(z.unknown(), {
 	route: looseRouteSchema,
 	attestation: z.unknown(),
@@ -50,7 +50,9 @@ export function checkBreakdownRecord(
 	input: unknown,
 ): BreakdownRecordCheck {
 	const { found, issue } = issueCollector(id);
-	const language = idPattern.exec(id)?.[1] as Dumling.Language | undefined;
+	const language = breakdownRecordIdPattern.exec(id)?.[1] as
+		| Dumling.Language
+		| undefined;
 	if (!language)
 		issue(
 			undefined,

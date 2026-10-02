@@ -11,7 +11,11 @@ export {
 	type AuthoredReadingIssue,
 	authoredReadingIssues,
 } from "./check-authored-readings.js";
-export { checkPromptCitations, type PromptIssue } from "./check-citations.js";
+export {
+	checkPromptCitations,
+	type PromptIssue,
+	ruleCitationStatus,
+} from "./check-citations.js";
 export {
 	attestationParticleIssues,
 	type ParticleIssue,
@@ -21,6 +25,7 @@ export {
 	attestationSyncretismIssues,
 	type SyncretismIssue,
 } from "./check-syncretisms.js";
+export { isSpecRecordId } from "./ids.js";
 export {
 	type ArticleAgreement,
 	type ArticleMember,
@@ -73,6 +78,7 @@ export {
 	loadSpecWorklist,
 	type WorklistEntry,
 } from "./load.js";
+export { setReviewDepth } from "./review-depth.js";
 export { ruleStatementHash, rules } from "./rules.js";
 export type {
 	AdrId,
