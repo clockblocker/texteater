@@ -19,6 +19,9 @@ import {
 	governmentRelationSchema,
 	hebrewValencyComplementSchema,
 	knowledgeChangeSchema,
+	knowledgeRequestMaskSchema,
+	knowledgeSelectionInputSchema,
+	knowledgeSettingsSchema,
 	lexemeUnitShadowSchema,
 	locutionTypeSchema,
 	morphologicalTreeNodeSchema,
@@ -43,11 +46,6 @@ import {
 	valencySlotSchema,
 	valencySlotStatusSchema,
 } from "../src/schemas.js";
-import {
-	knowledgeRequestMaskSchema,
-	knowledgeSelectionInputSchema,
-	knowledgeSettingsSchema,
-} from "../src/selection-schemas.js";
 import { normalizeText } from "../src/semantics.js";
 import { formatTypeScript } from "./format-typescript.js";
 import {

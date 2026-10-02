@@ -4,7 +4,6 @@ import type {
 	ReadingKnowledge as CanonicalReadingKnowledge,
 	SemanticRelations as CanonicalSemanticRelations,
 	DirectSemanticRelation,
-	MorphologicalTree,
 } from "./generated/types.js";
 
 export type {
@@ -40,7 +39,6 @@ export type {
 	ValencySlotStatus,
 } from "./generated/types.js";
 
-export type MorphologicalTreeStructure = MorphologicalTree["root"];
 /** A Reading's governed complements in order; never empty. */
 export type ValencyFrame = NonNullable<CanonicalReadingKnowledge["valency"]>;
 export type NonEmptyStrings = [string, ...string[]];

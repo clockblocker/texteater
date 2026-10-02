@@ -220,7 +220,6 @@ function isExplicitAuthoringSource(
 			path,
 		) ||
 		path.startsWith("src/development/") ||
-		path.startsWith("src/selection-schemas.") ||
 		path.startsWith("src/universal/schemas.") ||
 		path.startsWith("src/promptsmith/") ||
 		path.startsWith("src/catalog/laboratory/")

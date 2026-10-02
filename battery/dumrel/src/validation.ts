@@ -13,8 +13,6 @@ type Root =
 	| "semanticProjectionInput"
 	| "knowledgeChange"
 	| "readingKnowledge"
-	| "knowledgeSettings"
-	| "knowledgeRequestMask"
 	| "knowledgeSelectionInput";
 const registry: CompiledValidationRegistry = validationRegistry;
 const operations: ValidationOperations = {
@@ -34,14 +32,6 @@ export const parseChangeShape = (
 	input: unknown,
 ): KnowledgeChange | ParsingError =>
 	parse<KnowledgeChange>("knowledgeChange", input);
-
-export const parseSettingsShape = (input: unknown) =>
-	parse<import("./types.js").KnowledgeSettings>("knowledgeSettings", input);
-export const parseRequestMaskShape = (input: unknown) =>
-	parse<import("./types.js").KnowledgeRequestMask>(
-		"knowledgeRequestMask",
-		input,
-	);
 
 export const parseSelectionShape = (input: unknown) =>
 	parse<import("./types.js").KnowledgeSelectionInput>(

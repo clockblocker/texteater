@@ -29,7 +29,6 @@ export type {
 	LocutionType,
 	MorphologicalTree,
 	MorphologicalTreeNode,
-	MorphologicalTreeStructure,
 	NonEmptyStrings,
 	NounPlural,
 	ParticipleMeaning,
