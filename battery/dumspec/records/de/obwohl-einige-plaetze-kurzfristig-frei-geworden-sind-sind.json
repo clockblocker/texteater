@@ -35,14 +35,99 @@
 		{ "kind": "ResolvableText", "text": "eingeladen" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
-		"rules": [],
+		"adrs": ["ADR-0026", "ADR-0035", "ADR-0036", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "SCONJ" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "einige determines Plätze, so it is DET (de/pron-or-det-by-use)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "frei is the predicate of copular werden and stays apart (de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [10, 12],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "geworden sind is the perfect of copular werden 'become': sind serves werden's own perfect and joins it (de/auxiliary-joins-the-verb-it-serves)."
+			}
+		},
+		{
+			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "einladen forms its perfect with haben, so sind … eingeladen reports a state: copular sein stays apart (de/sein-perfect-or-copula)."
+			}
+		},
+		{
+			"memberSegmentIndices": [17, 21],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [23],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "The agent phrase vom Gastgeber is free (de/participial-adjective), so the preposition piece vo is a single-member ADP (de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [24, 26],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "The article piece m (dem) belongs to Gastgeber (de/fused-word-pieces, de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "In the state passive the participle is an ADJ describing a state (de/sein-perfect-or-copula, de/participial-adjective)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

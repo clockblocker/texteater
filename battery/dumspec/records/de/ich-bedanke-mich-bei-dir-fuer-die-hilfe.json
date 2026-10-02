@@ -19,14 +19,54 @@
 		{ "kind": "ResolvableText", "text": "Hilfe" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0022", "ADR-0029", "ADR-0034", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
+		"references": [
+			{
+				"title": "E-VALBU: bedanken, sich, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400351/1",
+				"supports": "Target [bedanke, mich, bei, für]: Satzbauplan Ksub, (Kprp), (Kprp), (Kadv) with Kprp bei + Dat and für + Akk, 'jemand bedankt sich bei jemandem für etwas'."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2, 4, 6, 10],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "sich bedanken is reflexive-only (E-VALBU bedanken, sich, Lesart 1), so mich is its lexical reflexive (de/verb-owns-its-scattered-members). Its frame has two prepositional complements, bei + Dat for the person and für + Acc for the reason, so bei and für both join the verb, each standing apart from it (de/governed-preposition-joins-its-governor). dir and die Hilfe fill the slots and stay outside."
+			}
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "dir fills the bei slot and is a PRON of its own."
+			}
+		},
+		{
+			"memberSegmentIndices": [12, 14],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

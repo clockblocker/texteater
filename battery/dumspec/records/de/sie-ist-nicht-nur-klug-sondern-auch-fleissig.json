@@ -19,14 +19,47 @@
 		{ "kind": "ResolvableText", "text": "fleißig" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
+			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [4, 6, 10, 12],
+			"route": { "family": "Locution", "kind": "CCONJ" },
+			"notes": {
+				"rationale": "nicht nur … sondern auch is a fixed correlator, one Locution CCONJ made of its anchors only; klug and fleißig, the words it connects, stay outside (de/correlator-anchors). nicht is a fixed member here, so it is no PART of its own (de/nicht-is-part)."
+			}
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [14],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

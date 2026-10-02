@@ -20,14 +20,67 @@
 		{ "kind": "ResolvableText", "text": "Brot" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0035", "ADR-0036", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "99bff23563b49716"
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "dc0d3ef97ace5bc0"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "zum Abendessen is a free phrase, so the preposition piece Zu is a single-member ADP (de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [1, 3],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "The article piece m (dem) belongs to Abendessen (de/fused-word-pieces, de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [5, 7],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "es geben 'there is' selects a subject es that refers to nothing, so es joins gab after the finite verb (de/expletive-es-joins-its-verb)."
+			}
+		},
+		{
+			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "The participle outside a perfect or passive is an attributive ADJ (de/participial-adjective)."
+			}
+		},
+		{
+			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

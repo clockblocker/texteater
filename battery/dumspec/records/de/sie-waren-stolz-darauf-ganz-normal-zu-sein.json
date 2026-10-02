@@ -20,14 +20,70 @@
 		{ "kind": "ResolvableText", "text": "sein" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0029"],
-		"rules": [],
+		"adrs": ["ADR-0029", "ADR-0034"],
+		"rules": [
+			{
+				"rule": "de/pronominal-adverb-stands-alone",
+				"hash": "1b11d9ee80ce12bd"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
+			{ "rule": "de/bare-infinitive-zu", "hash": "920eb73475a80ef0" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "A copula never joins its predicate (de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "stolz governs auf, but darauf stands for the whole auf phrase as the correlate of the zu-clause, so it never joins stolz (de/pronominal-adverb-stands-alone)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "The pronominal adverb darauf is an ADV of its own (de/pronominal-adverb-stands-alone)."
+			}
+		},
+		{
+			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "ganz says to what degree normal holds, an ADV of its own (de/degree-word-is-adv)."
+			}
+		},
+		{
+			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "PART" },
+			"notes": {
+				"rationale": "zu before the infinitive, without um, ohne or statt, is a single-member PART (de/bare-infinitive-zu)."
+			}
+		},
+		{
+			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

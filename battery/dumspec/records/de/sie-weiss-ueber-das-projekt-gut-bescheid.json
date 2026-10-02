@@ -17,14 +17,67 @@
 		{ "kind": "ResolvableText", "text": "Bescheid" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0034"],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0028", "ADR-0029", "ADR-0034", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" },
+			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
+		"references": [
+			{
+				"title": "Duden: Bescheid",
+				"url": "https://www.duden.de/rechtschreibung/Bescheid",
+				"supports": "Target [weiß, über, Bescheid]: Bescheid wissen (von etwas Kenntnis haben, unterrichtet sein), with Bescheid [über etwas]."
+			},
+			{
+				"title": "E-VALBU: wissen, Generelle Anmerkungen",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401234",
+				"supports": "Target [weiß, über, Bescheid]: the Fügung über jemanden/etwas Bescheid wissen, 'über jemanden/etwas informiert sein'."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2, 4, 12],
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "Bescheid wissen 'be informed' (Duden Bescheid) is a Collocation: wissen only supports the noun, as in er weiß Bescheid über die Pläne, so weiß and Bescheid form one Locution VERB (de/funktionsverbgefuege-are-collocations). The expression governs über for its free complement, so über joins as a member though it stands apart and is no part of the Lemma (de/governed-preposition-joins-its-governor, de/fixed-member-test)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "gut says how well she knows and keeps its attributive sense, so it is a free ADJ between the members (de/adjective-stays-adj, de/fixed-members-only); the Locution stays Full (de/partial-coverage)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
@@ -60,10 +113,7 @@
 						}
 					],
 					"targets": [
-						{
-							"kind": "ADP",
-							"members": [{ "offset": 9 }]
-						}
+						{ "kind": "ADP", "members": [{ "offset": 9 }] }
 					],
 					"phrasemes": [
 						{

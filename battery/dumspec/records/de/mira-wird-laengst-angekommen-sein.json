@@ -13,7 +13,7 @@
 		{ "kind": "ResolvableText", "text": "sein" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
@@ -33,6 +33,10 @@
 		"references": []
 	},
 	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PROPN" }
+		},
 		{
 			"memberSegmentIndices": [2, 6, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
@@ -81,6 +85,10 @@
 					"surfaceFeatures": null
 				}
 			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADV" }
 		}
 	],
 	"noTarget": []

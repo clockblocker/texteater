@@ -24,14 +24,58 @@
 		{ "kind": "ResolvableText", "text": "schneiden" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0039", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
+			{ "rule": "de/bare-infinitive-zu", "hash": "920eb73475a80ef0" },
+			{ "rule": "de/degree-word-is-adv", "hash": "b27dedd36b0a24bb" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "A copula never joins its predicate (de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "genug says to what degree scharf holds, an ADV of its own that never joins the word it grades (de/degree-word-is-adv). It is no anchor of um … zu."
+			}
+		},
+		{
+			"memberSegmentIndices": [11, 17],
+			"route": { "family": "Locution", "kind": "SCONJ" },
+			"notes": {
+				"rationale": "um … zu is a zu-infinitive conjunction, one Locution SCONJ over its anchors um and zu; the clause between them stays outside (de/correlator-anchors). With um, zu is no bare infinitive PART (de/bare-infinitive-zu)."
+			}
+		},
+		{
+			"memberSegmentIndices": [13, 15],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

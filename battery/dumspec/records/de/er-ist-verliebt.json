@@ -9,14 +9,37 @@
 		{ "kind": "ResolvableText", "text": "verliebt" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0026", "ADR-0036"],
+		"rules": [
+			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "sich verlieben forms its perfect with haben (er hat sich verliebt), so ist … verliebt is no perfect: copular sein stays apart (de/sein-perfect-or-copula, de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "The participle describes a state, an ADJ with no reflexive (de/sein-perfect-or-copula, as in Sie ist verärgert)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

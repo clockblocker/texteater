@@ -11,18 +11,26 @@
 		{ "kind": "ResolvableText", "text": "erklärt" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
 		"rules": [
 			{ "rule": "de/recipient-passive", "hash": "0196915ee6d1a36d" },
 			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
 		],
 		"references": []
 	},
 	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
@@ -69,6 +77,13 @@
 					},
 					"surfaceFeatures": null
 				}
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "alles stands for a noun phrase, so it is PRON (de/pron-or-det-by-use)."
 			}
 		}
 	],

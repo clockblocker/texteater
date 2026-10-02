@@ -20,14 +20,64 @@
 		{ "kind": "ResolvableText", "text": "Geld" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0029", "ADR-0034", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "dc0d3ef97ace5bc0"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: Zeit",
+				"url": "https://www.duden.de/rechtschreibung/Zeit",
+				"supports": "Target [Zeit, ist, Geld]: Zeit ist Geld (man soll die Zeit nicht ungenutzt lassen; Zeitverlust bedeutet materiellen Verlust)."
+			},
+			{
+				"title": "E-VALBU: gelten, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400659/2",
+				"supports": "Target [Für, gilt]: Satzbauplan Ksub, (Kprp), (Kadv) with Kprp für + Akk, 'etwas gilt für etwas'; the subject may be a clause (Für Sozialwohnungen gilt, dass …)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "gelten 'apply' takes für for what something applies to (E-VALBU gelten, Lesart 2, Kprp für + Acc, as in Für Sozialwohnungen gilt, dass …), so the fronted Für joins gilt (de/governed-preposition-joins-its-governor). The Saying after the colon fills the subject slot."
+			}
+		},
+		{
+			"memberSegmentIndices": [2, 6],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [11, 13, 15],
+			"route": { "family": "Saying", "kind": "Saying" },
+			"notes": {
+				"rationale": "Zeit ist Geld is a Proverb that Duden lists under Zeit, quoted after the colon as a complete saying, so it is one Saying target over all its words (de/saying-needs-uptake), as in wir-muessen-hoeflich-bleiben-zeit-ist-geld."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

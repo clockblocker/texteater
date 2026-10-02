@@ -12,14 +12,43 @@
 		{ "kind": "ResolvableText", "text": "digital" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],
-		"rules": [],
+		"rules": [
+			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 5],
+			"route": { "family": "Locution", "kind": "ADV" },
+			"notes": {
+				"rationale": "einerseits … andererseits is a fixed correlator, one Locution ADV made of its anchors only (de/correlator-anchors)."
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "lokal is a word the correlator connects and stays outside it (de/correlator-anchors)."
+			}
+		},
+		{
+			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "digital is a word the correlator connects and stays outside it (de/correlator-anchors)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

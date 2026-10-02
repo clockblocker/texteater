@@ -13,14 +13,49 @@
 		{ "kind": "ResolvableText", "text": "Taschenrechner" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0029", "ADR-0034", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
+		"references": [
+			{
+				"title": "E-VALBU: rechnen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400828/1",
+				"supports": "Targets [rechnet] and [mit]: Satzbauplan Ksub, (Kakk); 'Mit einer PräpP [mit + Dat] kann auf das Mittel [häufig Taschenrechner] Bezug genommen werden'."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "rechnen 'calculate' (E-VALBU rechnen, Lesart 1, Satzbauplan Ksub, (Kakk)) governs no preposition."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "mit names the means, which E-VALBU notes as a free phrase beside Lesart 1 (mit dem Taschenrechner), so it is a single-member ADP, unlike rechnen mit 'expect' (de/governed-preposition-joins-its-governor)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

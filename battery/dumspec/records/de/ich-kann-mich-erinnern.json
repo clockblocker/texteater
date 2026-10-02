@@ -11,7 +11,7 @@
 		{ "kind": "ResolvableText", "text": "erinnern" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0026", "ADR-0041"],
@@ -20,11 +20,23 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" }
+			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
 		],
 		"references": []
 	},
 	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The modal is a VERB of its own, and the infinitive with its reflexive a separate target (de/modal-is-a-verb)."
+			}
+		},
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },

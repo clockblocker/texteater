@@ -13,14 +13,44 @@
 		{ "kind": "ResolvableText", "text": "Spree" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" },
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PROPN" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "südlich with the genitive heads the place complement of liegen; a preposition inside an Adverbial complement is free (de/governed-preposition-joins-its-governor)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"notes": {
+				"rationale": "River names are cited with the definite article (die Spree), so Spree owns der (de/proper-noun-article)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

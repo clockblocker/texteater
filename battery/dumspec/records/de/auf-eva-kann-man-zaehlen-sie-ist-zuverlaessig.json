@@ -20,14 +20,65 @@
 		{ "kind": "ResolvableText", "text": "zuverlässig" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0026", "ADR-0029", "ADR-0034"],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" }
+		],
+		"references": [
+			{
+				"title": "E-VALBU: zählen, Lesart 6",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401251/6",
+				"supports": "Target [Auf, zählen]: zählen auf, Satzbauplan Ksub, Kprp with Kprp auf + Akk, 'jemand verlässt sich auf jemanden/etwas' (Ich zähle auf dich!)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 8],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "zählen auf 'rely on' governs auf + Acc (E-VALBU zählen, Lesart 6), so the fronted Auf joins zählen (de/governed-preposition-joins-its-governor)."
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PROPN" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The modal is a VERB of its own, and zählen a separate target (de/modal-is-a-verb)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "A copula never joins its predicate (de/copula-stays-apart)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

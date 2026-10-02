@@ -11,14 +11,42 @@
 		{ "kind": "ResolvableText", "text": "verliebt" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			}
+		],
+		"references": [
+			{
+				"title": "E-VALBU: verlieben, sich, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401069/1",
+				"supports": "Target [hat, sich, verliebt]: sich [A] verlieben, Satzbauplan Ksub, (Kprp), example Sie hat sich verliebt."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2, 4, 6],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "sich verlieben is reflexive-only (E-VALBU verlieben, sich, Lesart 1: Sie hat sich verliebt), so sich is its lexical reflexive and hat its perfect auxiliary, all one VERB (de/verb-owns-its-scattered-members, de/verbal-participle)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

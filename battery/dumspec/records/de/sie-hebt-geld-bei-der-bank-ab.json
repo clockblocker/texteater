@@ -17,14 +17,57 @@
 		{ "kind": "ResolvableText", "text": "ab" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0022", "ADR-0029", "ADR-0034", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
+		"references": [
+			{
+				"title": "E-VALBU: abheben, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400186/1",
+				"supports": "Targets [hebt, ab] and [bei]: Satzbauplan Ksub, Kakk / Kadv, (Kprp) with Kprp von + Dat only (Geld vom Konto abheben)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2, 12],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "ab is the separable particle of abheben 'withdraw' and joins hebt across the middle field (de/verb-owns-its-scattered-members)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "abheben governs von for the source (E-VALBU abheben, Lesart 1), not bei, so bei der Bank is a free place phrase and bei a single-member ADP (de/governed-preposition-joins-its-governor)."
+			}
+		},
+		{
+			"memberSegmentIndices": [8, 10],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

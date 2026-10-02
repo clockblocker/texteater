@@ -19,14 +19,65 @@
 		{ "kind": "ResolvableText", "text": "erinnert" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0029", "ADR-0034", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{
+				"rule": "de/only-der-and-ein-are-articles",
+				"hash": "9f44b34f99bd5145"
+			}
+		],
+		"references": [
+			{
+				"title": "E-VALBU: erinnern, sich, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400220/1",
+				"supports": "Target [hat, sich, an, erinnert]: sich [A] erinnern <an>, Satzbauplan Ksub, Kgen / Kprp with Kprp an + Akk."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2, 4, 8, 14],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "sich erinnern is reflexive-only (E-VALBU erinnern, sich, Lesart 1) and governs an + Acc, so the perfect auxiliary hat, the lexical reflexive sich and the governed an all join erinnert across the sentence (de/verb-owns-its-scattered-members, de/governed-preposition-joins-its-governor, de/auxiliary-joins-the-verb-it-serves)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADV" }
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "The possessive seinen is a determiner, not an article (de/only-der-and-ein-are-articles)."
+			}
+		},
+		{
+			"memberSegmentIndices": [12],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
@@ -69,19 +120,13 @@
 								{ "offset": 37, "role": "Head" }
 							]
 						},
-						{
-							"kind": "ADV",
-							"members": [{ "offset": 12 }]
-						},
+						{ "kind": "ADV", "members": [{ "offset": 12 }] },
 						{
 							"kind": "DET",
 							"members": [{ "offset": 23 }],
 							"identity": "DET:sein"
 						},
-						{
-							"kind": "NOUN",
-							"members": [{ "offset": 30 }]
-						}
+						{ "kind": "NOUN", "members": [{ "offset": 30 }] }
 					],
 					"phrasemes": [],
 					"slots": [

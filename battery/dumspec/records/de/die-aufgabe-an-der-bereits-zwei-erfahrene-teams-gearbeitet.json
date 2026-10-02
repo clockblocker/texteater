@@ -39,14 +39,109 @@
 		{ "kind": "ResolvableText", "text": "ungelöst" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0036"],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0026", "ADR-0029", "ADR-0034", "ADR-0036", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "dc0d3ef97ace5bc0"
+			},
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
+		"references": [
+			{
+				"title": "E-VALBU: arbeiten, Lesart 4",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400309/4",
+				"supports": "Target [an, gearbeitet, haben]: Satzbauplan Ksub, Kprp with Kprp an + Dat, 'jemand arbeitet an etwas'."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [5, 17, 19],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "arbeiten an 'work on' governs an + Dat (E-VALBU arbeiten, Lesart 4), so an, fronted with the relative pronoun, joins gearbeitet together with its perfect auxiliary haben (de/governed-preposition-joins-its-governor, de/auxiliary-joins-the-verb-it-serves)."
+			}
+		},
+		{
+			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "The relative der stands for die Aufgabe inside the an phrase and is a PRON of its own (de/pron-or-det-by-use)."
+			}
+		},
+		{
+			"memberSegmentIndices": [9],
+			"route": { "family": "Lexeme", "kind": "ADV" }
+		},
+		{
+			"memberSegmentIndices": [11],
+			"route": { "family": "Lexeme", "kind": "NUM" }
+		},
+		{
+			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "zwei is a numeral, not an article, so Teams owns none (de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [22],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "Copular bleiben never joins its predicate (de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [26, 30],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "Hinweise owns der across the adjective neuen (de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [32],
+			"route": { "family": "Lexeme", "kind": "ADV" }
+		},
+		{
+			"memberSegmentIndices": [34],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "ungelöst is an adjective outside any perfect or passive (de/participial-adjective), as in Die Aufgabe bleibt ungelöst."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

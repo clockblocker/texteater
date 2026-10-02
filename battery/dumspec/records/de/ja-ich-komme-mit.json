@@ -12,14 +12,42 @@
 		{ "kind": "ResolvableText", "text": "mit" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
+			},
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "INTJ" },
+			"notes": {
+				"rationale": "Ja answers outside the clause, an INTJ (de/interjection-counts-its-words)."
+			}
+		},
+		{
+			"memberSegmentIndices": [3],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [5, 7],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "mit is the separable particle of mitkommen (de/verb-owns-its-scattered-members)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

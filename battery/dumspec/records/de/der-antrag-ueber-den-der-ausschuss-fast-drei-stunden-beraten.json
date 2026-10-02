@@ -39,14 +39,103 @@
 		{ "kind": "ResolvableText", "text": "genehmigt" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0026", "ADR-0029", "ADR-0034", "ADR-0036", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			},
+			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
+			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
+		"references": [
+			{
+				"title": "E-VALBU: beraten, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400379/1",
+				"supports": "Target [über, beraten, hat]: Satzbauplan Ksub, Kakk / Kprp, Kprp with Kprp über, 'jemand berät etwas bzw. über etwas mit jemandem'."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [5, 19, 21],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "beraten 'deliberate' takes über for its topic (E-VALBU beraten, Lesart 1), so über, fronted with the relative pronoun, joins the verb together with its perfect auxiliary hat (de/governed-preposition-joins-its-governor, de/auxiliary-joins-the-verb-it-serves)."
+			}
+		},
+		{
+			"memberSegmentIndices": [7],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "The relative den stands for der Antrag inside the über phrase and is a PRON of its own (de/pron-or-det-by-use)."
+			}
+		},
+		{
+			"memberSegmentIndices": [9, 11],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "ADV" }
+		},
+		{
+			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "NUM" }
+		},
+		{
+			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [24],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "genehmigen forms its perfect with haben, so ist … genehmigt reports a state: copular sein stays apart (de/sein-perfect-or-copula, de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [26],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [28],
+			"route": { "family": "Lexeme", "kind": "DET" },
+			"notes": {
+				"rationale": "mehreren determines Änderungen, so it is DET (de/pron-or-det-by-use)."
+			}
+		},
+		{
+			"memberSegmentIndices": [30],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [32],
+			"route": { "family": "Lexeme", "kind": "ADV" }
+		},
+		{
+			"memberSegmentIndices": [34],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "In the state passive the participle is an ADJ describing a state (de/sein-perfect-or-copula, de/participial-adjective)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

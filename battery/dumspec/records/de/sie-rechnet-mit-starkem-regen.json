@@ -13,14 +13,49 @@
 		{ "kind": "ResolvableText", "text": "Regen" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0029", "ADR-0034"],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/attributive-adjective-stands-alone",
+				"hash": "dc0d3ef97ace5bc0"
+			}
+		],
+		"references": [
+			{
+				"title": "E-VALBU: rechnen, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400828/2",
+				"supports": "Target [rechnet, mit]: rechnen mit, Satzbauplan Ksub, Kprp with Kprp mit + Dat, 'jemand sieht das Eintreten von etwas als ziemlich sicher an'."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2, 4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "rechnen mit 'expect' governs mit + Dat (E-VALBU rechnen, Lesart 2), so mit joins the verb (de/governed-preposition-joins-its-governor). Contrast mit dem Taschenrechner, where mit is free."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

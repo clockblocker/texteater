@@ -15,14 +15,58 @@
 		{ "kind": "ResolvableText", "text": "verwandt" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0029", "ADR-0034", "ADR-0036"],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" },
+			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" }
+		],
+		"references": [
+			{
+				"title": "Duden: verwandt",
+				"url": "https://www.duden.de/rechtschreibung/verwandt_nahestehend_aehnlich",
+				"supports": "Target [mit, verwandt]: zur gleichen Familie gehörend (mit jemandem nahe, entfernt, weitläufig … verwandt sein)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "A copula never joins its predicate (de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4, 10],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "verwandt 'related' takes mit for the relative (Duden verwandt: mit jemandem nahe, entfernt … verwandt sein), so mit joins it across ihm and entfernt (de/governed-preposition-joins-its-governor). Duden lists it as an adjective of its own, apart from the participle of verwenden."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "entfernt 'distantly' grades the kinship with the sense it has attributively (entfernte Verwandte), so it stays ADJ (de/adjective-stays-adj)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

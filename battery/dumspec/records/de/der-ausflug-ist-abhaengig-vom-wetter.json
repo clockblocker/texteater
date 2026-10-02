@@ -16,14 +16,54 @@
 		{ "kind": "ResolvableText", "text": "Wetter" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0029", "ADR-0034", "ADR-0035", "ADR-0040"],
+		"rules": [
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
+		"references": [
+			{
+				"title": "Duden: abhängig",
+				"url": "https://www.duden.de/rechtschreibung/abhaengig",
+				"supports": "Target [abhängig, vo]: durch etwas bedingt, bestimmt; von etwas entscheidend beeinflusst (der Ausflug ist vom Wetter abhängig)."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "A copula never joins its predicate (de/copula-stays-apart)."
+			}
+		},
+		{
+			"memberSegmentIndices": [6, 8],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "abhängig takes von for what it depends on (Duden abhängig: der Ausflug ist vom Wetter abhängig), so the preposition piece vo of vom joins it (de/governed-preposition-joins-its-governor, de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [9, 11],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "The article piece m (dem) belongs to Wetter, the Head of its phrase (de/fused-word-pieces, de/noun-owns-its-article)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

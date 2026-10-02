@@ -15,7 +15,7 @@
 		{ "kind": "ResolvableText", "text": "nötig" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039", "ADR-0042"],
@@ -24,7 +24,10 @@
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
-			}
+			},
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" }
 		],
 		"references": [
 			{
@@ -35,6 +38,20 @@
 		]
 	},
 	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "das stands for a noun phrase, so it is PRON (de/pron-or-det-by-use)."
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "A copula never joins its predicate (de/copula-stays-apart)."
+			}
+		},
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "ADV" },
@@ -67,6 +84,10 @@
 					"surfaceFeatures": null
 				}
 			}
+		},
+		{
+			"memberSegmentIndices": [10],
+			"route": { "family": "Lexeme", "kind": "ADJ" }
 		}
 	],
 	"noTarget": []

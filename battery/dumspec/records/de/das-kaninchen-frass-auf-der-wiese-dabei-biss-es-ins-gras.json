@@ -27,14 +27,79 @@
 		{ "kind": "ResolvableText", "text": "Gras" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
-		"rules": [],
+		"adrs": ["ADR-0029", "ADR-0035", "ADR-0039", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/pronominal-adverb-stands-alone",
+				"hash": "1b11d9ee80ce12bd"
+			},
+			{
+				"rule": "de/expletive-es-joins-its-verb",
+				"hash": "99bff23563b49716"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0, 2],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [8, 10],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		},
+		{
+			"memberSegmentIndices": [13],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "Dabei is a pronominal adverb standing for bei and the feeding, an ADV of its own (de/pronominal-adverb-stands-alone)."
+			}
+		},
+		{
+			"memberSegmentIndices": [15],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "A feeding rabbit bites into real grass, so ins Gras beißen 'die' is not meant: the same words used literally are separate units (de/idiom), as in Er biss in den Rasen."
+			}
+		},
+		{
+			"memberSegmentIndices": [17],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "es refers to das Kaninchen, so it is a PRON of its own (de/expletive-es-joins-its-verb)."
+			}
+		},
+		{
+			"memberSegmentIndices": [19],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "Outside a fixed expression the preposition piece of ins is a single-member ADP: in takes the accusative of direction (de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [20, 22],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "The article piece s (das) belongs to Gras, the Head of its phrase (de/fused-word-pieces, de/noun-owns-its-article)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

@@ -9,14 +9,35 @@
 		{ "kind": "ResolvableText", "text": "du" },
 		{ "kind": "Punctuation", "text": "?" }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0029", "ADR-0034"],
+		"rules": [
+			{
+				"rule": "de/pronominal-adverb-stands-alone",
+				"hash": "1b11d9ee80ce12bd"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "Worauf stands for the whole auf phrase of warten and is an ADV of its own; it never joins wartest (de/pronominal-adverb-stands-alone)."
+			}
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

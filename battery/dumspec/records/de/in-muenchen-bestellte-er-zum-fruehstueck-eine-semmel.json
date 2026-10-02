@@ -20,14 +20,52 @@
 		{ "kind": "ResolvableText", "text": "Semmel" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0035", "ADR-0040"],
+		"rules": [
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADP" }
+		},
+		{
+			"memberSegmentIndices": [2],
+			"route": { "family": "Lexeme", "kind": "PROPN" }
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "VERB" }
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "zum Frühstück is a free phrase, so the preposition piece zu is a single-member ADP (de/fused-word-pieces)."
+			}
+		},
+		{
+			"memberSegmentIndices": [9, 11],
+			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"notes": {
+				"rationale": "The article piece m (dem) belongs to Frühstück (de/fused-word-pieces, de/noun-owns-its-article)."
+			}
+		},
+		{
+			"memberSegmentIndices": [13, 15],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
@@ -49,9 +87,7 @@
 						"emojiDescription": "🥖",
 						"unitKind": "Reading"
 					},
-					"request": {
-						"semanticRelations": { "nearSynonym": null }
-					}
+					"request": { "semanticRelations": { "nearSynonym": null } }
 				},
 				"idealOutput": {
 					"semanticRelations": {

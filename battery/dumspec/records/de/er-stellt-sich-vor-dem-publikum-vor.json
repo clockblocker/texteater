@@ -17,14 +17,65 @@
 		{ "kind": "ResolvableText", "text": "vor" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0022", "ADR-0029", "ADR-0034", "ADR-0040", "ADR-0044"],
+		"rules": [
+			{
+				"rule": "de/verb-owns-its-scattered-members",
+				"hash": "11bcdacfa342c436"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			},
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+		],
+		"references": [
+			{
+				"title": "E-VALBU: vorstellen, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401122/2",
+				"supports": "Targets [stellt, vor] and [sich]: Satzbauplan Ksub, Kakk, (Kdat), Kakk 'häufig sich' (Der Fahrer stellte sich vor), 'jemand macht jemanden mit jemandem bekannt'."
+			},
+			{
+				"title": "E-VALBU: vorstellen, sich",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401123",
+				"supports": "Target [sich]: the reflexive entry covers only sich [D] vorstellen, 'etwas gedanklich realisieren'."
+			}
+		]
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "PRON" }
+		},
+		{
+			"memberSegmentIndices": [2, 12],
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "The clause-final vor is the separable particle of vorstellen 'introduce' and joins stellt (de/verb-owns-its-scattered-members)."
+			}
+		},
+		{
+			"memberSegmentIndices": [4],
+			"route": { "family": "Lexeme", "kind": "PRON" },
+			"notes": {
+				"rationale": "sich fills the accusative slot of vorstellen 'introduce' (E-VALBU vorstellen, Lesart 2, Kakk often sich), which takes any object in the same sense (er stellt seine Frau vor), so the reflexive alternates and is a PRON of its own (de/verb-owns-its-scattered-members). E-VALBU's reflexive entry vorstellen, sich is the dative 'imagine' only."
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Lexeme", "kind": "ADP" },
+			"notes": {
+				"rationale": "The first vor heads the free place phrase vor dem Publikum; vorstellen does not govern it, so it is a single-member ADP, not the particle (de/governed-preposition-joins-its-governor)."
+			}
+		},
+		{
+			"memberSegmentIndices": [8, 10],
+			"route": { "family": "Lexeme", "kind": "NOUN" }
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{
