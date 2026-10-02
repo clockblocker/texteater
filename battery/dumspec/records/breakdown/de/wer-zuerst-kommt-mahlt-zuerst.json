@@ -24,7 +24,7 @@
 	"sources": {
 		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041"],
 		"rules": [
-			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "b7ac2bf4eaaf25be" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"

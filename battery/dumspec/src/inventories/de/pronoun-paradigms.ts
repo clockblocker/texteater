@@ -764,7 +764,7 @@ reviewed.push(
 // a feminine or plural one (hers, theirs), so each is one Lemma. A possessor
 // is no Core Feature, so no referent picks between possessive cells and none
 // has a Syncretism (system ADR 0044, ADR 0046).
-// Strong standalone, weak after an article, and article-bound -ig forms:
+// Strong standalone and article-bound -ig forms:
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/Pron-Poss-ig1.html?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/e-Tilgung.html?lang=de
@@ -812,47 +812,45 @@ for (const [stem, ipa, person, polite, en, ru] of [
 		return [];
 	};
 	// A cell's respellings and short meins, deins or seins are Licensed
-	// Variants. The weak form after an article (der meine, den unsren)
-	// awaits a ruling; weak beiden after an article is ADJ beide.
-	const withWeak = (
+	// Variants. The PRON has no weak forms: after an article the weak
+	// possessive is ADJ (der meine gives ADJ meine;
+	// de/possessive-after-article), as weak beiden after an article is ADJ
+	// beide.
+	const withVariants = (
 		entry: NonNullable<PronounTable["Masc"][0]>,
-		ending: "e" | "en",
 		short = false,
 	) => {
 		const variants = new Set(respellings(entry.text));
 		if (short && ["mein", "dein", "sein"].includes(stem))
 			variants.add(`${stem}s`);
-		const weak = stem + ending;
-		const unruled = new Set([weak, ...respellings(weak)]);
 		variants.delete(entry.text);
-		for (const text of [entry.text, ...variants]) unruled.delete(text);
-		return { ...entry, variants: [...variants], unruled: [...unruled] };
+		return { ...entry, variants: [...variants] };
 	};
 	add(
 		{
 			Masc: [
-				withWeak(t.Masc[0], "e"),
-				withWeak(t.Masc[1], "en"),
-				withWeak(t.Masc[2], "en"),
-				withWeak(t.Masc[3], "en"),
+				withVariants(t.Masc[0]),
+				withVariants(t.Masc[1]),
+				withVariants(t.Masc[2]),
+				withVariants(t.Masc[3]),
 			],
 			Neut: [
-				withWeak(t.Neut[0], "e", true),
-				withWeak(t.Neut[1], "e", true),
-				withWeak(t.Neut[2], "en"),
-				withWeak(t.Neut[3], "en"),
+				withVariants(t.Neut[0], true),
+				withVariants(t.Neut[1], true),
+				withVariants(t.Neut[2]),
+				withVariants(t.Neut[3]),
 			],
 			Fem: [
-				withWeak(t.Fem[0], "e"),
-				withWeak(t.Fem[1], "e"),
-				withWeak(t.Fem[2], "en"),
-				withWeak(t.Fem[3], "en"),
+				withVariants(t.Fem[0]),
+				withVariants(t.Fem[1]),
+				withVariants(t.Fem[2]),
+				withVariants(t.Fem[3]),
 			],
 			Plur: [
-				withWeak(t.Plur[0], "en"),
-				withWeak(t.Plur[1], "en"),
-				withWeak(t.Plur[2], "en"),
-				withWeak(t.Plur[3], "en"),
+				withVariants(t.Plur[0]),
+				withVariants(t.Plur[1]),
+				withVariants(t.Plur[2]),
+				withVariants(t.Plur[3]),
 			],
 		},
 		meaning,

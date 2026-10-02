@@ -23,7 +23,7 @@
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
 			},
-			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+			{ "rule": "de/pron-or-det-by-use", "hash": "b7ac2bf4eaaf25be" }
 		],
 		"references": []
 	},

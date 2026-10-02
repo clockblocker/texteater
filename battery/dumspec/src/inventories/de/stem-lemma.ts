@@ -27,9 +27,7 @@ export const licensed: SurfaceSpelling = {
  * `spelling` is the Surface's spelling where gold, a Rule or a ruling fixes
  * it. A form's main spelling is Canonical, and a table's other spellings of
  * a cell (eins beside eines, unsre beside unsere, genitive jeden beside
- * jedes) are Licensed Variants, as the user ruled on 2026-10-02. A form
- * whose status awaits a ruling has none: a weak form after an article (der
- * meine).
+ * jedes) are Licensed Variants, as the user ruled on 2026-10-02.
  */
 export type AuthoredSpelling = {
 	readonly spelled: string;
@@ -54,9 +52,8 @@ export type StemDescription<Core> = {
 const cases = ["Nom", "Acc", "Dat", "Gen"] as const;
 
 /**
- * Every occupied cell's spellings, variants and unruled forms included,
- * with the cell each realizes. A cell's own form is Canonical, its variants
- * are Licensed, and its unruled forms carry no spelling.
+ * Every occupied cell's spellings, variants included, with the cell each
+ * realizes. A cell's own form is Canonical and its variants are Licensed.
  */
 export function tableSpellings(table: PronounTable): AuthoredSpelling[] {
 	const spellings: AuthoredSpelling[] = [];
@@ -72,8 +69,6 @@ export function tableSpellings(table: PronounTable): AuthoredSpelling[] {
 			spellings.push({ spelled: form.text, cell, spelling: canonical });
 			for (const spelled of form.variants ?? [])
 				spellings.push({ spelled, cell, spelling: licensed });
-			for (const spelled of form.unruled ?? [])
-				spellings.push({ spelled, cell });
 		}
 	return spellings;
 }

@@ -27,7 +27,7 @@
 				"hash": "b72c043c004f9dc9"
 			},
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "b7ac2bf4eaaf25be" },
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" }
 		],
 		"references": [

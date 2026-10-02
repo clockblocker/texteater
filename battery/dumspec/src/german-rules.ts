@@ -662,9 +662,9 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/pron-or-det-by-use",
 		statement:
-			"An interrogative, demonstrative, relative, quantifier or negative that stands for a noun phrase is PRON; one that directly modifies a noun is DET, except beide after a determiner, which is ADJ (die beiden Häuser). Genitive jedermanns is PRON, and so are attributive dessen, deren and wessen, whose following noun is a separate target.",
+			"An interrogative, demonstrative, relative, quantifier or negative that stands for a noun phrase is PRON; one that directly modifies a noun is DET. Three are ADJ instead, noun elided or not: beide after a determiner (die beiden Häuser), the ordinal wievielte (der wievielte Versuch) and a possessive after an article (der meine, de/possessive-after-article). Genitive jedermanns is PRON, and so are attributive dessen, deren and wessen, whose following noun is a separate target.",
 		adrs: [],
-		routes: lexeme("PRON", "DET"),
+		routes: lexeme("PRON", "DET", "ADJ"),
 		records: [
 			"de/und-minz-und-maunz-die-schreien",
 			"de/der-autor-dessen-buch-fehlt-wartet-draussen",
@@ -675,6 +675,8 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/wer-war-das",
 			"de/wer-mitkommen-will-meldet-sich-bis-freitag",
 			"de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand",
+			"de/der-wievielte-versuch-war-schliesslich-erfolgreich",
+			"de/dein-garten-ist-gross-der-meine-ist-klein",
 		],
 	},
 	{
@@ -710,9 +712,9 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/possessive-after-article",
 		statement:
-			"In der meine, der meinige and der eine, the pronoun stands in for an elided noun, so it is the Head of its phrase and owns the article the way a noun does: Der meine ist rot gives [Der, meine] PRON. The article is no DET target of its own.",
+			"After an article, a weak possessive (der meine, der meinige) and der eine are ADJ, cited in their weak form after der, as the ordinal erste is: der meine gives ADJ meine, der meinige ADJ meinige, der eine ADJ eine. Each stands in for an elided noun, so it is the Head of its phrase and owns the article the way a noun does: Der meine ist rot gives [Der, meine] ADJ. The article is no DET target of its own.",
 		adrs: ["ADR-0040"],
-		routes: lexeme("PRON", "DET"),
+		routes: lexeme("ADJ", "PRON", "DET"),
 		records: ["de/dein-garten-ist-gross-der-meine-ist-klein"],
 	},
 	{

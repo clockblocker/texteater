@@ -53,8 +53,8 @@ as UD's promotion attaches it:
 - `Ich nehme den roten` attests ADJ `rot` over `[den, roten]`.
 - `the rich` attests ADJ `rich` over `[the, rich]`. UD tags an adjective
   heading a nominal ADJ.
-- `der meine` attests the possessive PRON over `[der, meine]`, and `der eine`
-  attests its `eine` the same way.
+- `der meine` attests ADJ `meine` over `[der, meine]`, and `der eine`
+  attests ADJ `eine` the same way.
 - `das alte Berlin` attests PROPN `Berlin` over `[das, Berlin]`. A proper
   noun cited bare owns the article it takes in a sentence. Core
   `article: Definite` stays only on names cited with their article
@@ -198,3 +198,13 @@ article and the inner `the` one of its fixed words. Dumling had allowed article
 evidence only on Lexeme routes, a gap rather than a decision. Decided by
 agents under the user's delegation on 2026-10-02
 ([#828](https://github.com/clockblocker/texteater/issues/828)).
+
+Amended on 2026-10-02: `der meine` attested the possessive PRON over
+`[der, meine]`, as the weak form of its Nom.Masc.Sg cell. After an article
+the weak possessive is ADJ now, as `beide` is in *die beiden*. It is cited in
+its weak form after `der`, as Duden's headword `meine` (*Ist es der meine?*)
+and the ordinal `erste` are: `der meine` attests ADJ `meine` over
+`[der, meine]`, `der meinige` ADJ `meinige` and `der eine` ADJ `eine`. The
+possessive PRON has no weak forms. Decided by agents under the user's
+delegation on 2026-10-02
+([#595](https://github.com/clockblocker/texteater/issues/595)).

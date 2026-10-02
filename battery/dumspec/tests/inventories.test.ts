@@ -401,10 +401,22 @@ describe("the German authored inventory", () => {
 		// 0035), no spelling.
 		expect(tagsOf("selben", "DET")).toEqual([]);
 		expect(tagsOf("selbe", "DET")).toEqual([]);
-		// What awaits a ruling carries no spelling: a weak form after an
-		// article.
-		expect(tagsOf("meinen", "PRON", "Gen")).toEqual(["meiner none"]);
-		expect(tagsOf("unsren", "PRON", "Nom")).toEqual(["unserer none"]);
+		// The possessive PRON has no weak forms: after an article the weak
+		// possessive is ADJ, so der meine gives ADJ meine
+		// (de/possessive-after-article; decided by agents under the user's
+		// delegation, 2026-10-02).
+		expect(tagsOf("meinen", "PRON", "Gen")).toEqual([]);
+		expect(tagsOf("unsren", "PRON", "Nom")).toEqual([]);
+		expect(tagsOf("meine", "PRON", "Nom")).toEqual(["meiner Canonical"]);
+		expect(
+			authoredRealizations.filter(
+				({ member, spelled, inflection }) =>
+					member.lemma.kind === "PRON" &&
+					member.lemma.canonicalForm === "meiner" &&
+					spelled === "meine" &&
+					inflection?.gender === "Masc",
+			),
+		).toEqual([]);
 		// Bare PRON viel and wenig are Canonical with no cell, as DET viel's
 		// uninflected spelling is; vieles, vielem and weniges keep their cells
 		// (decided by agents under the user's delegation, 2026-10-02).

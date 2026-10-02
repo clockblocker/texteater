@@ -57,7 +57,7 @@
 			{ "rule": "de/sein-perfect-or-copula", "hash": "a41762ea8316b7df" },
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
-			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" },
+			{ "rule": "de/pron-or-det-by-use", "hash": "b7ac2bf4eaaf25be" },
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
 		],
 		"references": [

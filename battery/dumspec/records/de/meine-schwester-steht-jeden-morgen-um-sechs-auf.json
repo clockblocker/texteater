@@ -33,7 +33,7 @@
 				"rule": "de/only-der-and-ein-are-articles",
 				"hash": "9f44b34f99bd5145"
 			},
-			{ "rule": "de/pron-or-det-by-use", "hash": "c2995798ac6c735d" }
+			{ "rule": "de/pron-or-det-by-use", "hash": "b7ac2bf4eaaf25be" }
 		],
 		"references": []
 	},

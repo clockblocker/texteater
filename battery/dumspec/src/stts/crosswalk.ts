@@ -766,7 +766,8 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 	{
 		tag: "PPOSS",
 		stts: "substituting possessive pronoun",
-		dumling: "Lexeme PRON poss Yes",
+		dumling:
+			"Lexeme PRON poss Yes; after an article, a Lexeme ADJ cited in its weak form, which owns the article (der meine gives meine)",
 		mappings: [
 			{
 				use: "possessive standing for a noun phrase",
@@ -775,9 +776,20 @@ export const germanSttsCrosswalk: readonly SttsRow[] = [
 					show("der-freie-platz-ist-deiner", "deiner", "deiner"),
 				],
 			},
+			{
+				use: "weak possessive after an article (der meine, der meinige)",
+				becomes: head(lexeme("ADJ")),
+				records: [
+					show(
+						"dein-garten-ist-gross-der-meine-ist-klein",
+						"meine",
+						"meine",
+					),
+				],
+			},
 		],
-		rules: ["de/possessive-after-article"],
-		adrs: ["ADR-0044"],
+		rules: ["de/possessive-after-article", "de/noun-owns-its-article"],
+		adrs: ["ADR-0040", "ADR-0044"],
 		model: modeled,
 		gold: "No",
 		pipeline: waitsOnDumgen,

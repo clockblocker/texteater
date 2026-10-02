@@ -19,11 +19,6 @@ export type PronounForm = {
 	readonly ipa: string;
 	/** Accepted alternative forms of the cell, Licensed Variants (eins beside eines). */
 	readonly variants?: readonly string[];
-	/**
-	 * Other forms of the cell whose spelling awaits a ruling: a weak form
-	 * after an article (der meine).
-	 */
-	readonly unruled?: readonly string[];
 };
 export type PronounDescription = StemDescription<Core>;
 export type ReviewedPronoun = ReviewedMember;
@@ -121,15 +116,14 @@ export function pronounMember(
 				},
 			},
 		}),
-		// The cell's own form is Canonical, its variants (eins beside eines)
-		// Licensed, and its unruled forms carry no spelling.
+		// The cell's own form is Canonical and its variants (eins beside
+		// eines) Licensed.
 		spellings: [
 			{ spelled: form.text, spelling: canonical },
 			...(form.variants ?? []).map((spelled) => ({
 				spelled,
 				spelling: licensed,
 			})),
-			...(form.unruled ?? []).map((spelled) => ({ spelled })),
 		],
 	};
 }

@@ -25,21 +25,31 @@
 	"sources": {
 		"adrs": ["ADR-0040"],
 		"rules": [
-			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
 				"rule": "de/possessive-after-article",
-				"hash": "be071df99f2242e6"
+				"hash": "2aab509339ca27d9"
+			},
+			{
+				"rule": "de/pron-or-det-by-use",
+				"hash": "b7ac2bf4eaaf25be"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: meine",
+				"url": "https://www.duden.de/rechtschreibung/meine",
+				"supports": "Target [der, meine]: the headword meine, as in Ist es der meine?"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 11],
-			"route": { "family": "Lexeme", "kind": "PRON" },
+			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": { "emojiDescription": "🔐" },
 			"notes": {
-				"rationale": "meine stands in for the elided Garten, so it is the Head of its phrase and owns der the way a noun does; der is no DET target of its own. meine after an article is the weak form of the Nom.Masc.Sg cell of the possessive meiner."
+				"rationale": "meine after der is the weak possessive, so it is ADJ meine (de/possessive-after-article), cited in its weak form after der as Duden's headword meine is (Ist es der meine?) and as the ordinal erste is. It stands in for the elided Garten, so it is the Head of its phrase and owns der the way a noun does, as alte does in der alte (de/noun-owns-its-article); der is no DET target of its own. Its Surface marks Nom.Masc.Sg, agreeing with der. Decided by agents under the user's delegation (2026-10-02)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -50,16 +60,10 @@
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Lexeme",
-						"kind": "PRON",
-						"canonicalForm": "meiner",
+						"kind": "ADJ",
+						"canonicalForm": "meine",
 						"coreFeatures": {
-							"case": null,
-							"number": null,
-							"person": "1",
-							"polite": null,
-							"poss": "Yes",
-							"pronType": "Prs",
-							"gender": null
+							"comparable": null
 						}
 					},
 					"normalizedSurface": "meine",
@@ -67,10 +71,9 @@
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
 						"case": "Nom",
+						"degree": null,
 						"gender": "Masc",
-						"number": "Sing",
-						"gender[psor]": null,
-						"number[psor]": "Sing"
+						"number": "Sing"
 					}
 				},
 				"members": [
@@ -78,7 +81,8 @@
 					{ "attested": "meine", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full",
-				"articleEvidence": { "kind": "Owned", "member": 0 }
+				"articleEvidence": { "kind": "Owned", "member": 0 },
+				"valencyEvidence": []
 			}
 		}
 	],
