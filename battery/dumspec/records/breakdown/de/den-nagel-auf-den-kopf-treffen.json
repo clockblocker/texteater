@@ -143,6 +143,10 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🎯" },
+			"notes": {
+				"rationale": "The Breakdown reads treffen literally, Duden treffen 1 'mit einem Schlag erreichen' (ein Ziel treffen), not 'begegnen'; the idiom's meaning belongs to the Locution."
+			},
 			"grundform": true,
 			"attestation": {
 				"unitKind": "Attestation",

@@ -37,6 +37,7 @@
 		{
 			"memberSegmentIndices": [8, 10],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "⏰❌" },
 			"notes": {
 				"rationale": "haben is the perfect auxiliary of verpasst, so the target is the perfect infinitive [verpasst, haben]. The modal könnte is a VERB of its own (de/modal-is-a-verb)."
 			},

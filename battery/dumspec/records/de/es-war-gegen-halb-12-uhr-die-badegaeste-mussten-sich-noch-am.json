@@ -554,6 +554,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "📍" },
 			"notes": {
 				"rationale": "sich befinden 'be located' needs its reflexive: befinden without it is another verb ('judge'). So sich is a member (de/verb-owns-its-scattered-members); noch and am Strande stay outside."
 			},

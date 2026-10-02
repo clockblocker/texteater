@@ -33,6 +33,7 @@
 		{
 			"memberSegmentIndices": [4, 6, 12],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🛤↪" },
 			"notes": {
 				"rationale": "vorbei stands in the right bracket and vorbeiführen an + Dat is a dictionary particle verb in this sense, so vorbei is the separable particle and an the governed preposition, though a prepositional phrase precedes it. Out of the bracket, as in der Weg an der Kirche vorbei, an … vorbei is a circumposition."
 			},

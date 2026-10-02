@@ -125,6 +125,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🧼" },
 			"notes": {
 				"rationale": "The dative sich alternates with any other dative in the same sense (wäscht dem Kind die Hände), so it is a PRON target of its own and not a member (de/verb-owns-its-scattered-members)."
 			},

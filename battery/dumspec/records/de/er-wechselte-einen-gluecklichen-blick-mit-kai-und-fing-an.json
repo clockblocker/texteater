@@ -177,7 +177,7 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0039", "ADR-0040", "ADR-0042"],
+		"adrs": ["ADR-0031", "ADR-0034", "ADR-0039", "ADR-0040", "ADR-0042"],
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -288,6 +288,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🔄" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -355,7 +356,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "wechseln 'exchange' governs the exchange partner with mit: E-VALBU wechseln Lesart 7 'jemand wechselt etwas mit jemandem', Kprp mit + Dat, with the example einen kurzen Blick mit ihm gewechselt. So mit is its governed member and stays out of the normalized Surface (de/governed-preposition-joins-its-governor). einen Blick wechseln is literal exchange, so no Collocation. Ruled on #743 (BT-B2)."
+				"rationale": "wechseln 'exchange' governs the exchange partner with mit: E-VALBU wechseln Lesart 7 'jemand wechselt etwas mit jemandem', Kprp mit + Dat, with the example einen kurzen Blick mit ihm gewechselt. So mit is its governed member and stays out of the normalized Surface (de/governed-preposition-joins-its-governor). einen Blick wechseln is literal exchange, so no Collocation. Ruled on #743 (BT-B2). einen Blick mit jemandem wechseln (Duden wechseln 2, Blicke wechseln) shares one Reading with Duden wechseln 1 'durch etwas anderes derselben Art ersetzen', since both swap one thing for another of its kind (ADR 0031)."
 			}
 		},
 		{

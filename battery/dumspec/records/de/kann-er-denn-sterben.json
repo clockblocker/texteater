@@ -231,6 +231,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💀" },
 			"notes": {
 				"rationale": "sterben is the infinitive kann governs, a VERB target of its own (de/modal-is-a-verb)."
 			},

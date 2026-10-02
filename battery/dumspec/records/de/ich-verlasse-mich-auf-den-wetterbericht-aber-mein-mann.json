@@ -214,6 +214,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤝" },
 			"notes": {
 				"rationale": "sich verlassen auf 'rely on' needs the reflexive (jemanden verlassen means leaving someone); auf + Acc is governed and a member."
 			},
@@ -474,6 +475,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤝" },
 			"notes": {
 				"rationale": "Control: the same verb whose slot darauf fills. darauf stands alone and never joins (de/pronominal-adverb-stands-alone); the slot is recorded with no member."
 			},

@@ -352,6 +352,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "😔🤝" },
 			"notes": {
 				"rationale": "Verb-final control: the particle stays inside abgefunden, but sich, mit and the auxiliary hat still join. sich abfinden 'come to terms' needs the reflexive (jemanden abfinden means paying someone off), and mit + Dat is governed."
 			},

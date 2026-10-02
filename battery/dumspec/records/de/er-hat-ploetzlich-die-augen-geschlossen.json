@@ -127,8 +127,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🔒" },
 			"notes": {
-				"rationale": "plötzlich marks a change, so the clause reports the event of closing, and the simple past says the same (schloss plötzlich die Augen): hat … geschlossen is the perfect of schließen, one VERB target (de/sein-perfect-or-copula, #653). Minimal pair: de/er-hat-die-ganze-zeit-die-augen-geschlossen."
+				"rationale": "plötzlich marks a change, so the clause reports the event of closing, and the simple past says the same (schloss plötzlich die Augen): hat … geschlossen is the perfect of schließen, one VERB target (de/sein-perfect-or-copula, #653). Minimal pair: de/er-hat-die-ganze-zeit-die-augen-geschlossen. Closing the eyes is Duden schließen 1 'zumachen', as closing a door is, so it shares the 🔒 Reading, which matches the ADJ geschlossen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

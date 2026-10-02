@@ -169,6 +169,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "👃➡" },
 			"notes": {
 				"rationale": "sich einmischen 'interfere' needs the reflexive: etwas einmischen means mixing an ingredient in, another sense. ein is its particle, and in + Acc its governed preposition (Duden: sich [in etwas] einmischen), a member left out of the Surface. hasSepPrefix names ein, never in (de/verb-core-features)."
 			},

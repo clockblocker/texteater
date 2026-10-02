@@ -175,7 +175,7 @@
 		"year": 1911
 	},
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0039", "ADR-0041", "ADR-0044"],
+		"adrs": ["ADR-0022", "ADR-0031", "ADR-0039", "ADR-0041", "ADR-0044"],
 		"rules": [
 			{
 				"rule": "de/bare-infinitive-zu",
@@ -768,8 +768,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🚫🔀" },
 			"notes": {
-				"rationale": "Duden (übrig bleiben, übrigbleiben) and DWDS (übrigbleiben) list a verb, and DWDS files jmdm. bleibt nichts (anderes, weiter) übrig, als … 'have no choice but' as its figurative sense. So übrig blieb is one VERB with übrig as its separable first part, not copular bleiben plus ADJ übrig; nichts and als stay outside. Ruled on #743 (MB-B2). Its Canonical Form is Duden's recommended spelling, übrig bleiben, written apart (D 55); Duden allows the joined übrigbleiben only in a transferred sense (de/canonical-form-is-the-headword). Ruled on #771."
+				"rationale": "Duden (übrig bleiben, übrigbleiben) and DWDS (übrigbleiben) list a verb, and DWDS files jmdm. bleibt nichts (anderes, weiter) übrig, als … 'have no choice but' as its figurative sense. So übrig blieb is one VERB with übrig as its separable first part, not copular bleiben plus ADJ übrig; nichts and als stay outside. Ruled on #743 (MB-B2). Its Canonical Form is Duden's recommended spelling, übrig bleiben, written apart (D 55); Duden allows the joined übrigbleiben only in a transferred sense (de/canonical-form-is-the-headword). Ruled on #771. This is DWDS übrigbleiben, übertragen: jmdm. bleibt nichts übrig, als … 'keine andere Wahl haben', kept apart from the literal 'als Rest zurückbleiben' as a Reading of its own (ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

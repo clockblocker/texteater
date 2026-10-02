@@ -23,6 +23,7 @@
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "⏳" },
 			"notes": {
 				"rationale": "The adposition piece of the fused aufs is the governed-preposition member of warten; its s piece is the article of Ende (ADR 0035)."
 			},

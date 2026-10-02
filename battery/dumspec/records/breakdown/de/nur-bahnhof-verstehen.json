@@ -17,7 +17,7 @@
 		{ "kind": "ResolvableText", "text": "verstehen" }
 	],
 	"sources": {
-		"adrs": ["ADR-0039", "ADR-0041"],
+		"adrs": ["ADR-0031", "ADR-0039", "ADR-0041"],
 		"rules": [
 			{ "rule": "de/focus-word-is-adv", "hash": "d38200289df9682c" },
 			{
@@ -101,6 +101,10 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "💡" },
+			"notes": {
+				"rationale": "The Breakdown reads verstehen literally, Duden verstehen 2 'den Sinn von etwas erfassen; begreifen'; the idiom's 'understand nothing' belongs to the Locution."
+			},
 			"grundform": true,
 			"attestation": {
 				"unitKind": "Attestation",

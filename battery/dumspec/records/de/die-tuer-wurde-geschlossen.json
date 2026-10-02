@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🔒" },
 			"notes": {
 				"rationale": "Productive werden-passive. wurde member. geschlossen head stays Part."
 			},

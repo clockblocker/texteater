@@ -534,6 +534,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🪑" },
 			"notes": {
 				"rationale": "sitzen is the infinitive muß governs (de/modal-is-a-verb)."
 			},

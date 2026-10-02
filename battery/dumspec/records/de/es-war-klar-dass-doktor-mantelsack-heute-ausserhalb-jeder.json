@@ -873,6 +873,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "👀" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -940,7 +941,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "sich kümmern 'care about' is inherently reflexive (non-reflexive kümmern is 'concern': Was kümmert mich das?), so sich is a member (de/verb-owns-its-scattered-members). Its um slot is filled by the pronominal adverb darum, which stays its own target, so the valency evidence records um + Acc with no member (de/pronominal-adverb-stands-alone). Ruled on #743 (BT-A6, A6)."
+				"rationale": "sich kümmern 'care about' is inherently reflexive (non-reflexive kümmern is 'concern': Was kümmert mich das?), so sich is a member (de/verb-owns-its-scattered-members). Its um slot is filled by the pronominal adverb darum, which stays its own target, so the valency evidence records um + Acc with no member (de/pronominal-adverb-stands-alone). Ruled on #743 (BT-A6, A6). Here sich kümmern is Duden kümmern 1b 'einer Sache Aufmerksamkeit schenken' (meist verneint), not 1a 'sich helfend, sorgend annehmen'."
 			}
 		},
 		{

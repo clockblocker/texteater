@@ -79,6 +79,7 @@
 		{
 			"memberSegmentIndices": [12, 14],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "✂" },
 			"notes": {
 				"rationale": "Nobody who does the cutting is named, so causative lassen joins schneiden, an infinitive with voice Cau under the modal (de/causative-lassen, #721)."
 			},

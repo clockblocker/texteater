@@ -364,6 +364,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "⚡" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -413,7 +414,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "vorkommen 'happen' with its separated particle (de/verb-owns-its-scattered-members)."
+				"rationale": "vorkommen 'happen' with its separated particle (de/verb-owns-its-scattered-members). Here vorkommen is Duden vorkommen 1 '[überraschend] geschehen, sich ereignen', so it takes the ⚡ of geschehen."
 			}
 		},
 		{
@@ -827,6 +828,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🌊" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -872,7 +874,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Inseparable überfluten (stress on -flut-), so no separable prefix."
+				"rationale": "Inseparable überfluten (stress on -flut-), so no separable prefix. DWDS überfluten 'überschwemmen' files ein Gefühl … überflutete ihn as its transferred use, so the wave of shame takes the flooding Reading."
 			}
 		},
 		{
@@ -1118,6 +1120,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🗣🔁" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

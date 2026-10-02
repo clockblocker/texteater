@@ -31,6 +31,7 @@
 		{
 			"memberSegmentIndices": [2, 12],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "✂" },
 			"notes": {
 				"rationale": "Nobody who does the cutting is named and lassen is not the modal-passive sich lassen, so this is the obvious causative: lasse joins schneiden, whose Surface carries voice Cau (de/causative-lassen, #721). mir is a free dative."
 			},

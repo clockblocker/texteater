@@ -1196,8 +1196,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "↪" },
 			"notes": {
-				"rationale": "wandte sich is 'turned round'. Duden files sich [zur Seite] wenden under the same sense as den Kopf wenden, so sich fills an object slot a non-reflexive noun can fill: wenden is not inherently reflexive and sich is a PRON of its own (de/verb-owns-its-scattered-members). Ruled on #743 (MB-B1, A4)."
+				"rationale": "wandte sich is 'turned round'. Duden files sich [zur Seite] wenden under the same sense as den Kopf wenden, so sich fills an object slot a non-reflexive noun can fill: wenden is not inherently reflexive and sich is a PRON of its own (de/verb-owns-its-scattered-members). Ruled on #743 (MB-B1, A4). wandte sich is Duden wenden 3 'in eine andere Richtung drehen' (sich zur Seite wenden), not 1 'auf die andere Seite drehen'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

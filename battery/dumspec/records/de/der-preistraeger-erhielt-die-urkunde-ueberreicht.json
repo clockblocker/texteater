@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [4, 10],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🫴" },
 			"notes": {
 				"rationale": "erhalten as recipient-passive auxiliary; finite past on the whole Surface. überreichen is inseparable, so hasSepPrefix stays null."
 			},

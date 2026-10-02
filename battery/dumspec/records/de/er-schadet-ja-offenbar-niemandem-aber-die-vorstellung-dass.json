@@ -336,6 +336,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤕" },
 			"notes": {
 				"rationale": "schadet is schaden; its dative complement niemandem is a bare case, so a target of its own."
 			},
@@ -840,8 +841,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🪦🧍" },
 			"notes": {
-				"rationale": "überleben has the inseparable prefix über-, so no hasSepPrefix; it is the infinitive sollte governs (de/modal-is-a-verb)."
+				"rationale": "überleben has the inseparable prefix über-, so no hasSepPrefix; it is the infinitive sollte governs (de/modal-is-a-verb). Here überleben is Duden überleben 2 'über jemandes Tod hinaus leben' (sie sollte ihren Mann überleben), not 1 'etwas Gefahrvolles lebend überstehen'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

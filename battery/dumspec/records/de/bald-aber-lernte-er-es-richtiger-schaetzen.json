@@ -388,6 +388,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🤔📏" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -433,7 +434,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Infinitive governed by lernte. schätzen lernen is a common combination with literal meaning, not a Locution."
+				"rationale": "Infinitive governed by lernte. schätzen lernen is a common combination with literal meaning, not a Locution. lernte es richtiger schätzen grades how accurately he schätzt, as in er hat die Entfernung gut geschätzt under Duden schätzen 1a '(ohne exaktes Messen, nur auf Erfahrung gestützt) näherungsweise bestimmen'; the sentence also fits 3a 'eine hohe Meinung haben' (schätzen gelernt) but says nothing of high regard, so it takes the broader assessing Reading."
 			}
 		}
 	],

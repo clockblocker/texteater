@@ -99,6 +99,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🚶😌" },
 			"notes": {
 				"rationale": "spazieren is the bare infinitive under gehen, a VERB of its own, since spazieren gehen fails de/idiom (see gehen). Ruled by the user on #739 (2026-10-01), reversing #743 SZ-B7."
 			},

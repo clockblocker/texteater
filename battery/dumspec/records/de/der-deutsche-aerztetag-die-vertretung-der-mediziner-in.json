@@ -61,6 +61,10 @@
 		{
 			"memberSegmentIndices": [20, 22, 24, 40],
 			"route": { "family": "Lexeme", "kind": "VERB" },
+			"reading": { "emojiDescription": "🗣👍" },
+			"notes": {
+				"rationale": "sich für etwas aussprechen is Duden aussprechen 'Stellung nehmen; etwas befürworten', which Duden keeps apart from sich gegen etwas aussprechen 'ablehnen'."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

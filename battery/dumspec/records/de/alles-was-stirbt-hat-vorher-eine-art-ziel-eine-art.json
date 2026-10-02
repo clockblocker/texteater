@@ -456,6 +456,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "💀" },
 			"notes": {
 				"rationale": "stirbt is sterben."
 			},
@@ -889,6 +890,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🪫" },
 			"notes": {
 				"rationale": "sich zerreiben 'wear oneself out' (DWDS: sich zerreiben = sich aufreiben; Duden: <zerreiben + sich>) is the reflexive sense: the subject is what is worn down, so sich is no object that another noun could replace in this sense. It joins the verb with the perfect auxiliary hat (de/verb-owns-its-scattered-members, de/auxiliary-joins-the-verb-it-serves). Ruled on #743 (SZ-B3, A4)."
 			},
@@ -1048,8 +1050,9 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "🧩✅" },
 			"notes": {
-				"rationale": "trifft … zu is the particle verb zutreffen with its separated zu (de/verb-owns-its-scattered-members)."
+				"rationale": "trifft … zu is the particle verb zutreffen with its separated zu (de/verb-owns-its-scattered-members). Here zutreffen is Duden zutreffen 2 'auf jemanden anwendbar, passend sein' (diese Regel trifft hier nicht zu), not 1 'stimmen, richtig sein'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

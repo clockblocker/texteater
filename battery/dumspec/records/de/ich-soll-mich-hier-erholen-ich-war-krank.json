@@ -222,6 +222,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
+			"reading": { "emojiDescription": "😌🔋" },
 			"notes": {
 				"rationale": "sich erholen is inherently reflexive (no erholen without it in this sense), so mich is a member of the infinitive's target (de/verb-owns-its-scattered-members)."
 			},
