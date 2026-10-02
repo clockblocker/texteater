@@ -19,14 +19,19 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Eurozeichens" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "€" },
+		{ "kind": "ResolvableText", "text": "€" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/sign-for-a-word",
+				"hash": "291f3a669b094e5c"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -34,6 +39,9 @@
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "SYM" },
 			"reading": { "emojiDescription": "💶" },
+			"notes": {
+				"rationale": "Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the euro sign € at the end was a Punctuation Segment and is now ResolvableText (de/sign-for-a-word). No target changed."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

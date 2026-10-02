@@ -29,7 +29,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Zeichen" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "%" },
+		{ "kind": "ResolvableText", "text": "%" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "und" },
 		{ "kind": "Whitespace", "text": " " },
@@ -61,6 +61,10 @@
 			{
 				"rule": "de/abbreviation-is-one-segment",
 				"hash": "8b5d215a31ab7264"
+			},
+			{
+				"rule": "de/sign-for-a-word",
+				"hash": "291f3a669b094e5c"
 			}
 		],
 		"references": []
@@ -70,7 +74,7 @@
 			"memberSegmentIndices": [44],
 			"route": { "family": "Foreign", "kind": "Foreign" },
 			"notes": {
-				"rationale": "Duden lists neither yeet nor yeeten, and bare yeet shows no German ending: Foreign en. A German ending would make it the VERB yeeten (geyeetet). Rule-decided Segment fix, 2026-10-02 (#851): The abbreviation z.B. that the sentence names was four Segments, z . B ., and is now one, z.B. (de/abbreviation-is-one-segment). No target changed."
+				"rationale": "Duden lists neither yeet nor yeeten, and bare yeet shows no German ending: Foreign en. A German ending would make it the VERB yeeten (geyeetet). Rule-decided Segment fix, 2026-10-02 (#851): The abbreviation z.B. that the sentence names was four Segments, z . B ., and is now one, z.B. (de/abbreviation-is-one-segment). No target changed. Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the sign % that the sentence names was a Punctuation Segment and is now ResolvableText (de/sign-for-a-word). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

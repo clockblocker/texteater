@@ -661,6 +661,22 @@ const fusedWords: Rule[] = [
 			"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus",
 		],
 	},
+	{
+		id: "de/sign-for-a-word",
+		statement:
+			"A sign written apart that stands for a word, such as + (plus), % (Prozent), € (Euro) or §, is one ResolvableText Segment, repeated or not (§§), and a single-member SYM target: a number beside it is not a member (80 % gives [%] SYM). An emoji stays OpaqueText, which no click reaches.",
+		adrs: ["dumgen/ADR-0004", "ADR-0045"],
+		routes: lexeme("SYM"),
+		records: [
+			// Both + of one sentence are clickable, the one no target names too.
+			"de/links-steht-bereits-rechts-ergaenzt-sie-ein-zweites",
+			"de/die-anzeige-zeigt-80-ladezustand",
+			"de/der-eintritt-kostet-zwoelf",
+			"de/die-beiden-verweisen-auf-getrennte-regelungen",
+			// The sentence itself calls its emoji unclickable.
+			"de/vor-dem-nicht-anklickbaren-emoji-steht-ein",
+		],
+	},
 ];
 
 const pronounsAndAdjectives: Rule[] = [

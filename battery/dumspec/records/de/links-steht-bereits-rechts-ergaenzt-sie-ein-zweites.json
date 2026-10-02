@@ -8,7 +8,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "bereits" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "+" },
+		{ "kind": "ResolvableText", "text": "+" },
 		{ "kind": "Punctuation", "text": "," },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "rechts" },
@@ -28,7 +28,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/sign-for-a-word",
+				"hash": "291f3a669b094e5c"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -37,7 +42,7 @@
 			"route": { "family": "Lexeme", "kind": "SYM" },
 			"reading": { "emojiDescription": "➕" },
 			"notes": {
-				"rationale": "This target is the second +, the one she adds on the right; the first + is another occurrence. The sentence names the sign, which takes its ordinary Reading, the plus of an addition."
+				"rationale": "This target is the second +, the one she adds on the right; the first + is another occurrence. The sentence names the sign, which takes its ordinary Reading, the plus of an addition. Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the first + was a Punctuation Segment and is now ResolvableText like the second, since a sign that stands for a word is clickable wherever it stands (de/sign-for-a-word). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

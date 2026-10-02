@@ -6,7 +6,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "drei" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "OpaqueText", "text": "+" },
+		{ "kind": "ResolvableText", "text": "+" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "zwei" },
 		{ "kind": "Punctuation", "text": "." }
@@ -15,7 +15,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/sign-for-a-word",
+				"hash": "291f3a669b094e5c"
+			}
+		],
 		"references": []
 	},
 	"targets": [],

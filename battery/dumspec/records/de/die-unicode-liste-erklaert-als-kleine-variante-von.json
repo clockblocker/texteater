@@ -18,7 +18,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "von" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "%" },
+		{ "kind": "ResolvableText", "text": "%" },
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
@@ -29,6 +29,10 @@
 			{
 				"rule": "de/variant-and-historical-status",
 				"hash": "9e2c6c25c942a570"
+			},
+			{
+				"rule": "de/sign-for-a-word",
+				"hash": "291f3a669b094e5c"
 			}
 		],
 		"references": []
@@ -39,7 +43,7 @@
 			"route": { "family": "Lexeme", "kind": "SYM" },
 			"reading": { "emojiDescription": "➗1⃣0⃣0⃣" },
 			"notes": {
-				"rationale": "﹪ (U+FE6A, small percent sign) is a code point of its own, not a spelling of %: a Variant is a spelling that a standard accepts or once accepted, a dialect uses, or that stretches letters for effect, and a small form is none of these (de/variant-and-historical-status). It is a SYM Lemma of its own, Canonical, as the minus sign − (U+2212) is apart from the hyphen-minus. ﹪ is a small form of the percent sign and means what % means, so it copies the description of %."
+				"rationale": "﹪ (U+FE6A, small percent sign) is a code point of its own, not a spelling of %: a Variant is a spelling that a standard accepts or once accepted, a dialect uses, or that stretches letters for effect, and a small form is none of these (de/variant-and-historical-status). It is a SYM Lemma of its own, Canonical, as the minus sign − (U+2212) is apart from the hyphen-minus. ﹪ is a small form of the percent sign and means what % means, so it copies the description of %. Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the % the sentence names last was a Punctuation Segment and is now ResolvableText (de/sign-for-a-word). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

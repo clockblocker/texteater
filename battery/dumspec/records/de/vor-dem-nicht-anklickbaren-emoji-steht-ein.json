@@ -12,7 +12,7 @@
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "Emoji" },
 		{ "kind": "Whitespace", "text": " " },
-		{ "kind": "Punctuation", "text": "😀" },
+		{ "kind": "OpaqueText", "text": "😀" },
 		{ "kind": "Whitespace", "text": " " },
 		{ "kind": "ResolvableText", "text": "steht" },
 		{ "kind": "Whitespace", "text": " " },
@@ -25,7 +25,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/sign-for-a-word",
+				"hash": "291f3a669b094e5c"
+			}
+		],
 		"references": []
 	},
 	"targets": [
@@ -34,7 +39,7 @@
 			"route": { "family": "Lexeme", "kind": "SYM" },
 			"reading": { "emojiDescription": "🏷" },
 			"notes": {
-				"rationale": "The sentence names the sign, which takes its ordinary Reading, the mark set before a keyword."
+				"rationale": "The sentence names the sign, which takes its ordinary Reading, the mark set before a keyword. Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the emoji 😀 was a Punctuation Segment and is now OpaqueText, which no click reaches either (de/sign-for-a-word). No target changed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
