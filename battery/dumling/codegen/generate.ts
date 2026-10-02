@@ -58,7 +58,6 @@ const outputs = {
 	]),
 	"units.ts": types,
 	"validation.ts": `// Generated from canonical Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(JSON.stringify(compiled))};\n`,
-	"vocabulary.ts": `// Generated from canonical Zod enums. Run bun run generate.\nexport const UnitKind = ${JSON.stringify(UnitKindSchema.enum)} as const;\nexport type UnitKind = (typeof UnitKind)[keyof typeof UnitKind];\nexport const VariantTag = ${JSON.stringify(VariantTagSchema.enum)} as const;\nexport type VariantTag = (typeof VariantTag)[keyof typeof VariantTag];\n`,
 	...Object.fromEntries(
 		routes.map((route) => [
 			`schemas/${route.modulePath.replace(/\.js$/, ".ts")}`,

@@ -7,7 +7,6 @@
 			"dumling/id": ["./src/id.ts"],
 			"dumling/reading": ["./src/reading.ts"],
 			"dumling/types": ["./src/types.ts"],
-			"dumling/vocabulary": ["./src/vocabulary.ts"],
 			"dumling/schema/*": ["./src/generated/schemas/*"]
 		}
 	},

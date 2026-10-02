@@ -11,10 +11,16 @@ test("replacement public operations use the settled unit and Knowledge contracts
 	expect(Object.keys(dumling).sort()).toEqual([
 		"GrundformAssessmentError",
 		"ParsingError",
-		"UnitKind",
 		"checkIfGrundform",
-		"germanArticleForm",
+		"foldCase",
+		"isSyncreticUnit",
+		"isSyncretism",
+		"lemmaIdentityKey",
 		"parseUnit",
+		"readingIdentityKey",
+		"sameLemma",
+		"syncretismView",
+		"syncretize",
 	]);
 	expect(Object.keys(dumrel).sort()).toEqual([
 		"KnowledgePolicyUnavailable",

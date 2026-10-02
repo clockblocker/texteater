@@ -3,12 +3,10 @@ import type { lemmaSchema } from "../../src/generated/schemas/de/lexeme/pronoun.
 import {
 	isSyncreticUnit,
 	isSyncretism,
-	type Lemma,
-	type Syncretism,
-	type SyncretismView,
 	syncretismView,
 	syncretize,
 } from "../../src/index.js";
+import type { Lemma, Syncretism, SyncretismView } from "../../src/types.js";
 
 type Pronoun = Lemma<"de", "Lexeme", "PRON">;
 type PronounSyncretism = Syncretism<"Lemma", "de", "Lexeme", "PRON">;

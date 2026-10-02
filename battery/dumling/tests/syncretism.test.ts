@@ -2,7 +2,6 @@ import { describe, expect, test } from "bun:test";
 import {
 	isSyncreticUnit,
 	isSyncretism,
-	type Lemma,
 	parseUnit,
 	syncretismView,
 	syncretize,
@@ -14,6 +13,7 @@ import {
 	readingSchema,
 	surfaceSchema,
 } from "dumling/schema/de/lexeme/pronoun";
+import type { Lemma } from "dumling/types";
 
 type Pronoun = Lemma<"de", "Lexeme", "PRON">;
 const unmarked = {

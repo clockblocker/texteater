@@ -3,12 +3,8 @@ import { compileZodValidationArtifacts } from "codegen";
 import { z } from "zod";
 import { registrations } from "../codegen/operations.js";
 import { loadRoutes } from "../codegen/routes.js";
-import {
-	parseUnit,
-	syncretismView,
-	syncretize,
-	UnitKind,
-} from "../src/index.js";
+import { parseUnit, syncretismView, syncretize } from "../src/index.js";
+import { UnitKindSchema } from "../src/schemas/units.js";
 import { unitFixtures } from "./unit-fixtures.js";
 
 const routes = await loadRoutes();
@@ -60,7 +56,7 @@ describe("compiled unit interface", () => {
 		expect(routes).toHaveLength(102);
 		for (const route of routes) {
 			const fixtures = unitFixtures(route, z);
-			for (const kind of Object.values(UnitKind)) {
+			for (const kind of UnitKindSchema.options) {
 				const schema = route.schemas[kind];
 				const fixture = fixtures[kind];
 				const valid = schema.safeParse(fixture);
@@ -124,7 +120,7 @@ describe("compiled unit interface", () => {
 			Reading: [{ ...Reading, lemma: view }],
 			Attestation: [{ ...Attestation, surface }],
 		};
-		for (const kind of Object.values(UnitKind))
+		for (const kind of UnitKindSchema.options)
 			for (const fixture of units[kind]) {
 				const schema = route.schemas[kind];
 				expect(schema.safeParse(fixture).success, kind).toBe(true);

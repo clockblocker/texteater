@@ -4,13 +4,10 @@ import {
 	parseCompiledValidation,
 } from "dumval/runtime";
 import { validationRegistry } from "./generated/linked-validation.js";
-import type { ParsedUnit, UnitRoute } from "./types.js";
+import type { ParsedUnit, ParseResult, UnitRoute } from "./types.js";
 import { validationOperations } from "./validation/operations.js";
 
 const registry: CompiledValidationRegistry = validationRegistry;
-export type ParseResult<T> =
-	| { success: true; chain: T }
-	| { success: false; error: ParsingError };
 function object(value: unknown): Record<string, unknown> | undefined {
 	return value !== null && typeof value === "object" && !Array.isArray(value)
 		? (value as Record<string, unknown>)

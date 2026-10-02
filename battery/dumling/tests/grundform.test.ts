@@ -5,8 +5,8 @@ import {
 	checkIfGrundform,
 	GrundformAssessmentError,
 	parseUnit,
-	type Surface,
 } from "../src/index.js";
+import type { Surface } from "../src/types.js";
 import { unitFixtures } from "./unit-fixtures.js";
 
 const routes = await loadRoutes();

@@ -1,11 +1,11 @@
-import {
-	type Lemma,
-	parseUnit,
-	type Reading,
-	type Surface,
-	type Unit,
-	type UnitKind,
-} from "../../src/index.js";
+import { parseUnit } from "../../src/index.js";
+import type {
+	Lemma,
+	Reading,
+	Surface,
+	Unit,
+	UnitKind,
+} from "../../src/types.js";
 
 type Noun = Unit<"Lemma", "de", "Lexeme", "NOUN">;
 declare const noun: Noun;

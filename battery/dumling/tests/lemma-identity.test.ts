@@ -2,15 +2,13 @@ import { describe, expect, test } from "bun:test";
 import {
 	checkIfGrundform,
 	foldCase,
-	type Lemma,
 	lemmaIdentityKey,
-	type Reading,
 	readingIdentityKey,
-	type Surface,
 	sameLemma,
 	syncretismView,
 	syncretize,
 } from "dumling";
+import type { Lemma, Reading, Surface } from "dumling/types";
 
 const interjection = (canonicalForm: string) =>
 	({

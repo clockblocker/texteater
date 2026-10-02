@@ -46,8 +46,6 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 	expect(Object.keys(module).sort()).toEqual([
 		"GrundformAssessmentError",
 		"ParsingError",
-		"UnitKind",
-		"VariantTag",
 		"checkIfGrundform",
 		"foldCase",
 		"isSyncreticUnit",
@@ -67,7 +65,8 @@ test("published types stay precise without loading Zod declarations", async () =
 	try {
 		await writeFile(
 			join(directory, "consumer.ts"),
-			`import {parseUnit,checkIfGrundform,type Unit} from ${JSON.stringify(join(packageRoot, "dist/index.js"))};
+			`import {parseUnit,checkIfGrundform} from ${JSON.stringify(join(packageRoot, "dist/index.js"))};
+import type {Unit} from ${JSON.stringify(join(packageRoot, "dist/types.js"))};
 type Noun=Unit<"Lemma","de","Lexeme","NOUN">;
 declare const prefix:Unit<"Surface","de","Morpheme","Prefix">;
 const assessment=checkIfGrundform(prefix);

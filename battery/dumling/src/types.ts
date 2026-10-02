@@ -1,3 +1,5 @@
+import type { ParsingError } from "dumval/runtime";
+
 export type {
 	Attestation,
 	Family,
@@ -16,3 +18,6 @@ export type {
 	VariantTag,
 } from "./generated/units.js";
 export type { GrundformIssue, GrundformResult } from "./grundform/result.js";
+export type ParseResult<T> =
+	| { success: true; chain: T }
+	| { success: false; error: ParsingError };

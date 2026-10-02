@@ -1,33 +1,13 @@
 export { ParsingError } from "common-utils";
 export { checkIfGrundform } from "./check-if-grundform.js";
-export { UnitKind, VariantTag } from "./generated/vocabulary.js";
-export {
-	GrundformAssessmentError,
-	type GrundformIssue,
-	type GrundformResult,
-} from "./grundform/result.js";
+export { GrundformAssessmentError } from "./grundform/result.js";
 export {
 	foldCase,
 	lemmaIdentityKey,
 	readingIdentityKey,
 	sameLemma,
 } from "./identity.js";
-export { type ParseResult, parseUnit } from "./parse-unit.js";
-export type {
-	Attestation,
-	Family,
-	Kind,
-	Language,
-	Lemma,
-	ParsedUnit,
-	Reading,
-	Surface,
-	Syncretism,
-	SyncretismView,
-	SyncretizableUnitKind,
-	Unit,
-	UnitRoute,
-} from "./types.js";
+export { parseUnit } from "./parse-unit.js";
 export {
 	isSyncreticUnit,
 	isSyncretism,
