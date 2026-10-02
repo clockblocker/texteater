@@ -3,11 +3,8 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
-import {
-	type CallRecord,
-	Jev,
-	noul,
-} from "../../src/segment-in-units/lab/jev.js";
+import { noul } from "../../src/segment/ask.js";
+import { type CallRecord, Jev } from "../../src/segment-in-units/lab/jev.js";
 
 const directory = await mkdtemp(join(tmpdir(), "segment-ownership-retries-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));

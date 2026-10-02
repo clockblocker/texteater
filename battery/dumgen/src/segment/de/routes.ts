@@ -4,9 +4,9 @@
  * are left out: an auxiliary always joins the verb it serves, and
  * punctuation is never scored.
  */
-import type { Route } from "../../evaluation/spec-corpus/segment-in-units.js";
+import type { Route } from "../segmented-sentence.js";
 
-export const lexemeKinds = [
+const lexemeKinds = [
 	"ADJ",
 	"ADP",
 	"ADV",
@@ -23,7 +23,7 @@ export const lexemeKinds = [
 	"VERB",
 ] as const;
 
-export const locutionKinds = [
+const locutionKinds = [
 	"ADJ",
 	"ADP",
 	"ADV",
@@ -39,7 +39,7 @@ export const locutionKinds = [
 
 export type RouteKey = string;
 
-export const routeDescriptions: Readonly<Record<RouteKey, string>> = {
+const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 	"Lexeme/ADJ":
 		"Adjective, also comparative or used adverbially (singt laut), and every participle outside a perfect or passive (die gebratenen Zwiebeln, Die Tür ist geschlossen)",
 	"Lexeme/ADP":

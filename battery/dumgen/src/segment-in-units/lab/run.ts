@@ -15,7 +15,6 @@ import type {
 } from "../de/arm.js";
 import type { LabCase, LabSet } from "./corpus.js";
 import { type CallRecord, type Jev, Semaphore } from "./jev.js";
-import type { Luna } from "./luna.js";
 
 export type RepetitionRecord = {
 	readonly outputs?: Readonly<Record<string, SegmentInUnitsOutput>>;
@@ -78,7 +77,6 @@ export async function runArm(args: {
 	readonly cases: readonly LabCase[];
 	readonly repetitions: number;
 	readonly jev: Jev;
-	readonly luna?: Luna;
 	readonly concurrency: number;
 	readonly gitHead: string;
 	readonly repetitionOffset?: number;
@@ -88,12 +86,6 @@ export async function runArm(args: {
 }): Promise<LabRun> {
 	const startedAt = new Date().toISOString();
 	const semaphore = new Semaphore(args.concurrency);
-	const noise = args.set.cases
-		.filter((_, index) => index % 40 === 0)
-		.slice(0, 30)
-		.map((labCase) =>
-			labCase.input.segments.map(({ text }) => text).join(""),
-		);
 	let done = 0;
 	const total = args.cases.length * args.repetitions;
 	const cases = await Promise.all(
@@ -111,21 +103,10 @@ export async function runArm(args: {
 						try {
 							const result = await args.arm.run(labCase.input, {
 								jev: args.jev,
-								...(args.luna ? { luna: args.luna } : {}),
 								repetition:
 									repetition + (args.repetitionOffset ?? 0),
 								calls,
 								options: args.options,
-								noise: noise.filter(
-									(text) =>
-										text !==
-										labCase.input.segments
-											.map((segment) => segment.text)
-											.join(""),
-								),
-								...(args.arm.needsOracle
-									? { oracle: labCase.idealOutput }
-									: {}),
 							});
 							return {
 								outputs: result.outputs,

@@ -30,6 +30,17 @@ its route or `Unresolved`. Its jev-based judges see one Sentence at a time.
 See [Dumgen ADR 0007] and [Dumgen ADR 0008].
 _Avoid_: Segment.Text, lattice, Sentence Analysis, for the current design
 
+**Membership**:
+Which Segments `segment.inUnits` puts in one unit, whatever its route. It
+is judged before the route: a unit is right when its Segment set matches
+gold. See [Dumgen ADR 0008].
+
+**Route Variant**:
+One of the few routes a borderline unit carries when `segment.inUnits`
+cannot decide between them, its route first. A click picks one and never
+regroups the unit. See [Dumgen ADR 0007] and [Dumgen ADR 0008].
+_Avoid_: route distribution, alternative route
+
 **`segment.inLexemes`**:
 The segmenter that breaks one Locution or Saying down into its Lexemes, once
 per Lemma. It returns the same shape as `segment.inUnits` one level down and

@@ -11,6 +11,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { rules } from "dumspec";
 import { loadGold } from "../../evaluation/spec-corpus/gold.js";
 import { projectCorpus } from "../../evaluation/spec-corpus/projection.js";
 import {
@@ -19,8 +20,16 @@ import {
 	type SegmentInUnitsOutput,
 	segmentInUnits,
 } from "../../evaluation/spec-corpus/segment-in-units.js";
-import { ruleExampleRecords } from "../de/guide.js";
 import { hashOf } from "./jev.js";
+
+/** Records the German Rules name as their examples (the guide may quote them). */
+function ruleExampleRecords(): ReadonlySet<string> {
+	return new Set(
+		rules
+			.filter((rule) => rule.id.startsWith("de/"))
+			.flatMap((rule) => rule.records),
+	);
+}
 
 export type LabCase = {
 	readonly id: string;

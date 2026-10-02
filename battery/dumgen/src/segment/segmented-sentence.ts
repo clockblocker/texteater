@@ -25,3 +25,22 @@ export type SegmentedSentence = {
 	readonly text: string;
 	readonly segments: readonly Segment[];
 };
+
+/** Where a click on a unit routes: language, Family and Kind. */
+export type Route = {
+	readonly language: string;
+	readonly family: string;
+	readonly kind: string;
+};
+
+/**
+ * One biggest unit (Dumgen ADR 0007): the indices of its Segments in
+ * ascending order, discontinuous ones included, and its route or
+ * `Unresolved`. A borderline unit also carries route variants, its route
+ * first, and a click picks one of them (amended 2026-09-30).
+ */
+export type Unit = {
+	segments: number[];
+	route: Route | "Unresolved";
+	variants?: Route[];
+};

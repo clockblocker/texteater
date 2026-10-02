@@ -200,7 +200,10 @@ describe("segment.inUnits on a nonce noun's No Target with its article", () => {
 			text: "Der Blarg",
 			verdict: "Stub",
 		});
-		expect(result.grouping).toMatchObject({ decidedPairs: 0, truePairs: 0 });
+		expect(result.grouping).toMatchObject({
+			decidedPairs: 0,
+			truePairs: 0,
+		});
 	});
 
 	test("fails the article split from its noun", () => {

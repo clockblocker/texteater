@@ -4,7 +4,6 @@
 		"src/segment-in-units/**/*.ts",
 		"cli/segment-in-units-lab.ts",
 		"cli/segment-in-units-attribution.ts",
-		"cli/segment-ownership-pilot.ts",
 		"tests/segment-in-units/**/*.ts"
 	]
 }

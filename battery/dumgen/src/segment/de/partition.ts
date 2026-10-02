@@ -1,19 +1,15 @@
 /**
- * Turns judged links between pieces into a partition, and a partition with
- * routes into a `segment.inUnits` output. Every piece ends in exactly one
- * unit.
+ * Turns links between pieces into a partition, and a partition with routes
+ * into units. Every piece ends in exactly one unit.
  */
-import type {
-	SegmentInUnitsOutput,
-	Unit,
-} from "../../evaluation/spec-corpus/segment-in-units.js";
+import type { Unit } from "../segmented-sentence.js";
 import { type RouteKey, routeOf } from "./routes.js";
 import type { Sentence } from "./sentence.js";
 
 /** Groups of piece ids, each sorted, ordered by first piece. */
 export type Partition = readonly (readonly number[])[];
 
-export class UnionFind {
+class UnionFind {
 	readonly #parent = new Map<number, number>();
 	find(id: number): number {
 		let root = id;
@@ -48,19 +44,15 @@ export function partitionOf(
 		.sort((a, b) => (a[0] ?? 0) - (b[0] ?? 0));
 }
 
-export function singletons(sentence: Sentence): Partition {
-	return sentence.pieces.map((piece) => [piece.id]);
-}
-
 export const groupKey = (group: readonly number[]) => group.join(",");
 
-/** The output: each group's Segments with its route key. */
-export function outputOf(
+/** Each group's Segments with its route. */
+export function unitsOf(
 	sentence: Sentence,
 	partition: Partition,
 	routeFor: (group: readonly number[]) => RouteKey,
-): SegmentInUnitsOutput {
-	const units: Unit[] = partition.map((group) => ({
+): Unit[] {
+	return partition.map((group) => ({
 		segments: group.map((id) => {
 			const piece = sentence.pieces[id - 1];
 			if (!piece) throw Error(`No piece p${id}`);
@@ -68,28 +60,6 @@ export function outputOf(
 		}),
 		route: routeOf(routeFor(group)),
 	}));
-	return { units };
-}
-
-/** The gold partition of a case: its units' pieces; unannotated pieces alone. */
-export function partitionOfUnits(
-	sentence: Sentence,
-	units: readonly Unit[],
-): Partition {
-	const bySegment = new Map(
-		sentence.pieces.map((piece) => [piece.segment, piece.id]),
-	);
-	const links: [number, number][] = [];
-	for (const unit of units) {
-		const ids = unit.segments.flatMap(
-			(segment) => bySegment.get(segment) ?? [],
-		);
-		for (const id of ids.slice(1)) links.push([ids[0] ?? id, id]);
-	}
-	return partitionOf(
-		sentence.pieces.map((piece) => piece.id),
-		links,
-	);
 }
 
 /** The argmax key of a distribution, ties to the first key. */

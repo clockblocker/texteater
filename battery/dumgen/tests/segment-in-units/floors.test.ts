@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test";
-import { slotLinks } from "../../src/segment-in-units/de/arms/candidates.js";
+import type { Slot } from "../../src/segment/de/candidates.js";
+import { slotLinks } from "../../src/segment/de/nomination.js";
+import type { Piece } from "../../src/segment/de/sentence.js";
 import {
 	floorsKey,
 	floorsOf,
@@ -7,12 +9,6 @@ import {
 	referencePolicy,
 	runFloors,
 } from "../../src/segment-in-units/de/arms/reference.js";
-import {
-	combinedGrid,
-	singleGrid,
-} from "../../src/segment-in-units/de/arms/reference-floors.js";
-import type { Slot } from "../../src/segment-in-units/de/candidates.js";
-import type { Piece } from "../../src/segment-in-units/de/sentence.js";
 import type { FocusSet } from "../../src/segment-in-units/lab/corpus.js";
 import type { PolicySummary } from "../../src/segment-in-units/lab/metrics.js";
 import type { OutcomeRow } from "../../src/segment-in-units/lab/outcomes.js";
@@ -39,7 +35,7 @@ test("the reference's floors are the run's with the floors #762 adopted", () => 
 	});
 	expect(floorsOf({})).toEqual(referenceFloors);
 	expect(floorsOf({ floors: "run" })).toEqual(runFloors);
-	expect(floorsOf({ expression: "0.6", grid: "single" })).toEqual({
+	expect(floorsOf({ expression: "0.6" })).toEqual({
 		...referenceFloors,
 		expression: 0.6,
 	});
@@ -55,10 +51,6 @@ test("a setting is named after the floors it moves from the run's", () => {
 	expect(floorsKey({ ...runFloors, fixed: 0.4, expression: 0.6 })).toBe(
 		"expression=0.6,fixed=0.4",
 	);
-	const keys = [...singleGrid, ...combinedGrid].map(floorsKey);
-	expect(new Set(keys).size).toBe(keys.length);
-	expect(keys).not.toContain(referencePolicy);
-	expect(keys).toContain(floorsKey(referenceFloors));
 });
 
 const piece = (id: number, text: string): Piece => ({

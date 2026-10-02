@@ -130,7 +130,6 @@ const traced = await Promise.all(
 				repetition,
 				calls,
 				options: {},
-				noise: [],
 			});
 			freshCalls.push(...calls.filter((call) => !call.cached));
 			const cached = run.repetitions[repetition]?.outputs?.[policy];

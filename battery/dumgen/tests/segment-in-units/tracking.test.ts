@@ -9,7 +9,8 @@ import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 } from "../../src/evaluation/spec-corpus/segment-in-units.js";
-import { oracleArm } from "../../src/segment-in-units/de/arms/baselines.js";
+import { noul } from "../../src/segment/ask.js";
+import { candidates4Arm } from "../../src/segment-in-units/de/arms/candidates4.js";
 import {
 	deltaBetween,
 	findNoise,
@@ -25,7 +26,6 @@ import {
 import {
 	hashOf,
 	Jev,
-	noul,
 	pinnedJevModel,
 	writeCache,
 } from "../../src/segment-in-units/lab/jev.js";
@@ -389,8 +389,8 @@ test("a repetition offset misses the cache while sending the same prompts", asyn
 		});
 		const run = await runArm({
 			runId: `offset-${repetitionOffset}`,
-			arm: oracleArm,
-			options: {},
+			arm: candidates4Arm,
+			options: { final: "1", closed: "1" },
 			set,
 			subset: "all",
 			cases: [labCase],
@@ -639,7 +639,7 @@ test("the lab tracks tokens only: no USD in its code, committed evidence or doc"
 			: [path];
 	const code = [
 		"cli/segment-in-units-lab.ts",
-		"cli/segment-ownership-pilot.ts",
+		...filesUnder(join(packageRoot, "src/segment")),
 		...filesUnder(join(packageRoot, "src/segment-in-units")),
 	].map((path) => resolve(packageRoot, path));
 	const evidence = filesUnder(

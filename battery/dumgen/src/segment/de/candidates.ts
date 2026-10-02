@@ -1,11 +1,13 @@
 /**
- * Deterministic candidate generators for German satellites: code finds the
- * pieces that could attach to another word (articles, separable particles,
- * auxiliaries, reflexives, expletive es, governed prepositions, split
- * adverbs, correlators) from dumspec's inventories and closed word lists,
- * and the judge only picks the host among a bounded window, or `none`.
+ * Deterministic candidates for German units. Code finds the pieces that
+ * could attach to another word (articles, separable particles,
+ * auxiliaries, reflexives, expletive es, governed prepositions, a noun's
+ * idiom verb), the pairs that could be one unit (split adverbs,
+ * correlators, circumpositions, multiword names) and the spans a Saying
+ * could cover. The judge only picks a host among a bounded window, or
+ * `none`, and weighs the pairs and spans.
  */
-import { authoredRealizations, germanAdpositionEntry } from "dumspec";
+import type { GermanInventory } from "./inventory.js";
 import type { Piece, Sentence } from "./sentence.js";
 
 export type SlotKind =
@@ -53,6 +55,9 @@ const articleForms = new Set([
 	"nen",
 ]);
 
+/** Shortened articles: `n Auto`, `nem`, `ner`. */
+const shortArticleForms = new Set(["n", "'n", "nem", "ner"]);
+
 /** Separable verb prefixes, the her-/hin- adverbs and their r- shorthands. */
 export const particleForms = new Set(
 	"ab an auf aus bei dabei dar durch ein empor entgegen entlang fehl fern fest fort frei gegenüber heim her herab heran herauf heraus herbei herein herüber herum herunter hervor hin hinab hinauf hinaus hinein hinüber hinunter hinweg hinzu hoch los mit nach nieder raus rein rüber runter rauf ran statt teil um vor voran voraus vorbei vorüber vorweg weg weiter wieder zu zurecht zurück zusammen zuvor über unter kennen preis bloß kaputt klar".split(
@@ -60,7 +65,7 @@ export const particleForms = new Set(
 	),
 );
 
-export /** Particles v3 adds after the v2 run missed them (umher, übrig, …). */
+/** More particles: umher, übrig, … */
 const moreParticleForms = new Set(
 	"umher übrig fertig auseinander beiseite hinterher davon dazu dahin daher vorwärts rückwärts entzwei bereit ein".split(
 		" ",
@@ -78,24 +83,6 @@ export const reflexiveForms = new Set([
 ]);
 export const expletiveForms = new Set(["es", "'s", "s"]);
 
-let auxiliaryForms: Set<string> | undefined;
-export function isAuxiliaryForm(text: string): boolean {
-	auxiliaryForms ??= new Set(
-		authoredRealizations
-			.filter((realization) => realization.member.lemma.kind === "AUX")
-			.map((realization) => realization.spelled.toLowerCase()),
-	);
-	return auxiliaryForms.has(text.toLowerCase());
-}
-
-/** Whether dumspec's ADP Case Table lists the word as a Lexeme ADP, in any position. */
-export function isAdposition(word: string): boolean {
-	return (
-		germanAdpositionEntry({ family: "Lexeme", canonicalForm: word }) !==
-		null
-	);
-}
-
 const lower = (piece: Piece) => piece.text.toLowerCase();
 const window = (
 	sentence: Sentence,
@@ -110,17 +97,13 @@ const window = (
 			other.id <= piece.id + after,
 	);
 
-/** Shortened articles only v2 lists: `n Auto`, `nem`, `ner`. */
-const shortArticleForms = new Set(["n", "'n", "nem", "ner"]);
-
 /** A fused word's article piece (`m` of `im`) stands for its article. */
-function isArticle(piece: Piece, version = 1): boolean {
+function isArticle(piece: Piece): boolean {
 	if (piece.fusedWord && piece.surface !== piece.text)
 		return articleForms.has(piece.surface.toLowerCase());
 	return (
 		!piece.fusedWord &&
-		(articleForms.has(lower(piece)) ||
-			(version >= 2 && shortArticleForms.has(lower(piece))))
+		(articleForms.has(lower(piece)) || shortArticleForms.has(lower(piece)))
 	);
 }
 
@@ -135,32 +118,28 @@ const capitalizedFunctionWords = new Set(
 export function nounLike(piece: Piece): boolean {
 	return (
 		/^\p{Lu}/u.test(piece.text) &&
-		!isArticle(piece, 2) &&
+		!isArticle(piece) &&
 		!capitalizedFunctionWords.has(lower(piece))
 	);
 }
 
-/**
- * The satellite slots of a Sentence. `isAuxiliary` defaults to dumspec's
- * current AUX spellings; a replay pins the inventory its run read.
- */
+/** The satellite slots of a Sentence, and an idiom slot for each noun. */
 export function slotsOf(
 	sentence: Sentence,
-	version = 1,
-	isAuxiliary: (text: string) => boolean = isAuxiliaryForm,
+	inventory: GermanInventory,
 ): Slot[] {
 	const slots: Slot[] = [];
 	for (const piece of sentence.pieces) {
 		const text = lower(piece);
-		if (version >= 2 && nounLike(piece))
+		if (nounLike(piece))
 			slots.push({
 				kind: "idiom",
 				piece,
 				hosts: window(sentence, piece, 10, 10).filter(
-					(other) => !nounLike(other) && !isArticle(other, 2),
+					(other) => !nounLike(other) && !isArticle(other),
 				),
 			});
-		if (isArticle(piece, version)) {
+		if (isArticle(piece)) {
 			const hosts = sentence.pieces.filter(
 				(other) =>
 					other.id > piece.id &&
@@ -168,12 +147,11 @@ export function slotsOf(
 					other.clause === piece.clause,
 			);
 			if (hosts.length > 0) slots.push({ kind: "article", piece, hosts });
-			// v3: `ein` is also a particle (trat … ein).
-			if (!(version >= 3 && text === "ein")) continue;
+			// `ein` is also a particle (trat … ein).
+			if (text !== "ein") continue;
 		}
 		if (
-			(particleForms.has(text) ||
-				(version >= 3 && moreParticleForms.has(text))) &&
+			(particleForms.has(text) || moreParticleForms.has(text)) &&
 			!piece.fusedWord
 		)
 			slots.push({
@@ -183,7 +161,7 @@ export function slotsOf(
 					(other) => other.id < piece.id && other.id >= piece.id - 15,
 				),
 			});
-		if (isAuxiliary(text))
+		if (inventory.isAuxiliary(text))
 			slots.push({
 				kind: "auxiliary",
 				piece,
@@ -201,7 +179,7 @@ export function slotsOf(
 				piece,
 				hosts: window(sentence, piece, 8, 8),
 			});
-		if (isAdposition(piece.surface))
+		if (inventory.isAdposition(piece.surface))
 			slots.push({
 				kind: "preposition",
 				piece,
@@ -254,7 +232,7 @@ const correlators: readonly (readonly [string, string, string])[] = [
 	["so", "dass", "so … dass"],
 ];
 
-/** Two adjacent words v2 proposes as one subordinator (#735 keeps *X dass* a Locution). */
+/** Two adjacent words proposed as one subordinator (#735 keeps *X dass* a Locution). */
 const adjacentConjunctions: readonly (readonly [string, string])[] = [
 	["ohne", "dass"],
 	["ohne", "daß"],
@@ -299,61 +277,55 @@ const nameConnectors = new Set([
 
 export function pairCandidatesOf(
 	sentence: Sentence,
-	version = 1,
+	inventory: GermanInventory,
 ): PairCandidate[] {
 	const pairs: PairCandidate[] = [];
-	if (version >= 2) {
-		const { pieces } = sentence;
-		for (const [index, left] of pieces.entries()) {
-			const right = pieces[index + 1];
-			if (!right) continue;
-			for (const [first, second] of adjacentConjunctions)
-				if (lower(left) === first && lower(right) === second)
-					pairs.push({
-						kind: "correlator",
-						left,
-						right,
-						name: `${first} ${second}`,
-					});
-			// Names: capitalized pieces, possibly joined by von, van, de.
-			if (nounLike(left) && left.clause === right.clause) {
-				let next = index + 1;
-				while (
-					pieces[next] &&
-					nameConnectors.has(lower(pieces[next] as Piece)) &&
-					next - index < 3
-				)
-					next++;
-				const partner = pieces[next];
-				if (
-					partner &&
-					nounLike(partner) &&
-					partner.clause === left.clause
-				)
-					pairs.push({
-						kind: "name",
-						left,
-						right: partner,
-						name: "",
-					});
-			}
+	const { pieces } = sentence;
+	for (const [index, left] of pieces.entries()) {
+		const right = pieces[index + 1];
+		if (!right) continue;
+		for (const [first, second] of adjacentConjunctions)
+			if (lower(left) === first && lower(right) === second)
+				pairs.push({
+					kind: "correlator",
+					left,
+					right,
+					name: `${first} ${second}`,
+				});
+		// Names: capitalized pieces, possibly joined by von, van, de.
+		if (nounLike(left) && left.clause === right.clause) {
+			let next = index + 1;
+			while (
+				pieces[next] &&
+				nameConnectors.has(lower(pieces[next] as Piece)) &&
+				next - index < 3
+			)
+				next++;
+			const partner = pieces[next];
+			if (partner && nounLike(partner) && partner.clause === left.clause)
+				pairs.push({
+					kind: "name",
+					left,
+					right: partner,
+					name: "",
+				});
 		}
-		for (const left of pieces) {
-			if (!isAdposition(left.surface) || left.fusedWord) continue;
-			for (const right of pieces)
-				if (
-					right.id > left.id + 1 &&
-					right.id - left.id <= 8 &&
-					right.clause === left.clause &&
-					circumpositionTails.has(lower(right))
-				)
-					pairs.push({
-						kind: "circumposition",
-						left,
-						right,
-						name: `${lower(left)} … ${lower(right)}`,
-					});
-		}
+	}
+	for (const left of pieces) {
+		if (!inventory.isAdposition(left.surface) || left.fusedWord) continue;
+		for (const right of pieces)
+			if (
+				right.id > left.id + 1 &&
+				right.id - left.id <= 8 &&
+				right.clause === left.clause &&
+				circumpositionTails.has(lower(right))
+			)
+				pairs.push({
+					kind: "circumposition",
+					left,
+					right,
+					name: `${lower(left)} … ${lower(right)}`,
+				});
 	}
 	for (const left of sentence.pieces) {
 		const head = lower(left);
@@ -384,7 +356,7 @@ export function pairCandidatesOf(
 	return pairs;
 }
 
-/** A span v2 asks about as a whole Saying. */
+/** A span the judge weighs as a whole Saying. */
 export type SayingSpan = {
 	readonly pieces: readonly Piece[];
 	readonly text: string;
@@ -492,35 +464,26 @@ export function fusedSiblings(
 	return siblings;
 }
 
-/** An adposition piece right before a phrase: `in` of `in den Sand`. */
-export function isAdpositionPiece(piece: Piece): boolean {
-	return isAdposition(piece.surface);
-}
-
 /** The first piece of its clause: a capitalized one may be a verb, not a noun. */
-export function clauseInitial(sentence: Sentence, piece: Piece): boolean {
+function clauseInitial(sentence: Sentence, piece: Piece): boolean {
 	const previous = sentence.pieces[piece.id - 2];
 	return previous === undefined || previous.clause !== piece.clause;
 }
 
 /**
- * The hosts an idiom slot offers a noun. v2 left out every capitalized
- * piece as a noun, so a clause-initial imperative (`Blase … Trübsal`) could
- * never host; `fixed` keeps clause-initial pieces.
+ * The hosts an idiom slot offers a noun when step 0 asks it again: unlike
+ * the first request's, a clause-initial capitalized piece may host
+ * (`Blase … Trübsal`).
  */
-export function idiomHosts(
-	sentence: Sentence,
-	piece: Piece,
-	fixed: boolean,
-): Piece[] {
+export function idiomHosts(sentence: Sentence, piece: Piece): Piece[] {
 	return window(sentence, piece, 10, 10).filter(
 		(other) =>
-			(!nounLike(other) || (fixed && clauseInitial(sentence, other))) &&
-			!isArticle(other, 2),
+			(!nounLike(other) || clauseInitial(sentence, other)) &&
+			!isArticle(other),
 	);
 }
 
-/** Non-adjacent correlators v2 missed: the old spelling daß. */
+/** Non-adjacent correlators in the old spelling daß. */
 export function oldSpellingCorrelators(sentence: Sentence): PairCandidate[] {
 	const pairs: PairCandidate[] = [];
 	for (const left of sentence.pieces)
@@ -546,7 +509,7 @@ const numberWords = new Set(
 	),
 );
 
-export const isNumberPiece = (piece: Piece) =>
+const isNumberPiece = (piece: Piece) =>
 	/^\p{N}+([.,]\p{N}+)?$/u.test(piece.text) || numberWords.has(lower(piece));
 
 /** Number, `Komma` or `bis`, number: one Locution/NUM (drei Komma vierzehn, zwölf bis sechzehn). */
@@ -575,47 +538,3 @@ export const isSymbolPiece = (piece: Piece) =>
 /** An abbreviation's shape: letters with inner dots, or a short word ending in a dot. */
 export const isAbbreviationPiece = (piece: Piece) =>
 	/\p{L}\.\p{L}/u.test(piece.text) || /^\p{L}{1,5}\.$/u.test(piece.text);
-
-/**
- * The written words of a sentence, each the piece ids of one word: a fused
- * word (`zu` + `m`) is one word.
- */
-export function writtenWords(sentence: Sentence): number[][] {
-	const words: number[][] = [];
-	for (const piece of sentence.pieces) {
-		const last = words[words.length - 1];
-		const previous = last
-			? sentence.pieces[(last[last.length - 1] ?? 0) - 1]
-			: undefined;
-		if (
-			last &&
-			previous &&
-			piece.fusedWord &&
-			previous.fusedWord &&
-			previous.segment === piece.segment - 1
-		)
-			last.push(piece.id);
-		else words.push([piece.id]);
-	}
-	return words;
-}
-
-/** Every clause-internal run of 2 to 4 written words, as piece ids. */
-export function contiguousSpans(sentence: Sentence, most = 4): number[][] {
-	const words = writtenWords(sentence);
-	const spans: number[][] = [];
-	for (let start = 0; start < words.length; start++)
-		for (
-			let length = 2;
-			length <= most && start + length <= words.length;
-			length++
-		) {
-			const run = words.slice(start, start + length);
-			const clauses = new Set(
-				run.flat().map((id) => sentence.pieces[id - 1]?.clause),
-			);
-			if (clauses.size !== 1) break;
-			spans.push(run.flat());
-		}
-	return spans;
-}

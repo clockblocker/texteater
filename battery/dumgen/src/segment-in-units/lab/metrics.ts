@@ -27,12 +27,11 @@ import {
 import { toleratedPairOf } from "../../evaluation/spec-corpus/segment-in-units-route-tolerance.js";
 import {
 	expletiveForms,
-	isAdposition,
-	isAuxiliaryForm,
 	particleForms,
 	reflexiveForms,
-} from "../de/candidates.js";
-import { keyOf } from "../de/routes.js";
+} from "../../segment/de/candidates.js";
+import { authoredInventory } from "../../segment/de/inventory.js";
+import { keyOf } from "../../segment/de/routes.js";
 import type { LabCase } from "./corpus.js";
 import type { CallRecord } from "./jev.js";
 import type { LabRun, RepetitionRecord } from "./run.js";
@@ -1108,7 +1107,7 @@ export const byPhenomenon = (labCase: LabCase, unit: Unit): string[] => {
 						: "particle verb, split <5 pieces"
 					: "particle verb, adjacent",
 			);
-		if (texts.some((text) => isAuxiliaryForm(text)))
+		if (texts.some((text) => authoredInventory.isAuxiliary(text)))
 			tags.push("VERB with auxiliary");
 		if (texts.some((text) => reflexiveForms.has(text)))
 			tags.push("VERB with reflexive");
@@ -1120,7 +1119,7 @@ export const byPhenomenon = (labCase: LabCase, unit: Unit): string[] => {
 	if (
 		unit.segments.length > 1 &&
 		/^Lexeme\/(VERB|ADJ|NOUN)$/u.test(route) &&
-		surfaces.some((surface) => isAdposition(surface))
+		surfaces.some((surface) => authoredInventory.isAdposition(surface))
 	)
 		tags.push(`governed preposition (${route.slice(7)})`);
 	if (/^Lexeme\/(NOUN|PROPN)$/u.test(route) && unit.segments.length > 1)

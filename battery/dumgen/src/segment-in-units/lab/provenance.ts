@@ -1,9 +1,8 @@
 /**
  * What a lab run pins so its numbers can be traced to the code, gold, Rules,
- * prompts and model that produced them: the run manifest. `run`, `noise`
- * and the ownership pilot all write one, beside the run's outcomes and
- * summary, under `evidence/segment-in-units-lab/runs/<runId>/` (the pilot
- * under `.runs/`).
+ * prompts and model that produced them: the run manifest. `run` and
+ * `noise` write one, beside the run's outcomes and summary, under
+ * `evidence/segment-in-units-lab/runs/<runId>/`.
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -151,7 +150,7 @@ export async function dumspecFingerprint(): Promise<{
 
 export type RunManifest = {
 	readonly runId: string;
-	/** `run`, `noise` or `pilot`. */
+	/** `run` or `noise`; the retired ownership pilot wrote `pilot`. */
 	readonly kind: string;
 	readonly createdAt: string;
 	readonly parent: string | null;

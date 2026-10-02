@@ -4,17 +4,14 @@ import {
 	type SegmentInUnitsOutput,
 	segmentInUnitsOutputSchema,
 } from "../../src/evaluation/spec-corpus/segment-in-units.js";
+import { closedClassRouteShares } from "../../src/segment/de/closed-class.js";
+import { routeVariants } from "../../src/segment/de/routing.js";
+import { type Sentence, sentenceOf } from "../../src/segment/de/sentence.js";
 import {
 	pickedOutput,
 	pickId,
 	pickQuestions,
-	routeVariants,
 } from "../../src/segment-in-units/de/arms/reference.js";
-import { closedClassRouteShares } from "../../src/segment-in-units/de/closed-class.js";
-import {
-	type Sentence,
-	sentenceOf,
-} from "../../src/segment-in-units/de/sentence.js";
 import type { LabCase } from "../../src/segment-in-units/lab/corpus.js";
 import { pinnedJevModel } from "../../src/segment-in-units/lab/jev.js";
 import { summarizePolicy } from "../../src/segment-in-units/lab/metrics.js";

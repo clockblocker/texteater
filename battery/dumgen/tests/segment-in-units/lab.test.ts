@@ -4,16 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import type { SegmentInUnitsInput } from "../../src/evaluation/spec-corpus/segment-in-units.js";
-import { oracleArm } from "../../src/segment-in-units/de/arms/baselines.js";
-import { pairwiseArm } from "../../src/segment-in-units/de/arms/pairs.js";
-import {
-	partitionOf,
-	partitionOfUnits,
-} from "../../src/segment-in-units/de/partition.js";
-import {
-	sentenceOf,
-	taggedText,
-} from "../../src/segment-in-units/de/sentence.js";
+import { arms } from "../../src/segment-in-units/de/arms/index.js";
 import {
 	archivedSetPath,
 	type LabCase,
@@ -68,64 +59,29 @@ const labCase: LabCase = {
 	ruleExample: false,
 };
 
-test("pieces are numbered from 1, fused pieces keep their written word", () => {
-	const sentence = sentenceOf(input);
-	expect(sentence.pieces.map((piece) => piece.text)).toEqual([
-		"Er",
-		"zog",
-		"sich",
-		"an",
-		"zu",
-		"m",
-		"Glück",
-	]);
-	expect(sentence.pieces[5]).toMatchObject({
-		id: 6,
-		surface: "dem",
-		fusedWord: "zum",
-		clause: 1,
-	});
-	expect(taggedText(sentence)).toBe(
-		"Er[1] zog[2] sich[3] an[4], zu[5]m[6] Glück[7].",
-	);
-	expect(partitionOfUnits(sentence, labCase.idealOutput.units)).toEqual([
-		[1],
-		[2, 3, 4],
-		[5, 6, 7],
-	]);
-	expect(partitionOf([1, 2, 3, 4], [[4, 2]])).toEqual([[1], [2, 4], [3]]);
-});
-
-/** A judge that links exactly the gold pairs and names the gold route. */
+/**
+ * A judge that knows the gold: sich and an take zog as host, zu, m and
+ * Glück are fixed words of one expression, and each gold group gets its
+ * gold route. Everything else is answered no: a Noul 0.1, a Choice its
+ * last option (`none`, `Other`, …).
+ */
 const goldJudge: TypeSafeExecutor = async (request) => {
-	const gold: Record<string, string> = {
-		"1": "Lexeme/PRON",
-		"2_3_4": "Lexeme/VERB",
-		"5_6_7": "Locution/ADV",
+	const known: Record<string, string> = {
+		s_reflexive_3: "p2",
+		s_particle_4: "p2",
+		r_1: "Lexeme/PRON",
+		r_2_3_4: "Lexeme/VERB",
+		r_5_6_7: "Locution/ADV",
 	};
-	const together = (a: number, b: number) =>
-		[
-			[2, 3, 4],
-			[5, 6, 7],
-		].some((group) => group.includes(a) && group.includes(b));
+	const fixed = new Set(["f_5", "f_6", "f_7", "e_5_6", "e_5_7", "e_6_7"]);
 	const answers = Object.fromEntries(
 		Object.entries(request.questions).map(([id, question]) => {
-			if (question.type === "noul") {
-				const [, a, b] = id.split("_").map(Number);
-				return [
-					id,
-					{
-						type: "noul",
-						noul: together(a ?? 0, b ?? 0) ? 0.9 : 0.1,
-					},
-				];
-			}
+			if (question.type === "noul")
+				return [id, { type: "noul", noul: fixed.has(id) ? 0.9 : 0.1 }];
 			const keys = Object.keys(
 				question.type === "choice" ? question.criteria : {},
 			);
-			const wanted = id.startsWith("r_")
-				? (gold[id.slice(2)] ?? keys[0])
-				: keys[keys.length - 1];
+			const wanted = known[id] ?? keys[keys.length - 1];
 			return [
 				id,
 				{
@@ -155,13 +111,21 @@ const set: LabSet = {
 	cases: [labCase],
 };
 
-test("the pairwise and oracle arms score every gold unit with a gold judge", async () => {
+test("candidates4 and the reference score every gold unit with a gold judge, through the lab's runner", async () => {
 	const jev = new Jev({ cacheDirectory: directory, executor: goldJudge });
-	for (const arm of [pairwiseArm, oracleArm]) {
+	for (const [arm, options, policy] of [
+		[
+			arms.candidates4,
+			{ final: "1", closed: "1" },
+			"step0+saying+maxim@0.7+closed",
+		],
+		[arms.reference, {}, "idiom=0.6,fixed=0.3,saying=0.4"],
+	] as const) {
+		if (!arm) throw Error("A kept arm is missing");
 		const run = await runArm({
 			runId: `test-${arm.id}`,
 			arm,
-			options: {},
+			options,
 			set,
 			subset: "all",
 			cases: [labCase],
@@ -170,7 +134,6 @@ test("the pairwise and oracle arms score every gold unit with a gold judge", asy
 			concurrency: 2,
 			gitHead: "test",
 		});
-		const policy = arm.id === "oracle" ? "identity" : "t0.5";
 		const summary = summarizePolicy(
 			run,
 			new Map([[labCase.id, labCase]]),
@@ -184,6 +147,14 @@ test("the pairwise and oracle arms score every gold unit with a gold judge", asy
 		});
 		expect(summary.flips).toBe(0);
 	}
+	expect(
+		arms.candidates4?.run(input, {
+			jev,
+			repetition: 0,
+			calls: [],
+			options: { final: "1", closed: "1", span: "1" },
+		}),
+	).rejects.toThrow("other levers are retired");
 });
 
 test("a run's set is read by its hash, from the archive once a refreeze replaced it", async () => {

@@ -6,6 +6,7 @@
  *   bun run segment-in-units-lab freeze [--force]
  *   bun run segment-in-units-lab run --arm pairwise --subset smoke --reps 1 [--opt render=tagged]
  *       [--parent <runId>] [--hypothesis "<one line>"] [--allow-dirty] [--model jev-1.13.0]
+ *   bun run segment-in-units-lab replay --run <runId>
  *   bun run segment-in-units-lab report --run <runId> [--subset slice300]
  *   bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:policy]
  *       [--noise <noiseRunId>] [--record [--verdict "<text>"]]
@@ -62,7 +63,11 @@ import {
 	scoreFocus,
 	type UnitTally,
 } from "../src/segment-in-units/lab/focus.js";
-import { type CallRecord, Jev } from "../src/segment-in-units/lab/jev.js";
+import {
+	type CallRecord,
+	Jev,
+	Semaphore,
+} from "../src/segment-in-units/lab/jev.js";
 import {
 	appendLedger,
 	type CompareEntry,
@@ -71,7 +76,6 @@ import {
 	spendOf,
 } from "../src/segment-in-units/lab/ledger.js";
 import { questionsPerCall } from "../src/segment-in-units/lab/limits.js";
-import { Luna } from "../src/segment-in-units/lab/luna.js";
 import {
 	breakdown,
 	byGoldRoute,
@@ -313,13 +317,6 @@ async function execute(args: {
 			spentNow += tokens;
 		},
 	});
-	const luna = arm.usesLuna
-		? new Luna({
-				cacheDirectory: join(labRoot, "cache"),
-				concurrency: 6,
-				offline: values.offline,
-			})
-		: undefined;
 	const slug = Object.entries(args.options)
 		.map(([key, value]) => `${key}-${value}`)
 		.join("_")
@@ -350,7 +347,6 @@ async function execute(args: {
 		repetitions: args.repetitions,
 		repetitionOffset: args.repetitionOffset,
 		jev,
-		...(luna ? { luna } : {}),
 		concurrency: Number(values.concurrency),
 		gitHead: args.provenance.gitHead,
 		codeHash: args.provenance.codeHash,
@@ -369,20 +365,12 @@ async function execute(args: {
 	});
 	await saveLabRun(labRoot, labRun);
 	const { patch, ...provenance } = args.provenance;
-	const promptHashes = {
-		...Object.fromEntries(
-			Object.entries(jev.promptHashes()).map(([stage, hash]) => [
-				`jev/${stage}`,
-				hash,
-			]),
-		),
-		...Object.fromEntries(
-			Object.entries(luna?.promptHashes() ?? {}).map(([stage, hash]) => [
-				`luna/${stage}`,
-				hash,
-			]),
-		),
-	};
+	const promptHashes = Object.fromEntries(
+		Object.entries(jev.promptHashes()).map(([stage, hash]) => [
+			`jev/${stage}`,
+			hash,
+		]),
+	);
 	const manifest: RunManifest = {
 		runId,
 		kind: args.kind,
@@ -458,6 +446,105 @@ async function run() {
 		provenance,
 		...(values.model ? { model: values.model } : {}),
 	});
+}
+
+/**
+ * Replays a raw run offline with today's code and compares every policy's
+ * output, per case and repetition, with what the run stored. A cache miss
+ * fails its case. Nothing is asked, written or ledgered; the exit code is 1
+ * when an output differs or a case the run completed fails.
+ */
+async function replayRun() {
+	const runId = values.run ?? "";
+	const original = await loadLabRun(labRoot, runId);
+	const arm = arms[original.arm];
+	if (!arm)
+		throw Error(
+			`${runId} ran ${original.arm}, which is retired; replay it at ec467e8d`,
+		);
+	const set = await loadSet(
+		labRoot,
+		original.set as SetName,
+		original.setHash,
+	);
+	const byId = new Map(set.cases.map((labCase) => [labCase.id, labCase]));
+	const jev = new Jev({
+		cacheDirectory: join(labRoot, "cache"),
+		model: original.model,
+		allowFloatingModel: values["allow-floating-model"],
+		offline: true,
+	});
+	const semaphore = new Semaphore(Number(values.concurrency));
+	let compared = 0;
+	let identical = 0;
+	let fresh = 0;
+	const differing: string[] = [];
+	const failed: string[] = [];
+	const failedBefore: string[] = [];
+	await Promise.all(
+		original.cases.map((caseRun) =>
+			semaphore.use(async () => {
+				const labCase = byId.get(caseRun.id);
+				if (!labCase)
+					throw Error(`${set.name} has no case ${caseRun.id}`);
+				for (const [
+					repetition,
+					recorded,
+				] of caseRun.repetitions.entries()) {
+					const at = `${caseRun.id}#${repetition}`;
+					const calls: CallRecord[] = [];
+					try {
+						const result = await arm.run(labCase.input, {
+							jev,
+							repetition:
+								repetition + (original.repetitionOffset ?? 0),
+							calls,
+							options: original.options,
+						});
+						fresh += calls.filter((call) => !call.cached).length;
+						if (recorded.error) {
+							differing.push(
+								`${at}: the run failed, the replay succeeds`,
+							);
+							continue;
+						}
+						const stored = recorded.outputs ?? {};
+						const policies = new Set([
+							...Object.keys(stored),
+							...Object.keys(result.outputs),
+						]);
+						for (const policy of policies) {
+							compared++;
+							if (
+								stableJson(result.outputs[policy] ?? null) ===
+								stableJson(stored[policy] ?? null)
+							)
+								identical++;
+							else differing.push(`${at} ${policy}`);
+						}
+						if (result.primary !== recorded.primary)
+							differing.push(
+								`${at}: primary ${result.primary}, was ${recorded.primary}`,
+							);
+					} catch (error) {
+						const message =
+							error instanceof Error
+								? error.message
+								: String(error);
+						(recorded.error ? failedBefore : failed).push(
+							`${at}: ${message}`,
+						);
+					}
+				}
+			}),
+		),
+	);
+	console.log(
+		`replay ${runId} (${original.arm} ${stableJson(original.options)}, ${original.cases.length} cases × ${original.repetitions}, set ${set.name}@${set.hash}): ${identical}/${compared} policy outputs identical, ${differing.length} differ, ${failed.length} case repetitions fail, ${failedBefore.length} failed in the run too, ${fresh} fresh calls`,
+	);
+	for (const line of [...differing, ...failed].slice(0, 40))
+		console.log(`  ${line}`);
+	if (differing.length > 0 || failed.length > 0) process.exitCode = 1;
 }
 
 /**
@@ -1431,9 +1518,12 @@ if (command === "freeze") await freeze();
 else if (command === "run") await run();
 else if (command === "report") await report(values.run ?? "");
 else if (command === "compare") await compare();
+else if (command === "replay") await replayRun();
 else if (command === "noise") await noise();
 else if (command === "sweep") await sweep();
 else if (command === "ledger") await ledger();
 else if (command === "limit-qpc") await limitQuestionsPerCall();
 else
-	throw Error("Commands: freeze, run, report, compare, noise, sweep, ledger");
+	throw Error(
+		"Commands: freeze, run, replay, report, compare, noise, sweep, ledger, limit-qpc",
+	);

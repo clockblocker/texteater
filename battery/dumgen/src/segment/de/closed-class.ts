@@ -7,8 +7,8 @@
  * the ruling gives that spelling, and the use implies the route (Dumgen ADR
  * 0007's closed-class rule, extended to PART as #734 allows).
  *
- * The members are encoded here for the lab, not in dumspec; #747 will author
- * them there.
+ * The members are encoded here, not in dumspec; #747 will author them
+ * there.
  */
 import type { RouteKey } from "./routes.js";
 import type { Piece } from "./sentence.js";
@@ -237,7 +237,7 @@ const fixed: Readonly<Record<string, RouteKey>> = {
 	erst: "Lexeme/ADV",
 };
 
-const spelling = (piece: Piece) => piece.text.toLowerCase().replace("ß", "ß");
+const spelling = (piece: Piece) => piece.text.toLowerCase();
 
 export function closedClassQuestion(
 	piece: Piece,

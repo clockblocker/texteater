@@ -1,8 +1,9 @@
 /**
- * The lab's jev client: one System One request per chunk of questions, with
- * every answer cached on disk by (model, state, questions, repetition), so a
- * re-score or a threshold sweep never calls jev again, and each fresh call
- * recorded for the cost ledger. Repetition `r` of a request is its own cache
+ * The lab's jev client, which backs the production stages' `ask` port: one
+ * System One request per chunk of questions, with every answer cached on
+ * disk by (model, state, questions, repetition), so a re-score or a
+ * threshold sweep never calls jev again, and each fresh call recorded for
+ * the cost ledger. Repetition `r` of a request is its own cache
  * entry: a noise rerun offsets its repetitions to miss the cache.
  *
  * The model is pinned: the client requests a jev version, refuses an answer
@@ -20,23 +21,7 @@ import {
 	type Questions,
 	type TypeSafeExecutor,
 } from "promptsmith/typesafe";
-
-export type Answer =
-	| { readonly type: "noul"; readonly noul: number }
-	| {
-			readonly type: "choice";
-			readonly choice: string;
-			readonly confidence: number;
-			readonly probabilities: Readonly<Record<string, number>>;
-	  }
-	| {
-			readonly type: "score";
-			readonly score: number;
-			readonly confidence: number;
-			readonly probabilities: Readonly<Record<string, number>>;
-	  };
-
-export type Answers = Readonly<Record<string, Answer>>;
+import type { Answers } from "../../segment/ask.js";
 
 /** One request as the ledger and the run record see it. */
 export type CallRecord = {
@@ -333,46 +318,3 @@ export class Jev {
 		return result.answers;
 	}
 }
-
-export function noulOf(answers: Answers, id: string): number {
-	const answer = answers[id];
-	if (answer?.type !== "noul") throw Error(`No Noul answer ${id}`);
-	return answer.noul;
-}
-
-export function choiceOf(
-	answers: Answers,
-	id: string,
-): Extract<Answer, { type: "choice" }> {
-	const answer = answers[id];
-	if (answer?.type !== "choice") throw Error(`No Choice answer ${id}`);
-	return answer;
-}
-
-export function scoreOf(
-	answers: Answers,
-	id: string,
-): Extract<Answer, { type: "score" }> {
-	const answer = answers[id];
-	if (answer?.type !== "score") throw Error(`No Score answer ${id}`);
-	return answer;
-}
-
-export const noul = (
-	instructions: EntryType,
-	criteria?: { true?: EntryType; false?: EntryType },
-): Question => ({
-	type: "noul",
-	instructions,
-	...(criteria ? { criteria } : {}),
-});
-
-export const choice = (
-	instructions: EntryType,
-	criteria: Record<string, EntryType>,
-): Question => ({ type: "choice", instructions, criteria });
-
-export const score = (
-	instructions: EntryType,
-	criteria: readonly [EntryType, EntryType, ...EntryType[]],
-): Question => ({ type: "score", instructions, criteria });

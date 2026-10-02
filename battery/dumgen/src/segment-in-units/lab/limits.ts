@@ -5,10 +5,10 @@
  * small-chunk baseline and with the baseline's own repetition noise.
  */
 import type { Questions } from "promptsmith/typesafe";
-import { judgeState } from "../de/arm.js";
-import { sentenceOf } from "../de/sentence.js";
+import { type Answers, noul } from "../../segment/ask.js";
+import { judgeState, sentenceOf } from "../../segment/de/sentence.js";
 import type { LabCase } from "./corpus.js";
-import { type Answers, type CallRecord, type Jev, noul } from "./jev.js";
+import type { CallRecord, Jev } from "./jev.js";
 
 export type ChunkingResult = {
 	readonly questionsPerCall: number;
@@ -50,7 +50,7 @@ export async function questionsPerCall(args: {
 }): Promise<ChunkingResult[]> {
 	const prepared = args.cases.map((labCase) => {
 		const sentence = sentenceOf(labCase.input);
-		const { state, ref } = judgeState(sentence, { options: {} });
+		const { state, ref } = judgeState(sentence);
 		const questions = pairQuestions(labCase, (id) => {
 			const piece = sentence.pieces[id - 1];
 			if (!piece) throw Error(`No piece p${id}`);

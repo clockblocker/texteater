@@ -1,161 +1,92 @@
 /**
- * The candidate reference of #755 behind the lab's stage interfaces
- * (`lab/stages.ts`): candidates4 with `final=1 closed=1`, policy
- * `step0+saying+closed`. That is v3's requests, step 0, the Saying Choice
- * counted on whole + fragment at 0.5, and closed-class identity.
+ * The candidate reference of #755: the production unit stage with the
+ * Saying Choice counted on whole + fragment, no maxim, and the AUX
+ * inventory pinned to the one dumspec authored when the reference run was
+ * made (causative `lassen`, aecec098, came later and changes the
+ * `candidates` request). Behind the lab's stage interfaces
+ * (`lab/stages.ts`), so the attribution can trace it:
  *
- * - **Nomination** sends v3's two requests and the `final` request, and
- *   lists every connection they judged, plus code's own (number ranges,
- *   superlative `am`, the pieces of a split word, the preposition opening a
- *   noun's phrase).
- * - **Resolution** is candidates4's assembly, unchanged: its floors, its
- *   conflict rules and its absorption.
- * - **Routing** is candidates4's, including the merge of adjacent
- *   interjections. Its route requests are batched as the original run
- *   batched them, over the groups of every policy that run built, so they
- *   stay cache hits; groups no batch asked get a request of their own.
+ * - **Nomination** lists every connection the production requests judged,
+ *   plus code's own (number ranges, superlative `am`, the pieces of a
+ *   split word, the preposition opening a noun's phrase).
+ * - **Resolution** is production's membership under the floors.
+ * - **Routing** is production's, with its batched route requests; groups
+ *   no batch asked get `route-extra` (`--opt unasked=unresolved` routes
+ *   them `Unresolved` instead, so a setting runs offline).
  *
- * Replaying the reference run reproduces its cached outputs exactly. The
- * AUX inventory is pinned to the one dumspec authored when that run was
- * made: causative `lassen` (aecec098) came later and changes v3's request.
- *
- * The resolver's floors are parameters (#762). `runFloors` are the
- * reference run's, which its replay reproduces (`--opt floors=run`);
- * `referenceFloors`, the default, are the setting the #762 sweep adopted.
- * `--opt` moves one (`--opt expression=0.6`), and a policy is named after
- * the floors it moves from the run's. No floor changes a request
- * nomination or the historical route batches send, so a setting reads the
- * same cached answers; only groups no batch asked need a request of their
- * own (`--opt unasked=unresolved` routes them `Unresolved` instead).
+ * The floors are parameters (#762). `runFloors` are the reference run's,
+ * which its replay reproduces (`--opt floors=run`); `referenceFloors`, the
+ * default, are the setting the #762 sweep adopted. `--opt` moves one
+ * (`--opt expression=0.6`), and a policy is named after the floors it
+ * moves from the run's.
  */
-import { authoredRealizations } from "dumspec";
 import type { Questions } from "promptsmith/typesafe";
-import type {
-	Route,
-	SegmentInUnitsOutput,
-} from "../../../evaluation/spec-corpus/segment-in-units.js";
+import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
+import { type Answer, choice, choiceOf, noulOf } from "../../../segment/ask.js";
 import {
-	type Answer,
-	type Answers,
-	choice,
-	choiceOf,
-	noulOf,
-} from "../../lab/jev.js";
-import {
-	type Connection,
-	type Edge,
-	type Groups,
+	type AssembledEdge,
+	type Floors,
 	type Membership,
-	type Nomination,
-	type Routed,
-	runStages,
-	type Stages,
-} from "../../lab/stages.js";
-import {
-	type Arm,
-	type ArmContext,
-	type ArmOptions,
-	judgeRoutes,
-	type RouteJudgment,
-	readRoutes,
-	routeQuestions,
-} from "../arm.js";
+	membershipOf,
+} from "../../../segment/de/assembly.js";
 import {
 	fusedSiblings,
-	isAbbreviationPiece,
-	isAdpositionPiece,
 	nounLike,
 	numberRanges,
 	oldSpellingCorrelators,
 	sayingSpans,
 	superlativeLinks,
-} from "../candidates.js";
+} from "../../../segment/de/candidates.js";
+import { germanInventory } from "../../../segment/de/inventory.js";
 import {
-	closedClassQuestion,
-	closedClassRoute,
-	closedClassRouteShares,
-	hasFixedRoute,
-} from "../closed-class.js";
-import { groupKey, outputOf } from "../partition.js";
-import { allRoutes, type RouteKey, routeCriteria, routeOf } from "../routes.js";
-import { slotId, slotLinks } from "./candidates.js";
-import {
-	type AssembledEdge,
-	type AssemblyInput,
-	articleHosts,
-	assemble,
-	type CandidatesCore,
-	candidatesCore,
-	type Family,
-	oneSatellitePerHost,
-	type Policy,
-	policies,
-	policyInput,
-	structuralRoute,
-} from "./candidates2.js";
-import {
-	mergeInterjections,
-	polishedSayings,
+	correlatorId,
+	expressionId,
+	type Nomination,
+	nominate,
+	pairId,
+	reaskedIdiomId,
 	sayingChoiceId,
-	sayingQuestions,
-	stepZeroInput,
-	stepZeroQuestions,
-	v3Options,
-} from "./candidates4.js";
+	slotId,
+} from "../../../segment/de/nomination.js";
+import type { Partition } from "../../../segment/de/partition.js";
+import { routeCriteria } from "../../../segment/de/routes.js";
+import {
+	askRouteBatches,
+	askUnaskedRoutes,
+	type RoutedMembership,
+	routeMembership,
+} from "../../../segment/de/routing.js";
+import type { Reference, Sentence } from "../../../segment/de/sentence.js";
+import {
+	type Connection,
+	type Edge,
+	type Routed,
+	runStages,
+	type Nomination as StageNomination,
+	type Stages,
+} from "../../lab/stages.js";
+import { type Arm, type ArmOptions, askOf } from "../arm.js";
 
 /** The policy of the reference run, which `runFloors` reproduce. */
 export const referencePolicy = "step0+saying+closed";
 
-/** The AUX lemmas dumspec authored when the reference run was made. */
-const referenceAuxiliaryLemmas = new Set([
-	"sein",
-	"haben",
-	"werden",
-	"bekommen",
-]);
-let referenceAuxiliaryForms: Set<string> | undefined;
+/** The inventory with the AUX Lemmas dumspec authored when the reference run was made. */
+const referenceInventory = germanInventory({
+	auxiliaryLemmas: new Set(["sein", "haben", "werden", "bekommen"]),
+});
 
-export function isReferenceAuxiliary(text: string): boolean {
-	referenceAuxiliaryForms ??= new Set(
-		authoredRealizations
-			.filter(
-				({ member }) =>
-					member.lemma.kind === "AUX" &&
-					referenceAuxiliaryLemmas.has(member.lemma.canonicalForm),
-			)
-			.map(({ spelled }) => spelled.toLowerCase()),
-	);
-	return referenceAuxiliaryForms.has(text.toLowerCase());
-}
-
-const full07 = policies["full@0.7"] as Policy;
-
-/**
- * Where the resolver turns a judgment into a supported connection. The
- * historical route batches keep `full@0.7` and the reference's own values
- * whatever the setting, so their requests stay cache hits.
- */
-export type ReferenceFloors = {
-	/** A satellite's top host share (article, particle, auxiliary, reflexive, expletive es, governed preposition). */
-	readonly satellite: number;
-	/** How far a satellite's top host share must exceed `none`'s. */
-	readonly margin: number;
-	/** An idiom host's share, v3's and step 0's re-asked one. */
-	readonly idiom: number;
-	/** An expression pair's Noul. */
-	readonly expression: number;
-	/** The fixedness Noul both pieces of an expression pair need. */
-	readonly fixed: number;
+/** The unit stage's floors and the Saying Choice's floor, counted on whole + fragment. */
+export type ReferenceFloors = Floors & {
 	/** A Saying span's whole + fragment share. */
 	readonly saying: number;
 };
 
-/** The reference run's floors (#755). */
+/** The reference run's floors (#755): candidates v3's full@0.7 and the Saying Choice at 0.5. */
 export const runFloors: ReferenceFloors = {
-	satellite: full07.satellite,
+	satellite: 0.5,
 	margin: 0,
-	idiom: full07.idiom ?? 0.7,
-	expression: full07.expression ?? 0.7,
+	idiom: 0.7,
+	expression: 0.7,
 	fixed: 0.5,
 	saying: 0.5,
 };
@@ -172,9 +103,7 @@ export const referenceFloors: ReferenceFloors = {
 	saying: 0.4,
 };
 
-export const floorNames = Object.keys(
-	runFloors,
-) as readonly (keyof ReferenceFloors)[];
+const floorNames = Object.keys(runFloors) as readonly (keyof ReferenceFloors)[];
 
 /**
  * The floors `--opt` sets, over the reference's own, or over the run's
@@ -209,30 +138,6 @@ export function floorsKey(floors: ReferenceFloors): string {
 		: moved.map((name) => `${name}=${floors[name]}`).join(",");
 }
 
-/** What v3's requests and the `final` request answered. */
-export type ReferenceEvidence = {
-	readonly core: CandidatesCore;
-	readonly final: Answers;
-};
-
-/** The core as a setting reads it: satellite hosts re-read under its margin. */
-function coreUnder(
-	core: CandidatesCore,
-	floors: ReferenceFloors,
-): CandidatesCore {
-	if (floors.margin === runFloors.margin) return core;
-	return {
-		...core,
-		slotAnswers: oneSatellitePerHost(
-			slotLinks(core.slots, core.first, floors.margin),
-		),
-	};
-}
-
-export type ReferenceDetail = {
-	readonly familyOf: (group: readonly number[]) => Family;
-};
-
 const sorted = (ids: readonly number[]) => [...ids].sort((a, b) => a - b);
 const pairKey = (a: number, b: number) => `${Math.min(a, b)},${Math.max(a, b)}`;
 
@@ -248,15 +153,14 @@ function hostShares(answer: Extract<Answer, { type: "choice" }>) {
 }
 
 /**
- * Every connection v3's requests and the `final` request judged, with the
- * floors deciding `supported`, and code's rule connections.
+ * Every connection the nomination requests judged, with the floors
+ * deciding `supported`, and code's rule connections.
  */
-export function referenceConnections(
-	evidence: ReferenceEvidence,
+function referenceConnections(
+	nomination: Nomination,
 	floors: ReferenceFloors = referenceFloors,
 ): Connection[] {
-	const { core, final } = evidence;
-	const { sentence } = core;
+	const { sentence, first, final, inventory } = nomination;
 	const connections: Connection[] = [];
 	const reasked = new Set(
 		Object.keys(final)
@@ -286,7 +190,7 @@ export function referenceConnections(
 			});
 		}
 	};
-	for (const slot of core.slots) {
+	for (const slot of nomination.slots) {
 		if (slot.kind === "idiom" && reasked.has(slot.piece.id)) continue;
 		const question = slotId(slot);
 		const idiom = slot.kind === "idiom";
@@ -294,13 +198,13 @@ export function referenceConnections(
 			slot.kind,
 			slot.piece.id,
 			question,
-			choiceOf(core.first, question),
+			choiceOf(first, question),
 			idiom ? floors.idiom : floors.satellite,
 			idiom ? 0 : floors.margin,
 		);
 	}
 	for (const id of reasked) {
-		const question = `s4_idiom_${id}`;
+		const question = reaskedIdiomId(id);
 		hostConnections(
 			"idiom",
 			id,
@@ -310,9 +214,9 @@ export function referenceConnections(
 			0,
 		);
 	}
-	for (const pair of core.pairs) {
-		const question = `c_${pair.left.id}_${pair.right.id}`;
-		const probability = noulOf(core.first, question);
+	for (const pair of nomination.pairs) {
+		const question = pairId(pair);
+		const probability = noulOf(first, question);
 		const pieces =
 			pair.kind === "name"
 				? sentence.pieces
@@ -334,7 +238,7 @@ export function referenceConnections(
 		});
 	}
 	for (const pair of oldSpellingCorrelators(sentence)) {
-		const question = `c4_${pair.left.id}_${pair.right.id}`;
+		const question = correlatorId(pair);
 		const probability = noulOf(final, question);
 		connections.push({
 			id: question,
@@ -346,8 +250,8 @@ export function referenceConnections(
 			supported: probability >= 0.5,
 		});
 	}
-	for (const link of core.links) {
-		const question = `e_${link.left}_${link.right}`;
+	for (const link of nomination.links) {
+		const question = expressionId(link.left, link.right);
 		connections.push({
 			id: question,
 			kind: "expression",
@@ -357,8 +261,8 @@ export function referenceConnections(
 			probability: link.probability,
 			supported:
 				link.probability >= floors.expression &&
-				(core.fixed.get(link.left) ?? 0) >= floors.fixed &&
-				(core.fixed.get(link.right) ?? 0) >= floors.fixed,
+				(nomination.fixed.get(link.left) ?? 0) >= floors.fixed &&
+				(nomination.fixed.get(link.right) ?? 0) >= floors.fixed,
 		});
 	}
 	for (const span of sayingSpans(sentence)) {
@@ -399,7 +303,9 @@ export function referenceConnections(
 	for (const run of runs) rule("sibling", run.split("_").map(Number), true);
 	// The preposition opening a noun's phrase, before the noun or before any
 	// article that may head to it: absorbed when the noun joins an expression.
-	const articleSlots = core.slots.filter((slot) => slot.kind === "article");
+	const articleSlots = nomination.slots.filter(
+		(slot) => slot.kind === "article",
+	);
 	const prepositions = new Set<string>();
 	for (const piece of sentence.pieces) {
 		if (!nounLike(piece)) continue;
@@ -418,7 +324,7 @@ export function referenceConnections(
 			if (
 				before &&
 				before.clause === piece.clause &&
-				isAdpositionPiece(before)
+				inventory.isAdposition(before.surface)
 			)
 				prepositions.add(`${before.id}_${piece.id}`);
 		}
@@ -426,45 +332,6 @@ export function referenceConnections(
 	for (const entry of prepositions)
 		rule("preposition", entry.split("_").map(Number), true);
 	return connections;
-}
-
-/**
- * The assembly input of `step0+saying`: step 0 over v3's `full@0.7`,
- * Sayings from the Choice, each under the setting's floors.
- */
-function referenceInput(
-	evidence: ReferenceEvidence,
-	floors: ReferenceFloors,
-): {
-	readonly input: AssemblyInput;
-	readonly ranges: readonly (readonly number[])[];
-} {
-	const { final } = evidence;
-	const core = coreUnder(evidence.core, floors);
-	const { input, ranges } = stepZeroInput(
-		core,
-		policyInput(core, {
-			...full07,
-			satellite: floors.satellite,
-			idiom: floors.idiom,
-			expression: floors.expression,
-			fixed: floors.fixed,
-		}),
-		final,
-		floors.idiom,
-	);
-	return {
-		input: {
-			...input,
-			sayings: polishedSayings(
-				core.sentence,
-				final,
-				floors.saying,
-				false,
-			),
-		},
-		ranges,
-	};
 }
 
 /** Which connection, or which rule, drew each assembled edge. */
@@ -562,9 +429,9 @@ function edgesOf(
 	});
 }
 
-/** The judge state's question answers, restricted to what nomination asked. */
+/** The answers behind the connections, and every fixedness Noul. */
 function judgmentsOf(
-	evidence: ReferenceEvidence,
+	nomination: Nomination,
 	connections: readonly Connection[],
 ): Record<string, Answer> {
 	const asked = new Set(
@@ -574,404 +441,92 @@ function judgmentsOf(
 	);
 	const judgments: Record<string, Answer> = {};
 	for (const answers of [
-		evidence.core.first,
-		evidence.core.second,
-		evidence.final,
+		nomination.first,
+		nomination.second,
+		nomination.final,
 	])
 		for (const [id, answer] of Object.entries(answers))
 			if (asked.has(id) || id.startsWith("f_")) judgments[id] = answer;
 	return judgments;
 }
 
-const v3Context = (context: ArmContext): ArmContext => ({
-	...context,
-	options: { ...v3Options },
-});
+const unitFloors = ({ saying: _saying, ...floors }: ReferenceFloors): Floors =>
+	floors;
 
-const ask = (
-	core: CandidatesCore,
-	context: ArmContext,
-	stage: string,
-	questions: Questions,
-) =>
-	context.jev.ask({
-		stage,
-		state: core.state,
-		questions,
-		repetition: context.repetition,
-		calls: context.calls,
-	});
-
-/** v3's two requests and the `final` request: what every setting reads. */
-export async function referenceEvidence(
-	input: Parameters<Arm["run"]>[0],
-	context: ArmContext,
-): Promise<ReferenceEvidence> {
-	const core = await candidatesCore(
-		input,
-		v3Context(context),
-		isReferenceAuxiliary,
-	);
-	const final = await ask(core, context, "final", {
-		...stepZeroQuestions(core),
-		...sayingQuestions(core),
-	});
-	return { core, final };
-}
-
-/** The connections of the evidence, `supported` under the floors. */
-export function nominationOf(
-	evidence: ReferenceEvidence,
-	floors: ReferenceFloors = referenceFloors,
-): Nomination<ReferenceEvidence> {
-	const connections = referenceConnections(evidence, floors);
-	return {
-		pieces: evidence.core.sentence.pieces.map((piece) => piece.id),
-		connections,
-		judgments: judgmentsOf(evidence, connections),
-		evidence,
-	};
-}
-
-export function resolveReference(
-	nomination: Nomination<ReferenceEvidence>,
-	floors: ReferenceFloors = referenceFloors,
-): Membership<ReferenceDetail> {
-	const { core } = nomination.evidence;
-	const { input, ranges } = referenceInput(nomination.evidence, floors);
-	const built = assemble(
-		core.sentence,
-		articleHosts(coreUnder(core, floors)),
-		input,
-	);
-	const rangeKeys = new Set(ranges.map((range) => groupKey(range)));
-	return {
-		partition: built.partition,
-		edges: edgesOf(built.edges, nomination.connections, ranges),
-		detail: {
-			familyOf: (group) =>
-				rangeKeys.has(groupKey(group))
-					? "Locution"
-					: built.familyOf(group),
-		},
-	};
-}
-
-/**
- * The groups the original run's `route2` request asked about, in its order:
- * those of `v3`, `step0`, `step0+saying` and `step0+saying+maxim@0.7` that
- * v3's own route request did not.
- */
-function historicalFreshGroups(
-	evidence: ReferenceEvidence,
-	v3Groups: ReadonlySet<string>,
-): Map<string, readonly number[]> {
-	const { core, final } = evidence;
-	const articleOf = articleHosts(core);
-	const base = policyInput(core, full07);
-	const { input } = stepZeroInput(core, base, final, 0.7);
-	const partitions: Groups[] = [
-		assemble(core.sentence, articleOf, base).partition,
-		assemble(core.sentence, articleOf, input).partition,
-		assemble(core.sentence, articleOf, {
-			...input,
-			sayings: polishedSayings(core.sentence, final, 0.5, false),
-		}).partition,
-		assemble(core.sentence, articleOf, {
-			...input,
-			sayings: polishedSayings(core.sentence, final, 0.7, true),
-		}).partition,
-	];
-	const fresh = new Map<string, readonly number[]>();
-	for (const partition of partitions)
-		for (const group of partition)
-			if (!v3Groups.has(groupKey(group)))
-				fresh.set(groupKey(group), group);
-	return fresh;
-}
-
-function closedQuestions(core: CandidatesCore): Questions {
-	const questions: Questions = {};
-	for (const piece of core.sentence.pieces) {
-		const question = closedClassQuestion(piece);
-		if (question)
-			questions[`cc_${piece.id}`] = choice(
-				question.instructions(core.ref(piece)),
-				question.criteria,
-			);
-	}
-	return questions;
-}
-
-type Routes = ReturnType<typeof readRoutes>;
-
-/**
- * The route requests of the reference run, which no floor changes: v3's
- * route request over its policies' groups, `route2` over the groups the
- * historical policies added and the abbreviations, and closed-class
- * identity.
- */
-export type ReferenceRouteAnswers = {
-	/** Every group the historical batches asked about. */
-	readonly asked: ReadonlySet<string>;
-	readonly routes: Routes;
-	readonly route2: Answers;
-	readonly closed: Answers;
-};
-
-export async function askReferenceRoutes(
-	evidence: ReferenceEvidence,
-	context: ArmContext,
-): Promise<ReferenceRouteAnswers> {
-	const { core } = evidence;
-	const { sentence } = core;
-	const articleOf = articleHosts(core);
-	const v3Partitions = Object.values(policies).map(
-		(policy) =>
-			assemble(sentence, articleOf, policyInput(core, policy)).partition,
-	);
-	const v3Routes = await judgeRoutes(
-		sentence,
-		v3Partitions,
-		v3Context(context),
-	);
-	const v3Groups = new Set(
-		v3Partitions.flatMap((partition) => partition.map(groupKey)),
-	);
-	const fresh = historicalFreshGroups(evidence, v3Groups);
-	const abbreviations: Questions = {};
-	for (const piece of sentence.pieces.filter(isAbbreviationPiece))
-		abbreviations[`ra_${piece.id}`] = choice(
-			`In \`sentence\`, the word ${core.ref(piece)} is a unit on its own. Which route does it take? An abbreviation takes the route of what it stands for (z.B. = zum Beispiel, a Locution ADV).`,
-			routeCriteria(allRoutes, true),
-		);
-	const freshGroups = [...fresh.values()];
-	const route2 = await ask(core, context, "route2", {
-		...routeQuestions(sentence, freshGroups, core.ref, v3Context(context)),
-		...abbreviations,
-	});
-	const freshRoutes = readRoutes(sentence, freshGroups, route2);
-	const closed = await ask(core, context, "closed", closedQuestions(core));
-	return {
-		asked: new Set([...v3Groups, ...fresh.keys()]),
-		routes: {
-			open: new Map([...v3Routes.open, ...freshRoutes.open]),
-			identity: new Map([...v3Routes.identity, ...freshRoutes.identity]),
-			distributions: new Map([
-				...v3Routes.distributions,
-				...freshRoutes.distributions,
-			]),
-		},
-		route2,
-		closed,
-	};
-}
-
-/** The groups of a partition no historical batch asked about. */
-export const unaskedGroups = (
-	answers: ReferenceRouteAnswers,
-	partition: Groups,
-): Groups => partition.filter((group) => !answers.asked.has(groupKey(group)));
-
-/**
- * The route variants of a borderline unit (Dumgen ADR 0007, amended
- * 2026-09-30). When the top two shares of the distribution that decided
- * its route lie within `margin` of each other, the routes within `margin`
- * of the top, its route first, at most `most`; undefined when one route
- * is clear.
- */
-export function routeVariants(
-	route: RouteKey,
-	shares: Readonly<Record<string, number>> | undefined,
-	margin: number,
-	most = 3,
-): RouteKey[] | undefined {
-	if (!shares || route === "Unresolved") return undefined;
-	const ranked = Object.entries(shares)
-		.filter(([key]) => key !== "Unresolved")
-		.sort((a, b) => b[1] - a[1]);
-	const [top, second] = ranked;
-	if (!top || !second || top[1] - second[1] > margin) return undefined;
-	const near = ranked
-		.filter(([, share]) => share >= top[1] - margin)
-		.map(([key]) => key);
-	const variants = [route, ...near.filter((key) => key !== route)].slice(
-		0,
-		most,
-	);
-	return variants.length > 1 ? variants : undefined;
-}
-
-const variantRoute = (key: RouteKey): Route => {
-	const route = routeOf(key);
-	if (route === "Unresolved") throw Error("A route variant is a route");
-	return route;
-};
-
-/** The reference's routing, with each unit's route variants under a margin. */
-export type ReferenceRouted = Routed & {
-	readonly withVariants: (margin: number) => SegmentInUnitsOutput;
-};
-
-/**
- * Routes a membership from the route answers, plus `extra`, the answers
- * for the groups no historical batch asked about. A group without either
- * routes `Unresolved`. A unit's variants come from the distribution that
- * decided its route: closed-class identity for a covered spelling (its
- * uses' shares summed by route), the abbreviation route for an
- * abbreviation, the route Choice for any other word, and the Choice
- * restricted to the Family code named for a multi-piece unit. A Saying, a
- * merged interjection and a fixed closed-class route carry none.
- */
-export function routeReferenceWith(
-	nomination: Nomination<ReferenceEvidence>,
-	membership: Membership<ReferenceDetail>,
-	answers: ReferenceRouteAnswers,
-	extra?: Routes,
-): ReferenceRouted {
-	const { sentence } = nomination.evidence.core;
-	const { route2, closed: closedAnswers } = answers;
-	const judged = new Map<string, RouteJudgment>([
-		...answers.routes.identity,
-		...(extra?.identity ?? []),
-	]);
-	const distributions = new Map([
-		...answers.routes.distributions,
-		...(extra?.distributions ?? []),
-	]);
-	const jevRoute = (group: readonly number[]): RouteKey => {
-		const [only] = group;
-		if (group.length === 1 && only !== undefined) {
-			const abbreviation = route2[`ra_${only}`];
-			if (abbreviation?.type === "choice") return abbreviation.choice;
-		}
-		return judged.get(groupKey(group))?.choice ?? "Unresolved";
-	};
-	const structural = structuralRoute(
-		distributions,
-		jevRoute,
-		membership.detail.familyOf,
-	);
-	const merged = mergeInterjections(
-		sentence,
-		membership.partition,
-		structural,
-	);
-	const closedRoute = (group: readonly number[]): RouteKey | undefined => {
-		const [only] = group;
-		if (group.length !== 1 || only === undefined) return undefined;
-		const piece = sentence.pieces[only - 1];
-		if (!piece) return undefined;
-		if (hasFixedRoute(piece)) return closedClassRoute(piece, undefined);
-		const answer = closedAnswers[`cc_${only}`];
-		return answer?.type === "choice"
-			? closedClassRoute(piece, answer.choice)
-			: undefined;
-	};
-	const route = (group: readonly number[]): RouteKey =>
-		closedRoute(group) ??
-		(merged.merged.has(groupKey(group))
-			? "Locution/INTJ"
-			: structural(group));
-	const decidingShares = (
-		group: readonly number[],
-	): Readonly<Record<string, number>> | undefined => {
-		const [only] = group;
-		if (group.length === 1 && only !== undefined) {
-			const piece = sentence.pieces[only - 1];
-			if (!piece || hasFixedRoute(piece)) return undefined;
-			const closed = closedAnswers[`cc_${only}`];
-			if (closed?.type === "choice")
-				return closedClassRouteShares(piece, closed.probabilities);
-			const abbreviation = route2[`ra_${only}`];
-			if (abbreviation?.type === "choice")
-				return abbreviation.probabilities;
-			return distributions.get(groupKey(group));
-		}
-		if (merged.merged.has(groupKey(group))) return undefined;
-		const family = membership.detail.familyOf(group);
-		if (family === "Saying") return undefined;
-		return Object.fromEntries(
-			Object.entries(distributions.get(groupKey(group)) ?? {}).filter(
-				([key]) => key.startsWith(`${family}/`),
-			),
-		);
-	};
-	const output = outputOf(sentence, merged.partition, route);
-	return {
-		output,
-		withVariants: (margin) => ({
-			units: output.units.map((unit, index) => {
-				const group = merged.partition[index] ?? [];
-				const keys = routeVariants(
-					route(group),
-					decidingShares(group),
-					margin,
-				);
-				return keys
-					? { ...unit, variants: keys.map(variantRoute) }
-					: unit;
-			}),
-		}),
-		partition: merged.partition,
-		merges: merged.links.map(
-			(pieces): Edge => ({
-				pieces: [pieces[0], pieces[1]],
-				rule: "interjection",
-			}),
-		),
-	};
-}
-
-/**
- * Routing that asks a `route-extra` request for the groups no historical
- * batch asked about, or routes them `Unresolved` without asking.
- */
-const routeReference =
-	(unasked: "ask" | "unresolved") =>
-	async (
-		nomination: Nomination<ReferenceEvidence>,
-		membership: Membership<ReferenceDetail>,
-		context: ArmContext,
-	): Promise<ReferenceRouted> => {
-		const { core } = nomination.evidence;
-		const answers = await askReferenceRoutes(nomination.evidence, context);
-		if (unasked === "unresolved")
-			return routeReferenceWith(nomination, membership, answers);
-		const groups = unaskedGroups(answers, membership.partition);
-		const extra = readRoutes(
-			core.sentence,
-			groups,
-			await ask(
-				core,
-				context,
-				"route-extra",
-				routeQuestions(
-					core.sentence,
-					groups,
-					core.ref,
-					v3Context(context),
-				),
-			),
-		);
-		return routeReferenceWith(nomination, membership, answers, extra);
-	};
+/** The reference's routing: the routed membership behind its output. */
+type ReferenceRouted = Routed & { readonly routed: RoutedMembership };
 
 /** The reference's stages under a setting of its floors. */
 export function referenceStagesUnder(
 	floors: ReferenceFloors,
 	unasked: "ask" | "unresolved" = "ask",
-): Stages<ReferenceEvidence, ReferenceDetail> {
+): Stages<Nomination, Membership> {
 	return {
-		nominate: async (input, context) =>
-			nominationOf(await referenceEvidence(input, context), floors),
-		resolve: (nomination) => resolveReference(nomination, floors),
-		route: routeReference(unasked),
+		async nominate(input, context) {
+			const nomination = await nominate(
+				input,
+				askOf(context),
+				referenceInventory,
+			);
+			const connections = referenceConnections(nomination, floors);
+			return {
+				pieces: nomination.sentence.pieces.map((piece) => piece.id),
+				connections,
+				judgments: judgmentsOf(nomination, connections),
+				evidence: nomination,
+			};
+		},
+		resolve(nomination) {
+			const membership = membershipOf(
+				nomination.evidence,
+				unitFloors(floors),
+				{ floor: floors.saying, maxim: false },
+			);
+			return {
+				partition: membership.partition,
+				edges: edgesOf(
+					membership.edges,
+					nomination.connections,
+					membership.ranges,
+				),
+				detail: membership,
+			};
+		},
+		async route(nomination, membership, context): Promise<ReferenceRouted> {
+			const ask = askOf(context);
+			const evidence = nomination.evidence;
+			const answers = await askRouteBatches(evidence, ask);
+			const extra =
+				unasked === "ask"
+					? await askUnaskedRoutes(
+							evidence,
+							answers,
+							membership.partition,
+							ask,
+						)
+					: undefined;
+			const routed = routeMembership(
+				evidence,
+				membership.detail,
+				answers,
+				extra,
+			);
+			return {
+				output: { units: routed.units() },
+				partition: routed.partition,
+				merges: routed.merges.map(
+					([a, b]): Edge => ({
+						pieces: [a, b],
+						rule: "interjection",
+					}),
+				),
+				routed,
+			};
+		},
 	};
 }
 
-/** The stages that replay the reference run (#755). */
-export const referenceRunStages = referenceStagesUnder(runFloors);
+export const pickId = (group: readonly number[]) => `pk_${group.join("_")}`;
 
 /**
  * The click-time pick of Dumgen ADR 0007 (amended 2026-09-30), as a lab
@@ -980,8 +535,8 @@ export const referenceRunStages = referenceStagesUnder(runFloors);
  * grouping is fixed; the answer is its one route.
  */
 export function pickQuestions(
-	core: Pick<CandidatesCore, "sentence" | "ref">,
-	partition: Groups,
+	nomination: { readonly sentence: Sentence; readonly ref: Reference },
+	partition: Partition,
 	output: SegmentInUnitsOutput,
 ): Questions {
 	const questions: Questions = {};
@@ -990,9 +545,9 @@ export function pickQuestions(
 		if (!unit.variants || !group) return;
 		const refs = group
 			.map((id) => {
-				const piece = core.sentence.pieces[id - 1];
+				const piece = nomination.sentence.pieces[id - 1];
 				if (!piece) throw Error(`No piece p${id}`);
-				return core.ref(piece);
+				return nomination.ref(piece);
 			})
 			.join(", ");
 		questions[pickId(group)] = choice(
@@ -1010,13 +565,11 @@ export function pickQuestions(
 	return questions;
 }
 
-export const pickId = (group: readonly number[]) => `pk_${group.join("_")}`;
-
 /** Each unit with variants takes the route its pick chose, among its variants. */
 export function pickedOutput(
-	partition: Groups,
+	partition: Partition,
 	output: SegmentInUnitsOutput,
-	picks: Answers,
+	picks: Readonly<Record<string, Answer>>,
 ): SegmentInUnitsOutput {
 	return {
 		units: output.units.map((unit, index) => {
@@ -1049,7 +602,7 @@ const marginsOf = (value: string | undefined, name: string) =>
  * Running the reference through the lab, or replaying its run with `--opt
  * floors=run`; `--opt` moves its floors, and the policy is named after the
  * floors moved from the run's. `--opt unasked=unresolved` asks nothing for
- * groups no historical batch asked about.
+ * groups no batched route request asked about.
  *
  * `--opt variants=0.1,0.2` adds a policy per margin whose borderline units
  * carry route variants (`<policy>+variants@0.1`); they read the same
@@ -1070,26 +623,25 @@ export const referenceArm: Arm = {
 		const [pickMargin, ...more] = marginsOf(context.options.pick, "pick");
 		if (more.length > 0) throw Error("--opt pick takes one margin");
 		const stages = referenceStagesUnder(floors, unasked);
-		let evidence: ReferenceEvidence | undefined;
-		let routed: ReferenceRouted | undefined;
+		let evidence: Nomination | undefined;
+		let routed: RoutedMembership | undefined;
 		const { output } = await runStages(
 			{
 				...stages,
 				nominate: async (stageInput, stageContext) => {
-					const nomination = await stages.nominate(
-						stageInput,
-						stageContext,
-					);
+					const nomination: StageNomination<Nomination> =
+						await stages.nominate(stageInput, stageContext);
 					evidence = nomination.evidence;
 					return nomination;
 				},
 				route: async (nomination, membership, stageContext) => {
-					routed = (await stages.route(
+					const result = (await stages.route(
 						nomination,
 						membership,
 						stageContext,
 					)) as ReferenceRouted;
-					return routed;
+					routed = result.routed;
+					return result;
 				},
 			},
 			input,
@@ -1101,16 +653,20 @@ export const referenceArm: Arm = {
 		};
 		if (!routed || !evidence) throw Error("The reference did not route");
 		for (const margin of variantMargins)
-			outputs[`${policy}+variants@${margin}`] =
-				routed.withVariants(margin);
+			outputs[`${policy}+variants@${margin}`] = {
+				units: routed.units(margin),
+			};
 		if (pickMargin !== undefined) {
-			const withVariants = routed.withVariants(pickMargin);
-			const picks = await ask(
-				evidence.core,
-				context,
-				"pick",
-				pickQuestions(evidence.core, routed.partition, withVariants),
-			);
+			const withVariants = { units: routed.units(pickMargin) };
+			const picks = await askOf(context)({
+				stage: "pick",
+				state: evidence.state,
+				questions: pickQuestions(
+					evidence,
+					routed.partition,
+					withVariants,
+				),
+			});
 			outputs[`${policy}+variants@${pickMargin}`] = withVariants;
 			outputs[`${policy}+variants@${pickMargin}+pick`] = pickedOutput(
 				routed.partition,

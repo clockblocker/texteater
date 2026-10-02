@@ -4,10 +4,14 @@ German `segment.inUnits` ([#701](https://github.com/clockblocker/texteater/issue
 [Dumgen ADR 0007](docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md)):
 a Sentence's Segments go in, and its biggest units come back, each with its
 route or `Unresolved`. This package is being rebuilt from scratch. Today it
-holds the `segment.inUnits` jev lab, the spec-corpus evaluator that scores
-it against dumspec, and the evaluation CLI. The legacy pipeline, with
-`createDumgen`, moved to [`legacy-dumgen`](../legacy-dumgen/README.md),
-where it stays frozen.
+holds the German segmenter's stages under `src/segment/`, which reach jev
+only through an injected `ask` port and read no files: the Segment stage
+cuts a Sentence into Segments, and the unit stage groups and routes them.
+Beside them are the `segment.inUnits` jev lab that configures and measures
+them, the spec-corpus evaluator that scores them against dumspec, and the
+evaluation CLI. The public entry still exports only the contract types.
+The legacy pipeline, with `createDumgen`, moved to
+[`legacy-dumgen`](../legacy-dumgen/README.md), where it stays frozen.
 
 ```sh
 bun run --cwd battery/dumgen evaluate --list

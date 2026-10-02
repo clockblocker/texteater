@@ -1,21 +1,31 @@
 # German `segment.inUnits` jev lab
 
-The lab tests what jev can do for German `segment.inUnits` (Dumgen ADR
-0007): grouping a Sentence's pieces into biggest units and routing each
-unit. It is not the production segmenter. Results live in the lab tickets
+The lab measures German `segment.inUnits` (Dumgen ADR 0007): grouping a
+Sentence's pieces into biggest units and routing each unit. The segmenter
+itself is production code under `src/segment/`; the lab's arms configure
+it and score it against frozen gold. Results live in the lab tickets
 (#744, #756 on the #701 map) and in git history, not here.
 
 ## Layout and dependencies
 
-- The German Segment stage is production code:
-  `src/segment/de/segments.ts` stitches a Sentence and cuts it into
-  Segments, reaching jev through the injected `ask` port of
-  `src/segment/ask.ts`. The lab passes its cached jev as that port.
-- `src/segment-in-units/de/` holds the arms, candidate generators, guide
-  and routes. `src/segment-in-units/lab/` holds the frozen sets, the cached
-  jev and Luna clients, metrics, run evidence, the promptsmith export and
-  the ledger. The CLI is `cli/segment-in-units-lab.ts`.
-  `cli/segment-ownership-pilot.ts` is a bounded pilot beside it.
+- `src/segment/` is the production segmenter. It reaches jev only through
+  the injected `ask` port of `src/segment/ask.ts`, and the lab passes its
+  cached jev as that port. `src/segment/de/segments.ts` is the Segment
+  stage: it stitches a Sentence and cuts it into Segments.
+  `src/segment/de/units.ts` is the unit stage. Nomination
+  (`nomination.ts`) asks what jev judges about code's candidates,
+  membership (`assembly.ts`) assembles units under floors, and routing
+  (`routing.ts`) routes them. Its default, `productionUnitSettings`, is
+  candidates4's maxim+closed policy (#843).
+- `src/segment-in-units/de/arms/` holds the two arms. `candidates4`
+  (`--opt final=1 --opt closed=1`) outputs v3, step0, step0+saying and
+  step0+saying+maxim@0.7, each step-0 policy also `+closed`; production is
+  its `step0+saying+maxim@0.7+closed`. `reference` is the #755 reference.
+  The retired arms and candidates4's other levers are at ec467e8d, and
+  reference-floors at 5335f033.
+- `src/segment-in-units/lab/` holds the frozen sets, the cached jev
+  client, metrics, run evidence, the promptsmith export and the ledger.
+  The CLI is `cli/segment-in-units-lab.ts`.
 - Besides the production segmenter, the lab imports only the #731 harness
   (`src/evaluation/spec-corpus/`), promptsmith and dumspec. Keep it that
   way. Typecheck it with `bun run check:segment-in-units` and test it with
@@ -27,7 +37,8 @@ unit. It is not the production segmenter. Results live in the lab tickets
 ```sh
 bun run segment-in-units-lab freeze                      # once; --force refreezes
 bun run segment-in-units-lab run --arm candidates4 --subset slice300 --reps 3 \
-  --opt final=1 --parent <runId> --hypothesis "<one line>"
+  --opt final=1 --opt closed=1 --parent <runId> --hypothesis "<one line>"
+bun run segment-in-units-lab replay --run <runId>
 bun run segment-in-units-lab report --run <runId> [--policy <p>] [--subset <s>] [--relabel 734]
 bun run segment-in-units-lab compare --left <runId>[:policy] --right <runId>[:policy] \
   [--subset <s>] [--noise <noiseRunId>] [--record [--verdict "<text>"]]
@@ -37,15 +48,22 @@ bun run segment-in-units-lab ledger [--table]
 ```
 
 - `run` refuses a dirty tree unless `--allow-dirty` is passed. A tree is
-  dirty when the lab's sources, the harness, the CLI or `battery/dumspec/src`
-  have uncommitted changes. Commit first, so that `gitHead` names the code.
-  dumspec records are outside this check, because a run reads the frozen
-  set.
+  dirty when the production segmenter, the lab's sources, the harness, the
+  CLI or `battery/dumspec/src` have uncommitted changes. Commit first, so
+  that `gitHead` names the code. dumspec records are outside this check,
+  because a run reads the frozen set.
+- `replay` reruns a raw run offline with today's code and compares every
+  policy's output, case by case and repetition by repetition, with what
+  the run stored. It asks nothing and writes nothing, and it exits 1 when
+  an output differs or a case fails. A refactor of `src/segment/` must
+  replay the latest runs exactly. Rebuild dumspec's dist first, because
+  the inventories it reads shape the requests.
 - `freeze --force` keeps each set it replaces at `sets/<name>@<hash>.json`,
-  and `report`, `compare`, `sweep` and `segment-in-units-attribution` read
-  a run's set by its hash, so a run stays scored against the gold it ran
-  on. `withheldRecords` in `lab/corpus.ts` keeps a record out of both sets
-  while its gold waits for a person's approval.
+  and `report`, `compare`, `sweep`, `replay` and
+  `segment-in-units-attribution` read a run's set by its hash, so a run
+  stays scored against the gold it ran on. `withheldRecords` in
+  `lab/corpus.ts` keeps a record out of both sets while its gold waits for
+  a person's approval.
 - jev is pinned to `pinnedJevModel` in `lab/jev.ts`. `--model` picks another
   version. A floating alias needs `--allow-floating-model`. An answer from a
   version other than the one requested fails the call.
@@ -55,11 +73,10 @@ bun run segment-in-units-lab ledger [--table]
 - The `reference` arm takes its resolver floors as options (`--opt
   expression=0.6`; `floorsOf` in `arms/reference.ts`). Its default is the
   setting #762 adopted; `--opt floors=run` replays the #755 reference run.
-  `--opt unasked=unresolved` routes groups no cached route request asked
-  about `Unresolved` instead of asking, so a setting runs offline. The
-  `reference-floors` arm sweeps the floors from the same cached answers,
-  one policy per setting (`--opt grid=single|combined`), and `sweep` reads
-  every policy of such a run against its baseline.
+  It pins the AUX inventory to the one its run read. `--opt
+  unasked=unresolved` routes groups no batched route request asked about
+  `Unresolved` instead of asking, so a setting runs offline. `sweep` reads
+  every policy of a run against its baseline.
 
 ## Artifacts
 
@@ -79,9 +96,6 @@ evidence/segment-in-units-lab/
     noise.json               noise reruns only: flip rates per policy and bucket
   summaries/                 reports of runs made before manifests (historical)
 ```
-
-The pilot writes its manifest, configuration, requests and results to
-`.runs/segment-in-units-lab/pilot/runs/<runId>/`.
 
 ## Scoring
 

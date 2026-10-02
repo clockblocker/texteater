@@ -17,8 +17,8 @@ import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 } from "../../evaluation/spec-corpus/segment-in-units.js";
+import type { Answer } from "../../segment/ask.js";
 import type { ArmContext } from "../de/arm.js";
-import type { Answer } from "./jev.js";
 import { assertValidUnits } from "./validate.js";
 
 /** Groups of piece ids, each sorted, ordered by first piece. */

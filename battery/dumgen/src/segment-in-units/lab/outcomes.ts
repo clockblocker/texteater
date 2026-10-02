@@ -9,7 +9,7 @@ import {
 	hasMembership,
 	type UnitCheck,
 } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
-import { keyOf } from "../de/routes.js";
+import { keyOf } from "../../segment/de/routes.js";
 import type { LabCase } from "./corpus.js";
 import { bucketOf, isStub, mcnemar, policiesOf, scoreCase } from "./metrics.js";
 import type { LabRun } from "./run.js";
