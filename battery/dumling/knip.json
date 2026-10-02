@@ -1,9 +1,15 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
-		"src/index.ts",
 		"src/types.ts",
-		"codegen/generate.ts",
+		"src/validation/operations.ts",
+		"src/generated/linked-validation.ts",
+		"src/generated/validation.ts",
+		"src/generated/schemas/**/*.ts",
+		"src/schemas/concrete-language/*/*/*.ts",
+		"codegen/operations.ts",
+		"codegen/output-types.ts",
+		"codegen/routes.ts",
 		"generate-readme/examples/**/*.ts",
 		"tests/**/*.ts"
 	],
@@ -13,5 +19,5 @@
 		"src/**/*.ts",
 		"tests/**/*.ts"
 	],
-	"ignoreDependencies": ["@biomejs/biome", "bun-types", "dependency-cruiser"]
+	"ignoreDependencies": ["bun-types", "dependency-cruiser"]
 }
