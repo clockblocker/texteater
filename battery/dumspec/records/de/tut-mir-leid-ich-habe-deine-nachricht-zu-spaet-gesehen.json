@@ -92,7 +92,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0022", "ADR-0039"],
+		"adrs": ["ADR-0003", "ADR-0022", "ADR-0031", "ADR-0039"],
 		"rules": [
 			{
 				"rule": "de/largest-fixed-unit",
@@ -475,6 +475,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
+			},
+			"reading": { "emojiDescription": "⌛" },
+			"notes": {
+				"rationale": "zu spät is Duden spät 2 'später als erwartet; verspätet', merged with spät 1, late in the day (es ist schon ziemlich spät), as one concept under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

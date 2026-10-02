@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🤪" },
 			"notes": {
 				"rationale": "verrückt is used as a predicative adjective, so it is an ADJ (ADR 0036), not a state passive of verrücken. It compares (verrückter), so it is comparable and marks Pos (ADR 0042)."
 			},

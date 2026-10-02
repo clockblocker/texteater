@@ -157,6 +157,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🎯❌" },
 			"notes": {
 				"rationale": "Vergeblich is an adverbially used adjective, so ADJ (de/adjective-stays-adj). Duden gives vergeblicher, am vergeblichsten with no label, and Duden decides before DWDS (which marks them rare), so it is comparable and marks Pos (de/comparability-is-lexical). Ruled on #743 (A9)."
 			},

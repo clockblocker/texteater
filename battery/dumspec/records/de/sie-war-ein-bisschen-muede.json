@@ -78,6 +78,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🥱" },
 			"notes": {
 				"rationale": "müde is the predicative ADJ ein bisschen grades, a target of its own. It is comparable (müder, am müdesten), so its Surface marks Pos (de/comparability-is-lexical)."
 			},

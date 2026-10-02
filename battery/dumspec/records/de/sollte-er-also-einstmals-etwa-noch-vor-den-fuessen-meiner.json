@@ -780,8 +780,9 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🔙〰" },
 			"notes": {
-				"rationale": "nachschleifendem is an attributive Partizip I of nachschleifen, so a single-member ADJ nachschleifend (de/participial-adjective, de/attributive-adjective-stands-alone); like the Reviewed lachend it is left non-comparable."
+				"rationale": "nachschleifendem is an attributive Partizip I of nachschleifen, so a single-member ADJ nachschleifend (de/participial-adjective, de/attributive-adjective-stands-alone); like the Reviewed lachend it is left non-comparable. nachschleifen is DWDS 'etw. schleifend nachziehen, hinterherschleifen', so the thread trails behind along the ground."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

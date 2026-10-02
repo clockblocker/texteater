@@ -20,7 +20,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -28,6 +28,10 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "📏" },
+			"notes": {
+				"rationale": "mit langer Geduld is Duden lang 2a, long in time, folded into one Reading 📏 with lang 1a, long in space, by the user's split ruling (2026-10-02, ADR 0031)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

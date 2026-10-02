@@ -36,6 +36,7 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "3⃣🧊" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "3D", "orthography": "Standard" }],

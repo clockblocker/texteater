@@ -1057,6 +1057,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "💔" },
 			"notes": {
 				"rationale": "eine fast schmerzliche elides Vorstellung. The lowercase adjective stands in for the noun, so it is the Head and owns eine (de/participial-adjective, de/noun-owns-its-article). Duden cites die schmerzlichsten Erfahrungen, so it is comparable."
 			},

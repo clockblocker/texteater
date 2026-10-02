@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [0, 8],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🦚" },
 			"notes": {
 				"rationale": "A fronted governed preposition stays a member of its adjective, as a separated verb particle does; sentence-initial Auf normalizes to auf."
 			},

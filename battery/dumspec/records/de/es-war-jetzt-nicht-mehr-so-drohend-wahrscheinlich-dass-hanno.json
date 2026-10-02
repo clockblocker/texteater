@@ -586,6 +586,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🤔👍" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -624,7 +625,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Predicative ADJ after the copula, not the sentence adverb 'probably'. DWDS gives wahrscheinlicher, am wahrscheinlichsten, so it marks Pos (de/comparability-is-lexical)."
+				"rationale": "Predicative ADJ after the copula, not the sentence adverb 'probably'. DWDS gives wahrscheinlicher, am wahrscheinlichsten, so it marks Pos (de/comparability-is-lexical). Predicative wahrscheinlich is DWDS's one sense 'in hohem Grade möglich, mit ziemlicher Sicherheit anzunehmen', the likelihood the sentence adverb wahrscheinlich 'probably' states, so it takes the adverb's 🤔👍."
 			}
 		},
 		{
@@ -1063,6 +1064,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🚫🍀" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

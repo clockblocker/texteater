@@ -46,6 +46,7 @@
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🤨" },
 			"notes": {
 				"rationale": "Duden lists weird as an indeclinable adjective, so the typo wierd is a Typo member of ADJ weird, though the chat mixes German and English: a listed word is a Lexeme in every sentence, and no Lexeme is marked foreign (ADR 0045). Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
 			},

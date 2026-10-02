@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🤸" },
 			"notes": {
 				"rationale": "An attributive Partizip I is an ADJ (ADR 0036): Canonical Form spielend; Acc Plur with Kinder."
 			},

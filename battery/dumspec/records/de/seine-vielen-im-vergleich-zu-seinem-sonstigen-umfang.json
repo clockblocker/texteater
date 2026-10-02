@@ -276,6 +276,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🔢" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -463,6 +464,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
+			},
+			"reading": { "emojiDescription": "➕" },
+			"notes": {
+				"rationale": "seinem sonstigen Umfang is Duden sonstig 'sonst noch vorhanden, in Betracht zu ziehen; anderweitig': the girth of the rest of him."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

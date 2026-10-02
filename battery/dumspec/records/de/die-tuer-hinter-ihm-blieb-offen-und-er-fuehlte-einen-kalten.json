@@ -379,6 +379,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🔓" },
 			"notes": {
 				"rationale": "Predicative offen after copular bleiben; offen compares (offener), so it marks Pos (de/comparability-is-lexical)."
 			},

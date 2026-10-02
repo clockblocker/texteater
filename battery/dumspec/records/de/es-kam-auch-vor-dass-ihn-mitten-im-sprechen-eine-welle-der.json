@@ -978,6 +978,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🔴" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1016,7 +1017,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Predicative ADJ; rot werden 'blush' is literal (the face turns red) and a copula never forms a Collocation (de/copula-stays-apart). röter, am rötesten, so Pos."
+				"rationale": "Predicative ADJ; rot werden 'blush' is literal (the face turns red) and a copula never forms a Collocation (de/copula-stays-apart). röter, am rötesten, so Pos. rot werden, 'vor Scham erröten', is a Wendung under Duden rot 1, the colour of fresh blood, so it is the colour Reading of die rote Tasche."
 			}
 		},
 		{

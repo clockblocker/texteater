@@ -203,7 +203,7 @@
 		"year": 1901
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
+		"adrs": ["ADR-0031", "ADR-0035", "ADR-0036", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/attributive-adjective-stands-alone",
@@ -396,6 +396,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🫥" },
 			"notes": {
 				"rationale": "A postposed Partizip II with no auxiliary: ADJ versteckt, Participle Source verstecken (de/participial-adjective). Taken as non-comparable."
 			},
@@ -497,6 +498,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🤐" },
 			"notes": {
 				"rationale": "Adverbial Partizip I: ADJ schweigend (de/participial-adjective)."
 			},
@@ -876,6 +878,10 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "📏" },
+			"notes": {
+				"rationale": "ein langes Zwischengebäude is Duden lang 1a, long in space; the Reading also takes lang 2a, long in time (mit langer Geduld), folded in by the user's split ruling (2026-10-02, ADR 0031)."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -961,6 +967,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🔗" },
 			"notes": {
 				"rationale": "Attributive Partizip II: ADJ verbunden from verbinden (de/participial-adjective, de/attributive-adjective-stands-alone)."
 			},

@@ -14,7 +14,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -22,6 +22,10 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "😌" },
+			"notes": {
+				"rationale": "Der See bleibt ruhig is Duden ruhig 1 '[fast] unbewegt' (die See ist ruhig), described with the calm of ruhig 4 'gelassen' as one concept under ADR 0031."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

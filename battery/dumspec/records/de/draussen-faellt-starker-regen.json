@@ -24,8 +24,9 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
-				"rationale": "starker Regen is only a preferred combination, no formula and no fixed unit: stark keeps its own meaning, so starker is an ADJ of its own."
+				"rationale": "starker Regen is only a preferred combination, no formula and no fixed unit: stark keeps its own meaning, so starker is an ADJ of its own. starker Regen is Duden stark 7a 'sehr ausgeprägt; in hohem Maße vorhanden; sehr intensiv', not 1a 'viel Kraft besitzend'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

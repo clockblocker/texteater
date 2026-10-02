@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "💨" },
 			"notes": {
 				"rationale": "Productive adverbial ADJ, not lexical ADV. Degree Pos. No agreement."
 			},

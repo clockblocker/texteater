@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [2, 8],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🦚" },
 			"notes": {
 				"rationale": "An attributive adjective keeps its governed preposition across its complement; the Surface is stolze."
 			},

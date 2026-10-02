@@ -134,7 +134,8 @@
 			{
 				"rule": "de/noun-owns-its-article",
 				"hash": "c2b1f74a61545177"
-			}
+			},
+			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" }
 		],
 		"references": []
 	},
@@ -196,6 +197,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🔊" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -448,6 +450,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "ADJ"
+			},
+			"reading": { "emojiDescription": "⏳" },
+			"notes": {
+				"rationale": "langsam here is Duden langsam 3 'allmählich, nach und nach; mit der Zeit', not 1 'mit geringer Geschwindigkeit', and that sense stands attributively (das langsame Nachlassen der Kräfte), so it stays ADJ under de/adjective-stays-adj."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

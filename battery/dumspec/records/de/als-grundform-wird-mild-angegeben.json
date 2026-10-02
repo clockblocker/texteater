@@ -16,7 +16,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -29,6 +29,10 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🪶" },
+			"notes": {
+				"rationale": "A mentioned word takes its ordinary Reading, and 🪶, not harsh, covers Duden mild 1 to 3 (lenient, temperate, not sharp in taste) as one concept under ADR 0031."
+			},
 			"grundform": true,
 			"attestation": {
 				"unitKind": "Attestation",

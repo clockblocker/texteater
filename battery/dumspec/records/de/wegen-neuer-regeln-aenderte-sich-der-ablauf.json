@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🆕" },
 			"notes": {
 				"rationale": "Ending syncretic. Context gives genitive plural; noun gives feminine identity."
 			},

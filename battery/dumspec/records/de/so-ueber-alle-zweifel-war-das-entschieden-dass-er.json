@@ -743,6 +743,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🚶😌" },
 			"notes": {
 				"rationale": "Adverbial Partizip I: ADJ schlendernd, Participle Source schlendern (de/participial-adjective)."
 			},
@@ -884,8 +885,9 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🤗" },
 			"notes": {
-				"rationale": "Attributive Partizip I: ADJ schmeichelnd from schmeicheln, a single-member target (de/attributive-adjective-stands-alone, de/participial-adjective)."
+				"rationale": "Attributive Partizip I: ADJ schmeichelnd from schmeicheln, a single-member target (de/attributive-adjective-stands-alone, de/participial-adjective). der schmeichelnde Frühlingstag is Duden schmeicheln 2, 'liebkosen' and 'in jemandes Ohr, Sinne sanft hineindringen' (schmeichelnde Musik), not 1a, praising someone to excess."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1341,6 +1343,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🌪" },
 			"notes": {
 				"rationale": "Attributive wüsten ('wild, dissolute') is ADJ wüst, which compares (wüster), so it marks Pos."
 			},

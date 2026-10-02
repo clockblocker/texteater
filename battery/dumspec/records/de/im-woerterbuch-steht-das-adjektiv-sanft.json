@@ -19,7 +19,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0031"],
 		"rules": [],
 		"references": []
 	},
@@ -27,8 +27,9 @@
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🪶" },
 			"notes": {
-				"rationale": "Dictionary mention. Citation Surface. No inflection bag."
+				"rationale": "Dictionary mention. Citation Surface. No inflection bag. A mentioned word takes its ordinary Reading, Duden sanft 2 'behutsam, zart', with sanft 1, a gentle nature, as one concept under ADR 0031."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

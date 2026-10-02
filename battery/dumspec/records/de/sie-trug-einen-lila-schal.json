@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🟣" },
 			"notes": {
 				"rationale": "Attributive color ADJ. Not color-name NOUN. Invariant form keeps agreement."
 			},

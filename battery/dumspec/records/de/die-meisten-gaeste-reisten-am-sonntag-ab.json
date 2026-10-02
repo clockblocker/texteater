@@ -29,6 +29,7 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🔢" },
 			"notes": {
 				"rationale": "meisten follows the article die, so it is ADJ (de/quantifier-by-use): the superlative of viel (DWDS viel: mehr, am meisten), with the weak ending after die. die belongs to Gäste (de/noun-owns-its-article)."
 			},

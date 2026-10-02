@@ -29,8 +29,9 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "📈" },
 			"notes": {
-				"rationale": "starker Raucher is a weak collocation with a literal meaning, someone who smokes a lot, so starker is an ADJ of its own and no member of a Locution."
+				"rationale": "starker Raucher is a weak collocation with a literal meaning, someone who smokes a lot, so starker is an ADJ of its own and no member of a Locution. ein starker Raucher is Duden's own example under stark 7a 'in hohem Maße vorhanden', so it shares the intensity Reading of starker Regen."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

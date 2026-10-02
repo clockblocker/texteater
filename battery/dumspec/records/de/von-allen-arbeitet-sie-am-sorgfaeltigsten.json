@@ -28,6 +28,7 @@
 		{
 			"memberSegmentIndices": [8, 10],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🔍" },
 			"notes": {
 				"rationale": "am before a superlative is one Segment and a member of the adjective whose degree it marks: [am, sorgfältigsten] is sorgfältig (Sup), used adverbially."
 			},

@@ -24,6 +24,7 @@
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "🤏📏" },
 			"notes": {
 				"rationale": "am before a superlative is one Segment and a member of the adjective whose degree it marks: [am, nächsten] is nah (Sup), used adverbially. Minimal pair: in Am nächsten Morgen, Am splits into A (an) and m (dem), and nächst is the lexical adjective for next.",
 				"knownMistakes": [

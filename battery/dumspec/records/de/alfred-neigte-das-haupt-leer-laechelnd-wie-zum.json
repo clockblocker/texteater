@@ -450,8 +450,9 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "😶" },
 			"notes": {
-				"rationale": "leer modifies lächelnd adverbially ('with an empty smile'), so it stays ADJ (de/adjective-stays-adj). leer compares (leerer, am leersten), so it marks Pos (de/comparability-is-lexical)."
+				"rationale": "leer modifies lächelnd adverbially ('with an empty smile'), so it stays ADJ (de/adjective-stays-adj). leer compares (leerer, am leersten), so it marks Pos (de/comparability-is-lexical). leer lächelnd is Duden leer 2, Sinn und Inhalt vermissen lassend (mit leerem Blick, 'abwesend-ausdruckslos'), not 1a, a container with nothing in it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -497,6 +498,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🙂" },
 			"notes": {
 				"rationale": "Adverbial Partizip I outside any verbal construction: a single-member ADJ lächelnd whose Participle Source is lächeln (de/participial-adjective). Like schweigend and lachend in Reviewed precedents, it is taken as non-comparable."
 			},

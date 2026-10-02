@@ -424,6 +424,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🫨" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -462,7 +463,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Attributive ADJ, a single-member target (de/attributive-adjective-stands-alone); Duden compares unruhig, so it marks Pos."
+				"rationale": "Attributive ADJ, a single-member target (de/attributive-adjective-stands-alone); Duden compares unruhig, so it marks Pos. unruhige Träume is Duden unruhig 1c 'nicht gleichmäßig, sondern häufig unterbrochen, gestört', as in ein unruhiger Schlaf."
 			}
 		},
 		{
@@ -909,6 +910,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🦖" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -956,6 +958,7 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "🔄" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

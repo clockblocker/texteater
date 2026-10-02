@@ -22,6 +22,7 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"reading": { "emojiDescription": "😄" },
 			"notes": {
 				"rationale": "An adverbial Partizip I is an ADJ (ADR 0036): Canonical Form lachend; adverbial use has only degree."
 			},

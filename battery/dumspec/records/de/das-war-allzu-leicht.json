@@ -101,8 +101,9 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
+			"reading": { "emojiDescription": "✅" },
 			"notes": {
-				"rationale": "leicht is the predicative ADJ allzu grades, a target of its own. It is comparable (leichter, am leichtesten), so its Surface marks Pos (de/comparability-is-lexical)."
+				"rationale": "leicht is the predicative ADJ allzu grades, a target of its own. It is comparable (leichter, am leichtesten), so its Surface marks Pos (de/comparability-is-lexical). Das war allzu leicht is read as Duden leicht 2a 'nicht schwierig, einfach', the sense of Die Aufgabe ist leicht, not 1a 'von geringem Gewicht'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
