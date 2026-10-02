@@ -1,26 +1,7 @@
 import { ParsingError } from "common-utils";
-import type * as Dumling from "dumling/types";
-import { conflict, contextualizeKnowledge } from "./context.js";
-import { foldCanonicalForm } from "./fingerprint.js";
+import { compare, structuralKeys } from "./fingerprint.js";
+import { parseProjectionInventory } from "./projection-inventory.js";
 import type { GovernmentProjection, ReadingWithKnowledge } from "./types.js";
-import { parseProjectionShape } from "./validation.js";
-
-// Structural indexing is private to this projection, not a persistent ID
-// codec. A Canonical Form counts case-folded, as Lemma identity does.
-function key(value: unknown): string {
-	if (Array.isArray(value)) return `[${value.map(key).join(",")}]`;
-	if (value !== null && typeof value === "object")
-		return `{${Object.entries(foldCanonicalForm(value))
-			.filter(([, member]) => member !== undefined)
-			.sort(([left], [right]) => compare(left, right))
-			.map(([name, member]) => `${JSON.stringify(name)}:${key(member)}`)
-			.join(",")}}`;
-	return JSON.stringify(value);
-}
-
-function compare(left: string, right: string): number {
-	return left < right ? -1 : left > right ? 1 : 0;
-}
 
 const relationOrder = ["governs", "governedBy"];
 
@@ -46,38 +27,11 @@ export function projectPrepositionalGovernment(
 ):
 	| { success: true; value: readonly GovernmentProjection[] }
 	| { success: false; error: ParsingError } {
-	const parsed = parseProjectionShape(entries);
+	const key = structuralKeys();
+	const parsed = parseProjectionInventory(entries, key);
 	if (parsed instanceof ParsingError)
 		return { success: false, error: parsed };
-	const seen = new Set<string>();
-	const byLemma = new Map<string, Dumling.Reading[]>();
-	const governors: ReadingWithKnowledge[] = [];
-	for (const [index, entry] of parsed.entries()) {
-		const identity = key(entry.reading);
-		if (seen.has(identity))
-			return {
-				success: false,
-				error: conflict([index, "reading"], "Duplicate source Reading"),
-			};
-		seen.add(identity);
-		const knowledge = contextualizeKnowledge(
-			entry.reading,
-			entry.knowledge,
-		);
-		if (knowledge instanceof ParsingError)
-			return {
-				success: false,
-				error: new ParsingError(
-					knowledge.issues.map((issue) => ({
-						...issue,
-						path: [index, ...issue.path],
-					})),
-				),
-			};
-		governors.push({ reading: entry.reading, knowledge });
-		const lemma = key(entry.reading.lemma);
-		byLemma.set(lemma, [...(byLemma.get(lemma) ?? []), entry.reading]);
-	}
+	const { inventory, byLemma } = parsed;
 	const edges = new Map<string, GovernmentProjection>();
 	function add(edge: GovernmentProjection) {
 		const identity = JSON.stringify([
@@ -88,7 +42,7 @@ export function projectPrepositionalGovernment(
 		]);
 		if (!edges.has(identity)) edges.set(identity, edge);
 	}
-	for (const { reading, knowledge } of governors)
+	for (const { reading, knowledge } of inventory.values())
 		for (const governed of (knowledge.valency ?? []).flatMap(
 			({ complements }) => complements,
 		)) {

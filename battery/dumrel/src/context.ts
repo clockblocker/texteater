@@ -1,7 +1,7 @@
 import { ParsingError } from "common-utils";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import { fingerprint } from "./fingerprint.js";
+import { structuralKeys } from "./fingerprint.js";
 import type {
 	ConjugationClasses,
 	KnowledgeChange,
@@ -16,7 +16,7 @@ import { allowedComplementKinds } from "./valency-policy.js";
 
 type Path = (number | string)[];
 
-function issue(path: Path, message: string): ParsingError {
+export function issue(path: Path, message: string): ParsingError {
 	return new ParsingError([{ code: "custom", path, message }]);
 }
 
@@ -216,6 +216,7 @@ function parseValencyFrame<R extends Dumling.Reading>(
 	frame: ValencyFrame,
 	path: Path,
 ): ValencyFrame | ParsingError {
+	const key = structuralKeys();
 	const slots: ValencySlot[] = [];
 	const inFrame = new Set<string>();
 	for (const [index, slot] of frame.entries()) {
@@ -229,7 +230,7 @@ function parseValencyFrame<R extends Dumling.Reading>(
 				complementPath,
 			);
 			if (complement instanceof ParsingError) return complement;
-			const identity = fingerprint(complement);
+			const identity = key(complement);
 			if (inSlot.has(identity))
 				return issue(
 					complementPath,
@@ -493,8 +494,4 @@ export function contextualizeChange<R extends Dumling.Reading>(
 		if (failure) return failure;
 	}
 	return { ...change, value: values } as KnowledgeChange<R>;
-}
-
-export function conflict(path: Path, message: string): ParsingError {
-	return issue(path, message);
 }

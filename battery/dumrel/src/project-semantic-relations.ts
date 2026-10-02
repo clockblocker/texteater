@@ -1,8 +1,9 @@
 import { ParsingError } from "common-utils";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import { conflict, contextualizeKnowledge } from "./context.js";
-import { foldCanonicalForm } from "./fingerprint.js";
+import { issue } from "./context.js";
+import { compare, structuralKeys } from "./fingerprint.js";
+import { parseProjectionInventory } from "./projection-inventory.js";
 import type {
 	ReadingWithKnowledge,
 	SemanticRelation,
@@ -25,39 +26,6 @@ const algebra = {
 } as const satisfies Record<SemanticRelation, SemanticRelation>;
 const relationOrder = Object.keys(algebra);
 
-/**
- * Structural indexing private to one projection, not a persistent ID codec.
- * A Canonical Form counts case-folded, as Lemma identity does (system ADR
- * 0002). Keys are cached by object identity, which holds because a projection
- * never mutates the values it indexes.
- */
-function structuralKeys() {
-	const cache = new WeakMap<object, string>();
-	function key(value: unknown): string {
-		if (value === null || typeof value !== "object")
-			return JSON.stringify(value);
-		const known = cache.get(value);
-		if (known !== undefined) return known;
-		const computed = Array.isArray(value)
-			? `[${value.map(key).join(",")}]`
-			: `{${Object.entries(foldCanonicalForm(value))
-					.filter(([, member]) => member !== undefined)
-					.sort(([left], [right]) => compare(left, right))
-					.map(
-						([name, member]) =>
-							`${JSON.stringify(name)}:${key(member)}`,
-					)
-					.join(",")}}`;
-		cache.set(value, computed);
-		return computed;
-	}
-	return key;
-}
-
-function compare(left: string, right: string): number {
-	return left < right ? -1 : left > right ? 1 : 0;
-}
-
 type ReadingCount = {
 	readonly lemma: Dumling.Lemma;
 	readonly readingCount: number;
@@ -75,25 +43,22 @@ function parseReadingCounts(
 		const parsed = parseUnit(lemma);
 		if (!parsed.success)
 			return new ParsingError(
-				parsed.error.issues.map((issue) => ({
-					...issue,
-					path: [...path, "lemma", ...issue.path],
+				parsed.error.issues.map((entry) => ({
+					...entry,
+					path: [...path, "lemma", ...entry.path],
 				})),
 			);
 		if (parsed.chain.unitKind !== "Lemma")
-			return conflict([...path, "lemma", "unitKind"], "Expected a Lemma");
+			return issue([...path, "lemma", "unitKind"], "Expected a Lemma");
 		const normalized = parsed.chain.value as Dumling.Lemma;
 		const identity = key(normalized);
 		if (byLemma.has(identity))
-			return conflict(
-				[...path, "lemma"],
-				"Duplicate Lemma Reading count",
-			);
+			return issue([...path, "lemma"], "Duplicate Lemma Reading count");
 		if (
 			!Number.isInteger(readingCount) ||
 			readingCount < supplied(normalized)
 		)
-			return conflict(
+			return issue(
 				[...path, "readingCount"],
 				"Reading count must cover the Lemma's supplied Readings",
 			);
@@ -146,36 +111,10 @@ export function projectSemanticRelations(
 	| { success: true; value: readonly SemanticRelationProjection[] }
 	| { success: false; error: ParsingError } {
 	const key = structuralKeys();
-	const parsed = parseProjectionShape(entries);
+	const parsed = parseProjectionInventory(entries, key);
 	if (parsed instanceof ParsingError)
 		return { success: false, error: parsed };
-	const inventory = new Map<string, ReadingWithKnowledge>();
-	const byLemma = new Map<string, Dumling.Reading[]>();
-	for (const [index, entry] of parsed.entries()) {
-		const identity = key(entry.reading);
-		if (inventory.has(identity))
-			return {
-				success: false,
-				error: conflict([index, "reading"], "Duplicate source Reading"),
-			};
-		const knowledge = contextualizeKnowledge(
-			entry.reading,
-			entry.knowledge,
-		);
-		if (knowledge instanceof ParsingError)
-			return {
-				success: false,
-				error: new ParsingError(
-					knowledge.issues.map((issue) => ({
-						...issue,
-						path: [index, ...issue.path],
-					})),
-				),
-			};
-		inventory.set(identity, { reading: entry.reading, knowledge });
-		const lemma = key(entry.reading.lemma);
-		byLemma.set(lemma, [...(byLemma.get(lemma) ?? []), entry.reading]);
-	}
+	const { inventory, byLemma } = parsed;
 	const parsedCounts = parseReadingCounts(
 		options.readingCounts ?? [],
 		(lemma) => byLemma.get(key(lemma))?.length ?? 0,
@@ -197,16 +136,16 @@ export function projectSemanticRelations(
 		]);
 		if (normalized instanceof ParsingError)
 			return new ParsingError(
-				normalized.issues.map((issue) => ({
-					...issue,
-					path: ["source", ...issue.path.slice(2)],
+				normalized.issues.map((entry) => ({
+					...entry,
+					path: ["source", ...entry.path.slice(2)],
 				})),
 			);
 		const reading = normalized[0]?.reading;
 		const identity = reading ? key(reading) : undefined;
 		return identity !== undefined && inventory.has(identity)
 			? identity
-			: conflict(
+			: issue(
 					["source"],
 					"Projection source must be supplied in the inventory",
 				);
@@ -233,7 +172,9 @@ export function projectSemanticRelations(
 				?.targetKind === "reading"
 		);
 	}
-	for (const [index, { reading, knowledge }] of parsed.entries()) {
+	for (const [index, { reading, knowledge }] of [
+		...inventory.values(),
+	].entries()) {
 		const relations = knowledge.semanticRelations;
 		if (!relations) continue;
 		for (const relation of directSemanticRelationValues) {
@@ -250,7 +191,7 @@ export function projectSemanticRelations(
 				)
 					return {
 						success: false,
-						error: conflict(
+						error: issue(
 							[
 								index,
 								"knowledge",

@@ -1,30 +1,7 @@
 import { ParsingError } from "common-utils";
-import type * as Dumling from "dumling/types";
-import { conflict, contextualizeKnowledge } from "./context.js";
-import { foldCanonicalForm } from "./fingerprint.js";
-import type {
-	ParticipleProjection,
-	ParticipleSource,
-	ReadingWithKnowledge,
-} from "./types.js";
-import { parseProjectionShape } from "./validation.js";
-
-// Structural indexing is private to this projection, not a persistent ID
-// codec. A Canonical Form counts case-folded, as Lemma identity does.
-function key(value: unknown): string {
-	if (Array.isArray(value)) return `[${value.map(key).join(",")}]`;
-	if (value !== null && typeof value === "object")
-		return `{${Object.entries(foldCanonicalForm(value))
-			.filter(([, member]) => member !== undefined)
-			.sort(([left], [right]) => compare(left, right))
-			.map(([name, member]) => `${JSON.stringify(name)}:${key(member)}`)
-			.join(",")}}`;
-	return JSON.stringify(value);
-}
-
-function compare(left: string, right: string): number {
-	return left < right ? -1 : left > right ? 1 : 0;
-}
+import { compare, structuralKeys } from "./fingerprint.js";
+import { parseProjectionInventory } from "./projection-inventory.js";
+import type { ParticipleProjection, ReadingWithKnowledge } from "./types.js";
 
 const relationOrder = ["participleSource", "participialAdjective"];
 
@@ -48,44 +25,14 @@ export function projectParticipleSources(
 ):
 	| { success: true; value: readonly ParticipleProjection[] }
 	| { success: false; error: ParsingError } {
-	const parsed = parseProjectionShape(entries);
+	const key = structuralKeys();
+	const parsed = parseProjectionInventory(entries, key);
 	if (parsed instanceof ParsingError)
 		return { success: false, error: parsed };
-	const seen = new Set<string>();
-	const participles: {
-		reading: Dumling.Reading;
-		source: ParticipleSource;
-	}[] = [];
-	for (const [index, entry] of parsed.entries()) {
-		const identity = key(entry.reading);
-		if (seen.has(identity))
-			return {
-				success: false,
-				error: conflict([index, "reading"], "Duplicate source Reading"),
-			};
-		seen.add(identity);
-		const knowledge = contextualizeKnowledge(
-			entry.reading,
-			entry.knowledge,
-		);
-		if (knowledge instanceof ParsingError)
-			return {
-				success: false,
-				error: new ParsingError(
-					knowledge.issues.map((issue) => ({
-						...issue,
-						path: [index, ...issue.path],
-					})),
-				),
-			};
-		if (knowledge.participleSource)
-			participles.push({
-				reading: entry.reading,
-				source: knowledge.participleSource,
-			});
-	}
 	const edges: ParticipleProjection[] = [];
-	for (const { reading, source } of participles) {
+	for (const { reading, knowledge } of parsed.inventory.values()) {
+		const source = knowledge.participleSource;
+		if (!source) continue;
 		edges.push({
 			source: reading,
 			relation: "participleSource",

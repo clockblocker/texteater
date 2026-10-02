@@ -1,7 +1,7 @@
 import { ParsingError } from "common-utils";
 import type * as Dumling from "dumling/types";
-import { conflict, contextualizeChange, parseSource } from "./context.js";
-import { fingerprint } from "./fingerprint.js";
+import { contextualizeChange, issue, parseSource } from "./context.js";
+import { structuralKeys } from "./fingerprint.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 import type {
 	ConjugationClasses,
@@ -116,11 +116,12 @@ function applyValency<R extends Dumling.Reading>(
 	const frame = knowledge.valency ?? [];
 	let next: ValencySlot[];
 	if (change.kind === "Retract") {
-		const retracted = change.complement && fingerprint(change.complement);
+		const key = structuralKeys();
+		const retracted = change.complement && key(change.complement);
 		next = retracted
 			? frame.flatMap((slot) => {
 					const complements = slot.complements.filter(
-						(complement) => fingerprint(complement) !== retracted,
+						(complement) => key(complement) !== retracted,
 					);
 					return complements.length === 0
 						? []
@@ -166,7 +167,7 @@ function applyPlural<R extends Dumling.Reading>(
 		(typeof existing === "string" || typeof change.value === "string") &&
 		existing !== change.value
 	)
-		return conflict(
+		return issue(
 			["change", "value"],
 			"Contribute conflicts with the existing plural; use Correct to replace it",
 		);
@@ -213,10 +214,11 @@ function fills(
 	stored: ValencyComplement,
 	contributed: ValencyComplement,
 ): boolean {
+	const key = structuralKeys();
 	const [storedReferent, storedRest] = splitReferent(stored);
 	const [contributedReferent, contributedRest] = splitReferent(contributed);
 	return (
-		fingerprint(storedRest) === fingerprint(contributedRest) &&
+		key(storedRest) === key(contributedRest) &&
 		(storedReferent === contributedReferent ||
 			storedReferent === "Either" ||
 			contributedReferent === "Either")
@@ -239,7 +241,7 @@ function applyRelation<R extends Dumling.Reading>(
 	const existing = knowledge.semanticRelations;
 	const current = existing?.targetKind === "reading" ? "reading" : "lemma";
 	if (existing && requested !== current)
-		return conflict(
+		return issue(
 			["change", "targetKind"],
 			"One Reading Knowledge value cannot mix Lemma and Reading Semantic Relation targets",
 		);
@@ -284,12 +286,13 @@ function applyAtomic<R extends Dumling.Reading>(
 		return;
 	}
 	const existing = knowledge[change.aspect];
+	const key = structuralKeys();
 	if (
 		change.kind === "Contribute" &&
 		existing !== undefined &&
-		fingerprint(existing) !== fingerprint(change.value)
+		key(existing) !== key(change.value)
 	)
-		return conflict(
+		return issue(
 			["change", "value"],
 			`Contribute conflicts with existing ${change.aspect}; use Correct to replace it`,
 		);
@@ -297,12 +300,13 @@ function applyAtomic<R extends Dumling.Reading>(
 }
 
 function unique<T>(values: readonly T[]): [T, ...T[]] {
+	const key = structuralKeys();
 	const result: T[] = [];
 	const seen = new Set<string>();
 	for (const value of values) {
-		const key = fingerprint(value);
-		if (seen.has(key)) continue;
-		seen.add(key);
+		const identity = key(value);
+		if (seen.has(identity)) continue;
+		seen.add(identity);
 		result.push(structuredClone(value));
 	}
 	return result as [T, ...T[]];
