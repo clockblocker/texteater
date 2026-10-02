@@ -140,12 +140,6 @@ export async function runRepresentativeOperation(
 			assert.deepEqual(storage.snapshot(), []);
 			break;
 		}
-		case "dumdict.project-relations":
-			assert.deepEqual(call(module, "projectSemanticRelations", []), {
-				success: true,
-				value: [],
-			});
-			break;
 		case "dumdict.pending-identity":
 			assert.equal(
 				typeof module.createPendingSemanticRelationRecord,

@@ -1,9 +1,9 @@
 import type * as Dumling from "dumling/types";
 
 import * as Effect from "effect/Effect";
+import type { CommitChangesRequest } from "../../domain-types";
 import type { SerializedDictionaryNote } from "../../dto";
 import type {
-	CommitChangesRequest,
 	FindStoredReadingsStorageRequest,
 	GetInfoForRelationsCleanupStorageRequest,
 	LoadCleanupRelationsContextRequest,

@@ -1,12 +1,12 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import type { PlannedChangeOp } from "../../domain-types";
 import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
+	PlannedChangeOp,
 	ReadingEntry,
 	SurfaceEntry,
-} from "../../dto";
+} from "../../domain-types";
 import { makeSurfaceId } from "../../dumling-id";
 import {
 	parsePendingSemanticRelationForDumdictRuntime,

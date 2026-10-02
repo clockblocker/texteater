@@ -1,11 +1,8 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
+import { projectSemanticRelations } from "dumrel";
 import { Effect } from "effect";
-import {
-	ParsingError,
-	parseAsCommitChangesRequest,
-	projectSemanticRelations,
-} from "../../../src";
+import { ParsingError, parseAsCommitChangesRequest } from "../../../src";
 import { getBootedUpDumdict } from "../../../src/testing/boot";
 import { emojiOf } from "./helpers";
 
@@ -116,7 +113,12 @@ test("a Reading's Surface, Attestation and generated Knowledge reach dictionary 
 			canonicalForm: "Sparkasse",
 		},
 	]);
-	const projected = projectSemanticRelations(entries);
+	const projected = projectSemanticRelations(
+		entries.map(({ reading, knowledge }) => ({
+			reading,
+			knowledge: knowledge ?? {},
+		})),
+	);
 	expect(projected.success).toBe(true);
 	if (!projected.success) throw projected.error;
 	expect(projected.value).toContainEqual({

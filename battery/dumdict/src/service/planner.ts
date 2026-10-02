@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-
+import type { DumdictPlan } from "../domain-types";
 import type {
 	AddNewNoteRequest,
 	AffectedDictionaryEntities,
@@ -14,7 +14,6 @@ import type {
 	AddNewNoteContext,
 	ApplyGeneratedKnowledgeContext,
 	CleanupRelationsSlice,
-	DumdictPlan,
 	EnsureOwnedSurfaceContext,
 	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,

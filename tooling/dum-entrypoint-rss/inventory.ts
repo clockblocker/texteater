@@ -120,16 +120,6 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
-		specifier: "dumdict/relations",
-		classification: "operational",
-		rationale:
-			"Published application runtime; must exclude schema authoring.",
-		operation: {
-			id: "dumdict.project-relations",
-			description: "project relations",
-		},
-	},
-	{
 		specifier: "dumdict/pending",
 		classification: "operational",
 		rationale:

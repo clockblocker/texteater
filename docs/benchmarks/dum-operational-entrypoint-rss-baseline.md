@@ -33,7 +33,6 @@ Empty-module samples: `17809408`, `17219584`, `17219584`, `17137664`, `17154048`
 | `dumdict` | operational | parse record | 26.281 | 26.594 | none |
 | `dumdict/schema` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
 | `dumdict/runtime` | operational | parse record | 26.188 | 26.516 | none |
-| `dumdict/relations` | operational | project relations | 6.859 | 7.656 | none |
 | `dumdict/pending` | operational | pending identity | 5.563 | 6.094 | none |
 | `dumdict/planning` | operational | plan reading entry | 8.797 | 18.703 | none |
 | `dumdict/package.json` | metadata | Package metadata. | — | — | — |

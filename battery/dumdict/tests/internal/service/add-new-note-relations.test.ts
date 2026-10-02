@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
+import { projectSemanticRelations } from "dumrel";
 import * as Effect from "effect/Effect";
-import { projectSemanticRelations } from "../../../src";
 import {
 	derivePendingEntryId,
 	emojiOf,
@@ -319,7 +319,12 @@ describe("configured service relation writes", () => {
 });
 
 function projections(readings: import("../../../src").ReadingEntry<"en">[]) {
-	const result = projectSemanticRelations(readings);
+	const result = projectSemanticRelations(
+		readings.map(({ reading, knowledge }) => ({
+			reading,
+			knowledge: knowledge ?? {},
+		})),
+	);
 	if (!result.success) throw result.error;
 	return result.value;
 }

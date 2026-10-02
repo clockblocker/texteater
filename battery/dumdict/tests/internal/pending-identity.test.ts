@@ -5,7 +5,7 @@ import { readingFingerprint } from "../../src/core/identity";
 import type {
 	DumdictPendingSemanticRelation,
 	PendingSemanticRelationRecord,
-} from "../../src/dto";
+} from "../../src/domain-types";
 import {
 	assertPendingSemanticRelationRecordIdentity,
 	createPendingSemanticRelationRecord,

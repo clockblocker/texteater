@@ -431,47 +431,6 @@
 			}
 		},
 		{
-			"specifier": "dumdict/relations",
-			"classification": "operational",
-			"rationale": "Published application runtime; must exclude schema authoring.",
-			"operation": {
-				"id": "dumdict.project-relations",
-				"description": "project relations"
-			},
-			"importOnly": {
-				"baselineMedianBytes": 17219584,
-				"deltaBytes": 7192576,
-				"deltaMiB": 6.859,
-				"medianBytes": 24412160,
-				"samplesBytes": [
-					24412160, 24363008, 24035328, 24428544, 24854528
-				]
-			},
-			"importPlusOperation": {
-				"baselineMedianBytes": 17219584,
-				"deltaBytes": 8028160,
-				"deltaMiB": 7.656,
-				"medianBytes": 25247744,
-				"samplesBytes": [
-					25198592, 25493504, 25329664, 25247744, 25247744
-				]
-			},
-			"reachability": {
-				"externalPackages": ["emoji-regex"],
-				"heavyweightDependencies": [],
-				"schemaEntrypoints": [],
-				"workspaceEntrypoints": [
-					"common-utils",
-					"dumdict/relations",
-					"dumling",
-					"dumling/compiled-validation",
-					"dumling/validation",
-					"dumrel",
-					"dumval/runtime"
-				]
-			}
-		},
-		{
 			"specifier": "dumdict/pending",
 			"classification": "operational",
 			"rationale": "Published application runtime; must exclude schema authoring.",

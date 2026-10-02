@@ -1,10 +1,9 @@
 import type * as Dumling from "dumling/types";
-
 import type {
 	PendingSemanticRelationRecord,
-	ReadingNoteForDisambiguation,
 	StoreRevision,
-} from "../dto";
+} from "../domain-types";
+import type { ReadingNoteForDisambiguation } from "../dto";
 import type { SurfaceId } from "../dumling-id";
 
 export type AffectedDictionaryEntities<L extends Dumling.Language> = {
@@ -47,7 +46,7 @@ export type MutationResult<L extends Dumling.Language> = {
 };
 
 export type PreparedMutation<L extends Dumling.Language> = Readonly<{
-	plan: import("../storage").DumdictPlan<L>;
+	plan: import("../domain-types").DumdictPlan<L>;
 	affected: AffectedDictionaryEntities<L>;
 	summary: MutationSummary;
 }>;

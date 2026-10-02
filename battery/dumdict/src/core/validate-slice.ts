@@ -5,7 +5,7 @@ import type {
 	PendingSemanticRelationRecord,
 	ReadingEntry,
 	SurfaceEntry,
-} from "../dto";
+} from "../domain-types";
 import { makeSurfaceId } from "../dumling-id";
 import {
 	parseAsLemmaRecord,

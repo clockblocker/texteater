@@ -5,7 +5,7 @@ import type {
 	PendingEntryId,
 	PendingSemanticRelationLocator,
 	PendingSemanticRelationRecord,
-} from "../../dto";
+} from "../../domain-types";
 import { readingFingerprint } from "../identity";
 
 function normalizeUnitShadow<L extends Dumling.Language>(

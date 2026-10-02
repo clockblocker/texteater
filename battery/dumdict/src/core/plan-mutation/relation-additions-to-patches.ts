@@ -1,7 +1,10 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import type { PlannedChangeOp, StoreRevision } from "../../domain-types";
-import type { ReadingKnowledgeChange } from "../../dto";
+import type {
+	PlannedChangeOp,
+	ReadingKnowledgeChange,
+	StoreRevision,
+} from "../../domain-types";
 import { readingFingerprint } from "../identity";
 import type { PlannedRelationAddition } from "../plan-relation-maintenance";
 

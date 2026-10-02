@@ -5,7 +5,6 @@
 		"src/pending.ts",
 		"src/planning.ts",
 		"src/public-schema.ts",
-		"src/relations.ts",
 		"src/runtime.ts",
 		"generate-readme/examples/**/*.ts",
 		"tests/**/*.ts"

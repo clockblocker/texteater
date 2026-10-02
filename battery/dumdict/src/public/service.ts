@@ -3,12 +3,11 @@ import type * as Dumrel from "dumrel/types";
 
 import type * as Effect from "effect/Effect";
 import type {
-	DumdictReadingDraft,
-	OwnedSurfaceDraft,
 	PendingSemanticRelationLocator,
 	ReadingEntry,
 	StoreRevision,
-} from "../dto";
+} from "../domain-types";
+import type { DumdictReadingDraft, OwnedSurfaceDraft } from "../dto";
 import type {
 	DumdictCommitFailure,
 	DumdictInvalidInput,

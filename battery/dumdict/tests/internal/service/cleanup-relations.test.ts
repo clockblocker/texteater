@@ -1,10 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
+import { projectSemanticRelations } from "dumrel";
 import * as Effect from "effect/Effect";
-import {
-	projectSemanticRelations,
-	type SerializedDictionaryNote,
-} from "../../../src";
+import type { SerializedDictionaryNote } from "../../../src";
 import {
 	emojiOf,
 	englishSwimDraft,
@@ -212,9 +210,18 @@ describe("relations cleanup", () => {
 
 function projections(
 	readings: import("../../../src").ReadingEntry<"en">[],
-	readingCounts: Parameters<typeof projectSemanticRelations>[1] = [],
+	readingCounts: readonly {
+		readonly lemma: Dumling.Lemma;
+		readonly readingCount: number;
+	}[] = [],
 ) {
-	const result = projectSemanticRelations(readings, readingCounts);
+	const result = projectSemanticRelations(
+		readings.map(({ reading, knowledge }) => ({
+			reading,
+			knowledge: knowledge ?? {},
+		})),
+		{ readingCounts },
+	);
 	if (!result.success) throw result.error;
 	return result.value;
 }

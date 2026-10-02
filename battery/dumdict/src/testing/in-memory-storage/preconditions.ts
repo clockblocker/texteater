@@ -3,10 +3,10 @@ import type * as Dumling from "dumling/types";
 import { sameLemma, sameReading } from "../../core/identity";
 import { samePendingSemanticRelationLocator } from "../../core/pending";
 import type {
+	ChangePrecondition,
 	PendingSemanticRelationRecord,
-	SerializedDictionaryNote,
-} from "../../dto";
-import type { ChangePrecondition } from "../../storage";
+} from "../../domain-types";
+import type { SerializedDictionaryNote } from "../../dto";
 
 export type DraftStorageState<L extends Dumling.Language> = {
 	currentRevision(): string;

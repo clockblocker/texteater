@@ -1,6 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { PlannedChangeOp } from "../../domain-types";
-import type { ReadingEntry } from "../../dto";
+import type { PlannedChangeOp, ReadingEntry } from "../../domain-types";
 import type { EnsureReadingEntryRequest } from "../../public";
 import type { EnsureReadingEntryContext } from "../../storage";
 import { readingLemma } from "../identity";

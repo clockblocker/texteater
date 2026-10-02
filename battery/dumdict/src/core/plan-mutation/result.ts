@@ -1,6 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { PlannedChangeOp } from "../../domain-types";
-import type { StoreRevision } from "../../dto";
+import type { PlannedChangeOp, StoreRevision } from "../../domain-types";
 import type {
 	AffectedDictionaryEntities,
 	MutationRejectedCode,

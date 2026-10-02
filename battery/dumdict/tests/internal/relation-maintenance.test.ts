@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { projectSemanticRelations, type ReadingEntry } from "../../src";
+import { projectSemanticRelations } from "dumrel";
+import type { ReadingEntry } from "../../src";
 import { sameLemma, sameReading } from "../../src/core/identity";
 import { planRelationMaintenance } from "../../src/core/plan-relation-maintenance";
 import {
@@ -162,7 +163,12 @@ describe("relation maintenance planner", () => {
 });
 
 function projections(readings: import("../../src").ReadingEntry<"en">[]) {
-	const result = projectSemanticRelations(readings);
+	const result = projectSemanticRelations(
+		readings.map(({ reading, knowledge }) => ({
+			reading,
+			knowledge: knowledge ?? {},
+		})),
+	);
 	if (!result.success) throw result.error;
 	return result.value;
 }

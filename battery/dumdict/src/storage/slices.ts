@@ -2,13 +2,13 @@ import type * as Dumling from "dumling/types";
 
 import type {
 	DumdictPendingSemanticRelation,
-	DumdictSemanticRelationDraft,
 	LemmaRecord,
 	PendingSemanticRelationRecord,
 	ReadingEntry,
 	StoreRevision,
 	SurfaceEntry,
-} from "../dto";
+} from "../domain-types";
+import type { DumdictSemanticRelationDraft } from "../dto";
 import type { CleanupRelationResolution } from "../public";
 
 export type FindStoredReadingsStorageRequest<L extends Dumling.Language> = {

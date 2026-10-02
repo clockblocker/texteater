@@ -1,7 +1,6 @@
 import * as Effect from "effect/Effect";
 import {
 	createDumdictService,
-	DumdictLanguageMismatchError,
 	type DumdictStoragePort,
 	makeSurfaceId,
 	type ReadingEntry,
@@ -38,7 +37,6 @@ import {
 export type { DumdictStoragePort, ReadingEntry, StoreRevision, SurfaceEntry };
 export {
 	createDumdictService,
-	DumdictLanguageMismatchError,
 	derivePendingEntryId,
 	deSerializedNotes,
 	englishRunDraft,

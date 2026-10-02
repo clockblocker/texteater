@@ -5,7 +5,7 @@ import type {
 	LemmaRecord,
 	PendingSemanticRelationRecord,
 	ReadingEntry,
-} from "../dto";
+} from "../domain-types";
 import {
 	compareLemmas,
 	lemmaFingerprint,

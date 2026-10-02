@@ -31,7 +31,6 @@ export const RSS_ENTRYPOINT_POLICIES = {
 	dumrel: diagnostic,
 	dumdict: diagnostic,
 	"dumdict/runtime": diagnostic,
-	"dumdict/relations": diagnostic,
 	"dumdict/pending": diagnostic,
 	"dumdict/memory": diagnostic,
 	"dumdict/planning": diagnostic,

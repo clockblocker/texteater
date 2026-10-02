@@ -4,9 +4,9 @@ import { sameLemma, sameReading } from "../../core/identity";
 import type {
 	PendingSemanticRelationRecord,
 	ReadingEntry,
-	SerializedDictionaryNote,
 	StoreRevision,
-} from "../../dto";
+} from "../../domain-types";
+import type { SerializedDictionaryNote } from "../../dto";
 import type { DumdictStoragePort } from "../../storage";
 import type { ReadingEntryContextRead } from "./load-slices";
 

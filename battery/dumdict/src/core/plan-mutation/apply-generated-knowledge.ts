@@ -1,18 +1,16 @@
 import type * as Dumling from "dumling/types";
-import type { PlannedChangeOp } from "../../domain-types";
 import type {
 	PendingSemanticRelationRecord,
+	PlannedChangeOp,
 	ReadingKnowledgeChange,
-} from "../../dto";
+	ReadingPatchOp,
+} from "../../domain-types";
 import {
 	parsePendingSemanticRelationForDumdictRuntime,
 	unwrapDumdictParse,
 } from "../../parsing/lightweight-parsers";
 import type { ApplyGeneratedKnowledgeRequest } from "../../public";
-import type {
-	ApplyGeneratedKnowledgeContext,
-	ReadingPatchOp,
-} from "../../storage";
+import type { ApplyGeneratedKnowledgeContext } from "../../storage";
 import { applyDumdictKnowledgeChange } from "../apply-reading-knowledge-change.js";
 import { readingFingerprint, sameLemma, sameReading } from "../identity";
 import {
