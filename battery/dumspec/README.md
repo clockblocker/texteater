@@ -92,3 +92,11 @@ PRON or AUX member, with the cell a stem's spelling marks.
 `reviewedDeterminers` and `reviewedPronouns` pair each stem with its
 spellings, and `closedVerbForms` lists every form of sein, haben, werden and
 the modals.
+
+The selectors read the inventories without a model. `authoredReading` and
+`authoredFor` find the members of a Reading or a Lemma, and
+`selectAuthoredArticle` an article cell's. `closedRoute` tells a Closed Route
+(system ADR 0021). `selectGrammaticalAlternatives` steps between a pillar's
+Paradigm Cells (system ADR 0019), and `deriveGrammaticalComponent` gives the
+article of a name cited with one, or the subject expletive `es`, that a
+Surface brings.
