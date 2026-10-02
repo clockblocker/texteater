@@ -21,8 +21,17 @@ evidence of the same Reading.
 No outside sense inventory sets the granularity. Different concepts are
 expected to get different descriptions: `Absatz` as paragraph and as shoe heel.
 Whether a figurative or metonymic use shares a Reading with its literal use is
-left to the generator and may differ from word to word, because the language
-itself draws no fixed line there.
+left to the generator, within the test below, and may differ from word to
+word, because the language itself draws no fixed line there.
+
+Amended on 2026-10-02: a Lemma gets several Readings only when its meanings
+are distinct enough that an emoji-generating model would tell them apart from
+the sentence. Subtle functional or grammatical nuances of one meaning stay one
+Reading, and when in doubt, fold. `noch` 'still' ⏳ and 'in addition' ➕ are
+two Readings. `so` of manner and of degree is one Reading, 👉, because no
+model would draw that line reliably. The test holds for authored and drafted
+Readings as well as generated ones. Decided by the user on 2026-10-02
+([#700](https://github.com/clockblocker/texteater/issues/700)).
 
 Equality compares normalized descriptions. Dumling's parse drops variation
 selectors (U+FE0E, U+FE0F) and skin-tone modifiers, so `🖱️` equals `🖱` and
