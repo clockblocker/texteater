@@ -125,6 +125,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "😟" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -169,7 +170,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Subject; Unruhe owns its article (de/noun-owns-its-article)."
+				"rationale": "Subject; Unruhe owns its article (de/noun-owns-its-article). Unruhe here is Duden's 'das Nicht-zur-Ruhe-Kommen; inneres Getriebenwerden; Ruhelosigkeit', the inner unrest, not noise or riots."
 			}
 		},
 		{

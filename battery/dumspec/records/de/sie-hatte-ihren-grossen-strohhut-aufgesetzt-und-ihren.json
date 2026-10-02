@@ -450,6 +450,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👒" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -580,6 +581,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "⛱" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -851,6 +853,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🌊🌬" },
 			"notes": {
 				"rationale": "Seewind owns ein across kleiner, deriving ein Nom.Masc.Sg (de/noun-owns-its-article)."
 			},

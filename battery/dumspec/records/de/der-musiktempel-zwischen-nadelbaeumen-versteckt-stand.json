@@ -352,6 +352,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🌲" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -674,6 +675,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🇨🇭🏠" },
 			"notes": {
 				"rationale": "den (Dat.Plur) opens the phrase whose Head is Schweizerhäusern, across beiden and the extended attribute. Zwischengebäude sits inside the attribute with its own article, so it cuts nothing off (de/noun-owns-its-article, ADR 0035). Ruled on #743 (MB-A2, A7)."
 			},
@@ -822,6 +824,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🏠🏢🏠" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

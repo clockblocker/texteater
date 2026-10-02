@@ -508,6 +508,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "📏" },
+			"notes": {
+				"rationale": "sein sonstiger Umfang is Duden's Umfang '[räumliche] Ausdehnung, Ausmaß, Größe' (ein Bauch von beträchtlichem Umfang), the body's bulk, not the geometric circumference."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

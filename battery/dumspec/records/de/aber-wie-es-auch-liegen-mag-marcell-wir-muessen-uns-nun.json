@@ -1317,6 +1317,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🎭" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1354,7 +1355,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Tragikomödie has no article to own, since dieser is a DET; dative singular after zu."
+				"rationale": "Tragikomödie has no article to own, since dieser is a DET; dative singular after zu. Tragikomödie here is the figurative use Duden gives under its one sense (die Tragikomödie um die Abgeordnetengehälter), a tragicomic affair rather than a play."
 			}
 		},
 		{

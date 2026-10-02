@@ -444,6 +444,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🛏🔑👩" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -631,6 +632,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "📅" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -754,6 +756,10 @@
 			"route": {
 				"family": "Lexeme",
 				"kind": "NOUN"
+			},
+			"reading": { "emojiDescription": "🕐" },
+			"notes": {
+				"rationale": "acht Uhr is Duden's Uhr 'bestimmte Stunde der Uhrzeit' (gegen drei Uhr früh), a Reading apart from the timepiece."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

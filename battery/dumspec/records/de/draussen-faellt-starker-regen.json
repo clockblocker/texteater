@@ -63,6 +63,7 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🌧" },
 			"notes": {
 				"rationale": "Regen resolves on its own, a bare NOUN with no article."
 			},

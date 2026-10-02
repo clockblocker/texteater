@@ -665,8 +665,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🎯" },
 			"notes": {
-				"rationale": "Ziel is the noun apposed to eine Art, in its case, with no article of its own."
+				"rationale": "Ziel is the noun apposed to eine Art, in its case, with no article of its own. Ziel here is Duden's 'etwas, worauf jemandes Handeln, Tun o. Ä. ganz bewusst gerichtet ist', the aim, not a destination or a finish line."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -765,6 +766,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🛠" },
 			"notes": {
 				"rationale": "Tätigkeit is the noun apposed to the second eine Art."
 			},

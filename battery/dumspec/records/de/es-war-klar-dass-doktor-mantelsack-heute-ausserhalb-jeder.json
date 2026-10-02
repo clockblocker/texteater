@@ -736,6 +736,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🗂" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -773,7 +774,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Genitive complement of außerhalb; jeder is its own DET, so the noun owns no article."
+				"rationale": "Genitive complement of außerhalb; jeder is its own DET, so the noun owns no article. außerhalb jeder Ordnung is Duden's Ordnung 'Art und Weise, wie etwas geordnet, geregelt ist', here the order of who is examined next (wer am längsten nicht examiniert worden war), not discipline or public order."
 			}
 		},
 		{

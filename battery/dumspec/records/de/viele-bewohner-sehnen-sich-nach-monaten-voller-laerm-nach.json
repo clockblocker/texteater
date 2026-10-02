@@ -403,6 +403,10 @@
 		{
 			"memberSegmentIndices": [20],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🔇" },
+			"notes": {
+				"rationale": "Ruhe set against Monaten voller Lärm is Duden's Ruhe 'durch kein lärmendes Geräusch gestörter Zustand; Stille', not rest or calm."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -496,6 +500,7 @@
 		{
 			"memberSegmentIndices": [26],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🌙" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

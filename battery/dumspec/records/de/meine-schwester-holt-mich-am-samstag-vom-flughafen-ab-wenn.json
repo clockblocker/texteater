@@ -230,6 +230,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "👭" },
+			"notes": {
+				"rationale": "Schwester here is Duden's 'Person weiblichen Geschlechts im Verwandtschaftsverhältnis zu einer anderen Person, die von denselben Eltern abstammt', the sibling, not the nun or the nurse."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -441,6 +445,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "📅6⃣" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

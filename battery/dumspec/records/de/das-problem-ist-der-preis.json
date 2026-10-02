@@ -26,6 +26,7 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "⚠" },
 			"notes": {
 				"rationale": "Problem owns Das, the article that opens its phrase."
 			},
@@ -65,8 +66,9 @@
 		{
 			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🏷💰" },
 			"notes": {
-				"rationale": "The verb ist cuts der off from Problem, so der opens the predicate's phrase and is Preis's article."
+				"rationale": "The verb ist cuts der off from Problem, so der opens the predicate's phrase and is Preis's article. Preis here is Duden's 'Betrag, der beim Kauf einer Ware bezahlt werden muss', the price, not the prize won in a contest."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

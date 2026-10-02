@@ -380,8 +380,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🚗" },
 			"notes": {
-				"rationale": "m stands for dem and is Wagen's owned article, a Fused member (de/fused-word-pieces, de/noun-owns-its-article)."
+				"rationale": "m stands for dem and is Wagen's owned article, a Fused member (de/fused-word-pieces, de/noun-owns-its-article). im Wagen fahren names a vehicle people ride in, and nothing in the sentence shows horses or rails, so Wagen takes its everyday sense, Duden Wagen 3 'Auto oder sonstiges zweispuriges Kraftfahrzeug', drawn 🚗 as fahren is; the horse-drawn carriage of Wagen 1a would be another Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

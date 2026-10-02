@@ -568,8 +568,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "💭" },
 			"notes": {
-				"rationale": "Vorstellung owns die."
+				"rationale": "Vorstellung owns die. Vorstellung here is Duden's 'Bild, das sich jemand in seinen Gedanken von etwas macht', the notion, not a performance or an introduction."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -721,6 +721,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🎒" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1327,6 +1328,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🦴" },
+			"notes": {
+				"rationale": "Versteifungen here are Duden's 'etwas, was dazu dient, etwas zu versteifen', the stiffening ribs across the belly, not the act of stiffening."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1797,6 +1802,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🛝" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

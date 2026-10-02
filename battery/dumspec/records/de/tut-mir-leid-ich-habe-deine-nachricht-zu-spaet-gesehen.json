@@ -388,6 +388,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "📨" },
+			"notes": {
+				"rationale": "deine Nachricht, a message sent to the speaker, is Duden's Nachricht 'Mitteilung' like die überraschende Nachricht, so it shares the 📨 Reading."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

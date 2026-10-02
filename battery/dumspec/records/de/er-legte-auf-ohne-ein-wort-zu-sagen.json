@@ -260,6 +260,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "💬" },
+			"notes": {
+				"rationale": "ohne ein Wort zu sagen is Duden's Wort as 'Äußerung' (er hat mir kein Wort davon gesagt, plural Worte), not the lexical unit with plural Wörter."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

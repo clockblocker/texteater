@@ -68,6 +68,7 @@
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🚬🧑" },
 			"notes": {
 				"rationale": "Raucher is a NOUN of its own that owns its article ein across the adjective."
 			},

@@ -827,6 +827,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🧵" },
 			"notes": {
 				"rationale": "Zwirnsfaden has no article."
 			},
@@ -873,6 +874,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🏠🪜" },
 			"notes": {
 				"rationale": "die Treppe is the accusative of path; Treppe owns die."
 			},

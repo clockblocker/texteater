@@ -1142,6 +1142,10 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "↔" },
+			"notes": {
+				"rationale": "von der Seite is Duden's Seite as the place to the right or left of someone, here beside her as he walks, not the page of a book."
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

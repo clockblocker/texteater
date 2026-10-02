@@ -74,6 +74,7 @@
 		{
 			"memberSegmentIndices": [5, 7],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🌲🌳" },
 			"grundform": false,
 			"notes": {
 				"rationale": "m stands for dem and is the noun's owned article, a Fused member of the Wald Attestation, which is therefore Full.",

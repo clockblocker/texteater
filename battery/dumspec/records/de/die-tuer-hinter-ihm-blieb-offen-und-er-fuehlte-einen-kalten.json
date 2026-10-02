@@ -175,6 +175,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🚪" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -721,6 +722,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🧣" },
 			"notes": {
 				"rationale": "m is the owned Fused article of Nacken, dem Dat.Masc.Sg. jemandem im Nacken sitzen is not attested: nobody sits here."
 			},

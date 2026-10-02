@@ -14,7 +14,7 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": { "adrs": ["ADR-0031"], "rules": [], "references": [] },
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
@@ -70,8 +70,9 @@
 		{
 			"memberSegmentIndices": [5, 7],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🏫" },
 			"notes": {
-				"rationale": "zur is zu and r (der). Outside a fixed expression the article piece r belongs to the Head of its phrase, Schule, as its owned Fused article."
+				"rationale": "zur is zu and r (der). Outside a fixed expression the article piece r belongs to the Head of its phrase, Schule, as its owned Fused article. zur Schule gehen names the institution and das Dach der Schule its building, two Duden senses merged into one Reading (ADR 0031)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

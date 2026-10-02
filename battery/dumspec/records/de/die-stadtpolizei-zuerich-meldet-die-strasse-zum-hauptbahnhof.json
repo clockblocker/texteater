@@ -43,6 +43,7 @@
 		{
 			"memberSegmentIndices": [10, 12],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🛣" },
 			"notes": {
 				"rationale": "The Zurich city police write Swiss Standard German, which has no ß: Strasse is a spelling of Straße that a current standard accepts and that marks a region, so it is a Variant tagged Licensed and Regional."
 			},

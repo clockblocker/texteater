@@ -287,6 +287,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "📅" },
 			"notes": {
 				"rationale": "Tages has no article of its own: desselben is a determiner, not an article."
 			},

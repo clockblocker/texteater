@@ -113,6 +113,7 @@
 		{
 			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🌱" },
 			"notes": { "rationale": "Rasen owns its article den." },
 			"attestation": {
 				"unitKind": "Attestation",

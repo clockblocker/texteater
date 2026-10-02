@@ -60,6 +60,7 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🧳" },
 			"notes": {
 				"rationale": "Reisende after a numeral is the strong plural of the adjectival noun Reisende, one Lemma with no gender. A plural Surface marks no gender, and the bare noun owns no article."
 			},

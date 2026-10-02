@@ -86,6 +86,7 @@
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
+			"reading": { "emojiDescription": "🏋" },
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -321,6 +321,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🏠🪜" },
 			"notes": {
 				"rationale": "die Treppe is the accusative path object of hinuntergehen and owns its article."
 			},

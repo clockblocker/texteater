@@ -402,6 +402,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🕐" },
 			"notes": {
 				"rationale": "Uhr after a numeral names the hour of the clock; the form stays singular, and gegen makes it accusative."
 			},
@@ -714,6 +715,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "🏖" },
 			"notes": {
 				"rationale": "m (dem) is the owned Fused article, so Strande is Dat.Sg; am rules out the rare plural Strande. The old dative -e is an inflected form, not a spelling, so the Surface is spelled Canonical and marked Archaic like ward: Duden's current table gives only dem Strand (de/variant-and-historical-status). Ruled on #743 (MB-B6, A8)."
 			},

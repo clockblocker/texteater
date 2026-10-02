@@ -481,6 +481,7 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
+			"reading": { "emojiDescription": "☀" },
 			"notes": {
 				"rationale": "Sonne owns der; in der Sonne sitzen is literal and resolves word by word (de/fixed-members-only)."
 			},
