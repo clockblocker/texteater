@@ -122,23 +122,6 @@
         "vite": "^8",
       },
     },
-    "battery/codec-builder": {
-      "name": "codec-builder-library",
-      "version": "0.2.0",
-      "devDependencies": {
-        "@biomejs/biome": "2.5.13",
-        "@types/node": "^24.13.3",
-        "bun-types": "1.4.2",
-        "common-utils": "workspace:^",
-        "dependency-cruiser": "^18.1.0",
-        "knip": "^6.29.0",
-        "typescript": "^7.0.2",
-        "zod": "^4.4.0",
-      },
-      "peerDependencies": {
-        "zod": "^3.25.0 || ^4.4.0",
-      },
-    },
     "battery/codegen": {
       "name": "codegen",
       "version": "0.1.0",
@@ -1195,8 +1178,6 @@
     "clsx": ["clsx@2.1.1", "", {}, "sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA=="],
 
     "code-block-writer": ["code-block-writer@13.0.3", "", {}, "sha512-Oofo0pq3IKnsFtuHqSF7TqBfr71aeyZDVJ0HpmqB7FBM2qEigL0iPONSCZSO9pE9dZTAxANe5XHG9Uy0YMv8cg=="],
-
-    "codec-builder-library": ["codec-builder-library@workspace:battery/codec-builder"],
 
     "codegen": ["codegen@workspace:battery/codegen"],
 

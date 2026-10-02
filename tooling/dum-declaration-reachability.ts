@@ -31,7 +31,7 @@ type PublishedDeclaration = {
 	readonly path: string;
 };
 
-const FORBIDDEN_PACKAGES = new Set(["codec-builder-library", "zod"]);
+const FORBIDDEN_PACKAGES = new Set(["zod"]);
 
 function auditsDeclarationReachability(
 	classification: DumEntryPoint["classification"],

@@ -89,7 +89,7 @@ describe("Dum published declaration reachability", () => {
 		await writeSource(
 			alpha,
 			"dist/referenced.d.ts",
-			'export type Codec = import("codec-builder-library/deep").Codec;\n',
+			'export type Schema = import("zod/v4/core").$ZodType;\n',
 		);
 		const inventory = [
 			{
@@ -111,9 +111,9 @@ describe("Dum published declaration reachability", () => {
 					"alpha",
 					"battery/alpha/dist/index.d.ts",
 					"battery/alpha/dist/referenced.d.ts",
-					"codec-builder-library/deep",
+					"zod/v4/core",
 				],
-				detail: 'forbidden declaration dependency "codec-builder-library/deep"',
+				detail: 'forbidden declaration dependency "zod/v4/core"',
 				entrypoint: "alpha",
 				kind: "forbidden-dependency",
 			},

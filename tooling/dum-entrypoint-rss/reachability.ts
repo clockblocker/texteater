@@ -8,7 +8,7 @@ const runtimePackagePaths = {
 	"common-utils": "common-utils",
 };
 const workspacePackages = new Set(Object.keys(runtimePackagePaths));
-const heavyweightPackages = new Set(["codec-builder-library", "openai", "zod"]);
+const heavyweightPackages = new Set(["openai", "zod"]);
 
 export type EntrypointReachability = {
 	readonly externalPackages: readonly string[];
