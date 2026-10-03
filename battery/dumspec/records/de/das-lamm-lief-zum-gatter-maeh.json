@@ -22,13 +22,36 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: mäh",
+				"url": "https://www.duden.de/rechtschreibung/maeh",
+				"supports": "Target 0 Knowledge: 'lautmalend für das Blöken von Schafen': a sound word; no synonyms listed"
+			},
+			{
+				"title": "DWDS: mäh",
+				"url": "https://www.dwds.de/wb/m%C3%A4h",
+				"supports": "Target 0 Knowledge: lautnachahmend, 'bezeichnet das Blöken der Schafe'; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🐑" },
+			"reading": {
+				"emojiDescription": "🐑",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

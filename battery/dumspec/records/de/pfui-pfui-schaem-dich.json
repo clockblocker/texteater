@@ -18,15 +18,71 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: pfui",
+				"url": "https://www.duden.de/rechtschreibung/pfui",
+				"supports": "Target 0 Knowledge: 'Ausruf des Missfallens, Ekels'; Synonyme: brr, pfui Teufel, puh; (landschaftlich) igitt[igitt]"
+			},
+			{
+				"title": "DWDS: pfui",
+				"url": "https://www.dwds.de/wb/pfui",
+				"supports": "Target 0 Knowledge: 'Äußerung des Missfallens': a) Kritik, 'in gegensätzlicher Bedeutung zu bravo'; b) Ekel, Synonym zu igitt (a), bäh (1 b); c) 'in gegensätzlicher Bedeutung zu hui'; OpenThesaurus synset: igitt · pfui · pfui Teufel · puh …"
+			},
+			{
+				"title": "Duden: pfui",
+				"url": "https://www.duden.de/rechtschreibung/pfui",
+				"supports": "Target 1 Knowledge: 'Ausruf des Missfallens, Ekels'; Synonyme: brr, pfui Teufel, puh; (landschaftlich) igitt[igitt]"
+			},
+			{
+				"title": "DWDS: pfui",
+				"url": "https://www.dwds.de/wb/pfui",
+				"supports": "Target 1 Knowledge: 'Äußerung des Missfallens': a) Kritik, 'in gegensätzlicher Bedeutung zu bravo'; b) Ekel, Synonym zu igitt (a), bäh (1 b); c) 'in gegensätzlicher Bedeutung zu hui'; OpenThesaurus synset: igitt · pfui · pfui Teufel · puh …"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👎" },
+			"reading": {
+				"emojiDescription": "👎",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "igitt",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "pfui Teufel",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "A comma separates the two calls, so each pfui is its own target, both of the Lemma pfui."
+				"rationale": "A comma separates the two calls, so each pfui is its own target, both of the Lemma pfui. Knowledge (#887, dev draft): brr and puh name cold or relief as well, so they do not hold for the whole Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -52,7 +108,42 @@
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👎" },
+			"reading": {
+				"emojiDescription": "👎",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "igitt",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "pfui Teufel",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "pfui", "orthography": "Standard" }],
@@ -72,6 +163,9 @@
 					},
 					"surfaceFeatures": null
 				}
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): brr and puh name cold or relief as well, so they do not hold for the whole Reading."
 			}
 		}
 	],

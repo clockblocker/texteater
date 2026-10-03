@@ -36,13 +36,36 @@
 				"hash": "b572bad8906b508d"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: doch",
+				"url": "https://www.dwds.de/wb/doch",
+				"supports": "Target 0 Knowledge: doch I.3 'beantwortet eine negative Entscheidungsfrage im positiven Sinne'; no relation listed for that sense"
+			},
+			{
+				"title": "Duden: doch",
+				"url": "https://www.duden.de/rechtschreibung/doch_Partikel",
+				"supports": "Target 0 Knowledge: 'als gegensätzliche Antwort auf eine negativ formulierte Aussage oder Frage … in Opposition zu „nein“' (inside the definition); listed Synonyme (auch, weiß Gott, wirklich) belong to the modal-particle senses"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [20],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "↪✅" },
+			"reading": {
+				"emojiDescription": "↪✅",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "doch answers the negated question Kommst du nicht? by contradicting it: a response particle, partType Res."
 			},

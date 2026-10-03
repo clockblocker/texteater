@@ -39,13 +39,36 @@
 				"hash": "b572bad8906b508d"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: doch",
+				"url": "https://www.dwds.de/wb/doch",
+				"supports": "Target 0 Knowledge: doch I.3 'beantwortet eine negative Entscheidungsfrage im positiven Sinne'; no relation listed for that sense"
+			},
+			{
+				"title": "Duden: doch",
+				"url": "https://www.duden.de/rechtschreibung/doch_Partikel",
+				"supports": "Target 0 Knowledge: 'als gegensätzliche Antwort auf eine negativ formulierte Aussage oder Frage … in Opposition zu „nein“' (inside the definition); listed Synonyme (auch, weiß Gott, wirklich) belong to the modal-particle senses"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [24],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "↪✅" },
+			"reading": {
+				"emojiDescription": "↪✅",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "doch is the contradicting answer to the negated question, embedded in mit doch. An answer word stays INTJ with partType Res when a clause embeds it; German PART has no polarity Pos (de/interjection-counts-its-words). The answer doch is DWDS doch I.3, filed with I.2 'trotzdem' under 'drückt einen Gegensatz aus', so it takes the ↪✅ of the ADV doch."
 			},

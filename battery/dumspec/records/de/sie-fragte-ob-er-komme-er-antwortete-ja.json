@@ -34,15 +34,65 @@
 				"hash": "b572bad8906b508d"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: ja",
+				"url": "https://www.dwds.de/wb/ja",
+				"supports": "Target 0 Knowledge: ja I.1 'drückt Zustimmung, Gewissheit aus', a) als Antwort auf eine Frage; 'in gegensätzlicher Bedeutung zu nein' (DWDS Gegensatz link)"
+			},
+			{
+				"title": "Duden: ja",
+				"url": "https://www.duden.de/rechtschreibung/ja",
+				"supports": "Target 0 Knowledge: 'drückt eine zustimmende Antwort auf eine Entscheidungsfrage aus'; Synonyme: aber ja, aber sicher, abgemacht, auf jeden Fall"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [18],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "✅" },
+			"reading": {
+				"emojiDescription": "✅",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "auf jeden Fall",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "nein",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The standalone answer carries response partType Res; quotation-initial capitalization remains Standard."
+				"rationale": "The standalone answer carries response partType Res; quotation-initial capitalization remains Standard. Knowledge (#887, dev draft): An answer word answers a question and performs no routine; auf jeden Fall is the emphatic shade."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

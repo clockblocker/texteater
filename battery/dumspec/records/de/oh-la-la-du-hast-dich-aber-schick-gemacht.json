@@ -37,6 +37,16 @@
 				"title": "Duden: oh, là, là",
 				"url": "https://www.duden.de/rechtschreibung/oh__la__la",
 				"supports": "Target 0: Duden lists oh, là, là as an Interjektion from French, Ausruf der Verwunderung, der Anerkennung"
+			},
+			{
+				"title": "DWDS: oh là là",
+				"url": "https://www.dwds.de/wb/oh%20l%C3%A0%20l%C3%A0",
+				"supports": "Target 0 Knowledge: oh, là, là / oh là là, 2 'begleitet oder markiert auf anerkennende Weise vor allem sexuelle Andeutungen…'; its OpenThesaurus synset is general surprise, not this appreciation"
+			},
+			{
+				"title": "Duden: oh là là",
+				"url": "https://www.duden.de/rechtschreibung/oh_la_la",
+				"supports": "Target 0 Knowledge: no Duden entry found by the search"
 			}
 		]
 	},
@@ -44,7 +54,19 @@
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😍" },
+			"reading": {
+				"emojiDescription": "😍",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Duden lists oh, là, là as an interjection from French, so it is German and not Foreign fr. là is no German word on its own, so Oh là là is one interjection written in three pieces: one INTJ Lexeme with no Breakdown, like o wei. DWDS lists it as oh, là, là with the variant oh là là; the Canonical Form takes the variant without internal commas. Here it voices appreciation of how someone looks."
 			},

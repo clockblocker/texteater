@@ -21,13 +21,31 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: weh",
+				"url": "https://www.dwds.de/wb/weh",
+				"supports": "Target 0 Knowledge: Interjektion weh/wehe, b) 'drückt eine Drohung aus', mit folgendem Dativ; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "⚠" },
+			"reading": {
+				"emojiDescription": "⚠",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "wehe is the Nebenform of the interjection weh (DWDS), so its Surface is a Variant of the Lemma weh, here with its warning Reading, ⚠ (user ruling 6 on #877, 2026-10-03: ☝ read as the lament 😖). The dative is a free word, not a fixed member, and dir is the Dat cell of the personal pronoun, its own target."
 			},

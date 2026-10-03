@@ -23,13 +23,56 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: oje",
+				"url": "https://www.dwds.de/wb/oje",
+				"supports": "Target 0 Knowledge: 'drückt negative Überraschung und Bedauern oder Mitgefühl aus'; siehe auch herrje (backs nothing)"
+			},
+			{
+				"title": "Duden: oje",
+				"url": "https://www.duden.de/rechtschreibung/oje",
+				"supports": "Target 0 Knowledge: 'Ausrufe der Bestürzung, des Erschreckens'; no synonyms listed"
+			},
+			{
+				"title": "DWDS: auweia",
+				"url": "https://www.dwds.de/wb/auweia",
+				"supports": "Target 0 Knowledge: auweia: Synonym zu oje"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😟" },
+			"reading": {
+				"emojiDescription": "😟",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "auweia",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Oje is a one-word interjection of dismay, an INTJ Lexeme. Duden also gives oh je and o je, but each written shape is a Lemma of its own, so the spaced o je is a Lemma apart from oje (de/interjection-counts-its-words)."
 			},

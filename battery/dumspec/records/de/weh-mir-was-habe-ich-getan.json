@@ -21,13 +21,31 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: weh",
+				"url": "https://www.dwds.de/wb/weh",
+				"supports": "Target 0 Knowledge: Interjektion weh, a) 'drückt Schmerz, Klage aus' (veraltet weh mir!); no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😖" },
+			"reading": {
+				"emojiDescription": "😖",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "weh laments, and mir names who suffers. DWDS lists weh mir! as an example, but the dative is free (weh dir, weh uns), so it is no fixed member: weh is an INTJ Lexeme and mir the Dat cell of the personal pronoun, each its own target."
 			},

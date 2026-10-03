@@ -22,13 +22,36 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: äh",
+				"url": "https://www.dwds.de/wb/%C3%A4h",
+				"supports": "Target 0 Knowledge: äh 'Laut, mit dem Sprechpausen überbrückt werden'; its 'Synonym zu igitt, pfui' sits on the homonym äh of disgust, not this sense"
+			},
+			{
+				"title": "Duden: äh",
+				"url": "https://www.duden.de/rechtschreibung/aeh_Gespraechspartikel",
+				"supports": "Target 0 Knowledge: Gesprächspartikel, 'dient dazu, kurze Sprechpausen zu überbrücken'; no synonyms listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [5],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🫤" },
+			"reading": {
+				"emojiDescription": "🫤",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "äh is Duden's filler that 'dient dazu, kurze Sprechpausen zu überbrücken', the speaker's hesitation."
 			},

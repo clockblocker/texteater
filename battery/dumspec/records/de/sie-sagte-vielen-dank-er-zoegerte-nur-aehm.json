@@ -25,15 +25,38 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: ähm",
+				"url": "https://www.dwds.de/wb/%C3%A4hm",
+				"supports": "Target 0 Knowledge: ähm is a Nebenform of äh, 'Laut, mit dem Sprechpausen überbrückt werden'; no relation listed"
+			},
+			{
+				"title": "Duden: ähm",
+				"url": "https://www.duden.de/rechtschreibung/aehm",
+				"supports": "Target 0 Knowledge: Gesprächspartikel, 'dient dazu, kurze Sprechpausen oder Verlegenheit zu überbrücken'; no synonyms listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🫤" },
+			"reading": {
+				"emojiDescription": "🫤",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "ähm bridges a pause or embarrassment (Duden), the hesitation that äh also names with 🫤."
+				"rationale": "ähm bridges a pause or embarrassment (Duden), the hesitation that äh also names with 🫤. Knowledge (#887, dev draft): äh is the same word's other form (DWDS Nebenform), not a listed synonym."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

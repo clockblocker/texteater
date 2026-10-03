@@ -24,13 +24,63 @@
 				"hash": "9e2c6c25c942a570"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: nee",
+				"url": "https://www.dwds.de/wb/nee",
+				"supports": "Target 0 Knowledge: Interjektion, 'umgangssprachlich Synonym zu nein'; OpenThesaurus synset shown on DWDS: auf keinen Fall · keineswegs · nein · nee · nö …"
+			},
+			{
+				"title": "Duden: nee",
+				"url": "https://www.duden.de/rechtschreibung/nee",
+				"supports": "Target 0 Knowledge: 'nein'; Synonyme: nein, aber nein, aber nicht doch, auf [gar] keinen Fall"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "❌" },
+			"reading": {
+				"emojiDescription": "❌",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "nein",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "auf keinen Fall",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "neeee stretches the letters of nee, Duden's own headword (landschaftlich, umgangssprachlich für nein), for effect, so it is a Variant of nee tagged Expressive. nee itself is the regional word, so the spelling adds no Regional tag. Duden glosses nee as nein, so it takes the ❌ of nein."
 			},

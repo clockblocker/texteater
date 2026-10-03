@@ -25,15 +25,100 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: hallo",
+				"url": "https://www.duden.de/rechtschreibung/hallo",
+				"supports": "Target 0 Knowledge: 3 '[freundschaftliche] Grußformel'; Synonyme: Guten Abend, Guten Morgen, guten Tag; (ugs.) Ciao"
+			},
+			{
+				"title": "DWDS: hallo",
+				"url": "https://www.dwds.de/wb/hallo",
+				"supports": "Target 0 Knowledge: b) 'Anrede zur Begrüßung', Synonym zu hoi (2); OpenThesaurus greeting synset shown on DWDS: Servus · Moin · Tag! · hallo · hey · hi · hoi …"
+			},
+			{
+				"title": "Duden: hi",
+				"url": "https://www.duden.de/rechtschreibung/hi_Grusz",
+				"supports": "Target 0 Knowledge: hi 'freundschaftliche Grußformel'; Synonyme: hallo, servus"
+			},
+			{
+				"title": "Duden: servus",
+				"url": "https://www.duden.de/rechtschreibung/servus",
+				"supports": "Target 0 Knowledge: servus 'freundschaftlicher Gruß beim Abschied, zur Begrüßung', so broader than hallo"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👋" },
+			"reading": {
+				"emojiDescription": "👋",
+				"knowledge": {
+					"formulaRole": "Greeting",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "hi",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "guten Tag",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "servus",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "guten Morgen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "guten Abend",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "hallo to the neighbours is Duden's hallo '[freundschaftliche] Grußformel', so it takes the 👋 of grüßen."
+				"rationale": "hallo to the neighbours is Duden's hallo '[freundschaftliche] Grußformel', so it takes the 👋 of grüßen. Knowledge (#887, dev draft): servus also takes leave and guten Morgen/Abend are bound to a time of day, so they are near."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

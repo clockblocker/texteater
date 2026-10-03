@@ -25,15 +25,81 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: igitt",
+				"url": "https://www.dwds.de/wb/igitt",
+				"supports": "Target 0 Knowledge: a) 'drückt Ekel aus', Synonym zu pfui (b); OpenThesaurus synset shown on DWDS: brr · bä(h) · igitt · igittigitt · ih · pfui · pfui Deibel · pfui Teufel · puh · ärks"
+			},
+			{
+				"title": "Duden: igitt",
+				"url": "https://www.duden.de/rechtschreibung/igitt",
+				"supports": "Target 0 Knowledge: 'Ausruf der Ablehnung, Zurückweisung voller Ekel, Abscheu'"
+			},
+			{
+				"title": "DWDS: pfui",
+				"url": "https://www.dwds.de/wb/pfui",
+				"supports": "Target 0 Knowledge: pfui b) 'drückt Ekel aus', Synonym zu igitt (a), bäh (1 b)"
+			},
+			{
+				"title": "Duden: bäh",
+				"url": "https://www.duden.de/rechtschreibung/baeh",
+				"supports": "Target 0 Knowledge: bäh 'Ausruf des Ekels, der Verachtung…', the headword of the claim"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤢" },
+			"reading": {
+				"emojiDescription": "🤢",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "pfui",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "pfui Teufel",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "bäh",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Igitt is a one-word interjection of disgust, an INTJ Lexeme with no partType. The doubled igittigitt is a headword of its own."
+				"rationale": "Igitt is a one-word interjection of disgust, an INTJ Lexeme with no partType. The doubled igittigitt is a headword of its own. Knowledge (#887, dev draft): The doubled igittigitt is the same word, not a relation target."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

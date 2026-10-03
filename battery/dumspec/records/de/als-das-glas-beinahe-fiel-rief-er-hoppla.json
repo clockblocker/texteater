@@ -25,15 +25,58 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: hoppla",
+				"url": "https://www.dwds.de/wb/hoppla",
+				"supports": "Target 0 Knowledge: Interjektion, 'wird gesagt, wenn jmd. stolpert, wenn etw. fällt'; OpenThesaurus synset shown on DWDS (04/2026): autsch · hoppala · hoppla · ups · uups"
+			},
+			{
+				"title": "Duden: hoppla",
+				"url": "https://www.duden.de/rechtschreibung/hoppla",
+				"supports": "Target 0 Knowledge: Interjektion, 'Ausruf, mit dem man innehaltend auf etwas aufmerksam machen möchte' (hoppla, beinah wäre ich gefallen): an exclamation, no routine"
+			},
+			{
+				"title": "Duden: ups",
+				"url": "https://www.duden.de/rechtschreibung/ups",
+				"supports": "Target 0 Knowledge: ups 'Ausruf der Überraschung, des Erstaunens o. Ä.; hoppla'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🫢" },
+			"reading": {
+				"emojiDescription": "🫢",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "ups",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "hoppla is Duden's call at a near mishap (hoppla, beinah wäre ich gefallen)."
+				"rationale": "hoppla is Duden's call at a near mishap (hoppla, beinah wäre ich gefallen). Knowledge (#887, dev draft): autsch (pain) and the spelling hoppala stay out of the OpenThesaurus synset's claims."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

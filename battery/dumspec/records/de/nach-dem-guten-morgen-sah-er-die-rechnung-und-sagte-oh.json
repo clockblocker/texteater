@@ -35,13 +35,36 @@
 				"hash": "b572bad8906b508d"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: oh",
+				"url": "https://www.dwds.de/wb/oh",
+				"supports": "Target 0 Knowledge: Interjektion, a) 'Ausruf der Überraschung, der Verwunderung'; no relation listed (DWDS, Duden; OpenThesaurus API rate-limited, no synset shown on DWDS)"
+			},
+			{
+				"title": "Duden: oh",
+				"url": "https://www.duden.de/rechtschreibung/oh",
+				"supports": "Target 0 Knowledge: Interjektion, 'Ausruf der Überraschung, der Verwunderung o. Ä.'; no synonyms listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [20],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😮" },
+			"reading": {
+				"emojiDescription": "😮",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "oh, said on seeing the bill, stands outside the clause and voices surprise: an INTJ Lexeme with no partType, since it answers no question (de/interjection-counts-its-words). oh is Duden's 'Ausruf der Überraschung, der Verwunderung'."
 			},

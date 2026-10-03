@@ -26,15 +26,59 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: tja",
+				"url": "https://www.dwds.de/wb/tja",
+				"supports": "Target 0 Knowledge: 'Äußerung des Nachdenkens, der Resignation'; OpenThesaurus synset shown on DWDS: ach ja · nun ja · tja · na ja"
+			},
+			{
+				"title": "Duden: tja",
+				"url": "https://www.duden.de/rechtschreibung/tja",
+				"supports": "Target 0 Knowledge: 'drückt Nachdenklichkeit, Bedenken, eine zögernde Haltung, auch Verlegenheit oder Resignation aus'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤷" },
+			"reading": {
+				"emojiDescription": "🤷",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "na ja",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "nun ja",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "tja voices resignation, an INTJ Lexeme with no partType. tja after a failure voices resignation, one of the attitudes of Duden's tja (tja, nun ist es zu spät)."
+				"rationale": "tja voices resignation, an INTJ Lexeme with no partType. tja after a failure voices resignation, one of the attitudes of Duden's tja (tja, nun ist es zu spät). Knowledge (#887, dev draft): nearSynonym matches the reviewed na ja record, which holds tja as its nearSynonym and nun ja as its synonym."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

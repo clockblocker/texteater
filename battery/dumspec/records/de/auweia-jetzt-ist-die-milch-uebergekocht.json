@@ -21,13 +21,64 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: auweia",
+				"url": "https://www.dwds.de/wb/auweia",
+				"supports": "Target 0 Knowledge: 'drückt aus, dass man schlimme oder unangenehme Folgen befürchtet…', Synonym zu oje; OpenThesaurus synset shown on DWDS: au weia! · au Backe! · ach herrje! · oh je! · auwei! …"
+			},
+			{
+				"title": "Duden: auweia",
+				"url": "https://www.duden.de/rechtschreibung/auweia",
+				"supports": "Target 0 Knowledge: Interjektion, umgangssprachlich, Bedeutung 'auwei' (a Nebenform, not a target)"
+			},
+			{
+				"title": "DWDS: au",
+				"url": "https://www.dwds.de/wb/au",
+				"supports": "Target 0 Knowledge: au 2c Phrasem au Backe! (= wie dumm, ungünstig), the headword of the claim"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😬" },
+			"reading": {
+				"emojiDescription": "😬",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "oje",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "au Backe",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Auweia is one written word, the headword in Duden and DWDS: one INTJ Lexeme. The spaced au weia is a Lemma of its own (de/interjection-counts-its-words)."
 			},

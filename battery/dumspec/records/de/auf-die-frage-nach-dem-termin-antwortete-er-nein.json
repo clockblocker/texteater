@@ -26,13 +26,80 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: nein",
+				"url": "https://www.dwds.de/wb/nein",
+				"supports": "Target 0 Knowledge: 1 'drückt Ablehnung, Widerspruch aus', a) als Antwort auf eine Frage, 'in gegensätzlicher Bedeutung zu ja'; OpenThesaurus synset shown on DWDS: auf keinen Fall · keineswegs · nein · nee · nö …"
+			},
+			{
+				"title": "Duden: nein",
+				"url": "https://www.duden.de/rechtschreibung/nein",
+				"supports": "Target 0 Knowledge: 'drückt eine verneinende Antwort [auf eine Entscheidungsfrage] aus'; Synonyme: aber nein, aber nicht doch, auf [gar] keinen Fall, ausgeschlossen"
+			},
+			{
+				"title": "DWDS: nee",
+				"url": "https://www.dwds.de/wb/nee",
+				"supports": "Target 0 Knowledge: nee: 'Synonym zu nein'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "❌" },
+			"reading": {
+				"emojiDescription": "❌",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "nee",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "auf keinen Fall",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "ja",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

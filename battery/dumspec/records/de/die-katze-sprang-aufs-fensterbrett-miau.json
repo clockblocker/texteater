@@ -22,13 +22,36 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: miau",
+				"url": "https://www.dwds.de/wb/miau",
+				"supports": "Target 0 Knowledge: Interjektion, lautnachahmend, 'bezeichnet den Ruf der Katze'; no relation listed"
+			},
+			{
+				"title": "Duden: miau",
+				"url": "https://www.duden.de/rechtschreibung/miau",
+				"supports": "Target 0 Knowledge: 'lautmalend für den Laut der Katze': a sound word, no routine; no synonyms listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🐱" },
+			"reading": {
+				"emojiDescription": "🐱",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "miau imitates the cat's call, an onomatopoeic INTJ Lexeme with no partType."
 			},

@@ -25,13 +25,36 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: aha",
+				"url": "https://www.dwds.de/wb/aha",
+				"supports": "Target 0 Knowledge: Interjektion, 'drückt eine Empfindung des plötzlichen Verstehens … aus'; no relation listed"
+			},
+			{
+				"title": "Duden: aha",
+				"url": "https://www.duden.de/rechtschreibung/aha",
+				"supports": "Target 0 Knowledge: Gesprächspartikel, 'dient dazu, eine Information zu bestätigen, auszudrücken, dass man etwas verstanden hat'; no synonyms listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "💡" },
+			"reading": {
+				"emojiDescription": "💡",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "aha marks sudden understanding. It reacts, but it is no response particle answering a question, so its partType is null. aha says that one has understood something (Duden: aha, so hängt das zusammen!)."
 			},

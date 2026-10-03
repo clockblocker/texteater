@@ -25,13 +25,51 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: au",
+				"url": "https://www.dwds.de/wb/au",
+				"supports": "Target 0 Knowledge: au 1 'drückt aus, dass man plötzlichen oder akuten Schmerz empfindet', Synonym zu aua"
+			},
+			{
+				"title": "Duden: aua",
+				"url": "https://www.duden.de/rechtschreibung/aua",
+				"supports": "Target 0 Knowledge: aua 'als Ausdruck des körperlichen Schmerzes'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤕" },
+			"reading": {
+				"emojiDescription": "🤕",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "aua",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "au is a cry of pain, an INTJ Lexeme; it answers no question, so it has no partType. au is DWDS au 1, a cry at sudden or acute pain."
 			},

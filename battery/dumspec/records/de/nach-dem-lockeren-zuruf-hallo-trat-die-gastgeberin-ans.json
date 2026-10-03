@@ -48,12 +48,41 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "Duden: willkommen",
+				"url": "https://www.duden.de/rechtschreibung/willkommen",
+				"supports": "Target 0 Knowledge: '(in Formeln zur Begrüßung bei jemandes Empfang) [sei] willkommen!, willkommen in der Heimat!'; listed Synonyme (angenehm, erwünscht) belong to the adjective sense"
+			},
+			{
+				"title": "DWDS: willkommen",
+				"url": "https://www.dwds.de/wb/willkommen",
+				"supports": "Target 0 Knowledge: 'herzlich willkommen! (= Gruß, wenn ein (erwarteter) Gast ankommt)'; the OpenThesaurus synset shown is the adjective 'erwünscht', no relation for the greeting"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [36],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤗" },
+			"reading": {
+				"emojiDescription": "🤗",
+				"knowledge": {
+					"formulaRole": "Greeting"
+				},
+				"coverage": {
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Willkommen in Dresden! greets the guests: a one-word greeting formula, so it is a Lexeme INTJ. Willkommen in Dresden! is Duden's willkommen 'in Formeln zur Begrüßung bei jemandes Empfang' (willkommen in der Heimat!)."
 			},

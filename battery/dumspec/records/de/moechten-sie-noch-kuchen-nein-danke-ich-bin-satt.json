@@ -34,13 +34,90 @@
 	"sources": {
 		"adrs": ["ADR-0031"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: danke",
+				"url": "https://www.duden.de/rechtschreibung/danke",
+				"supports": "Target 1 Knowledge: Höflichkeitsformel, 'als kurze Form der Dankesbezeigung'; Synonyme: aufrichtigen/besten Dank, danke schön/sehr, danke vielmals, hab/habt Dank"
+			},
+			{
+				"title": "DWDS: danke",
+				"url": "https://www.dwds.de/wb/danke",
+				"supports": "Target 1 Knowledge: Höflichkeitsformel a) 'drückt Anerkennung für freundliches Verhalten, Hilfe, ein Geschenk o. Ä. aus'"
+			},
+			{
+				"title": "DWDS: nein",
+				"url": "https://www.dwds.de/wb/nein",
+				"supports": "Target 0 Knowledge: 1 'drückt Ablehnung, Widerspruch aus', a) als Antwort auf eine Frage, 'in gegensätzlicher Bedeutung zu ja'; OpenThesaurus synset shown on DWDS: auf keinen Fall · keineswegs · nein · nee · nö …"
+			},
+			{
+				"title": "Duden: nein",
+				"url": "https://www.duden.de/rechtschreibung/nein",
+				"supports": "Target 0 Knowledge: 'drückt eine verneinende Antwort [auf eine Entscheidungsfrage] aus'; Synonyme: aber nein, aber nicht doch, auf [gar] keinen Fall, ausgeschlossen"
+			},
+			{
+				"title": "DWDS: nee",
+				"url": "https://www.dwds.de/wb/nee",
+				"supports": "Target 0 Knowledge: nee: 'Synonym zu nein'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "❌" },
+			"reading": {
+				"emojiDescription": "❌",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "nee",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "auf keinen Fall",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "ja",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "No punctuation stands between Nein and danke, but an answer before a formula keeps its own target: nein is the response particle, partType Res, and danke the thanks formula, each an INTJ target of its own."
 			},
@@ -68,7 +145,49 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙏" },
+			"reading": {
+				"emojiDescription": "🙏",
+				"knowledge": {
+					"formulaRole": "Thanks",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "danke schön",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "danke sehr",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "danke vielmals",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "danke after nein is Duden's danke 'zur Unterstreichung einer höflichen Ablehnung', which still thanks for the offer, so it is folded into the thanks Reading under ADR 0031."
 			},

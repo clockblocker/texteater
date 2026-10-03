@@ -19,15 +19,61 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: au weia",
+				"url": "https://www.dwds.de/wb/au%20weia",
+				"supports": "Target 0 Knowledge: auweia (au weia listed as its spaced spelling) 'drückt aus, dass man schlimme oder unangenehme Folgen befürchtet…', Synonym zu oje; OpenThesaurus synset shown on DWDS: au weia! · au Backe! · ach herrje! · oh je! · auwei! …"
+			},
+			{
+				"title": "DWDS: au",
+				"url": "https://www.dwds.de/wb/au",
+				"supports": "Target 0 Knowledge: au 2c Phrasem au Backe! (= wie dumm, ungünstig), the headword of the claim"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😬" },
+			"reading": {
+				"emojiDescription": "😬",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "oje",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "au Backe",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "weia is no German word of its own, so Au weia is one interjection in two pieces with no punctuation between them: one target, an INTJ Lexeme with no Breakdown (de/interjection-counts-its-words). Its Canonical Form is the pieces as written, au weia, a Lemma apart from the joined headword auweia (Duden, DWDS). DWDS calls the spaced spelling invalid, but spacing is never a Typo or a Variant, so both members are Standard."
+				"rationale": "weia is no German word of its own, so Au weia is one interjection in two pieces with no punctuation between them: one target, an INTJ Lexeme with no Breakdown (de/interjection-counts-its-words). Its Canonical Form is the pieces as written, au weia, a Lemma apart from the joined headword auweia (Duden, DWDS). DWDS calls the spaced spelling invalid, but spacing is never a Typo or a Variant, so both members are Standard. Knowledge (#887, dev draft): The joined auweia and the Nebenform auwei are spellings of the same word, not relation targets."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

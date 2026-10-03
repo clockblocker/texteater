@@ -17,13 +17,51 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: haha",
+				"url": "https://www.dwds.de/wb/haha",
+				"supports": "Target 0 Knowledge: haha 1a Synonym zu ¹ha (1 a), 1b 'als Reaktion' Synonym zu ¹ha (1 b): laughter"
+			},
+			{
+				"title": "Duden: haha",
+				"url": "https://www.duden.de/rechtschreibung/haha",
+				"supports": "Target 0 Knowledge: 'das Lachen wiedergebender Ausruf'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😂" },
+			"reading": {
+				"emojiDescription": "😂",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "ha",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Haha is one written word, the headword for laughter (Duden, DWDS): one INTJ Lexeme haha, a Lemma apart from ha and from the spaced ha ha, since spacing is never a Variant."
 			},

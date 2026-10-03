@@ -21,13 +21,56 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: peng",
+				"url": "https://www.dwds.de/wb/peng",
+				"supports": "Target 0 Knowledge: 1 'lautmalerisch für einen Knall, einen Schuss'; OpenThesaurus synset shown on DWDS: bumm · bums · peng · puff · bam · bäm · piff-paff"
+			},
+			{
+				"title": "Duden: peng",
+				"url": "https://www.duden.de/rechtschreibung/peng",
+				"supports": "Target 0 Knowledge: 'lautmalend für einen Knall, einen Schuss aus einer Waffe o. Ä.': a sound word, no routine"
+			},
+			{
+				"title": "Duden: bum",
+				"url": "https://www.duden.de/rechtschreibung/bum",
+				"supports": "Target 0 Knowledge: bum, bumm 'lautmalend für einen dumpfen Schlag, Schuss', a duller sound, hence near"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "💥" },
+			"reading": {
+				"emojiDescription": "💥",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "bum",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Peng imitates a bang. An onomatopoeic word standing outside the clause is an INTJ Lexeme with no partType (DWDS: peng, Interjektion)."
 			},

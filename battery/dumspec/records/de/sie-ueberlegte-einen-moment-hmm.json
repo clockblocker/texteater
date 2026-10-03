@@ -25,13 +25,36 @@
 			},
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: hm",
+				"url": "https://www.duden.de/rechtschreibung/hm_Nachdenken",
+				"supports": "Target 0 Knowledge: 'drückt Nachdenklichkeit oder Bedenken, auch Verlegenheit aus'; no synonyms listed"
+			},
+			{
+				"title": "DWDS: hm",
+				"url": "https://www.dwds.de/wb/hm",
+				"supports": "Target 0 Knowledge: 2 'drückt Nachdenklichkeit aus'; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤔" },
+			"reading": {
+				"emojiDescription": "🤔",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "hmm stretches hm, the only spelling Duden gives, for effect, so the Surface is a Variant tagged Expressive, not Licensed, and the member is Standard (de/variant-and-historical-status, de/member-orthography). hm while thinking is Duden's hm that 'drückt Nachdenklichkeit oder Bedenken aus'."
 			},

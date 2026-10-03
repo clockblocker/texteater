@@ -29,13 +29,36 @@
 				"hash": "9e2c6c25c942a570"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: boah",
+				"url": "https://www.duden.de/rechtschreibung/boah",
+				"supports": "Target 0 Knowledge: Interjektion, 'Ausruf des Staunens'; no synonyms listed"
+			},
+			{
+				"title": "DWDS: boah",
+				"url": "https://www.dwds.de/wb/boah",
+				"supports": "Target 0 Knowledge: Interjektion, umgangssprachlich; no definition or relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😲" },
+			"reading": {
+				"emojiDescription": "😲",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "boahhh stretches the letters of boah for effect, so it is a Variant tagged Expressive. boah is Duden's 'Ausruf des Staunens', here at the view."
 			},

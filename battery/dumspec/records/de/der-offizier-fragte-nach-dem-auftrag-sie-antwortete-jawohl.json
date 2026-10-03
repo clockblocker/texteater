@@ -27,13 +27,62 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: jawohl",
+				"url": "https://www.duden.de/rechtschreibung/jawohl",
+				"supports": "Target 0 Knowledge: Gesprächspartikel: „Verstanden?“ – „Jawohl, Herr Leutnant“; Synonyme: allerdings, freilich, garantiert, ja"
+			},
+			{
+				"title": "DWDS: jawohl",
+				"url": "https://www.dwds.de/wb/jawohl",
+				"supports": "Target 0 Knowledge: 'drückt unbedingte Zustimmung aus'; OpenThesaurus synset shown on DWDS: jawohl (+ dienstliche Anrede) · jawoll · sehr wohl · zu Befehl (militärisch)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🫡" },
+			"reading": {
+				"emojiDescription": "🫡",
+				"knowledge": {
+					"formulaRole": "Acknowledgment",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "zu Befehl",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "ja",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "jawohl is an emphatic yes answering the officer: a response particle, partType Res. jawohl 'drückt unbedingte Zustimmung aus' (DWDS), the emphatic yes given to an officer."
 			},

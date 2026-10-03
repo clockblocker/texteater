@@ -37,13 +37,36 @@
 				"hash": "b572bad8906b508d"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Mist",
+				"url": "https://www.duden.de/rechtschreibung/Mist_Dreck",
+				"supports": "Target 0 Knowledge: 'lästige, ärgerliche, dumme Angelegenheit', (in Flüchen) so ein Mist!, [verfluchter] Mist!; listed Synonyme (Dung, Dünger) belong to the dung sense"
+			},
+			{
+				"title": "DWDS: Mist",
+				"url": "https://www.dwds.de/wb/Mist",
+				"supports": "Target 0 Knowledge: 2d 'in Verwünschungen, Flüchen'; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [22],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤬" },
+			"reading": {
+				"emojiDescription": "🤬",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The called-out Mist! stands outside any clause: an INTJ Lexeme with no partType (de/interjection-counts-its-words), a Lemma apart from the NOUN Mist of the first clause, since Kind is identity (ADR 0002). Mist! is the curse Duden gives under Mist 'lästige, ärgerliche Angelegenheit' (in Flüchen: so ein Mist!), not the dung of the NOUN Mist."
 			},

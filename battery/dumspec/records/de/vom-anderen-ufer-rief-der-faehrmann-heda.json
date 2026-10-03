@@ -23,13 +23,38 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: heda",
+				"url": "https://www.dwds.de/wb/heda",
+				"supports": "Target 0 Knowledge: 'Anruf, um jmds. Aufmerksamkeit zu erregen', with the definition word hallo (definition markup, not a Synonym zu link)"
+			},
+			{
+				"title": "Duden: heda",
+				"url": "https://www.duden.de/rechtschreibung/heda",
+				"supports": "Target 0 Knowledge: Interjektion, veraltet; Bedeutung 'hallo (1)', i.e. the call for attention"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "📣" },
+			"reading": {
+				"emojiDescription": "📣",
+				"knowledge": {
+					"formulaRole": "Initiation"
+				},
+				"coverage": {
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Duden glosses heda as hallo 'Ruf, mit dem man jemandes Aufmerksamkeit auf sich lenkt', a call for attention."
 			},

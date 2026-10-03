@@ -25,13 +25,36 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Mann",
+				"url": "https://www.duden.de/rechtschreibung/Mann_Person",
+				"supports": "Target 0 Knowledge: '[mein lieber] Mann! (salopp: Ausruf des Erstaunens, des Unwillens)'; no synonym for the exclamation"
+			},
+			{
+				"title": "DWDS: Mann",
+				"url": "https://www.dwds.de/wb/Mann",
+				"supports": "Target 0 Knowledge: 2a 'in Ausrufen' (salopp); no relation listed for it"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😤" },
+			"reading": {
+				"emojiDescription": "😤",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Mann! at the jammed key is Duden's '[mein lieber] Mann!', 'Ausruf des Erstaunens, des Unwillens', here displeasure, not the man 👨 of the NOUN Mann."
 			},

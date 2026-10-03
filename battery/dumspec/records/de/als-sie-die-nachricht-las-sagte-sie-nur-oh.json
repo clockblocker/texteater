@@ -27,13 +27,36 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: oh",
+				"url": "https://www.dwds.de/wb/oh",
+				"supports": "Target 0 Knowledge: Interjektion, a) 'Ausruf der Überraschung, der Verwunderung'; no relation listed (DWDS, Duden; OpenThesaurus API rate-limited, no synset shown on DWDS)"
+			},
+			{
+				"title": "Duden: oh",
+				"url": "https://www.duden.de/rechtschreibung/oh",
+				"supports": "Target 0 Knowledge: Interjektion, 'Ausruf der Überraschung, der Verwunderung o. Ä.'; no synonyms listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😮" },
+			"reading": {
+				"emojiDescription": "😮",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

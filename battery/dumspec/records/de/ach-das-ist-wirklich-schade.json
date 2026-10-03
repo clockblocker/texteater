@@ -19,13 +19,36 @@
 	"sources": {
 		"adrs": ["ADR-0031"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: ach",
+				"url": "https://www.duden.de/rechtschreibung/ach",
+				"supports": "Target 0 Knowledge: 'als Ausdruck des [ironischen] Bedauerns' (ach, wie schade!); no synonyms listed"
+			},
+			{
+				"title": "DWDS: ach",
+				"url": "https://www.dwds.de/wb/ach",
+				"supports": "Target 0 Knowledge: 2a 'als Ausdruck des (ironischen) Bedauerns'; the OpenThesaurus synsets shown hold ach! as surprise, not this sigh"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😮‍💨" },
+			"reading": {
+				"emojiDescription": "😮‍💨",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "ach before schade is Duden's 'Ausdruck des [ironischen] Bedauerns'; its sighs of pain or dismay and of displeasure stay one Reading with it, the sigh, under ADR 0031."
 			},

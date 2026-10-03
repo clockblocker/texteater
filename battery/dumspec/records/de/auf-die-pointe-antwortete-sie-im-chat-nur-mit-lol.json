@@ -38,7 +38,18 @@
 				"hash": "43184aac9186aceb"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: lol",
+				"url": "https://www.duden.de/rechtschreibung/lol",
+				"supports": "Target 0 Knowledge: 'drückt [meist in geschriebenem Text] große Heiterkeit aus'; no synonyms listed"
+			},
+			{
+				"title": "DWDS: lol",
+				"url": "https://www.dwds.de/wb/lol",
+				"supports": "Target 0 Knowledge: no DWDS entry"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -67,7 +78,19 @@
 				"members": [{ "attested": "LOL", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
 			},
-			"reading": { "emojiDescription": "😂" }
+			"reading": {
+				"emojiDescription": "😂",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			}
 		}
 	],
 	"noTarget": []

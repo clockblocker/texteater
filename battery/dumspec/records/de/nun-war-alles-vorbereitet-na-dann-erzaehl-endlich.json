@@ -31,13 +31,36 @@
 				"hash": "b572bad8906b508d"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: na",
+				"url": "https://www.duden.de/rechtschreibung/na_Interjektion_Partikel",
+				"supports": "Target 0 Knowledge: na, dann mal los; Synonym hallo belongs to the sense 'freundschaftlicher Gruß', not the urging"
+			},
+			{
+				"title": "DWDS: na",
+				"url": "https://www.dwds.de/wb/na",
+				"supports": "Target 0 Knowledge: 1a 'drückt Ungeduld … aus' (na los, komm schon!), 2f 'dient als Einleitung einer Aufforderung'; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👉" },
+			"reading": {
+				"emojiDescription": "👉",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "na stands outside the clause and urges the listener on: an INTJ Lexeme with no partType (de/interjection-counts-its-words). na urging the story on is Duden's na leading into an Aufforderung (na, dann mal los), the same Reading that opens na ja."
 			},

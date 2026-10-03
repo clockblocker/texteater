@@ -32,13 +32,36 @@
 				"hash": "b572bad8906b508d"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: ach",
+				"url": "https://www.duden.de/rechtschreibung/ach",
+				"supports": "Target 0 Knowledge: 'als Ausdruck des [ironischen] Bedauerns' (ach, wie schade!); no synonyms listed"
+			},
+			{
+				"title": "DWDS: ach",
+				"url": "https://www.dwds.de/wb/ach",
+				"supports": "Target 0 Knowledge: 2a 'als Ausdruck des (ironischen) Bedauerns'; the OpenThesaurus synsets shown hold ach! as surprise, not this sigh"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😮‍💨" },
+			"reading": {
+				"emojiDescription": "😮‍💨",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The sighed ach stands outside a clause: an INTJ Lexeme with no partType (de/interjection-counts-its-words). Sein ständiges Ach uses the word as a noun, another Lemma, since Kind is identity (ADR 0002)."
 			},

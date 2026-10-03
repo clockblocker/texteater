@@ -23,13 +23,64 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Donnerwetter",
+				"url": "https://www.duden.de/rechtschreibung/Donnerwetter",
+				"supports": "Target 0 Knowledge: 'Ausruf des bewundernden Erstaunens' (salopp); listed Synonyme (Rüge, Standpauke) belong to the scolding sense"
+			},
+			{
+				"title": "DWDS: Donnerwetter",
+				"url": "https://www.dwds.de/wb/Donnerwetter",
+				"supports": "Target 0 Knowledge: c) ⟨Donnerwetter!⟩ 'Ausruf; drückt bewundernde Überraschung aus'; OpenThesaurus synset shown on DWDS: Donnerwetter! · Mannomann! · alter Schwede! · Menschenskinder! · Wahnsinn! …"
+			},
+			{
+				"title": "Duden: Mannomann",
+				"url": "https://www.duden.de/rechtschreibung/Mannomann",
+				"supports": "Target 0 Knowledge: Mannomann 'Ausruf des Erstaunens'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😲" },
+			"reading": {
+				"emojiDescription": "😲",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "Mannomann",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "alter Schwede",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Bare Donnerwetter! is the 'Ausruf des bewundernden Erstaunens' of Duden and DWDS, here astonishment at the damage, since their curse needs zum or noch einmal (zum Donnerwetter noch einmal!)."
 			},

@@ -23,13 +23,36 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: huch",
+				"url": "https://www.duden.de/rechtschreibung/huch",
+				"supports": "Target 0 Knowledge: 'Ausruf des [gespielten] Erschreckens, Abscheus u. Ä.'; no synonyms listed"
+			},
+			{
+				"title": "DWDS: huch",
+				"url": "https://www.dwds.de/wb/huch",
+				"supports": "Target 0 Knowledge: a) 'drückt (gespielte) Furcht aus'; the OpenThesaurus synset shown (huch! · oh je! · Schreck lass nach! …) gives only the spaced oh je and set phrases, no solid headword claim"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [13],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😱" },
+			"reading": {
+				"emojiDescription": "😱",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "huch at the mouse is Duden's 'Ausruf des [gespielten] Erschreckens'."
 			},

@@ -19,13 +19,36 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: hurra",
+				"url": "https://www.dwds.de/wb/hurra",
+				"supports": "Target 0 Knowledge: Interjektion, 'drückt Freude, Begeisterung, Zustimmung aus'; no relation listed (DWDS, Duden; OpenThesaurus API rate-limited, no synset shown on DWDS)"
+			},
+			{
+				"title": "Duden: hurra",
+				"url": "https://www.duden.de/rechtschreibung/hurra",
+				"supports": "Target 0 Knowledge: Interjektion, 'Ausruf der Begeisterung, des Beifalls'; no synonyms listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙌" },
+			"reading": {
+				"emojiDescription": "🙌",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "hurra is Duden's 'Ausruf der Begeisterung, des Beifalls'."
 			},
