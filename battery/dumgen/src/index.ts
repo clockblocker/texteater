@@ -3,8 +3,10 @@
  * Text into paragraphs and Sentences in code; `createDumgen({ jev, luna })`
  * builds the operations: `segment.inUnits`, which turns each Sentence into
  * its Segments and its biggest units, each with its route or `Unresolved`,
- * asking jev through the host's `JevAsk`, and `resolve.grammar`, which
- * resolves a stored unit's Attestation with jev judging and Luna writing.
+ * asking jev through the host's `JevAsk`; `resolve.grammar`, which
+ * resolves a stored unit's Attestation with jev judging and Luna writing;
+ * and `resolve.reading`, which picks a stored Emoji Description of the
+ * Attestation's Lemma or writes a new one.
  * The operations are Effect 4 Effects. `createTypeSafeAsk` and
  * `createOpenAILuna` are the production transports: `fetch` to the
  * TypeSafe and OpenAI APIs, with no `node:*` import.
@@ -35,7 +37,9 @@ export type {
 	GrammarResolution,
 	LemmaCandidate,
 	NeighbourSentences,
+	ReadingResolution,
 	ResolveGrammarInput,
+	ResolveReadingInput,
 } from "./resolve/types.js";
 export type { Answer, Answers } from "./segment/ask.js";
 export type { GermanInventory } from "./segment/de/inventory.js";

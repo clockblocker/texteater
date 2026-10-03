@@ -1,9 +1,11 @@
 /**
- * What `resolve.grammar` takes and returns (#859): the stored unit a click
- * landed on, the Sentence and its neighbours, and the stored Lemmas that
- * may name it; out comes the unit's Attestation, or the judge's
- * Unresolved, or a Catalog Miss. All three are answers; the error channel
- * says only that no usable answer came back.
+ * What `resolve.grammar` and `resolve.reading` take and return (#859).
+ * Grammar takes the stored unit a click landed on, the Sentence and its
+ * neighbours, and the stored Lemmas that may name it; out comes the
+ * unit's Attestation, or the judge's Unresolved, or a Catalog Miss.
+ * Reading takes that Attestation and the stored Emoji Descriptions of its
+ * Lemma; out comes a Reuse, a New or a Catalog Miss. All are answers; the
+ * error channel says only that no usable answer came back.
  */
 import type * as Dumling from "dumling/types";
 import type {
@@ -51,6 +53,44 @@ export type GrammarResolution =
 			readonly attestation: Dumling.Attestation<"de">;
 	  }
 	| { readonly _tag: "Unresolved" }
+	| {
+			readonly _tag: "CatalogMiss";
+			readonly route: Route;
+			readonly message: string;
+	  };
+
+/**
+ * What `resolve.reading` takes (#859): the Attestation `resolve.grammar`
+ * returned, the Sentence and the stored unit it resolved, and the Emoji
+ * Descriptions of the Lemma's stored Readings. The unit only marks the
+ * target in the Sentence.
+ */
+export type ResolveReadingInput = {
+	readonly attestation: Dumling.Attestation<"de">;
+	/** Dumgen's own Segmented Sentence, as intake stored it; never a failed one. */
+	readonly sentence: SegmentedSentence;
+	/** The stored unit the Attestation resolves. */
+	readonly unit: Unit;
+	/** The Emoji Descriptions of the Lemma's stored Readings, as stored. */
+	readonly candidates: readonly string[];
+	/**
+	 * The Emoji Description Luna wrote for this click before the host
+	 * refused its New as stale (ADR 0031): the judge runs again over the
+	 * current candidates, and a second NoMatch takes this one instead of
+	 * writing another.
+	 */
+	readonly written?: string;
+};
+
+/**
+ * The Reading's answer: a stored candidate the click reuses, as stored, or
+ * a New Emoji Description, which Luna wrote or an authored Reading names
+ * (ADR 0021), or a Catalog Miss when a Closed Route's Lemma has no
+ * authored Reading. tf-demo recognizes an authored Reading by its value.
+ */
+export type ReadingResolution =
+	| { readonly _tag: "Reuse"; readonly emojiDescription: string }
+	| { readonly _tag: "New"; readonly emojiDescription: string }
 	| {
 			readonly _tag: "CatalogMiss";
 			readonly route: Route;

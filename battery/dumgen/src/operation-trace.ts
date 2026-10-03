@@ -55,18 +55,29 @@ export type SentenceOutcome =
 	  };
 
 /**
- * How a `resolve.grammar` click came out, with why a click came back
- * Unresolved or a Catalog Miss: `UnresolvedUnit` when intake left the unit
- * Unresolved, otherwise the question or check that decided. The value the
- * host receives carries only the outcome; the evaluation buckets by reason.
+ * How a click came out, with why. For `resolve.grammar`: why it came back
+ * Unresolved or a Catalog Miss, `UnresolvedUnit` when intake left the unit
+ * Unresolved, otherwise the question or check that decided. For
+ * `resolve.reading`: what decided its Reuse or New (`Authored`,
+ * `AuthoredJudged`, `Judged`, `Written`, `Collision`, `WrittenStored`,
+ * `Rejudged`) or its Catalog Miss. The value the host receives carries
+ * only the outcome; the evaluation buckets by reason.
  */
 export type ResolutionOutcome = {
-	readonly outcome: "Resolved" | "Unresolved" | "CatalogMiss";
+	readonly outcome:
+		| "Resolved"
+		| "Unresolved"
+		| "CatalogMiss"
+		| "Reuse"
+		| "New";
 	readonly reason?: string;
 };
 
 export type OperationTrace = {
-	readonly operation: "segment.inUnits" | "resolve.grammar";
+	readonly operation:
+		| "segment.inUnits"
+		| "resolve.grammar"
+		| "resolve.reading";
 	/** Epoch milliseconds; `durationMs` reads the monotonic clock. */
 	readonly startedAt: number;
 	readonly durationMs: number;
@@ -75,6 +86,6 @@ export type OperationTrace = {
 	readonly waits: readonly BudgetWait[];
 	/** In the order they finished; a Sentence the operation never finished is absent. */
 	readonly sentences: readonly SentenceOutcome[];
-	/** `resolve.grammar` only, once its click came out. */
+	/** `resolve.grammar` and `resolve.reading` only, once the click came out. */
 	readonly resolution?: ResolutionOutcome;
 };

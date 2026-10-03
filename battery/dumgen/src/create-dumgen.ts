@@ -2,8 +2,8 @@
  * `createDumgen`, the one factory every host builds Dumgen with (#859). Its
  * operations are Effects whose error channel holds only `ProviderFailure`
  * and `InvalidModelOutput` (#552); a host `yield*`s them in its own
- * programs. It offers `segment.inUnits` and `resolve.grammar`;
- * `resolve.reading` and `knowledge.produce` follow.
+ * programs. It offers `segment.inUnits`, `resolve.grammar` and
+ * `resolve.reading`; `knowledge.produce` follows.
  */
 import type * as Effect from "effect/Effect";
 import { requestBudget, runOperation } from "./call.js";
@@ -15,9 +15,12 @@ import {
 } from "./luna.js";
 import type { OperationTrace } from "./operation-trace.js";
 import { resolveGrammar } from "./resolve/grammar.js";
+import { resolveReading } from "./resolve/reading.js";
 import type {
 	GrammarResolution,
+	ReadingResolution,
 	ResolveGrammarInput,
+	ResolveReadingInput,
 } from "./resolve/types.js";
 import type { GermanInventory } from "./segment/de/inventory.js";
 import { productionUnitSettings } from "./segment/de/units.js";
@@ -30,7 +33,8 @@ export type DumgenOptions = {
 	readonly jev: JevAsk;
 	/**
 	 * Luna, for the operations that write: `resolve.grammar` writes Canonical
-	 * Forms and spelling corrections with it (#862). Segmentation never
+	 * Forms and spelling corrections with it, and `resolve.reading` Emoji
+	 * Descriptions (#862). Segmentation never
 	 * receives it. `createOpenAILuna` in production.
 	 */
 	readonly luna: LunaAsk;
@@ -75,6 +79,20 @@ export type Dumgen = {
 			GrammarResolution,
 			ProviderFailure | InvalidModelOutput
 		>;
+		/**
+		 * The Reading a resolved click lands on (#859, ADR 0031): a stored
+		 * Emoji Description it reuses, or a New one, or a Catalog Miss, all
+		 * as answers. jev judges the stored candidates first; Luna writes
+		 * only after NoMatch or when nothing is stored. Authored Lemmas take
+		 * their authored Reading. A click is all-or-nothing, as in grammar.
+		 * Bad input, a Foreign Attestation among it, is a Defect.
+		 */
+		readonly reading: (
+			input: ResolveReadingInput,
+		) => Effect.Effect<
+			ReadingResolution,
+			ProviderFailure | InvalidModelOutput
+		>;
 	};
 };
 
@@ -109,6 +127,10 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 			grammar: (input) =>
 				runOperation("resolve.grammar", operations, (scope) =>
 					resolveGrammar(scope, { jev, luna }, input),
+				),
+			reading: (input) =>
+				runOperation("resolve.reading", operations, (scope) =>
+					resolveReading(scope, { jev, luna }, input),
 				),
 		},
 	};
