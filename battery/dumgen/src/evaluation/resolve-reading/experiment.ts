@@ -67,6 +67,12 @@ export const readingRoute = "resolve-reading/de";
 /** Each attempt runs three times; each repetition is its own cached answer. */
 export const readingRepetitions = 3;
 
+/**
+ * The operation a run measures. 2: Luna answers the Emoji Description as
+ * JSON (#526); open-route authored Lemmas can gain a New Reading (#877 R4).
+ */
+export const readingOperationVersion = `${readingRoute}@production-2`;
+
 /** A run's projected spend, shaped as resolve.grammar's so one budget guard reads both. */
 export type ReadingPrice = GrammarPrice;
 
@@ -400,7 +406,7 @@ export function readingExperiment(setName: ReadingSetName) {
 					},
 				},
 				experimentId: id,
-				operationVersion: `${readingRoute}@production`,
+				operationVersion: readingOperationVersion,
 				evaluatorVersion: "resolve-reading-1",
 				sourceRevision: args.sourceRevision,
 				configurations: {

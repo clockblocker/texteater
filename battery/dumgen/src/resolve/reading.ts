@@ -3,14 +3,16 @@
  * Lemma a resolved click lands on, told apart by the Emoji Description
  * alone.
  *
- * - A Lemma dumspec authors takes its authored Reading with no call, or
- *   jev's pick when it has several (ADR 0021). A Closed Route's Lemma with
- *   none is a Catalog Miss.
- * - Any other Lemma with stored Readings goes to jev first, which sees the
+ * - On a Closed Route a Lemma takes its authored Reading with no call, or
+ *   jev's pick when it has several, and one dumspec authors no Reading of
+ *   is a Catalog Miss (ADR 0021).
+ * - On an Open Route jev judges first: it sees the Lemma's authored and
  *   stored Emoji Descriptions bare beside the marked Sentence and picks
- *   one or answers NoMatch. Only after NoMatch, or with nothing stored,
+ *   one or answers NoMatch. Only after NoMatch, or with none to offer,
  *   does Luna write one, from the marked Sentence and the Canonical Form
- *   alone. Luna writing a stored one is a Reuse: the judge was wrong.
+ *   alone. An authored set may miss a sense, so its Lemma can gain a New
+ *   Reading beside it (#877 R4). Luna writing an offered one takes it: the
+ *   judge was wrong.
  * - A host that refused a New as stale passes the description Luna wrote
  *   as `written`: the judge runs again over the current candidates, and a
  *   second NoMatch takes it (ADR 0031).
@@ -43,13 +45,6 @@ export type ReadingModels = {
 	readonly jev: JevSettings;
 	readonly luna: LunaSettings;
 };
-
-/**
- * How Luna answers the Emoji Description call. Text, as the legacy
- * generator answered; JSON with a string schema (E10's arm RS) awaits the
- * user's ruling on #526.
- */
-export const emojiDescriptionOutput = "text" as "text" | "json";
 
 /** The Sentence with each run of the unit's Segments marked `<TARGET>…</TARGET>`. */
 export function markedSentence(
@@ -84,21 +79,27 @@ export const generationPrompt = [
 	generation.copula,
 	generation.polarity,
 	generation.multiword,
-	emojiDescriptionOutput === "json" ? generation.json : generation.text,
+	generation.json,
 	generation.examples,
 	...readingDemonstrations.map(({ text }) => text),
 ].join("\n");
 
-/** The Emoji Description request Luna gets, without its configuration. */
+/**
+ * The Emoji Description request Luna gets, without its configuration. Luna
+ * answers JSON under a string schema with strict mode off, E10's arm RS
+ * (#526, ruled 2026-10-03): fewer lost clicks than free text. An answer
+ * that is no Emoji Description is still refused, never salvaged.
+ */
 export function emojiDescriptionRequest(input: {
 	readonly markedSentence: string;
 	readonly lemma: string;
 }): Omit<LunaRequest, "configuration"> {
-	const answer =
-		emojiDescriptionOutput === "json"
-			? { outputSchema: { type: "string", minLength: 1 } }
-			: { outputFormat: "text" as const };
-	return { systemPrompt: generationPrompt, input, ...answer };
+	return {
+		systemPrompt: generationPrompt,
+		input,
+		outputFormat: "json",
+		outputSchema: { type: "string" },
+	};
 }
 
 /** An Emoji Description as Dumling parses it, or undefined when it is none. */
@@ -231,27 +232,33 @@ export const resolveReading = Effect.fnUntraced(function* (
 	};
 	const ask = askThrough(scope, models.jev);
 
-	// A Lemma dumspec authors: its authored Reading, or jev's pick of them.
 	const authored = authoredFor(lemma).map(
 		({ reading }) => reading.emojiDescription,
 	);
-	const [only] = authored;
-	if (only !== undefined && authored.length === 1)
-		return answer(only, "Authored");
-	if (authored.length > 1) {
-		const index = yield* pick(ask, "authoredReading", state, authored);
-		const chosen = index === undefined ? undefined : authored[index];
-		if (chosen === undefined)
-			throw Error("An authored pick names an option");
-		return answer(chosen, "AuthoredJudged");
-	}
+	// A Closed Route: its authored Reading, or jev's pick of them.
 	if (closedRoute(route)) {
+		const [only] = authored;
+		if (only !== undefined && authored.length === 1)
+			return answer(only, "Authored");
+		if (authored.length > 1) {
+			const index = yield* pick(ask, "authoredReading", state, authored);
+			const chosen = index === undefined ? undefined : authored[index];
+			if (chosen === undefined)
+				throw Error("An authored pick names an option");
+			return answer(chosen, "AuthoredJudged");
+		}
 		const message = `No authored Reading of ${route.kind} ${lemma.canonicalForm}`;
 		scope.resolution({ outcome: "CatalogMiss", reason: message });
 		return { _tag: "CatalogMiss", route, message };
 	}
 
-	// An open Lemma: the judge over what is stored, then Luna.
+	// An Open Route: the judge over the authored and stored descriptions,
+	// then Luna.
+	const options = [...authored, ...candidates].filter(
+		(option, index, all) =>
+			all.findIndex((other) => keyOf(other) === keyOf(option)) === index,
+	);
+	const offered = new Set(options.map(keyOf));
 	const written =
 		input.written === undefined
 			? undefined
@@ -260,11 +267,11 @@ export const resolveReading = Effect.fnUntraced(function* (
 		return yield* defect(
 			`The written ${JSON.stringify(input.written)} is no Emoji Description`,
 		);
-	if (written !== undefined && seen.has(keyOf(written)))
+	if (written !== undefined && offered.has(keyOf(written)))
 		return answer(written, "WrittenStored");
-	if (candidates.length > 0) {
-		const index = yield* pick(ask, "reading", state, candidates);
-		const picked = index === undefined ? undefined : candidates[index];
+	if (options.length > 0) {
+		const index = yield* pick(ask, "reading", state, options);
+		const picked = index === undefined ? undefined : options[index];
 		if (picked !== undefined) return answer(picked, "Judged");
 	}
 	if (written !== undefined) return answer(written, "Rejudged");
@@ -282,6 +289,6 @@ export const resolveReading = Effect.fnUntraced(function* (
 	);
 	return answer(
 		emojiDescription,
-		seen.has(keyOf(emojiDescription)) ? "Collision" : "Written",
+		offered.has(keyOf(emojiDescription)) ? "Collision" : "Written",
 	);
 });

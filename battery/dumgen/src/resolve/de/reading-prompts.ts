@@ -59,7 +59,7 @@ function paragraph(name: string, text: string, ...cites: Cite[]): string {
 export const judgePolicy = {
 	task: paragraph(
 		"judge.task",
-		"`markedSentence` marks one German unit with <TARGET>…</TARGET>, every word of it, and `lemma` is its dictionary headword, already fixed. Each option is the Emoji Description of one stored Reading of that Lemma: one to four emoji naming one meaning of it.",
+		"`markedSentence` marks one German unit with <TARGET>…</TARGET>, every word of it, and `lemma` is its dictionary headword, already fixed. Each option is the Emoji Description of one Reading of that Lemma: one to four emoji naming one meaning of it.",
 		rules.meaning,
 	),
 	meaning: paragraph(
@@ -140,11 +140,6 @@ export const generation = {
 		"Describe a fixed expression by the meaning of the whole unit, not of its words; keep its own image only when it is transparent.",
 		rules.multiword,
 		rules.idiom,
-	),
-	text: paragraph(
-		"generation.output.text",
-		"Answer with the emoji alone, one to four of them, and nothing else.",
-		rules.meaning,
 	),
 	json: paragraph(
 		"generation.output.json",
