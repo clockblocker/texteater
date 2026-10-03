@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0040"],
@@ -103,7 +103,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Kindern is a dative plural noun with plural -n; the surface features carry both case and number. Knowledge (#884): the Reading is a child by age; Knirps stays off as an OpenThesaurus Unterbegriff, Sprössling as the offspring sense, Erwachsene as only a definition's negation; decided by agents under the user's delegation. Open for the user: the judges split on nearSynonym Göre, drafted without it."
+				"rationale": "Kindern is a dative plural noun with plural -n; the surface features carry both case and number. Knowledge (#884): the Reading is a child by age; Knirps stays off as an OpenThesaurus Unterbegriff, Sprössling as the offspring sense, Erwachsene as only a definition's negation; decided by agents under the user's delegation. Göre stays off too: like Knirps it sits in an OpenThesaurus Unterbegriff group (user ruling on #884, 2026-10-03)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

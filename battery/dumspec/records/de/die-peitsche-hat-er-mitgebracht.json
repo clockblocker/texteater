@@ -28,7 +28,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",

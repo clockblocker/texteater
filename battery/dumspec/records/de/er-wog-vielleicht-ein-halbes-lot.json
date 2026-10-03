@@ -31,7 +31,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
