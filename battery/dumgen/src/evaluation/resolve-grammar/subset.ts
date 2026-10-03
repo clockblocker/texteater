@@ -201,21 +201,32 @@ export function selectSubset(options: {
 	readonly guardSize: number;
 	/** Whether gold records a case's valencyEvidence; a failed attempt then misses it. */
 	readonly scoresValency?: (caseId: string) => boolean;
+	/**
+	 * A whole-set run the guard is drawn from, its passed cases stratified by
+	 * its routes; `attempts` by default. A later round reads its misses from
+	 * the round before and draws a fresh guard from the baseline.
+	 */
+	readonly guardAttempts?: readonly ScoredAttempt[];
+	/** Cases the guard never takes, such as an earlier round's guard. */
+	readonly exclude?: ReadonlySet<string>;
 }): GrammarSubset {
-	const { missed, passed } = splitByMisses(
-		options.attempts,
+	const { missed } = splitByMisses(options.attempts, options.scoresValency);
+	const source = splitByMisses(
+		options.guardAttempts ?? options.attempts,
 		options.scoresValency,
 	);
 	const devRoutes = new Map<string, number>();
-	for (const { route } of missed.values())
+	for (const { route } of source.missed.values())
 		devRoutes.set(route, (devRoutes.get(route) ?? 0) + 1);
-	for (const route of passed.values())
+	for (const route of source.passed.values())
 		devRoutes.set(route, (devRoutes.get(route) ?? 0) + 1);
 	const passedByRoute = new Map<string, string[]>();
-	for (const [caseId, route] of [...passed].sort(([left], [right]) =>
+	for (const [caseId, route] of [...source.passed].sort(([left], [right]) =>
 		left.localeCompare(right),
-	))
+	)) {
+		if (missed.has(caseId) || options.exclude?.has(caseId)) continue;
 		passedByRoute.set(route, [...(passedByRoute.get(route) ?? []), caseId]);
+	}
 	const quotas = guardQuotas(
 		new Map(
 			[...devRoutes].sort(([left], [right]) => left.localeCompare(right)),

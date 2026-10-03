@@ -300,3 +300,40 @@ test("an evaluation on a subset runs only its cases, at the asked repetitions, a
 		count: 3,
 	});
 });
+
+test("a later round reads its misses from the round before and draws a fresh guard from the baseline, excluding an earlier guard", () => {
+	const first = selectSubset({
+		baselineRunId: "baseline",
+		experimentId: "resolve-grammar/de:dev",
+		setHash: "hash",
+		attempts: baseline(),
+		seed: 7,
+		guardSize: 12,
+	});
+	const earlierGuard = new Set(subsetCaseIds(first).guard);
+	// Round 2 ran the first subset: one missed case and one guard case miss.
+	const [regressed] = [...earlierGuard];
+	if (!regressed) throw Error("no guard");
+	const round = [
+		...attemptsAt("failed#0", "Lexeme/ADJ"),
+		...attemptsAt("flip#0", "Lexeme/VERB", [["cell"], [], []]),
+		...attemptsAt(regressed, "Lexeme/NOUN", [[], [], ["members"]]),
+	];
+	const next = selectSubset({
+		baselineRunId: "round-2",
+		experimentId: "resolve-grammar/de:dev",
+		setHash: "hash",
+		attempts: round,
+		guardAttempts: baseline(),
+		exclude: earlierGuard,
+		seed: 9,
+		guardSize: 12,
+	});
+	expect(Object.keys(next.missed).sort()).toEqual(
+		["flip#0", regressed].sort(),
+	);
+	const fresh = subsetCaseIds(next).guard;
+	expect(fresh).toHaveLength(12);
+	expect(fresh.some((id) => earlierGuard.has(id))).toBe(false);
+	expect(fresh.some((id) => Object.hasOwn(next.missed, id))).toBe(false);
+});

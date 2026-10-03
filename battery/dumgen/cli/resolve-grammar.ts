@@ -3,6 +3,7 @@
  *
  *   bun cli/resolve-grammar.ts freeze
  *   bun cli/resolve-grammar.ts subset <baselineRunId> [--seed N] [--guard N]
+ *       [--guard-from <wholeSetRunId>] [--exclude <earlier subset>] [--out <file>]
  *
  * `freeze` freezes dev (the Draft records with the Attestation layer) and
  * held-out (the records reviewed through Attestation or deeper) under
@@ -30,6 +31,7 @@ import {
 	grammarAttempts,
 } from "../src/evaluation/resolve-grammar/experiment.js";
 import {
+	loadSubset,
 	saveSubset,
 	selectSubset,
 	subsetCaseIds,
@@ -51,6 +53,9 @@ export async function runResolveGrammarCli(
 		options: {
 			seed: { type: "string" },
 			guard: { type: "string" },
+			"guard-from": { type: "string" },
+			exclude: { type: "string", multiple: true },
+			out: { type: "string" },
 		},
 	});
 	const [command, runId] = positionals;
@@ -59,23 +64,40 @@ export async function runResolveGrammarCli(
 			throw Error(
 				"Use `bun cli/resolve-grammar.ts subset <baselineRunId>`",
 			);
-		const loaded = await loadRun(
-			options.runDirectory ?? defaultRunOutputDirectory,
-			runId,
-		);
-		if (loaded.manifest.version !== 2)
-			throw Error(
-				"The baseline is an operation run (manifest version 2)",
+		const operationRun = async (id: string) => {
+			const loaded = await loadRun(
+				options.runDirectory ?? defaultRunOutputDirectory,
+				id,
 			);
-		const run = loaded as OperationEvaluationRun;
+			if (loaded.manifest.version !== 2)
+				throw Error("The run is an operation run (manifest version 2)");
+			return loaded as OperationEvaluationRun;
+		};
+		const run = await operationRun(runId);
 		const settings = run.manifest.configurations.judgment.settings as {
 			setHash?: string;
 			caseFilter?: unknown;
 		};
-		if (!settings.setHash || settings.caseFilter)
+		// The guard comes from a whole-set run: this one, or --guard-from.
+		const guardRun = values["guard-from"]
+			? await operationRun(values["guard-from"])
+			: run;
+		const guardSettings = guardRun.manifest.configurations.judgment
+			.settings as { setHash?: string; caseFilter?: unknown };
+		if (
+			!settings.setHash ||
+			guardSettings.caseFilter ||
+			guardSettings.setHash !== settings.setHash
+		)
 			throw Error(
-				"The baseline is a whole-set resolve.grammar run with its set hash",
+				"The guard is drawn from a whole-set resolve.grammar run on the same set",
 			);
+		const exclude = new Set(
+			(values.exclude ?? []).flatMap((path) => {
+				const earlier = loadSubset(resolve(path));
+				return subsetCaseIds(earlier).guard;
+			}),
+		);
 		const set = await loadGrammarSet(defaultGrammarRoot, "dev");
 		if (set.hash !== settings.setHash)
 			throw Error(
@@ -92,10 +114,17 @@ export async function runResolveGrammarCli(
 			experimentId: run.manifest.experimentId,
 			setHash: settings.setHash,
 			attempts: grammarAttempts(run),
+			guardAttempts: grammarAttempts(guardRun),
+			exclude,
 			seed: Number(values.seed ?? 876),
 			guardSize: Number(values.guard ?? 200),
 		});
-		await saveSubset(options.subsetPath ?? defaultSubsetPath, subset);
+		await saveSubset(
+			values.out
+				? resolve(values.out)
+				: (options.subsetPath ?? defaultSubsetPath),
+			subset,
+		);
 		const ids = subsetCaseIds(subset);
 		const summary = {
 			baselineRunId: subset.baselineRunId,
