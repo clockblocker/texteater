@@ -12,8 +12,10 @@ import { type PolicyName, policy, question } from "./prompts.js";
 
 /** Why a click came back Unresolved; caught where the click's outcome is decided. */
 export class UnresolvedAnswer extends Error {
-	constructor(readonly reason: string) {
+	readonly reason: string;
+	constructor(reason: string) {
 		super(reason);
+		this.reason = reason;
 		this.name = "UnresolvedAnswer";
 	}
 }
@@ -57,7 +59,10 @@ export class Questionnaire {
 
 /** One request's answers, read question by question. */
 export class Answered {
-	constructor(readonly answers: Answers) {}
+	readonly answers: Answers;
+	constructor(answers: Answers) {
+		this.answers = answers;
+	}
 
 	/** A deciding answer: Unresolved stops the click. */
 	pick(id: string): string {
