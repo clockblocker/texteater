@@ -1,0 +1,2379 @@
+{
+	"runId": "a8c0f394-58f7-4988-9c7f-6cf868321dbb",
+	"experimentId": "resolve-grammar/de:dev",
+	"round": "2026-10-03-round-5-subset",
+	"manifest": {
+		"version": 2,
+		"runId": "a8c0f394-58f7-4988-9c7f-6cf868321dbb",
+		"experimentId": "resolve-grammar/de:dev",
+		"evaluatorVersion": "resolve-grammar-1",
+		"sourceRevision": "88baeabf9",
+		"startedAt": "2026-10-03T08:18:02.453Z",
+		"corpus": {
+			"fingerprint": "1dea3bd35dea3a7c24fa371a61835a16477f918a8c7648925ef0520730b58d0e",
+			"caseIds": [
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#4",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#5",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#13",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#18",
+				"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#19",
+				"de/ach-treibel-sie-sind-ewig-ein-spoetter#3",
+				"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum#1",
+				"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum#3",
+				"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum#5",
+				"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum#8",
+				"de/alle-stuehle-stehen-schon-im-saal#0",
+				"de/alle-wollten-den-geheimen-plan-wissen-schliesslich-liess-er#0",
+				"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#2",
+				"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#4",
+				"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#9",
+				"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#11",
+				"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#16",
+				"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#0",
+				"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#1",
+				"de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf#0",
+				"de/als-das-glas-beinahe-fiel-rief-er-hoppla#0",
+				"de/als-der-schueler-sich-ueber-denselben-streich-beschwerte#0",
+				"de/als-die-auffuehrung-trotz-der-panne-gelang-fasste-der#0",
+				"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#4",
+				"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#8",
+				"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#9",
+				"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#10",
+				"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#11",
+				"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#1",
+				"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#8",
+				"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#9",
+				"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#12",
+				"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#14",
+				"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#15",
+				"de/als-grundform-wird-mild-angegeben#0",
+				"de/als-roemische-zahl-wird-vierzehn-xiv-geschrieben#0",
+				"de/als-sie-die-nachricht-las-sagte-sie-nur-oh#0",
+				"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir#0",
+				"de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir#1",
+				"de/als-wir-angekommen-sind-war-die-kueche-schon-aufgeraeumt#2",
+				"de/alt-werden-heisst-sehend-werden#0",
+				"de/am-ende-desselben-tages-fiel-der-strom-aus#2",
+				"de/am-gartentor-verabschiedete-sich-der-besucher-mit-auf#0",
+				"de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper#0",
+				"de/an-demselben-morgen-fiel-erneut-der-strom-aus#1",
+				"de/anna-kauft-obst-gemuese-usw-auf-dem-markt#0",
+				"de/au-weia-das-gibt-aerger#0",
+				"de/auf-dem-beschaedigten-tonband-war-nur-der-anfang-wer-anderen#0",
+				"de/auf-dem-fehlerhaften-uebungsblatt-stand-das-sprichwort-aller#0",
+				"de/auf-dem-handgeschriebenen-schild-stand-die-begruessung-guten#0",
+				"de/auf-dem-leeren-schreibtisch-lag-nichts-mehr#0",
+				"de/auf-dem-schild-war-der-sprichwortanfang-faelschlich#0",
+				"de/auf-dem-zettel-stehen-brot-u-kaese#0",
+				"de/auf-der-karte-war-nur-der-anfang-gedruckt-wenn-der-kunst#0",
+				"de/auf-der-tafel-steht-neun-vier#0",
+				"de/auf-die-frage-nach-dem-termin-antwortete-er-nein#0",
+				"de/auf-die-frage-nach-der-reservierung-antwortete-sie-ja#0",
+				"de/auf-die-frage-ob-sie-nicht-teilnehmen-koenne-antwortete-sie#0",
+				"de/auf-die-pointe-antwortete-sie-im-chat-nur-mit-lol#0",
+				"de/auweia-jetzt-ist-die-milch-uebergekocht#0",
+				"de/bald-aber-lernte-er-es-richtiger-schaetzen#0",
+				"de/beim-anblick-des-schmutzes-sagte-er-pufi#0",
+				"de/bevor-die-zeugin-antwortete-erinnerte-ihr-anwalt-sie-an-den#0",
+				"de/blase-jetzt-nicht-laenger-truebsal#0",
+				"de/da-gehe-ich-morgen-hin#0",
+				"de/da-steht-ne-kiste-auf-dem-flur#0",
+				"de/da-weiss-ich-nichts-von#1",
+				"de/darauf-kommt-es-an#0",
+				"de/darauf-kommt-es-an#1",
+				"de/das-am-see-gelegene-haus-gehoert-meinem-onkel#0",
+				"de/das-angebot-gilt-fuer-gruppen-von-zwoelf-bis-sechzehn#0",
+				"de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale#0",
+				"de/das-ergebnis-ist-sehr-viel-besser-als-erwartet#0",
+				"de/das-ersatzteil-kostet-dreissig#0",
+				"de/das-essen-war-ganz-gut#1",
+				"de/das-fenster-laesst-sich-oeffnen#0",
+				"de/das-gefaellt-der-ganzen-familie#0",
+				"de/das-geht-weit-ueber-meine-kraefte-hinaus#0",
+				"de/das-ist-die-frau-mit-der-wir-arbeiten#0",
+				"de/das-kind-sucht-sein-spielzeug-das-rote-spielzeug-dort-ist#0",
+				"de/das-kleid-ist-zu-gross#0",
+				"de/das-kleid-ist-zu-gross#1",
+				"de/das-liegt-wo-im-keller#0",
+				"de/das-muss-wie-gehen#0",
+				"de/das-namenverzeichnis-enthaelt-den-ortsnamen-mainz#0",
+				"de/das-paket-liegt-unter-dem-tisch#0",
+				"de/das-radio-geht-s-wieder#1",
+				"de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine#0",
+				"de/das-sind-die-geraete-die-wir-pruefen#0",
+				"de/das-sprichwort-morgenstund-hat-gold-im-mund-half-ihm-nicht#0",
+				"de/das-steht-jedermann-frei#0",
+				"de/das-theater-zeigt-heute-die-physiker#0",
+				"de/das-war-vielleicht-ein-spass#0",
+				"de/das-zdf-uebertraegt-die-debatte-live#0",
+				"de/dein-garten-ist-gross-der-meine-ist-klein#0",
+				"de/den-kenn-ich-woher#0",
+				"de/der-abgerissene-zettel-enthielt-nur-die-halbe-zeile-reden#0",
+				"de/der-alte-forenbeitrag-endete-mit-dem-slangausdruck-w00t#0",
+				"de/der-alte-hund-tut-mir-so-leid#1",
+				"de/der-alte-hund-tut-mir-so-leid#2",
+				"de/der-alte-pfarrer-war-beliebt-die-gemeinde-gedachte-seiner#0",
+				"de/der-aufstieg-und-abstieg#0",
+				"de/der-aufstieg-und-abstieg-und-umstieg#0",
+				"de/der-ausschuss-trifft-die-entscheidung#0",
+				"de/der-ausschuss-trifft-heute-eine-entscheidung#0",
+				"de/der-autor-dessen-buch-fehlt-wartet-draussen#0",
+				"de/der-bericht-erwaehnt-ebay-nur-am-rand#0",
+				"de/der-beschaedigte-briefentwurf-endete-sichtbar-mit-mit#0",
+				"de/der-beschaedigte-scan-zeigte-im-lesbaren-technischen#0",
+				"de/der-bote-ward-freundlich-empfangen#0",
+				"de/der-brief-liegt-hier-auf-meinem-schreibtisch-das-muss-heute#1",
+				"de/der-chronist-hegte-noch-etwelche-zweifel-an-dem-bericht#0",
+				"de/der-chronist-schwieg-sintemal-ihm-niemand-glauben-schenkte#0",
+				"de/der-deutsche-aerztetag-die-vertretung-der-mediziner-in#0",
+				"de/der-erste-versuch-gelang#0",
+				"de/der-fahrer-mus-sofort-bremsen#0",
+				"de/der-gefaellt-mir#0",
+				"de/der-grosse-tisch-ist-unserer#0",
+				"de/der-historische-brief-klingt-bisschen-foermlich#0",
+				"de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#4",
+				"de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#12",
+				"de/der-katalog-nennt-den-titel-der-prozess#0",
+				"de/der-kurier-ist-puenktlich-gegangen#0",
+				"de/der-laden-fuehrt-kinder-und-jugendbuecher#0",
+				"de/der-laden-hat-bis-20-uhr-geoeffnet#1",
+				"de/der-laden-hat-heute-erst-um-8-geoeffnet#1",
+				"de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand#3",
+				"de/der-neue-ablauf-ist-ja-deutlich-einfacher-als-der-alte#0",
+				"de/der-plan-dort-dessen-bedarf-es#0",
+				"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0",
+				"de/der-preis-betraegt-inkl-versand-zehn-euro#0",
+				"de/der-radweg-fuehrt-an-der-schule-vorbei#0",
+				"de/der-raum-ist-lange-leer-gewesen#0",
+				"de/der-schauspieler-verwendete-im-historischen-stueck-die-alte#0",
+				"de/der-schreiber-verweilte-dieweil-der-bote-noch-ausstand#0",
+				"de/der-spannende-vortrag-dauerte-eine-stunde#0",
+				"de/der-tank-ist-zu-siebenachtel-gefuellt#0",
+				"de/der-unterzeichnete-erklaert-allhier-die-uebergabe#0",
+				"de/der-vater-nimmt-das-weinende-kind-auf-den-arm#3",
+				"de/der-vorschlag-hat-anerkenung-gefunden#0",
+				"de/der-wievielte-versuch-war-schliesslich-erfolgreich#0",
+				"de/der-zug-wird-wohl-erst-am-abend-eintreffen#0",
+				"de/die-alten-haeuser-stehen-am-marktplatz#0",
+				"de/die-antworten-waren-teils-hilfreich-teils-widerspruechlich#0",
+				"de/die-aufnahme-brach-mitten-in-der-dankesformel-vielen#0",
+				"de/die-aufnahme-endete-nach-dem-klar-erkennbaren#0",
+				"de/die-ausgabe-kuerzt-mit-auslassungszeichen-die-leute-denen#0",
+				"de/die-ausschuesse-treffen-entscheidungen#0",
+				"de/die-bedingung-lautet-x-5#0",
+				"de/die-beiden-verweisen-auf-getrennte-regelungen#0",
+				"de/die-bewerberinnen-stellten-projekte-vor-der-beitrag-jeder#0",
+				"de/die-bewerberinnen-stellten-projekte-vor-der-beitrag-jedweder#0",
+				"de/die-blosse-meldung-der-bus-kommt-spaeter-war-nur-eine#0",
+				"de/die-bundeswehr-bereitet-sich-auf-einen-moeglichen-minenraeum#0",
+				"de/die-designerin-nennt-die-eine-klammeraffe#0",
+				"de/die-erste-mannschaft-hat-das-handtuch-geworfen-und-spaeter#0",
+				"de/die-fahrgaeste-warten-trotz-der-eisigen-kaelte-geduldig-auf#0",
+				"de/die-ferien-beginnen-morgen#0",
+				"de/die-form-des-ist-in-dieser-schrift-besonders-breit#0",
+				"de/die-form-des-ist-in-dieser-schrift-ungewoehnlich#0",
+				"de/die-fundstelle-lautet-8-abs-2#0",
+				"de/die-gefaellt-mir#0",
+				"de/die-geschlossene-tuer-bleibt-heute-zu#0",
+				"de/die-gruenen-hatten-in-ihrem-wahlprogramm-angekuendigt-dass#0",
+				"de/die-impfstofflieferung-fuer-die-eu-soll-in-den#0",
+				"de/die-jacke-dort-die-nehme-ich#0",
+				"de/die-jury-dankt-leonie-fuer-ihren-einsatz#0",
+				"de/die-kinder-frieren-wir-geben-ihnen-decken#0",
+				"de/die-kinder-lachen-und-ich-sehe-sie#0",
+				"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die#2",
+				"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die#4",
+				"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die#6",
+				"de/die-lampe-blinkt-wenn-der-akku-fast-leer-ist#0",
+				"de/die-lehrerin-markiert-das-rot#0",
+				"de/die-leidenschaft-ist-immer-ein-leiden-auch-die-befriedigte#0",
+				"de/die-lektorin-nennt-die-eine-raute#0",
+				"de/die-maschine-arbeitet-so-leise-wie-der-hersteller#0",
+				"de/die-meinung-manches-der-teilnehmer-blieb-ungehoert#0",
+				"de/die-menschen-denen-wir-eine-stuetze-sind-die-geben-uns-den#0",
+				"de/die-messe-wurde-nach-berlin-verlegt#0",
+				"de/die-messwerte-waren-gar-nicht-so-ungewoehnlich#0",
+				"de/die-nachricht-muss-irgendjemandem-im-buero-bekannt-vorkommen#0",
+				"de/die-nato-beraet-heute-ueber-den-antrag#0",
+				"de/die-praktikantin-hilft-den-gaesten-gern#0",
+				"de/die-protokollnotiz-die-sitzung-endet-um-fuenf-war-nur#0",
+				"de/die-redaktion-fuehrt-fotografie-als-leitform-die#0",
+				"de/die-schuelerin-kauft-vier-karierte-hefte#0",
+				"de/die-schuelerin-umkreist-das-mit-roter-farbe#0",
+				"de/die-seiten-des-kinder-und-jugendbuchs-fehlen#0",
+				"de/die-spd-beschloss-ein-neues-programm#0",
+				"de/die-sprechstunde-laeuft-von-zehn-bis-zwoelf-uhr#0",
+				"de/die-stadt-berlin-waechst-weiterhin-schnell#0",
+				"de/die-stadtpolizei-zuerich-meldet-die-strasse-zum-hauptbahnhof#0",
+				"de/die-stimmen-aller-zaehlen#0",
+				"de/die-strasse-ist-z-t-gesperrt#0",
+				"de/die-studentin-nannte-das-ergebnis-low-key-ueberraschend#0",
+				"de/die-stueckzahl-ist-mit-t-fuer-tausend-angegeben#0",
+				"de/die-tuer-hinter-ihm-blieb-offen-und-er-fuehlte-einen-kalten#3",
+				"de/die-tuer-hinter-ihm-blieb-offen-und-er-fuehlte-einen-kalten#7",
+				"de/die-tuer-ist-offen-ich-bin-in-der-kueche-komm-doch-rein#0",
+				"de/die-tuer-klemmte-so-dass-wir-warten-mussten#0",
+				"de/die-uneinheitlich-annotierte-spalte-enthielt-den-eintrag-3d#0",
+				"de/die-unesco-foerdert-das-neue-bildungsprojekt#0",
+				"de/die-unicode-liste-erklaert-als-kleine-variante-von#0",
+				"de/die-unicode-tabelle-nennt-ausdruecklich-als-vollbreite#0",
+				"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0",
+				"de/die-vorschlaege-lagen-vor-der-wortlaut-jeglicher-wurde#0",
+				"de/die-vorschlaege-lagen-vor-wir-widersprachen-jeglichen#0",
+				"de/die-wirkung-reicht-ueber-das-jahr-hinaus#0",
+				"de/die-zweite-loesung-ist-ebenso-robust-wie-die-erste#0",
+				"de/die-zweite-sitzung-begann-puenktlich#0",
+				"de/du-brauchst-einen-schirm-aber-was-fuer-einen#0",
+				"de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht#0",
+				"de/ein-einziges-steht-zwischen-den-zahlen#0",
+				"de/ein-grsser-hund-wartet-draussen#0",
+				"de/ein-sog-experte-sagte-vor-gericht-aus#0",
+				"de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher#2",
+				"de/entweder-faehrt-mia-heute-oder-sie-bleibt-bis-morgen#0",
+				"de/er-antwortete-im-chat-nur-mit-lol#0",
+				"de/er-biss-ins-kunstgras#0",
+				"de/er-hat-die-augen-geschlossen#0",
+				"de/er-hat-die-ganze-zeit-die-augen-geschlossen#3",
+				"de/er-hilft-den-kindern-bei-den-aufgaben#0",
+				"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#2",
+				"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#3",
+				"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#7",
+				"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#12",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#0",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#2",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#3",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#4",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#5",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#6",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#14",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#19",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#23",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#27",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#29",
+				"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#31",
+				"de/er-legte-auf-ohne-ein-wort-zu-sagen#2",
+				"de/er-legte-jedes-ding-das-er-beruehrte-kaum-ergriffen-wieder#8",
+				"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass#7",
+				"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass#14",
+				"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass#15",
+				"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass#17",
+				"de/er-sol-jetzt-warten#0",
+				"de/er-sprach-langsam-damit-alle-ihn-verstehen-konnten#0",
+				"de/er-stieg-aus-und-gleich-wieder-ein#5",
+				"de/er-tanzd-gern#0",
+				"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an#4",
+				"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an#6",
+				"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an#7",
+				"de/er-weiss-bescheid-ueber-die-plaene#0",
+				"de/es-bedarf-jemandes-mit-erfahrung#0",
+				"de/es-bedarf-keines-der-vorgeschlagenen-vertraege#0",
+				"de/es-brennt-die-hand-es-brennt-das-haar#1",
+				"de/es-brennt-die-hand-es-brennt-das-haar#2",
+				"de/es-freut-mich-dass-du-kommst#0",
+				"de/es-ist-ruhiger-seitdem-die-baustelle-geschlossen-wurde#0",
+				"de/es-ist-schon-ziemlich-spaet#0",
+				"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#0",
+				"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#3",
+				"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#8",
+				"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#11",
+				"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#20",
+				"de/es-kamen-gaeste#0",
+				"de/es-schneite-stark-so-dass-die-strasse-gesperrt-wurde#0",
+				"de/es-sol-ein-jeglicher-des-auffgelegten-brots-vnnd-speise-zu#0",
+				"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#1",
+				"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#2",
+				"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#4",
+				"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#5",
+				"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#6",
+				"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#7",
+				"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#10",
+				"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#6",
+				"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#8",
+				"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#12",
+				"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#15",
+				"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#17",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#3",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#5",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#9",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#12",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#16",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#17",
+				"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#18",
+				"de/es-warten-drei-kunden-vor-der-tuer-aber-keiner-hat-es-eilig#2",
+				"de/es-warten-drei-kunden-vor-der-tuer-aber-keiner-hat-es-eilig#7",
+				"de/eva-hat-die-segel-gestrichen-nach-der-niederlage-hat-auch#0",
+				"de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#2",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#5",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#6",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#8",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#15",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#16",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#22",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#26",
+				"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#27",
+				"de/frau-doktor-bitte-setzen-sie-sich-an-den-tisch#0",
+				"de/frau-weber-der-ordner-ist-ihrer#0",
+				"de/fuer-die-ganze-weite-welt-haett-ich-selbst-ein-fest-bestellt#0",
+				"de/gestern-mischte-sich-mein-onkel-ungefragt-in-unsere-diskussion#5",
+				"de/gibt-es-einen-ausweg#0",
+				"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#1",
+				"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#4",
+				"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#6",
+				"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+				"de/guten-morgen#0",
+				"de/ha-ha-sehr-witzig#0",
+				"de/hallo-leute-hoert-kurz-zu#0",
+				"de/hast-du-das-wem-erzaehlt#0",
+				"de/hast-du-mit-ihr-darueber-gesprochen#0",
+				"de/hast-du-ne-frage#0",
+				"de/herzliche-gruesse#0",
+				"de/heult-nicht-laenger-mit-den-woelfen#0",
+				"de/heute-kamen-mehr-gaeste-als-gestern#0",
+				"de/heute-kochst-du-das-abendessen#0",
+				"de/ich-bin-extra-frueh-aufgestanden-um-den-bus-um-sieben-zu#1",
+				"de/ich-bin-extra-frueh-aufgestanden-um-den-bus-um-sieben-zu#2",
+				"de/ich-bin-oben-in-der-dachwohnung-bring-den-koffer-bitte-rauf#0",
+				"de/ich-bin-schon-auf-der-anderen-strassenseite-kommst-du-auch#0",
+				"de/ich-hab-was-gehoert#0",
+				"de/ich-kenne-mehrere#0",
+				"de/ich-lasse-das-auto-von-ihm-reparieren#1",
+				"de/ich-lasse-mir-morgen-die-haare-schneiden#0",
+				"de/ich-lese-und-dann-wir-gehen-viel-spazieren#5",
+				"de/ich-lese-und-dann-wir-gehen-viel-spazieren#6",
+				"de/ich-lese-und-dann-wir-gehen-viel-spazieren#7",
+				"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#1",
+				"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#2",
+				"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#4",
+				"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#7",
+				"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#8",
+				"de/ich-nehme-den-roten-pullover-nicht-den-blauen#0",
+				"de/ich-stehe-hier-neben-dem-fenster-komm-naeher-ran-dann-siehst#0",
+				"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#1",
+				"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#3",
+				"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#6",
+				"de/ich-war-bereits-2x-in-dieser-werkstatt#0",
+				"de/ich-warte-draussen-vor-der-tuer-komm-sofort-raus#0",
+				"de/ich-warte-unten-an-der-haustuer-kommst-du-runter#0",
+				"de/ich-weiss-nicht-ob-sich-meine-oma-inzwischen-mit-dem-neuen#4",
+				"de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#0",
+				"de/ihr-holdes-laecheln-bezauberte-die-gaeste#0",
+				"de/im-alten-brief-steht-er-muss-morgen-abreisen#0",
+				"de/im-alten-druck-stand-er-sprach-so-leise-dass-ihn-niemand#0",
+				"de/im-deutsch-englischen-chat-war-mit-dem-tippfehler-wierd#0",
+				"de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten#0",
+				"de/im-fehlerhaften-ocr-text-steht-statt-des-eurozeichens#0",
+				"de/im-franzoesischen-formular-kennzeichnet-n-ausdruecklich-die#0",
+				"de/im-funkverkehr-meldete-die-pilotin-zwo-kontakte#0",
+				"de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert#0",
+				"de/im-portugiesischsprachigen-gespraech-erzaehlt-sie-von-rio-de#0",
+				"de/im-schuelerheft-stand-der-fehlerhafte-satz-stille-wasser#0",
+				"de/im-seminar-zitierte-sie-verkuerzt-die-verstehen-sehr-wenig#0",
+				"de/im-stadion-rief-jemand-huraa#0",
+				"de/im-transkript-wurde-die-partikel-nicht-als-n-abgekuerzt#0",
+				"de/im-ukrainischsprachigen-teil-sagt-die-delegation-sie-reise#0",
+				"de/im-werkverzeichnis-steht-der-titel-tonio-kroeger#0",
+				"de/im-woerterbuch-steht-der-eintrag-ins-gras-beissen#0",
+				"de/in-der-abgebrochenen-sprachnachricht-war-nur-die#0",
+				"de/in-der-abgebrochenen-sprachnachricht-war-nur-die#1",
+				"de/in-der-beschaedigten-notiz-steht-wir-sollen#0",
+				"de/in-der-mittagspause-hat-jonas-mit-seiner-chefin-ueber-die#2",
+				"de/in-der-mittagspause-hat-jonas-mit-seiner-chefin-ueber-die#4",
+				"de/in-der-tag-legende-wird-die-positive-antwortpartikel-mit-pos#0",
+				"de/in-der-zeitung-von-1985-stand-das-sprichwort-wer-a-sagt-muss#0",
+				"de/in-ihrer-deutschen-nachricht-schrieb-sie-lediglich-idk#0",
+				"de/ist-da-wer#0",
+				"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#0",
+				"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#2",
+				"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#3",
+				"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#7",
+				"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#10",
+				"de/je-hoeher-der-druck-desdo-groesser-das-risiko#0",
+				"de/je-mehr-er-versprach-je-weniger-glaubte-man-ihm#0",
+				"de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#1",
+				"de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#3",
+				"de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#4",
+				"de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#5",
+				"de/je-spaeter-der-abend-wurde-umso-leiser-sprach-die-runde#0",
+				"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#1",
+				"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#2",
+				"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#5",
+				"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#8",
+				"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#9",
+				"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#11",
+				"de/jetzt-wo-du-da-bist-koennen-wir-anfangen#0",
+				"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus#7",
+				"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus#17",
+				"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus#26",
+				"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus#29",
+				"de/kaffee-oder-tee-das-ist-hier-die-frage#0",
+				"de/kann-er-denn-sterben#0",
+				"de/kann-er-denn-sterben#3",
+				"de/kannst-du-mich-morgen-vom-bahnhof-abholen#0",
+				"de/kinder-und-jugendbuecher-sind-beliebt#0",
+				"de/komm-endlich-zum-ende#0",
+				"de/komm-ruhig-herein#0",
+				"de/komm-wann-vorbei#0",
+				"de/lass-uns-gehen#0",
+				"de/lauf-schneller#0",
+				"de/lea-moechte-noch-etwas-bleiben#0",
+				"de/lena-sucht-ihren-mantel-der-gruene-mantel-dort-ist-ihrer#0",
+				"de/manchmal-fahren-wir-auch-im-wagen-die-mama-und-ich#2",
+				"de/mara-schaemt-sich-fuer-den-irrtum#0",
+				"de/mein-bruder-bindet-mir-gern-einen-baeren-auf#4",
+				"de/meine-oma-findet-sich-mit-dem-neuen-handy-einfach-nicht-ab#2",
+				"de/meine-oma-findet-sich-mit-dem-neuen-handy-einfach-nicht-ab#4",
+				"de/meine-oma-sagt-immer-uebung-macht-den-meister#0",
+				"de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn#3",
+				"de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn#4",
+				"de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn#9",
+				"de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn#12",
+				"de/mina-faehrt-lieber-mit-dem-zug-als-mit-dem-auto#0",
+				"de/mina-reist-am-liebsten-im-fruehling#0",
+				"de/mina-verliess-den-raum-ohne-sich-zu-verabschieden#0",
+				"de/mir-geht-s-gut#0",
+				"de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun#0",
+				"de/mit-dem-verweist-sie-auf-die-einschlaegige-vorschrift#0",
+				"de/mit-dieser-diagnose-wurde-der-nagel-genau-auf-den-kopf#0",
+				"de/mit-dieser-frage-ist-er-voll-ins-fettnaepfchen-getreten#3",
+				"de/mit-disem-plan-erreicht-das-team-sein-ziel-nicht#0",
+				"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#0",
+				"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#4",
+				"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#8",
+				"de/mit-jenem-schluessel-oeffnet-die-hausmeisterin-den-keller#0",
+				"de/mit-kinder-und-jugendbuechern-kennt-sie-sich-aus#0",
+				"de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen#0",
+				"de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen#1",
+				"de/mitleid-ist-liebe-im-neglige#0",
+				"de/mitten-im-deutschen-satz-fuegte-er-anyway-ein-und-sprach#0",
+				"de/mitten-in-der-erklaerung-hat-er-voellig-den-faden-verloren#0",
+				"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7#3",
+				"de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat#0",
+				"de/nach-dem-essen-liest-sie-noch-eine-stunde#0",
+				"de/nach-dem-lockeren-zuruf-hallo-trat-die-gastgeberin-ans#0",
+				"de/nach-dem-training-waescht-lea-sich-die-haende#4",
+				"de/nach-dem-zweiten-versuch-gelang-schliesslich-versuch-nummer#0",
+				"de/nach-der-formel-guten-morgen-hat-sie-ohne-pruefung-die-katze#0",
+				"de/nach-der-reise-sind-wir-muede#0",
+				"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank#0",
+				"de/nach-der-sitzung-fahre-ihc-direkt-nach-hause#0",
+				"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#1",
+				"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#2",
+				"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#3",
+				"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#5",
+				"de/nachdem-die-reisenden-ueber-ungewohnte-essenszeiten#0",
+				"de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir#1",
+				"de/nachdem-er-gegessen-hatte-raeumte-er-den-tisch-ab#0",
+				"de/nachdem-jemand-den-idiom-ausdruck-ins-gras-beissen-erwaehnt#0",
+				"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#0",
+				"de/neeee-des-mach-i-ned#0",
+				"de/neeee-des-mach-i-ned#1",
+				"de/nimm-eine-jacke-mit-falls-es-abends-kuehl-wird#0",
+				"de/o-je-jetzt-faengt-es-auch-noch-an-zu-regnen#0",
+				"de/ob-des-unwetters-blieb-das-tor-geschlossen#0",
+				"de/obwohl-am-empfang-schon-jemand-hallo-gerufen-hatte#0",
+				"de/obwohl-der-wagen-am-morgen-noch-liegen-geblieben-war-hat-die#1",
+				"de/oh-la-la-du-hast-dich-aber-schick-gemacht#0",
+				"de/ohne-mantel-fror-sie-wie-ein-schneider#0",
+				"de/pass-auf-dich-auf#0",
+				"de/peng-da-war-der-reifen-geplatzt#0",
+				"de/peters-neuer-roman-erscheint-im-herbst#0",
+				"de/pfui-pfui-schaem-dich#0",
+				"de/pfui-teufel-wie-das-hier-stinkt#0",
+				"de/saarland-meldet-steigende-besucherzahlen#0",
+				"de/sag-doch-was#0",
+				"de/sei-bitte-vorsichtig#0",
+				"de/sein-staendiges-ach-stoerte-sie-spaeter-seufzte-er-ach#0",
+				"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#3",
+				"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#4",
+				"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#5",
+				"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#6",
+				"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#10",
+				"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#12",
+				"de/seit-dem-fahrplanwechsel-kommt-der-bus-oefter#0",
+				"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#0",
+				"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+				"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#3",
+				"de/sie-backt-einen-kuchen-fuer-ihre-nachbarin#0",
+				"de/sie-beendet-die-nachricht-mit#0",
+				"de/sie-bekommt-ein-paket#0",
+				"de/sie-bewundert-sein-antlitz#0",
+				"de/sie-blickt-auf-die-uhr-und-steht-danach-auf#0",
+				"de/sie-fragte-ob-er-komme-er-antwortete-ja#0",
+				"de/sie-ging-weiter-obwol-sie-muede-war#0",
+				"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#1",
+				"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#3",
+				"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#7",
+				"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#8",
+				"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#10",
+				"de/sie-half-indem-sie-die-messwerte-sorgfaeltig-pruefte#0",
+				"de/sie-hat-angst-vor-hunden#0",
+				"de/sie-hat-gesungen#0",
+				"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#0",
+				"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#8",
+				"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#11",
+				"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#12",
+				"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#14",
+				"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#16",
+				"de/sie-ist-eben-gegangen-weil-der-bus-schon-kam#0",
+				"de/sie-ist-muede-aber-sie-arbeitet-weiter#0",
+				"de/sie-kann-das#0",
+				"de/sie-lebt-seit-zwei-jahren-in-new-york#0",
+				"de/sie-legt-das-handy-auf-den-tisch-und-hoert-ihm-aufmerksam-zu#0",
+				"de/sie-legt-das-handy-auf-den-tisch-und-hoert-ihm-aufmerksam-zu#6",
+				"de/sie-legt-das-handy-auf-den-tisch-und-hoert-ihm-aufmerksam-zu#8",
+				"de/sie-liest-leise#0",
+				"de/sie-meint-es-gut-mit-dir#0",
+				"de/sie-meint-es-gut-mit-dir#1",
+				"de/sie-protestiert-egen-den-neuen-plan#0",
+				"de/sie-steht-jeden-morgen-frueh-auf#0",
+				"de/sie-streichelt-die-katze-vorsichtig#0",
+				"de/sie-ueberlegte-einen-moment-hmm#0",
+				"de/sie-verkauft-kidner-und-jugendbuecher#0",
+				"de/sie-verkauft-kinder-und-jugendbuecher#0",
+				"de/sie-versucht-ihre-sorge-zum-ausdruck-zu-bringen#0",
+				"de/sie-wird-aerztin#0",
+				"de/sieh-einmal-hier-steht-er#3",
+				"de/sieh-einmal-hier-steht-er#5",
+				"de/sieh-einmal-hier-steht-er#6",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#0",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#3",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#4",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#9",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#10",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#12",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#16",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#18",
+				"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#21",
+				"de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#5",
+				"de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#6",
+				"de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#10",
+				"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#0",
+				"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#3",
+				"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#8",
+				"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#9",
+				"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#12",
+				"de/stell-das-einfach-wohin#0",
+				"de/tarek-oeffnete-das-fenster-um-frische-luft-hereinzulassen-zu#0",
+				"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0",
+				"de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+				"de/trotz-millionen-offener-fragen-begann-das-projekt#0",
+				"de/trotz-starken-regens-begann-das-spiel#0",
+				"de/tut-mir-leid-ich-habe-deine-nachricht-zu-spaet-gesehen#0",
+				"de/tut-mir-leid-ich-habe-deine-nachricht-zu-spaet-gesehen#3",
+				"de/um-diese-frage-kommt-er-nicht-herum#0",
+				"de/unbegruendeter-tadel-ist-manchmal-eine-feine-form-der#0",
+				"de/unsere-nachbarn-gruessen-sich-jeden-morgen-und-unterhalten-sich#3",
+				"de/unter-den-frauen-hilft-jegliche#0",
+				"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird#0",
+				"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird#3",
+				"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird#4",
+				"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird#5",
+				"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#0",
+				"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#2",
+				"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#4",
+				"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#5",
+				"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#8",
+				"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#9",
+				"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#10",
+				"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#11",
+				"de/vom-anderen-ufer-rief-der-faehrmann-heda#0",
+				"de/von-allen-arbeitet-sie-am-sorgfaeltigsten#0",
+				"de/von-den-empfehlungen-folge-ich-mancher#0",
+				"de/von-den-frauen-kenne-ich-jegliche#0",
+				"de/von-den-frauen-kenne-ich-manche-die-schon-damals-dabei-war#0",
+				"de/von-den-gaesten-half-ich-keinen#0",
+				"de/von-den-gaesten-kamen-keine#0",
+				"de/von-den-geraeten-funktioniert-keines#0",
+				"de/von-den-kandidaten-vertraue-ich-manchem#0",
+				"de/von-den-kindern-helfe-ich-jedem#0",
+				"de/von-den-kindern-helfe-ich-jedwedem#0",
+				"de/von-den-kindern-hilft-das-manchem#0",
+				"de/von-den-kindern-kenne-ich-jedes#0",
+				"de/von-der-terrasse-aus-sieht-man-den-see#0",
+				"de/von-morgen-an-fahre-ich-mit-dem-rad-zur-arbeit#1",
+				"de/vor-dem-ausschalten-des-flurlichts-verabschiedete-sich-der#0",
+				"de/vor-dem-schmutzigen-becken-rief-sie-igitt-igitt#0",
+				"de/was-ist-das-fuer-ein-buch#3",
+				"de/was-zum#0",
+				"de/was-zum-2#0",
+				"de/weder-mein-vater-noch-meine-mutter-konnte-mir-die-frage#5",
+				"de/wegen-neuer-regeln-aenderte-sich-der-ablauf#0",
+				"de/weh-mir-was-habe-ich-getan#0",
+				"de/wehe-dir-wenn-du-das-verraetst#0",
+				"de/wer-nichts-weiss-muss-alles-glauben#0",
+				"de/wer-rastet-rostet#0",
+				"de/wie-alt-bist-du#0",
+				"de/wie-geht-s-dir-heute#0",
+				"de/wir-bleiben-im-wald-und-feld#0",
+				"de/wir-gedachten-deiner-in-dankbarkeit#0",
+				"de/wir-gehen-abends-spazieren#0",
+				"de/wir-gehen-abends-spazieren#1",
+				"de/wir-gehen-jetzt-denn-es-wird-spaet#0",
+				"de/wir-koenen-den-termin-einhalten#0",
+				"de/wir-liefen-den-fluss-entlang-bis-zur-bruecke#0",
+				"de/wir-nahmen-abschied#0",
+				"de/wir-nehmen-endweder-den-bus-oder-die-bahn#0",
+				"de/wir-reisen-entweder-am-freitag-oder-am-samstag#0",
+				"de/wir-treffen-uns-morgen-in-berlin#0",
+				"de/wissen-ist-macht#0",
+				"de/wo-die-eitelkeit-anfaengt-hoehrt-der-verstand-auf#0",
+				"de/wo-kommst-du-her#0",
+				"de/woerterbucheintrag-eine-frage-stellen#0",
+				"de/zusaetzliche-unterlagen-es-bedarf-keiner#0",
+				"de/zween-ritter-bewachten-der-sage-nach-das-tor#0"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "resolve-grammar/de@production",
+		"configurations": {
+			"generation": {
+				"model": "gpt-5.6-luna",
+				"settings": {
+					"reasoning": {
+						"effort": "none"
+					},
+					"service_tier": "fast"
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"set": "dev",
+					"setHash": "a1b22d327e9f754f",
+					"caseFilter": {
+						"subset": "evidence/resolve-grammar/round-5-subset.json",
+						"baselineRunId": "8e10377e-3ec5-4db3-9ddb-b0fb1b0c83a1",
+						"seed": 879,
+						"missed": [
+							"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#18",
+							"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#19",
+							"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#4",
+							"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#5",
+							"de/ach-treibel-sie-sind-ewig-ein-spoetter#3",
+							"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#11",
+							"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#16",
+							"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#0",
+							"de/als-beide-kisten-endlich-oben-standen-erwiderte-der#1",
+							"de/als-das-gespraech-lauter-wurde-fragte-die-vorsitzende-darf#0",
+							"de/als-der-schueler-sich-ueber-denselben-streich-beschwerte#0",
+							"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#11",
+							"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#4",
+							"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#1",
+							"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#12",
+							"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#14",
+							"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#15",
+							"de/als-roemische-zahl-wird-vierzehn-xiv-geschrieben#0",
+							"de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir#0",
+							"de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir#1",
+							"de/als-wir-angekommen-sind-war-die-kueche-schon-aufgeraeumt#2",
+							"de/alt-werden-heisst-sehend-werden#0",
+							"de/am-ende-desselben-tages-fiel-der-strom-aus#2",
+							"de/am-gartentor-verabschiedete-sich-der-besucher-mit-auf#0",
+							"de/am-samstag-sehen-wir-die-zauberfloete-in-der-oper#0",
+							"de/an-demselben-morgen-fiel-erneut-der-strom-aus#1",
+							"de/au-weia-das-gibt-aerger#0",
+							"de/auf-dem-beschaedigten-tonband-war-nur-der-anfang-wer-anderen#0",
+							"de/auf-dem-fehlerhaften-uebungsblatt-stand-das-sprichwort-aller#0",
+							"de/auf-dem-handgeschriebenen-schild-stand-die-begruessung-guten#0",
+							"de/auf-dem-schild-war-der-sprichwortanfang-faelschlich#0",
+							"de/auf-dem-zettel-stehen-brot-u-kaese#0",
+							"de/auf-der-karte-war-nur-der-anfang-gedruckt-wenn-der-kunst#0",
+							"de/auf-die-frage-nach-der-reservierung-antwortete-sie-ja#0",
+							"de/auf-die-pointe-antwortete-sie-im-chat-nur-mit-lol#0",
+							"de/auweia-jetzt-ist-die-milch-uebergekocht#0",
+							"de/bald-aber-lernte-er-es-richtiger-schaetzen#0",
+							"de/beim-anblick-des-schmutzes-sagte-er-pufi#0",
+							"de/blase-jetzt-nicht-laenger-truebsal#0",
+							"de/da-gehe-ich-morgen-hin#0",
+							"de/da-steht-ne-kiste-auf-dem-flur#0",
+							"de/darauf-kommt-es-an#1",
+							"de/das-angebot-gilt-fuer-gruppen-von-zwoelf-bis-sechzehn#0",
+							"de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale#0",
+							"de/das-ergebnis-ist-sehr-viel-besser-als-erwartet#0",
+							"de/das-fenster-laesst-sich-oeffnen#0",
+							"de/das-geht-weit-ueber-meine-kraefte-hinaus#0",
+							"de/das-kind-sucht-sein-spielzeug-das-rote-spielzeug-dort-ist#0",
+							"de/das-liegt-wo-im-keller#0",
+							"de/das-muss-wie-gehen#0",
+							"de/das-namenverzeichnis-enthaelt-den-ortsnamen-mainz#0",
+							"de/das-paket-liegt-unter-dem-tisch#0",
+							"de/das-radio-geht-s-wieder#1",
+							"de/das-regionalwoerterbuch-nennt-nedd-ausdruecklich-eine#0",
+							"de/das-sind-die-geraete-die-wir-pruefen#0",
+							"de/das-sprichwort-morgenstund-hat-gold-im-mund-half-ihm-nicht#0",
+							"de/das-steht-jedermann-frei#0",
+							"de/das-theater-zeigt-heute-die-physiker#0",
+							"de/das-zdf-uebertraegt-die-debatte-live#0",
+							"de/dein-garten-ist-gross-der-meine-ist-klein#0",
+							"de/den-kenn-ich-woher#0",
+							"de/der-abgerissene-zettel-enthielt-nur-die-halbe-zeile-reden#0",
+							"de/der-alte-hund-tut-mir-so-leid#2",
+							"de/der-aufstieg-und-abstieg-und-umstieg#0",
+							"de/der-aufstieg-und-abstieg#0",
+							"de/der-ausschuss-trifft-die-entscheidung#0",
+							"de/der-bericht-erwaehnt-ebay-nur-am-rand#0",
+							"de/der-beschaedigte-briefentwurf-endete-sichtbar-mit-mit#0",
+							"de/der-bote-ward-freundlich-empfangen#0",
+							"de/der-brief-liegt-hier-auf-meinem-schreibtisch-das-muss-heute#1",
+							"de/der-chronist-schwieg-sintemal-ihm-niemand-glauben-schenkte#0",
+							"de/der-deutsche-aerztetag-die-vertretung-der-mediziner-in#0",
+							"de/der-erste-versuch-gelang#0",
+							"de/der-grosse-tisch-ist-unserer#0",
+							"de/der-historische-brief-klingt-bisschen-foermlich#0",
+							"de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#4",
+							"de/der-katalog-nennt-den-titel-der-prozess#0",
+							"de/der-kurier-ist-puenktlich-gegangen#0",
+							"de/der-laden-fuehrt-kinder-und-jugendbuecher#0",
+							"de/der-musiktempel-zwischen-nadelbaeumen-versteckt-stand#3",
+							"de/der-plan-dort-dessen-bedarf-es#0",
+							"de/der-praktikant-tanzte-dem-chef-auf-der-nahse-herum#0",
+							"de/der-preis-betraegt-inkl-versand-zehn-euro#0",
+							"de/der-radweg-fuehrt-an-der-schule-vorbei#0",
+							"de/der-schauspieler-verwendete-im-historischen-stueck-die-alte#0",
+							"de/der-schreiber-verweilte-dieweil-der-bote-noch-ausstand#0",
+							"de/der-tank-ist-zu-siebenachtel-gefuellt#0",
+							"de/der-unterzeichnete-erklaert-allhier-die-uebergabe#0",
+							"de/der-vorschlag-hat-anerkenung-gefunden#0",
+							"de/die-alten-haeuser-stehen-am-marktplatz#0",
+							"de/die-aufnahme-brach-mitten-in-der-dankesformel-vielen#0",
+							"de/die-aufnahme-endete-nach-dem-klar-erkennbaren#0",
+							"de/die-ausgabe-kuerzt-mit-auslassungszeichen-die-leute-denen#0",
+							"de/die-ausschuesse-treffen-entscheidungen#0",
+							"de/die-beiden-verweisen-auf-getrennte-regelungen#0",
+							"de/die-bewerberinnen-stellten-projekte-vor-der-beitrag-jeder#0",
+							"de/die-bewerberinnen-stellten-projekte-vor-der-beitrag-jedweder#0",
+							"de/die-blosse-meldung-der-bus-kommt-spaeter-war-nur-eine#0",
+							"de/die-designerin-nennt-die-eine-klammeraffe#0",
+							"de/die-erste-mannschaft-hat-das-handtuch-geworfen-und-spaeter#0",
+							"de/die-fahrgaeste-warten-trotz-der-eisigen-kaelte-geduldig-auf#0",
+							"de/die-ferien-beginnen-morgen#0",
+							"de/die-form-des-ist-in-dieser-schrift-besonders-breit#0",
+							"de/die-form-des-ist-in-dieser-schrift-ungewoehnlich#0",
+							"de/die-geschlossene-tuer-bleibt-heute-zu#0",
+							"de/die-gruenen-hatten-in-ihrem-wahlprogramm-angekuendigt-dass#0",
+							"de/die-impfstofflieferung-fuer-die-eu-soll-in-den#0",
+							"de/die-jacke-dort-die-nehme-ich#0",
+							"de/die-jury-dankt-leonie-fuer-ihren-einsatz#0",
+							"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die#2",
+							"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die#4",
+							"de/die-koechin-der-frau-grubach-seiner-zimmervermieterin-die#6",
+							"de/die-lehrerin-markiert-das-rot#0",
+							"de/die-lektorin-nennt-die-eine-raute#0",
+							"de/die-meinung-manches-der-teilnehmer-blieb-ungehoert#0",
+							"de/die-menschen-denen-wir-eine-stuetze-sind-die-geben-uns-den#0",
+							"de/die-messe-wurde-nach-berlin-verlegt#0",
+							"de/die-nato-beraet-heute-ueber-den-antrag#0",
+							"de/die-praktikantin-hilft-den-gaesten-gern#0",
+							"de/die-protokollnotiz-die-sitzung-endet-um-fuenf-war-nur#0",
+							"de/die-redaktion-fuehrt-fotografie-als-leitform-die#0",
+							"de/die-schuelerin-umkreist-das-mit-roter-farbe#0",
+							"de/die-seiten-des-kinder-und-jugendbuchs-fehlen#0",
+							"de/die-spd-beschloss-ein-neues-programm#0",
+							"de/die-stadt-berlin-waechst-weiterhin-schnell#0",
+							"de/die-stadtpolizei-zuerich-meldet-die-strasse-zum-hauptbahnhof#0",
+							"de/die-studentin-nannte-das-ergebnis-low-key-ueberraschend#0",
+							"de/die-stueckzahl-ist-mit-t-fuer-tausend-angegeben#0",
+							"de/die-tuer-ist-offen-ich-bin-in-der-kueche-komm-doch-rein#0",
+							"de/die-tuer-klemmte-so-dass-wir-warten-mussten#0",
+							"de/die-uneinheitlich-annotierte-spalte-enthielt-den-eintrag-3d#0",
+							"de/die-unesco-foerdert-das-neue-bildungsprojekt#0",
+							"de/die-unicode-liste-erklaert-als-kleine-variante-von#0",
+							"de/die-unicode-tabelle-nennt-ausdruecklich-als-vollbreite#0",
+							"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0",
+							"de/die-vorschlaege-lagen-vor-der-wortlaut-jeglicher-wurde#0",
+							"de/die-vorschlaege-lagen-vor-wir-widersprachen-jeglichen#0",
+							"de/die-wirkung-reicht-ueber-das-jahr-hinaus#0",
+							"de/die-zweite-sitzung-begann-puenktlich#0",
+							"de/ein-einziges-steht-zwischen-den-zahlen#0",
+							"de/ein-grsser-hund-wartet-draussen#0",
+							"de/ein-sog-experte-sagte-vor-gericht-aus#0",
+							"de/er-antwortete-im-chat-nur-mit-lol#0",
+							"de/er-biss-ins-kunstgras#0",
+							"de/er-hat-die-ganze-zeit-die-augen-geschlossen#3",
+							"de/er-hilft-den-kindern-bei-den-aufgaben#0",
+							"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#12",
+							"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#3",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#19",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#23",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#27",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#29",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#3",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#4",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#5",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#6",
+							"de/er-legte-jedes-ding-das-er-beruehrte-kaum-ergriffen-wieder#8",
+							"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass#7",
+							"de/er-sol-jetzt-warten#0",
+							"de/er-stieg-aus-und-gleich-wieder-ein#5",
+							"de/er-tanzd-gern#0",
+							"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an#4",
+							"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an#7",
+							"de/er-weiss-bescheid-ueber-die-plaene#0",
+							"de/es-bedarf-keines-der-vorgeschlagenen-vertraege#0",
+							"de/es-brennt-die-hand-es-brennt-das-haar#1",
+							"de/es-freut-mich-dass-du-kommst#0",
+							"de/es-ist-schon-ziemlich-spaet#0",
+							"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#11",
+							"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#20",
+							"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#3",
+							"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#8",
+							"de/es-schneite-stark-so-dass-die-strasse-gesperrt-wurde#0",
+							"de/es-sol-ein-jeglicher-des-auffgelegten-brots-vnnd-speise-zu#0",
+							"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#10",
+							"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#4",
+							"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#5",
+							"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#6",
+							"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#7",
+							"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#12",
+							"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#17",
+							"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#6",
+							"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#8",
+							"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#12",
+							"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#17",
+							"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#3",
+							"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#5",
+							"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#9",
+							"de/es-warten-drei-kunden-vor-der-tuer-aber-keiner-hat-es-eilig#7",
+							"de/eva-hat-die-segel-gestrichen-nach-der-niederlage-hat-auch#0",
+							"de/fest-steht-das-alte-umlagesystem-bei-dem-die-beitraege-der#0",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#15",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#16",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#2",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#26",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#5",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#6",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#8",
+							"de/frau-doktor-bitte-setzen-sie-sich-an-den-tisch#0",
+							"de/frau-weber-der-ordner-ist-ihrer#0",
+							"de/fuer-die-ganze-weite-welt-haett-ich-selbst-ein-fest-bestellt#0",
+							"de/gibt-es-einen-ausweg#0",
+							"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#1",
+							"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#6",
+							"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#8",
+							"de/guten-morgen#0",
+							"de/ha-ha-sehr-witzig#0",
+							"de/hallo-leute-hoert-kurz-zu#0",
+							"de/hast-du-das-wem-erzaehlt#0",
+							"de/hast-du-mit-ihr-darueber-gesprochen#0",
+							"de/hast-du-ne-frage#0",
+							"de/herzliche-gruesse#0",
+							"de/heult-nicht-laenger-mit-den-woelfen#0",
+							"de/ich-bin-extra-frueh-aufgestanden-um-den-bus-um-sieben-zu#1",
+							"de/ich-bin-oben-in-der-dachwohnung-bring-den-koffer-bitte-rauf#0",
+							"de/ich-bin-schon-auf-der-anderen-strassenseite-kommst-du-auch#0",
+							"de/ich-hab-was-gehoert#0",
+							"de/ich-lasse-mir-morgen-die-haare-schneiden#0",
+							"de/ich-lese-und-dann-wir-gehen-viel-spazieren#6",
+							"de/ich-lese-und-dann-wir-gehen-viel-spazieren#7",
+							"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#1",
+							"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#4",
+							"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#8",
+							"de/ich-stehe-hier-neben-dem-fenster-komm-naeher-ran-dann-siehst#0",
+							"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#1",
+							"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#6",
+							"de/ich-war-bereits-2x-in-dieser-werkstatt#0",
+							"de/ich-warte-draussen-vor-der-tuer-komm-sofort-raus#0",
+							"de/ich-warte-unten-an-der-haustuer-kommst-du-runter#0",
+							"de/ich-weiss-nicht-ob-sich-meine-oma-inzwischen-mit-dem-neuen#4",
+							"de/ihnen-kann-es-keiner-recht-machen-und-am-wenigsten-die#0",
+							"de/ihr-holdes-laecheln-bezauberte-die-gaeste#0",
+							"de/im-alten-brief-steht-er-muss-morgen-abreisen#0",
+							"de/im-alten-druck-stand-er-sprach-so-leise-dass-ihn-niemand#0",
+							"de/im-deutsch-englischen-chat-war-mit-dem-tippfehler-wierd#0",
+							"de/im-ersten-duell-hat-anna-den-kuerzeren-gezogen-im-zweiten#0",
+							"de/im-fehlerhaften-ocr-text-steht-statt-des-eurozeichens#0",
+							"de/im-franzoesischen-formular-kennzeichnet-n-ausdruecklich-die#0",
+							"de/im-funkverkehr-meldete-die-pilotin-zwo-kontakte#0",
+							"de/im-portugiesischsprachigen-gespraech-erzaehlt-sie-von-rio-de#0",
+							"de/im-schuelerheft-stand-der-fehlerhafte-satz-stille-wasser#0",
+							"de/im-seminar-zitierte-sie-verkuerzt-die-verstehen-sehr-wenig#0",
+							"de/im-stadion-rief-jemand-huraa#0",
+							"de/im-transkript-wurde-die-partikel-nicht-als-n-abgekuerzt#0",
+							"de/im-ukrainischsprachigen-teil-sagt-die-delegation-sie-reise#0",
+							"de/im-werkverzeichnis-steht-der-titel-tonio-kroeger#0",
+							"de/in-der-abgebrochenen-sprachnachricht-war-nur-die#1",
+							"de/in-der-beschaedigten-notiz-steht-wir-sollen#0",
+							"de/in-der-mittagspause-hat-jonas-mit-seiner-chefin-ueber-die#2",
+							"de/in-der-mittagspause-hat-jonas-mit-seiner-chefin-ueber-die#4",
+							"de/in-der-tag-legende-wird-die-positive-antwortpartikel-mit-pos#0",
+							"de/in-der-zeitung-von-1985-stand-das-sprichwort-wer-a-sagt-muss#0",
+							"de/in-ihrer-deutschen-nachricht-schrieb-sie-lediglich-idk#0",
+							"de/ist-da-wer#0",
+							"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#0",
+							"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#2",
+							"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#7",
+							"de/je-hoeher-der-druck-desdo-groesser-das-risiko#0",
+							"de/je-mehr-er-versprach-je-weniger-glaubte-man-ihm#0",
+							"de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#1",
+							"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#1",
+							"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#2",
+							"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#5",
+							"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#8",
+							"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#9",
+							"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus#29",
+							"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus#7",
+							"de/kaffee-oder-tee-das-ist-hier-die-frage#0",
+							"de/kann-er-denn-sterben#0",
+							"de/kannst-du-mich-morgen-vom-bahnhof-abholen#0",
+							"de/kinder-und-jugendbuecher-sind-beliebt#0",
+							"de/komm-endlich-zum-ende#0",
+							"de/komm-wann-vorbei#0",
+							"de/lauf-schneller#0",
+							"de/lea-moechte-noch-etwas-bleiben#0",
+							"de/lena-sucht-ihren-mantel-der-gruene-mantel-dort-ist-ihrer#0",
+							"de/mara-schaemt-sich-fuer-den-irrtum#0",
+							"de/mein-bruder-bindet-mir-gern-einen-baeren-auf#4",
+							"de/meine-oma-findet-sich-mit-dem-neuen-handy-einfach-nicht-ab#2",
+							"de/meine-oma-findet-sich-mit-dem-neuen-handy-einfach-nicht-ab#4",
+							"de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn#12",
+							"de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn#4",
+							"de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn#9",
+							"de/mina-faehrt-lieber-mit-dem-zug-als-mit-dem-auto#0",
+							"de/mina-reist-am-liebsten-im-fruehling#0",
+							"de/mir-geht-s-gut#0",
+							"de/mit-dem-umzug-hat-die-familie-alle-haende-voll-zu-tun#0",
+							"de/mit-dem-verweist-sie-auf-die-einschlaegige-vorschrift#0",
+							"de/mit-disem-plan-erreicht-das-team-sein-ziel-nicht#0",
+							"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#0",
+							"de/mit-jenem-schluessel-oeffnet-die-hausmeisterin-den-keller#0",
+							"de/mit-kinder-und-jugendbuechern-kennt-sie-sich-aus#0",
+							"de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen#0",
+							"de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen#1",
+							"de/mitten-in-der-erklaerung-hat-er-voellig-den-faden-verloren#0",
+							"de/mr-und-mrs-parker-wohnen-im-fliederweg-nummer-7#3",
+							"de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat#0",
+							"de/nach-dem-essen-liest-sie-noch-eine-stunde#0",
+							"de/nach-dem-lockeren-zuruf-hallo-trat-die-gastgeberin-ans#0",
+							"de/nach-dem-training-waescht-lea-sich-die-haende#4",
+							"de/nach-der-formel-guten-morgen-hat-sie-ohne-pruefung-die-katze#0",
+							"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank#0",
+							"de/nach-der-sitzung-fahre-ihc-direkt-nach-hause#0",
+							"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#1",
+							"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#2",
+							"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#3",
+							"de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir#1",
+							"de/nachdem-jemand-den-idiom-ausdruck-ins-gras-beissen-erwaehnt#0",
+							"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#0",
+							"de/neeee-des-mach-i-ned#0",
+							"de/neeee-des-mach-i-ned#1",
+							"de/o-je-jetzt-faengt-es-auch-noch-an-zu-regnen#0",
+							"de/obwohl-am-empfang-schon-jemand-hallo-gerufen-hatte#0",
+							"de/obwohl-der-wagen-am-morgen-noch-liegen-geblieben-war-hat-die#1",
+							"de/oh-la-la-du-hast-dich-aber-schick-gemacht#0",
+							"de/ohne-mantel-fror-sie-wie-ein-schneider#0",
+							"de/pass-auf-dich-auf#0",
+							"de/peng-da-war-der-reifen-geplatzt#0",
+							"de/peters-neuer-roman-erscheint-im-herbst#0",
+							"de/pfui-pfui-schaem-dich#0",
+							"de/pfui-teufel-wie-das-hier-stinkt#0",
+							"de/saarland-meldet-steigende-besucherzahlen#0",
+							"de/sag-doch-was#0",
+							"de/sei-bitte-vorsichtig#0",
+							"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#10",
+							"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#12",
+							"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#3",
+							"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#4",
+							"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#5",
+							"de/seine-vielen-im-vergleich-zu-seinem-sonstigen-umfang#6",
+							"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#2",
+							"de/sie-bewundert-sein-antlitz#0",
+							"de/sie-blickt-auf-die-uhr-und-steht-danach-auf#0",
+							"de/sie-fragte-ob-er-komme-er-antwortete-ja#0",
+							"de/sie-ging-weiter-obwol-sie-muede-war#0",
+							"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#1",
+							"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#10",
+							"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#8",
+							"de/sie-hat-angst-vor-hunden#0",
+							"de/sie-hat-gesungen#0",
+							"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#0",
+							"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#14",
+							"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#16",
+							"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#8",
+							"de/sie-lebt-seit-zwei-jahren-in-new-york#0",
+							"de/sie-legt-das-handy-auf-den-tisch-und-hoert-ihm-aufmerksam-zu#0",
+							"de/sie-meint-es-gut-mit-dir#0",
+							"de/sie-meint-es-gut-mit-dir#1",
+							"de/sie-protestiert-egen-den-neuen-plan#0",
+							"de/sie-streichelt-die-katze-vorsichtig#0",
+							"de/sie-ueberlegte-einen-moment-hmm#0",
+							"de/sie-verkauft-kidner-und-jugendbuecher#0",
+							"de/sie-verkauft-kinder-und-jugendbuecher#0",
+							"de/sieh-einmal-hier-steht-er#3",
+							"de/sieh-einmal-hier-steht-er#6",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#0",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#12",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#18",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#21",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#3",
+							"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#0",
+							"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#12",
+							"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#3",
+							"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#8",
+							"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#9",
+							"de/stell-das-einfach-wohin#0",
+							"de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0",
+							"de/trotz-des-zeitdrucks-nahm-lea-stets-ruecksicht-auf-ihre#2",
+							"de/trotz-millionen-offener-fragen-begann-das-projekt#0",
+							"de/trotz-starken-regens-begann-das-spiel#0",
+							"de/tut-mir-leid-ich-habe-deine-nachricht-zu-spaet-gesehen#0",
+							"de/tut-mir-leid-ich-habe-deine-nachricht-zu-spaet-gesehen#3",
+							"de/um-diese-frage-kommt-er-nicht-herum#0",
+							"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird#0",
+							"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird#3",
+							"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird#4",
+							"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#10",
+							"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#11",
+							"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#2",
+							"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#4",
+							"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#5",
+							"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#8",
+							"de/vom-anderen-ufer-rief-der-faehrmann-heda#0",
+							"de/von-den-empfehlungen-folge-ich-mancher#0",
+							"de/von-den-frauen-kenne-ich-jegliche#0",
+							"de/von-den-frauen-kenne-ich-manche-die-schon-damals-dabei-war#0",
+							"de/von-den-gaesten-half-ich-keinen#0",
+							"de/von-den-kandidaten-vertraue-ich-manchem#0",
+							"de/von-den-kindern-helfe-ich-jedem#0",
+							"de/von-den-kindern-helfe-ich-jedwedem#0",
+							"de/von-den-kindern-hilft-das-manchem#0",
+							"de/vor-dem-ausschalten-des-flurlichts-verabschiedete-sich-der#0",
+							"de/vor-dem-schmutzigen-becken-rief-sie-igitt-igitt#0",
+							"de/was-ist-das-fuer-ein-buch#3",
+							"de/was-zum-2#0",
+							"de/was-zum#0",
+							"de/wegen-neuer-regeln-aenderte-sich-der-ablauf#0",
+							"de/weh-mir-was-habe-ich-getan#0",
+							"de/wehe-dir-wenn-du-das-verraetst#0",
+							"de/wer-nichts-weiss-muss-alles-glauben#0",
+							"de/wer-rastet-rostet#0",
+							"de/wie-geht-s-dir-heute#0",
+							"de/wir-bleiben-im-wald-und-feld#0",
+							"de/wir-gehen-abends-spazieren#1",
+							"de/wir-liefen-den-fluss-entlang-bis-zur-bruecke#0",
+							"de/wir-nehmen-endweder-den-bus-oder-die-bahn#0",
+							"de/wir-treffen-uns-morgen-in-berlin#0",
+							"de/wo-die-eitelkeit-anfaengt-hoehrt-der-verstand-auf#0",
+							"de/zusaetzliche-unterlagen-es-bedarf-keiner#0",
+							"de/zween-ritter-bewachten-der-sage-nach-das-tor#0"
+						],
+						"guard": [
+							"de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#13",
+							"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum#1",
+							"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum#3",
+							"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum#5",
+							"de/alfred-neigte-das-haupt-leer-laechelnd-wie-zum#8",
+							"de/alle-stuehle-stehen-schon-im-saal#0",
+							"de/alle-wollten-den-geheimen-plan-wissen-schliesslich-liess-er#0",
+							"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#2",
+							"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#4",
+							"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art#9",
+							"de/als-das-glas-beinahe-fiel-rief-er-hoppla#0",
+							"de/als-die-auffuehrung-trotz-der-panne-gelang-fasste-der#0",
+							"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#10",
+							"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#8",
+							"de/als-er-die-treppe-hinunterging-wusste-er-dass-ihm-nichts-zu#9",
+							"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#8",
+							"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#9",
+							"de/als-grundform-wird-mild-angegeben#0",
+							"de/als-sie-die-nachricht-las-sagte-sie-nur-oh#0",
+							"de/anna-kauft-obst-gemuese-usw-auf-dem-markt#0",
+							"de/auf-dem-leeren-schreibtisch-lag-nichts-mehr#0",
+							"de/auf-der-tafel-steht-neun-vier#0",
+							"de/auf-die-frage-nach-dem-termin-antwortete-er-nein#0",
+							"de/auf-die-frage-ob-sie-nicht-teilnehmen-koenne-antwortete-sie#0",
+							"de/bevor-die-zeugin-antwortete-erinnerte-ihr-anwalt-sie-an-den#0",
+							"de/da-weiss-ich-nichts-von#1",
+							"de/darauf-kommt-es-an#0",
+							"de/das-am-see-gelegene-haus-gehoert-meinem-onkel#0",
+							"de/das-ersatzteil-kostet-dreissig#0",
+							"de/das-essen-war-ganz-gut#1",
+							"de/das-gefaellt-der-ganzen-familie#0",
+							"de/das-ist-die-frau-mit-der-wir-arbeiten#0",
+							"de/das-kleid-ist-zu-gross#0",
+							"de/das-kleid-ist-zu-gross#1",
+							"de/das-war-vielleicht-ein-spass#0",
+							"de/der-alte-forenbeitrag-endete-mit-dem-slangausdruck-w00t#0",
+							"de/der-alte-hund-tut-mir-so-leid#1",
+							"de/der-alte-pfarrer-war-beliebt-die-gemeinde-gedachte-seiner#0",
+							"de/der-ausschuss-trifft-heute-eine-entscheidung#0",
+							"de/der-autor-dessen-buch-fehlt-wartet-draussen#0",
+							"de/der-beschaedigte-scan-zeigte-im-lesbaren-technischen#0",
+							"de/der-chronist-hegte-noch-etwelche-zweifel-an-dem-bericht#0",
+							"de/der-fahrer-mus-sofort-bremsen#0",
+							"de/der-gefaellt-mir#0",
+							"de/der-junge-schwarzkopf-schritt-in-seinem-grauen-filzhut-sein#12",
+							"de/der-laden-hat-bis-20-uhr-geoeffnet#1",
+							"de/der-laden-hat-heute-erst-um-8-geoeffnet#1",
+							"de/der-neue-ablauf-ist-ja-deutlich-einfacher-als-der-alte#0",
+							"de/der-raum-ist-lange-leer-gewesen#0",
+							"de/der-spannende-vortrag-dauerte-eine-stunde#0",
+							"de/der-vater-nimmt-das-weinende-kind-auf-den-arm#3",
+							"de/der-wievielte-versuch-war-schliesslich-erfolgreich#0",
+							"de/der-zug-wird-wohl-erst-am-abend-eintreffen#0",
+							"de/die-antworten-waren-teils-hilfreich-teils-widerspruechlich#0",
+							"de/die-bedingung-lautet-x-5#0",
+							"de/die-bundeswehr-bereitet-sich-auf-einen-moeglichen-minenraeum#0",
+							"de/die-fundstelle-lautet-8-abs-2#0",
+							"de/die-gefaellt-mir#0",
+							"de/die-kinder-frieren-wir-geben-ihnen-decken#0",
+							"de/die-kinder-lachen-und-ich-sehe-sie#0",
+							"de/die-lampe-blinkt-wenn-der-akku-fast-leer-ist#0",
+							"de/die-leidenschaft-ist-immer-ein-leiden-auch-die-befriedigte#0",
+							"de/die-maschine-arbeitet-so-leise-wie-der-hersteller#0",
+							"de/die-messwerte-waren-gar-nicht-so-ungewoehnlich#0",
+							"de/die-nachricht-muss-irgendjemandem-im-buero-bekannt-vorkommen#0",
+							"de/die-schuelerin-kauft-vier-karierte-hefte#0",
+							"de/die-sprechstunde-laeuft-von-zehn-bis-zwoelf-uhr#0",
+							"de/die-stimmen-aller-zaehlen#0",
+							"de/die-strasse-ist-z-t-gesperrt#0",
+							"de/die-tuer-hinter-ihm-blieb-offen-und-er-fuehlte-einen-kalten#3",
+							"de/die-tuer-hinter-ihm-blieb-offen-und-er-fuehlte-einen-kalten#7",
+							"de/die-zweite-loesung-ist-ebenso-robust-wie-die-erste#0",
+							"de/du-brauchst-einen-schirm-aber-was-fuer-einen#0",
+							"de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht#0",
+							"de/eine-unruhe-trieb-ihn-von-da-an-rastlos-umher#2",
+							"de/entweder-faehrt-mia-heute-oder-sie-bleibt-bis-morgen#0",
+							"de/er-hat-die-augen-geschlossen#0",
+							"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#2",
+							"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#7",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#0",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#14",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#2",
+							"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#31",
+							"de/er-legte-auf-ohne-ein-wort-zu-sagen#2",
+							"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass#14",
+							"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass#15",
+							"de/er-schadet-ja-offenbar-niemandem-aber-die-vorstellung-dass#17",
+							"de/er-sprach-langsam-damit-alle-ihn-verstehen-konnten#0",
+							"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an#6",
+							"de/es-bedarf-jemandes-mit-erfahrung#0",
+							"de/es-brennt-die-hand-es-brennt-das-haar#2",
+							"de/es-ist-ruhiger-seitdem-die-baustelle-geschlossen-wurde#0",
+							"de/es-kam-auch-vor-dass-ihn-mitten-im-sprechen-eine-welle-der#0",
+							"de/es-kamen-gaeste#0",
+							"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#1",
+							"de/es-war-gegen-halb-12-uhr-die-badegaeste-mussten-sich-noch-am#2",
+							"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno#15",
+							"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#16",
+							"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder#18",
+							"de/es-warten-drei-kunden-vor-der-tuer-aber-keiner-hat-es-eilig#2",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#22",
+							"de/findest-du-dass-sie-wirklich-eine-gefaehrliche-person-ist#27",
+							"de/gestern-mischte-sich-mein-onkel-ungefragt-in-unsere-diskussion#5",
+							"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#4",
+							"de/heute-kamen-mehr-gaeste-als-gestern#0",
+							"de/heute-kochst-du-das-abendessen#0",
+							"de/ich-bin-extra-frueh-aufgestanden-um-den-bus-um-sieben-zu#2",
+							"de/ich-kenne-mehrere#0",
+							"de/ich-lasse-das-auto-von-ihm-reparieren#1",
+							"de/ich-lese-und-dann-wir-gehen-viel-spazieren#5",
+							"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#2",
+							"de/ich-muss-darum-auch-viel-in-der-sonne-sitzen-hat-der-arzt#7",
+							"de/ich-nehme-den-roten-pullover-nicht-den-blauen#0",
+							"de/ich-verlasse-mich-auf-den-wetterbericht-aber-mein-mann#3",
+							"de/im-lektorat-stand-erst-das-alter-verklaert-oder-versteinert#0",
+							"de/im-woerterbuch-steht-der-eintrag-ins-gras-beissen#0",
+							"de/in-der-abgebrochenen-sprachnachricht-war-nur-die#0",
+							"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#10",
+							"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#3",
+							"de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#3",
+							"de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#4",
+							"de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#5",
+							"de/je-spaeter-der-abend-wurde-umso-leiser-sprach-die-runde#0",
+							"de/jemand-musste-josef-k-verleumdet-haben-denn-ohne-dass-er#11",
+							"de/jetzt-wo-du-da-bist-koennen-wir-anfangen#0",
+							"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus#17",
+							"de/k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus#26",
+							"de/kann-er-denn-sterben#3",
+							"de/komm-ruhig-herein#0",
+							"de/lass-uns-gehen#0",
+							"de/manchmal-fahren-wir-auch-im-wagen-die-mama-und-ich#2",
+							"de/meine-oma-sagt-immer-uebung-macht-den-meister#0",
+							"de/meine-schwester-holt-mich-am-samstag-vom-flughafen-ab-wenn#3",
+							"de/mina-verliess-den-raum-ohne-sich-zu-verabschieden#0",
+							"de/mit-dieser-diagnose-wurde-der-nagel-genau-auf-den-kopf#0",
+							"de/mit-dieser-frage-ist-er-voll-ins-fettnaepfchen-getreten#3",
+							"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#4",
+							"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#8",
+							"de/mitleid-ist-liebe-im-neglige#0",
+							"de/mitten-im-deutschen-satz-fuegte-er-anyway-ein-und-sprach#0",
+							"de/nach-dem-zweiten-versuch-gelang-schliesslich-versuch-nummer#0",
+							"de/nach-der-reise-sind-wir-muede#0",
+							"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#5",
+							"de/nachdem-die-reisenden-ueber-ungewohnte-essenszeiten#0",
+							"de/nachdem-er-gegessen-hatte-raeumte-er-den-tisch-ab#0",
+							"de/nimm-eine-jacke-mit-falls-es-abends-kuehl-wird#0",
+							"de/ob-des-unwetters-blieb-das-tor-geschlossen#0",
+							"de/sein-staendiges-ach-stoerte-sie-spaeter-seufzte-er-ach#0",
+							"de/seit-dem-fahrplanwechsel-kommt-der-bus-oefter#0",
+							"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#0",
+							"de/seit-wochen-macht-sich-meine-mutter-sorgen-um-ihre-gesundheit#3",
+							"de/sie-backt-einen-kuchen-fuer-ihre-nachbarin#0",
+							"de/sie-beendet-die-nachricht-mit#0",
+							"de/sie-bekommt-ein-paket#0",
+							"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#3",
+							"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#7",
+							"de/sie-half-indem-sie-die-messwerte-sorgfaeltig-pruefte#0",
+							"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#11",
+							"de/sie-hatte-ihren-grossen-strohhut-aufgesetzt-und-ihren#12",
+							"de/sie-ist-eben-gegangen-weil-der-bus-schon-kam#0",
+							"de/sie-ist-muede-aber-sie-arbeitet-weiter#0",
+							"de/sie-kann-das#0",
+							"de/sie-legt-das-handy-auf-den-tisch-und-hoert-ihm-aufmerksam-zu#6",
+							"de/sie-legt-das-handy-auf-den-tisch-und-hoert-ihm-aufmerksam-zu#8",
+							"de/sie-liest-leise#0",
+							"de/sie-steht-jeden-morgen-frueh-auf#0",
+							"de/sie-versucht-ihre-sorge-zum-ausdruck-zu-bringen#0",
+							"de/sie-wird-aerztin#0",
+							"de/sieh-einmal-hier-steht-er#5",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#10",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#16",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#4",
+							"de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#9",
+							"de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#10",
+							"de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#5",
+							"de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#6",
+							"de/tarek-oeffnete-das-fenster-um-frische-luft-hereinzulassen-zu#0",
+							"de/unbegruendeter-tadel-ist-manchmal-eine-feine-form-der#0",
+							"de/unsere-nachbarn-gruessen-sich-jeden-morgen-und-unterhalten-sich#3",
+							"de/unter-den-frauen-hilft-jegliche#0",
+							"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird#5",
+							"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#0",
+							"de/viele-bewohner-sehnen-sich-nach-monaten-voller-laerm-nach#9",
+							"de/von-allen-arbeitet-sie-am-sorgfaeltigsten#0",
+							"de/von-den-gaesten-kamen-keine#0",
+							"de/von-den-geraeten-funktioniert-keines#0",
+							"de/von-den-kindern-kenne-ich-jedes#0",
+							"de/von-der-terrasse-aus-sieht-man-den-see#0",
+							"de/von-morgen-an-fahre-ich-mit-dem-rad-zur-arbeit#1",
+							"de/weder-mein-vater-noch-meine-mutter-konnte-mir-die-frage#5",
+							"de/wie-alt-bist-du#0",
+							"de/wir-gedachten-deiner-in-dankbarkeit#0",
+							"de/wir-gehen-abends-spazieren#0",
+							"de/wir-gehen-jetzt-denn-es-wird-spaet#0",
+							"de/wir-koenen-den-termin-einhalten#0",
+							"de/wir-nahmen-abschied#0",
+							"de/wir-reisen-entweder-am-freitag-oder-am-samstag#0",
+							"de/wissen-ist-macht#0",
+							"de/wo-kommst-du-her#0",
+							"de/woerterbucheintrag-eine-frage-stellen#0"
+						]
+					}
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 0,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 610
+		},
+		"status": "Failed",
+		"finishedAt": "2026-10-03T08:18:03.442Z",
+		"total": 610,
+		"succeeded": 607,
+		"failed": 3,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 120,
+			"quality": {
+				"passed": 0,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 1830
+			}
+		}
+	},
+	"metrics": {
+		"attempts": 1830,
+		"cases": 610,
+		"table": {
+			"lemma": {
+				"correct": 1487,
+				"count": 1830,
+				"rate": 0.812568306010929,
+				"interval": [
+					0.7940400235384445,
+					0.8297870769230523
+				]
+			},
+			"cell": {
+				"correct": 1290,
+				"count": 1830,
+				"rate": 0.7049180327868853,
+				"interval": [
+					0.6836102612787605,
+					0.7253672958419761
+				]
+			},
+			"members": {
+				"correct": 1726,
+				"count": 1830,
+				"rate": 0.9431693989071038,
+				"interval": [
+					0.9316042035007083,
+					0.9528779266990711
+				]
+			},
+			"spelling": {
+				"correct": 1446,
+				"count": 1830,
+				"rate": 0.7901639344262295,
+				"interval": [
+					0.770909636042978,
+					0.8082025848399846
+				]
+			},
+			"exact": {
+				"correct": 754,
+				"count": 1830,
+				"rate": 0.41202185792349727,
+				"interval": [
+					0.3896781606691656,
+					0.43473414147366474
+				]
+			},
+			"valencyEvidence": {
+				"correct": 725,
+				"count": 825,
+				"rate": 0.8787878787878788,
+				"interval": [
+					0.8547439012583513,
+					0.8993206949354433
+				]
+			}
+		},
+		"byRepetition": {
+			"0": {
+				"correct": 496,
+				"count": 610,
+				"rate": 0.8131147540983606,
+				"interval": [
+					0.7802552679313489,
+					0.8420552561837561
+				]
+			},
+			"1": {
+				"correct": 496,
+				"count": 610,
+				"rate": 0.8131147540983606,
+				"interval": [
+					0.7802552679313489,
+					0.8420552561837561
+				]
+			},
+			"2": {
+				"correct": 495,
+				"count": 610,
+				"rate": 0.8114754098360656,
+				"interval": [
+					0.7785233176484577,
+					0.8405290361833221
+				]
+			}
+		},
+		"slices": {
+			"adjectival nouns and attributive-only adjectives (#709)": {
+				"lemma": {
+					"correct": 214,
+					"count": 243,
+					"rate": 0.8806584362139918,
+					"interval": [
+						0.8338603291198727,
+						0.9156085844023285
+					]
+				},
+				"cell": {
+					"correct": 118,
+					"count": 243,
+					"rate": 0.48559670781893005,
+					"interval": [
+						0.42347155791682806,
+						0.5481701588688184
+					]
+				},
+				"members": {
+					"correct": 243,
+					"count": 243,
+					"rate": 1,
+					"interval": [
+						0.9844375458697022,
+						1
+					]
+				},
+				"spelling": {
+					"correct": 218,
+					"count": 243,
+					"rate": 0.897119341563786,
+					"interval": [
+						0.8525393189807521,
+						0.9293390610721389
+					]
+				},
+				"exact": {
+					"correct": 92,
+					"count": 243,
+					"rate": 0.3786008230452675,
+					"interval": [
+						0.31995227626894857,
+						0.4410279080672143
+					]
+				},
+				"valencyEvidence": {
+					"correct": 152,
+					"count": 159,
+					"rate": 0.9559748427672956,
+					"interval": [
+						0.9119235512229683,
+						0.9785130795720086
+					]
+				}
+			},
+			"NOUN Case (#542)": {
+				"lemma": {
+					"correct": 9,
+					"count": 9,
+					"rate": 1,
+					"interval": [
+						0.700854948272956,
+						1
+					]
+				},
+				"cell": {
+					"correct": 0,
+					"count": 9,
+					"rate": 0,
+					"interval": [
+						0,
+						0.299145051727044
+					]
+				},
+				"members": {
+					"correct": 9,
+					"count": 9,
+					"rate": 1,
+					"interval": [
+						0.700854948272956,
+						1
+					]
+				},
+				"spelling": {
+					"correct": 9,
+					"count": 9,
+					"rate": 1,
+					"interval": [
+						0.700854948272956,
+						1
+					]
+				},
+				"exact": {
+					"correct": 0,
+					"count": 9,
+					"rate": 0,
+					"interval": [
+						0,
+						0.299145051727044
+					]
+				},
+				"valencyEvidence": {
+					"correct": 9,
+					"count": 9,
+					"rate": 1,
+					"interval": [
+						0.700854948272956,
+						1
+					]
+				}
+			},
+			"Foreign (#687)": {
+				"lemma": {
+					"correct": 12,
+					"count": 12,
+					"rate": 1,
+					"interval": [
+						0.7575059904469021,
+						1
+					]
+				},
+				"cell": {
+					"correct": 12,
+					"count": 12,
+					"rate": 1,
+					"interval": [
+						0.7575059904469021,
+						1
+					]
+				},
+				"members": {
+					"correct": 10,
+					"count": 12,
+					"rate": 0.8333333333333334,
+					"interval": [
+						0.5519691353881888,
+						0.9530348582430792
+					]
+				},
+				"spelling": {
+					"correct": 12,
+					"count": 12,
+					"rate": 1,
+					"interval": [
+						0.7575059904469021,
+						1
+					]
+				},
+				"exact": {
+					"correct": 10,
+					"count": 12,
+					"rate": 0.8333333333333334,
+					"interval": [
+						0.5519691353881888,
+						0.9530348582430792
+					]
+				},
+				"valencyEvidence": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"closed DET and PRON (#864)": {
+				"lemma": {
+					"correct": 273,
+					"count": 315,
+					"rate": 0.8666666666666667,
+					"interval": [
+						0.8246757426296889,
+						0.8998222596392094
+					]
+				},
+				"cell": {
+					"correct": 183,
+					"count": 315,
+					"rate": 0.580952380952381,
+					"interval": [
+						0.5258102656739408,
+						0.6341438387230888
+					]
+				},
+				"members": {
+					"correct": 297,
+					"count": 315,
+					"rate": 0.9428571428571428,
+					"interval": [
+						0.9114908615022811,
+						0.9635521801991155
+					]
+				},
+				"spelling": {
+					"correct": 300,
+					"count": 315,
+					"rate": 0.9523809523809523,
+					"interval": [
+						0.9229283117785652,
+						0.9709328598518936
+					]
+				},
+				"exact": {
+					"correct": 180,
+					"count": 315,
+					"rate": 0.5714285714285714,
+					"interval": [
+						0.5162419806938375,
+						0.6248939937741297
+					]
+				},
+				"valencyEvidence": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"circumpositions and bracket particles (#707)": {
+				"lemma": {
+					"correct": 87,
+					"count": 102,
+					"rate": 0.8529411764705882,
+					"interval": [
+						0.7714538779763949,
+						0.9088088542366022
+					]
+				},
+				"cell": {
+					"correct": 79,
+					"count": 102,
+					"rate": 0.7745098039215687,
+					"interval": [
+						0.6843101640510453,
+						0.8447830721146191
+					]
+				},
+				"members": {
+					"correct": 102,
+					"count": 102,
+					"rate": 1,
+					"interval": [
+						0.9637055373017458,
+						1
+					]
+				},
+				"spelling": {
+					"correct": 78,
+					"count": 102,
+					"rate": 0.7647058823529411,
+					"interval": [
+						0.673717980949697,
+						0.8364790682100506
+					]
+				},
+				"exact": {
+					"correct": 46,
+					"count": 102,
+					"rate": 0.45098039215686275,
+					"interval": [
+						0.3579461987516136,
+						0.5475728662188036
+					]
+				},
+				"valencyEvidence": {
+					"correct": 55,
+					"count": 72,
+					"rate": 0.7638888888888888,
+					"interval": [
+						0.6540123093347168,
+						0.8470329047278986
+					]
+				}
+			}
+		},
+		"routes": {
+			"Foreign/Foreign": {
+				"correct": 12,
+				"count": 12,
+				"rate": 1,
+				"interval": [
+					0.7575059904469021,
+					1
+				]
+			},
+			"Lexeme/ADJ": {
+				"correct": 120,
+				"count": 186,
+				"rate": 0.6451612903225806,
+				"interval": [
+					0.5740989754468561,
+					0.7103489018409238
+				]
+			},
+			"Lexeme/ADP": {
+				"correct": 45,
+				"count": 45,
+				"rate": 1,
+				"interval": [
+					0.921348400123914,
+					0.9999999999999999
+				]
+			},
+			"Lexeme/ADV": {
+				"correct": 99,
+				"count": 120,
+				"rate": 0.825,
+				"interval": [
+					0.7472429005906636,
+					0.8825946409289678
+				]
+			},
+			"Lexeme/CCONJ": {
+				"correct": 30,
+				"count": 30,
+				"rate": 1,
+				"interval": [
+					0.886486605238548,
+					1
+				]
+			},
+			"Lexeme/DET": {
+				"correct": 60,
+				"count": 60,
+				"rate": 1,
+				"interval": [
+					0.9398281469657729,
+					1
+				]
+			},
+			"Lexeme/INTJ": {
+				"correct": 65,
+				"count": 75,
+				"rate": 0.8666666666666667,
+				"interval": [
+					0.7716683616751214,
+					0.9259341533012722
+				]
+			},
+			"Lexeme/NOUN": {
+				"correct": 96,
+				"count": 126,
+				"rate": 0.7619047619047619,
+				"interval": [
+					0.6804874332978341,
+					0.8278247850694802
+				]
+			},
+			"Lexeme/NUM": {
+				"correct": 16,
+				"count": 21,
+				"rate": 0.7619047619047619,
+				"interval": [
+					0.5490882614178733,
+					0.8937198704460038
+				]
+			},
+			"Lexeme/PART": {
+				"correct": 26,
+				"count": 33,
+				"rate": 0.7878787878787878,
+				"interval": [
+					0.6224835486508011,
+					0.8932397852491516
+				]
+			},
+			"Lexeme/PRON": {
+				"correct": 213,
+				"count": 255,
+				"rate": 0.8352941176470589,
+				"interval": [
+					0.7848586980513481,
+					0.87577735592183
+				]
+			},
+			"Lexeme/PROPN": {
+				"correct": 45,
+				"count": 84,
+				"rate": 0.5357142857142857,
+				"interval": [
+					0.42984715856586697,
+					0.6384577179288193
+				]
+			},
+			"Lexeme/SCONJ": {
+				"correct": 59,
+				"count": 60,
+				"rate": 0.9833333333333333,
+				"interval": [
+					0.9114487018291041,
+					0.9970518402378096
+				]
+			},
+			"Lexeme/SYM": {
+				"correct": 50,
+				"count": 54,
+				"rate": 0.9259259259259259,
+				"interval": [
+					0.8244588405779678,
+					0.970818472437297
+				]
+			},
+			"Lexeme/VERB": {
+				"correct": 329,
+				"count": 369,
+				"rate": 0.8915989159891599,
+				"interval": [
+					0.8557508976870204,
+					0.9193774929891109
+				]
+			},
+			"Locution/ADP": {
+				"correct": 3,
+				"count": 3,
+				"rate": 1,
+				"interval": [
+					0.43850296436068037,
+					1
+				]
+			},
+			"Locution/ADV": {
+				"correct": 11,
+				"count": 18,
+				"rate": 0.6111111111111112,
+				"interval": [
+					0.38619041442114627,
+					0.7969475353714572
+				]
+			},
+			"Locution/CCONJ": {
+				"correct": 9,
+				"count": 9,
+				"rate": 1,
+				"interval": [
+					0.700854948272956,
+					1
+				]
+			},
+			"Locution/INTJ": {
+				"correct": 35,
+				"count": 48,
+				"rate": 0.7291666666666666,
+				"interval": [
+					0.590030349020167,
+					0.8343404243867794
+				]
+			},
+			"Locution/NOUN": {
+				"correct": 2,
+				"count": 3,
+				"rate": 0.6666666666666666,
+				"interval": [
+					0.2076595988078242,
+					0.9385080559790691
+				]
+			},
+			"Locution/NUM": {
+				"correct": 0,
+				"count": 6,
+				"rate": 0,
+				"interval": [
+					0,
+					0.39033429165637346
+				]
+			},
+			"Locution/SCONJ": {
+				"correct": 24,
+				"count": 30,
+				"rate": 0.8,
+				"interval": [
+					0.6269430343619583,
+					0.9049489287811706
+				]
+			},
+			"Locution/VERB": {
+				"correct": 79,
+				"count": 99,
+				"rate": 0.797979797979798,
+				"interval": [
+					0.7084558880529249,
+					0.8652427023968695
+				]
+			},
+			"Saying/Saying": {
+				"correct": 59,
+				"count": 84,
+				"rate": 0.7023809523809523,
+				"interval": [
+					0.5975091486436803,
+					0.7895518181595427
+				]
+			}
+		},
+		"outcomes": {
+			"Resolved": 1795,
+			"Unresolved": 22,
+			"CatalogMiss": 7,
+			"Failed": 6
+		},
+		"reasons": {
+			"Unresolved cell": 9,
+			"Unresolved case": 6,
+			"No authored particle has this spelling": 4,
+			"No authored PRON bisschen is spelled bißchen": 3,
+			"Unresolved spelling": 2,
+			"Unresolved agreement.gender": 2,
+			"Unresolved archaic": 1,
+			"The article agrees with no case of its head": 1,
+			"Unresolved agreement.number": 1
+		},
+		"flips": [
+			"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen#14",
+			"de/als-roemische-zahl-wird-vierzehn-xiv-geschrieben#0",
+			"de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale#0",
+			"de/das-namenverzeichnis-enthaelt-den-ortsnamen-mainz#0",
+			"de/das-sind-die-geraete-die-wir-pruefen#0",
+			"de/der-aufstieg-und-abstieg#0",
+			"de/der-aufstieg-und-abstieg-und-umstieg#0",
+			"de/der-ausschuss-trifft-die-entscheidung#0",
+			"de/der-autor-dessen-buch-fehlt-wartet-draussen#0",
+			"de/der-brief-liegt-hier-auf-meinem-schreibtisch-das-muss-heute#1",
+			"de/der-radweg-fuehrt-an-der-schule-vorbei#0",
+			"de/der-wievielte-versuch-war-schliesslich-erfolgreich#0",
+			"de/die-aufnahme-endete-nach-dem-klar-erkennbaren#0",
+			"de/die-jacke-dort-die-nehme-ich#0",
+			"de/die-praktikantin-hilft-den-gaesten-gern#0",
+			"de/die-redaktion-fuehrt-fotografie-als-leitform-die#0",
+			"de/die-seiten-des-kinder-und-jugendbuchs-fehlen#0",
+			"de/die-tuer-ist-offen-ich-bin-in-der-kueche-komm-doch-rein#0",
+			"de/die-tuer-klemmte-so-dass-wir-warten-mussten#0",
+			"de/die-verhandlung-lief-schliesslich-auf-einen-kompromiss#0",
+			"de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#12",
+			"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#23",
+			"de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#29",
+			"de/ha-ha-sehr-witzig#0",
+			"de/im-fehlerhaften-ocr-text-steht-statt-des-eurozeichens#0",
+			"de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#10",
+			"de/je-mehr-er-versprach-je-weniger-glaubte-man-ihm#0",
+			"de/komm-endlich-zum-ende#0",
+			"de/lea-moechte-noch-etwas-bleiben#0",
+			"de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#0",
+			"de/mit-kinder-und-jugendbuechern-kennt-sie-sich-aus#0",
+			"de/mit-manchem-hinweis-liess-sich-das-raetsel-schneller-loesen#1",
+			"de/nach-dem-einwand-und-dem-zitierten-spruch-morgenstund-hat#0",
+			"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank#0",
+			"de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#5",
+			"de/nachdem-jemand-den-idiom-ausdruck-ins-gras-beissen-erwaehnt#0",
+			"de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#8",
+			"de/sie-ueberlegte-einen-moment-hmm#0",
+			"de/sie-verkauft-kidner-und-jugendbuecher#0",
+			"de/sieh-einmal-hier-steht-er#6",
+			"de/sollte-er-also-einstmals-etwa-noch-vor-den-fuessen-meiner#9",
+			"de/zween-ritter-bewachten-der-sage-nach-das-tor#0"
+		],
+		"againstBaseline": {
+			"baselineRunId": "8e10377e-3ec5-4db3-9ddb-b0fb1b0c83a1",
+			"missedCases": 410,
+			"lines": {
+				"lemma": {
+					"baseline": {
+						"correct": 814,
+						"count": 1230,
+						"rate": 0.6617886178861788,
+						"interval": [
+							0.634882027907218,
+							0.6876877780716311
+						]
+					},
+					"now": {
+						"correct": 896,
+						"count": 1230,
+						"rate": 0.7284552845528456,
+						"interval": [
+							0.7029173171236863,
+							0.7525707003640355
+						]
+					}
+				},
+				"cell": {
+					"baseline": {
+						"correct": 660,
+						"count": 1230,
+						"rate": 0.5365853658536586,
+						"interval": [
+							0.5086470265122329,
+							0.5642958944377581
+						]
+					},
+					"now": {
+						"correct": 693,
+						"count": 1230,
+						"rate": 0.5634146341463414,
+						"interval": [
+							0.5355428043822522,
+							0.5908915919310654
+						]
+					}
+				},
+				"members": {
+					"baseline": {
+						"correct": 1094,
+						"count": 1230,
+						"rate": 0.8894308943089431,
+						"interval": [
+							0.8706783578345683,
+							0.9057585118331142
+						]
+					},
+					"now": {
+						"correct": 1126,
+						"count": 1230,
+						"rate": 0.9154471544715447,
+						"interval": [
+							0.8985760624281293,
+							0.9297313288039911
+						]
+					}
+				},
+				"spelling": {
+					"baseline": {
+						"correct": 826,
+						"count": 1230,
+						"rate": 0.6715447154471544,
+						"interval": [
+							0.644799589688562,
+							0.6972216618769514
+						]
+					},
+					"now": {
+						"correct": 858,
+						"count": 1230,
+						"rate": 0.697560975609756,
+						"interval": [
+							0.6713096980100585,
+							0.7225820751198931
+						]
+					}
+				},
+				"valency": {
+					"baseline": {
+						"correct": 504,
+						"count": 609,
+						"rate": 0.8275862068965517,
+						"interval": [
+							0.7955558224985408,
+							0.8555097903409523
+						]
+					},
+					"now": {
+						"correct": 504,
+						"count": 609,
+						"rate": 0.8275862068965517,
+						"interval": [
+							0.7955558224985408,
+							0.8555097903409523
+						]
+					}
+				},
+				"exact": {
+					"baseline": {
+						"correct": 108,
+						"count": 1230,
+						"rate": 0.08780487804878048,
+						"interval": [
+							0.07324471552871134,
+							0.10493170843472285
+						]
+					},
+					"now": {
+						"correct": 176,
+						"count": 1230,
+						"rate": 0.14308943089430895,
+						"interval": [
+							0.12463062513746098,
+							0.16377065715040412
+						]
+					}
+				}
+			},
+			"wrongToRight": [
+				{
+					"caseId": "de/als-sie-vom-tod-seines-hundes-erfuhr-sagte-sie-leise-tut-mir#0",
+					"route": "Lexeme/VERB",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/als-sie-von-seiner-krankheit-hoerte-sagte-sie-das-tut-mir#1",
+					"route": "Lexeme/VERB",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/das-dialektwoerterbuch-bezeichnet-nich-als-regionale#0",
+					"route": "Lexeme/PART",
+					"baseline": "0/3",
+					"now": "2/3"
+				},
+				{
+					"caseId": "de/das-muss-wie-gehen#0",
+					"route": "Lexeme/ADV",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/das-sind-die-geraete-die-wir-pruefen#0",
+					"route": "Lexeme/PRON",
+					"baseline": "0/3",
+					"now": "2/3"
+				},
+				{
+					"caseId": "de/den-kenn-ich-woher#0",
+					"route": "Lexeme/ADV",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/der-alte-hund-tut-mir-so-leid#2",
+					"route": "Lexeme/VERB",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/der-erste-versuch-gelang#0",
+					"route": "Lexeme/ADJ",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/die-zweite-sitzung-begann-puenktlich#0",
+					"route": "Lexeme/ADJ",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/er-konnte-kein-gespraech-mit-kameraden-fuehren-ohne-grundlos#12",
+					"route": "Locution/SCONJ",
+					"baseline": "0/3",
+					"now": "2/3"
+				},
+				{
+					"caseId": "de/hast-du-das-wem-erzaehlt#0",
+					"route": "Lexeme/PRON",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/ich-hab-was-gehoert#0",
+					"route": "Lexeme/PRON",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/ist-da-wer#0",
+					"route": "Lexeme/PRON",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/je-mehr-ich-uebe-desto-besser-spiele-ich-gitarre#1",
+					"route": "Lexeme/ADV",
+					"baseline": "1/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/komm-wann-vorbei#0",
+					"route": "Lexeme/ADV",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/mein-bruder-bindet-mir-gern-einen-baeren-auf#4",
+					"route": "Lexeme/ADV",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/mina-faehrt-lieber-mit-dem-zug-als-mit-dem-auto#0",
+					"route": "Lexeme/ADV",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/mina-reist-am-liebsten-im-fruehling#0",
+					"route": "Lexeme/ADV",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/mit-disem-plan-erreicht-das-team-sein-ziel-nicht#0",
+					"route": "Lexeme/DET",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/nach-dem-essen-liest-sie-noch-eine-stunde#0",
+					"route": "Lexeme/PRON",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/nach-der-sitzung-fahre-ihc-direkt-nach-hause#0",
+					"route": "Lexeme/PRON",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/nachdem-er-die-vase-zerbrochen-hatte-sagte-er-es-tut-mir#1",
+					"route": "Lexeme/VERB",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#0",
+					"route": "Locution/INTJ",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/sag-doch-was#0",
+					"route": "Lexeme/PRON",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/sie-meint-es-gut-mit-dir#1",
+					"route": "Locution/VERB",
+					"baseline": "1/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/so-ueber-alle-zweifel-war-das-entschieden-dass-er#12",
+					"route": "Lexeme/ADJ",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/stell-das-einfach-wohin#0",
+					"route": "Lexeme/ADV",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/trotz-der-warnung-hat-er-den-kopf-weiter-in-den-sant#0",
+					"route": "Locution/VERB",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/tut-mir-leid-ich-habe-deine-nachricht-zu-spaet-gesehen#0",
+					"route": "Lexeme/VERB",
+					"baseline": "0/3",
+					"now": "3/3"
+				},
+				{
+					"caseId": "de/wir-liefen-den-fluss-entlang-bis-zur-bruecke#0",
+					"route": "Lexeme/VERB",
+					"baseline": "1/3",
+					"now": "3/3"
+				}
+			],
+			"rightToWrong": [
+				{
+					"caseId": "de/aber-wie-es-auch-liegen-mag-marcell-wir-muessen-uns-nun#18",
+					"route": "Lexeme/ADJ",
+					"baseline": "3/3",
+					"now": "0/3"
+				},
+				{
+					"caseId": "de/die-jacke-dort-die-nehme-ich#0",
+					"route": "Lexeme/PRON",
+					"baseline": "2/3",
+					"now": "1/3"
+				},
+				{
+					"caseId": "de/er-lag-auf-seinem-panzerartig-harten-ruecken-und-sah-wenn-er#29",
+					"route": "Lexeme/ADJ",
+					"baseline": "2/3",
+					"now": "1/3"
+				},
+				{
+					"caseId": "de/mit-einer-dame-die-so-gut-erzogen-wurde-kann-man-sich#0",
+					"route": "Lexeme/VERB",
+					"baseline": "3/3",
+					"now": "1/3"
+				},
+				{
+					"caseId": "de/sie-gingen-die-vorderreihe-entlang-und-spazierten-durch-den#8",
+					"route": "Lexeme/ADJ",
+					"baseline": "3/3",
+					"now": "1/3"
+				}
+			],
+			"regression": {
+				"regressed": 10,
+				"count": 200,
+				"rate": 0.05,
+				"interval": [
+					0.027382645473457017,
+					0.08957814852860962
+				],
+				"cases": [
+					{
+						"caseId": "de/als-das-glas-beinahe-fiel-rief-er-hoppla#0",
+						"lines": [
+							"spelling",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/der-autor-dessen-buch-fehlt-wartet-draussen#0",
+						"lines": [
+							"lemma",
+							"cell",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/der-fahrer-mus-sofort-bremsen#0",
+						"lines": [
+							"spelling",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/der-wievielte-versuch-war-schliesslich-erfolgreich#0",
+						"lines": [
+							"lemma",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/die-sprechstunde-laeuft-von-zehn-bis-zwoelf-uhr#0",
+						"lines": [
+							"lemma",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/ist-dir-korinna-die-du-vorhin-so-grossmuetig-verteidigen#10",
+						"lines": [
+							"lemma",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/lass-uns-gehen#0",
+						"lines": [
+							"spelling",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/nach-der-ueberraschenden-nachricht-hat-sie-sich-heimlich-ins#5",
+						"lines": [
+							"lemma",
+							"cell",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/sofort-klopfte-es-und-ein-mann-den-er-in-dieser-wohnung-noch#6",
+						"lines": [
+							"valency",
+							"exact"
+						]
+					},
+					{
+						"caseId": "de/wo-kommst-du-her#0",
+						"lines": [
+							"spelling",
+							"exact"
+						]
+					}
+				]
+			}
+		}
+	},
+	"spend": {
+		"jev": {
+			"freshCalls": 777,
+			"freshInputTokens": 1183611,
+			"freshOutputTokens": 233887,
+			"cachedCalls": 978
+		},
+		"luna": {
+			"freshCalls": 501,
+			"freshInputTokens": 248611,
+			"freshOutputTokens": 11725,
+			"cachedCalls": 984
+		}
+	}
+}
