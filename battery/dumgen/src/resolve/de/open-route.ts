@@ -1632,7 +1632,22 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		canonicalForm = authored.lemma.canonicalForm;
 		if (!written) normalized[0] = authored.lemma.canonicalForm;
 	}
-	if (canonicalForm !== undefined)
+	// A numeral Locution has no open slot: a … Luna writes in it (von … bis …)
+	// cites a dictionary pattern, not this unit, whose headword is its
+	// members' words, digits spelled (zehn bis zwölf; Rules
+	// de/canonical-form-is-the-headword, de/digits-spell-the-numeral).
+	if (
+		canonicalForm !== undefined &&
+		target.route.family === "Locution" &&
+		target.route.kind === "NUM" &&
+		canonicalForm.split(" ").includes("…")
+	)
+		canonicalForm = joinMembers(
+			normalized.map((word) => numeralWord(word) ?? word),
+			target.glued,
+			outsideHeadword,
+		);
+	else if (canonicalForm !== undefined)
 		canonicalForm = guardedHeadword(
 			target,
 			canonicalForm,

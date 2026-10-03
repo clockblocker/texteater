@@ -1451,3 +1451,23 @@ test("a preposition with its own complement is never taken as the prefix when je
 		hasSepPrefix: null,
 	});
 });
+
+test("a numeral Locution Luna cites as a slotted pattern takes its members' words, digits spelled", async () => {
+	// Es0 _1 dauert2 _3 acht4 _5 bis6 _7 9 8 _9 Tage10 .11
+	const range = await resolveOnce(
+		{
+			jev: fakeJev().ask,
+			luna: fakeLuna(({ members }) => ({
+				canonicalForm: "von … bis …",
+				members: members.map(({ text }) => text),
+			})).ask,
+		},
+		{
+			sentence: sentenceOf("Es dauert acht bis 9 Tage."),
+			unit: unitOf([4, 6, 8], "Locution", "NUM"),
+		},
+	);
+	expect(attested(range.result).surface.lemma.canonicalForm).toBe(
+		"acht bis neun",
+	);
+});
