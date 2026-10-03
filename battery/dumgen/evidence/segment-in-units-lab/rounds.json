@@ -8,14 +8,14 @@
 			"capTokens": 119047619,
 			"stopLineTokens": 104000000,
 			"pin": {
-				"dumspecCommit": "703f3081ec2b3394a1125d40bb170de9ac4b9b26",
+				"dumspecCommit": "3a6b7b89d6902388c80319e1adbd59d1a7806cb1",
 				"dumspecDirty": false,
-				"hash": "556a0dcf8e4dd7ce3c6d66b2ea217d5d7a69768fc936e2942527396d54124f2a",
+				"hash": "b291801d72c97b22d9396087bdbf362614d8f960538e5dcd03db35a6325f7b71",
 				"inputs": {
 					"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",
-					"rules": "5e1b57ab65418be91f7d0bdfeed4857b22f8f7b1685b1bc57715d60753439e98"
+					"rules": "7f51dabdc2b4830e3ab99ec7e8458a4135df34ae9d29d99b0e5f31f784929945"
 				},
-				"at": "2026-10-03T05:06:48.350Z"
+				"at": "2026-10-03T05:30:21.061Z"
 			},
 			"repins": [
 				{
@@ -59,6 +59,20 @@
 						"at": "2026-10-03T04:25:57.766Z"
 					},
 					"reason": "#884 added four German Knowledge Rules (dumspec 703f3081). Only the rules input moved: the inventories hash is unchanged, and the unit stage's requests quote no Rule text; a cached replay of 20261002T122056--production--heldout--all stays 567/567 identical with 0 fresh calls"
+				},
+				{
+					"at": "2026-10-03T05:30:21.061Z",
+					"from": {
+						"dumspecCommit": "703f3081ec2b3394a1125d40bb170de9ac4b9b26",
+						"dumspecDirty": false,
+						"hash": "556a0dcf8e4dd7ce3c6d66b2ea217d5d7a69768fc936e2942527396d54124f2a",
+						"inputs": {
+							"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",
+							"rules": "5e1b57ab65418be91f7d0bdfeed4857b22f8f7b1685b1bc57715d60753439e98"
+						},
+						"at": "2026-10-03T05:06:48.350Z"
+					},
+					"reason": "#884 reworded de/valency-frame-follows-e-valbu (dumspec 3a6b7b89). Only the rules input moved; a cached replay of 20261002T122056--production--heldout--all stays 567/567 identical with 0 fresh calls"
 				}
 			]
 		}
