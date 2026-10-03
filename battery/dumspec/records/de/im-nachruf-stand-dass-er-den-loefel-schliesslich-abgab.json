@@ -40,14 +40,9 @@
 				"supports": "Target 0 Knowledge: den Löffel ... abgeben (salopp: sterben): Idiom"
 			},
 			{
-				"title": "DWDS: ins Gras beißen",
-				"url": "https://www.dwds.de/wb/ins%20Gras%20bei%C3%9Fen",
-				"supports": "Target 0 Knowledge: sense 1 Synonym zu den Löffel abgeben"
-			},
-			{
 				"title": "OpenThesaurus: den Löffel abgeben",
 				"url": "https://www.openthesaurus.de/synonyme/den%20L%C3%B6ffel%20abgeben",
-				"supports": "Target 0 Knowledge: synset sterben · das Zeitliche segnen · ins Gras beißen · (den) Löffel abgeben; no Gegenteil"
+				"supports": "Target 0 Knowledge: synset sterben · das Zeitliche segnen · (den) Löffel abgeben; no Gegenteil"
 			}
 		]
 	},
@@ -143,9 +138,6 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
-			},
-			"notes": {
-				"rationale": "Knowledge (#887, dev draft): ins Gras beißen (listed) is left out because a Knowledge prompt example uses it (#693)."
 			}
 		}
 	],

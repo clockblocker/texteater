@@ -398,7 +398,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B12). es klopft (Duden: unpersönlich, jemand klopft an) has a subject es that refers to nothing. It stays in the middle field after the verb, so it is not positional, and cannot be questioned (*Was klopfte?), so it joins klopfen as the expletive (de/expletive-es-joins-its-verb). es klopfte is Duden klopfen 'anklopfen' (es klopft: jemand klopft an), not a beating heart or beating a carpet. Knowledge (#887, dev draft): Optional direction and instrument complements are dropped as free adjuncts; the expletive es is no Slot. Knowledge (#887, dev draft): Optional direction and instrument complements are dropped as free adjuncts; the expletive es is no Slot. pochen (listed) is left out because a Knowledge prompt example uses it (#693)."
+				"rationale": "Ruled on #743 (VP-B12). es klopft (Duden: unpersönlich, jemand klopft an) has a subject es that refers to nothing. It stays in the middle field after the verb, so it is not positional, and cannot be questioned (*Was klopfte?), so it joins klopfen as the expletive (de/expletive-es-joins-its-verb). es klopfte is Duden klopfen 'anklopfen' (es klopft: jemand klopft an), not a beating heart or beating a carpet. Knowledge (#887, dev draft): Optional direction and instrument complements are dropped as free adjuncts; the expletive es is no Slot. pochen (listed) is left out because a Knowledge prompt example uses it (#693)."
 			}
 		},
 		{

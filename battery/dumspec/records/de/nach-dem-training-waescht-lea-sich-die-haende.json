@@ -47,21 +47,6 @@
 		],
 		"references": [
 			{
-				"title": "Duden: Training",
-				"url": "https://www.duden.de/rechtschreibung/Training",
-				"supports": "Target 1 Knowledge: Plural die Trainings; Synonyme Bewegung, Fitnesstraining, Körperertüchtigung, Körperkultur"
-			},
-			{
-				"title": "DWDS: Training",
-				"url": "https://www.dwds.de/wb/Training",
-				"supports": "Target 1 Knowledge: Nominativ Plural Trainings; Sport 'das Trainieren'"
-			},
-			{
-				"title": "OpenThesaurus: Training",
-				"url": "https://www.openthesaurus.de/synonyme/Training",
-				"supports": "Target 1 Knowledge: synset Übung · Probe · Training · Vorübung (other synsets are the course sense: Kurs, Schulung)"
-			},
-			{
 				"title": "E-VALBU: waschen, Lesart 1",
 				"url": "https://grammis.ids-mannheim.de/verbs/view/401190/1",
 				"supports": "Target 2 Knowledge: jemand/etwas wäscht jemanden/etwas mit irgendetwas: K sub, K akk, (K adv Mittel mit + Dat)"
@@ -80,6 +65,21 @@
 				"title": "OpenThesaurus: waschen",
 				"url": "https://www.openthesaurus.de/synonyme/waschen",
 				"supports": "Target 2 Knowledge: synsets only for dishes (spülen, abwaschen) and laundry; no Gegenteil"
+			},
+			{
+				"title": "Duden: Training",
+				"url": "https://www.duden.de/rechtschreibung/Training",
+				"supports": "Target 1 Knowledge: Plural die Trainings; Synonyme Bewegung, Fitnesstraining, Körperertüchtigung, Körperkultur"
+			},
+			{
+				"title": "DWDS: Training",
+				"url": "https://www.dwds.de/wb/Training",
+				"supports": "Target 1 Knowledge: Nominativ Plural Trainings; Sport 'das Trainieren'"
+			},
+			{
+				"title": "OpenThesaurus: Training",
+				"url": "https://www.openthesaurus.de/synonyme/Training",
+				"supports": "Target 1 Knowledge: synset Übung · Probe · Training · Vorübung (other synsets are the course sense: Kurs, Schulung)"
 			}
 		]
 	},
@@ -190,7 +190,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "Knowledge (#887, dev draft): Übung is broader (any practice) and Fitnesstraining narrower than the sports session, so both are near. Knowledge (#887, dev draft): Übung is broader (any practice) and Fitnesstraining narrower than the sports session, so both are near. Übung (OT synset) is left out because a Knowledge prompt example uses it (#693)."
+				"rationale": "Knowledge (#887, dev draft): Fitnesstraining is narrower than the sports session, so near. Übung (OT synset) is left out because a Knowledge prompt example uses it (#693)."
 			}
 		},
 		{
