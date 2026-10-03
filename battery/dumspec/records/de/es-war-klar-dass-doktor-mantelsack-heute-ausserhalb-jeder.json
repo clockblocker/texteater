@@ -329,6 +329,26 @@
 				"title": "OpenThesaurus: Doktor",
 				"url": "https://www.openthesaurus.de/synonyme/Doktor",
 				"supports": "Target 4 Knowledge: synsets for the physician (Arzt) and the degree (Doktorgrad, Doktortitel; Oberbegriff Titel); none for the holder used as a title"
+			},
+			{
+				"title": "E-VALBU: fragen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400607/1",
+				"supports": "Target 10 Knowledge: Satzbauplan K sub, (K akk), (K akk): jemand fragt jemanden etwas; second K akk also ob-S, w-S ohne Korrelat"
+			},
+			{
+				"title": "Duden: fragen",
+				"url": "https://www.duden.de/rechtschreibung/fragen",
+				"supports": "Target 10 Knowledge: schwaches Verb, fragte (landschaftlich frug); sense 'Fragen stellen'"
+			},
+			{
+				"title": "DWDS: fragen",
+				"url": "https://www.dwds.de/wb/fragen",
+				"supports": "Target 10 Knowledge: Präteritum fragte"
+			},
+			{
+				"title": "OpenThesaurus: fragen",
+				"url": "https://www.openthesaurus.de/synonyme/fragen",
+				"supports": "Target 10 Knowledge: synset 21935: fragen · anfragen (ob) · eine Frage stellen; synset 43074: (jemanden) befragen · (jemanden) fragen"
 			}
 		]
 	},
@@ -873,7 +893,99 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "❓" },
+			"reading": {
+				"emojiDescription": "❓",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob"
+								},
+								{
+									"kind": "Clause",
+									"form": "W"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "eine Frage stellen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "befragen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anfragen",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

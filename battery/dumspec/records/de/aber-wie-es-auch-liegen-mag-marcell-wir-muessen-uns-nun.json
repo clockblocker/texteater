@@ -419,6 +419,21 @@
 				"title": "E-VALBU: mögen",
 				"url": "https://grammis.ids-mannheim.de/verbvalenz/400795",
 				"supports": "Target 5 Knowledge: only Vollverb Lesarten; the modal frame follows Duden"
+			},
+			{
+				"title": "E-VALBU: machen, Lesart 3",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400774/3",
+				"supports": "Target 13 Knowledge: Satzbauplan K sub, K akk, K prd: jemand/etwas macht jemanden/etwas so; K sub also dass-S, Inf-S mit zu, Inf-S ohne zu, fak. Korrelat es"
+			},
+			{
+				"title": "Duden: machen",
+				"url": "https://www.duden.de/rechtschreibung/machen",
+				"supports": "Target 13 Knowledge: machte; 'in einen bestimmten Zustand bringen'; Synonyme only for sich machen"
+			},
+			{
+				"title": "OpenThesaurus: machen",
+				"url": "https://www.openthesaurus.de/synonyme/machen",
+				"supports": "Target 13 Knowledge: no synset for this sense; no relation listed"
 			}
 		]
 	},
@@ -1059,7 +1074,70 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🔨" },
+			"reading": {
+				"emojiDescription": "🔨",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "BareInfinitive",
+									"correlate": "Optional"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Predicative",
+									"of": "Object",
+									"marker": "None"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

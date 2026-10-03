@@ -62,15 +62,120 @@
 				"hash": "19c59bf41ed26810"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: weiterleiten",
+				"url": "https://www.duden.de/rechtschreibung/weiterleiten",
+				"supports": "Target 0 Knowledge: leitete weiter; 'etwas, was man erhalten hat, einer anderen Person, Stelle zuleiten' (einen Antrag [an den zuständigen Sachbearbeiter] weiterleiten)"
+			},
+			{
+				"title": "DWDS: weiterleiten",
+				"url": "https://www.dwds.de/wb/weiterleiten",
+				"supports": "Target 0 Knowledge: leitet weiter, leitete weiter; die Freiexemplare sind an alle Autoren weiterzuleiten"
+			},
+			{
+				"title": "OpenThesaurus: weiterleiten",
+				"url": "https://www.openthesaurus.de/synonyme/weiterleiten",
+				"supports": "Target 0 Knowledge: synset 8999: durchgeben · übergeben · weitergeben · weiterleiten; synset 5108: nachsenden · weiterleiten (Brief)"
+			},
+			{
+				"title": "E-VALBU: weiterleiten",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 0 Knowledge: no E-VALBU entry"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [26, 32, 34],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "📥📤" },
+			"reading": {
+				"emojiDescription": "📥📤",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "an",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "weitergeben",
+								"coreFeatures": {
+									"hasSepPrefix": "weiter",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "nachsenden",
+								"coreFeatures": {
+									"hasSepPrefix": "nach",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "weitergeleitet werden is the process passive of weiterleiten, 'pass on what one received to another person or office': werden is its passive auxiliary and joins it, and weiter is its separable prefix (de/verbal-participle, de/verb-core-features). an die Rentner names the recipient that weiterleiten asks for (DWDS: die Freiexemplare sind an alle Autoren weiterzuleiten), so an + Acc is governed, a member left out of the normalized Surface (de/governed-preposition-joins-its-governor)."
+				"rationale": "weitergeleitet werden is the process passive of weiterleiten, 'pass on what one received to another person or office': werden is its passive auxiliary and joins it, and weiter is its separable prefix (de/verbal-participle, de/verb-core-features). an die Rentner names the recipient that weiterleiten asks for (DWDS: die Freiexemplare sind an alle Autoren weiterzuleiten), so an + Acc is governed, a member left out of the normalized Surface (de/governed-preposition-joins-its-governor). Knowledge (#887, dev draft): No E-VALBU entry; Duden brackets the an-recipient (Optional), a person or an office (Either)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

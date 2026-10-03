@@ -243,6 +243,41 @@
 				"title": "DWDS: ein Ende machen",
 				"url": "https://www.dwds.de/wb/ein%20Ende%20machen",
 				"supports": "Target 13 Knowledge: only the narrower 'seinem Leben ein Ende machen'; no relation for the broad sense"
+			},
+			{
+				"title": "E-VALBU: tun, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400246/1",
+				"supports": "Target 10 Knowledge: Satzbauplan K sub, K akk: jemand/etwas tut etwas (unternimmt oder erledigt etwas)"
+			},
+			{
+				"title": "Duden: tun",
+				"url": "https://www.duden.de/rechtschreibung/tun_handeln",
+				"supports": "Target 10 Knowledge: tut, tat, hat getan; 'eine Handlung ausführen', 'verrichten, erledigen' (nichts zu tun)"
+			},
+			{
+				"title": "OpenThesaurus: tun",
+				"url": "https://www.openthesaurus.de/synonyme/tun",
+				"supports": "Target 10 Knowledge: synset 12489: anstellen · durchführen · machen · realisieren · tätigen · tun"
+			},
+			{
+				"title": "DWDS: übrigbleiben",
+				"url": "https://www.dwds.de/wb/übrigbleiben",
+				"supports": "Target 11 Knowledge: bleibt übrig, blieb übrig; übertragen ⟨jmdm. bleibt nichts (anderes, weiter) übrig, als …⟩ keine andere Wahl haben"
+			},
+			{
+				"title": "Duden: übrig bleiben",
+				"url": "https://www.duden.de/rechtschreibung/uebrig_bleiben",
+				"supports": "Target 11 Knowledge: starkes Verb; only the literal 'als Rest bleiben' with its Synonyme"
+			},
+			{
+				"title": "OpenThesaurus: übrig bleiben",
+				"url": "https://www.openthesaurus.de/synonyme/%C3%BCbrig%20bleiben",
+				"supports": "Target 11 Knowledge: synset 9524 (bleiben · verbleiben · zurückbleiben) is the literal sense; no relation listed for the figurative sense"
+			},
+			{
+				"title": "E-VALBU: übrig bleiben",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 11 Knowledge: no E-VALBU entry"
 			}
 		]
 	},
@@ -730,7 +765,60 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🛠" },
+			"reading": {
+				"emojiDescription": "🛠",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "machen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "tun is the infinitive of nichts zu tun, a VERB of its own; zu is a separate PART (de/bare-infinitive-zu)."
 			},
@@ -785,9 +873,47 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🚫🔀" },
+			"reading": {
+				"emojiDescription": "🚫🔀",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Duden (übrig bleiben, übrigbleiben) and DWDS (übrigbleiben) list a verb, and DWDS files jmdm. bleibt nichts (anderes, weiter) übrig, als … 'have no choice but' as its figurative sense. So übrig blieb is one VERB with übrig as its separable first part, not copular bleiben plus ADJ übrig; nichts and als stay outside. Ruled on #743 (MB-B2). Its Canonical Form is Duden's recommended spelling, übrig bleiben, written apart (D 55); Duden allows the joined übrigbleiben only in a transferred sense (de/canonical-form-is-the-headword). Ruled on #771. This is DWDS übrigbleiben, übertragen: jmdm. bleibt nichts übrig, als … 'keine andere Wahl haben', kept apart from the literal 'als Rest zurückbleiben' as a Reading of its own (ADR 0031)."
+				"rationale": "Duden (übrig bleiben, übrigbleiben) and DWDS (übrigbleiben) list a verb, and DWDS files jmdm. bleibt nichts (anderes, weiter) übrig, als … 'have no choice but' as its figurative sense. So übrig blieb is one VERB with übrig as its separable first part, not copular bleiben plus ADJ übrig; nichts and als stay outside. Ruled on #743 (MB-B2). Its Canonical Form is Duden's recommended spelling, übrig bleiben, written apart (D 55); Duden allows the joined übrigbleiben only in a transferred sense (de/canonical-form-is-the-headword). Ruled on #771. This is DWDS übrigbleiben, übertragen: jmdm. bleibt nichts übrig, als … 'keine andere Wahl haben', kept apart from the literal 'als Rest zurückbleiben' as a Reading of its own (ADR 0031). Knowledge (#887, dev draft): Frame from DWDS's jmdm. bleibt nichts übrig; the als-phrase depends on nichts (anderes) and has no Slot kind."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

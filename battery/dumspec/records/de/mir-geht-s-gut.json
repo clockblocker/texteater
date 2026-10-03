@@ -20,15 +20,88 @@
 				"hash": "a5fb49a3b3ef1cb3"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: gehen, es, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400654/1",
+				"supports": "Target 0 Knowledge: Satzbauplan K dat, K adv (Art und Weise): es geht jemandem irgendwie"
+			},
+			{
+				"title": "Duden: gehen",
+				"url": "https://www.duden.de/rechtschreibung/gehen",
+				"supports": "Target 0 Knowledge: geht, ging, ist gegangen; unpersönlich 'sich in einer bestimmten Verfassung befinden'"
+			},
+			{
+				"title": "DWDS: gehen",
+				"url": "https://www.dwds.de/wb/gehen",
+				"supports": "Target 0 Knowledge: 14. jmdm. geht es gut, schlecht"
+			},
+			{
+				"title": "OpenThesaurus: gehen",
+				"url": "https://www.openthesaurus.de/synonyme/gehen",
+				"supports": "Target 0 Knowledge: synset 43222: (es ... jemandem gut / schlecht ...) (er)gehen · es gut (schlecht) haben"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 3],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🌡" },
+			"reading": {
+				"emojiDescription": "🌡",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Adverbial",
+									"standIn": "Irgendwie"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "ergehen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "es geht jemandem gut selects an es that refers to nothing, so 's is the expletive member of gehen, exactly as a full es would be (de/expletive-es-joins-its-verb). geht's is two Segments, and both Fused pieces are members of the one target: a click on either opens gehen. A further Reading: es geht jemandem gut 'be doing, fare' (Duden gehen 15a 'sich in einer bestimmten Verfassung befinden'); gut is an ADJ of its own.",
+				"rationale": "es geht jemandem gut selects an es that refers to nothing, so 's is the expletive member of gehen, exactly as a full es would be (de/expletive-es-joins-its-verb). geht's is two Segments, and both Fused pieces are members of the one target: a click on either opens gehen. A further Reading: es geht jemandem gut 'be doing, fare' (Duden gehen 15a 'sich in einer bestimmten Verfassung befinden'); gut is an ADJ of its own. Knowledge (#887, dev draft): The expletive es is a fixed part, not a Slot.",
 				"knownMistakes": [
 					"Making 's a PRON es target of its own, as in Das Radio? Geht's wieder?"
 				]

@@ -254,6 +254,26 @@
 				"title": "OpenThesaurus: Traum",
 				"url": "https://www.openthesaurus.de/synonyme/Traum",
 				"supports": "Target 5 Knowledge: synset Traum alone, only Unterbegriffe (Tagtraum, Albtraum); no relation listed"
+			},
+			{
+				"title": "E-VALBU: finden, Lesart 3",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400584/3",
+				"supports": "Target 7 Knowledge: Satzbauplan K sub, K akk, (K adv Ort, optional): jemand/etwas findet etwas"
+			},
+			{
+				"title": "E-VALBU: finden, Lesart 9",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400584/9",
+				"supports": "Target 7 Knowledge: Satzbauplan K sub, K akk, K prd: jemand findet jemanden/etwas so (vorfinden)"
+			},
+			{
+				"title": "Duden: finden",
+				"url": "https://www.duden.de/rechtschreibung/finden",
+				"supports": "Target 7 Knowledge: findet, fand; 1a 'auf jemanden, etwas treffen, stoßen; entdecken'"
+			},
+			{
+				"title": "OpenThesaurus: finden",
+				"url": "https://www.openthesaurus.de/synonyme/finden",
+				"supports": "Target 7 Knowledge: synset 4433: antreffen · auffinden · (zufällig) begegnen · entdecken · finden · vorfinden"
 			}
 		]
 	},
@@ -615,7 +635,82 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🔍" },
+			"reading": {
+				"emojiDescription": "🔍",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "entdecken",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "auffinden",
+								"coreFeatures": {
+									"hasSepPrefix": "auf",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "vorfinden",
+								"coreFeatures": {
+									"hasSepPrefix": "vor",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -661,7 +756,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "finden in the sense 'find in a state' (Duden finden 2: das Haus leer finden) with sich as its object and verwandelt as the object's predicative. sich finden is not lexicalized here: sie fand ihn verwandelt keeps the meaning, so sich stays outside (de/verb-owns-its-scattered-members). finden 'find in a certain state' (Duden finden 2: das Haus leer finden) shares one Reading with 'come upon, obtain' (1a, 1c) under ADR 0031."
+				"rationale": "finden in the sense 'find in a state' (Duden finden 2: das Haus leer finden) with sich as its object and verwandelt as the object's predicative. sich finden is not lexicalized here: sie fand ihn verwandelt keeps the meaning, so sich stays outside (de/verb-owns-its-scattered-members). finden 'find in a certain state' (Duden finden 2: das Haus leer finden) shares one Reading with 'come upon, obtain' (1a, 1c) under ADR 0031. Knowledge (#887, dev draft): Frame of the 🔍 head sense (E-VALBU Lesart 3, object Either from Duden 1a jemanden, etwas); the optional place drops."
 			}
 		},
 		{

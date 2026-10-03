@@ -359,6 +359,66 @@
 				"title": "DWDS: wenden",
 				"url": "https://www.dwds.de/wb/wenden",
 				"supports": "Target 18 Knowledge: no Synonym/Gegensatz line for this sense"
+			},
+			{
+				"title": "Duden: neigen",
+				"url": "https://www.duden.de/rechtschreibung/neigen",
+				"supports": "Target 1 Knowledge: neigte; transitive sense 'nach unten beugen, senken' (den Kopf zum Gruß neigen); Synonyme only for the tilt sense (kippen, schräg halten)"
+			},
+			{
+				"title": "DWDS: neigen",
+				"url": "https://www.dwds.de/wb/neigen",
+				"supports": "Target 1 Knowledge: neigte; 1a etw. senken, with plant subjects (die Halme neigen ihre Ähren) beside persons"
+			},
+			{
+				"title": "OpenThesaurus: neigen",
+				"url": "https://www.openthesaurus.de/synonyme/neigen",
+				"supports": "Target 1 Knowledge: no synset for lowering the head; kippen · neigen · schräg stellen is the tilt sense; no relation listed for this sense"
+			},
+			{
+				"title": "E-VALBU: neigen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 1 Knowledge: no E-VALBU entry"
+			},
+			{
+				"title": "E-VALBU: hängen I, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400552/1",
+				"supports": "Target 16 Knowledge: Satzbauplan K sub, K adv (Ort statisch, obligatory): jemand/etwas hängt irgendwo"
+			},
+			{
+				"title": "E-VALBU: hängen I, Lesart 11",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400552/11",
+				"supports": "Target 16 Knowledge: Satzbauplan K sub, (K adv direktivisch): hang limply, herabhängen"
+			},
+			{
+				"title": "Duden: hängen (starkes Verb)",
+				"url": "https://www.duden.de/rechtschreibung/haengen_gehangen",
+				"supports": "Target 16 Knowledge: hing; senses 'an einer Stelle befestigt sein' and 'schlaff nach unten fallen'; Synonyme pendeln, schweben, baumeln"
+			},
+			{
+				"title": "DWDS: hängen",
+				"url": "https://www.dwds.de/wb/hängen",
+				"supports": "Target 16 Knowledge: hängt, hing, hat gehangen"
+			},
+			{
+				"title": "OpenThesaurus: hängen",
+				"url": "https://www.openthesaurus.de/synonyme/h%C3%A4ngen",
+				"supports": "Target 16 Knowledge: synset 10089: hängen · herunterhängen · baumeln"
+			},
+			{
+				"title": "Duden: lassen",
+				"url": "https://www.duden.de/rechtschreibung/lassen",
+				"supports": "Target 17 Knowledge: starkes Verb, ließ; 1b 'zulassen, erlauben; dulden; nicht an etwas hindern' in Verbindung mit einem Infinitiv + Akkusativ (die Kinder spielen lassen)"
+			},
+			{
+				"title": "E-VALBU: lassen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400729",
+				"supports": "Target 17 Knowledge: no Lesart for lassen + infinitive"
+			},
+			{
+				"title": "OpenThesaurus: lassen",
+				"url": "https://www.openthesaurus.de/synonyme/lassen",
+				"supports": "Target 17 Knowledge: synset 9032: erlauben · gestatten · lassen · zulassen"
 			}
 		]
 	},
@@ -416,9 +476,47 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "⤵" },
+			"reading": {
+				"emojiDescription": "⤵",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "das Haupt neigen is literal (bow the head), so neigte is the VERB neigen and das Haupt its free object. neigte das Haupt is Duden neigen 'nach unten beugen, senken' (den Kopf zum Gruß neigen), not neigen zu, tending towards something."
+				"rationale": "das Haupt neigen is literal (bow the head), so neigte is the VERB neigen and das Haupt its free object. neigte das Haupt is Duden neigen 'nach unten beugen, senken' (den Kopf zum Gruß neigen), not neigen zu, tending towards something. Knowledge (#887, dev draft): No E-VALBU entry; the frame is Duden/DWDS's transitive use (etw. neigen), the subject Either because DWDS gives plant subjects in this sense."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -1267,7 +1365,70 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🪝" },
+			"reading": {
+				"emojiDescription": "🪝",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Adverbial",
+									"standIn": "Irgendwo"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "herunterhängen",
+								"coreFeatures": {
+									"hasSepPrefix": "herunter",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "baumeln",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "hängen is the infinitive under permissive lassen. The accusative die, the hands, does the hanging, so the clause names a doer and lassen is no causative: hängen is a VERB target of its own (de/causative-lassen). Here the hands literally hang; Duden's hängen lassen covers only figurative senses, so no Locution. Hands hanging limply (die sie entfremdet hängen ließ) are Duden hängen (hing) 'vom Eigengewicht nach unten gezogen werden, schlaff nach unten fallen', merged with hanging from a fixed point as one concept under ADR 0031."
 			},
@@ -1322,9 +1483,95 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "👐" },
+			"reading": {
+				"emojiDescription": "👐",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Clause",
+									"form": "BareInfinitive"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "zulassen",
+								"coreFeatures": {
+									"hasSepPrefix": "zu",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "erlauben",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "gestatten",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "ließ is permissive lassen. Its clause names the doer of hängen, the accusative die, so lassen joins no infinitive as a causative: it is the VERB lassen, and hängen stays outside (de/causative-lassen). Permissive lassen 'let, not prevent' (Duden lassen 1b 'zulassen; nicht an etwas hindern'): she lets her hands hang."
+				"rationale": "ließ is permissive lassen. Its clause names the doer of hängen, the accusative die, so lassen joins no infinitive as a causative: it is the VERB lassen, and hängen stays outside (de/causative-lassen). Permissive lassen 'let, not prevent' (Duden lassen 1b 'zulassen; nicht an etwas hindern'): she lets her hands hang. Knowledge (#887, dev draft): E-VALBU has no permissive Lesart with infinitive, so the frame is Duden's 'Infinitiv + Akkusativ'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

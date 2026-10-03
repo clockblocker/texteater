@@ -379,6 +379,26 @@
 				"title": "OpenThesaurus: beginnen",
 				"url": "https://www.openthesaurus.de/synonyme/beginnen",
 				"supports": "Target 17 Knowledge: synset anfangen · beginnen · einsetzen · starten (mit) …; no Gegenteil marker"
+			},
+			{
+				"title": "Duden: stottern",
+				"url": "https://www.duden.de/rechtschreibung/stottern",
+				"supports": "Target 16 Knowledge: stottert, stotterte; 1 'stockend … sprechen' (intransitive); Synonyme stammeln, sich verhaspeln"
+			},
+			{
+				"title": "DWDS: stottern",
+				"url": "https://www.dwds.de/wb/stottern",
+				"supports": "Target 16 Knowledge: stotterte"
+			},
+			{
+				"title": "OpenThesaurus: stottern",
+				"url": "https://www.openthesaurus.de/synonyme/stottern",
+				"supports": "Target 16 Knowledge: synset 21761: stammeln · stottern; Oberbegriff: reden · sagen · sprechen"
+			},
+			{
+				"title": "E-VALBU: stottern",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 16 Knowledge: no E-VALBU entry"
 			}
 		]
 	},
@@ -1271,7 +1291,76 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🗣🔁" },
+			"reading": {
+				"emojiDescription": "🗣🔁",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "stammeln",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich verhaspeln",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sprechen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

@@ -234,6 +234,26 @@
 				"title": "E-VALBU: eintreten",
 				"url": "https://grammis.ids-mannheim.de/verbvalenz",
 				"supports": "Target 12 Knowledge: no E-VALBU entry"
+			},
+			{
+				"title": "E-VALBU: klopfen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400709/1",
+				"supports": "Target 1 Knowledge: Satzbauplan K sub, (K adv direktivisch), (K adv Mittel): jemand/etwas klopft mit etwas an etwas"
+			},
+			{
+				"title": "E-VALBU: klopfen, es, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400710/1",
+				"supports": "Target 1 Knowledge: Satzbauplan (K adv direktivisch): es klopft irgendwohin"
+			},
+			{
+				"title": "Duden: klopfen",
+				"url": "https://www.duden.de/rechtschreibung/klopfen",
+				"supports": "Target 1 Knowledge: klopfte; 'anklopfen' (unpersönlich: es klopft); Synonyme hämmern, schlagen, trommeln, pochen"
+			},
+			{
+				"title": "OpenThesaurus: klopfen",
+				"url": "https://www.openthesaurus.de/synonyme/klopfen",
+				"supports": "Target 1 Knowledge: synset 2165: hämmern · klopfen · pochen · pulsieren · schlagen"
 			}
 		]
 	},
@@ -282,7 +302,63 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "✊🚪" },
+			"reading": {
+				"emojiDescription": "✊🚪",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "pochen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "hämmern",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -335,7 +411,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B12). es klopft (Duden: unpersönlich, jemand klopft an) has a subject es that refers to nothing. It stays in the middle field after the verb, so it is not positional, and cannot be questioned (*Was klopfte?), so it joins klopfen as the expletive (de/expletive-es-joins-its-verb). es klopfte is Duden klopfen 'anklopfen' (es klopft: jemand klopft an), not a beating heart or beating a carpet."
+				"rationale": "Ruled on #743 (VP-B12). es klopft (Duden: unpersönlich, jemand klopft an) has a subject es that refers to nothing. It stays in the middle field after the verb, so it is not positional, and cannot be questioned (*Was klopfte?), so it joins klopfen as the expletive (de/expletive-es-joins-its-verb). es klopfte is Duden klopfen 'anklopfen' (es klopft: jemand klopft an), not a beating heart or beating a carpet. Knowledge (#887, dev draft): Optional direction and instrument complements are dropped as free adjuncts; the expletive es is no Slot."
 			}
 		},
 		{

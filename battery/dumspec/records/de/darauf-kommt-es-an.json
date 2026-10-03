@@ -75,6 +75,26 @@
 				"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
 				"url": "https://www.gutenberg.org/ebooks/46184",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Vielleicht ist es so."
+			},
+			{
+				"title": "E-VALBU: ankommen, es, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400292/2",
+				"supports": "Target 1 Knowledge: Satzbauplan K prp: es kommt auf jemanden/etwas an; auf + Akk, or ob-S, w-S mit obl. Korrelat darauf"
+			},
+			{
+				"title": "Duden: ankommen",
+				"url": "https://www.duden.de/rechtschreibung/ankommen",
+				"supports": "Target 1 Knowledge: kommt an, kam an; 'von jemandem, etwas abhängen'"
+			},
+			{
+				"title": "DWDS: ankommen",
+				"url": "https://www.dwds.de/wb/ankommen",
+				"supports": "Target 1 Knowledge: 8. ⟨es kommt auf jmdn., etw. an⟩ (= es hängt von jmdm., etw. ab), a paraphrase, no listing"
+			},
+			{
+				"title": "OpenThesaurus: ankommen",
+				"url": "https://www.openthesaurus.de/synonyme/ankommen",
+				"supports": "Target 1 Knowledge: no synset for es kommt auf etw. an; no relation listed (Duden, DWDS, OT)"
 			}
 		]
 	},
@@ -128,7 +148,53 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🔑" },
+			"reading": {
+				"emojiDescription": "🔑",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "auf",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob",
+									"correlate": "Required"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Required"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -203,7 +269,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "es kommt auf etwas an 'what matters is' (E-VALBU ankommen, es, Lesart 2: Kprp auf + Akk, obligatory) selects an es that refers to nothing and cannot be replaced by a noun phrase, so es is the expletive member of ankommen, set as expletive Subject (de/expletive-es-joins-its-verb). an is the separable particle (de/verb-owns-its-scattered-members). The auf slot is filled by the pronominal adverb Darauf, so the valency evidence records auf + Acc with no member (de/pronominal-adverb-stands-alone). es kommt auf etw. an is DWDS ankommen 8, what something depends on or what matters, a second Reading beside 🛬, DWDS 1 'anlangen, eintreffen'."
+				"rationale": "es kommt auf etwas an 'what matters is' (E-VALBU ankommen, es, Lesart 2: Kprp auf + Akk, obligatory) selects an es that refers to nothing and cannot be replaced by a noun phrase, so es is the expletive member of ankommen, set as expletive Subject (de/expletive-es-joins-its-verb). an is the separable particle (de/verb-owns-its-scattered-members). The auf slot is filled by the pronominal adverb Darauf, so the valency evidence records auf + Acc with no member (de/pronominal-adverb-stands-alone). es kommt auf etw. an is DWDS ankommen 8, what something depends on or what matters, a second Reading beside 🛬, DWDS 1 'anlangen, eintreffen'. Knowledge (#887, dev draft): The expletive es is a fixed part, not a Slot."
 			}
 		}
 	],

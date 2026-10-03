@@ -47,15 +47,111 @@
 	"sources": {
 		"adrs": ["ADR-0031"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: finden, Lesart 3",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400584/3",
+				"supports": "Target 0 Knowledge: Satzbauplan K sub, K akk, (K adv Ort, optional): jemand/etwas findet etwas"
+			},
+			{
+				"title": "E-VALBU: finden, Lesart 9",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400584/9",
+				"supports": "Target 0 Knowledge: Satzbauplan K sub, K akk, K prd: jemand findet jemanden/etwas so (vorfinden)"
+			},
+			{
+				"title": "Duden: finden",
+				"url": "https://www.duden.de/rechtschreibung/finden",
+				"supports": "Target 0 Knowledge: findet, fand; 1a 'auf jemanden, etwas treffen, stoßen; entdecken'"
+			},
+			{
+				"title": "OpenThesaurus: finden",
+				"url": "https://www.openthesaurus.de/synonyme/finden",
+				"supports": "Target 0 Knowledge: synset 4433: antreffen · auffinden · (zufällig) begegnen · entdecken · finden · vorfinden"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 14],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🔍" },
+			"reading": {
+				"emojiDescription": "🔍",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "entdecken",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "auffinden",
+								"coreFeatures": {
+									"hasSepPrefix": "auf",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "vorfinden",
+								"coreFeatures": {
+									"hasSepPrefix": "vor",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "First wird member. Last wird other verb. einen Job finden is Duden finden 1c 'erlangen', one Reading with finding something in a state (2) under ADR 0031."
+				"rationale": "First wird member. Last wird other verb. einen Job finden is Duden finden 1c 'erlangen', one Reading with finding something in a state (2) under ADR 0031. Knowledge (#887, dev draft): Frame of the 🔍 head sense (E-VALBU Lesart 3, object Either from Duden 1a jemanden, etwas); the optional place drops."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

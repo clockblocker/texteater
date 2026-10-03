@@ -228,6 +228,36 @@
 				"title": "Project Gutenberg eBook #69327: Franz Kafka, Der Prozess",
 				"url": "https://www.gutenberg.org/ebooks/69327",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #69327 (released 2022-11-11), transcribed from Verlag Die Schmiede, Berlin 1925. Chapter 1, paragraph 1, sentences 1-5 of 41."
+			},
+			{
+				"title": "E-VALBU: tun, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400246/1",
+				"supports": "Target 9 Knowledge: Satzbauplan K sub, K akk: jemand/etwas tut etwas (unternimmt oder erledigt etwas)"
+			},
+			{
+				"title": "Duden: tun",
+				"url": "https://www.duden.de/rechtschreibung/tun_handeln",
+				"supports": "Target 9 Knowledge: tut, tat, hat getan; 'eine Handlung ausführen', 'verrichten, erledigen' (nichts zu tun)"
+			},
+			{
+				"title": "OpenThesaurus: tun",
+				"url": "https://www.openthesaurus.de/synonyme/tun",
+				"supports": "Target 9 Knowledge: synset 12489: anstellen · durchführen · machen · realisieren · tätigen · tun"
+			},
+			{
+				"title": "E-VALBU: verhaften, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401018/1",
+				"supports": "Target 10 Knowledge: Satzbauplan K sub, K akk: jemand verhaftet jemanden"
+			},
+			{
+				"title": "Duden: verhaften",
+				"url": "https://www.duden.de/rechtschreibung/verhaften",
+				"supports": "Target 10 Knowledge: verhaftete; Synonyme abführen, aufgreifen, dingfest machen, ergreifen"
+			},
+			{
+				"title": "OpenThesaurus: verhaften",
+				"url": "https://www.openthesaurus.de/synonyme/verhaften",
+				"supports": "Target 10 Knowledge: synset 13026: festnehmen · dingfest machen · verhaften; synset 2212: aufgreifen · ergreifen · verhaften"
 			}
 		]
 	},
@@ -674,7 +704,60 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🛠" },
+			"reading": {
+				"emojiDescription": "🛠",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "machen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -733,7 +816,92 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "👮⛓" },
+			"reading": {
+				"emojiDescription": "👮⛓",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "festnehmen",
+								"coreFeatures": {
+									"hasSepPrefix": "fest",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "dingfest machen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "ergreifen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "aufgreifen",
+								"coreFeatures": {
+									"hasSepPrefix": "auf",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

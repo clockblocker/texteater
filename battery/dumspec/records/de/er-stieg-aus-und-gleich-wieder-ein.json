@@ -75,7 +75,48 @@
 				"hash": "11bcdacfa342c436"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: einsteigen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400474/1",
+				"supports": "Target 5 Knowledge: Satzbauplan K sub, (K adv direktivisch), (K adv statisch): both place complements optional"
+			},
+			{
+				"title": "DWDS: einsteigen",
+				"url": "https://www.dwds.de/wb/einsteigen",
+				"supports": "Target 5 Knowledge: steigt ein, stieg ein, ist eingestiegen"
+			},
+			{
+				"title": "Duden: einsteigen",
+				"url": "https://www.duden.de/rechtschreibung/einsteigen",
+				"supports": "Target 5 Knowledge: 'in ein Fahrzeug steigen'; Synonyme an Bord gehen, besteigen, betreten, boarden"
+			},
+			{
+				"title": "OpenThesaurus: einsteigen",
+				"url": "https://www.openthesaurus.de/synonyme/einsteigen",
+				"supports": "Target 5 Knowledge: synset 42395: einsteigen · an Bord gehen (Schiff, Flugzeug) · (ein Fahrzeug) besteigen · zusteigen · boarden; Gegenteil on einsteigen: aussteigen"
+			},
+			{
+				"title": "E-VALBU: aussteigen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400342/1",
+				"supports": "Target 1 Knowledge: Satzbauplan K sub, (K adv direktivisch), (K adv statisch): both place complements optional"
+			},
+			{
+				"title": "DWDS: aussteigen",
+				"url": "https://www.dwds.de/wb/aussteigen",
+				"supports": "Target 1 Knowledge: steigt aus, stieg aus, ist ausgestiegen"
+			},
+			{
+				"title": "Duden: aussteigen",
+				"url": "https://www.duden.de/rechtschreibung/aussteigen",
+				"supports": "Target 1 Knowledge: 'ein Fahrzeug verlassen'; Synonyme herauskommen, heraussteigen, entsteigen"
+			},
+			{
+				"title": "OpenThesaurus: aussteigen",
+				"url": "https://www.openthesaurus.de/synonyme/aussteigen",
+				"supports": "Target 1 Knowledge: synset 32022: aus einem Fahrzeug steigen · aussteigen · (einem Fahrzeug) entsteigen; Gegenteil on aussteigen: einsteigen"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -131,7 +172,76 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🚌➡" },
+			"reading": {
+				"emojiDescription": "🚌➡",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "entsteigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "heraussteigen",
+								"coreFeatures": {
+									"hasSepPrefix": "heraus",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "einsteigen",
+								"coreFeatures": {
+									"hasSepPrefix": "ein",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "stieg serves two particle verbs, aussteigen and einsteigen, and one Segment belongs to one target, so it belongs to the coordinated verb nearer to it: aus is next to it, so [stieg, aus] is aussteigen with Full coverage (de/partial-coverage, de/verb-owns-its-scattered-members). Ruled on #724."
 			},
@@ -309,7 +419,95 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "➡🚌" },
+			"reading": {
+				"emojiDescription": "➡🚌",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "besteigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "zusteigen",
+								"coreFeatures": {
+									"hasSepPrefix": "zu",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "an Bord gehen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "boarden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "aussteigen",
+								"coreFeatures": {
+									"hasSepPrefix": "aus",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "ein is the particle of einsteigen, whose finite verb stieg the nearer aussteigen owns, so the Attestation is Partial with no evidence field. The shared stieg still counts toward its features, so the Surface is finite Past, third person singular, while its members and normalizedSurface hold only ein (de/partial-coverage, ADR 0041). Not a free directional ADV: ein is coordinated with another particle, not with a free directional phrase (de/bracket-particle-or-circumposition). Ruled on #724."
 			},

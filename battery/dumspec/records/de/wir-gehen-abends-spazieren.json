@@ -34,6 +34,21 @@
 				"title": "Duden: spazieren gehen",
 				"url": "https://www.duden.de/rechtschreibung/spazieren_gehen",
 				"supports": "Targets [gehen] and [spazieren]: Duden's headword spazieren gehen, 'einen Spaziergang machen', is what the two words say, so it is no Idiom (de/idiom)."
+			},
+			{
+				"title": "Duden: spazieren",
+				"url": "https://www.duden.de/rechtschreibung/spazieren",
+				"supports": "Target 1 Knowledge: spaziert, spazierte, ist spaziert; 'gemächlich [ohne bestimmtes Ziel] gehen; schlendern'"
+			},
+			{
+				"title": "OpenThesaurus: spazieren",
+				"url": "https://www.openthesaurus.de/synonyme/spazieren",
+				"supports": "Target 1 Knowledge: synset 317: spazieren · flanieren · schlendern · spazieren gehen …; Oberbegriff: zu Fuß gehen · gehen · laufen"
+			},
+			{
+				"title": "E-VALBU: spazieren",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 1 Knowledge: no E-VALBU entry"
 			}
 		]
 	},
@@ -99,7 +114,74 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🚶😌" },
+			"reading": {
+				"emojiDescription": "🚶😌",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "schlendern",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "flanieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "gehen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "spazieren is the bare infinitive under gehen, a VERB of its own, since spazieren gehen fails de/idiom (see gehen). Ruled by the user on #739 (2026-10-01), reversing #743 SZ-B7."
 			},

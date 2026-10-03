@@ -46,13 +46,101 @@
 				"hash": "584917189382edfe"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: einpendeln",
+				"url": "https://www.duden.de/rechtschreibung/einpendeln",
+				"supports": "Target 0 Knowledge: einpendeln + sich, hat; 'ein weitestgehend konstantes Niveau erreichen' (sich auf ein/einem mittleren Niveau einpendeln; die Preise haben sich eingependelt); Synonyme sich einpegeln, sich ausbalancieren, ausgleichen"
+			},
+			{
+				"title": "DWDS: einpendeln",
+				"url": "https://www.dwds.de/wb/einpendeln",
+				"supports": "Target 0 Knowledge: pendelte ein"
+			},
+			{
+				"title": "OpenThesaurus: sich einpendeln",
+				"url": "https://www.openthesaurus.de/synonyme/sich%20einpendeln",
+				"supports": "Target 0 Knowledge: synset 5347: sich einpendeln (bei) · sich festigen · sich normalisieren · sich stabilisieren · sich verfestigen"
+			},
+			{
+				"title": "E-VALBU: einpendeln",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 0 Knowledge: no E-VALBU entry"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 22],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "↕⚖" },
+			"reading": {
+				"emojiDescription": "↕⚖",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich einpegeln",
+								"coreFeatures": {
+									"hasSepPrefix": "ein",
+									"lexicallyReflexive": "Acc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich stabilisieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich normalisieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

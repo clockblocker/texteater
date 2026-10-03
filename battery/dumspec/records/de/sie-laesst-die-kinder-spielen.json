@@ -20,15 +20,117 @@
 		"rules": [
 			{ "rule": "de/causative-lassen", "hash": "6df00ff37a0a5baa" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: lassen",
+				"url": "https://www.duden.de/rechtschreibung/lassen",
+				"supports": "Target 0 Knowledge: starkes Verb, ließ; 1b 'zulassen, erlauben; dulden; nicht an etwas hindern' in Verbindung mit einem Infinitiv + Akkusativ (die Kinder spielen lassen)"
+			},
+			{
+				"title": "E-VALBU: lassen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400729",
+				"supports": "Target 0 Knowledge: no Lesart for lassen + infinitive"
+			},
+			{
+				"title": "OpenThesaurus: lassen",
+				"url": "https://www.openthesaurus.de/synonyme/lassen",
+				"supports": "Target 0 Knowledge: synset 9032: erlauben · gestatten · lassen · zulassen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "👐" },
+			"reading": {
+				"emojiDescription": "👐",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Clause",
+									"form": "BareInfinitive"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "zulassen",
+								"coreFeatures": {
+									"hasSepPrefix": "zu",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "erlauben",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "gestatten",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Permissive lassen, 'let': die Kinder are the ones who play, so lassen is the VERB lassen and spielen a target of its own (de/causative-lassen, #721). Permissive lassen 'let' (Duden lassen 1b: die Kinder spielen lassen)."
+				"rationale": "Permissive lassen, 'let': die Kinder are the ones who play, so lassen is the VERB lassen and spielen a target of its own (de/causative-lassen, #721). Permissive lassen 'let' (Duden lassen 1b: die Kinder spielen lassen). Knowledge (#887, dev draft): E-VALBU has no permissive Lesart with infinitive, so the frame is Duden's 'Infinitiv + Akkusativ'."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

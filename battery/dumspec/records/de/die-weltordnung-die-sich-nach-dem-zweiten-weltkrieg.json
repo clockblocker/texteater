@@ -49,13 +49,74 @@
 				"hash": "584917189382edfe"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: etablieren",
+				"url": "https://www.dwds.de/wb/etablieren",
+				"supports": "Target 0 Knowledge: etablierte; 2. ⟨jmd., etw. etabliert sich⟩ eine gesicherte, anerkannte Position erlangen"
+			},
+			{
+				"title": "Duden: etablieren",
+				"url": "https://www.duden.de/rechtschreibung/etablieren",
+				"supports": "Target 0 Knowledge: etablierte; sich etablieren 'festen Bestand erlangen'"
+			},
+			{
+				"title": "OpenThesaurus: sich etablieren",
+				"url": "https://www.openthesaurus.de/synonyme/sich%20etablieren",
+				"supports": "Target 0 Knowledge: synset 15844: (sich) etablieren · Fuß fassen · Tritt fassen"
+			},
+			{
+				"title": "E-VALBU: etablieren",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 0 Knowledge: no E-VALBU entry"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [7, 17, 19],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "⚓" },
+			"reading": {
+				"emojiDescription": "⚓",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "Fuß fassen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
