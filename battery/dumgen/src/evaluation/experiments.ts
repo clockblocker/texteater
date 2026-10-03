@@ -18,6 +18,10 @@
  *   from them (#873, `resolve-reading/experiment.ts`), with its own frozen
  *   sets and cache. It shares resolve.grammar's transports, budget guard
  *   and caps.
+ * - `knowledge/de:dev`, `:heldout` and `:spot-check`: `knowledge.produce`'s
+ *   structural aspects against dumspec's Knowledge gold, and its text
+ *   aspects on a human spot-check sample (#887, `knowledge/experiment.ts`),
+ *   with the same transports, guard and caps.
  *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the
@@ -70,6 +74,7 @@ import {
 	standInAnswers,
 } from "../segment-in-units/lab/round.js";
 import type { LabRun } from "../segment-in-units/lab/run.js";
+import { knowledgeExperiment } from "./knowledge/experiment.js";
 import type { LunaBatch } from "./luna-batch.js";
 import {
 	type GrammarEvaluated,
@@ -198,6 +203,8 @@ export type EvaluateArgs = {
 	readonly grammarRoot?: string;
 	/** resolve.reading's frozen sets and cache. */
 	readonly readingRoot?: string;
+	/** knowledge.produce's frozen sets and cache. */
+	readonly knowledgeRoot?: string;
 };
 
 type Evaluated = {
@@ -670,6 +677,51 @@ function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
 	};
 }
 
+/**
+ * A knowledge.produce entry, its arguments taken from the table's: the
+ * transports, price guard and caps resolve.grammar's runs take.
+ */
+function knowledgeEntry(set: "dev" | "heldout" | "spot-check"): Experiment {
+	const experiment = knowledgeExperiment(set);
+	return {
+		id: experiment.id,
+		caseCount: experiment.caseCount,
+		metrics: experiment.metrics,
+		async evaluate(args) {
+			const evaluated = await experiment.evaluate({
+				experimentId: args.experimentId,
+				sourceRevision: args.sourceRevision,
+				...(args.jev ? { jev: args.jev } : {}),
+				...(args.luna ? { luna: args.luna } : {}),
+				...(args.lunaBatch ? { lunaBatch: args.lunaBatch } : {}),
+				...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
+				...(args.offline ? { offline: true } : {}),
+				...(args.estimate ? { estimate: true } : {}),
+				...(args.wholeRound ? { wholeRound: true } : {}),
+				...(args.beforeGrammarLive
+					? { beforeLive: args.beforeGrammarLive }
+					: {}),
+				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
+				...(args.outputDirectory
+					? { outputDirectory: args.outputDirectory }
+					: {}),
+				...(args.signal ? { signal: args.signal } : {}),
+				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+				...(args.knowledgeRoot ? { root: args.knowledgeRoot } : {}),
+				...(args.limit ? { limit: args.limit } : {}),
+				...(args.repetitions ? { repetitions: args.repetitions } : {}),
+				...(args.grammarCaps ? { caps: args.grammarCaps } : {}),
+			});
+			return {
+				...(evaluated.run ? { run: evaluated.run } : {}),
+				...(evaluated.price ? { price: evaluated.price } : {}),
+				...(evaluated.spend ? { grammarSpend: evaluated.spend } : {}),
+				...(evaluated.set ? { set: evaluated.set } : {}),
+			};
+		},
+	};
+}
+
 const experiments: readonly Experiment[] = [
 	...setNames.flatMap((set) => [
 		segmentInUnitsExperiment(goldMode, set),
@@ -681,6 +733,9 @@ const experiments: readonly Experiment[] = [
 	resolveGrammarEntry("dev", true),
 	resolveReadingEntry("dev"),
 	resolveReadingEntry("heldout"),
+	knowledgeEntry("dev"),
+	knowledgeEntry("heldout"),
+	knowledgeEntry("spot-check"),
 ];
 
 function experimentOf(id: string): Experiment {

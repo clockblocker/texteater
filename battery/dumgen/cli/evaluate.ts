@@ -19,6 +19,11 @@
  *       --luna-output-budget <Luna output tokens> [--limit N]
  *       [--luna-batch] [--luna-prompt-cache] [--usd-budget <dollars>]
  *       [--subset evidence/resolve-reading/round-2-subset.json] [--repetitions 1]
+ *   bun run evaluate --experiment knowledge/de:dev --estimate [--whole-round]
+ *   bun run evaluate --experiment knowledge/de:spot-check --revision <rev>
+ *       --budget <jev input tokens> --luna-budget <Luna input tokens>
+ *       --luna-output-budget <Luna output tokens> [--luna-batch]
+ *       [--usd-budget <dollars>] [--limit N] [--repetitions 1]
  *   bun run evaluate --open <runId>
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
@@ -26,7 +31,7 @@
  * moved since the round was pinned (unless `--repin`) or when its projected
  * spend would cross the stop line, and stops at the line.
  *
- * A resolve.grammar or resolve.reading run prices itself first and goes
+ * A resolve.grammar, resolve.reading or knowledge run prices itself first and goes
  * live only under the budgets the main session granted the round:
  * `--budget` for fresh jev input tokens, `--luna-budget` for Luna's input
  * tokens and `--luna-output-budget` for its output tokens, and
@@ -189,8 +194,11 @@ export async function runEvaluationCli(
 				.jevFreshInputTokens
 		: 0;
 	let spentNow = 0;
-	// resolve.reading's runs share resolve.grammar's transports and guard.
-	const grammar = /^resolve-(grammar|reading)\//u.test(values.experiment);
+	// resolve.reading's and knowledge.produce's runs share resolve.grammar's
+	// transports and guard.
+	const grammar = /^(resolve-(grammar|reading)|knowledge)\//u.test(
+		values.experiment,
+	);
 	const grammarLive = grammar && live;
 	const lunaBatch = values["luna-batch"] ?? false;
 	const promptCaching = values["luna-prompt-cache"] ?? false;
