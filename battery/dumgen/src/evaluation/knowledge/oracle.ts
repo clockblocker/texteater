@@ -74,7 +74,7 @@ function goldChoice(
 	if (id === "meaning")
 		return offer(gold.participleSource?.meaning ?? "Verbal") as string;
 	if (id === "locutionType")
-		return offer(gold.locutionType ?? "None") as string;
+		return offer(gold.locutionType ?? "Neither") as string;
 	if (id === "formulaRole")
 		return offer(gold.formulaRole ?? "None") as string;
 	if (id === "sayingType")

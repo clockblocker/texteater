@@ -138,7 +138,7 @@ export const proxyStageSizes: GrammarPrice["sizes"]["stages"] = {
 export const knowledgeRepetitions = 3;
 
 /** The operation a run measures. 1: the first port (#887). 2: the text prompts after the first spot-check. */
-export const knowledgeOperationVersion = `${knowledgeRoute}@production-3`;
+export const knowledgeOperationVersion = `${knowledgeRoute}@production-4`;
 
 export type KnowledgeEvaluateArgs = {
 	readonly experimentId: string;

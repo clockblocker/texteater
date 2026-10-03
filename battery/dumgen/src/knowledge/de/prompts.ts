@@ -272,7 +272,7 @@ export const valency = {
 	),
 	fixed: paragraph(
 		"valency.fixed",
-		"Fixed parts are never Slots: a separable prefix, a lexical reflexive («sich verbeugen» has no Slot for «sich»), an expletive es, and a Locution's own words.",
+		"Fixed parts are never Slots: a separable prefix, a lexical reflexive («sich verbeugen» has no Slot for «sich»), an expletive es, and a Locution's own words. A Locution's fixed noun is never its object, nor its fixed prepositional phrase a Preposition complement: a Locution VERB's frame holds its subject and only what it governs beyond its own words («Däumchen drehen»: the Nom Slot alone; «einen Rat geben»: Nom, then a Dat Slot for whom).",
 		rules.verbCore,
 		rules.idiom,
 	),
@@ -479,7 +479,7 @@ export const formulaRole = {
 		),
 		None: paragraph(
 			"formulaRole.None",
-			"None: it performs no routine: an exclamation of feeling, surprise, dismay or disgust, laughter, a sound word, an answer particle such as yes or no, or an attention word that only voices annoyance",
+			"None: it performs no routine: an exclamation of feeling, surprise, dismay or disgust, laughter, a sound word, an answer particle such as yes or no, an attention word that only voices annoyance, or a wish or congratulation, which no role names",
 			rules.formulaRole,
 		),
 	},

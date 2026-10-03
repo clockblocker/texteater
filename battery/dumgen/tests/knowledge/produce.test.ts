@@ -832,7 +832,7 @@ test("Locution Type, Saying Type with its attribution and Formula Role are judge
 	expect(result.changes).toEqual([
 		{ kind: "Contribute", aspect: "locutionType", value: "Collocation" },
 	]);
-	const adverbJev = knowledgeJev({ locutionType: "None" });
+	const adverbJev = knowledgeJev({ locutionType: "Neither" });
 	const adverb = await produceOnce(
 		{ jev: adverbJev.ask, luna: knowledgeLuna({}).ask },
 		knowledgeInput(
@@ -847,7 +847,7 @@ test("Locution Type, Saying Type with its attribution and Formula Role are judge
 	const question = adverbJev.sent[0]?.questions.locutionType;
 	expect(
 		question?.type === "choice" ? Object.keys(question.criteria ?? {}) : [],
-	).toEqual(["Idiom", "None"]);
+	).toEqual(["Idiom", "Neither"]);
 
 	const sayingLuna = knowledgeLuna({
 		attribution: "Friedrich Schiller, Wilhelm Tell",

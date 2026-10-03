@@ -373,7 +373,8 @@ export const locutionTypeQuestion = (kind: string) =>
 	choice(locutionType.question, {
 		Idiom: locutionType.idiom,
 		...(kind === "VERB" ? { Collocation: locutionType.collocation } : {}),
-		None: locutionType.none,
+		// "Neither", not "None": a bare None drew the judge to it (#887).
+		Neither: locutionType.none,
 	});
 
 export const produceLocutionType = (
@@ -388,7 +389,7 @@ export const produceLocutionType = (
 			},
 		});
 		const picked = choiceOf(answers, "locutionType").choice;
-		return picked === "None"
+		return picked === "Neither"
 			? []
 			: yield* checked(context, "locutionType", picked);
 	});
