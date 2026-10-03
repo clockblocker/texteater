@@ -74,15 +74,19 @@ picks one of them; it never regroups the members or weighs a route outside the
 variants. See [Dumgen ADR 0007].
 _Avoid_: Unit, group, lattice node
 
-**Realized Slot**:
-A preposition slot a Sentence realizes, linked to the unit that lexically
-selects the preposition. Bare-case slots come from the Knowledge call's
-Valency Frame instead. See [ADR 0034].
-_Avoid_: government list, valency guess, governed-preposition prompt
-
 **Grammatical Resolution**:
 Production of a click-independent Attestation for an Analysis Target whose
 route is already chosen.
+
+**`valencyEvidence`**:
+The Case and Preposition complements one occurrence realizes, recorded on its
+Attestation, each with the member that realizes it, if any, and the case it
+shows. Grammatical Resolution writes it in the grammar judgment a click
+already runs, and Knowledge Production reads it. `segment.inUnits` only
+decides whether a governed preposition joins its governor. See [ADR 0034]
+and [Dumgen ADR 0007].
+_Avoid_: Realized Slot, intake slots, government list, valency guess,
+governed-preposition prompt
 
 **Referent Context**:
 The Sentences just before and after an Encounter's Sentence in its Text.

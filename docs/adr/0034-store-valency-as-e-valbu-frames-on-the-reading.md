@@ -162,8 +162,8 @@ Free prepositions are never compared with the frame. Decided on
 Statuses taken only from attestations were rejected. An imperative, a passive
 or an object dropped by context looks the same as an Optional slot, and the
 first click on a word would show half its frame. Frames authored only by hand
-were rejected as well, since a Reading created at intake would have no frame
-until someone wrote one.
+were rejected as well, since a new Reading would have no frame until someone
+wrote one.
 
 **An occurrence.**
 
@@ -176,6 +176,18 @@ complements are Case and Preposition only, a strict subset of the frame's
 vocabulary: nothing produces or reads an Adverbial, Predicative or Clause
 there.
 
+Grammatical Resolution writes `valencyEvidence` as part of the grammar
+judgment a click already runs for its unit, and Knowledge reads it. Intake
+decides membership only: `segment.inUnits` judges whether a governed
+preposition joins its governor and records no complement or case
+([Dumgen ADR 0007](../../battery/dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md)).
+Analysing the complement at intake was rejected, since its case changes
+neither where a click routes nor what drill-down offers. So was keeping an
+intake analysis beside the grammar one, since the two can disagree on one
+occurrence. Intake may be tested proposing a valency hint, which is adopted
+only if it is accurate and does not hurt grouping accuracy, cost or latency.
+Decided on [#616](https://github.com/clockblocker/texteater/issues/616).
+
 A governed preposition stays an Attestation member, so clicking it still
 routes to the governor. `normalizedSurface` projects only Fixed members:
 `wartet`, not `wartet auf`; `pass auf`, not `pass auf auf`. The preposition
@@ -183,29 +195,27 @@ inside an Adverbial is not a member: in `legt das Buch auf den Tisch` and
 `wohnt in Bonn`, the verb requires a direction or a place, not `auf` or `in`.
 Neither is the `als` or `für` that marks a Predicative.
 
-Intake's Sentence Analysis replaces `government` with the realized
-`slots: { governor, marker: offset | null, filler: target id | null, complement, realizedCase }[]`.
-It lists only preposition slots the sentence realizes, for every governor
-Kind. Case slots (bare Nom, Acc, Dat or Gen noun phrases) come only from the
-Knowledge call's frame, and so do Adverbial, Predicative and Clause
-complements, which intake never realizes. The frame is already complete
-without them, and Source Contexts already show the sentence. A free dative would Contribute a
-wrong slot (`Ich backe dir einen Kuchen` → Dat on `backen`). Each bare noun
-phrase would also cost one more import-time question. Decided in
+A governor's evidence lists only the governed prepositions its sentence
+realizes, for every governor Kind. Case slots (bare Nom, Acc, Dat or Gen noun
+phrases) come only from the Knowledge call's frame, and so do Adverbial,
+Predicative and Clause complements. The frame is already complete without
+them, and Source Contexts already show the sentence. A free dative would pass
+for a slot (`Ich backe dir einen Kuchen` → Dat on `backen`). Each bare noun
+phrase would also cost one more question. Decided in
 [#605](https://github.com/clockblocker/texteater/issues/605).
 
-A preposition slot keeps its case under passive (`um Geduld` stays `um` +
-Acc), so intake converts no passives. Asking about bare Dat and Gen objects
+A governed preposition keeps its case under passive (`um Geduld` stays `um` +
+Acc), so recording it converts no passive. Recording bare Dat and Gen objects
 stays an option ([#609](https://github.com/clockblocker/texteater/issues/609)).
-If intake takes it up, it must convert a passive back to the active frame
-through the Surface's `passive`
+Taking it up means converting a passive back to the active frame through the
+Surface's `passive`
 ([ADR 0022](./0022-describe-whole-verbal-surfaces-compositionally.md)): in
 `Sie wurde um Geduld gebeten`, the Nom `Sie` fills the Acc slot of `bitten`.
 
 Some words realize a governed preposition and its filler at once: German
 `darauf` and `dafür`, Hebrew `לו` and `עליו`. The filler wins. The word stays
-its own unit, and the slot links it as `filler`, with the preposition's Lemma
-as the complement. German pronominal adverbs stay ADV Lexemes
+its own unit, and the governor's evidence names the preposition's Lemma as
+the complement with no member. German pronominal adverbs stay ADV Lexemes
 ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md)).
 How Hebrew `לו` itself is analysed belongs to areas 2 and 3 of
 [#595](https://github.com/clockblocker/texteater/issues/595).
