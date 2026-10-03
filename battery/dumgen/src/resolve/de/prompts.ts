@@ -153,7 +153,7 @@ export const policy = {
 	),
 	adjective: paragraph(
 		"policy.adjective",
-		"An adjective or adverb is comparable when Duden, or else DWDS, gives its headword comparison forms, suppletive ones from another stem included; forms marked colloquial or rare do not count, and a participle no dictionary lists as an adjective is not comparable. Every form of a comparable one marks its degree, positive when uncompared; a non-comparable one marks none. Only an adjective that agrees with a noun, attributively or standing in for an elided noun, marks case, gender and number.",
+		"An adjective or adverb is comparable when Duden, or else DWDS, gives its headword comparison forms, suppletive ones from another stem included; forms marked colloquial or rare do not count, and a participle no dictionary lists as an adjective is not comparable. Answer from what the dictionary prints for the headword, not from whether its meaning could be graded: many derived adjectives and participles print no forms and are not comparable, while a few common adverbs compare only from another stem. Every form of a comparable one marks its degree, positive when uncompared; a non-comparable one marks none. Only an adjective that agrees with a noun, attributively or standing in for an elided noun, marks case, gender and number.",
 		rules.comparability,
 		rules.attributive,
 	),
@@ -165,7 +165,7 @@ export const policy = {
 	),
 	referent: paragraph(
 		"policy.referent",
-		"Some pronoun forms spell several cells that only the referent tells apart. Take the cell the text settles through an antecedent, the verb's agreement, address or capitalization, in this sentence or in `neighbours`. When nothing settles it, choose the option that leaves it open; never guess a cell.",
+		"Some pronoun forms spell several cells that only the referent tells apart. Take the cell the text settles through an antecedent, the verb's agreement, address or capitalization, in this sentence or in `neighbours`; a singular finite verb settles a singular cell, a plural one a plural cell. When nothing settles it, choose the option that leaves it open; never guess a cell.",
 		rules.referent,
 		rules.pronOrDet,
 	),
@@ -242,6 +242,21 @@ export const question = {
 		"question.shortened",
 		"Under `policy.orthography`, {m} is a shortened adverb. Which word does it stand for here? Movement towards the speaker or the scene's viewpoint gives the her- word, movement away from it the hin- word.",
 		rules.rShorthand,
+	),
+	indefinite: paragraph(
+		"question.indefinite",
+		"Under `policy.orthography`, does {m} ask a question or open a clause here, or does it stand for its irgend- word, unstressed inside its clause?",
+		rules.wShorthand,
+	),
+	indefiniteAsks: paragraph(
+		"question.indefinite.Asks",
+		"It asks, as a direct or embedded question or an echo question, or it opens a relative or other clause",
+		rules.wShorthand,
+	),
+	indefiniteIrgend: paragraph(
+		"question.indefinite.Indefinite",
+		"It stands for its irgend- word: somewhere, somehow, at some time",
+		rules.wShorthand,
 	),
 	nounGender: paragraph(
 		"question.noun.gender",
@@ -703,8 +718,10 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 	),
 	"Lexeme/PART": paragraph(
 		"canonical.route.Lexeme/PART",
-		"A particle is cited in lowercase.",
+		"A particle is cited in lowercase in its standard spelling: a regional or colloquial spelling or a shortening is cited as the particle it stands for.",
 		rules.headword,
+		rules.variant,
+		rules.orthography,
 	),
 	Locution: paragraph(
 		"canonical.route.Locution",

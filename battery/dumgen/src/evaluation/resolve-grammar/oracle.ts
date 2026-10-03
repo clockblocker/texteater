@@ -198,6 +198,10 @@ export function goldAnswers(
 			answer(core.article === "Definite" ? "Definite" : "Bare");
 		else if (id === "gender")
 			answer(articleOfGender[String(core.gender)] ?? "None");
+		else if (id === "indefinite")
+			answer(
+				members[0]?.orthography === "Shorthand" ? "Indefinite" : "Asks",
+			);
 		else if (id === "nounKind")
 			answer(
 				core.gender !== null && core.gender !== undefined

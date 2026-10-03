@@ -660,6 +660,26 @@ function plan(target: Target): Plan {
 			? casesBeforeAgreement(article.article)
 			: [...cases, "Unmarked"];
 	if (earlyCases.length > 0) caseQuestion(questionnaire, earlyCases);
+	// A bare w-word as an ADV asks, opens a clause or stands for its irgend-
+	// word (Rule de/bare-w-word-is-shorthand).
+	const [lone] = target.members;
+	if (
+		shape.adverbial &&
+		shape.lexeme &&
+		target.members.length === 1 &&
+		lone &&
+		!lone.spelling &&
+		bareWWords.has(fold(lone.text))
+	)
+		questionnaire.choice(
+			"indefinite",
+			fill(question.indefinite, { m: lone.ref }),
+			{
+				Asks: question.indefiniteAsks,
+				Indefinite: question.indefiniteIrgend,
+			},
+			["orthography"],
+		);
 	if (shape.adjectival || shape.adverbial) {
 		questionnaire.choice(
 			"comparable",
@@ -873,6 +893,7 @@ function readFirst(
 	const irregular = questionnaire.questions.orthography
 		? answered.pick("orthography")
 		: "None";
+	const indefinite = answered.peek("indefinite") === "Indefinite";
 	const orthographies = target.members.map(
 		(member): MemberOrthography =>
 			member.spelling?.orthography ??
@@ -880,7 +901,7 @@ function readFirst(
 				? planned.article.orthography
 				: irregular === `t${member.position}`
 					? "Typo"
-					: irregular === `s${member.position}`
+					: irregular === `s${member.position}` || indefinite
 						? "Shorthand"
 						: "Standard"),
 	);
@@ -1279,8 +1300,36 @@ function prefixAnswer(
 	prefixes: readonly string[],
 	answered: Answered,
 ): string {
+	const governed = (word: string) =>
+		target.members.some(
+			(member) =>
+				fold(spellingOf(member)) === word &&
+				answered.peek(`governed_m${member.position}`) === "Governed",
+		);
 	const settled = answered.peek("prefix");
-	if (settled !== undefined) return settled;
+	// A preposition the verb governs is never its prefix (Rule
+	// de/verb-core-features): warten auf is warten.
+	if (settled !== undefined && settled !== "None") {
+		const prefix = prefixes[Number(settled.slice(1))];
+		return prefix !== undefined && governed(prefix) ? "None" : settled;
+	}
+	// A particle standing apart that segmentation put in the VERB unit, and
+	// that the verb does not govern, is its separable prefix: it belongs to
+	// the verb's Lemma, and only the prefix can (de/verb-core-features,
+	// de/bracket-particle-or-circumposition): tut … leid is leidtun.
+	const standing = prefixes.flatMap((prefix, index) =>
+		target.members.length > 1 &&
+		target.members.some(
+			(member) =>
+				fold(spellingOf(member)) === prefix &&
+				member.spelling === undefined,
+		) &&
+		!governed(prefix)
+			? [`p${index}`]
+			: [],
+	);
+	if (settled === "None")
+		return standing.length === 1 ? (standing[0] as string) : "None";
 	const expansions = new Set(
 		target.members.flatMap((member) =>
 			member.spelling?.orthography === "Shorthand" &&
@@ -1302,6 +1351,24 @@ const shortenedFrom: Readonly<Record<string, string>> = Object.fromEntries(
 		expansions.map((expansion) => [expansion, word]),
 	),
 );
+
+/** The positive of each suppletive adverb's compared forms (gern: lieber, am liebsten). */
+const suppletivePositive: Readonly<Record<string, string>> = {
+	lieber: "gern",
+	liebsten: "gern",
+	eher: "bald",
+	ehesten: "bald",
+	besser: "gut",
+	besten: "gut",
+	mehr: "viel",
+	meisten: "viel",
+	weniger: "wenig",
+	wenigsten: "wenig",
+};
+
+/** An ordinal's stem without its ending, as Luna writes it bare (erst, zweit). */
+const ordinalStem =
+	/^(erst|zweit|dritt|viert|fünft|sechst|siebt|neunt|zehnt|elft|zwölft|(drei|vier|fünf|sech|sieb|acht|neun)zehnt|(zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig|hundert|tausend)st)$/u;
 
 /** The irgend- words a bare w-word judged Shorthand stands for (Rule de/bare-w-word-is-shorthand). */
 const bareWWords = new Set(["wo", "wie", "wann", "woher", "wohin"]);
@@ -1544,6 +1611,28 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 				normalized[position] = word;
 		}
 	}
+	// A compared form of a suppletive adverb cites its positive (lieber is
+	// gern; Rules de/comparability-is-lexical, de/canonical-form-is-the-headword).
+	const degree = (first.inflection as { degree?: unknown } | null | undefined)
+		?.degree;
+	if (
+		shape.adverbial &&
+		shape.lexeme &&
+		(degree === "Cmp" || degree === "Sup")
+	) {
+		const last = target.members[target.members.length - 1];
+		const positive = last && suppletivePositive[fold(last.text)];
+		if (positive) canonicalForm = positive;
+	}
+	// An ordinal is cited in its attributive headword (erste; Rule
+	// de/attributive-adjective-stands-alone).
+	if (
+		shape.adjectival &&
+		shape.lexeme &&
+		canonicalForm !== undefined &&
+		ordinalStem.test(canonicalForm)
+	)
+		canonicalForm = `${canonicalForm}e`;
 	if (canonicalForm === undefined)
 		throw Error("No Canonical Form was written");
 	// The subject es is the authored es, whatever its position's capital.

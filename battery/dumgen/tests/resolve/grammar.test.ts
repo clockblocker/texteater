@@ -1284,3 +1284,131 @@ test("an r- word's prefix jev leaves Unresolved is the likelier of its her- and 
 		coreFeatures: { hasSepPrefix: "hinein" },
 	});
 });
+
+test("a closed-class member one edit from exactly one spelling of its stored identity is that spelling's Typo", async () => {
+	const { result } = await resolveOnce(
+		{ jev: fakeJev().ask, luna: fakeLuna().ask },
+		{
+			sentence: sentenceOf("Morgen fahre ihc los."),
+			unit: {
+				...unitOf([4], "Lexeme", "PRON"),
+				identity: {
+					kind: "PRON",
+					canonicalForm: "ich",
+					pronType: "Prs",
+				},
+			},
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.canonicalForm).toBe("ich");
+	expect(attestation.surface.normalizedSurface).toBe("ich");
+	expect(attestation.members[0]).toEqual({
+		attested: "ihc",
+		orthography: "Typo",
+	});
+});
+
+test("bare was and wem resolve to etwas and irgendwem as Shorthand", async () => {
+	const was = attested(
+		(
+			await resolveOnce(
+				{ jev: fakeJev().ask, luna: fakeLuna().ask },
+				{
+					sentence: sentenceOf("Sag doch was!"),
+					unit: {
+						...unitOf([4], "Lexeme", "PRON"),
+						identity: {
+							kind: "PRON",
+							canonicalForm: "etwas",
+							pronType: "Ind",
+						},
+					},
+				},
+			)
+		).result,
+	);
+	expect(was.surface.lemma.canonicalForm).toBe("etwas");
+	expect(was.members[0]).toMatchObject({
+		attested: "was",
+		orthography: "Shorthand",
+	});
+	const wem = attested(
+		(
+			await resolveOnce(
+				{ jev: fakeJev().ask, luna: fakeLuna().ask },
+				{
+					sentence: sentenceOf("Hast du das wem erzählt?"),
+					unit: {
+						...unitOf([6], "Lexeme", "PRON"),
+						identity: {
+							kind: "PRON",
+							canonicalForm: "irgendwer",
+							pronType: "Ind",
+						},
+					},
+				},
+			)
+		).result,
+	);
+	expect(wem.surface.normalizedSurface).toBe("irgendwem");
+	expect(wem.surface.inflectionalFeatures).toMatchObject({ case: "Dat" });
+});
+
+test("a particle standing apart in the VERB unit is its prefix when jev says None, but never a preposition the verb governs", async () => {
+	const sorry = await resolveOnce(
+		{ jev: fakeJev({ prefix: "None" }).ask, luna: writes("tun").ask },
+		{
+			sentence: sentenceOf("Das tut mir leid."),
+			unit: unitOf([2, 6], "Lexeme", "VERB"),
+		},
+	);
+	expect(attested(sorry.result).surface.lemma).toMatchObject({
+		canonicalForm: "leidtun",
+		coreFeatures: { hasSepPrefix: "leid" },
+	});
+	const wait = await resolveOnce(
+		{
+			jev: fakeJev({ prefix: "p0", governed_m1: "Governed" }).ask,
+			luna: writes("aufwarten").ask,
+		},
+		{
+			sentence: sentenceOf("Sie warten auf ihn."),
+			unit: unitOf([2, 4], "Lexeme", "VERB"),
+		},
+	);
+	expect(attested(wait.result).surface.lemma.coreFeatures).toMatchObject({
+		hasSepPrefix: null,
+	});
+});
+
+test("a compared suppletive adverb cites its positive, and an ordinal its attributive headword", async () => {
+	const rather = await resolveOnce(
+		{
+			jev: fakeJev({ comparable: "Yes", degree: "Cmp" }).ask,
+			luna: writes("lieb").ask,
+		},
+		{
+			sentence: sentenceOf("Ich trinke lieber Tee."),
+			unit: unitOf([4], "Lexeme", "ADV"),
+		},
+	);
+	expect(attested(rather.result).surface.lemma.canonicalForm).toBe("gern");
+	const second = await resolveOnce(
+		{
+			jev: fakeJev({
+				comparable: "No",
+				attributive: "Yes",
+				"agreement.number": "Sing",
+				"agreement.gender": "Fem",
+				"agreement.case": "Nom",
+			}).ask,
+			luna: writes("zweit").ask,
+		},
+		{
+			sentence: sentenceOf("Die zweite Runde beginnt."),
+			unit: unitOf([2], "Lexeme", "ADJ"),
+		},
+	);
+	expect(attested(second.result).surface.lemma.canonicalForm).toBe("zweite");
+});

@@ -79,8 +79,68 @@ export function matchingRealizations(
 	const folded = ofIdentity.filter(({ spelled }) =>
 		foldedTexts.has(foldCase(spelled, "de")),
 	);
+	if (exact.length === 0 && folded.length === 0)
+		return typoRealizations(ofIdentity, foldCase(member.text, "de"));
 	if (exact.length === 0) return folded;
 	return opensSentence ? folded : exact;
+}
+
+/** Edit distance with adjacent transpositions (ihc is one edit from ich). */
+function editDistance(left: string, right: string): number {
+	const rows = Array.from({ length: left.length + 1 }, (_, i) =>
+		Array.from({ length: right.length + 1 }, (_, j) =>
+			i === 0 ? j : j === 0 ? i : 0,
+		),
+	);
+	for (let i = 1; i <= left.length; i++)
+		for (let j = 1; j <= right.length; j++) {
+			const row = rows[i] as number[];
+			const above = rows[i - 1] as number[];
+			const cost = left[i - 1] === right[j - 1] ? 0 : 1;
+			row[j] = Math.min(
+				(above[j] ?? 0) + 1,
+				(row[j - 1] ?? 0) + 1,
+				(above[j - 1] ?? 0) + cost,
+			);
+			if (
+				i > 1 &&
+				j > 1 &&
+				left[i - 1] === right[j - 2] &&
+				left[i - 2] === right[j - 1]
+			)
+				row[j] = Math.min(
+					row[j] ?? 0,
+					((rows[i - 2] as number[])[j - 2] ?? 0) + 1,
+				);
+		}
+	return (rows[left.length] as number[])[right.length] ?? 0;
+}
+
+/**
+ * A member no spelling of its stored identity matches, one edit from
+ * exactly one of them (disem for diesem, ihc for ich), is a Typo of that
+ * spelling (Rule de/member-orthography); its realizations come back marked
+ * so the member is attested as Typo.
+ */
+function typoRealizations(
+	ofIdentity: readonly AuthoredRealization[],
+	text: string,
+): readonly AuthoredRealization[] {
+	if (text.length < 3) return [];
+	const near = ofIdentity.filter(
+		({ spelled }) => editDistance(foldCase(spelled, "de"), text) === 1,
+	);
+	const spellings = new Set(
+		near.map(({ spelled }) => foldCase(spelled, "de")),
+	);
+	if (spellings.size !== 1) return [];
+	return near.map(
+		(realization) =>
+			({
+				...realization,
+				orthography: "Typo",
+			}) as unknown as AuthoredRealization,
+	);
 }
 
 /**
