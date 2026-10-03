@@ -1,0 +1,1174 @@
+{
+	"runId": "8258ae4d-addb-4ecc-8cb3-0b6cd5ae3204",
+	"experimentId": "resolve-reading/de:heldout",
+	"round": "2026-10-03-heldout-finalist",
+	"manifest": {
+		"version": 2,
+		"runId": "8258ae4d-addb-4ecc-8cb3-0b6cd5ae3204",
+		"experimentId": "resolve-reading/de:heldout",
+		"evaluatorVersion": "resolve-reading-1",
+		"sourceRevision": "9e117bee2",
+		"startedAt": "2026-10-03T13:22:17.094Z",
+		"corpus": {
+			"fingerprint": "4d68cc87f9cd57355b150f149bef8c198acc5a980639bceed0fc8b8f1ba59617",
+			"caseIds": [
+				"de/als-der-letzte-zug-einfuhr-verabschiedete-sich-mira-mit-auf#0:present",
+				"de/als-der-letzte-zug-einfuhr-verabschiedete-sich-mira-mit-auf#0:removed",
+				"de/am-naechsten-morgen-war-alles-anders#0:present",
+				"de/am-naechsten-morgen-war-alles-anders#0:removed",
+				"de/am-naechsten-morgen-war-alles-anders#1:present",
+				"de/am-naechsten-morgen-war-alles-anders#1:removed",
+				"de/am-naechsten-morgen-war-alles-anders#2:present",
+				"de/am-naechsten-morgen-war-alles-anders#2:removed",
+				"de/am-naechsten-morgen-war-alles-anders#3:present",
+				"de/am-naechsten-morgen-war-alles-anders#3:removed",
+				"de/auf-den-dank-des-nachbarn-antwortete-sie-gern-geschehen#0:present",
+				"de/auf-den-dank-des-nachbarn-antwortete-sie-gern-geschehen#0:removed",
+				"de/auf-der-karte-sind-drei-seen-eingezeichnet#0:present",
+				"de/auf-der-karte-sind-drei-seen-eingezeichnet#0:removed",
+				"de/auf-der-karte-sind-drei-seen-eingezeichnet#1:present",
+				"de/auf-der-karte-sind-drei-seen-eingezeichnet#1:removed",
+				"de/bei-dieser-formel-verstehe-ich-nur-bahnhof#0:present",
+				"de/bei-dieser-formel-verstehe-ich-nur-bahnhof#0:removed",
+				"de/bitte-folgen-sie-ihrem-ansprechpartner#0:present",
+				"de/damit-triffst-du-den-nagel-auf-den-kopf#0:present",
+				"de/damit-triffst-du-den-nagel-auf-den-kopf#0:removed",
+				"de/das-ist-nicht-mein-problem#0:present",
+				"de/das-ist-schwer-zu-erklaeren#0:present",
+				"de/das-rennen-hat-spass-gemacht#0:present",
+				"de/das-rennen-hat-spass-gemacht#0:removed",
+				"de/das-rote-band-lag-auf-dem-geschenk#0:present",
+				"de/das-rote-band-lag-auf-dem-geschenk#0:removed",
+				"de/das-rote-band-lag-auf-dem-geschenk#1:present",
+				"de/das-rote-band-lag-auf-dem-geschenk#1:removed",
+				"de/das-rote-band-lag-auf-dem-geschenk#2:present",
+				"de/das-rote-band-lag-auf-dem-geschenk#2:removed",
+				"de/das-schloss-an-der-tuer-klemmt#0:present",
+				"de/das-schloss-an-der-tuer-klemmt#0:removed",
+				"de/das-schloss-ueber-dem-fluss-wurde-renoviert#0:present",
+				"de/das-schloss-ueber-dem-fluss-wurde-renoviert#0:removed",
+				"de/das-waere-fast-schief-gewesen#0:present",
+				"de/das-waere-fast-schief-gewesen#0:removed",
+				"de/das-waere-fast-schief-gewesen#1:present",
+				"de/das-waere-fast-schief-gewesen#1:removed",
+				"de/das-waere-schoen-gewesen#0:present",
+				"de/das-waere-schoen-gewesen#0:removed",
+				"de/den-fluss-entlang-standen-alte-weiden#0:present",
+				"de/den-fluss-entlang-standen-alte-weiden#0:removed",
+				"de/der-ausschuss-trifft-eine-entscheidung#0:present",
+				"de/der-ausschuss-trifft-eine-entscheidung#0:removed",
+				"de/der-brief-ist-schon-geschrieben#0:present",
+				"de/der-brief-ist-schon-geschrieben#0:removed",
+				"de/der-dritte-band-ist-laengst-vergriffen#0:present",
+				"de/der-dritte-band-ist-laengst-vergriffen#0:removed",
+				"de/der-faehrmann-hat-uns-uebergesetzt#0:present",
+				"de/der-faehrmann-hat-uns-uebergesetzt#0:removed",
+				"de/der-geschriebene-brief-lag-auf-dem-tisch#0:present",
+				"de/der-geschriebene-brief-lag-auf-dem-tisch#0:removed",
+				"de/der-hockte-da-im-gruenen-gras#0:present",
+				"de/der-hockte-da-im-gruenen-gras#0:removed",
+				"de/der-hockte-da-im-gruenen-gras#1:present",
+				"de/der-hockte-da-im-gruenen-gras#1:removed",
+				"de/der-kiefer-schmerzte-nach-der-operation#0:present",
+				"de/der-kiefer-schmerzte-nach-der-operation#0:removed",
+				"de/der-lachende-junge-winkte-uns-zu#0:present",
+				"de/der-lachende-junge-winkte-uns-zu#0:removed",
+				"de/der-laster-fuhr-das-schild-um#0:present",
+				"de/der-laster-fuhr-das-schild-um#0:removed",
+				"de/der-leiter-der-werkstatt-kam-spaeter#0:present",
+				"de/der-leiter-der-werkstatt-kam-spaeter#0:removed",
+				"de/der-reisende-haendler-wartete-draussen#0:present",
+				"de/der-reisende-haendler-wartete-draussen#0:removed",
+				"de/der-reisende-wartete-draussen#0:present",
+				"de/der-reisende-wartete-draussen#0:removed",
+				"de/der-von-allen-bewunderte-lehrer-ging-in-den-ruhestand#0:present",
+				"de/der-von-allen-bewunderte-lehrer-ging-in-den-ruhestand#0:removed",
+				"de/die-alte-kiefer-steht-am-hang#0:present",
+				"de/die-alte-kiefer-steht-am-hang#0:removed",
+				"de/die-angestellten-streikten-gestern#0:present",
+				"de/die-angestellten-streikten-gestern#0:removed",
+				"de/die-auf-ihn-abgestimmte-loesung-half-sofort#0:present",
+				"de/die-auf-ihn-abgestimmte-loesung-half-sofort#0:removed",
+				"de/die-aufgabe-bleibt-ungeloest#0:present",
+				"de/die-aufgabe-bleibt-ungeloest#0:removed",
+				"de/die-band-spielt-heute-im-kellerclub#0:present",
+				"de/die-band-spielt-heute-im-kellerclub#0:removed",
+				"de/die-eingezeichneten-seen-sind-jetzt-besser-zu-sehen#0:present",
+				"de/die-eingezeichneten-seen-sind-jetzt-besser-zu-sehen#0:removed",
+				"de/die-gekochten-kartoffeln-standen-schon-bereit#0:present",
+				"de/die-gekochten-kartoffeln-standen-schon-bereit#0:removed",
+				"de/die-kartoffeln-sind-bereits-gekocht#0:present",
+				"de/die-kartoffeln-sind-bereits-gekocht#0:removed",
+				"de/die-leiter-wackelte-auf-dem-nassen-boden#0:present",
+				"de/die-leiter-wackelte-auf-dem-nassen-boden#0:removed",
+				"de/die-linke-hand-zitterte#0:present",
+				"de/die-linke-hand-zitterte#0:removed",
+				"de/die-mit-bleistift-geschriebene-notiz-lag-noch-auf-dem-tisch#0:present",
+				"de/die-mit-bleistift-geschriebene-notiz-lag-noch-auf-dem-tisch#0:removed",
+				"de/die-mutter-passt-nicht-auf-diese-schraube#0:present",
+				"de/die-mutter-passt-nicht-auf-diese-schraube#0:removed",
+				"de/die-peitsche-hat-er-mitgebracht#0:present",
+				"de/die-peitsche-hat-er-mitgebracht#0:removed",
+				"de/die-peitsche-hat-er-mitgebracht#1:present",
+				"de/die-peitsche-hat-er-mitgebracht#1:removed",
+				"de/die-peitsche-hat-er-mitgebracht#2:present",
+				"de/die-peitsche-hat-er-mitgebracht#3:present",
+				"de/die-peitsche-hat-er-mitgebracht#3:removed",
+				"de/die-peitsche-hat-er-mitgebracht#4:present",
+				"de/die-peitsche-hat-er-mitgebracht#4:removed",
+				"de/die-peitsche-hat-er-mitgebracht#5:present",
+				"de/die-peitsche-hat-er-mitgebracht#6:present",
+				"de/die-peitsche-hat-er-mitgebracht#6:removed",
+				"de/die-peitsche-hat-er-mitgebracht#7:present",
+				"de/die-peitsche-hat-er-mitgebracht#7:removed",
+				"de/die-schlafenden-kinder-wurden-nicht-geweckt#0:present",
+				"de/die-schlafenden-kinder-wurden-nicht-geweckt#0:removed",
+				"de/die-schoss-das-haeschen-ganz-entzwei#0:present",
+				"de/die-schoss-das-haeschen-ganz-entzwei#0:removed",
+				"de/die-schoss-das-haeschen-ganz-entzwei#1:present",
+				"de/die-schoss-das-haeschen-ganz-entzwei#1:removed",
+				"de/die-schoss-das-haeschen-ganz-entzwei#2:present",
+				"de/die-schoss-das-haeschen-ganz-entzwei#2:removed",
+				"de/die-tuer-ist-geschlossen#0:present",
+				"de/die-tuer-ist-geschlossen#0:removed",
+				"de/die-tuer-ist-geschlossen#1:present",
+				"de/die-tuer-ist-geschlossen#1:removed",
+				"de/ein-interessierter-leser-fragte-nach#0:present",
+				"de/ein-interessierter-leser-fragte-nach#0:removed",
+				"de/ein-verletzter-lag-am-strassenrand#0:present",
+				"de/ein-verletzter-lag-am-strassenrand#0:removed",
+				"de/einst-ging-er-an-ufers-rand#0:present",
+				"de/einst-ging-er-an-ufers-rand#0:removed",
+				"de/einst-ging-er-an-ufers-rand#1:present",
+				"de/einst-ging-er-an-ufers-rand#1:removed",
+				"de/einst-ging-er-an-ufers-rand#2:present",
+				"de/einst-ging-er-an-ufers-rand#2:removed",
+				"de/einst-ging-er-an-ufers-rand#3:present",
+				"de/einst-ging-er-an-ufers-rand#3:removed",
+				"de/einst-ging-er-an-ufers-rand#4:present",
+				"de/einst-ging-er-an-ufers-rand#4:removed",
+				"de/entschuldigung-ist-hier-noch-frei#0:present",
+				"de/entschuldigung-ist-hier-noch-frei#0:removed",
+				"de/er-ist-stolz-auf-seinen-sohn#0:present",
+				"de/er-ist-stolz-auf-seinen-sohn#0:removed",
+				"de/er-ist-stolz-auf-seinen-sohn#1:present",
+				"de/er-ist-stolz-auf-seinen-sohn#1:removed",
+				"de/er-lief-erst-nach-links-und-dann-hinaus#0:present",
+				"de/er-lief-erst-nach-links-und-dann-hinaus#0:removed",
+				"de/er-lief-erst-nach-links-und-dann-hinaus#1:present",
+				"de/er-muss-heute-arbeiten#0:present",
+				"de/er-muss-heute-arbeiten#0:removed",
+				"de/er-muss-heute-arbeiten#1:present",
+				"de/er-muss-heute-arbeiten#1:removed",
+				"de/er-sass-schweigend-am-fenster#0:present",
+				"de/er-sass-schweigend-am-fenster#0:removed",
+				"de/er-vergass-seinen-schluessel-im-buero#0:present",
+				"de/er-versucht-hinauszulaufen#0:present",
+				"de/er-versucht-hinauszulaufen#0:removed",
+				"de/er-versucht-hinauszulaufen#1:present",
+				"de/er-wartet-auf-den-nachtbus#0:present",
+				"de/er-wartet-auf-den-nachtbus#0:removed",
+				"de/er-wog-vielleicht-ein-halbes-lot#0:present",
+				"de/er-wog-vielleicht-ein-halbes-lot#0:removed",
+				"de/er-wog-vielleicht-ein-halbes-lot#1:present",
+				"de/er-wog-vielleicht-ein-halbes-lot#1:removed",
+				"de/er-wog-vielleicht-ein-halbes-lot#2:present",
+				"de/er-wog-vielleicht-ein-halbes-lot#2:removed",
+				"de/er-wog-vielleicht-ein-halbes-lot#3:present",
+				"de/er-wog-vielleicht-ein-halbes-lot#3:removed",
+				"de/er-wog-vielleicht-ein-halbes-lot#4:present",
+				"de/er-wog-vielleicht-ein-halbes-lot#4:removed",
+				"de/es-zog-der-wilde-jaegersmann#0:present",
+				"de/es-zog-der-wilde-jaegersmann#1:present",
+				"de/es-zog-der-wilde-jaegersmann#1:removed",
+				"de/es-zog-der-wilde-jaegersmann#2:present",
+				"de/es-zog-der-wilde-jaegersmann#2:removed",
+				"de/fort-geht-nun-die-mutter-und#0:present",
+				"de/fort-geht-nun-die-mutter-und#0:removed",
+				"de/fort-geht-nun-die-mutter-und#1:present",
+				"de/fort-geht-nun-die-mutter-und#1:removed",
+				"de/genau-da-liegt-der-hase-im-pfeffer#0:present",
+				"de/genau-da-liegt-der-hase-im-pfeffer#0:removed",
+				"de/guten-tag-ich-habe-einen-termin#0:present",
+				"de/guten-tag-ich-habe-einen-termin#0:removed",
+				"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst#0:present",
+				"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst#0:removed",
+				"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen#0:present",
+				"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen#0:removed",
+				"de/ich-suche-einen-besseren-ansatz#0:present",
+				"de/ich-suche-einen-besseren-ansatz#0:removed",
+				"de/im-heft-stand-filosofie-statt-philosophie#0:present",
+				"de/im-heft-stand-filosofie-statt-philosophie#0:removed",
+				"de/in-berlin-betreibt-die-bvg-die-u-bahn#0:present",
+				"de/in-berlin-betreibt-die-bvg-die-u-bahn#0:removed",
+				"de/kaffee-oder-tee-das-ist-hier-die-frage#0:present",
+				"de/kaffee-oder-tee-das-ist-hier-die-frage#0:removed",
+				"de/meine-mutter-ruft-jeden-sonntag-an#0:present",
+				"de/meine-mutter-ruft-jeden-sonntag-an#0:removed",
+				"de/mit-den-kindern-ist-es-nie-langweilig#0:present",
+				"de/mit-den-kindern-ist-es-nie-langweilig#0:removed",
+				"de/mit-keinem-wort-erwaehnte-sie-den-plan#0:present",
+				"de/morgen-fahren-wir-nach-hamburg#0:present",
+				"de/morgen-fahren-wir-nach-hamburg#0:removed",
+				"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen#0:present",
+				"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen#0:removed",
+				"de/na-ja-ganz-ueberzeugt-bin-ich-nicht#0:present",
+				"de/na-ja-ganz-ueberzeugt-bin-ich-nicht#0:removed",
+				"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank#0:present",
+				"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank#0:removed",
+				"de/nach-manchem-fehler-lernt-man-schneller#0:present",
+				"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#0:present",
+				"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#1:present",
+				"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin#1:removed",
+				"de/nahm-ranzen-pulverhorn-und-flint#0:present",
+				"de/nahm-ranzen-pulverhorn-und-flint#0:removed",
+				"de/nahm-ranzen-pulverhorn-und-flint#1:present",
+				"de/nahm-ranzen-pulverhorn-und-flint#1:removed",
+				"de/schwimmen-ist-gesund#0:present",
+				"de/schwimmen-ist-gesund#0:removed",
+				"de/sein-staendiges-meckern-nervt#0:present",
+				"de/sein-staendiges-meckern-nervt#0:removed",
+				"de/sie-erinnert-sich-an-den-geruch#0:present",
+				"de/sie-erinnert-sich-an-den-geruch#0:removed",
+				"de/sie-folgte-ihrem-herzen#0:present",
+				"de/sie-folgte-ihrem-herzen#0:removed",
+				"de/sie-hat-hilfe-in-anspruch-genommen#0:present",
+				"de/sie-hat-hilfe-in-anspruch-genommen#0:removed",
+				"de/sie-ist-verheiratet#0:present",
+				"de/sie-ist-verheiratet#0:removed",
+				"de/sie-kam-lachend-herein#0:present",
+				"de/sie-kam-lachend-herein#0:removed",
+				"de/sie-uebersetzt-den-vertrag-ins-deutsche#0:present",
+				"de/sie-uebersetzt-den-vertrag-ins-deutsche#0:removed",
+				"de/sie-uebersetzt-den-vertrag-ins-deutsche#1:present",
+				"de/sie-uebersetzt-den-vertrag-ins-deutsche#1:removed",
+				"de/sie-umfuhr-die-baustelle-weitraeumig#0:present",
+				"de/sie-umfuhr-die-baustelle-weitraeumig#0:removed",
+				"de/sie-wurde-um-geduld-gebeten#0:present",
+				"de/sie-wurde-um-geduld-gebeten#0:removed",
+				"de/tut-mir-leid-das-war-mein-fehler#0:present",
+				"de/tut-mir-leid-das-war-mein-fehler#0:removed",
+				"de/tut-mir-leid-das-war-mein-fehler#1:present",
+				"de/und-minz-und-maunz-die-schreien#0:present",
+				"de/und-minz-und-maunz-die-schreien#1:present",
+				"de/und-minz-und-maunz-die-schreien#1:removed",
+				"de/und-minz-und-maunz-die-schreien#2:present",
+				"de/und-minz-und-maunz-die-schreien#2:removed",
+				"de/und-minz-und-maunz-die-schreien#3:present",
+				"de/und-minz-und-maunz-die-schreien#3:removed",
+				"de/und-minz-und-maunz-die-schreien#4:present",
+				"de/und-minz-und-maunz-die-schreien#4:removed",
+				"de/unter-falschem-namen-mietete-er-das-zimmer#0:present",
+				"de/unter-falschem-namen-mietete-er-das-zimmer#0:removed",
+				"de/verbrannt-ist-alles-ganz-und-gar#0:present",
+				"de/verbrannt-ist-alles-ganz-und-gar#0:removed",
+				"de/verbrannt-ist-alles-ganz-und-gar#1:present",
+				"de/verbrannt-ist-alles-ganz-und-gar#1:removed",
+				"de/verbrannt-ist-alles-ganz-und-gar#2:present",
+				"de/verbrannt-ist-alles-ganz-und-gar#2:removed",
+				"de/viele-deutschsprachigen-quellen-fehlen-noch#0:present",
+				"de/viele-deutschsprachigen-quellen-fehlen-noch#0:removed",
+				"de/viele-vermissen-das-alte-berlin#0:present",
+				"de/viele-vermissen-das-alte-berlin#0:removed",
+				"de/wegen-dem-regen-kamen-wir-zu-spaet#0:present",
+				"de/wegen-dem-regen-kamen-wir-zu-spaet#0:removed",
+				"de/wer-war-das#0:present",
+				"de/wer-zuerst-kommt-mahlt-zuerst#0:present",
+				"de/wer-zuerst-kommt-mahlt-zuerst#0:removed",
+				"de/wir-haetten-gern-mehr-zeit#0:present",
+				"de/wir-haetten-gern-mehr-zeit#0:removed",
+				"de/wir-liefen-den-fluss-entlang#0:present",
+				"de/wir-liefen-den-fluss-entlang#0:removed",
+				"de/wissen-ist-macht#0:present",
+				"de/wissen-ist-macht#0:removed"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "resolve-reading/de@production-4",
+		"configurations": {
+			"generation": {
+				"model": "gpt-5.6-luna",
+				"settings": {
+					"reasoning": {
+						"effort": "none"
+					},
+					"service_tier": "fast"
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"set": "heldout",
+					"setHash": "20fb3b09bfa728d1"
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 0,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 269
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-03T13:22:17.252Z",
+		"total": 269,
+		"succeeded": 269,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 38,
+			"quality": {
+				"passed": 0,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 807
+			}
+		}
+	},
+	"metrics": {
+		"attempts": 807,
+		"cases": 142,
+		"lines": {
+			"reuse": {
+				"correct": 364,
+				"count": 381,
+				"rate": 0.9553805774278216,
+				"interval": [
+					0.929712098309217,
+					0.9719579062913836
+				]
+			},
+			"reuseAmongSeveral": {
+				"correct": 30,
+				"count": 30,
+				"rate": 1,
+				"interval": [
+					0.886486605238548,
+					1
+				]
+			},
+			"noMatch": {
+				"correct": 23,
+				"count": 30,
+				"rate": 0.7666666666666667,
+				"interval": [
+					0.5907167369328042,
+					0.8820761191944214
+				]
+			},
+			"noMatchUnjudged": {
+				"correct": 351,
+				"count": 351,
+				"rate": 1,
+				"interval": [
+					0.9891741543014535,
+					0.9999999999999999
+				]
+			},
+			"wrongReuse": {
+				"correct": 7,
+				"count": 762,
+				"rate": 0.009186351706036745,
+				"interval": [
+					0.004456855163551634,
+					0.018839688363039283
+				]
+			},
+			"authored": {
+				"correct": 45,
+				"count": 45,
+				"rate": 1,
+				"interval": [
+					0.921348400123914,
+					0.9999999999999999
+				]
+			},
+			"esGibt": {
+				"correct": 0,
+				"count": 0,
+				"rate": 0,
+				"interval": [
+					0,
+					1
+				]
+			},
+			"lunaMatchesGold": {
+				"correct": 181,
+				"count": 374,
+				"rate": 0.4839572192513369,
+				"interval": [
+					0.4337306085602727,
+					0.5345100391560225
+				]
+			}
+		},
+		"esGibtRejected": 0,
+		"wrongReuseBy": {
+			"Judged": 7
+		},
+		"byRepetition": {
+			"0": {
+				"reuse": {
+					"correct": 121,
+					"count": 127,
+					"rate": 0.952755905511811,
+					"interval": [
+						0.9007560950290322,
+						0.9781702100065303
+					]
+				},
+				"noMatch": {
+					"correct": 8,
+					"count": 10,
+					"rate": 0.8,
+					"interval": [
+						0.4901624691221323,
+						0.9433178490622331
+					]
+				}
+			},
+			"1": {
+				"reuse": {
+					"correct": 122,
+					"count": 127,
+					"rate": 0.9606299212598425,
+					"interval": [
+						0.911143777273776,
+						0.9830682026319701
+					]
+				},
+				"noMatch": {
+					"correct": 7,
+					"count": 10,
+					"rate": 0.7,
+					"interval": [
+						0.3967781453459709,
+						0.892208733443606
+					]
+				}
+			},
+			"2": {
+				"reuse": {
+					"correct": 121,
+					"count": 127,
+					"rate": 0.952755905511811,
+					"interval": [
+						0.9007560950290322,
+						0.9781702100065303
+					]
+				},
+				"noMatch": {
+					"correct": 8,
+					"count": 10,
+					"rate": 0.8,
+					"interval": [
+						0.4901624691221323,
+						0.9433178490622331
+					]
+				}
+			}
+		},
+		"routes": {
+			"Lexeme/ADJ": {
+				"reuse": {
+					"correct": 85,
+					"count": 87,
+					"rate": 0.9770114942528736,
+					"interval": [
+						0.9200068191939195,
+						0.9936729149510093
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/ADP": {
+				"reuse": {
+					"correct": 19,
+					"count": 21,
+					"rate": 0.9047619047619048,
+					"interval": [
+						0.7108586073515344,
+						0.9734812328017302
+					]
+				},
+				"noMatch": {
+					"correct": 5,
+					"count": 6,
+					"rate": 0.8333333333333334,
+					"interval": [
+						0.4364971749742326,
+						0.969946630588185
+					]
+				}
+			},
+			"Lexeme/ADV": {
+				"reuse": {
+					"correct": 13,
+					"count": 18,
+					"rate": 0.7222222222222222,
+					"interval": [
+						0.4912734325899035,
+						0.8750024669953034
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/CCONJ": {
+				"reuse": {
+					"correct": 3,
+					"count": 3,
+					"rate": 1,
+					"interval": [
+						0.43850296436068037,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/DET": {
+				"reuse": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/INTJ": {
+				"reuse": {
+					"correct": 12,
+					"count": 12,
+					"rate": 1,
+					"interval": [
+						0.7575059904469021,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/NOUN": {
+				"reuse": {
+					"correct": 87,
+					"count": 87,
+					"rate": 1,
+					"interval": [
+						0.9577124924169734,
+						0.9999999999999999
+					]
+				},
+				"noMatch": {
+					"correct": 12,
+					"count": 12,
+					"rate": 1,
+					"interval": [
+						0.7575059904469021,
+						1
+					]
+				}
+			},
+			"Lexeme/NUM": {
+				"reuse": {
+					"correct": 3,
+					"count": 3,
+					"rate": 1,
+					"interval": [
+						0.43850296436068037,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/PART": {
+				"reuse": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/PRON": {
+				"reuse": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/PROPN": {
+				"reuse": {
+					"correct": 3,
+					"count": 6,
+					"rate": 0.5,
+					"interval": [
+						0.18761630498040816,
+						0.8123836950195918
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Lexeme/VERB": {
+				"reuse": {
+					"correct": 79,
+					"count": 84,
+					"rate": 0.9404761904761905,
+					"interval": [
+						0.8681173710300114,
+						0.9743094390711211
+					]
+				},
+				"noMatch": {
+					"correct": 6,
+					"count": 12,
+					"rate": 0.5,
+					"interval": [
+						0.25378159616252394,
+						0.7462184038374761
+					]
+				}
+			},
+			"Locution/ADV": {
+				"reuse": {
+					"correct": 6,
+					"count": 6,
+					"rate": 1,
+					"interval": [
+						0.6096657083436265,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Locution/INTJ": {
+				"reuse": {
+					"correct": 18,
+					"count": 18,
+					"rate": 1,
+					"interval": [
+						0.8241207740667156,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Locution/SCONJ": {
+				"reuse": {
+					"correct": 3,
+					"count": 3,
+					"rate": 1,
+					"interval": [
+						0.43850296436068037,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Locution/VERB": {
+				"reuse": {
+					"correct": 21,
+					"count": 21,
+					"rate": 1,
+					"interval": [
+						0.8453609790128563,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"Saying/Saying": {
+				"reuse": {
+					"correct": 12,
+					"count": 12,
+					"rate": 1,
+					"interval": [
+						0.7575059904469021,
+						1
+					]
+				},
+				"noMatch": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			}
+		},
+		"outcomes": {
+			"Reuse": 416,
+			"New": 391
+		},
+		"reasons": {
+			"Written": 391,
+			"Judged": 373,
+			"Authored": 39,
+			"AuthoredJudged": 3,
+			"Collision": 1
+		},
+		"flips": [
+			"de/am-naechsten-morgen-war-alles-anders#0:removed",
+			"de/die-peitsche-hat-er-mitgebracht#6:present",
+			"de/einst-ging-er-an-ufers-rand#0:present",
+			"de/wegen-dem-regen-kamen-wir-zu-spaet#0:present",
+			"de/wir-haetten-gern-mehr-zeit#0:present"
+		],
+		"spotCheck": [
+			{
+				"caseId": "de/das-rote-band-lag-auf-dem-geschenk#1",
+				"lemma": "liegen",
+				"markedSentence": "Das rote Band <TARGET>lag</TARGET> auf dem Geschenk.",
+				"gold": "📍",
+				"written": "📍"
+			},
+			{
+				"caseId": "de/die-eingezeichneten-seen-sind-jetzt-besser-zu-sehen#0",
+				"lemma": "eingezeichnet",
+				"markedSentence": "Die <TARGET>eingezeichneten</TARGET> Seen sind jetzt besser zu sehen.",
+				"gold": "🗺✏",
+				"written": "🗺"
+			},
+			{
+				"caseId": "de/der-reisende-haendler-wartete-draussen#0",
+				"lemma": "reisend",
+				"markedSentence": "Der <TARGET>reisende</TARGET> Händler wartete draußen.",
+				"gold": "🧳",
+				"written": "🚶"
+			},
+			{
+				"caseId": "de/und-minz-und-maunz-die-schreien#3",
+				"lemma": "zu",
+				"markedSentence": "Und Minz und Maunz, die schreien\ngar jämmerlich <TARGET>zu</TARGET> zweien",
+				"gold": "👥",
+				"written": "👥"
+			},
+			{
+				"caseId": "de/genau-da-liegt-der-hase-im-pfeffer#0",
+				"lemma": "da liegt der Hase im Pfeffer",
+				"markedSentence": "Genau <TARGET>da</TARGET> <TARGET>liegt</TARGET> <TARGET>der</TARGET> <TARGET>Hase</TARGET> <TARGET>im</TARGET> <TARGET>Pfeffer</TARGET>.",
+				"gold": "🔑",
+				"written": "💡"
+			},
+			{
+				"caseId": "de/die-peitsche-hat-er-mitgebracht#4",
+				"lemma": "in Acht nehmen",
+				"markedSentence": "Die Peitsche hat er mitgebracht\nund <TARGET>nimmt</TARGET> sie sorglich sehr <TARGET>in</TARGET> <TARGET>acht</TARGET>.",
+				"gold": "🛡",
+				"written": "👀"
+			},
+			{
+				"caseId": "de/die-kartoffeln-sind-bereits-gekocht#0",
+				"lemma": "gekocht",
+				"markedSentence": "Die Kartoffeln sind bereits <TARGET>gekocht</TARGET>.",
+				"gold": "♨",
+				"written": "🍲"
+			},
+			{
+				"caseId": "de/der-leiter-der-werkstatt-kam-spaeter#0",
+				"lemma": "Leiter",
+				"markedSentence": "<TARGET>Der</TARGET> <TARGET>Leiter</TARGET> der Werkstatt kam später.",
+				"gold": "🧑‍💼",
+				"written": "👨‍💼"
+			},
+			{
+				"caseId": "de/einst-ging-er-an-ufers-rand#2",
+				"lemma": "an",
+				"markedSentence": "Einst ging er <TARGET>an</TARGET> Ufers Rand\nmit der Mappe in der Hand.",
+				"gold": "📌",
+				"written": "➡"
+			},
+			{
+				"caseId": "de/na-ja-ganz-ueberzeugt-bin-ich-nicht#0",
+				"lemma": "na ja",
+				"markedSentence": "<TARGET>Na</TARGET> <TARGET>ja</TARGET>, ganz überzeugt bin ich nicht.",
+				"gold": "🤷",
+				"written": "🤔"
+			},
+			{
+				"caseId": "de/viele-vermissen-das-alte-berlin#0",
+				"lemma": "Berlin",
+				"markedSentence": "Viele vermissen <TARGET>das</TARGET> alte <TARGET>Berlin</TARGET>.",
+				"gold": "🐻",
+				"written": "🏙"
+			},
+			{
+				"caseId": "de/nahm-ranzen-pulverhorn-und-flint#1",
+				"lemma": "geschwind",
+				"markedSentence": "nahm Ranzen, Pulverhorn und Flint\nund lief hinaus ins Feld <TARGET>geschwind</TARGET>",
+				"gold": "💨",
+				"written": "⚡"
+			},
+			{
+				"caseId": "de/er-ist-stolz-auf-seinen-sohn#0",
+				"lemma": "stolz",
+				"markedSentence": "Er ist <TARGET>stolz</TARGET> <TARGET>auf</TARGET> seinen Sohn.",
+				"gold": "🦚",
+				"written": "😊"
+			},
+			{
+				"caseId": "de/kaffee-oder-tee-das-ist-hier-die-frage#0",
+				"lemma": "Sein oder Nichtsein, das ist hier die Frage",
+				"markedSentence": "Kaffee <TARGET>oder</TARGET> Tee, <TARGET>das</TARGET> <TARGET>ist</TARGET> <TARGET>hier</TARGET> <TARGET>die</TARGET> <TARGET>Frage</TARGET>.",
+				"gold": "⚖🤔",
+				"written": "🤔"
+			},
+			{
+				"caseId": "de/wer-zuerst-kommt-mahlt-zuerst#0",
+				"lemma": "Wer zuerst kommt, mahlt zuerst",
+				"markedSentence": "<TARGET>Wer</TARGET> <TARGET>zuerst</TARGET> <TARGET>kommt</TARGET>, <TARGET>mahlt</TARGET> <TARGET>zuerst</TARGET>.",
+				"gold": "🥇",
+				"written": "🥇"
+			},
+			{
+				"caseId": "de/unter-falschem-namen-mietete-er-das-zimmer#0",
+				"lemma": "Name",
+				"markedSentence": "Unter falschem <TARGET>Namen</TARGET> mietete er das Zimmer.",
+				"gold": "📛",
+				"written": "🏷"
+			},
+			{
+				"caseId": "de/morgen-fahren-wir-nach-hamburg#0",
+				"lemma": "morgen",
+				"markedSentence": "<TARGET>Morgen</TARGET> fahren wir nach Hamburg.",
+				"gold": "📅",
+				"written": "🌅"
+			},
+			{
+				"caseId": "de/sie-folgte-ihrem-herzen#0",
+				"lemma": "Herz",
+				"markedSentence": "Sie folgte ihrem <TARGET>Herzen</TARGET>.",
+				"gold": "❤",
+				"written": "❤"
+			},
+			{
+				"caseId": "de/am-naechsten-morgen-war-alles-anders#3",
+				"lemma": "anders",
+				"markedSentence": "Am nächsten Morgen war alles <TARGET>anders</TARGET>.",
+				"gold": "🔀",
+				"written": "🔀"
+			},
+			{
+				"caseId": "de/die-schlafenden-kinder-wurden-nicht-geweckt#0",
+				"lemma": "schlafend",
+				"markedSentence": "Die <TARGET>schlafenden</TARGET> Kinder wurden nicht geweckt.",
+				"gold": "😴",
+				"written": "😴"
+			},
+			{
+				"caseId": "de/die-mutter-passt-nicht-auf-diese-schraube#0",
+				"lemma": "Mutter",
+				"markedSentence": "<TARGET>Die</TARGET> <TARGET>Mutter</TARGET> passt nicht auf diese Schraube.",
+				"gold": "🔩",
+				"written": "🔩"
+			},
+			{
+				"caseId": "de/ich-suche-einen-besseren-ansatz#0",
+				"lemma": "gut",
+				"markedSentence": "Ich suche einen <TARGET>besseren</TARGET> Ansatz.",
+				"gold": "👍",
+				"written": "👍"
+			},
+			{
+				"caseId": "de/er-wog-vielleicht-ein-halbes-lot#1",
+				"lemma": "Lot",
+				"markedSentence": "Er wog vielleicht <TARGET>ein</TARGET> halbes <TARGET>Lot</TARGET> –\nund war am fünften Tage tot.",
+				"gold": "⚖",
+				"written": "⚖"
+			},
+			{
+				"caseId": "de/der-faehrmann-hat-uns-uebergesetzt#0",
+				"lemma": "übersetzen",
+				"markedSentence": "Der Fährmann <TARGET>hat</TARGET> uns <TARGET>übergesetzt</TARGET>.",
+				"gold": "⛴",
+				"written": "⛴"
+			},
+			{
+				"caseId": "de/am-naechsten-morgen-war-alles-anders#0",
+				"lemma": "an",
+				"markedSentence": "<TARGET>A</TARGET>m nächsten Morgen war alles anders.",
+				"gold": "📅",
+				"written": "📅"
+			},
+			{
+				"caseId": "de/sein-staendiges-meckern-nervt#0",
+				"lemma": "Meckern",
+				"markedSentence": "Sein ständiges <TARGET>Meckern</TARGET> nervt.",
+				"gold": "😤",
+				"written": "😠"
+			},
+			{
+				"caseId": "de/die-mit-bleistift-geschriebene-notiz-lag-noch-auf-dem-tisch#0",
+				"lemma": "geschrieben",
+				"markedSentence": "Die mit Bleistift <TARGET>geschriebene</TARGET> Notiz lag noch auf dem Tisch.",
+				"gold": "✍",
+				"written": "✍"
+			},
+			{
+				"caseId": "de/einst-ging-er-an-ufers-rand#4",
+				"lemma": "Rand",
+				"markedSentence": "Einst ging er an Ufers <TARGET>Rand</TARGET>\nmit der Mappe in der Hand.",
+				"gold": "🔲",
+				"written": "🔲"
+			},
+			{
+				"caseId": "de/er-sass-schweigend-am-fenster#0",
+				"lemma": "schweigend",
+				"markedSentence": "Er saß <TARGET>schweigend</TARGET> am Fenster.",
+				"gold": "🤐",
+				"written": "🤐"
+			},
+			{
+				"caseId": "de/sie-kam-lachend-herein#0",
+				"lemma": "lachend",
+				"markedSentence": "Sie kam <TARGET>lachend</TARGET> herein.",
+				"gold": "😄",
+				"written": "😂"
+			},
+			{
+				"caseId": "de/er-wog-vielleicht-ein-halbes-lot#4",
+				"lemma": "tot",
+				"markedSentence": "Er wog vielleicht ein halbes Lot –\nund war am fünften Tage <TARGET>tot</TARGET>.",
+				"gold": "💀",
+				"written": "💀"
+			},
+			{
+				"caseId": "de/der-geschriebene-brief-lag-auf-dem-tisch#0",
+				"lemma": "geschrieben",
+				"markedSentence": "Der <TARGET>geschriebene</TARGET> Brief lag auf dem Tisch.",
+				"gold": "✍",
+				"written": "✍"
+			},
+			{
+				"caseId": "de/die-schoss-das-haeschen-ganz-entzwei#1",
+				"lemma": "o wei",
+				"markedSentence": "Die schoß das Häschen ganz entzwei;\nda rief die Frau: »<TARGET>O</TARGET> <TARGET>wei</TARGET>! O wei!«",
+				"gold": "😩",
+				"written": "😱"
+			},
+			{
+				"caseId": "de/er-wog-vielleicht-ein-halbes-lot#0",
+				"lemma": "wiegen",
+				"markedSentence": "Er <TARGET>wog</TARGET> vielleicht ein halbes Lot –\nund war am fünften Tage tot.",
+				"gold": "⚖",
+				"written": "⚖"
+			},
+			{
+				"caseId": "de/er-muss-heute-arbeiten#0",
+				"lemma": "müssen",
+				"markedSentence": "Er <TARGET>muss</TARGET> heute arbeiten.",
+				"gold": "❗",
+				"written": "‼"
+			},
+			{
+				"caseId": "de/den-fluss-entlang-standen-alte-weiden#0",
+				"lemma": "entlang",
+				"markedSentence": "Den Fluss <TARGET>entlang</TARGET> standen alte Weiden.",
+				"gold": "🛤",
+				"written": "↔"
+			},
+			{
+				"caseId": "de/wegen-dem-regen-kamen-wir-zu-spaet#0",
+				"lemma": "wegen",
+				"markedSentence": "<TARGET>Wegen</TARGET> dem Regen kamen wir zu spät.",
+				"gold": "⛓",
+				"written": "🌧"
+			},
+			{
+				"caseId": "de/die-schoss-das-haeschen-ganz-entzwei#0",
+				"lemma": "entzwei",
+				"markedSentence": "Die schoß das Häschen ganz <TARGET>entzwei</TARGET>;\nda rief die Frau: »O wei! O wei!«",
+				"gold": "✂",
+				"written": "💥"
+			},
+			{
+				"caseId": "de/der-hockte-da-im-gruenen-gras#1",
+				"lemma": "auf",
+				"markedSentence": "Der hockte da im grünen Gras;\ndem floß der Kaffee <TARGET>auf</TARGET> die Nas.",
+				"gold": "🔝",
+				"written": "⬆"
+			},
+			{
+				"caseId": "de/die-auf-ihn-abgestimmte-loesung-half-sofort#0",
+				"lemma": "abgestimmt",
+				"markedSentence": "Die <TARGET>auf</TARGET> ihn <TARGET>abgestimmte</TARGET> Lösung half sofort.",
+				"gold": "🎯",
+				"written": "🎯"
+			}
+		]
+	},
+	"spend": {
+		"jev": {
+			"freshCalls": 396,
+			"freshInputTokens": 328935,
+			"freshOutputTokens": 14306,
+			"freshCachedInputTokens": 0,
+			"freshCacheWriteTokens": 0,
+			"cachedCalls": 438
+		},
+		"luna": {
+			"freshCalls": 350,
+			"freshInputTokens": 320293,
+			"freshOutputTokens": 4673,
+			"freshCachedInputTokens": 0,
+			"freshCacheWriteTokens": 0,
+			"cachedCalls": 416
+		},
+		"lunaTransport": "batch",
+		"usd": {
+			"jev": 0.013815270000000001,
+			"luna": 0.034833100000000006,
+			"lunaTier": "batch"
+		},
+		"batches": [
+			{
+				"batchId": "batch_6ac1010e3cc88190b21293461494879a",
+				"inputFileId": "file-7Q1wukJeNVhKPsE15tT6pQ",
+				"submittedAt": "2026-10-03T13:20:14.320Z",
+				"status": "completed",
+				"requests": 350,
+				"answered": 350,
+				"failed": 0,
+				"inputTokens": 320293,
+				"outputTokens": 4673,
+				"cachedInputTokens": 0,
+				"cacheWriteTokens": 0,
+				"usd": 0.034833100000000006,
+				"requestCounts": {
+					"total": 350,
+					"completed": 350,
+					"failed": 0
+				},
+				"usage": {
+					"input_tokens": 320293,
+					"output_tokens": 4673,
+					"total_tokens": 324966,
+					"input_tokens_details": {
+						"cached_tokens": 0
+					},
+					"output_tokens_details": {
+						"reasoning_tokens": 0
+					}
+				}
+			}
+		]
+	}
+}
