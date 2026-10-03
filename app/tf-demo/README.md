@@ -25,10 +25,11 @@ deployment reads from the first place that sets it: your shell, then
 login shell, which finds exports in `~/.zshrc` when `bun run dev` starts from
 a shell that never read it. Values are never printed. A key found nowhere
 gets a boxed warning, the dev server starts anyway, and adding a text then
-fails with "Intake isn't configured". No other provider key is needed while
-click resolution is rebuilt
-([#848](https://github.com/clockblocker/texteater/issues/848)): a click
-selects its unit and calls no model.
+fails with "Intake isn't configured". A click resolves its unit's grammar
+and Reading with jev and Luna, so it needs `OPENAI_API_KEY` as well.
+Knowledge production also runs only where `TF_KNOWLEDGE_PRODUCTION=1`; set
+it in `app/tf-demo/.env.local` for local work. It stays off in production
+([#886](https://github.com/clockblocker/texteater/issues/886)).
 
 The sync runs before `convex dev` starts the local backend, and
 `convex env set` briefly starts a stopped backend to write the key, so a
@@ -54,8 +55,8 @@ through `bun run env:sync`:
   stripping every analysis, and shows their buttons.
 - `TF_INSPECTION=1` honours requests to capture Resolution Inspector records.
 
-The dictionary starts empty. While click resolution is rebuilt, a click adds
-nothing to it; grammatical navigation adds only the selected Reading.
+The dictionary starts empty. A click adds the Lemma and Reading it resolves;
+grammatical navigation adds only the selected Reading.
 
 The Notes playground uses an isolated in-memory fixture database. Fixtures
 are never loaded into the application’s Convex deployment.
