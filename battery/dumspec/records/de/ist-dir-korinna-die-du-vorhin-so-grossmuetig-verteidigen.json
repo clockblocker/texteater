@@ -178,6 +178,26 @@
 				"title": "OpenThesaurus: verleidet",
 				"url": "https://www.openthesaurus.de/synonyme/verleidet",
 				"supports": "Target 10 Knowledge: no synset; Duden has no verleidet entry: no relation listed"
+			},
+			{
+				"title": "Duden: verteidigen",
+				"url": "https://www.duden.de/rechtschreibung/verteidigen",
+				"supports": "Target 8 Knowledge: verteidigt, verteidigte, hat verteidigt (schwaches Verb); 2 'für eine Person, Sache, die Kritik ausgesetzt ist, eintreten'"
+			},
+			{
+				"title": "DWDS: verteidigen",
+				"url": "https://www.dwds.de/wb/verteidigen",
+				"supports": "Target 8 Knowledge: 2 ⟨jmdn., etw., sich verteidigen⟩ 'jmdn. in Schutz nehmen …'"
+			},
+			{
+				"title": "OpenThesaurus: verteidigen",
+				"url": "https://www.openthesaurus.de/synonyme/verteidigen",
+				"supports": "Target 8 Knowledge: synset eintreten für · sich einsetzen (für) · verfechten · verteidigen · vertreten …; Gegenteil markers sit on eintreten für, sich einsetzen and verfechten only"
+			},
+			{
+				"title": "E-VALBU: verteidigen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 8 Knowledge: no E-VALBU entry, so the frame follows DWDS/Duden"
 			}
 		]
 	},
@@ -562,7 +582,71 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🛡" },
+			"reading": {
+				"emojiDescription": "🛡",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "eintreten",
+								"coreFeatures": {
+									"hasSepPrefix": "ein",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich einsetzen",
+								"coreFeatures": {
+									"hasSepPrefix": "ein",
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -608,7 +692,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "verteidigen is the infinitive under the modal wolltest."
+				"rationale": "verteidigen is the infinitive under the modal wolltest. Knowledge (#887, dev draft): eintreten für and sich einsetzen für mean backing, a shade broader than defending against criticism, so near; verfechten and vertreten take positions, not persons."
 			}
 		},
 		{

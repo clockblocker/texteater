@@ -107,6 +107,26 @@
 				"title": "Project Gutenberg eBook #24173: Stefan Zweig, Brennendes Geheimnis",
 				"url": "https://www.gutenberg.org/ebooks/24173",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #24173 (released 2008-01-05), transcribed from Insel-Verlag, Leipzig, 16.-25. Tausend. Chapter Der Partner, Edgar's answer to the Baron."
+			},
+			{
+				"title": "E-VALBU: erholen, sich, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400514/1",
+				"supports": "Target 2 Knowledge: jemand/etwas erholt sich von etwas: K sub, (K prp von + Dat; SK prp mit obl. Korrelat davon: dass-S, Inf-S mit zu)"
+			},
+			{
+				"title": "Duden: erholen",
+				"url": "https://www.duden.de/rechtschreibung/erholen",
+				"supports": "Target 2 Knowledge: sich, schwaches Verb; 1 'seine Kraft wiedererlangen'"
+			},
+			{
+				"title": "OpenThesaurus: erholen",
+				"url": "https://www.openthesaurus.de/synonyme/erholen",
+				"supports": "Target 2 Knowledge: synset ausspannen, entspannen, erholen, sich ausruhen …; Medizin synset (sich) erholen, genesen, gesunden …; Gegenteil erkranken sits on genesen/gesunden only"
+			},
+			{
+				"title": "DWDS: erholen",
+				"url": "https://www.dwds.de/wb/erholen",
+				"supports": "Target 2 Knowledge: no Synonym/Gegensatz line"
 			}
 		]
 	},
@@ -222,9 +242,91 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "😌🔋" },
+			"reading": {
+				"emojiDescription": "😌🔋",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "von",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Required"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Required"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "ausspannen",
+								"coreFeatures": {
+									"hasSepPrefix": "aus",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "genesen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "sich erholen is inherently reflexive (no erholen without it in this sense), so mich is a member of the infinitive's target (de/verb-owns-its-scattered-members)."
+				"rationale": "sich erholen is inherently reflexive (no erholen without it in this sense), so mich is a member of the infinitive's target (de/verb-owns-its-scattered-members). Knowledge (#887, dev draft): The Reading covers both resting (ausspannen) and recovering from illness (genesen); each OT synset is a narrower shade, so both are near."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

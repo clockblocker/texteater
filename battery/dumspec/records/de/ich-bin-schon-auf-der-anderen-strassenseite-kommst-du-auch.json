@@ -40,13 +40,62 @@
 				"hash": "9d116db0de61b6dd"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: herüberkommen",
+				"url": "https://www.duden.de/rechtschreibung/herueberkommen",
+				"supports": "Target 0 Knowledge: kommt herüber, kam herüber, ist herübergekommen; 1 'von dort drüben hierher kommen'; no Synonyme"
+			},
+			{
+				"title": "DWDS: herüberkommen",
+				"url": "https://www.dwds.de/wb/her%C3%BCberkommen",
+				"supports": "Target 0 Knowledge: 1 'von dort drüben … hierher (zum Sprechenden) kommen'; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: herüberkommen",
+				"url": "https://www.openthesaurus.de/synonyme/her%C3%BCberkommen",
+				"supports": "Target 0 Knowledge: no synset"
+			},
+			{
+				"title": "E-VALBU: herüberkommen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 0 Knowledge: no E-VALBU entry"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 21],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🌉👋" },
+			"reading": {
+				"emojiDescription": "🌉👋",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The speaker is already across the street, so the addressee crosses towards the speaker: rüber in the right bracket is the particle of herüberkommen. rüber is its Shorthand member, and the Surface spells the full particle."
 			},

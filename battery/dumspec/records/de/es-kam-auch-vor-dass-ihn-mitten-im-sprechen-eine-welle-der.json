@@ -339,6 +339,46 @@
 				"title": "OpenThesaurus: Sprechen",
 				"url": "https://www.openthesaurus.de/synonyme/Sprechen",
 				"supports": "Target 7 Knowledge: synsets are all for the verb sprechen, none for the noun"
+			},
+			{
+				"title": "Duden: abwenden",
+				"url": "https://www.duden.de/rechtschreibung/abwenden",
+				"supports": "Target 19 Knowledge: 1 '(sich, etwas) nach der anderen Seite wenden', wandte/wendete ab; Synonyme abdrehen, sich abkehren"
+			},
+			{
+				"title": "DWDS: abwenden",
+				"url": "https://www.dwds.de/wb/abwenden",
+				"supports": "Target 19 Knowledge: 1 'etw., sich von etw., jmdm. wegwenden', sich (von etw., jmdm.) abwenden"
+			},
+			{
+				"title": "OpenThesaurus: abwenden",
+				"url": "https://www.openthesaurus.de/synonyme/abwenden",
+				"supports": "Target 19 Knowledge: synset (sich) abwenden · (sich) wegdrehen · (sich) wegwenden; no Gegenteil"
+			},
+			{
+				"title": "E-VALBU: abwenden",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 19 Knowledge: no E-VALBU entry, so the frame follows DWDS/Duden"
+			},
+			{
+				"title": "E-VALBU: beginnen, Lesart 11",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400216/11",
+				"supports": "Target 17 Knowledge: jemand/etwas beginnt etwas zu tun ('an jemandem hat etwas angefangen sich zu vollziehen'): K sub, K vrb Inf-S mit zu"
+			},
+			{
+				"title": "Duden: beginnen",
+				"url": "https://www.duden.de/rechtschreibung/beginnen",
+				"supports": "Target 17 Knowledge: beginnt, begann, hat begonnen (starkes Verb); Synonyme anfangen, anstimmen, aufnehmen, darangehen"
+			},
+			{
+				"title": "DWDS: beginnen",
+				"url": "https://www.dwds.de/wb/beginnen",
+				"supports": "Target 17 Knowledge: 1 '(etw.) anfangen', 'in gegensätzlicher Bedeutung zu enden, beenden'; 1a zu reden, lachen beginnen"
+			},
+			{
+				"title": "OpenThesaurus: beginnen",
+				"url": "https://www.openthesaurus.de/synonyme/beginnen",
+				"supports": "Target 17 Knowledge: synset anfangen · beginnen · einsetzen · starten (mit) …; no Gegenteil marker"
 			}
 		]
 	},
@@ -1286,7 +1326,83 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "▶" },
+			"reading": {
+				"emojiDescription": "▶",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anfangen",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "enden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "beenden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1391,7 +1507,89 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🧍↩" },
+			"reading": {
+				"emojiDescription": "🧍↩",
+				"knowledge": {
+					"conjugationClass": ["Mixed", "Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "von",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "wegwenden",
+								"coreFeatures": {
+									"hasSepPrefix": "weg",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "wegdrehen",
+								"coreFeatures": {
+									"hasSepPrefix": "weg",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1437,7 +1635,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Infinitive governed by mußte, separable abwenden 'turn away'. DWDS abwenden 1, turning oneself away, not 2, averting a danger."
+				"rationale": "Infinitive governed by mußte, separable abwenden 'turn away'. DWDS abwenden 1, turning oneself away, not 2, averting a danger. Knowledge (#887, dev draft): sich fills the Acc Slot of plain abwenden (etw., sich); the bracketed von-phrase is optional."
 			}
 		},
 		{

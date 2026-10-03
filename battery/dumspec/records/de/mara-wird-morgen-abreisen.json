@@ -26,15 +26,121 @@
 			},
 			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: abreisen",
+				"url": "https://www.duden.de/rechtschreibung/abreisen",
+				"supports": "Target 0 Knowledge: reiste ab (schwaches Verb); senses 'eine Reise antreten', 'Aufenthalt beenden und abfahren', no complement besides the subject; Synonyme abfahren, abfliegen, aufbrechen"
+			},
+			{
+				"title": "DWDS: abreisen",
+				"url": "https://www.dwds.de/wb/abreisen",
+				"supports": "Target 0 Knowledge: reist ab, reiste ab, ist abgereist; 'in gegensätzlicher Bedeutung zu anreisen'; von/nach places only as free examples"
+			},
+			{
+				"title": "OpenThesaurus: abreisen",
+				"url": "https://www.openthesaurus.de/synonyme/abreisen",
+				"supports": "Target 0 Knowledge: synset abfahren, abfliegen, abreisen, aufbrechen, wegfahren …; no Oberbegriff, no Gegenteil marker"
+			},
+			{
+				"title": "Duden: anreisen",
+				"url": "https://www.duden.de/rechtschreibung/anreisen",
+				"supports": "Target 0 Knowledge: anreisen 'eintreffen, ankommen', the target of the DWDS opposition"
+			},
+			{
+				"title": "E-VALBU: abreisen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 0 Knowledge: no E-VALBU entry, so the frame follows Duden"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🧳👋" },
+			"reading": {
+				"emojiDescription": "🧳👋",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "abfahren",
+								"coreFeatures": {
+									"hasSepPrefix": "ab",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "abfliegen",
+								"coreFeatures": {
+									"hasSepPrefix": "ab",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "aufbrechen",
+								"coreFeatures": {
+									"hasSepPrefix": "auf",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anreisen",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "wird is the future auxiliary of abreisen, so the target is the whole future [wird, abreisen]."
+				"rationale": "wird is the future auxiliary of abreisen, so the target is the whole future [wird, abreisen]. Knowledge (#887, dev draft): abfliegen (by plane) is narrower and aufbrechen (set off) broader than abreisen, so both are near."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

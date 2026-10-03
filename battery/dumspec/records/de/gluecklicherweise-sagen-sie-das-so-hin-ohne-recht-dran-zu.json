@@ -223,6 +223,26 @@
 				"title": "OpenThesaurus: recht",
 				"url": "https://www.openthesaurus.de/synonyme/recht",
 				"supports": "Target 6 Knowledge: synsets 'fair, gerecht' and degree 'ziemlich' only: no relation listed for this sense"
+			},
+			{
+				"title": "E-VALBU: glauben, Lesart 7",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400667/7",
+				"supports": "Target 8 Knowledge: jemand glaubt an etwas: K sub, K prp an + Akk; SK prp mit obl. Korrelat daran: dass-S, Inf-S mit zu, HS"
+			},
+			{
+				"title": "DWDS: glauben",
+				"url": "https://www.dwds.de/wb/glauben",
+				"supports": "Target 8 Knowledge: glaubt, glaubte, hat geglaubt; 2 'für wahr halten', 2b ⟨an etw. glauben⟩ ('daran glaubt man')"
+			},
+			{
+				"title": "Duden: glauben",
+				"url": "https://www.duden.de/rechtschreibung/glauben",
+				"supports": "Target 8 Knowledge: glaubte (schwaches Verb); 2a 'für wahr, richtig halten'; Synonyme annehmen, denken … belong to sense 1 'vermuten'"
+			},
+			{
+				"title": "OpenThesaurus: glauben",
+				"url": "https://www.openthesaurus.de/synonyme/glauben",
+				"supports": "Target 8 Knowledge: synset (etwas) für wahr halten · davon ausgehen, dass etwas stimmt · (etwas) glauben; no Gegenteil marker, no Oberbegriff on that synset"
 			}
 		]
 	},
@@ -619,7 +639,75 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💭✅" },
+			"reading": {
+				"emojiDescription": "💭✅",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "an",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Required"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Required"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "für wahr halten",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -683,7 +771,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "glauben is the infinitive of the ohne … zu clause. It governs an (E-VALBU glauben an, Kprp an + Akk), but dran never joins it, so the valency evidence records an + Acc with no member (de/pronominal-adverb-stands-alone). glauben an here is 'hold it to be true', said of one's own words (Duden glauben 2a 'für wahr, richtig halten')."
+				"rationale": "glauben is the infinitive of the ohne … zu clause. It governs an (E-VALBU glauben an, Kprp an + Akk), but dran never joins it, so the valency evidence records an + Acc with no member (de/pronominal-adverb-stands-alone). glauben an here is 'hold it to be true', said of one's own words (Duden glauben 2a 'für wahr, richtig halten'). Knowledge (#887, dev draft): E-VALBU has no 'hold true' Lesart with an; Lesart 7 (an + Akk, obligatory correlate daran) is the an-frame of DWDS 2b, and the Hauptsatz alternative has no Clause form."
 			}
 		}
 	],

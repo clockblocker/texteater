@@ -334,6 +334,26 @@
 				"title": "Duden: zutreffen",
 				"url": "https://www.duden.de/rechtschreibung/zutreffen",
 				"supports": "Target [bei]: zutreffen governs auf ('die Beschreibung trifft auf ihn zu'), not bei."
+			},
+			{
+				"title": "Duden: zutreffen",
+				"url": "https://www.duden.de/rechtschreibung/zutreffen",
+				"supports": "Target 14 Knowledge: trifft zu, traf zu, hat zugetroffen; 2 'auf jemanden anwendbar, für jemanden oder etwas passend sein' (trifft auf ihn zu; trifft hier nicht zu); Synonyme belong to sense 1 'stimmen'"
+			},
+			{
+				"title": "DWDS: zutreffen",
+				"url": "https://www.dwds.de/wb/zutreffen",
+				"supports": "Target 14 Knowledge: no Synonym/Gegensatz line for this sense"
+			},
+			{
+				"title": "OpenThesaurus: zutreffen",
+				"url": "https://www.openthesaurus.de/synonyme/zutreffen",
+				"supports": "Target 14 Knowledge: only the 'stimmen, richtig sein' synset; no relation listed for sense 2"
+			},
+			{
+				"title": "E-VALBU: zutreffen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 14 Knowledge: no E-VALBU entry, so the frame follows Duden"
 			}
 		]
 	},
@@ -1053,7 +1073,53 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🧩✅" },
+			"reading": {
+				"emojiDescription": "🧩✅",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "auf",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "trifft … zu is the particle verb zutreffen with its separated zu (de/verb-owns-its-scattered-members). Here zutreffen is Duden zutreffen 2 'auf jemanden anwendbar, passend sein' (diese Regel trifft hier nicht zu), not 1 'stimmen, richtig sein'."
 			},

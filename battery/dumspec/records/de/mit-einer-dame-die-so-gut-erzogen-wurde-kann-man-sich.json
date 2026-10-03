@@ -225,6 +225,26 @@
 				"title": "DWDS: überhaupt",
 				"url": "https://www.dwds.de/wb/%C3%BCberhaupt",
 				"supports": "überhaupt: Adverb; überhaupt nicht verstärkt eine Verneinung."
+			},
+			{
+				"title": "E-VALBU: erziehen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400741/1",
+				"supports": "Target 5 Knowledge: jemand/etwas erzieht jemanden/etwas irgendwie: K sub, K akk, (K adv Art und Weise)"
+			},
+			{
+				"title": "Duden: erziehen",
+				"url": "https://www.duden.de/rechtschreibung/erziehen",
+				"supports": "Target 5 Knowledge: erzieht, erzog, hat erzogen; 1 'Geist und Charakter bilden' (ein gut erzogenes Kind); Synonyme angewöhnen, anhalten zu, aufziehen, bilden"
+			},
+			{
+				"title": "OpenThesaurus: erziehen",
+				"url": "https://www.openthesaurus.de/synonyme/erziehen",
+				"supports": "Target 5 Knowledge: synset aufziehen · erziehen · großziehen · heranziehen · versorgen; no Gegenteil marker, no Oberbegriff"
+			},
+			{
+				"title": "DWDS: erziehen",
+				"url": "https://www.dwds.de/wb/erziehen",
+				"supports": "Target 5 Knowledge: no Synonym/Gegensatz line"
 			}
 		]
 	},
@@ -509,7 +529,80 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🧑‍🏫🧒" },
+			"reading": {
+				"emojiDescription": "🧑‍🏫🧒",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Adverbial",
+									"standIn": "Irgendwie"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "aufziehen",
+								"coreFeatures": {
+									"hasSepPrefix": "auf",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "großziehen",
+								"coreFeatures": {
+									"hasSepPrefix": "groß",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -559,7 +652,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "erzogen wurde is the process passive of erziehen, so participle and auxiliary are one VERB target, and the Surface records the whole passive with tense from the finite wurde (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole)."
+				"rationale": "erzogen wurde is the process passive of erziehen, so participle and auxiliary are one VERB target, and the Surface records the whole passive with tense from the finite wurde (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole). Knowledge (#887, dev draft): aufziehen and großziehen are raising a child, a shade broader than forming its character, so near."
 			}
 		},
 		{

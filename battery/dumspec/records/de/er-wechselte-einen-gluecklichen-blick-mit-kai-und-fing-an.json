@@ -245,6 +245,46 @@
 				"title": "OpenThesaurus: Glied",
 				"url": "https://www.openthesaurus.de/synonyme/Glied",
 				"supports": "Target 8 Knowledge: Anatomie synset Extremität · Glied · Gliedmaßen · (die) Gliedmaße; Oberbegriff Körperteil"
+			},
+			{
+				"title": "E-VALBU: wechseln II, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401197/1",
+				"supports": "Target 1 Knowledge: jemand/etwas wechselt jemanden/etwas: K sub, K akk"
+			},
+			{
+				"title": "Duden: wechseln",
+				"url": "https://www.duden.de/rechtschreibung/wechseln",
+				"supports": "Target 1 Knowledge: schwaches Verb; 1 'durch etwas anderes derselben Art ersetzen' (das Thema wechseln); Synonyme austauschen, auswechseln, erneuern, ersetzen"
+			},
+			{
+				"title": "DWDS: wechseln",
+				"url": "https://www.dwds.de/wb/wechseln",
+				"supports": "Target 1 Knowledge: 1b 'etw. aufgeben und etw. anderes derselben Art wählen' (den Gesprächsgegenstand wechseln)"
+			},
+			{
+				"title": "OpenThesaurus: wechseln",
+				"url": "https://www.openthesaurus.de/synonyme/wechseln",
+				"supports": "Target 1 Knowledge: no synset for this sense beyond übergehen (zu) / umsteigen (auf); no Oberbegriff, no Gegenteil"
+			},
+			{
+				"title": "E-VALBU: anfangen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400214/1",
+				"supports": "Target 6 Knowledge: jemand/etwas fängt etwas bzw. mit etwas an: K sub, K akk / K prp (Akk NP or Inf-S mit zu; mit + Dat or Inf-S mit zu, fak. Korrelat damit)"
+			},
+			{
+				"title": "Duden: anfangen",
+				"url": "https://www.duden.de/rechtschreibung/anfangen",
+				"supports": "Target 6 Knowledge: starkes Verb, sie fing an; 1a 'mit etwas beginnen' (fing wieder an zu paddeln); Synonyme angehen, anpacken, aufnehmen, beginnen"
+			},
+			{
+				"title": "OpenThesaurus: anfangen",
+				"url": "https://www.openthesaurus.de/synonyme/anfangen",
+				"supports": "Target 6 Knowledge: synset anfangen · beginnen · starten (mit) …; no Gegenteil on anfangen"
+			},
+			{
+				"title": "DWDS: anfangen",
+				"url": "https://www.dwds.de/wb/anfangen",
+				"supports": "Target 6 Knowledge: 1a ⟨jmd. fängt an zu [Infinitiv]⟩; no Gegensatz line"
 			}
 		]
 	},
@@ -303,7 +343,71 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🔄" },
+			"reading": {
+				"emojiDescription": "🔄",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "austauschen",
+								"coreFeatures": {
+									"hasSepPrefix": "aus",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "auswechseln",
+								"coreFeatures": {
+									"hasSepPrefix": "aus",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -566,7 +670,78 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "▶" },
+			"reading": {
+				"emojiDescription": "▶",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								},
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "mit",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "beginnen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -616,7 +791,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "anfangen with its separated particle (de/verb-owns-its-scattered-members). The zu-infinitives it governs are targets of their own."
+				"rationale": "anfangen with its separated particle (de/verb-owns-its-scattered-members). The zu-infinitives it governs are targets of their own. Knowledge (#887, dev draft): The Acc and mit alternatives (K akk / K prp) share one Slot with the zu-infinitive, whose correlate damit is optional."
 			}
 		},
 		{

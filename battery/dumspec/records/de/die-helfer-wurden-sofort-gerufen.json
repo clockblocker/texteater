@@ -25,13 +25,87 @@
 			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
 			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: rufen, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400840/2",
+				"supports": "Target 0 Knowledge: jemand/etwas ruft jemanden/etwas irgendwohin: K sub, K akk, (K adv direktivisch, optional, dropped)"
+			},
+			{
+				"title": "Duden: rufen",
+				"url": "https://www.duden.de/rechtschreibung/rufen",
+				"supports": "Target 0 Knowledge: ruft, rief, hat gerufen (starkes Verb); 'jemanden herbeirufen, jemanden, etwas kommen lassen' (die Polizei rufen)"
+			},
+			{
+				"title": "OpenThesaurus: rufen",
+				"url": "https://www.openthesaurus.de/synonyme/rufen",
+				"supports": "Target 0 Knowledge: synset herbeirufen · kommen lassen · zu sich bestellen · rufen; no Gegenteil"
+			},
+			{
+				"title": "DWDS: rufen",
+				"url": "https://www.dwds.de/wb/rufen",
+				"supports": "Target 0 Knowledge: no Synonym/Gegensatz line"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🗣🏃" },
+			"reading": {
+				"emojiDescription": "🗣🏃",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "herbeirufen",
+								"coreFeatures": {
+									"hasSepPrefix": "herbei",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "wurden is the passive auxiliary of gerufen, so the target is the whole passive [wurden, gerufen]. wurden gerufen is Duden rufen 'jemanden herbeirufen, jemanden kommen lassen', summoning, not shouting."
 			},

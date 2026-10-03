@@ -214,6 +214,26 @@
 				"title": "OpenThesaurus: Mann",
 				"url": "https://www.openthesaurus.de/synonyme/Mann",
 				"supports": "Target 3 Knowledge: synset Mann · Herr · Mannsbild · Mannsperson · Bursche · Kerl; Gegenteil Frau on Mann; Oberbegriff Mensch · Person (catch-all, not claimed)"
+			},
+			{
+				"title": "DWDS: eintreten",
+				"url": "https://www.dwds.de/wb/eintreten",
+				"supports": "Target 12 Knowledge: tritt ein, trat ein; 1 ⟨jmd. tritt (irgendwo) ein⟩ 'etw. betreten, sich ins Innere von etw. begeben'"
+			},
+			{
+				"title": "Duden: eintreten",
+				"url": "https://www.duden.de/rechtschreibung/eintreten",
+				"supports": "Target 12 Knowledge: starkes Verb; 1a 'in einen Raum hineingehen oder hereinkommen'; Synonyme betreten, hereinkommen, hereintreten, hineingehen"
+			},
+			{
+				"title": "OpenThesaurus: eintreten",
+				"url": "https://www.openthesaurus.de/synonyme/eintreten",
+				"supports": "Target 12 Knowledge: synset betreten · eintreten · hineingehen · reingehen · reinkommen …; no Gegenteil on that synset"
+			},
+			{
+				"title": "E-VALBU: eintreten",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 12 Knowledge: no E-VALBU entry"
 			}
 		]
 	},
@@ -843,7 +863,74 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "➡🚪" },
+			"reading": {
+				"emojiDescription": "➡🚪",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "betreten",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "hineingehen",
+								"coreFeatures": {
+									"hasSepPrefix": "hinein",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "hereinkommen",
+								"coreFeatures": {
+									"hasSepPrefix": "herein",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -893,7 +980,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "trat … ein is the particle verb eintreten; the particle is a member (de/verb-owns-its-scattered-members). DWDS eintreten 1, entering a room."
+				"rationale": "trat … ein is the particle verb eintreten; the particle is a member (de/verb-owns-its-scattered-members). DWDS eintreten 1, entering a room. Knowledge (#887, dev draft): The place is bracketed (optional) and dropped; hineingehen and hereinkommen add a speaker perspective, so near; clipped reingehen/reinkommen stay out."
 			}
 		}
 	],

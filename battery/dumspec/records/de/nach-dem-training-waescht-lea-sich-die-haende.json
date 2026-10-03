@@ -60,6 +60,26 @@
 				"title": "OpenThesaurus: Training",
 				"url": "https://www.openthesaurus.de/synonyme/Training",
 				"supports": "Target 1 Knowledge: synset Übung · Probe · Training · Vorübung (other synsets are the course sense: Kurs, Schulung)"
+			},
+			{
+				"title": "E-VALBU: waschen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401190/1",
+				"supports": "Target 2 Knowledge: jemand/etwas wäscht jemanden/etwas mit irgendetwas: K sub, K akk, (K adv Mittel mit + Dat)"
+			},
+			{
+				"title": "Duden: waschen",
+				"url": "https://www.duden.de/rechtschreibung/waschen",
+				"supports": "Target 2 Knowledge: wäscht, wusch, hat gewaschen (starkes Verb); 2a 'mit Wasser und Seife … reinigen' (sich die Hände waschen); Synonyme … reinigen"
+			},
+			{
+				"title": "DWDS: waschen",
+				"url": "https://www.dwds.de/wb/waschen",
+				"supports": "Target 2 Knowledge: 1b ⟨einen Körperteil, jmdn., sich waschen⟩; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: waschen",
+				"url": "https://www.openthesaurus.de/synonyme/waschen",
+				"supports": "Target 2 Knowledge: synsets only for dishes (spülen, abwaschen) and laundry; no Gegenteil"
 			}
 		]
 	},
@@ -176,9 +196,62 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🧼" },
+			"reading": {
+				"emojiDescription": "🧼",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "reinigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The dative sich alternates with any other dative in the same sense (wäscht dem Kind die Hände), so it is a PRON target of its own and not a member (de/verb-owns-its-scattered-members)."
+				"rationale": "The dative sich alternates with any other dative in the same sense (wäscht dem Kind die Hände), so it is a PRON target of its own and not a member (de/verb-owns-its-scattered-members). Knowledge (#887, dev draft): The free dative sich is no Slot; E-VALBU's optional Mittel adverbial (mit + Dat) has no stand-in and is left out."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -196,6 +196,26 @@
 				"title": "OpenThesaurus: Hauch",
 				"url": "https://www.openthesaurus.de/synonyme/Hauch",
 				"supports": "Target 8 Knowledge: synsets only for breath (Atem) and 'a trace' (Spur, Anflug); none for a draught"
+			},
+			{
+				"title": "E-VALBU: fühlen, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400616/2",
+				"supports": "Target 7 Knowledge: jemand fühlt etwas irgendwo: K sub, K akk (NP; dass-S, ob-S, w-S, HS mit fak. Korrelat es; Inf-S ohne zu ohne Korrelat), (K adv Ort statisch, dropped); 'spüren, verspüren'"
+			},
+			{
+				"title": "Duden: fühlen",
+				"url": "https://www.duden.de/rechtschreibung/fuehlen",
+				"supports": "Target 7 Knowledge: fühlt, fühlte, hat gefühlt (schwaches Verb); 1a 'körperlich spüren'; Synonyme bemerken, empfinden, erfahren, erleben"
+			},
+			{
+				"title": "OpenThesaurus: fühlen",
+				"url": "https://www.openthesaurus.de/synonyme/f%C3%BChlen",
+				"supports": "Target 7 Knowledge: synset empfinden · fühlen · spüren · verspüren · wahrnehmen; Oberbegriff (sinnlich oder geistig) wahrnehmen, also a member, so no hypernym; no Gegenteil"
+			},
+			{
+				"title": "DWDS: fühlen",
+				"url": "https://www.dwds.de/wb/f%C3%BChlen",
+				"supports": "Target 7 Knowledge: no Gegensatz line"
 			}
 		]
 	},
@@ -539,7 +559,103 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🖐" },
+			"reading": {
+				"emojiDescription": "🖐",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "BareInfinitive"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Optional"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "spüren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "verspüren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "empfinden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -583,6 +699,9 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): empfinden leans to inner feeling, so near; the Hauptsatz alternative has no Clause form."
 			}
 		},
 		{

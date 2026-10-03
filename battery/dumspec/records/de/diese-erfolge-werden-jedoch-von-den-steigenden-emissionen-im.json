@@ -40,15 +40,89 @@
 				"hash": "c86ab32a13fa94be"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: auffressen",
+				"url": "https://www.duden.de/rechtschreibung/auffressen",
+				"supports": "Target 0 Knowledge: frisst auf, fraß auf, hat aufgefressen (starkes Verb); Synonyme aufschlingen, ausessen, konsumieren, leer essen (literal eating only)"
+			},
+			{
+				"title": "DWDS: auffressen",
+				"url": "https://www.dwds.de/wb/auffressen",
+				"supports": "Target 0 Knowledge: 1 'etw. fressen, bis nichts mehr da ist', 1a übertragen 'jmdn., etw. verschlingen' (Inflation die Ersparnisse), 1b 'jmdn. physisch ruinieren'"
+			},
+			{
+				"title": "OpenThesaurus: auffressen",
+				"url": "https://www.openthesaurus.de/synonyme/auffressen",
+				"supports": "Target 0 Knowledge: synset aufessen, auffressen, fressen, verschlingen, verspeisen, vertilgen …; Oberbegriff essen / (sich) einverleiben, which contains fressen, a member of the synset itself; no Gegenteil"
+			},
+			{
+				"title": "E-VALBU: auffressen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 0 Knowledge: no E-VALBU entry"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 25],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🍖🦴" },
+			"reading": {
+				"emojiDescription": "🍖🦴",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "verschlingen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Emissions eating up the gains is the figurative use (1a, 1b) of DWDS auffressen 1, 'etw. fressen, bis nichts mehr da ist', one Reading under ADR 0031. Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the fragment Verkehrs- was two Segments, Verkehrs and -, and is now one that keeps its hyphen (de/suspended-compound-completion). No target changed."
+				"rationale": "Emissions eating up the gains is the figurative use (1a, 1b) of DWDS auffressen 1, 'etw. fressen, bis nichts mehr da ist', one Reading under ADR 0031. Segment fix decided by an agent under the user's delegation (2026-10-02, #853): the fragment Verkehrs- was two Segments, Verkehrs and -, and is now one that keeps its hyphen (de/suspended-compound-completion). No target changed. Knowledge (#887, dev draft): Only verschlingen, an OT synset member, also carries the figurative use (die Inflation verschlang die Ersparnisse); the eating-only members and the eating Oberbegriff do not hold for the whole Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

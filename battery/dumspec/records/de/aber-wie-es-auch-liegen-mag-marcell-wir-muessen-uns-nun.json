@@ -399,6 +399,26 @@
 				"title": "OpenThesaurus: so oder so",
 				"url": "https://www.openthesaurus.de/synonyme/so%20oder%20so",
 				"supports": "Target 21 Knowledge: synset '(ganz) egal wie man's macht · in jedem Fall · wie man es auch macht · so oder so'; no entry in DWDS"
+			},
+			{
+				"title": "Duden: mögen",
+				"url": "https://www.duden.de/rechtschreibung/moegen",
+				"supports": "Target 5 Knowledge: 1b 'zum Ausdruck der Einräumung', mit Infinitiv als Modalverb; mochte, hat … mögen"
+			},
+			{
+				"title": "DWDS: mögen",
+				"url": "https://www.dwds.de/wb/m%C3%B6gen",
+				"supports": "Target 5 Knowledge: 4a ⟨mögen + Infinitiv⟩ concessive; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: mögen",
+				"url": "https://www.openthesaurus.de/synonyme/m%C3%B6gen",
+				"supports": "Target 5 Knowledge: only liking/wanting synsets and the adverb synset vielleicht/möglicherweise (mögen as epistemic modal); nothing for concessive mögen"
+			},
+			{
+				"title": "E-VALBU: mögen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400795",
+				"supports": "Target 5 Knowledge: only Vollverb Lesarten; the modal frame follows Duden"
 			}
 		]
 	},
@@ -629,7 +649,44 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🤷" },
+			"reading": {
+				"emojiDescription": "🤷",
+				"knowledge": {
+					"conjugationClass": ["Mixed"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Clause",
+									"form": "BareInfinitive"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

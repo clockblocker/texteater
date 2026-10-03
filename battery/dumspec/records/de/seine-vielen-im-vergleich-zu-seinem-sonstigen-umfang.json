@@ -246,6 +246,31 @@
 				"title": "OpenThesaurus: Auge",
 				"url": "https://www.openthesaurus.de/synonyme/Auge",
 				"supports": "Target 13 Knowledge: synset Auge · Sehwerkzeug · Oculus · Sehorgan · Gucker; Oberbegriff Körperteil | Sinnesorgan"
+			},
+			{
+				"title": "DWDS: flimmern",
+				"url": "https://www.dwds.de/wb/flimmern",
+				"supports": "Target 9 Knowledge: flimmert, flimmerte, hat geflimmert; 1 'unruhig, funkelnd glänzen' ● 'sich sichtbar zitternd, unruhig bewegen'"
+			},
+			{
+				"title": "Duden: flimmern",
+				"url": "https://www.duden.de/rechtschreibung/flimmern",
+				"supports": "Target 9 Knowledge: schwaches Verb; Synonyme blinken, flittern, funkeln, glitzern (light only)"
+			},
+			{
+				"title": "OpenThesaurus: flimmern",
+				"url": "https://www.openthesaurus.de/synonyme/flimmern",
+				"supports": "Target 9 Knowledge: synset blinken · flackern · flimmern · flirren; Oberbegriff leuchten, scheinen, strahlen; no Gegenteil"
+			},
+			{
+				"title": "DWDS: flirren",
+				"url": "https://www.dwds.de/wb/flirren",
+				"supports": "Target 9 Knowledge: flirren has the same two senses (glänzen, flimmern ● sich sichtbar zitternd bewegen)"
+			},
+			{
+				"title": "E-VALBU: flimmern",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 9 Knowledge: no E-VALBU entry"
 			}
 		]
 	},
@@ -730,7 +755,50 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "✨〰" },
+			"reading": {
+				"emojiDescription": "✨〰",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "flirren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -776,7 +844,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "Ruled on #743 (VP-B8). Literal flimmern with Beine as subject. The idiom jemandem flimmert es vor den Augen needs its expletive es, which a real subject replaces, so the words resolve one by one (de/idiom). The legs' restless trembling is DWDS flimmern 1a, 'sich sichtbar zitternd, unruhig bewegen', merged with 1, 'unruhig, funkelnd glänzen', under ADR 0031."
+				"rationale": "Ruled on #743 (VP-B8). Literal flimmern with Beine as subject. The idiom jemandem flimmert es vor den Augen needs its expletive es, which a real subject replaces, so the words resolve one by one (de/idiom). The legs' restless trembling is DWDS flimmern 1a, 'sich sichtbar zitternd, unruhig bewegen', merged with 1, 'unruhig, funkelnd glänzen', under ADR 0031. Knowledge (#887, dev draft): The free dative ihm is no Slot; light-only listings and the light Oberbegriff fail the trembling half of the merged Reading."
 			}
 		},
 		{

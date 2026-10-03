@@ -240,6 +240,46 @@
 				"title": "OpenThesaurus: ein Gespräch führen",
 				"url": "https://www.openthesaurus.de/synonyme/ein%20Gespr%C3%A4ch%20f%C3%BChren",
 				"supports": "Target 3 Knowledge: no synset (also none for 'Gespräch führen'); DWDS has no entry for the phrase"
+			},
+			{
+				"title": "E-VALBU: wechseln II, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401197/1",
+				"supports": "Target 13 Knowledge: jemand/etwas wechselt jemanden/etwas: K sub, K akk"
+			},
+			{
+				"title": "Duden: wechseln",
+				"url": "https://www.duden.de/rechtschreibung/wechseln",
+				"supports": "Target 13 Knowledge: schwaches Verb; 1 'durch etwas anderes derselben Art ersetzen' (das Thema wechseln); Synonyme austauschen, auswechseln, erneuern, ersetzen"
+			},
+			{
+				"title": "DWDS: wechseln",
+				"url": "https://www.dwds.de/wb/wechseln",
+				"supports": "Target 13 Knowledge: 1b 'etw. aufgeben und etw. anderes derselben Art wählen' (den Gesprächsgegenstand wechseln)"
+			},
+			{
+				"title": "OpenThesaurus: wechseln",
+				"url": "https://www.openthesaurus.de/synonyme/wechseln",
+				"supports": "Target 13 Knowledge: no synset for this sense beyond übergehen (zu) / umsteigen (auf); no Oberbegriff, no Gegenteil"
+			},
+			{
+				"title": "Duden: verstummen",
+				"url": "https://www.duden.de/rechtschreibung/verstummen",
+				"supports": "Target 7 Knowledge: verstummt, verstummte, ist verstummt; 'aufhören zu sprechen' (also of guns, loudspeakers); Synonyme nicht mehr reden, nichts mehr sagen, schweigen, aufhören"
+			},
+			{
+				"title": "DWDS: verstummen",
+				"url": "https://www.dwds.de/wb/verstummen",
+				"supports": "Target 7 Knowledge: 'aufhören zu sprechen, zu tönen, stumm werden' (die Menge, das Geräusch verstummte)"
+			},
+			{
+				"title": "OpenThesaurus: verstummen",
+				"url": "https://www.openthesaurus.de/synonyme/verstummen",
+				"supports": "Target 7 Knowledge: synset verstummen · aufhören zu reden · in Schweigen verfallen · still werden … (phrases, no single-word Lemma); no Gegenteil"
+			},
+			{
+				"title": "E-VALBU: verstummen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 7 Knowledge: no E-VALBU entry"
 			}
 		]
 	},
@@ -683,7 +723,50 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🔇" },
+			"reading": {
+				"emojiDescription": "🔇",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "schweigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -729,7 +812,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "First infinitive under ohne … zu."
+				"rationale": "First infinitive under ohne … zu. Knowledge (#887, dev draft): schweigen is the state, verstummen its onset, so near."
 			}
 		},
 		{
@@ -1029,7 +1112,71 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🔄" },
+			"reading": {
+				"emojiDescription": "🔄",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "austauschen",
+								"coreFeatures": {
+									"hasSepPrefix": "aus",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "auswechseln",
+								"coreFeatures": {
+									"hasSepPrefix": "aus",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

@@ -400,6 +400,26 @@
 				"title": "Duden, Richtiges und gutes Deutsch: voll",
 				"url": "https://grammatisch.de-academic.com/50704/Voll",
 				"supports": "a bare noun after voll stays uninflected (voll Wasser)."
+			},
+			{
+				"title": "E-VALBU: verzeihen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401106/1",
+				"supports": "Target 28 Knowledge: jemand/etwas verzeiht jemandem/etwas etwas: K sub, (K akk: NP, dass-S, Inf-S mit zu, fak. Korrelat es), (K dat); 'vergeben'"
+			},
+			{
+				"title": "Duden: verzeihen",
+				"url": "https://www.duden.de/rechtschreibung/verzeihen",
+				"supports": "Target 28 Knowledge: verzeiht, verzieh, hat verziehen (starkes Verb); Synonyme durchgehen lassen, entschuldigen, freisprechen, lossprechen"
+			},
+			{
+				"title": "OpenThesaurus: verzeihen",
+				"url": "https://www.openthesaurus.de/synonyme/verzeihen",
+				"supports": "Target 28 Knowledge: synsets amnestieren, begnadigen, entschuldigen, nachsehen, vergeben, verzeihen and (jemandem etwas) vergeben/nachsehen/verzeihen; the Gegenteil übelnehmen sits on nachsehen only"
+			},
+			{
+				"title": "DWDS: verzeihen",
+				"url": "https://www.dwds.de/wb/verzeihen",
+				"supports": "Target 28 Knowledge: no Gegensatz line"
 			}
 		]
 	},
@@ -1700,7 +1720,104 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🕊" },
+			"reading": {
+				"emojiDescription": "🕊",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "vergeben",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "entschuldigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "nachsehen",
+								"coreFeatures": {
+									"hasSepPrefix": "nach",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1750,7 +1867,7 @@
 				"expletiveEvidence": null
 			},
 			"notes": {
-				"rationale": "verziehen werden is the process passive infinitive of verzeihen under the modal kann: participle and werden are one VERB target, with no finite features of the modal (de/verbal-participle, de/verbal-surface-is-whole)."
+				"rationale": "verziehen werden is the process passive infinitive of verzeihen under the modal kann: participle and werden are one VERB target, with no finite features of the modal (de/verbal-participle, de/verbal-surface-is-whole). Knowledge (#887, dev draft): nachsehen is the milder 'overlook', so near."
 			}
 		},
 		{

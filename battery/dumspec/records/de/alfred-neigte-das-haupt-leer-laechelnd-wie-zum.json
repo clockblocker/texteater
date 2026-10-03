@@ -339,6 +339,26 @@
 				"title": "OpenThesaurus: lächelnd",
 				"url": "https://www.openthesaurus.de/synonyme/l%C3%A4chelnd",
 				"supports": "Target 4 Knowledge: no synset: no relation listed"
+			},
+			{
+				"title": "Duden: wenden",
+				"url": "https://www.duden.de/rechtschreibung/wenden",
+				"supports": "Target 18 Knowledge: 3 'in eine andere Richtung drehen' (den Kopf, sich [zur Seite] wenden), schwaches und starkes Verb: 'er wandte, seltener wendete sich zu ihr'; Synonyme belong to 'sich ändern'"
+			},
+			{
+				"title": "E-VALBU: wenden, sich, Lesart 4",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401213/4",
+				"supports": "Target 18 Knowledge: E-VALBU has only the reflexive entry (sich irgendwohin wenden, K adv required); the Lemma here is plain wenden, so the frame follows Duden"
+			},
+			{
+				"title": "OpenThesaurus: wenden",
+				"url": "https://www.openthesaurus.de/synonyme/wenden",
+				"supports": "Target 18 Knowledge: synsets only for flipping (auf die andere Seite drehen, umdrehen), U-turns and invertieren; nothing for turning aside; no Gegenteil"
+			},
+			{
+				"title": "DWDS: wenden",
+				"url": "https://www.dwds.de/wb/wenden",
+				"supports": "Target 18 Knowledge: no Synonym/Gegensatz line for this sense"
 			}
 		]
 	},
@@ -1357,9 +1377,47 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "↪" },
+			"reading": {
+				"emojiDescription": "↪",
+				"knowledge": {
+					"conjugationClass": ["Mixed", "Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"valency": "Authored",
+					"conjugationClass": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "wandte sich is 'turned round'. Duden files sich [zur Seite] wenden under the same sense as den Kopf wenden, so sich fills an object slot a non-reflexive noun can fill: wenden is not inherently reflexive and sich is a PRON of its own (de/verb-owns-its-scattered-members). Ruled on #743 (MB-B1, A4). wandte sich is Duden wenden 3 'in eine andere Richtung drehen' (sich zur Seite wenden), not 1 'auf die andere Seite drehen'."
+				"rationale": "wandte sich is 'turned round'. Duden files sich [zur Seite] wenden under the same sense as den Kopf wenden, so sich fills an object slot a non-reflexive noun can fill: wenden is not inherently reflexive and sich is a PRON of its own (de/verb-owns-its-scattered-members). Ruled on #743 (MB-B1, A4). wandte sich is Duden wenden 3 'in eine andere Richtung drehen' (sich zur Seite wenden), not 1 'auf die andere Seite drehen'. Knowledge (#887, dev draft): sich fills the Acc Slot (Duden files sich wenden with den Kopf wenden); the bracketed direction is optional and dropped."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
