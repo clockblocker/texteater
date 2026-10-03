@@ -42,8 +42,12 @@ import {
 } from "../validation/semantics.js";
 import {
 	isLemmaSyncretism,
+	isSurfaceSyncretism,
+	isSurfaceSyncretismView,
 	isSyncretismView,
 	lemmaSyncretismError,
+	surfaceSyncretismError,
+	surfaceSyncretismViewError,
 	syncretismViewError,
 } from "../validation/syncretism.js";
 import { DeAdpositionFeatureBagsSchema } from "./concrete-language/de/lexeme/adposition.js";
@@ -154,10 +158,35 @@ const surfaceFeaturesSchema = z
 	.refine(hasMarkedFeature, { error: nonEmptyFeatureBagError })
 	.nullable();
 
-/** A Core Feature of the route, named in a Syncretism's `syncretic` list. */
-type CoreFeatureName<C extends z.core.$ZodType> = z.ZodEnum<{
+/** A feature of a route's feature bag, named in a Syncretism's `syncretic` list. */
+type FeatureName<C extends z.core.$ZodType> = z.ZodEnum<{
 	[Name in Extract<keyof z.output<C>, string>]: Name;
 }>;
+/** The feature names of a feature bag schema, for a Syncretism's `syncretic` list. */
+function featureNameSchema(bag: z.core.$ZodType) {
+	const shape = (bag as { shape?: unknown }).shape;
+	const [first, ...rest] =
+		shape !== null && typeof shape === "object" ? Object.keys(shape) : [];
+	if (first === undefined)
+		throw Error("A Syncretism needs a route whose features are named");
+	return z.enum([first, ...rest]);
+}
+/**
+ * German PRON opts in first: only the referent tells some of its pillar
+ * cells, and some of a stem's Surfaces, apart (system ADR 0046). Other
+ * routes reject both fields.
+ */
+function allowsSyncretism(route: {
+	language: string;
+	family: string;
+	kind: string;
+}): boolean {
+	return (
+		route.language === "de" &&
+		route.family === "Lexeme" &&
+		route.kind === "PRON"
+	);
+}
 /**
  * A Lemma of a route that allows Syncretisms (system ADR 0046). It is a plain
  * Lemma, a view that adds `syncretic`, or a Syncretism that also holds its
@@ -169,9 +198,7 @@ type SyncretizableLemmaSchema<
 	C extends z.core.$ZodType,
 > = z.ZodObject<
 	P["shape"] & {
-		syncretic: z.ZodOptional<
-			z.ZodTuple<[CoreFeatureName<C>], CoreFeatureName<C>>
-		>;
+		syncretic: z.ZodOptional<z.ZodTuple<[FeatureName<C>], FeatureName<C>>>;
 		syncretized: z.ZodOptional<z.ZodTuple<[P, P], P>>;
 	},
 	z.core.$strict
@@ -180,12 +207,7 @@ function syncretizableLemmaSchema(
 	plainLemma: z.ZodObject,
 	core: z.core.$ZodType,
 ) {
-	const shape = (core as { shape?: unknown }).shape;
-	const [first, ...rest] =
-		shape !== null && typeof shape === "object" ? Object.keys(shape) : [];
-	if (first === undefined)
-		throw Error("A Syncretism needs a route whose Core names its features");
-	const name = z.enum([first, ...rest]);
+	const name = featureNameSchema(core);
 	return plainLemma
 		.extend({
 			syncretic: z.tuple([name], name).optional(),
@@ -195,6 +217,39 @@ function syncretizableLemmaSchema(
 		})
 		.refine(isSyncretismView, { error: syncretismViewError })
 		.refine(isLemmaSyncretism, { error: lemmaSyncretismError });
+}
+/**
+ * A Surface of a route that allows Syncretisms (system ADR 0046), shaped as
+ * its Lemma is: a plain Surface, a view whose `syncretic` list names the
+ * inflectional features it leaves open, or a Syncretism that also holds its
+ * Surfaces in `syncretized`. Each unit passes the route's Surface checks.
+ */
+type SyncretizableSurfaceSchema<
+	P extends z.ZodObject,
+	I extends z.core.$ZodType,
+> = z.ZodObject<
+	P["shape"] & {
+		syncretic: z.ZodOptional<z.ZodTuple<[FeatureName<I>], FeatureName<I>>>;
+		syncretized: z.ZodOptional<z.ZodTuple<[P, P], P>>;
+	},
+	z.core.$strict
+>;
+function syncretizableSurfaceSchema(
+	plainSurface: z.ZodObject,
+	inflectional: z.core.$ZodType,
+	refine: <S extends z.ZodObject>(schema: S) => S,
+) {
+	const name = featureNameSchema(inflectional);
+	const unit = refine(plainSurface);
+	return refine(
+		z.strictObject({
+			...plainSurface.shape,
+			syncretic: z.tuple([name], name).optional(),
+			syncretized: z.tuple([unit, unit], unit).optional(),
+		}),
+	)
+		.refine(isSurfaceSyncretismView, { error: surfaceSyncretismViewError })
+		.refine(isSurfaceSyncretism, { error: surfaceSyncretismError });
 }
 
 /** Missing inflectional schemas omit the Surface field; present schemas retain their refinements. */
@@ -216,12 +271,7 @@ function buildBaseUnitSchemas<
 				: normalizedFormSchema,
 		coreFeatures: core,
 	});
-	// German PRON opts in first: only the referent tells some of its pillar
-	// cells apart (system ADR 0046). Other routes reject both fields.
-	const syncretizable =
-		route.language === "de" &&
-		route.family === "Lexeme" &&
-		route.kind === "PRON";
+	const syncretizable = allowsSyncretism(route);
 	// The conditional type keeps the concrete schema exports exact; runtime
 	// construction uses the same route condition.
 	const Lemma = (
@@ -462,31 +512,44 @@ export function buildUnitSchemas<
 		route.language === "de" &&
 		lexemeOrLocution &&
 		["PRON", "DET"].includes(route.kind);
-	let Surface = base.Surface;
+	const surfaceChecks: [(input: unknown) => boolean, () => string][] = [];
 	if (route.family === "Foreign")
-		Surface = Surface.refine(isForeignSurface, {
-			error: foreignSurfaceError,
-		});
+		surfaceChecks.push([isForeignSurface, foreignSurfaceError]);
 	if (comparability)
-		Surface = Surface.refine(isComparabilitySurface, {
-			error: comparabilitySurfaceError,
-		});
+		surfaceChecks.push([isComparabilitySurface, comparabilitySurfaceError]);
 	if (closedClass)
-		Surface = Surface.refine(isGermanClosedClassSurface, {
-			error: germanClosedClassSurfaceError,
-		});
-	if (noun)
-		Surface = Surface.refine(isGermanNounSurface, {
-			error: germanNounSurfaceError,
-		});
+		surfaceChecks.push([
+			isGermanClosedClassSurface,
+			germanClosedClassSurfaceError,
+		]);
+	if (noun) surfaceChecks.push([isGermanNounSurface, germanNounSurfaceError]);
 	if (properNoun)
-		Surface = Surface.refine(isGermanProperNounSurface, {
-			error: germanProperNounSurfaceError,
-		});
+		surfaceChecks.push([
+			isGermanProperNounSurface,
+			germanProperNounSurfaceError,
+		]);
 	if (verbal)
-		Surface = Surface.refine(isGermanVerbalSurface, {
-			error: germanVerbalSurfaceError,
-		});
+		surfaceChecks.push([isGermanVerbalSurface, germanVerbalSurfaceError]);
+	const refineSurface = <S extends z.ZodObject>(schema: S): S =>
+		surfaceChecks.reduce(
+			(refined, [check, error]) => refined.refine(check, { error }),
+			schema,
+		);
+	// The conditional type keeps the concrete schema exports exact; runtime
+	// construction uses the same route condition.
+	const Surface = (
+		allowsSyncretism(route) && inflectional !== undefined
+			? syncretizableSurfaceSchema(
+					base.Surface,
+					inflectional,
+					refineSurface,
+				)
+			: refineSurface(base.Surface)
+	) as `${L}/${F}/${K}` extends "de/Lexeme/PRON"
+		? I extends z.core.$ZodType
+			? SyncretizableSurfaceSchema<typeof base.Surface, I>
+			: typeof base.Surface
+		: typeof base.Surface;
 	let Attestation = base.Attestation.extend({
 		surface: Surface,
 		...(lexemeArticleOwner

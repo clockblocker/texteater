@@ -47,8 +47,12 @@ import {
 } from "./semantics.js";
 import {
 	isLemmaSyncretism,
+	isSurfaceSyncretism,
+	isSurfaceSyncretismView,
 	isSyncretismView,
 	lemmaSyncretismError,
+	surfaceSyncretismError,
+	surfaceSyncretismViewError,
 	syncretismViewError,
 } from "./syncretism.js";
 
@@ -161,6 +165,20 @@ export const operationTable = [
 		implementation: isLemmaSyncretism,
 		error: lemmaSyncretismError,
 		name: "dumling.syncretism.lemma",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isSurfaceSyncretismView,
+		error: surfaceSyncretismViewError,
+		name: "dumling.syncretism.surface-view",
+		version: 1,
+	},
+	{
+		construct: "custom",
+		implementation: isSurfaceSyncretism,
+		error: surfaceSyncretismError,
+		name: "dumling.syncretism.surface",
 		version: 1,
 	},
 	{

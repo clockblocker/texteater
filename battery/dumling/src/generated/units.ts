@@ -2504,6 +2504,721 @@ export interface UnitMap {
 					| null;
 				"number[psor]": ("Plur" | "Sing") | null;
 			} | null;
+			syncretic?:
+				| [
+						(
+							| "case"
+							| "gender"
+							| "number"
+							| "gender[psor]"
+							| "number[psor]"
+						),
+						...Array<
+							| "case"
+							| "gender"
+							| "number"
+							| "gender[psor]"
+							| "number[psor]"
+						>,
+				  ]
+				| undefined;
+			syncretized?:
+				| [
+						{
+							unitKind: "Surface";
+							language: "de";
+							lemma: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+								syncretic?:
+									| [
+											(
+												| "case"
+												| "number"
+												| "person"
+												| "polite"
+												| "poss"
+												| "pronType"
+												| "gender"
+											),
+											...Array<
+												| "case"
+												| "number"
+												| "person"
+												| "polite"
+												| "poss"
+												| "pronType"
+												| "gender"
+											>,
+									  ]
+									| undefined;
+								syncretized?:
+									| [
+											{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											},
+											{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											},
+											...Array<{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											}>,
+									  ]
+									| undefined;
+							};
+							normalizedSurface: string;
+							spelling:
+								| { kind: "Canonical" }
+								| {
+										kind: "Variant";
+										variantTags: [
+											(
+												| "Licensed"
+												| "Historical"
+												| "Regional"
+												| "Expressive"
+											),
+											...Array<
+												| "Licensed"
+												| "Historical"
+												| "Regional"
+												| "Expressive"
+											>,
+										];
+								  };
+							surfaceFeatures: {
+								historicalStatus: "Archaic" | null;
+							} | null;
+							inflectionalFeatures: {
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								number: ("Plur" | "Sing") | null;
+								"gender[psor]":
+									| (
+											| ("Fem" | "Masc" | "Neut")
+											| [
+													"Fem" | "Masc" | "Neut",
+													...Array<
+														"Fem" | "Masc" | "Neut"
+													>,
+											  ]
+									  )
+									| null;
+								"number[psor]": ("Plur" | "Sing") | null;
+							} | null;
+						},
+						{
+							unitKind: "Surface";
+							language: "de";
+							lemma: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+								syncretic?:
+									| [
+											(
+												| "case"
+												| "number"
+												| "person"
+												| "polite"
+												| "poss"
+												| "pronType"
+												| "gender"
+											),
+											...Array<
+												| "case"
+												| "number"
+												| "person"
+												| "polite"
+												| "poss"
+												| "pronType"
+												| "gender"
+											>,
+									  ]
+									| undefined;
+								syncretized?:
+									| [
+											{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											},
+											{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											},
+											...Array<{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											}>,
+									  ]
+									| undefined;
+							};
+							normalizedSurface: string;
+							spelling:
+								| { kind: "Canonical" }
+								| {
+										kind: "Variant";
+										variantTags: [
+											(
+												| "Licensed"
+												| "Historical"
+												| "Regional"
+												| "Expressive"
+											),
+											...Array<
+												| "Licensed"
+												| "Historical"
+												| "Regional"
+												| "Expressive"
+											>,
+										];
+								  };
+							surfaceFeatures: {
+								historicalStatus: "Archaic" | null;
+							} | null;
+							inflectionalFeatures: {
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								number: ("Plur" | "Sing") | null;
+								"gender[psor]":
+									| (
+											| ("Fem" | "Masc" | "Neut")
+											| [
+													"Fem" | "Masc" | "Neut",
+													...Array<
+														"Fem" | "Masc" | "Neut"
+													>,
+											  ]
+									  )
+									| null;
+								"number[psor]": ("Plur" | "Sing") | null;
+							} | null;
+						},
+						...Array<{
+							unitKind: "Surface";
+							language: "de";
+							lemma: {
+								unitKind: "Lemma";
+								language: "de";
+								family: "Lexeme";
+								kind: "PRON";
+								canonicalForm: string;
+								coreFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									number: ("Plur" | "Sing") | null;
+									person: ("1" | "2" | "3") | null;
+									polite: "Form" | null;
+									poss: "Yes" | null;
+									pronType:
+										| (
+												| "Dem"
+												| "Ind"
+												| "Int"
+												| "Neg"
+												| "Prs"
+												| "Rcp"
+												| "Rel"
+												| "Tot"
+										  )
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+								};
+								syncretic?:
+									| [
+											(
+												| "case"
+												| "number"
+												| "person"
+												| "polite"
+												| "poss"
+												| "pronType"
+												| "gender"
+											),
+											...Array<
+												| "case"
+												| "number"
+												| "person"
+												| "polite"
+												| "poss"
+												| "pronType"
+												| "gender"
+											>,
+									  ]
+									| undefined;
+								syncretized?:
+									| [
+											{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											},
+											{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											},
+											...Array<{
+												unitKind: "Lemma";
+												language: "de";
+												family: "Lexeme";
+												kind: "PRON";
+												canonicalForm: string;
+												coreFeatures: {
+													case:
+														| (
+																| "Acc"
+																| "Dat"
+																| "Gen"
+																| "Nom"
+														  )
+														| null;
+													number:
+														| ("Plur" | "Sing")
+														| null;
+													person:
+														| ("1" | "2" | "3")
+														| null;
+													polite: "Form" | null;
+													poss: "Yes" | null;
+													pronType:
+														| (
+																| "Dem"
+																| "Ind"
+																| "Int"
+																| "Neg"
+																| "Prs"
+																| "Rcp"
+																| "Rel"
+																| "Tot"
+														  )
+														| null;
+													gender:
+														| (
+																| "Fem"
+																| "Masc"
+																| "Neut"
+														  )
+														| null;
+												};
+											}>,
+									  ]
+									| undefined;
+							};
+							normalizedSurface: string;
+							spelling:
+								| { kind: "Canonical" }
+								| {
+										kind: "Variant";
+										variantTags: [
+											(
+												| "Licensed"
+												| "Historical"
+												| "Regional"
+												| "Expressive"
+											),
+											...Array<
+												| "Licensed"
+												| "Historical"
+												| "Regional"
+												| "Expressive"
+											>,
+										];
+								  };
+							surfaceFeatures: {
+								historicalStatus: "Archaic" | null;
+							} | null;
+							inflectionalFeatures: {
+								case: ("Acc" | "Dat" | "Gen" | "Nom") | null;
+								gender: ("Fem" | "Masc" | "Neut") | null;
+								number: ("Plur" | "Sing") | null;
+								"gender[psor]":
+									| (
+											| ("Fem" | "Masc" | "Neut")
+											| [
+													"Fem" | "Masc" | "Neut",
+													...Array<
+														"Fem" | "Masc" | "Neut"
+													>,
+											  ]
+									  )
+									| null;
+								"number[psor]": ("Plur" | "Sing") | null;
+							} | null;
+						}>,
+				  ]
+				| undefined;
 		};
 		Reading: {
 			unitKind: "Reading";
@@ -2836,6 +3551,739 @@ export interface UnitMap {
 						| null;
 					"number[psor]": ("Plur" | "Sing") | null;
 				} | null;
+				syncretic?:
+					| [
+							(
+								| "case"
+								| "gender"
+								| "number"
+								| "gender[psor]"
+								| "number[psor]"
+							),
+							...Array<
+								| "case"
+								| "gender"
+								| "number"
+								| "gender[psor]"
+								| "number[psor]"
+							>,
+					  ]
+					| undefined;
+				syncretized?:
+					| [
+							{
+								unitKind: "Surface";
+								language: "de";
+								lemma: {
+									unitKind: "Lemma";
+									language: "de";
+									family: "Lexeme";
+									kind: "PRON";
+									canonicalForm: string;
+									coreFeatures: {
+										case:
+											| ("Acc" | "Dat" | "Gen" | "Nom")
+											| null;
+										number: ("Plur" | "Sing") | null;
+										person: ("1" | "2" | "3") | null;
+										polite: "Form" | null;
+										poss: "Yes" | null;
+										pronType:
+											| (
+													| "Dem"
+													| "Ind"
+													| "Int"
+													| "Neg"
+													| "Prs"
+													| "Rcp"
+													| "Rel"
+													| "Tot"
+											  )
+											| null;
+										gender:
+											| ("Fem" | "Masc" | "Neut")
+											| null;
+									};
+									syncretic?:
+										| [
+												(
+													| "case"
+													| "number"
+													| "person"
+													| "polite"
+													| "poss"
+													| "pronType"
+													| "gender"
+												),
+												...Array<
+													| "case"
+													| "number"
+													| "person"
+													| "polite"
+													| "poss"
+													| "pronType"
+													| "gender"
+												>,
+										  ]
+										| undefined;
+									syncretized?:
+										| [
+												{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												},
+												{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												},
+												...Array<{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												}>,
+										  ]
+										| undefined;
+								};
+								normalizedSurface: string;
+								spelling:
+									| { kind: "Canonical" }
+									| {
+											kind: "Variant";
+											variantTags: [
+												(
+													| "Licensed"
+													| "Historical"
+													| "Regional"
+													| "Expressive"
+												),
+												...Array<
+													| "Licensed"
+													| "Historical"
+													| "Regional"
+													| "Expressive"
+												>,
+											];
+									  };
+								surfaceFeatures: {
+									historicalStatus: "Archaic" | null;
+								} | null;
+								inflectionalFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									number: ("Plur" | "Sing") | null;
+									"gender[psor]":
+										| (
+												| ("Fem" | "Masc" | "Neut")
+												| [
+														"Fem" | "Masc" | "Neut",
+														...Array<
+															| "Fem"
+															| "Masc"
+															| "Neut"
+														>,
+												  ]
+										  )
+										| null;
+									"number[psor]": ("Plur" | "Sing") | null;
+								} | null;
+							},
+							{
+								unitKind: "Surface";
+								language: "de";
+								lemma: {
+									unitKind: "Lemma";
+									language: "de";
+									family: "Lexeme";
+									kind: "PRON";
+									canonicalForm: string;
+									coreFeatures: {
+										case:
+											| ("Acc" | "Dat" | "Gen" | "Nom")
+											| null;
+										number: ("Plur" | "Sing") | null;
+										person: ("1" | "2" | "3") | null;
+										polite: "Form" | null;
+										poss: "Yes" | null;
+										pronType:
+											| (
+													| "Dem"
+													| "Ind"
+													| "Int"
+													| "Neg"
+													| "Prs"
+													| "Rcp"
+													| "Rel"
+													| "Tot"
+											  )
+											| null;
+										gender:
+											| ("Fem" | "Masc" | "Neut")
+											| null;
+									};
+									syncretic?:
+										| [
+												(
+													| "case"
+													| "number"
+													| "person"
+													| "polite"
+													| "poss"
+													| "pronType"
+													| "gender"
+												),
+												...Array<
+													| "case"
+													| "number"
+													| "person"
+													| "polite"
+													| "poss"
+													| "pronType"
+													| "gender"
+												>,
+										  ]
+										| undefined;
+									syncretized?:
+										| [
+												{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												},
+												{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												},
+												...Array<{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												}>,
+										  ]
+										| undefined;
+								};
+								normalizedSurface: string;
+								spelling:
+									| { kind: "Canonical" }
+									| {
+											kind: "Variant";
+											variantTags: [
+												(
+													| "Licensed"
+													| "Historical"
+													| "Regional"
+													| "Expressive"
+												),
+												...Array<
+													| "Licensed"
+													| "Historical"
+													| "Regional"
+													| "Expressive"
+												>,
+											];
+									  };
+								surfaceFeatures: {
+									historicalStatus: "Archaic" | null;
+								} | null;
+								inflectionalFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									number: ("Plur" | "Sing") | null;
+									"gender[psor]":
+										| (
+												| ("Fem" | "Masc" | "Neut")
+												| [
+														"Fem" | "Masc" | "Neut",
+														...Array<
+															| "Fem"
+															| "Masc"
+															| "Neut"
+														>,
+												  ]
+										  )
+										| null;
+									"number[psor]": ("Plur" | "Sing") | null;
+								} | null;
+							},
+							...Array<{
+								unitKind: "Surface";
+								language: "de";
+								lemma: {
+									unitKind: "Lemma";
+									language: "de";
+									family: "Lexeme";
+									kind: "PRON";
+									canonicalForm: string;
+									coreFeatures: {
+										case:
+											| ("Acc" | "Dat" | "Gen" | "Nom")
+											| null;
+										number: ("Plur" | "Sing") | null;
+										person: ("1" | "2" | "3") | null;
+										polite: "Form" | null;
+										poss: "Yes" | null;
+										pronType:
+											| (
+													| "Dem"
+													| "Ind"
+													| "Int"
+													| "Neg"
+													| "Prs"
+													| "Rcp"
+													| "Rel"
+													| "Tot"
+											  )
+											| null;
+										gender:
+											| ("Fem" | "Masc" | "Neut")
+											| null;
+									};
+									syncretic?:
+										| [
+												(
+													| "case"
+													| "number"
+													| "person"
+													| "polite"
+													| "poss"
+													| "pronType"
+													| "gender"
+												),
+												...Array<
+													| "case"
+													| "number"
+													| "person"
+													| "polite"
+													| "poss"
+													| "pronType"
+													| "gender"
+												>,
+										  ]
+										| undefined;
+									syncretized?:
+										| [
+												{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												},
+												{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												},
+												...Array<{
+													unitKind: "Lemma";
+													language: "de";
+													family: "Lexeme";
+													kind: "PRON";
+													canonicalForm: string;
+													coreFeatures: {
+														case:
+															| (
+																	| "Acc"
+																	| "Dat"
+																	| "Gen"
+																	| "Nom"
+															  )
+															| null;
+														number:
+															| ("Plur" | "Sing")
+															| null;
+														person:
+															| ("1" | "2" | "3")
+															| null;
+														polite: "Form" | null;
+														poss: "Yes" | null;
+														pronType:
+															| (
+																	| "Dem"
+																	| "Ind"
+																	| "Int"
+																	| "Neg"
+																	| "Prs"
+																	| "Rcp"
+																	| "Rel"
+																	| "Tot"
+															  )
+															| null;
+														gender:
+															| (
+																	| "Fem"
+																	| "Masc"
+																	| "Neut"
+															  )
+															| null;
+													};
+												}>,
+										  ]
+										| undefined;
+								};
+								normalizedSurface: string;
+								spelling:
+									| { kind: "Canonical" }
+									| {
+											kind: "Variant";
+											variantTags: [
+												(
+													| "Licensed"
+													| "Historical"
+													| "Regional"
+													| "Expressive"
+												),
+												...Array<
+													| "Licensed"
+													| "Historical"
+													| "Regional"
+													| "Expressive"
+												>,
+											];
+									  };
+								surfaceFeatures: {
+									historicalStatus: "Archaic" | null;
+								} | null;
+								inflectionalFeatures: {
+									case:
+										| ("Acc" | "Dat" | "Gen" | "Nom")
+										| null;
+									gender: ("Fem" | "Masc" | "Neut") | null;
+									number: ("Plur" | "Sing") | null;
+									"gender[psor]":
+										| (
+												| ("Fem" | "Masc" | "Neut")
+												| [
+														"Fem" | "Masc" | "Neut",
+														...Array<
+															| "Fem"
+															| "Masc"
+															| "Neut"
+														>,
+												  ]
+										  )
+										| null;
+									"number[psor]": ("Plur" | "Sing") | null;
+								} | null;
+							}>,
+					  ]
+					| undefined;
 			};
 			members: [
 				(

@@ -6,7 +6,12 @@ import {
 	syncretismView,
 	syncretize,
 } from "../../src/index.js";
-import type { Lemma, Syncretism, SyncretismView } from "../../src/types.js";
+import type {
+	Lemma,
+	Surface,
+	Syncretism,
+	SyncretismView,
+} from "../../src/types.js";
 
 type Pronoun = Lemma<"de", "Lexeme", "PRON">;
 type PronounSyncretism = Syncretism<"Lemma", "de", "Lexeme", "PRON">;
@@ -30,11 +35,23 @@ const _viewLemma: Pronoun = view;
 const _noNoun: [Syncretism<"Lemma", "de", "Lexeme", "NOUN">] extends [never]
 	? true
 	: false = true;
-const _noSurface: [Syncretism<"Surface", "de", "Lexeme", "PRON">] extends [
+const _noNounSurface: [Syncretism<"Surface", "de", "Lexeme", "NOUN">] extends [
 	never,
 ]
 	? true
 	: false = true;
+// German PRON opens its Surfaces too: a stem's gender-only cells (jedem).
+type PronounSurfaceSyncretism = Syncretism<"Surface", "de", "Lexeme", "PRON">;
+declare const surfaceSyncretism: PronounSurfaceSyncretism;
+const _surfaceOpen: keyof NonNullable<
+	Surface<"de", "Lexeme", "PRON">["inflectionalFeatures"]
+> = surfaceSyncretism.syncretic[0];
+const _surfaceUnits: Surface<"de", "Lexeme", "PRON">[] = [
+	...surfaceSyncretism.syncretized,
+];
+declare const surfaceUnit: PronounSurfaceSyncretism["syncretized"][number];
+// @ts-expect-error A unit of a Surface Syncretism lists no open features.
+surfaceUnit.syncretic;
 // @ts-expect-error A Reading has no Syncretism of its own.
 type _NoReading = Syncretism<"Reading">;
 

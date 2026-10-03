@@ -47,11 +47,16 @@ type Syncretism<U extends "Lemma" | "Surface", L, F, K> = Unit<U, L, F, K> & {
   apart ([ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md)),
   and an occurrence attests one unit.
 - A Surface Syncretism stands for Surfaces of one Lemma that only the
-  referent tells apart, such as Hebrew `תכתוב`, 2nd person masculine or 3rd
-  person feminine. The type allows it; no route uses it yet.
+  referent tells apart: `jedem`, the dative of the stem `jeder` in the
+  masculine or the neuter. Its units share the Lemma, the form compared
+  without letter case, the spelling and the Surface features, and are listed
+  in key order: Lemma identity, form, then the inflectional features they
+  mark. Its inflectional features keep the values its units agree on, and
+  `syncretic` names the inflectional features they disagree on. It names one
+  Lemma, so it adds no Reading and no Knowledge.
 
 A route accepts Syncretisms only where its schema allows them. German PRON
-allows Lemma Syncretisms.
+allows Lemma Syncretisms and Surface Syncretisms.
 
 **Dumspec generates every Syncretism, and nobody authors one.** Its source is
 the German Authored Inventory
@@ -71,11 +76,21 @@ Syncretism's Reading has the Emoji Description its units share, and
 generation fails if they differ. Its Knowledge joins theirs, and an authored
 definition replaces the joined one.
 
+A stem PRON Lemma marks its cell on its Surfaces
+([ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md)), so its
+Syncretisms are Surface Syncretisms. Its Surfaces that share a spelling, a
+case and a number and differ in gender alone get one: `jedem`, `keinem`,
+`manchem`, `diesem` and genitive `keines`, each Masc or Neut. A stem's
+Syncretism leaves gender alone open. Dumspec generates them from the stem
+spellings of the Authored Inventory.
+
 **A referent no text settles attests the Syncretism.** A pronoun attests the
-cell its referent settles. When neither its sentence nor its Referent
-Context settles the referent, it attests the Syncretism of the cells still
-possible, and no cell is guessed. A Spec Record judges by its own sentence
-and stores the whole Syncretism.
+cell its referent settles, a pillar's Lemma or a stem's Surface. When
+neither its sentence nor its Referent Context settles the referent, it
+attests the Syncretism of the cells still possible, and no cell is guessed:
+*Von den Kindern helfe ich jedem* attests neuter `jedem`, and `jedem` with
+no referent in sight attests its Surface Syncretism. A Spec Record judges by
+its own sentence and stores the whole Syncretism.
 
 **Navigation reaches only cells.** Varying case from `er` reaches `ihm`
 Masc. No null is a wildcard, and a Syncretism is reached from its units'
@@ -102,6 +117,10 @@ Notes.
   lowercase `sie` with an open referent would offer formal *you*, which its
   spelling rules out, and *Sie gingen* would offer *she*, which its verb
   rules out.
+- A stem's gender-only Surfaces with no Syncretism, so an open referent
+  gets a guessed cell or Unresolved. Rejected: `jedem` with an open referent
+  is the case of `ihm`, and either answer misleads the learner or loses the
+  click.
 - Authored Syncretisms. Rejected: the cells hold every fact a Syncretism
   needs, and generation keeps the two in step.
 
@@ -118,5 +137,9 @@ Notes.
   a Neut cell and 4 for the `ihm` Syncretism. Sentence-initial *Sie gingen*
   and *Ihnen kann es keiner recht machen* attest the 3pl-or-formal
   Syncretisms of `sie` and `ihnen`.
+- Amends ADR 0032: a stem's gender-only Surfaces have a Surface
+  Syncretism.
 - Decided by the user on 2026-10-02 on
-  [#829](https://github.com/clockblocker/texteater/issues/829).
+  [#829](https://github.com/clockblocker/texteater/issues/829); stem
+  Surface Syncretisms on 2026-10-03 on
+  [#876](https://github.com/clockblocker/texteater/issues/876).

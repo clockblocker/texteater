@@ -257,3 +257,122 @@ describe("Syncretism rejections", () => {
 		}
 	});
 });
+
+describe("Surface Syncretisms on German PRON stems (system ADR 0046)", () => {
+	const jeder = cell("jeder", { pronType: "Tot" });
+	function stemSurface(
+		normalizedSurface: string,
+		gender: "Masc" | "Neut" | "Fem" | null,
+		grammaticalCase: "Dat" | "Gen" = "Dat",
+	) {
+		return {
+			unitKind: "Surface" as const,
+			language: "de" as const,
+			lemma: jeder,
+			normalizedSurface,
+			spelling: { kind: "Canonical" as const },
+			surfaceFeatures: null,
+			inflectionalFeatures: {
+				case: grammaticalCase,
+				gender,
+				number: "Sing" as const,
+				"gender[psor]": null,
+				"number[psor]": null,
+			},
+		};
+	}
+	const masculine = stemSurface("jedem", "Masc");
+	const neuter = stemSurface("jedem", "Neut");
+	const jedem = syncretize([neuter, masculine]);
+	function acceptsSurface(value: unknown, expected: boolean) {
+		expect(surfaceSchema.safeParse(value).success).toBe(expected);
+		expect(parseUnit(value).success).toBe(expected);
+	}
+
+	test("syncretize nulls the gender only the referent tells apart", () => {
+		expect(jedem.syncretic).toEqual(["gender"]);
+		expect(jedem.inflectionalFeatures).toEqual({
+			...masculine.inflectionalFeatures,
+			gender: null,
+		});
+		expect(jedem.syncretized).toEqual([masculine, neuter]);
+		expect(jedem.lemma).toEqual(jeder);
+	});
+
+	test("accepts the Syncretism, its view and an Attestation of it", () => {
+		acceptsSurface(jedem, true);
+		acceptsSurface(syncretismView(jedem), true);
+		const attestation = {
+			unitKind: "Attestation",
+			surface: jedem,
+			members: [{ attested: "jedem", orthography: "Standard" }],
+			realizationCoverage: "Full",
+			articleEvidence: null,
+		};
+		expect(attestationSchema.safeParse(attestation).success).toBe(true);
+		expect(parseUnit(attestation).success).toBe(true);
+		expect(isSyncretism(jedem)).toBe(true);
+		expect(isSyncreticUnit(syncretismView(jedem))).toBe(true);
+	});
+
+	test("rejects features that are not the units' projection or disagreements", () => {
+		acceptsSurface(
+			{
+				...jedem,
+				inflectionalFeatures: {
+					...jedem.inflectionalFeatures,
+					gender: "Masc",
+				},
+			},
+			false,
+		);
+		acceptsSurface({ ...jedem, syncretic: ["case", "gender"] }, false);
+		acceptsSurface({ ...masculine, syncretic: ["gender"] }, false);
+	});
+
+	test("rejects units out of order, of other forms, Lemmas or spellings", () => {
+		acceptsSurface({ ...jedem, syncretized: [neuter, masculine] }, false);
+		acceptsSurface(
+			syncretize([masculine, stemSurface("jedes", "Neut")]),
+			false,
+		);
+		acceptsSurface(
+			{
+				...jedem,
+				syncretized: [
+					masculine,
+					{ ...neuter, lemma: cell("jeder", { pronType: "Ind" }) },
+				],
+			},
+			false,
+		);
+		acceptsSurface(
+			{
+				...jedem,
+				syncretized: [
+					masculine,
+					{
+						...neuter,
+						spelling: {
+							kind: "Variant",
+							variantTags: ["Licensed"],
+						},
+					},
+				],
+			},
+			false,
+		);
+		acceptsSurface(syncretize([masculine, masculine]), false);
+	});
+
+	test("rejects a unit that fails the route's Surface checks", () => {
+		const plural = {
+			...neuter,
+			inflectionalFeatures: {
+				...neuter.inflectionalFeatures,
+				number: "Plur",
+			},
+		};
+		acceptsSurface(syncretize([masculine, plural]), false);
+	});
+});
