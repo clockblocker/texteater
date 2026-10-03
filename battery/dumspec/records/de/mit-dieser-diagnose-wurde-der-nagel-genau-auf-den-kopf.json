@@ -30,13 +30,89 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: den Nagel auf den Kopf treffen",
+				"url": "https://www.dwds.de/wb/den%20Nagel%20auf%20den%20Kopf%20treffen",
+				"supports": "Target 0 Knowledge: ⟨jmd. trifft den Nagel auf den Kopf⟩ 'das Wesentliche treffend benennen'; auf den Punkt bringen only 'siehe auch' there"
+			},
+			{
+				"title": "Duden: Nagel",
+				"url": "https://www.duden.de/rechtschreibung/Nagel",
+				"supports": "Target 0 Knowledge: den Nagel auf den Kopf treffen 'den Kernpunkt von etwas treffen, erfassen'"
+			},
+			{
+				"title": "OpenThesaurus: den Nagel auf den Kopf treffen",
+				"url": "https://www.openthesaurus.de/synonyme/den%20Nagel%20auf%20den%20Kopf%20treffen",
+				"supports": "Target 0 Knowledge: synset 8341: ins Schwarze treffen; synsets 47148/3172: auf den Punkt bringen; Gegenteil marker on den Nagel auf den Kopf treffen: danebenhauen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8, 10, 14, 16, 18, 20],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🎯" },
+			"reading": {
+				"emojiDescription": "🎯",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "ins Schwarze treffen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "auf den Punkt bringen",
+								"coreFeatures": {}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "danebenhauen",
+								"coreFeatures": {
+									"hasSepPrefix": "daneben",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -37,13 +37,56 @@
 				"hash": "8b5d215a31ab7264"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: stehen bleiben",
+				"url": "https://www.dwds.de/wb/stehen%20bleiben",
+				"supports": "Target 0 Knowledge: sense 1 ⟨etw. bleibt stehen⟩ 'belassen, nicht korrigiert werden'; Präteritum blieb stehen; no synonym for the sense"
+			},
+			{
+				"title": "Duden: stehen bleiben",
+				"url": "https://www.duden.de/rechtschreibung/stehen_bleiben",
+				"supports": "Target 0 Knowledge: sense 4 'unverändert belassen werden'; Synonyme (anstehen, bleiben, innehalten) belong to the stopping senses"
+			},
+			{
+				"title": "OpenThesaurus: stehen bleiben",
+				"url": "https://www.openthesaurus.de/synonyme/stehen%20bleiben",
+				"supports": "Target 0 Knowledge: synsets are halting, waiting and buildings surviving (19582); none for text left unchanged"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "📌" },
+			"reading": {
+				"emojiDescription": "📌",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "stehen bleiben in Duden's sense 4, unverändert belassen werden (die Fehler sollten tatsächlich stehen bleiben): the abbreviation was left in the revised sentence. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive). This is Duden's stehen bleiben sense 4, 'unverändert belassen werden' (die Fehler sollten tatsächlich stehen bleiben), a Reading apart from sense 2, the lift or motor that stops 🛑."
 			},

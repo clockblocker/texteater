@@ -26,13 +26,89 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Frage",
+				"url": "https://www.duden.de/rechtschreibung/Frage",
+				"supports": "Target 0 Knowledge: jemandem/an jemanden eine Frage stellen"
+			},
+			{
+				"title": "OpenThesaurus: eine Frage stellen",
+				"url": "https://www.openthesaurus.de/synonyme/eine%20Frage%20stellen",
+				"supports": "Target 0 Knowledge: synset 21935: fragen · anfragen (ob) · eine Frage stellen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "❓" },
+			"reading": {
+				"emojiDescription": "❓",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								},
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "an",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "fragen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The first stellt supports Frage; the second belongs to abstellen with the Vase."
 			},

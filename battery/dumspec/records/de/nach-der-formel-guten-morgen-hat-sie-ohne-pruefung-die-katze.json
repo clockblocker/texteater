@@ -39,13 +39,51 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Katze",
+				"url": "https://www.duden.de/rechtschreibung/Katze",
+				"supports": "Target 0 Knowledge: die Katze im Sack kaufen 'etwas kaufen, ohne sich vorher von dessen Güte überzeugt zu haben'"
+			},
+			{
+				"title": "OpenThesaurus: die Katze im Sack kaufen",
+				"url": "https://www.openthesaurus.de/synonyme/die%20Katze%20im%20Sack%20kaufen",
+				"supports": "Target 0 Knowledge: no synset; DWDS has no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12, 20, 22, 24, 25, 27, 29],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🛒🙈" },
+			"reading": {
+				"emojiDescription": "🛒🙈",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

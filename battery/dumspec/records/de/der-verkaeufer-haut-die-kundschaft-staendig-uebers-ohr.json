@@ -25,13 +25,95 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: übers Ohr hauen",
+				"url": "https://www.dwds.de/wb/%C3%BCbers%20Ohr%20hauen",
+				"supports": "Target 0 Knowledge: ⟨jmd. haut jmdn. übers Ohr⟩ 'jmdn. betrügen, hereinlegen'; Synonym zu jmdn. über den Tisch ziehen"
+			},
+			{
+				"title": "OpenThesaurus: übers Ohr hauen",
+				"url": "https://www.openthesaurus.de/synonyme/%C3%BCbers%20Ohr%20hauen",
+				"supports": "Target 0 Knowledge: synset 32372: betrügen · hereinlegen · über den Tisch ziehen · übers Ohr hauen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 12, 13, 15],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🤥💸" },
+			"reading": {
+				"emojiDescription": "🤥💸",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "über den Tisch ziehen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "betrügen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "hereinlegen",
+								"coreFeatures": {
+									"hasSepPrefix": "herein",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -36,13 +36,103 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Öl ins Feuer gießen",
+				"url": "https://www.dwds.de/wb/%C3%96l%20ins%20Feuer%20gie%C3%9Fen",
+				"supports": "Target 0 Knowledge: ⟨jmd. gießt Öl ins Feuer⟩ 'einen schwelenden Konflikt verschärfen'"
+			},
+			{
+				"title": "Duden: Öl",
+				"url": "https://www.duden.de/rechtschreibung/Oel",
+				"supports": "Target 0 Knowledge: Öl ins Feuer gießen (etwas noch schlimmer machen)"
+			},
+			{
+				"title": "OpenThesaurus: Öl ins Feuer gießen",
+				"url": "https://www.openthesaurus.de/synonyme/%C3%96l%20ins%20Feuer%20gie%C3%9Fen",
+				"supports": "Target 0 Knowledge: synset 11289: anfachen · anheizen (Konflikt) · schüren · Öl ins Feuer gießen; Gegenteil marker on Öl ins Feuer gießen: Öl auf die Wogen gießen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 21, 23, 24, 26],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🔥📈" },
+			"reading": {
+				"emojiDescription": "🔥📈",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "schüren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anheizen",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anfachen",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "Öl auf die Wogen gießen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "zusätzliches modifies Öl and stays outside; both pieces of ins are members."
 			},

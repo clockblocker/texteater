@@ -25,13 +25,89 @@
 				"hash": "57f04b272a0e9aeb"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Frage",
+				"url": "https://www.duden.de/rechtschreibung/Frage",
+				"supports": "Target 0 Knowledge: jemandem/an jemanden eine Frage stellen"
+			},
+			{
+				"title": "OpenThesaurus: eine Frage stellen",
+				"url": "https://www.openthesaurus.de/synonyme/eine%20Frage%20stellen",
+				"supports": "Target 0 Knowledge: synset 21935: fragen · anfragen (ob) · eine Frage stellen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [3, 5, 7],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "❓" },
+			"reading": {
+				"emojiDescription": "❓",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								},
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "an",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "fragen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "eine Frage stellen is cited as a dictionary entry, so its Surface leaves its inflection empty (de/empty-inflection-is-structural). It is a Collocation: stellen only supports the noun Frage (de/funktionsverbgefuege-are-collocations). Cited as a dictionary entry with no context, eine Frage stellen takes its only Duden sense, asking someone a question (Duden Frage: jemandem eine Frage stellen)."
 			},

@@ -230,6 +230,16 @@
 				"title": "OpenThesaurus: zerstreut",
 				"url": "https://www.openthesaurus.de/synonyme/zerstreut",
 				"supports": "Target 9 Knowledge: synset 1478: geistesabwesend · konfus · zerstreut · distrait; no Gegenteil"
+			},
+			{
+				"title": "Duden: Gespräch",
+				"url": "https://www.duden.de/rechtschreibung/Gespraech",
+				"supports": "Target 3 Knowledge: ein Gespräch führen; ein Gespräch mit jemandem, ein Gespräch über etwas; no synonym for the phrase"
+			},
+			{
+				"title": "OpenThesaurus: ein Gespräch führen",
+				"url": "https://www.openthesaurus.de/synonyme/ein%20Gespr%C3%A4ch%20f%C3%BChren",
+				"supports": "Target 3 Knowledge: no synset (also none for 'Gespräch führen'); DWDS has no entry for the phrase"
 			}
 		]
 	},
@@ -401,7 +411,70 @@
 				"family": "Locution",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "💬" },
+			"reading": {
+				"emojiDescription": "💬",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "mit",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "über",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

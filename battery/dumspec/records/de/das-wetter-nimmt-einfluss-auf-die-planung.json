@@ -31,13 +31,89 @@
 				"hash": "19c59bf41ed26810"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Einfluss",
+				"url": "https://www.duden.de/rechtschreibung/Einfluss",
+				"supports": "Target 0 Knowledge: sense 1 'Wirkung auf jemanden, etwas': auf diese Entscheidung keinen Einfluss nehmen (the bracketed 'sie nicht beeinflussen' is a gloss, not the listing)"
+			},
+			{
+				"title": "DWDS: Einfluss",
+				"url": "https://www.dwds.de/wb/Einfluss",
+				"supports": "Target 0 Knowledge: plural Einflüsse; 'sie wollte dort Einfluss nehmen' (no auf phrase, so auf is optional)"
+			},
+			{
+				"title": "OpenThesaurus: Einfluss nehmen",
+				"url": "https://www.openthesaurus.de/synonyme/Einfluss%20nehmen",
+				"supports": "Target 0 Knowledge: synset 21135: beeinflussen · Einfluss nehmen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🕹" },
+			"reading": {
+				"emojiDescription": "🕹",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "auf",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "beeinflussen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Einfluss nehmen is a Funktionsverbgefüge: nehmen only supports the noun Einfluss, so the whole is a Locution VERB with Collocation as its Reading's Locution Type (de/funktionsverbgefuege-are-collocations). Einfluss governs auf with the accusative (Duden Einfluss 1 'Wirkung auf jemanden, etwas'), so auf is a member recorded in valencyEvidence and stays out of the normalized Surface, as in nahm Rücksicht auf (de/governed-preposition-joins-its-governor). die Planung is free. Rule-decided fix from the 2026-10-02 grouping audit (#701): auf was missing from the target."
 			},

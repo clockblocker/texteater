@@ -29,13 +29,88 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Hand",
+				"url": "https://www.duden.de/rechtschreibung/Hand",
+				"supports": "Target 0 Knowledge: Hand und Fuß haben 'gut durchdacht sein: der Plan muss aber Hand und Fuß haben' (a thing as subject)"
+			},
+			{
+				"title": "OpenThesaurus: Hand und Fuß haben",
+				"url": "https://www.openthesaurus.de/synonyme/Hand%20und%20Fu%C3%9F%20haben",
+				"supports": "Target 0 Knowledge: synset 23091: Hand und Fuß haben · stichhaltig sein · überzeugen; synset 37735: wohlüberlegt (sein)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8, 10, 12],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🧠✅" },
+			"reading": {
+				"emojiDescription": "🧠✅",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "stichhaltig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "wohlüberlegt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "überzeugen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

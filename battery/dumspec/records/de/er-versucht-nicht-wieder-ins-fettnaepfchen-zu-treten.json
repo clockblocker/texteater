@@ -26,13 +26,115 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Fettnäpfchen",
+				"url": "https://www.duden.de/rechtschreibung/Fettnaepfchen",
+				"supports": "Target 0 Knowledge: [bei jemandem] ins Fettnäpfchen treten 'jemandes Unwillen erregen, einen Fauxpas begehen'"
+			},
+			{
+				"title": "DWDS: ins Fettnäpfchen treten",
+				"url": "https://www.dwds.de/wb/ins%20Fettn%C3%A4pfchen%20treten",
+				"supports": "Target 0 Knowledge: ⟨jmd. tritt ins Fettnäpfchen (bei jmdm.) (mit etw.)⟩; Synonym zu ins Fettnäpfchen steigen, ins Fettnäpfchen tappen"
+			},
+			{
+				"title": "OpenThesaurus: ins Fettnäpfchen treten",
+				"url": "https://www.openthesaurus.de/synonyme/ins%20Fettn%C3%A4pfchen%20treten",
+				"supports": "Target 0 Knowledge: synset 16720: (sich) blamieren · einen Fauxpas begehen · ins Fettnäpfchen treten"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 10, 12, 16],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "😬" },
+			"reading": {
+				"emojiDescription": "😬",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "bei",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "ins Fettnäpfchen tappen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "ins Fettnäpfchen steigen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "einen Fauxpas begehen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "blamieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

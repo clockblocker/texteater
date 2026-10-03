@@ -22,13 +22,82 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Schneider",
+				"url": "https://www.duden.de/rechtschreibung/Schneider",
+				"supports": "Target 0 Knowledge: Wendung frieren wie ein Schneider (umgangssprachlich: sehr frieren)"
+			},
+			{
+				"title": "E-VALBU: frieren, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400612/1",
+				"supports": "Target 0 Knowledge: jemand/etwas friert (an etwas): K sub, (K prp); the idiom keeps only the subject"
+			},
+			{
+				"title": "OpenThesaurus: frieren wie ein Schneider",
+				"url": "https://www.openthesaurus.de/synonyme/frieren%20wie%20ein%20Schneider",
+				"supports": "Target 0 Knowledge: synset 28376: frieren · bibbern · frieren wie ein Schneider (both milder or broader than 'sehr frieren', so near)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8, 10, 12],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🥶" },
+			"reading": {
+				"emojiDescription": "🥶",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "frieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "bibbern",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

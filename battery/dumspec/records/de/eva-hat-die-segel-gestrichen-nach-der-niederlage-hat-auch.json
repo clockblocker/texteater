@@ -33,13 +33,105 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Segel",
+				"url": "https://www.duden.de/rechtschreibung/Segel",
+				"supports": "Target 0 Knowledge: [vor jemandem, etwas] die Segel streichen 'den Kampf, den Widerstand aufgeben'"
+			},
+			{
+				"title": "DWDS: die Segel streichen",
+				"url": "https://www.dwds.de/wb/die%20Segel%20streichen",
+				"supports": "Target 0 Knowledge: sense 2 ⟨jmd. streicht die Segel⟩ 'aufgeben, resignieren'; Synonym zu sich geschlagen geben (die Waffen strecken is only 'siehe auch')"
+			},
+			{
+				"title": "OpenThesaurus: die Segel streichen",
+				"url": "https://www.openthesaurus.de/synonyme/die%20Segel%20streichen",
+				"supports": "Target 0 Knowledge: synset 53412: aufgeben · das Handtuch werfen · die Segel streichen · sich geschlagen geben"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17, 23],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🏳" },
+			"reading": {
+				"emojiDescription": "🏳",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "vor",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "sich geschlagen geben",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "das Handtuch werfen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "aufgeben",
+								"coreFeatures": {
+									"hasSepPrefix": "auf",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom."
 			},

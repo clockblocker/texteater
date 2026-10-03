@@ -36,13 +36,86 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: die Kirche im Dorf lassen",
+				"url": "https://www.dwds.de/wb/die%20Kirche%20im%20Dorf%20lassen",
+				"supports": "Target 0 Knowledge: ⟨jmd. lässt die Kirche im Dorf⟩ 'vernünftig bleiben, nicht übertreiben'; only 'siehe auch' (backs nothing)"
+			},
+			{
+				"title": "Duden: Kirche",
+				"url": "https://www.duden.de/rechtschreibung/Kirche",
+				"supports": "Target 0 Knowledge: Wendung die Kirche im Dorf lassen 'eine Sache in einem vernünftigen Rahmen betrachten, nicht übertreiben'"
+			},
+			{
+				"title": "OpenThesaurus: die Kirche im Dorf lassen",
+				"url": "https://www.openthesaurus.de/synonyme/die%20Kirche%20im%20Dorf%20lassen",
+				"supports": "Target 0 Knowledge: synset 24753: auf dem Teppich bleiben · halblang machen; Gegenteil marker on die Kirche im Dorf lassen: über das Ziel hinausschießen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 19, 21, 23, 24, 26],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "⚖😌" },
+			"reading": {
+				"emojiDescription": "⚖😌",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "auf dem Teppich bleiben",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "halblang machen",
+								"coreFeatures": {}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "über das Ziel hinausschießen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

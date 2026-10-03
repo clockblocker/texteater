@@ -130,6 +130,21 @@
 				"title": "OpenThesaurus: Woche",
 				"url": "https://www.openthesaurus.de/synonyme/Woche",
 				"supports": "Target 1 Knowledge: synset Woche · sieben Tage · Kalenderwoche [fachsprachlich] (narrower, nearSynonym); Oberbegriff Zeitspanne · Abstand · Dauer · Frist · Periode"
+			},
+			{
+				"title": "Duden: Sorge",
+				"url": "https://www.duden.de/rechtschreibung/Sorge",
+				"supports": "Target 2 Knowledge: sich um jemanden, etwas Sorge, [keine] Sorgen machen"
+			},
+			{
+				"title": "DWDS: Sorge",
+				"url": "https://www.dwds.de/wb/Sorge",
+				"supports": "Target 2 Knowledge: sich [Dativ] Sorgen machen"
+			},
+			{
+				"title": "OpenThesaurus: sich Sorgen machen",
+				"url": "https://www.openthesaurus.de/synonyme/sich%20Sorgen%20machen",
+				"supports": "Target 2 Knowledge: synset 2884: sich beunruhigen (über / um) · sich Gedanken machen · sich Sorgen machen · (sich) sorgen (um)"
 			}
 		]
 	},
@@ -272,7 +287,88 @@
 				"family": "Locution",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "😟" },
+			"reading": {
+				"emojiDescription": "😟",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "um",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sorgen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "beunruhigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "sich Gedanken machen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "sich Sorgen machen 'worry' (Duden: sich (Dativ) Sorgen machen): machen only supports Sorgen, and the dative reflexive is fixed, since jemandem Sorgen machen means causing worry. um + Acc is governed by the expression and a member. The subject meine Mutter stands between sich and Sorgen and stays out."
 			},

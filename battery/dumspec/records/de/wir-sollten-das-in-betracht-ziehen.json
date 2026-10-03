@@ -30,6 +30,26 @@
 				"title": "Duden: Betracht",
 				"url": "https://www.duden.de/rechtschreibung/Betracht",
 				"supports": "Target 0, in Betracht ziehen (jemanden, etwas in Betracht ziehen)."
+			},
+			{
+				"title": "DWDS: in Betracht ziehen",
+				"url": "https://www.dwds.de/wb/in%20Betracht%20ziehen",
+				"supports": "Target 0 Knowledge: sense 1 ⟨jmd. zieht jmdn., etw. in Betracht⟩ 'erwägen, als mögliche Option ansehen'; Synonym zu in Erwägung ziehen (1), ins Auge fassen (1)"
+			},
+			{
+				"title": "Duden: Betracht",
+				"url": "https://www.duden.de/rechtschreibung/Betracht",
+				"supports": "Target 0 Knowledge: jemanden, etwas in Betracht ziehen"
+			},
+			{
+				"title": "OpenThesaurus: in Betracht ziehen",
+				"url": "https://www.openthesaurus.de/synonyme/in%20Betracht%20ziehen",
+				"supports": "Target 0 Knowledge: synset 1127 (and 1267): erwägen · in Betracht ziehen · in Erwägung ziehen"
+			},
+			{
+				"title": "DWDS: in Erwägung ziehen",
+				"url": "https://www.dwds.de/wb/in%20Erw%C3%A4gung%20ziehen",
+				"supports": "Target 0 Knowledge: Synonym zu in Betracht ziehen (1), ins Auge fassen (1)"
 			}
 		]
 	},
@@ -37,9 +57,69 @@
 		{
 			"memberSegmentIndices": [6, 8, 10],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🤔" },
+			"reading": {
+				"emojiDescription": "🤔",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "erwägen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "ins Auge fassen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "in Betracht ziehen 'consider' is a Funktionsverbgefüge (Duden: jemanden, etwas in Betracht ziehen): ziehen only supports Betracht, so it is a Collocation, a Locution VERB over in, Betracht and ziehen (de/funktionsverbgefuege-are-collocations). das is its free object and sollten a VERB of its own. Its parts are in its Breakdown Record."
+				"rationale": "in Betracht ziehen 'consider' is a Funktionsverbgefüge (Duden: jemanden, etwas in Betracht ziehen): ziehen only supports Betracht, so it is a Collocation, a Locution VERB over in, Betracht and ziehen (de/funktionsverbgefuege-are-collocations). das is its free object and sollten a VERB of its own. Its parts are in its Breakdown Record. Knowledge (#887, dev draft): in Erwägung ziehen (listed) is left out because a Knowledge prompt example uses it (#693)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

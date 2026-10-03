@@ -24,13 +24,96 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: auf den Zahn fühlen",
+				"url": "https://www.dwds.de/wb/auf%20den%20Zahn%20f%C3%BChlen",
+				"supports": "Target 0 Knowledge: sense 1 ⟨jmd. fühlt jmdm. auf den Zahn⟩ 'jmdn. ausfragen, ausforschen'; Synonym zu jmdm., etw. auf den Puls fühlen (1)"
+			},
+			{
+				"title": "Duden: Zahn",
+				"url": "https://www.duden.de/rechtschreibung/Zahn",
+				"supports": "Target 0 Knowledge: jemandem auf den Zahn fühlen 'jemanden ausforschen'"
+			},
+			{
+				"title": "OpenThesaurus: auf den Zahn fühlen",
+				"url": "https://www.openthesaurus.de/synonyme/auf%20den%20Zahn%20f%C3%BChlen",
+				"supports": "Target 0 Knowledge: synset 43074: (jemanden) befragen · (jemandem) auf den Zahn fühlen"
+			},
+			{
+				"title": "DWDS: auf den Puls fühlen",
+				"url": "https://www.dwds.de/wb/auf%20den%20Puls%20f%C3%BChlen",
+				"supports": "Target 0 Knowledge: sense 1 Synonym zu jmdm. auf den Zahn fühlen (1)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 10, 12, 14],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🔍❓" },
+			"reading": {
+				"emojiDescription": "🔍❓",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "auf den Puls fühlen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "befragen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "ihm fills the dative slot of the Valency Frame and gründlich is a free adverb; neither is a member."
 			},

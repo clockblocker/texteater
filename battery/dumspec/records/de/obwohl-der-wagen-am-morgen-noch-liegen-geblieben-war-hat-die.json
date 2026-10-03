@@ -59,13 +59,56 @@
 			},
 			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: liegen bleiben",
+				"url": "https://www.dwds.de/wb/liegen%20bleiben",
+				"supports": "Target 0 Knowledge: sense 2 ⟨etw., jmd. bleibt liegen⟩ 'seinen (Fahr-)Weg nicht fortsetzen können'; Präteritum blieb liegen; no synonym listed"
+			},
+			{
+				"title": "Duden: liegen bleiben",
+				"url": "https://www.duden.de/rechtschreibung/liegen_bleiben",
+				"supports": "Target 0 Knowledge: sense 'nicht weiterkommen': mit einer Panne liegen bleiben; Synonyme include eine Panne haben"
+			},
+			{
+				"title": "OpenThesaurus: liegen bleiben",
+				"url": "https://www.openthesaurus.de/synonyme/liegen%20bleiben",
+				"supports": "Target 0 Knowledge: synset 35333: nicht weiterfahren können · liegen bleiben · (eine) Panne haben"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [13, 15, 17],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🚗🛑" },
+			"reading": {
+				"emojiDescription": "🚗🛑",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "liegen bleiben in Duden's sense 2, mit einer Panne liegen bleiben: the car broke down. It is an Idiom over both verbs, cited apart, with its pluperfect auxiliary war (de/bleiben-with-an-infinitive). Decided on #723."
 			},

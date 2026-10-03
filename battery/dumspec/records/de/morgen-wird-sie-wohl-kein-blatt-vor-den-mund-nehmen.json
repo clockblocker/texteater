@@ -28,13 +28,106 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: kein Blatt vor den Mund nehmen",
+				"url": "https://www.dwds.de/wb/kein%20Blatt%20vor%20den%20Mund%20nehmen",
+				"supports": "Target 0 Knowledge: ⟨jmd. nimmt kein Blatt vor den Mund⟩ 'offen seine Meinung äußern'; Synonym zu jmdm. die Meinung sagen; in gegensätzlicher Bedeutung zu mit etw. hinterm Berg halten"
+			},
+			{
+				"title": "DWDS: mit etw. hinterm Berg halten",
+				"url": "https://www.dwds.de/wb/mit%20etw.%20hinterm%20Berg%20halten",
+				"supports": "Target 0 Knowledge: ⟨jmd. hält mit etw. hinter dem Berg⟩ 'Informationen zurückhalten'"
+			},
+			{
+				"title": "Duden: Berg",
+				"url": "https://www.duden.de/rechtschreibung/Berg",
+				"supports": "Target 0 Knowledge: headword spelling: mit etwas [nicht] hinter dem Berg halten"
+			},
+			{
+				"title": "Duden: Blatt",
+				"url": "https://www.duden.de/rechtschreibung/Blatt",
+				"supports": "Target 0 Knowledge: kein Blatt vor den Mund nehmen (offen seine Meinung sagen)"
+			},
+			{
+				"title": "OpenThesaurus: kein Blatt vor den Mund nehmen",
+				"url": "https://www.openthesaurus.de/synonyme/kein%20Blatt%20vor%20den%20Mund%20nehmen",
+				"supports": "Target 0 Knowledge: synset 12818: kein Blatt vor den Mund nehmen · Klartext reden · Tacheles reden · (mit etwas) nicht hinterm Berg(e) halten"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 8, 10, 12, 14, 16, 18],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🗣💯" },
+			"reading": {
+				"emojiDescription": "🗣💯",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "Klartext reden",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "Tacheles reden",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "die Meinung sagen",
+								"coreFeatures": {}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "hinter dem Berg halten",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -76,6 +169,9 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): die Meinung sagen is near: DWDS lists it as a synonym, but it adds an addressee and a reproach."
 			}
 		}
 	],

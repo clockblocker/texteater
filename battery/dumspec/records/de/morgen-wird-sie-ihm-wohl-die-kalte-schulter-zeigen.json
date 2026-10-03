@@ -26,13 +26,92 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: die kalte Schulter zeigen",
+				"url": "https://www.dwds.de/wb/die%20kalte%20Schulter%20zeigen",
+				"supports": "Target 0 Knowledge: sense 1 ⟨jmd. zeigt jmdm. die kalte Schulter⟩ 'einer Person keine Beachtung schenken'; only 'siehe auch' (den Rücken kehren, links liegen lassen)"
+			},
+			{
+				"title": "Duden: Schulter",
+				"url": "https://www.duden.de/rechtschreibung/Schulter",
+				"supports": "Target 0 Knowledge: jemandem, einer Sache die kalte Schulter zeigen 'keine Beachtung schenken, abweisen'"
+			},
+			{
+				"title": "OpenThesaurus: die kalte Schulter zeigen",
+				"url": "https://www.openthesaurus.de/synonyme/die%20kalte%20Schulter%20zeigen",
+				"supports": "Target 0 Knowledge: synset 6859: (jemanden) abweisen · (jemanden) zurückweisen · (jemandem) die kalte Schulter zeigen; Gegenteil marker on it: zurückflirten"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 10, 12, 14, 16],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "😒🔙" },
+			"reading": {
+				"emojiDescription": "😒🔙",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "abweisen",
+								"coreFeatures": {
+									"hasSepPrefix": "ab",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "zurückweisen",
+								"coreFeatures": {
+									"hasSepPrefix": "zurück",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

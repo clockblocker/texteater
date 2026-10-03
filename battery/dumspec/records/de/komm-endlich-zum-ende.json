@@ -17,13 +17,68 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: zum Ende kommen",
+				"url": "https://www.dwds.de/wb/zum%20Ende%20kommen",
+				"supports": "Target 0 Knowledge: sense 1 ⟨jmd. kommt zum Ende⟩ '(endlich) mit etw. fertig werden'; Synonym zu ein Ende finden (2)"
+			},
+			{
+				"title": "DWDS: ein Ende finden",
+				"url": "https://www.dwds.de/wb/ein%20Ende%20finden",
+				"supports": "Target 0 Knowledge: sense 2 ⟨jmd. findet ein Ende⟩ '(endlich) mit etw. fertig werden'"
+			},
+			{
+				"title": "OpenThesaurus: zum Ende kommen",
+				"url": "https://www.openthesaurus.de/synonyme/zum%20Ende%20kommen",
+				"supports": "Target 0 Knowledge: synsets 9824/6646 are a thing ending (DWDS sense 2); no claim taken for the person sense"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4, 5, 7],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🏁" },
+			"reading": {
+				"emojiDescription": "🏁",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "ein Ende finden",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

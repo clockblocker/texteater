@@ -39,13 +39,76 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: die Katze aus dem Sack lassen",
+				"url": "https://www.dwds.de/wb/die%20Katze%20aus%20dem%20Sack%20lassen",
+				"supports": "Target 0 Knowledge: ⟨jmd. lässt die Katze aus dem Sack⟩ 'eine bisher geheime Information preisgeben'; only 'siehe auch'"
+			},
+			{
+				"title": "Duden: Katze",
+				"url": "https://www.duden.de/rechtschreibung/Katze",
+				"supports": "Target 0 Knowledge: die Katze aus dem Sack lassen 'eine Absicht, einen Plan, den man bisher verschwiegen hat, anderen zur Kenntnis bringen'"
+			},
+			{
+				"title": "OpenThesaurus: die Katze aus dem Sack lassen",
+				"url": "https://www.openthesaurus.de/synonyme/die%20Katze%20aus%20dem%20Sack%20lassen",
+				"supports": "Target 0 Knowledge: synset 44513: aus dem Busch kommen (mit) · (die) Katze aus dem Sack lassen · mit der Sprache herausrücken"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 19, 23, 25, 27, 29],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🤫➡📢" },
+			"reading": {
+				"emojiDescription": "🤫➡📢",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "mit der Sprache herausrücken",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "aus dem Busch kommen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "verdammte modifies Katze and stays outside; every fixed word is present, so the Locution is Full."
 			},

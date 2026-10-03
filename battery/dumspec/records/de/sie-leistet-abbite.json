@@ -14,13 +14,92 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Abbitte",
+				"url": "https://www.duden.de/rechtschreibung/Abbitte",
+				"supports": "Target 0 Knowledge: (förmliche) Bitte um Verzeihung: Abbitte leisten, tun; jemandem Abbitte leisten"
+			},
+			{
+				"title": "OpenThesaurus: Abbitte leisten",
+				"url": "https://www.openthesaurus.de/synonyme/Abbitte%20leisten",
+				"supports": "Target 0 Knowledge: synset 29856: sich entschuldigen · um Verzeihung bitten · Abbitte leisten · Abbitte tun"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🙇" },
+			"reading": {
+				"emojiDescription": "🙇",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "Abbitte tun",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "um Verzeihung bitten",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "entschuldigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

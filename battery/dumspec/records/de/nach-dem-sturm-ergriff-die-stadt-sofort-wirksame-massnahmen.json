@@ -31,13 +31,73 @@
 				"hash": "57f04b272a0e9aeb"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Maßnahmen ergreifen",
+				"url": "https://www.dwds.de/wb/Ma%C3%9Fnahmen%20ergreifen",
+				"supports": "Target 0 Knowledge: Mehrwortausdruck ⟨jmd. ergreift Maßnahmen⟩ 'zweckorientiert tätig werden'; Synonym zu Maßnahmen treffen"
+			},
+			{
+				"title": "DWDS: Maßnahmen treffen",
+				"url": "https://www.dwds.de/wb/Ma%C3%9Fnahmen%20treffen",
+				"supports": "Target 0 Knowledge: ⟨jmd. trifft Maßnahmen⟩; Synonym zu Maßnahmen ergreifen"
+			},
+			{
+				"title": "Duden: Maßnahme",
+				"url": "https://www.duden.de/rechtschreibung/Masznahme",
+				"supports": "Target 0 Knowledge: Maßnahme 'Handlung, Regelung, die etwas bewirken soll'; example geeignete Maßnahmen gegen etwas treffen"
+			},
+			{
+				"title": "OpenThesaurus: Maßnahmen ergreifen",
+				"url": "https://www.openthesaurus.de/synonyme/Ma%C3%9Fnahmen%20ergreifen",
+				"supports": "Target 0 Knowledge: only synset is 'Maßnahmen ergreifen (gegen)' = bekämpfen, vorgehen gegen: the combating sense, not the whole Reading; no claim taken"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 16],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🛠" },
+			"reading": {
+				"emojiDescription": "🛠",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "Maßnahmen treffen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Maßnahmen ergreifen is a Funktionsverbgefüge: ergreifen only supports the noun Maßnahmen, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. The noun has no article here; the adverb sofort and the attributive wirksame are free."
 			},

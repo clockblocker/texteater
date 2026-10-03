@@ -18,13 +18,106 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Vereinbarung",
+				"url": "https://www.duden.de/rechtschreibung/Vereinbarung",
+				"supports": "Target 0 Knowledge: eine Vereinbarung, Vereinbarungen [mit jemandem] treffen"
+			},
+			{
+				"title": "OpenThesaurus: eine Vereinbarung treffen",
+				"url": "https://www.openthesaurus.de/synonyme/eine%20Vereinbarung%20treffen",
+				"supports": "Target 0 Knowledge: synset 3355: abmachen · absprechen · vereinbaren · (eine) Vereinbarung treffen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🤝" },
+			"reading": {
+				"emojiDescription": "🤝",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "mit",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "vereinbaren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "abmachen",
+								"coreFeatures": {
+									"hasSepPrefix": "ab",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "absprechen",
+								"coreFeatures": {
+									"hasSepPrefix": "ab",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

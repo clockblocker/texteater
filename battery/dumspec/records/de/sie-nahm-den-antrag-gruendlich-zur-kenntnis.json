@@ -23,13 +23,102 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: zur Kenntnis nehmen",
+				"url": "https://www.dwds.de/wb/zur%20Kenntnis%20nehmen",
+				"supports": "Target 0 Knowledge: ⟨jmd. nimmt etw. zur Kenntnis⟩ 'etw. registrieren, bemerken' (a gloss, no listing)"
+			},
+			{
+				"title": "Duden: Kenntnis",
+				"url": "https://www.duden.de/rechtschreibung/Kenntnis",
+				"supports": "Target 0 Knowledge: zur Kenntnis nehmen: Ihre Mitteilung haben wir zur Kenntnis genommen"
+			},
+			{
+				"title": "OpenThesaurus: zur Kenntnis nehmen",
+				"url": "https://www.openthesaurus.de/synonyme/zur%20Kenntnis%20nehmen",
+				"supports": "Target 0 Knowledge: synset 152: Notiz nehmen (von) · zur Kenntnis nehmen; synset 12073: registrieren · wahrnehmen · zur Kenntnis nehmen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 10, 11, 13],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "👀📝" },
+			"reading": {
+				"emojiDescription": "👀📝",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "Notiz nehmen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "registrieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "wahrnehmen",
+								"coreFeatures": {
+									"hasSepPrefix": "wahr",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

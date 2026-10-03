@@ -29,13 +29,92 @@
 				"hash": "57f04b272a0e9aeb"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Antrag",
+				"url": "https://www.duden.de/rechtschreibung/Antrag",
+				"supports": "Target 0 Knowledge: einen Antrag auf etwas stellen; einen Antrag auf Beihilfe stellen"
+			},
+			{
+				"title": "OpenThesaurus: Antrag stellen",
+				"url": "https://www.openthesaurus.de/synonyme/Antrag%20stellen",
+				"supports": "Target 0 Knowledge: synset 43856: (einen) Antrag stellen (auf) · (etwas) beantragen · (ein) Gesuch stellen (auf)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 12, 14],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "📝📤" },
+			"reading": {
+				"emojiDescription": "📝📤",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "auf",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "beantragen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "ein Gesuch stellen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "einen Antrag stellen is a Funktionsverbgefüge: stellen only supports the noun Antrag, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. The noun's own article einen is a member, as in eine Entscheidung treffen; the subject Nora and the adverb noch are free."
 			},
