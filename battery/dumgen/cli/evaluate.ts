@@ -50,8 +50,8 @@
  * clicks stay synchronous.
  */
 import { execFileSync } from "node:child_process";
-import { appendFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { appendFile, mkdir } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { loadRun } from "promptsmith/storage";
 import {
@@ -209,8 +209,10 @@ export async function runEvaluationCli(
 		"ledger.jsonl",
 	);
 	const experimentId = values.experiment;
-	const recordBatch = (event: LunaBatchEvent) =>
-		appendFile(
+	// A port's first batch creates its ledger (knowledge has none yet).
+	const recordBatch = async (event: LunaBatchEvent) => {
+		await mkdir(dirname(portLedger), { recursive: true });
+		await appendFile(
 			portLedger,
 			`${JSON.stringify({
 				at: new Date().toISOString(),
@@ -219,6 +221,7 @@ export async function runEvaluationCli(
 				...event,
 			})}\n`,
 		);
+	};
 	const environment = (name: string) => {
 		const value = process.env[name];
 		if (!value) throw Error(`${name} is not set`);
