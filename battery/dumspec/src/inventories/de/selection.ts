@@ -36,9 +36,11 @@ export function selectAuthoredArticle(reading: unknown): AuthoredMember | null {
 
 /**
  * Whether a route resolves only to authored members: a German Lexeme AUX,
- * DET or PRON. Its identity is chosen among the authored candidates its
- * spelling realizes (Dumgen ADR 0007), so a Lemma there that no member
- * matches is a Catalog Miss, never Open production (system ADR 0021).
+ * DET, PRON or PART. A DET or PRON identity is chosen among the authored
+ * candidates its spelling realizes (Dumgen ADR 0007), and every German
+ * PART is authored (#734, `germanParticles`), so a Lemma there that no
+ * member matches is a Catalog Miss, never Open production (system ADR
+ * 0021). PART joined on #876.
  */
 export function closedRoute(route: {
 	readonly language: string;
@@ -48,6 +50,9 @@ export function closedRoute(route: {
 	return (
 		route.language === "de" &&
 		route.family === "Lexeme" &&
-		(route.kind === "AUX" || route.kind === "DET" || route.kind === "PRON")
+		(route.kind === "AUX" ||
+			route.kind === "DET" ||
+			route.kind === "PRON" ||
+			route.kind === "PART")
 	);
 }

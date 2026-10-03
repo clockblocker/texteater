@@ -53,7 +53,7 @@ based on reviewed content and available resolution behavior. It is route
 policy, not a flag on linguistic values, and it changes neither the validity
 nor the identity of a value. The closure facts are pure functions over the
 inventories, in `dumspec/inventories`: `closedRoute` says whether a route is
-Closed (in German, Lexeme AUX, DET and PRON), and `authoredFor` returns the
+Closed (in German, Lexeme AUX, DET, PRON and PART), and `authoredFor` returns the
 authored members of a Lemma. The selectors that find an authored member
 (`authoredReading`, `selectAuthoredArticle`), grammatical navigation
 (`selectGrammaticalAlternatives`,
@@ -129,6 +129,11 @@ as a target; `segment.inLexemes` reaches them by drill-down and is out of
 scope for now. Decided by the user on 2026-10-02
 ([#620](https://github.com/clockblocker/texteater/issues/620),
 [#595](https://github.com/clockblocker/texteater/issues/595)).
+
+Amended on 2026-10-03: German Lexeme PART is a Closed Route too. Every
+German PART is authored (#734), so a PART that no authored member spells is
+a Catalog Miss, not Open production. Decided by the user on 2026-10-03
+([#876](https://github.com/clockblocker/texteater/issues/876)).
 
 ## Considered Options
 

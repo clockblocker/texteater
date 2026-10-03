@@ -784,3 +784,28 @@ test("the trace names the operation, its calls by executor and how the click cam
 	]);
 	expect(trace?.resolution).toEqual({ outcome: "Resolved" });
 });
+
+test("PART is closed: an authored particle resolves with no Luna call, and a spelling none names is a Catalog Miss", async () => {
+	// Er0 _1 kommt2 _3 nicht4 .5
+	const luna = fakeLuna();
+	const nicht = await resolveOnce(
+		{ jev: fakeJev().ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Er kommt nicht."),
+			unit: unitOf([4], "Lexeme", "PART"),
+		},
+	);
+	expect(attested(nicht.result).surface.lemma).toMatchObject({
+		canonicalForm: "nicht",
+		coreFeatures: { polarity: "Neg" },
+	});
+	expect(luna.sent).toEqual([]);
+	const unknown = await resolveOnce(
+		{ jev: fakeJev().ask, luna: writes("blubb").ask },
+		{
+			sentence: sentenceOf("Er kommt blubb."),
+			unit: unitOf([4], "Lexeme", "PART"),
+		},
+	);
+	expect(unknown.result).toMatchObject({ _tag: "CatalogMiss" });
+});

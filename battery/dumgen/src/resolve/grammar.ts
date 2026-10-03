@@ -179,8 +179,12 @@ export const resolveGrammar = Effect.fnUntraced(function* (
 	const target = targetOf(input.sentence, unit, route);
 	const ask = askThrough(scope, models.jev);
 	// A Locution DET or PRON an inventory authors resolves as authored too.
+	// A PART, closed as well, is closed on the open route: its spelling or
+	// Luna's headword must name an authored particle.
 	const authored =
-		closedRoute(route) || route.kind === "DET" || route.kind === "PRON"
+		(closedRoute(route) && route.kind !== "PART") ||
+		route.kind === "DET" ||
+		route.kind === "PRON"
 			? yield* resolveAuthored(target, input, ask)
 			: undefined;
 	const outcome: Outcome =

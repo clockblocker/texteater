@@ -137,14 +137,15 @@ describe("authored members by Reading and Lemma", () => {
 		).toBeNull();
 	});
 
-	test("German Lexeme AUX, DET and PRON are the Closed Routes", () => {
+	test("German Lexeme AUX, DET, PRON and PART are the Closed Routes", () => {
 		const route = (language: string, family: string, kind: string) =>
 			closedRoute({ language, family, kind });
-		for (const kind of ["AUX", "DET", "PRON"])
+		for (const kind of ["AUX", "DET", "PRON", "PART"])
 			expect(route("de", "Lexeme", kind)).toBe(true);
 		expect(route("de", "Lexeme", "NOUN")).toBe(false);
 		expect(route("de", "Lexeme", "ADV")).toBe(false);
 		expect(route("de", "Locution", "PRON")).toBe(false);
+		expect(route("de", "Lexeme", "INTJ")).toBe(false);
 		expect(route("en", "Lexeme", "DET")).toBe(false);
 	});
 });
