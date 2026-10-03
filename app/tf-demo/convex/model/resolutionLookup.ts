@@ -109,6 +109,9 @@ export async function loadSentenceForResolution(
 		})),
 		...(sentence.units ? { units: sentence.units } : {}),
 		definitionText: text?.origin?.kind === "Definition",
+		...(sentence.segmentationFailed
+			? { segmentationFailed: true as const }
+			: {}),
 	};
 }
 

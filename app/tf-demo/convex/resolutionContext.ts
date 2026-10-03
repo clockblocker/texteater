@@ -32,6 +32,8 @@ export const resolutionContextValidator = v.object({
 			units: v.optional(v.array(storedUnitValidator)),
 			/** Whether the Sentence belongs to a hidden Definition Text. */
 			definitionText: v.boolean(),
+			/** Present when intake's segmentation failed; a click segments it again. */
+			segmentationFailed: v.optional(v.literal(true)),
 		}),
 	),
 	/** Stored Lemmas and the Sentence texts they were found under. */

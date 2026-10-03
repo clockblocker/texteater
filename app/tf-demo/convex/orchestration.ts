@@ -5,8 +5,10 @@ import {
 	createDumgen,
 	createOpenAILuna,
 	createTypeSafeAsk,
+	InvalidModelOutput,
 	type LunaAsk,
 	type OperationTrace,
+	ProviderFailure,
 } from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
@@ -46,6 +48,7 @@ import {
 	parseGermanReading,
 } from "../server/operationalParsing";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
+import { storedUnitOf } from "../server/storedSegments";
 import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
 import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
@@ -148,7 +151,7 @@ export function clickCallDeadlineMs(
  * The click's Dumgen instance: jev and Luna at the click deadline. With no
  * TypeSafe key, a click fails with the coded intake error.
  */
-function clickDumgen() {
+function clickDumgen(onOperation?: (trace: OperationTrace) => void) {
 	const apiKey = env.TYPESAFE_API_KEY;
 	if (!apiKey)
 		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
@@ -156,6 +159,57 @@ function clickDumgen() {
 	return createDumgen({
 		jev: createTypeSafeAsk({ apiKey, timeoutMs }),
 		luna: productionLuna(timeoutMs),
+		...(onOperation ? { onOperation } : {}),
+	});
+}
+
+/**
+ * Segments one failed Sentence again for its first click (#861), at the
+ * click deadline. When it fails again, the click fails with what its trace
+ * says: a ProviderFailure or an InvalidModelOutput.
+ */
+function resegment(stitchedText: string) {
+	return Effect.suspend(() => {
+		let failure: OperationTrace["sentences"][number] | undefined;
+		const dumgen = clickDumgen((trace) => {
+			failure = trace.sentences.find(
+				({ outcome }) => outcome === "Failed",
+			);
+		});
+		return dumgen.segment
+			.inUnits({
+				language: "de",
+				paragraphs: [{ sentences: [stitchedText] }],
+			})
+			.pipe(
+				Effect.flatMap((text) => {
+					const sentence = text.paragraphs[0]?.sentences[0];
+					if (sentence && !sentence.failed)
+						return Effect.succeed({
+							segments: sentence.segments.map(
+								({ kind, text, surface }) =>
+									surface === undefined
+										? { kind, text }
+										: { kind, text, surface },
+							),
+							units: sentence.units.map(storedUnitOf),
+						});
+					const reason =
+						failure?.outcome === "Failed"
+							? failure.failure
+							: undefined;
+					const fields = {
+						stage: "segment.inUnits",
+						message:
+							reason?.message ?? "The Sentence was not segmented",
+					};
+					return Effect.fail(
+						reason?.tag === "InvalidModelOutput"
+							? new InvalidModelOutput(fields)
+							: new ProviderFailure(fields),
+					);
+				}),
+			);
 	});
 }
 
@@ -361,7 +415,8 @@ function orchestratorFor(
 	observer?: ResolutionProgressObserver,
 ) {
 	return createTfDemoOrchestrator({
-		resolution: dumgenClickResolution(clickDumgen),
+		resolution: dumgenClickResolution(() => clickDumgen()),
+		resegment,
 		findStoredReadings: async (lemma) =>
 			(
 				await ctx.runQuery(
@@ -444,6 +499,17 @@ function createConvexPersistence(
 					sessionGuard: sessionCommitGuard(sessionGuard),
 				},
 			) as Promise<ReusedResolvedClickCommit>;
+		},
+		async storeResegmentedSentence(input) {
+			return ctx.runMutation(
+				internal.persistence.storeResegmentedSentence,
+				{
+					...convexSegmentSelectionArgs(input),
+					segments: input.segments.map((segment) => ({ ...segment })),
+					units: input.units.map((unit) => storedUnitOf(unit)),
+					sessionGuard: sessionCommitGuard(sessionGuard),
+				},
+			);
 		},
 		async persistUnresolvedClick(input) {
 			return ctx.runMutation(

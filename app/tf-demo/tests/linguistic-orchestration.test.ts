@@ -723,3 +723,89 @@ test("a Resolution Session run on a unit intake left Unresolved ends Unresolved 
 		[],
 	);
 });
+
+/** A click on a Sentence intake failed to segment: `Banken`, stored with no units. */
+function failedSentenceRun(
+	resegment: Parameters<typeof createTfDemoOrchestrator>[0]["resegment"],
+) {
+	const fake = fakeResolution();
+	const stored: Parameters<
+		NonNullable<OrchestrationPersistence["storeResegmentedSentence"]>
+	>[0][] = [];
+	let failed = true;
+	const persistence: OrchestrationPersistence = {
+		async loadResolutionContext() {
+			const loaded = context();
+			if (!failed || !loaded.sentence) return loaded;
+			return {
+				...loaded,
+				sentence: {
+					...loaded.sentence,
+					units: [],
+					segmentationFailed: true,
+				},
+			};
+		},
+		async storeResegmentedSentence(input) {
+			stored.push(input);
+			failed = false;
+			return { clickedSegmentIndex: input.clickedSegmentIndex };
+		},
+		async persistResolvedClick() {
+			throw new Error("No commit is expected.");
+		},
+		async persistReusedResolvedClick() {
+			throw new Error("No reuse is expected.");
+		},
+		async persistUnresolvedClick() {
+			throw new Error("No unresolved commit is expected.");
+		},
+	};
+	const orchestrator = createTfDemoOrchestrator({
+		resolution: {
+			...fake.resolution,
+			reading: () => Effect.fail(providerFailure("stop after grammar")),
+		},
+		findStoredReadings: () => Effect.succeed([]),
+		persistence,
+		...(resegment ? { resegment } : {}),
+	});
+	return { orchestrator, fake, stored };
+}
+
+test("a click on a Sentence intake failed to segment segments it again, stores its units, then resolves the unit", async () => {
+	const resegmented: string[] = [];
+	const run = failedSentenceRun((stitchedText) => {
+		resegmented.push(stitchedText);
+		return Effect.succeed({
+			segments: [{ kind: "ResolvableText" as const, text: "Banken" }],
+			units: [unit],
+		});
+	});
+	const failure = await Effect.runPromise(
+		Effect.flip(run.orchestrator.resolveSegment(selection)),
+	);
+	expect(failure).toBeInstanceOf(ProviderFailure);
+	expect(resegmented).toEqual(["Banken"]);
+	expect(run.stored).toEqual([
+		{
+			...selection,
+			segments: [{ kind: "ResolvableText", text: "Banken" }],
+			units: [unit],
+		},
+	]);
+	// Grammar ran on the new unit.
+	expect(run.fake.grammarInputs[0]?.unit).toEqual(unit);
+});
+
+test("a re-segmentation that fails again fails the click and stores nothing", async () => {
+	const run = failedSentenceRun(() =>
+		Effect.fail(providerFailure("jev is down")),
+	);
+	const failure = await Effect.runPromise(
+		Effect.flip(run.orchestrator.resolveSegment(selection)),
+	);
+	expect(failure).toMatchObject({ message: "jev is down" });
+	expect(run.stored).toEqual([]);
+	expect(run.fake.grammarInputs).toEqual([]);
+});

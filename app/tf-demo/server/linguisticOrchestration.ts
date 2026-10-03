@@ -47,6 +47,8 @@ export type PersistedSentence = {
 	readonly segments: readonly StoredSegment[];
 	/** The biggest units intake stored with the Sentence, if it still has them. */
 	readonly units?: readonly StoredUnit[];
+	/** Present when intake's segmentation failed: a click segments it again (#861). */
+	readonly segmentationFailed?: true;
 	/** Whether the Sentence belongs to a hidden Definition Text; absent reads as false. */
 	readonly definitionText?: boolean;
 };
@@ -175,6 +177,16 @@ export type ResolveSegmentResult =
  * Attestation, and the Visitor Encounter commit together. Replays and late
  * competing results return the committed occurrence instead of duplicating it.
  */
+/** What a click's re-segmentation of a failed Sentence found (#861). */
+export type ResegmentedSentence = {
+	readonly segments: readonly {
+		readonly kind: StoredSegment["kind"];
+		readonly text: string;
+		readonly surface?: string;
+	}[];
+	readonly units: readonly StoredUnit[];
+};
+
 export type OrchestrationPersistence = {
 	loadResolutionContext(
 		input: ResolveSegmentInput,
@@ -187,6 +199,15 @@ export type OrchestrationPersistence = {
 			readonly attestationId: string;
 		},
 	): Promise<ReusedResolvedClickCommit>;
+	/**
+	 * Stores a failed Sentence's re-segmentation for the click that ran it,
+	 * and returns the clicked Segment's index among the new Segments: the
+	 * Segment at the same place, should the Segments have come out
+	 * differently.
+	 */
+	storeResegmentedSentence?(
+		input: ResolveSegmentInput & ResegmentedSentence,
+	): Promise<{ readonly clickedSegmentIndex: number }>;
 	persistUnresolvedClick(input: {
 		readonly requestId: string;
 		readonly visitorId: string;
@@ -263,6 +284,15 @@ export function createTfDemoOrchestrator(options: {
 	}) => Effect.Effect<KnowledgeDraft, unknown>;
 	/** How long a new Reading waits for unfinished drafts before committing. */
 	readonly draftGraceMs?: number;
+	/**
+	 * Segments a Sentence whose intake segmentation failed again, on the
+	 * first click on it (#861): Dumgen's `segment.inUnits` for that one
+	 * Sentence. A segmentation that fails again fails the click; the next
+	 * click is a fresh attempt.
+	 */
+	readonly resegment?: (
+		stitchedText: string,
+	) => Effect.Effect<ResegmentedSentence, unknown>;
 }) {
 	const draftGrace = Duration.millis(options.draftGraceMs ?? DRAFT_GRACE_MS);
 	/** Waits out the grace, then settles the leaves in flight; a draft that ignores the settle is dropped. */
@@ -287,11 +317,12 @@ export function createTfDemoOrchestrator(options: {
 		});
 	}
 	function resolveSegment(
-		input: ResolveSegmentInput,
+		selection: ResolveSegmentInput,
 		checkpoints: ResolutionCheckpoints = {},
 		initialContext?: ResolutionContext,
 	) {
 		return Effect.gen(function* () {
+			let input = selection;
 			let knowledgeDraft:
 				| Fiber.Fiber<KnowledgeDraft | null, never>
 				| undefined;
@@ -304,16 +335,48 @@ export function createTfDemoOrchestrator(options: {
 					"clickedSegmentIndex must be a safe integer.",
 				);
 			}
-			const context =
-				initialContext ??
-				(yield* Effect.tryPromise(() =>
+			const load = () =>
+				Effect.tryPromise(() =>
 					options.persistence.loadResolutionContext(input),
 				).pipe(
 					Effect.withSpan(
 						"Load resolution context",
 						inspectionStep("app/tf-demo", input),
 					),
-				));
+				);
+			let context = initialContext ?? (yield* load());
+			// A Sentence intake failed to segment is segmented again on its
+			// first click, its units stored, then resolved as usual (#861).
+			const failed = context.sentence?.segmentationFailed === true;
+			const { resegment } = options;
+			const store = options.persistence.storeResegmentedSentence;
+			if (failed && !checkpoints.grammatical && resegment && store) {
+				const stitchedText = context.sentence?.stitchedText ?? "";
+				const resegmented = yield* resegment(stitchedText).pipe(
+					Effect.withSpan(
+						"Segment the failed sentence again",
+						inspectionStep("battery/dumgen · segment.inUnits", {
+							stitchedText,
+						}),
+					),
+				);
+				const stored = yield* Effect.tryPromise(() =>
+					store({ ...input, ...resegmented }),
+				).pipe(
+					Effect.withSpan(
+						"Store the sentence's new units",
+						inspectionStep(
+							"app/tf-demo · persistence",
+							resegmented,
+						),
+					),
+				);
+				input = {
+					...input,
+					clickedSegmentIndex: stored.clickedSegmentIndex,
+				};
+				context = yield* load();
+			}
 			const reusable = context.reusable;
 			if (reusable) {
 				const reuse = {
