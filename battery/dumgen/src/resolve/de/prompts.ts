@@ -27,6 +27,10 @@ const rules = {
 	neuterNoun: ["de/neuter-adjectival-noun", "a4bd8e12a664fd8e"],
 	pluralOnly: ["de/plural-only-noun-has-no-gender", "92946b73a6244500"],
 	properArticle: ["de/proper-noun-article", "c3eb61394edd1818"],
+	organisation: [
+		"de/organisation-name-takes-its-article",
+		"f554775a2a54046e",
+	],
 	title: ["de/title-before-a-name", "dd531115e2c8a2ef"],
 	verbalWhole: ["de/verbal-surface-is-whole", "ab79bbe68ce12d4c"],
 	verbalParticiple: ["de/verbal-participle", "8783a18791f95718"],
@@ -128,8 +132,9 @@ export const policy = {
 	),
 	properNoun: paragraph(
 		"policy.properNoun",
-		"A name cited with its definite article, as streets, squares, rivers, mountains, buildings, a country or region always named with it, and titles whose article inflects are, has Core article Definite; a name cited bare has none even where this sentence gives it an article. A surname, full name or coined name has no lexical gender, unlike a first name, and its singular form shows the gender its article or adjective gives it; any other name has the lexical gender its article or an agreeing word shows. A title before a name takes the name's case.",
+		"A name cited with its definite article, as streets, squares, rivers, mountains, buildings, a country or region always named with it, an organisation German names with it («der ADAC», «die FIFA») and titles whose article inflects are, has Core article Definite, and an organisation's gender is that article's; a name cited bare has none even where this sentence gives it an article. A surname, full name or coined name has no lexical gender, unlike a first name, and its singular form shows the gender its article or adjective gives it; any other name has the lexical gender its article or an agreeing word shows. A title before a name takes the name's case.",
 		rules.properArticle,
+		rules.organisation,
 		rules.title,
 	),
 	verbal: paragraph(
@@ -340,11 +345,13 @@ export const question = {
 		"question.proper.article",
 		"Under `policy.properNoun`, is this name cited in a dictionary with its definite article?",
 		rules.properArticle,
+		rules.organisation,
 	),
 	properGender: paragraph(
 		"question.proper.gender",
 		"Under `policy.properNoun`, what gender does the name have lexically? A first name has its bearer's gender; any other name but a surname, full name or coined name has the gender its article or an agreeing word shows.",
 		rules.properArticle,
+		rules.organisation,
 	),
 	properGenderNone: paragraph(
 		"question.proper.gender.None",
