@@ -6,15 +6,19 @@
  * cell needs no question, and several get one Choice over the cells. A
  * pronoun form whose cells only its referent tells apart reads the
  * neighbouring Sentences and may attest the form's Syncretism (ADR 0044,
- * ADR 0046). An identity no authored member realizes is a Catalog Miss.
+ * ADR 0046): a pillar's Lemma Syncretism (ihm), or a stem's Surface
+ * Syncretism (jedem). An identity no authored member realizes is a Catalog
+ * Miss.
  */
-import { foldCase, lemmaIdentityKey } from "dumling";
+import { foldCase, lemmaIdentityKey, syncretize } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	type AuthoredMember,
 	type AuthoredRealization,
 	authoredMembers,
 	authoredRealizations,
+	type StemSyncretism,
+	stemSyncretisms,
 } from "dumspec/inventories";
 import type { ClosedClassIdentity } from "../../segment/segmented-sentence.js";
 import type { NeighbourSentences } from "../types.js";
@@ -250,6 +254,58 @@ export function syncretismOptions(
 	});
 }
 
+/** A stem's generated Surface Syncretism (ADR 0046) and the options that are its units. */
+export type StemOpenOption = {
+	readonly syncretism: StemSyncretism;
+	readonly units: readonly [ClosedOption, ClosedOption, ...ClosedOption[]];
+};
+
+/**
+ * The generated Surface Syncretisms of a stem (ADR 0046) whose cells are
+ * all among the options of its Lemma and spelling: each is an answer that
+ * leaves the gender open (jedem, Masc or Neut).
+ */
+export function stemSyncretismOptions(
+	options: readonly ClosedOption[],
+): readonly StemOpenOption[] {
+	const open: StemOpenOption[] = [];
+	for (const syncretism of stemSyncretisms.values()) {
+		const lemma = lemmaIdentityKey(syncretism.member.lemma);
+		const units = syncretism.cells.map((cell) =>
+			options.find(
+				(option) =>
+					option.cell !== undefined &&
+					lemmaIdentityKey(option.member.lemma) === lemma &&
+					foldCase(option.realization.spelled, "de") ===
+						syncretism.spelled &&
+					JSON.stringify(option.realization.spelling ?? null) ===
+						JSON.stringify(syncretism.spelling) &&
+					(["case", "number", "gender"] as const).every(
+						(key) => (option.cell?.[key] ?? null) === cell[key],
+					),
+			),
+		);
+		const [first, second, ...rest] = units;
+		if (first && second && rest.every((unit) => unit !== undefined))
+			open.push({
+				syncretism,
+				units: [first, second, ...(rest as ClosedOption[])],
+			});
+	}
+	return open;
+}
+
+/** An answer that leaves the referent open: a Lemma Syncretism or a stem's Surface one. */
+export type OpenAnswer = AuthoredMember | StemOpenOption;
+
+/** The answers that leave the referent open, Lemma Syncretisms first (ADR 0046). */
+export function openOptions(
+	options: readonly ClosedOption[],
+): readonly OpenAnswer[] {
+	if (!referentDecides(options)) return [];
+	return [...syncretismOptions(options), ...stemSyncretismOptions(options)];
+}
+
 const caseNames: Readonly<Record<string, string>> = {
 	Nom: "nominative",
 	Acc: "accusative",
@@ -289,27 +345,34 @@ export function cellQuestion(
 ) {
 	const questionnaire = new Questionnaire();
 	const referent = referentDecides(options);
-	const syncretisms = referent ? syncretismOptions(options) : [];
+	const syncretisms = openOptions(options);
 	const criteria: Record<string, string> = {};
 	for (const [index, option] of options.entries())
 		criteria[`o${index}`] = describe(option.member, option.cell);
 	for (const [index, syncretism] of syncretisms.entries()) {
-		const units =
-			(syncretism.lemma as { syncretized?: AuthoredMember["lemma"][] })
-				.syncretized ?? [];
+		const cells =
+			"syncretism" in syncretism
+				? syncretism.units.map((unit) =>
+						describe(unit.member, unit.cell),
+					)
+				: (
+						(
+							syncretism.lemma as {
+								syncretized?: AuthoredMember["lemma"][];
+							}
+						).syncretized ?? []
+					).map((unit) => {
+						const authored = authoredMembers.find(
+							(candidate) =>
+								lemmaIdentityKey(candidate.lemma) ===
+								lemmaIdentityKey(unit),
+						);
+						return authored
+							? describe(authored, undefined)
+							: unit.canonicalForm;
+					});
 		criteria[`s${index}`] = fill(question.cellOpen, {
-			cells: units
-				.map((unit) => {
-					const authored = authoredMembers.find(
-						(candidate) =>
-							lemmaIdentityKey(candidate.lemma) ===
-							lemmaIdentityKey(unit),
-					);
-					return authored
-						? describe(authored, undefined)
-						: unit.canonicalForm;
-				})
-				.join(" or "),
+			cells: cells.join(" or "),
 		});
 	}
 	questionnaire.choice(
@@ -332,7 +395,7 @@ export function cellQuestion(
 							: {}),
 					}
 				: undefined,
-		answerOf(choice: string): ClosedOption | AuthoredMember | undefined {
+		answerOf(choice: string): ClosedOption | OpenAnswer | undefined {
 			if (choice.startsWith("o")) return options[Number(choice.slice(1))];
 			if (choice.startsWith("s"))
 				return syncretisms[Number(choice.slice(1))];
@@ -392,9 +455,11 @@ function stemInflection(option: ClosedOption): Cell {
  */
 export function closedAttestation(
 	target: Target,
-	answer: ClosedOption | AuthoredMember,
+	answer: ClosedOption | OpenAnswer,
 	realization: AuthoredRealization,
 ): unknown {
+	if ("syncretism" in answer)
+		return stemSyncretismAttestation(target, answer);
 	const option = "realization" in answer ? answer : undefined;
 	const lemma = structuredClone(
 		option ? option.member.lemma : (answer as AuthoredMember).lemma,
@@ -436,6 +501,28 @@ export function closedAttestation(
 		...(lemma.family === "Lexeme" && lemma.kind === "PRON"
 			? { articleEvidence: null }
 			: {}),
+	};
+}
+
+/**
+ * The Attestation of a stem's Surface Syncretism (ADR 0046): each unit's
+ * Surface as its cell would be attested, joined by Dumling into one.
+ */
+function stemSyncretismAttestation(
+	target: Target,
+	answer: StemOpenOption,
+): unknown {
+	const attestations = answer.units.map(
+		(unit) =>
+			closedAttestation(target, unit, unit.realization) as {
+				readonly surface: Dumling.Surface;
+			},
+	);
+	const [first] = attestations;
+	if (!first) throw Error("A Surface Syncretism holds two or more units");
+	return {
+		...first,
+		surface: syncretize(attestations.map(({ surface }) => surface)),
 	};
 }
 

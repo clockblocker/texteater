@@ -508,6 +508,72 @@ test("a referent the neighbours settle attests its cell", async () => {
 	expect(["Masc", "Neut"]).toContain(String(lemma.coreFeatures.gender));
 });
 
+const jedem = {
+	sentence: sentenceOf("Ich helfe jedem."),
+	unit: unitOf([4], "Lexeme", "PRON", {
+		kind: "PRON",
+		canonicalForm: "jeder",
+		pronType: "Tot",
+	}),
+};
+
+test("a stem's gender-only cells offer its Surface Syncretism, which an open referent attests", async () => {
+	const jev = fakeJev({ cell: "s0" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: fakeLuna().ask },
+		{ ...jedem, neighbours: { before: "Heute ist Markt." } },
+	);
+	const { surface } = attested(result);
+	expect(surface.lemma.canonicalForm).toBe("jeder");
+	expect(surface.lemma).not.toHaveProperty("syncretic");
+	expect(surface).toMatchObject({
+		normalizedSurface: "jedem",
+		syncretic: ["gender"],
+		inflectionalFeatures: { case: "Dat", number: "Sing", gender: null },
+	});
+	expect(
+		(
+			surface as { syncretized?: readonly Dumling.Surface[] }
+		).syncretized?.map(
+			(unit) =>
+				(unit as { inflectionalFeatures: { gender: string } })
+					.inflectionalFeatures.gender,
+		),
+	).toEqual(["Masc", "Neut"]);
+	const cell = jev.sent[0]?.questions.cell as
+		| { criteria?: Record<string, string> }
+		| undefined;
+	expect(Object.keys(cell?.criteria ?? {})).toEqual([
+		"o0",
+		"o1",
+		"s0",
+		"Unresolved",
+	]);
+	expect(jev.sent[0]?.state.neighbours).toEqual({
+		before: "Heute ist Markt.",
+	});
+});
+
+test("a stem whose referent the sentence settles attests the settled Surface", async () => {
+	const jev = fakeJev({ cell: "o1" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: fakeLuna().ask },
+		{
+			sentence: sentenceOf("Von den Kindern helfe ich jedem."),
+			unit: unitOf([10], "Lexeme", "PRON", {
+				kind: "PRON",
+				canonicalForm: "jeder",
+				pronType: "Tot",
+			}),
+		},
+	);
+	const { surface } = attested(result);
+	expect(surface).not.toHaveProperty("syncretic");
+	expect(surface).toMatchObject({
+		inflectionalFeatures: { case: "Dat", gender: "Neut" },
+	});
+});
+
 // Luna writes the Canonical Form and spellings (#862, #639, #764).
 
 test("Luna writes the Canonical Form in lexical casing with the unit's stored Lemmas as hints, and nothing lowercases by position", async () => {

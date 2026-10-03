@@ -9,7 +9,7 @@
  */
 import { lemmaIdentityKey, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember, AuthoredRealization } from "dumspec/inventories";
+import type { AuthoredRealization } from "dumspec/inventories";
 import { closedRoute } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type { OperationScope } from "../call.js";
@@ -23,6 +23,7 @@ import {
 	type ClosedOption,
 	cellQuestion,
 	closedAttestation,
+	type OpenAnswer,
 } from "./de/closed-class.js";
 import { resolveOpenRoute } from "./de/open-route.js";
 import { Answered, UnresolvedAnswer } from "./de/questions.js";
@@ -120,14 +121,16 @@ const resolveAuthored = Effect.fnUntraced(function* (
 });
 
 /**
- * The authored spelling an answer attests: its own, or for a Syncretism
- * the spelling of its Canonical Form among its units' (ihnen, not Ihnen).
+ * The authored spelling an answer attests: its own, for a stem's Surface
+ * Syncretism its units' one spelling, or for a Lemma Syncretism the
+ * spelling of its Canonical Form among its units' (ihnen, not Ihnen).
  */
 function realizationOf(
-	chosen: ClosedOption | AuthoredMember,
+	chosen: ClosedOption | OpenAnswer,
 	options: readonly ClosedOption[],
 ): AuthoredRealization {
 	if ("realization" in chosen) return chosen.realization;
+	if ("syncretism" in chosen) return chosen.units[0].realization;
 	const units = new Set(
 		(
 			(chosen.lemma as { syncretized?: readonly Dumling.Lemma[] })

@@ -7,11 +7,7 @@
 import { foldCase, lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type { Question, Questions } from "promptsmith/typesafe";
-import {
-	authoredOptions,
-	referentDecides,
-	syncretismOptions,
-} from "../../resolve/de/closed-class.js";
+import { authoredOptions, openOptions } from "../../resolve/de/closed-class.js";
 import { auxiliaryUses } from "../../resolve/de/prompts.js";
 import { targetOf } from "../../resolve/de/target.js";
 import type { Answer, Answers } from "../../segment/ask.js";
@@ -77,11 +73,29 @@ function cellAnswer(goldCase: GrammarCase, question: Question): string {
 			),
 	);
 	if (index >= 0) return `o${index}`;
-	const syncretisms = referentDecides(options)
-		? syncretismOptions(options)
-		: [];
-	const open = syncretisms.findIndex(
-		(member) => lemmaIdentityKey(member.lemma) === lemmaKey,
+	// A stem's Surface Syncretism has its units' Lemma; its units' cells
+	// tell it apart.
+	const goldUnits = (
+		(
+			ideal.surface as {
+				syncretized?: readonly {
+					inflectionalFeatures?: Values | null;
+				}[];
+			}
+		).syncretized ?? []
+	).map(({ inflectionalFeatures }) => inflectionalFeatures ?? {});
+	const open = openOptions(options).findIndex((answer) =>
+		"syncretism" in answer
+			? lemmaIdentityKey(answer.syncretism.member.lemma) === lemmaKey &&
+				answer.units.length === goldUnits.length &&
+				answer.units.every(({ cell }) =>
+					goldUnits.some((unit) =>
+						Object.entries(cell ?? {}).every(
+							([key, value]) => (unit[key] ?? null) === value,
+						),
+					),
+				)
+			: lemmaIdentityKey(answer.lemma) === lemmaKey,
 	);
 	return open >= 0 &&
 		question.type === "choice" &&
