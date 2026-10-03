@@ -329,6 +329,13 @@ evidence/segment-in-units-lab/
   the inventories, and an offline replay of
   20261002T122056--production--heldout--all misses the cache on 15 case
   repetitions.
+- A fourth refreeze, on 2026-10-03 at 06888a0a, picks up #877's ruling 7:
+  *Da kann ich nichts für* is one Locution VERB, `nichts dafür können`,
+  over `[Da, kann, nichts, für]`, where the split ADV `dafür` and the VERB
+  `können` were two units. Dev is now `dev@9408e60258d4f891`, the same
+  1279 cases with 2024 gold units, and only that case changed. Held-out
+  came out unchanged at `heldout@1a69c4258c71f152`. Dev runs before it
+  stay scored on `dev@b6fca287295d4ee3`. The round was not re-pinned.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   committed outcomes otherwise. Outcomes are scored against the frozen
   gold, so `--relabel` needs the raw run.
