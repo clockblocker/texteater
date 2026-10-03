@@ -16,9 +16,19 @@
  * were), or wrapped under another single key, is unwrapped and marked. The
  * request ends at its deadline or when the caller's signal aborts,
  * whichever comes first.
+ *
+ * With `promptCaching` (or a request's `cachePrompt`) it asks for explicit
+ * prompt caching as promptsmith's executor does (#891): the system prompt
+ * goes as a developer message ending in a cache breakpoint, under
+ * `prompt_cache_options: { mode: "explicit" }`. OpenAI caches only a
+ * prefix of at least 1,024 input tokens on GPT-5.6 and later, writes at
+ * 1.25 times the input rate and reads at 0.1 times; the usage's
+ * `input_tokens_details` reports `cached_tokens` and `cache_write_tokens`.
+ * The body and the reading of an answer are exported so an evaluation's
+ * Batch API lines are sent and read exactly as these requests are.
  */
 
-import type { LunaAsk, LunaResponse } from "./luna.js";
+import type { LunaAsk, LunaRequest, LunaResponse } from "./luna.js";
 import type { Fetch } from "./segment/typesafe-ask.js";
 
 export type OpenAILunaOptions = {
@@ -32,6 +42,11 @@ export type OpenAILunaOptions = {
 	 * default. A host sets a shorter one for clicks.
 	 */
 	readonly timeoutMs?: number;
+	/**
+	 * Ask for explicit prompt caching of every request's system prompt;
+	 * off by default, and a request's own `cachePrompt` asks for it too.
+	 */
+	readonly promptCaching?: boolean;
 };
 
 const messageOf = (error: unknown) =>
@@ -51,6 +66,95 @@ type ResponsesPayload = {
 	readonly usage?: unknown;
 	readonly model?: string;
 };
+
+/** The schema's required keys, which an unwrapped answer must hold. */
+function requiredOf(request: LunaRequest): readonly string[] {
+	const required = (
+		request.outputSchema as { required?: unknown } | undefined
+	)?.required;
+	return Array.isArray(required)
+		? required.filter((key): key is string => typeof key === "string")
+		: [];
+}
+
+/**
+ * The Responses API body of one Luna request: the system prompt, the input
+ * as one user message, and JSON output wrapped in `value`. With
+ * `promptCaching`, the system prompt is a developer message ending in an
+ * explicit cache breakpoint.
+ */
+export function lunaResponsesBody(
+	request: LunaRequest,
+	options: { readonly promptCaching?: boolean } = {},
+): Record<string, unknown> {
+	const json = request.outputFormat !== "text";
+	const cache =
+		options.promptCaching === true || request.cachePrompt === true;
+	const {
+		$defs,
+		$schema: _schema,
+		...schema
+	} = (request.outputSchema ?? {}) as Record<string, unknown>;
+	return {
+		...request.configuration.settings,
+		model: request.configuration.model,
+		store: false,
+		...(cache ? { prompt_cache_options: { mode: "explicit" } } : {}),
+		input: [
+			cache
+				? {
+						role: "developer",
+						content: [
+							{
+								type: "input_text",
+								text: request.systemPrompt,
+								prompt_cache_breakpoint: { mode: "explicit" },
+							},
+						],
+					}
+				: { role: "system", content: request.systemPrompt },
+			{
+				role: "user",
+				content:
+					typeof request.input === "string"
+						? request.input
+						: JSON.stringify(request.input),
+			},
+		],
+		text: {
+			format: json
+				? {
+						type: "json_schema",
+						name: "output",
+						strict: false,
+						schema: {
+							type: "object",
+							properties: { value: schema },
+							required: ["value"],
+							additionalProperties: false,
+							...($defs ? { $defs } : {}),
+						},
+					}
+				: { type: "text" },
+		},
+	};
+}
+
+/**
+ * What one Responses API answer body gives the request that asked it, as
+ * `createOpenAILuna` returns it; throws when the answer is unusable as an
+ * exchange (not JSON, not completed, output that is not JSON).
+ */
+export function lunaResponseOf(
+	body: string,
+	request: LunaRequest,
+): LunaResponse {
+	return responseOf(
+		body,
+		request.outputFormat !== "text",
+		requiredOf(request),
+	);
+}
 
 function responseOf(
 	body: string,
@@ -138,43 +242,11 @@ export function createOpenAILuna(options: OpenAILunaOptions): LunaAsk {
 	const timeoutMs = options.timeoutMs ?? 120_000;
 	return async (request, { signal }) => {
 		const deadline = AbortSignal.timeout(timeoutMs);
-		const json = request.outputFormat !== "text";
-		const {
-			$defs,
-			$schema: _schema,
-			...schema
-		} = (request.outputSchema ?? {}) as Record<string, unknown>;
-		const body = JSON.stringify({
-			...request.configuration.settings,
-			model: request.configuration.model,
-			store: false,
-			input: [
-				{ role: "system", content: request.systemPrompt },
-				{
-					role: "user",
-					content:
-						typeof request.input === "string"
-							? request.input
-							: JSON.stringify(request.input),
-				},
-			],
-			text: {
-				format: json
-					? {
-							type: "json_schema",
-							name: "output",
-							strict: false,
-							schema: {
-								type: "object",
-								properties: { value: schema },
-								required: ["value"],
-								additionalProperties: false,
-								...($defs ? { $defs } : {}),
-							},
-						}
-					: { type: "text" },
-			},
-		});
+		const body = JSON.stringify(
+			lunaResponsesBody(request, {
+				...(options.promptCaching ? { promptCaching: true } : {}),
+			}),
+		);
 		let status: number;
 		let ok: boolean;
 		let text: string;
@@ -201,11 +273,6 @@ export function createOpenAILuna(options: OpenAILunaOptions): LunaAsk {
 		}
 		if (!ok)
 			throw Error(`OpenAI answered ${status}: ${text.slice(0, 200)}`);
-		const required = Array.isArray(schema.required)
-			? (schema.required as unknown[]).filter(
-					(key): key is string => typeof key === "string",
-				)
-			: [];
-		return responseOf(text, json, required);
+		return lunaResponseOf(text, request);
 	};
 }

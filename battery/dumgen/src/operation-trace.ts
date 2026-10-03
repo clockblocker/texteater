@@ -23,6 +23,12 @@ export type CallTrace = {
 	/** Zero when no answer came back. */
 	readonly inputTokens: number;
 	readonly outputTokens: number;
+	/**
+	 * Luna only: of `inputTokens`, those read from OpenAI's prompt cache
+	 * and those written to it (#891); zero unless prompt caching is on.
+	 */
+	readonly cachedInputTokens?: number;
+	readonly cacheWriteTokens?: number;
 	/** Epoch milliseconds; `durationMs` reads the monotonic clock. */
 	readonly startedAt: number;
 	readonly durationMs: number;

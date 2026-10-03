@@ -42,6 +42,12 @@ export function requestBudget(permits: number): RequestBudget {
 	return { permits, semaphore: Semaphore.makeUnsafe(permits), demand: 0 };
 }
 
+/** The tokens a call's answer reports; Luna's say what the prompt cache read and wrote. */
+export type CallTokens = Pick<
+	CallTrace,
+	"inputTokens" | "outputTokens" | "cachedInputTokens" | "cacheWriteTokens"
+>;
+
 /** One model call as an operation sends and checks it. */
 export type Exchange<Response, Output> = {
 	readonly stage: string;
@@ -50,10 +56,7 @@ export type Exchange<Response, Output> = {
 	/** What a payload keeps of the request. */
 	readonly request: unknown;
 	send(signal: AbortSignal): Promise<Response>;
-	tokens(response: Response): {
-		readonly inputTokens: number;
-		readonly outputTokens: number;
-	};
+	tokens(response: Response): CallTokens;
 	/** The output, or why the response cannot be used. */
 	check(response: Response): Output | InvalidModelOutput;
 };

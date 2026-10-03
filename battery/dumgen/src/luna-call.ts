@@ -4,7 +4,7 @@
  * transport reports (OpenAI's `usage`, as `createOpenAILuna` returns it).
  */
 import type * as Effect from "effect/Effect";
-import type { OperationScope } from "./call.js";
+import type { CallTokens, OperationScope } from "./call.js";
 import { InvalidModelOutput, type ProviderFailure } from "./errors.js";
 import type { LunaAsk, LunaConfiguration, LunaRequest } from "./luna.js";
 
@@ -17,16 +17,26 @@ export type LunaSettings = {
 const tokenCount = (value: unknown) =>
 	typeof value === "number" && Number.isFinite(value) ? value : 0;
 
-/** The tokens a Luna response reports in its metadata's `usage`, zero when it reports none. */
-export function lunaTokens(metadata: unknown): {
-	readonly inputTokens: number;
-	readonly outputTokens: number;
+/**
+ * The tokens a Luna response reports in its metadata's `usage`, zero when
+ * it reports none. `inputTokens` counts them all; of those, OpenAI's
+ * `input_tokens_details` says how many were read from the prompt cache
+ * (`cached_tokens`) and how many were written to it (`cache_write_tokens`).
+ */
+export function lunaTokens(metadata: unknown): CallTokens & {
+	readonly cachedInputTokens: number;
+	readonly cacheWriteTokens: number;
 } {
 	const usage = (metadata as { usage?: Record<string, unknown> } | null)
 		?.usage;
+	const details = usage?.input_tokens_details as
+		| Record<string, unknown>
+		| undefined;
 	return {
 		inputTokens: tokenCount(usage?.input_tokens),
 		outputTokens: tokenCount(usage?.output_tokens),
+		cachedInputTokens: tokenCount(details?.cached_tokens),
+		cacheWriteTokens: tokenCount(details?.cache_write_tokens),
 	};
 }
 

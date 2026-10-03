@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { defaultLunaConfiguration, type LunaRequest } from "../src/luna.js";
-import { createOpenAILuna } from "../src/openai-luna.js";
+import { lunaTokens } from "../src/luna-call.js";
+import { createOpenAILuna, lunaResponsesBody } from "../src/openai-luna.js";
 import type { Fetch } from "../src/segment/typesafe-ask.js";
 
 const completed = (text: string) =>
@@ -196,4 +197,62 @@ test("the value written without its wrapper is taken when it holds the schema's 
 		output: { canonicalForm: "Haus", members: ["Häuser"] },
 		metadata: { unwrapped: "top-level" },
 	});
+});
+
+test("with prompt caching, the system prompt ends in an explicit breakpoint and the usage's cache tokens are read", async () => {
+	const { fetch, sent } = fakeFetch([
+		{
+			status: 200,
+			body: JSON.stringify({
+				status: "completed",
+				model: "gpt-5.6-luna",
+				output: [
+					{
+						content: [
+							{
+								type: "output_text",
+								text: '{"value":{"canonicalForm":"Haus"}}',
+							},
+						],
+					},
+				],
+				usage: {
+					input_tokens: 1300,
+					input_tokens_details: {
+						cached_tokens: 1024,
+						cache_write_tokens: 0,
+					},
+					output_tokens: 12,
+				},
+			}),
+		},
+	]);
+	const luna = createOpenAILuna({
+		apiKey: "key-1",
+		fetch,
+		promptCaching: true,
+	});
+	const response = await luna(request, context());
+	const body = JSON.parse(sent[0]?.init.body ?? "{}");
+	expect(body.prompt_cache_options).toEqual({ mode: "explicit" });
+	expect(body.input[0]).toEqual({
+		role: "developer",
+		content: [
+			{
+				type: "input_text",
+				text: "Write the Canonical Form.",
+				prompt_cache_breakpoint: { mode: "explicit" },
+			},
+		],
+	});
+	expect(lunaTokens(response.metadata)).toEqual({
+		inputTokens: 1300,
+		outputTokens: 12,
+		cachedInputTokens: 1024,
+		cacheWriteTokens: 0,
+	});
+	// Off by default: the plain shape, as production clicks send it.
+	expect(lunaResponsesBody(request)).not.toHaveProperty(
+		"prompt_cache_options",
+	);
 });
