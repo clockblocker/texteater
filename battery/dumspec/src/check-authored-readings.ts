@@ -25,6 +25,18 @@ function authoredMembersOf(lemma: Dumling.Lemma): readonly AuthoredMember[] {
 }
 
 /**
+ * Whether the Authored Inventory holds this Reading, by its identity (ADR
+ * 0031): its reviewed Knowledge lives there (ADR 0021).
+ */
+export function isAuthoredReading(reading: Dumling.Reading): boolean {
+	if (!("emojiDescription" in reading)) return false;
+	const key = readingIdentityKey(reading);
+	return authoredMembersOf(reading.lemma).some(
+		(member) => readingIdentityKey(member.reading) === key,
+	);
+}
+
+/**
  * An authored Lemma's Readings are its authored members (ADR 0021), so a
  * Reading of an authored Lemma must name one of them by its Emoji
  * Description (ADR 0031). The members include the generated Syncretisms,

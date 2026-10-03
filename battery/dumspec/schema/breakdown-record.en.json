@@ -2958,6 +2958,49 @@
 									}
 								},
 								"additionalProperties": false
+							},
+							"coverage": {
+								"type": "object",
+								"properties": {
+									"transcription": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"definition": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"translations": {
+										"$ref": "#/$defs/__schema488"
+									},
+									"morphologicalTree": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"semanticRelations": {
+										"$ref": "#/$defs/__schema489"
+									},
+									"valency": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"participleSource": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"plural": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"conjugationClass": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"locutionType": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"sayingType": {
+										"$ref": "#/$defs/__schema487"
+									},
+									"formulaRole": {
+										"$ref": "#/$defs/__schema487"
+									}
+								},
+								"additionalProperties": false,
+								"description": "Which Knowledge aspects a person has covered: Authored when `knowledge` holds the aspect, ReviewedEmpty when it has none. Leave an unreviewed aspect out."
 							}
 						},
 						"additionalProperties": false
@@ -13986,6 +14029,53 @@
 				"Weak",
 				"Mixed"
 			]
+		},
+		"__schema487": {
+			"type": "string",
+			"enum": [
+				"Authored",
+				"ReviewedEmpty"
+			],
+			"description": "Authored: the Knowledge holds this aspect. ReviewedEmpty: a person reviewed it and it has none."
+		},
+		"__schema488": {
+			"type": "object",
+			"properties": {
+				"en": {
+					"$ref": "#/$defs/__schema487"
+				},
+				"ru": {
+					"$ref": "#/$defs/__schema487"
+				}
+			},
+			"additionalProperties": false
+		},
+		"__schema489": {
+			"type": "object",
+			"properties": {
+				"synonym": {
+					"$ref": "#/$defs/__schema487"
+				},
+				"nearSynonym": {
+					"$ref": "#/$defs/__schema487"
+				},
+				"antonym": {
+					"$ref": "#/$defs/__schema487"
+				},
+				"nearAntonym": {
+					"$ref": "#/$defs/__schema487"
+				},
+				"hypernym": {
+					"$ref": "#/$defs/__schema487"
+				},
+				"holonym": {
+					"$ref": "#/$defs/__schema487"
+				},
+				"endonym": {
+					"$ref": "#/$defs/__schema487"
+				}
+			},
+			"additionalProperties": false
 		}
 	}
 }

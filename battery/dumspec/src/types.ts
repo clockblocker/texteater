@@ -59,6 +59,31 @@ export interface SegmentationTarget {
 }
 
 /**
+ * Whether a person has covered one Knowledge aspect: Authored when the
+ * Knowledge holds it, ReviewedEmpty when it was reviewed and has none.
+ */
+export type CoverageStatus = "Authored" | "ReviewedEmpty";
+
+/**
+ * Which Knowledge aspects of a Reading a person has covered: one status per
+ * aspect, per translation language and per semantic relation, as the
+ * Authored Inventory records it. An aspect left out is unreviewed.
+ */
+export type KnowledgeCoverage = {
+	readonly [Aspect in Exclude<
+		keyof Dumrel.ReadingKnowledge,
+		"translations" | "semanticRelations"
+	>]?: CoverageStatus;
+} & {
+	readonly translations?: {
+		readonly [Language in Dumrel.TranslationLanguage]?: CoverageStatus;
+	};
+	readonly semanticRelations?: {
+		readonly [Relation in Dumrel.DirectSemanticRelation]?: CoverageStatus;
+	};
+};
+
+/**
  * One target with its Attestation: a full Dumling Attestation whose Lemma has
  * the target's route. `memberSegmentIndices[i]` is the Segment of
  * `attestation.members[i]`.
@@ -77,6 +102,11 @@ export interface SpecTarget extends SegmentationTarget {
 	 * a record's `legacy` cases keep theirs verbatim until converted (#700).
 	 */
 	knowledge?: Dumrel.ReadingKnowledge;
+	/**
+	 * Which aspects of `knowledge` a person has covered, authored as
+	 * `reading.coverage`. Present with the Knowledge it describes.
+	 */
+	coverage?: KnowledgeCoverage;
 	/** The authored Grundform verdict, checked wherever Dumling can decide it. */
 	grundform?: boolean;
 }

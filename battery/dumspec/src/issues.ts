@@ -10,6 +10,8 @@ export type SpecCheck =
 	| "Attestation"
 	| "Reading"
 	| "Knowledge"
+	| "KnowledgeCoverage"
+	| "SharedReading"
 	| "AdpositionCase"
 	| "ArticleAgreement"
 	| "ClosedPart"

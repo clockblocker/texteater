@@ -17,10 +17,16 @@ export {
 	ruleCitationStatus,
 } from "./check-citations.js";
 export {
+	type KnowledgeCoverageIssue,
+	knowledgeCoverageIssues,
+	structuralAspects,
+} from "./check-knowledge-coverage.js";
+export {
 	attestationParticleIssues,
 	type ParticleIssue,
 } from "./check-particles.js";
 export { checkRecord, type RecordCheck } from "./check-record.js";
+export { sharedReadingIssues } from "./check-shared-readings.js";
 export {
 	attestationSyncretismIssues,
 	type SyncretismIssue,
@@ -87,6 +93,8 @@ export type {
 	BreakdownRecordId,
 	CitingPrompt,
 	Coverage,
+	CoverageStatus,
+	KnowledgeCoverage,
 	LayeredReview,
 	LegacyCase,
 	NoTarget,

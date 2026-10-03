@@ -57,6 +57,16 @@ Partial otherwise. It is not an Attestation's Realization Coverage (Dumling). Se
 [ADR 0037].
 _Avoid_: completeness
 
+**Knowledge Coverage**:
+Which Reading Knowledge aspects of a target a person has covered, each
+Authored or reviewed and empty, as an Authored Inventory records them. An
+aspect left out is unreviewed, so an aspect a Knowledge Policy (Dumrel) adds
+later never reads as empty. A record's Knowledge layer is complete when every
+target covers the structural aspects its route requests, and a Reading in
+several records carries one value. Decided on
+[#884](https://github.com/clockblocker/texteater/issues/884).
+_Avoid_: Coverage (a Segmentation's), completeness
+
 **No Target**:
 ResolvableText Segments with no defensible route, recorded with the authored
 reason: a nonce word or a word broken off, and a nonce noun together with the

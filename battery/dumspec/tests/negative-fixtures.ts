@@ -4,6 +4,7 @@ import type * as Dumling from "dumling/types";
 import { authoredMembers } from "../src/inventories.js";
 import type { SpecCheck } from "../src/issues.js";
 import { ruleStatementHash, rules } from "../src/rules.js";
+import type { KnowledgeCoverage } from "../src/types.js";
 
 // biome-ignore lint/suspicious/noExplicitAny: fixtures edit raw record JSON.
 type RecordJson = any;
@@ -83,6 +84,23 @@ export function attestSie(record: RecordJson, lemma: unknown) {
 	);
 	target.attestation.surface.lemma = lemma;
 }
+
+/**
+ * Coverage of every structural aspect a German VERB Reading's policy
+ * requests, for a Knowledge of a definition and a conjugation class.
+ */
+export const verbCoverage: KnowledgeCoverage = {
+	definition: "Authored",
+	conjugationClass: "Authored",
+	valency: "ReviewedEmpty",
+	semanticRelations: {
+		synonym: "ReviewedEmpty",
+		nearSynonym: "ReviewedEmpty",
+		antonym: "ReviewedEmpty",
+		nearAntonym: "ReviewedEmpty",
+		hypernym: "ReviewedEmpty",
+	},
+};
 
 /**
  * Negative fixtures for the per-record checks: each edits one seed record so
@@ -255,6 +273,95 @@ export const negativeFixtures: {
 			record.targets[0].reading.knowledge = {
 				definition: "to watch out",
 				conjugationClass: ["Weak"],
+			};
+			record.targets[0].reading.coverage = verbCoverage;
+		},
+	},
+	{
+		name: "a record reviewed through Knowledge that leaves a structural aspect uncovered",
+		seed: "de/pass-auf-dich-auf",
+		check: "KnowledgeCoverage",
+		edit: (record) => {
+			review(record);
+			record.reviewDepth = "Knowledge";
+			record.targets[0].reading.knowledge = {
+				conjugationClass: ["Weak"],
+			};
+			record.targets[0].reading.coverage = {
+				conjugationClass: "Authored",
+			};
+			// dich is authored, so its Knowledge is reviewed in the inventory.
+			record.targets[1].reading.knowledge = {};
+		},
+	},
+	{
+		name: "coverage that marks an aspect Authored the Knowledge lacks",
+		seed: "de/pass-auf-dich-auf",
+		check: "KnowledgeCoverage",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: {},
+				coverage: { valency: "Authored" },
+			};
+		},
+	},
+	{
+		name: "a relation marked Authored with no claim",
+		seed: "de/pass-auf-dich-auf",
+		check: "KnowledgeCoverage",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: { semanticRelations: { synonym: [] } },
+				coverage: { semanticRelations: { synonym: "Authored" } },
+			};
+		},
+	},
+	{
+		name: "coverage that marks a stored aspect ReviewedEmpty",
+		seed: "de/pass-auf-dich-auf",
+		check: "KnowledgeCoverage",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: { conjugationClass: ["Weak"] },
+				coverage: { conjugationClass: "ReviewedEmpty" },
+			};
+		},
+	},
+	{
+		name: "a stored aspect its coverage leaves out",
+		seed: "de/pass-auf-dich-auf",
+		check: "KnowledgeCoverage",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: { conjugationClass: ["Weak"] },
+				coverage: {},
+			};
+		},
+	},
+	{
+		name: "coverage of an aspect its route's Knowledge Policy does not request",
+		seed: "de/pass-auf-dich-auf",
+		check: "KnowledgeCoverage",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				knowledge: {},
+				coverage: { plural: "ReviewedEmpty" },
+			};
+		},
+	},
+	{
+		name: "coverage without its Knowledge",
+		seed: "de/pass-auf-dich-auf",
+		check: "KnowledgeCoverage",
+		edit: (record) => {
+			record.targets[0].reading = {
+				emojiDescription: "👀",
+				coverage: { valency: "ReviewedEmpty" },
 			};
 		},
 	},

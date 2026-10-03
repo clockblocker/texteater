@@ -6,6 +6,7 @@ import { z } from "zod";
 import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
 import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
 import { authoredReadingIssues } from "./check-authored-readings.js";
+import { knowledgeCoverageIssues } from "./check-knowledge-coverage.js";
 import { attestationParticleIssues } from "./check-particles.js";
 import { attestationSyncretismIssues } from "./check-syncretisms.js";
 import { unitRoutes } from "./generated/routes.js";
@@ -16,6 +17,7 @@ import { looseRouteSchema, recordFileSchema } from "./record-schema.js";
 import { sameValue } from "./same-value.js";
 import type {
 	AnnotationLayer,
+	KnowledgeCoverage,
 	LegacyCase,
 	Segment,
 	SegmentationTarget,
@@ -79,8 +81,8 @@ export interface LayerVerdict {
 /**
  * Splits a record's issues by its Review Depth and finds the deepest layer
  * that passes. A layer with an issue fails; so does Knowledge while a target
- * holds none, which is work only once the record is reviewed through
- * Knowledge.
+ * holds none or leaves a structural aspect uncovered, which is work only
+ * once the record is reviewed through Knowledge.
  */
 export function settleLayers(
 	found: readonly SpecIssue[],
@@ -142,8 +144,9 @@ export function uncitedIssue(
  * their Segments, cases against the ADP Case Table, articles against the der
  * and ein cells, Syncretisms against the generated ones, and Grundform.
  * Reading: every target names a valid Reading. Knowledge: every Reading
- * Knowledge passes dumrel. A reviewed layer must pass; a Draft layer may
- * fail or be missing.
+ * Knowledge passes dumrel, and its coverage agrees with it and covers each
+ * structural aspect its route requests. A reviewed layer must pass; a Draft
+ * layer may fail or be missing.
  */
 export function checkRecord(id: SpecRecordId, input: unknown): RecordCheck {
 	const { found, issue } = issueCollector(id);
@@ -266,10 +269,11 @@ type TargetFile = z.infer<typeof fileSchema>["targets"][number];
  * The checks a sentence record and a Breakdown Record share: the Segments
  * spell the sentence, and each target's members and route (Segmentation),
  * its strict Attestation, ADP cases, articles, Syncretisms and Grundform
- * (Attestation), its Reading (Reading) and its Reading Knowledge
- * (Knowledge). Returns each target's Segmentation, each target whose
+ * (Attestation), its Reading (Reading) and its Reading Knowledge and
+ * coverage (Knowledge). Returns each target's Segmentation, each target whose
  * Attestation passes, with the Reading and Knowledge that pass, how many
- * targets claim each Segment, and whether every target holds Knowledge.
+ * targets claim each Segment, and whether every target holds Knowledge that
+ * covers its structural aspects.
  */
 export function checkTargets(
 	record: {
@@ -357,8 +361,9 @@ export function checkTargets(
 
 /**
  * Checks one target's Attestation, Reading and Knowledge layers. Returns the
- * target when its Attestation passes, carrying its Reading and Knowledge when
- * they pass, and whether it holds valid Knowledge.
+ * target when its Attestation passes, carrying its Reading, Knowledge and
+ * coverage when they pass, and whether its Knowledge is valid and covers
+ * every structural aspect its route requests.
  */
 function checkTargetLayers(
 	target: TargetFile,
@@ -526,6 +531,45 @@ function checkTargetLayers(
 			`${path}.reading.knowledge`,
 			"A record reviewed through Knowledge holds each target's Reading Knowledge",
 		);
+	const authoredCoverage = target.reading?.coverage as
+		| KnowledgeCoverage
+		| undefined;
+	if (
+		authoredCoverage !== undefined &&
+		target.reading?.knowledge === undefined
+	)
+		issue(
+			"Knowledge",
+			"KnowledgeCoverage",
+			`${path}.reading.knowledge`,
+			"A Reading with coverage holds its Knowledge, {} when it holds no aspect",
+		);
+	let coverage: KnowledgeCoverage | undefined;
+	let complete = false;
+	if (knowledge !== undefined && reading.value !== undefined) {
+		const covered = knowledgeCoverageIssues(
+			reading.value,
+			knowledge,
+			authoredCoverage,
+		);
+		for (const found of covered.issues)
+			issue(
+				"Knowledge",
+				"KnowledgeCoverage",
+				`${path}.${found.path}`,
+				found.message,
+			);
+		if (covered.uncovered.length > 0 && reviewDepth === "Knowledge")
+			issue(
+				"Knowledge",
+				"KnowledgeCoverage",
+				`${path}.reading.coverage`,
+				`A record reviewed through Knowledge covers each structural aspect its route requests; uncovered: ${covered.uncovered.join(", ")}`,
+			);
+		if (covered.issues.length === 0) coverage = authoredCoverage;
+		complete =
+			covered.issues.length === 0 && covered.uncovered.length === 0;
+	}
 	if (failed) return { knowledge: false };
 	return {
 		target: {
@@ -533,11 +577,12 @@ function checkTargetLayers(
 			attestation,
 			...(reading.value === undefined ? {} : { reading: reading.value }),
 			...(knowledge === undefined ? {} : { knowledge }),
+			...(coverage === undefined ? {} : { coverage }),
 			...(target.grundform === undefined
 				? {}
 				: { grundform: target.grundform }),
 		},
-		knowledge: knowledge !== undefined,
+		knowledge: complete,
 	};
 }
 

@@ -13,8 +13,15 @@ Attestation whose Lemma has that route. A target names its Reading as
 Dumling Reading built from its Attestation's Lemma. The Reading may hold its
 Reading Knowledge as `reading.knowledge`, in dumrel's schema; the loader
 checks it with dumrel against the Reading, and the loaded target carries it
-as `knowledge`. Point a record's `$schema` at
-`schema/spec-record.<language>.json` for completion.
+as `knowledge`. `reading.coverage` says which aspects a person has covered,
+per aspect, translation language and relation: `Authored` when the Knowledge
+holds it, `ReviewedEmpty` when it has none; an aspect left out is
+unreviewed. A target's Knowledge layer passes when its coverage covers each
+structural aspect (`structuralAspects`) its route's Knowledge Policy
+requests. A Reading the Authored Inventory holds has its Knowledge reviewed
+there, so `{}` completes its target. `sharedReadingIssues` is the guard that gives a
+Reading shared by several records one Knowledge value and coverage. Point a
+record's `$schema` at `schema/spec-record.<language>.json` for completion.
 
 A record is reviewed one Annotation Layer at a time: Segmentation (members,
 routes, No Target entries, coverage), Attestation, Reading, then Knowledge.

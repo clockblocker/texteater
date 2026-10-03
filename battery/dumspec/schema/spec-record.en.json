@@ -4183,6 +4183,49 @@
 									}
 								},
 								"additionalProperties": false
+							},
+							"coverage": {
+								"type": "object",
+								"properties": {
+									"transcription": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"definition": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"translations": {
+										"$ref": "#/$defs/__schema524"
+									},
+									"morphologicalTree": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"semanticRelations": {
+										"$ref": "#/$defs/__schema525"
+									},
+									"valency": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"participleSource": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"plural": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"conjugationClass": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"locutionType": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"sayingType": {
+										"$ref": "#/$defs/__schema523"
+									},
+									"formulaRole": {
+										"$ref": "#/$defs/__schema523"
+									}
+								},
+								"additionalProperties": false,
+								"description": "Which Knowledge aspects a person has covered: Authored when `knowledge` holds the aspect, ReviewedEmpty when it has none. Leave an unreviewed aspect out."
 							}
 						},
 						"additionalProperties": false
@@ -15792,6 +15835,53 @@
 				"Weak",
 				"Mixed"
 			]
+		},
+		"__schema523": {
+			"type": "string",
+			"enum": [
+				"Authored",
+				"ReviewedEmpty"
+			],
+			"description": "Authored: the Knowledge holds this aspect. ReviewedEmpty: a person reviewed it and it has none."
+		},
+		"__schema524": {
+			"type": "object",
+			"properties": {
+				"en": {
+					"$ref": "#/$defs/__schema523"
+				},
+				"ru": {
+					"$ref": "#/$defs/__schema523"
+				}
+			},
+			"additionalProperties": false
+		},
+		"__schema525": {
+			"type": "object",
+			"properties": {
+				"synonym": {
+					"$ref": "#/$defs/__schema523"
+				},
+				"nearSynonym": {
+					"$ref": "#/$defs/__schema523"
+				},
+				"antonym": {
+					"$ref": "#/$defs/__schema523"
+				},
+				"nearAntonym": {
+					"$ref": "#/$defs/__schema523"
+				},
+				"hypernym": {
+					"$ref": "#/$defs/__schema523"
+				},
+				"holonym": {
+					"$ref": "#/$defs/__schema523"
+				},
+				"endonym": {
+					"$ref": "#/$defs/__schema523"
+				}
+			},
+			"additionalProperties": false
 		}
 	}
 }

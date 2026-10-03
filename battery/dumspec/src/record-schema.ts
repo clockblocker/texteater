@@ -50,12 +50,59 @@ const sourcesSchema = z.strictObject({
 	),
 });
 
+const coverageStatusSchema = z
+	.enum(["Authored", "ReviewedEmpty"])
+	.describe(
+		"Authored: the Knowledge holds this aspect. ReviewedEmpty: a person reviewed it and it has none.",
+	)
+	.optional();
+
+/**
+ * Which Knowledge aspects of a Reading a person has covered, one status per
+ * aspect, per translation language and per semantic relation, as the
+ * Authored Inventory records it. An aspect left out is unreviewed, so an
+ * aspect a Knowledge Policy adds later never reads as reviewed and empty.
+ */
+export const knowledgeCoverageSchema = z
+	.strictObject({
+		transcription: coverageStatusSchema,
+		definition: coverageStatusSchema,
+		translations: z
+			.strictObject({
+				en: coverageStatusSchema,
+				ru: coverageStatusSchema,
+			})
+			.optional(),
+		morphologicalTree: coverageStatusSchema,
+		semanticRelations: z
+			.strictObject({
+				synonym: coverageStatusSchema,
+				nearSynonym: coverageStatusSchema,
+				antonym: coverageStatusSchema,
+				nearAntonym: coverageStatusSchema,
+				hypernym: coverageStatusSchema,
+				holonym: coverageStatusSchema,
+				endonym: coverageStatusSchema,
+			})
+			.optional(),
+		valency: coverageStatusSchema,
+		participleSource: coverageStatusSchema,
+		plural: coverageStatusSchema,
+		conjugationClass: coverageStatusSchema,
+		locutionType: coverageStatusSchema,
+		sayingType: coverageStatusSchema,
+		formulaRole: coverageStatusSchema,
+	})
+	.describe(
+		"Which Knowledge aspects a person has covered: Authored when `knowledge` holds the aspect, ReviewedEmpty when it has none. Leave an unreviewed aspect out.",
+	);
+
 /**
  * The Reading a target attests, named by its Emoji Description (ADR 0031),
- * and the Reading Knowledge it owns. A Foreign Reading has no Emoji
- * Description (ADR 0045). Its Lemma is the target's; the loader checks the
- * Reading with Dumling's `parseUnit` and the Knowledge with dumrel's
- * `parseReadingKnowledge`.
+ * the Reading Knowledge it owns and which aspects of it a person has
+ * covered. A Foreign Reading has no Emoji Description (ADR 0045). Its Lemma
+ * is the target's; the loader checks the Reading with Dumling's `parseUnit`
+ * and the Knowledge with dumrel's `parseReadingKnowledge`.
  */
 function readingSchema<K extends z.ZodType>(knowledge: K) {
 	return z.strictObject({
@@ -65,6 +112,7 @@ function readingSchema<K extends z.ZodType>(knowledge: K) {
 			)
 			.optional(),
 		knowledge: knowledge.optional(),
+		coverage: knowledgeCoverageSchema.optional(),
 	});
 }
 
