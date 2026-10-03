@@ -676,4 +676,19 @@ export const negativeFixtures: {
 			);
 		},
 	},
+	{
+		// Generated, but standalone allem means "everything": its Neut cell.
+		name: "a Syncretism of alle's singular for standalone allem",
+		seed: "de/mit-allem-bin-ich-einverstanden",
+		check: "Syncretism",
+		edit: (record) => {
+			attestJedem(
+				record,
+				syncretize([
+					jedemSurface(record, { gender: "Masc" }),
+					jedemSurface(record, { gender: "Neut" }),
+				]),
+			);
+		},
+	},
 ];

@@ -105,6 +105,31 @@ function generate(): Map<string, StemSyncretism> {
 export const stemSyncretisms: ReadonlyMap<string, StemSyncretism> = generate();
 
 /**
+ * Stem PRON Lemmas whose standalone neuter singular is a fixed use with its
+ * own gender (Rule de/standalone-alles-means-everything): alles and allem
+ * mean "everything", whatever the sentence names.
+ */
+const fixedNeuterSingular = new Set(["alle"]);
+
+/**
+ * Whether an open referent may attest this Syncretism (Rule
+ * de/open-referent). The Syncretisms of alle's singular never are: its
+ * standalone neuter singular means "everything" and attests its Neut cell
+ * (Rule de/standalone-alles-means-everything).
+ */
+export function referentCanLeaveOpen(syncretism: StemSyncretism): boolean {
+	const { lemma } = syncretism.member;
+	return !(
+		lemma.family === "Lexeme" &&
+		lemma.kind === "PRON" &&
+		fixedNeuterSingular.has(fold(lemma.canonicalForm)) &&
+		syncretism.cells.some(
+			(cell) => cell.number === "Sing" && cell.gender === "Neut",
+		)
+	);
+}
+
+/**
  * The generated Surface Syncretism a stem PRON Surface would be, by its
  * Lemma, its form without letter case, its spelling and the case and number
  * it marks, or undefined when the inventory generates none.

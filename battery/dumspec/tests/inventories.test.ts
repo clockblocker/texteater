@@ -30,6 +30,7 @@ import {
 	germanPluralOnlyNouns,
 	isGermanPluralOnlyNoun,
 	modalVerbs,
+	referentCanLeaveOpen,
 	reflexiveDrillDown,
 	reflexivityUnit,
 	stemSyncretisms,
@@ -1853,6 +1854,20 @@ describe("the German stem Surface Syncretisms (system ADR 0046)", () => {
 				cells.length,
 			);
 		}
+	});
+
+	test("alle's singular ones exist, but no open referent attests them", () => {
+		expect(labels).toContain("alle allem Dat Masc/Neut");
+		expect(labels).toContain("alle alles Gen Masc/Neut");
+		expect(
+			generated
+				.filter((syncretism) => !referentCanLeaveOpen(syncretism))
+				.map(
+					({ member, spelled }) =>
+						`${member.lemma.canonicalForm} ${spelled}`,
+				)
+				.toSorted(),
+		).toEqual(["alle allem", "alle alles"]);
 	});
 
 	test("cells that differ in case or number get none", () => {

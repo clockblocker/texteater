@@ -1,6 +1,9 @@
 import { isSyncreticUnit, isSyncretism } from "dumling";
 import type * as Dumling from "dumling/types";
-import { stemSyncretismFor } from "./inventories/de/surface-syncretisms.js";
+import {
+	referentCanLeaveOpen,
+	stemSyncretismFor,
+} from "./inventories/de/surface-syncretisms.js";
 import { syncretismFor } from "./inventories/de/syncretisms.js";
 import { sameValue } from "./same-value.js";
 
@@ -53,7 +56,9 @@ const bagOf = (surface: Dumling.Surface): Bag =>
  * A stem's Surface Syncretism (system ADR 0046) is stored whole, and its
  * units are exactly the cells the inventory generates for its Lemma,
  * spelling, case and number: they differ in gender alone. Dumling has
- * already checked that its features are the units' projection.
+ * already checked that its features are the units' projection. Standalone
+ * alles and allem attest their Neut cell instead (Rule
+ * de/standalone-alles-means-everything).
  */
 function surfaceSyncretismIssues(surface: Dumling.Surface): SyncretismIssue[] {
 	const issue = (message: string) => [{ path: "surface", message }];
@@ -65,6 +70,10 @@ function surfaceSyncretismIssues(surface: Dumling.Surface): SyncretismIssue[] {
 	if (!generated)
 		return issue(
 			"A Syncretism is generated, never authored; the inventory has no stem Surface Syncretism with this Lemma, spelling, case and number (ADR 0046)",
+		);
+	if (!referentCanLeaveOpen(generated))
+		return issue(
+			"Standalone alles and allem mean 'everything': attest the Neut cell, not a Syncretism (Rule de/standalone-alles-means-everything)",
 		);
 	const cellOf = (bag: Bag) =>
 		JSON.stringify([

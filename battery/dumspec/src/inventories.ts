@@ -82,6 +82,7 @@ export type {
 	SurfaceCell,
 } from "./inventories/de/stem-lemma.js";
 export {
+	referentCanLeaveOpen,
 	type StemSyncretism,
 	stemSyncretismFor,
 	stemSyncretisms,

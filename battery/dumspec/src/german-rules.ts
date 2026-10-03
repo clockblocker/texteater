@@ -1345,6 +1345,22 @@ const attestations: Rule[] = [
 		],
 	},
 	{
+		// Duden https://www.duden.de/rechtschreibung/all ("allein stehend":
+		// alles in Ordnung, trotz allem, alles (jedes Ding) hat zwei Seiten)
+		// and DWDS https://www.dwds.de/wb/alle, read 2026-10-03.
+		id: "de/standalone-alles-means-everything",
+		statement:
+			"Standing alone, the neuter singular of alle (alles, allem) means 'everything', the use Duden and DWDS list as allein stehend: alles in Ordnung, trotz allem, mit allem einverstanden. It is a fixed use with its own gender, not a pronoun waiting for a referent, so it attests its Neut cell even when the sentence names nothing, and never a Syncretism of alle's singular cells (de/open-referent does not apply).",
+		adrs: ["ADR-0044", "ADR-0046"],
+		routes: lexeme("PRON"),
+		records: [
+			"de/mit-allem-bin-ich-einverstanden",
+			"de/alles-funktioniert",
+			"de/ich-habe-alles-geprueft",
+			"de/alles-was-stirbt-hat-vorher-eine-art-ziel-eine-art",
+		],
+	},
+	{
 		id: "de/canonical-form-is-the-headword",
 		statement:
 			"A Lemma's Canonical Form is its dictionary headword, whatever the sentence spells: Duden's recommended spelling, a noun bare, an interjection in pieces as written (ha ha, o je). Identity ignores case, but the Canonical Form keeps the dictionary's casing (Haus, LOL, Sie), not the word's position: sentence-initial Wegen is wegen. An open slot is … (U+2026) with a space on each side (um … willen). A stem PRON or DET cites its Nom.Masc.Sg cell or, plural-cited, its Nom.Plur (mancher, alle), but viel and wenig their usual bare form. A Surface spelled Canonical need not be the Grundform.",
