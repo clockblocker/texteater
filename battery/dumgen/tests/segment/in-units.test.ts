@@ -472,6 +472,7 @@ test("routes are Dumling's: a Kind belongs to its Family", () => {
 });
 
 test("cached lab answers replay through inUnits to the lab's own units", async () => {
+	const identities: unknown[] = [];
 	for (const sentence of recorded.sentences) {
 		const { calls } = sentence;
 		const sent: string[] = [];
@@ -501,7 +502,48 @@ test("cached lab answers replay through inUnits to the lab's own units", async (
 		);
 		const [result] = text.paragraphs[0]?.sentences ?? [];
 		expect(result?.failed).toBeUndefined();
-		expect(result?.units).toEqual([...sentence.units]);
+		// The lab recorded no closed-class identity; production adds it (#864).
+		expect(
+			result?.units.map(({ identity: _identity, ...unit }) => unit),
+		).toEqual([...sentence.units]);
+		identities.push(
+			...(result?.units ?? []).flatMap((unit) =>
+				unit.identity
+					? [
+							{
+								word: unit.segments
+									.map(
+										(index) =>
+											result?.segments[index]?.text,
+									)
+									.join(" "),
+								route:
+									unit.route === "Unresolved"
+										? unit.route
+										: unit.route.kind,
+								identity: unit.identity,
+							},
+						]
+					: [],
+			),
+		);
 		expect(sent).toEqual(calls.map(({ stage }) => stage));
 	}
+	// Each one-piece PRON keeps the identity its identity Choice picked.
+	expect(identities).toEqual([
+		{ word: "Wir", route: "PRON", identity: wir },
+		{ word: "Wir", route: "PRON", identity: wir },
+		{
+			word: "das",
+			route: "PRON",
+			identity: { kind: "PRON", canonicalForm: "das", pronType: "Dem" },
+		},
+		{
+			word: "du",
+			route: "PRON",
+			identity: { kind: "PRON", canonicalForm: "du", pronType: "Prs" },
+		},
+	]);
 });
+
+const wir = { kind: "PRON", canonicalForm: "wir", pronType: "Prs" };

@@ -581,8 +581,28 @@ export const evaluationMetrics = (run: OperationEvaluationRun) =>
 	experimentOf(run.manifest.experimentId).metrics(run);
 
 /**
+ * An output's units without the closed-class identity production stores
+ * since #864, which no lab run recorded.
+ */
+const withoutIdentity = (output: unknown): unknown => {
+	const units = (output as { units?: unknown } | null)?.units;
+	return Array.isArray(units)
+		? {
+				...(output as object),
+				units: units.map((unit) => {
+					const { identity: _identity, ...rest } = unit as {
+						identity?: unknown;
+					};
+					return rest;
+				}),
+			}
+		: output;
+};
+
+/**
  * Gold mode against a lab run, case by case and repetition by repetition:
  * the parity gate of #845. `policy` names the lab output to compare with.
+ * The closed-class identity production adds (#864) is left out.
  */
 export function parityWith(
 	run: OperationEvaluationRun,
@@ -611,7 +631,7 @@ export function parityWith(
 			}
 			compared++;
 			if (
-				stableJson(attempt.output ?? null) ===
+				stableJson(withoutIdentity(attempt.output ?? null)) ===
 				stableJson(stored?.outputs?.[policy] ?? null)
 			)
 				identical++;

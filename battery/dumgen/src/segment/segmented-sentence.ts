@@ -49,16 +49,32 @@ export type Route = {
 }[SegmentLanguage];
 
 /**
+ * The authored DET or PRON identity the route judge picked for a one-piece
+ * unit whose spelling realizes authored members (#864): its Kind, Canonical
+ * Form, pronoun type, and `poss` when the identity is possessive. It always
+ * agrees with the unit's route, and the click builds the unit's Lemma from
+ * it, asking only about the occurrence's cell.
+ */
+export type ClosedClassIdentity = {
+	readonly kind: "DET" | "PRON";
+	readonly canonicalForm: string;
+	readonly pronType: string | null;
+	readonly poss?: "Yes";
+};
+
+/**
  * One biggest unit (Dumgen ADR 0007): the indices of its Segments in its
  * Sentence's Segments, ascending, discontinuous ones included (#767), and
  * its route or `Unresolved`. A borderline unit also carries route
- * variants, its route first, and a click picks one of them (amended
- * 2026-09-30).
+ * variants, its route first (amended 2026-09-30); the evaluator reads
+ * them and a click ignores them (#860). A one-piece DET or PRON unit
+ * carries the closed-class identity it was routed by, if any (#864).
  */
 export type Unit = {
 	segments: number[];
 	route: Route | "Unresolved";
 	variants?: Route[];
+	identity?: ClosedClassIdentity;
 };
 
 /**

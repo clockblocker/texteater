@@ -210,5 +210,5 @@ export const segmentGermanUnits = Effect.fnUntraced(function* (
 		settings.rules.includes("answer-apart")
 			? answerBeforeFormula
 			: undefined,
-	).units(settings.variantMargin);
+	).units(settings.variantMargin, { identity: true });
 });

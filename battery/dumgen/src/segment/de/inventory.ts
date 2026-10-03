@@ -21,6 +21,7 @@ export type IdentityCandidate = {
 	readonly kind: "DET" | "PRON";
 	readonly canonicalForm: string;
 	readonly pronType: string | null;
+	readonly poss: boolean;
 	readonly description: string;
 };
 
@@ -78,6 +79,7 @@ function identityIndex(): Map<string, IdentityCandidate[]> {
 				kind: lemma.kind,
 				canonicalForm: lemma.canonicalForm,
 				pronType,
+				poss,
 				description: `${lemma.canonicalForm}: ${role || lemma.kind.toLowerCase()} ${lemma.kind === "DET" ? "determiner" : "pronoun"}, ${use}`,
 			});
 		}

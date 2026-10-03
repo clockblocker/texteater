@@ -13,6 +13,9 @@
  *   `de/interjection-counts-its-words`).
  * - Closed-class identity (#734) overrides the route of a one-piece unit
  *   whose spelling it covers.
+ * - A one-piece DET or PRON unit keeps the authored identity the identity
+ *   Choice picked, re-read for the final Kind when a Rule test flipped it
+ *   (#864, `storedIdentity`).
  *
  * The route requests are batched as candidates4's lab runs batched them:
  * `route` over the groups of candidates v3's seven policies, `route2` over
@@ -32,7 +35,11 @@ import {
 	choiceOf,
 	noul,
 } from "../ask.js";
-import type { Route, Unit } from "../segmented-sentence.js";
+import type {
+	ClosedClassIdentity,
+	Route,
+	Unit,
+} from "../segmented-sentence.js";
 import {
 	articleHosts,
 	assemble,
@@ -51,7 +58,7 @@ import {
 	closedClassRouteShares,
 	hasFixedRoute,
 } from "./closed-class.js";
-import type { GermanInventory } from "./inventory.js";
+import type { GermanInventory, IdentityCandidate } from "./inventory.js";
 import type { Nomination } from "./nomination.js";
 import {
 	argmax,
@@ -151,11 +158,66 @@ function routeQuestions(
 	return questions;
 }
 
-/** Each group's route as jev judged it, and its full route distribution. */
+/**
+ * A one-piece group's closed-class identity Choice: the authored candidates
+ * its spelling realizes and how jev answered (`c0`, `c1`, … or `Other`).
+ */
+export type IdentityPick = {
+	readonly candidates: readonly IdentityCandidate[];
+	readonly choice: string;
+	readonly probabilities: Readonly<Record<string, number>>;
+};
+
+/**
+ * Each group's route as jev judged it, its full route distribution, and a
+ * one-piece group's identity Choice.
+ */
 export type Routes = {
 	readonly identity: Map<string, RouteJudgment>;
 	readonly distributions: Map<string, Readonly<Record<string, number>>>;
+	readonly picks: Map<string, IdentityPick>;
 };
+
+/**
+ * The identity a one-piece unit stores (#864), consistent with its final
+ * route: the picked candidate when its Kind is the route's, else the most
+ * probable candidate of the route's Kind in the same Choice, as when the
+ * DET/PRON Rule test flipped the Kind. None for another route, for
+ * `Other`, or when no candidate has the route's Kind.
+ */
+export function storedIdentity(
+	pick: IdentityPick | undefined,
+	route: RouteKey,
+): ClosedClassIdentity | undefined {
+	if (!pick || pick.choice === "Other") return undefined;
+	const kind =
+		route === "Lexeme/DET" ? "DET" : route === "Lexeme/PRON" ? "PRON" : "";
+	if (!kind) return undefined;
+	const picked = pick.candidates[Number(pick.choice.slice(1))];
+	const candidate =
+		picked?.kind === kind
+			? picked
+			: pick.candidates
+					.map((entry, position) => ({
+						entry,
+						share: pick.probabilities[`c${position}`] ?? 0,
+					}))
+					.filter(({ entry }) => entry.kind === kind)
+					.reduce<
+						{ entry: IdentityCandidate; share: number } | undefined
+					>(
+						(best, next) =>
+							best && best.share >= next.share ? best : next,
+						undefined,
+					)?.entry;
+	if (!candidate) return undefined;
+	return {
+		kind: candidate.kind,
+		canonicalForm: candidate.canonicalForm,
+		pronType: candidate.pronType,
+		...(candidate.poss ? { poss: "Yes" as const } : {}),
+	};
+}
 
 /**
  * Reads the route answers: the route Choice, a winning non-article identity
@@ -170,6 +232,7 @@ function readRoutes(
 ): Routes {
 	const identity = new Map<string, RouteJudgment>();
 	const distributions = new Map<string, Readonly<Record<string, number>>>();
+	const picks = new Map<string, IdentityPick>();
 	for (const group of groups) {
 		const answer = choiceOf(answers, routeId(group));
 		const top = argmax(answer.probabilities);
@@ -191,6 +254,11 @@ function readRoutes(
 			? inventory.identityCandidates(piece.text)
 			: [];
 		const picked = choiceOf(answers, id);
+		picks.set(groupKey(group), {
+			candidates,
+			choice: picked.choice,
+			probabilities: picked.probabilities,
+		});
 		const position = Number(picked.choice.slice(1));
 		const candidate =
 			picked.choice === "Other" ? undefined : candidates[position];
@@ -226,7 +294,7 @@ function readRoutes(
 				choice: modifier.noul >= 0.5 ? "Lexeme/DET" : "Lexeme/PRON",
 			});
 	}
-	return { identity, distributions };
+	return { identity, distributions, picks };
 }
 
 /** Asks one route request over `groups` and reads it. */
@@ -358,6 +426,7 @@ export const askRouteBatches = Effect.fnUntraced(function* (
 				...v3.routes.distributions,
 				...route2.routes.distributions,
 			]),
+			picks: new Map([...v3.routes.picks, ...route2.routes.picks]),
 		},
 		route2: route2.answers,
 		closed,
@@ -542,8 +611,15 @@ export type RoutedMembership = {
 	readonly openRoute: (group: readonly number[]) => RouteKey;
 	/** A group's route. */
 	readonly route: (group: readonly number[]) => RouteKey;
-	/** The units; a borderline one carries variants when `variantMargin` is given. */
-	readonly units: (variantMargin?: number) => Unit[];
+	/**
+	 * The units; a borderline one carries variants when `variantMargin` is
+	 * given, and a one-piece DET or PRON unit its closed-class identity when
+	 * `identity` is set, as production stores it (#864).
+	 */
+	readonly units: (
+		variantMargin?: number,
+		options?: { readonly identity?: boolean },
+	) => Unit[];
 };
 
 /**
@@ -574,6 +650,7 @@ export function routeMembership(
 		...answers.routes.distributions,
 		...(extra?.distributions ?? []),
 	]);
+	const picks = new Map([...answers.routes.picks, ...(extra?.picks ?? [])]);
 	const jevRoute = (group: readonly number[]): RouteKey => {
 		const [only] = group;
 		if (group.length === 1 && only !== undefined) {
@@ -644,19 +721,31 @@ export function routeMembership(
 		merges: merged.links,
 		openRoute,
 		route,
-		units(variantMargin) {
+		units(variantMargin, options) {
 			const units = unitsOf(sentence, merged.partition, route);
-			if (variantMargin === undefined) return units;
+			if (variantMargin === undefined && !options?.identity) return units;
 			return units.map((unit, index) => {
 				const group = merged.partition[index] ?? [];
-				const keys = routeVariants(
-					route(group),
-					decidingShares(group),
-					variantMargin,
-				);
-				return keys
-					? { ...unit, variants: keys.map(variantRoute) }
-					: unit;
+				const keys =
+					variantMargin === undefined
+						? undefined
+						: routeVariants(
+								route(group),
+								decidingShares(group),
+								variantMargin,
+							);
+				const identity =
+					options?.identity && group.length === 1
+						? storedIdentity(
+								picks.get(groupKey(group)),
+								route(group),
+							)
+						: undefined;
+				return {
+					...unit,
+					...(keys ? { variants: keys.map(variantRoute) } : {}),
+					...(identity ? { identity } : {}),
+				};
 			});
 		},
 	};

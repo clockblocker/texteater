@@ -37,6 +37,18 @@ const sameRouteKey = (route: Route) =>
 	`${route.language}/${route.family}/${route.kind}`;
 
 /**
+ * The closed-class identity production stores on a one-piece DET or PRON
+ * unit (#864). No gold names one, so no score reads it; `resolve.grammar`'s
+ * end-to-end line hands it on with the unit.
+ */
+const closedClassIdentitySchema = z.strictObject({
+	kind: z.enum(["DET", "PRON"]),
+	canonicalForm: z.string().min(1),
+	pronType: z.string().min(1).nullable(),
+	poss: z.literal("Yes").optional(),
+});
+
+/**
  * One biggest unit: the indices of the input Segments that route to it, in
  * ascending order, discontinuous ones included, and its route or
  * `Unresolved`.
@@ -52,6 +64,7 @@ const unitSchema = z
 		segments: z.array(z.int().nonnegative()).min(1),
 		route: z.union([routeSchema, z.literal("Unresolved")]),
 		variants: z.array(routeSchema).min(2).optional(),
+		identity: closedClassIdentitySchema.optional(),
 	})
 	.superRefine((unit, context) => {
 		if (!unit.variants) return;
