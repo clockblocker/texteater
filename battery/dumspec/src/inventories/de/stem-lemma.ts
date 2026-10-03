@@ -17,6 +17,11 @@ export type SurfaceCell = {
 export type SurfaceSpelling = Dumling.Surface<"de">["spelling"];
 /** The spelling of a form's main spelling (Rule de/variant-and-historical-status). */
 export const canonical: SurfaceSpelling = { kind: "Canonical" };
+/** The spelling of a form only an earlier standard accepted (bißchen; Rule de/variant-and-historical-status). */
+export const historical: SurfaceSpelling = {
+	kind: "Variant",
+	variantTags: ["Historical"],
+};
 /** The spelling of an accepted alternative form of a cell, beside its main form. */
 export const licensed: SurfaceSpelling = {
 	kind: "Variant",

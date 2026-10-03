@@ -614,6 +614,8 @@ describe("the German authored inventory", () => {
 		).toEqual([
 			["etwas", null],
 			["etwas", null],
+			// Bare was is the Shorthand of PRON etwas (de/bare-w-word-is-shorthand).
+			["was", null],
 		]);
 	});
 
@@ -913,14 +915,20 @@ describe("the German authored inventory", () => {
 					pronType: field(member.lemma.coreFeatures, "pronType"),
 					inflection,
 				}));
-		// wem is the Dat Surface of wer, as diesem is of dieser.
-		expect(lemmasSpelled("wem")).toEqual(
-			["Int", "Rel"].map((pronType) => ({
+		// wem is the Dat Surface of wer, as diesem is of dieser, and the
+		// Shorthand of irgendwem (de/bare-w-word-is-shorthand).
+		expect(lemmasSpelled("wem")).toEqual([
+			...["Int", "Rel"].map((pronType) => ({
 				canonicalForm: "wer",
 				pronType,
 				inflection: { case: "Dat", number: null, gender: null },
 			})),
-		);
+			{
+				canonicalForm: "irgendwer",
+				pronType: "Ind",
+				inflection: { case: "Dat", gender: null, number: null },
+			},
+		]);
 		const interrogative = (canonicalForm: string) => {
 			const found = authoredMembers.find(
 				({ lemma }) =>

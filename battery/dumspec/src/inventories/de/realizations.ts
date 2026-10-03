@@ -4,7 +4,12 @@ import { reflexivityUnit } from "./drill-down.js";
 import { authoredMembers } from "./inventory.js";
 import type { AuthoredMember } from "./member.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
-import { canonical, licensed, type SurfaceSpelling } from "./stem-lemma.js";
+import {
+	canonical,
+	historical,
+	licensed,
+	type SurfaceSpelling,
+} from "./stem-lemma.js";
 
 /**
  * How one spelling is written, where gold or a Rule fixes it. `spelling` is
@@ -211,10 +216,21 @@ export const auxiliaryFormSpellings: Readonly<
 /**
  * Other spellings of pronouns, keyed by Canonical Form. nix is a Licensed
  * Variant of nichts, as gold has it. s is a Fused piece standing for es, as
- * in gehts (ADR 0035).
+ * in gehts (ADR 0035). A bare w-word that neither asks nor opens a relative
+ * clause is the Shorthand of its indefinite: wer, wen and wem of irgendwer,
+ * each standing for the cell it spells, and was of etwas (Rule
+ * de/bare-w-word-is-shorthand). bißchen is the spelling only the earlier
+ * standard accepted (de/variant-and-historical-status).
  */
 const pronounAliases: Readonly<Record<string, readonly Alias[]>> = {
 	nichts: [{ spelled: "nix", spelling: licensed }],
+	etwas: [shorthand("was", "etwas")],
+	irgendwer: [
+		shorthand("wer", "irgendwer"),
+		shorthand("wen", "irgendwen"),
+		shorthand("wem", "irgendwem"),
+	],
+	bisschen: [{ spelled: "bißchen", spelling: historical }],
 	es: [
 		{
 			spelled: "s",
@@ -296,6 +312,18 @@ export const authoredRealizations: readonly AuthoredRealization[] =
 			})),
 			...aliases
 				.filter(({ spelled }) => !cellless.has(spelled))
-				.map((alias) => ({ member, ...alias })),
+				.map((alias) => {
+					// A shorthand of a stem's spelling marks that spelling's cell.
+					const cell =
+						alias.inflection ??
+						spellings.find(
+							({ spelled }) => spelled === alias.standsFor,
+						)?.cell;
+					return {
+						member,
+						...alias,
+						...(cell ? { inflection: { ...cell } } : {}),
+					};
+				}),
 		];
 	});
