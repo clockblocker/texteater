@@ -30,7 +30,7 @@ const useFeatures: Readonly<Record<string, Values>> = {
 	"werden 🔮": { future: "Yes" },
 	"werden 🔄": { passive: "Process" },
 	"bekommen 🎁": { passive: "Recipient" },
-	"lassen 🫴": { voice: "Cau" },
+	"lassen 🗣👉": { voice: "Cau" },
 };
 const articleOfGender: Readonly<Record<string, string>> = {
 	Masc: "der",

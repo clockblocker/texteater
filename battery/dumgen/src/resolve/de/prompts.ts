@@ -581,7 +581,7 @@ export const auxiliaryUses: Readonly<Record<string, string>> = {
 		"The recipient passive with bekommen, kriegen or erhalten and a past participle that adds nothing lexical",
 		rules.recipient,
 	),
-	"lassen 🫴": paragraph(
+	"lassen 🗣👉": paragraph(
 		"question.auxiliary.lassen-causative",
 		"Causative lassen with an infinitive whose doer the clause does not name",
 		rules.causative,

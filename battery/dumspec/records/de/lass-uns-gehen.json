@@ -22,9 +22,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "👐" },
+			"reading": { "emojiDescription": "🤝" },
 			"notes": {
-				"rationale": "lass uns is a proposal, not a causative: lassen is the VERB lassen and gehen a target of its own (de/causative-lassen, #721). lass uns 'let's', a friendly proposal to do something together (Duden lassen: drückt eine freundliche Aufforderung aus), is folded into one Reading 👐 with permissive lassen 'let' (1b 'zulassen; nicht an etwas hindern'), by the user's split ruling (2026-10-02, ADR 0031)."
+				"rationale": "lass uns is a proposal, not a causative: lassen is the VERB lassen and gehen a target of its own (de/causative-lassen, #721). lass uns 'let's', a friendly proposal to do something together (Duden lassen: drückt eine freundliche Aufforderung aus), is its own Reading 🤝, split from permissive lassen 👐 'let' (1b 'zulassen; nicht an etwas hindern') by the user's ruling of 2026-10-03 (#877), which replaced the fold of 2026-10-02."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

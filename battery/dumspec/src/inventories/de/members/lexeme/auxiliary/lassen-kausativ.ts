@@ -17,7 +17,7 @@ const lemma = {
  */
 export const member = defineAuthoredMember({
 	lemma,
-	reading: { ...{ unitKind: "Reading", emojiDescription: "🫴" }, lemma },
+	reading: { ...{ unitKind: "Reading", emojiDescription: "🗣👉" }, lemma },
 	knowledge: {
 		transcription: "ˈlasn̩",
 		definition:

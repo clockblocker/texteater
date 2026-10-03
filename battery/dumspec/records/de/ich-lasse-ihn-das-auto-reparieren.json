@@ -28,9 +28,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🫴" },
+			"reading": { "emojiDescription": "🗣👉" },
 			"notes": {
-				"rationale": "ihn names who does the repairing, so lassen is the VERB lassen and reparieren a target of its own (de/causative-lassen, #721). Read as causative, 'have him repair the car' (Duden lassen 1a), as ADR 0026 lists lässt ihn reparieren beside lässt es von ihm reparieren; the permissive 'let him repair it' is also possible in isolation."
+				"rationale": "ihn names who does the repairing, so lassen is the VERB lassen and reparieren a target of its own (de/causative-lassen, #721). Read as causative, 'have him repair the car' (Duden lassen 1a), as ADR 0026 lists lässt ihn reparieren beside lässt es von ihm reparieren; the permissive 'let him repair it' is also possible in isolation. Causative lassen is 🗣👉, relabelled from 🫴, which read as handing something over (user, 2026-10-03, #877)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

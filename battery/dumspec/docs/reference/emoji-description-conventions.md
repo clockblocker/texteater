@@ -40,6 +40,7 @@ for authored, drafted and generated Readings alike.
 | `Uhr` | 🕐🔢 'o'clock', ⌚ 'clock, watch' | split: the numbered hour is no instrument |
 | `weh` | ⚠ 'warning' (*Wehe dir!*), 😖 'lament' (*Weh mir!*) | split |
 | `hinauslaufen` | 🏃🚪 'run out', ➡🎯 'amount to' (*auf etwas hinauslaufen*) | split, one Lemma: `auf` is valency |
+| `lassen` (VERB) | 👐 'let', 🗣👉 'have done' (causative, as the AUX), 🤝 'let's' (*lass uns*) | split |
 | `so` | 🔧 | fold: manner and degree are one Reading |
 | `lang` (ADJ) | 📏 | fold: length in space and in time |
 | `leidtun` | 😔 | fold: regret and pity; the sentence says what one is sorry about |

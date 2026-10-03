@@ -249,7 +249,7 @@ const auxiliaryFeatures: Readonly<Record<string, Values>> = {
 	"werden 🔮": { future: "Yes" },
 	"werden 🔄": { passive: "Process", voice: "Pass" },
 	"bekommen 🎁": { passive: "Recipient", voice: "Pass" },
-	"lassen 🫴": { voice: "Cau" },
+	"lassen 🗣👉": { voice: "Cau" },
 };
 
 const reflexives: Readonly<Record<string, "Acc" | "Dat" | undefined>> = {

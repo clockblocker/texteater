@@ -30,9 +30,9 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🫴" },
+			"reading": { "emojiDescription": "🗣👉" },
 			"notes": {
-				"rationale": "von ihm names who does the repairing, so lassen is the VERB lassen and reparieren a target of its own (de/causative-lassen, #721). A second Reading: causative lassen 'have something done' (Duden lassen 1a 'veranlassen'), the meaning the AUX lassen carries as 🫴 when the clause names no doer."
+				"rationale": "von ihm names who does the repairing, so lassen is the VERB lassen and reparieren a target of its own (de/causative-lassen, #721). A second Reading: causative lassen 'have something done' (Duden lassen 1a 'veranlassen'), the meaning the AUX lassen carries when the clause names no doer. Both are 🗣👉, relabelled from 🫴, which read as handing something over (user, 2026-10-03, #877)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
