@@ -97,8 +97,8 @@ bun run segment-in-units-lab round --open <id> --cap <tokens> --stop-line <token
   policy's output, case by case and repetition by repetition, with what
   the run stored. It asks nothing and writes nothing, and it exits 1 when
   an output differs or a case fails. A refactor of `src/segment/` must
-  replay the latest runs exactly. Rebuild dumspec's dist first, because
-  the inventories it reads shape the requests.
+  replay the latest runs exactly. The inventories it reads shape the
+  requests; Bun loads them from dumspec's source.
 - `freeze --force` keeps each set it replaces at `sets/<name>@<hash>.json`,
   and `report`, `compare`, `sweep`, `replay` and
   `segment-in-units-attribution` read a run's set by its hash, so a run
@@ -189,12 +189,12 @@ names the current one; `round` prints what it has spent and has left.
 - The pin: the unit stage's requests quote dumspec's Authored Inventories,
   so a peer edit to them changes prompts and misses the cache. A round
   records the last commit of `battery/dumspec/src` and a hash of the
-  prompt inputs: the built `dumspec/inventories` entry with its chunks, and
-  the Rules. Each run manifest and ledger line keeps the pin it read. A
-  live run refuses to start when today's inputs differ from the round's
-  pin, unless `--repin`, which pins the round at today's dumspec and keeps
-  the old pin in `repins`. `replay` and offline runs report the drift.
-  Rebuild dumspec's dist before checking: the pin reads the build. No
+  prompt inputs: the `dumspec/inventories` source with the modules it
+  imports, and the Rules. Each run manifest and ledger line keeps the pin
+  it read. A live run refuses to start when today's inputs differ from the
+  round's pin, unless `--repin`, which pins the round at today's dumspec
+  and keeps the old pin in `repins`. `replay` and offline runs report the
+  drift. Pins taken before #881 hashed the built dist instead. No
   request quotes Rule text, so drift in `rules` alone still hits the
   cache, though `replay` warns that it misses. `round --repin` re-pins
   without running anything.

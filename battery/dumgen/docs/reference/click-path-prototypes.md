@@ -68,8 +68,6 @@ canonical-form generation, which is now the dominant remaining cost on that rout
 The verb baseline needed the evaluation projection fix in `src/evaluation/grammar-operation.ts`
 (expletiveEvidence was dropped, so every verb case failed the output schema).
 
-Note: `cli/evaluate.ts` evaluates the built `dist`, so run `bun run build:js` before evaluating source changes.
-
 ## P4: stray articles on noun clicks (2026-09-18)
 
 Live traces (`resolution_inspector trace p97562n0ccz21jxdhedxhvace18em5yt`, `…p9779dzqs7a0nth68zdfk9y2es8em33n`)

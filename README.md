@@ -52,6 +52,11 @@ bun run check:docs
 Cross-workspace imports use package exports. Do not reach into a sibling with a
 relative import or an undeclared package subpath.
 
+Each export names its source under the `bun` and `convex` conditions, and
+type-checks set `customConditions: ["convex"]`, so Bun, Convex and `tsc` read
+sibling packages from source and nothing waits on a build. The built `dist` is
+for Node, Vite, published consumers and the tests that measure the build.
+
 ## Local reference clones
 
 When implementation work needs library source, clone it under the ignored
