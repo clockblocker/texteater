@@ -13,6 +13,11 @@
  * - `resolve-grammar/de:<set>` and `resolve-grammar/de:dev:e2e`: a click's
  *   grammar against dumspec's Attestation gold (#873,
  *   `resolve-grammar/experiment.ts`), with its own frozen sets and cache.
+ * - `resolve-reading/de:<set>`: a click's Reading against dumspec's
+ *   Reading gold, gold's Reading present among the candidates and removed
+ *   from them (#873, `resolve-reading/experiment.ts`), with its own frozen
+ *   sets and cache. It shares resolve.grammar's transports, budget guard
+ *   and caps.
  *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the
@@ -71,6 +76,7 @@ import {
 	grammarExperiment,
 } from "./resolve-grammar/experiment.js";
 import type { GrammarCaps } from "./resolve-grammar/models.js";
+import { readingExperiment } from "./resolve-reading/experiment.js";
 import {
 	evaluateRawSegmentInUnits,
 	type RawOutput,
@@ -179,6 +185,8 @@ export type EvaluateArgs = {
 	readonly limit?: number;
 	/** resolve.grammar's frozen sets and cache. */
 	readonly grammarRoot?: string;
+	/** resolve.reading's frozen sets and cache. */
+	readonly readingRoot?: string;
 };
 
 type Evaluated = {
@@ -600,6 +608,47 @@ function resolveGrammarEntry(set: "dev" | "heldout", e2e: boolean): Experiment {
 	};
 }
 
+/**
+ * A resolve.reading entry, its arguments taken from the table's: the
+ * transports, price guard and caps resolve.grammar's runs take.
+ */
+function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
+	const experiment = readingExperiment(set);
+	return {
+		id: experiment.id,
+		caseCount: experiment.caseCount,
+		metrics: experiment.metrics,
+		async evaluate(args) {
+			const evaluated = await experiment.evaluate({
+				experimentId: args.experimentId,
+				sourceRevision: args.sourceRevision,
+				...(args.jev ? { jev: args.jev } : {}),
+				...(args.luna ? { luna: args.luna } : {}),
+				...(args.offline ? { offline: true } : {}),
+				...(args.estimate ? { estimate: true } : {}),
+				...(args.beforeGrammarLive
+					? { beforeLive: args.beforeGrammarLive }
+					: {}),
+				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
+				...(args.outputDirectory
+					? { outputDirectory: args.outputDirectory }
+					: {}),
+				...(args.signal ? { signal: args.signal } : {}),
+				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+				...(args.readingRoot ? { root: args.readingRoot } : {}),
+				...(args.limit ? { limit: args.limit } : {}),
+				...(args.grammarCaps ? { caps: args.grammarCaps } : {}),
+			});
+			return {
+				...(evaluated.run ? { run: evaluated.run } : {}),
+				...(evaluated.price ? { price: evaluated.price } : {}),
+				...(evaluated.spend ? { grammarSpend: evaluated.spend } : {}),
+				...(evaluated.set ? { set: evaluated.set } : {}),
+			};
+		},
+	};
+}
+
 const experiments: readonly Experiment[] = [
 	...setNames.flatMap((set) => [
 		segmentInUnitsExperiment(goldMode, set),
@@ -609,6 +658,8 @@ const experiments: readonly Experiment[] = [
 	resolveGrammarEntry("dev", false),
 	resolveGrammarEntry("heldout", false),
 	resolveGrammarEntry("dev", true),
+	resolveReadingEntry("dev"),
+	resolveReadingEntry("heldout"),
 ];
 
 function experimentOf(id: string): Experiment {

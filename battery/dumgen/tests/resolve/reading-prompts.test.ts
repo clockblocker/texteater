@@ -1,9 +1,12 @@
 import { expect, test } from "bun:test";
+import { foldCase } from "dumling";
 import { checkPromptCitations, rules } from "dumspec";
+import { readingCases } from "../../src/evaluation/resolve-reading/cases.js";
 import {
 	judgePolicy,
 	judgeQuestion,
 	readingDemonstrations,
+	readingExamples,
 	readingPromptTexts,
 } from "../../src/resolve/de/reading-prompts.js";
 import {
@@ -64,5 +67,92 @@ test("the demonstrations come in the input shape production sends, es gibt, a fu
 	// A verbal demonstration marks its auxiliary too.
 	expect(byLemma.get("flicken")?.markedSentence).toContain(
 		"<TARGET>hat</TARGET>",
+	);
+});
+
+/** The open-class Kinds whose Lemmas a worked example could give away (#693). */
+const openKinds = new Set([
+	"NOUN",
+	"PROPN",
+	"VERB",
+	"ADJ",
+	"ADV",
+	"NUM",
+	"INTJ",
+	"SYM",
+]);
+
+const words = (text: string) =>
+	foldCase(text, "de")
+		.split(/[\s…]+/u)
+		.filter(Boolean);
+
+/** Whether `form`'s words occur in `text`'s in a row. */
+const occursIn = (form: string, text: string) => {
+	const needle = words(form);
+	const haystack = words(text);
+	return (
+		needle.length > 0 &&
+		haystack.some((_, start) =>
+			needle.every((word, offset) => haystack[start + offset] === word),
+		)
+	);
+};
+
+/**
+ * Clashes that wait for the user's ruling on #877: the es gibt
+ * demonstration #694 asks for has the Lemma geben, which the folded es
+ * gibt evaluation cases share. Either the demonstration goes or every
+ * geben case leaves the evaluation; until then the clash is named here,
+ * and the test fails once it is gone so the entry cannot outlive it.
+ */
+const awaitingRuling = ["geben"];
+
+test("no demonstration or example in a Reading prompt uses an evaluation case's Lemma or one of its open-class forms (#693)", () => {
+	const { dev, heldout } = readingCases();
+	const lemmas = new Map<string, string>();
+	const openForms = new Map<string, string>();
+	for (const goldCase of [...dev, ...heldout]) {
+		const { lemma, normalizedSurface } = goldCase.attestation.surface;
+		lemmas.set(foldCase(lemma.canonicalForm, "de"), goldCase.id);
+		const open =
+			lemma.family === "Lexeme" ? openKinds.has(lemma.kind) : true;
+		if (!open) continue;
+		openForms.set(lemma.canonicalForm, goldCase.id);
+		if (lemma.family === "Lexeme")
+			openForms.set(normalizedSurface, goldCase.id);
+	}
+	const clashes: { readonly form: string; readonly message: string }[] = [];
+	for (const { lemma } of readingDemonstrations) {
+		const id = lemmas.get(foldCase(lemma, "de"));
+		if (id)
+			clashes.push({
+				form: lemma,
+				message: `${lemma} is the Lemma of ${id}`,
+			});
+		for (const [form, of] of openForms)
+			if (
+				foldCase(form, "de") !== foldCase(lemma, "de") &&
+				occursIn(form, lemma)
+			)
+				clashes.push({
+					form,
+					message: `${lemma} uses ${form} (${of})`,
+				});
+	}
+	for (const example of readingExamples())
+		for (const [form, of] of openForms)
+			if (occursIn(form, example))
+				clashes.push({
+					form,
+					message: `«${example}» uses ${form} (${of})`,
+				});
+	expect(
+		clashes
+			.filter(({ form }) => !awaitingRuling.includes(form))
+			.map(({ message }) => message),
+	).toEqual([]);
+	expect([...new Set(clashes.map(({ form }) => form))]).toEqual(
+		awaitingRuling,
 	);
 });

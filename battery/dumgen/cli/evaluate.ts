@@ -12,6 +12,10 @@
  *   bun run evaluate --experiment resolve-grammar/de:dev --revision <rev>
  *       --budget <jev input tokens> --luna-budget <Luna input tokens>
  *       --luna-output-budget <Luna output tokens> [--limit N]
+ *   bun run evaluate --experiment resolve-reading/de:dev --estimate
+ *   bun run evaluate --experiment resolve-reading/de:dev --revision <rev>
+ *       --budget <jev input tokens> --luna-budget <Luna input tokens>
+ *       --luna-output-budget <Luna output tokens> [--limit N]
  *   bun run evaluate --open <runId>
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
@@ -19,12 +23,12 @@
  * moved since the round was pinned (unless `--repin`) or when its projected
  * spend would cross the stop line, and stops at the line.
  *
- * A resolve.grammar run prices itself first and goes live only under the
- * budgets the main session granted the round: `--budget` for fresh jev
- * input tokens, `--luna-budget` for Luna's input tokens and
- * `--luna-output-budget` for its output tokens. The same caps stop it
- * while it runs. Its answers are cached, so `--offline` re-scores it for
- * free.
+ * A resolve.grammar or resolve.reading run prices itself first and goes
+ * live only under the budgets the main session granted the round:
+ * `--budget` for fresh jev input tokens, `--luna-budget` for Luna's input
+ * tokens and `--luna-output-budget` for its output tokens. The same caps
+ * stop it while it runs. Its answers are cached, so `--offline` re-scores
+ * it for free.
  */
 import { execFileSync } from "node:child_process";
 import { join, resolve } from "node:path";
@@ -157,7 +161,8 @@ export async function runEvaluationCli(
 				.jevFreshInputTokens
 		: 0;
 	let spentNow = 0;
-	const grammar = values.experiment.startsWith("resolve-grammar/");
+	// resolve.reading's runs share resolve.grammar's transports and guard.
+	const grammar = /^resolve-(grammar|reading)\//u.test(values.experiment);
 	const grammarLive = grammar && live;
 	const environment = (name: string) => {
 		const value = process.env[name];
@@ -357,7 +362,7 @@ export function guardGrammarBudget(
 		!Object.values(caps).every(Number.isFinite)
 	)
 		throw Error(
-			"A live resolve.grammar run needs --budget (jev input tokens), --luna-budget (Luna input tokens) and --luna-output-budget (Luna output tokens); price it with --estimate first. Nothing was asked.",
+			"A live resolve.grammar or resolve.reading run needs --budget (jev input tokens), --luna-budget (Luna input tokens) and --luna-output-budget (Luna output tokens); price it with --estimate first. Nothing was asked.",
 		);
 	if (
 		price &&

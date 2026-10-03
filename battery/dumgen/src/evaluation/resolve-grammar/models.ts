@@ -1,21 +1,24 @@
 /**
- * The transports a `resolve.grammar` evaluation runs through: jev and Luna
- * behind one disk cache keyed by the request and its repetition, so a
- * re-score replays every answer without a call. Three modes:
+ * The transports a `resolve.grammar` or `resolve.reading` evaluation runs
+ * through: jev and Luna behind one disk cache keyed by the request and its
+ * repetition, so a re-score replays every answer without a call. Three
+ * modes:
  *
  * - `offline` answers only from the cache; a miss fails its attempt.
  * - `live` asks the host's transport on a miss, once, and keeps the answer.
  * - `project` asks nothing: a miss is answered as gold would answer it
- *   (`oracle.ts`), so the requests that depend on it are found too, and
- *   is priced by its size. That is how a run states its token estimate
+ *   (the operation's `GoldOracle`; grammar's is `oracle.ts`), so the
+ *   requests that depend on it are found too, and is priced by its size. That is how a run states its token estimate
  *   before any paid call.
  */
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { stableJson } from "promptsmith";
+import type { Questions } from "promptsmith/typesafe";
 import type { LunaAsk, LunaRequest, LunaResponse } from "../../luna.js";
 import { lunaTokens } from "../../luna-call.js";
+import type { Answers } from "../../segment/ask.js";
 import type { JevAsk, JevRequest, JevResponse } from "../../segment/jev.js";
 import type { GrammarCase } from "./cases.js";
 import { goldAnswers, goldWritten } from "./oracle.js";
@@ -103,17 +106,25 @@ export type GrammarCaps = {
 /** Luna output tokens held back per request in flight, against the output cap. */
 const lunaOutputPerRequest = 60;
 
+/** How a case's gold answers the questions and writes the text a projection replays. */
+export type GoldOracle<Case> = {
+	readonly answers: (goldCase: Case, questions: Questions) => Answers;
+	readonly written: (goldCase: Case, input: unknown) => unknown;
+};
+
 /** The cached transports of one evaluation, with what they spent or foresaw. */
-export class GrammarModels {
+export class CachedModels<Case> {
 	readonly spend = { jev: fresh(), luna: fresh() };
 	readonly projection = { jev: projected(), luna: projected() };
 	/** Which cap stopped the run, once one did. */
 	capHit: string | undefined;
 	readonly #options: GrammarModelsOptions;
 	readonly #inFlight = { jevInput: 0, lunaInput: 0, lunaCalls: 0 };
+	readonly #oracle: GoldOracle<Case>;
 
-	constructor(options: GrammarModelsOptions) {
+	constructor(options: GrammarModelsOptions, oracle: GoldOracle<Case>) {
 		this.#options = options;
+		this.#oracle = oracle;
 	}
 
 	#path(executor: "jev" | "luna", key: string) {
@@ -126,7 +137,7 @@ export class GrammarModels {
 	}
 
 	/** jev for one attempt at `goldCase`, at `repetition`. */
-	jev(goldCase: GrammarCase, repetition: number): JevAsk {
+	jev(goldCase: Case, repetition: number): JevAsk {
 		return async (request: JevRequest, context) => {
 			const body = {
 				model: request.model,
@@ -159,7 +170,7 @@ export class GrammarModels {
 				);
 				return {
 					model: request.model,
-					answers: goldAnswers(goldCase, request.questions),
+					answers: this.#oracle.answers(goldCase, request.questions),
 					usage: { input_tokens: 0, output_tokens: 0 },
 				};
 			}
@@ -200,7 +211,7 @@ export class GrammarModels {
 	}
 
 	/** Luna for one attempt at `goldCase`, at `repetition`. */
-	luna(goldCase: GrammarCase, repetition: number): LunaAsk {
+	luna(goldCase: Case, repetition: number): LunaAsk {
 		return async (request: LunaRequest, context) => {
 			const keyOf = (at: number) =>
 				sha256({ ...request, repetition: at });
@@ -225,7 +236,7 @@ export class GrammarModels {
 					this.projection.luna.outputTokens += tokens.outputTokens;
 					return other;
 				}
-				const output = goldWritten(goldCase, request.input);
+				const output = this.#oracle.written(goldCase, request.input);
 				this.projection.luna.inputTokens += Math.ceil(
 					(request.systemPrompt.length +
 						stableJson(request.input).length +
@@ -294,5 +305,12 @@ export class GrammarModels {
 			if (other) return other;
 		}
 		return undefined;
+	}
+}
+
+/** `resolve.grammar`'s cached transports, its projections answered by `oracle.ts`. */
+export class GrammarModels extends CachedModels<GrammarCase> {
+	constructor(options: GrammarModelsOptions) {
+		super(options, { answers: goldAnswers, written: goldWritten });
 	}
 }
