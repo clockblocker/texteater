@@ -42,7 +42,7 @@ const rules = {
 	expletive: ["de/expletive-es-joins-its-verb", "99bff23563b49716"],
 	government: [
 		"de/governed-preposition-joins-its-governor",
-		"2d20d7f0e21161bc",
+		"19c59bf41ed26810",
 	],
 	comparability: ["de/comparability-is-lexical", "b72c043c004f9dc9"],
 	attributive: ["de/attributive-adjective-stands-alone", "dc0d3ef97ace5bc0"],

@@ -34,11 +34,11 @@
 			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" },
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "5a5fb5a55b00e034"
+				"hash": "d71c5846b57b2c24"
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
-				"hash": "ad69c69c16a27d62"
+				"hash": "3d9e1bc7b0022207"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",

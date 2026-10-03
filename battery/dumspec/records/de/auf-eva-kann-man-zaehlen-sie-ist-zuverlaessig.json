@@ -28,7 +28,7 @@
 		"rules": [
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "2d20d7f0e21161bc"
+				"hash": "19c59bf41ed26810"
 			},
 			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" },
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" }

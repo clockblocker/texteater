@@ -186,7 +186,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/governed-preposition-joins-its-governor",
 		statement:
-			"A preposition that a verb, adjective or noun, or a routine formula's head word, selects for its complement is a member of that word's target, also when it stands apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in and is never part of the Lemma. A participial ADJ governs the preposition its source verb does in the same sense. Government is read from E-VALBU, or Duden where it has no entry. An adjunct's preposition is not a member, nor is one inside an Adverbial complement, since the verb requires a place or direction, not that preposition.",
+			"A preposition that a verb, adjective or noun, or a routine formula's head word, selects for its complement is a member of that word's target, even standing apart: Auf ihn bin ich stolz gives [stolz, auf] ADJ. It joins the smallest unit its government survives in, never the Lemma. Government is read from E-VALBU, else Duden. A participial ADJ takes its source verb's preposition unless Duden gives the ADJ its own: interessiert an, but sich interessieren für. An adjunct's preposition is no member, nor is one inside an Adverbial complement, which needs a place or direction, not that word.",
 		adrs: ["ADR-0029", "ADR-0034", "ADR-0036", "ADR-0039"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN", "INTJ"),
@@ -199,6 +199,8 @@ const verbs: Rule[] = [
 			"de/sie-wurde-um-geduld-gebeten",
 			"de/sie-erinnert-sich-an-den-geruch",
 			"de/er-ist-stolz-auf-seinen-sohn",
+			// Duden gives interessiert an, while its verb takes für.
+			"de/ein-interessierter-leser-fragte-nach",
 			"de/als-gregor-samsa-eines-morgens-aus-unruhigen-traeumen",
 			"de/vergeblich-frage-ich-mich-was-mit-ihm-geschehen-wird",
 			"de/er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an",
@@ -1525,7 +1527,7 @@ const knowledge: Rule[] = [
 	{
 		id: "de/valency-frame-follows-e-valbu",
 		statement:
-			"A Reading's Valency Frame is the Satzbauplan of its sense in E-VALBU, or in Duden where E-VALBU has no entry. An adjective's frame has no Nom Slot, since the copula owns the subject: stolz (auf + Acc). A referent is the dictionary's jemand or etwas for the sense, not what the sentence happens to show: sich erinnern an jemanden/etwas is Either, though the sentence names a smell. Each clause form the dictionary lists is an alternative in its Slot. When either of two complements can complete the frame, both Slots are Optional: bitten (Acc) (um + Acc).",
+			"A Reading's Valency Frame is its sense's Satzbauplan in E-VALBU, else Duden, less E-VALBU's optional place and time complements, free adjuncts (ADR 0034): warten has no place Slot. An adjective's frame has no Nom Slot; the copula owns the subject: stolz (auf + Acc). A referent is the dictionary's jemand or etwas for the sense, not the sentence's: sich erinnern an jemanden/etwas is Either, though the sentence names a smell. Each clause form the dictionary lists is an alternative in its Slot. When either of two complements can complete the frame, both Slots are Optional: bitten (Acc) (um + Acc).",
 		adrs: ["ADR-0034"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),
@@ -1573,7 +1575,7 @@ const knowledge: Rule[] = [
 	{
 		id: "de/relations-need-a-dictionary",
 		statement:
-			"A Reading claims a semantic relation only where a dictionary backs it for this sense: Duden, DWDS or OpenThesaurus lists the target in that relation. Each relation holds at most three claims. A target may be any German Lemma, stored or not, and is matched by its Family, Kind and case-folded Canonical Form.",
+			"A Reading claims a semantic relation only where Duden, DWDS or OpenThesaurus lists the target in that relation for this sense, at most three per relation. Register neither makes a near-synonym nor blocks a claim: Mama is a synonym of Mutter. A hypernym needs an explicit Oberbegriff, not a definition's genus, and an antonym is never read off a definition's negation. A catch-all Oberbegriff backs none: Mensch, Person, Gegenstand, Werk. A target may be any German Lemma, stored or not, matched by its Family, Kind and case-folded Canonical Form.",
 		adrs: ["ADR-0011", "ADR-0012", "ADR-0020"],
 		routes: [],
 		records: [
@@ -1584,6 +1586,9 @@ const knowledge: Rule[] = [
 			"de/sie-erinnert-sich-an-den-geruch",
 			"de/verbrannt-ist-alles-ganz-und-gar",
 			"de/guten-tag-ich-habe-einen-termin",
+			// OpenThesaurus's catch-all Oberbegriffe Person and Gegenstand, Werk.
+			"de/es-zog-der-wilde-jaegersmann",
+			"de/das-rote-band-lag-auf-dem-geschenk",
 		],
 	},
 ];

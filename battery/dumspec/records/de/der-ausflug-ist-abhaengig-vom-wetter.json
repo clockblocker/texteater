@@ -24,7 +24,7 @@
 		"rules": [
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "2d20d7f0e21161bc"
+				"hash": "19c59bf41ed26810"
 			},
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },

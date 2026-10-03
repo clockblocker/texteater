@@ -29,7 +29,7 @@
 			},
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "2d20d7f0e21161bc"
+				"hash": "19c59bf41ed26810"
 			},
 			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" },
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
