@@ -42,6 +42,7 @@ import type { Unit } from "../../segment/segmented-sentence.js";
 import { askOf } from "../../segment-in-units/de/arm.js";
 import { loadSet } from "../../segment-in-units/lab/corpus.js";
 import { type CallRecord, Jev } from "../../segment-in-units/lab/jev.js";
+import type { LunaBatch } from "../luna-batch.js";
 import {
 	type GrammarCase,
 	type GrammarSetName,
@@ -49,10 +50,12 @@ import {
 	loadGrammarSet,
 } from "./cases.js";
 import {
-	type ExecutorProjection,
-	type ExecutorSpend,
 	type GrammarCaps,
 	GrammarModels,
+	type GrammarPrice,
+	type LunaBatchEvent,
+	type ModelsSpend,
+	readLedgerSizes,
 } from "./models.js";
 import {
 	evaluateGrammar,
@@ -77,13 +80,12 @@ export const grammarRoute = "resolve-grammar/de";
 /** Each case runs three times; each repetition is its own cached answer. */
 export const grammarRepetitions = 3;
 
-/** A run's projected spend, per repetition and in all. */
-export type GrammarPrice = {
-	readonly repetitions: number;
-	readonly attempts: number;
-	readonly jev: ExecutorProjection;
-	readonly luna: ExecutorProjection;
-};
+export type { GrammarPrice } from "./models.js";
+
+/** The port's ledger, whose latest round's sizes price a run (#891). */
+const grammarLedgerPath = fileURLToPath(
+	new URL("../../../evidence/resolve-grammar/ledger.jsonl", import.meta.url),
+);
 
 export type GrammarEvaluateArgs = {
 	readonly experimentId: string;
@@ -91,9 +93,20 @@ export type GrammarEvaluateArgs = {
 	/** Asked on a cache miss in a live run. */
 	readonly jev?: JevAsk;
 	readonly luna?: LunaAsk;
+	/**
+	 * Send Luna's cache misses through OpenAI's Batch API in stages instead
+	 * of `luna` (#891); evaluation runs only.
+	 */
+	readonly lunaBatch?: LunaBatch;
+	/** Receives each batch as it is sent and settled, for the ledger. */
+	readonly onLunaBatch?: (event: LunaBatchEvent) => void | Promise<void>;
+	/** The ledger whose latest round's sizes price the run; the port's by default. */
+	readonly ledger?: string;
 	readonly offline?: boolean;
 	/** Price the run and stop: nothing is asked and no run is saved. */
 	readonly estimate?: boolean;
+	/** With `estimate`: price every request, cached ones included (`wholeRound`). */
+	readonly wholeRound?: boolean;
 	readonly beforeLive?: (price: GrammarPrice) => void | Promise<void>;
 	readonly beforeSpend?: () => void;
 	/** The round's hard caps; a live run stops at the first it would cross. */
@@ -116,10 +129,7 @@ export type GrammarEvaluateArgs = {
 export type GrammarEvaluated = {
 	readonly run?: OperationEvaluationRun;
 	readonly price?: GrammarPrice;
-	readonly spend?: {
-		readonly jev: ExecutorSpend;
-		readonly luna: ExecutorSpend;
-	};
+	readonly spend?: ModelsSpend;
 	readonly set?: { readonly name: GrammarSetName; readonly hash: string };
 };
 
@@ -388,17 +398,29 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 				: undefined;
 			const identity = { name: set.name, hash: set.hash };
 			let price: GrammarPrice | undefined;
+			const ledgerSizes =
+				args.estimate || !args.offline
+					? await readLedgerSizes(
+							args.ledger ?? grammarLedgerPath,
+							id,
+						)
+					: undefined;
+			let stageSizes: GrammarPrice["sizes"]["stages"] | undefined;
 			if (args.estimate || !args.offline) {
 				const projecting = new GrammarModels({
 					directory,
 					mode: "project",
+					...(ledgerSizes ? { ledgerSizes } : {}),
+					...(args.estimate && args.wholeRound
+						? { wholeRound: true }
+						: {}),
 				});
 				await pass(cases, projecting, concurrency, repetitions, units);
-				price = {
+				price = projecting.price(
 					repetitions,
-					attempts: cases.length * repetitions,
-					...projecting.projection,
-				};
+					cases.length * repetitions,
+				);
+				stageSizes = price.sizes.stages;
 				if (args.estimate) return { price, set: identity };
 				await args.beforeLive?.(price);
 			}
@@ -407,18 +429,28 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 				mode: args.offline ? "offline" : "live",
 				...(args.jev ? { jev: args.jev } : {}),
 				...(args.luna ? { luna: args.luna } : {}),
+				...(args.lunaBatch ? { lunaBatch: args.lunaBatch } : {}),
+				...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
 				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
 				...(args.caps ? { caps: args.caps } : {}),
+				...(ledgerSizes ? { ledgerSizes } : {}),
+				...(stageSizes ? { stageSizes } : {}),
 			});
 			if (!args.offline) {
-				if (!args.jev || !args.luna)
+				if (!args.jev || !(args.luna || args.lunaBatch))
 					throw Error(
 						"A live resolve.grammar run needs jev and Luna",
 					);
+				// Staged with a batch: each pass stops attempts at their Luna
+				// misses, one batch answers them, and the next pass goes on.
+				const signal = args.signal ?? new AbortController().signal;
+				await live.resumeLunaBatches(signal);
 				await pass(cases, live, concurrency, repetitions, units);
+				while (await live.sendLunaBatch(signal))
+					await pass(cases, live, concurrency, repetitions, units);
 				if (live.capHit !== undefined)
 					throw Error(
-						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.spend)}`,
+						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.report())}`,
 					);
 			}
 			const replay = new GrammarModels({ directory, mode: "offline" });
@@ -531,7 +563,7 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 			return {
 				run,
 				...(price ? { price } : {}),
-				spend: live.spend,
+				spend: live.report(),
 				set: identity,
 			};
 		},

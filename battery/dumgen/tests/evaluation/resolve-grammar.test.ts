@@ -3,6 +3,7 @@ import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { guardGrammarBudget } from "../../cli/evaluate.js";
+import { createOpenAILunaBatch } from "../../src/evaluation/luna-batch.js";
 import {
 	freezeGrammarSets,
 	type GrammarCase,
@@ -16,12 +17,15 @@ import {
 	goldAnswers,
 	goldWritten,
 } from "../../src/evaluation/resolve-grammar/oracle.js";
+import { roundCost } from "../../src/evaluation/resolve-grammar/pricing.js";
 import {
 	evaluateGrammar,
 	wilson,
 } from "../../src/evaluation/resolve-grammar/scoring.js";
-import type { LunaAsk } from "../../src/luna.js";
+import { defaultLunaConfiguration, type LunaAsk } from "../../src/luna.js";
+import { createOpenAILuna } from "../../src/openai-luna.js";
 import type { JevAsk } from "../../src/segment/jev.js";
+import { completedResponse, fakeOpenAI } from "./fake-openai.js";
 
 const repository = resolve(import.meta.dir, "../../../..");
 
@@ -232,6 +236,11 @@ test("a live resolve.grammar run needs granted budgets and stays under them", ()
 			outputTokens: 60,
 			pricedFromCache: 0,
 		},
+		cost: roundCost(
+			{ inputTokens: 3000 },
+			{ inputTokens: 1200, outputTokens: 60 },
+			defaultLunaConfiguration,
+		),
 	};
 	expect(() => guardGrammarBudget(price, undefined, "5000", "60")).toThrow(
 		"needs --budget",
@@ -250,6 +259,21 @@ test("a live resolve.grammar run needs granted budgets and stays under them", ()
 		lunaInputTokens: 1200,
 		lunaOutputTokens: 60,
 	});
+	// Dollars: Luna's fast tier synchronously, the Batch rate batched.
+	const sync = price.cost.totalSyncUsd;
+	const batch = price.cost.totalBatchUsd;
+	expect(batch).toBeLessThan(sync);
+	expect(() =>
+		guardGrammarBudget(price, "3000", "1200", "60", {
+			usdBudget: String(batch),
+		}),
+	).toThrow("past the budget of $");
+	expect(
+		guardGrammarBudget(price, "3000", "1200", "60", {
+			usdBudget: String(batch),
+			lunaBatch: true,
+		}),
+	).toMatchObject({ usd: batch });
 });
 
 test("a live run stops at the first cap it would cross and names it", async () => {
@@ -274,4 +298,64 @@ test("a live run stops at the first cap it would cross and names it", async () =
 	// Each Luna call reports 20 output tokens and holds back 60 until it
 	// answers: after three (60 spent), a fourth would pass 100.
 	expect(counter.luna).toBe(3);
+});
+
+test("resolve.grammar's replay scores the same whether its Canonical Forms came synchronously or by a Luna batch", async () => {
+	const { root: syncRoot, cases } = await frozenRoot();
+	const { root: batchRoot } = await frozenRoot();
+	const experiment = grammarExperiment("dev", false);
+	const answer = (body: Record<string, unknown>) => {
+		const [, user] = body.input as { content: string }[];
+		const input = JSON.parse(user?.content ?? "{}") as { sentence: string };
+		const goldCase = cases.find(
+			(candidate) => candidate.sentence.text === input.sentence,
+		);
+		if (!goldCase) throw Error("No case for this request");
+		return {
+			status: 200,
+			body: completedResponse(goldWritten(goldCase, input), {
+				input_tokens: 390,
+				output_tokens: 25,
+			}),
+		};
+	};
+	const syncOpenAI = fakeOpenAI(answer);
+	const batchOpenAI = fakeOpenAI(answer);
+	const sync = await experiment.evaluate({
+		experimentId: experiment.id,
+		sourceRevision: "test",
+		root: syncRoot,
+		jev: goldTransports(cases).jev,
+		luna: createOpenAILuna({
+			apiKey: "test",
+			baseUrl: "https://fake.openai.test/v1",
+			fetch: syncOpenAI.fetch,
+		}),
+	});
+	const batched = await experiment.evaluate({
+		experimentId: experiment.id,
+		sourceRevision: "test",
+		root: batchRoot,
+		jev: goldTransports(cases).jev,
+		lunaBatch: createOpenAILunaBatch({
+			apiKey: "test",
+			baseUrl: "https://fake.openai.test/v1",
+			fetch: batchOpenAI.batchFetch,
+			pollMs: 0,
+		}),
+	});
+	if (!sync.run || !batched.run) throw Error("no run");
+	expect(batchOpenAI.counts.responses).toBe(0);
+	expect(batchOpenAI.sentIds.size).toBe(syncOpenAI.counts.responses);
+	expect(syncOpenAI.counts.responses).toBeGreaterThan(0);
+	expect(grammarMetrics(batched.run)).toEqual(grammarMetrics(sync.run));
+	expect(
+		batched.run.cases.map((record) =>
+			record.repetitions?.map(({ output }) => output),
+		),
+	).toEqual(
+		sync.run.cases.map((record) =>
+			record.repetitions?.map(({ output }) => output),
+		),
+	);
 });

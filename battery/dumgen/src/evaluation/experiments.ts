@@ -70,12 +70,13 @@ import {
 	standInAnswers,
 } from "../segment-in-units/lab/round.js";
 import type { LabRun } from "../segment-in-units/lab/run.js";
+import type { LunaBatch } from "./luna-batch.js";
 import {
 	type GrammarEvaluated,
 	type GrammarPrice,
 	grammarExperiment,
 } from "./resolve-grammar/experiment.js";
-import type { GrammarCaps } from "./resolve-grammar/models.js";
+import type { GrammarCaps, LunaBatchEvent } from "./resolve-grammar/models.js";
 import { readingExperiment } from "./resolve-reading/experiment.js";
 import {
 	evaluateRawSegmentInUnits,
@@ -164,6 +165,8 @@ export type EvaluateArgs = {
 	readonly labRoot?: string;
 	/** Price the run and stop: nothing is asked and no run is saved. */
 	readonly estimate?: boolean;
+	/** resolve.grammar and resolve.reading: price every request, cached ones included. */
+	readonly wholeRound?: boolean;
 	/** Receives a live run's price before anything is asked; throw to refuse. */
 	readonly beforeLive?: (priced: PricedProjection) => void | Promise<void>;
 	/** Called before every fresh request; throw to stop spending. */
@@ -177,6 +180,10 @@ export type EvaluateArgs = {
 	/** A live resolve.grammar run's transports, asked on a cache miss. */
 	readonly jev?: JevAsk;
 	readonly luna?: LunaAsk;
+	/** resolve.grammar and resolve.reading: Luna's misses through the Batch API instead (#891). */
+	readonly lunaBatch?: LunaBatch;
+	/** Receives each Luna batch as it is sent and settled, for the port's ledger. */
+	readonly onLunaBatch?: (event: LunaBatchEvent) => void | Promise<void>;
 	/** Receives a live resolve.grammar run's price before anything is asked; throw to refuse. */
 	readonly beforeGrammarLive?: (price: GrammarPrice) => void | Promise<void>;
 	/** resolve.grammar's hard caps on fresh tokens. */
@@ -586,8 +593,11 @@ function resolveGrammarEntry(set: "dev" | "heldout", e2e: boolean): Experiment {
 				sourceRevision: args.sourceRevision,
 				...(args.jev ? { jev: args.jev } : {}),
 				...(args.luna ? { luna: args.luna } : {}),
+				...(args.lunaBatch ? { lunaBatch: args.lunaBatch } : {}),
+				...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
 				...(args.offline ? { offline: true } : {}),
 				...(args.estimate ? { estimate: true } : {}),
+				...(args.wholeRound ? { wholeRound: true } : {}),
 				...(args.beforeGrammarLive
 					? { beforeLive: args.beforeGrammarLive }
 					: {}),
@@ -630,8 +640,11 @@ function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
 				sourceRevision: args.sourceRevision,
 				...(args.jev ? { jev: args.jev } : {}),
 				...(args.luna ? { luna: args.luna } : {}),
+				...(args.lunaBatch ? { lunaBatch: args.lunaBatch } : {}),
+				...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
 				...(args.offline ? { offline: true } : {}),
 				...(args.estimate ? { estimate: true } : {}),
+				...(args.wholeRound ? { wholeRound: true } : {}),
 				...(args.beforeGrammarLive
 					? { beforeLive: args.beforeGrammarLive }
 					: {}),

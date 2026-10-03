@@ -13,10 +13,11 @@
  *       --budget <jev input tokens> --luna-budget <Luna input tokens>
  *       --luna-output-budget <Luna output tokens> [--limit N]
  *       [--subset evidence/resolve-grammar/round-2-subset.json] [--repetitions 1]
- *   bun run evaluate --experiment resolve-reading/de:dev --estimate
+ *   bun run evaluate --experiment resolve-reading/de:dev --estimate [--whole-round]
  *   bun run evaluate --experiment resolve-reading/de:dev --revision <rev>
  *       --budget <jev input tokens> --luna-budget <Luna input tokens>
  *       --luna-output-budget <Luna output tokens> [--limit N]
+ *       [--luna-batch] [--luna-prompt-cache] [--usd-budget <dollars>]
  *   bun run evaluate --open <runId>
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
@@ -27,11 +28,23 @@
  * A resolve.grammar or resolve.reading run prices itself first and goes
  * live only under the budgets the main session granted the round:
  * `--budget` for fresh jev input tokens, `--luna-budget` for Luna's input
- * tokens and `--luna-output-budget` for its output tokens. The same caps
- * stop it while it runs. Its answers are cached, so `--offline` re-scores
- * it for free.
+ * tokens and `--luna-output-budget` for its output tokens, and
+ * `--usd-budget` for dollars when given. The same caps stop it while it
+ * runs. Its answers are cached, so `--offline` re-scores it for free. Its
+ * price states the dollars synchronously and with Luna batched, priced
+ * from measured sizes wherever they exist; `--estimate --whole-round`
+ * prices every request, cached ones included, as a round whose prompts
+ * all moved would pay.
+ *
+ * `--luna-batch` sends such a run's Luna cache misses through OpenAI's
+ * Batch API in stages (#891), its guard and caps pricing them at the Batch
+ * rate; each batch's id goes to the port's ledger
+ * (`evidence/resolve-*\/ledger.jsonl`) as it is sent and as it settles.
+ * `--luna-prompt-cache` asks Luna for explicit prompt caching. Production
+ * clicks stay synchronous.
  */
 import { execFileSync } from "node:child_process";
+import { appendFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { loadRun } from "promptsmith/storage";
@@ -51,8 +64,13 @@ import {
 	type UnitConfig,
 	unitConfigs,
 } from "../src/evaluation/experiments.js";
-import type { GrammarPrice } from "../src/evaluation/resolve-grammar/experiment.js";
-import type { GrammarCaps } from "../src/evaluation/resolve-grammar/models.js";
+import { createOpenAILunaBatch } from "../src/evaluation/luna-batch.js";
+import type {
+	GrammarCaps,
+	GrammarPrice,
+	LunaBatchEvent,
+} from "../src/evaluation/resolve-grammar/models.js";
+import type { RoundCost } from "../src/evaluation/resolve-grammar/pricing.js";
 import type { Splitter } from "../src/evaluation/split-text.js";
 import { createOpenAILuna } from "../src/openai-luna.js";
 import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
@@ -83,6 +101,8 @@ export async function runEvaluationCli(
 		labRoot?: string;
 		/** The lab's evidence: the ledger and the round book. */
 		evidenceRoot?: string;
+		/** Where resolve.grammar's and resolve.reading's ledgers are; `evidence/` by default. */
+		resolveEvidenceRoot?: string;
 		repository?: string;
 	} = {},
 ) {
@@ -109,6 +129,10 @@ export async function runEvaluationCli(
 			limit: { type: "string" },
 			subset: { type: "string" },
 			repetitions: { type: "string" },
+			"luna-batch": { type: "boolean" },
+			"luna-prompt-cache": { type: "boolean" },
+			"usd-budget": { type: "string" },
+			"whole-round": { type: "boolean" },
 		},
 	});
 	const write =
@@ -167,6 +191,25 @@ export async function runEvaluationCli(
 	// resolve.reading's runs share resolve.grammar's transports and guard.
 	const grammar = /^resolve-(grammar|reading)\//u.test(values.experiment);
 	const grammarLive = grammar && live;
+	const lunaBatch = values["luna-batch"] ?? false;
+	const promptCaching = values["luna-prompt-cache"] ?? false;
+	// Each batch's id goes to the port's ledger as it is sent and settled.
+	const portLedger = join(
+		dependencies.resolveEvidenceRoot ?? join(packageRoot, "evidence"),
+		values.experiment.split("/")[0] ?? "",
+		"ledger.jsonl",
+	);
+	const experimentId = values.experiment;
+	const recordBatch = (event: LunaBatchEvent) =>
+		appendFile(
+			portLedger,
+			`${JSON.stringify({
+				at: new Date().toISOString(),
+				command: "luna-batch",
+				experiment: experimentId,
+				...event,
+			})}\n`,
+		);
 	const environment = (name: string) => {
 		const value = process.env[name];
 		if (!value) throw Error(`${name} is not set`);
@@ -187,6 +230,7 @@ export async function runEvaluationCli(
 				: {}),
 			offline: values.offline ?? false,
 			estimate: values.estimate ?? false,
+			...(values["whole-round"] ? { wholeRound: true } : {}),
 			sourceRevision: values.revision ?? "estimate",
 			outputDirectory,
 			signal: controller.signal,
@@ -206,14 +250,27 @@ export async function runEvaluationCli(
 						jev: createTypeSafeAsk({
 							apiKey: environment("TYPESAFE_API_KEY"),
 						}),
-						luna: createOpenAILuna({
-							apiKey: environment("OPENAI_API_KEY"),
-						}),
+						...(lunaBatch
+							? {
+									lunaBatch: createOpenAILunaBatch({
+										apiKey: environment("OPENAI_API_KEY"),
+										promptCaching,
+										metadata: { experiment: experimentId },
+									}),
+									onLunaBatch: recordBatch,
+								}
+							: {
+									luna: createOpenAILuna({
+										apiKey: environment("OPENAI_API_KEY"),
+										promptCaching,
+									}),
+								}),
 						grammarCaps: guardGrammarBudget(
 							undefined,
 							values.budget,
 							values["luna-budget"],
 							values["luna-output-budget"],
+							{ usdBudget: values["usd-budget"], lunaBatch },
 						),
 						beforeGrammarLive(price: GrammarPrice) {
 							warn(JSON.stringify({ price }));
@@ -222,6 +279,7 @@ export async function runEvaluationCli(
 								values.budget,
 								values["luna-budget"],
 								values["luna-output-budget"],
+								{ usdBudget: values["usd-budget"], lunaBatch },
 							);
 						},
 					}
@@ -349,14 +407,33 @@ export async function runEvaluationCli(
  * The caps a live resolve.grammar run was granted, refusing a run with no
  * granted budget or whose price exceeds it: fresh jev input tokens against
  * `--budget`, Luna's input against `--luna-budget` and its output against
- * `--luna-output-budget`.
+ * `--luna-output-budget`, and, when `--usd-budget` is given, the price in
+ * dollars at the rate Luna's transport pays: the Batch rate with
+ * `--luna-batch`, the configuration's tier otherwise.
  */
 export function guardGrammarBudget(
-	price: GrammarPrice | undefined,
+	price:
+		| {
+				readonly jev: { readonly inputTokens: number };
+				readonly luna: {
+					readonly inputTokens: number;
+					readonly outputTokens: number;
+				};
+				readonly cost: RoundCost;
+		  }
+		| undefined,
 	jevBudget: string | undefined,
 	lunaBudget: string | undefined,
 	lunaOutputBudget: string | undefined,
+	options: {
+		readonly usdBudget?: string | undefined;
+		readonly lunaBatch?: boolean;
+	} = {},
 ): GrammarCaps {
+	const usd =
+		options.usdBudget === undefined ? undefined : Number(options.usdBudget);
+	if (usd !== undefined && !Number.isFinite(usd))
+		throw Error("--usd-budget is a number of dollars. Nothing was asked.");
 	const caps = {
 		jevInputTokens: Number(jevBudget),
 		lunaInputTokens: Number(lunaBudget),
@@ -380,7 +457,14 @@ export function guardGrammarBudget(
 		throw Error(
 			`This run projects ${price.jev.inputTokens} jev input tokens and ${price.luna.inputTokens} in / ${price.luna.outputTokens} out Luna tokens, past the budgets of ${caps.jevInputTokens}, ${caps.lunaInputTokens} and ${caps.lunaOutputTokens}. Nothing was asked.`,
 		);
-	return caps;
+	const projected = options.lunaBatch
+		? price?.cost.totalBatchUsd
+		: price?.cost.totalSyncUsd;
+	if (usd !== undefined && projected !== undefined && projected > usd)
+		throw Error(
+			`This run projects $${projected} with Luna ${options.lunaBatch ? "batched" : `synchronous (${price?.cost.luna.syncTier})`}, past the budget of $${usd}. Nothing was asked.`,
+		);
+	return usd === undefined ? caps : { ...caps, usd };
 }
 
 /**

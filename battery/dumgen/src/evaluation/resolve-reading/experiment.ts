@@ -34,12 +34,15 @@ import { defaultLunaConfiguration, type LunaAsk } from "../../luna.js";
 import type { OperationTrace } from "../../operation-trace.js";
 import { markedSentence } from "../../resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../segment/jev.js";
-import type { GrammarPrice } from "../resolve-grammar/experiment.js";
+import type { LunaBatch } from "../luna-batch.js";
 import {
 	CachedModels,
-	type ExecutorSpend,
 	type GrammarCaps,
 	type GrammarModelsOptions,
+	type GrammarPrice,
+	type LunaBatchEvent,
+	type ModelsSpend,
+	readLedgerSizes,
 } from "../resolve-grammar/models.js";
 import {
 	armsOf,
@@ -64,6 +67,11 @@ export const defaultReadingRoot = fileURLToPath(
 );
 
 export const readingRoute = "resolve-reading/de";
+
+/** The port's ledger, whose latest round's sizes price a run (#891). */
+const readingLedgerPath = fileURLToPath(
+	new URL("../../../evidence/resolve-reading/ledger.jsonl", import.meta.url),
+);
 /** Each attempt runs three times; each repetition is its own cached answer. */
 export const readingRepetitions = 3;
 
@@ -82,9 +90,20 @@ export type ReadingEvaluateArgs = {
 	/** Asked on a cache miss in a live run. */
 	readonly jev?: JevAsk;
 	readonly luna?: LunaAsk;
+	/**
+	 * Send Luna's cache misses through OpenAI's Batch API in stages instead
+	 * of `luna` (#891); evaluation runs only.
+	 */
+	readonly lunaBatch?: LunaBatch;
+	/** Receives each batch as it is sent and settled, for the ledger. */
+	readonly onLunaBatch?: (event: LunaBatchEvent) => void | Promise<void>;
+	/** The ledger whose latest round's sizes price the run; the port's by default. */
+	readonly ledger?: string;
 	readonly offline?: boolean;
 	/** Price the run and stop: nothing is asked and no run is saved. */
 	readonly estimate?: boolean;
+	/** With `estimate`: price every request, cached ones included (`wholeRound`). */
+	readonly wholeRound?: boolean;
 	readonly beforeLive?: (price: ReadingPrice) => void | Promise<void>;
 	readonly beforeSpend?: () => void;
 	/** The round's hard caps; a live run stops at the first it would cross. */
@@ -101,10 +120,7 @@ export type ReadingEvaluateArgs = {
 export type ReadingEvaluated = {
 	readonly run?: OperationEvaluationRun;
 	readonly price?: ReadingPrice;
-	readonly spend?: {
-		readonly jev: ExecutorSpend;
-		readonly luna: ExecutorSpend;
-	};
+	readonly spend?: ModelsSpend;
 	readonly set?: { readonly name: ReadingSetName; readonly hash: string };
 };
 
@@ -250,17 +266,29 @@ export function readingExperiment(setName: ReadingSetName) {
 				0,
 			);
 			let price: ReadingPrice | undefined;
+			const ledgerSizes =
+				args.estimate || !args.offline
+					? await readLedgerSizes(
+							args.ledger ?? readingLedgerPath,
+							id,
+						)
+					: undefined;
+			let stageSizes: ReadingPrice["sizes"]["stages"] | undefined;
 			if (args.estimate || !args.offline) {
 				const projecting = new ReadingModels({
 					directory,
 					mode: "project",
+					...(ledgerSizes ? { ledgerSizes } : {}),
+					...(args.estimate && args.wholeRound
+						? { wholeRound: true }
+						: {}),
 				});
 				await pass(cases, projecting, concurrency);
-				price = {
-					repetitions: readingRepetitions,
-					attempts: attempts * readingRepetitions,
-					...projecting.projection,
-				};
+				price = projecting.price(
+					readingRepetitions,
+					attempts * readingRepetitions,
+				);
+				stageSizes = price.sizes.stages;
 				if (args.estimate) return { price, set: identity };
 				await args.beforeLive?.(price);
 			}
@@ -269,18 +297,28 @@ export function readingExperiment(setName: ReadingSetName) {
 				mode: args.offline ? "offline" : "live",
 				...(args.jev ? { jev: args.jev } : {}),
 				...(args.luna ? { luna: args.luna } : {}),
+				...(args.lunaBatch ? { lunaBatch: args.lunaBatch } : {}),
+				...(args.onLunaBatch ? { onLunaBatch: args.onLunaBatch } : {}),
 				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
 				...(args.caps ? { caps: args.caps } : {}),
+				...(ledgerSizes ? { ledgerSizes } : {}),
+				...(stageSizes ? { stageSizes } : {}),
 			});
 			if (!args.offline) {
-				if (!args.jev || !args.luna)
+				if (!args.jev || !(args.luna || args.lunaBatch))
 					throw Error(
 						"A live resolve.reading run needs jev and Luna",
 					);
+				// Staged with a batch: each pass stops attempts at their Luna
+				// misses, one batch answers them, and the next pass goes on.
+				const signal = args.signal ?? new AbortController().signal;
+				await live.resumeLunaBatches(signal);
 				await pass(cases, live, concurrency);
+				while (await live.sendLunaBatch(signal))
+					await pass(cases, live, concurrency);
 				if (live.capHit !== undefined)
 					throw Error(
-						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.spend)}`,
+						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.report())}`,
 					);
 			}
 			const replay = new ReadingModels({ directory, mode: "offline" });
@@ -428,7 +466,7 @@ export function readingExperiment(setName: ReadingSetName) {
 			return {
 				run,
 				...(price ? { price } : {}),
-				spend: live.spend,
+				spend: live.report(),
 				set: identity,
 			};
 		},
