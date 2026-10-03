@@ -15,8 +15,19 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
-		"references": []
+		"rules": [
+			{
+				"rule": "de/plural-only-noun-has-no-gender",
+				"hash": "92946b73a6244500"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: Ferien",
+				"url": "https://www.duden.de/rechtschreibung/Ferien",
+				"supports": "Target [Ferien]: Pluralwort, \"Grammatik: nur im Plural\"; with no singular it has gender null (de/plural-only-noun-has-no-gender)."
+			}
+		]
 	},
 	"targets": [
 		{

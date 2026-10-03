@@ -25,6 +25,10 @@ export {
 	attestationParticleIssues,
 	type ParticleIssue,
 } from "./check-particles.js";
+export {
+	attestationPluralOnlyIssues,
+	type PluralOnlyIssue,
+} from "./check-plural-only.js";
 export { checkRecord, type RecordCheck } from "./check-record.js";
 export { sharedReadingIssues } from "./check-shared-readings.js";
 export {

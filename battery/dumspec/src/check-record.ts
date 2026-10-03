@@ -8,6 +8,7 @@ import { attestationArticleAgreementIssues } from "./check-article-agreement.js"
 import { authoredReadingIssues } from "./check-authored-readings.js";
 import { knowledgeCoverageIssues } from "./check-knowledge-coverage.js";
 import { attestationParticleIssues } from "./check-particles.js";
+import { attestationPluralOnlyIssues } from "./check-plural-only.js";
 import { attestationSyncretismIssues } from "./check-syncretisms.js";
 import { unitRoutes } from "./generated/routes.js";
 import { specRecordIdPattern } from "./ids.js";
@@ -268,7 +269,8 @@ type TargetFile = z.infer<typeof fileSchema>["targets"][number];
 /**
  * The checks a sentence record and a Breakdown Record share: the Segments
  * spell the sentence, and each target's members and route (Segmentation),
- * its strict Attestation, ADP cases, articles, Syncretisms and Grundform
+ * its strict Attestation, ADP cases, articles, closed PART, plural-only
+ * nouns, Syncretisms and Grundform
  * (Attestation), its Reading (Reading) and its Reading Knowledge and
  * coverage (Knowledge). Returns each target's Segmentation, each target whose
  * Attestation passes, with the Reading and Knowledge that pass, how many
@@ -453,6 +455,12 @@ function checkTargetLayers(
 	for (const found of attestationParticleIssues(attestation))
 		attestationIssue(
 			"ClosedPart",
+			`${path}.attestation.${found.path}`,
+			found.message,
+		);
+	for (const found of attestationPluralOnlyIssues(attestation))
+		attestationIssue(
+			"PluralOnly",
 			`${path}.attestation.${found.path}`,
 			found.message,
 		);

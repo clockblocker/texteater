@@ -560,6 +560,18 @@ const nouns: Rule[] = [
 		],
 	},
 	{
+		id: "de/plural-only-noun-has-no-gender",
+		statement:
+			"A noun with no singular, one the dictionary gives only in the plural (Leute, Eltern, Ferien, Kosten), has gender null. Gender is read from the nominative singular, and such a noun has none to read it from. It is cited in its plural, and its Surfaces are plural and mark no gender. A noun the dictionary gives a singular keeps that singular's gender, even where it is mostly used in the plural: die Lebensmittel is das Lebensmittel, Neut.",
+		adrs: ["ADR-0002", "ADR-0032", "ADR-0040"],
+		routes: lexeme("NOUN"),
+		records: [
+			"de/die-eltern-warten-draussen",
+			"de/die-ferien-beginnen-morgen",
+			"de/hallo-leute-hoert-kurz-zu",
+		],
+	},
+	{
 		id: "de/only-der-and-ein-are-articles",
 		statement:
 			"Only forms of der, die, das and ein are articles, including the article piece of a fused word (m in im) and a shortened article ('ne, 'nen). mein, dieser, kein and other determiners are DETs of their own: kein Haus gives [kein] DET and [Haus] NOUN. The der- part of derselbe and derjenige belongs to the word, not an article, fused piece included: am selben Morgen gives [m, selben] DET derselbe with Full coverage, and Morgen no article.",

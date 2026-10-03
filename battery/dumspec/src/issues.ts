@@ -15,6 +15,7 @@ export type SpecCheck =
 	| "AdpositionCase"
 	| "ArticleAgreement"
 	| "ClosedPart"
+	| "PluralOnly"
 	| "Syncretism"
 	| "AuthoredReading"
 	| "Segments"

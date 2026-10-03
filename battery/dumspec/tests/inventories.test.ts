@@ -13,6 +13,7 @@ import type * as Dumrel from "dumrel/types";
 import { frameAdpositionCaseIssues } from "../src/check-adposition-cases.js";
 import {
 	attestationParticleIssues,
+	attestationPluralOnlyIssues,
 	authoredReadingIssues,
 	loadSpecRecords,
 } from "../src/index.js";
@@ -26,6 +27,8 @@ import {
 	closedVerbForms,
 	germanParticleMember,
 	germanParticles,
+	germanPluralOnlyNouns,
+	isGermanPluralOnlyNoun,
 	modalVerbs,
 	reflexiveDrillDown,
 	reflexivityUnit,
@@ -1760,5 +1763,68 @@ describe("German PART (#734)", () => {
 				coreFeatures: { partType: "Mod", polarity: null },
 			})?.lemma.canonicalForm,
 		).toBe("doch");
+	});
+});
+
+describe("plural-only nouns", () => {
+	const noun = (
+		canonicalForm: string,
+		gender: string | null,
+		surfaceGender: string | null,
+	) => {
+		const parsed = parseUnit({
+			unitKind: "Attestation",
+			members: [{ attested: canonicalForm, orthography: "Standard" }],
+			realizationCoverage: "Full",
+			articleEvidence: null,
+			valencyEvidence: [],
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				normalizedSurface: canonicalForm,
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					case: "Nom",
+					gender: surfaceGender,
+					number: "Plur",
+				},
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+					canonicalForm,
+					coreFeatures: { gender },
+				},
+			},
+		});
+		if (!parsed.success || parsed.chain.unitKind !== "Attestation")
+			throw Error(`Expected a NOUN Attestation of ${canonicalForm}`);
+		return parsed.chain.value;
+	};
+
+	test("each listed Pluraletantum cites its Duden page, once", () => {
+		const nouns = germanPluralOnlyNouns.map(({ noun }) => noun);
+		expect(new Set(nouns).size).toBe(nouns.length);
+		for (const { source } of germanPluralOnlyNouns)
+			expect(source).toStartWith("https://www.duden.de/rechtschreibung/");
+		expect(isGermanPluralOnlyNoun("leute")).toBe(true);
+		expect(isGermanPluralOnlyNoun("Lebensmittel")).toBe(false);
+	});
+
+	test("a plural-only noun has gender null in its Core and on its Surface", () => {
+		expect(attestationPluralOnlyIssues(noun("Kosten", null, null))).toEqual(
+			[],
+		);
+		expect(
+			attestationPluralOnlyIssues(noun("Kosten", "Fem", null)).map(
+				({ path }) => path,
+			),
+		).toEqual(["surface.lemma.coreFeatures.gender"]);
+		// A noun with a singular keeps its gender.
+		expect(
+			attestationPluralOnlyIssues(noun("Lebensmittel", "Neut", null)),
+		).toEqual([]);
 	});
 });
