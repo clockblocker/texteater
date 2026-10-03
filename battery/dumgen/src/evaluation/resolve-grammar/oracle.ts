@@ -307,5 +307,13 @@ export function goldWritten(goldCase: GrammarCase, input: unknown): unknown {
 		cursor = index + 1;
 		return tokens[index] ?? text;
 	});
-	return { canonicalForm: ideal.surface.lemma.canonicalForm, members };
+	const { lemma } = ideal.surface;
+	const gender = (lemma.coreFeatures as Values).gender;
+	return {
+		canonicalForm: lemma.canonicalForm,
+		members,
+		...(lemma.family === "Lexeme" && lemma.kind === "NOUN"
+			? { article: articleOfGender[String(gender)] ?? "none" }
+			: {}),
+	};
 }

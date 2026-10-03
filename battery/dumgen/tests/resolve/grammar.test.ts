@@ -172,9 +172,9 @@ test("a transport failure is a ProviderFailure and an unusable answer an Invalid
 });
 
 test("a click is all-or-nothing: a failed Case question interrupts Luna's call in flight", async () => {
-	// Er0 _1 gibt2 _3 der4 _5 Frau6 _7 ein8 _9 Buch10 .11
+	// Er0 _1 grüßt2 _3 der4 _5 Anna6 .7 (a PROPN's Case runs beside Luna)
 	const jev = fakeJev(
-		{ gender: "Fem", number: "Sing" },
+		{ gender: "die", number: "Sing", article: "Bare" },
 		{ fail: (stage) => stage === "case" },
 	);
 	const luna = fakeLuna(undefined, { delayMs: 50 });
@@ -182,8 +182,8 @@ test("a click is all-or-nothing: a failed Case question interrupts Luna's call i
 		Effect.flip(
 			createDumgen({ jev: jev.ask, luna: luna.ask }).resolve.grammar({
 				language: "de",
-				sentence: sentenceOf("Er gibt der Frau ein Buch."),
-				unit: unitOf([4, 6], "Lexeme", "NOUN"),
+				sentence: sentenceOf("Er hilft der Anna."),
+				unit: unitOf([4, 6], "Lexeme", "PROPN"),
 				neighbours: {},
 				lemmaCandidates: [],
 			}),
@@ -191,6 +191,71 @@ test("a click is all-or-nothing: a failed Case question interrupts Luna's call i
 	);
 	expect(failure).toBeInstanceOf(ProviderFailure);
 	expect(luna.aborted).toEqual(["canonical"]);
+});
+
+test("a common NOUN's gender is the article Luna writes with its headword, and its Case is asked over the cells that gender leaves", async () => {
+	// jev leans das for Kran; Luna writes der.
+	const jev = fakeJev({ gender: "das", number: "Sing", case: "Acc" });
+	const luna = fakeLuna(({ members }) => ({
+		canonicalForm: "Kran",
+		members: members.map(({ text }) => text),
+		article: "der",
+	}));
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Sie sieht den Kran."),
+			unit: unitOf([4, 6], "Lexeme", "NOUN"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.coreFeatures).toEqual({ gender: "Masc" });
+	expect(attestation.surface.inflectionalFeatures).toMatchObject({
+		case: "Acc",
+		number: "Sing",
+	});
+	expect(luna.sent[0]?.outputSchema).toMatchObject({
+		properties: { article: { enum: ["der", "die", "das", "none"] } },
+	});
+	// A Luna article the singular head's own article rules out gives way
+	// to jev's reading: der Tisch is never das.
+	const wrong = fakeLuna(({ members }) => ({
+		canonicalForm: "Tisch",
+		members: members.map(({ text }) => text),
+		article: "das",
+	}));
+	const table = await resolveOnce(
+		{
+			jev: fakeJev({ gender: "der", number: "Sing" }).ask,
+			luna: wrong.ask,
+		},
+		{
+			sentence: sentenceOf("Der Tisch wackelt."),
+			unit: unitOf([0, 2], "Lexeme", "NOUN"),
+		},
+	);
+	expect(attested(table.result).surface.lemma.coreFeatures).toEqual({
+		gender: "Masc",
+	});
+	// none: a plural-only noun has no gender.
+	const people = fakeLuna(({ members }) => ({
+		canonicalForm: "Leute",
+		members: members.map(({ text }) => text),
+		article: "none",
+	}));
+	const plural = await resolveOnce(
+		{
+			jev: fakeJev({ gender: "die", number: "Plur" }).ask,
+			luna: people.ask,
+		},
+		{
+			sentence: sentenceOf("Leute warten."),
+			unit: unitOf([0], "Lexeme", "NOUN"),
+		},
+	);
+	expect(attested(plural.result).surface.lemma.coreFeatures).toEqual({
+		gender: null,
+	});
 });
 
 // NOUN Case: narrowed in code, asked at most once (#625).

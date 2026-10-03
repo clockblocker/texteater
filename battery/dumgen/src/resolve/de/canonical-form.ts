@@ -37,7 +37,15 @@ export type Judged = {
 export type Written = {
 	readonly canonicalForm: string;
 	readonly members: readonly string[];
+	/** A NOUN's definite article in the nominative singular, or none (#876). */
+	readonly article?: "der" | "die" | "das" | "none";
 };
+
+/** Whether Luna writes the unit's article beside its headword: a common NOUN Lexeme. */
+export const writesArticle = (target: Target) =>
+	target.route.family === "Lexeme" && target.route.kind === "NOUN";
+
+const nounArticles = ["der", "die", "das", "none"] as const;
 
 const discontinuous = new Set([
 	"Lexeme/ADP",
@@ -70,6 +78,7 @@ function systemPrompt(target: Target): string {
 			? [canonicalForm.slot]
 			: []),
 		...(guidance ? [guidance] : []),
+		...(writesArticle(target) ? [routeGuidance.nounArticle] : []),
 	].join("\n");
 }
 
@@ -160,8 +169,15 @@ export function canonicalFormRequest(
 					minItems: target.members.length,
 					maxItems: target.members.length,
 				},
+				...(writesArticle(target)
+					? { article: { type: "string", enum: [...nounArticles] } }
+					: {}),
 			},
-			required: ["canonicalForm", "members"],
+			required: [
+				"canonicalForm",
+				"members",
+				...(writesArticle(target) ? ["article"] : []),
+			],
 			additionalProperties: false,
 		},
 	};
@@ -284,5 +300,14 @@ export function checkWritten(
 			);
 		members.push(word);
 	}
-	return { canonicalForm: form, members };
+	const article = (value as { article?: unknown }).article;
+	return {
+		canonicalForm: form,
+		members,
+		...(writesArticle(target) &&
+		typeof article === "string" &&
+		(nounArticles as readonly string[]).includes(article)
+			? { article: article as Written["article"] & string }
+			: {}),
+	};
 }

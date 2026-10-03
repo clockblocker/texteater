@@ -625,6 +625,13 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 		rules.adjectivalNoun,
 		rules.neuterNoun,
 	),
+	nounArticle: paragraph(
+		"canonical.route.Lexeme/NOUN.article",
+		"Give in `article` the definite article the noun's nominative singular takes in the dictionary (der, die or das), whatever this sentence's case, number or article: «des Hafens» is der «Hafen». Give none only for a noun with no singular or a person noun made from an adjective or participle («Abgeordnete»).",
+		rules.core,
+		rules.adjectivalNoun,
+		rules.nounArticle,
+	),
 	"Lexeme/PROPN": paragraph(
 		"canonical.route.Lexeme/PROPN",
 		"A name keeps its registered spelling and capitals, without a genitive ending and without the article it is cited with («Zugspitze» for «die Zugspitze»).",

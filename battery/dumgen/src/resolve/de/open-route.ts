@@ -812,6 +812,12 @@ type FirstRead = {
 	readonly realizedCase: AdpCase | "None" | undefined;
 	/** The cases a NOUN's Case question still has to choose among. */
 	readonly openCases: readonly string[];
+	/** A used common NOUN's number and the gender jev saw its form show, for Luna's article. */
+	readonly noun?: {
+		readonly number: string;
+		readonly shown: string | null;
+		readonly earlyCase: string | undefined;
+	};
 };
 
 /** A verbal Surface's features, from its form questions and its auxiliaries' uses. */
@@ -921,6 +927,7 @@ function readFirst(
 		: undefined;
 	let expletive: Member | undefined;
 	let openCases: readonly string[] = [];
+	let noun: FirstRead["noun"];
 	if (shape.verbal) {
 		if (shape.lexeme) {
 			const prefix = planned.prefixes.length
@@ -982,6 +989,20 @@ function readFirst(
 					: undefined;
 			let formGender =
 				shown === undefined ? null : (genderOfArticle[shown] ?? shown);
+			if (shape.lexeme && !shape.proper) {
+				const seen = answered.peek("formGender");
+				noun = {
+					number,
+					shown:
+						seen === undefined
+							? null
+							: (genderOfArticle[seen] ?? seen),
+					earlyCase:
+						planned.earlyCases.length > 0
+							? answered.peek("case")
+							: undefined,
+				};
+			}
 			// A singular head's owned article is hard evidence of its
 			// gender: when the judged one agrees with no case of the
 			// article, the likeliest other gender jev weighed that does is
@@ -1026,11 +1047,12 @@ function readFirst(
 			openCases = planned.article
 				? articleCases(planned.article.article, number, agreeing)
 				: [...cases, "Unmarked"];
-			if (openCases.length === 0)
+			// A common NOUN waits for the article Luna writes before this verdict.
+			if (openCases.length === 0 && !noun)
 				throw new UnresolvedAnswer(
 					"The article agrees with no case of its head",
 				);
-			if (planned.earlyCases.length > 0) {
+			if (openCases.length > 0 && planned.earlyCases.length > 0) {
 				const answer = answered.pick("case");
 				if (!openCases.includes(answer))
 					throw new UnresolvedAnswer(
@@ -1143,6 +1165,7 @@ function readFirst(
 		expletive,
 		realizedCase,
 		openCases,
+		...(noun ? { noun } : {}),
 	};
 }
 
@@ -1187,6 +1210,61 @@ export function verbHeadword(form: string, core: Values): string {
 		verb = `${prefix}${verb.slice(shortening?.length ?? tail?.length ?? 0)}`;
 	}
 	return reflexive ? `sich ${verb}` : verb;
+}
+
+/**
+ * A common NOUN's Core gender and cells from the article Luna wrote with
+ * its headword (der Kran; Rules de/core-features-are-identity,
+ * de/adjectival-noun-lemma: none for a person noun made from an adjective
+ * or participle or a plural-only noun). Undefined keeps jev's reading,
+ * which already fell back to the likeliest gender the Sentence's article
+ * allows: when Luna wrote none, or a gender the singular head's owned
+ * article agrees with in no case, or none for a singular form whose
+ * gender jev saw no form show, or one that rules out a Case jev answered.
+ */
+function nounCells(
+	planned: Plan,
+	first: FirstRead,
+	article: Written["article"],
+):
+	| {
+			readonly core: Values;
+			readonly inflection: Values | null | undefined;
+			readonly openCases: readonly string[];
+	  }
+	| undefined {
+	const { noun } = first;
+	if (!noun || !article || !first.inflection) return undefined;
+	const gender =
+		article === "none" ? null : (genderOfArticle[article] ?? null);
+	if (gender === (first.core.gender ?? null)) return undefined;
+	const singular = noun.number === "Sing";
+	const formGender = gender === null && singular ? noun.shown : null;
+	if (gender === null && singular && formGender === null) return undefined;
+	const agreeing = formGender ?? gender;
+	let openCases: readonly string[] = planned.article
+		? articleCases(planned.article.article, noun.number, agreeing)
+		: [...cases, "Unmarked"];
+	if (openCases.length === 0) return undefined;
+	if (noun.earlyCase !== undefined) {
+		if (!openCases.includes(noun.earlyCase)) return undefined;
+		openCases = [noun.earlyCase];
+	}
+	const [only] = openCases;
+	return {
+		core: { ...first.core, gender },
+		inflection: {
+			...first.inflection,
+			gender: formGender,
+			case:
+				openCases.length === 1 && only !== undefined
+					? only === "Unmarked"
+						? null
+						: only
+					: null,
+		},
+		openCases,
+	};
 }
 
 /**
@@ -1352,11 +1430,11 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		),
 		readings: first.readings,
 	};
-	const caseRequest =
-		first.openCases.length > 1
+	const caseRequestOver = (open: readonly string[]) =>
+		open.length > 1
 			? Effect.gen(function* () {
 					const questionnaire = new Questionnaire();
-					caseQuestion(questionnaire, first.openCases);
+					caseQuestion(questionnaire, open);
 					const answered = yield* ask({
 						stage: "case",
 						state: {
@@ -1368,6 +1446,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 					return settle(() => new Answered(answered).pick("case"));
 				})
 			: Effect.succeed(undefined);
+	const caseRequest = caseRequestOver(first.openCases);
 	const writing: Effect.Effect<Written | undefined, AskFailure> =
 		particleSpelled.length === 1 && first.orthographies[0] === "Standard"
 			? Effect.succeed(undefined)
@@ -1382,19 +1461,39 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 					),
 					(output) => checkWritten(target, judged, output),
 				);
-	const [caseAnswer, written] = yield* Effect.all([caseRequest, writing], {
-		concurrency: "unbounded",
-	});
+	// A common NOUN's gender is the article Luna writes with its headword
+	// when it fits the Sentence's article; its Case is asked over the cells
+	// that gender leaves, after Luna.
+	let cells = {
+		core: first.core,
+		inflection: first.inflection,
+		openCases: first.openCases,
+	};
+	let caseAnswer: string | UnresolvedAnswer | undefined;
+	let written: Written | undefined;
+	if (first.noun && first.inflection) {
+		written = yield* writing;
+		cells = nounCells(planned, first, written?.article) ?? cells;
+		if (cells.openCases.length === 0)
+			return {
+				_tag: "Unresolved",
+				reason: "The article agrees with no case of its head",
+			};
+		caseAnswer = yield* caseRequestOver(cells.openCases);
+	} else
+		[caseAnswer, written] = yield* Effect.all([caseRequest, writing], {
+			concurrency: "unbounded",
+		});
 	if (caseAnswer instanceof UnresolvedAnswer)
 		return { _tag: "Unresolved", reason: caseAnswer.reason };
 	const inflection =
-		caseAnswer === undefined || !first.inflection
-			? first.inflection
+		caseAnswer === undefined || !cells.inflection
+			? cells.inflection
 			: {
-					...first.inflection,
+					...cells.inflection,
 					case: caseAnswer === "Unmarked" ? null : caseAnswer,
 				};
-	let core = first.core;
+	let core = cells.core;
 	let canonicalForm =
 		written && shape.verbal && shape.lexeme
 			? verbHeadword(written.canonicalForm, first.core)
