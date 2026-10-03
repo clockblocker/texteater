@@ -555,7 +555,16 @@ test("a unit selection settles on one Unit Card with no step left loading", () =
 	);
 	expect(settled).toContain(">Die Banken<");
 	expect(settled).toContain("Lexeme · NOUN");
+	expect(settled).toContain("This unit could not be resolved.");
 	expect(settled).not.toContain('data-slot="note-skeleton"');
+	const running = renderToStaticMarkup(
+		createElement(ResolutionNoteFrame, {
+			note: routed,
+			presentation: "Card",
+		}),
+	);
+	expect(running).toContain("Resolving this unit…");
+	expect(running).not.toContain("paused");
 	expect(
 		renderCardTail({
 			kind: "Note",

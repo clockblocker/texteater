@@ -120,7 +120,8 @@ export function ResolutionNoteFrame({
 	onRetry?: () => Promise<unknown>;
 }) {
 	const { lifecycle } = note;
-	// While resolution is rebuilt, a click shows the unit it selected (#848).
+	// A click shows the unit it selected until Grammar resolves, and keeps
+	// showing it when the unit stays Unresolved (#848, #886).
 	if (
 		note.unit &&
 		(lifecycle.state === "Active" || lifecycle.outcome === "Unresolved")
@@ -203,9 +204,9 @@ function unitWords(
 }
 
 /**
- * What a click shows while resolution is rebuilt (#848): the whole unit it
- * selected, its route and any route variants. No Note is made and no model
- * is asked.
+ * The unit a click selected, its route and any route variants: what the
+ * Resolution Card shows while Grammar runs, and what an Unresolved click
+ * settles on (#848, #886).
  */
 function UnitCard({ note, unit }: { note: ResolutionNote; unit: StoredUnit }) {
 	const variants: readonly UnitRoute[] = (unit.variants ?? []).filter(
@@ -230,7 +231,9 @@ function UnitCard({ note, unit }: { note: ResolutionNote; unit: StoredUnit }) {
 					) : null}
 				</dl>
 				<p className="text-xs text-ink-muted" role="status">
-					Readings are paused while click resolution is rebuilt.
+					{note.lifecycle.state === "Active"
+						? "Resolving this unit…"
+						: "This unit could not be resolved."}
 				</p>
 			</div>
 		</div>
