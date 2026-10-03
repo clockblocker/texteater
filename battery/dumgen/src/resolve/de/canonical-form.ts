@@ -3,8 +3,11 @@
  * unit's Canonical Form and each member's spelling, in lexical casing,
  * with the stored Lemma candidates as hints. jev has already judged the
  * route's features and which members are Typos; Luna only writes text.
- * Code keeps the members aligned and refuses an answer that changes a
- * Standard member's letters, and no code lowercases by position.
+ * Luna's letters are taken only for a member judged Typo or Shorthand and
+ * for a suspended fragment; a Standard member keeps its own letters, in
+ * the casing Luna gave it when Luna wrote the same word, so a member Luna
+ * dropped or wrote as its headword never loses the click (#876). No code
+ * lowercases by position.
  */
 import { foldCase } from "dumling";
 import { InvalidModelOutput } from "../../errors.js";
@@ -160,9 +163,52 @@ export const normalizedSlots = (form: string) =>
 		.trim();
 
 /**
- * Luna's answer, when it is one Canonical Form and one spelling per
- * member, a Standard member changed at most in casing; a member the table
- * spells keeps the table's spelling.
+ * Luna's spellings matched to the members. One per member is read by
+ * position. Otherwise each member that keeps its letters finds its own
+ * word, compared without case, in order, and the words left over go in
+ * order to the members Luna writes; undefined when they do not fit.
+ */
+function alignedWritten(
+	target: Target,
+	written: readonly unknown[],
+	keeps: (member: Target["members"][number]) => string | undefined,
+): readonly unknown[] | undefined {
+	if (written.length === target.members.length) return written;
+	const aligned: unknown[] = target.members.map(() => undefined);
+	const leftOver: unknown[] = [];
+	const writing: number[] = [];
+	let next = 0;
+	for (const member of target.members) {
+		const own = keeps(member);
+		if (own === undefined) {
+			writing.push(member.position);
+			continue;
+		}
+		const found = written.findIndex(
+			(word, index) =>
+				index >= next &&
+				typeof word === "string" &&
+				foldCase(word.trim(), "de") === foldCase(own, "de"),
+		);
+		if (found < 0) continue;
+		leftOver.push(...written.slice(next, found));
+		aligned[member.position] = written[found];
+		next = found + 1;
+	}
+	leftOver.push(...written.slice(next));
+	if (writing.length === 0) return aligned;
+	if (leftOver.length !== writing.length) return undefined;
+	for (const [index, position] of writing.entries())
+		aligned[position] = leftOver[index];
+	return aligned;
+}
+
+/**
+ * Luna's answer, when it is one Canonical Form and a spelling for each
+ * member it writes: a Typo, a Shorthand the table leaves open, a
+ * suspended fragment. A member the table spells keeps the table's
+ * spelling; a Standard member keeps its letters, cased as Luna wrote the
+ * same word, else as the Canonical Form when it is that word.
  */
 export function checkWritten(
 	target: Target,
@@ -180,36 +226,51 @@ export function checkWritten(
 	const form = normalizedSlots(value.canonicalForm);
 	if (!form || /\n/u.test(value.canonicalForm))
 		return unusable("Luna answered no single-line Canonical Form");
-	if (value.members.length !== target.members.length)
+	const keeps = (member: Target["members"][number]) => {
+		const fixed = fixedSpelling(member, judged.readings);
+		if (fixed !== undefined) return fixed;
+		return judged.orthographies[member.position] === "Standard" &&
+			!suspendedFragment.test(member.text)
+			? member.text
+			: undefined;
+	};
+	const aligned = alignedWritten(target, value.members, keeps);
+	if (!aligned)
 		return unusable(
 			`Luna spelled ${value.members.length} members, not ${target.members.length}`,
 		);
 	const members: string[] = [];
 	for (const member of target.members) {
-		const written = value.members[member.position];
+		const written = aligned[member.position];
+		const word = typeof written === "string" ? written.trim() : "";
 		const fixed = fixedSpelling(member, judged.readings);
 		if (fixed !== undefined) {
 			members.push(fixed);
 			continue;
 		}
+		const own = keeps(member);
+		if (own !== undefined) {
+			const cased = [word, form].find(
+				(candidate) =>
+					foldCase(candidate, "de") === foldCase(own, "de"),
+			);
+			members.push(cased ?? own);
+			continue;
+		}
 		const orthography = judged.orthographies[member.position];
-		if (
-			typeof written !== "string" ||
-			!written.trim() ||
-			(orthography !== "Shorthand" && /\s/u.test(written))
-		)
+		if (!word || (orthography !== "Shorthand" && /\s/u.test(word)))
 			return unusable(`Luna spelled m${member.position} as no one word`);
 		// A suspended fragment is completed from its compound (Ein- is Eingang).
 		const fragment = suspendedFragment.exec(member.text)?.[1];
-		const kept =
-			fragment === undefined
-				? foldCase(written, "de") === foldCase(member.text, "de")
-				: foldCase(written, "de").startsWith(foldCase(fragment, "de"));
-		if (orthography === "Standard" && !kept)
+		if (
+			orthography === "Standard" &&
+			fragment !== undefined &&
+			!foldCase(word, "de").startsWith(foldCase(fragment, "de"))
+		)
 			return unusable(
 				`Luna changed the letters of the Standard member m${member.position}`,
 			);
-		members.push(written.trim());
+		members.push(word);
 	}
 	return { canonicalForm: form, members };
 }

@@ -427,24 +427,15 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 	expect(attested(capital.result).surface.normalizedSurface).toBe("Mangels");
 });
 
-test("Luna may correct a Typo but changes a Standard member's letters only in casing", async () => {
+test("Luna may correct a Typo, while a Standard member keeps its letters in Luna's casing", async () => {
 	const sentence = sentenceOf("Er kommt.");
 	const unit = unitOf([2], "Lexeme", "VERB");
-	const changed = await Effect.runPromise(
-		Effect.flip(
-			createDumgen({
-				jev: fakeJev().ask,
-				luna: writes("kommen", ["kam"]).ask,
-			}).resolve.grammar({
-				language: "de",
-				sentence,
-				unit,
-				neighbours: {},
-				lemmaCandidates: [],
-			}),
-		),
+	// Luna writing the headword form of a Standard member changes nothing.
+	const changed = await resolveOnce(
+		{ jev: fakeJev().ask, luna: writes("kommen", ["kam"]).ask },
+		{ sentence, unit },
 	);
-	expect(changed).toBeInstanceOf(InvalidModelOutput);
+	expect(attested(changed.result).surface.normalizedSurface).toBe("kommt");
 	const typo = await resolveOnce(
 		{
 			jev: fakeJev({ orthography: "t0" }).ask,
@@ -458,6 +449,37 @@ test("Luna may correct a Typo but changes a Standard member's letters only in ca
 		orthography: "Typo",
 	});
 	expect(attestation.surface.normalizedSurface).toBe("kommt");
+	// A Standard member Luna dropped keeps its letters; the Typo still gets
+	// Luna's word, and a Standard member Luna recased keeps that casing.
+	const dropped = await resolveOnce(
+		{
+			jev: fakeJev({ orthography: "t2" }).ask,
+			luna: writes("hereinkommen", ["komm", "herein"]).ask,
+		},
+		{
+			sentence: sentenceOf("Komm doch herrein."),
+			unit: unitOf([0, 2, 4], "Lexeme", "VERB"),
+		},
+	);
+	expect(attested(dropped.result).surface.normalizedSurface).toBe(
+		"komm doch herein",
+	);
+	// Too few words for the members Luna writes is no answer.
+	const short = await Effect.runPromise(
+		Effect.flip(
+			createDumgen({
+				jev: fakeJev({ orthography: "t2" }).ask,
+				luna: writes("hereinkommen", ["komm", "doch"]).ask,
+			}).resolve.grammar({
+				language: "de",
+				sentence: sentenceOf("Komm doch herrein."),
+				unit: unitOf([0, 2, 4], "Lexeme", "VERB"),
+				neighbours: {},
+				lemmaCandidates: [],
+			}),
+		),
+	);
+	expect(short).toBeInstanceOf(InvalidModelOutput);
 });
 
 test("INTJ LOL and lol resolve to one Lemma, while NOUN Morgen and ADV morgen stay two", async () => {
