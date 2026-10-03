@@ -370,7 +370,7 @@ describe("Surface Syncretisms on German PRON stems (system ADR 0046)", () => {
 			...neuter,
 			inflectionalFeatures: {
 				...neuter.inflectionalFeatures,
-				number: "Plur",
+				number: "Plur" as const,
 			},
 		};
 		acceptsSurface(syncretize([masculine, plural]), false);
