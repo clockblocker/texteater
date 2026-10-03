@@ -137,8 +137,8 @@ export const proxyStageSizes: GrammarPrice["sizes"]["stages"] = {
 /** Each case runs three times; each repetition is its own cached answer. */
 export const knowledgeRepetitions = 3;
 
-/** The operation a run measures. 1: the first port (#887). */
-export const knowledgeOperationVersion = `${knowledgeRoute}@production-1`;
+/** The operation a run measures. 1: the first port (#887). 2: the text prompts after the first spot-check. */
+export const knowledgeOperationVersion = `${knowledgeRoute}@production-2`;
 
 export type KnowledgeEvaluateArgs = {
 	readonly experimentId: string;
