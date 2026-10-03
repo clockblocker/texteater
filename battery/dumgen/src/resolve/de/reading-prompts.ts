@@ -34,6 +34,7 @@ const rules = {
 		"99996175abb4200d",
 	],
 	idiom: ["de/idiom", "c05df428b3a42079"],
+	modification: ["de/modification-attests-partially", "91fc596acb3813f1"],
 	auxiliary: ["de/auxiliary-joins-the-verb-it-serves", "17cec6bff2108a22"],
 	expletive: ["de/expletive-es-joins-its-verb", "99bff23563b49716"],
 } as const satisfies Readonly<Record<string, Cite>>;
@@ -59,17 +60,28 @@ function paragraph(name: string, text: string, ...cites: Cite[]): string {
 export const judgePolicy = {
 	task: paragraph(
 		"judge.task",
-		"`markedSentence` marks one German unit with <TARGET>…</TARGET>, every word of it, and `lemma` is its dictionary headword, already fixed. Each option is the Emoji Description of one Reading of that Lemma: one to four emoji naming one meaning of it.",
+		"`markedSentence` marks one German unit with <TARGET>…</TARGET>, every word of it, and `lemma` is its dictionary headword, already fixed. Each option is the Emoji Description of one Reading of that Lemma: one to four emoji that label one meaning of it.",
 		rules.meaning,
 	),
 	meaning: paragraph(
 		"judge.meaning",
-		"An Emoji Description names what its target means, in any sentence with that meaning: never the sentence's scene, its participants or objects, a neighbouring word's meaning, or grammar such as tense, person or number. Pick the option that names what this target means here.",
+		"An Emoji Description names what its target means, in any sentence with that meaning: never the sentence's scene, its participants or objects, a neighbouring word's meaning, or grammar such as tense, person or number.",
 		rules.meaning,
+	),
+	label: paragraph(
+		"judge.label",
+		"An option is the label a meaning already carries, not a picture to grade against this sentence: a symbol, a stand-in object, a series marker or a loose image still labels its meaning. Ask which meaning of the Lemma each option stands for, then whether the target has that meaning here.",
+		rules.meaning,
+		rules.distinct,
 	),
 	distinct: paragraph(
 		"judge.distinct",
-		"Different concepts get different descriptions, and closely related uses of one meaning, figurative ones included, share one. Answer NoMatch when this target means a concept no option names.",
+		"Meanings get different Readings only when they are different concepts a model would tell apart from the sentence, as «Flügel» the wing and the grand piano. Closely related uses of one meaning, figurative ones and functional or grammatical shades included, share one option. When in doubt, fold: pick the option whose meaning the target's is closest to.",
+		rules.distinct,
+	),
+	noMatch: paragraph(
+		"judge.noMatch",
+		"Answer NoMatch only when the target here means a concept no option stands for, one you could name as another meaning of the Lemma; an option that pictures the target's meaning imperfectly is no reason for NoMatch.",
 		rules.distinct,
 	),
 	copula: paragraph(
@@ -79,22 +91,29 @@ export const judgePolicy = {
 	),
 	multiword: paragraph(
 		"judge.multiword",
-		"A fixed expression is described by the meaning of the whole unit, not of its words.",
+		"A fixed expression is described by the meaning of the whole unit, not of its words, and it keeps that one meaning when it is quoted, cut short or altered.",
 		rules.multiword,
 		rules.idiom,
+		rules.modification,
 	),
 } as const;
 
 export const judgeQuestion = {
 	stored: paragraph(
 		"judge.question",
-		"Which option names what the target means in this sentence? NoMatch if none does.",
+		"Which option labels the meaning the target has in this sentence? NoMatch only if the target means a concept no option stands for.",
+		rules.meaning,
+		rules.distinct,
+	),
+	storedWithAuthored: paragraph(
+		"judge.question.withAuthored",
+		"Options a… are the word's authored Readings: each labels one function of the word by the conventions its word class shares, not by a picture of this sentence, and covers its abstract and figurative uses too. Which option labels the meaning the target has in this sentence? NoMatch only if the target means a concept no option stands for.",
 		rules.meaning,
 		rules.distinct,
 	),
 	noMatch: paragraph(
 		"judge.question.NoMatch",
-		"None of them names the target's meaning here",
+		"The target here means a concept no option stands for",
 		rules.distinct,
 	),
 	authored: paragraph(
@@ -117,7 +136,7 @@ export const generation = {
 	),
 	meaning: paragraph(
 		"generation.meaning",
-		"Name what the unit means here, a figurative use included, so the description fits every sentence with that meaning: not another sense of the word, not the sentence's scene, its participants or objects, and not a neighbouring word's meaning. Repeat no grammar the headword or its forms carry, such as tense, person, number or gender.",
+		"The description is the label of one sense of the Lemma, the same in every sentence with that sense. Name the sense the marked words have here, a figurative use included: not another sense of the word, even one the same word has elsewhere in the sentence, and not the sentence's scene, its participants or objects, a time, place or amount other words mention, or a neighbouring word's meaning. Repeat no grammar the headword or its forms carry, such as tense, person, number or gender.",
 		rules.meaning,
 	),
 	distinct: paragraph(
@@ -127,7 +146,7 @@ export const generation = {
 	),
 	copula: paragraph(
 		"generation.copula",
-		"A copula, a light verb or another verb whose complement carries the sentence's meaning contributes only its own part: being, staying, becoming, causing or seeming. Leave the complement out, even as a second emoji; its meaning belongs to its own Lemma.",
+		"A copula, a light verb or another verb whose complement carries the sentence's meaning contributes only its own part: being, staying, becoming, causing or seeming. Leave the complement out, even as a second emoji and even when it names a time, a place or an amount; its meaning belongs to its own Lemma.",
 		rules.copula,
 	),
 	polarity: paragraph(
@@ -135,15 +154,27 @@ export const generation = {
 		"Keep polarity, direction and scale: a pleasant against an unpleasant feeling, up against down, effort needed against strength had. Start from the one emoji that carries the meaning and add another only to remove a real ambiguity; never add a negation or emphasis sign to an emoji that already shows the state.",
 		rules.polarity,
 	),
+	existential: paragraph(
+		"generation.existential",
+		"Existential es gibt, 'there is', in any tense, describes existence or availability, whatever the sentence says is there; it never takes the giving meaning.",
+		rules.existential,
+		rules.expletive,
+	),
 	multiword: paragraph(
 		"generation.multiword",
-		"Describe a fixed expression by the meaning of the whole unit, not of its words; keep its own image only when it is transparent.",
+		"Describe a fixed expression by the meaning of the whole unit, not of its words; keep its own image only when it is transparent. Quoted, cut short or altered, it keeps the whole unit's description.",
 		rules.multiword,
 		rules.idiom,
+		rules.modification,
 	),
 	json: paragraph(
 		"generation.output.json",
-		"Answer with the emoji alone as the JSON string, one to four of them and nothing else.",
+		"Answer with the emoji alone as the JSON string: one to four emoji and nothing else. Never a letter, a word in any language or script, a bare digit, punctuation or a sign that is no emoji: write a number with keycap emoji, and describe a sign or symbol by what it means instead of copying it.",
+		rules.meaning,
+	),
+	schema: paragraph(
+		"generation.output.schema",
+		"One to four emoji and nothing else: no letter, word, bare digit, punctuation or sign that is no emoji.",
 		rules.meaning,
 	),
 	examples: paragraph(
@@ -178,8 +209,9 @@ function demonstration(
 
 /**
  * The generation demonstrations: an adjective, a noun, a verb with its
- * auxiliary, a copula, a function word, a Locution and existential es gibt
- * (#694). None of their Lemmas or target words is an evaluation case's.
+ * auxiliary, a copula, a function word, a numeral, a sign, a Locution and
+ * existential es gibt (#694). None of their Lemmas or target words is an
+ * evaluation case's.
  */
 export const readingDemonstrations: readonly ReadingDemonstration[] = [
 	demonstration(
@@ -229,6 +261,24 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 			lemma: "anstatt",
 		},
 		"🔄",
+		rules.meaning,
+	),
+	demonstration(
+		"numeral",
+		{
+			markedSentence: "Die Katze hat <TARGET>neun</TARGET> Leben.",
+			lemma: "neun",
+		},
+		"9⃣",
+		rules.meaning,
+	),
+	demonstration(
+		"sign",
+		{
+			markedSentence: "Die Toleranz beträgt <TARGET>±</TARGET> 0,5 mm.",
+			lemma: "±",
+		},
+		"➕➖",
 		rules.meaning,
 	),
 	demonstration(

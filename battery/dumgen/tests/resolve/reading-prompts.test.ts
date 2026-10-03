@@ -3,6 +3,7 @@ import { foldCase } from "dumling";
 import { checkPromptCitations, rules } from "dumspec";
 import { readingCases } from "../../src/evaluation/resolve-reading/cases.js";
 import {
+	generation,
 	judgePolicy,
 	judgeQuestion,
 	readingDemonstrations,
@@ -11,6 +12,7 @@ import {
 } from "../../src/resolve/de/reading-prompts.js";
 import {
 	emojiDescriptionRequest,
+	emojiDescriptionSchema,
 	generationPrompt,
 } from "../../src/resolve/reading.js";
 
@@ -68,6 +70,29 @@ test("the demonstrations come in the input shape production sends, es gibt, a fu
 	expect(byLemma.get("flicken")?.markedSentence).toContain(
 		"<TARGET>hat</TARGET>",
 	);
+});
+
+test("the judge folds when in doubt and answers NoMatch only for another concept; Luna's prompt and schema rule out non-emoji answers (#877 round 2)", () => {
+	expect(judgeText).toContain("When in doubt, fold");
+	expect(judgeText).toContain("Answer NoMatch only when");
+	expect(judgeQuestion.stored).not.toContain("authored");
+	expect(judgeQuestion.storedWithAuthored).toContain("Options a…");
+	expect(generationPrompt).toContain(
+		"write a number with keycap emoji, and describe a sign or symbol by what it means",
+	);
+	expect(emojiDescriptionSchema).toEqual({
+		type: "string",
+		minLength: 1,
+		description: generation.schema,
+	});
+	const byLemma = new Map(
+		readingDemonstrations.map((demonstration) => [
+			demonstration.lemma,
+			demonstration.emojiDescription,
+		]),
+	);
+	expect(byLemma.get("neun")).toBe("9⃣");
+	expect(byLemma.get("±")).toBe("➕➖");
 });
 
 /** The open-class Kinds whose Lemmas a worked example could give away (#693). */

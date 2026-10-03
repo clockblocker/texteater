@@ -88,8 +88,11 @@ export const readingRepetitions = 3;
 /**
  * The operation a run measures. 2: Luna answers the Emoji Description as
  * JSON (#526); open-route authored Lemmas can gain a New Reading (#877 R4).
+ * 3: the judge reads options as labels and folds when in doubt, authored
+ * options are marked, and Luna's prompt and schema rule out non-emoji
+ * answers and scene leaks (#877 round 2).
  */
-export const readingOperationVersion = `${readingRoute}@production-2`;
+export const readingOperationVersion = `${readingRoute}@production-3`;
 
 /** A run's projected spend, shaped as resolve.grammar's so one budget guard reads both. */
 export type ReadingPrice = GrammarPrice;

@@ -66,7 +66,9 @@ export function markedSentence(
 const policyBlock = {
 	task: judgePolicy.task,
 	meaning: judgePolicy.meaning,
+	label: judgePolicy.label,
 	distinct: judgePolicy.distinct,
+	noMatch: judgePolicy.noMatch,
 	copula: judgePolicy.copula,
 	multiword: judgePolicy.multiword,
 };
@@ -78,11 +80,23 @@ export const generationPrompt = [
 	generation.distinct,
 	generation.copula,
 	generation.polarity,
+	generation.existential,
 	generation.multiword,
 	generation.json,
 	generation.examples,
 	...readingDemonstrations.map(({ text }) => text),
 ].join("\n");
+
+/**
+ * The string schema Luna answers under. Strict mode stays off, E10's arm RS
+ * (#526, ruled 2026-10-03), so the provider enforces none of it: the schema
+ * states the constraint, and Dumling's emoji-grapheme parse enforces it.
+ */
+export const emojiDescriptionSchema = {
+	type: "string",
+	minLength: 1,
+	description: generation.schema,
+} as const;
 
 /**
  * The Emoji Description request Luna gets, without its configuration. Luna
@@ -98,7 +112,7 @@ export function emojiDescriptionRequest(input: {
 		systemPrompt: generationPrompt,
 		input,
 		outputFormat: "json",
-		outputSchema: { type: "string" },
+		outputSchema: emojiDescriptionSchema,
 	};
 }
 
@@ -118,43 +132,51 @@ function parsedDescription(
 		.emojiDescription;
 }
 
+/** One option the judge sees: an Emoji Description, and whether dumspec authors it. */
+type Option = { readonly description: string; readonly authored: boolean };
+
 /**
- * Picks one of `options` with jev: the stored candidates with NoMatch,
- * or a Lemma's authored Readings alone. The pick's index, or undefined
- * for NoMatch.
+ * Picks one of `options` with jev: on an Open Route the authored and stored
+ * descriptions with NoMatch, on a Closed Route a Lemma's authored Readings
+ * alone. An authored option's id is `a<index>`, a stored one's `c<index>`,
+ * so the question can tell the judge which are authored. The pick's index,
+ * or undefined for NoMatch.
  */
 const pick = Effect.fnUntraced(function* (
 	ask: Ask,
 	stage: "reading" | "authoredReading",
 	state: { readonly markedSentence: string; readonly lemma: string },
-	options: readonly string[],
+	options: readonly Option[],
 ): Effect.fn.Return<number | undefined, ProviderFailure | InvalidModelOutput> {
-	const stored = stage === "reading";
-	const prefix = stored ? "c" : "a";
+	const open = stage === "reading";
+	const idOf = (option: Option, index: number) =>
+		`${option.authored ? "a" : "c"}${index}`;
+	const question = !open
+		? judgeQuestion.authored
+		: options.some(({ authored }) => authored)
+			? judgeQuestion.storedWithAuthored
+			: judgeQuestion.stored;
 	const answers = yield* ask({
 		stage,
 		state: { ...state, policy: policyBlock },
 		questions: {
-			reading: choice(
-				stored ? judgeQuestion.stored : judgeQuestion.authored,
-				{
-					...Object.fromEntries(
-						options.map((option, index) => [
-							`${prefix}${index}`,
-							option,
-						]),
-					),
-					...(stored ? { NoMatch: judgeQuestion.noMatch } : {}),
-				},
-			),
+			reading: choice(question, {
+				...Object.fromEntries(
+					options.map((option, index) => [
+						idOf(option, index),
+						option.description,
+					]),
+				),
+				...(open ? { NoMatch: judgeQuestion.noMatch } : {}),
+			}),
 		},
 	});
 	const answer = choiceOf(answers, "reading").choice;
-	if (stored && answer === "NoMatch") return undefined;
-	const index = answer.startsWith(prefix)
-		? Number(answer.slice(prefix.length))
-		: Number.NaN;
-	if (!Number.isInteger(index) || options[index] === undefined)
+	if (open && answer === "NoMatch") return undefined;
+	const index = options.findIndex(
+		(option, at) => idOf(option, at) === answer,
+	);
+	if (index < 0)
 		return yield* new InvalidModelOutput({
 			stage,
 			message: `jev answered the Reading with ${answer}, no option of it`,
@@ -241,7 +263,15 @@ export const resolveReading = Effect.fnUntraced(function* (
 		if (only !== undefined && authored.length === 1)
 			return answer(only, "Authored");
 		if (authored.length > 1) {
-			const index = yield* pick(ask, "authoredReading", state, authored);
+			const index = yield* pick(
+				ask,
+				"authoredReading",
+				state,
+				authored.map((description) => ({
+					description,
+					authored: true,
+				})),
+			);
 			const chosen = index === undefined ? undefined : authored[index];
 			if (chosen === undefined)
 				throw Error("An authored pick names an option");
@@ -254,11 +284,20 @@ export const resolveReading = Effect.fnUntraced(function* (
 
 	// An Open Route: the judge over the authored and stored descriptions,
 	// then Luna.
-	const options = [...authored, ...candidates].filter(
-		(option, index, all) =>
-			all.findIndex((other) => keyOf(other) === keyOf(option)) === index,
+	const authoredKeys = new Set(authored.map(keyOf));
+	const options = [...authored, ...candidates]
+		.filter(
+			(option, index, all) =>
+				all.findIndex((other) => keyOf(other) === keyOf(option)) ===
+				index,
+		)
+		.map((description) => ({
+			description,
+			authored: authoredKeys.has(keyOf(description)),
+		}));
+	const offered = new Set(
+		options.map(({ description }) => keyOf(description)),
 	);
-	const offered = new Set(options.map(keyOf));
 	const written =
 		input.written === undefined
 			? undefined
@@ -272,7 +311,7 @@ export const resolveReading = Effect.fnUntraced(function* (
 	if (options.length > 0) {
 		const index = yield* pick(ask, "reading", state, options);
 		const picked = index === undefined ? undefined : options[index];
-		if (picked !== undefined) return answer(picked, "Judged");
+		if (picked !== undefined) return answer(picked.description, "Judged");
 	}
 	if (written !== undefined) return answer(written, "Rejudged");
 	const emojiDescription = yield* askLuna(

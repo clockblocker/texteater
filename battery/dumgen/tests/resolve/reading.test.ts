@@ -221,7 +221,7 @@ test("a Closed Route's Lemma with several authored Readings has jev pick among t
 test("an Open Route's authored Readings go to the judge beside the stored ones, and a pick of one not stored yet is New", async () => {
 	const { lemma, readings } = authoredLemma("darum", "ADV");
 	const [causal = "", other = ""] = readings;
-	const jev = fakeJev({ reading: "c1" });
+	const jev = fakeJev({ reading: "a1" });
 	const luna = writes("🔐");
 	const { result, trace } = await readOnce(jev, luna, {
 		attestation: attestationOf(lemma),
@@ -235,13 +235,16 @@ test("an Open Route's authored Readings go to the judge beside the stored ones, 
 	});
 	expect(jev.stages()).toEqual(["reading"]);
 	const question = jev.sent[0]?.questions.reading;
-	// Authored first, then what is stored besides, each once.
+	// Authored first, marked a…, then what is stored besides, each once.
 	expect(question?.type === "choice" ? question.criteria : {}).toEqual({
-		c0: causal,
-		c1: other,
+		a0: causal,
+		a1: other,
 		c2: "🧭",
 		NoMatch: expect.any(String),
 	});
+	expect(question?.type === "choice" ? question.instructions : "").toContain(
+		"Options a… are the word's authored Readings",
+	);
 	expect(luna.sent).toEqual([]);
 	expect(trace?.resolution).toEqual({ outcome: "New", reason: "Judged" });
 });
@@ -286,7 +289,7 @@ test("Luna answers the Emoji Description as JSON under a string schema (#526, E1
 	await readOnce(fakeJev(), luna, { candidates: [] });
 	expect(luna.sent[0]).toMatchObject({
 		outputFormat: "json",
-		outputSchema: { type: "string" },
+		outputSchema: { type: "string", minLength: 1 },
 	});
 });
 
