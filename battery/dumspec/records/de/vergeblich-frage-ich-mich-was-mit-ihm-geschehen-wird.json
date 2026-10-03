@@ -132,6 +132,16 @@
 		],
 		"references": [
 			{
+				"title": "Duden: vergeblich",
+				"url": "https://www.duden.de/rechtschreibung/vergeblich",
+				"supports": "Target [Vergeblich]: Adjektiv; the entry prints no comparative or superlative."
+			},
+			{
+				"title": "DWDS: vergeblich",
+				"url": "https://www.dwds.de/wb/vergeblich",
+				"supports": "Target [Vergeblich]: 'Komparativ: vergeblicher · Superlativ: am vergeblichsten, Steigerung selten'; rare forms do not count (de/comparability-is-lexical)."
+			},
+			{
 				"title": "Project Gutenberg eBook #21989: Franz Kafka, Die Sorge des Hausvaters",
 				"url": "https://www.gutenberg.org/ebooks/21989",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #21989, Ein Landarzt: Kleine Erzählungen (released 2007-07-03), transcribed from Kurt Wolff Verlag, München und Leipzig, copyright 1919. Last paragraph of Die Sorge des Hausvaters."
@@ -167,7 +177,7 @@
 			},
 			"reading": { "emojiDescription": "🎯❌" },
 			"notes": {
-				"rationale": "Vergeblich is an adverbially used adjective, so ADJ (de/adjective-stays-adj). Duden gives vergeblicher, am vergeblichsten with no label, and Duden decides before DWDS (which marks them rare), so it is comparable and marks Pos (de/comparability-is-lexical). Ruled on #743 (A9)."
+				"rationale": "Vergeblich is an adverbially used adjective, so ADJ (de/adjective-stays-adj). Duden prints no comparison forms for vergeblich, and DWDS gives vergeblicher, am vergeblichsten only with \"Steigerung selten\"; rare forms do not count, so it is not comparable and marks no Degree (de/comparability-is-lexical). This reverses #743 A9, whose premise that Duden gives vergeblicher was wrong; ruled by the user on #876 (2026-10-03)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -187,12 +197,7 @@
 					"spelling": {
 						"kind": "Canonical"
 					},
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					},
+					"inflectionalFeatures": null,
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
@@ -200,7 +205,7 @@
 						"kind": "ADJ",
 						"canonicalForm": "vergeblich",
 						"coreFeatures": {
-							"comparable": "Yes"
+							"comparable": null
 						}
 					},
 					"surfaceFeatures": null

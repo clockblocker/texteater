@@ -230,6 +230,11 @@
 		],
 		"references": [
 			{
+				"title": "Duden: früh (Adverb)",
+				"url": "https://www.duden.de/rechtschreibung/frueh_morgens",
+				"supports": "Target [früh]: Adverb 'morgens, am Morgen' (heute früh, [am] Dienstag früh); the entry prints frü|her, am frühs|ten oder am frü|hes|ten."
+			},
+			{
 				"title": "Project Gutenberg eBook #69327: Franz Kafka, Der Prozess",
 				"url": "https://www.gutenberg.org/ebooks/69327",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #69327 (released 2022-11-11), transcribed from Verlag Die Schmiede, Berlin 1925. Chapter 1, paragraph 1, sentences 1-5 of 41."
@@ -855,7 +860,7 @@
 						"kind": "ADV",
 						"canonicalForm": "früh",
 						"coreFeatures": {
-							"comparable": null
+							"comparable": "Yes"
 						}
 					},
 					"normalizedSurface": "früh",
@@ -863,7 +868,9 @@
 						"kind": "Canonical"
 					},
 					"surfaceFeatures": null,
-					"inflectionalFeatures": null
+					"inflectionalFeatures": {
+						"degree": "Pos"
+					}
 				},
 				"members": [
 					{
@@ -874,7 +881,7 @@
 				"realizationCoverage": "Full"
 			},
 			"notes": {
-				"rationale": "früh after a clock time means 'in the morning' (Duden has früh as an Adverb: heute früh, Dienstag früh). The attributive frühe has no such sense, so the use is ADV, not ADJ, and neither inflects nor compares (de/adjective-stays-adj)."
+				"rationale": "früh after a clock time means 'in the morning' (Duden has früh as an Adverb: heute früh, Dienstag früh). The attributive frühe has no such sense, so the use is ADV, not ADJ (de/adjective-stays-adj). Duden's adverb entry prints früher, am frühsten or am frühesten, and comparability follows what the dictionary prints for the entry, so it is comparable and marks Pos (de/comparability-is-lexical). Ruled by the user on #876 (2026-10-03)."
 			}
 		},
 		{
