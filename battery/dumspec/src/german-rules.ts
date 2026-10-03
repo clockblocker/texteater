@@ -1475,6 +1475,74 @@ const attestations: Rule[] = [
 	},
 ];
 
+/** What a Reading's Knowledge records: its structural aspects (#884). */
+const knowledge: Rule[] = [
+	{
+		id: "de/valency-frame-follows-e-valbu",
+		statement:
+			"A Reading's Valency Frame is the Satzbauplan of its sense in E-VALBU, or in Duden where E-VALBU has no entry. An adjective's frame has no Nom Slot, since the copula owns the subject: stolz (auf + Acc). A referent is the dictionary's jemand or etwas for the sense, not what the sentence happens to show: warten auf jemanden/etwas is Either. Each clause form the dictionary lists is an alternative in its Slot. When either of two complements can complete the frame, both Slots are Optional: bitten (Acc) (um + Acc).",
+		adrs: ["ADR-0034"],
+		routes: [
+			...lexeme("VERB", "ADJ", "NOUN"),
+			...locution("VERB", "ADJ", "NOUN"),
+		],
+		records: [
+			"de/er-wartet-auf-den-nachtbus",
+			"de/sie-erinnert-sich-an-den-geruch",
+			"de/sie-wurde-um-geduld-gebeten",
+			"de/er-ist-stolz-auf-seinen-sohn",
+			"de/die-auf-ihn-abgestimmte-loesung-half-sofort",
+			"de/das-rote-band-lag-auf-dem-geschenk",
+			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
+			"de/es-zog-der-wilde-jaegersmann",
+			"de/sie-ist-verheiratet",
+			"de/ein-interessierter-leser-fragte-nach",
+			"de/verbrannt-ist-alles-ganz-und-gar",
+		],
+	},
+	{
+		id: "de/adjectival-noun-plural-is-weak",
+		statement:
+			"An adjective or participle used as a noun for a person stores as its plural the weak form after the definite article, matching its weak citation (de/adjectival-noun-lemma): Angestellte stores Angestellten, as in die Angestellten. The strong form after no article (drei Angestellte) belongs to the same paradigm and is no second plural.",
+		adrs: ["ADR-0038", "ADR-0040"],
+		routes: lexeme("NOUN"),
+		records: ["de/die-angestellten-streikten-gestern"],
+	},
+	{
+		id: "de/conjugation-class-from-praeteritum",
+		statement:
+			"A VERB Reading stores every conjugation class its Präteritum forms attest in this sense, as Duden or DWDS lists them, each judged on the stem: Strong adds no -te (bitten, bat; sein, war), Weak adds -te or -ete to the unchanged stem (warten, wartete) and Mixed adds -te to a changed stem (verbrennen, verbrannte). A separable verb is judged by its stem (anziehen, zog an). Senses may differ: wiegen 'weigh' wog, 'rock' wiegte.",
+		adrs: ["ADR-0038"],
+		routes: lexeme("VERB"),
+		records: [
+			"de/es-zog-der-wilde-jaegersmann",
+			"de/er-wartet-auf-den-nachtbus",
+			"de/sie-erinnert-sich-an-den-geruch",
+			"de/sie-wurde-um-geduld-gebeten",
+			"de/er-ist-stolz-auf-seinen-sohn",
+			"de/das-rote-band-lag-auf-dem-geschenk",
+			"de/sie-uebersetzt-den-vertrag-ins-deutsche",
+			"de/verbrannt-ist-alles-ganz-und-gar",
+		],
+	},
+	{
+		id: "de/relations-need-a-dictionary",
+		statement:
+			"A Reading claims a semantic relation only where a dictionary backs it for this sense: Duden, DWDS or OpenThesaurus lists the target in that relation. Each relation holds at most three claims. A target may be any German Lemma, stored or not, and is matched by its Family, Kind and case-folded Canonical Form.",
+		adrs: ["ADR-0011", "ADR-0012", "ADR-0020"],
+		routes: [],
+		records: [
+			"de/die-mutter-passt-nicht-auf-diese-schraube",
+			"de/meine-mutter-ruft-jeden-sonntag-an",
+			"de/der-kiefer-schmerzte-nach-der-operation",
+			"de/die-angestellten-streikten-gestern",
+			"de/sie-erinnert-sich-an-den-geruch",
+			"de/verbrannt-ist-alles-ganz-und-gar",
+			"de/guten-tag-ich-habe-einen-termin",
+		],
+	},
+];
+
 /**
  * The German classification Rules (ADR 0037), grouped by topic. A Rule with
  * no routes applies to every German route. A Rule with no records still needs
@@ -1490,4 +1558,5 @@ export const germanRules: readonly Rule[] = [
 	...conjunctionsAndParticles,
 	...locutionsAndSayings,
 	...attestations,
+	...knowledge,
 ];
