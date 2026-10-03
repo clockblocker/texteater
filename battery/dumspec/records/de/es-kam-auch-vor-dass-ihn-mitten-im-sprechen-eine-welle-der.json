@@ -304,6 +304,26 @@
 				"title": "Project Gutenberg eBook #34717: Robert Musil, Die Verwirrungen des Zöglings Törleß",
 				"url": "https://www.gutenberg.org/ebooks/34717",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34717 (released 2010-12-21), transcribed from Wiener Verlag, Wien und Leipzig 1906. Paragraph beginning Bald aber lernte er."
+			},
+			{
+				"title": "Duden: Scham",
+				"url": "https://www.duden.de/rechtschreibung/Scham",
+				"supports": "Target 9 Knowledge: Grammatik die Scham, Genitiv der Scham, no plural; Synonyme Beschämung, Reue, Schamgefühl, Schamhaftigkeit"
+			},
+			{
+				"title": "DWDS: Scham",
+				"url": "https://www.dwds.de/wb/Scham",
+				"supports": "Target 9 Knowledge: wird nur im Singular verwendet"
+			},
+			{
+				"title": "OpenThesaurus: Scham",
+				"url": "https://www.openthesaurus.de/synonyme/Scham",
+				"supports": "Target 9 Knowledge: synset Scham · Schamgefühl, Oberbegriff Gefühl · Emotion · Empfindung"
+			},
+			{
+				"title": "Duden: Schamgefühl",
+				"url": "https://www.duden.de/rechtschreibung/Schamgefuehl",
+				"supports": "Target 9 Knowledge: Synonyme Scham, Scheu"
 			}
 		]
 	},
@@ -777,7 +797,62 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "😳" },
+			"reading": {
+				"emojiDescription": "😳",
+				"knowledge": {
+					"plural": "NoPlural",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Schamgefühl",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Beschämung",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gefühl",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

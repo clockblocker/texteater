@@ -200,6 +200,21 @@
 				"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
 				"url": "https://www.gutenberg.org/ebooks/34811",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 3, Travemünde: Tony and Morten on the promenade."
+			},
+			{
+				"title": "Duden: Strand",
+				"url": "https://www.duden.de/rechtschreibung/Strand",
+				"supports": "Target 10 Knowledge: Plural die Strände; Synonyme Küste, Küstenstreifen, Ufer, Gestade; no frame"
+			},
+			{
+				"title": "DWDS: Strand",
+				"url": "https://www.dwds.de/wb/Strand",
+				"supports": "Target 10 Knowledge: Nominativ Plural 1 Strände, Plural 2 selten Strande; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: Strand",
+				"url": "https://www.openthesaurus.de/synonyme/Strand",
+				"supports": "Target 10 Knowledge: synsets Badestrand · Strand and Küste · Strand · Ufer · Gestade (broader/narrower shades, so nearSynonym); no Oberbegriff, no Gegenteil"
 			}
 		]
 	},
@@ -717,7 +732,58 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🏖" },
+			"reading": {
+				"emojiDescription": "🏖",
+				"knowledge": {
+					"plural": ["Strände"],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Ufer",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Küste",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Badestrand",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "m (dem) is the owned Fused article, so Strande is Dat.Sg; am rules out the rare plural Strande. The old dative -e is an inflected form, not a spelling, so the Surface is spelled Canonical and marked Archaic like ward: Duden's current table gives only dem Strand (de/variant-and-historical-status). Ruled on #743 (MB-B6, A8)."
 			},

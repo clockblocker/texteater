@@ -79,6 +79,36 @@
 				"title": "DWDS: voller",
 				"url": "https://www.dwds.de/wb/voller",
 				"supports": "Target [voller]: Präposition (mit Genitiv, mit Dativ)."
+			},
+			{
+				"title": "Duden: Monat",
+				"url": "https://www.duden.de/rechtschreibung/Monat",
+				"supports": "Target 4 Knowledge: Plural die Monate; Synonyme (umgangssprachlich) vier Wochen, (dichterisch veraltet) Mond"
+			},
+			{
+				"title": "DWDS: Monat",
+				"url": "https://www.dwds.de/wb/Monat",
+				"supports": "Target 4 Knowledge: Nominativ Plural Monate"
+			},
+			{
+				"title": "OpenThesaurus: Monat",
+				"url": "https://www.openthesaurus.de/synonyme/Monat",
+				"supports": "Target 4 Knowledge: synset Monat · Kalendermonat · vier Wochen; Oberbegriff Zeitspanne · Abstand · Dauer · Frist · Periode"
+			},
+			{
+				"title": "Duden: Nacht",
+				"url": "https://www.duden.de/rechtschreibung/Nacht",
+				"supports": "Target 11 Knowledge: Plural die Nächte; Synonyme Dunkelheit, Finsternis … do not hold for the time-span Reading"
+			},
+			{
+				"title": "DWDS: Nacht",
+				"url": "https://www.dwds.de/wb/Nacht",
+				"supports": "Target 11 Knowledge: Nominativ Plural Nächte; sense 1 'in gegensätzlicher Bedeutung zu ¹Tag'"
+			},
+			{
+				"title": "OpenThesaurus: Nacht",
+				"url": "https://www.openthesaurus.de/synonyme/Nacht",
+				"supports": "Target 11 Knowledge: Oberbegriff Zeitspanne · Abstand · Dauer · Frist · Periode"
 			}
 		]
 	},
@@ -271,7 +301,62 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "📅" },
+			"reading": {
+				"emojiDescription": "📅",
+				"knowledge": {
+					"plural": ["Monate"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Mond",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Kalendermonat",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Zeitspanne",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -508,7 +593,50 @@
 		{
 			"memberSegmentIndices": [26],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🌙" },
+			"reading": {
+				"emojiDescription": "🌙",
+				"knowledge": {
+					"plural": ["Nächte"],
+					"semanticRelations": {
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Tag",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Zeitspanne",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -18,13 +18,92 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Katze",
+				"url": "https://www.duden.de/rechtschreibung/Katze",
+				"supports": "Target 0 Knowledge: Plural die Katzen; Synonyme Kater, Mieze[katze], Samtpfötchen, Büsi"
+			},
+			{
+				"title": "DWDS: Katze",
+				"url": "https://www.dwds.de/wb/Katze",
+				"supports": "Target 0 Knowledge: Nominativ Plural Katzen; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: Katze",
+				"url": "https://www.openthesaurus.de/synonyme/Katze",
+				"supports": "Target 0 Knowledge: synset Hauskatze · Katze · Mieze · Samtpfötchen …; its Oberbegriff is the Katze/Felidae family synset (own Lemma), so no hypernym"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🐈" },
+			"reading": {
+				"emojiDescription": "🐈",
+				"knowledge": {
+					"plural": ["Katzen"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Hauskatze",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Mieze",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Samtpfötchen",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Kater",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

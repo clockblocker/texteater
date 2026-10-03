@@ -122,6 +122,21 @@
 				"title": "OpenThesaurus: weinend",
 				"url": "https://www.openthesaurus.de/synonyme/weinend",
 				"supports": "Target 3 Knowledge: synset 29023 is '(heftig) weinend': in Tränen aufgelöst · tränenreich · unter Tränen; no plain-weinend listing (Duden has no weinend entry)"
+			},
+			{
+				"title": "Duden: Arm",
+				"url": "https://www.duden.de/rechtschreibung/Arm",
+				"supports": "Target 5 Knowledge: Plural die Arme; Synonyme Glied[maße], [obere] Extremität, (Medizin) Brachium"
+			},
+			{
+				"title": "DWDS: Arm",
+				"url": "https://www.dwds.de/wb/Arm",
+				"supports": "Target 5 Knowledge: Nominativ Plural Arme"
+			},
+			{
+				"title": "OpenThesaurus: Arm",
+				"url": "https://www.openthesaurus.de/synonyme/Arm",
+				"supports": "Target 5 Knowledge: synset Arm · obere Extremität; Oberbegriff Extremität · Glied · Gliedmaßen · (die) Gliedmaße"
 			}
 		]
 	},
@@ -407,7 +422,70 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "💪" },
+			"reading": {
+				"emojiDescription": "💪",
+				"knowledge": {
+					"plural": ["Arme"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "NOUN",
+								"canonicalForm": "obere Extremität",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Brachium",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Extremität",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gliedmaße",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

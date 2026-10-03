@@ -18,7 +18,23 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Jugendbuch",
+				"url": "https://www.dwds.de/wb/Jugendbuch",
+				"supports": "Target 1 Knowledge: Nominativ Plural Jugendbücher; no relation listed"
+			},
+			{
+				"title": "Duden: Jugendbuch",
+				"url": "https://www.duden.de/rechtschreibung/Jugendbuch",
+				"supports": "Target 1 Knowledge: no entry found"
+			},
+			{
+				"title": "OpenThesaurus: Jugendbuch",
+				"url": "https://www.openthesaurus.de/synonyme/Jugendbuch",
+				"supports": "Target 1 Knowledge: no synset"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -63,7 +79,24 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🧑📖" },
+			"reading": {
+				"emojiDescription": "🧑📖",
+				"knowledge": {
+					"plural": ["Jugendbücher"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

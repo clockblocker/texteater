@@ -246,6 +246,21 @@
 				"title": "DWDS: groß",
 				"url": "https://www.dwds.de/wb/groß",
 				"supports": "Target 3 Knowledge: Adjektiv, größer, am größten; no Synonym/Gegensatz"
+			},
+			{
+				"title": "Duden: Strohhut",
+				"url": "https://www.duden.de/rechtschreibung/Strohhut",
+				"supports": "Target 4 Knowledge: Plural die Strohhüte; 'Hut aus einem Strohgeflecht' is a definition genus, not an Oberbegriff"
+			},
+			{
+				"title": "DWDS: Strohhut",
+				"url": "https://www.dwds.de/wb/Strohhut",
+				"supports": "Target 4 Knowledge: Nominativ Plural Strohhüte; no relation listed"
+			},
+			{
+				"title": "OpenThesaurus: Strohhut",
+				"url": "https://www.openthesaurus.de/synonyme/Strohhut",
+				"supports": "Target 4 Knowledge: no synset"
 			}
 		]
 	},
@@ -516,7 +531,24 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "👒" },
+			"reading": {
+				"emojiDescription": "👒",
+				"knowledge": {
+					"plural": ["Strohhüte"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

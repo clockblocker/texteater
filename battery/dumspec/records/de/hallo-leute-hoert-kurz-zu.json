@@ -30,6 +30,21 @@
 				"title": "Duden: Leute",
 				"url": "https://www.duden.de/rechtschreibung/Leute",
 				"supports": "Target [Leute]: Pluralwort, \"Grammatik: nur im Plural\"; with no singular it has gender null (de/plural-only-noun-has-no-gender)."
+			},
+			{
+				"title": "Duden: Leute",
+				"url": "https://www.duden.de/rechtschreibung/Leute",
+				"supports": "Target 0 Knowledge: Pluralwort, nur im Plural; sense 1 'Menschen' (hört mal her, Leute!)"
+			},
+			{
+				"title": "DWDS: Leute",
+				"url": "https://www.dwds.de/wb/Leute",
+				"supports": "Target 0 Knowledge: wird nur im Plural verwendet; sense 1 'Menschen'"
+			},
+			{
+				"title": "OpenThesaurus: Leute",
+				"url": "https://www.openthesaurus.de/synonyme/Leute",
+				"supports": "Target 0 Knowledge: synset Leute · Menschen · Personen · Volk (its Oberbegriff Gruppierung does not hold); no Gegenteil"
 			}
 		]
 	},
@@ -37,7 +52,48 @@
 		{
 			"memberSegmentIndices": [3],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "👥" },
+			"reading": {
+				"emojiDescription": "👥",
+				"knowledge": {
+					"plural": "PluralOnly",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Mensch",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Person",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

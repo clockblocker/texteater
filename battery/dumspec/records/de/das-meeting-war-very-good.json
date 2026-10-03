@@ -23,13 +23,80 @@
 				"hash": "c2f06b03fed6e233"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Meeting",
+				"url": "https://www.duden.de/rechtschreibung/Meeting",
+				"supports": "Target 0 Knowledge: Plural die Meetings; Synonyme Besprechung, Kolloquium, Konferenz, Kongress"
+			},
+			{
+				"title": "DWDS: Meeting",
+				"url": "https://www.dwds.de/wb/Meeting",
+				"supports": "Target 0 Knowledge: Nominativ Plural Meetings"
+			},
+			{
+				"title": "OpenThesaurus: Meeting",
+				"url": "https://www.openthesaurus.de/synonyme/Meeting",
+				"supports": "Target 0 Knowledge: synset Besprechung · Jour fixe · Konferenz · Meeting · Sitzung; no Oberbegriff, no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "💼👥" },
+			"reading": {
+				"emojiDescription": "💼👥",
+				"knowledge": {
+					"plural": ["Meetings"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Besprechung",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Konferenz",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Sitzung",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Duden lists Meeting as a neuter noun, so it is a German NOUN, and das agrees with it as well."
 			},

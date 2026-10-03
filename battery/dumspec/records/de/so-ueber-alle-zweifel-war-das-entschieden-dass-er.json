@@ -312,6 +312,21 @@
 				"title": "OpenThesaurus: schmeichelnd",
 				"url": "https://www.openthesaurus.de/synonyme/schmeichelnd",
 				"supports": "Target 12 Knowledge: only synset 11301 is the 'flattering, sycophantic' sense (glattzüngig, heuchlerisch), not this one: no relation listed"
+			},
+			{
+				"title": "Duden: Nacht",
+				"url": "https://www.duden.de/rechtschreibung/Nacht",
+				"supports": "Target 20 Knowledge: Plural die Nächte; Synonyme Dunkelheit, Finsternis … do not hold for the time-span Reading"
+			},
+			{
+				"title": "DWDS: Nacht",
+				"url": "https://www.dwds.de/wb/Nacht",
+				"supports": "Target 20 Knowledge: Nominativ Plural Nächte; sense 1 'in gegensätzlicher Bedeutung zu ¹Tag'"
+			},
+			{
+				"title": "OpenThesaurus: Nacht",
+				"url": "https://www.openthesaurus.de/synonyme/Nacht",
+				"supports": "Target 20 Knowledge: Oberbegriff Zeitspanne · Abstand · Dauer · Frist · Periode"
 			}
 		]
 	},
@@ -1336,7 +1351,50 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🌙" },
+			"reading": {
+				"emojiDescription": "🌙",
+				"knowledge": {
+					"plural": ["Nächte"],
+					"semanticRelations": {
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Tag",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Zeitspanne",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

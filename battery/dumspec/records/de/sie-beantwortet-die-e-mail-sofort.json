@@ -18,13 +18,82 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: E-Mail",
+				"url": "https://www.duden.de/rechtschreibung/E_Mail",
+				"supports": "Target 0 Knowledge: Plural die E-Mails; Kurzform Mail (clipped, out); Synonyme E-Brief, E-Post, elektronische Post, elektronischer Brief"
+			},
+			{
+				"title": "DWDS: E-Mail",
+				"url": "https://www.dwds.de/wb/E-Mail",
+				"supports": "Target 0 Knowledge: Nominativ Plural E-Mails"
+			},
+			{
+				"title": "OpenThesaurus: E-Mail",
+				"url": "https://www.openthesaurus.de/synonyme/E-Mail",
+				"supports": "Target 0 Knowledge: message synset E-Mail · E-Mail-Nachricht · elektronischer Brief · Mail, Oberbegriff Nachricht"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "📧" },
+			"reading": {
+				"emojiDescription": "📧",
+				"knowledge": {
+					"plural": ["E-Mails"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "E-Mail-Nachricht",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "NOUN",
+								"canonicalForm": "elektronischer Brief",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Nachricht",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

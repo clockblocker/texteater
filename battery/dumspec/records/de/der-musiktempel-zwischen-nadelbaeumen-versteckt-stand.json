@@ -243,6 +243,26 @@
 				"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
 				"url": "https://www.gutenberg.org/ebooks/34811",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 3, Travemünde: Tony and Morten on the promenade."
+			},
+			{
+				"title": "Duden: Nadelbaum",
+				"url": "https://www.duden.de/rechtschreibung/Nadelbaum",
+				"supports": "Target 2 Knowledge: Plural die Nadelbäume"
+			},
+			{
+				"title": "DWDS: Nadelbaum",
+				"url": "https://www.dwds.de/wb/Nadelbaum",
+				"supports": "Target 2 Knowledge: Nominativ Plural Nadelbäume"
+			},
+			{
+				"title": "OpenThesaurus: Nadelbaum",
+				"url": "https://www.openthesaurus.de/synonyme/Nadelbaum",
+				"supports": "Target 2 Knowledge: synset Nadelbaum · Konifere; Oberbegriff Baum · Makrophanerophyt"
+			},
+			{
+				"title": "Duden: Konifere",
+				"url": "https://www.duden.de/rechtschreibung/Konifere",
+				"supports": "Target 2 Knowledge: Konifere = Nadelholz, die"
 			}
 		]
 	},
@@ -352,7 +372,50 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🌲" },
+			"reading": {
+				"emojiDescription": "🌲",
+				"knowledge": {
+					"plural": ["Nadelbäume"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Konifere",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Baum",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

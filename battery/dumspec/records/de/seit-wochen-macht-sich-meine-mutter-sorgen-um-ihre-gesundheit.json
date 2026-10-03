@@ -115,7 +115,23 @@
 				"hash": "11bcdacfa342c436"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Woche",
+				"url": "https://www.duden.de/rechtschreibung/Woche",
+				"supports": "Target 1 Knowledge: Plural die Wochen; Synonyme acht Tage (number phrase, not drafted)"
+			},
+			{
+				"title": "DWDS: Woche",
+				"url": "https://www.dwds.de/wb/Woche",
+				"supports": "Target 1 Knowledge: Nominativ Plural Wochen"
+			},
+			{
+				"title": "OpenThesaurus: Woche",
+				"url": "https://www.openthesaurus.de/synonyme/Woche",
+				"supports": "Target 1 Knowledge: synset Woche · sieben Tage · Kalenderwoche [fachsprachlich] (narrower, nearSynonym); Oberbegriff Zeitspanne · Abstand · Dauer · Frist · Periode"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -169,7 +185,50 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "📅" },
+			"reading": {
+				"emojiDescription": "📅",
+				"knowledge": {
+					"plural": ["Wochen"],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Kalenderwoche",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Zeitspanne",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

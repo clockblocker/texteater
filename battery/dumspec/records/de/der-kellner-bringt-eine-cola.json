@@ -23,7 +23,28 @@
 				"hash": "57f04b272a0e9aeb"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Cola",
+				"url": "https://www.duden.de/rechtschreibung/Cola",
+				"supports": "Target 1 Knowledge: Plural die Colas ⟨aber: 5 Cola⟩ (measure construction, not a plural)"
+			},
+			{
+				"title": "DWDS: Cola",
+				"url": "https://www.dwds.de/wb/Cola",
+				"supports": "Target 1 Knowledge: koffeinhaltiges Erfrischungsgetränk; no plural line, no Synonym/Gegensatz"
+			},
+			{
+				"title": "OpenThesaurus: Cola",
+				"url": "https://www.openthesaurus.de/synonyme/Cola",
+				"supports": "Target 1 Knowledge: synset Coca-Cola · Coke · Cola (brand, narrower: nearSynonym); Oberbegriff alkoholfreies Getränk · Erfrischungsgetränk · Softdrink"
+			},
+			{
+				"title": "Duden: Coca-Cola",
+				"url": "https://www.duden.de/rechtschreibung/Coca_Cola",
+				"supports": "Target 1 Knowledge: brand noun 'koffeinhaltiges Erfrischungsgetränk', das oder die"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -76,7 +97,50 @@
 		{
 			"memberSegmentIndices": [6, 8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🥤" },
+			"reading": {
+				"emojiDescription": "🥤",
+				"knowledge": {
+					"plural": ["Colas"],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Coca-Cola",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Erfrischungsgetränk",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Cola is the free object, a NOUN that owns its article eine."
 			},

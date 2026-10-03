@@ -20,13 +20,72 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Knie",
+				"url": "https://www.duden.de/rechtschreibung/Knie",
+				"supports": "Target 0 Knowledge: Plural die Knie; Synonyme Knick, Krümmung … belong to the bend sense"
+			},
+			{
+				"title": "DWDS: Knie",
+				"url": "https://www.dwds.de/wb/Knie",
+				"supports": "Target 0 Knowledge: Nominativ Plural Knie; 'Gelenk zwischen Oberschenkel und Unterschenkel'"
+			},
+			{
+				"title": "OpenThesaurus: Knie",
+				"url": "https://www.openthesaurus.de/synonyme/Knie",
+				"supports": "Target 0 Knowledge: synset Knie · Kniegelenk, Oberbegriff Gelenk"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🧎" },
+			"reading": {
+				"emojiDescription": "🧎",
+				"knowledge": {
+					"plural": ["Knie"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Kniegelenk",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gelenk",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The plural is fixed by beide while the noun form is invariant. Knie is DWDS 'Gelenk zwischen Oberschenkel und Unterschenkel'; no emoji shows the knee alone, so the kneeling figure stands in for it."
 			},

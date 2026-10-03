@@ -277,6 +277,26 @@
 				"title": "DWDS: wahrscheinlich",
 				"url": "https://www.dwds.de/wb/wahrscheinlich",
 				"supports": "Target 7 Knowledge: Adjektiv, wahrscheinlicher; no Synonym/Gegensatz"
+			},
+			{
+				"title": "Duden: Zufall",
+				"url": "https://www.duden.de/rechtschreibung/Zufall",
+				"supports": "Target 16 Knowledge: Plural die Zufälle; Synonyme Gelegenheit, Glücksfall, Glückssache, Glücksumstand (lucky-chance shades that do not hold for 'unseliger Zufall'); no frame"
+			},
+			{
+				"title": "DWDS: Zufall",
+				"url": "https://www.dwds.de/wb/Zufall",
+				"supports": "Target 16 Knowledge: Nominativ Plural Zufälle; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: Zufall",
+				"url": "https://www.openthesaurus.de/synonyme/Zufall",
+				"supports": "Target 16 Knowledge: synset Fügung des Schicksals · Zufall · Zufälligkeit · Tyche; no Oberbegriff, no Gegenteil"
+			},
+			{
+				"title": "Duden: Zufälligkeit",
+				"url": "https://www.duden.de/rechtschreibung/Zufaelligkeit",
+				"supports": "Target 16 Knowledge: sense 2 'zufälliges Ereignis', a shade of Zufall (nearSynonym)"
 			}
 		]
 	},
@@ -1053,7 +1073,38 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🎲" },
+			"reading": {
+				"emojiDescription": "🎲",
+				"knowledge": {
+					"plural": ["Zufälle"],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Zufälligkeit",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

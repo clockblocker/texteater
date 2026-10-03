@@ -19,13 +19,72 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Kaffee",
+				"url": "https://www.duden.de/rechtschreibung/Kaffee",
+				"supports": "Target 0 Knowledge: Plural die Kaffees ('zwei Kaffee' is a measure construction); Synonyme Bohnenkaffee, Espresso, Filterkaffee, Mokka (Espresso, Mokka are OT Unterbegriffe, so out)"
+			},
+			{
+				"title": "DWDS: Kaffee",
+				"url": "https://www.dwds.de/wb/Kaffee",
+				"supports": "Target 0 Knowledge: Nominativ Plural Kaffees"
+			},
+			{
+				"title": "OpenThesaurus: Kaffee",
+				"url": "https://www.openthesaurus.de/synonyme/Kaffee",
+				"supports": "Target 0 Knowledge: Oberbegriff Getränk · Trank · Trunk (drink synsets); Unterbegriff Espresso · Mokka"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "☕" },
+			"reading": {
+				"emojiDescription": "☕",
+				"knowledge": {
+					"plural": ["Kaffees"],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Bohnenkaffee",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Getränk",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

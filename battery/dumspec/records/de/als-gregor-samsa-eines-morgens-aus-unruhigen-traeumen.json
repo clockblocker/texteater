@@ -239,6 +239,21 @@
 				"title": "OpenThesaurus: verwandelt",
 				"url": "https://www.openthesaurus.de/synonyme/verwandelt",
 				"supports": "Target 15 Knowledge: no synset; no relation listed (Duden has no verwandelt entry)"
+			},
+			{
+				"title": "Duden: Traum",
+				"url": "https://www.duden.de/rechtschreibung/Traum",
+				"supports": "Target 5 Knowledge: Plural die Träume; Synonyme Fantasievorstellung, Illusion … belong to the wish sense"
+			},
+			{
+				"title": "DWDS: Traum",
+				"url": "https://www.dwds.de/wb/Traum",
+				"supports": "Target 5 Knowledge: Nominativ Plural Träume"
+			},
+			{
+				"title": "OpenThesaurus: Traum",
+				"url": "https://www.openthesaurus.de/synonyme/Traum",
+				"supports": "Target 5 Knowledge: synset Traum alone, only Unterbegriffe (Tagtraum, Albtraum); no relation listed"
 			}
 		]
 	},
@@ -487,7 +502,24 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "😴💭" },
+			"reading": {
+				"emojiDescription": "😴💭",
+				"knowledge": {
+					"plural": ["Träume"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
