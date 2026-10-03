@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"jsx": "react-jsx",
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"noUncheckedIndexedAccess": false,
 		"types": ["bun-types", "vite/client"]
 	},
 	"include": [

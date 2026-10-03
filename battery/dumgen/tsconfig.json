@@ -1,9 +1,4 @@
 {
 	"extends": "../../tooling/typescript/battery.json",
-	"include": ["src/**/*.ts", "tests/**/*.ts", "cli/**/*.ts"],
-	"compilerOptions": {
-		"paths": {
-			"dumgen/development": ["./src/development.ts"]
-		}
-	}
+	"include": ["src/**/*.ts", "tests/**/*.ts", "cli/**/*.ts"]
 }

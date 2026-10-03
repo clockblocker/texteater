@@ -25,32 +25,44 @@
 	],
 	"exports": {
 		".": {
+			"bun": "./src/index.ts",
+			"convex": "./src/index.ts",
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js",
 			"default": "./dist/index.js"
 		},
 		"./types": {
+			"bun": "./src/types.ts",
+			"convex": "./src/types.ts",
 			"types": "./dist/types.d.ts",
 			"import": "./dist/types.js",
 			"default": "./dist/types.js"
 		},
 		"./validation": {
+			"bun": "./src/validation/operations.ts",
+			"convex": "./src/validation/operations.ts",
 			"types": "./dist/validation/operations.d.ts",
 			"import": "./dist/validation/operations.js",
 			"default": "./dist/validation/operations.js"
 		},
 		"./package.json": "./package.json",
 		"./schema/*": {
+			"bun": "./src/generated/schemas/*.ts",
+			"convex": "./src/generated/schemas/*.ts",
 			"types": "./dist/generated/schemas/*.d.ts",
 			"import": "./dist/generated/schemas/*.js",
 			"default": "./dist/generated/schemas/*.js"
 		},
 		"./compiled-validation": {
+			"bun": "./src/generated/linked-validation.ts",
+			"convex": "./src/generated/linked-validation.ts",
 			"types": "./dist/generated/linked-validation.d.ts",
 			"import": "./dist/generated/linked-validation.js",
 			"default": "./dist/generated/linked-validation.js"
 		},
 		"./validation-artifact": {
+			"bun": "./src/generated/validation.ts",
+			"convex": "./src/generated/validation.ts",
 			"types": "./dist/generated/validation.d.ts",
 			"import": "./dist/generated/validation.js",
 			"default": "./dist/generated/validation.js"

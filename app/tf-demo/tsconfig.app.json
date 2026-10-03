@@ -9,6 +9,8 @@
 
 		/* Bundler mode */
 		"moduleResolution": "bundler",
+		/* Workspace packages export their src under "convex", as Convex bundles them. */
+		"customConditions": ["convex"],
 		"allowImportingTsExtensions": true,
 		"verbatimModuleSyntax": true,
 		"moduleDetection": "force",

@@ -1,11 +1,4 @@
 {
 	"extends": "../../tooling/typescript/battery.json",
-	"compilerOptions": {
-		"paths": {
-			"dumdict": ["./src/index.ts"],
-			"dumdict/pending": ["./src/pending.ts"],
-			"dumdict/runtime": ["./src/runtime.ts"]
-		}
-	},
 	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
 }

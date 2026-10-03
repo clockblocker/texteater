@@ -10,11 +10,15 @@
 	"types": "./dist/runtime.d.ts",
 	"exports": {
 		"./compiler": {
+			"bun": "./src/compiler.ts",
+			"convex": "./src/compiler.ts",
 			"types": "./dist/compiler.d.ts",
 			"import": "./dist/compiler.js",
 			"default": "./dist/compiler.js"
 		},
 		"./runtime": {
+			"bun": "./src/runtime.ts",
+			"convex": "./src/runtime.ts",
 			"types": "./dist/runtime.d.ts",
 			"import": "./dist/runtime.js",
 			"default": "./dist/runtime.js"

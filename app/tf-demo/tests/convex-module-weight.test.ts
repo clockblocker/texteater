@@ -21,13 +21,18 @@ const FORBIDDEN_INPUTS = [
 	/node_modules\/effect\//,
 	/node_modules\/promptsmith\//,
 	/battery\/promptsmith\//,
-	/\/dumgen\/dist\//,
-	/\/dumdict\/dist\/index\.js$/,
-	/\/dumdict\/dist\/runtime\.js$/,
+	/\/dumgen\/(?:dist|src)\//,
+	/\/dumdict\/(?:dist\/index\.js|src\/index\.ts)$/,
+	/\/dumdict\/(?:dist\/runtime\.js|src\/runtime\.ts)$/,
 	/\/zod\//,
 ];
 const DUM_PACKAGE_INPUT =
 	/\/(?:dumspec|dumdict|dumling|dumrel|dumval)\/(?:dist|src)\//;
+/**
+ * Convex bundles workspace packages from their source ("convex" export
+ * condition). A built copy beside it would load the same package twice.
+ */
+const BUILT_WORKSPACE_INPUT = /\/battery\/[^/]+\/dist\//;
 
 const convexRoot = join(import.meta.dir, "..", "convex");
 
@@ -47,6 +52,7 @@ const isolateModules = walk(convexRoot).filter(
 test("isolate-side Convex modules stay light and never load the generation runtime", async () => {
 	const overweight: string[] = [];
 	const leaking: string[] = [];
+	const built: string[] = [];
 	for (const path of isolateModules) {
 		const result = await build({
 			entryPoints: [path],
@@ -67,6 +73,10 @@ test("isolate-side Convex modules stay light and never load the generation runti
 				: [],
 		);
 		if (leaks.length) leaking.push(`${name}: ${leaks.join(", ")}`);
+		const builtInputs = inputs.filter(([input]) =>
+			BUILT_WORKSPACE_INPUT.test(input),
+		);
+		if (builtInputs.length) built.push(`${name}: ${builtInputs[0]?.[0]}`);
 		let dumBytes = 0;
 		let otherBytes = 0;
 		for (const [input, { bytes }] of inputs) {
@@ -79,5 +89,6 @@ test("isolate-side Convex modules stay light and never load the generation runti
 			);
 	}
 	expect(leaking).toEqual([]);
+	expect(built).toEqual([]);
 	expect(overweight).toEqual([]);
 }, 120_000);

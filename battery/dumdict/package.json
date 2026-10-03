@@ -13,27 +13,39 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
+			"bun": "./src/index.ts",
+			"convex": "./src/index.ts",
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		},
 		"./schema": {
+			"bun": "./src/public-schema.ts",
+			"convex": "./src/public-schema.ts",
 			"types": "./dist/public-schema.d.ts",
 			"import": "./dist/public-schema.js"
 		},
 		"./runtime": {
+			"bun": "./src/runtime.ts",
+			"convex": "./src/runtime.ts",
 			"types": "./dist/runtime.d.ts",
 			"import": "./dist/runtime.js"
 		},
 		"./pending": {
+			"bun": "./src/pending.ts",
+			"convex": "./src/pending.ts",
 			"types": "./dist/pending.d.ts",
 			"import": "./dist/pending.js"
 		},
 		"./planning": {
+			"bun": "./src/planning.ts",
+			"convex": "./src/planning.ts",
 			"types": "./dist/planning.d.ts",
 			"import": "./dist/planning.js"
 		},
 		"./package.json": "./package.json",
 		"./memory": {
+			"bun": "./src/memory.ts",
+			"convex": "./src/memory.ts",
 			"types": "./dist/memory.d.ts",
 			"import": "./dist/memory.js"
 		}
@@ -54,8 +66,8 @@
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
-		"generate:validation": "bun --tsconfig-override=tsconfig.codegen.json codegen/generate-validation-artifacts.ts",
-		"generate:validation:check": "bun --tsconfig-override=tsconfig.codegen.json codegen/generate-validation-artifacts.ts --check",
+		"generate:validation": "bun codegen/generate-validation-artifacts.ts",
+		"generate:validation:check": "bun codegen/generate-validation-artifacts.ts --check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
 		"lint": "bun run --silent biome check .",

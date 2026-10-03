@@ -8,6 +8,8 @@
     "allowJs": true,
     "strict": true,
     "moduleResolution": "Bundler",
+    /* Resolve workspace packages to their src, as Convex's bundler does. */
+    "customConditions": ["convex"],
     "jsx": "react-jsx",
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,

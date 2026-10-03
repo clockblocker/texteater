@@ -11,10 +11,14 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
+			"bun": "./src/index.ts",
+			"convex": "./src/index.ts",
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		},
 		"./development": {
+			"bun": "./src/development.ts",
+			"convex": "./src/development.ts",
 			"types": "./dist/development.d.ts",
 			"import": "./dist/development.js"
 		},

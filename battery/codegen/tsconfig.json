@@ -1,9 +1,4 @@
 {
 	"extends": "../../tooling/typescript/battery.json",
-	"compilerOptions": {
-		"paths": {
-			"codegen": ["./src/index.ts"]
-		}
-	},
 	"include": ["src/**/*.ts", "tests/**/*.ts"]
 }

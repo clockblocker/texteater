@@ -20,16 +20,22 @@
 	],
 	"exports": {
 		".": {
+			"bun": "./src/index.ts",
+			"convex": "./src/index.ts",
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js",
 			"default": "./dist/index.js"
 		},
 		"./types": {
+			"bun": "./src/types.ts",
+			"convex": "./src/types.ts",
 			"types": "./dist/types.d.ts",
 			"import": "./dist/types.js",
 			"default": "./dist/types.js"
 		},
 		"./inventories": {
+			"bun": "./src/inventories.ts",
+			"convex": "./src/inventories.ts",
 			"types": "./dist/inventories.d.ts",
 			"import": "./dist/inventories.js",
 			"default": "./dist/inventories.js"

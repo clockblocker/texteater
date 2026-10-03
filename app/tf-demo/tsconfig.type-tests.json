@@ -3,6 +3,6 @@
 	"compilerOptions": {
 		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.type-tests.tsbuildinfo"
 	},
-	"include": ["tests/types"],
+	"include": ["src/node-timeout.d.ts", "tests/types"],
 	"exclude": ["tests/**/*.test.ts"]
 }

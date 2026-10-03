@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
 		"allowImportingTsExtensions": true,
+		"customConditions": ["convex"],
 		"isolatedModules": false,
 		"lib": ["ESNext"],
 		"module": "Preserve",

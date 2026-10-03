@@ -14,6 +14,8 @@
 	"types": "./dist/react-resizable-panels.d.ts",
 	"exports": {
 		".": {
+			"bun": "./lib/index.ts",
+			"convex": "./lib/index.ts",
 			"types": "./dist/react-resizable-panels.d.ts",
 			"development": "./lib/index.ts",
 			"import": "./dist/react-resizable-panels.js",
@@ -22,12 +24,15 @@
 		},
 		"./package.json": "./package.json",
 		"./workspace": {
+			"bun": "./workspace/index.ts",
+			"convex": "./workspace/index.ts",
 			"types": "./dist/workspace/index.d.ts",
 			"development": "./workspace/index.ts",
 			"import": "./dist/workspace.js",
 			"require": "./dist/workspace.cjs"
 		},
 		"./workspace.css": {
+			"bun": "./workspace/workspace.css",
 			"development": "./workspace/workspace.css",
 			"default": "./dist/workspace.css"
 		},
