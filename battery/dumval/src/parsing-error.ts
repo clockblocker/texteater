@@ -153,8 +153,10 @@ export type ParsingIssue =
  */
 export class ParsingError<_Output = unknown> extends Error {
 	override readonly name = "ParsingError";
+	readonly issues: ParsingIssue[];
 
-	constructor(readonly issues: ParsingIssue[]) {
+	constructor(issues: ParsingIssue[]) {
 		super(JSON.stringify(issues, null, 2));
+		this.issues = issues;
 	}
 }

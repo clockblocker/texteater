@@ -36,9 +36,9 @@ export type TypeSafeExecutor = <const Q extends Questions>(
 export function createTypeSafeExecutor(
 	config: TypeSafeClientConfig = {},
 ): TypeSafeExecutor {
+	// Without an apiKey, the SDK reads TYPESAFE_API_KEY from the environment.
 	const client = new TypeSafeClient({
 		...config,
-		apiKey: config.apiKey ?? process.env.TYPESAFE_API_KEY,
 		retry: { ...config.retry, maxRetries: 0 },
 	});
 	return async (request, options) => {

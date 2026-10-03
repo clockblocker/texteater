@@ -20,6 +20,7 @@ export type GrundformIssue =
 export class GrundformAssessmentError extends Error {
 	readonly _tag = "GrundformAssessmentError";
 	override readonly name = "GrundformAssessmentError";
+	readonly issues: readonly [GrundformIssue, ...GrundformIssue[]];
 	readonly route: {
 		language: Surface["language"];
 		family: Surface["lemma"]["family"];
@@ -29,9 +30,10 @@ export class GrundformAssessmentError extends Error {
 
 	constructor(
 		surface: Surface,
-		readonly issues: readonly [GrundformIssue, ...GrundformIssue[]],
+		issues: readonly [GrundformIssue, ...GrundformIssue[]],
 	) {
 		super(issues.map((issue) => issue.message).join("; "));
+		this.issues = issues;
 		const { language, family, kind, canonicalForm } = surface.lemma;
 		this.route = { language, family, kind };
 		this.canonicalForm = canonicalForm;

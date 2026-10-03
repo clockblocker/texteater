@@ -5,10 +5,12 @@ import { parseSelectionShape } from "./validation.js";
 
 export class KnowledgePolicyUnavailable extends Error {
 	readonly _tag = "KnowledgePolicyUnavailable";
-	constructor(readonly route: KnowledgeSelectionInput["route"]) {
+	readonly route: KnowledgeSelectionInput["route"];
+	constructor(route: KnowledgeSelectionInput["route"]) {
 		super(
 			`No Knowledge policy for ${route.language}/${route.family}/${route.kind}`,
 		);
+		this.route = route;
 	}
 }
 /** Omitted setting leaves are enabled. Explicit false disables; null and unknown keys fail. */
