@@ -193,10 +193,10 @@
 				"kind": "VERB"
 			},
 			"reading": {
-				"emojiDescription": "🥺"
+				"emojiDescription": "😔"
 			},
 			"notes": {
-				"rationale": "Pity: the verb leidtun 'arouse pity' (Duden sense 2), with leid as its separable first part and mir a free dative (tut ihr leid), as in every tut mir leid (#759 Q1). Consistency partner of tut-mir-leid-ich-habe-…."
+				"rationale": "Pity: the verb leidtun, with leid as its separable first part and mir a free dative (tut ihr leid), as in every tut mir leid (#759 Q1). Regret and pity are one Reading, 😔: Duden has one entry, and the sentence supplies what one is sorry about (user ruling 1 on #877, 2026-10-03; ADR 0031). Consistency partner of tut-mir-leid-ich-habe-…."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -404,9 +404,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🕐" },
+			"reading": { "emojiDescription": "🕐🔢" },
 			"notes": {
-				"rationale": "Uhr after a numeral names the hour of the clock; the form stays singular, and gegen makes it accusative."
+				"rationale": "Uhr after a numeral names the hour of the clock, 🕐🔢, the numbered hour, apart from the timepiece ⌚ (#877 ruling 5, label decided by agents under the user's delegation, 2026-10-03); the form stays singular, and gegen makes it accusative."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

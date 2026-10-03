@@ -27,9 +27,9 @@
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "☝" },
+			"reading": { "emojiDescription": "⚠" },
 			"notes": {
-				"rationale": "wehe is the Nebenform of the interjection weh (DWDS), so its Surface is a Variant of the Lemma weh, here with its threat Reading. The dative is a free word, not a fixed member, and dir is the Dat cell of the personal pronoun, its own target."
+				"rationale": "wehe is the Nebenform of the interjection weh (DWDS), so its Surface is a Variant of the Lemma weh, here with its warning Reading, ⚠ (user ruling 6 on #877, 2026-10-03: ☝ read as the lament 😖). The dative is a free word, not a fixed member, and dir is the Dat cell of the personal pronoun, its own target."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

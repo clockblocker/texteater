@@ -37,8 +37,12 @@ for authored, drafted and generated Readings alike.
 | `noch` | ⏳ 'still', ➕ 'in addition' | split |
 | `Mutter` | 👩‍👧 'mother', 🔩 'nut' | split |
 | `stehen bleiben` | 🛑 'stop working', 📌 'be left unchanged' | split |
+| `Uhr` | 🕐🔢 'o'clock', ⌚ 'clock, watch' | split: the numbered hour is no instrument |
+| `weh` | ⚠ 'warning' (*Wehe dir!*), 😖 'lament' (*Weh mir!*) | split |
+| `hinauslaufen` | 🏃🚪 'run out', ➡🎯 'amount to' (*auf etwas hinauslaufen*) | split, one Lemma: `auf` is valency |
 | `so` | 🔧 | fold: manner and degree are one Reading |
 | `lang` (ADJ) | 📏 | fold: length in space and in time |
+| `leidtun` | 😔 | fold: regret and pity; the sentence says what one is sorry about |
 
 When a Lemma gains a second Reading, name the Duden or DWDS sense you picked
 in the target's rationale. When you fold dictionary senses, cite ADR 0031.
@@ -105,6 +109,10 @@ and say which in the rationale.
   Nichtsein, das ist hier die Frage* ⚖🤔.
 - Judge on the recorded route. Whether the unit should be a Locution or Saying
   at all is a review question (#668, #633), not the description's.
+- A sense that needs fixed words of its own is a Locution, not a Reading of
+  its verb: *Da kann ich nichts für* is `nichts dafür können` 🫵😬, and
+  `können` keeps 💪. A sense that only governs a free complement stays a
+  Reading: *auf einen Kompromiss hinauslaufen* is `hinauslaufen` ➡🎯 (#877).
 - In a Breakdown Record each word takes its literal Reading. The whole
   meaning belongs to the Locution or Saying: in `so oder so` 🔁, `so` is 🔧.
 

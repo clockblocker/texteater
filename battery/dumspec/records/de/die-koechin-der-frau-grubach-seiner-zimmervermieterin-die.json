@@ -800,9 +800,9 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🕐" },
+			"reading": { "emojiDescription": "🕐🔢" },
 			"notes": {
-				"rationale": "acht Uhr is Duden's Uhr 'bestimmte Stunde der Uhrzeit' (gegen drei Uhr früh), a Reading apart from the timepiece."
+				"rationale": "acht Uhr is Duden's Uhr 'bestimmte Stunde der Uhrzeit' (gegen drei Uhr früh), a Reading apart from the timepiece ⌚. 🕐🔢, the numbered hour, pins the clock face away from the instrument (#877 ruling 5, label decided by agents under the user's delegation, 2026-10-03)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

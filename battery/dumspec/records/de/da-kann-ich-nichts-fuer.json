@@ -18,58 +18,24 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" },
+			{ "rule": "de/fixed-members-only", "hash": "f0bf57e9cd925985" },
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
 			{
-				"rule": "de/split-adverb-is-one-target",
-				"hash": "05ddf27450fc5104"
-			},
-			{
-				"rule": "de/pronominal-adverb-stands-alone",
-				"hash": "ed9c0c62153c7596"
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
 			}
 		],
 		"references": []
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [0, 8],
-			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "🎁" },
-			"notes": {
-				"rationale": "Split da … für is one target of the pronominal adverb dafür, as in Dafür kann ich nichts."
-			},
-			"attestation": {
-				"unitKind": "Attestation",
-				"surface": {
-					"unitKind": "Surface",
-					"language": "de",
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Lexeme",
-						"kind": "ADV",
-						"canonicalForm": "dafür",
-						"coreFeatures": {
-							"comparable": null
-						}
-					},
-					"normalizedSurface": "da für",
-					"spelling": { "kind": "Canonical" },
-					"surfaceFeatures": null,
-					"inflectionalFeatures": null
-				},
-				"members": [
-					{ "attested": "Da", "orthography": "Standard" },
-					{ "attested": "für", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full"
-			}
-		},
-		{
-			"memberSegmentIndices": [2],
-			"route": { "family": "Lexeme", "kind": "VERB" },
+			"memberSegmentIndices": [0, 2, 6, 8],
+			"route": { "family": "Locution", "kind": "VERB" },
 			"reading": { "emojiDescription": "🫵😬" },
 			"notes": {
-				"rationale": "können (für etwas können, be to blame) governs für, but dafür never joins the verb, split or not. A Reading of its own: etwas, nichts für etwas können 'be to blame for' (Duden können, Wendung 'für etwas verantwortlich sein'; DWDS können 3a)."
+				"rationale": "nichts dafür können 'not be to blame, can't help it' is an Idiom of its own, not a sense of können (user ruling 7 on #877, 2026-10-03). Its fixed members are the verb, nichts (one of the narrow set etwas, nichts, was) and the split da … für, which a synonym such as deswegen would break (de/fixed-member-test); ich stays outside. Duden: dafürkönnen, also dafür können, 'Schuld daran haben' (nichts dafürkann oder dafür kann), and können: etwas, nichts für etwas können."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -79,15 +45,12 @@
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"family": "Lexeme",
+						"family": "Locution",
 						"kind": "VERB",
-						"canonicalForm": "können",
-						"coreFeatures": {
-							"hasSepPrefix": null,
-							"lexicallyReflexive": null
-						}
+						"canonicalForm": "nichts dafür können",
+						"coreFeatures": {}
 					},
-					"normalizedSurface": "kann",
+					"normalizedSurface": "da kann nichts für",
 					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null,
 					"inflectionalFeatures": {
@@ -103,7 +66,12 @@
 						"passive": null
 					}
 				},
-				"members": [{ "attested": "kann", "orthography": "Standard" }],
+				"members": [
+					{ "attested": "Da", "orthography": "Standard" },
+					{ "attested": "kann", "orthography": "Standard" },
+					{ "attested": "nichts", "orthography": "Standard" },
+					{ "attested": "für", "orthography": "Standard" }
+				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []

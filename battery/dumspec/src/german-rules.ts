@@ -289,7 +289,6 @@ const verbs: Rule[] = [
 			"de/wo-willst-du-hinfahren",
 			"de/da-gehe-ich-morgen-hin",
 			"de/da-weiss-ich-nichts-von",
-			"de/da-kann-ich-nichts-fuer",
 			"de/wo-hast-du-das-mit-gemacht",
 		],
 	},
@@ -301,7 +300,6 @@ const verbs: Rule[] = [
 		routes: lexeme("ADV"),
 		records: [
 			"de/da-weiss-ich-nichts-von",
-			"de/da-kann-ich-nichts-fuer",
 			"de/wo-hast-du-das-mit-gemacht",
 			"de/es-war-klar-dass-doktor-mantelsack-heute-ausserhalb-jeder",
 			"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu",
@@ -1186,6 +1184,8 @@ const locutionsAndSayings: Rule[] = [
 			"de/bei-dieser-formel-verstehe-ich-nur-bahnhof",
 			"de/damit-triffst-du-den-nagel-auf-den-kopf",
 			"de/genau-da-liegt-der-hase-im-pfeffer",
+			// A split pronominal adverb as a fixed member (#877 ruling 7).
+			"de/da-kann-ich-nichts-fuer",
 		],
 	},
 	{
