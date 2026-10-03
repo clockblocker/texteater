@@ -278,7 +278,7 @@ export const valency = {
 	),
 	referent: paragraph(
 		"valency.referent",
-		"A Case or Preposition complement's referent is the dictionary's jemand (Someone) or etwas (Something) for this meaning: Either when it gives both, or when a person and a thing fill it alike («sich kümmern um»: Either), never just what this sentence happens to show.",
+		"A Case or Preposition complement's referent is the dictionary's jemand (Someone) or etwas (Something) for this meaning: Either when it gives both, or when a person and a thing fill it alike («sich kümmern um»: Either), never just what this sentence happens to show. A subject is Either whenever an institution, a machine, an event or a thing can fill it as well as a person; it is Someone only when the meaning needs a person who thinks, speaks, feels or acts on purpose, and Something only when no person can fill it.",
 		rules.valency,
 	),
 	shapes: paragraph(
