@@ -93,6 +93,21 @@
 				"title": "OpenThesaurus: überraschend",
 				"url": "https://www.openthesaurus.de/synonyme/%C3%BCberraschend",
 				"supports": "Target 2 Knowledge: synsets ... überraschend · unerwartet · unverhofft ... and erstaunlich · überraschend · verblüffend ...; Gegenteil only on überraschenderweise"
+			},
+			{
+				"title": "DWDS: sich ins Fäustchen lachen",
+				"url": "https://www.dwds.de/wb/sich%20ins%20F%C3%A4ustchen%20lachen",
+				"supports": "Target 3 Knowledge: ⟨jmd. lacht sich [Dativ] ins Fäustchen⟩ heimlich schadenfroh sein; Synonym zu sich die Hände reiben (2)"
+			},
+			{
+				"title": "Duden: Fäustchen",
+				"url": "https://www.duden.de/rechtschreibung/Faeustchen",
+				"supports": "Target 3 Knowledge: sich <Dativ> ins Fäustchen lachen (voll heimlicher Schadenfreude sein): figurative, Idiom"
+			},
+			{
+				"title": "OpenThesaurus: sich ins Fäustchen lachen",
+				"url": "https://www.openthesaurus.de/synonyme/sich%20ins%20F%C3%A4ustchen%20lachen",
+				"supports": "Target 3 Knowledge: synset with sich die Hände reiben; no Gegenteil"
 			}
 		]
 	},
@@ -267,7 +282,46 @@
 		{
 			"memberSegmentIndices": [8, 12, 16, 17, 19, 21],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🤭" },
+			"reading": {
+				"emojiDescription": "🤭",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "sich die Hände reiben",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -330,6 +384,9 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): The reflexive sich is part of the wording, so only the subject is a Slot."
 			}
 		},
 		{

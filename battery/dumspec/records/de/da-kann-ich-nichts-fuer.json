@@ -27,13 +27,51 @@
 				"hash": "fdaeed620ab52c64"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: dafürkönnen",
+				"url": "https://www.duden.de/rechtschreibung/dafuerkoennen",
+				"supports": "Target 0 Knowledge: etwas dafürkönnen (umgangssprachlich: Schuld daran haben); nichts dafürkann: subject only, dafür fixed"
+			},
+			{
+				"title": "OpenThesaurus: nichts dafür können",
+				"url": "https://www.openthesaurus.de/synonyme/nichts%20daf%C3%BCr%20k%C3%B6nnen",
+				"supports": "Target 0 Knowledge: synset nicht jemandes Schuld sein · (etwas) nicht schuld sein · nichts dafür können (no clean Lemma); Gegenteil on the term: selbst schuld (sein)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🫵😬" },
+			"reading": {
+				"emojiDescription": "🫵😬",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "nichts dafür können 'not be to blame, can't help it' is an Idiom of its own, not a sense of können (user ruling 7 on #877, 2026-10-03). Its fixed members are the verb, nichts (one of the narrow set etwas, nichts, was) and the split da … für, which a synonym such as deswegen would break (de/fixed-member-test); ich stays outside. Duden: dafürkönnen, also dafür können, 'Schuld daran haben' (nichts dafürkann oder dafür kann), and können: etwas, nichts für etwas können."
 			},

@@ -18,13 +18,68 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Trübsal blasen",
+				"url": "https://www.dwds.de/wb/Tr%C3%BCbsal%20blasen",
+				"supports": "Target 0 Knowledge: ⟨jmd. bläst Trübsal⟩ traurig, mutlos, deprimiert sein; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "Duden: Trübsal",
+				"url": "https://www.duden.de/rechtschreibung/Truebsal",
+				"supports": "Target 0 Knowledge: Trübsal blasen (betrübt sein und seinem Kummer nachhängen): Idiom"
+			},
+			{
+				"title": "OpenThesaurus: Trübsal blasen",
+				"url": "https://www.openthesaurus.de/synonyme/Tr%C3%BCbsal%20blasen",
+				"supports": "Target 0 Knowledge: synset with den Kopf hängen lassen, trauern, traurig (sein); no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "😔" },
+			"reading": {
+				"emojiDescription": "😔",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "den Kopf hängen lassen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

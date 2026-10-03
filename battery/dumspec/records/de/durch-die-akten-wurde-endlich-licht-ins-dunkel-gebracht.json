@@ -27,13 +27,82 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Licht",
+				"url": "https://www.duden.de/rechtschreibung/Licht",
+				"supports": "Target 0 Knowledge: Licht in etwas bringen (eine Angelegenheit aufklären: ihr Geständnis hat Licht in die Affäre gebracht): thing or person subject"
+			},
+			{
+				"title": "DWDS: Licht",
+				"url": "https://www.dwds.de/wb/Licht",
+				"supports": "Target 0 Knowledge: Licht in eine Angelegenheit bringen (= aufklären); no multiword entry for Licht ins Dunkel bringen"
+			},
+			{
+				"title": "OpenThesaurus: Licht ins Dunkel bringen",
+				"url": "https://www.openthesaurus.de/synonyme/Licht%20ins%20Dunkel%20bringen",
+				"supports": "Target 0 Knowledge: synset aufklären · aufhellen · klären · Licht ins Dunkel bringen; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 10, 12, 13, 15, 17],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🔦" },
+			"reading": {
+				"emojiDescription": "🔦",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "aufklären",
+								"coreFeatures": {
+									"hasSepPrefix": "auf",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "klären",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -96,6 +165,9 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): No dictionary names the subject; Duden's example has a thing subject (ihr Geständnis), so the Nom referent is Either."
 			}
 		}
 	],

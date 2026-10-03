@@ -18,13 +18,129 @@
 	"sources": {
 		"adrs": ["ADR-0034"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Angst",
+				"url": "https://www.duden.de/rechtschreibung/Angst",
+				"supports": "Target 0 Knowledge: Angst vor jemandem, etwas haben; sie hat Angst, dass alles entdeckt wird; (Angst um = worry, another sense)"
+			},
+			{
+				"title": "DWDS: Angst",
+				"url": "https://www.dwds.de/wb/Angst",
+				"supports": "Target 0 Knowledge: Angst haben um jmdn. (= sich sorgen) kept apart as another sense"
+			},
+			{
+				"title": "OpenThesaurus: Angst haben",
+				"url": "https://www.openthesaurus.de/synonyme/Angst%20haben",
+				"supports": "Target 0 Knowledge: synset Angst haben (vor / dass) · (sich) ängstigen · befürchten · (etwas) fürchten · (sich) fürchten; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "😨" },
+			"reading": {
+				"emojiDescription": "😨",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "vor",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich fürchten",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "fürchten",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich ängstigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "befürchten",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "vor is the preposition Angst haben governs, a member of the Collocation but not one of its fixed words (ADR 0034); the Surface projects only hat Angst."
 			},

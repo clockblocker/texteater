@@ -14,13 +14,89 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Abschied",
+				"url": "https://www.duden.de/rechtschreibung/Abschied",
+				"supports": "Target 0 Knowledge: Abschied nehmen (sich vor einer längeren Trennung verabschieden: von den Freunden, von der Heimat Abschied nehmen): von + Dat, person or thing"
+			},
+			{
+				"title": "E-VALBU: nehmen, Generelle Anmerkungen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400800",
+				"supports": "Target 0 Knowledge: nehmen as verbal core of Funktionsverbgefüge, e.g. Abschied nehmen: Collocation"
+			},
+			{
+				"title": "OpenThesaurus: Abschied nehmen",
+				"url": "https://www.openthesaurus.de/synonyme/Abschied%20nehmen",
+				"supports": "Target 0 Knowledge: synset Abschied nehmen · Lebewohl sagen · (sich) verabschieden; Gegenteil begrüßen sits on (jemanden) verabschieden only"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [3, 5],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "👋🚶" },
+			"reading": {
+				"emojiDescription": "👋🚶",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "von",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich verabschieden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Cited as a dictionary entry with no context, Abschied nehmen takes Duden's first sense, 'sich vor einer längeren Trennung verabschieden'."
 			},

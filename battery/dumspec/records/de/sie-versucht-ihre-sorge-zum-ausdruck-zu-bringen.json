@@ -26,13 +26,86 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: zum Ausdruck bringen",
+				"url": "https://www.dwds.de/wb/zum%20Ausdruck%20bringen",
+				"supports": "Target 0 Knowledge: ⟨jmd., etw. bringt etw. (durch, mit etw.) zum Ausdruck⟩ Emotionen, Gedanken zeigen, vermitteln; Synonym zu etw. Ausdruck verleihen"
+			},
+			{
+				"title": "OpenThesaurus: zum Ausdruck bringen",
+				"url": "https://www.openthesaurus.de/synonyme/zum%20Ausdruck%20bringen",
+				"supports": "Target 0 Knowledge: synset (etwas) deutlich machen · (etwas) vermitteln · (etwas) zum Ausdruck bringen (vermitteln near); no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [9, 10, 12, 16],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🗣💭" },
+			"reading": {
+				"emojiDescription": "🗣💭",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "Ausdruck verleihen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "vermitteln",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -93,6 +166,9 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): DWDS's (durch, mit etw.) is an instrument adjunct, not a Slot."
 			}
 		}
 	],

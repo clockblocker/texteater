@@ -24,13 +24,56 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Tomaten auf den Augen haben",
+				"url": "https://www.dwds.de/wb/Tomaten%20auf%20den%20Augen%20haben",
+				"supports": "Target 0 Knowledge: nicht in der Lage sein, das Offensichtliche zu sehen; only siehe auch Bohnen in den Ohren haben (no relation)"
+			},
+			{
+				"title": "Duden: Tomate",
+				"url": "https://www.duden.de/rechtschreibung/Tomate",
+				"supports": "Target 0 Knowledge: Tomaten auf den Augen haben (etwas, jemanden aus Unachtsamkeit übersehen): figurative, Idiom"
+			},
+			{
+				"title": "OpenThesaurus: Tomaten auf den Augen haben",
+				"url": "https://www.openthesaurus.de/synonyme/Tomaten%20auf%20den%20Augen%20haben",
+				"supports": "Target 0 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 8, 10, 12, 14],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "👀❌" },
+			"reading": {
+				"emojiDescription": "👀❌",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

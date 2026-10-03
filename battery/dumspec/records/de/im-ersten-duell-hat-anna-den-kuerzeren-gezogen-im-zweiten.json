@@ -39,13 +39,82 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: den Kürzeren ziehen",
+				"url": "https://www.dwds.de/wb/den%20K%C3%BCrzeren%20ziehen",
+				"supports": "Target 0 Knowledge: ⟨jmd., etw. zieht den Kürzeren⟩ benachteiligt sein und unterliegen; only siehe auch zu kurz kommen"
+			},
+			{
+				"title": "Duden: kurz",
+				"url": "https://www.duden.de/rechtschreibung/kurz",
+				"supports": "Target 0 Knowledge: den Kürzeren ziehen (der Unterlegene sein): Idiom"
+			},
+			{
+				"title": "OpenThesaurus: den Kürzeren ziehen",
+				"url": "https://www.openthesaurus.de/synonyme/den%20K%C3%BCrzeren%20ziehen",
+				"supports": "Target 0 Knowledge: synset unterliegen · verlieren · den Kürzeren ziehen; Gegenteil markers sit on unterliegen, verlieren only"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [23, 29],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "👎" },
+			"reading": {
+				"emojiDescription": "👎",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "unterliegen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "verlieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Second occurrence. Fixed object omitted. Parallel clause identifies idiom."
 			},

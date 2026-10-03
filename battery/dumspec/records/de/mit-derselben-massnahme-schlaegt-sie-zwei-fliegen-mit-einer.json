@@ -28,13 +28,68 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: zwei Fliegen mit einer Klappe schlagen",
+				"url": "https://www.dwds.de/wb/zwei%20Fliegen%20mit%20einer%20Klappe%20schlagen",
+				"supports": "Target 0 Knowledge: ⟨jmd. schlägt zwei Fliegen mit einer Klappe (mit, bei etw.)⟩; Synonym zu zwei Fliegen auf einen Streich schlagen"
+			},
+			{
+				"title": "Duden: Fliege",
+				"url": "https://www.duden.de/rechtschreibung/Fliege",
+				"supports": "Target 0 Knowledge: zwei Fliegen mit einer Klappe schlagen (einen doppelten Zweck auf einmal erreichen): Idiom"
+			},
+			{
+				"title": "OpenThesaurus: zwei Fliegen mit einer Klappe schlagen",
+				"url": "https://www.openthesaurus.de/synonyme/zwei%20Fliegen%20mit%20einer%20Klappe%20schlagen",
+				"supports": "Target 0 Knowledge: only in an adverbial synset (auf einmal, in einem Aufwasch), no VERB synonym; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 10, 12, 14, 16, 18],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🎯🎯" },
+			"reading": {
+				"emojiDescription": "🎯🎯",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "zwei Fliegen auf einen Streich schlagen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -75,6 +130,9 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): DWDS's (mit, bei etw.) is an instrument adjunct, not a Slot."
 			}
 		}
 	],

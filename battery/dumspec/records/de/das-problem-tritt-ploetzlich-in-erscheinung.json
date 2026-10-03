@@ -20,13 +20,95 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: treten, Generelle Anmerkungen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400965",
+				"supports": "Target 0 Knowledge: treten in Funktionsverbgefügen: jemand/etwas tritt in Erscheinung : jemand/etwas wird sichtbar"
+			},
+			{
+				"title": "Duden: Erscheinung",
+				"url": "https://www.duden.de/rechtschreibung/Erscheinung",
+				"supports": "Target 0 Knowledge: in Erscheinung treten (sichtbar, erkennbar werden)"
+			},
+			{
+				"title": "DWDS: in Erscheinung treten",
+				"url": "https://www.dwds.de/wb/in%20Erscheinung%20treten",
+				"supports": "Target 0 Knowledge: sense 4 ⟨etw. tritt in Erscheinung⟩ auftreten, vorkommen; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: in Erscheinung treten",
+				"url": "https://www.openthesaurus.de/synonyme/in%20Erscheinung%20treten",
+				"supports": "Target 0 Knowledge: synset erscheinen · hervortreten · in Erscheinung treten · (sich) zeigen · zutage treten; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8, 10],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🫥➡👀" },
+			"reading": {
+				"emojiDescription": "🫥➡👀",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "zutage treten",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich zeigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "erscheinen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -24,13 +24,74 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: durch dick und dünn gehen",
+				"url": "https://www.dwds.de/wb/durch%20dick%20und%20d%C3%BCnn%20gehen",
+				"supports": "Target 0 Knowledge: ⟨jmd. geht durch dick und dünn (mit jmdm.)⟩: mit + Dat optional"
+			},
+			{
+				"title": "Duden: dick",
+				"url": "https://www.duden.de/rechtschreibung/dick",
+				"supports": "Target 0 Knowledge: mit jemandem durch dick und dünn gehen (jemandem in allen Lebenslagen beistehen): Idiom"
+			},
+			{
+				"title": "OpenThesaurus: durch dick und dünn gehen",
+				"url": "https://www.openthesaurus.de/synonyme/durch%20dick%20und%20d%C3%BCnn%20gehen",
+				"supports": "Target 0 Knowledge: no synset (OT's durch dick und dünn synset is the noun-like 'gute und schlechte Zeiten'); no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8, 10, 12, 14],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🫂🌦" },
+			"reading": {
+				"emojiDescription": "🫂🌦",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "mit",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

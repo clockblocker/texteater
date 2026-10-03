@@ -18,12 +18,123 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "Duden: Verfügung",
+				"url": "https://www.duden.de/rechtschreibung/Verfuegung",
+				"supports": "Target 0 Knowledge: [jemandem] etwas zur Verfügung stellen ([jemandem] etwas zur beliebigen Benutzung bereitstellen): Dat optional, Acc etwas"
+			},
+			{
+				"title": "DWDS: zur Verfügung stellen",
+				"url": "https://www.dwds.de/wb/zur%20Verf%C3%BCgung%20stellen",
+				"supports": "Target 0 Knowledge: sense 1 ⟨jmd. stellt jmdm. etw. zur Verfügung⟩, (jmdm.) optional; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "E-VALBU: stellen, Generelle Anmerkungen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400931",
+				"supports": "Target 0 Knowledge: lists jemandem etwas zur Verfügung stellen among stellen's Funktionsverbgefüge-like Fügungen: Collocation"
+			},
+			{
+				"title": "OpenThesaurus: zur Verfügung stellen",
+				"url": "https://www.openthesaurus.de/synonyme/zur%20Verf%C3%BCgung%20stellen",
+				"supports": "Target 0 Knowledge: synset anbieten · bereitstellen · bieten · liefern · zur Verfügung stellen (bereitstellen synonym; anbieten, liefern near); no Gegenteil"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 8, 9, 11],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🫴" },
+			"reading": {
+				"emojiDescription": "🫴",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "bereitstellen",
+								"coreFeatures": {
+									"hasSepPrefix": "bereit",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anbieten",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "liefern",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "zur Verfügung stellen is a Collocation, a fixed expression, so both pieces of zur are its members; the free object die Daten stays outside."
 			},

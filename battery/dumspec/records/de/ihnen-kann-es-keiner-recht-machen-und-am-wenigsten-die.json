@@ -194,6 +194,16 @@
 				"title": "DWDS: wenig",
 				"url": "https://www.dwds.de/wb/wenig",
 				"supports": "am wenigsten: wenig as Adjektiv with Komparativ weniger, Superlativ am wenigsten, used adverbially."
+			},
+			{
+				"title": "Duden: recht",
+				"url": "https://www.duden.de/rechtschreibung/recht",
+				"supports": "Target 2 Knowledge: man kann es nicht allen recht machen; man kann es ihm nicht recht machen: dative person"
+			},
+			{
+				"title": "OpenThesaurus: es recht machen",
+				"url": "https://www.openthesaurus.de/synonyme/es%20recht%20machen",
+				"supports": "Target 2 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
 			}
 		]
 	},
@@ -342,7 +352,44 @@
 				"family": "Locution",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "👌😊" },
+			"reading": {
+				"emojiDescription": "👌😊",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

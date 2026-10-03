@@ -24,13 +24,92 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: den Faden verlieren",
+				"url": "https://www.dwds.de/wb/den%20Faden%20verlieren",
+				"supports": "Target 0 Knowledge: Mehrwortausdruck ⟨jmd. verliert den Faden⟩ (subject only); den Leitgedanken nicht mehr weiterführen können; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "Duden: Faden",
+				"url": "https://www.duden.de/rechtschreibung/Faden",
+				"supports": "Target 0 Knowledge: Wendung den Faden verlieren (beim Sprechen plötzlich nicht mehr weiterwissen), figurative: Idiom"
+			},
+			{
+				"title": "OpenThesaurus: den Faden verlieren",
+				"url": "https://www.openthesaurus.de/synonyme/den%20Faden%20verlieren",
+				"supports": "Target 0 Knowledge: synset with aus dem Konzept kommen (synonym); synset with durcheinanderkommen, sich verheddern (near: stumbling in speech); no Gegenteil on the term"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 12, 14],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "💭💨" },
+			"reading": {
+				"emojiDescription": "💭💨",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "aus dem Konzept kommen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "durcheinanderkommen",
+								"coreFeatures": {
+									"hasSepPrefix": "durcheinander",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich verheddern",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

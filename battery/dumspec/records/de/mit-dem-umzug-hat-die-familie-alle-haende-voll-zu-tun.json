@@ -39,13 +39,78 @@
 				"hash": "1a5d9f3240c41e69"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: alle Hände voll zu tun haben",
+				"url": "https://www.dwds.de/wb/alle%20H%C3%A4nde%20voll%20zu%20tun%20haben",
+				"supports": "Target 0 Knowledge: ⟨jmd. hat alle Hände voll zu tun⟩ sehr beschäftigt sein; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "Duden: Hand",
+				"url": "https://www.duden.de/rechtschreibung/Hand",
+				"supports": "Target 0 Knowledge: alle/beide Hände voll zu tun haben (sehr beschäftigt sein): Idiom"
+			},
+			{
+				"title": "OpenThesaurus: alle Hände voll zu tun haben",
+				"url": "https://www.openthesaurus.de/synonyme/alle%20H%C3%A4nde%20voll%20zu%20tun%20haben",
+				"supports": "Target 0 Knowledge: synset with viel um die Ohren haben (synonym) and in Arbeit ersticken (near, stronger); no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 12, 14, 16, 18, 20],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🤹" },
+			"reading": {
+				"emojiDescription": "🤹",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "viel um die Ohren haben",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "in Arbeit ersticken",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "alle Hände voll zu tun haben spells zu in its Canonical Form, so zu is a member of the Locution, not a PART of its own (de/bare-infinitive-zu), and the normalized Surface keeps it: hat alle Hände voll zu tun. The expression needs this zu in its slot, so it is fixed (de/fixed-member-test). mit dem Umzug and die Familie are free. Ruled 2026-10-02 (#701, grouping audit Q4)."
 			},

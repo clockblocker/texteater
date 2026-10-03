@@ -53,7 +53,23 @@
 				"hash": "c2b1f74a61545177"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Rücksicht",
+				"url": "https://www.dwds.de/wb/R%C3%BCcksicht",
+				"supports": "Target 2 Knowledge: sense 1: auf jmdn., etw. Rücksicht nehmen (auf + Acc, jmd./etw.)"
+			},
+			{
+				"title": "Duden: Rücksicht",
+				"url": "https://www.duden.de/rechtschreibung/Ruecksicht",
+				"supports": "Target 2 Knowledge: Rücksicht nehmen used bare and with auf (keine Rücksicht auf mich zu nehmen): auf optional"
+			},
+			{
+				"title": "OpenThesaurus: Rücksicht nehmen",
+				"url": "https://www.openthesaurus.de/synonyme/R%C3%BCcksicht%20nehmen",
+				"supports": "Target 2 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -135,7 +151,52 @@
 		{
 			"memberSegmentIndices": [6, 12, 14],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🫶" },
+			"reading": {
+				"emojiDescription": "🫶",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "auf",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Rücksicht nehmen is a Funktionsverbgefüge: nehmen only supports the noun Rücksicht, so the whole is a Locution VERB with Collocation as its Reading's Locution Type. Rücksicht governs auf with the accusative inside the expression, so auf is a member but stays out of the Surface (ADR 0034). The adverb stets and the object ihre Kollegen are free."
 			},

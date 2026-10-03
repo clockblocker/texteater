@@ -31,13 +31,85 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: die Flinte ins Korn werfen",
+				"url": "https://www.dwds.de/wb/die%20Flinte%20ins%20Korn%20werfen",
+				"supports": "Target 0 Knowledge: ⟨jmd. wirft die Flinte ins Korn⟩ aufgeben, resignieren; Synonym zu die Flinte ins Korn schmeißen"
+			},
+			{
+				"title": "OpenThesaurus: die Flinte ins Korn werfen",
+				"url": "https://www.openthesaurus.de/synonyme/die%20Flinte%20ins%20Korn%20werfen",
+				"supports": "Target 0 Knowledge: synset aufgeben · resignieren · kapitulieren · (die) Flinte ins Korn werfen; Gegenteil markers sit on kapitulieren, resignieren, Rückzieher only"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 12, 14, 18, 19, 21],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "😞🏳" },
+			"reading": {
+				"emojiDescription": "😞🏳",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "die Flinte ins Korn schmeißen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "aufgeben",
+								"coreFeatures": {
+									"hasSepPrefix": "auf",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "resignieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

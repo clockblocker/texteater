@@ -28,13 +28,56 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: die Zunge im Zaum halten",
+				"url": "https://www.dwds.de/wb/die%20Zunge%20im%20Zaum%20halten",
+				"supports": "Target 0 Knowledge: ⟨jmd. hält seine Zunge im Zaum⟩ beherrscht reden, notfalls schweigen; only siehe auch seine Zunge hüten (no relation)"
+			},
+			{
+				"title": "Duden: Zaum",
+				"url": "https://www.duden.de/rechtschreibung/Zaum",
+				"supports": "Target 0 Knowledge: jemanden, sich, etwas im Zaum halten (zügeln, unter Kontrolle halten): figurative, Idiom"
+			},
+			{
+				"title": "OpenThesaurus: die Zunge im Zaum halten",
+				"url": "https://www.openthesaurus.de/synonyme/die%20Zunge%20im%20Zaum%20halten",
+				"supports": "Target 0 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [7, 9, 11, 12, 14, 18],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🤐" },
+			"reading": {
+				"emojiDescription": "🤐",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

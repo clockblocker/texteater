@@ -32,15 +32,58 @@
 			},
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Anerkennung",
+				"url": "https://www.duden.de/rechtschreibung/Anerkennung",
+				"supports": "Target 0 Knowledge: keine Anerkennung finden; finden among Anerkennung's typical verbs"
+			},
+			{
+				"title": "DWDS: Anerkennung",
+				"url": "https://www.dwds.de/wb/Anerkennung",
+				"supports": "Target 0 Knowledge: sense 2 lobende Würdigung: Anerkennung finden, verdienen, ernten"
+			},
+			{
+				"title": "OpenThesaurus: Anerkennung finden",
+				"url": "https://www.openthesaurus.de/synonyme/Anerkennung%20finden",
+				"supports": "Target 0 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "👏" },
+			"reading": {
+				"emojiDescription": "👏",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Anerkennung finden is a Collocation: finden only supports the noun Anerkennung (de/funktionsverbgefuege-are-collocations). hat is its perfect auxiliary and joins it, so the Surface describes the whole perfect, finite present with perfect Yes (de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole). Anerkenung is a Typo of Anerkennung: the member keeps its letters, and the Surface spells the noun right (de/member-orthography)."
+				"rationale": "Anerkennung finden is a Collocation: finden only supports the noun Anerkennung (de/funktionsverbgefuege-are-collocations). hat is its perfect auxiliary and joins it, so the Surface describes the whole perfect, finite present with perfect Yes (de/auxiliary-joins-the-verb-it-serves, de/verbal-surface-is-whole). Anerkenung is a Typo of Anerkennung: the member keeps its letters, and the Surface spells the noun right (de/member-orthography). Knowledge (#887, dev draft): No dictionary names the subject; people and things both find Anerkennung, so the Nom referent is Either."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

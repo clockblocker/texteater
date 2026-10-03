@@ -32,13 +32,102 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: den Kopf in den Sand stecken",
+				"url": "https://www.dwds.de/wb/den%20Kopf%20in%20den%20Sand%20stecken",
+				"supports": "Target 0 Knowledge: ⟨jmd. steckt den Kopf in den Sand⟩ der Realität ausweichen; no Synonym/Gegensatz line"
+			},
+			{
+				"title": "Duden: Kopf",
+				"url": "https://www.duden.de/rechtschreibung/Kopf",
+				"supports": "Target 0 Knowledge: den Kopf in den Sand stecken (eine Gefahr nicht sehen wollen; der Realität ausweichen): Idiom"
+			},
+			{
+				"title": "OpenThesaurus: den Kopf in den Sand stecken",
+				"url": "https://www.openthesaurus.de/synonyme/den%20Kopf%20in%20den%20Sand%20stecken",
+				"supports": "Target 0 Knowledge: synset die Augen verschließen (vor) · ignorieren · wegsehen · (den) Kopf in den Sand stecken; Gegenteil on (den) Kopf in den Sand stecken: (den) Tatsachen ins Auge sehen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 10, 12, 16, 18, 20, 22],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🙈" },
+			"reading": {
+				"emojiDescription": "🙈",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "die Augen verschließen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "wegsehen",
+								"coreFeatures": {
+									"hasSepPrefix": "weg",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "ignorieren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "den Tatsachen ins Auge sehen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

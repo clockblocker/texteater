@@ -20,13 +20,104 @@
 	"sources": {
 		"adrs": ["ADR-0034"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: wissen, Generelle Anmerkungen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/401234",
+				"supports": "Target 0 Knowledge: Fügung über jemanden/etwas Bescheid wissen : über jemanden/etwas informiert sein"
+			},
+			{
+				"title": "DWDS: Bescheid wissen",
+				"url": "https://www.dwds.de/wb/Bescheid%20wissen",
+				"supports": "Target 0 Knowledge: ⟨jmd. weiß (über etw.) Bescheid⟩ informiert sein: über optional; Synonym zu im Bilde sein"
+			},
+			{
+				"title": "Duden: Bescheid",
+				"url": "https://www.duden.de/rechtschreibung/Bescheid",
+				"supports": "Target 0 Knowledge: Bescheid wissen (1. Kenntnis haben, unterrichtet sein; 2. sich auskennen)"
+			},
+			{
+				"title": "OpenThesaurus: Bescheid wissen",
+				"url": "https://www.openthesaurus.de/synonyme/Bescheid%20wissen",
+				"supports": "Target 0 Knowledge: synset informiert (sein) · (sich) auskennen · Bescheid wissen · (bereits) im Bilde (sein); no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🧠ℹ" },
+			"reading": {
+				"emojiDescription": "🧠ℹ",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "über",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "im Bilde sein",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich auskennen",
+								"coreFeatures": {
+									"hasSepPrefix": "aus",
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation that is not one of its fixed members (ADR 0034). The Surface projects only the Fixed members: weiß Bescheid."
 			},

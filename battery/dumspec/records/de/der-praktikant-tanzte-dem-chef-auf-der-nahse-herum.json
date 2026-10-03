@@ -26,13 +26,78 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: jmdm. auf der Nase herumtanzen",
+				"url": "https://www.dwds.de/wb/jmdm.%20auf%20der%20Nase%20herumtanzen",
+				"supports": "Target 0 Knowledge: ⟨jmd. tanzt jmdm. auf der Nase herum⟩; Synonym zu jmdm. auf dem Kopf herumtanzen"
+			},
+			{
+				"title": "Duden: Nase",
+				"url": "https://www.duden.de/rechtschreibung/Nase",
+				"supports": "Target 0 Knowledge: jemandem auf der Nase herumtanzen (→ Kopf): dative person"
+			},
+			{
+				"title": "OpenThesaurus: auf der Nase herumtanzen",
+				"url": "https://www.openthesaurus.de/synonyme/auf%20der%20Nase%20herumtanzen",
+				"supports": "Target 0 Knowledge: synset with (jemandem) auf dem Kopf herumtanzen; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 10, 12, 14, 16],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "😜🙉" },
+			"reading": {
+				"emojiDescription": "😜🙉",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "auf dem Kopf herumtanzen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "dem Chef is free argument. Do not add jemandem to canonicalForm."
 			},

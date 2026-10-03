@@ -37,13 +37,56 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Teufel",
+				"url": "https://www.duden.de/rechtschreibung/Teufel",
+				"supports": "Target 0 Knowledge: den Teufel an die Wand malen (ein Unglück dadurch heraufbeschwören, dass man darüber spricht): this Reading's sense"
+			},
+			{
+				"title": "DWDS: den Teufel an die Wand malen",
+				"url": "https://www.dwds.de/wb/den%20Teufel%20an%20die%20Wand%20malen",
+				"supports": "Target 0 Knowledge: ⟨jmd. malt den Teufel an die Wand⟩ schlimmste Befürchtungen haben, pessimistisch darstellen; only siehe auch"
+			},
+			{
+				"title": "OpenThesaurus: den Teufel an die Wand malen",
+				"url": "https://www.openthesaurus.de/synonyme/den%20Teufel%20an%20die%20Wand%20malen",
+				"supports": "Target 0 Knowledge: synset das Schlimmste befürchten · schwarzsehen (the pessimism sense, not the conjuring-by-talk sense); no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [13, 19, 21, 23, 25, 27],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🗣😈" },
+			"reading": {
+				"emojiDescription": "🗣😈",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -48,13 +48,51 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Wolke",
+				"url": "https://www.duden.de/rechtschreibung/Wolke",
+				"supports": "Target 0 Knowledge: auf Wolke sieben schweben (überglücklich, in Hochstimmung sein): figurative, Idiom"
+			},
+			{
+				"title": "OpenThesaurus: auf Wolke sieben schweben",
+				"url": "https://www.openthesaurus.de/synonyme/auf%20Wolke%20sieben%20schweben",
+				"supports": "Target 0 Knowledge: no synset; the only OT listing (auf Wolke sieben) sits in the 'verliebt' synset, another sense; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [28, 34, 36, 38],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🥰☁" },
+			"reading": {
+				"emojiDescription": "🥰☁",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
