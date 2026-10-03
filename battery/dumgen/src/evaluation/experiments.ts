@@ -10,6 +10,9 @@
  *   groups the Segments (`segment-in-units-raw.ts`).
  * - `split-text/de:ud-drafts`, text mode: `splitText` cuts the ud-drafts
  *   Texts into Sentences (`split-text.ts`).
+ * - `resolve-grammar/de:<set>` and `resolve-grammar/de:dev:e2e`: a click's
+ *   grammar against dumspec's Attestation gold (#873,
+ *   `resolve-grammar/experiment.ts`), with its own frozen sets and cache.
  *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the
@@ -36,8 +39,10 @@ import {
 import { saveRun } from "promptsmith/storage";
 import type { JsonValue, TypeSafeExecutor } from "promptsmith/typesafe";
 import type { z } from "zod";
+import type { LunaAsk } from "../luna.js";
 import { segmentGermanSentence } from "../segment/de/segments.js";
 import { segmentGermanUnits } from "../segment/de/units.js";
+import type { JevAsk } from "../segment/jev.js";
 import { splitText } from "../segment/split-text.js";
 import { askOf } from "../segment-in-units/de/arm.js";
 import { referenceArm } from "../segment-in-units/de/arms/reference.js";
@@ -60,6 +65,11 @@ import {
 	standInAnswers,
 } from "../segment-in-units/lab/round.js";
 import type { LabRun } from "../segment-in-units/lab/run.js";
+import {
+	type GrammarEvaluated,
+	type GrammarPrice,
+	grammarExperiment,
+} from "./resolve-grammar/experiment.js";
 import {
 	evaluateRawSegmentInUnits,
 	type RawOutput,
@@ -157,6 +167,15 @@ export type EvaluateArgs = {
 	readonly settings?: Readonly<Record<string, JsonValue>>;
 	/** Text mode's splitter; production's `splitText` by default. */
 	readonly split?: Splitter;
+	/** A live resolve.grammar run's transports, asked on a cache miss. */
+	readonly jev?: JevAsk;
+	readonly luna?: LunaAsk;
+	/** Receives a live resolve.grammar run's price before anything is asked; throw to refuse. */
+	readonly beforeGrammarLive?: (price: GrammarPrice) => void | Promise<void>;
+	/** resolve.grammar: only the first this many cases, for a smoke run. */
+	readonly limit?: number;
+	/** resolve.grammar's frozen sets and cache. */
+	readonly grammarRoot?: string;
 };
 
 type Evaluated = {
@@ -165,7 +184,11 @@ type Evaluated = {
 	readonly projection?: PricedProjection;
 	/** The jev calls of the run, the cache fill included; none for text mode. */
 	readonly spend?: Spend;
-	readonly set?: { readonly name: SetName; readonly hash: string };
+	readonly set?: { readonly name: string; readonly hash: string };
+	/** resolve.grammar's projected spend. */
+	readonly price?: GrammarPrice;
+	/** resolve.grammar's spend, jev and Luna. */
+	readonly grammarSpend?: GrammarEvaluated["spend"];
 };
 
 type Experiment = {
@@ -535,12 +558,53 @@ const splitTextExperiment: Experiment = {
 	},
 };
 
+/** A resolve.grammar entry, its arguments taken from the table's. */
+function resolveGrammarEntry(set: "dev" | "heldout", e2e: boolean): Experiment {
+	const experiment = grammarExperiment(set, e2e);
+	return {
+		id: experiment.id,
+		caseCount: experiment.caseCount,
+		metrics: experiment.metrics,
+		async evaluate(args) {
+			const evaluated = await experiment.evaluate({
+				experimentId: args.experimentId,
+				sourceRevision: args.sourceRevision,
+				...(args.jev ? { jev: args.jev } : {}),
+				...(args.luna ? { luna: args.luna } : {}),
+				...(args.offline ? { offline: true } : {}),
+				...(args.estimate ? { estimate: true } : {}),
+				...(args.beforeGrammarLive
+					? { beforeLive: args.beforeGrammarLive }
+					: {}),
+				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
+				...(args.outputDirectory
+					? { outputDirectory: args.outputDirectory }
+					: {}),
+				...(args.signal ? { signal: args.signal } : {}),
+				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+				...(args.grammarRoot ? { root: args.grammarRoot } : {}),
+				...(args.labRoot ? { segmentLabRoot: args.labRoot } : {}),
+				...(args.limit ? { limit: args.limit } : {}),
+			});
+			return {
+				...(evaluated.run ? { run: evaluated.run } : {}),
+				...(evaluated.price ? { price: evaluated.price } : {}),
+				...(evaluated.spend ? { grammarSpend: evaluated.spend } : {}),
+				...(evaluated.set ? { set: evaluated.set } : {}),
+			};
+		},
+	};
+}
+
 const experiments: readonly Experiment[] = [
 	...setNames.flatMap((set) => [
 		segmentInUnitsExperiment(goldMode, set),
 		segmentInUnitsExperiment(rawMode, set),
 	]),
 	splitTextExperiment,
+	resolveGrammarEntry("dev", false),
+	resolveGrammarEntry("heldout", false),
+	resolveGrammarEntry("dev", true),
 ];
 
 function experimentOf(id: string): Experiment {

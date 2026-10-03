@@ -130,13 +130,16 @@ async function labRootWithSet(name: string) {
 	return labRoot;
 }
 
-test("the table lists gold and raw mode per frozen set, and text mode", () => {
+test("the table lists gold and raw mode per frozen set, text mode, and resolve.grammar's sets", () => {
 	expect(listExperiments().map(({ id }) => id)).toEqual([
 		"segment-in-units/de:dev",
 		"segment-in-units/de:dev:raw",
 		"segment-in-units/de:heldout",
 		"segment-in-units/de:heldout:raw",
 		"split-text/de:ud-drafts",
+		"resolve-grammar/de:dev",
+		"resolve-grammar/de:heldout",
+		"resolve-grammar/de:dev:e2e",
 	]);
 });
 

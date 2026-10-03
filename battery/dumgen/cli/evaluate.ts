@@ -8,12 +8,20 @@
  *   bun run evaluate --experiment segment-in-units/de:heldout:raw --revision <rev>
  *   bun run evaluate --experiment segment-in-units/de:dev:raw --estimate
  *   bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
+ *   bun run evaluate --experiment resolve-grammar/de:dev --estimate
+ *   bun run evaluate --experiment resolve-grammar/de:dev --revision <rev>
+ *       --budget <jev input tokens> --luna-budget <Luna tokens> [--limit N]
  *   bun run evaluate --open <runId>
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
  * line to the lab ledger, refuses to go live when dumspec's prompt inputs
  * moved since the round was pinned (unless `--repin`) or when its projected
  * spend would cross the stop line, and stops at the line.
+ *
+ * A resolve.grammar run prices itself first and goes live only under the
+ * budgets the main session granted the round: `--budget` for fresh jev
+ * input tokens and `--luna-budget` for Luna's input and output tokens. Its
+ * answers are cached, so `--offline` re-scores it for free.
  */
 import { execFileSync } from "node:child_process";
 import { join, resolve } from "node:path";
@@ -35,7 +43,10 @@ import {
 	type UnitConfig,
 	unitConfigs,
 } from "../src/evaluation/experiments.js";
+import type { GrammarPrice } from "../src/evaluation/resolve-grammar/experiment.js";
 import type { Splitter } from "../src/evaluation/split-text.js";
+import { createOpenAILuna } from "../src/openai-luna.js";
+import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
 import {
 	appendLedger,
 	readLedger,
@@ -83,6 +94,9 @@ export async function runEvaluationCli(
 			reason: { type: "string" },
 			"token-budget": { type: "string" },
 			concurrency: { type: "string" },
+			budget: { type: "string" },
+			"luna-budget": { type: "string" },
+			limit: { type: "string" },
 		},
 	});
 	const write =
@@ -138,6 +152,13 @@ export async function runEvaluationCli(
 				.jevFreshInputTokens
 		: 0;
 	let spentNow = 0;
+	const grammar = values.experiment.startsWith("resolve-grammar/");
+	const grammarLive = grammar && live;
+	const environment = (name: string) => {
+		const value = process.env[name];
+		if (!value) throw Error(`${name} is not set`);
+		return value;
+	};
 	const controller = new AbortController();
 	const interrupt = () => controller.abort();
 	process.once("SIGINT", interrupt);
@@ -162,6 +183,25 @@ export async function runEvaluationCli(
 				? { concurrency: Number(values.concurrency) }
 				: {}),
 			...(dependencies.split ? { split: dependencies.split } : {}),
+			...(values.limit ? { limit: Number(values.limit) } : {}),
+			...(grammarLive
+				? {
+						jev: createTypeSafeAsk({
+							apiKey: environment("TYPESAFE_API_KEY"),
+						}),
+						luna: createOpenAILuna({
+							apiKey: environment("OPENAI_API_KEY"),
+						}),
+						beforeGrammarLive(price: GrammarPrice) {
+							warn(JSON.stringify({ price }));
+							guardGrammarBudget(
+								price,
+								values.budget,
+								values["luna-budget"],
+							);
+						},
+					}
+				: {}),
 			...(account
 				? {
 						settings: {
@@ -190,6 +230,15 @@ export async function runEvaluationCli(
 					}
 				: {}),
 		});
+		if (values.estimate && grammar) {
+			const estimate = {
+				experiment: values.experiment,
+				set: evaluated.set,
+				price: evaluated.price,
+			};
+			write(estimate);
+			return estimate;
+		}
 		if (values.estimate) {
 			const projected = evaluated.projection
 				? projectedSpend(evaluated.projection)
@@ -254,6 +303,9 @@ export async function runEvaluationCli(
 			summary: run.summary,
 			metrics: evaluationMetrics(run),
 			...(evaluated.spend ? { spend: evaluated.spend } : {}),
+			...(evaluated.grammarSpend
+				? { spend: evaluated.grammarSpend }
+				: {}),
 			...(parity ? { parity } : {}),
 		});
 		if (
@@ -267,6 +319,34 @@ export async function runEvaluationCli(
 	} finally {
 		process.removeListener("SIGINT", interrupt);
 	}
+}
+
+/**
+ * Refuses a live resolve.grammar run that has no granted budget or whose
+ * price exceeds it: fresh jev input tokens against `--budget`, Luna's
+ * input and output tokens against `--luna-budget`.
+ */
+export function guardGrammarBudget(
+	price: GrammarPrice,
+	jevBudget: string | undefined,
+	lunaBudget: string | undefined,
+): void {
+	const jev = Number(jevBudget);
+	const luna = Number(lunaBudget);
+	if (
+		!jevBudget ||
+		!lunaBudget ||
+		!Number.isFinite(jev) ||
+		!Number.isFinite(luna)
+	)
+		throw Error(
+			"A live resolve.grammar run needs --budget (jev input tokens) and --luna-budget (Luna tokens); price it with --estimate first. Nothing was asked.",
+		);
+	const lunaTokens = price.luna.inputTokens + price.luna.outputTokens;
+	if (price.jev.inputTokens > jev || lunaTokens > luna)
+		throw Error(
+			`This run projects ${price.jev.inputTokens} jev input tokens and ${lunaTokens} Luna tokens, past the budgets of ${jev} and ${luna}. Nothing was asked.`,
+		);
 }
 
 /**
