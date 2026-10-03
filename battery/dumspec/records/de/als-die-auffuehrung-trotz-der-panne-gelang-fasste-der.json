@@ -105,6 +105,9 @@
 					{ "attested": "gut", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Judges split (#887 dev round): Proverb, DWDS's label, is kept; the system judge read DWDS's origin note as a Winged Word, Shakespeare, All's Well That Ends Well."
 			}
 		}
 	],

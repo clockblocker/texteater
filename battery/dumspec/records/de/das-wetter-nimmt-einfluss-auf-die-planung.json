@@ -63,7 +63,7 @@
 								{
 									"kind": "Case",
 									"governedCase": "Nom",
-									"referent": "Someone"
+									"referent": "Either"
 								}
 							]
 						},

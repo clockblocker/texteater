@@ -67,7 +67,7 @@
 			"reading": {
 				"emojiDescription": "▶",
 				"knowledge": {
-					"formulaRole": "Initiation",
+					"formulaRole": "Transition",
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -95,7 +95,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Duden glosses nun denn! as 'also, dann wollen wir beginnen!', so it takes the ▶ of beginnen."
+				"rationale": "Duden glosses nun denn! as 'also, dann wollen wir beginnen!', so it takes the ▶ of beginnen. Knowledge (#887, dev draft): Judges split (#887 dev round): Transition, as Duden's gloss 'also, dann wollen wir beginnen!' and the judges' agreed call on dann wollen wir mal give (learner); the system judge kept Initiation only to match dann wollen wir mal."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

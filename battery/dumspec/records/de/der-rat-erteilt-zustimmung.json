@@ -63,7 +63,7 @@
 							]
 						},
 						{
-							"status": "Required",
+							"status": "Optional",
 							"complements": [
 								{
 									"kind": "Case",
@@ -140,6 +140,9 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Judges split (#887 dev round): the Dat Slot is Optional, since Duden's erteilen examples show it both present and absent and this sentence has none (system); the learner kept it Required."
 			}
 		}
 	],

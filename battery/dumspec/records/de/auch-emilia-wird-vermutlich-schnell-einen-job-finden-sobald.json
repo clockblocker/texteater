@@ -151,7 +151,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "First wird member. Last wird other verb. einen Job finden is Duden finden 1c 'erlangen', one Reading with finding something in a state (2) under ADR 0031. Knowledge (#887, dev draft): Frame of the 🔍 head sense (E-VALBU Lesart 3, object Either from Duden 1a jemanden, etwas); the optional place drops."
+				"rationale": "First wird member. Last wird other verb. einen Job finden is Duden finden 1c 'erlangen', one Reading with finding something in a state (2) under ADR 0031. Knowledge (#887, dev draft): Frame of the 🔍 head sense (E-VALBU Lesart 3, object Either from Duden 1a jemanden, etwas); the optional place drops. Judges split (#887 dev round): no Predicative Slot: the system judge would add an Optional Predicative of the object for 'find in a state'; the learner keeps the come-upon frame."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

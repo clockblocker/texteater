@@ -47,7 +47,6 @@
 			"reading": {
 				"emojiDescription": "🫡",
 				"knowledge": {
-					"formulaRole": "Acknowledgment",
 					"semanticRelations": {
 						"synonym": [
 							{
@@ -74,7 +73,7 @@
 					}
 				},
 				"coverage": {
-					"formulaRole": "Authored",
+					"formulaRole": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "Authored",
 						"nearSynonym": "Authored",
@@ -84,7 +83,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "jawohl is an emphatic yes answering the officer: a response particle, partType Res. jawohl 'drückt unbedingte Zustimmung aus' (DWDS), the emphatic yes given to an officer."
+				"rationale": "jawohl is an emphatic yes answering the officer: a response particle, partType Res. jawohl 'drückt unbedingte Zustimmung aus' (DWDS), the emphatic yes given to an officer. Knowledge (#887, dev draft): Judges split (#887 dev round): no Formula Role, jawohl read as an emphatic answer word (system); the learner gave it Acknowledgment."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

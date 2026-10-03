@@ -56,14 +56,6 @@
 							{
 								"unitKind": "Lemma",
 								"language": "de",
-								"family": "Lexeme",
-								"kind": "CCONJ",
-								"canonicalForm": "oder",
-								"coreFeatures": {}
-							},
-							{
-								"unitKind": "Lemma",
-								"language": "de",
 								"family": "Locution",
 								"kind": "CCONJ",
 								"canonicalForm": "sei es … sei es",
@@ -103,6 +95,9 @@
 					{ "attested": "oder", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Both judges read oder as a near-synonym only (it lacks the exclusive emphasis), and a Locution CCONJ takes no nearSynonym, so oder is left out."
 			}
 		}
 	],

@@ -63,28 +63,6 @@
 					],
 					"locutionType": "Idiom",
 					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "ADJ",
-								"canonicalForm": "stichhaltig",
-								"coreFeatures": {
-									"comparable": null
-								}
-							},
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "ADJ",
-								"canonicalForm": "wohlüberlegt",
-								"coreFeatures": {
-									"comparable": null
-								}
-							}
-						],
 						"nearSynonym": [
 							{
 								"unitKind": "Lemma",
@@ -104,7 +82,7 @@
 					"valency": "Authored",
 					"locutionType": "Authored",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
@@ -149,6 +127,9 @@
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Judges split (#887 dev round): OpenThesaurus lists stichhaltig sein and wohlüberlegt (sein), copula phrases de/copula-stays-apart splits, so no ADJ synonym is claimed (system); the learner kept the ADJs."
 			}
 		}
 	],

@@ -92,7 +92,7 @@
 						"type": "Proverb"
 					},
 					"semanticRelations": {
-						"synonym": [
+						"nearSynonym": [
 							{
 								"unitKind": "Lemma",
 								"language": "de",
@@ -107,8 +107,8 @@
 				"coverage": {
 					"sayingType": "Authored",
 					"semanticRelations": {
-						"synonym": "Authored",
-						"nearSynonym": "ReviewedEmpty",
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
 					}

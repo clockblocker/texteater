@@ -381,6 +381,21 @@
 				"supports": "Target 1 Knowledge: no E-VALBU entry"
 			},
 			{
+				"title": "Duden: lassen",
+				"url": "https://www.duden.de/rechtschreibung/lassen",
+				"supports": "Target 17 Knowledge: starkes Verb, ließ; 1b 'zulassen, erlauben; dulden; nicht an etwas hindern' in Verbindung mit einem Infinitiv + Akkusativ (die Kinder spielen lassen)"
+			},
+			{
+				"title": "E-VALBU: lassen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400729",
+				"supports": "Target 17 Knowledge: no Lesart for lassen + infinitive"
+			},
+			{
+				"title": "OpenThesaurus: lassen",
+				"url": "https://www.openthesaurus.de/synonyme/lassen",
+				"supports": "Target 17 Knowledge: synset 9032: erlauben · gestatten · lassen · zulassen"
+			},
+			{
 				"title": "E-VALBU: hängen I, Lesart 1",
 				"url": "https://grammis.ids-mannheim.de/verbs/view/400552/1",
 				"supports": "Target 16 Knowledge: Satzbauplan K sub, K adv (Ort statisch, obligatory): jemand/etwas hängt irgendwo"
@@ -404,21 +419,6 @@
 				"title": "OpenThesaurus: hängen",
 				"url": "https://www.openthesaurus.de/synonyme/h%C3%A4ngen",
 				"supports": "Target 16 Knowledge: synset 10089: hängen · herunterhängen · baumeln"
-			},
-			{
-				"title": "Duden: lassen",
-				"url": "https://www.duden.de/rechtschreibung/lassen",
-				"supports": "Target 17 Knowledge: starkes Verb, ließ; 1b 'zulassen, erlauben; dulden; nicht an etwas hindern' in Verbindung mit einem Infinitiv + Akkusativ (die Kinder spielen lassen)"
-			},
-			{
-				"title": "E-VALBU: lassen",
-				"url": "https://grammis.ids-mannheim.de/verbvalenz/400729",
-				"supports": "Target 17 Knowledge: no Lesart for lassen + infinitive"
-			},
-			{
-				"title": "OpenThesaurus: lassen",
-				"url": "https://www.openthesaurus.de/synonyme/lassen",
-				"supports": "Target 17 Knowledge: synset 9032: erlauben · gestatten · lassen · zulassen"
 			}
 		]
 	},
@@ -1381,7 +1381,7 @@
 							]
 						},
 						{
-							"status": "Required",
+							"status": "Optional",
 							"complements": [
 								{
 									"kind": "Adverbial",
@@ -1430,7 +1430,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "hängen is the infinitive under permissive lassen. The accusative die, the hands, does the hanging, so the clause names a doer and lassen is no causative: hängen is a VERB target of its own (de/causative-lassen). Here the hands literally hang; Duden's hängen lassen covers only figurative senses, so no Locution. Hands hanging limply (die sie entfremdet hängen ließ) are Duden hängen (hing) 'vom Eigengewicht nach unten gezogen werden, schlaff nach unten fallen', merged with hanging from a fixed point as one concept under ADR 0031."
+				"rationale": "hängen is the infinitive under permissive lassen. The accusative die, the hands, does the hanging, so the clause names a doer and lassen is no causative: hängen is a VERB target of its own (de/causative-lassen). Here the hands literally hang; Duden's hängen lassen covers only figurative senses, so no Locution. Hands hanging limply (die sie entfremdet hängen ließ) are Duden hängen (hing) 'vom Eigengewicht nach unten gezogen werden, schlaff nach unten fallen', merged with hanging from a fixed point as one concept under ADR 0031. Knowledge (#887, dev draft): Judges split (#887 dev round): the Irgendwo Slot is Optional, since the merged Reading covers limp hanging (E-VALBU Lesart 11), as this sentence attests (system); the learner kept Lesart 1's Required place."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

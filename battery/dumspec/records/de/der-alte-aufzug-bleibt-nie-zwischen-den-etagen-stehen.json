@@ -69,36 +69,21 @@
 							]
 						}
 					],
-					"locutionType": "Idiom",
-					"semanticRelations": {
-						"nearSynonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "VERB",
-								"canonicalForm": "anhalten",
-								"coreFeatures": {
-									"hasSepPrefix": "an",
-									"lexicallyReflexive": null
-								}
-							}
-						]
-					}
+					"locutionType": "Idiom"
 				},
 				"coverage": {
 					"valency": "Authored",
 					"locutionType": "Authored",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
-						"nearSynonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
 					}
 				}
 			},
 			"notes": {
-				"rationale": "stehen bleiben in Duden's sense 2, nicht weiterlaufen, nicht weiter in Funktion sein (der Motor ist stehen geblieben): the lift never gets stuck between floors. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive). This is Duden's stehen bleiben sense 2, 'nicht weiterlaufen, nicht weiter in Funktion sein' (der Motor ist stehen geblieben), a Reading apart from sense 4, 'unverändert belassen werden' 📝🟰."
+				"rationale": "stehen bleiben in Duden's sense 2, nicht weiterlaufen, nicht weiter in Funktion sein (der Motor ist stehen geblieben): the lift never gets stuck between floors. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive). This is Duden's stehen bleiben sense 2, 'nicht weiterlaufen, nicht weiter in Funktion sein' (der Motor ist stehen geblieben), a Reading apart from sense 4, 'unverändert belassen werden' 📝🟰. Knowledge (#887, dev draft): Judges split (#887 dev round): anhalten (OT, halting motion) is left out for this ceasing-to-run Reading (system); the learner kept it near."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

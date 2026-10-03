@@ -95,6 +95,11 @@
 				"title": "OpenThesaurus: ankommen",
 				"url": "https://www.openthesaurus.de/synonyme/ankommen",
 				"supports": "Target 1 Knowledge: no synset for es kommt auf etw. an; no relation listed (Duden, DWDS, OT)"
+			},
+			{
+				"title": "E-VALBU: ankommen, es, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz/400099",
+				"supports": "Target 1 Knowledge: es kommt jemandem auf etwas an ('jemandem besonders wichtig sein'): (Kdat / für + Acc), auf + Acc / dass-S / Inf-S mit zu with obl. Korrelat darauf; the 🔑 'what matters' sense (two judges)"
 			}
 		]
 	},
@@ -154,6 +159,29 @@
 					"conjugationClass": ["Strong"],
 					"valency": [
 						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								},
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "für",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
 							"status": "Required",
 							"complements": [
 								{
@@ -171,12 +199,12 @@
 								},
 								{
 									"kind": "Clause",
-									"form": "Ob",
+									"form": "Dass",
 									"correlate": "Required"
 								},
 								{
 									"kind": "Clause",
-									"form": "W",
+									"form": "ZuInfinitive",
 									"correlate": "Required"
 								}
 							]

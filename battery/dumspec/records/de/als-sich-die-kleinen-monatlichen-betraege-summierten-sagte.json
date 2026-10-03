@@ -69,16 +69,6 @@
 						"type": "Proverb"
 					},
 					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Saying",
-								"kind": "Saying",
-								"canonicalForm": "Kleinvieh gibt auch Mist",
-								"coreFeatures": {}
-							}
-						],
 						"nearSynonym": [
 							{
 								"unitKind": "Lemma",
@@ -94,7 +84,7 @@
 				"coverage": {
 					"sayingType": "Authored",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
@@ -125,6 +115,9 @@
 					{ "attested": "Mist", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Judges split (#887 dev round): Kleinvieh gibt auch Mist (DWDS Synonym zu) is left out as a wording of this Saying (system) rather than a Lemma of its own (learner)."
 			}
 		}
 	],

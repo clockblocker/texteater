@@ -82,16 +82,6 @@
 					],
 					"locutionType": "Collocation",
 					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Locution",
-								"kind": "VERB",
-								"canonicalForm": "im Bilde sein",
-								"coreFeatures": {}
-							}
-						],
 						"nearSynonym": [
 							{
 								"unitKind": "Lemma",
@@ -111,7 +101,7 @@
 					"valency": "Authored",
 					"locutionType": "Authored",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
@@ -119,7 +109,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation that is not one of its fixed members (ADR 0034). The Surface projects only the Fixed members: weiß Bescheid."
+				"rationale": "Bescheid governs über only inside Bescheid wissen, so über is a governed member of the Collocation that is not one of its fixed members (ADR 0034). The Surface projects only the Fixed members: weiß Bescheid. Knowledge (#887, dev draft): Judges split (#887 dev round): im Bilde sein (DWDS, OT) is left out: de/copula-stays-apart splits off sein and no Rule sets the Kind of im Bilde (system); the learner would point it at a Locution ADJ im Bilde."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

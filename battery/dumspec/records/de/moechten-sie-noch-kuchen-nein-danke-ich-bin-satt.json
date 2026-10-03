@@ -70,18 +70,6 @@
 				"emojiDescription": "❌",
 				"knowledge": {
 					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "INTJ",
-								"canonicalForm": "nee",
-								"coreFeatures": {
-									"partType": null
-								}
-							}
-						],
 						"nearSynonym": [
 							{
 								"unitKind": "Lemma",
@@ -111,7 +99,7 @@
 				"coverage": {
 					"formulaRole": "ReviewedEmpty",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
 						"antonym": "Authored",
 						"nearAntonym": "ReviewedEmpty"
@@ -119,7 +107,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "No punctuation stands between Nein and danke, but an answer before a formula keeps its own target: nein is the response particle, partType Res, and danke the thanks formula, each an INTJ target of its own."
+				"rationale": "No punctuation stands between Nein and danke, but an answer before a formula keeps its own target: nein is the response particle, partType Res, and danke the thanks formula, each an INTJ target of its own. Knowledge (#887, dev draft): Judges split (#887 dev round): nee is left out, read as a colloquial form of nein (system); the learner kept it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

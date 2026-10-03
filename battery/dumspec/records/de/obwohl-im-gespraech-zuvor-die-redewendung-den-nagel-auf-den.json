@@ -100,24 +100,12 @@
 				"knowledge": {
 					"sayingType": {
 						"type": "Proverb"
-					},
-					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Saying",
-								"kind": "Saying",
-								"canonicalForm": "Wie man sich bettet, so schläft man",
-								"coreFeatures": {}
-							}
-						]
 					}
 				},
 				"coverage": {
 					"sayingType": "Authored",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
@@ -125,7 +113,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Wie man sich bettet, so liegt man is a Proverb, one Saying target over all its words (de/saying-needs-uptake). The idiom mentioned before it, den Nagel auf den Kopf treffen, is a unit of its own."
+				"rationale": "Wie man sich bettet, so liegt man is a Proverb, one Saying target over all its words (de/saying-needs-uptake). The idiom mentioned before it, den Nagel auf den Kopf treffen, is a unit of its own. Knowledge (#887, dev draft): Judges split (#887 dev round): Wie man sich bettet, so schläft man (DWDS Synonym zu) is left out as a wording of this Saying (system) rather than a Lemma of its own (learner)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

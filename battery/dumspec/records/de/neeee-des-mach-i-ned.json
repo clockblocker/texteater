@@ -45,18 +45,6 @@
 				"emojiDescription": "❌",
 				"knowledge": {
 					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "INTJ",
-								"canonicalForm": "nein",
-								"coreFeatures": {
-									"partType": null
-								}
-							}
-						],
 						"nearSynonym": [
 							{
 								"unitKind": "Lemma",
@@ -74,7 +62,7 @@
 				"coverage": {
 					"formulaRole": "ReviewedEmpty",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
@@ -82,7 +70,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "neeee stretches the letters of nee, Duden's own headword (landschaftlich, umgangssprachlich für nein), for effect, so it is a Variant of nee tagged Expressive. nee itself is the regional word, so the spelling adds no Regional tag. Duden glosses nee as nein, so it takes the ❌ of nein."
+				"rationale": "neeee stretches the letters of nee, Duden's own headword (landschaftlich, umgangssprachlich für nein), for effect, so it is a Variant of nee tagged Expressive. nee itself is the regional word, so the spelling adds no Regional tag. Duden glosses nee as nein, so it takes the ❌ of nein. Knowledge (#887, dev draft): Judges split (#887 dev round): nein (DWDS Synonym zu, Duden Synonyme) is left out, nee read as a colloquial form of the same word (system); the learner kept it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

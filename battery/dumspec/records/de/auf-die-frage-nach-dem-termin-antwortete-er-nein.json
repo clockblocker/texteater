@@ -52,18 +52,6 @@
 				"emojiDescription": "❌",
 				"knowledge": {
 					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "INTJ",
-								"canonicalForm": "nee",
-								"coreFeatures": {
-									"partType": null
-								}
-							}
-						],
 						"nearSynonym": [
 							{
 								"unitKind": "Lemma",
@@ -93,7 +81,7 @@
 				"coverage": {
 					"formulaRole": "ReviewedEmpty",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "Authored",
 						"antonym": "Authored",
 						"nearAntonym": "ReviewedEmpty"
@@ -119,6 +107,9 @@
 				},
 				"members": [{ "attested": "nein", "orthography": "Standard" }],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Judges split (#887 dev round): nee is left out, read as a colloquial form of nein (system); the learner kept it."
 			}
 		}
 	],

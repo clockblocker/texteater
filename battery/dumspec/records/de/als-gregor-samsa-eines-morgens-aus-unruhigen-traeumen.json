@@ -226,21 +226,6 @@
 				"supports": "The sentence, quoted from Project Gutenberg eBook #22367 (released 2007-08-21), transcribed from Kurt Wolff Verlag, Leipzig 1917 (Der jüngste Tag 22/23). Chapter I, paragraph 1."
 			},
 			{
-				"title": "Duden: verwandeln",
-				"url": "https://www.duden.de/rechtschreibung/verwandeln",
-				"supports": "Target 15 Knowledge: sense 1b 'zu jemand, etwas anderem werden lassen': ein Zauber hatte den Prinzen in einen Frosch verwandelt; no E-VALBU entry"
-			},
-			{
-				"title": "DWDS: verwandeln",
-				"url": "https://www.dwds.de/wb/verwandeln",
-				"supports": "Target 15 Knowledge: 1. ⟨etw., jmd. verwandelt etw., jmdn. (zu, in etw., jmdn.)⟩ zu einer anderen Sache, Person werden lassen"
-			},
-			{
-				"title": "OpenThesaurus: verwandelt",
-				"url": "https://www.openthesaurus.de/synonyme/verwandelt",
-				"supports": "Target 15 Knowledge: no synset; no relation listed (Duden has no verwandelt entry)"
-			},
-			{
 				"title": "Duden: Traum",
 				"url": "https://www.duden.de/rechtschreibung/Traum",
 				"supports": "Target 5 Knowledge: Plural die Träume; Synonyme Fantasievorstellung, Illusion … belong to the wish sense"
@@ -274,6 +259,21 @@
 				"title": "OpenThesaurus: finden",
 				"url": "https://www.openthesaurus.de/synonyme/finden",
 				"supports": "Target 7 Knowledge: synset 4433: antreffen · auffinden · (zufällig) begegnen · entdecken · finden · vorfinden"
+			},
+			{
+				"title": "Duden: verwandeln",
+				"url": "https://www.duden.de/rechtschreibung/verwandeln",
+				"supports": "Target 15 Knowledge: sense 1b 'zu jemand, etwas anderem werden lassen': ein Zauber hatte den Prinzen in einen Frosch verwandelt; no E-VALBU entry"
+			},
+			{
+				"title": "DWDS: verwandeln",
+				"url": "https://www.dwds.de/wb/verwandeln",
+				"supports": "Target 15 Knowledge: 1. ⟨etw., jmd. verwandelt etw., jmdn. (zu, in etw., jmdn.)⟩ zu einer anderen Sache, Person werden lassen"
+			},
+			{
+				"title": "OpenThesaurus: verwandelt",
+				"url": "https://www.openthesaurus.de/synonyme/verwandelt",
+				"supports": "Target 15 Knowledge: no synset; no relation listed (Duden has no verwandelt entry)"
 			}
 		]
 	},
@@ -756,7 +756,7 @@
 				"valencyEvidence": []
 			},
 			"notes": {
-				"rationale": "finden in the sense 'find in a state' (Duden finden 2: das Haus leer finden) with sich as its object and verwandelt as the object's predicative. sich finden is not lexicalized here: sie fand ihn verwandelt keeps the meaning, so sich stays outside (de/verb-owns-its-scattered-members). finden 'find in a certain state' (Duden finden 2: das Haus leer finden) shares one Reading with 'come upon, obtain' (1a, 1c) under ADR 0031. Knowledge (#887, dev draft): Frame of the 🔍 head sense (E-VALBU Lesart 3, object Either from Duden 1a jemanden, etwas); the optional place drops."
+				"rationale": "finden in the sense 'find in a state' (Duden finden 2: das Haus leer finden) with sich as its object and verwandelt as the object's predicative. sich finden is not lexicalized here: sie fand ihn verwandelt keeps the meaning, so sich stays outside (de/verb-owns-its-scattered-members). finden 'find in a certain state' (Duden finden 2: das Haus leer finden) shares one Reading with 'come upon, obtain' (1a, 1c) under ADR 0031. Knowledge (#887, dev draft): Frame of the 🔍 head sense (E-VALBU Lesart 3, object Either from Duden 1a jemanden, etwas); the optional place drops. Judges split (#887 dev round): no Predicative Slot: the system judge would add an Optional Predicative of the object for 'find in a state'; the learner keeps the come-upon frame."
 			}
 		},
 		{
@@ -1105,7 +1105,7 @@
 				"knowledge": {
 					"valency": [
 						{
-							"status": "Required",
+							"status": "Optional",
 							"complements": [
 								{
 									"kind": "Preposition",
@@ -1217,7 +1217,7 @@
 				]
 			},
 			"notes": {
-				"rationale": "verwandelt is the predicative of finden's object sich, not a perfect or passive, so it is an ADJ with Participle Source verwandeln (de/participial-adjective). Its source verb governs zu in this sense: E-VALBU has no verwandeln, and Duden gives verwandeln 1b 'zu jemand, etwas anderem werden lassen'. So the participle governs zu too, a member named by valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). No dictionary gives verwandelt comparison forms, so it marks no Degree. Ruled on #743 (VP-A3, A6). Knowledge (#887, dev draft): No dictionary gives verwandelt its own preposition, so it takes verwandeln 1b's zu/in complement, which defines that sense."
+				"rationale": "verwandelt is the predicative of finden's object sich, not a perfect or passive, so it is an ADJ with Participle Source verwandeln (de/participial-adjective). Its source verb governs zu in this sense: E-VALBU has no verwandeln, and Duden gives verwandeln 1b 'zu jemand, etwas anderem werden lassen'. So the participle governs zu too, a member named by valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). No dictionary gives verwandelt comparison forms, so it marks no Degree. Ruled on #743 (VP-A3, A6). Knowledge (#887, dev draft): No dictionary gives verwandelt its own preposition, so it takes verwandeln 1b's zu/in complement, which defines that sense. Judges split (#887 dev round): the zu | in Slot is Optional, as DWDS brackets it (system); the learner kept it Required for Duden's sense."
 			}
 		}
 	],

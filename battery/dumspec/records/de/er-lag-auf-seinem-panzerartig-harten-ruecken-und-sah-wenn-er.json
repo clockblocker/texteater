@@ -2009,27 +2009,13 @@
 								}
 							]
 						}
-					],
-					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "ADJ",
-								"canonicalForm": "fertig",
-								"coreFeatures": {
-									"comparable": null
-								}
-							}
-						]
-					}
+					]
 				},
 				"coverage": {
 					"valency": "Authored",
 					"participleSource": "ReviewedEmpty",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
@@ -2105,7 +2091,7 @@
 				]
 			},
 			"notes": {
-				"rationale": "bereit governs zu (Duden: zu etwas bereit), so the zu piece of zum is a member of the ADJ and valency evidence names it (de/governed-preposition-joins-its-governor, de/fused-word-pieces); the m piece belongs to Niedergleiten. Duden gives bereit no comparison forms."
+				"rationale": "bereit governs zu (Duden: zu etwas bereit), so the zu piece of zum is a member of the ADJ and valency evidence names it (de/governed-preposition-joins-its-governor, de/fused-word-pieces); the m piece belongs to Niedergleiten. Duden gives bereit no comparison forms. Knowledge (#887, dev draft): Judges split (#887 dev round): fertig (Duden sense 1, 'ready') is left out, since 🙋 may read as 'willing' (system); the learner kept it."
 			}
 		},
 		{

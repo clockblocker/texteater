@@ -106,6 +106,9 @@
 					"article": { "attested": "der", "orthography": "Standard" }
 				},
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Judges split (#887 dev round): no frame: no dictionary gives Umstieg a frame line (system); the learner would add an Optional auf + Acc Slot from the examples."
 			}
 		}
 	],

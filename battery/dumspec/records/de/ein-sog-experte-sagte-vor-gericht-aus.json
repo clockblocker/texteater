@@ -56,28 +56,13 @@
 			"route": { "family": "Lexeme", "kind": "ADJ" },
 			"reading": {
 				"emojiDescription": "🏷",
-				"knowledge": {
-					"semanticRelations": {
-						"nearSynonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "ADJ",
-								"canonicalForm": "angeblich",
-								"coreFeatures": {
-									"comparable": null
-								}
-							}
-						]
-					}
-				},
+				"knowledge": {},
 				"coverage": {
 					"valency": "ReviewedEmpty",
 					"participleSource": "ReviewedEmpty",
 					"semanticRelations": {
 						"synonym": "ReviewedEmpty",
-						"nearSynonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
 					}

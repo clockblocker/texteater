@@ -76,18 +76,6 @@
 									"gender": "Neut"
 								}
 							}
-						],
-						"nearSynonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "NOUN",
-								"canonicalForm": "Kater",
-								"coreFeatures": {
-									"gender": "Masc"
-								}
-							}
 						]
 					}
 				},
@@ -96,7 +84,7 @@
 					"plural": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
-						"nearSynonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty",
@@ -135,6 +123,9 @@
 				"realizationCoverage": "Full",
 				"articleEvidence": { "kind": "Owned", "member": 0 },
 				"valencyEvidence": []
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Judges split (#887 dev round): Kater (Duden Synonyme) is left out as a hyponym (system); the learner kept it as a nearSynonym."
 			}
 		}
 	],

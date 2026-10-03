@@ -90,32 +90,12 @@
 				"knowledge": {
 					"sayingType": {
 						"type": "Proverb"
-					},
-					"semanticRelations": {
-						"synonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Saying",
-								"kind": "Saying",
-								"canonicalForm": "Einem geschenkten Gaul guckt man nicht ins Maul",
-								"coreFeatures": {}
-							},
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Saying",
-								"kind": "Saying",
-								"canonicalForm": "Einem geschenkten Gaul sieht man nicht ins Maul",
-								"coreFeatures": {}
-							}
-						]
 					}
 				},
 				"coverage": {
 					"sayingType": "Authored",
 					"semanticRelations": {
-						"synonym": "Authored",
+						"synonym": "ReviewedEmpty",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
@@ -123,7 +103,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Einem geschenkten Gaul schaut man nicht ins Maul is a Proverb, one Saying target over all its words, both pieces of ins included (de/saying-needs-uptake, de/fused-word-pieces). The aphorism quoted before it is another line."
+				"rationale": "Einem geschenkten Gaul schaut man nicht ins Maul is a Proverb, one Saying target over all its words, both pieces of ins included (de/saying-needs-uptake, de/fused-word-pieces). The aphorism quoted before it is another line. Knowledge (#887, dev draft): Judges split (#887 dev round): the guckt and sieht wordings (DWDS Synonym zu) are left out as wordings of this Saying (system) rather than Lemmas of their own (learner)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

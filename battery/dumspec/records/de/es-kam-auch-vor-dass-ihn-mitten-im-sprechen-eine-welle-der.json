@@ -361,26 +361,6 @@
 				"supports": "Target 19 Knowledge: no E-VALBU entry, so the frame follows DWDS/Duden"
 			},
 			{
-				"title": "E-VALBU: beginnen, Lesart 11",
-				"url": "https://grammis.ids-mannheim.de/verbs/view/400216/11",
-				"supports": "Target 17 Knowledge: jemand/etwas beginnt etwas zu tun ('an jemandem hat etwas angefangen sich zu vollziehen'): K sub, K vrb Inf-S mit zu"
-			},
-			{
-				"title": "Duden: beginnen",
-				"url": "https://www.duden.de/rechtschreibung/beginnen",
-				"supports": "Target 17 Knowledge: beginnt, begann, hat begonnen (starkes Verb); Synonyme anfangen, anstimmen, aufnehmen, darangehen"
-			},
-			{
-				"title": "DWDS: beginnen",
-				"url": "https://www.dwds.de/wb/beginnen",
-				"supports": "Target 17 Knowledge: 1 '(etw.) anfangen', 'in gegensätzlicher Bedeutung zu enden, beenden'; 1a zu reden, lachen beginnen"
-			},
-			{
-				"title": "OpenThesaurus: beginnen",
-				"url": "https://www.openthesaurus.de/synonyme/beginnen",
-				"supports": "Target 17 Knowledge: synset anfangen · beginnen · einsetzen · starten (mit) …; no Gegenteil marker"
-			},
-			{
 				"title": "Duden: stottern",
 				"url": "https://www.duden.de/rechtschreibung/stottern",
 				"supports": "Target 16 Knowledge: stottert, stotterte; 1 'stockend … sprechen' (intransitive); Synonyme stammeln, sich verhaspeln"
@@ -399,6 +379,26 @@
 				"title": "E-VALBU: stottern",
 				"url": "https://grammis.ids-mannheim.de/verbvalenz",
 				"supports": "Target 16 Knowledge: no E-VALBU entry"
+			},
+			{
+				"title": "Duden: beginnen",
+				"url": "https://www.duden.de/rechtschreibung/beginnen",
+				"supports": "Target 17 Knowledge: beginnt, begann, hat begonnen (starkes Verb); Synonyme anfangen, anstimmen, aufnehmen, darangehen"
+			},
+			{
+				"title": "DWDS: beginnen",
+				"url": "https://www.dwds.de/wb/beginnen",
+				"supports": "Target 17 Knowledge: 1 '(etw.) anfangen', 'in gegensätzlicher Bedeutung zu enden, beenden'; 1a zu reden, lachen beginnen"
+			},
+			{
+				"title": "OpenThesaurus: beginnen",
+				"url": "https://www.openthesaurus.de/synonyme/beginnen",
+				"supports": "Target 17 Knowledge: synset anfangen · beginnen · einsetzen · starten (mit) …; no Gegenteil marker"
+			},
+			{
+				"title": "E-VALBU: beginnen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400216/1",
+				"supports": "Target 17 Knowledge: jemand/etwas beginnt etwas bzw. mit etwas: K sub, K akk / K prp (mit + Dat; Inf-S mit zu, fak. Korrelat damit); the general 'start' Reading (two judges)"
 			}
 		]
 	},
@@ -1434,8 +1434,27 @@
 							"status": "Required",
 							"complements": [
 								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								},
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "mit",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Something"
+								},
+								{
 									"kind": "Clause",
-									"form": "ZuInfinitive"
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
 								}
 							]
 						}

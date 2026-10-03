@@ -329,21 +329,6 @@
 				"supports": "Target 20 Knowledge: Oberbegriff Zeitspanne · Abstand · Dauer · Frist · Periode"
 			},
 			{
-				"title": "Duden: Zweifel",
-				"url": "https://www.duden.de/rechtschreibung/Zweifel",
-				"supports": "Target 3 Knowledge: Plural die Zweifel; Synonyme Hin-und-her-Schwanken, innerer Widerstreit, Skepsis, Skrupel; examples Zweifel an …, Zweifel, ob/dass"
-			},
-			{
-				"title": "DWDS: Zweifel",
-				"url": "https://www.dwds.de/wb/Zweifel",
-				"supports": "Target 3 Knowledge: Nominativ Plural Zweifel; sense 'Ungewissheit, Unsicherheit, ob …'"
-			},
-			{
-				"title": "OpenThesaurus: Zweifel",
-				"url": "https://www.openthesaurus.de/synonyme/Zweifel",
-				"supports": "Target 3 Knowledge: synset Bedenken · Ungewissheit · Unsicherheit · Zweifel · Zwiespalt, with Gegenteil Gewissheit on Zweifel; synset Argwohn · Misstrauen · Skepsis · Zweifel (Gegenteil Glaube on Zweifel)"
-			},
-			{
 				"title": "Duden: ersehnen",
 				"url": "https://www.duden.de/rechtschreibung/ersehnen",
 				"supports": "Target 18 Knowledge: 'herbeisehnen, sehnlichst wünschen'; der lang ersehnte Augenblick; transitive, no governed preposition"
@@ -427,6 +412,21 @@
 				"title": "E-VALBU: spazieren",
 				"url": "https://grammis.ids-mannheim.de/verbvalenz",
 				"supports": "Target 14 Knowledge: no E-VALBU entry"
+			},
+			{
+				"title": "Duden: Zweifel",
+				"url": "https://www.duden.de/rechtschreibung/Zweifel",
+				"supports": "Target 3 Knowledge: Plural die Zweifel; Synonyme Hin-und-her-Schwanken, innerer Widerstreit, Skepsis, Skrupel; examples Zweifel an …, Zweifel, ob/dass"
+			},
+			{
+				"title": "DWDS: Zweifel",
+				"url": "https://www.dwds.de/wb/Zweifel",
+				"supports": "Target 3 Knowledge: Nominativ Plural Zweifel; sense 'Ungewissheit, Unsicherheit, ob …'"
+			},
+			{
+				"title": "OpenThesaurus: Zweifel",
+				"url": "https://www.openthesaurus.de/synonyme/Zweifel",
+				"supports": "Target 3 Knowledge: synset Bedenken · Ungewissheit · Unsicherheit · Zweifel · Zwiespalt, with Gegenteil Gewissheit on Zweifel; synset Argwohn · Misstrauen · Skepsis · Zweifel (Gegenteil Glaube on Zweifel)"
 			}
 		]
 	},
@@ -638,7 +638,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Zweifel is Acc.Plur after über; alle is a DET, so the noun owns no article."
+				"rationale": "Zweifel is Acc.Plur after über; alle is a DET, so the noun owns no article. Knowledge (#887, dev draft): Judges split (#887 dev round): no frame: Duden shows an and the clauses only in examples (system); the learner would add an Optional an + Dat | Dass | Ob Slot."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
