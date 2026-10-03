@@ -81,6 +81,12 @@ export async function preparePublishedRuntime(repositoryRoot: string) {
 					await cp(join(source, file), join(dest, file), {
 						recursive: true,
 					});
+			// Dependencies installed apart, such as legacy-dumgen's Effect v3.
+			if (existsSync(join(source, "node_modules")))
+				await symlink(
+					join(source, "node_modules"),
+					join(dest, "node_modules"),
+				);
 			pending.push(...Object.keys(manifest.dependencies ?? {}));
 		}
 		for (const name of external) {

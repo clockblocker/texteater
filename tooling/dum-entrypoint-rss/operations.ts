@@ -7,7 +7,7 @@ const lemma = {
 	family: "Lexeme",
 	kind: "NOUN",
 	canonicalForm: "Bank",
-	coreFeatures: { gender: "Fem", hyph: null },
+	coreFeatures: { gender: "Fem" },
 };
 const reading = { unitKind: "Reading", lemma, emojiDescription: "🏦" };
 function call(module: PublicModule, name: string, ...args: unknown[]): any {
@@ -119,12 +119,12 @@ export async function runRepresentativeOperation(
 					language: "de",
 					lemma,
 					normalizedSurface: "Bank",
-					spelling: "Canonical",
+					spelling: { kind: "Canonical" },
 					surfaceFeatures: null,
 					inflectionalFeatures: {
 						case: "Nom",
+						gender: null,
 						number: "Sing",
-						article: null,
 					},
 				}),
 				"string",
