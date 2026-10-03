@@ -883,10 +883,37 @@ function readFirst(
 		core.gender = gender === "None" ? null : gender;
 		if (!cited) {
 			const number = answered.pick("number");
-			const formGender =
+			let formGender =
 				!shape.locution && core.gender === null && number === "Sing"
 					? (answered.peek("formGender") ?? null)
 					: null;
+			// A singular head's owned article is hard evidence of its
+			// gender: when the judged one agrees with no case of the
+			// article, the likeliest other gender jev weighed that does is
+			// read instead (der Tisch is never Neut).
+			const article = planned.article?.article;
+			const judgedGender = (formGender ?? core.gender) as string | null;
+			if (
+				article &&
+				!shape.locution &&
+				number === "Sing" &&
+				articleCases(article, number, judgedGender).length === 0
+			) {
+				const id = core.gender === null ? "formGender" : "gender";
+				const agreeing = (
+					id in planned.questionnaire.questions
+						? answered.alternatives(id)
+						: []
+				).find(
+					(option) =>
+						option in genders &&
+						articleCases(article, number, option).length > 0,
+				);
+				if (agreeing !== undefined && id === "gender")
+					core.gender = agreeing;
+				if (agreeing !== undefined && id === "formGender")
+					formGender = agreeing;
+			}
 			if (
 				!shape.locution &&
 				!shape.proper &&
@@ -1033,6 +1060,39 @@ function settle<T>(read: () => T): T | UnresolvedAnswer {
 }
 
 /**
+ * A VERB's Canonical Form as its judged Core Features require it (Rule
+ * de/verb-core-features, de/canonical-form-is-the-headword): the
+ * infinitive with its separable prefix and, for a lexical reflexive, sich
+ * before it. Luna's form is kept when it already has both. A prefix it
+ * left out is written on, over the r- shortening Luna wrote for it
+ * (reinkommen is hereinkommen) or over a shorter particle that ends the
+ * prefix (umkommen is herumkommen).
+ */
+export function verbHeadword(form: string, core: Values): string {
+	const reflexive = /^sich\s+/u.test(form) || core.lexicallyReflexive;
+	let verb = form.replace(/^sich\s+/u, "");
+	const prefix = core.hasSepPrefix;
+	if (typeof prefix === "string" && !fold(verb).startsWith(fold(prefix))) {
+		const folded = fold(verb);
+		const shortening = Object.entries(rShortenings).find(
+			([word, expansions]) =>
+				expansions.includes(fold(prefix)) && folded.startsWith(word),
+		)?.[0];
+		const tail = [...fold(prefix)]
+			.map((_, start) => fold(prefix).slice(start))
+			.find(
+				(ending) =>
+					ending.length >= 2 &&
+					ending.length < prefix.length &&
+					isParticle(ending) &&
+					folded.startsWith(ending),
+			);
+		verb = `${prefix}${verb.slice(shortening?.length ?? tail?.length ?? 0)}`;
+	}
+	return reflexive ? `sich ${verb}` : verb;
+}
+
+/**
  * The authored PART Lemmas whose Canonical Form is `form`, compared
  * without case; a Lemma's several Readings count once.
  */
@@ -1137,7 +1197,10 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 					case: caseAnswer === "Unmarked" ? null : caseAnswer,
 				};
 	let core = first.core;
-	let canonicalForm = written?.canonicalForm;
+	let canonicalForm =
+		written && shape.verbal && shape.lexeme
+			? verbHeadword(written.canonicalForm, first.core)
+			: written?.canonicalForm;
 	const normalized = [
 		...(written?.members ??
 			target.members.map(

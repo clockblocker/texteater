@@ -72,6 +72,25 @@ export class Answered {
 		return answer;
 	}
 
+	/**
+	 * A deciding answer's other options jev gave some weight, most likely
+	 * first, its own and Unresolved left out: code holding hard evidence
+	 * against the answer reads on to the likeliest option the evidence
+	 * allows, instead of asking again (ADR 0023).
+	 */
+	alternatives(id: string, floor = 0.05): readonly string[] {
+		const { choice: answer, probabilities } = choiceOf(this.answers, id);
+		return Object.entries(probabilities)
+			.filter(
+				([option, probability]) =>
+					option !== answer &&
+					option !== "Unresolved" &&
+					probability >= floor,
+			)
+			.sort(([, left], [, right]) => right - left)
+			.map(([option]) => option);
+	}
+
 	/** A speculative answer, undefined when it was not asked or came back Unresolved. */
 	peek(id: string): string | undefined {
 		if (!(id in this.answers)) return undefined;

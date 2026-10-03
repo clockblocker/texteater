@@ -4,6 +4,8 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
+import { verbHeadword } from "../../src/resolve/de/open-route.js";
+import type { JevAsk } from "../../src/segment/jev.js";
 import type { Segment } from "../../src/segment/segmented-sentence.js";
 import {
 	attested,
@@ -830,4 +832,59 @@ test("PART is closed: an authored particle resolves with no Luna call, and a spe
 		},
 	);
 	expect(unknown.result).toMatchObject({ _tag: "CatalogMiss" });
+});
+
+test("a VERB's Canonical Form carries its judged separable prefix and lexical reflexive", () => {
+	const core = (
+		hasSepPrefix: string | null,
+		lexicallyReflexive = null as string | null,
+	) => ({
+		hasSepPrefix,
+		lexicallyReflexive,
+	});
+	expect(verbHeadword("führen", core("vorbei"))).toBe("vorbeiführen");
+	expect(verbHeadword("reinkommen", core("herein"))).toBe("hereinkommen");
+	expect(verbHeadword("umkommen", core("herum"))).toBe("herumkommen");
+	expect(verbHeadword("gehen", core("entlang"))).toBe("entlanggehen");
+	expect(verbHeadword("übrig bleiben", core("übrig"))).toBe("übrig bleiben");
+	expect(verbHeadword("erinnern", core(null, "Acc"))).toBe("sich erinnern");
+	expect(verbHeadword("sich abfinden", core("ab", "Acc"))).toBe(
+		"sich abfinden",
+	);
+	expect(verbHeadword("finden", core(null))).toBe("finden");
+});
+
+test("a judged gender the owned article rules out gives way to the likeliest gender jev weighed that agrees", async () => {
+	const base = fakeJev({ number: "Sing" });
+	// jev leans Neut for Tisch, which der in the nominative rules out.
+	const jev: JevAsk = async (request, context) => {
+		const response = await base.ask(request, context);
+		return "gender" in request.questions
+			? {
+					...response,
+					answers: {
+						...response.answers,
+						gender: {
+							type: "choice",
+							choice: "Neut",
+							confidence: 0.6,
+							probabilities: { Neut: 0.6, Masc: 0.35, Fem: 0.05 },
+						},
+					},
+				}
+			: response;
+	};
+	const { result } = await resolveOnce(
+		{ jev, luna: writes("Tisch").ask },
+		{
+			sentence: sentenceOf("Der Tisch wackelt."),
+			unit: unitOf([0, 2], "Lexeme", "NOUN"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.coreFeatures).toEqual({ gender: "Masc" });
+	expect(attestation.surface.inflectionalFeatures).toMatchObject({
+		case: "Nom",
+		number: "Sing",
+	});
 });
