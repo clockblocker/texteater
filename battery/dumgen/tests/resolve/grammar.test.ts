@@ -5,9 +5,11 @@ import * as Effect from "effect/Effect";
 import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { LunaAsk } from "../../src/luna.js";
+import { guardedHeadword } from "../../src/resolve/de/headword-guards.js";
 import { verbHeadword } from "../../src/resolve/de/open-route.js";
+import { targetOf } from "../../src/resolve/de/target.js";
 import type { JevAsk } from "../../src/segment/jev.js";
-import type { Segment } from "../../src/segment/segmented-sentence.js";
+import type { Route, Segment } from "../../src/segment/segmented-sentence.js";
 import {
 	attested,
 	fakeJev,
@@ -1126,4 +1128,57 @@ test("the comparable question offers No for a demonstrative or interrogative adv
 		comparable: null,
 	});
 	expect(attestation.surface.inflectionalFeatures ?? null).toBeNull();
+});
+
+test("a Locution's or interjection's headword drops placeholders and members outside it, and an adpositional or conjunctional Locution has … exactly at its gaps", () => {
+	const at = (
+		text: string,
+		segments: number[],
+		family: string,
+		kind: string,
+	) => {
+		const sentence = sentenceOf(text);
+		const unit = unitOf(segments, family, kind);
+		return targetOf(sentence, unit, unit.route as Route);
+	};
+	const nose = at(
+		"Er tanzte ihr auf der Nase herum.",
+		[2, 6, 8, 10, 12],
+		"Locution",
+		"VERB",
+	);
+	expect(
+		guardedHeadword(nose, "jemandem auf der Nase herumtanzen", new Set()),
+	).toBe("auf der Nase herumtanzen");
+	const thanks = at("Vielen Dank für alles.", [0, 2, 4], "Locution", "INTJ");
+	expect(guardedHeadword(thanks, "vielen Dank für …", new Set([2]))).toBe(
+		"vielen Dank",
+	);
+	const care = at(
+		"Sie nahm Rücksicht auf ihn.",
+		[2, 4, 6],
+		"Locution",
+		"VERB",
+	);
+	expect(guardedHeadword(care, "Rücksicht auf … nehmen", new Set([2]))).toBe(
+		"Rücksicht nehmen",
+	);
+	const similar = at(
+		"Sie mag Äpfel oder Ähnliches.",
+		[6, 8],
+		"Locution",
+		"ADV",
+	);
+	expect(guardedHeadword(similar, "oder … Ähnliches", new Set())).toBe(
+		"oder Ähnliches",
+	);
+	const without = at("Er ging ohne zu grüßen.", [4, 6], "Locution", "SCONJ");
+	expect(guardedHeadword(without, "ohne zu", new Set())).toBe("ohne … zu");
+	const so = at(
+		"Er sprach so leise, dass keiner es hörte.",
+		[4, 9],
+		"Locution",
+		"SCONJ",
+	);
+	expect(guardedHeadword(so, "so dass", new Set())).toBe("so … dass");
 });

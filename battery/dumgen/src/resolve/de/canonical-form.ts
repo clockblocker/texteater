@@ -16,7 +16,6 @@ import type { LemmaCandidate } from "../types.js";
 import type { MemberOrthography } from "./member-spelling.js";
 import { canonicalForm, routeGuidance } from "./prompts.js";
 import { fixedSpelling, type Target, targetState } from "./target.js";
-import { assembleTied, tiedRoute, tiedWordsSchema } from "./tied-headword.js";
 
 /** What grammar fixed before Luna writes: the judged features and what stays out of the headword. */
 export type Judged = {
@@ -32,8 +31,6 @@ export type Judged = {
 	readonly auxiliaries?: ReadonlySet<number>;
 	/** The word each ambiguous fused piece or shorthand stands for, by Segment. */
 	readonly readings: ReadonlyMap<number, string>;
-	/** A Locution's or Saying's judged coverage: only a Partial one gains missing words. */
-	readonly coverage?: "Full" | "Partial";
 };
 
 /** What Luna wrote: the Canonical Form and every member's spelling, aligned. */
@@ -57,21 +54,6 @@ const suspendedFragment = /^(.+)[-‐‑]$/u;
 /** The system prompt: the task, the casing and member lines, and the route's line. */
 function systemPrompt(target: Target): string {
 	const key = `${target.route.family}/${target.route.kind}`;
-	if (tiedRoute(target))
-		return [
-			canonicalForm.tiedTask,
-			canonicalForm.headword,
-			canonicalForm.members,
-			canonicalForm.tiedWords,
-			...(target.members.some(({ text }) => suspendedFragment.test(text))
-				? [canonicalForm.suspended]
-				: []),
-			target.route.family === "Saying"
-				? routeGuidance["Saying/Saying"]
-				: routeGuidance.Locution,
-		]
-			.filter((line): line is string => line !== undefined)
-			.join("\n");
 	const guidance =
 		routeGuidance[key] ??
 		(target.route.family === "Locution"
@@ -118,14 +100,6 @@ export function hintsFor(
 			),
 	);
 }
-
-/** One spelling per member, in order. */
-const membersSchema = (target: Target) => ({
-	type: "array",
-	items: { type: "string", minLength: 1 },
-	minItems: target.members.length,
-	maxItems: target.members.length,
-});
 
 /** The Canonical Form request, without its configuration. */
 export function canonicalFormRequest(
@@ -176,25 +150,20 @@ export function canonicalFormRequest(
 					}
 				: {}),
 		},
-		outputSchema: tiedRoute(target)
-			? {
-					type: "object",
-					properties: {
-						words: tiedWordsSchema,
-						members: membersSchema(target),
-					},
-					required: ["words", "members"],
-					additionalProperties: false,
-				}
-			: {
-					type: "object",
-					properties: {
-						canonicalForm: { type: "string", minLength: 1 },
-						members: membersSchema(target),
-					},
-					required: ["canonicalForm", "members"],
-					additionalProperties: false,
+		outputSchema: {
+			type: "object",
+			properties: {
+				canonicalForm: { type: "string", minLength: 1 },
+				members: {
+					type: "array",
+					items: { type: "string", minLength: 1 },
+					minItems: target.members.length,
+					maxItems: target.members.length,
 				},
+			},
+			required: ["canonicalForm", "members"],
+			additionalProperties: false,
+		},
 	};
 }
 
@@ -260,27 +229,14 @@ export function checkWritten(
 ): Written | InvalidModelOutput {
 	const unusable = (message: string) =>
 		new InvalidModelOutput({ stage: "canonical", message });
-	const value = output as {
-		canonicalForm?: unknown;
-		words?: unknown;
-		members?: unknown;
-	};
-	const tied = tiedRoute(target);
+	const value = output as { canonicalForm?: unknown; members?: unknown };
 	if (
-		(tied
-			? !Array.isArray(value?.words)
-			: typeof value?.canonicalForm !== "string") ||
-		!Array.isArray(value?.members)
+		typeof value?.canonicalForm !== "string" ||
+		!Array.isArray(value.members)
 	)
-		return unusable(
-			tied
-				? "Luna answered without its headword's words and members"
-				: "Luna answered without a Canonical Form and members",
-		);
-	const written =
-		typeof value.canonicalForm === "string" ? value.canonicalForm : "";
-	let form = normalizedSlots(written);
-	if (!tied && (!form || /\n/u.test(written)))
+		return unusable("Luna answered without a Canonical Form and members");
+	const form = normalizedSlots(value.canonicalForm);
+	if (!form || /\n/u.test(value.canonicalForm))
 		return unusable("Luna answered no single-line Canonical Form");
 	const keeps = (member: Target["members"][number]) => {
 		const fixed = fixedSpelling(member, judged.readings);
@@ -327,22 +283,6 @@ export function checkWritten(
 				`Luna changed the letters of the Standard member m${member.position}`,
 			);
 		members.push(word);
-	}
-	if (tied) {
-		const assembled = assembleTied(
-			target,
-			value.words as unknown[],
-			members,
-			{
-				coverage: judged.coverage ?? "Full",
-				outside: new Set([
-					...judged.outsideHeadword,
-					...(judged.auxiliaries ?? []),
-				]),
-			},
-		);
-		if (assembled instanceof InvalidModelOutput) return assembled;
-		form = normalizedSlots(assembled);
 	}
 	return { canonicalForm: form, members };
 }

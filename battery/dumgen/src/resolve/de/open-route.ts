@@ -38,6 +38,7 @@ import {
 	type Judged,
 	type Written,
 } from "./canonical-form.js";
+import { guardedHeadword } from "./headword-guards.js";
 import {
 	ambiguousPieces,
 	attestedMember,
@@ -1314,7 +1315,6 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			}),
 		),
 		readings: first.readings,
-		coverage: first.coverage,
 	};
 	const caseRequest =
 		first.openCases.length > 1
@@ -1385,6 +1385,12 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		canonicalForm = authored.lemma.canonicalForm;
 		if (!written) normalized[0] = authored.lemma.canonicalForm;
 	}
+	if (canonicalForm !== undefined)
+		canonicalForm = guardedHeadword(
+			target,
+			canonicalForm,
+			new Set([...outsideHeadword, ...(judged.auxiliaries ?? [])]),
+		);
 	// Digits spell their numeral word (Rule de/digits-spell-the-numeral).
 	const [only] = target.members;
 	const spelledNumber =
