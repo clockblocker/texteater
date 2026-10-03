@@ -72,9 +72,9 @@ test("the demonstrations come in the input shape production sends, es gibt, a fu
 	);
 });
 
-test("the judge folds when in doubt and answers NoMatch only for another concept; Luna's prompt and schema rule out non-emoji answers (#877 round 2)", () => {
-	expect(judgeText).toContain("When in doubt, fold");
-	expect(judgeText).toContain("Answer NoMatch only when");
+test("the judge tests each option both ways, NoMatch for another meaning and a pick for a loose picture; Luna's prompt and schema rule out non-emoji answers (#877 round 2)", () => {
+	expect(judgeText).not.toContain("When in doubt");
+	expect(judgeText).toContain("Test each option both ways");
 	expect(judgeQuestion.stored).not.toContain("authored");
 	expect(judgeQuestion.storedWithAuthored).toContain("Options a…");
 	expect(generationPrompt).toContain(

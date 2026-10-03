@@ -76,12 +76,12 @@ export const judgePolicy = {
 	),
 	distinct: paragraph(
 		"judge.distinct",
-		"Meanings get different Readings only when they are different concepts a model would tell apart from the sentence, as «Flügel» the wing and the grand piano. Closely related uses of one meaning, figurative ones and functional or grammatical shades included, share one option. When in doubt, fold: pick the option whose meaning the target's is closest to.",
+		"Meanings get different Readings when they are different concepts a model would tell apart from the sentence: «Birne» the pear and the light bulb, «Pflaster» the sticking plaster and the paving. Closely related uses of one meaning, figurative ones and functional or grammatical shades included, share one Reading.",
 		rules.distinct,
 	),
 	noMatch: paragraph(
 		"judge.noMatch",
-		"Answer NoMatch only when the target here means a concept no option stands for, one you could name as another meaning of the Lemma; an option that pictures the target's meaning imperfectly is no reason for NoMatch.",
+		"Test each option both ways. When the sentence gives the target a different meaning from the one the option stands for, a meaning you would name apart from it, the option is wrong: answer NoMatch rather than take the nearest option, also when it is the only one. When the target has the option's meaning and the option only pictures it loosely, by a symbol or a stand-in, pick it.",
 		rules.distinct,
 	),
 	copula: paragraph(
@@ -101,13 +101,13 @@ export const judgePolicy = {
 export const judgeQuestion = {
 	stored: paragraph(
 		"judge.question",
-		"Which option labels the meaning the target has in this sentence? NoMatch only if the target means a concept no option stands for.",
+		"Which option labels the meaning the target has in this sentence? NoMatch if the sentence gives the target a meaning no option stands for.",
 		rules.meaning,
 		rules.distinct,
 	),
 	storedWithAuthored: paragraph(
 		"judge.question.withAuthored",
-		"Options a… are the word's authored Readings: each labels one function of the word by the conventions its word class shares, not by a picture of this sentence, and covers its abstract and figurative uses too. Which option labels the meaning the target has in this sentence? NoMatch only if the target means a concept no option stands for.",
+		"Options a… are the word's authored Readings: each labels one function of the word by the conventions its word class shares, not by a picture of this sentence, and covers its abstract and figurative uses too. Which option labels the meaning the target has in this sentence? NoMatch if the sentence gives the target a meaning no option stands for.",
 		rules.meaning,
 		rules.distinct,
 	),
@@ -146,13 +146,18 @@ export const generation = {
 	),
 	copula: paragraph(
 		"generation.copula",
-		"A copula, a light verb or another verb whose complement carries the sentence's meaning contributes only its own part: being, staying, becoming, causing or seeming. Leave the complement out, even as a second emoji and even when it names a time, a place or an amount; its meaning belongs to its own Lemma.",
+		"A copula, a light verb or another verb whose complement carries the sentence's meaning contributes only its own part: being, staying, becoming, causing or seeming, and being is 🟰, a mark no other verb takes. Leave the complement out, even as a second emoji and even when it names a time, a place or an amount; its meaning belongs to its own Lemma.",
 		rules.copula,
 	),
 	polarity: paragraph(
 		"generation.polarity",
-		"Keep polarity, direction and scale: a pleasant against an unpleasant feeling, up against down, effort needed against strength had. Start from the one emoji that carries the meaning and add another only to remove a real ambiguity; never add a negation or emphasis sign to an emoji that already shows the state.",
+		"Keep polarity, direction and scale: a pleasant against an unpleasant feeling, up against down, effort needed against strength had, much against little. A word that grades how intense or how much something is labels that degree on its scale, never the physical strength or size its literal sense names. Start from the one emoji that carries the meaning and add another only to remove a real ambiguity; never add a negation or emphasis sign to an emoji that already shows the state.",
 		rules.polarity,
+	),
+	modal: paragraph(
+		"generation.modal",
+		"A modal verb labels its own modality, the same in every sentence: necessity, obligation, ability, permission, wish or supposition, never the effort, goal or scene of the action it governs.",
+		rules.meaning,
 	),
 	existential: paragraph(
 		"generation.existential",

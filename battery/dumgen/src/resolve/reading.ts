@@ -80,6 +80,7 @@ export const generationPrompt = [
 	generation.distinct,
 	generation.copula,
 	generation.polarity,
+	generation.modal,
 	generation.existential,
 	generation.multiword,
 	generation.json,

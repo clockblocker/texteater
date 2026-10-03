@@ -90,9 +90,11 @@ export const readingRepetitions = 3;
  * JSON (#526); open-route authored Lemmas can gain a New Reading (#877 R4).
  * 3: the judge reads options as labels and folds when in doubt, authored
  * options are marked, and Luna's prompt and schema rule out non-emoji
- * answers and scene leaks (#877 round 2).
+ * answers and scene leaks (#877 round 2). 4: the judge tests each option
+ * both ways instead of folding when in doubt; Luna labels modality, degree
+ * and the copula of being 🟰 (#877 round 3).
  */
-export const readingOperationVersion = `${readingRoute}@production-3`;
+export const readingOperationVersion = `${readingRoute}@production-4`;
 
 /** A run's projected spend, shaped as resolve.grammar's so one budget guard reads both. */
 export type ReadingPrice = GrammarPrice;
