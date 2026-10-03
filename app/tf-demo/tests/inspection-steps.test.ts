@@ -6,6 +6,7 @@ import {
 	type TestConvexDb,
 } from "./support/convex";
 import { enableDeploymentFlags } from "./support/deploymentFlags";
+import { fakeJev, germanAnswers } from "./support/jev";
 import {
 	bankOccurrenceCommit,
 	type Selection,
@@ -131,6 +132,9 @@ test("an inspected submission shows its root and its code steps", async () => {
 		"Analyze submitted text > Persist submitted text [Code · app/tf-demo · Success]",
 		"Analyze submitted text > Segment sentences in units [Code · battery/dumgen · segment.inUnits · Success]",
 		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitText · Success]",
+		"Analyze submitted text > segment.inUnits > candidates · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
+		"Analyze submitted text > segment.inUnits > route · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
+		"Analyze submitted text > segment.inUnits [Code · battery/dumgen · Success]",
 		"Analyze submitted text [Code · app/tf-demo · intake · Success]",
 	]);
 	const steps = await savedSteps(t, requestId);
@@ -154,6 +158,18 @@ test("an inspected submission shows its root and its code steps", async () => {
 	expect(payload("Persist submitted text")).toMatchObject({
 		input: { submissionKey: "submission", sourceText: "Die Banken." },
 		output: { textId: expect.any(String) },
+	});
+	// Dumgen's calls carry their prompts and answers under DEV inspection (#885).
+	expect(payload("route · Sentence 0")).toMatchObject({
+		input: { questions: expect.any(Object) },
+		output: { answers: expect.any(Object) },
+		stage: "route",
+		sentence: 0,
+		executor: "jev",
+	});
+	expect(payload("segment.inUnits")).toMatchObject({
+		calls: 2,
+		sentences: [{ sentence: 0, outcome: "Segmented" }],
 	});
 });
 
@@ -181,6 +197,9 @@ test("a failed inspected submission fails its root", async () => {
 		"Analyze submitted text > Persist submitted text [Code · app/tf-demo · Failure]",
 		"Analyze submitted text > Segment sentences in units [Code · battery/dumgen · segment.inUnits · Success]",
 		"Analyze submitted text > Split text into sentences [Code · battery/dumgen · splitText · Success]",
+		"Analyze submitted text > segment.inUnits > candidates · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
+		"Analyze submitted text > segment.inUnits > route · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
+		"Analyze submitted text > segment.inUnits [Code · battery/dumgen · Success]",
 		"Analyze submitted text [Code · app/tf-demo · intake · Failure]",
 	]);
 });
@@ -218,6 +237,54 @@ test("an inspected click selects its unit through ClickResolution and calls no m
 				name === "knowledgeGenerationActions:runKnowledgeGeneration",
 		),
 	).toEqual([]);
+});
+
+test("an inspected click renders each Dumgen operation it runs as rows whose calls carry their payloads (#885)", async () => {
+	const t = createTestConvex();
+	const { sentenceIds } = await submitText(t, [
+		["Er", " ", "gibt", " ", "auf", "."],
+	]);
+	const sentenceId = sentenceIds[0];
+	if (!sentenceId) throw new Error("Expected a Sentence.");
+	const guard = await select(
+		t,
+		{
+			requestId: "request-1",
+			visitorId: "visitor-1",
+			sentenceId,
+			clickedSegmentIndex: 2,
+		},
+		true,
+	);
+	// Intake failed the Sentence, so the click segments it again first.
+	await t.run((ctx) =>
+		ctx.db.patch(sentenceId, { units: [], segmentationFailed: true }),
+	);
+	const providers = fakeTypeSafe(fakeJev({ answers: germanAnswers }));
+	try {
+		await t.action(internal.orchestration.runResolutionSession, {
+			...guard,
+			inspect: true,
+		});
+	} finally {
+		providers.restore();
+	}
+	const lines = await inspection(t, "request-1");
+	expect(lines).toEqual(
+		expect.arrayContaining([
+			"Resolution session > segment.inUnits [Code · battery/dumgen · Success]",
+			"Resolution session > segment.inUnits > route · Sentence 0 [TypeSafe · battery/dumgen · jev · Success]",
+			"Resolution session > resolve.grammar [Code · battery/dumgen · Success]",
+			"Resolution session > resolve.grammar > grammar [TypeSafe · battery/dumgen · jev · Success]",
+		]),
+	);
+	const grammar = (await savedSteps(t, "request-1")).find(
+		(step) => step.name === "grammar",
+	);
+	expect(grammar?.payload).toMatchObject({
+		input: { questions: expect.any(Object) },
+		output: { answers: expect.any(Object) },
+	});
 });
 
 test("an inspected click reusing another session's occurrence makes no ClickResolution call", async () => {

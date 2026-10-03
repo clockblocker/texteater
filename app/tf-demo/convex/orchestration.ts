@@ -15,6 +15,8 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import { dumgenClickResolution } from "../server/dumgenClickResolution";
 import {
+	dumgenTracing,
+	type InspectionCapture,
 	inspected,
 	inspectionStep,
 	spanHops,
@@ -118,19 +120,22 @@ function productionLuna(timeoutMs?: number): LunaAsk {
 	});
 }
 
+/** How a Dumgen instance traces: `dumgenTracing`'s options. */
+type DumgenTracing = ReturnType<typeof dumgenTracing>;
+
 /**
  * The production Dumgen for intake: jev through TypeSafe with the
  * deployment's key. With no key, intake fails with a coded error that tells
  * the Visitor how to fix it.
  */
-function productionDumgen(onOperation: (trace: OperationTrace) => void) {
+function productionDumgen(tracing: DumgenTracing) {
 	const apiKey = env.TYPESAFE_API_KEY;
 	if (!apiKey)
 		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
 	return createDumgen({
 		jev: createTypeSafeAsk({ apiKey }),
 		luna: productionLuna(),
-		onOperation,
+		...tracing,
 	});
 }
 
@@ -151,7 +156,7 @@ export function clickCallDeadlineMs(
  * The click's Dumgen instance: jev and Luna at the click deadline. With no
  * TypeSafe key, a click fails with the coded intake error.
  */
-function clickDumgen(onOperation?: (trace: OperationTrace) => void) {
+function clickDumgen(tracing: DumgenTracing) {
 	const apiKey = env.TYPESAFE_API_KEY;
 	if (!apiKey)
 		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
@@ -159,7 +164,7 @@ function clickDumgen(onOperation?: (trace: OperationTrace) => void) {
 	return createDumgen({
 		jev: createTypeSafeAsk({ apiKey, timeoutMs }),
 		luna: productionLuna(timeoutMs),
-		...(onOperation ? { onOperation } : {}),
+		...tracing,
 	});
 }
 
@@ -168,50 +173,53 @@ function clickDumgen(onOperation?: (trace: OperationTrace) => void) {
  * click deadline. When it fails again, the click fails with what its trace
  * says: a ProviderFailure or an InvalidModelOutput.
  */
-function resegment(stitchedText: string) {
-	return Effect.suspend(() => {
-		let failure: OperationTrace["sentences"][number] | undefined;
-		const dumgen = clickDumgen((trace) => {
-			failure = trace.sentences.find(
-				({ outcome }) => outcome === "Failed",
-			);
-		});
-		return dumgen.segment
-			.inUnits({
-				language: "de",
-				paragraphs: [{ sentences: [stitchedText] }],
-			})
-			.pipe(
-				Effect.flatMap((text) => {
-					const sentence = text.paragraphs[0]?.sentences[0];
-					if (sentence && !sentence.failed)
-						return Effect.succeed({
-							segments: sentence.segments.map(
-								({ kind, text, surface }) =>
-									surface === undefined
-										? { kind, text }
-										: { kind, text, surface },
-							),
-							units: sentence.units.map(storedUnitOf),
-						});
-					const reason =
-						failure?.outcome === "Failed"
-							? failure.failure
-							: undefined;
-					const fields = {
-						stage: "segment.inUnits",
-						message:
-							reason?.message ?? "The Sentence was not segmented",
-					};
-					return Effect.fail(
-						reason?.tag === "InvalidModelOutput"
-							? new InvalidModelOutput(fields)
-							: new ProviderFailure(fields),
+const resegmenter =
+	(inspection?: InspectionCapture) => (stitchedText: string) =>
+		Effect.suspend(() => {
+			let failure: OperationTrace["sentences"][number] | undefined;
+			const dumgen = clickDumgen(
+				dumgenTracing(inspection, (trace) => {
+					failure = trace.sentences.find(
+						({ outcome }) => outcome === "Failed",
 					);
 				}),
 			);
-	});
-}
+			return dumgen.segment
+				.inUnits({
+					language: "de",
+					paragraphs: [{ sentences: [stitchedText] }],
+				})
+				.pipe(
+					Effect.flatMap((text) => {
+						const sentence = text.paragraphs[0]?.sentences[0];
+						if (sentence && !sentence.failed)
+							return Effect.succeed({
+								segments: sentence.segments.map(
+									({ kind, text, surface }) =>
+										surface === undefined
+											? { kind, text }
+											: { kind, text, surface },
+								),
+								units: sentence.units.map(storedUnitOf),
+							});
+						const reason =
+							failure?.outcome === "Failed"
+								? failure.failure
+								: undefined;
+						const fields = {
+							stage: "segment.inUnits",
+							message:
+								reason?.message ??
+								"The Sentence was not segmented",
+						};
+						return Effect.fail(
+							reason?.tag === "InvalidModelOutput"
+								? new InvalidModelOutput(fields)
+								: new ProviderFailure(fields),
+						);
+					}),
+				);
+		});
 
 export const submitText = action({
 	args: {
@@ -274,7 +282,9 @@ export const submitText = action({
 		};
 		try {
 			const intake = createIntake({
-				segment: productionDumgen(run.operation).segment,
+				segment: productionDumgen(
+					dumgenTracing(inspection, run.operation),
+				).segment,
 				persistence: {
 					persistSubmittedText: (input) =>
 						ctx.runMutation(
@@ -374,7 +384,7 @@ export const runResolutionSession = internalAction({
 					spanHops(services),
 				),
 				resolve: (selection, checkpoints, observer, context) =>
-					orchestratorFor(ctx, guard, observer)
+					orchestratorFor(ctx, guard, observer, inspection)
 						.resolveSegment(selection, checkpoints, context)
 						.pipe(
 							Effect.withSpan(
@@ -408,16 +418,20 @@ export const runResolutionSession = internalAction({
  * The click orchestrator for one action. Its grammar is Dumgen's
  * `resolve.grammar` (#876) and its Reading Dumgen's `resolve.reading`
  * (#877), judged over the Lemma's stored Readings, which Dumdict finds by
- * the case-folded Lemma identity (#764).
+ * the case-folded Lemma identity (#764). Under DEV inspection every
+ * Dumgen operation renders as inspection rows, with payloads (#885).
  */
 function orchestratorFor(
 	ctx: ActionCtx,
 	sessionGuard: ResolutionSessionGuard | null,
 	observer?: ResolutionProgressObserver,
+	inspection?: InspectionCapture,
 ) {
 	return createTfDemoOrchestrator({
-		resolution: dumgenClickResolution(() => clickDumgen()),
-		resegment,
+		resolution: dumgenClickResolution(() =>
+			clickDumgen(dumgenTracing(inspection)),
+		),
+		resegment: resegmenter(inspection),
 		findStoredReadings: async (lemma) =>
 			(
 				await ctx.runQuery(

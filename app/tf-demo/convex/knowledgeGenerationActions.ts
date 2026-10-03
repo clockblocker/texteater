@@ -5,10 +5,12 @@ import { createDumgen, createOpenAILuna, createTypeSafeAsk } from "dumgen";
 import * as Effect from "effect/Effect";
 import { dumgenKnowledgeProducer } from "../server/dumgenKnowledgeProducer";
 import {
+	dumgenTracing,
 	inspected,
 	inspectionStep,
 	type SpanHops,
 	spanHops,
+	withoutPayloads,
 } from "../server/inspectionCapture";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
 import type {
@@ -51,7 +53,7 @@ const BASE_TEXT_ASPECTS = new Set([
  * and without a key, a run fails with the safe message and calls no model.
  */
 export function productionKnowledgeProducer(): KnowledgeProducer {
-	return dumgenKnowledgeProducer((onOperation) => {
+	return dumgenKnowledgeProducer((tracing) => {
 		if (env.TF_KNOWLEDGE_PRODUCTION !== "1")
 			throw new Error(
 				"Knowledge production is off on this deployment (TF_KNOWLEDGE_PRODUCTION).",
@@ -63,7 +65,7 @@ export function productionKnowledgeProducer(): KnowledgeProducer {
 		return createDumgen({
 			jev: createTypeSafeAsk({ apiKey: env.TYPESAFE_API_KEY }),
 			luna: createOpenAILuna({ apiKey: env.OPENAI_API_KEY }),
-			onOperation,
+			...tracing,
 		});
 	});
 }
@@ -262,7 +264,13 @@ export async function generateKnowledge(
 					},
 					{
 						onContribution,
-						onOperation: (trace) => operationTraces.push(trace),
+						// DEV inspection renders the calls with their payloads;
+						// the run's evidence keeps every trace without them.
+						...dumgenTracing(inspection, (trace) =>
+							operationTraces.push(
+								JSON.stringify(withoutPayloads(trace)),
+							),
+						),
 					},
 				).pipe(
 					Effect.withSpan(

@@ -104,9 +104,15 @@ function rows<Table extends TableNames>(t: TestConvexDb, table: Table) {
 	return t.run((ctx) => ctx.db.query(table).collect());
 }
 
-test("the production producer runs Dumgen's knowledge.produce through the deployment's transports; structural changes publish with the final batch (#887)", async () => {
-	const t = createTestConvex();
-	await seedAttempt(t, "live");
+/**
+ * Runs the production Knowledge action for `attemptKey` with the fixture
+ * keys and transports, and cancels what its publication scheduled.
+ */
+async function runProductionAction(
+	t: TestConvexDb,
+	attemptKey: string,
+	inspect?: boolean,
+) {
 	const previous = {
 		fetch: globalThis.fetch,
 		flag: process.env.TF_KNOWLEDGE_PRODUCTION,
@@ -171,7 +177,7 @@ test("the production producer runs Dumgen's knowledge.produce through the deploy
 	try {
 		await t.action(
 			internal.knowledgeGenerationActions.runKnowledgeGeneration,
-			{ attemptKey: "live" },
+			{ attemptKey, ...(inspect ? { inspect } : {}) },
 		);
 	} finally {
 		// What the publication scheduled (the definition's segmentation)
@@ -192,6 +198,22 @@ test("the production producer runs Dumgen's knowledge.produce through the deploy
 			if (value === undefined) delete process.env[name];
 			else process.env[name] = value;
 	}
+	return { urls, aspects };
+}
+
+/** The run's evidence: one serialized Dumgen trace per operation. */
+async function evidenceTraces(t: TestConvexDb) {
+	const [run] = await rows(t, "knowledgeProductionRuns");
+	const evidence = run?.evidence as
+		| { readonly operationTraces: readonly string[] }
+		| undefined;
+	return evidence?.operationTraces ?? [];
+}
+
+test("the production producer runs Dumgen's knowledge.produce through the deployment's transports; structural changes publish with the final batch (#887)", async () => {
+	const t = createTestConvex();
+	await seedAttempt(t, "live");
+	const { urls, aspects } = await runProductionAction(t, "live");
 	expect(
 		urls.every(
 			(url) =>
@@ -222,14 +244,73 @@ test("the production producer runs Dumgen's knowledge.produce through the deploy
 	});
 	// The empty frame stores nothing and still completes the Reading.
 	expect(accumulated?.status).toBe("Full");
-	// The run's Dumgen trace is its evidence.
-	const [run] = await rows(t, "knowledgeProductionRuns");
-	const evidence = run?.evidence as
-		| { readonly operationTraces: readonly string[] }
-		| undefined;
+	// The run's Dumgen trace is its evidence, with no prompt or answer:
+	// without DEV inspection, Dumgen keeps no payloads.
+	const traces = await evidenceTraces(t);
 	expect(
-		evidence?.operationTraces.some((trace) =>
+		traces.some((trace) =>
 			trace.includes('"operation":"knowledge.produce"'),
 		),
 	).toBe(true);
+	expect(traces.some((trace) => trace.includes('"payload"'))).toBe(false);
+	expect(await rows(t, "inspectionSteps")).toEqual([]);
+});
+
+test("under DEV inspection the run's Dumgen calls render as inspection rows with their prompts and answers, and the evidence still keeps none (#885)", async () => {
+	const t = createTestConvex();
+	await seedAttempt(t, "inspected");
+	await t.run((ctx) =>
+		ctx.db.insert("inspectionClicks", {
+			requestId: "inspected",
+			visitorId: "visitor-1",
+			selectedSegment: "Bank",
+			sentence: "Bank am Fluss",
+			selectionKind: "Available",
+			startedAt: 1,
+			resolutionState: "Complete",
+		}),
+	);
+	await runProductionAction(t, "inspected", true);
+
+	const steps = await rows(t, "inspectionSteps");
+	const root = steps.find((step) => step.parentId === undefined);
+	expect(root?.name).toBe("Generate and publish Knowledge");
+	const operation = steps.find((step) => step.name === "knowledge.produce");
+	expect(operation).toMatchObject({
+		parentId: root?.id,
+		owner: "battery/dumgen",
+		kind: "Code",
+	});
+	const calls = steps.filter((step) => step.parentId === operation?.id);
+	expect(calls.length).toBeGreaterThan(0);
+	expect(new Set(calls.map((step) => step.kind))).toEqual(
+		new Set(["TypeSafe", "LLM"]),
+	);
+	const payloads = await t.run(async (ctx) =>
+		Promise.all(
+			calls.map(async (step) =>
+				JSON.parse(
+					(
+						await ctx.db
+							.query("inspectionPayloads")
+							.withIndex("by_step_id_and_part", (q) =>
+								q.eq("stepId", step._id),
+							)
+							.collect()
+					)
+						.map(({ text }) => text)
+						.join(""),
+				),
+			),
+		),
+	);
+	// Every call shows what was sent and what came back.
+	for (const payload of payloads) {
+		expect(payload.input).toBeDefined();
+		expect(payload.output).toBeDefined();
+	}
+	expect(JSON.stringify(payloads)).toContain("Ein Geldinstitut.");
+	const traces = await evidenceTraces(t);
+	expect(traces.length).toBeGreaterThan(0);
+	expect(traces.some((trace) => trace.includes('"payload"'))).toBe(false);
 });

@@ -216,3 +216,67 @@ test("without a TypeSafe key the submission fails with a NotConfigured error the
 		}),
 	]);
 });
+
+test("with DEV inspection on, intake's segment.inUnits renders as inspection rows whose calls carry their prompts and answers; with it off nothing is captured (#885)", async () => {
+	const providers = typeSafe();
+	const previous = process.env.TF_INSPECTION;
+	const submitInspected = (t: TestConvexDb) =>
+		t.action(api.orchestration.submitText, {
+			visitorId: "visitor-1",
+			submissionKey: "inspected",
+			sourceText: "Er gibt auf.",
+			inspectionVisitorId: "visitor-1",
+		});
+	const inspection = (t: TestConvexDb) =>
+		t.run(async (ctx) => ({
+			steps: await ctx.db.query("inspectionSteps").collect(),
+			payloads: await ctx.db.query("inspectionPayloads").collect(),
+		}));
+	try {
+		// A hosted deployment leaves TF_INSPECTION unset: no rows, no payloads.
+		delete process.env.TF_INSPECTION;
+		const off = createTestConvex();
+		await submitInspected(off);
+		expect(await inspection(off)).toEqual({ steps: [], payloads: [] });
+
+		process.env.TF_INSPECTION = "1";
+		const on = createTestConvex();
+		const sentBefore = providers.jev.sent.length;
+		await submitInspected(on);
+		const { steps, payloads } = await inspection(on);
+		const root = steps.find((step) => step.parentId === undefined);
+		expect(root?.name).toBe("Analyze submitted text");
+		const operation = steps.find((step) => step.name === "segment.inUnits");
+		expect(operation).toMatchObject({
+			parentId: root?.id,
+			owner: "battery/dumgen",
+			status: "Success",
+		});
+		const calls = steps.filter(
+			(step) =>
+				step.parentId === operation?.id && step.kind === "TypeSafe",
+		);
+		expect(calls).toHaveLength(providers.jev.sent.length - sentBefore);
+		expect(calls[0]).toMatchObject({ owner: "battery/dumgen · jev" });
+		expect(calls[0]?.name).toEndWith("· Sentence 0");
+		const payloadOf = (stepId: string) =>
+			JSON.parse(
+				payloads
+					.filter((payload) => payload.stepId === stepId)
+					.sort((a, b) => a.part - b.part)
+					.map(({ text }) => text)
+					.join(""),
+			);
+		for (const call of calls) {
+			const payload = payloadOf(call._id);
+			expect(payload.input.questions).toBeDefined();
+			expect(payload.output.answers).toBeDefined();
+			expect(payload.tokens.input).toBeGreaterThan(0);
+		}
+		// The payload carries no credential.
+		expect(JSON.stringify(payloads)).not.toContain("fixture");
+	} finally {
+		if (previous === undefined) delete process.env.TF_INSPECTION;
+		else process.env.TF_INSPECTION = previous;
+	}
+});

@@ -3,9 +3,12 @@ import * as Effect from "effect/Effect";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import {
 	createInspectionCapture,
+	dumgenTracing,
 	inspected,
 	inspectionStep,
+	operationSteps,
 	spanHops,
+	withoutPayloads,
 } from "../server/inspectionCapture";
 import { inspectionJson } from "../server/inspectionPayload";
 
@@ -206,4 +209,104 @@ test("a promise hop becomes a step under its services' span and rethrows its own
 		["Save", "Failure", capture.steps[1]?.id],
 		["Session", "Success", undefined],
 	]);
+});
+
+test("an OperationTrace renders as its operation, its calls and its budget waits (#885)", () => {
+	const trace = {
+		operation: "segment.inUnits",
+		startedAt: 1_000,
+		durationMs: 90,
+		calls: [
+			{
+				stage: "segments",
+				sentence: 0,
+				executor: "jev",
+				inputTokens: 20,
+				outputTokens: 1,
+				startedAt: 1_000,
+				durationMs: 40,
+				payload: { request: { q: 1 }, response: { a: 1 } },
+			},
+			{
+				stage: "segments",
+				sentence: 1,
+				executor: "jev",
+				inputTokens: 0,
+				outputTokens: 0,
+				startedAt: 1_050,
+				durationMs: 30,
+				failure: { tag: "ProviderFailure", message: "jev is down" },
+				payload: { request: { q: 2 } },
+			},
+		],
+		waits: [{ call: 1, waitMs: 10 }],
+		sentences: [
+			{ sentence: 0, outcome: "Segmented" },
+			{
+				sentence: 1,
+				outcome: "Failed",
+				failure: { tag: "ProviderFailure", message: "jev is down" },
+			},
+		],
+	} as const;
+	const steps = operationSteps(trace, "root");
+	const [operation, ...rows] = steps;
+	expect(operation).toMatchObject({
+		parentId: "root",
+		name: "segment.inUnits",
+		status: "Partial",
+		startedAt: 1_000,
+		durationMs: 90,
+	});
+	expect(
+		rows.map(({ parentId, name, kind, status, startedAt, durationMs }) => ({
+			parentId,
+			name,
+			kind,
+			status,
+			startedAt,
+			durationMs,
+		})),
+	).toEqual([
+		{
+			parentId: operation?.id,
+			name: "segments · Sentence 0",
+			kind: "TypeSafe",
+			status: "Success",
+			startedAt: 1_000,
+			durationMs: 40,
+		},
+		{
+			parentId: operation?.id,
+			name: "Wait for the request budget",
+			kind: "Code",
+			status: "Success",
+			startedAt: 1_040,
+			durationMs: 10,
+		},
+		{
+			parentId: operation?.id,
+			name: "segments · Sentence 1",
+			kind: "TypeSafe",
+			status: "Failure",
+			startedAt: 1_050,
+			durationMs: 30,
+		},
+	]);
+	expect(JSON.parse(rows[0]?.payloadJson ?? "null")).toMatchObject({
+		input: { q: 1 },
+		output: { a: 1 },
+		tokens: { input: 20, output: 1 },
+	});
+	expect(JSON.parse(rows[2]?.payloadJson ?? "null")).toMatchObject({
+		input: { q: 2 },
+		budgetWaitMs: 10,
+		failure: { tag: "ProviderFailure" },
+	});
+	expect(JSON.stringify(withoutPayloads(trace))).not.toContain("payload");
+});
+
+test("Dumgen keeps payloads only under DEV inspection (#885)", () => {
+	expect(dumgenTracing(undefined).tracePayloads).toBe(false);
+	expect(dumgenTracing(createInspectionCapture()).tracePayloads).toBe(true);
 });

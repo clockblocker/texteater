@@ -1,3 +1,4 @@
+import type { OperationTrace } from "dumgen";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type * as Effect from "effect/Effect";
@@ -91,7 +92,9 @@ export type KnowledgeProducer = <E>(
 		readonly onContribution: (
 			changes: KnowledgeProduction["changes"],
 		) => Effect.Effect<void, E>;
-		/** Receives each Dumgen operation's trace, serialized, for the run's evidence. */
-		readonly onOperation?: (trace: string) => void;
+		/** Receives each Dumgen operation's trace, for the run's evidence and DEV inspection. */
+		readonly onOperation?: (trace: OperationTrace) => void;
+		/** Keeps each call's prompt and answer in its trace: DEV inspection only. */
+		readonly tracePayloads?: boolean;
 	},
 ) => Effect.Effect<KnowledgeProduction, E>;
