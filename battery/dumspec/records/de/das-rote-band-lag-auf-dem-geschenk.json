@@ -18,7 +18,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038"],
@@ -132,7 +132,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "The ribbon or tape use resolves to the neuter Band Lemma; the feminine music-group and masculine book-volume uses resolve to different Lemmas through their Core Features. Knowledge (#884): Bändel is a synonym only if register doesn't count (#884 G1, open for the user)."
+				"rationale": "The ribbon or tape use resolves to the neuter Band Lemma; the feminine music-group and masculine book-volume uses resolve to different Lemmas through their Core Features. Knowledge (#884): Bändel is a synonym, since register neither makes a near-synonym nor blocks a claim (#884 G1, ruled by the user). OpenThesaurus's catch-all Oberbegriffe Gegenstand and Werk back no hypernym (de/relations-need-a-dictionary)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

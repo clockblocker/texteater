@@ -10,7 +10,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0036"],
@@ -152,7 +152,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Verheiratet describes a state, not the event of marrying: ist is the copula VERB and verheiratet the ADJ verheiratet with Participle Source verheiraten (ADR 0036). Knowledge (#884): the Participle Source is sich verheiraten, under which Duden and DWDS file the participle, Verbal; decided by agents under the user's delegation, and the user may reword \"verheiraten\" above. verehelicht and vermählt are synonyms only if register doesn't count (#884 G1, open for the user)."
+				"rationale": "Verheiratet describes a state, not the event of marrying: ist is the copula VERB and verheiratet the ADJ verheiratet with Participle Source sich verheiraten, Verbal (ADR 0036). Duden files the participle under verheiraten sense 1, sich verheiraten, and DWDS under ⟨sich verheiraten⟩, as ADR 0036 derives verliebt from sich verlieben. Knowledge (#884): verehelicht and vermählt are synonyms, since register neither makes a near-synonym nor blocks a claim (#884 G1, ruled by the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

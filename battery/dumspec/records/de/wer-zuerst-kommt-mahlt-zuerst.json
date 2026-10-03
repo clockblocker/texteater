@@ -15,7 +15,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],

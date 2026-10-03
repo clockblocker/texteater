@@ -24,7 +24,7 @@
 		{ "kind": "Punctuation", "text": ";" }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": {
 		"kind": "Quoted",
 		"work": "Der Struwwelpeter",
@@ -322,7 +322,7 @@
 			},
 			"grundform": true,
 			"notes": {
-				"rationale": "The noun owns its article across the adjective wilde, as German der does. Knowledge (#884): both plurals, Duden's Jägersleute and DWDS's Jägersmänner, were decided by agents under the user's delegation. Jäger and Weidmann are synonyms only if register doesn't count (#884 G1, open for the user)."
+				"rationale": "The noun owns its article across the adjective wilde, as German der does. Knowledge (#884): both plurals, Duden's Jägersleute and DWDS's Jägersmänner, were decided by agents under the user's delegation. Jäger and Weidmann are synonyms, since register neither makes a near-synonym nor blocks a claim (#884 G1, ruled by the user). OpenThesaurus's catch-all Oberbegriff Person backs no hypernym (de/relations-need-a-dictionary)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

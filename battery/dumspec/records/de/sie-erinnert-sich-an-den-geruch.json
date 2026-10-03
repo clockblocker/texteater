@@ -52,7 +52,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -213,7 +213,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "sich erinnern is inherently reflexive, so sich is a member and part of the normalized Surface erinnert sich. an is governed by erinnern: it is a member recorded in valencyEvidence as an + Acc and stays out of the normalized Surface. Knowledge (#884): the an Slot is Required with E-VALBU's Gen alternative, and vergessen is no antonym; decided by agents under the user's delegation. sich entsinnen is a synonym only if register doesn't count (#884 G1, open for the user), and vergessen would be an antonym if a definition by negation backed one (#884 G2, open for the user)."
+				"rationale": "sich erinnern is inherently reflexive, so sich is a member and part of the normalized Surface erinnert sich. an is governed by erinnern: it is a member recorded in valencyEvidence as an + Acc and stays out of the normalized Surface. Knowledge (#884): the an Slot is Required with E-VALBU's Gen alternative; decided by agents under the user's delegation. sich entsinnen is a synonym, since register neither makes a near-synonym nor blocks a claim (#884 G1), and vergessen is no antonym, since none is read off a definition's negation (#884 G2); both ruled by the user."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

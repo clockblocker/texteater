@@ -44,7 +44,7 @@
 		}
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": {
 		"kind": "Authored"
 	},
@@ -210,7 +210,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "wurde … gebeten is the process passive of bitten: wurde is its werden auxiliary and gebeten its participle, so the whole target has voice Pass and passive Process, and tense Past describes the finite wurde. um is governed by bitten, a member recorded in valencyEvidence as um + Acc and kept out of the normalized Surface wurde gebeten. Knowledge (#884): ersuchen is a synonym only if register doesn't count (#884 G1, open for the user). The Acc and um Slots are both Optional by the user's convention (d), though E-VALBU makes the um Slot obligatory."
+				"rationale": "wurde … gebeten is the process passive of bitten: wurde is its werden auxiliary and gebeten its participle, so the whole target has voice Pass and passive Process, and tense Past describes the finite wurde. um is governed by bitten, a member recorded in valencyEvidence as um + Acc and kept out of the normalized Surface wurde gebeten. Knowledge (#884): ersuchen is a synonym, since register neither makes a near-synonym nor blocks a claim (#884 G1, ruled by the user). The Acc and um Slots are both Optional by the user's convention (d), though E-VALBU makes the um Slot obligatory."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

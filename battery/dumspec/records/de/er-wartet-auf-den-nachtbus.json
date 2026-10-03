@@ -14,7 +14,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0038"],
@@ -176,7 +176,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "The governed preposition auf stays an occurrence member, so a click on it opens warten, but it is not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is wartet. Government is not a Lemma feature. Knowledge (#884): the Nom and the auf complement are Either, and the frame has no Adverbial, since ADR 0034 makes the place a free adjunct; decided by agents under the user's delegation. harren is a synonym only if register doesn't count (#884 G1, open for the user)."
+				"rationale": "The governed preposition auf stays an occurrence member, so a click on it opens warten, but it is not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is wartet. Government is not a Lemma feature. Knowledge (#884): the Nom and the auf complement are Either, and the frame has no Adverbial, since ADR 0034 makes the place a free adjunct; decided by agents under the user's delegation. harren is a synonym, since register neither makes a near-synonym nor blocks a claim (#884 G1, ruled by the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

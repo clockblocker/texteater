@@ -16,7 +16,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0031", "ADR-0034", "ADR-0038"],
@@ -111,7 +111,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "This is the kinship noun Mutter. The mother use shares one feminine Mutter Lemma with the nut use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Mütter and Muttern, are Reading Knowledge, not identity (ADR 0038). Knowledge (#884): the hypernym Familienmitglied and no antonym Vater were decided by agents under the user's delegation. Mama and Mutti are synonyms only if register doesn't count (#884 G1, open for the user), and Elternteil would join the hypernyms if a definition's genus backed one (#884 G2, open for the user)."
+				"rationale": "This is the kinship noun Mutter. The mother use shares one feminine Mutter Lemma with the nut use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Mütter and Muttern, are Reading Knowledge, not identity (ADR 0038). Knowledge (#884): the hypernym Familienmitglied and no antonym Vater were decided by agents under the user's delegation. Mama and Mutti are synonyms, since register neither makes a near-synonym nor blocks a claim (#884 G1), and Elternteil stays out, since a definition's genus backs no hypernym (#884 G2); both ruled by the user."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

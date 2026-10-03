@@ -16,7 +16,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Partial",
-	"reviewDepth": "Reading",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038"],
@@ -97,7 +97,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "The jaw use resolves to the masculine Kiefer Lemma, distinct through its Core Features from the feminine pine-tree Lemma. Knowledge (#884): the hypernym Knochen and no holonym were decided by agents under the user's delegation. Schädelknochen would join the hypernyms if a definition's genus backed one (#884 G2, open for the user)."
+				"rationale": "The jaw use resolves to the masculine Kiefer Lemma, distinct through its Core Features from the feminine pine-tree Lemma. Knowledge (#884): the hypernym Knochen and no holonym were decided by agents under the user's delegation. Schädelknochen stays out, since a definition's genus backs no hypernym (#884 G2, ruled by the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
