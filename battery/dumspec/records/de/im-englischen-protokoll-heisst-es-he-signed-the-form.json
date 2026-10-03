@@ -1,0 +1,147 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Im englischen Protokoll heißt es: „He signed the form.“",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Im"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "englischen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Protokoll"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "heißt"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "es"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ":"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "Punctuation",
+			"text": "„"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "He"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "signed"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "the"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "form"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		},
+		{
+			"kind": "Punctuation",
+			"text": "“"
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [12],
+			"route": {
+				"family": "Foreign",
+				"kind": "Foreign"
+			},
+			"notes": {
+				"rationale": "English He opening a quoted English sentence shows no German grammar: Foreign en, its Canonical Form correcting the position's capital (ADR 0045). Imported from legacy-dumgen grammar-de-pron-accept-v4-foreign-he (#687, #876)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "He",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "he",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "he",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": {
+							"sourceLang": "en"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
+		}
+	],
+	"noTarget": []
+}

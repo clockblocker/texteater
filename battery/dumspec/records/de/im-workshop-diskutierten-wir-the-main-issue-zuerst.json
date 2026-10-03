@@ -1,0 +1,127 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Im Workshop diskutierten wir the main issue zuerst.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Im"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Workshop"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "diskutierten"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "the"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "main"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "issue"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "zuerst"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [8],
+			"route": {
+				"family": "Foreign",
+				"kind": "Foreign"
+			},
+			"notes": {
+				"rationale": "English the inside a German sentence is Foreign en (ADR 0045), never a German DET. Imported from legacy-dumgen grammar-de-det-dev-foreign-the (#687, #876)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "the",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "the",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "the",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": {
+							"sourceLang": "en"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
+		}
+	],
+	"noTarget": []
+}

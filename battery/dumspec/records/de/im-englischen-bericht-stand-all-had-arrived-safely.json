@@ -1,0 +1,139 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Im englischen Bericht stand: „All had arrived safely.“",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Im"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "englischen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Bericht"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "stand"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ":"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "Punctuation",
+			"text": "„"
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "All"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "had"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "arrived"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "safely"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		},
+		{
+			"kind": "Punctuation",
+			"text": "“"
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": ["ADR-0045"],
+		"rules": [
+			{
+				"rule": "de/foreign-unless-duden-or-german-grammar",
+				"hash": "c2f06b03fed6e233"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [10],
+			"route": {
+				"family": "Foreign",
+				"kind": "Foreign"
+			},
+			"notes": {
+				"rationale": "English All opening a quoted English sentence is Foreign en (ADR 0045), as the user ruled on #876; legacy-dumgen grammar-de-pron-dev-total-foreign-all expected Unresolved."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "All",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "all",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "all",
+						"family": "Foreign",
+						"kind": "Foreign",
+						"coreFeatures": {
+							"sourceLang": "en"
+						}
+					},
+					"surfaceFeatures": null
+				}
+			},
+			"reading": {}
+		}
+	],
+	"noTarget": []
+}
