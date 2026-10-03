@@ -318,6 +318,17 @@ evidence/segment-in-units-lab/
   set was not taken again. It reads only `dev@adb64b2bdaf31f4f`, so runs
   on the current dev get no focus block and `--subset focus` refuses it.
   Earlier runs stay scored on `dev@adb64b2bdaf31f4f`.
+- A third refreeze, on 2026-10-03 at 0efc8d65, picks up #884's reopened
+  Segmentation of sie-uebersetzt-den-vertrag-ins-deutsche: the governed
+  `in` of `ins` joins `[übersetzt, in]`. Held-out is now
+  `heldout@1a69c4258c71f152`, the same 189 cases and 725 gold units, with
+  that one unit changed. Dev is now `dev@b6fca287295d4ee3`, 1279 cases:
+  #876's three Foreign en Draft records joined it, and no other case
+  changed. Held-out runs before it stay scored on
+  `heldout@c23a5cc90ca8afc9`. The round was not re-pinned: #876 changed
+  the inventories, and an offline replay of
+  20261002T122056--production--heldout--all misses the cache on 15 case
+  repetitions.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   committed outcomes otherwise. Outcomes are scored against the frozen
   gold, so `--relabel` needs the raw run.
