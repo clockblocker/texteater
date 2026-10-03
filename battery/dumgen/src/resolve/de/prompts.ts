@@ -56,6 +56,8 @@ const rules = {
 	idiom: ["de/idiom", "c05df428b3a42079"],
 	routine: ["de/routine-formula-is-intj", "32797f3b5f083780"],
 	pronOrDet: ["de/pron-or-det-by-use", "b7ac2bf4eaaf25be"],
+	splitAdverb: ["de/split-adverb-is-one-target", "05ddf27450fc5104"],
+	pronominalAdverb: ["de/pronominal-adverb-stands-alone", "1b11d9ee80ce12bd"],
 } as const satisfies Readonly<Record<string, Cite>>;
 
 /** One registered paragraph: its name, its text or template, and what it cites. */
@@ -117,14 +119,15 @@ export const policy = {
 	),
 	noun: paragraph(
 		"policy.noun",
-		"A noun's article is a member, never a feature, and the noun's Surface marks its own case and number. A person noun made from an adjective or participle is one Lemma with no gender, whose singular form shows a gender («der Abgeordnete», «die Abgeordnete»); a neuter one with a meaning of its own keeps Neut («das Ungewisse»).",
+		"A noun's article is a member, never a feature, and the noun's Surface marks its own case and number. Its lexical gender is the gender of its nominative singular with der, die or das, whatever case, number or article this sentence gives it: «des Hafens» is a form of der «Hafen», and «Gläser» keeps the gender of das «Glas». A person noun made from an adjective or participle is one Lemma with no gender, whose singular form shows a gender («der Abgeordnete», «die Abgeordnete»); a neuter one with a meaning of its own keeps Neut («das Ungewisse»).",
 		rules.nounArticle,
+		rules.core,
 		rules.adjectivalNoun,
 		rules.neuterNoun,
 	),
 	properNoun: paragraph(
 		"policy.properNoun",
-		"A name cited with its definite article, as streets, rivers, mountains, buildings and titles whose article inflects are, has Core article Definite; a name cited bare has none even where this sentence gives it an article. A surname, full name or coined name has no lexical gender, and its singular form shows the gender its article or adjective gives it. A title before a name takes the name's case.",
+		"A name cited with its definite article, as streets, squares, rivers, mountains, buildings, a country or region always named with it, and titles whose article inflects are, has Core article Definite; a name cited bare has none even where this sentence gives it an article. A surname, full name or coined name has no lexical gender, unlike a first name, and its singular form shows the gender its article or adjective gives it; any other name has the lexical gender its article or an agreeing word shows. A title before a name takes the name's case.",
 		rules.properArticle,
 		rules.title,
 	),
@@ -139,7 +142,7 @@ export const policy = {
 	),
 	verbCore: paragraph(
 		"policy.verbCore",
-		"A verb's separable prefix is only its separable particle, attached or standing apart, never a preposition the verb governs or one with its own complement; a directional word in the verbal bracket is the particle when verb and word form a particle verb («führt … vorüber» is «vorüberführen»). A lexical reflexive's case is fixed per verb.",
+		"A verb's separable prefix is only its separable particle, attached or standing apart, never a preposition the verb governs or one with its own complement; a directional word in the verbal bracket is the particle when verb and word form a particle verb («führt … vorüber» is «vorüberführen»), and so is a noun or adjective the infinitive writes as one word with the verb («findet … statt» is «stattfinden»). A prefix the verb never splits off, which takes no ge- in the participle («überquert», «widerlegt»), is inseparable and no separable prefix. A lexical reflexive's case is fixed per verb.",
 		rules.verbCore,
 		rules.bracket,
 	),
@@ -150,7 +153,7 @@ export const policy = {
 	),
 	adjective: paragraph(
 		"policy.adjective",
-		"An adjective or adverb is comparable when a dictionary gives it comparison forms. Every form of a comparable one marks its degree, positive when uncompared; a non-comparable one marks none. Only an adjective that agrees with a noun, attributively or standing in for an elided noun, marks case, gender and number.",
+		"An adjective or adverb is comparable when Duden, or else DWDS, gives its headword comparison forms, suppletive ones from another stem included; forms marked colloquial or rare do not count, and a participle no dictionary lists as an adjective is not comparable. Every form of a comparable one marks its degree, positive when uncompared; a non-comparable one marks none. Only an adjective that agrees with a noun, attributively or standing in for an elided noun, marks case, gender and number.",
 		rules.comparability,
 		rules.attributive,
 	),
@@ -219,6 +222,12 @@ export const question = {
 		"Under `policy.orthography`, how is the unit's form spelled, compared with the dictionary's main spelling of that same form?",
 		rules.variant,
 	),
+	spellingCanonical: paragraph(
+		"question.spelling.Canonical",
+		"The dictionary's main spelling of this form; an inflected or capitalized form counts, and so does a form whose only fault is a typo, judged as the word it misspells",
+		rules.variant,
+		rules.orthography,
+	),
 	archaic: paragraph(
 		"question.archaic",
 		"Under `policy.orthography`, is the unit's form itself archaic?",
@@ -231,15 +240,31 @@ export const question = {
 	),
 	nounGender: paragraph(
 		"question.noun.gender",
-		"Under `policy.noun`, what lexical gender does the noun's dictionary entry have?",
+		"Under `policy.noun`, what lexical gender does the noun's dictionary entry have: the gender of its nominative singular, whatever case, number or article this sentence shows?",
 		rules.core,
 		rules.adjectivalNoun,
 		rules.neuterNoun,
 	),
 	nounGenderNone: paragraph(
 		"question.noun.gender.None",
-		"None: a person noun made from an adjective or participle, or a plural-only noun",
+		"None: only a person noun made from an adjective or participle, or a noun with no singular at all; a plural form of a noun that has a singular takes that singular's gender",
 		rules.adjectivalNoun,
+		rules.core,
+	),
+	nounGenderMasc: paragraph(
+		"question.noun.gender.Masc",
+		"Masculine: its nominative singular takes der",
+		rules.core,
+	),
+	nounGenderFem: paragraph(
+		"question.noun.gender.Fem",
+		"Feminine: its nominative singular takes die",
+		rules.core,
+	),
+	nounGenderNeut: paragraph(
+		"question.noun.gender.Neut",
+		"Neuter: its nominative singular takes das",
+		rules.core,
 	),
 	locutionGender: paragraph(
 		"question.locution.gender",
@@ -276,12 +301,27 @@ export const question = {
 	),
 	properGender: paragraph(
 		"question.proper.gender",
-		"Under `policy.properNoun`, what gender does the name have lexically?",
+		"Under `policy.properNoun`, what gender does the name have lexically? A first name has its bearer's gender; any other name but a surname, full name or coined name has the gender its article or an agreeing word shows.",
 		rules.properArticle,
 	),
 	properGenderNone: paragraph(
 		"question.proper.gender.None",
-		"None: a surname, full name or coined name, or a plural-only name",
+		"None: a surname, full name or coined name, never a first name, or a name used only in the plural",
+		rules.properArticle,
+	),
+	properGenderMasc: paragraph(
+		"question.proper.gender.Masc",
+		"Masculine: a man's first name, or a name that takes der in the singular",
+		rules.properArticle,
+	),
+	properGenderFem: paragraph(
+		"question.proper.gender.Fem",
+		"Feminine: a woman's first name, or a name that takes die in the singular",
+		rules.properArticle,
+	),
+	properGenderNeut: paragraph(
+		"question.proper.gender.Neut",
+		"Neuter: a name that takes das, as a city or country named without an article does",
 		rules.properArticle,
 	),
 	auxiliary: paragraph(
@@ -297,7 +337,7 @@ export const question = {
 	),
 	prefix: paragraph(
 		"question.prefix",
-		"Under `policy.verbCore`, does the verb's dictionary entry have a separable prefix, and which?",
+		"Under `policy.verbCore`, does the verb's dictionary entry have a separable prefix, and which? A separable prefix is split off from the finite verb in a main clause and takes ge- or zu after it in the participle or infinitive; a word standing apart that the infinitive writes as one with the verb is one.",
 		rules.verbCore,
 		rules.bracket,
 	),
@@ -343,7 +383,17 @@ export const question = {
 	),
 	comparable: paragraph(
 		"question.comparable",
-		"Under `policy.adjective`, does a dictionary give this word comparison forms?",
+		"Under `policy.adjective`, does Duden, or else DWDS, give this word's headword comparison forms, suppletive ones included?",
+		rules.comparability,
+	),
+	comparableYes: paragraph(
+		"question.comparable.Yes",
+		"Yes: its headword has comparison forms, from its own stem or another",
+		rules.comparability,
+	),
+	comparableNo: paragraph(
+		"question.comparable.No",
+		"No: no comparison forms, only colloquial or rare ones, or a participle no dictionary lists as an adjective",
 		rules.comparability,
 	),
 	attributive: paragraph(
@@ -513,15 +563,18 @@ export const canonicalForm = {
 	),
 	headword: paragraph(
 		"canonical.headword",
-		"The Canonical Form is the dictionary headword, in the casing the dictionary shows, never the casing the word's position gives: a sentence-initial «Mangels» is the preposition «mangels», and «WTF» keeps its capitals. When a stored Lemma in `lemmaCandidates` is this unit's headword, write it as stored.",
+		"The Canonical Form is the dictionary headword, in Duden's recommended current spelling and in the casing the dictionary shows, never the casing the word's position gives: a sentence-initial «Mangels» is the preposition «mangels», «WTF» keeps its capitals, and an old or Swiss spelling such as «Kuß» or «Schiffahrt» is cited as «Kuss» and «Schifffahrt». When a stored Lemma in `lemmaCandidates` is this unit's headword, write it as stored.",
 		rules.headword,
 	),
 	members: paragraph(
 		"canonical.members",
-		"Spell each member as the unit shows it, in the word's lexical casing. Correct a member judged Typo, and write a member judged Shorthand as the word it shortens; a member judged Standard keeps its letters and changes at most in casing. A member in `fixedMembers` keeps the spelling given there.",
+		"Spell each member as the unit shows it, in the word's lexical casing, one entry per member in order, those in `outsideHeadword` and `auxiliaries` included. Correct a member judged Typo, and write a member judged Shorthand as the word it shortens: an r- word as its her- or hin- word, a dr- word as its da(r)- word, a bare w-word as its irgend- word. A member judged Standard keeps its letters and changes at most in casing. A member in `fixedMembers` keeps the spelling given there.",
 		rules.orthography,
 		rules.fused,
 		rules.abbreviation,
+		rules.rShorthand,
+		rules.drShorthand,
+		rules.wShorthand,
 	),
 	suspended: paragraph(
 		"canonical.suspended",
@@ -553,21 +606,30 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 	),
 	"Lexeme/VERB": paragraph(
 		"canonical.route.Lexeme/VERB",
-		"A verb is cited as its infinitive with its lexical reflexive and its separable prefix (`judged.hasSepPrefix`), never with its auxiliaries, its subject es or a governed preposition: «sich sputen», «fortfahren».",
+		"A verb is cited as the infinitive of its main verb, with sich before it when `judged.lexicallyReflexive` is set and with its separable prefix (`judged.hasSepPrefix`) written on, never with the members in `auxiliaries`, causative lassen, its subject es or a governed preposition: «sich sputen», «fortfahren».",
 		rules.headword,
 		rules.verbCore,
 		rules.expletive,
+		rules.auxiliary,
+		rules.causative,
 	),
 	"Lexeme/ADJ": paragraph(
 		"canonical.route.Lexeme/ADJ",
-		"An adjective is cited in its uninflected positive form, without a governed preposition; one used only attributively cites its attributive headword («obere» in «die obere Etage»).",
+		"An adjective is cited in its uninflected positive form, also for a suppletive comparative or superlative, without a governed preposition; only one with no predicative form, as an ordinal, cites its attributive headword («obere» in «die obere Etage»).",
 		rules.headword,
 		rules.government,
+		rules.attributive,
 	),
 	"Lexeme/ADV": paragraph(
 		"canonical.route.Lexeme/ADV",
-		"An adverb is cited in its positive form; a split adverb is cited whole.",
+		"An adverb is cited in its positive form, the positive headword of a suppletive comparative or superlative. A da, wo or hier split from its hin, her or preposition is cited as the one word they form, such as «hiermit», never as its first piece alone. A member judged Shorthand is cited as the word it shortens.",
 		rules.headword,
+		rules.comparability,
+		rules.splitAdverb,
+		rules.pronominalAdverb,
+		rules.rShorthand,
+		rules.drShorthand,
+		rules.wShorthand,
 	),
 	"Lexeme/ADP": paragraph(
 		"canonical.route.Lexeme/ADP",
@@ -587,14 +649,16 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 	),
 	"Lexeme/INTJ": paragraph(
 		"canonical.route.Lexeme/INTJ",
-		"An interjection is cited as written, pieces and spacing kept, in its lexical casing; a one-word routine formula is cited as its word.",
+		"An interjection is cited as written, pieces and spacing kept, in its lexical casing, but letters stretched for effect are cited in the dictionary's spelling («pssst» is «pst»); a one-word routine formula is cited as its word, without a preposition or complement after it.",
 		rules.headword,
 		rules.interjection,
 		rules.routine,
+		rules.variant,
+		rules.government,
 	),
 	"Lexeme/NUM": paragraph(
 		"canonical.route.Lexeme/NUM",
-		"A numeral written in digits is cited as the numeral word it spells; a year from 1100 to 1999 is spelled in hundreds.",
+		"A numeral written in digits is cited as the numeral word it spells, never as digits; a year from 1100 to 1999 is spelled in hundreds, not thousands.",
 		rules.headword,
 		rules.digits,
 	),
@@ -610,14 +674,15 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 	),
 	Locution: paragraph(
 		"canonical.route.Locution",
-		"A Locution is cited in its dictionary wording: a verbal one as its fixed words with the infinitive last and open slots left out («Maulaffen feilhalten»), a nominal one in the nominative, an adpositional or conjunctional one with … for each slot.",
+		"A Locution is cited in its dictionary wording: a verbal one as its fixed words with the infinitive last, keeping the article or fused preposition that wording has and leaving out open slots, never a placeholder such as jemandem or etwas («Maulaffen feilhalten»), a nominal one in the nominative, an adpositional or conjunctional one with … for each slot.",
 		rules.headword,
 		rules.idiom,
 	),
 	"Saying/Saying": paragraph(
 		"canonical.route.Saying/Saying",
-		"A Saying is cited as a sentence in its standard wording, capitalized, with internal punctuation and no final punctuation.",
+		"A Saying is cited as a sentence in its full standard wording, even when this sentence quotes only part of it or changes a word, capitalized, with the commas that wording has and no final punctuation.",
 		rules.headword,
+		rules.partial,
 	),
 	"Foreign/Foreign": paragraph(
 		"canonical.route.Foreign/Foreign",

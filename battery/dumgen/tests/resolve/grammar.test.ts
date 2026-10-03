@@ -961,4 +961,5 @@ test("Luna is told which members are auxiliaries, which stay out of the headword
 		(luna.sent[0]?.input as { auxiliaries?: unknown } | undefined)
 			?.auxiliaries,
 	).toEqual(["m0"]);
+	expect(luna.sent[0]?.systemPrompt).toContain("`auxiliaries`");
 });

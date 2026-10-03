@@ -430,8 +430,7 @@ function plan(target: Target): Plan {
 			"spelling",
 			question.spelling,
 			{
-				Canonical:
-					"The dictionary's main spelling of this form; an inflected or capitalized form counts",
+				Canonical: question.spellingCanonical,
 				Licensed: "Another spelling a current standard accepts",
 				Historical: "A spelling only an earlier standard accepted",
 				Regional: "A dialect or regional spelling",
@@ -581,14 +580,24 @@ function plan(target: Target): Plan {
 			questionnaire.choice(
 				"gender",
 				question.properGender,
-				{ ...genders, None: question.properGenderNone },
+				{
+					Masc: question.properGenderMasc,
+					Fem: question.properGenderFem,
+					Neut: question.properGenderNeut,
+					None: question.properGenderNone,
+				},
 				["properNoun"],
 			);
 		} else
 			questionnaire.choice(
 				"gender",
 				shape.locution ? question.locutionGender : question.nounGender,
-				{ ...genders, None: question.nounGenderNone },
+				{
+					Masc: question.nounGenderMasc,
+					Fem: question.nounGenderFem,
+					Neut: question.nounGenderNeut,
+					None: question.nounGenderNone,
+				},
 				["noun"],
 			);
 		questionnaire.choice("number", question.nounNumber, numbers);
@@ -605,7 +614,7 @@ function plan(target: Target): Plan {
 		questionnaire.choice(
 			"comparable",
 			question.comparable,
-			{ Yes: "Yes, it has comparison forms", No: "No comparison forms" },
+			{ Yes: question.comparableYes, No: question.comparableNo },
 			["adjective"],
 		);
 		questionnaire.choice("degree", question.degree, {
