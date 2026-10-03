@@ -36,7 +36,7 @@ for authored, drafted and generated Readings alike.
 | --- | --- | --- |
 | `noch` | ⏳ 'still', ➕ 'in addition' | split |
 | `Mutter` | 👩‍👧 'mother', 🔩 'nut' | split |
-| `stehen bleiben` | 🛑 'stop working', 📝🟰 'be left unchanged' | split |
+| `stehen bleiben` | 🛑 'stop working', 📌 'be left unchanged' | split |
 | `so` | 🔧 | fold: manner and degree are one Reading |
 | `lang` (ADJ) | 📏 | fold: length in space and in time |
 
