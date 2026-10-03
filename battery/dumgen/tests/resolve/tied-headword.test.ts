@@ -7,7 +7,7 @@ import { sentenceOf, unitOf } from "./support.js";
 
 const targetAt = (
 	text: string,
-	segments: readonly number[],
+	segments: number[],
 	family: string,
 	kind: string,
 ) => {

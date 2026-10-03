@@ -44,6 +44,7 @@ import {
 	type MemberOrthography,
 	rShortenings,
 } from "./member-spelling.js";
+import { numeralWord } from "./numeral.js";
 import { auxiliaryUses, fill, question } from "./prompts.js";
 import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
 import {
@@ -563,7 +564,7 @@ function plan(target: Target): Plan {
 				...Object.fromEntries(
 					prefixes.map((prefix, index) => [`p${index}`, prefix]),
 				),
-				None: "No separable prefix",
+				None: "No separable prefix: the verb's dictionary infinitive is written without any of these",
 			},
 			["verbCore"],
 		);
@@ -1384,6 +1385,16 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		canonicalForm = authored.lemma.canonicalForm;
 		if (!written) normalized[0] = authored.lemma.canonicalForm;
 	}
+	// Digits spell their numeral word (Rule de/digits-spell-the-numeral).
+	const [only] = target.members;
+	const spelledNumber =
+		target.route.family === "Lexeme" &&
+		target.route.kind === "NUM" &&
+		target.members.length === 1 &&
+		only
+			? numeralWord(only.text)
+			: undefined;
+	if (spelledNumber !== undefined) canonicalForm = spelledNumber;
 	if (shape.adverbial && shape.lexeme && canonicalForm !== undefined) {
 		const derived = adverbHeadword(target, first.orthographies, normalized);
 		if (derived) {

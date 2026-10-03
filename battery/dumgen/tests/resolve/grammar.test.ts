@@ -1107,3 +1107,23 @@ test("a split da or wo adverb and a bare w-word judged Shorthand get the headwor
 	expect(jev.questions("grammar")).toContain("short_s6");
 	expect(attested(out.result).surface.lemma.canonicalForm).toBe("hinaus");
 });
+
+test("the comparable question offers No for a demonstrative or interrogative adverb such as so, and code reads it as no Degree", async () => {
+	const jev = fakeJev({ comparable: "No" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("so").ask },
+		{
+			sentence: sentenceOf("Es war so laut."),
+			unit: unitOf([4], "Lexeme", "ADV"),
+		},
+	);
+	const asked = jev.sent[0]?.questions.comparable;
+	expect(asked?.type === "choice" && asked.criteria.No).toContain(
+		"a demonstrative, interrogative or relative adverb",
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.coreFeatures).toEqual({
+		comparable: null,
+	});
+	expect(attestation.surface.inflectionalFeatures ?? null).toBeNull();
+});

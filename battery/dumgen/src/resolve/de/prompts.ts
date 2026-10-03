@@ -171,7 +171,7 @@ export const policy = {
 	),
 	interjection: paragraph(
 		"policy.interjection",
-		"An answer word replying to a question, quoted or embedded too, has partType Res; any other interjection has none.",
+		"An answer word replying to a question, quoted or embedded too, has partType Res; any other interjection has none, even one given as a reply, such as a laugh, an exclamation or a thanks.",
 		rules.interjection,
 	),
 	foreign: paragraph(
@@ -415,12 +415,12 @@ export const question = {
 	),
 	comparableYes: paragraph(
 		"question.comparable.Yes",
-		"Yes: its headword has comparison forms, from its own stem or another",
+		"Yes: its headword itself has a comparative and a superlative, from its own stem or, for a suppletive word, from another stem",
 		rules.comparability,
 	),
 	comparableNo: paragraph(
 		"question.comparable.No",
-		"No: no comparison forms, only colloquial or rare ones, or a participle no dictionary lists as an adjective",
+		"No: the headword itself has no comparison forms, as for an ordinal, a possessive, a demonstrative, interrogative or relative adverb, only colloquial or rare ones, or a participle no dictionary lists as an adjective; a word it modifies does not count",
 		rules.comparability,
 	),
 	attributive: paragraph(
@@ -634,7 +634,7 @@ export const canonicalForm = {
 export const routeGuidance: Readonly<Record<string, string>> = {
 	"Lexeme/NOUN": paragraph(
 		"canonical.route.Lexeme/NOUN",
-		"A noun is cited bare, in the nominative singular, with noun capitalization, without its article or a governed preposition; a plural-only noun keeps its plural. A person noun made from an adjective or participle is cited in its weak form after der («Abgeordnete»), and a neuter one in its weak form («Ungewisse»).",
+		"A noun is cited bare, in the nominative singular, with noun capitalization, without its article or a governed preposition, even where the members show its plural («Gläser» is «Glas»); only a plural-only noun keeps its plural. A person noun made from an adjective or participle is cited in its weak form after der («Abgeordnete»), and a neuter one in its weak form («Ungewisse»).",
 		rules.headword,
 		rules.nounArticle,
 		rules.adjectivalNoun,
