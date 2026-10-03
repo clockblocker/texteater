@@ -11,8 +11,9 @@
  * that came back but holds no usable output (a refusal, or JSON without
  * its `value`) is returned with no output and the problem in its metadata,
  * so the operation's check refuses it as `InvalidModelOutput` with that
- * reason in the trace (#876). JSON whose only key wraps the value under
- * another name (`output`, the schema's name) is unwrapped and marked. The
+ * reason in the trace (#876). The value written without its wrapper (an
+ * object holding the schema's required keys, as round 3's empty answers
+ * were), or wrapped under another single key, is unwrapped and marked. The
  * request ends at its deadline or when the caller's signal aborts,
  * whichever comes first.
  */
@@ -51,7 +52,11 @@ type ResponsesPayload = {
 	readonly model?: string;
 };
 
-function responseOf(body: string, json: boolean): LunaResponse {
+function responseOf(
+	body: string,
+	json: boolean,
+	required: readonly string[] = [],
+): LunaResponse {
 	let payload: ResponsesPayload;
 	try {
 		payload = JSON.parse(body) as ResponsesPayload;
@@ -106,6 +111,12 @@ function responseOf(body: string, json: boolean): LunaResponse {
 	const keys = record ? Object.keys(record) : [];
 	const [only] = keys;
 	const inner = only === undefined ? undefined : record?.[only];
+	// The value itself, unwrapped (round 3 saw {"canonicalForm": …}).
+	if (record && required.length > 0 && required.every((key) => key in record))
+		return {
+			output: record,
+			metadata: { ...metadata, unwrapped: "top-level" },
+		};
 	if (keys.length === 1 && inner !== null && typeof inner === "object")
 		return { output: inner, metadata: { ...metadata, unwrapped: only } };
 	return {
@@ -190,6 +201,11 @@ export function createOpenAILuna(options: OpenAILunaOptions): LunaAsk {
 		}
 		if (!ok)
 			throw Error(`OpenAI answered ${status}: ${text.slice(0, 200)}`);
-		return responseOf(text, json);
+		const required = Array.isArray(schema.required)
+			? (schema.required as unknown[]).filter(
+					(key): key is string => typeof key === "string",
+				)
+			: [];
+		return responseOf(text, json, required);
 	};
 }

@@ -168,3 +168,32 @@ test("an incomplete response throws with its reason", async () => {
 		"OpenAI response incomplete (max_output_tokens)",
 	);
 });
+
+test("the value written without its wrapper is taken when it holds the schema's required keys", async () => {
+	const { fetch } = fakeFetch([
+		{
+			status: 200,
+			body: completed('{"canonicalForm":"Haus","members":["Häuser"]}'),
+		},
+	]);
+	const luna = createOpenAILuna({ apiKey: "key-1", fetch });
+	expect(
+		await luna(
+			{
+				...request,
+				outputSchema: {
+					type: "object",
+					properties: {
+						canonicalForm: { type: "string" },
+						members: { type: "array" },
+					},
+					required: ["canonicalForm", "members"],
+				},
+			},
+			context(),
+		),
+	).toMatchObject({
+		output: { canonicalForm: "Haus", members: ["Häuser"] },
+		metadata: { unwrapped: "top-level" },
+	});
+});
