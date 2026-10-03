@@ -47,13 +47,40 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Ende gut, alles gut",
+				"url": "https://www.dwds.de/wb/Ende%20gut%2C%20alles%20gut",
+				"supports": "Target 0 Knowledge: Formgeschichte: das Sprichwort translates the title of Shakespeare's All's Well That Ends Well"
+			},
+			{
+				"title": "OpenThesaurus: Ende gut, alles gut",
+				"url": "https://www.openthesaurus.de/synonyme/Ende%20gut%2C%20alles%20gut",
+				"supports": "Target 0 Knowledge: synsets with ein gutes Ende finden (VERB) and letztendlich etc. (ADV sense); neither holds for the saying, not claimed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [29, 31, 34, 36],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🏁😌" },
+			"reading": {
+				"emojiDescription": "🏁😌",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

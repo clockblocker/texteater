@@ -35,7 +35,23 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 51: Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert, ist ein schlechter Erzieher (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "Wikiquote: Marie von Ebner-Eschenbach",
+				"url": "https://de.wikiquote.org/wiki/Marie_von_Ebner-Eschenbach",
+				"supports": "Target 0 Knowledge: lists 'Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert, ist ein schlechter Erzieher' under Aphorismen, Schriften Bd. 1 (1893)"
+			},
+			{
+				"title": "DWDS: Wer sich seiner eigenen Kindheit nicht mehr deutlich erinnert, ist ein schlechter Erzieher",
+				"url": "https://www.dwds.de/wb/Wer%20sich%20seiner%20eigenen%20Kindheit%20nicht%20mehr%20deutlich%20erinnert%2C%20ist%20ein%20schlechter%20Erzieher",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -43,7 +59,24 @@
 				0, 2, 4, 6, 8, 10, 12, 14, 16, 19, 21, 23, 25
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🧸💭🧑‍🏫" },
+			"reading": {
+				"emojiDescription": "🧸💭🧑‍🏫",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

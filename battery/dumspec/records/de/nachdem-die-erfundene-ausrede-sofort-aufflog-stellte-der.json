@@ -40,13 +40,62 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Lügen haben kurze Beine",
+				"url": "https://www.dwds.de/wb/L%C3%BCgen%20haben%20kurze%20Beine",
+				"supports": "Target 0 Knowledge: sprichwörtlich; Synonym zu ehrlich währt am längsten"
+			},
+			{
+				"title": "DWDS: ehrlich währt am längsten",
+				"url": "https://www.dwds.de/wb/ehrlich%20w%C3%A4hrt%20am%20l%C3%A4ngsten",
+				"supports": "Target 0 Knowledge: sprichwörtlich; Synonym zu Lügen haben kurze Beine; gloss: eine Lüge wird früher oder später doch aufgedeckt"
+			},
+			{
+				"title": "Duden: Luege",
+				"url": "https://www.duden.de/rechtschreibung/Luege",
+				"supports": "Target 0 Knowledge: Wendung Lügen haben kurze Beine"
+			},
+			{
+				"title": "OpenThesaurus: Lügen haben kurze Beine.",
+				"url": "https://www.openthesaurus.de/synonyme/L%C3%BCgen%20haben%20kurze%20Beine.",
+				"supports": "Target 0 Knowledge: synset with Mit Lügen kommt man nicht weit (a paraphrase, no Lemma); not claimed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [23, 25, 27, 29],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🤥🔍" },
+			"reading": {
+				"emojiDescription": "🤥🔍",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Ehrlich währt am längsten",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -14,13 +14,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Zeit ist Geld",
+				"url": "https://www.dwds.de/wb/Zeit%20ist%20Geld",
+				"supports": "Target 0 Knowledge: Mehrwortausdruck (umgangssprachlich), no origin given; no Synonym/Gegensatz"
+			},
+			{
+				"title": "Büchmann, Geflügelte Worte (19. Aufl., 1898)",
+				"url": "https://www.gutenberg.org/ebooks/43759",
+				"supports": "Target 0 Knowledge: Zeit ist Geld (Time is money) traced to Theophrast's saying, cf. Bacon, Of Dispatch; no single author"
+			},
+			{
+				"title": "OpenThesaurus: Zeit ist Geld.",
+				"url": "https://www.openthesaurus.de/synonyme/Zeit%20ist%20Geld.",
+				"supports": "Target 0 Knowledge: no synset; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "⏳💰" },
+			"reading": {
+				"emojiDescription": "⏳💰",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

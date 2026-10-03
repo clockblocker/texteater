@@ -48,13 +48,40 @@
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: wer A sagt, muss auch B sagen",
+				"url": "https://www.dwds.de/wb/wer%20A%20sagt%2C%20muss%20auch%20B%20sagen",
+				"supports": "Target 0 Knowledge: Mehrwortausdruck with Bedeutungsgeschichte (alphabet); no Synonym/Gegensatz"
+			},
+			{
+				"title": "OpenThesaurus: Wer A sagt, muss auch B sagen",
+				"url": "https://www.openthesaurus.de/synonyme/Wer%20A%20sagt%2C%20muss%20auch%20B%20sagen",
+				"supports": "Target 0 Knowledge: synset holds only glosses (Begonnenes muss man fortsetzen); no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17, 19, 21, 24, 26, 28, 30],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🅰➡🅱" },
+			"reading": {
+				"emojiDescription": "🅰➡🅱",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "muß is the spelling of muss valid only before 1996, so the Surface that spells it is a Variant tagged Historical, while the member is Standard (de/variant-and-historical-status, de/member-orthography). The Canonical Form has today's muss and keeps the internal comma (de/saying-needs-uptake)."
 			},

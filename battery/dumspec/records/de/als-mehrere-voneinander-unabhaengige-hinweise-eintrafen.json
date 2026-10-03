@@ -43,13 +43,50 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: wo Rauch ist, ist auch Feuer",
+				"url": "https://www.dwds.de/wb/wo%20Rauch%20ist%2C%20ist%20auch%20Feuer",
+				"supports": "Target 0 Knowledge: no entry (also none for wo Rauch ist, da ist auch Feuer)"
+			},
+			{
+				"title": "DWDS: kein Rauch ohne Feuer",
+				"url": "https://www.dwds.de/wb/kein%20Rauch%20ohne%20Feuer",
+				"supports": "Target 0 Knowledge: sprichwörtlich; separate proverb, no link to this line"
+			},
+			{
+				"title": "Duden: Rauch_Qualm",
+				"url": "https://www.duden.de/rechtschreibung/Rauch_Qualm",
+				"supports": "Target 0 Knowledge: Sprichwörter list kein Rauch ohne Flamme only"
+			},
+			{
+				"title": "OpenThesaurus: Wo Rauch ist, ist auch Feuer.",
+				"url": "https://www.openthesaurus.de/synonyme/Wo%20Rauch%20ist%2C%20ist%20auch%20Feuer.",
+				"supports": "Target 0 Knowledge: no synset; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [21, 23, 25, 28, 30, 32],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "💨🔥" },
+			"reading": {
+				"emojiDescription": "💨🔥",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -76,6 +113,9 @@
 					{ "attested": "Feuer", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): No dictionary lists this exact wording; Proverb is drafted from its proverbial form, related proverbs are not listed as relations."
 			}
 		}
 	],

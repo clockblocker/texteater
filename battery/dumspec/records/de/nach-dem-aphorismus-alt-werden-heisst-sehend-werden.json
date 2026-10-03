@@ -63,13 +63,65 @@
 			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" },
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: einem geschenkten Gaul schaut man nicht ins Maul",
+				"url": "https://www.dwds.de/wb/einem%20geschenkten%20Gaul%20schaut%20man%20nicht%20ins%20Maul",
+				"supports": "Target 0 Knowledge: sprichwörtlich; Synonym zu einem geschenkten Gaul guckt man nicht ins Maul, einem geschenkten Gaul sieht man nicht ins Maul"
+			},
+			{
+				"title": "Duden: Gaul",
+				"url": "https://www.duden.de/rechtschreibung/Gaul",
+				"supports": "Target 0 Knowledge: Wendung einem geschenkten Gaul schaut/sieht man nicht ins Maul"
+			},
+			{
+				"title": "OpenThesaurus: Einem geschenkten Gaul schaut man nicht ins Maul.",
+				"url": "https://www.openthesaurus.de/synonyme/Einem%20geschenkten%20Gaul%20schaut%20man%20nicht%20ins%20Maul.",
+				"supports": "Target 0 Knowledge: no synset"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [34, 36, 38, 40, 42, 44, 46, 47, 49],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🎁🚫🧐" },
+			"reading": {
+				"emojiDescription": "🎁🚫🧐",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Einem geschenkten Gaul guckt man nicht ins Maul",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Einem geschenkten Gaul sieht man nicht ins Maul",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Einem geschenkten Gaul schaut man nicht ins Maul is a Proverb, one Saying target over all its words, both pieces of ins included (de/saying-needs-uptake, de/fused-word-pieces). The aphorism quoted before it is another line."
 			},

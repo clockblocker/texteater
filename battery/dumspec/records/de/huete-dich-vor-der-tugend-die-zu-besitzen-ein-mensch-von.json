@@ -37,7 +37,18 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 48: Hüte dich vor der Tugend, die zu besitzen ein Mensch von sich selber rühmt (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "DWDS: Hüte dich vor der Tugend, die zu besitzen ein Mensch von sich selber rühmt",
+				"url": "https://www.dwds.de/wb/H%C3%BCte%20dich%20vor%20der%20Tugend%2C%20die%20zu%20besitzen%20ein%20Mensch%20von%20sich%20selber%20r%C3%BChmt",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -45,7 +56,24 @@
 				0, 2, 4, 6, 8, 11, 13, 15, 17, 19, 21, 23, 25, 27
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "⚠🦚😇" },
+			"reading": {
+				"emojiDescription": "⚠🦚😇",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -40,7 +40,23 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 1: Sag etwas, das sich von selbst versteht, zum ersten Mal, und du bist unsterblich (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "Wikiquote: Marie von Ebner-Eschenbach",
+				"url": "https://de.wikiquote.org/wiki/Marie_von_Ebner-Eschenbach",
+				"supports": "Target 0 Knowledge: lists 'Sag etwas, das sich von selbst versteht, zum ersten Mal, und du bist unsterblich' under Aphorismen, Schriften Bd. 1 (1893)"
+			},
+			{
+				"title": "DWDS: Sag etwas, das sich von selbst versteht, zum ersten Mal, und du bist unsterblich",
+				"url": "https://www.dwds.de/wb/Sag%20etwas%2C%20das%20sich%20von%20selbst%20versteht%2C%20zum%20ersten%20Mal%2C%20und%20du%20bist%20unsterblich",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -48,7 +64,24 @@
 				0, 2, 5, 7, 9, 11, 13, 16, 17, 19, 21, 24, 26, 28, 30
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🗣🥇♾" },
+			"reading": {
+				"emojiDescription": "🗣🥇♾",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

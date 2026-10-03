@@ -41,13 +41,41 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 43: Die Leute, denen man nie widerspricht, sind entweder die, welche man am meisten liebt, oder die, welche man am geringsten achtet (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "DWDS: Die Leute, denen man nie widerspricht, sind entweder die, welche man am meisten liebt, oder die, welche man am geringsten achtet",
+				"url": "https://www.dwds.de/wb/Die%20Leute%2C%20denen%20man%20nie%20widerspricht%2C%20sind%20entweder%20die%2C%20welche%20man%20am%20meisten%20liebt%2C%20oder%20die%2C%20welche%20man%20am%20geringsten%20achtet",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12, 14, 16, 18, 20, 22, 24, 26, 28],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🤐❤👎" },
+			"reading": {
+				"emojiDescription": "🤐❤👎",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Quote stops at ellipsis. Missing tail not overt. Full source known. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			},

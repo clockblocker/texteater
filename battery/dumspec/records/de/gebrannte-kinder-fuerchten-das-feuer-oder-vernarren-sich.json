@@ -32,13 +32,46 @@
 				"hash": "91fc596acb3813f1"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 33: Gebrannte Kinder fürchten das Feuer oder vernarren sich darein (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "Wikiquote: Marie von Ebner-Eschenbach",
+				"url": "https://de.wikiquote.org/wiki/Marie_von_Ebner-Eschenbach",
+				"supports": "Target 0 Knowledge: lists 'Gebrannte Kinder fürchten das Feuer oder vernarren sich darein' under Aphorismen, Schriften Bd. 1 (1893)"
+			},
+			{
+				"title": "DWDS: Gebranntes Kind scheut das Feuer",
+				"url": "https://www.dwds.de/wb/Gebranntes%20Kind%20scheut%20das%20Feuer",
+				"supports": "Target 0 Knowledge: no entry; the aphorism varies that proverb but is Ebner-Eschenbach's own line"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 8, 10, 12, 14, 16],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🔥😨😍" },
+			"reading": {
+				"emojiDescription": "🔥😨😍",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -19,13 +19,41 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 34: Mitleid ist Liebe im Négligé (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "DWDS: Mitleid ist Liebe im Négligé",
+				"url": "https://www.dwds.de/wb/Mitleid%20ist%20Liebe%20im%20N%C3%A9glig%C3%A9",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🥺❤" },
+			"reading": {
+				"emojiDescription": "🥺❤",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

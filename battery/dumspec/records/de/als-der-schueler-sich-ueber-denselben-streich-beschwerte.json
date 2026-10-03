@@ -66,7 +66,23 @@
 		"rules": [
 			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Büchmann, Geflügelte Worte (19. Aufl., 1898)",
+				"url": "https://www.gutenberg.org/ebooks/43759",
+				"supports": "Target 0 Knowledge: Ein alter Reimspruch: Was du nicht willst, das man dir thu', Das füg' auch keinem Andern zu, reshaping Tobias 4, 16"
+			},
+			{
+				"title": "DWDS: was du nicht willst, das man dir tu, das füg auch keinem andern zu",
+				"url": "https://www.dwds.de/wb/was%20du%20nicht%20willst%2C%20das%20man%20dir%20tu%2C%20das%20f%C3%BCg%20auch%20keinem%20andern%20zu",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus: Was du nicht willst, das man dir tu, das füg auch keinem andern zu.",
+				"url": "https://www.openthesaurus.de/synonyme/Was%20du%20nicht%20willst%2C%20das%20man%20dir%20tu%2C%20das%20f%C3%BCg%20auch%20keinem%20andern%20zu.",
+				"supports": "Target 0 Knowledge: no synset; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -74,7 +90,23 @@
 				25, 27, 29, 31, 34, 36, 38, 40, 43, 45, 47, 49, 51, 53
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🙅🔁" },
+			"reading": {
+				"emojiDescription": "🙅🔁",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Was du nicht willst, das man dir tu, das füg auch keinem andern zu is a Proverb, one Saying target over all its words: both das are members, each in its own place, and the lead-in zitierte die Lehrerin stays outside (de/saying-needs-uptake)."
 			},

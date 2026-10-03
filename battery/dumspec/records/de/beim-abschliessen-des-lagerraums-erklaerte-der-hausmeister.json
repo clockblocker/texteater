@@ -36,13 +36,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Gelegenheit macht Diebe",
+				"url": "https://www.dwds.de/wb/Gelegenheit%20macht%20Diebe",
+				"supports": "Target 0 Knowledge: sprichwörtlich; no Synonym/Gegensatz"
+			},
+			{
+				"title": "Duden: Gelegenheit",
+				"url": "https://www.duden.de/rechtschreibung/Gelegenheit",
+				"supports": "Target 0 Knowledge: Wendung Gelegenheit macht Diebe"
+			},
+			{
+				"title": "OpenThesaurus: Gelegenheit macht Diebe.",
+				"url": "https://www.openthesaurus.de/synonyme/Gelegenheit%20macht%20Diebe.",
+				"supports": "Target 0 Knowledge: no synset; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [21, 23, 25],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🔓🦹" },
+			"reading": {
+				"emojiDescription": "🔓🦹",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

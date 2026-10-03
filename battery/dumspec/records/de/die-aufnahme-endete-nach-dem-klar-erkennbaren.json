@@ -37,13 +37,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: wer im Glashaus sitzt, sollte nicht mit Steinen werfen",
+				"url": "https://www.dwds.de/wb/wer%20im%20Glashaus%20sitzt%2C%20sollte%20nicht%20mit%20Steinen%20werfen",
+				"supports": "Target 0 Knowledge: sprichwörtlich; Nebenform wer im Glashaus sitzt, soll nicht mit Steinen werfen; only siehe auch (backs nothing)"
+			},
+			{
+				"title": "Duden: Glashaus",
+				"url": "https://www.duden.de/rechtschreibung/Glashaus",
+				"supports": "Target 0 Knowledge: Wendung wer [selbst] im Glashaus sitzt, soll[te] nicht mit Steinen werfen"
+			},
+			{
+				"title": "OpenThesaurus: Wer im Glashaus sitzt, (der) sollte nicht mit Steinen werfen.",
+				"url": "https://www.openthesaurus.de/synonyme/Wer%20im%20Glashaus%20sitzt%2C%20%28der%29%20sollte%20nicht%20mit%20Steinen%20werfen.",
+				"supports": "Target 0 Knowledge: synset with retorts (das musst du gerade sagen! etc.), not maxims; no relation claimed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17, 19, 20, 22, 24],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🚫👉🪞" },
+			"reading": {
+				"emojiDescription": "🚫👉🪞",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -91,6 +123,9 @@
 					{ "attested": "sitzt", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Partial"
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): OT's synset partners are situational retorts, not sayings with the proverb's general meaning, so no relation is claimed."
 			}
 		}
 	],

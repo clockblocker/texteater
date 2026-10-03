@@ -30,13 +30,41 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 63: Die Güte, die nicht grenzenlos ist, verdient den Namen nicht (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "DWDS: Die Güte, die nicht grenzenlos ist, verdient den Namen nicht",
+				"url": "https://www.dwds.de/wb/Die%20G%C3%BCte%2C%20die%20nicht%20grenzenlos%20ist%2C%20verdient%20den%20Namen%20nicht",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 5, 7, 9, 11, 14, 16, 18, 20],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "💗♾" },
+			"reading": {
+				"emojiDescription": "💗♾",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -46,13 +46,52 @@
 		"rules": [
 			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: was du heute kannst besorgen, das verschiebe nicht auf morgen",
+				"url": "https://www.dwds.de/wb/was%20du%20heute%20kannst%20besorgen%2C%20das%20verschiebe%20nicht%20auf%20morgen",
+				"supports": "Target 0 Knowledge: sprichwörtlich; only siehe auch (backs nothing)"
+			},
+			{
+				"title": "OpenThesaurus: Was du heute kannst besorgen, das verschiebe nicht auf morgen",
+				"url": "https://www.openthesaurus.de/synonyme/Was%20du%20heute%20kannst%20besorgen%2C%20das%20verschiebe%20nicht%20auf%20morgen",
+				"supports": "Target 0 Knowledge: synset: Morgen, morgen, nur nicht heute, sagen alle faulen Leute."
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [14, 16, 18, 20, 22, 25, 27, 29, 31, 33],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🚫🦥" },
+			"reading": {
+				"emojiDescription": "🚫🦥",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Morgen, morgen, nur nicht heute, sagen alle faulen Leute",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Was du heute kannst besorgen, das verschiebe nicht auf morgen is a Proverb, one Saying target over all its words. Its Canonical Form is written as a sentence, keeping the internal comma and dropping the final full stop (de/saying-needs-uptake). Punctuation is never a member, and the lead-in mahnte der Vater stays outside."
 			},

@@ -33,13 +33,41 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 2: Was uns an der sichtbaren Schönheit entzückt, ist ewig nur die unsichtbare (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "DWDS: Was uns an der sichtbaren Schönheit entzückt, ist ewig nur die unsichtbare",
+				"url": "https://www.dwds.de/wb/Was%20uns%20an%20der%20sichtbaren%20Sch%C3%B6nheit%20entz%C3%BCckt%2C%20ist%20ewig%20nur%20die%20unsichtbare",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 8, 10, 12, 15, 17, 19, 21, 23],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🌸➡💖" },
+			"reading": {
+				"emojiDescription": "🌸➡💖",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

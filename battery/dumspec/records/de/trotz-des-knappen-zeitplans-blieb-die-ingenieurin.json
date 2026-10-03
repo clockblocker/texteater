@@ -44,13 +44,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: wo ein Wille ist, ist auch ein Weg",
+				"url": "https://www.dwds.de/wb/wo%20ein%20Wille%20ist%2C%20ist%20auch%20ein%20Weg",
+				"supports": "Target 0 Knowledge: Mehrwortausdruck, Nebenform wo ein Wille ist, da ist auch ein Weg"
+			},
+			{
+				"title": "Duden: Wille",
+				"url": "https://www.duden.de/rechtschreibung/Wille",
+				"supports": "Target 0 Knowledge: under Wendungen, Redensarten, Sprichwörter: wo ein Wille ist, ist auch ein Weg"
+			},
+			{
+				"title": "OpenThesaurus: Wo ein Wille ist, ist auch ein Weg",
+				"url": "https://www.openthesaurus.de/synonyme/Wo%20ein%20Wille%20ist%2C%20ist%20auch%20ein%20Weg",
+				"supports": "Target 0 Knowledge: synset with Man muss (es) nur wollen (a free sentence, no Lemma); no relation claimed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [18, 20, 22, 24, 27, 29, 31, 33],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "💪🛤" },
+			"reading": {
+				"emojiDescription": "💪🛤",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

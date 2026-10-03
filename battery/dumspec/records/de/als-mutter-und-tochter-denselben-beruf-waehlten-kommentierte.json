@@ -47,13 +47,62 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: der Apfel fällt nicht weit vom Stamm",
+				"url": "https://www.dwds.de/wb/der%20Apfel%20f%C3%A4llt%20nicht%20weit%20vom%20Stamm",
+				"supports": "Target 0 Knowledge: sprichwörtlich; no Synonym/Gegensatz"
+			},
+			{
+				"title": "Duden: Apfel",
+				"url": "https://www.duden.de/rechtschreibung/Apfel",
+				"supports": "Target 0 Knowledge: Wendung der Apfel fällt nicht weit vom Stamm"
+			},
+			{
+				"title": "OpenThesaurus: Der Apfel fällt nicht weit vom Stamm.",
+				"url": "https://www.openthesaurus.de/synonyme/Der%20Apfel%20f%C3%A4llt%20nicht%20weit%20vom%20Stamm.",
+				"supports": "Target 0 Knowledge: synset with Wie der Vater, so der Sohn. (also the jocular variant vom Birnbaum and verb phrases nach jemandem geraten, not claimed)"
+			},
+			{
+				"title": "DWDS: wie der Vater, so der Sohn",
+				"url": "https://www.dwds.de/wb/wie%20der%20Vater%2C%20so%20der%20Sohn",
+				"supports": "Target 0 Knowledge: sprichwörtlich: ein Sohn übernimmt die Verhaltensweisen seines Vaters; Kinder ähneln ihren Eltern"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [23, 25, 27, 29, 31, 33, 34, 36],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "👪🧬" },
+			"reading": {
+				"emojiDescription": "👪🧬",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					},
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Wie der Vater, so der Sohn",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

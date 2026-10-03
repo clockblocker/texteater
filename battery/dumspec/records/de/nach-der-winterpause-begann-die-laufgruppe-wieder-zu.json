@@ -37,12 +37,43 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": { "adrs": [], "rules": [], "references": [] },
+	"sources": {
+		"adrs": [],
+		"rules": [],
+		"references": [
+			{
+				"title": "DWDS: wer rastet, der rostet",
+				"url": "https://www.dwds.de/wb/wer%20rastet%2C%20der%20rostet",
+				"supports": "Target 0 Knowledge: sprichwörtlich; Nebenform wer rastet, rostet; only siehe auch (backs nothing)"
+			},
+			{
+				"title": "OpenThesaurus: Wer rastet, der rostet.",
+				"url": "https://www.openthesaurus.de/synonyme/Wer%20rastet%2C%20der%20rostet.",
+				"supports": "Target 0 Knowledge: no synset; no relation listed"
+			}
+		]
+	},
 	"targets": [
 		{
 			"memberSegmentIndices": [22, 24, 27, 29],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🛋📉" },
+			"reading": {
+				"emojiDescription": "🛋📉",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The Canonical Form is written as a sentence: Wer rastet, der rostet keeps its internal comma and drops the final full stop."
 			},

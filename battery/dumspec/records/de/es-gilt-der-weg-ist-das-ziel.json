@@ -35,6 +35,16 @@
 				"title": "DWDS: der Weg ist das Ziel",
 				"url": "https://www.dwds.de/wb/der%20Weg%20ist%20das%20Ziel",
 				"supports": "Target 0, Der Weg ist das Ziel (sprichwörtlich)"
+			},
+			{
+				"title": "DWDS: der Weg ist das Ziel",
+				"url": "https://www.dwds.de/wb/der%20Weg%20ist%20das%20Ziel",
+				"supports": "Target 0 Knowledge: sprichwörtlich; no Synonym/Gegensatz"
+			},
+			{
+				"title": "OpenThesaurus: Der Weg ist das Ziel.",
+				"url": "https://www.openthesaurus.de/synonyme/Der%20Weg%20ist%20das%20Ziel.",
+				"supports": "Target 0 Knowledge: no synset; no relation listed"
 			}
 		]
 	},
@@ -42,7 +52,23 @@
 		{
 			"memberSegmentIndices": [5, 7, 9, 11, 13],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🛤🎯" },
+			"reading": {
+				"emojiDescription": "🛤🎯",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Der Weg ist das Ziel is a proverb DWDS lists, one Saying target over all its words; the lead-in Es gilt stays outside."
 			},

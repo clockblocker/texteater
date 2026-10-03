@@ -33,13 +33,46 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Ebner-Eschenbach, Gesammelte Schriften Bd. 1: Aphorismen (Project Gutenberg)",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: Aphorismen, Erstes Hundert Nr. 5: Vertrauen ist Mut, und Treue ist Kraft (Marie von Ebner-Eschenbach, 1893 text)"
+			},
+			{
+				"title": "Wikiquote: Marie von Ebner-Eschenbach",
+				"url": "https://de.wikiquote.org/wiki/Marie_von_Ebner-Eschenbach",
+				"supports": "Target 0 Knowledge: lists 'Vertrauen ist Mut, und Treue ist Kraft' under Aphorismen, Schriften Bd. 1 (1893)"
+			},
+			{
+				"title": "DWDS: Vertrauen ist Mut, und Treue ist Kraft",
+				"url": "https://www.dwds.de/wb/Vertrauen%20ist%20Mut%2C%20und%20Treue%20ist%20Kraft",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [1, 11, 13, 16, 18, 20, 22],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🤝🦁💪" },
+			"reading": {
+				"emojiDescription": "🤝🦁💪",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Split quotation. Attribution free. Target words keep source order. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			},
