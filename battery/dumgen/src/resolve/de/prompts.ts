@@ -153,7 +153,7 @@ export const policy = {
 	),
 	adjective: paragraph(
 		"policy.adjective",
-		"An adjective or adverb is comparable when Duden, or else DWDS, gives its headword comparison forms, suppletive ones from another stem included; forms marked colloquial or rare do not count, and a participle no dictionary lists as an adjective is not comparable. Answer from what the dictionary prints for the headword, not from whether its meaning could be graded: many derived adjectives and participles print no forms and are not comparable, while a few common adverbs compare only from another stem. Every form of a comparable one marks its degree, positive when uncompared; a non-comparable one marks none. Only an adjective that agrees with a noun, attributively or standing in for an elided noun, marks case, gender and number.",
+		"An adjective or adverb is comparable when Duden, or else DWDS, gives its headword comparison forms, suppletive ones from another stem included; forms marked colloquial or rare do not count, and a participle no dictionary lists as an adjective is not comparable. Every form of a comparable one marks its degree, positive when uncompared; a non-comparable one marks none. Only an adjective that agrees with a noun, attributively or standing in for an elided noun, marks case, gender and number.",
 		rules.comparability,
 		rules.attributive,
 	),

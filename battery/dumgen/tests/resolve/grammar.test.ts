@@ -1412,3 +1412,19 @@ test("a compared suppletive adverb cites its positive, and an ordinal its attrib
 	);
 	expect(attested(second.result).surface.lemma.canonicalForm).toBe("zweite");
 });
+
+test("a preposition with its own complement is never taken as the prefix when jev says None", async () => {
+	const quarrel = await resolveOnce(
+		{
+			jev: fakeJev({ prefix: "None", reflexive: "Acc" }).ask,
+			luna: writes("sich zanken").ask,
+		},
+		{
+			sentence: sentenceOf("Sie zankt sich mit ihm."),
+			unit: unitOf([2, 4, 6], "Lexeme", "VERB"),
+		},
+	);
+	expect(attested(quarrel.result).surface.lemma.coreFeatures).toMatchObject({
+		hasSepPrefix: null,
+	});
+});

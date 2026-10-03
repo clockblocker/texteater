@@ -1316,13 +1316,39 @@ function prefixAnswer(
 	// A particle standing apart that segmentation put in the VERB unit, and
 	// that the verb does not govern, is its separable prefix: it belongs to
 	// the verb's Lemma, and only the prefix can (de/verb-core-features,
-	// de/bracket-particle-or-circumposition): tut … leid is leidtun.
+	// de/bracket-particle-or-circumposition): tut … leid is leidtun. A
+	// preposition followed by a word has its own complement and is never
+	// the prefix (sich mit ihm zanken; de/verb-core-features).
+	const ownComplement = (member: Member) => {
+		if (
+			germanAdpositionEntry({
+				family: "Lexeme",
+				canonicalForm: fold(member.text),
+			}) === null
+		)
+			return false;
+		const next = target.segments
+			.slice(member.segment + 1)
+			.find((segment) => segment.kind !== "Whitespace");
+		// A coordinating conjunction or another preposition after it opens
+		// no complement of its own (gingen … entlang und spazierten; liefen
+		// den Fluss entlang bis zur Brücke).
+		return (
+			next?.kind === "ResolvableText" &&
+			!coordinators.has(fold(next.text)) &&
+			germanAdpositionEntry({
+				family: "Lexeme",
+				canonicalForm: fold(next.text),
+			}) === null
+		);
+	};
 	const standing = prefixes.flatMap((prefix, index) =>
 		target.members.length > 1 &&
 		target.members.some(
 			(member) =>
 				fold(spellingOf(member)) === prefix &&
-				member.spelling === undefined,
+				member.spelling === undefined &&
+				!ownComplement(member),
 		) &&
 		!governed(prefix)
 			? [`p${index}`]
@@ -1351,6 +1377,16 @@ const shortenedFrom: Readonly<Record<string, string>> = Object.fromEntries(
 		expansions.map((expansion) => [expansion, word]),
 	),
 );
+
+/** Coordinating conjunctions, which never open a preposition's complement. */
+const coordinators = new Set([
+	"und",
+	"oder",
+	"aber",
+	"sondern",
+	"denn",
+	"sowie",
+]);
 
 /** The positive of each suppletive adverb's compared forms (gern: lieber, am liebsten). */
 const suppletivePositive: Readonly<Record<string, string>> = {
