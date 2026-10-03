@@ -65,7 +65,23 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Marie von Ebner-Eschenbach: Aphorismen (Gesammelte Schriften 1, Paetel 1893), Project Gutenberg",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: the line as Erstes Hundert no. 82: author and work of the Winged Word"
+			},
+			{
+				"title": "DWDS: Wenn zwei brave Menschen über Grundsätze streiten, haben immer beide recht",
+				"url": "https://www.dwds.de/wb/Wenn%20zwei%20brave%20Menschen%20%C3%BCber%20Grunds%C3%A4tze%20streiten%2C%20haben%20immer%20beide%20recht",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus text export",
+				"url": "https://www.openthesaurus.de/export/OpenThesaurus-Textversion.zip",
+				"supports": "Target 0 Knowledge: line absent; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -73,7 +89,24 @@
 				33, 35, 37, 39, 41, 43, 45, 48, 50, 52, 54
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🗯✅✅" },
+			"reading": {
+				"emojiDescription": "🗯✅✅",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

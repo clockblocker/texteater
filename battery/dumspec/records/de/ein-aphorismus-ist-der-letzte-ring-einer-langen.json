@@ -26,13 +26,51 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Marie von Ebner-Eschenbach: Aphorismen (Gesammelte Schriften 1, Paetel 1893), Project Gutenberg",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: the line as the collection's motto, before Erstes Hundert: author and work of the Winged Word"
+			},
+			{
+				"title": "Wikiquote: Marie von Ebner-Eschenbach",
+				"url": "https://de.wikiquote.org/wiki/Marie_von_Ebner-Eschenbach",
+				"supports": "Target 0 Knowledge: lists the line under Aphorismen"
+			},
+			{
+				"title": "DWDS: Ein Aphorismus ist der letzte Ring einer langen Gedankenkette",
+				"url": "https://www.dwds.de/wb/Ein%20Aphorismus%20ist%20der%20letzte%20Ring%20einer%20langen%20Gedankenkette",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus text export",
+				"url": "https://www.openthesaurus.de/export/OpenThesaurus-Textversion.zip",
+				"supports": "Target 0 Knowledge: line absent; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 8, 10, 12, 14, 16],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "💭⛓🏁" },
+			"reading": {
+				"emojiDescription": "💭⛓🏁",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

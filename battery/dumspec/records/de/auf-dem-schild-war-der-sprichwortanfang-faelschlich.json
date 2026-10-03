@@ -37,13 +37,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: viele Köche verderben den Brei",
+				"url": "https://www.dwds.de/wb/viele%20K%C3%B6che%20verderben%20den%20Brei",
+				"supports": "Target 0 Knowledge: Mehrwortausdruck (DWDS Brei: sprichwörtlich); no synonym or Gegensatz"
+			},
+			{
+				"title": "Duden: Koch",
+				"url": "https://www.duden.de/rechtschreibung/Koch_Kuechenchef",
+				"supports": "Target 0 Knowledge: Wendung viele Köche verderben den Brei with gloss"
+			},
+			{
+				"title": "OpenThesaurus: Viele Köche verderben den Brei",
+				"url": "https://www.openthesaurus.de/synonyme/Viele%20K%C3%B6che%20verderben%20den%20Brei",
+				"supports": "Target 0 Knowledge: no synset"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [18, 20, 22, 24, 26],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "👥🍲🤢" },
+			"reading": {
+				"emojiDescription": "👥🍲🤢",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "A lowercase first word in the complete written proverb is an inappropriate-casing Typo and normalizes to uppercase."
 			},

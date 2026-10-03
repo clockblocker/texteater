@@ -43,13 +43,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: andere Länder, andere Sitten",
+				"url": "https://www.dwds.de/wb/andere%20L%C3%A4nder%2C%20andere%20Sitten",
+				"supports": "Target 0 Knowledge: Mehrwortausdruck; DWDS Land and Sitte mark it sprichwörtlich; only a siehe-auch (andere Zeiten, andere Sitten), no synonym or Gegensatz"
+			},
+			{
+				"title": "Duden: Land",
+				"url": "https://www.duden.de/rechtschreibung/Land",
+				"supports": "Target 0 Knowledge: Wendung andere Länder, andere Sitten with gloss; no synonym listed"
+			},
+			{
+				"title": "OpenThesaurus: Andere Länder, andere Sitten",
+				"url": "https://www.openthesaurus.de/synonyme/Andere%20L%C3%A4nder%2C%20andere%20Sitten",
+				"supports": "Target 0 Knowledge: no synset (also absent from the OT text export)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [25, 27, 30, 32],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🌍🙇🤝" },
+			"reading": {
+				"emojiDescription": "🌍🙇🤝",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

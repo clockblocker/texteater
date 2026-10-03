@@ -46,13 +46,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Reden ist Silber, Schweigen ist Gold",
+				"url": "https://www.dwds.de/wb/Reden%20ist%20Silber%2C%20Schweigen%20ist%20Gold",
+				"supports": "Target 0 Knowledge: sprichwörtlich; no synonym or Gegensatz"
+			},
+			{
+				"title": "Duden: reden",
+				"url": "https://www.duden.de/rechtschreibung/reden",
+				"supports": "Target 0 Knowledge: Reden ist Silber, Schweigen ist Gold"
+			},
+			{
+				"title": "OpenThesaurus: Reden ist Silber, Schweigen ist Gold",
+				"url": "https://www.openthesaurus.de/synonyme/Reden%20ist%20Silber%2C%20Schweigen%20ist%20Gold",
+				"supports": "Target 0 Knowledge: synset 41873 (Sprichwort): Manchmal ist es besser, nichts zu sagen (paraphrase) · (sich) seinen Teil denken (keeping an opinion to oneself, not the maxim) · Einfach mal die Fresse halten; no claim"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [24, 26, 28, 31, 33, 35],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🤐🥇" },
+			"reading": {
+				"emojiDescription": "🤐🥇",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

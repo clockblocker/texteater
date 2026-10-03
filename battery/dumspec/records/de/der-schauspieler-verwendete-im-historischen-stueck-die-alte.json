@@ -46,15 +46,47 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: wes Brot ich ess, des Lied ich sing",
+				"url": "https://www.dwds.de/wb/wes%20Brot%20ich%20ess%2C%20des%20Lied%20ich%20sing",
+				"supports": "Target 0 Knowledge: sprichwörtlich, with gloss; no synonym or Gegensatz"
+			},
+			{
+				"title": "Duden: Brot",
+				"url": "https://www.duden.de/rechtschreibung/Brot",
+				"supports": "Target 0 Knowledge: Wendung wes Brot ich ess, des Lied ich sing with gloss"
+			},
+			{
+				"title": "OpenThesaurus: Wes Brot ich ess, des Lied ich sing",
+				"url": "https://www.openthesaurus.de/synonyme/Wes%20Brot%20ich%20ess%2C%20des%20Lied%20ich%20sing",
+				"supports": "Target 0 Knowledge: synset 48565 pairs it only with nicht (in) die Hand beißen, die einen füttert, a negated free phrase whose Lemma (die Hand beißen, die einen füttert) means the opposite; synset 11452 lists person nouns (Opportunist, Mitläufer), not this saying's meaning; no claim"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [20, 22, 24, 26, 29, 31, 33, 35],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "💰🦜" },
+			"reading": {
+				"emojiDescription": "💰🦜",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The Saying's wording holds the old genitives wes and des, but the Saying has no other wording: it is archaic in every use. That is true of its Lemma, not of this Surface, and a Surface is Archaic only when its form is archaic beside the Lemma's current forms. So the Surface carries no historical status (de/variant-and-historical-status)."
+				"rationale": "The Saying's wording holds the old genitives wes and des, but the Saying has no other wording: it is archaic in every use. That is true of its Lemma, not of this Surface, and a Surface is Archaic only when its form is archaic beside the Lemma's current forms. So the Surface carries no historical status (de/variant-and-historical-status). Knowledge (#887, dev draft): OpenThesaurus' only same-meaning neighbour is the negation of an idiom, so no relation is claimed."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

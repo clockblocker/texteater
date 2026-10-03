@@ -54,7 +54,28 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Marie von Ebner-Eschenbach: Aphorismen (Gesammelte Schriften 1, Paetel 1893), Project Gutenberg",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: the line as Erstes Hundert no. 75: author and work of the Winged Word"
+			},
+			{
+				"title": "Wikiquote: Marie von Ebner-Eschenbach",
+				"url": "https://de.wikiquote.org/wiki/Marie_von_Ebner-Eschenbach",
+				"supports": "Target 0 Knowledge: lists the line under Aphorismen"
+			},
+			{
+				"title": "DWDS: Die Liebe hat nicht nur Rechte, sie hat auch immer recht",
+				"url": "https://www.dwds.de/wb/Die%20Liebe%20hat%20nicht%20nur%20Rechte%2C%20sie%20hat%20auch%20immer%20recht",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus text export",
+				"url": "https://www.openthesaurus.de/export/OpenThesaurus-Textversion.zip",
+				"supports": "Target 0 Knowledge: line absent; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -62,7 +83,24 @@
 				22, 24, 26, 28, 30, 32, 35, 37, 39, 41, 43
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "❤✅" },
+			"reading": {
+				"emojiDescription": "❤✅",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

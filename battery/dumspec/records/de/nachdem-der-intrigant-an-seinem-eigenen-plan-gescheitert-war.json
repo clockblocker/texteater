@@ -53,13 +53,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Grube",
+				"url": "https://www.dwds.de/wb/Grube",
+				"supports": "Target 0 Knowledge: sprichwörtlich wer andern eine Grube gräbt, fällt selbst hinein; etymology: proverb known since the Middle Ages, from several Bible passages; no synonym or Gegensatz"
+			},
+			{
+				"title": "Duden: Grube",
+				"url": "https://www.duden.de/rechtschreibung/Grube",
+				"supports": "Target 0 Knowledge: Wendung wer andern eine Grube gräbt, fällt selbst hinein with gloss; no synonym listed"
+			},
+			{
+				"title": "OpenThesaurus: Wer anderen eine Grube gräbt",
+				"url": "https://www.openthesaurus.de/synonyme/Wer%20anderen%20eine%20Grube%20gr%C3%A4bt",
+				"supports": "Target 0 Knowledge: no synset (also absent from the OT text export)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [27, 29, 31, 33, 35, 38, 40, 42],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🕳🪃" },
+			"reading": {
+				"emojiDescription": "🕳🪃",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

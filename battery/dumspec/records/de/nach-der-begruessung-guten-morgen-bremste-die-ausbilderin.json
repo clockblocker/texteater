@@ -44,15 +44,59 @@
 		"rules": [
 			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Eile mit Weile",
+				"url": "https://www.dwds.de/wb/eile%20mit%20Weile",
+				"supports": "Target 0 Knowledge: sense 1 sprichwörtlich; in der Ruhe liegt die Kraft only under siehe auch"
+			},
+			{
+				"title": "Duden: eilen",
+				"url": "https://www.duden.de/rechtschreibung/eilen",
+				"supports": "Target 0 Knowledge: Wendung eile mit Weile! with gloss"
+			},
+			{
+				"title": "OpenThesaurus: Eile mit Weile",
+				"url": "https://www.openthesaurus.de/synonyme/Eile%20mit%20Weile",
+				"supports": "Target 0 Knowledge: synset 24009: Eile mit Weile (Sprichwort) · In der Ruhe liegt die Kraft (Sprichwort) · Aus der Ruhe kommt die Kraft · nichts überstürzen (a free phrase) · Nur ned hudle (Swabian)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [27, 29, 31],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🐢👍" },
+			"reading": {
+				"emojiDescription": "🐢👍",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					},
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "In der Ruhe liegt die Kraft",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Eile mit Weile is a Proverb, one Saying target over its three words (de/saying-needs-uptake). The greeting Guten Morgen quoted before it is a unit of its own."
+				"rationale": "Eile mit Weile is a Proverb, one Saying target over its three words (de/saying-needs-uptake). The greeting Guten Morgen quoted before it is a unit of its own. Knowledge (#887, dev draft): In der Ruhe liegt die Kraft praises calm in general, a shade broader than Eile mit Weile's warning against haste, so it is near; nichts überstürzen is a free phrase, not a Lemma."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

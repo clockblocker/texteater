@@ -27,13 +27,46 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Marie von Ebner-Eschenbach: Aphorismen (Gesammelte Schriften 1, Paetel 1893), Project Gutenberg",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: the line as Erstes Hundert no. 44: author and work of the Winged Word"
+			},
+			{
+				"title": "DWDS: Die meiste Nachsicht übt der, der die wenigste braucht",
+				"url": "https://www.dwds.de/wb/Die%20meiste%20Nachsicht%20%C3%BCbt%20der%2C%20der%20die%20wenigste%20braucht",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus text export",
+				"url": "https://www.openthesaurus.de/export/OpenThesaurus-Textversion.zip",
+				"supports": "Target 0 Knowledge: line absent; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 8, 11, 13, 15, 17],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "😇🤗" },
+			"reading": {
+				"emojiDescription": "😇🤗",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

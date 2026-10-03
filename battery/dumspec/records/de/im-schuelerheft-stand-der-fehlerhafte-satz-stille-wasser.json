@@ -31,13 +31,45 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: stille Wasser sind tief",
+				"url": "https://www.dwds.de/wb/stille%20Wasser%20sind%20tief",
+				"supports": "Target 0 Knowledge: sprichwörtlich; only siehe auch (ein stilles Wasser, es faustdick hinter den Ohren haben)"
+			},
+			{
+				"title": "Duden: Wasser",
+				"url": "https://www.duden.de/rechtschreibung/Wasser",
+				"supports": "Target 0 Knowledge: Wendung stille Wasser sind/gründen tief with gloss"
+			},
+			{
+				"title": "OpenThesaurus: Stille Wasser sind tief",
+				"url": "https://www.openthesaurus.de/synonyme/Stille%20Wasser%20sind%20tief",
+				"supports": "Target 0 Knowledge: synsets 49215/49216 pair it only with paraphrases, no Lemma"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [14, 16, 18, 20],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "😶🧠" },
+			"reading": {
+				"emojiDescription": "😶🧠",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Only the misspelled verb member is Typo and repaired."
 			},

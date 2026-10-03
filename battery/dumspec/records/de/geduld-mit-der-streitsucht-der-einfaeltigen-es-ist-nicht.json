@@ -42,7 +42,28 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Marie von Ebner-Eschenbach: Aphorismen (Gesammelte Schriften 1, Paetel 1893), Project Gutenberg",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: the line as Erstes Hundert no. 13: author and work of the Winged Word"
+			},
+			{
+				"title": "Wikiquote: Marie von Ebner-Eschenbach",
+				"url": "https://de.wikiquote.org/wiki/Marie_von_Ebner-Eschenbach",
+				"supports": "Target 0 Knowledge: lists the line under Aphorismen"
+			},
+			{
+				"title": "DWDS: Geduld mit der Streitsucht der Einfältigen! Es ist nicht leicht zu begreifen, dass man nicht begreift",
+				"url": "https://www.dwds.de/wb/Geduld%20mit%20der%20Streitsucht%20der%20Einf%C3%A4ltigen%21%20Es%20ist%20nicht%20leicht%20zu%20begreifen%2C%20dass%20man%20nicht%20begreift",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus text export",
+				"url": "https://www.openthesaurus.de/export/OpenThesaurus-Textversion.zip",
+				"supports": "Target 0 Knowledge: line absent; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -50,7 +71,24 @@
 				0, 2, 4, 6, 8, 10, 13, 15, 17, 19, 21, 23, 26, 28, 30, 32
 			],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🧘😤🤷" },
+			"reading": {
+				"emojiDescription": "🧘😤🤷",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

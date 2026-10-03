@@ -33,13 +33,46 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Marie von Ebner-Eschenbach: Aphorismen (Gesammelte Schriften 1, Paetel 1893), Project Gutenberg",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: the line as Erstes Hundert no. 26: author and work of the Winged Word"
+			},
+			{
+				"title": "DWDS: Warten lernen wir gewöhnlich erst, wenn wir nichts mehr zu erwarten haben",
+				"url": "https://www.dwds.de/wb/Warten%20lernen%20wir%20gew%C3%B6hnlich%20erst%2C%20wenn%20wir%20nichts%20mehr%20zu%20erwarten%20haben",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus text export",
+				"url": "https://www.openthesaurus.de/export/OpenThesaurus-Textversion.zip",
+				"supports": "Target 0 Knowledge: line absent; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 8, 11, 13, 15, 17, 19, 21, 23],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "⏳😔" },
+			"reading": {
+				"emojiDescription": "⏳😔",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -40,13 +40,67 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Kleinvieh macht auch Mist",
+				"url": "https://www.dwds.de/wb/Kleinvieh%20macht%20auch%20Mist",
+				"supports": "Target 0 Knowledge: sprichwörtlich; Synonym zu Kleinvieh gibt auch Mist"
+			},
+			{
+				"title": "Duden: Kleinvieh",
+				"url": "https://www.duden.de/rechtschreibung/Kleinvieh",
+				"supports": "Target 0 Knowledge: Wendung Kleinvieh macht auch Mist with gloss"
+			},
+			{
+				"title": "OpenThesaurus: Kleinvieh macht auch Mist",
+				"url": "https://www.openthesaurus.de/synonyme/Kleinvieh%20macht%20auch%20Mist",
+				"supports": "Target 0 Knowledge: synset 35586: Kleinvieh macht auch Mist! · Die Masse macht's (Spruch) · sich läppern · sich (auf)summieren …"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [23, 25, 27, 29],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🤏📈" },
+			"reading": {
+				"emojiDescription": "🤏📈",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Kleinvieh gibt auch Mist",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Die Masse macht's",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

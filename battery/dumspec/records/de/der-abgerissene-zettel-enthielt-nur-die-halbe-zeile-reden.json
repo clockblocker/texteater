@@ -36,13 +36,45 @@
 		"rules": [
 			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: Reden ist Silber, Schweigen ist Gold",
+				"url": "https://www.dwds.de/wb/Reden%20ist%20Silber%2C%20Schweigen%20ist%20Gold",
+				"supports": "Target 0 Knowledge: sprichwörtlich; no synonym or Gegensatz"
+			},
+			{
+				"title": "Duden: reden",
+				"url": "https://www.duden.de/rechtschreibung/reden",
+				"supports": "Target 0 Knowledge: Reden ist Silber, Schweigen ist Gold"
+			},
+			{
+				"title": "OpenThesaurus: Reden ist Silber, Schweigen ist Gold",
+				"url": "https://www.openthesaurus.de/synonyme/Reden%20ist%20Silber%2C%20Schweigen%20ist%20Gold",
+				"supports": "Target 0 Knowledge: synset 41873 (Sprichwort): Manchmal ist es besser, nichts zu sagen (paraphrase) · (sich) seinen Teil denken (keeping an opinion to oneself, not the maxim) · Einfach mal die Fresse halten; no claim"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [17, 19, 21],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🤐🥇" },
+			"reading": {
+				"emojiDescription": "🤐🥇",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Only Reden ist Silber survives on the torn note, and the ellipsis shows the rest is lost: Schweigen ist Gold is fixed material missing from the sentence, so the Saying is attested Partial over the three words present, and the normalized Surface holds only those (de/partial-coverage)."
 			},

@@ -52,15 +52,59 @@
 			{ "rule": "de/partial-coverage", "hash": "5aa8e564f6ae1177" },
 			{ "rule": "de/saying-needs-uptake", "hash": "b191e72860fbbf9c" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: wo gehobelt wird, fallen Späne",
+				"url": "https://www.dwds.de/wb/wo%20gehobelt%20wird%2C%20da%20fallen%20Sp%C3%A4ne",
+				"supports": "Target 0 Knowledge: sprichwörtlich; Nebenform wo gehobelt wird, da fallen Späne; no synonym or Gegensatz"
+			},
+			{
+				"title": "Duden: Span",
+				"url": "https://www.duden.de/rechtschreibung/Span",
+				"supports": "Target 0 Knowledge: Wendung wo gehobelt wird, [da] fallen Späne with gloss"
+			},
+			{
+				"title": "OpenThesaurus: Wo gehobelt wird, da fallen Späne",
+				"url": "https://www.openthesaurus.de/synonyme/Wo%20gehobelt%20wird%2C%20da%20fallen%20Sp%C3%A4ne",
+				"supports": "Target 0 Knowledge: synset 43755: Kollateralschaden · Der Zweck heiligt die Mittel (Sprichwort) · Wo gehobelt wird, da fallen Späne (Sprichwort, zynisch)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [1, 3, 5, 8, 36, 38],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🛠🤷" },
+			"reading": {
+				"emojiDescription": "🛠🤷",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					},
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Der Zweck heiligt die Mittel",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Wo gehobelt wird, da fallen Späne is a Proverb, one Saying target over all its words. The attribution erklärte der Meister … fort stands between them and stays outside; a target with free words between its members is still Full (de/partial-coverage, de/saying-needs-uptake)."
+				"rationale": "Wo gehobelt wird, da fallen Späne is a Proverb, one Saying target over all its words. The attribution erklärte der Meister … fort stands between them and stays outside; a target with free words between its members is still Full (de/partial-coverage, de/saying-needs-uptake). Knowledge (#887, dev draft): Der Zweck heiligt die Mittel shares the justifying use but excuses chosen means rather than unavoidable side effects, so it is near; Kollateralschaden names the damage, not the saying."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

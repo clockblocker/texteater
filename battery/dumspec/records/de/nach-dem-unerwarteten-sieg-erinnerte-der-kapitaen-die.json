@@ -47,13 +47,45 @@
 				"hash": "53eb6d28dab42ddc"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: wer zuletzt lacht, lacht am besten",
+				"url": "https://www.dwds.de/wb/wer%20zuletzt%20lacht%2C%20lacht%20am%20besten",
+				"supports": "Target 0 Knowledge: sprichwörtlich; no synonym or Gegensatz"
+			},
+			{
+				"title": "Duden: lachen",
+				"url": "https://www.duden.de/rechtschreibung/lachen",
+				"supports": "Target 0 Knowledge: Wendung wer zuletzt lacht, lacht am besten with gloss"
+			},
+			{
+				"title": "OpenThesaurus: Wer zuletzt lacht, lacht am besten",
+				"url": "https://www.openthesaurus.de/synonyme/Wer%20zuletzt%20lacht%2C%20lacht%20am%20besten",
+				"supports": "Target 0 Knowledge: synset 44521 pairs it only with free threat sentences (Freu dich nicht zu früh!, Dir wird das Lachen noch vergehen!), no Lemma"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [20, 22, 24, 27, 29, 31],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🏁😂" },
+			"reading": {
+				"emojiDescription": "🏁😂",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Rule-decided Segment fix, 2026-10-02 (#851): am before the superlative besten, with no noun after it, is one Segment, no longer a (an) and m (dem) (de/fused-word-pieces), so the Saying has one Standard member am where it had two Fused pieces. Its words are unchanged."
 			},

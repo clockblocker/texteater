@@ -45,13 +45,46 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Marie von Ebner-Eschenbach: Aphorismen (Gesammelte Schriften 1, Paetel 1893), Project Gutenberg",
+				"url": "https://www.gutenberg.org/ebooks/77889",
+				"supports": "Target 0 Knowledge: the line as Erstes Hundert no. 54: author and work of the Winged Word"
+			},
+			{
+				"title": "DWDS: Wenn der Kunst kein Tempel mehr offen steht, dann flüchtet sie in die Werkstatt",
+				"url": "https://www.dwds.de/wb/Wenn%20der%20Kunst%20kein%20Tempel%20mehr%20offen%20steht%2C%20dann%20fl%C3%BCchtet%20sie%20in%20die%20Werkstatt",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus text export",
+				"url": "https://www.openthesaurus.de/export/OpenThesaurus-Textversion.zip",
+				"supports": "Target 0 Knowledge: line absent; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [18, 20, 22, 24, 26, 28, 30, 32],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🎨➡🛠" },
+			"reading": {
+				"emojiDescription": "🎨➡🛠",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Marie von Ebner-Eschenbach, Aphorismen"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Quote stops at ellipsis. Missing tail not overt. Full source known. A Saying only if a reference collection (Büchmann, Duden Zitate und Aussprüche, OWID) lists this line: cite it in sources.references before review, or else the line resolves word by word (ADR 0039)."
 			},
