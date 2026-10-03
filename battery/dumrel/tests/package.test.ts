@@ -1,8 +1,10 @@
-import { expect, test } from "bun:test";
+import { beforeAll, expect, test } from "bun:test";
 import path from "node:path";
 import { build } from "esbuild";
+import { buildPublishedPackage } from "./published-build.js";
 
 const packageRoot = path.resolve(import.meta.dir, "..");
+beforeAll(buildPublishedPackage, 60_000);
 
 test("published operational entrypoint stays independent of Zod", async () => {
 	const result = await build({

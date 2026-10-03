@@ -1,11 +1,16 @@
-import { expect, test } from "bun:test";
+import { beforeAll, expect, test } from "bun:test";
 import type * as Dumrel from "dumrel/types";
-import { applyKnowledgeChange, parseReadingKnowledge } from "../dist/index.js";
-import {
-	knowledgeChangeSchema,
-	readingKnowledgeSchema,
-} from "../dist/schemas.js";
 import { berlinLemma, houseReading, prefixLemma } from "./fixtures.js";
+import { buildPublishedPackage, distFile } from "./published-build.js";
+
+let published: typeof import("../src/index.ts");
+let schemas: typeof import("../src/schemas.ts");
+
+beforeAll(async () => {
+	await buildPublishedPackage();
+	published = await import(distFile("index.js"));
+	schemas = await import(distFile("schemas.js"));
+}, 60_000);
 
 const nounShadow = {
 	language: "de",
@@ -43,8 +48,10 @@ test("published schemas and runtime agree on normalized, structured Knowledge", 
 		definition: "Gebäude",
 		translations: { en: ["house"] },
 	};
-	expect(readingKnowledgeSchema.parse(knowledge)).toEqual(expected);
-	expect(parseReadingKnowledge({ source: houseReading, knowledge })).toEqual({
+	expect(schemas.readingKnowledgeSchema.parse(knowledge)).toEqual(expected);
+	expect(
+		published.parseReadingKnowledge({ source: houseReading, knowledge }),
+	).toEqual({
 		success: true,
 		value: expected,
 	});
@@ -63,9 +70,12 @@ test.each([
 		},
 	],
 ])("published schemas and runtime reject %s", (_, knowledge) => {
-	expect(readingKnowledgeSchema.safeParse(knowledge).success).toBe(false);
+	expect(schemas.readingKnowledgeSchema.safeParse(knowledge).success).toBe(
+		false,
+	);
 	expect(
-		parseReadingKnowledge({ source: houseReading, knowledge }).success,
+		published.parseReadingKnowledge({ source: houseReading, knowledge })
+			.success,
 	).toBe(false);
 });
 
@@ -78,8 +88,8 @@ test("published changes reject Retract values without changing Knowledge", () =>
 		relation: "synonym",
 		value: [berlinLemma],
 	};
-	expect(knowledgeChangeSchema.safeParse(change).success).toBe(false);
-	const result = applyKnowledgeChange({
+	expect(schemas.knowledgeChangeSchema.safeParse(change).success).toBe(false);
+	const result = published.applyKnowledgeChange({
 		source: houseReading,
 		knowledge,
 		change,
@@ -88,7 +98,7 @@ test("published changes reject Retract values without changing Knowledge", () =>
 	expect(result).not.toHaveProperty("value");
 	expect(knowledge).toEqual(snapshot);
 	expect(
-		applyKnowledgeChange({
+		published.applyKnowledgeChange({
 			source: houseReading,
 			knowledge,
 			change: {

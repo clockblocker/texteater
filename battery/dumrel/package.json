@@ -70,7 +70,7 @@
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
-		"test": "bun run build && bun test",
+		"test": "bun test",
 		"validate": "bun ../../tooling/validate-package.ts",
 		"validate:test": "bun run test"
 	},

@@ -1,7 +1,10 @@
-import { afterAll, expect, test } from "bun:test";
+import { afterAll, beforeAll, expect, test } from "bun:test";
 import { fileURLToPath } from "node:url";
 import { closeTestingSessions, inferredType } from "prinfer/testing";
+import { buildPublishedPackage } from "./published-build.js";
 
+// The consumers type-check against the published declarations.
+beforeAll(buildPublishedPackage, 60_000);
 afterAll(closeTestingSessions);
 const consumer = new URL("./consumer/types.ts", import.meta.url);
 
