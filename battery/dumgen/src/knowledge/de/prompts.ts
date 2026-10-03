@@ -94,7 +94,7 @@ export const shared = {
 export const transcription = {
 	task: paragraph(
 		"transcription.task",
-		"Write the broad IPA transcription of the Lemma's Canonical Form in standard German pronunciation, as a pronouncing dictionary gives it, with no slashes or brackets. A word spelled like another with another pronunciation takes the pronunciation of this Reading's meaning. Transcribe a multiword Lemma word by word, separated by spaces, keeping every sound of every word. An abbreviation or a symbol is transcribed as the words it is read aloud as, in IPA symbols, never in spelling («usw.»: ʊnt zoː ˈvaɪ̯tɐ).",
+		"Write the broad IPA transcription of the Lemma's Canonical Form in standard German pronunciation, as a pronouncing dictionary gives it, with no slashes or brackets. A word spelled like another with another pronunciation takes the pronunciation of this Reading's meaning. Transcribe a multiword Lemma word by word, separated by spaces, keeping every sound of every word. An abbreviation or a symbol is transcribed as the words it is read aloud as in this meaning, all of them, in IPA symbols, never in spelling («usw.»: ʊnt zoː ˈvaɪ̯tɐ; «+» read as plus: plʊs).",
 		rules.headword,
 		rules.meaning,
 	),
@@ -108,7 +108,7 @@ export const transcription = {
 export const definition = {
 	task: paragraph(
 		"definition.task",
-		"Write a concise German definition of the Reading's meaning, in the style of a learner's dictionary: one phrase or short sentence that fits every use with this meaning, built from simpler words than the Lemma, and never the Lemma itself, a form of it or a second meaning. Define what the emoji name even when this sentence uses the word figuratively: a figurative use is one use of the meaning, not the meaning itself.",
+		"Write a concise German definition of the Reading's meaning, in the style of a learner's dictionary: one phrase or short sentence that fits every use with this meaning, built from simpler words than the Lemma, and never the Lemma itself, a form of it or a second meaning. Define what the emoji picture, in its literal use when they picture a literal one, even when this sentence uses the word figuratively: a figurative use is one use of the meaning, which the definition need not name.",
 		rules.meaning,
 	),
 	multiword: paragraph(
@@ -134,14 +134,14 @@ export const translation = {
 	),
 	citation: paragraph(
 		"translation.citation",
-		"Write each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs. The equivalent translates the target alone: it takes in no neighbouring word, no object, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).",
+		"Write each equivalent in its dictionary headword form and carry over none of the sentence's tense, person, number, case or degree: a verb in its infinitive, a noun in the singular unless it exists only in the plural, an adjective in its positive. A verb's equivalent keeps the reflexive or particle its meaning needs, and every equivalent keeps the Reading's word class: an adverb takes an adverb, never an adjective of the same root. The equivalent translates the target alone, in every language: it takes in no neighbouring word, no object, adverb or predicative this sentence adds («Die Suppe riecht herrlich»: smell, пахнуть; not smell wonderful, вкусно пахнуть).",
 		rules.translation,
 		rules.headword,
 		rules.ownPart,
 	),
 	form: paragraph(
 		"translation.form",
-		"Never pick a word only because it looks or sounds like the German one: a false friend names another thing. An abbreviation or a title takes the established equivalent of what it stands for, or the target language's usual rendering of it, never a coined word. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it («München»: Munich, Мюнхен); never translate its parts («Lindenstraße»: Lindenstraße, Линденштрассе).",
+		"Never pick a word only because it looks or sounds like the German one: a false friend names another thing. An abbreviation or a title takes the established equivalent of what it stands for, or the target language's usual rendering of it, never a coined word: an academic degree takes the target language's established term for that degree, else a plain description of its holder, never a compound or suffix built from the German parts. A proper name keeps its own form, transliterated into Cyrillic for ru, unless the language has an established name for it («München»: Munich, Мюнхен); never translate its parts («Lindenstraße»: Lindenstraße, Линденштрассе).",
 		rules.translation,
 	),
 	multiword: paragraph(
