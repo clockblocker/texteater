@@ -1313,6 +1313,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			}),
 		),
 		readings: first.readings,
+		coverage: first.coverage,
 	};
 	const caseRequest =
 		first.openCases.length > 1

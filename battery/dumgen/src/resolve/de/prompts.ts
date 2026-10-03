@@ -603,6 +603,21 @@ export const canonicalForm = {
 		rules.drShorthand,
 		rules.wShorthand,
 	),
+	tiedTask: paragraph(
+		"canonical.tied.task",
+		"You tie the Canonical Form of one German Locution or Saying to its members, and write the spelling of each member. Its route, its judged features and its members are fixed; code joins the words you list.",
+		rules.headword,
+		rules.idiom,
+	),
+	tiedWords: paragraph(
+		"canonical.tied.words",
+		"List the headword's words in `words`, in the dictionary's order. A word that is a member names it (`member`: `m3`) with `text` empty to keep the member as you spell it, or, in a Locution only, with `text` its dictionary form, such as the infinitive of an inflected verb or the article the wording has. A fixed word the sentence lacks has `member` empty and the word as `text`; it counts only where `judged` says the coverage is Partial, or for a Locution's article. Never list a member in `outsideHeadword` or `auxiliaries`, never a placeholder such as jemandem or etwas, and never … for an open slot: code writes slots. Set `comma` when the dictionary wording puts a comma after the word.",
+		rules.headword,
+		rules.idiom,
+		rules.partial,
+		rules.government,
+		rules.auxiliary,
+	),
 	suspended: paragraph(
 		"canonical.suspended",
 		"A member ending in a hyphen in an und or oder coordination is completed with the ending it shares with the full compound beside it: «Ost-» in «Ost- und Westküste» is «Ostküste».",
@@ -701,13 +716,13 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 	),
 	Locution: paragraph(
 		"canonical.route.Locution",
-		"A Locution is cited in its dictionary wording: a verbal one as its fixed words with the infinitive last, keeping the article or fused preposition that wording has and leaving out open slots, never a placeholder such as jemandem or etwas («Maulaffen feilhalten»), a nominal one in the nominative, an adpositional or conjunctional one with … for each slot.",
+		"A Locution is cited in its dictionary wording: a verbal one as its fixed words in the dictionary's order, usually with the infinitive last («Maulaffen feilhalten»), a nominal one in the nominative.",
 		rules.headword,
 		rules.idiom,
 	),
 	"Saying/Saying": paragraph(
 		"canonical.route.Saying/Saying",
-		"A Saying is cited as a sentence in its full standard wording, even when this sentence quotes only part of it or changes a word, capitalized, with the commas that wording has and no final punctuation.",
+		"A Saying keeps every member it holds, in order and as written; mark the commas its standard wording has, and add the words it lacks only where it is judged Partial.",
 		rules.headword,
 		rules.partial,
 	),

@@ -307,5 +307,135 @@ export function goldWritten(goldCase: GrammarCase, input: unknown): unknown {
 		cursor = index + 1;
 		return tokens[index] ?? text;
 	});
-	return { canonicalForm: ideal.surface.lemma.canonicalForm, members };
+	const { family } = ideal.surface.lemma;
+	if (family !== "Locution" && family !== "Saying")
+		return { canonicalForm: ideal.surface.lemma.canonicalForm, members };
+	return {
+		words: tiedWords(goldCase, request, members, outside),
+		members,
+	};
+}
+
+/** The longest run of letters two words share, case folded. */
+function sharedRun(left: string, right: string): number {
+	const a = foldCase(left, "de");
+	const b = foldCase(right, "de");
+	let best = 0;
+	for (let i = 0; i < a.length; i++)
+		for (let j = 0; j < b.length; j++) {
+			let k = 0;
+			while (a[i + k] !== undefined && a[i + k] === b[j + k]) k++;
+			best = Math.max(best, k);
+		}
+	return best;
+}
+
+/**
+ * Gold's Canonical Form tied to the members (`tied-headword.ts`): the
+ * words a member's gold spelling spells (one word, several for a
+ * shorthand, or a run of glued pieces) are that member; a word left over
+ * cites the leftover member it shares the longest run of letters with (a
+ * verb's infinitive its finite form), and any other is a missing word.
+ */
+function tiedWords(
+	goldCase: GrammarCase,
+	request: { members: readonly { member: string }[] },
+	spelled: readonly string[],
+	outside: ReadonlySet<string>,
+): { member: string; text: string; comma: boolean }[] {
+	const { unit, sentence, ideal } = goldCase;
+	const target = targetOf(sentence, unit, unit.route as Route);
+	const tokens = ideal.surface.lemma.canonicalForm
+		.split(" ")
+		.filter((token) => token !== "…")
+		.map((token) => ({
+			word: token.replace(/,$/u, ""),
+			comma: token.endsWith(","),
+		}));
+	const free = request.members
+		.map(({ member }) => Number(member.slice(1)))
+		.filter((position) => !outside.has(`m${position}`));
+	const used = new Set<number>();
+	type Tied = { member: string; text: string; comma: boolean };
+	const slots: (Tied[] | undefined)[] = tokens.map(() => undefined);
+	const same = (left: string, right: string) =>
+		foldCase(left, "de") === foldCase(right, "de");
+	for (let at = 0; at < tokens.length; at++) {
+		if (slots[at]) continue;
+		for (const [index, start] of free.entries()) {
+			if (used.has(start)) continue;
+			// One member spelling one or more words.
+			const words = (spelled[start] ?? "").split(" ");
+			if (
+				words.every((word, offset) =>
+					same(word, tokens[at + offset]?.word ?? ""),
+				)
+			) {
+				used.add(start);
+				const last = tokens[at + words.length - 1];
+				slots[at] = [
+					{
+						member: `m${start}`,
+						text: "",
+						comma: last?.comma ?? false,
+					},
+				];
+				for (let offset = 1; offset < words.length; offset++)
+					slots[at + offset] = [];
+				break;
+			}
+			// A run of glued pieces spelling one word.
+			let joined = "";
+			const run: number[] = [];
+			for (const position of free.slice(index)) {
+				if (run.length > 0 && !target.glued.has(position)) break;
+				if (used.has(position)) break;
+				joined += spelled[position] ?? "";
+				run.push(position);
+				if (run.length > 1 && same(joined, tokens[at]?.word ?? "")) {
+					for (const piece of run) used.add(piece);
+					slots[at] = run.map((piece, offset) => ({
+						member: `m${piece}`,
+						text: "",
+						comma:
+							offset === run.length - 1 &&
+							(tokens[at]?.comma ?? false),
+					}));
+					break;
+				}
+			}
+			if (slots[at]) break;
+		}
+	}
+	for (const [at, token] of tokens.entries()) {
+		if (slots[at]) continue;
+		const best = free
+			.filter((position) => !used.has(position))
+			.map((position) => ({
+				position,
+				run: sharedRun(spelled[position] ?? "", token.word),
+			}))
+			.sort((left, right) => right.run - left.run)[0];
+		if (best && best.run >= 2) {
+			used.add(best.position);
+			slots[at] = [
+				{
+					member: `m${best.position}`,
+					text: token.word,
+					comma: token.comma,
+				},
+			];
+		} else
+			slots[at] = [{ member: "", text: token.word, comma: token.comma }];
+	}
+	// A missing word cites a member still left over, in order (die for eine).
+	const spare = free.filter((position) => !used.has(position));
+	for (const slot of slots) {
+		const [word] = slot ?? [];
+		if (!word || word.member !== "") continue;
+		const position = spare.shift();
+		if (position === undefined) break;
+		word.member = `m${position}`;
+	}
+	return slots.flatMap((slot) => slot ?? []);
 }

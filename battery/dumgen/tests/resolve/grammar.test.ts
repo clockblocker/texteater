@@ -26,12 +26,49 @@ const word = (text: string, surface?: string): Segment => ({
 const space: Segment = { kind: "Whitespace", text: " " };
 const stop: Segment = { kind: "Punctuation", text: "." };
 
-/** Luna writing `canonicalForm` and the members as attested. */
+/**
+ * Luna writing `canonicalForm` and the members as attested. For a
+ * Locution or Saying it ties each word of the form to the member, or run
+ * of members, that spells it, a finite verb citing its infinitive last.
+ */
 const writes = (canonicalForm: string, members?: readonly string[]) =>
-	fakeLuna(({ members: sent }) => ({
-		canonicalForm,
-		members: members ?? sent.map(({ text }) => text),
-	}));
+	fakeLuna(({ members: sent }) => {
+		const spelled = members ?? sent.map(({ text }) => text);
+		const used = new Set<number>();
+		const words = canonicalForm.split(" ").flatMap((word) => {
+			for (let start = 0; start < spelled.length; start++) {
+				let joined = "";
+				for (let end = start; end < spelled.length; end++) {
+					if (used.has(end)) break;
+					joined += spelled[end];
+					if (joined.toLowerCase() === word.toLowerCase()) {
+						const run = Array.from(
+							{ length: end - start + 1 },
+							(_, offset) => start + offset,
+						);
+						for (const position of run) used.add(position);
+						return run.map((position) => ({
+							member: `m${position}`,
+							text: "",
+							comma: false,
+						}));
+					}
+				}
+			}
+			const spare = spelled.findIndex(
+				(_, position) => !used.has(position),
+			);
+			if (spare >= 0) used.add(spare);
+			return [
+				{
+					member: spare >= 0 ? `m${spare}` : "",
+					text: word,
+					comma: false,
+				},
+			];
+		});
+		return { canonicalForm, words, members: spelled };
+	});
 
 // Unresolved and failed input (#861, #859).
 
