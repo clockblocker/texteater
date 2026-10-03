@@ -924,7 +924,7 @@ function readFirst(
 	if (shape.verbal) {
 		if (shape.lexeme) {
 			const prefix = planned.prefixes.length
-				? answered.pick("prefix")
+				? prefixAnswer(target, planned.prefixes, answered)
 				: "None";
 			core.hasSepPrefix =
 				prefix === "None"
@@ -1188,6 +1188,42 @@ export function verbHeadword(form: string, core: Values): string {
 	}
 	return reflexive ? `sich ${verb}` : verb;
 }
+
+/**
+ * The prefix answer. A shortened r- word in the verbal bracket is the
+ * particle of its her- or hin- word's particle verb (Rule
+ * de/r-adverb-is-her-or-hin-shorthand), so when jev leaves the prefix
+ * Unresolved, the likelier of those two it weighed is read; None is never
+ * one of them.
+ */
+function prefixAnswer(
+	target: Target,
+	prefixes: readonly string[],
+	answered: Answered,
+): string {
+	const settled = answered.peek("prefix");
+	if (settled !== undefined) return settled;
+	const expansions = new Set(
+		target.members.flatMap((member) =>
+			member.spelling?.orthography === "Shorthand" &&
+			member.spelling.surfaces.some((surface) => surface in shortenedFrom)
+				? member.spelling.surfaces
+				: [],
+		),
+	);
+	const likeliest = answered.alternatives("prefix", 0).find((option) => {
+		const prefix = prefixes[Number(option.slice(1))];
+		return prefix !== undefined && expansions.has(prefix);
+	});
+	return likeliest ?? answered.pick("prefix");
+}
+
+/** Each her- or hin- word an r- shortening stands for. */
+const shortenedFrom: Readonly<Record<string, string>> = Object.fromEntries(
+	Object.entries(rShortenings).flatMap(([word, expansions]) =>
+		expansions.map((expansion) => [expansion, word]),
+	),
+);
 
 /** The irgend- words a bare w-word judged Shorthand stands for (Rule de/bare-w-word-is-shorthand). */
 const bareWWords = new Set(["wo", "wie", "wann", "woher", "wohin"]);

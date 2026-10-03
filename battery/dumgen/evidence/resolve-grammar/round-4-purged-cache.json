@@ -1,0 +1,168 @@
+{
+	"purgedAt": "2026-10-03",
+	"reason": "Luna responses the transport stored with usage but no output (JSON without its value wrapper, before 3095eb17a and 2062ca130); purged so round 4 asks them again",
+	"entries": [
+		{
+			"key": "34a17fb25a7d695fb036cf5f057c4d996c46e6c6fafd5404f491a1d8cdd5b986",
+			"file": ".runs/resolve-grammar/cache/luna/34/34a17fb25a7d695fb036cf5f057c4d996c46e6c6fafd5404f491a1d8cdd5b986.json",
+			"outputTokens": 22,
+			"problem": null,
+			"cases": [
+				"(a request the current code no longer sends)"
+			]
+		},
+		{
+			"key": "3a9275e62778ee86817bcf850f39aceba3f2fff3f07984a6d83aa5903ebc6f54",
+			"file": ".runs/resolve-grammar/cache/luna/3a/3a9275e62778ee86817bcf850f39aceba3f2fff3f07984a6d83aa5903ebc6f54.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"de/das-essen-war-ganz-gut#0@0"
+			]
+		},
+		{
+			"key": "44f736c25b9df5fab0844dc0c9341c833ff7054bd7bd3ef8a38cab4437b25add",
+			"file": ".runs/resolve-grammar/cache/luna/44/44f736c25b9df5fab0844dc0c9341c833ff7054bd7bd3ef8a38cab4437b25add.json",
+			"outputTokens": 18,
+			"problem": null,
+			"cases": [
+				"(a request the current code no longer sends)"
+			]
+		},
+		{
+			"key": "6242815140f58956d89ab6a83086e4a128632e9fac7d564340f5783509bd7d20",
+			"file": ".runs/resolve-grammar/cache/luna/62/6242815140f58956d89ab6a83086e4a128632e9fac7d564340f5783509bd7d20.json",
+			"outputTokens": 18,
+			"problem": "Luna answered JSON without its value: {\"canonicalForm\":\"doch\",\"members\":[\"doch\"]}",
+			"cases": [
+				"de/er-ist-doch-gekommen#0@0"
+			]
+		},
+		{
+			"key": "6f931fe29ced970a38c1a54ec93da5de0fd6c816b4b1c07f75cbb4c0063a70ec",
+			"file": ".runs/resolve-grammar/cache/luna/6f/6f931fe29ced970a38c1a54ec93da5de0fd6c816b4b1c07f75cbb4c0063a70ec.json",
+			"outputTokens": 20,
+			"problem": "Luna answered JSON without its value: {\"canonicalForm\":\"lachend\",\"members\":[\"lachend\"]}",
+			"cases": [
+				"de/er-kam-lachend-herein#0@0"
+			]
+		},
+		{
+			"key": "7393ad8276efb24e2908b029998b92405e926168b5a63bd54af8ad6d5bb94b32",
+			"file": ".runs/resolve-grammar/cache/luna/73/7393ad8276efb24e2908b029998b92405e926168b5a63bd54af8ad6d5bb94b32.json",
+			"outputTokens": 18,
+			"problem": null,
+			"cases": [
+				"de/der-weg-dauerte-laenger-als-wir-erwartet-hatten#0@0"
+			]
+		},
+		{
+			"key": "812d76844adbb9d94a505f8e79ea69d6a09f319617b8bcd80eaa5e9250440769",
+			"file": ".runs/resolve-grammar/cache/luna/81/812d76844adbb9d94a505f8e79ea69d6a09f319617b8bcd80eaa5e9250440769.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"de/bald-aber-lernte-er-es-richtiger-schaetzen#0@1"
+			]
+		},
+		{
+			"key": "8b611928a6c536450918d40aa220785e719ac1da34a236d748267615b0cfd885",
+			"file": ".runs/resolve-grammar/cache/luna/8b/8b611928a6c536450918d40aa220785e719ac1da34a236d748267615b0cfd885.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"de/damit-oeffnet-der-hausmeister-das-seitentor#0@0"
+			]
+		},
+		{
+			"key": "951ed408961ad1a540e2d1c5844ca0f8ad115f9507f4b77810bce7174895d4fa",
+			"file": ".runs/resolve-grammar/cache/luna/95/951ed408961ad1a540e2d1c5844ca0f8ad115f9507f4b77810bce7174895d4fa.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"(a request the current code no longer sends)"
+			]
+		},
+		{
+			"key": "9fc22033221dae2cdcce25e9c920ae334c7d9c36528fcbe44f69954740b0cdeb",
+			"file": ".runs/resolve-grammar/cache/luna/9f/9fc22033221dae2cdcce25e9c920ae334c7d9c36528fcbe44f69954740b0cdeb.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"de/damit-oeffnet-der-hausmeister-das-seitentor#0@1"
+			]
+		},
+		{
+			"key": "a9d9bf0a097a6e3a9eb2ad807366bd75b529ce658a9a2ba2e08feb93b05e03ec",
+			"file": ".runs/resolve-grammar/cache/luna/a9/a9d9bf0a097a6e3a9eb2ad807366bd75b529ce658a9a2ba2e08feb93b05e03ec.json",
+			"outputTokens": 22,
+			"problem": null,
+			"cases": [
+				"(a request the current code no longer sends)"
+			]
+		},
+		{
+			"key": "abefe5cc539358c432ba1534f66b8b489ca0fdd253a4f6a23d5e2e5222579f2d",
+			"file": ".runs/resolve-grammar/cache/luna/ab/abefe5cc539358c432ba1534f66b8b489ca0fdd253a4f6a23d5e2e5222579f2d.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"de/moechten-sie-noch-kuchen-nein-danke-ich-bin-satt#0@0"
+			]
+		},
+		{
+			"key": "ad89465d66057d1e75a349812dac5f8ad99c69b6fa561653f50ccad1dde2ea13",
+			"file": ".runs/resolve-grammar/cache/luna/ad/ad89465d66057d1e75a349812dac5f8ad99c69b6fa561653f50ccad1dde2ea13.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"de/weh-mir-was-habe-ich-getan#0@1"
+			]
+		},
+		{
+			"key": "ba5bcf1dc93cdfaf353eb234c2398465acf69264d15a28021d744c9a5b6bccca",
+			"file": ".runs/resolve-grammar/cache/luna/ba/ba5bcf1dc93cdfaf353eb234c2398465acf69264d15a28021d744c9a5b6bccca.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"(a request the current code no longer sends)"
+			]
+		},
+		{
+			"key": "d0e034384a12886b64eb4132dd62597e84361f0e6d50bc5b8509b4758a1b73bf",
+			"file": ".runs/resolve-grammar/cache/luna/d0/d0e034384a12886b64eb4132dd62597e84361f0e6d50bc5b8509b4758a1b73bf.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"de/weh-mir-was-habe-ich-getan#0@0"
+			]
+		},
+		{
+			"key": "d4222f8373736a68f4eca3391a57c1311d36816e7cedea20f44a72505931e4df",
+			"file": ".runs/resolve-grammar/cache/luna/d4/d4222f8373736a68f4eca3391a57c1311d36816e7cedea20f44a72505931e4df.json",
+			"outputTokens": 23,
+			"problem": null,
+			"cases": [
+				"de/das-trikot-traegt-die-nummer-73#0@0"
+			]
+		},
+		{
+			"key": "fccefa0442df6d4b458b2d465c64884137a40fe5f4ffa86cb35c8859b721ab4f",
+			"file": ".runs/resolve-grammar/cache/luna/fc/fccefa0442df6d4b458b2d465c64884137a40fe5f4ffa86cb35c8859b721ab4f.json",
+			"outputTokens": 20,
+			"problem": null,
+			"cases": [
+				"(a request the current code no longer sends)"
+			]
+		},
+		{
+			"key": "ff24339969ad0dc321bf97d76be834f2668610d5e10fce8225f5967bf3952ce7",
+			"file": ".runs/resolve-grammar/cache/luna/ff/ff24339969ad0dc321bf97d76be834f2668610d5e10fce8225f5967bf3952ce7.json",
+			"outputTokens": 21,
+			"problem": null,
+			"cases": [
+				"de/gluecklicherweise-sagen-sie-das-so-hin-ohne-recht-dran-zu#7@0"
+			]
+		}
+	]
+}

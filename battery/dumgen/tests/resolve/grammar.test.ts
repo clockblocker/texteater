@@ -1182,3 +1182,40 @@ test("a Locution's or interjection's headword drops placeholders and members out
 	);
 	expect(guardedHeadword(so, "so dass", new Set())).toBe("so … dass");
 });
+
+test("an r- word's prefix jev leaves Unresolved is the likelier of its her- and hin- words, never None", async () => {
+	const base = fakeJev({ mood: "Imp" });
+	const jev: JevAsk = async (request, context) => {
+		const response = await base.ask(request, context);
+		return "prefix" in request.questions
+			? {
+					...response,
+					answers: {
+						...response.answers,
+						prefix: {
+							type: "choice",
+							choice: "Unresolved",
+							confidence: 0.4,
+							probabilities: {
+								Unresolved: 0.4,
+								None: 0.3,
+								p1: 0.2,
+								p0: 0.1,
+							},
+						},
+					},
+				}
+			: response;
+	};
+	const { result } = await resolveOnce(
+		{ jev, luna: writes("reinkommen").ask },
+		{
+			sentence: sentenceOf("Komm doch rein!"),
+			unit: unitOf([0, 4], "Lexeme", "VERB"),
+		},
+	);
+	expect(attested(result).surface.lemma).toMatchObject({
+		canonicalForm: "hineinkommen",
+		coreFeatures: { hasSepPrefix: "hinein" },
+	});
+});
