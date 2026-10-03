@@ -18,13 +18,96 @@
 	"sources": {
 		"adrs": ["ADR-0036", "ADR-0042"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: verrückt",
+				"url": "https://www.dwds.de/wb/verr%C3%BCckt",
+				"supports": "Target 0 Knowledge: partizipiales Adjektiv, Grundform verrücken; 'nicht normal: geisteskrank, wahnsinnig; närrisch, ausgefallen'"
+			},
+			{
+				"title": "Duden: verrückt",
+				"url": "https://www.duden.de/rechtschreibung/verrueckt",
+				"supports": "Target 0 Knowledge: Herkunft 'eigentlich 2. Partizip von verrücken'; sense 1 'krankhaft wirr im Denken und Handeln'"
+			},
+			{
+				"title": "Duden: verrücken",
+				"url": "https://www.duden.de/rechtschreibung/verruecken",
+				"supports": "Target 0 Knowledge: only 'an eine andere Stelle rücken': no current sense paraphrases 'crazy', so Drifted"
+			},
+			{
+				"title": "OpenThesaurus: verrückt",
+				"url": "https://www.openthesaurus.de/synonyme/verr%C3%BCckt",
+				"supports": "Target 0 Knowledge: synsets verrückt · durchgeknallt · irre ... and verrückt · abgefahren · übergeschnappt; no Gegenteil on verrückt"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🤪" },
+			"reading": {
+				"emojiDescription": "🤪",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "verrücken",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Drifted"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "irre",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "durchgeknallt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "übergeschnappt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "verrückt is used as a predicative adjective, so it is an ADJ (ADR 0036), not a state passive of verrücken. It compares (verrückter), so it is comparable and marks Pos (ADR 0042)."
 			},

@@ -278,6 +278,56 @@
 				"title": "OpenThesaurus: Musiktempel",
 				"url": "https://www.openthesaurus.de/synonyme/Musiktempel",
 				"supports": "Target 0 Knowledge: no synset"
+			},
+			{
+				"title": "E-VALBU: verbinden, Lesart 3",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401004/3",
+				"supports": "Target 15 Knowledge: 'etwas verbindet etwas/jemanden mit etwas/jemandem' (räumliche Verbindung): Satzbauplan Ksub, Kakk, Kprp mit+Dat; the ADJ keeps the mit complement (here miteinander)"
+			},
+			{
+				"title": "Duden: verbinden",
+				"url": "https://www.duden.de/rechtschreibung/verbinden",
+				"supports": "Target 15 Knowledge: sense '(zwei voneinander entfernte Dinge, Orte) ... zusammenbringen' (zwei Stadtteile durch eine Brücke verbinden) paraphrases the passive"
+			},
+			{
+				"title": "DWDS: verbunden",
+				"url": "https://www.dwds.de/wb/verbunden",
+				"supports": "Target 15 Knowledge: partizipiales Adjektiv, Grundform verbinden; no sense of its own for 'connected'"
+			},
+			{
+				"title": "Duden: verbunden",
+				"url": "https://www.duden.de/rechtschreibung/verbunden",
+				"supports": "Target 15 Knowledge: Adjektiv entry for 'dankbar'; synonyms dankbar, einig, komplex, nahe belong to other senses"
+			},
+			{
+				"title": "OpenThesaurus: verbunden",
+				"url": "https://www.openthesaurus.de/synonyme/verbunden",
+				"supports": "Target 15 Knowledge: synsets are online/connected device, gemeinsam, gekoppelt (mit), angegliedert, dankbar senses; none for physically joined: no relation listed"
+			},
+			{
+				"title": "DWDS: versteckt",
+				"url": "https://www.dwds.de/wb/versteckt",
+				"supports": "Target 3 Knowledge: partizipiales Adjektiv, sense 1 'entsprechend der Bedeutung von verstecken'"
+			},
+			{
+				"title": "DWDS: verstecken",
+				"url": "https://www.dwds.de/wb/verstecken",
+				"supports": "Target 3 Knowledge: 'jmdn., etw. verbergen'; bildlich das Haus liegt ganz hinter Bäumen versteckt (this use)"
+			},
+			{
+				"title": "Duden: verstecken",
+				"url": "https://www.duden.de/rechtschreibung/verstecken",
+				"supports": "Target 3 Knowledge: 'in, unter, hinter etwas anderem verbergen'; the place is an adjunct, no governed preposition"
+			},
+			{
+				"title": "Duden: versteckt",
+				"url": "https://www.duden.de/rechtschreibung/versteckt",
+				"supports": "Target 3 Knowledge: Adjektiv senses verborgen (b) [a gloss], nicht offen, heimlich; synonyms geheim, heimlich belong to the 'secret' senses"
+			},
+			{
+				"title": "OpenThesaurus: versteckt",
+				"url": "https://www.openthesaurus.de/synonyme/versteckt",
+				"supports": "Target 3 Knowledge: synsets for latent, heimlich, implizit, indirekt senses only: no relation listed for 'placed out of sight'"
 			}
 		]
 	},
@@ -491,7 +541,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🫥" },
+			"reading": {
+				"emojiDescription": "🫥",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "verstecken",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "A postposed Partizip II with no auxiliary: ADJ versteckt, Participle Source verstecken (de/participial-adjective). Taken as non-comparable."
 			},
@@ -1062,7 +1140,55 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔗" },
+			"reading": {
+				"emojiDescription": "🔗",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "mit",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "verbinden",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Attributive Partizip II: ADJ verbunden from verbinden (de/participial-adjective, de/attributive-adjective-stands-alone)."
 			},

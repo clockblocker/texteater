@@ -408,6 +408,21 @@
 				"title": "OpenThesaurus: Weilchen",
 				"url": "https://www.openthesaurus.de/synonyme/Weilchen",
 				"supports": "Target 3 Knowledge: no synset"
+			},
+			{
+				"title": "Duden: befremden",
+				"url": "https://www.duden.de/rechtschreibung/befremden",
+				"supports": "Target 27 Knowledge: 'bei jemandem Erstaunen und Missbilligung auslösen'; example ich war von seinem Verhalten zunächst etwas befremdet (passive paraphrase); no ADJ headword befremdet"
+			},
+			{
+				"title": "DWDS: befremden",
+				"url": "https://www.dwds.de/wb/befremden",
+				"supports": "Target 27 Knowledge: 'jmdn. seltsam berühren, in unwilliges Erstaunen versetzen', b) oft im Partizip II (befremdet lächeln)"
+			},
+			{
+				"title": "OpenThesaurus: befremdet",
+				"url": "https://www.openthesaurus.de/synonyme/befremdet",
+				"supports": "Target 27 Knowledge: synset befremdet · irritiert · verdutzt · bewildert · konsterniert; no Gegenteil"
 			}
 		]
 	},
@@ -1684,7 +1699,69 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🤨" },
+			"reading": {
+				"emojiDescription": "🤨",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "befremden",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "irritiert",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "verdutzt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "konsterniert",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

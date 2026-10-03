@@ -40,13 +40,42 @@
 				"hash": "b72c043c004f9dc9"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: weird",
+				"url": "https://www.duden.de/rechtschreibung/weird",
+				"supports": "Target 0 Knowledge: 'auf befremdliche Weise seltsam; unheimlich; schräg (2)' is a gloss; no Synonyme section"
+			},
+			{
+				"title": "DWDS: weird",
+				"url": "https://www.dwds.de/wb/weird",
+				"supports": "Target 0 Knowledge: grammar line only, no senses or Synonym/Gegensatz lines"
+			},
+			{
+				"title": "OpenThesaurus: weird",
+				"url": "https://www.openthesaurus.de/synonyme/weird",
+				"supports": "Target 0 Knowledge: no synset: no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🤨" },
+			"reading": {
+				"emojiDescription": "🤨",
+				"knowledge": {},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Duden lists weird as an indeclinable adjective, so the typo wierd is a Typo member of ADJ weird, though the chat mixes German and English: a listed word is a Lexeme in every sentence, and no Lexeme is marked foreign (ADR 0045). Duden gives no comparison forms, so it is not comparable and its Surface marks no Degree."
 			},

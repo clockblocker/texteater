@@ -297,6 +297,41 @@
 				"title": "Duden: Zufälligkeit",
 				"url": "https://www.duden.de/rechtschreibung/Zufaelligkeit",
 				"supports": "Target 16 Knowledge: sense 2 'zufälliges Ereignis', a shade of Zufall (nearSynonym)"
+			},
+			{
+				"title": "Duden: drohend",
+				"url": "https://www.duden.de/rechtschreibung/drohend",
+				"supports": "Target 6 Knowledge: Adjektiv 'als etwas Unangenehmes oder Gefährliches bevorstehend'; Synonyme bevorstehend, herankommend, herannahend, heraufkommend"
+			},
+			{
+				"title": "Duden: drohen",
+				"url": "https://www.duden.de/rechtschreibung/drohen",
+				"supports": "Target 6 Knowledge: sense 3 'als etwas Gefährliches, Unangenehmes möglicherweise eintreffen, als Gefahr bevorstehen' paraphrases the Reading"
+			},
+			{
+				"title": "DWDS: drohen",
+				"url": "https://www.dwds.de/wb/drohen",
+				"supports": "Target 6 Knowledge: sense 2 ⟨etw. droht jmdm.⟩ 'etw. Unangenehmes kündigt sich an'; eine drohende Gefahr"
+			},
+			{
+				"title": "OpenThesaurus: drohend",
+				"url": "https://www.openthesaurus.de/synonyme/drohend",
+				"supports": "Target 6 Knowledge: synset bedrohlich · beklemmend · beunruhigend · drohend · unheilvoll ...; no Gegenteil"
+			},
+			{
+				"title": "Duden: unselig",
+				"url": "https://www.duden.de/rechtschreibung/unselig",
+				"supports": "Target 17 Knowledge: 'Unheil bringend, verhängnisvoll; unglückselig' (a gloss); Synonyme bedauerlich, bejammernswert, beklagenswert, desaströs mostly fit the 'beklagenswert' sense"
+			},
+			{
+				"title": "DWDS: unselig",
+				"url": "https://www.dwds.de/wb/unselig",
+				"supports": "Target 17 Knowledge: 2. 'Unglück, Verderben bringend, verhängnisvoll, unheilvoll' (gloss); no Synonym/Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: unselig",
+				"url": "https://www.openthesaurus.de/synonyme/unselig",
+				"supports": "Target 17 Knowledge: no synset: no relation listed; plain adjective, no participle source"
 			}
 		]
 	},
@@ -578,7 +613,61 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "⚠" },
+			"reading": {
+				"emojiDescription": "⚠",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "drohen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "bedrohlich",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "bevorstehend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -1158,7 +1247,20 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🚫🍀" },
+			"reading": {
+				"emojiDescription": "🚫🍀",
+				"knowledge": {},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

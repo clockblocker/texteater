@@ -135,6 +135,26 @@
 				"title": "Project Gutenberg eBook #34717: Robert Musil, Die Verwirrungen des Zöglings Törleß",
 				"url": "https://www.gutenberg.org/ebooks/34717",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34717 (released 2010-12-21), transcribed from Wiener Verlag, Wien und Leipzig 1906. Paragraph beginning Bald aber lernte er."
+			},
+			{
+				"title": "Duden: ergreifen",
+				"url": "https://www.duden.de/rechtschreibung/ergreifen",
+				"supports": "Target 8 Knowledge: sense 1 'mit der Hand nach einer Person, Sache greifen und sie festhalten' paraphrases kaum ergriffen (Ding as object)"
+			},
+			{
+				"title": "DWDS: ergreifen",
+				"url": "https://www.dwds.de/wb/ergreifen",
+				"supports": "Target 8 Knowledge: sense 1a 'nach etw. greifen und es festhalten, mit den Händen'"
+			},
+			{
+				"title": "Duden: ergriffen",
+				"url": "https://www.duden.de/rechtschreibung/ergriffen",
+				"supports": "Target 8 Knowledge: synonyms aufgewühlt, berührt, bewegt, erregt belong to the 'moved' sense, not 'grasped'"
+			},
+			{
+				"title": "OpenThesaurus: ergriffen",
+				"url": "https://www.openthesaurus.de/synonyme/ergriffen",
+				"supports": "Target 8 Knowledge: synsets behaftet/heimgesucht and gerührt/bewegt only: no relation listed for 'grasped'"
 			}
 		]
 	},
@@ -553,7 +573,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "✊" },
+			"reading": {
+				"emojiDescription": "✊",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "ergreifen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

@@ -462,6 +462,41 @@
 				"title": "OpenThesaurus: Bauch",
 				"url": "https://www.openthesaurus.de/synonyme/Bauch",
 				"supports": "Target 21 Knowledge: synset Bauch · Unterleib · Abdomen, Oberbegriff Körperteil; Gegenteil marker sits on Bierbauch only"
+			},
+			{
+				"title": "E-VALBU: teilen, Lesart 6",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400945/6",
+				"supports": "Target 20 Knowledge: 'etwas teilt etwas in etwas' (bildet die Trennung): Satzbauplan Ksub, Kakk, (Kprp in+Akk)"
+			},
+			{
+				"title": "DWDS: teilen",
+				"url": "https://www.dwds.de/wb/teilen",
+				"supports": "Target 20 Knowledge: sense 1 'in einzelne Teile zerlegen, trennen' (Ein Vorhang teilt die Bühne in zwei Teile) paraphrases the passive"
+			},
+			{
+				"title": "Duden: geteilt",
+				"url": "https://www.duden.de/rechtschreibung/geteilt",
+				"supports": "Target 20 Knowledge: Adjektiv 'in Teile zerlegt'; Synonyme aufgeteilt, auseinander, getrennt, halbiert"
+			},
+			{
+				"title": "OpenThesaurus: geteilt",
+				"url": "https://www.openthesaurus.de/synonyme/geteilt",
+				"supports": "Target 20 Knowledge: synsets for 'separate' (getrennt, separat) and 'divided opinion' only; Gegenteil zusammen sits on getrennt"
+			},
+			{
+				"title": "Duden: bereit",
+				"url": "https://www.duden.de/rechtschreibung/bereit",
+				"supports": "Target 27 Knowledge: bereit sein (1. fertig, gerüstet sein; 2. zu etwas entschlossen sein); sich [zu etwas] bereit erklären ... dazu bereit erklärt, Überstunden zu machen; Synonyme bei der Hand, fertig, gerichtet, gerüstet"
+			},
+			{
+				"title": "DWDS: bereit",
+				"url": "https://www.dwds.de/wb/bereit",
+				"supports": "Target 27 Knowledge: 1. 'für, auf etw. vorbereitet, fertig' (wie zum Sprung bereit); 2. ⟨zu etw. bereit sein⟩; Jeder muss bereit sein, alles zu geben"
+			},
+			{
+				"title": "OpenThesaurus: bereit",
+				"url": "https://www.openthesaurus.de/synonyme/bereit",
+				"supports": "Target 27 Knowledge: synset bereit · einsatzbereit · fertig · parat · startklar ...; no Gegenteil"
 			}
 		]
 	},
@@ -1470,7 +1505,81 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "➗" },
+			"reading": {
+				"emojiDescription": "➗",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "in",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "teilen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "aufgeteilt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "halbiert",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1873,7 +1982,60 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🙋" },
+			"reading": {
+				"emojiDescription": "🙋",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "zu",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "fertig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -68,7 +68,33 @@
 				"hash": "c2b1f74a61545177"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: überraschend",
+				"url": "https://www.duden.de/rechtschreibung/ueberraschend",
+				"supports": "Target 2 Knowledge: Adjektiv 'jemanden unvorbereitet treffend [und deshalb in Erstaunen versetzend]'; its Synonyme (plötzlich, schlagartig) fit the adverbial use, not this one"
+			},
+			{
+				"title": "Duden: überraschen",
+				"url": "https://www.duden.de/rechtschreibung/ueberraschen",
+				"supports": "Target 2 Knowledge: sense 1 'anders als erwartet sein, unerwartet kommen ... und deshalb in Erstaunen versetzen' (ihre Absage hat mich überrascht)"
+			},
+			{
+				"title": "E-VALBU: überraschen, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400980/2",
+				"supports": "Target 2 Knowledge: 'etwas versetzt jemanden in Erstaunen': Ksub, Kakk, no governed preposition"
+			},
+			{
+				"title": "DWDS: überraschend",
+				"url": "https://www.dwds.de/wb/%C3%BCberraschend",
+				"supports": "Target 2 Knowledge: partizipiales Adjektiv: 'früher oder anders als erwartet und deshalb jmdn. unvorbereitet treffend oder in Erstaunen setzend'"
+			},
+			{
+				"title": "OpenThesaurus: überraschend",
+				"url": "https://www.openthesaurus.de/synonyme/%C3%BCberraschend",
+				"supports": "Target 2 Knowledge: synsets ... überraschend · unerwartet · unverhofft ... and erstaunlich · überraschend · verblüffend ...; Gegenteil only on überraschenderweise"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -152,7 +178,59 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "😲" },
+			"reading": {
+				"emojiDescription": "😲",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "überraschen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "unerwartet",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "erstaunlich",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

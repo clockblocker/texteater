@@ -342,6 +342,61 @@
 				"title": "OpenThesaurus: Zweifel",
 				"url": "https://www.openthesaurus.de/synonyme/Zweifel",
 				"supports": "Target 3 Knowledge: synset Bedenken · Ungewissheit · Unsicherheit · Zweifel · Zwiespalt, with Gegenteil Gewissheit on Zweifel; synset Argwohn · Misstrauen · Skepsis · Zweifel (Gegenteil Glaube on Zweifel)"
+			},
+			{
+				"title": "Duden: ersehnen",
+				"url": "https://www.duden.de/rechtschreibung/ersehnen",
+				"supports": "Target 18 Knowledge: 'herbeisehnen, sehnlichst wünschen'; der lang ersehnte Augenblick; transitive, no governed preposition"
+			},
+			{
+				"title": "DWDS: ersehnen",
+				"url": "https://www.dwds.de/wb/ersehnen",
+				"supports": "Target 18 Knowledge: 'etw. sehnsüchtig erwarten, herbeiwünschen', oft im Partizip II (er konnte den ersehnten Schlaf nicht finden)"
+			},
+			{
+				"title": "OpenThesaurus: ersehnt",
+				"url": "https://www.openthesaurus.de/synonyme/ersehnt",
+				"supports": "Target 18 Knowledge: only free phrases (inständig herbeigesehnt, sehnlichst herbeigewünscht), no Lemma: no relation listed; Duden has no ersehnt entry"
+			},
+			{
+				"title": "DWDS: schlendern",
+				"url": "https://www.dwds.de/wb/schlendern",
+				"supports": "Target 9 Knowledge: 'langsam und gemächlich gehen, spazieren'; ein schlendernder Gang (Partizip I in the progressive); intransitive, no frame"
+			},
+			{
+				"title": "Duden: schlendernd",
+				"url": "https://www.duden.de/rechtschreibung/schlendern",
+				"supports": "Target 9 Knowledge: no entry for schlendernd (search finds schlendern only)"
+			},
+			{
+				"title": "OpenThesaurus: schlendernd",
+				"url": "https://www.openthesaurus.de/synonyme/schlendernd",
+				"supports": "Target 9 Knowledge: no synset: no relation listed"
+			},
+			{
+				"title": "Duden: entschieden (Partizip)",
+				"url": "https://www.duden.de/rechtschreibung/entschieden_zu_entscheiden",
+				"supports": "Target 6 Knowledge: 'Das Stichwort entschieden ist das Partizip zu entscheiden' (the 'decided' sense; the Adjektiv entschieden_eindeutig is the 'resolute' Lemma)"
+			},
+			{
+				"title": "Duden: entscheiden",
+				"url": "https://www.duden.de/rechtschreibung/entscheiden",
+				"supports": "Target 6 Knowledge: '(einen Zweifelsfall) [endgültig] klären und darüber ein Urteil fällen' paraphrases das war entschieden"
+			},
+			{
+				"title": "DWDS: entscheiden",
+				"url": "https://www.dwds.de/wb/entscheiden",
+				"supports": "Target 6 Knowledge: sense 1; es ist noch nichts entschieden; nicht eher weggehen, als bis alles entschieden ist"
+			},
+			{
+				"title": "E-VALBU: entscheiden, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400485/1",
+				"supports": "Target 6 Knowledge: Satzbauplan Ksub, Kakk: no governed preposition, no ADJ frame"
+			},
+			{
+				"title": "OpenThesaurus: entschieden",
+				"url": "https://www.openthesaurus.de/synonyme/entschieden",
+				"supports": "Target 6 Knowledge: synset endgültig · entschieden · geklärt · geregelt · unumstößlich · definitiv (settled sense); Gegenteil markers sit on the resolute-sense terms only"
 			}
 		]
 	},
@@ -703,7 +758,71 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "✅" },
+			"reading": {
+				"emojiDescription": "✅",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "entscheiden",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "geklärt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "geregelt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "endgültig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "entschieden after copular war is the ADJ entschieden with Participle Source entscheiden (de/sein-perfect-or-copula). Here it means 'decided, settled', Duden's Partizip headword, which gives no comparison forms. The comparable 'resolute' (entschiedener, am entschiedensten) is Duden's Adjektiv headword, a Lemma of its own. So this Lemma is not comparable, and its predicative Surface marks no Degree (de/comparability-is-lexical, ADR 0036). Ruled on #743 (MB-A6, A9)."
 			},
@@ -841,7 +960,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🚶😌" },
+			"reading": {
+				"emojiDescription": "🚶😌",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "schlendern",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Adverbial Partizip I: ADJ schlendernd, Participle Source schlendern (de/participial-adjective)."
 			},
@@ -1323,7 +1470,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🌠" },
+			"reading": {
+				"emojiDescription": "🌠",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "ersehnen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Attributive Partizip II: ADJ ersehnt from ersehnen (de/participial-adjective)."
 			},

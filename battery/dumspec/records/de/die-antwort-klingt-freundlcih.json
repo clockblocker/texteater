@@ -16,13 +16,77 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: freundlich",
+				"url": "https://www.duden.de/rechtschreibung/freundlich",
+				"supports": "Target 0 Knowledge: sense 1 'im Umgang mit anderen aufmerksam und entgegenkommend; liebenswürdig' (ein paar freundliche Worte); Synonyme aufmerksam, einnehmend, entgegenkommend, gefällig"
+			},
+			{
+				"title": "DWDS: freundlich",
+				"url": "https://www.dwds.de/wb/freundlich",
+				"supports": "Target 0 Knowledge: 1. 'sich den Mitmenschen gegenüber wohlwollend zeigend'; unfreundlich only as word formation, no Gegensatz line"
+			},
+			{
+				"title": "OpenThesaurus: freundlich",
+				"url": "https://www.openthesaurus.de/synonyme/freundlich",
+				"supports": "Target 0 Knowledge: synsets charmant · freundlich · gefällig · nett; freundlich · herzlich · liebenswürdig; entgegenkommend · freundlich · nett · sympathisch; no Gegenteil on freundlich"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "😊" },
+			"reading": {
+				"emojiDescription": "😊",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "nett",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "liebenswürdig",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "entgegenkommend",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Letters transposed. Mark Typo. Repair Surface and Lemma."
 			},

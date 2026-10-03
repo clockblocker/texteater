@@ -20,13 +20,96 @@
 	"sources": {
 		"adrs": ["ADR-0036", "ADR-0042"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: glänzend",
+				"url": "https://www.dwds.de/wb/gl%C3%A4nzend",
+				"supports": "Target 0 Knowledge: partizipiales Adjektiv: 'entsprechend der Bedeutung von glänzen (2)', 1. hervorragend, ausgezeichnet (du hast immer die glänzendsten Ideen)"
+			},
+			{
+				"title": "Duden: glänzen",
+				"url": "https://www.duden.de/rechtschreibung/glaenzen",
+				"supports": "Target 0 Knowledge: sense 2 'Bewunderung hervorrufen; sich hervortun, sich auszeichnen'"
+			},
+			{
+				"title": "Duden: glänzend",
+				"url": "https://www.duden.de/rechtschreibung/glaenzend",
+				"supports": "Target 0 Knowledge: Adjektiv sense 2 'großartig; hervorragend; ausgezeichnet' (ein glänzender Einfall); Synonyme ausgezeichnet, bestechend, bestens, blendend"
+			},
+			{
+				"title": "OpenThesaurus: glänzend",
+				"url": "https://www.openthesaurus.de/synonyme/gl%C3%A4nzend",
+				"supports": "Target 0 Knowledge: synset großartig · ausgezeichnet · brillant · glänzend · hervorragend ...; no Gegenteil on glänzend"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🌟" },
+			"reading": {
+				"emojiDescription": "🌟",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "glänzen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "ausgezeichnet",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "hervorragend",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "brillant",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "glänzende is used attributively, so it is an ADJ with Canonical Form glänzend (ADR 0036). It compares (glänzender), so it is comparable and marks Pos (ADR 0042)."
 			},

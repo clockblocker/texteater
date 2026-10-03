@@ -163,6 +163,21 @@
 				"title": "Project Gutenberg eBook #46184: Theodor Fontane, Frau Jenny Treibel",
 				"url": "https://www.gutenberg.org/ebooks/46184",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #46184 (released 2014-07-03), transcribed from S. Fischer Verlag, Berlin. Paragraph beginning Vielleicht ist es so."
+			},
+			{
+				"title": "Duden: verleiden",
+				"url": "https://www.duden.de/rechtschreibung/verleiden",
+				"supports": "Target 10 Knowledge: 'bewirken, dass jemand an etwas keine Freude mehr hat'; jemandem den Urlaub verleiden; es ist mir alles verleidet (state passive keeps the dative)"
+			},
+			{
+				"title": "DWDS: verleiden",
+				"url": "https://www.dwds.de/wb/verleiden",
+				"supports": "Target 10 Knowledge: ⟨jmdm. etw., jmdn. verleiden⟩; durch diesen Auftritt war mir die ganze Feier gründlich verleidet"
+			},
+			{
+				"title": "OpenThesaurus: verleidet",
+				"url": "https://www.openthesaurus.de/synonyme/verleidet",
+				"supports": "Target 10 Knowledge: no synset; Duden has no verleidet entry: no relation listed"
 			}
 		]
 	},
@@ -657,7 +672,47 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "😒" },
+			"reading": {
+				"emojiDescription": "😒",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "verleiden",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

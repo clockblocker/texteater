@@ -261,6 +261,21 @@
 				"title": "OpenThesaurus: Strohhut",
 				"url": "https://www.openthesaurus.de/synonyme/Strohhut",
 				"supports": "Target 4 Knowledge: no synset"
+			},
+			{
+				"title": "OpenThesaurus: klein",
+				"url": "https://www.openthesaurus.de/synonyme/klein",
+				"supports": "Target 14 Knowledge: Gegenteil marker on klein (Hauptform): groß; synset klein · mini · winzig ... (size)"
+			},
+			{
+				"title": "Duden: klein",
+				"url": "https://www.duden.de/rechtschreibung/klein",
+				"supports": "Target 14 Knowledge: sense 1 'in Ausdehnung oder Umfang unter dem Durchschnitt'; Synonyme kleinformatig, mikroskopisch, minimal (narrower)"
+			},
+			{
+				"title": "DWDS: klein",
+				"url": "https://www.dwds.de/wb/klein",
+				"supports": "Target 14 Knowledge: 1. 'von geringem Ausmaß ... an räumlicher Ausdehnung'"
 			}
 		]
 	},
@@ -1005,7 +1020,47 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🤏" },
+			"reading": {
+				"emojiDescription": "🤏",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "winzig",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "groß",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "kleiner is the positive with its strong ending after ein, not the comparative: attributive, Pos."
 			},

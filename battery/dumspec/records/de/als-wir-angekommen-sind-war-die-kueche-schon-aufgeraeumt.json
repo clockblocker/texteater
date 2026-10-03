@@ -127,6 +127,31 @@
 				"title": "OpenThesaurus: Küche",
 				"url": "https://www.openthesaurus.de/synonyme/K%C3%BCche",
 				"supports": "Target 4 Knowledge: synset Kochstube · Küche (Architektur), Oberbegriff Raum · Zimmer · Kammer"
+			},
+			{
+				"title": "Duden: aufräumen",
+				"url": "https://www.duden.de/rechtschreibung/aufraeumen",
+				"supports": "Target 6 Knowledge: sense 1 '[wieder] Ordnung in etwas bringen' (das Zimmer aufräumen) paraphrases die Küche ist aufgeräumt as a state passive"
+			},
+			{
+				"title": "DWDS: aufräumen",
+				"url": "https://www.dwds.de/wb/aufr%C3%A4umen",
+				"supports": "Target 6 Knowledge: sense 1 'etw. Unordentliches wieder in Ordnung bringen'; lists aufgeräumt under Grundform"
+			},
+			{
+				"title": "E-VALBU: aufräumen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400265/1",
+				"supports": "Target 6 Knowledge: Satzbauplan Ksub, (Kakk): no governed preposition, so no ADJ frame"
+			},
+			{
+				"title": "Duden: aufgeräumt",
+				"url": "https://www.duden.de/rechtschreibung/aufgeraeumt",
+				"supports": "Target 6 Knowledge: Adjektiv headword only for the drifted 'gut gelaunt' sense; its synonyms (froh, fröhlich) belong to that sense"
+			},
+			{
+				"title": "OpenThesaurus: aufgeräumt",
+				"url": "https://www.openthesaurus.de/synonyme/aufger%C3%A4umt",
+				"supports": "Target 6 Knowledge: synset aufgeräumt · bereinigt · geordnet · ordentlich · säuberlich (tidy sense); no Gegenteil on aufgeräumt"
 			}
 		]
 	},
@@ -470,7 +495,59 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🧹" },
+			"reading": {
+				"emojiDescription": "🧹",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "aufräumen",
+							"coreFeatures": {
+								"hasSepPrefix": "auf",
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "ordentlich",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "geordnet",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

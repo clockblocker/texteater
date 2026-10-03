@@ -23,15 +23,69 @@
 				"hash": "b72c043c004f9dc9"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: milde, mild",
+				"url": "https://www.duden.de/rechtschreibung/milde",
+				"supports": "Target 0 Knowledge: senses 'nicht streng, nicht hart', 'keine extremen Temperaturen', 'nicht scharf' (the Reading's span); Synonyme gemäßigt, lau, nicht hart/kalt, nicht rau/streng"
+			},
+			{
+				"title": "DWDS: mild",
+				"url": "https://www.dwds.de/wb/mild",
+				"supports": "Target 0 Knowledge: 'Synonym zu milde' (a spelling of the same headword, not a relation)"
+			},
+			{
+				"title": "OpenThesaurus: mild",
+				"url": "https://www.openthesaurus.de/synonyme/mild",
+				"supports": "Target 0 Knowledge: synsets friedlich · harmlos · mild · sanft · weich and locker · mild(e) · nachgiebig · sanft; others are sense-specific (gütig, lau, fade); no Gegenteil on mild"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🪶" },
+			"reading": {
+				"emojiDescription": "🪶",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "sanft",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "gemäßigt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "A mentioned word takes its ordinary Reading, and 🪶, not harsh, covers Duden mild 1 to 3 (lenient, temperate, not sharp in taste) as one concept under ADR 0031."
+				"rationale": "A mentioned word takes its ordinary Reading, and 🪶, not harsh, covers Duden mild 1 to 3 (lenient, temperate, not sharp in taste) as one concept under ADR 0031. Knowledge (#887, dev draft): The Reading spans Duden mild 1 to 3, so only the broad 'gentle, moderate' listings are claimed, as nearSynonyms."
 			},
 			"grundform": true,
 			"attestation": {

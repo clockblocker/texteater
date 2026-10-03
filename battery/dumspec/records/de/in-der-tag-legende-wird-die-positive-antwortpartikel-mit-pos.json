@@ -38,13 +38,89 @@
 				"hash": "b72c043c004f9dc9"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: positiv",
+				"url": "https://www.duden.de/rechtschreibung/positiv",
+				"supports": "Target 0 Knowledge: sense 1 'Zustimmung, Bejahung ausdrückend' (eine positive Antwort); Synonyme anerkennend, beifällig, bejahend, zustimmend"
+			},
+			{
+				"title": "DWDS: positiv",
+				"url": "https://www.dwds.de/wb/positiv",
+				"supports": "Target 0 Knowledge: 1. 'in gegensätzlicher Bedeutung zu negativ', a) bejahend, zustimmend (eine positive Antwort)"
+			},
+			{
+				"title": "OpenThesaurus: positiv",
+				"url": "https://www.openthesaurus.de/synonyme/positiv",
+				"supports": "Target 0 Knowledge: synset (Linguistik/Sprache) affirmativ · bejahend · bestätigend · positiv · zustimmend"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "👍" },
+			"reading": {
+				"emojiDescription": "👍",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "bejahend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "zustimmend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "affirmativ",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "negativ",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "pos. is the label's abbreviation of the adjective positiv, the word the sentence glosses it with. An abbreviation is one Segment with its period and stands for its expansion, so pos. is a Shorthand member of positiv, never an abbreviation Lemma of its own (de/abbreviation-is-one-segment). The label is cited, not declined; positiv has comparison forms, so the citation marks Pos (de/comparability-is-lexical). pos. abbreviates positiv in Duden's sense 1 'Zustimmung, Bejahung ausdrückend' (eine positive Antwort), not 2a 'günstig, vorteilhaft'."
 			},

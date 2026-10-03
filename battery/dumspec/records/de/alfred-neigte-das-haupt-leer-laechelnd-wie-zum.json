@@ -319,6 +319,26 @@
 				"title": "Duden: Körperteil",
 				"url": "https://www.duden.de/rechtschreibung/Koerperteil",
 				"supports": "Target 2 Knowledge: der Körperteil, maskulin"
+			},
+			{
+				"title": "DWDS: lächeln",
+				"url": "https://www.dwds.de/wb/l%C3%A4cheln",
+				"supports": "Target 4 Knowledge: a) 'ein wenig und lautlos lachen'; sie schüttelte lächelnd den Kopf (Partizip I in the progressive)"
+			},
+			{
+				"title": "E-VALBU: lächeln, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400725/2",
+				"supports": "Target 4 Knowledge: 'jemand zeigt durch seinen Gesichtsausdruck Verbindlichkeit oder Ironie': Satzbauplan Ksub only, no ADJ frame"
+			},
+			{
+				"title": "Duden: lächelnd",
+				"url": "https://www.duden.de/rechtschreibung/laecheln",
+				"supports": "Target 4 Knowledge: no entry for lächelnd"
+			},
+			{
+				"title": "OpenThesaurus: lächelnd",
+				"url": "https://www.openthesaurus.de/synonyme/l%C3%A4chelnd",
+				"supports": "Target 4 Knowledge: no synset: no relation listed"
 			}
 		]
 	},
@@ -576,7 +596,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🙂" },
+			"reading": {
+				"emojiDescription": "🙂",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "lächeln",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Adverbial Partizip I outside any verbal construction: a single-member ADJ lächelnd whose Participle Source is lächeln (de/participial-adjective). Like schweigend and lachend in Reviewed precedents, it is taken as non-comparable."
 			},
