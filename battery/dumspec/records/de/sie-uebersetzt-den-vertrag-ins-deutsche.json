@@ -33,6 +33,12 @@
 			},
 			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" },
 			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "19c59bf41ed26810"
+			},
+			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
 				"rule": "de/valency-frame-follows-e-valbu",
 				"hash": "d71c5846b57b2c24"
 			},
@@ -70,7 +76,7 @@
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [2],
+			"memberSegmentIndices": [2, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
 			"reading": {
 				"emojiDescription": "🌐",
@@ -176,16 +182,46 @@
 				}
 			},
 			"notes": {
-				"rationale": "The ambiguous surface übersetzt is taken as present finite, not as a participle. Knowledge (#884): the frame takes E-VALBU's (aus + Dat) and (in + Acc), with an Either Nom and an Optional Acc; decided by agents under the user's delegation. By de/governed-preposition-joins-its-governor the in of ins is then a member of this target, a Segmentation change left to the user."
+				"rationale": "The ambiguous surface übersetzt is taken as present finite, not as a participle. übersetzen governs in + Acc for the target language (E-VALBU übersetzen, Lesart 1: etwas aus etwas in etwas übersetzen), so the preposition piece in of ins is a member (de/governed-preposition-joins-its-governor, de/fused-word-pieces), recorded in valencyEvidence and kept out of the normalized Surface; the Segmentation was reopened for it by the user's ruling on #884. Knowledge (#884): the frame takes E-VALBU's (aus + Dat) and (in + Acc), with an Either Nom and an Optional Acc."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
-					{ "attested": "übersetzt", "orthography": "Standard" }
+					{ "attested": "übersetzt", "orthography": "Standard" },
+					{
+						"attested": "in",
+						"orthography": "Fused",
+						"fusion": {
+							"spelling": "ins",
+							"components": [
+								{ "span": "in", "surface": "in" },
+								{ "span": "s", "surface": "das" }
+							]
+						},
+						"component": 0
+					}
 				],
 				"realizationCoverage": "Full",
 				"expletiveEvidence": null,
-				"valencyEvidence": [],
+				"valencyEvidence": [
+					{
+						"member": 1,
+						"complement": {
+							"kind": "Preposition",
+							"preposition": {
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADP",
+								"canonicalForm": "in",
+								"coreFeatures": {}
+							},
+							"governedCase": "Acc",
+							"referent": "Something"
+						},
+						"realizedCase": "Acc"
+					}
+				],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
@@ -266,7 +302,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Deutsche is the German language, a neuter with a meaning of its own, so it is a separate Lemma with gender Neut, not the adjectival noun for a person. s stands for das and is the noun's owned article, a Fused member."
+				"rationale": "Deutsche is the German language, a neuter with a meaning of its own, so it is a separate Lemma with gender Neut, not the adjectival noun for a person. The article piece s (das) of ins belongs to Deutsche, the Head of its phrase, as the noun's owned article, a Fused member; the preposition piece in joins übersetzt (de/fused-word-pieces, de/noun-owns-its-article)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
