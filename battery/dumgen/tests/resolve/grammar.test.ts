@@ -1,0 +1,786 @@
+import { expect, test } from "bun:test";
+import { sameLemma } from "dumling";
+import type * as Dumling from "dumling/types";
+import * as Effect from "effect/Effect";
+import { createDumgen } from "../../src/create-dumgen.js";
+import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
+import type { Segment } from "../../src/segment/segmented-sentence.js";
+import {
+	attested,
+	fakeJev,
+	fakeLuna,
+	resolveOnce,
+	sentenceOf,
+	unitOf,
+} from "./support.js";
+
+const word = (text: string, surface?: string): Segment => ({
+	kind: "ResolvableText",
+	text,
+	...(surface === undefined ? {} : { surface }),
+});
+const space: Segment = { kind: "Whitespace", text: " " };
+const stop: Segment = { kind: "Punctuation", text: "." };
+
+/** Luna writing `canonicalForm` and the members as attested. */
+const writes = (canonicalForm: string, members?: readonly string[]) =>
+	fakeLuna(({ members: sent }) => ({
+		canonicalForm,
+		members: members ?? sent.map(({ text }) => text),
+	}));
+
+// Unresolved and failed input (#861, #859).
+
+test("a unit intake left Unresolved stays Unresolved and asks nothing", async () => {
+	const jev = fakeJev();
+	const luna = fakeLuna();
+	const { result, trace } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Blarg kommt."),
+			unit: { segments: [0], route: "Unresolved" },
+		},
+	);
+	expect(result).toEqual({ _tag: "Unresolved" });
+	expect(jev.sent).toEqual([]);
+	expect(luna.sent).toEqual([]);
+	expect(trace).toMatchObject({
+		operation: "resolve.grammar",
+		calls: [],
+		resolution: { outcome: "Unresolved", reason: "UnresolvedUnit" },
+	});
+});
+
+test("another language, a failed Sentence or a unit outside its Sentence is a Defect before anything is asked", async () => {
+	const jev = fakeJev();
+	const dumgen = createDumgen({ jev: jev.ask, luna: fakeLuna().ask });
+	const sentence = sentenceOf("Er kommt.");
+	const input = {
+		language: "de" as const,
+		sentence,
+		unit: unitOf([2], "Lexeme", "VERB"),
+		neighbours: {},
+		lemmaCandidates: [],
+	};
+	await expect(
+		Effect.runPromise(
+			dumgen.resolve.grammar({ ...input, language: "en" as "de" }),
+		),
+	).rejects.toThrow('German ("de") only');
+	await expect(
+		Effect.runPromise(
+			dumgen.resolve.grammar({
+				...input,
+				sentence: { ...sentence, units: [], failed: true },
+			}),
+		),
+	).rejects.toThrow("segment it again");
+	await expect(
+		Effect.runPromise(
+			dumgen.resolve.grammar({
+				...input,
+				unit: unitOf([1], "Lexeme", "VERB"),
+			}),
+		),
+	).rejects.toThrow("ResolvableText");
+	expect(jev.sent).toEqual([]);
+});
+
+// The click API's error channel (#859, #858).
+
+test("a transport failure is a ProviderFailure and an unusable answer an InvalidModelOutput; nothing is retried", async () => {
+	const sentence = sentenceOf("Er kommt.");
+	const unit = unitOf([2], "Lexeme", "VERB");
+	const down = fakeJev({}, { fail: () => true });
+	const failure = await Effect.runPromise(
+		Effect.flip(
+			createDumgen({
+				jev: down.ask,
+				luna: fakeLuna().ask,
+			}).resolve.grammar({
+				language: "de",
+				sentence,
+				unit,
+				neighbours: {},
+				lemmaCandidates: [],
+			}),
+		),
+	);
+	expect(failure).toBeInstanceOf(ProviderFailure);
+	expect(down.sent).toHaveLength(1);
+	const garbled = fakeLuna(() => ({ canonicalForm: "kommen" }));
+	const unusable = await Effect.runPromise(
+		Effect.flip(
+			createDumgen({
+				jev: fakeJev().ask,
+				luna: garbled.ask,
+			}).resolve.grammar({
+				language: "de",
+				sentence,
+				unit,
+				neighbours: {},
+				lemmaCandidates: [],
+			}),
+		),
+	);
+	expect(unusable).toBeInstanceOf(InvalidModelOutput);
+	expect(unusable).toMatchObject({ stage: "canonical" });
+	expect(garbled.sent).toHaveLength(1);
+});
+
+test("a click is all-or-nothing: a failed Case question interrupts Luna's call in flight", async () => {
+	// Er0 _1 gibt2 _3 der4 _5 Frau6 _7 ein8 _9 Buch10 .11
+	const jev = fakeJev(
+		{ gender: "Fem", number: "Sing" },
+		{ fail: (stage) => stage === "case" },
+	);
+	const luna = fakeLuna(undefined, { delayMs: 50 });
+	const failure = await Effect.runPromise(
+		Effect.flip(
+			createDumgen({ jev: jev.ask, luna: luna.ask }).resolve.grammar({
+				language: "de",
+				sentence: sentenceOf("Er gibt der Frau ein Buch."),
+				unit: unitOf([4, 6], "Lexeme", "NOUN"),
+				neighbours: {},
+				lemmaCandidates: [],
+			}),
+		),
+	);
+	expect(failure).toBeInstanceOf(ProviderFailure);
+	expect(luna.aborted).toEqual(["canonical"]);
+});
+
+// NOUN Case: narrowed in code, asked at most once (#625).
+
+test("an article and the noun's form that leave one cell settle Case with no question", async () => {
+	// Wir0 _1 helfen2 _3 den4 _5 Kindern6 .7
+	const jev = fakeJev({ gender: "Neut", number: "Plur" });
+	const luna = writes("Kind", ["den", "Kindern"]);
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Wir helfen den Kindern."),
+			unit: unitOf([4, 6], "Lexeme", "NOUN"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma).toMatchObject({
+		canonicalForm: "Kind",
+		coreFeatures: { gender: "Neut" },
+	});
+	expect(attestation.surface.inflectionalFeatures).toEqual({
+		case: "Dat",
+		gender: null,
+		number: "Plur",
+	});
+	expect(attestation.articleEvidence).toEqual({ kind: "Owned", member: 0 });
+	expect(attestation.surface.normalizedSurface).toBe("Kindern");
+	expect(jev.stages()).toEqual(["grammar"]);
+	// No article question, and no Case question.
+	expect(jev.questions("grammar")).not.toContain("case");
+	expect(jev.questions("grammar")).not.toContain("article");
+});
+
+test("an article whose cells agreement cannot narrow asks Case once, in the first request", async () => {
+	// Die0 _1 Frau2 _3 lacht4 .5
+	const jev = fakeJev({ gender: "Fem", number: "Sing", case: "Nom" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("Frau", ["die", "Frau"]).ask },
+		{
+			sentence: sentenceOf("Die Frau lacht."),
+			unit: unitOf([0, 2], "Lexeme", "NOUN"),
+		},
+	);
+	expect(attested(result).surface.inflectionalFeatures).toMatchObject({
+		case: "Nom",
+	});
+	expect(jev.stages()).toEqual(["grammar"]);
+	const asked = jev.sent[0]?.questions.case;
+	expect(asked?.type === "choice" && Object.keys(asked.criteria)).toEqual([
+		"Nom",
+		"Acc",
+		"Unresolved",
+	]);
+});
+
+test("cells agreement leaves open get one Case question over those cells, and its Unresolved makes the click Unresolved", async () => {
+	// Er0 _1 gibt2 _3 der4 _5 Frau6 _7 ein8 _9 Buch10 .11
+	const sentence = sentenceOf("Er gibt der Frau ein Buch.");
+	const unit = unitOf([4, 6], "Lexeme", "NOUN");
+	const jev = fakeJev({ gender: "Fem", number: "Sing", case: "Dat" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("Frau", ["der", "Frau"]).ask },
+		{ sentence, unit },
+	);
+	expect(attested(result).surface.inflectionalFeatures).toMatchObject({
+		case: "Dat",
+	});
+	expect(jev.stages()).toEqual(["grammar", "case"]);
+	const asked = jev.sent[1]?.questions.case;
+	expect(asked?.type === "choice" && Object.keys(asked.criteria)).toEqual([
+		"Dat",
+		"Gen",
+		"Unresolved",
+	]);
+	const open = fakeJev({ gender: "Fem", number: "Sing", case: "Unresolved" });
+	const unresolved = await resolveOnce(
+		{ jev: open.ask, luna: writes("Frau", ["der", "Frau"]).ask },
+		{ sentence, unit },
+	);
+	expect(unresolved.result).toEqual({ _tag: "Unresolved" });
+	// Never a follow-up question.
+	expect(open.stages()).toEqual(["grammar", "case"]);
+	expect(unresolved.trace?.resolution).toEqual({
+		outcome: "Unresolved",
+		reason: "Unresolved case",
+	});
+});
+
+test("a bare noun asks Case over every case and the empty case of direct address", async () => {
+	// Hallo0 _1 Leute2 !3
+	const jev = fakeJev({ gender: "None", number: "Plur", case: "Unmarked" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("Leute").ask },
+		{
+			sentence: sentenceOf("Hallo Leute!"),
+			unit: unitOf([2], "Lexeme", "NOUN"),
+		},
+	);
+	expect(attested(result).surface.inflectionalFeatures).toEqual({
+		case: null,
+		gender: null,
+		number: "Plur",
+	});
+	const asked = jev.sent[0]?.questions.case;
+	expect(asked?.type === "choice" && Object.keys(asked.criteria)).toEqual([
+		"Nom",
+		"Acc",
+		"Dat",
+		"Gen",
+		"Unmarked",
+		"Unresolved",
+	]);
+});
+
+// The closed-class identity intake stored (#864, ADR 0021).
+
+test("a closed-class unit builds its Lemma from the stored identity, with no identity question and no Luna", async () => {
+	// Dieses0 _1 Haus2 _3 ist4 _5 alt6 .7
+	const jev = fakeJev();
+	const luna = fakeLuna();
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Dieses Haus ist alt."),
+			unit: unitOf([0], "Lexeme", "DET", {
+				kind: "DET",
+				canonicalForm: "dieser",
+				pronType: "Dem",
+			}),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.canonicalForm).toBe("dieser");
+	expect(attestation.surface.normalizedSurface).toBe("dieses");
+	expect(luna.sent).toEqual([]);
+	// One question, about the occurrence's cell only, without neighbours.
+	expect(jev.stages()).toEqual(["cell"]);
+	expect(Object.keys(jev.sent[0]?.questions ?? {})).toEqual(["cell"]);
+	expect(jev.sent[0]?.state.neighbours).toBeUndefined();
+});
+
+test("an identity whose spelling names one cell asks nothing", async () => {
+	// Ich0 _1 komme2 .3
+	const jev = fakeJev();
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: fakeLuna().ask },
+		{
+			sentence: sentenceOf("Ich komme."),
+			unit: unitOf([0], "Lexeme", "PRON", {
+				kind: "PRON",
+				canonicalForm: "ich",
+				pronType: "Prs",
+			}),
+		},
+	);
+	expect(attested(result).surface.lemma.coreFeatures).toMatchObject({
+		case: "Nom",
+		person: "1",
+	});
+	expect(jev.sent).toEqual([]);
+});
+
+test("a DET or PRON unit without an identity, or one the inventory lacks, is a Catalog Miss", async () => {
+	const jev = fakeJev();
+	const none = await resolveOnce(
+		{ jev: jev.ask, luna: fakeLuna().ask },
+		{
+			sentence: sentenceOf("Blubb kommt."),
+			unit: unitOf([0], "Lexeme", "PRON"),
+		},
+	);
+	expect(none.result).toMatchObject({
+		_tag: "CatalogMiss",
+		route: { family: "Lexeme", kind: "PRON" },
+	});
+	const unrealized = await resolveOnce(
+		{ jev: jev.ask, luna: fakeLuna().ask },
+		{
+			sentence: sentenceOf("Ihm hilft keiner."),
+			unit: unitOf([0], "Lexeme", "PRON", {
+				kind: "PRON",
+				canonicalForm: "er",
+				pronType: "Prs",
+			}),
+		},
+	);
+	expect(unrealized.result._tag).toBe("CatalogMiss");
+	expect(unrealized.trace?.resolution?.outcome).toBe("CatalogMiss");
+	expect(jev.sent).toEqual([]);
+});
+
+// The referent decides only some pronoun forms (ADR 0044, ADR 0046).
+
+const ihm = {
+	sentence: sentenceOf("Ich gebe ihm das Buch."),
+	unit: unitOf([4], "Lexeme", "PRON", {
+		kind: "PRON",
+		canonicalForm: "ihm",
+		pronType: "Prs",
+	}),
+};
+
+test("a referent no text settles attests the form's Syncretism, never a guessed cell", async () => {
+	const jev = fakeJev({ cell: "s0" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: fakeLuna().ask },
+		{ ...ihm, neighbours: { before: "Das Kind weint." } },
+	);
+	const lemma = attested(result).surface.lemma;
+	expect(lemma.syncretic).toEqual(["gender"]);
+	expect(lemma.coreFeatures).toMatchObject({ case: "Dat", gender: null });
+	// The neighbours go only to the question the referent decides.
+	expect(jev.sent[0]?.state.neighbours).toEqual({
+		before: "Das Kind weint.",
+	});
+	expect(jev.sent[0]?.state.policy).toHaveProperty("referent");
+});
+
+test("a referent the neighbours settle attests its cell", async () => {
+	const settled = fakeJev({ cell: "o0" });
+	const { result } = await resolveOnce(
+		{ jev: settled.ask, luna: fakeLuna().ask },
+		{ ...ihm, neighbours: { before: "Mein Bruder kommt." } },
+	);
+	const lemma = attested(result).surface.lemma;
+	expect(lemma.syncretic).toBeUndefined();
+	expect(["Masc", "Neut"]).toContain(String(lemma.coreFeatures.gender));
+});
+
+// Luna writes the Canonical Form and spellings (#862, #639, #764).
+
+test("Luna writes the Canonical Form in lexical casing with the unit's stored Lemmas as hints, and nothing lowercases by position", async () => {
+	// Mangels0 _1 Beweisen2 _3 kam4 _5 er6 _7 frei8 .9
+	const luna = writes("mangels", ["mangels"]);
+	const stored: Dumling.Lemma<"de"> = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "ADP",
+		canonicalForm: "mangels",
+		coreFeatures: {},
+	};
+	const elsewhere: Dumling.Lemma<"de"> = { ...stored, canonicalForm: "mit" };
+	const { result } = await resolveOnce(
+		{ jev: fakeJev().ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Mangels Beweisen kam er frei."),
+			unit: unitOf([0], "Lexeme", "ADP"),
+			lemmaCandidates: [
+				{ lemma: stored, foundUnder: ["Mangels"] },
+				{ lemma: elsewhere, foundUnder: ["mit"] },
+			],
+		},
+	);
+	expect(attested(result).surface.normalizedSurface).toBe("mangels");
+	const input = luna.sent[0]?.input as {
+		lemmaCandidates?: readonly unknown[];
+		members: readonly unknown[];
+	};
+	expect(input.lemmaCandidates).toEqual([
+		{ canonicalForm: "mangels", coreFeatures: {} },
+	]);
+	expect(input.members).toEqual([
+		{ member: "m0", text: "Mangels", orthography: "Standard" },
+	]);
+	expect(luna.sent[0]?.systemPrompt).toContain(
+		"never the casing the word's position gives",
+	);
+	// Luna keeping the position's capital is kept: code never lowercases.
+	const capital = await resolveOnce(
+		{ jev: fakeJev().ask, luna: writes("mangels", ["Mangels"]).ask },
+		{
+			sentence: sentenceOf("Mangels Beweisen kam er frei."),
+			unit: unitOf([0], "Lexeme", "ADP"),
+		},
+	);
+	expect(attested(capital.result).surface.normalizedSurface).toBe("Mangels");
+});
+
+test("Luna may correct a Typo but changes a Standard member's letters only in casing", async () => {
+	const sentence = sentenceOf("Er kommt.");
+	const unit = unitOf([2], "Lexeme", "VERB");
+	const changed = await Effect.runPromise(
+		Effect.flip(
+			createDumgen({
+				jev: fakeJev().ask,
+				luna: writes("kommen", ["kam"]).ask,
+			}).resolve.grammar({
+				language: "de",
+				sentence,
+				unit,
+				neighbours: {},
+				lemmaCandidates: [],
+			}),
+		),
+	);
+	expect(changed).toBeInstanceOf(InvalidModelOutput);
+	const typo = await resolveOnce(
+		{
+			jev: fakeJev({ orthography: "t0" }).ask,
+			luna: writes("kommen", ["kommt"]).ask,
+		},
+		{ sentence: sentenceOf("Er komt."), unit },
+	);
+	const attestation = attested(typo.result);
+	expect(attestation.members[0]).toEqual({
+		attested: "komt",
+		orthography: "Typo",
+	});
+	expect(attestation.surface.normalizedSurface).toBe("kommt");
+});
+
+test("INTJ LOL and lol resolve to one Lemma, while NOUN Morgen and ADV morgen stay two", async () => {
+	const stored: Dumling.Lemma<"de"> = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "INTJ",
+		canonicalForm: "LOL",
+		coreFeatures: { partType: null },
+	};
+	const lol = async (text: string, written: string) =>
+		attested(
+			(
+				await resolveOnce(
+					{
+						jev: fakeJev({ answer: "None" }).ask,
+						luna: writes(written).ask,
+					},
+					{
+						sentence: sentenceOf(`Er schrieb ${text}.`),
+						unit: unitOf([4], "Lexeme", "INTJ"),
+						lemmaCandidates: [
+							{ lemma: stored, foundUnder: [text] },
+						],
+					},
+				)
+			).result,
+		).surface.lemma as unknown as Dumling.Lemma;
+	const upper = await lol("LOL", "LOL");
+	const lower = await lol("lol", "lol");
+	expect(sameLemma(upper, lower)).toBe(true);
+	expect(sameLemma(upper, stored)).toBe(true);
+	const noun = attested(
+		(
+			await resolveOnce(
+				{
+					jev: fakeJev({
+						gender: "Masc",
+						number: "Sing",
+						case: "Nom",
+					}).ask,
+					luna: writes("Morgen").ask,
+				},
+				{
+					sentence: sentenceOf("Der Morgen kam."),
+					unit: unitOf([0, 2], "Lexeme", "NOUN"),
+				},
+			)
+		).result,
+	).surface.lemma as unknown as Dumling.Lemma;
+	const adverb = attested(
+		(
+			await resolveOnce(
+				{
+					jev: fakeJev({ comparable: "No" }).ask,
+					luna: writes("morgen").ask,
+				},
+				{
+					sentence: sentenceOf("Wir kommen morgen."),
+					unit: unitOf([4], "Lexeme", "ADV"),
+				},
+			)
+		).result,
+	).surface.lemma as unknown as Dumling.Lemma;
+	expect(sameLemma(noun, adverb)).toBe(false);
+});
+
+// valencyEvidence (ADR 0034) and auxiliaries (#686).
+
+test("a governed preposition is the verb's valencyEvidence and stays out of its Surface and Lemma", async () => {
+	// Sie0 _1 wartet2 _3 auf4 _5 den6 _7 Bus8 .9
+	const jev = fakeJev({
+		prefix: "None",
+		governed_m1: "Governed",
+		governedCase_m1: "Acc",
+		governedReferent_m1: "Something",
+		verbForm: "Fin",
+		mood: "Ind",
+		tense: "Pres",
+		person: "3",
+		number: "Sing",
+	});
+	const luna = writes("warten");
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Sie wartet auf den Bus."),
+			unit: unitOf([2, 4], "Lexeme", "VERB"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.valencyEvidence).toEqual([
+		{
+			member: 1,
+			complement: {
+				kind: "Preposition",
+				preposition: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "ADP",
+					canonicalForm: "auf",
+					coreFeatures: {},
+				},
+				governedCase: "Acc",
+				referent: "Something",
+			},
+			realizedCase: "Acc",
+		},
+	]);
+	expect(attestation.surface.normalizedSurface).toBe("wartet");
+	expect(
+		(luna.sent[0]?.input as { outsideHeadword?: string[] } | undefined)
+			?.outsideHeadword,
+	).toEqual(["m1"]);
+});
+
+test("an adposition records the case its complement took, asked only where the ADP Case Table allows several", async () => {
+	// Wir0 _1 sitzen2 _3 auf4 _5 dem6 _7 Sofa8 .9
+	const twoWay = fakeJev({ realizedCase: "Dat" });
+	const { result } = await resolveOnce(
+		{ jev: twoWay.ask, luna: writes("auf").ask },
+		{
+			sentence: sentenceOf("Wir sitzen auf dem Sofa."),
+			unit: unitOf([4], "Lexeme", "ADP"),
+		},
+	);
+	expect(attested(result).valencyEvidence).toEqual([
+		{
+			member: null,
+			complement: {
+				kind: "Case",
+				governedCase: "Dat",
+				referent: "Either",
+			},
+			realizedCase: "Dat",
+		},
+	]);
+	const oneCase = fakeJev();
+	const mit = await resolveOnce(
+		{ jev: oneCase.ask, luna: writes("mit").ask },
+		{
+			sentence: sentenceOf("Er kam mit dem Rad."),
+			unit: unitOf([4], "Lexeme", "ADP"),
+		},
+	);
+	expect(attested(mit.result).valencyEvidence?.[0]).toMatchObject({
+		realizedCase: "Dat",
+	});
+	expect(oneCase.questions("grammar")).not.toContain("realizedCase");
+});
+
+test("perfect, future and passive come from the auxiliaries' uses; a Locution VERB has no Core Features", async () => {
+	// Er0 _1 hat2 _3 den4 _5 Faden6 _7 verloren8 .9
+	const jev = fakeJev({ aux_m0: "u0", coverage: "Full" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("den Faden verlieren").ask },
+		{
+			sentence: sentenceOf("Er hat den Faden verloren."),
+			unit: unitOf([2, 4, 6, 8], "Locution", "VERB"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.lemma.coreFeatures).toEqual({});
+	expect(attestation.surface.inflectionalFeatures).toMatchObject({
+		perfect: "Yes",
+		future: null,
+		passive: null,
+		voice: null,
+	});
+	const asked = jev.sent[0]?.questions.aux_m0;
+	expect(asked?.type === "choice" && asked.criteria.u0).toContain("perfect");
+	expect(jev.questions("grammar")).toContain("coverage");
+	expect(jev.questions("grammar")).not.toContain("prefix");
+});
+
+// Locutions and Sayings (ADR 0039), Fused members (ADR 0035), member roles (ADR 0041).
+
+test("a Saying resolves with its coverage and fused pieces spelled as written", async () => {
+	const segments: Segment[] = [
+		word("Morgenstund"),
+		space,
+		word("hat"),
+		space,
+		word("Gold"),
+		space,
+		word("i", "in"),
+		word("m", "dem"),
+		space,
+		word("Mund"),
+		stop,
+	];
+	const jev = fakeJev({ coverage: "Full" });
+	const luna = writes("Morgenstund hat Gold im Mund");
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("", segments),
+			unit: unitOf([0, 2, 4, 6, 7, 9], "Saying", "Saying"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.normalizedSurface).toBe(
+		"Morgenstund hat Gold im Mund",
+	);
+	expect(attestation.surface).not.toHaveProperty("inflectionalFeatures");
+	expect(attestation.members[3]).toMatchObject({
+		attested: "i",
+		orthography: "Fused",
+		component: 0,
+	});
+	expect(
+		(luna.sent[0]?.input as { fixedMembers?: unknown } | undefined)
+			?.fixedMembers,
+	).toEqual({ m3: "i", m4: "m" });
+	// No Member Role anywhere on the Attestation (ADR 0041).
+	for (const member of attestation.members)
+		expect(
+			Object.keys(member).every((key) =>
+				["attested", "orthography", "fusion", "component"].includes(
+					key,
+				),
+			),
+		).toBe(true);
+});
+
+test("a fused article piece is the noun's owned article and narrows its Case", async () => {
+	const segments: Segment[] = [
+		word("Wir"),
+		space,
+		word("sind"),
+		space,
+		word("i", "in"),
+		word("m", "dem"),
+		space,
+		word("Wald"),
+		stop,
+	];
+	const jev = fakeJev({ gender: "Masc", number: "Sing" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("Wald", ["dem", "Wald"]).ask },
+		{
+			sentence: sentenceOf("", segments),
+			unit: unitOf([5, 7], "Lexeme", "NOUN"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.members[0]).toMatchObject({
+		attested: "m",
+		orthography: "Fused",
+		fusion: {
+			spelling: "im",
+			components: [
+				{ span: "i", surface: "in" },
+				{ span: "m", surface: "dem" },
+			],
+		},
+	});
+	expect(attestation.surface.inflectionalFeatures).toMatchObject({
+		case: "Dat",
+	});
+	expect(attestation.surface.normalizedSurface).toBe("Wald");
+	// The table spells m; only Wald's spelling is judged.
+	const asked = jev.sent[0]?.questions.orthography;
+	expect(asked?.type === "choice" && Object.keys(asked.criteria)).toEqual([
+		"None",
+		"t1",
+		"s1",
+		"Unresolved",
+	]);
+});
+
+test("an infinitive split at its infixed zu keeps its pieces' letters, glued in its Surface", async () => {
+	const segments: Segment[] = [
+		word("Er"),
+		space,
+		word("versucht"),
+		space,
+		word("hinaus"),
+		word("zu"),
+		word("laufen"),
+		stop,
+	];
+	const jev = fakeJev({ prefix: "p0", verbForm: "Inf" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: writes("hinauslaufen").ask },
+		{
+			sentence: sentenceOf("", segments),
+			unit: unitOf([4, 6], "Lexeme", "VERB"),
+		},
+	);
+	const attestation = attested(result);
+	expect(attestation.surface.normalizedSurface).toBe("hinauslaufen");
+	expect(attestation.surface.lemma.coreFeatures).toMatchObject({
+		hasSepPrefix: "hinaus",
+	});
+	expect(attestation.members[1]).toMatchObject({
+		attested: "laufen",
+		orthography: "Fused",
+		component: 2,
+	});
+});
+
+// The trace (#858).
+
+test("the trace names the operation, its calls by executor and how the click came out", async () => {
+	const { trace } = await resolveOnce(
+		{ jev: fakeJev().ask, luna: writes("kommen").ask },
+		{
+			sentence: sentenceOf("Er kommt."),
+			unit: unitOf([2], "Lexeme", "VERB"),
+		},
+	);
+	expect(trace?.operation).toBe("resolve.grammar");
+	expect(
+		trace?.calls.map(({ stage, executor }) => [stage, executor]),
+	).toEqual([
+		["grammar", "jev"],
+		["canonical", "luna"],
+	]);
+	expect(trace?.calls.map(({ inputTokens }) => inputTokens)).toEqual([
+		100, 50,
+	]);
+	expect(trace?.resolution).toEqual({ outcome: "Resolved" });
+});

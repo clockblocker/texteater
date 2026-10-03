@@ -2,13 +2,23 @@
  * `createDumgen`, the one factory every host builds Dumgen with (#859). Its
  * operations are Effects whose error channel holds only `ProviderFailure`
  * and `InvalidModelOutput` (#552); a host `yield*`s them in its own
- * programs. For now it offers `segment.inUnits`; `resolve.grammar`,
+ * programs. It offers `segment.inUnits` and `resolve.grammar`;
  * `resolve.reading` and `knowledge.produce` follow.
  */
 import type * as Effect from "effect/Effect";
 import { requestBudget, runOperation } from "./call.js";
-import type { LunaAsk } from "./luna.js";
+import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
+import {
+	defaultLunaConfiguration,
+	type LunaAsk,
+	type LunaConfiguration,
+} from "./luna.js";
 import type { OperationTrace } from "./operation-trace.js";
+import { resolveGrammar } from "./resolve/grammar.js";
+import type {
+	GrammarResolution,
+	ResolveGrammarInput,
+} from "./resolve/types.js";
 import type { GermanInventory } from "./segment/de/inventory.js";
 import { productionUnitSettings } from "./segment/de/units.js";
 import { type InUnitsInput, segmentText } from "./segment/in-units.js";
@@ -19,10 +29,13 @@ export type DumgenOptions = {
 	/** jev (TypeSafe System One): `createTypeSafeAsk` in production. */
 	readonly jev: JevAsk;
 	/**
-	 * Luna, for the operations that write; none of today's needs it, and
-	 * segmentation never receives it.
+	 * Luna, for the operations that write: `resolve.grammar` writes Canonical
+	 * Forms and spelling corrections with it (#862). Segmentation never
+	 * receives it. `createOpenAILuna` in production.
 	 */
-	readonly luna?: LunaAsk;
+	readonly luna: LunaAsk;
+	/** The Luna model and settings; `defaultLunaConfiguration` unless given. */
+	readonly lunaConfiguration?: LunaConfiguration;
 	/**
 	 * The model calls one instance keeps in flight, jev and Luna together;
 	 * 16 by default. A call holds its permit for its transport only.
@@ -48,6 +61,21 @@ export type Dumgen = {
 		 */
 		readonly inUnits: (input: InUnitsInput) => Effect.Effect<SegmentedText>;
 	};
+	readonly resolve: {
+		/**
+		 * The grammar of the stored unit a click landed on (#859): its
+		 * Attestation, or Unresolved, or a Catalog Miss, all as answers. A
+		 * click is all-or-nothing: any failed call fails it and interrupts
+		 * its other calls. Another language than German, a failed Sentence
+		 * or a unit that is no unit of its Sentence is a Defect.
+		 */
+		readonly grammar: (
+			input: ResolveGrammarInput,
+		) => Effect.Effect<
+			GrammarResolution,
+			ProviderFailure | InvalidModelOutput
+		>;
+	};
 };
 
 export function createDumgen(options: DumgenOptions): Dumgen {
@@ -66,11 +94,21 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 			? productionUnitSettings
 			: { ...productionUnitSettings, inventory: options.inventory };
 	const jev = { ask: options.jev, model };
+	const luna = {
+		ask: options.luna,
+		configuration: options.lunaConfiguration ?? defaultLunaConfiguration,
+	};
 	return {
 		segment: {
 			inUnits: (input) =>
 				runOperation("segment.inUnits", operations, (scope) =>
 					segmentText(scope, jev, settings, input),
+				),
+		},
+		resolve: {
+			grammar: (input) =>
+				runOperation("resolve.grammar", operations, (scope) =>
+					resolveGrammar(scope, { jev, luna }, input),
 				),
 		},
 	};

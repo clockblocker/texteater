@@ -66,7 +66,7 @@ export const particleForms = new Set(
 );
 
 /** More particles: umher, übrig, … */
-const moreParticleForms = new Set(
+export const moreParticleForms = new Set(
 	"umher übrig fertig auseinander beiseite hinterher davon dazu dahin daher vorwärts rückwärts entzwei bereit ein".split(
 		" ",
 	),

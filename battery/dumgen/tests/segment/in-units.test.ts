@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import type { Question } from "promptsmith/typesafe";
 import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
+import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import type { Answer, Answers } from "../../src/segment/ask.js";
 import {
@@ -103,15 +104,21 @@ const picked = (choice: string): Answer => ({
 	probabilities: { [choice]: 1 },
 });
 
+/** Segmentation never reaches Luna; this one fails the test if it does. */
+const noLuna: LunaAsk = async () => {
+	throw Error("segmentation asked Luna");
+};
+
 /** Runs `segment.inUnits` once and keeps the traces it reported. */
 async function inUnits(
-	options: DumgenOptions,
+	options: Omit<DumgenOptions, "luna">,
 	input: Parameters<ReturnType<typeof createDumgen>["segment"]["inUnits"]>[0],
 ): Promise<{ text: SegmentedText; traces: OperationTrace[] }> {
 	const traces: OperationTrace[] = [];
 	const text = await Effect.runPromise(
 		createDumgen({
 			...options,
+			luna: noLuna,
 			onOperation: (trace) => traces.push(trace),
 		}).segment.inUnits(input),
 	);
@@ -411,6 +418,7 @@ test("another language or a blank Sentence is a Defect before anything is asked,
 	const traces: OperationTrace[] = [];
 	const dumgen = createDumgen({
 		jev: jev.ask,
+		luna: noLuna,
 		onOperation: (trace) => traces.push(trace),
 	});
 	await expect(
@@ -433,11 +441,11 @@ test("another language or a blank Sentence is a Defect before anything is asked,
 	// Each failed operation still reports its (empty) trace.
 	expect(traces.map(({ calls }) => calls.length)).toEqual([0, 0]);
 	expect(() =>
-		createDumgen({ jev: jev.ask, jevModel: "jev-latest" }),
+		createDumgen({ jev: jev.ask, luna: noLuna, jevModel: "jev-latest" }),
 	).toThrow("floats between jev versions");
-	expect(() => createDumgen({ jev: jev.ask, requestBudget: 0 })).toThrow(
-		"requestBudget",
-	);
+	expect(() =>
+		createDumgen({ jev: jev.ask, luna: noLuna, requestBudget: 0 }),
+	).toThrow("requestBudget");
 });
 
 test("an exception from onOperation is the host's, and inUnits passes it on", async () => {
@@ -445,6 +453,7 @@ test("an exception from onOperation is the host's, and inUnits passes it on", as
 		Effect.runPromise(
 			createDumgen({
 				jev: fakeJev().ask,
+				luna: noLuna,
 				onOperation: () => {
 					throw Error("ledger is full");
 				},

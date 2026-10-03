@@ -4,18 +4,22 @@ import { dirname, join, relative, resolve } from "node:path";
 
 /**
  * The production code, the package entry with the files beside it and
- * everything under `src/segment/`, runs where a host has no file system (a
- * Convex action, a short-lived isolate): none of it may import `node:*`,
- * read files or the environment, or reach the evaluator or the lab, and it
- * imports packages only from the list here. Only the TypeSafe ask touches
- * the network; the segmenter's stages reach jev through their `ask` port,
- * and never Luna.
+ * everything under `src/segment/` and `src/resolve/`, runs where a host
+ * has no file system (a Convex action, a short-lived isolate): none of it
+ * may import `node:*`, read files or the environment, or reach the
+ * evaluator or the lab, and it imports packages only from the list here.
+ * Only the TypeSafe ask and the OpenAI Luna touch the network; the stages
+ * reach jev and Luna through their ports, and segmentation never Luna.
  */
 const src = resolve(import.meta.dir, "../../src");
 const segment = join(src, "segment");
+const resolveDirectory = join(src, "resolve");
 const allowedPackages = new Set([
 	// Reads no files (dumspec ADR 0025).
 	"dumspec/inventories",
+	"dumspec/types",
+	// Dumling's operational entry: compiled validation, no files.
+	"dumling",
 	"dumling/types",
 	"effect/Cause",
 	"effect/Data",
@@ -25,7 +29,11 @@ const allowedPackages = new Set([
 	"effect/Semaphore",
 	"promptsmith/typesafe",
 ]);
-const typeOnlyPackages = new Set(["dumling/types", "promptsmith/typesafe"]);
+const typeOnlyPackages = new Set([
+	"dumling/types",
+	"dumspec/types",
+	"promptsmith/typesafe",
+]);
 const forbidden = [
 	/\bBun\./u,
 	/\bprocess\./u,
@@ -33,7 +41,7 @@ const forbidden = [
 	/\breadFile(?:Sync)?\b/u,
 ];
 const network = /\bfetch\(/u;
-const networkFiles = new Set(["segment/typesafe-ask.ts"]);
+const networkFiles = new Set(["segment/typesafe-ask.ts", "openai-luna.ts"]);
 
 const files = [
 	...readdirSync(src, { withFileTypes: true })
@@ -44,9 +52,11 @@ const files = [
 				entry.name !== "development.ts",
 		)
 		.map((entry) => join(src, entry.name)),
-	...readdirSync(segment, { recursive: true, withFileTypes: true })
-		.filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
-		.map((entry) => join(entry.parentPath, entry.name)),
+	...[segment, resolveDirectory].flatMap((directory) =>
+		readdirSync(directory, { recursive: true, withFileTypes: true })
+			.filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
+			.map((entry) => join(entry.parentPath, entry.name)),
+	),
 ];
 const production = new Set(files);
 
