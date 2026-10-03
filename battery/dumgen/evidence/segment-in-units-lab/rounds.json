@@ -8,14 +8,14 @@
 			"capTokens": 119047619,
 			"stopLineTokens": 104000000,
 			"pin": {
-				"dumspecCommit": "82ff1f1e70ea2d45db6422eb6cb4eaddad6bcd63",
+				"dumspecCommit": "703f3081ec2b3394a1125d40bb170de9ac4b9b26",
 				"dumspecDirty": false,
-				"hash": "85449ef04e955360a038bed638911781ff7aa2714182309565cdf9e6146163a4",
+				"hash": "556a0dcf8e4dd7ce3c6d66b2ea217d5d7a69768fc936e2942527396d54124f2a",
 				"inputs": {
 					"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",
-					"rules": "1a8a87b15ea18284f0fd997f9d12843412068d916b886e0c46e4f7d780dcfd8e"
+					"rules": "5e1b57ab65418be91f7d0bdfeed4857b22f8f7b1685b1bc57715d60753439e98"
 				},
-				"at": "2026-10-03T04:25:57.766Z"
+				"at": "2026-10-03T05:06:48.350Z"
 			},
 			"repins": [
 				{
@@ -45,6 +45,20 @@
 						"at": "2026-10-02T15:26:30.894Z"
 					},
 					"reason": "#881: the pin hashes the dumspec source Bun now resolves instead of the built dist; a cached replay of 20261002T122056--production--heldout--all stays 567/567 identical with 0 fresh calls"
+				},
+				{
+					"at": "2026-10-03T05:06:48.350Z",
+					"from": {
+						"dumspecCommit": "82ff1f1e70ea2d45db6422eb6cb4eaddad6bcd63",
+						"dumspecDirty": false,
+						"hash": "85449ef04e955360a038bed638911781ff7aa2714182309565cdf9e6146163a4",
+						"inputs": {
+							"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",
+							"rules": "1a8a87b15ea18284f0fd997f9d12843412068d916b886e0c46e4f7d780dcfd8e"
+						},
+						"at": "2026-10-03T04:25:57.766Z"
+					},
+					"reason": "#884 added four German Knowledge Rules (dumspec 703f3081). Only the rules input moved: the inventories hash is unchanged, and the unit stage's requests quote no Rule text; a cached replay of 20261002T122056--production--heldout--all stays 567/567 identical with 0 fresh calls"
 				}
 			]
 		}
