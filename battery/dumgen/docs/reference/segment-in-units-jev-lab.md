@@ -336,6 +336,15 @@ evidence/segment-in-units-lab/
   1279 cases with 2024 gold units, and only that case changed. Held-out
   came out unchanged at `heldout@1a69c4258c71f152`. Dev runs before it
   stay scored on `dev@b6fca287295d4ee3`. The round was not re-pinned.
+- A fifth refreeze, on 2026-10-03 at 69eca225, picks up #884's batch 3:
+  the nine dev Drafts promoted to held-out (user ruling Q4) are excluded
+  from both sets in the sidecar until the user reviews them through
+  Knowledge, so they leave dev now and join held-out at the refreeze
+  after their approval. Dev is now `dev@36d553aa792208e7`, 1270 cases
+  with 2015 gold units: those nine cases left and no other case changed.
+  Held-out came out unchanged at `heldout@1a69c4258c71f152`. Dev runs
+  before it stay scored on `dev@9408e60258d4f891`. The round was not
+  re-pinned.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   committed outcomes otherwise. Outcomes are scored against the frozen
   gold, so `--relabel` needs the raw run.
