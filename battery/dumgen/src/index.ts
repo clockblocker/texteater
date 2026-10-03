@@ -5,8 +5,9 @@
  * its Segments and its biggest units, each with its route or `Unresolved`,
  * asking jev through the host's `JevAsk`; `resolve.grammar`, which
  * resolves a stored unit's Attestation with jev judging and Luna writing;
- * and `resolve.reading`, which picks a stored Emoji Description of the
- * Attestation's Lemma or writes a new one.
+ * `resolve.reading`, which picks a stored Emoji Description of the
+ * Attestation's Lemma or writes a new one; and `knowledge.produce`, which
+ * fills the resolved Reading's missing Knowledge aspect by aspect.
  * The operations are Effect 4 Effects. `createTypeSafeAsk` and
  * `createOpenAILuna` are the production transports: `fetch` to the
  * TypeSafe and OpenAI APIs, with no `node:*` import.
@@ -17,6 +18,16 @@ export {
 	type DumgenOptions,
 } from "./create-dumgen.js";
 export { InvalidModelOutput, ProviderFailure } from "./errors.js";
+export type {
+	GermanKnowledgeChange,
+	GermanPendingRelation,
+	KnowledgeAspect,
+	KnowledgeFailure,
+	KnowledgeOrigin,
+	KnowledgeProduction,
+	KnowledgeSentence,
+	ProduceKnowledgeInput,
+} from "./knowledge/types.js";
 export {
 	defaultLunaConfiguration,
 	type LunaAsk,
@@ -29,6 +40,7 @@ export type {
 	BudgetWait,
 	CallFailure,
 	CallTrace,
+	OperationEvent,
 	OperationTrace,
 	ResolutionOutcome,
 	SentenceOutcome,

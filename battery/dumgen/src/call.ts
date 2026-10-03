@@ -23,6 +23,7 @@ import type {
 	BudgetWait,
 	CallFailure,
 	CallTrace,
+	OperationEvent,
 	OperationTrace,
 	ResolutionOutcome,
 	SentenceOutcome,
@@ -69,6 +70,8 @@ export type OperationScope = {
 	readonly sentence: (outcome: SentenceOutcome) => void;
 	/** How a click came out; the last one recorded is traced. */
 	readonly resolution: (outcome: ResolutionOutcome) => void;
+	/** Something the operation decided that its value does not show. */
+	readonly event: (event: OperationEvent) => void;
 };
 
 export type OperationOptions = {
@@ -119,6 +122,7 @@ export function runOperation<A, E>(
 		const start = performance.now();
 		const record: CallRecord = { calls: [], waits: [], sent: 0 };
 		const sentences: SentenceOutcome[] = [];
+		const events: OperationEvent[] = [];
 		let resolution: ResolutionOutcome | undefined;
 		const scope: OperationScope = {
 			call: (exchange) => call(options, record, exchange),
@@ -127,6 +131,9 @@ export function runOperation<A, E>(
 			},
 			resolution: (outcome) => {
 				resolution = outcome;
+			},
+			event: (event) => {
+				events.push(event);
 			},
 		};
 		return body(scope).pipe(
@@ -146,6 +153,7 @@ export function runOperation<A, E>(
 						waits: [...record.waits],
 						sentences: [...sentences],
 						...(resolution ? { resolution } : {}),
+						...(events.length > 0 ? { events: [...events] } : {}),
 					}),
 				),
 			),

@@ -4,7 +4,8 @@ import { dirname, join, relative, resolve } from "node:path";
 
 /**
  * The production code, the package entry with the files beside it and
- * everything under `src/segment/` and `src/resolve/`, runs where a host
+ * everything under `src/segment/`, `src/resolve/` and `src/knowledge/`,
+ * runs where a host
  * has no file system (a Convex action, a short-lived isolate): none of it
  * may import `node:*`, read files or the environment, or reach the
  * evaluator or the lab, and it imports packages only from the list here.
@@ -14,6 +15,7 @@ import { dirname, join, relative, resolve } from "node:path";
 const src = resolve(import.meta.dir, "../../src");
 const segment = join(src, "segment");
 const resolveDirectory = join(src, "resolve");
+const knowledgeDirectory = join(src, "knowledge");
 const allowedPackages = new Set([
 	// Reads no files (dumspec ADR 0025).
 	"dumspec/inventories",
@@ -21,6 +23,9 @@ const allowedPackages = new Set([
 	// Dumling's operational entry: compiled validation, no files.
 	"dumling",
 	"dumling/types",
+	// Dumrel's compiled validation and policies, no files.
+	"dumrel",
+	"dumrel/types",
 	"effect/Cause",
 	"effect/Data",
 	"effect/Effect",
@@ -31,6 +36,7 @@ const allowedPackages = new Set([
 ]);
 const typeOnlyPackages = new Set([
 	"dumling/types",
+	"dumrel/types",
 	"dumspec/types",
 	"promptsmith/typesafe",
 ]);
@@ -52,7 +58,7 @@ const files = [
 				entry.name !== "development.ts",
 		)
 		.map((entry) => join(src, entry.name)),
-	...[segment, resolveDirectory].flatMap((directory) =>
+	...[segment, resolveDirectory, knowledgeDirectory].flatMap((directory) =>
 		readdirSync(directory, { recursive: true, withFileTypes: true })
 			.filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
 			.map((entry) => join(entry.parentPath, entry.name)),

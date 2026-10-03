@@ -79,11 +79,22 @@ export type ResolutionOutcome = {
 	readonly reason?: string;
 };
 
+/**
+ * Something an operation decided that its value does not show, such as
+ * the Valency Slots `knowledge.produce` dropped (`DroppedValencySlots`,
+ * #675).
+ */
+export type OperationEvent = {
+	readonly name: string;
+	readonly data?: unknown;
+};
+
 export type OperationTrace = {
 	readonly operation:
 		| "segment.inUnits"
 		| "resolve.grammar"
-		| "resolve.reading";
+		| "resolve.reading"
+		| "knowledge.produce";
 	/** Epoch milliseconds; `durationMs` reads the monotonic clock. */
 	readonly startedAt: number;
 	readonly durationMs: number;
@@ -94,4 +105,6 @@ export type OperationTrace = {
 	readonly sentences: readonly SentenceOutcome[];
 	/** `resolve.grammar` and `resolve.reading` only, once the click came out. */
 	readonly resolution?: ResolutionOutcome;
+	/** In the order they happened; absent when there were none. */
+	readonly events?: readonly OperationEvent[];
 };

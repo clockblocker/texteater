@@ -50,6 +50,7 @@
 	},
 	"dependencies": {
 		"dumling": "workspace:^",
+		"dumrel": "workspace:^",
 		"dumspec": "workspace:^",
 		"effect": "4.0.0",
 		"promptsmith": "workspace:^",

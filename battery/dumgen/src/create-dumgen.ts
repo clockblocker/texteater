@@ -2,12 +2,18 @@
  * `createDumgen`, the one factory every host builds Dumgen with (#859). Its
  * operations are Effects whose error channel holds only `ProviderFailure`
  * and `InvalidModelOutput` (#552); a host `yield*`s them in its own
- * programs. It offers `segment.inUnits`, `resolve.grammar` and
- * `resolve.reading`; `knowledge.produce` follows.
+ * programs. It offers `segment.inUnits`, `resolve.grammar`,
+ * `resolve.reading` and `knowledge.produce`, whose error channel holds
+ * only the host's own `onContribution` error (#883).
  */
 import type * as Effect from "effect/Effect";
 import { requestBudget, runOperation } from "./call.js";
 import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
+import { produceKnowledge } from "./knowledge/produce.js";
+import type {
+	KnowledgeProduction,
+	ProduceKnowledgeInput,
+} from "./knowledge/types.js";
 import {
 	defaultLunaConfiguration,
 	type LunaAsk,
@@ -33,8 +39,9 @@ export type DumgenOptions = {
 	readonly jev: JevAsk;
 	/**
 	 * Luna, for the operations that write: `resolve.grammar` writes Canonical
-	 * Forms and spelling corrections with it, and `resolve.reading` Emoji
-	 * Descriptions (#862). Segmentation never
+	 * Forms and spelling corrections with it, `resolve.reading` Emoji
+	 * Descriptions (#862) and `knowledge.produce` Knowledge text, plural and
+	 * Präteritum forms, frames and relation candidates. Segmentation never
 	 * receives it. `createOpenAILuna` in production.
 	 */
 	readonly luna: LunaAsk;
@@ -94,6 +101,18 @@ export type Dumgen = {
 			ProviderFailure | InvalidModelOutput
 		>;
 	};
+	readonly knowledge: {
+		/**
+		 * The Knowledge one occurrence asks for its resolved Reading (#883):
+		 * changes, Pending Semantic Relations and per-aspect failures, all
+		 * values. Each aspect's changes reach `onContribution` as soon as it
+		 * has them; its failure is the only error, and it interrupts the
+		 * rest. Bad input is a Defect.
+		 */
+		readonly produce: <E = never>(
+			input: ProduceKnowledgeInput<E>,
+		) => Effect.Effect<KnowledgeProduction, E>;
+	};
 };
 
 export function createDumgen(options: DumgenOptions): Dumgen {
@@ -131,6 +150,12 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 			reading: (input) =>
 				runOperation("resolve.reading", operations, (scope) =>
 					resolveReading(scope, { jev, luna }, input),
+				),
+		},
+		knowledge: {
+			produce: (input) =>
+				runOperation("knowledge.produce", operations, (scope) =>
+					produceKnowledge(scope, { jev, luna }, input),
 				),
 		},
 	};
