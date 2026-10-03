@@ -1,0 +1,797 @@
+{
+	"runId": "94d29d80-23bd-4645-89e9-c373ab66243f",
+	"experimentId": "resolve-grammar/de:heldout",
+	"round": "2026-10-03-heldout-finalist",
+	"manifest": {
+		"version": 2,
+		"runId": "94d29d80-23bd-4645-89e9-c373ab66243f",
+		"experimentId": "resolve-grammar/de:heldout",
+		"evaluatorVersion": "resolve-grammar-1",
+		"sourceRevision": "991107b78",
+		"startedAt": "2026-10-03T11:12:59.364Z",
+		"corpus": {
+			"fingerprint": "a6fb8ba19b12328d4160b098c84bbae2064fe1ed1ca0837029fd0776d28d4552",
+			"caseIds": [
+				"de/am-naechsten-morgen-war-alles-anders#0",
+				"de/am-naechsten-morgen-war-alles-anders#1",
+				"de/am-naechsten-morgen-war-alles-anders#2",
+				"de/am-naechsten-morgen-war-alles-anders#3",
+				"de/auf-der-karte-sind-drei-seen-eingezeichnet#0",
+				"de/auf-der-karte-sind-drei-seen-eingezeichnet#1",
+				"de/bei-dieser-formel-verstehe-ich-nur-bahnhof#0",
+				"de/bitte-folgen-sie-ihrem-ansprechpartner#0",
+				"de/damit-triffst-du-den-nagel-auf-den-kopf#0",
+				"de/das-ist-nicht-mein-problem#0",
+				"de/das-ist-schwer-zu-erklaeren#0",
+				"de/das-rennen-hat-spass-gemacht#0",
+				"de/das-rote-band-lag-auf-dem-geschenk#0",
+				"de/das-rote-band-lag-auf-dem-geschenk#1",
+				"de/das-rote-band-lag-auf-dem-geschenk#2",
+				"de/das-schloss-an-der-tuer-klemmt#0",
+				"de/das-schloss-ueber-dem-fluss-wurde-renoviert#0",
+				"de/das-waere-fast-schief-gewesen#0",
+				"de/das-waere-fast-schief-gewesen#1",
+				"de/das-waere-schoen-gewesen#0",
+				"de/den-fluss-entlang-standen-alte-weiden#0",
+				"de/der-brief-ist-schon-geschrieben#0",
+				"de/der-dritte-band-ist-laengst-vergriffen#0",
+				"de/der-faehrmann-hat-uns-uebergesetzt#0",
+				"de/der-geschriebene-brief-lag-auf-dem-tisch#0",
+				"de/der-hockte-da-im-gruenen-gras#0",
+				"de/der-hockte-da-im-gruenen-gras#1",
+				"de/der-kiefer-schmerzte-nach-der-operation#0",
+				"de/der-lachende-junge-winkte-uns-zu#0",
+				"de/der-laster-fuhr-das-schild-um#0",
+				"de/der-leiter-der-werkstatt-kam-spaeter#0",
+				"de/der-reisende-haendler-wartete-draussen#0",
+				"de/der-reisende-wartete-draussen#0",
+				"de/der-von-allen-bewunderte-lehrer-ging-in-den-ruhestand#0",
+				"de/die-alte-kiefer-steht-am-hang#0",
+				"de/die-angestellten-streikten-gestern#0",
+				"de/die-auf-ihn-abgestimmte-loesung-half-sofort#0",
+				"de/die-aufgabe-bleibt-ungeloest#0",
+				"de/die-band-spielt-heute-im-kellerclub#0",
+				"de/die-eingezeichneten-seen-sind-jetzt-besser-zu-sehen#0",
+				"de/die-gekochten-kartoffeln-standen-schon-bereit#0",
+				"de/die-kartoffeln-sind-bereits-gekocht#0",
+				"de/die-leiter-wackelte-auf-dem-nassen-boden#0",
+				"de/die-linke-hand-zitterte#0",
+				"de/die-mit-bleistift-geschriebene-notiz-lag-noch-auf-dem-tisch#0",
+				"de/die-mutter-passt-nicht-auf-diese-schraube#0",
+				"de/die-peitsche-hat-er-mitgebracht#0",
+				"de/die-peitsche-hat-er-mitgebracht#1",
+				"de/die-peitsche-hat-er-mitgebracht#2",
+				"de/die-peitsche-hat-er-mitgebracht#3",
+				"de/die-peitsche-hat-er-mitgebracht#4",
+				"de/die-peitsche-hat-er-mitgebracht#5",
+				"de/die-peitsche-hat-er-mitgebracht#6",
+				"de/die-peitsche-hat-er-mitgebracht#7",
+				"de/die-schlafenden-kinder-wurden-nicht-geweckt#0",
+				"de/die-schoss-das-haeschen-ganz-entzwei#0",
+				"de/die-schoss-das-haeschen-ganz-entzwei#1",
+				"de/die-schoss-das-haeschen-ganz-entzwei#2",
+				"de/die-tuer-ist-geschlossen#0",
+				"de/die-tuer-ist-geschlossen#1",
+				"de/die-zeugin-deren-aussage-zaehlt-bleibt-anonym#0",
+				"de/ein-interessierter-leser-fragte-nach#0",
+				"de/ein-verletzter-lag-am-strassenrand#0",
+				"de/einst-ging-er-an-ufers-rand#0",
+				"de/einst-ging-er-an-ufers-rand#1",
+				"de/einst-ging-er-an-ufers-rand#2",
+				"de/einst-ging-er-an-ufers-rand#3",
+				"de/einst-ging-er-an-ufers-rand#4",
+				"de/er-ist-stolz-auf-seinen-sohn#0",
+				"de/er-ist-stolz-auf-seinen-sohn#1",
+				"de/er-lief-erst-nach-links-und-dann-hinaus#0",
+				"de/er-lief-erst-nach-links-und-dann-hinaus#1",
+				"de/er-muss-heute-arbeiten#0",
+				"de/er-muss-heute-arbeiten#1",
+				"de/er-sass-schweigend-am-fenster#0",
+				"de/er-vergass-seinen-schluessel-im-buero#0",
+				"de/er-versucht-hinauszulaufen#0",
+				"de/er-versucht-hinauszulaufen#1",
+				"de/er-wartet-auf-den-nachtbus#0",
+				"de/er-wog-vielleicht-ein-halbes-lot#0",
+				"de/er-wog-vielleicht-ein-halbes-lot#1",
+				"de/er-wog-vielleicht-ein-halbes-lot#2",
+				"de/er-wog-vielleicht-ein-halbes-lot#3",
+				"de/er-wog-vielleicht-ein-halbes-lot#4",
+				"de/es-zog-der-wilde-jaegersmann#0",
+				"de/es-zog-der-wilde-jaegersmann#1",
+				"de/es-zog-der-wilde-jaegersmann#2",
+				"de/fort-geht-nun-die-mutter-und#0",
+				"de/fort-geht-nun-die-mutter-und#1",
+				"de/genau-da-liegt-der-hase-im-pfeffer#0",
+				"de/guten-tag-ich-habe-einen-termin#0",
+				"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst#0",
+				"de/ich-gehe-tomaten-kaufen-um-einen-salat-zu-machen#0",
+				"de/ich-suche-einen-besseren-ansatz#0",
+				"de/im-heft-stand-filosofie-statt-philosophie#0",
+				"de/in-berlin-betreibt-die-bvg-die-u-bahn#0",
+				"de/jetzt-schien-die-sonne-gar-zu-sehr#0",
+				"de/jetzt-schien-die-sonne-gar-zu-sehr#1",
+				"de/jetzt-schien-die-sonne-gar-zu-sehr#2",
+				"de/jetzt-schien-die-sonne-gar-zu-sehr#3",
+				"de/jetzt-schien-die-sonne-gar-zu-sehr#4",
+				"de/jetzt-schien-die-sonne-gar-zu-sehr#5",
+				"de/meine-mutter-ruft-jeden-sonntag-an#0",
+				"de/mit-den-kindern-ist-es-nie-langweilig#0",
+				"de/mit-keinem-wort-erwaehnte-sie-den-plan#0",
+				"de/morgen-fahren-wir-nach-hamburg#0",
+				"de/morgenstund-hat-gold-im-mund-sagte-sie-verschlafen#0",
+				"de/na-ja-ganz-ueberzeugt-bin-ich-nicht#0",
+				"de/nach-manchem-fehler-lernt-man-schneller#0",
+				"de/nahm-ranzen-pulverhorn-und-flint#0",
+				"de/nahm-ranzen-pulverhorn-und-flint#1",
+				"de/schwimmen-ist-gesund#0",
+				"de/sein-staendiges-meckern-nervt#0",
+				"de/sie-erinnert-sich-an-den-geruch#0",
+				"de/sie-folgte-ihrem-herzen#0",
+				"de/sie-ist-verheiratet#0",
+				"de/sie-kam-lachend-herein#0",
+				"de/sie-uebersetzt-den-vertrag-ins-deutsche#0",
+				"de/sie-uebersetzt-den-vertrag-ins-deutsche#1",
+				"de/sie-umfuhr-die-baustelle-weitraeumig#0",
+				"de/sie-wurde-um-geduld-gebeten#0",
+				"de/tut-mir-leid-das-war-mein-fehler#0",
+				"de/tut-mir-leid-das-war-mein-fehler#1",
+				"de/und-minz-und-maunz-die-schreien#0",
+				"de/und-minz-und-maunz-die-schreien#1",
+				"de/und-minz-und-maunz-die-schreien#2",
+				"de/und-minz-und-maunz-die-schreien#3",
+				"de/und-minz-und-maunz-die-schreien#4",
+				"de/unter-falschem-namen-mietete-er-das-zimmer#0",
+				"de/verbrannt-ist-alles-ganz-und-gar#0",
+				"de/verbrannt-ist-alles-ganz-und-gar#1",
+				"de/verbrannt-ist-alles-ganz-und-gar#2",
+				"de/viele-deutschsprachigen-quellen-fehlen-noch#0",
+				"de/viele-vermissen-das-alte-berlin#0",
+				"de/wegen-dem-regen-kamen-wir-zu-spaet#0",
+				"de/wer-mitkommen-will-meldet-sich-bis-freitag#0",
+				"de/wer-war-das#0",
+				"de/wer-zuerst-kommt-mahlt-zuerst#0",
+				"de/wir-haetten-gern-mehr-zeit#0",
+				"de/wir-liefen-den-fluss-entlang#0"
+			]
+		},
+		"repetitions": 3,
+		"operationVersion": "resolve-grammar/de@production",
+		"configurations": {
+			"generation": {
+				"model": "gpt-5.6-luna",
+				"settings": {
+					"reasoning": {
+						"effort": "none"
+					},
+					"service_tier": "fast"
+				}
+			},
+			"judgment": {
+				"model": "jev-1.13.0",
+				"settings": {
+					"set": "heldout",
+					"setHash": "19d8d7e324e09b1f"
+				}
+			}
+		}
+	},
+	"summary": {
+		"quality": {
+			"passed": 0,
+			"failed": 0,
+			"needsReview": 0,
+			"unscored": 140
+		},
+		"status": "Completed",
+		"finishedAt": "2026-10-03T11:12:59.529Z",
+		"total": 140,
+		"succeeded": 140,
+		"failed": 0,
+		"interrupted": 0,
+		"stability": {
+			"repetitions": 3,
+			"flipped": 0,
+			"varyingOutputs": 13,
+			"quality": {
+				"passed": 0,
+				"failed": 0,
+				"needsReview": 0,
+				"unscored": 420
+			}
+		}
+	},
+	"metrics": {
+		"attempts": 420,
+		"cases": 140,
+		"table": {
+			"lemma": {
+				"correct": 378,
+				"count": 420,
+				"rate": 0.9,
+				"interval": [
+					0.8675848306918414,
+					0.9251644225002644
+				]
+			},
+			"cell": {
+				"correct": 380,
+				"count": 420,
+				"rate": 0.9047619047619048,
+				"interval": [
+					0.8729076619127595,
+					0.9292790823887761
+				]
+			},
+			"members": {
+				"correct": 417,
+				"count": 420,
+				"rate": 0.9928571428571429,
+				"interval": [
+					0.9792124591723824,
+					0.9975678706536052
+				]
+			},
+			"spelling": {
+				"correct": 390,
+				"count": 420,
+				"rate": 0.9285714285714286,
+				"interval": [
+					0.8998630368164854,
+					0.9495111630321994
+				]
+			},
+			"exact": {
+				"correct": 332,
+				"count": 420,
+				"rate": 0.7904761904761904,
+				"interval": [
+					0.7490098658117577,
+					0.826677091863462
+				]
+			},
+			"valencyEvidence": {
+				"correct": 288,
+				"count": 294,
+				"rate": 0.9795918367346939,
+				"interval": [
+					0.9561984437889988,
+					0.9906140015273881
+				]
+			}
+		},
+		"byRepetition": {
+			"0": {
+				"correct": 127,
+				"count": 140,
+				"rate": 0.9071428571428571,
+				"interval": [
+					0.8476094089324533,
+					0.9449298275756914
+				]
+			},
+			"1": {
+				"correct": 125,
+				"count": 140,
+				"rate": 0.8928571428571429,
+				"interval": [
+					0.8307429590012401,
+					0.9339878832434609
+				]
+			},
+			"2": {
+				"correct": 126,
+				"count": 140,
+				"rate": 0.9,
+				"interval": [
+					0.8391410963823978,
+					0.939493942994025
+				]
+			}
+		},
+		"slices": {
+			"adjectival nouns and attributive-only adjectives (#709)": {
+				"lemma": {
+					"correct": 54,
+					"count": 66,
+					"rate": 0.8181818181818182,
+					"interval": [
+						0.7085480722568388,
+						0.8928139363945568
+					]
+				},
+				"cell": {
+					"correct": 60,
+					"count": 66,
+					"rate": 0.9090909090909091,
+					"interval": [
+						0.8155127002319876,
+						0.9576670251769491
+					]
+				},
+				"members": {
+					"correct": 66,
+					"count": 66,
+					"rate": 1,
+					"interval": [
+						0.9449974421664784,
+						1
+					]
+				},
+				"spelling": {
+					"correct": 66,
+					"count": 66,
+					"rate": 1,
+					"interval": [
+						0.9449974421664784,
+						1
+					]
+				},
+				"exact": {
+					"correct": 51,
+					"count": 66,
+					"rate": 0.7727272727272727,
+					"interval": [
+						0.6583054453720281,
+						0.8571477049005964
+					]
+				},
+				"valencyEvidence": {
+					"correct": 60,
+					"count": 63,
+					"rate": 0.9523809523809523,
+					"interval": [
+						0.8690903207207067,
+						0.9836738312590775
+					]
+				}
+			},
+			"NOUN Case (#542)": {
+				"lemma": {
+					"correct": 6,
+					"count": 6,
+					"rate": 1,
+					"interval": [
+						0.6096657083436265,
+						1
+					]
+				},
+				"cell": {
+					"correct": 3,
+					"count": 6,
+					"rate": 0.5,
+					"interval": [
+						0.18761630498040816,
+						0.8123836950195918
+					]
+				},
+				"members": {
+					"correct": 6,
+					"count": 6,
+					"rate": 1,
+					"interval": [
+						0.6096657083436265,
+						1
+					]
+				},
+				"spelling": {
+					"correct": 6,
+					"count": 6,
+					"rate": 1,
+					"interval": [
+						0.6096657083436265,
+						1
+					]
+				},
+				"exact": {
+					"correct": 3,
+					"count": 6,
+					"rate": 0.5,
+					"interval": [
+						0.18761630498040816,
+						0.8123836950195918
+					]
+				},
+				"valencyEvidence": {
+					"correct": 6,
+					"count": 6,
+					"rate": 1,
+					"interval": [
+						0.6096657083436265,
+						1
+					]
+				}
+			},
+			"Foreign (#687)": {
+				"lemma": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				},
+				"cell": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				},
+				"members": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				},
+				"spelling": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				},
+				"exact": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				},
+				"valencyEvidence": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"closed DET and PRON (#864)": {
+				"lemma": {
+					"correct": 36,
+					"count": 36,
+					"rate": 1,
+					"interval": [
+						0.9035813700311206,
+						1
+					]
+				},
+				"cell": {
+					"correct": 33,
+					"count": 36,
+					"rate": 0.9166666666666666,
+					"interval": [
+						0.781733086137824,
+						0.9712513888881098
+					]
+				},
+				"members": {
+					"correct": 36,
+					"count": 36,
+					"rate": 1,
+					"interval": [
+						0.9035813700311206,
+						1
+					]
+				},
+				"spelling": {
+					"correct": 36,
+					"count": 36,
+					"rate": 1,
+					"interval": [
+						0.9035813700311206,
+						1
+					]
+				},
+				"exact": {
+					"correct": 33,
+					"count": 36,
+					"rate": 0.9166666666666666,
+					"interval": [
+						0.781733086137824,
+						0.9712513888881098
+					]
+				},
+				"valencyEvidence": {
+					"correct": 0,
+					"count": 0,
+					"rate": 0,
+					"interval": [
+						0,
+						1
+					]
+				}
+			},
+			"circumpositions and bracket particles (#707)": {
+				"lemma": {
+					"correct": 18,
+					"count": 18,
+					"rate": 1,
+					"interval": [
+						0.8241207740667156,
+						1
+					]
+				},
+				"cell": {
+					"correct": 18,
+					"count": 18,
+					"rate": 1,
+					"interval": [
+						0.8241207740667156,
+						1
+					]
+				},
+				"members": {
+					"correct": 18,
+					"count": 18,
+					"rate": 1,
+					"interval": [
+						0.8241207740667156,
+						1
+					]
+				},
+				"spelling": {
+					"correct": 14,
+					"count": 18,
+					"rate": 0.7777777777777778,
+					"interval": [
+						0.5478541549399641,
+						0.9099907195415445
+					]
+				},
+				"exact": {
+					"correct": 14,
+					"count": 18,
+					"rate": 0.7777777777777778,
+					"interval": [
+						0.5478541549399641,
+						0.9099907195415445
+					]
+				},
+				"valencyEvidence": {
+					"correct": 15,
+					"count": 15,
+					"rate": 1,
+					"interval": [
+						0.7961166964035129,
+						1
+					]
+				}
+			}
+		},
+		"routes": {
+			"Lexeme/ADJ": {
+				"correct": 74,
+				"count": 87,
+				"rate": 0.8505747126436781,
+				"interval": [
+					0.7609539957959605,
+					0.910545567852722
+				]
+			},
+			"Lexeme/ADP": {
+				"correct": 21,
+				"count": 21,
+				"rate": 1,
+				"interval": [
+					0.8453609790128563,
+					1
+				]
+			},
+			"Lexeme/ADV": {
+				"correct": 30,
+				"count": 36,
+				"rate": 0.8333333333333334,
+				"interval": [
+					0.6810920555117621,
+					0.9212955245089851
+				]
+			},
+			"Lexeme/CCONJ": {
+				"correct": 3,
+				"count": 3,
+				"rate": 1,
+				"interval": [
+					0.43850296436068037,
+					1
+				]
+			},
+			"Lexeme/DET": {
+				"correct": 12,
+				"count": 12,
+				"rate": 1,
+				"interval": [
+					0.7575059904469021,
+					1
+				]
+			},
+			"Lexeme/INTJ": {
+				"correct": 8,
+				"count": 9,
+				"rate": 0.8888888888888888,
+				"interval": [
+					0.565000291629209,
+					0.9801091125830901
+				]
+			},
+			"Lexeme/NOUN": {
+				"correct": 83,
+				"count": 87,
+				"rate": 0.9540229885057471,
+				"interval": [
+					0.8876696642147789,
+					0.9819773116581049
+				]
+			},
+			"Lexeme/NUM": {
+				"correct": 3,
+				"count": 3,
+				"rate": 1,
+				"interval": [
+					0.43850296436068037,
+					1
+				]
+			},
+			"Lexeme/PART": {
+				"correct": 6,
+				"count": 9,
+				"rate": 0.6666666666666666,
+				"interval": [
+					0.35420213352505864,
+					0.8794161825659264
+				]
+			},
+			"Lexeme/PRON": {
+				"correct": 24,
+				"count": 24,
+				"rate": 1,
+				"interval": [
+					0.862023793448672,
+					0.9999999999999999
+				]
+			},
+			"Lexeme/PROPN": {
+				"correct": 6,
+				"count": 6,
+				"rate": 1,
+				"interval": [
+					0.6096657083436265,
+					1
+				]
+			},
+			"Lexeme/VERB": {
+				"correct": 81,
+				"count": 87,
+				"rate": 0.9310344827586207,
+				"interval": [
+					0.8576030568563133,
+					0.9680111607445259
+				]
+			},
+			"Locution/ADV": {
+				"correct": 3,
+				"count": 6,
+				"rate": 0.5,
+				"interval": [
+					0.18761630498040816,
+					0.8123836950195918
+				]
+			},
+			"Locution/INTJ": {
+				"correct": 6,
+				"count": 9,
+				"rate": 0.6666666666666666,
+				"interval": [
+					0.35420213352505864,
+					0.8794161825659264
+				]
+			},
+			"Locution/SCONJ": {
+				"correct": 3,
+				"count": 3,
+				"rate": 1,
+				"interval": [
+					0.43850296436068037,
+					1
+				]
+			},
+			"Locution/VERB": {
+				"correct": 9,
+				"count": 12,
+				"rate": 0.75,
+				"interval": [
+					0.4676946629183366,
+					0.9110583323051143
+				]
+			},
+			"Saying/Saying": {
+				"correct": 6,
+				"count": 6,
+				"rate": 1,
+				"interval": [
+					0.6096657083436265,
+					1
+				]
+			}
+		},
+		"outcomes": {
+			"Resolved": 417,
+			"CatalogMiss": 3
+		},
+		"reasons": {
+			"No authored particle has this spelling": 3
+		},
+		"flips": [
+			"de/die-schoss-das-haeschen-ganz-entzwei#2",
+			"de/er-wog-vielleicht-ein-halbes-lot#3",
+			"de/mit-den-kindern-ist-es-nie-langweilig#0"
+		]
+	},
+	"spend": {
+		"jev": {
+			"freshCalls": 3,
+			"freshInputTokens": 1857,
+			"freshOutputTokens": 123,
+			"freshCachedInputTokens": 0,
+			"freshCacheWriteTokens": 0,
+			"cachedCalls": 813
+		},
+		"luna": {
+			"freshCalls": 128,
+			"freshInputTokens": 66086,
+			"freshOutputTokens": 3154,
+			"freshCachedInputTokens": 0,
+			"freshCacheWriteTokens": 0,
+			"cachedCalls": 628
+		},
+		"lunaTransport": "batch",
+		"usd": {
+			"jev": 7.7994e-05,
+			"luna": 0.008501,
+			"lunaTier": "batch"
+		},
+		"batches": [
+			{
+				"batchId": "batch_6ac0e13739dc8190a5b8453e6396368a",
+				"inputFileId": "file-FybVdYgwnDKpyVA7i7zP3y",
+				"submittedAt": "2026-10-03T11:04:23.627Z",
+				"status": "completed",
+				"requests": 128,
+				"answered": 128,
+				"failed": 0,
+				"inputTokens": 66086,
+				"outputTokens": 3154,
+				"cachedInputTokens": 0,
+				"cacheWriteTokens": 0,
+				"usd": 0.008501,
+				"requestCounts": {
+					"total": 128,
+					"completed": 128,
+					"failed": 0
+				},
+				"usage": {
+					"input_tokens": 66086,
+					"output_tokens": 3154,
+					"total_tokens": 69240,
+					"input_tokens_details": {
+						"cached_tokens": 0
+					},
+					"output_tokens_details": {
+						"reasoning_tokens": 0
+					}
+				}
+			}
+		]
+	}
+}
