@@ -1527,7 +1527,7 @@ const knowledge: Rule[] = [
 	{
 		id: "de/valency-frame-follows-e-valbu",
 		statement:
-			"A Reading's Valency Frame is its sense's Satzbauplan in E-VALBU, else Duden, less E-VALBU's optional place and time complements, free adjuncts (ADR 0034): warten has no place Slot. An adjective's frame has no Nom Slot; the copula owns the subject: stolz (auf + Acc). A referent is the dictionary's jemand or etwas for the sense, not the sentence's: sich erinnern an jemanden/etwas is Either, though the sentence names a smell. Each clause form the dictionary lists is an alternative in its Slot. When either of two complements can complete the frame, both Slots are Optional: bitten (Acc) (um + Acc).",
+			"A Reading's Valency Frame is its sense's Satzbauplan in E-VALBU, else Duden, less E-VALBU's optional place and time complements, free adjuncts: warten has no place Slot. An adjective's frame has no Nom Slot; the copula owns it: stolz (auf + Acc). A Collocation's frame takes its noun's government: eine Entscheidung treffen (über + Acc). A referent is the dictionary's jemand or etwas for the sense, not the sentence's (sich erinnern an: Either). Each clause form listed is an alternative in its Slot. When either of two complements completes the frame, both are Optional: bitten (Acc) (um + Acc).",
 		adrs: ["ADR-0034"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),
@@ -1545,6 +1545,8 @@ const knowledge: Rule[] = [
 			"de/sie-ist-verheiratet",
 			"de/ein-interessierter-leser-fragte-nach",
 			"de/verbrannt-ist-alles-ganz-und-gar",
+			// A Collocation takes its noun's government (#884 batch 3, R4).
+			"de/der-ausschuss-trifft-eine-entscheidung",
 		],
 	},
 	{
@@ -1575,7 +1577,7 @@ const knowledge: Rule[] = [
 	{
 		id: "de/relations-need-a-dictionary",
 		statement:
-			"A Reading claims a semantic relation only where Duden, DWDS or OpenThesaurus lists the target in that relation for this sense, at most three per relation. Register neither makes a near-synonym nor blocks a claim: Mama is a synonym of Mutter. A hypernym needs an explicit Oberbegriff, not a definition's genus, and an antonym is never read off a definition's negation. A catch-all Oberbegriff backs none: Mensch, Person, Gegenstand, Werk. A target may be any German Lemma, stored or not, matched by its Family, Kind and case-folded Canonical Form.",
+			"A Reading claims a semantic relation only where Duden, DWDS or OpenThesaurus lists it for this sense and it holds for the whole Reading: leidtun 😔 takes bedauern, not bereuen. At most three per relation. Register neither demotes nor blocks a claim (Mama, Mutter). A synonym needs a listing, not a gloss (eine Entscheidung treffen: etwas entscheiden); a hypernym an explicit Oberbegriff, not a definition's genus nor a catch-all (Mensch, Person, Gegenstand, Werk). No antonym is read off a definition's negation. A target is any German Lemma, matched by Family, Kind and case-folded Canonical Form.",
 		adrs: ["ADR-0011", "ADR-0012", "ADR-0020"],
 		routes: [],
 		records: [
@@ -1589,6 +1591,10 @@ const knowledge: Rule[] = [
 			// OpenThesaurus's catch-all Oberbegriffe Person and Gegenstand, Werk.
 			"de/es-zog-der-wilde-jaegersmann",
 			"de/das-rote-band-lag-auf-dem-geschenk",
+			// The user's batch 3 R3 (a gloss backs no synonym) and the
+			// whole-Reading test (leidtun 😔 drops bereuen) on #884.
+			"de/tut-mir-leid-das-war-mein-fehler",
+			"de/der-ausschuss-trifft-eine-entscheidung",
 		],
 	},
 	// The user's batch 2 rulings Q1 (paraphrase test) and Q2 (head noun) on #884.

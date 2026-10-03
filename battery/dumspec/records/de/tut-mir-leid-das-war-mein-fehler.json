@@ -35,7 +35,7 @@
 			},
 			{
 				"rule": "de/valency-frame-follows-e-valbu",
-				"hash": "d71c5846b57b2c24"
+				"hash": "f0b9c8226ff45fb8"
 			},
 			{
 				"rule": "de/conjugation-class-from-praeteritum",
@@ -43,10 +43,15 @@
 			},
 			{
 				"rule": "de/relations-need-a-dictionary",
-				"hash": "3d9e1bc7b0022207"
+				"hash": "b8777ac73be3fda5"
 			}
 		],
 		"references": [
+			{
+				"title": "E-VALBU: leidtun, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400735/1",
+				"supports": "Target 0 Knowledge: jemand/etwas tut jemandem leid (Mitleid), Satzbauplan Ksub, Kdat; with Lesart 2, the subject is jemand or etwas, Either"
+			},
 			{
 				"title": "E-VALBU: leidtun, Lesart 2",
 				"url": "https://grammis.ids-mannheim.de/verbs/view/400735/2",
@@ -60,7 +65,7 @@
 			{
 				"title": "OpenThesaurus: leidtun",
 				"url": "https://www.openthesaurus.de/synonyme/leidtun",
-				"supports": "Target 0 Knowledge: synsets {bedauern, (jemandem) leidtun, (jemanden) dauern} and {bereuen, (jemandem) leidtun, Reue zeigen …}"
+				"supports": "Target 0 Knowledge: synset {bedauern, (jemandem) leidtun, (jemanden) dauern}; the synset {bereuen, (jemandem) leidtun, Reue zeigen …} fits regret only, not the whole merged Reading"
 			}
 		]
 	},
@@ -79,7 +84,7 @@
 								{
 									"kind": "Case",
 									"governedCase": "Nom",
-									"referent": "Something"
+									"referent": "Either"
 								},
 								{
 									"kind": "Clause",
@@ -117,19 +122,6 @@
 									"lexicallyReflexive": null
 								}
 							}
-						],
-						"nearSynonym": [
-							{
-								"unitKind": "Lemma",
-								"language": "de",
-								"family": "Lexeme",
-								"kind": "VERB",
-								"canonicalForm": "bereuen",
-								"coreFeatures": {
-									"hasSepPrefix": null,
-									"lexicallyReflexive": null
-								}
-							}
 						]
 					}
 				},
@@ -138,7 +130,7 @@
 					"valency": "Authored",
 					"semanticRelations": {
 						"synonym": "Authored",
-						"nearSynonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty",
 						"hypernym": "ReviewedEmpty"
@@ -146,7 +138,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Tut … leid is the verb leidtun, not a routine formula (#759 Q1): leid is its separable first part (de/verb-owns-its-scattered-members), and mir is a free dative. The Reading is leidtun 'regret' (Duden sense 1), here an apology. Knowledge (#884): bedauern is a synonym, since its converse frame is valency, not meaning; decided by agents under the user's delegation."
+				"rationale": "Tut … leid is the verb leidtun, not a routine formula (#759 Q1): leid is its separable first part (de/verb-owns-its-scattered-members), and mir is a free dative. The Reading is the merged leidtun 😔, regret and pity in one (#877 ruling 1, Duden sense 1), here an apology. Knowledge (#884): the subject is Either, because the merged Reading covers E-VALBU Lesart 1 (jemand/etwas tut jemandem leid, pity) as well as Lesart 2 (regret), by the user's ruling of 2026-10-03. bedauern is a synonym, since its converse frame is valency, not meaning (decided by agents under the user's delegation). bereuen is dropped: it fits regret only, and a relation holds for the whole Reading (user, 2026-10-03)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
