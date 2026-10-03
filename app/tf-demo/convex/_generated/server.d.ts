@@ -30,12 +30,12 @@ import type { DataModel } from "./dataModel.js";
 type Env = {
   readonly CONVEX_CLOUD_URL: string;
   readonly CONVEX_SITE_URL: string;
+  readonly CLICK_CALL_DEADLINE_MS: string | undefined;
+  readonly OPENAI_API_KEY: string | undefined;
   readonly TF_DEMO_ADMIN: string | undefined;
   readonly TF_INSPECTION: string | undefined;
-  readonly TYPESAFE_API_KEY: string | undefined;
-  readonly OPENAI_API_KEY: string | undefined;
   readonly TF_KNOWLEDGE_PRODUCTION: string | undefined;
-  readonly CLICK_CALL_DEADLINE_MS: string | undefined;
+  readonly TYPESAFE_API_KEY: string | undefined;
 };
 
 /**
