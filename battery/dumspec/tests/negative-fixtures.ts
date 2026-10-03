@@ -85,6 +85,24 @@ export function attestSie(record: RecordJson, lemma: unknown) {
 	target.attestation.surface.lemma = lemma;
 }
 
+/** The jedem Surface of the record's PRON jeder, marking these cell values. */
+export function jedemSurface(
+	record: RecordJson,
+	cell: Readonly<Record<string, string | null>>,
+): RecordJson {
+	const { surface } = record.targets[0].attestation;
+	const { syncretic: _list, syncretized: _units, ...plain } = surface;
+	return {
+		...plain,
+		inflectionalFeatures: { ...plain.inflectionalFeatures, ...cell },
+	};
+}
+
+/** Stores `surface` as the Surface of the record's PRON jeder. */
+export function attestJedem(record: RecordJson, surface: unknown) {
+	record.targets[0].attestation.surface = surface;
+}
+
 /**
  * Coverage of every structural aspect a German VERB Reading's policy
  * requests, for a Knowledge of a definition and a conjugation class.
@@ -607,6 +625,53 @@ export const negativeFixtures: {
 				syncretize([
 					pronoun("sie", { case: "Acc", number: "Sing" }),
 					pronoun("Sie", { case: "Acc" }),
+				]),
+			);
+		},
+	},
+	{
+		name: "a stem Surface Syncretism's view without its units",
+		seed: "de/von-den-kindern-helfe-ich-jedem",
+		check: "Syncretism",
+		edit: (record) => {
+			attestJedem(
+				record,
+				syncretismView(
+					syncretize([
+						jedemSurface(record, { gender: "Masc" }),
+						jedemSurface(record, { gender: "Neut" }),
+					]),
+				),
+			);
+		},
+	},
+	{
+		// Dumling accepts it, but a stem's Syncretism leaves gender alone open.
+		name: "a stem Surface Syncretism the inventory does not generate",
+		seed: "de/von-den-kindern-helfe-ich-jedem",
+		check: "Syncretism",
+		edit: (record) => {
+			attestJedem(
+				record,
+				syncretize([
+					jedemSurface(record, { gender: "Masc" }),
+					jedemSurface(record, { gender: null, number: "Plur" }),
+				]),
+			);
+		},
+	},
+	{
+		// No jedem cell is feminine: dative feminine jeder is spelled jeder.
+		name: "a stem Surface Syncretism with other units than the generated one",
+		seed: "de/von-den-kindern-helfe-ich-jedem",
+		check: "Syncretism",
+		edit: (record) => {
+			attestJedem(
+				record,
+				syncretize([
+					jedemSurface(record, { gender: "Masc" }),
+					jedemSurface(record, { gender: "Neut" }),
+					jedemSurface(record, { gender: "Fem" }),
 				]),
 			);
 		},

@@ -32,6 +32,7 @@ import {
 	modalVerbs,
 	reflexiveDrillDown,
 	reflexivityUnit,
+	stemSyncretisms,
 	subjectExpletiveEs,
 	syncretismFor,
 } from "../src/inventories.js";
@@ -1825,6 +1826,51 @@ describe("plural-only nouns", () => {
 		// A noun with a singular keeps its gender.
 		expect(
 			attestationPluralOnlyIssues(noun("Lebensmittel", "Neut", null)),
+		).toEqual([]);
+	});
+});
+
+describe("the German stem Surface Syncretisms (system ADR 0046)", () => {
+	const generated = [...stemSyncretisms.values()];
+	const labels = generated.map(
+		({ member, spelled, cells }) =>
+			`${member.lemma.canonicalForm} ${spelled} ${cells[0].case} ${cells.map(({ gender }) => gender).join("/")}`,
+	);
+
+	test("the gender-only cells of jeder, keiner and mancher each get one", () => {
+		expect(labels).toContain("jeder jedem Dat Masc/Neut");
+		expect(labels).toContain("keiner keinem Dat Masc/Neut");
+		expect(labels).toContain("keiner keines Gen Masc/Neut");
+		expect(labels).toContain("mancher manchem Dat Masc/Neut");
+		expect(labels).toContain("mancher manches Gen Masc/Neut");
+	});
+
+	test("each holds cells of one case and number that differ in gender alone", () => {
+		for (const { cells } of generated) {
+			expect(new Set(cells.map((cell) => cell.case)).size).toBe(1);
+			expect(new Set(cells.map((cell) => cell.number)).size).toBe(1);
+			expect(new Set(cells.map((cell) => cell.gender)).size).toBe(
+				cells.length,
+			);
+		}
+	});
+
+	test("cells that differ in case or number get none", () => {
+		// keine is Fem Sing or Plur; keines Nom and Acc Neut differ in case.
+		expect(labels.filter((label) => / keine /u.test(label))).toEqual([]);
+		expect(
+			generated.filter(
+				({ member, spelled, cells }) =>
+					member.lemma.canonicalForm === "keiner" &&
+					spelled === "keines" &&
+					cells[0].case !== "Gen",
+			),
+		).toEqual([]);
+		// A pillar's cells get Lemma Syncretisms instead (ihm).
+		expect(
+			generated.filter(
+				({ member }) => member.lemma.canonicalForm === "er",
+			),
 		).toEqual([]);
 	});
 });

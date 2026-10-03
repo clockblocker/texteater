@@ -10,6 +10,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { syncretize } from "dumling";
 import {
 	directSemanticRelationSchema,
 	readingKnowledgeSchema,
@@ -34,7 +35,9 @@ import { readRecords } from "../src/load.js";
 import { knowledgeCoverageSchema } from "../src/record-schema.js";
 import { readRepositoryAdrStatuses } from "./adr-statuses.js";
 import {
+	attestJedem,
 	attestSie,
+	jedemSurface,
 	negativeFixtures,
 	pronoun,
 	review,
@@ -308,6 +311,25 @@ describe("negative fixtures", () => {
 		);
 		expect(checked.record?.targets[0]?.reading).toMatchObject({
 			emojiDescription: "👈",
+		});
+	});
+
+	test("a reviewed record attests a stem's generated Surface Syncretism (ADR 0046)", () => {
+		const id = "de/von-den-kindern-helfe-ich-jedem";
+		const json = seedJson(id);
+		const syncretism = syncretize([
+			jedemSurface(json, { gender: "Neut" }),
+			jedemSurface(json, { gender: "Masc" }),
+		]);
+		attestJedem(json, syncretism);
+		review(json);
+		const checked = checkRecord(id, json);
+		expect([...checked.errors, ...checked.issues]).toEqual([]);
+		expect(checked.record?.targets[0]?.attestation.surface).toEqual(
+			syncretism,
+		);
+		expect(checked.record?.targets[0]?.reading).toMatchObject({
+			emojiDescription: "🌐",
 		});
 	});
 

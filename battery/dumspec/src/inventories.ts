@@ -9,7 +9,8 @@
  * Syncretisms generated from the pronoun cells (system ADR 0046). It also
  * exports German lookups: the ADP Case Table, the conjunction Locutions the
  * Rules cite, the der or ein cell an article derives to, the nouns with no
- * singular, and the Syncretism a classifier's answer names. Its selectors find the authored member of a
+ * singular, the Syncretism a classifier's answer names and the stem Surface
+ * Syncretisms. Its selectors find the authored member of a
  * Lemma or Reading, tell a Closed Route (system ADR 0021), step between
  * Paradigm Cells (system ADR 0019) and derive the grammatical component a
  * Surface brings without a model.
@@ -80,4 +81,9 @@ export type {
 	ReviewedMember,
 	SurfaceCell,
 } from "./inventories/de/stem-lemma.js";
+export {
+	type StemSyncretism,
+	stemSyncretismFor,
+	stemSyncretisms,
+} from "./inventories/de/surface-syncretisms.js";
 export { syncretismFor } from "./inventories/de/syncretisms.js";
