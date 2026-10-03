@@ -42,6 +42,7 @@ import {
 	ambiguousPieces,
 	attestedMember,
 	type MemberOrthography,
+	rShortenings,
 } from "./member-spelling.js";
 import { auxiliaryUses, fill, question } from "./prompts.js";
 import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
@@ -254,16 +255,6 @@ const spellsEs = (member: Member) =>
 	fold(spellingOf(member)) === "es" ||
 	(member.spelling?.surfaces.includes("es") ?? false);
 
-/** The her- and hin- words an r- shortening may stand for (Rule de/r-adverb-is-her-or-hin-shorthand). */
-const rShortenings: Readonly<Record<string, readonly string[]>> = {
-	rein: ["herein", "hinein"],
-	raus: ["heraus", "hinaus"],
-	rüber: ["herüber", "hinüber"],
-	runter: ["herunter", "hinunter"],
-	rauf: ["herauf", "hinauf"],
-	ran: ["heran"],
-	rum: ["herum"],
-};
 /** Particles of particle verbs the segmenter's lists leave out (daliegen, leidtun). */
 const verbParticles = new Set(["da", "leid"]);
 const isParticle = (word: string) =>
@@ -273,19 +264,29 @@ const isParticle = (word: string) =>
 
 /**
  * The separable prefixes a VERB unit could carry, longest first: each
- * member standing apart from the verb, with the words an r- shortening
- * stands for, and each particle a member's word begins with.
+ * particle member standing apart from the verb, the words a shortened one
+ * stands for in its place (rein is herein or hinein, never a prefix of its
+ * own: Rule de/r-adverb-is-her-or-hin-shorthand), and each particle a
+ * member's word begins with. A member that is no particle, such as the
+ * verb's own participle, is never offered whole.
  */
 function prefixCandidates(target: Target, skip: ReadonlySet<number>) {
 	const found = new Set<string>();
 	for (const member of target.members) {
 		if (skip.has(member.position)) continue;
 		const word = fold(spellingOf(member));
-		if (target.members.length > 1 && /^\p{L}+$/u.test(word)) {
+		if (
+			target.members.length > 1 &&
+			member.spelling?.orthography === "Shorthand"
+		)
+			for (const surface of member.spelling.surfaces)
+				found.add(fold(surface));
+		else if (
+			target.members.length > 1 &&
+			/^\p{L}+$/u.test(word) &&
+			isParticle(word)
+		)
 			found.add(word);
-			for (const expanded of rShortenings[word] ?? [])
-				found.add(expanded);
-		}
 		for (let length = word.length - 2; length >= 2; length--) {
 			const prefix = word.slice(0, length);
 			if (isParticle(prefix)) found.add(prefix);
@@ -860,6 +861,16 @@ function readFirst(
 				prefix === "None"
 					? null
 					: (planned.prefixes[Number(prefix.slice(1))] ?? null);
+			// A shortened particle stands for the prefix judged for it
+			// (rein is herein when the verb is hereinkommen).
+			for (const member of target.members)
+				if (
+					member.spelling?.orthography === "Shorthand" &&
+					typeof core.hasSepPrefix === "string" &&
+					member.spelling.surfaces.length > 1 &&
+					member.spelling.surfaces.includes(core.hasSepPrefix)
+				)
+					readings.set(member.segment, core.hasSepPrefix);
 			const reflexive = planned.reflexive;
 			core.lexicallyReflexive = reflexive
 				? (reflexives[fold(reflexive.text)] ??
@@ -1152,6 +1163,16 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			...(first.inflection ? { inflection: first.inflection } : {}),
 		},
 		outsideHeadword,
+		auxiliaries: new Set(
+			planned.auxiliaries.flatMap(({ member }) => {
+				const use = new Answered(answers).peek(
+					`aux_m${member.position}`,
+				);
+				return use === undefined || use === "Main"
+					? []
+					: [member.position];
+			}),
+		),
 		readings: first.readings,
 	};
 	const caseRequest =

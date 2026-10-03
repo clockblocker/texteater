@@ -69,7 +69,13 @@ export function targetOf(
 			position,
 			segment,
 			text: value.text,
-			spelling: tableSpelling(segments, unit.segments, segment),
+			spelling: tableSpelling(
+				segments,
+				unit.segments,
+				segment,
+				route.family === "Lexeme" &&
+					(route.kind === "VERB" || route.kind === "ADV"),
+			),
 			ref: `\`members.m${position}\` (${JSON.stringify(value.text)})`,
 		};
 	});

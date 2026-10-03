@@ -24,6 +24,11 @@ export type Judged = {
 	readonly features: Readonly<Record<string, unknown>>;
 	/** Members that are no part of the headword: an owned article, a governed preposition. */
 	readonly outsideHeadword: ReadonlySet<number>;
+	/**
+	 * A verbal unit's members judged auxiliaries: part of its Surface, never
+	 * of its headword (Rule de/auxiliary-joins-the-verb-it-serves).
+	 */
+	readonly auxiliaries?: ReadonlySet<number>;
 	/** The word each ambiguous fused piece or shorthand stands for, by Segment. */
 	readonly readings: ReadonlyMap<number, string>;
 };
@@ -125,6 +130,13 @@ export function canonicalFormRequest(
 			...(judged.outsideHeadword.size
 				? {
 						outsideHeadword: [...judged.outsideHeadword].map(
+							(position) => `m${position}`,
+						),
+					}
+				: {}),
+			...(judged.auxiliaries?.size
+				? {
+						auxiliaries: [...judged.auxiliaries].map(
 							(position) => `m${position}`,
 						),
 					}

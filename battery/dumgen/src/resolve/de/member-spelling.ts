@@ -90,11 +90,43 @@ function fusedWordIndices(
 		: [];
 }
 
-/** The table's spelling of the member at Segment `index`, if it settles one. */
+/**
+ * The her- and hin- words a colloquial r- adverb shortens (Rule
+ * de/r-adverb-is-her-or-hin-shorthand): never a Lemma of its own, always
+ * the Shorthand of one of them.
+ */
+export const rShortenings: Readonly<Record<string, readonly string[]>> = {
+	rein: ["herein", "hinein"],
+	raus: ["heraus", "hinaus"],
+	rüber: ["herüber", "hinüber"],
+	runter: ["herunter", "hinunter"],
+	rauf: ["herauf", "hinauf"],
+	ran: ["heran"],
+	rum: ["herum"],
+};
+
+/**
+ * The da(r)- word a colloquial dr- adverb shortens (Rule
+ * de/dr-adverb-is-da-shorthand), always its Shorthand.
+ */
+const drShortenings: Readonly<Record<string, readonly string[]>> = {
+	dran: ["daran"],
+	drauf: ["darauf"],
+	drin: ["darin"],
+	drüber: ["darüber"],
+	drum: ["darum"],
+};
+
+/**
+ * The table's spelling of the member at Segment `index`, if it settles
+ * one. On a route an r- or dr- adverb serves (a VERB's particle, an ADV),
+ * such an adverb is Shorthand for the words it may shorten.
+ */
 export function tableSpelling(
 	segments: readonly Segment[],
 	members: readonly number[],
 	index: number,
+	adverbShorthand = false,
 ): TableSpelling | undefined {
 	const found = piecesAt(segments, index);
 	if (found) {
@@ -117,10 +149,13 @@ export function tableSpelling(
 		};
 	}
 	const segment = segments[index];
+	if (segment?.kind !== "ResolvableText") return undefined;
+	const word = segment.text.toLocaleLowerCase("de");
 	const surfaces =
-		segment?.kind === "ResolvableText"
-			? shorthandSurfaces(germanFusionTable, segment.text)
-			: undefined;
+		shorthandSurfaces(germanFusionTable, segment.text) ??
+		(adverbShorthand
+			? (rShortenings[word] ?? drShortenings[word])
+			: undefined);
 	return surfaces && { orthography: "Shorthand", surfaces };
 }
 

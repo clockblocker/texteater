@@ -888,3 +888,77 @@ test("a judged gender the owned article rules out gives way to the likeliest gen
 		number: "Sing",
 	});
 });
+
+test("an r- adverb is Shorthand without a judge: its her- or hin- words are the prefix options, and the judged prefix spells it", async () => {
+	const jev = fakeJev({ prefix: "p0", mood: "Imp" });
+	const luna = writes("reinkommen", ["komm", "rein"]);
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Komm doch rein!"),
+			unit: unitOf([0, 4], "Lexeme", "VERB"),
+		},
+	);
+	const prefix = jev.sent[0]?.questions.prefix;
+	expect(prefix?.type === "choice" && prefix.criteria).toMatchObject({
+		p0: "herein",
+		p1: "hinein",
+	});
+	expect(
+		prefix?.type === "choice" && Object.values(prefix.criteria),
+	).not.toContain("rein");
+	// The table spells rein, so no orthography question names it.
+	expect(jev.sent[0]?.questions.orthography).toMatchObject({
+		criteria: { t0: expect.any(String), s0: expect.any(String) },
+	});
+	const orthography = jev.sent[0]?.questions.orthography;
+	expect(
+		orthography?.type === "choice" && Object.keys(orthography.criteria),
+	).not.toContain("t1");
+	expect(
+		(luna.sent[0]?.input as { fixedMembers?: unknown } | undefined)
+			?.fixedMembers,
+	).toEqual({ m1: "herein" });
+	const attestation = attested(result);
+	expect(attestation.surface.lemma).toMatchObject({
+		canonicalForm: "hereinkommen",
+		coreFeatures: { hasSepPrefix: "herein" },
+	});
+	expect(attestation.surface.normalizedSurface).toBe("komm herein");
+	expect(attestation.members[1]).toEqual({
+		attested: "rein",
+		orthography: "Shorthand",
+	});
+});
+
+test("a VERB's prefix options never offer a member that is no particle, such as its own participle", async () => {
+	const jev = fakeJev({ prefix: "None" });
+	await resolveOnce(
+		{ jev: jev.ask, luna: writes("zerreiben").ask },
+		{
+			sentence: sentenceOf("Er hat es zerrieben."),
+			unit: unitOf([2, 6], "Lexeme", "VERB"),
+		},
+	);
+	const prefix = jev.sent[0]?.questions.prefix;
+	expect(
+		prefix === undefined ||
+			(prefix.type === "choice" &&
+				!Object.values(prefix.criteria).includes("zerrieben")),
+	).toBe(true);
+});
+
+test("Luna is told which members are auxiliaries, which stay out of the headword", async () => {
+	const luna = writes("schwimmen");
+	await resolveOnce(
+		{ jev: fakeJev({ aux_m0: "u0" }).ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Sie wird schwimmen."),
+			unit: unitOf([2, 4], "Lexeme", "VERB"),
+		},
+	);
+	expect(
+		(luna.sent[0]?.input as { auxiliaries?: unknown } | undefined)
+			?.auxiliaries,
+	).toEqual(["m0"]);
+});
