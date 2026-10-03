@@ -1,7 +1,9 @@
 import { translationLanguageValues } from "dumrel";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
+import { completeAuthoredComponentKnowledge } from "../dumdictStorage/transaction";
 import { loadKnowledgeSettings } from "../knowledgeSettings";
+import { projectReadingValue } from "../modules/notes/projections";
 import { demandKnowledgeAttempt } from "./knowledgeAttempts";
 import {
 	findAccumulatedKnowledge,
@@ -44,6 +46,12 @@ export async function scheduleKnowledgeGeneration(
 		);
 	}
 	const ownerReadingKey = occurrence.reading.readingKey;
+	// An exact authored Reading publishes its reviewed Knowledge with no
+	// model call (ADR 0021); Dumgen would answer it with a Catalog Miss.
+	await completeAuthoredComponentKnowledge(
+		ctx,
+		projectReadingValue(occurrence.reading, occurrence.lemma),
+	);
 	const [accumulated, settings] = await Promise.all([
 		findAccumulatedKnowledge(ctx, ownerReadingKey),
 		loadKnowledgeSettings(ctx, input.visitorId),

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
+import { authoredFor } from "dumspec/inventories";
 import { internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
@@ -666,4 +667,70 @@ test("subject es materializes its exact Reading and Knowledge while retaining on
 		members.map((row) => row.attestationMembership?.attestationId),
 	).toEqual([result.attestationId, result.attestationId]);
 	await expectCompleted(t, "request-1", result.attestationId);
+});
+
+test("an exact authored Reading publishes its authored Knowledge at commit and asks for no Knowledge run", async () => {
+	const t = createTestConvex();
+	const { selection, guard } = await selectIn(t, ["ich"]);
+	const [authored] = authoredFor({
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "PRON",
+		canonicalForm: "ich",
+		coreFeatures: {
+			person: "1",
+			polite: null,
+			poss: null,
+			pronType: "Prs",
+			case: "Nom",
+			number: "Sing",
+			gender: null,
+		},
+	});
+	if (!authored) throw new Error("Expected the authored ich.");
+	const ichSurface = {
+		unitKind: "Surface",
+		language: "de",
+		normalizedSurface: "ich",
+		spelling: { kind: "Canonical" },
+		surfaceFeatures: null,
+		inflectionalFeatures: null,
+		lemma: authored.lemma,
+	} as const;
+	const commit = bankOccurrenceCommit(selection, guard, "New");
+
+	const result = await t.mutation(internal.persistence.persistResolvedClick, {
+		...commit,
+		reading: authored.reading,
+		readingKey: readingIdentityKey(authored.reading),
+		occurrence: {
+			...commit.occurrence,
+			attestation: {
+				unitKind: "Attestation" as const,
+				members: [
+					{ attested: "ich", orthography: "Standard" as const },
+				],
+				realizationCoverage: "Full" as const,
+				articleEvidence: null,
+				surface: ichSurface,
+			},
+			surfaceKey: makeSurfaceId("de", ichSurface),
+			lemmaKey: lemmaIdentityKey(authored.lemma),
+		},
+	});
+
+	if (result.status !== "Committed") throw new Error("Expected a commit.");
+	const [accumulated] = await rows(t, "accumulatedKnowledge");
+	expect(accumulated?.ownerReadingKey).toBe(
+		readingIdentityKey(authored.reading),
+	);
+	expect(accumulated?.knowledge).toMatchObject({
+		definition: authored.knowledge.definition,
+		transcription: "ɪç",
+		translations: { en: ["I"], ru: ["я"] },
+	});
+	expect(accumulated?.status).toBe("Full");
+	// Resolving an exact authored Reading calls no model (ADR 0021).
+	expect(await rows(t, "knowledgeGenerationAttempts")).toEqual([]);
 });

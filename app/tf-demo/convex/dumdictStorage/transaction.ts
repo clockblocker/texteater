@@ -897,7 +897,10 @@ export async function completeAuthoredComponentKnowledge(
 	)
 		return false;
 	await ctx.db.patch(entry._id, { record: { ...record, knowledge } });
-	await replaceAccumulatedKnowledge(ctx, stored.readingKey, knowledge);
+	// An authored member stores all its Knowledge (ADR 0021).
+	await replaceAccumulatedKnowledge(ctx, stored.readingKey, knowledge, {
+		status: "Full",
+	});
 	return true;
 }
 
