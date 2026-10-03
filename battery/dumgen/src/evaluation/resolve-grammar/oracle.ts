@@ -36,6 +36,11 @@ const useFeatures: Readonly<Record<string, Values>> = {
 	"bekommen 🎁": { passive: "Recipient" },
 	"lassen 🫴": { voice: "Cau" },
 };
+const articleOfGender: Readonly<Record<string, string>> = {
+	Masc: "der",
+	Fem: "die",
+	Neut: "das",
+};
 const useOf = Object.fromEntries(
 	Object.entries(auxiliaryUses).map(([use, text]) => [text, use]),
 );
@@ -191,9 +196,33 @@ export function goldAnswers(
 		else if (id === "participle") answer(bag?.participleForm);
 		else if (id === "article")
 			answer(core.article === "Definite" ? "Definite" : "Bare");
-		else if (id === "gender") answer(core.gender ?? "None");
-		else if (id === "formGender") answer(bag?.gender);
-		else if (id === "case") answer(bag?.case ?? "Unmarked");
+		else if (id === "gender")
+			answer(articleOfGender[String(core.gender)] ?? "None");
+		else if (id === "nounKind")
+			answer(
+				core.gender !== null && core.gender !== undefined
+					? "Ordinary"
+					: goldCase.rules.includes("de/adjectival-noun-lemma")
+						? "Adjectival"
+						: "PluralOnly",
+			);
+		else if (id === "formGender")
+			answer(articleOfGender[String(bag?.gender)]);
+		else if (id.startsWith("short_s")) {
+			const words = new Set(
+				[
+					surface.lemma.canonicalForm,
+					...String(surface.normalizedSurface).split(" "),
+				].map((word) => foldCase(word, "de")),
+			);
+			const found =
+				question.type === "choice"
+					? Object.entries(question.criteria).find(([, text]) =>
+							words.has(foldCase(String(text), "de")),
+						)?.[0]
+					: undefined;
+			answers[id] = picked(found ?? "Unresolved");
+		} else if (id === "case") answer(bag?.case ?? "Unmarked");
 		else if (id === "comparable")
 			answer(core.comparable === "Yes" ? "Yes" : "No");
 		else if (id === "degree") answer(bag?.degree);

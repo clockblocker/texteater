@@ -12,6 +12,7 @@ import {
 	attested,
 	fakeJev,
 	fakeLuna,
+	picked,
 	resolveOnce,
 	sentenceOf,
 	unitOf,
@@ -157,7 +158,7 @@ test("a click is all-or-nothing: a failed Case question interrupts Luna's call i
 
 test("an article and the noun's form that leave one cell settle Case with no question", async () => {
 	// Wir0 _1 helfen2 _3 den4 _5 Kindern6 .7
-	const jev = fakeJev({ gender: "Neut", number: "Plur" });
+	const jev = fakeJev({ gender: "das", number: "Plur" });
 	const luna = writes("Kind", ["den", "Kindern"]);
 	const { result } = await resolveOnce(
 		{ jev: jev.ask, luna: luna.ask },
@@ -186,7 +187,7 @@ test("an article and the noun's form that leave one cell settle Case with no que
 
 test("an article whose cells agreement cannot narrow asks Case once, in the first request", async () => {
 	// Die0 _1 Frau2 _3 lacht4 .5
-	const jev = fakeJev({ gender: "Fem", number: "Sing", case: "Nom" });
+	const jev = fakeJev({ gender: "die", number: "Sing", case: "Nom" });
 	const { result } = await resolveOnce(
 		{ jev: jev.ask, luna: writes("Frau", ["die", "Frau"]).ask },
 		{
@@ -210,7 +211,7 @@ test("cells agreement leaves open get one Case question over those cells, and it
 	// Er0 _1 gibt2 _3 der4 _5 Frau6 _7 ein8 _9 Buch10 .11
 	const sentence = sentenceOf("Er gibt der Frau ein Buch.");
 	const unit = unitOf([4, 6], "Lexeme", "NOUN");
-	const jev = fakeJev({ gender: "Fem", number: "Sing", case: "Dat" });
+	const jev = fakeJev({ gender: "die", number: "Sing", case: "Dat" });
 	const { result } = await resolveOnce(
 		{ jev: jev.ask, luna: writes("Frau", ["der", "Frau"]).ask },
 		{ sentence, unit },
@@ -225,7 +226,7 @@ test("cells agreement leaves open get one Case question over those cells, and it
 		"Gen",
 		"Unresolved",
 	]);
-	const open = fakeJev({ gender: "Fem", number: "Sing", case: "Unresolved" });
+	const open = fakeJev({ gender: "die", number: "Sing", case: "Unresolved" });
 	const unresolved = await resolveOnce(
 		{ jev: open.ask, luna: writes("Frau", ["der", "Frau"]).ask },
 		{ sentence, unit },
@@ -521,7 +522,7 @@ test("INTJ LOL and lol resolve to one Lemma, while NOUN Morgen and ADV morgen st
 			await resolveOnce(
 				{
 					jev: fakeJev({
-						gender: "Masc",
+						gender: "der",
 						number: "Sing",
 						case: "Nom",
 					}).ask,
@@ -722,7 +723,7 @@ test("a fused article piece is the noun's owned article and narrows its Case", a
 		word("Wald"),
 		stop,
 	];
-	const jev = fakeJev({ gender: "Masc", number: "Sing" });
+	const jev = fakeJev({ gender: "der", number: "Sing" });
 	const { result } = await resolveOnce(
 		{ jev: jev.ask, luna: writes("Wald", ["dem", "Wald"]).ask },
 		{
@@ -867,9 +868,9 @@ test("a judged gender the owned article rules out gives way to the likeliest gen
 						...response.answers,
 						gender: {
 							type: "choice",
-							choice: "Neut",
+							choice: "das",
 							confidence: 0.6,
-							probabilities: { Neut: 0.6, Masc: 0.35, Fem: 0.05 },
+							probabilities: { das: 0.6, der: 0.35, die: 0.05 },
 						},
 					},
 				}
@@ -985,4 +986,87 @@ test("a Luna answer the transport kept no output for is refused with the transpo
 	expect(String((failure as InvalidModelOutput).message)).toContain(
 		"Luna refused: no",
 	);
+});
+
+test("an ordinary noun shown in its plural keeps its singular's gender, while a plural-only noun has none", async () => {
+	const base = fakeJev({ number: "Plur" });
+	const leaning =
+		(kind: string): JevAsk =>
+		async (request, context) => {
+			const response = await base.ask(request, context);
+			return "gender" in request.questions
+				? {
+						...response,
+						answers: {
+							...response.answers,
+							nounKind: picked(kind),
+							gender: {
+								type: "choice",
+								choice: "None",
+								confidence: 0.4,
+								probabilities: {
+									None: 0.4,
+									die: 0.35,
+									das: 0.2,
+								},
+							},
+						},
+					}
+				: response;
+		};
+	const hands = await resolveOnce(
+		{ jev: leaning("Ordinary"), luna: writes("Hand").ask },
+		{
+			sentence: sentenceOf("Hände klatschen."),
+			unit: unitOf([0], "Lexeme", "NOUN"),
+		},
+	);
+	expect(attested(hands.result).surface.lemma.coreFeatures).toEqual({
+		gender: "Fem",
+	});
+	const people = await resolveOnce(
+		{ jev: leaning("PluralOnly"), luna: writes("Leute").ask },
+		{
+			sentence: sentenceOf("Leute klatschen."),
+			unit: unitOf([0], "Lexeme", "NOUN"),
+		},
+	);
+	expect(attested(people.result).surface.lemma.coreFeatures).toEqual({
+		gender: null,
+	});
+});
+
+test("a split da or wo adverb and a bare w-word judged Shorthand get the headword the Rules give them", async () => {
+	const split = await resolveOnce(
+		{ jev: fakeJev().ask, luna: writes("da").ask },
+		{
+			sentence: sentenceOf("Da weiß ich nichts an."),
+			unit: unitOf([0, 8], "Lexeme", "ADV"),
+		},
+	);
+	expect(attested(split.result).surface.lemma.canonicalForm).toBe("daran");
+	const shorthand = await resolveOnce(
+		{
+			jev: fakeJev({ orthography: "s0" }).ask,
+			luna: writes("wo", ["wo"]).ask,
+		},
+		{
+			sentence: sentenceOf("Es liegt wo."),
+			unit: unitOf([4], "Lexeme", "ADV"),
+		},
+	);
+	const attestation = attested(shorthand.result);
+	expect(attestation.surface.lemma.canonicalForm).toBe("irgendwo");
+	expect(attestation.surface.normalizedSurface).toBe("irgendwo");
+	// raus on an ADV is judged heraus or hinaus, then spells the headword.
+	const jev = fakeJev({ short_s6: "w1" });
+	const out = await resolveOnce(
+		{ jev: jev.ask, luna: writes("raus").ask },
+		{
+			sentence: sentenceOf("Der Zahn muss raus."),
+			unit: unitOf([6], "Lexeme", "ADV"),
+		},
+	);
+	expect(jev.questions("grammar")).toContain("short_s6");
+	expect(attested(out.result).surface.lemma.canonicalForm).toBe("hinaus");
 });

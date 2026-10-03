@@ -238,6 +238,11 @@ export const question = {
 		"Under `policy.fused`, {m} is a piece of the fused word {word}. Which word does its piece {piece} stand for here?",
 		rules.fused,
 	),
+	shortened: paragraph(
+		"question.shortened",
+		"Under `policy.orthography`, {m} is a shortened adverb. Which word does it stand for here? Movement towards the speaker or the scene's viewpoint gives the her- word, movement away from it the hin- word.",
+		rules.rShorthand,
+	),
 	nounGender: paragraph(
 		"question.noun.gender",
 		"Under `policy.noun`, what lexical gender does the noun's dictionary entry have: the gender of its nominative singular, whatever case, number or article this sentence shows?",
@@ -271,6 +276,27 @@ export const question = {
 		"Under `policy.noun`, what lexical gender does the whole expression have, the gender of its head noun?",
 		rules.core,
 		rules.idiom,
+	),
+	nounKind: paragraph(
+		"question.noun.kind",
+		"Under `policy.noun`, what kind of noun is this, whatever number it shows here?",
+		rules.adjectivalNoun,
+		rules.core,
+	),
+	nounKindOrdinary: paragraph(
+		"question.noun.kind.Ordinary",
+		"An ordinary noun with a singular, even when this sentence shows its plural",
+		rules.core,
+	),
+	nounKindPluralOnly: paragraph(
+		"question.noun.kind.PluralOnly",
+		"A noun with no singular at all in the dictionary",
+		rules.core,
+	),
+	nounKindAdjectival: paragraph(
+		"question.noun.kind.Adjectival",
+		"A person noun made from an adjective or participle, inflected like one («der Abgeordnete», «die Abgeordnete»)",
+		rules.adjectivalNoun,
 	),
 	nounNumber: paragraph(
 		"question.noun.number",
@@ -337,9 +363,10 @@ export const question = {
 	),
 	prefix: paragraph(
 		"question.prefix",
-		"Under `policy.verbCore`, does the verb's dictionary entry have a separable prefix, and which? A separable prefix is split off from the finite verb in a main clause and takes ge- or zu after it in the participle or infinitive; a word standing apart that the infinitive writes as one with the verb is one.",
+		"Under `policy.verbCore`, does the verb's dictionary entry have a separable prefix, and which? A separable prefix is split off from the finite verb in a main clause and takes ge- or zu after it in the participle or infinitive; a word standing apart that the infinitive writes as one with the verb is one. For a shortened r- word, movement towards the speaker or the scene's viewpoint gives the her- word, movement away from it the hin- word.",
 		rules.verbCore,
 		rules.bracket,
+		rules.rShorthand,
 	),
 	reflexive: paragraph(
 		"question.reflexive",

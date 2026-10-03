@@ -76,6 +76,15 @@ const genders = {
 	Neut: "Neuter",
 } as const;
 const numbers = { Sing: "Singular", Plur: "Plural" } as const;
+/**
+ * A gender question's options are named by the article the gender takes,
+ * never Neut, which jev read as a neutral fallback when unsure (#876).
+ */
+const genderOfArticle: Readonly<Record<string, string>> = {
+	der: "Masc",
+	die: "Fem",
+	das: "Neut",
+};
 
 /** The route's shape, as the questions and the Attestation need it. */
 function routeShape(target: Target) {
@@ -343,6 +352,8 @@ type Plan = {
 	readonly prefixes: readonly string[];
 	readonly governable: readonly Governable[];
 	readonly pieces: ReturnType<typeof ambiguousPieces>;
+	/** Shortened members whose word is judged, by Segment. */
+	readonly shortened: readonly Member[];
 	/** Readings code fixes: a VERB's clitic 's is its subject es. */
 	readonly presetReadings: ReadonlyMap<number, string>;
 	/** Cases asked in the first request, before agreement is known. */
@@ -457,6 +468,27 @@ function plan(target: Target): Plan {
 				piece.surfaces.map((surface, index) => [`w${index}`, surface]),
 			),
 			["fused"],
+		);
+	// A shortened adverb the table cannot settle (raus: heraus or hinaus)
+	// is judged here; a VERB's prefix question settles its particle.
+	const shortened = shape.verbal
+		? []
+		: target.members.filter(
+				(member) =>
+					member.spelling?.orthography === "Shorthand" &&
+					member.spelling.surfaces.length > 1,
+			);
+	for (const member of shortened)
+		questionnaire.choice(
+			`short_s${member.segment}`,
+			fill(question.shortened, { m: member.ref }),
+			Object.fromEntries(
+				(member.spelling?.surfaces ?? []).map((surface, index) => [
+					`w${index}`,
+					surface,
+				]),
+			),
+			["orthography"],
 		);
 	if (shape.citable && !article)
 		questionnaire.choice(
@@ -581,28 +613,44 @@ function plan(target: Target): Plan {
 				"gender",
 				question.properGender,
 				{
-					Masc: question.properGenderMasc,
-					Fem: question.properGenderFem,
-					Neut: question.properGenderNeut,
+					der: question.properGenderMasc,
+					die: question.properGenderFem,
+					das: question.properGenderNeut,
 					None: question.properGenderNone,
 				},
 				["properNoun"],
 			);
-		} else
+		} else {
 			questionnaire.choice(
 				"gender",
 				shape.locution ? question.locutionGender : question.nounGender,
 				{
-					Masc: question.nounGenderMasc,
-					Fem: question.nounGenderFem,
-					Neut: question.nounGenderNeut,
+					der: question.nounGenderMasc,
+					die: question.nounGenderFem,
+					das: question.nounGenderNeut,
 					None: question.nounGenderNone,
 				},
 				["noun"],
 			);
+			if (!shape.locution)
+				questionnaire.choice(
+					"nounKind",
+					question.nounKind,
+					{
+						Ordinary: question.nounKindOrdinary,
+						PluralOnly: question.nounKindPluralOnly,
+						Adjectival: question.nounKindAdjectival,
+					},
+					["noun"],
+				);
+		}
 		questionnaire.choice("number", question.nounNumber, numbers);
 		if (!shape.locution)
-			questionnaire.choice("formGender", question.formGender, genders);
+			questionnaire.choice("formGender", question.formGender, {
+				der: "Masculine, as der shows",
+				die: "Feminine, as die shows",
+				das: "Neuter, as das shows",
+			});
 	}
 	const earlyCases = !shape.nounLike
 		? []
@@ -740,6 +788,7 @@ function plan(target: Target): Plan {
 		prefixes,
 		governable,
 		pieces,
+		shortened,
 		presetReadings,
 		earlyCases,
 		adpositionCases,
@@ -852,6 +901,15 @@ function readFirst(
 			throw new UnresolvedAnswer(`No reading of Segment ${segment}`);
 		readings.set(segment, reading);
 	}
+	for (const member of planned.shortened) {
+		const answer = answered.pick(`short_s${member.segment}`);
+		const reading = member.spelling?.surfaces[Number(answer.slice(1))];
+		if (reading === undefined)
+			throw new UnresolvedAnswer(
+				`No reading of Segment ${member.segment}`,
+			);
+		readings.set(member.segment, reading);
+	}
 	const cited =
 		questionnaire.questions.citation !== undefined &&
 		answered.pick("citation") === "Citation";
@@ -900,13 +958,28 @@ function readFirst(
 			core.article =
 				answered.pick("article") === "Definite" ? "Definite" : null;
 		const gender = answered.pick("gender");
-		core.gender = gender === "None" ? null : gender;
+		core.gender =
+			gender === "None" ? null : (genderOfArticle[gender] ?? gender);
+		// Only a person noun made from an adjective or participle, or a noun
+		// with no singular, has no gender (Rule de/adjectival-noun-lemma);
+		// an ordinary noun shown in its plural keeps its singular's.
+		const kind = answered.peek("nounKind");
+		if (kind === "Adjectival" || kind === "PluralOnly") core.gender = null;
+		if (kind === "Ordinary" && core.gender === null) {
+			const likeliest = answered
+				.alternatives("gender")
+				.find((option) => option in genderOfArticle);
+			if (likeliest !== undefined)
+				core.gender = genderOfArticle[likeliest];
+		}
 		if (!cited) {
 			const number = answered.pick("number");
-			let formGender =
+			const shown =
 				!shape.locution && core.gender === null && number === "Sing"
-					? (answered.peek("formGender") ?? null)
-					: null;
+					? answered.peek("formGender")
+					: undefined;
+			let formGender =
+				shown === undefined ? null : (genderOfArticle[shown] ?? shown);
 			// A singular head's owned article is hard evidence of its
 			// gender: when the judged one agrees with no case of the
 			// article, the likeliest other gender jev weighed that does is
@@ -924,11 +997,13 @@ function readFirst(
 					id in planned.questionnaire.questions
 						? answered.alternatives(id)
 						: []
-				).find(
-					(option) =>
-						option in genders &&
-						articleCases(article, number, option).length > 0,
-				);
+				)
+					.map((option) => genderOfArticle[option])
+					.find(
+						(option) =>
+							option !== undefined &&
+							articleCases(article, number, option).length > 0,
+					);
 				if (agreeing !== undefined && id === "gender")
 					core.gender = agreeing;
 				if (agreeing !== undefined && id === "formGender")
@@ -1112,6 +1187,61 @@ export function verbHeadword(form: string, core: Values): string {
 	return reflexive ? `sich ${verb}` : verb;
 }
 
+/** The irgend- words a bare w-word judged Shorthand stands for (Rule de/bare-w-word-is-shorthand). */
+const bareWWords = new Set(["wo", "wie", "wann", "woher", "wohin"]);
+
+/**
+ * An ADV Lexeme's Canonical Form where the Rules settle it, whatever Luna
+ * wrote: a da, wo or hier split from its hin, her or preposition is the
+ * one word they form, with r before a vowel (da … auf is darauf; Rules
+ * de/split-adverb-is-one-target, de/pronominal-adverb-stands-alone); a
+ * bare w-word judged Shorthand is its irgend- word, member and headword
+ * (de/bare-w-word-is-shorthand); a member the table spells as one word (a
+ * dr- adverb, an r- adverb whose her- or hin- word was judged) is the
+ * headword (de/dr-adverb-is-da-shorthand, de/r-adverb-is-her-or-hin-shorthand).
+ */
+export function adverbHeadword(
+	target: Target,
+	orthographies: readonly MemberOrthography[],
+	spelled: readonly string[],
+):
+	| {
+			readonly canonicalForm: string;
+			readonly members: ReadonlyMap<number, string>;
+	  }
+	| undefined {
+	const words = target.members.map((member) => fold(member.text));
+	const [first, second] = words;
+	if (
+		target.members.length === 2 &&
+		first !== undefined &&
+		second !== undefined &&
+		["da", "wo", "hier"].includes(first) &&
+		/^\p{L}+$/u.test(second) &&
+		orthographies.every((orthography) => orthography === "Standard")
+	) {
+		const joint =
+			first !== "hier" && /^[aeiouäöü]/u.test(second) ? "r" : "";
+		return {
+			canonicalForm: `${first}${joint}${second}`,
+			members: new Map(),
+		};
+	}
+	if (target.members.length !== 1 || first === undefined) return undefined;
+	const [member] = target.members;
+	if (orthographies[0] === "Shorthand" && bareWWords.has(first)) {
+		const word = `irgend${first}`;
+		return { canonicalForm: word, members: new Map([[0, word]]) };
+	}
+	const fixed =
+		member?.spelling?.orthography === "Shorthand" ? spelled[0] : undefined;
+	return fixed !== undefined &&
+		fold(fixed) !== first &&
+		/^\p{L}+$/u.test(fixed)
+		? { canonicalForm: fold(fixed), members: new Map() }
+		: undefined;
+}
+
 /**
  * The authored PART Lemmas whose Canonical Form is `form`, compared
  * without case; a Lemma's several Readings count once.
@@ -1252,6 +1382,14 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		core = { ...authored.lemma.coreFeatures };
 		canonicalForm = authored.lemma.canonicalForm;
 		if (!written) normalized[0] = authored.lemma.canonicalForm;
+	}
+	if (shape.adverbial && shape.lexeme && canonicalForm !== undefined) {
+		const derived = adverbHeadword(target, first.orthographies, normalized);
+		if (derived) {
+			canonicalForm = derived.canonicalForm;
+			for (const [position, word] of derived.members)
+				normalized[position] = word;
+		}
 	}
 	if (canonicalForm === undefined)
 		throw Error("No Canonical Form was written");
