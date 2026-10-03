@@ -28,13 +28,28 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "OpenThesaurus: zwölf bis sechzehn",
+				"url": "https://www.openthesaurus.de/synonyme/zw%C3%B6lf%20bis%20sechzehn",
+				"supports": "Target 0 Knowledge: no synset; no entry in DWDS"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12, 14, 16],
 			"route": { "family": "Locution", "kind": "NUM" },
-			"reading": { "emojiDescription": "🔢➡🔢" },
+			"reading": {
+				"emojiDescription": "🔢➡🔢",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -59,6 +74,9 @@
 					{ "attested": "sechzehn", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): A number range is a compositional number phrase: no Locution Type."
 			}
 		}
 	],

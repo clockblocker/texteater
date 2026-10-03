@@ -35,15 +35,71 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: ach du meine Güte",
+				"url": "https://www.dwds.de/wb/ach%20du%20meine%20G%C3%BCte",
+				"supports": "Target 0 Knowledge: ach, du meine Güte!: Ausdruck positiver oder negativer Überraschung, des Erschreckens; Synonym zu ach, du gute Güte!, ach, du liebe Zeit!, ach, du lieber Himmel! and others"
+			},
+			{
+				"title": "OpenThesaurus: ach du meine Güte",
+				"url": "https://www.openthesaurus.de/synonyme/ach%20du%20meine%20G%C3%BCte",
+				"supports": "Target 0 Knowledge: synset 'ach du liebes bisschen · meine Güte! · ach du meine Güte · ach Gottchen! · herrje · herrjemine'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 17, 19, 21],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😧" },
+			"reading": {
+				"emojiDescription": "😧",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "ach du liebe Zeit",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "ach du lieber Himmel",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "herrje",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "Authored",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The formula reacts to the accident; the name after it is a vocative. Duden gives [ach] du meine/liebe Güte! as an 'Ausruf des Erschreckens, der Verwunderung', so it takes the 😧 of its near-synonym ach du liebe Zeit."
+				"rationale": "The formula reacts to the accident; the name after it is a vocative. Duden gives [ach] du meine/liebe Güte! as an 'Ausruf des Erschreckens, der Verwunderung', so it takes the 😧 of its near-synonym ach du liebe Zeit. Knowledge (#887, dev draft): An exclamation of dismay takes no Formula Role."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

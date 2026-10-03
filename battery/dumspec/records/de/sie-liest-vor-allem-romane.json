@@ -23,6 +23,21 @@
 				"title": "clockblocker/texteater#495",
 				"url": "https://github.com/clockblocker/texteater/issues/495",
 				"supports": "Target 0, vor allem"
+			},
+			{
+				"title": "DWDS: vor allem",
+				"url": "https://www.dwds.de/wb/vor%20allem",
+				"supports": "Target 0 Knowledge: besonders, hauptsächlich, primär; Synonym zu in erster Linie"
+			},
+			{
+				"title": "Duden: vor allem",
+				"url": "https://www.duden.de/rechtschreibung/vor_allem",
+				"supports": "Target 0 Knowledge: hauptsächlich, besonders; Synonyme besonders, extra, hauptsächlich, insbesondere"
+			},
+			{
+				"title": "OpenThesaurus: vor allem",
+				"url": "https://www.openthesaurus.de/synonyme/vor%20allem",
+				"supports": "Target 0 Knowledge: synsets 'besonders · insbesondere · vor allem · vornehmlich', 'hauptsächlich · ... · vor allem'"
 			}
 		]
 	},
@@ -30,9 +45,56 @@
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "🔝" },
+			"reading": {
+				"emojiDescription": "🔝",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "in erster Linie",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "hauptsächlich",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "insbesondere",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The written-out multi-word Lemma with every member attested (issue 495)."
+				"rationale": "The written-out multi-word Lemma with every member attested (issue 495). Knowledge (#887, dev draft): vor allem is compositional (before all else), so no Locution Type."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -32,13 +32,39 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: herzlich willkommen",
+				"url": "https://www.duden.de/rechtschreibung/herzlich_willkommen",
+				"supports": "Target 0 Knowledge: Willkommensgruß zur freundlichen Begrüßung; no Synonyme"
+			},
+			{
+				"title": "OpenThesaurus: herzlich willkommen",
+				"url": "https://www.openthesaurus.de/synonyme/herzlich%20willkommen",
+				"supports": "Target 0 Knowledge: no synset; no entry in DWDS"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 17],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤗" },
+			"reading": {
+				"emojiDescription": "🤗",
+				"knowledge": {
+					"formulaRole": "Greeting"
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

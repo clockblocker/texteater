@@ -15,15 +15,84 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: zum Teufel",
+				"url": "https://www.dwds.de/wb/zum%20Teufel",
+				"supports": "Target 0 Knowledge: sense 2: (in Fragesätzen) zur Bekräftigung, Verstärkung (Was zum Teufel mache ich hier); no synonym line, no Gegensatz"
+			},
+			{
+				"title": "OpenThesaurus: zum Teufel",
+				"url": "https://www.openthesaurus.de/synonyme/zum%20Teufel",
+				"supports": "Target 0 Knowledge: synsets '(wie) zum Teufel · (wie) in drei Teufels Namen · (wie) um Himmels willen · (was) zur Hölle', 'um alles in der Welt · um Himmels willen · zum Teufel', 'zum Henker · zum Teufel'; no Gegenteil"
+			},
+			{
+				"title": "DWDS: zum Henker",
+				"url": "https://www.dwds.de/wb/zum%20Henker",
+				"supports": "Target 0 Knowledge: sense 2: verstärkend nach Fragepronomen (Was zum Henker trieben die Polizisten), parallel to zum Teufel sense 2"
+			},
+			{
+				"title": "DWDS: um Himmels willen",
+				"url": "https://www.dwds.de/wb/um%20Himmels%20willen",
+				"supports": "Target 0 Knowledge: sense 2 (nach Fragepronomen): Synonym zu um alles in der Welt, zum Henker (2), in drei Teufels Namen (2)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 3],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "❓🤬" },
+			"reading": {
+				"emojiDescription": "❓🤬",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "zum Henker",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "um Himmels willen",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "in drei Teufels Namen",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Conventional truncation. The Locution is zum Teufel, which intensifies a question word (was, wer, wo zum Teufel); zu and m identify it and Teufel is unrealized fixed material. Was is a PRON of its own."
+				"rationale": "Conventional truncation. The Locution is zum Teufel, which intensifies a question word (was, wer, wo zum Teufel); zu and m identify it and Teufel is unrealized fixed material. Was is a PRON of its own. Knowledge (#887, dev draft): The question intensifier means nothing of devils, so Idiom; synonyms carry Kind ADV in this use."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

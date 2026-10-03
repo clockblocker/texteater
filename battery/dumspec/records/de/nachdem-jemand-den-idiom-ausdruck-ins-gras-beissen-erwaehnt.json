@@ -60,15 +60,53 @@
 				"hash": "b572bad8906b508d"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: um Himmels willen",
+				"url": "https://www.dwds.de/wb/um%20Himmels%20willen",
+				"supports": "Target 0 Knowledge: sense 1: Ausruf des Erstaunens, Erschreckens, Ärgers; Synonym zu um Gottes willen (1)"
+			},
+			{
+				"title": "OpenThesaurus: um Himmels willen",
+				"url": "https://www.openthesaurus.de/synonyme/um%20Himmels%20willen",
+				"supports": "Target 0 Knowledge: synsets for the question intensifier and the Abwehr '(nein)!' use, other senses"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [40, 42, 44],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😱" },
+			"reading": {
+				"emojiDescription": "😱",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "um Gottes willen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "Authored",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Um Himmels willen! is an established exclamation whose meaning is not the sum of its words, so it is one Locution INTJ (de/interjection-counts-its-words). um Himmels willen! at the wrong finding is Duden's 'Ausruf des Erschreckens, der Abwehr', not its 'Ausdruck einer inständigen Bitte'. The idiom mentioned earlier, ins Gras beißen, is a unit of its own."
+				"rationale": "Um Himmels willen! is an established exclamation whose meaning is not the sum of its words, so it is one Locution INTJ (de/interjection-counts-its-words). um Himmels willen! at the wrong finding is Duden's 'Ausruf des Erschreckens, der Abwehr', not its 'Ausdruck einer inständigen Bitte'. The idiom mentioned earlier, ins Gras beißen, is a unit of its own. Knowledge (#887, dev draft): An exclamation of fright takes no Formula Role."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

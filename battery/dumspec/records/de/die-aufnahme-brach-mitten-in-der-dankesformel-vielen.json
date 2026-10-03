@@ -32,13 +32,39 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Dank",
+				"url": "https://www.duden.de/rechtschreibung/Dank",
+				"supports": "Target 0 Knowledge: thanks formulas vielen Dank!, herzlichen Dank!"
+			},
+			{
+				"title": "OpenThesaurus: vielen herzlichen Dank",
+				"url": "https://www.openthesaurus.de/synonyme/vielen%20herzlichen%20Dank",
+				"supports": "Target 0 Knowledge: no synset; no entry in DWDS"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 17],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙏" },
+			"reading": {
+				"emojiDescription": "🙏",
+				"knowledge": {
+					"formulaRole": "Thanks"
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The recording contains only the recoverable beginning, so missing Dank is genuinely unrealized. The recording breaks off before Dank, and the Reading is the whole thanks formula's, the 🙏 of danke."
 			},

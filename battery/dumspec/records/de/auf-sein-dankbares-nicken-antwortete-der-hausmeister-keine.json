@@ -38,13 +38,67 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: keine Ursache",
+				"url": "https://www.dwds.de/wb/keine%20Ursache",
+				"supports": "Target 0 Knowledge: (formelhaft gebrauchte) höflich-abwehrende Antwort auf eine Dankesbezeigung; Synonym zu gern geschehen, da nicht für"
+			},
+			{
+				"title": "OpenThesaurus: keine Ursache",
+				"url": "https://www.openthesaurus.de/synonyme/keine%20Ursache",
+				"supports": "Target 0 Knowledge: synset with Gern geschehen · Nichts zu danken · Da nich(t) für · keine Ursache; no Gegenteil on keine Ursache"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😊" },
+			"reading": {
+				"emojiDescription": "😊",
+				"knowledge": {
+					"formulaRole": "Reaction",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "gern geschehen",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "da nicht für",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "nichts zu danken",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Duden gives keine Ursache! as the 'formelhafte Antwort auf eine Dankesbezeigung; bitte! gern geschehen!', so it takes the 😊 of gern geschehen."
 			},

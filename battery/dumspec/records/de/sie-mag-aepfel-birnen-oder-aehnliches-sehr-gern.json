@@ -30,6 +30,16 @@
 				"title": "clockblocker/texteater#495",
 				"url": "https://github.com/clockblocker/texteater/issues/495",
 				"supports": "Target 0, oder Ähnliches"
+			},
+			{
+				"title": "DWDS: oder Ähnliches",
+				"url": "https://www.dwds.de/wb/oder%20%C3%84hnliches",
+				"supports": "Target 0 Knowledge: Hinweis am Ende einer Aufzählung auf vergleichbare Dinge; siehe auch only"
+			},
+			{
+				"title": "OpenThesaurus: oder Ähnliches",
+				"url": "https://www.openthesaurus.de/synonyme/oder%20%C3%84hnliches",
+				"supports": "Target 0 Knowledge: synset 'und so weiter · etc. · o. Ä. · oder Ähnliches · und Ähnliches · und vieles mehr'"
 			}
 		]
 	},
@@ -37,9 +47,48 @@
 		{
 			"memberSegmentIndices": [9, 11],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "🔀〰" },
+			"reading": {
+				"emojiDescription": "🔀〰",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "und Ähnliches",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "und so weiter",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The written-out multi-word Lemma with every member attested (issue 495)."
+				"rationale": "The written-out multi-word Lemma with every member attested (issue 495). Knowledge (#887, dev draft): oder Ähnliches is compositional (or similar), so no Locution Type; und so weiter is near because it continues a list rather than offering alternatives."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

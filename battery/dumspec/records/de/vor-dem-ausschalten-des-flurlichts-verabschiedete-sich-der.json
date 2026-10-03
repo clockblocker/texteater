@@ -39,13 +39,39 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: gute Nacht",
+				"url": "https://www.dwds.de/wb/gute%20Nacht",
+				"supports": "Target 0 Knowledge: Abschiedsformel am späten Abend, vor dem Schlafengehen; siehe auch only, no synonym listed"
+			},
+			{
+				"title": "OpenThesaurus: gute Nacht",
+				"url": "https://www.openthesaurus.de/synonyme/gute%20Nacht",
+				"supports": "Target 0 Knowledge: only synset is the ironic '(na dann) gute Nacht! · (na dann) Prost Mahlzeit!', another sense"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [21, 23],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🌙👋" },
+			"reading": {
+				"emojiDescription": "🌙👋",
+				"knowledge": {
+					"formulaRole": "Farewell"
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "gute Nacht! is Duden's 'Grußformel vor dem Schlafengehen', so it joins the 🌙 of Nacht to the parting 👋."
 			},

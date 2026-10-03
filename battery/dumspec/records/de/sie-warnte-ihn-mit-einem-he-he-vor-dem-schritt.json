@@ -28,15 +28,34 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "OpenThesaurus: he he",
+				"url": "https://www.openthesaurus.de/synonyme/he%20he",
+				"supports": "Target 0 Knowledge: no synset; no entry in DWDS or Duden"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [10, 12],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😆" },
+			"reading": {
+				"emojiDescription": "😆",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "No punctuation stands between the two he, so he he is one call and one target (de/interjection-counts-its-words). After mit einem it names the laugh, but it stays an interjection, not a NOUN, and the article stays outside the target. Each he is a word of its own, so the target is a Locution INTJ with two Heads, spelled Canonical: repeating a word stretches no letters, so it is no Expressive Variant."
+				"rationale": "No punctuation stands between the two he, so he he is one call and one target (de/interjection-counts-its-words). After mit einem it names the laugh, but it stays an interjection, not a NOUN, and the article stays outside the target. Each he is a word of its own, so the target is a Locution INTJ with two Heads, spelled Canonical: repeating a word stretches no letters, so it is no Expressive Variant. Knowledge (#887, dev draft): A laugh sound performs no routine and is the sum of its pieces."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

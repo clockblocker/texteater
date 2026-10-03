@@ -41,6 +41,21 @@
 				"title": "Duden: Umstand",
 				"url": "https://www.duden.de/rechtschreibung/Umstand",
 				"supports": "Target 0, unter keinen Umständen, listed as an idiom next to unter allen Umständen and unter Umständen"
+			},
+			{
+				"title": "DWDS: unter keinen Umständen",
+				"url": "https://www.dwds.de/wb/unter%20keinen%20Umst%C3%A4nden",
+				"supports": "Target 0 Knowledge: auf keinen Fall, niemals; in gegensätzlicher Bedeutung zu unter allen Umständen"
+			},
+			{
+				"title": "DWDS: Umstand",
+				"url": "https://www.dwds.de/wb/Umstand",
+				"supports": "Target 0 Knowledge: ⟨unter keinen Umständen⟩ Synonym zu auf keinen Fall"
+			},
+			{
+				"title": "OpenThesaurus: unter keinen Umständen",
+				"url": "https://www.openthesaurus.de/synonyme/unter%20keinen%20Umst%C3%A4nden",
+				"supports": "Target 0 Knowledge: synset with auf (gar) keinen Fall · keinesfalls · unter keinen Umständen; no Gegenteil marker on it"
 			}
 		]
 	},
@@ -48,9 +63,58 @@
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "🚫" },
+			"reading": {
+				"emojiDescription": "🚫",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "auf keinen Fall",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "keinesfalls",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "unter allen Umständen",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "unter keinen Umständen is an idiom Duden lists under Umstand, a Locution ADV with no comparison forms, like auf keinen Fall (de/idiom). keinen is a fixed member (de/fixed-member-test): allen in its slot gives unter allen Umständen, a different idiom with the opposite meaning, and diesen makes the phrase compositional. So a click on any of the three words selects the whole Locution (de/largest-fixed-unit), and keinen has no DET target of its own (de/locutions-and-sayings-are-made-of-lexemes). The Canonical Form is Duden's headword, lowercase unter despite the sentence-initial Unter (de/canonical-form-is-the-headword). Ruled 2026-10-02 (#701, grouping audit Q3)."
+				"rationale": "unter keinen Umständen is an idiom Duden lists under Umstand, a Locution ADV with no comparison forms, like auf keinen Fall (de/idiom). keinen is a fixed member (de/fixed-member-test): allen in its slot gives unter allen Umständen, a different idiom with the opposite meaning, and diesen makes the phrase compositional. So a click on any of the three words selects the whole Locution (de/largest-fixed-unit), and keinen has no DET target of its own (de/locutions-and-sayings-are-made-of-lexemes). The Canonical Form is Duden's headword, lowercase unter despite the sentence-initial Unter (de/canonical-form-is-the-headword). Ruled 2026-10-02 (#701, grouping audit Q3). Knowledge (#887, dev draft): The phrase means what its words say (under no circumstances), so no Locution Type."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

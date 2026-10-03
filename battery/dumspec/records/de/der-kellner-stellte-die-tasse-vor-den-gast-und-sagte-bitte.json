@@ -35,15 +35,52 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: bitte schön",
+				"url": "https://www.dwds.de/wb/bitte%20sch%C3%B6n",
+				"supports": "Target 0 Knowledge: sense 1: Höflichkeitsformel im Rahmen eines Austauschs von Geben und Nehmen (Hier, bitte schön); Synonym zu bitte sehr (1)"
+			},
+			{
+				"title": "OpenThesaurus: bitte schön",
+				"url": "https://www.openthesaurus.de/synonyme/bitte%20sch%C3%B6n",
+				"supports": "Target 0 Knowledge: synsets for the reply to thanks and for 'nur zu!', other uses; Gegenteil danke schön sits on the reply-to-thanks use"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [22, 24],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🫴" },
+			"reading": {
+				"emojiDescription": "🫴",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "bitte sehr",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The presentation function is a Reading of the one Lemma bitte schön; the request use is another. The role is Reading Knowledge, not part of the Lemma (ADR 0039). bitte schön as the cup is set down is Duden's bitte 'zur Unterstreichung einer [höflichen] Aufforderung' to take what is offered (bitte, bedienen Sie sich!), a Reading apart from the please of a request 🙏."
+				"rationale": "The presentation function is a Reading of the one Lemma bitte schön; the request use is another. The role is Reading Knowledge, not part of the Lemma (ADR 0039). bitte schön as the cup is set down is Duden's bitte 'zur Unterstreichung einer [höflichen] Aufforderung' to take what is offered (bitte, bedienen Sie sich!), a Reading apart from the please of a request 🙏. Knowledge (#887, dev draft): Handing something over matches no value in the Formula Role set."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

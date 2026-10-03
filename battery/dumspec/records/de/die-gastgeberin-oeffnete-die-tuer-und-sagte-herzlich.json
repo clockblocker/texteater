@@ -37,13 +37,39 @@
 		"rules": [
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: herzlich willkommen",
+				"url": "https://www.duden.de/rechtschreibung/herzlich_willkommen",
+				"supports": "Target 0 Knowledge: Willkommensgruß zur freundlichen Begrüßung; no Synonyme"
+			},
+			{
+				"title": "OpenThesaurus: herzlich willkommen",
+				"url": "https://www.openthesaurus.de/synonyme/herzlich%20willkommen",
+				"supports": "Target 0 Knowledge: no synset; no entry in DWDS"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤗" },
+			"reading": {
+				"emojiDescription": "🤗",
+				"knowledge": {
+					"formulaRole": "Greeting"
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "wilkommen is a Typo of willkommen, missing an l: the member keeps its letters, marked Typo (de/member-orthography). herzlich willkommen is Duden's 'Willkommensgruß zur freundlichen Begrüßung', so it takes the 🤗 of willkommen."
 			},

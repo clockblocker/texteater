@@ -53,13 +53,74 @@
 				"hash": "32797f3b5f083780"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Dank",
+				"url": "https://www.duden.de/rechtschreibung/Dank",
+				"supports": "Target 0 Knowledge: thanks formulas vielen Dank!, besten Dank!, herzlichen Dank!"
+			},
+			{
+				"title": "OpenThesaurus: besten Dank",
+				"url": "https://www.openthesaurus.de/synonyme/besten%20Dank",
+				"supports": "Target 0 Knowledge: synset 'danke · danke schön · vielen Dank · besten Dank · (ganz) herzlichen Dank · lieben Dank'"
+			},
+			{
+				"title": "DWDS: besten Dank",
+				"url": "https://www.dwds.de/wb/besten%20Dank",
+				"supports": "Target 0 Knowledge: only besten Dank auch (ironische Abwehr), another sense"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [25, 27, 29],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙏" },
+			"reading": {
+				"emojiDescription": "🙏",
+				"knowledge": {
+					"formulaRole": "Thanks",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "danke",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "vielen Dank",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "herzlichen Dank",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "besten Dank is one of Duden's thanks formulas (vielen Dank!, besten Dank!, herzlichen Dank!), so it takes the 🙏 of danke. Its head word Dank governs für (Duden Dank: Anerkennung für etwas Gutes, jemandem [für etwas] Dank sagen), so für is a member of the formula, as vor joins Angst haben, and stays out of the normalized Surface besten Dank; Ihre Mühe is free (de/governed-preposition-joins-its-governor). An INTJ records no valencyEvidence, so the member carries none. Ruled 2026-10-02 (#701, grouping audit Q1)."
 			},

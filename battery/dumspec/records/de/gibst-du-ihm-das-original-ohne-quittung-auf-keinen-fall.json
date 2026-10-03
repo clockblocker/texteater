@@ -35,15 +35,90 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: auf keinen Fall",
+				"url": "https://www.dwds.de/wb/auf%20keinen%20Fall",
+				"supports": "Target 0 Knowledge: unter keinen Umständen, ganz bestimmt nicht; in gegensätzlicher Bedeutung zu auf jeden Fall"
+			},
+			{
+				"title": "OpenThesaurus: auf keinen Fall",
+				"url": "https://www.openthesaurus.de/synonyme/auf%20keinen%20Fall",
+				"supports": "Target 0 Knowledge: synsets with keinesfalls · keineswegs · unter keinen Umständen; Gegenteil marker on auf keinen Fall: auf jeden Fall"
+			},
+			{
+				"title": "DWDS: Umstand",
+				"url": "https://www.dwds.de/wb/Umstand",
+				"supports": "Target 0 Knowledge: ⟨unter keinen Umständen⟩ Synonym zu auf keinen Fall"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [20, 22, 24],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "🙅" },
+			"reading": {
+				"emojiDescription": "🙅",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "keinesfalls",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "unter keinen Umständen",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "keineswegs",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "auf jeden Fall",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "auf keinen Fall is a fixed adverbial, a Locution ADV with no comparison forms. Standing alone as a reply, it still modifies the elided answer (Nein, auf keinen Fall gebe ich es ihm), so it keeps Kind ADV and is no INTJ."
+				"rationale": "auf keinen Fall is a fixed adverbial, a Locution ADV with no comparison forms. Standing alone as a reply, it still modifies the elided answer (Nein, auf keinen Fall gebe ich es ihm), so it keeps Kind ADV and is no INTJ. Knowledge (#887, dev draft): auf keinen Fall means what its words say (in no case), so no Locution Type."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

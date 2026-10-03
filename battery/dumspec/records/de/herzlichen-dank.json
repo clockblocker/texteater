@@ -12,13 +12,74 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Dank",
+				"url": "https://www.duden.de/rechtschreibung/Dank",
+				"supports": "Target 0 Knowledge: thanks formulas vielen Dank!, besten Dank!, herzlichen Dank!"
+			},
+			{
+				"title": "OpenThesaurus: herzlichen Dank",
+				"url": "https://www.openthesaurus.de/synonyme/herzlichen%20Dank",
+				"supports": "Target 0 Knowledge: synset 'danke · danke schön · vielen Dank · besten Dank · (ganz) herzlichen Dank · lieben Dank'"
+			},
+			{
+				"title": "DWDS: herzlichen Dank",
+				"url": "https://www.dwds.de/wb/herzlichen%20Dank",
+				"supports": "Target 0 Knowledge: only herzlichen Dank auch (ironische Abwehr), another sense"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙏" },
+			"reading": {
+				"emojiDescription": "🙏",
+				"knowledge": {
+					"formulaRole": "Thanks",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "danke",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "vielen Dank",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "besten Dank",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "herzlichen Dank is one of Duden's thanks formulas, so it takes the 🙏 of danke."
 			},

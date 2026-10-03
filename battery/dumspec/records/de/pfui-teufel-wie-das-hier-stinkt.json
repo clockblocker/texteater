@@ -21,15 +21,68 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: pfui Teufel",
+				"url": "https://www.dwds.de/wb/pfui%20Teufel",
+				"supports": "Target 0 Knowledge: pfui Teufel!: salopp, drückt besonderen Ekel, Empörung oder Entrüstung aus; Synonym zu pfui Deibel!"
+			},
+			{
+				"title": "OpenThesaurus: pfui Teufel",
+				"url": "https://www.openthesaurus.de/synonyme/pfui%20Teufel",
+				"supports": "Target 0 Knowledge: synset 'igitt · igittigitt · pfui · pfui Deibel! · pfui Teufel! · bä(h)! · puh'"
+			},
+			{
+				"title": "Duden: Teufel",
+				"url": "https://www.duden.de/rechtschreibung/Teufel",
+				"supports": "Target 0 Knowledge: Wendung pfui Teufel! (umgangssprachlich; Ausruf der Abscheu)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤮" },
+			"reading": {
+				"emojiDescription": "🤮",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "pfui Deibel",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "igitt",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "Authored",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "pfui Teufel is an established exclamation of disgust (DWDS lists it with pfui Deibel and pfui Spinne), and Teufel here names no devil. Both words are words of their own, so it is a Locution INTJ with two Heads, not a Lexeme and not two targets."
+				"rationale": "pfui Teufel is an established exclamation of disgust (DWDS lists it with pfui Deibel and pfui Spinne), and Teufel here names no devil. Both words are words of their own, so it is a Locution INTJ with two Heads, not a Lexeme and not two targets. Knowledge (#887, dev draft): Teufel names no devil here, so Idiom; an exclamation of disgust takes no Formula Role."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

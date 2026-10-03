@@ -394,6 +394,11 @@
 				"title": "DWDS: auch",
 				"url": "https://www.dwds.de/wb/auch",
 				"supports": "auch: sense 5, generalizing with concessive sense (wie dem auch sei, was auch kommen mag)."
+			},
+			{
+				"title": "OpenThesaurus: so oder so",
+				"url": "https://www.openthesaurus.de/synonyme/so%20oder%20so",
+				"supports": "Target 21 Knowledge: synset '(ganz) egal wie man's macht · in jedem Fall · wie man es auch macht · so oder so'; no entry in DWDS"
 			}
 		]
 	},
@@ -1420,7 +1425,35 @@
 				"family": "Locution",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "🔁" },
+			"reading": {
+				"emojiDescription": "🔁",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "in jedem Fall",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

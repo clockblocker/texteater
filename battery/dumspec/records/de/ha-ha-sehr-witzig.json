@@ -17,13 +17,42 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: haha",
+				"url": "https://www.dwds.de/wb/haha",
+				"supports": "Target 0 Knowledge: DWDS resolves ha ha to the one-word haha (Interjektion, Synonym zu ¹ha); no entry for spaced ha ha"
+			},
+			{
+				"title": "Duden: haha",
+				"url": "https://www.duden.de/rechtschreibung/haha",
+				"supports": "Target 0 Knowledge: Interjektion: das Lachen wiedergebender Ausruf; no synonyms"
+			},
+			{
+				"title": "OpenThesaurus: ha ha",
+				"url": "https://www.openthesaurus.de/synonyme/ha%20ha",
+				"supports": "Target 0 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😂" },
+			"reading": {
+				"emojiDescription": "😂",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "No punctuation stands between Ha and ha, so they are one call and one target; the comma after them closes the call. Each ha is a word of its own, so ha ha is a Locution INTJ with two Heads, here ironic laughter. DWDS lists the doubled ha, ha! under ha. The one written word haha is a Lemma of its own."
 			},

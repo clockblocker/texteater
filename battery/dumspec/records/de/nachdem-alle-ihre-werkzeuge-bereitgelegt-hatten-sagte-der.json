@@ -38,13 +38,62 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "OpenThesaurus: dann wollen wir mal",
+				"url": "https://www.openthesaurus.de/synonyme/dann%20wollen%20wir%20mal",
+				"supports": "Target 0 Knowledge: synsets 'Fangen wir an! · lass(t) uns anfangen! · dann mal los! · dann wollen wir mal!' and 'auf geht's! · los geht's! · dann (mal) los! · dann wollen wir mal!'; no entry in DWDS or Duden"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [21, 23, 25, 27],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "▶" },
+			"reading": {
+				"emojiDescription": "▶",
+				"knowledge": {
+					"formulaRole": "Initiation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "dann mal los",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "los geht's",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "auf geht's",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "dann wollen wir mal announces that the work now begins, so it takes the ▶ of beginnen, as nun denn does."
 			},

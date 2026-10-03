@@ -251,6 +251,16 @@
 				"title": "OpenThesaurus: nachschleifend",
 				"url": "https://www.openthesaurus.de/synonyme/nachschleifend",
 				"supports": "Target 11 Knowledge: no synset; no relation listed (Duden has no entry)"
+			},
+			{
+				"title": "DWDS: Kinder und Kindeskinder",
+				"url": "https://www.dwds.de/wb/Kinder%20und%20Kindeskinder",
+				"supports": "Target 9 Knowledge: Mehrwortausdruck: die nachfolgenden Generationen; alle Nachkommen einer Person oder der gesamten Menschheit; no synonym or Gegensatz listed"
+			},
+			{
+				"title": "OpenThesaurus: Kinder und Kindeskinder",
+				"url": "https://www.openthesaurus.de/synonyme/Kinder%20und%20Kindeskinder",
+				"supports": "Target 9 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
 			}
 		]
 	},
@@ -690,9 +700,24 @@
 				"family": "Locution",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🧒👶⏩" },
+			"reading": {
+				"emojiDescription": "🧒👶⏩",
+				"knowledge": {
+					"locutionType": "Idiom"
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Kinder und Kindeskinder is the twin formula 'all one's descendants' (DWDS lists it as a Phrasem: die gesamte Nachkommenschaft einer Person); here it means generations to come. Read as one Locution NOUN whose meaning generalizes past its words (de/idiom); meiner stays outside as a free possessive. It is plural-only, so its Core gender is null. Ruled on #743 (SZ-B4) and #766."
+				"rationale": "Kinder und Kindeskinder is the twin formula 'all one's descendants' (DWDS lists it as a Phrasem: die gesamte Nachkommenschaft einer Person); here it means generations to come. Read as one Locution NOUN whose meaning generalizes past its words (de/idiom); meiner stays outside as a free possessive. It is plural-only, so its Core gender is null. Ruled on #743 (SZ-B4) and #766. Knowledge (#887, dev draft): A plain NOUN Locution with no Preposition or Clause complement, so no valency frame."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

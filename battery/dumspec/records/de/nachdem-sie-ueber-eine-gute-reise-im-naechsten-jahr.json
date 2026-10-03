@@ -57,15 +57,34 @@
 		"rules": [
 			{ "rule": "de/routine-formula-is-intj", "hash": "32797f3b5f083780" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "OpenThesaurus: gute Reise",
+				"url": "https://www.openthesaurus.de/synonyme/gute%20Reise",
+				"supports": "Target 0 Knowledge: no synset; no entry in DWDS or Duden"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [39, 41],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🧳👍" },
+			"reading": {
+				"emojiDescription": "🧳👍",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Gute Reise wishes Leyla a good journey: the routine formula gute Reise, a Locution INTJ, whose wish is its Formula Role, Reading Knowledge (de/routine-formula-is-intj, ADR 0039). The earlier eine gute Reise is an ordinary noun phrase, and Leyla a vocative. The formula joins the 🧳 of reisen to the 👍 of gut."
+				"rationale": "Gute Reise wishes Leyla a good journey: the routine formula gute Reise, a Locution INTJ, whose wish is its Formula Role, Reading Knowledge (de/routine-formula-is-intj, ADR 0039). The earlier eine gute Reise is an ordinary noun phrase, and Leyla a vocative. The formula joins the 🧳 of reisen to the 👍 of gut. Knowledge (#887, dev draft): A wish has no value in the Formula Role set, so formulaRole is left out."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

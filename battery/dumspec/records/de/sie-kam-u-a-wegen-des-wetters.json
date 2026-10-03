@@ -20,15 +20,58 @@
 	"sources": {
 		"adrs": ["ADR-0035"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: unter anderem",
+				"url": "https://www.duden.de/rechtschreibung/unter_anderem",
+				"supports": "Target 0 Knowledge: drückt aus, dass die Aufzählung nicht vollständig ist; außerdem, auch noch (gloss, no Synonyme)"
+			},
+			{
+				"title": "DWDS: unter anderem",
+				"url": "https://www.dwds.de/wb/unter%20anderem",
+				"supports": "Target 0 Knowledge: gloss außerdem, dazu, auch; siehe auch only"
+			},
+			{
+				"title": "OpenThesaurus: unter anderem",
+				"url": "https://www.openthesaurus.de/synonyme/unter%20anderem",
+				"supports": "Target 0 Knowledge: synset 'u. a. · unter anderem · neben anderem · so auch · zum Beispiel · neben Verschiedenem'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "📋➕" },
+			"reading": {
+				"emojiDescription": "📋➕",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "neben anderem",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "An abbreviation is one Shorthand member whose Surface is its expansion, unter anderem (ADR 0035)."
+				"rationale": "An abbreviation is one Shorthand member whose Surface is its expansion, unter anderem (ADR 0035). Knowledge (#887, dev draft): unter anderem is compositional (among other things), so no Locution Type."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -32,15 +32,39 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Glückwunsch",
+				"url": "https://www.duden.de/rechtschreibung/Glueckwunsch",
+				"supports": "Target 0 Knowledge: Ausdruck der freudigen Anteilnahme an einem Erfolg; Beispiel herzlichen Glückwunsch zum Geburtstag; no entry for the formula"
+			},
+			{
+				"title": "OpenThesaurus: herzlichen Glückwunsch",
+				"url": "https://www.openthesaurus.de/synonyme/herzlichen%20Gl%C3%BCckwunsch",
+				"supports": "Target 0 Knowledge: synset 'Glückwunsch meinerseits (zu ...)! · Herzlichen Glückwunsch (zum / zur ...)! · Ich gratuliere. · Gratuliere!'; no entry in DWDS"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🎉" },
+			"reading": {
+				"emojiDescription": "🎉",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "A congratulation formula, one Locution/INTJ. What it does in conversation is its Formula Role, Reading Knowledge, not part of the Lemma (ADR 0039). herzlichen Glückwunsch congratulates, Duden's Glückwunsch 'Ausdruck der freudigen Anteilnahme an einem Erfolg'."
+				"rationale": "A congratulation formula, one Locution/INTJ. What it does in conversation is its Formula Role, Reading Knowledge, not part of the Lemma (ADR 0039). herzlichen Glückwunsch congratulates, Duden's Glückwunsch 'Ausdruck der freudigen Anteilnahme an einem Erfolg'. Knowledge (#887, dev draft): A congratulation has no value in the Formula Role set, so formulaRole is left out."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

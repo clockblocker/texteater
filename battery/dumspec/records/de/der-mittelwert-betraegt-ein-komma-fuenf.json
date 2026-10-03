@@ -20,15 +20,35 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "OpenThesaurus: ein Komma fünf",
+				"url": "https://www.openthesaurus.de/synonyme/ein%20Komma%20f%C3%BCnf",
+				"supports": "Target 0 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
+			},
+			{
+				"title": "DWDS: Komma",
+				"url": "https://www.dwds.de/wb/Komma",
+				"supports": "Target 0 Knowledge: sense 2: Trennungszeichen bei Dezimalbrüchen (zwei Komma acht Meter); no entry for ein Komma fünf, no synonym listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 8, 10],
 			"route": { "family": "Locution", "kind": "NUM" },
-			"reading": { "emojiDescription": "1⃣🔸5⃣" },
+			"reading": {
+				"emojiDescription": "1⃣🔸5⃣",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "ein Komma fünf is one spoken decimal, 1.5: a Locution NUM over its three words, as ADR 0039 lists vier Komma neun."
+				"rationale": "ein Komma fünf is one spoken decimal, 1.5: a Locution NUM over its three words, as ADR 0039 lists vier Komma neun. Knowledge (#887, dev draft): A spoken decimal is a compositional number phrase: no Locution Type."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

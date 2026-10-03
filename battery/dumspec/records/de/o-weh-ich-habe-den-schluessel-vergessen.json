@@ -23,15 +23,39 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: oweh",
+				"url": "https://www.dwds.de/wb/oweh",
+				"supports": "Target 0 Knowledge: weh, Interjektion: drückt Schmerz, Klage aus (Beispiel o weh!); no synonym line"
+			},
+			{
+				"title": "OpenThesaurus: o weh",
+				"url": "https://www.openthesaurus.de/synonyme/o%20weh",
+				"supports": "Target 0 Knowledge: no synset; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😖" },
+			"reading": {
+				"emojiDescription": "😖",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "No punctuation stands between O and weh, so they are one call and one target. o and weh are each an interjection of their own, o strengthening the exclamation as in o ja and o Wunder and weh lamenting, so o weh is a Locution INTJ with two Heads. Its Canonical Form is the pieces as written. o wei, whose wei is no word, is a Lexeme instead."
+				"rationale": "No punctuation stands between O and weh, so they are one call and one target. o and weh are each an interjection of their own, o strengthening the exclamation as in o ja and o Wunder and weh lamenting, so o weh is a Locution INTJ with two Heads. Its Canonical Form is the pieces as written. o wei, whose wei is no word, is a Lexeme instead. Knowledge (#887, dev draft): o weh is o plus weh, a lament exclamation: no Locution Type, no Formula Role."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
