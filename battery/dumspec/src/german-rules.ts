@@ -1480,7 +1480,7 @@ const knowledge: Rule[] = [
 	{
 		id: "de/valency-frame-follows-e-valbu",
 		statement:
-			"A Reading's Valency Frame is the Satzbauplan of its sense in E-VALBU, or in Duden where E-VALBU has no entry. An adjective's frame has no Nom Slot, since the copula owns the subject: stolz (auf + Acc). A referent is the dictionary's jemand or etwas for the sense, not what the sentence happens to show: warten auf jemanden/etwas is Either. Each clause form the dictionary lists is an alternative in its Slot. When either of two complements can complete the frame, both Slots are Optional: bitten (Acc) (um + Acc).",
+			"A Reading's Valency Frame is the Satzbauplan of its sense in E-VALBU, or in Duden where E-VALBU has no entry. An adjective's frame has no Nom Slot, since the copula owns the subject: stolz (auf + Acc). A referent is the dictionary's jemand or etwas for the sense, not what the sentence happens to show: sich erinnern an jemanden/etwas is Either, though the sentence names a smell. Each clause form the dictionary lists is an alternative in its Slot. When either of two complements can complete the frame, both Slots are Optional: bitten (Acc) (um + Acc).",
 		adrs: ["ADR-0034"],
 		routes: [
 			...lexeme("VERB", "ADJ", "NOUN"),
