@@ -10,12 +10,15 @@
  *   cached units for the record's Sentence go in, and only the units that
  *   match a gold target (same Segments, same route) are scored.
  *
- * Each case runs three times. A live run first prices itself (`models.ts`
- * in `project` mode), hands the price to `beforeLive`, which may refuse,
- * then fills the cache concurrently and runs from it.
+ * Each case runs three times, or as many as `repetitions` asks. A live run
+ * first prices itself (`models.ts` in `project` mode), hands the price to
+ * `beforeLive`, which may refuse, then fills the cache concurrently and
+ * runs from it. A run may take only a frozen subset's cases (`subset.ts`):
+ * the baseline's misses and a seeded guard, its seed and case ids
+ * recorded in the manifest, and its report compared with the baseline's.
  */
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as Effect from "effect/Effect";
 import {
@@ -59,6 +62,7 @@ import {
 	lineOf,
 	type ScoredAttempt,
 } from "./scoring.js";
+import { compareWithBaseline, loadSubset, subsetCaseIds } from "./subset.js";
 
 export const defaultGrammarRoot = fileURLToPath(
 	new URL("../../../.runs/resolve-grammar/", import.meta.url),
@@ -66,6 +70,8 @@ export const defaultGrammarRoot = fileURLToPath(
 const defaultSegmentLabRoot = fileURLToPath(
 	new URL("../../../.runs/segment-in-units-lab/", import.meta.url),
 );
+/** The package root a subset's path in the manifest is relative to. */
+const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
 export const grammarRoute = "resolve-grammar/de";
 /** Each case runs three times; each repetition is its own cached answer. */
@@ -101,6 +107,10 @@ export type GrammarEvaluateArgs = {
 	readonly segmentLabRoot?: string;
 	/** Only these cases, for a smoke run; all by default. */
 	readonly limit?: number;
+	/** A frozen subset's file (`subset.ts`): only its cases run. */
+	readonly subset?: string;
+	/** Attempts per case, 1 to 3; three by default. */
+	readonly repetitions?: number;
 };
 
 export type GrammarEvaluated = {
@@ -184,10 +194,11 @@ async function pass(
 	cases: readonly GrammarCase[],
 	models: GrammarModels,
 	concurrency: number,
+	repetitions: number,
 	units?: UnitSource,
 ): Promise<void> {
 	const work = cases.flatMap((goldCase) =>
-		Array.from({ length: grammarRepetitions }, (_, repetition) => ({
+		Array.from({ length: repetitions }, (_, repetition) => ({
 			goldCase,
 			repetition,
 		})),
@@ -264,12 +275,31 @@ export function grammarAttempts(run: OperationEvaluationRun): ScoredAttempt[] {
 	});
 }
 
+/** The subset a run took, as its manifest records it. */
+type CaseFilter = {
+	readonly subset: string;
+	readonly baselineRunId: string;
+	readonly seed: number;
+	readonly missed: readonly string[];
+	readonly guard: readonly string[];
+};
+
+const caseFilterOf = (run: OperationEvaluationRun): CaseFilter | undefined =>
+	(
+		run.manifest.configurations.judgment.settings as {
+			caseFilter?: CaseFilter;
+		}
+	).caseFilter;
+
 /**
  * The headline report of a run. The end-to-end line scores only the units
- * that matched gold and says how many did.
+ * that matched gold and says how many did. A run on a subset also reports
+ * each line against the baseline on the same cases, the cases that moved
+ * from wrong to right, and the guard's regression line.
  */
 export function grammarMetrics(run: OperationEvaluationRun) {
 	const attempts = grammarAttempts(run);
+	const filter = caseFilterOf(run);
 	const matched = attempts.filter(
 		({ evaluation }) => evaluation?.outcome !== "NoMatchingUnit",
 	);
@@ -286,6 +316,14 @@ export function grammarMetrics(run: OperationEvaluationRun) {
 				}
 			: {}),
 		...grammarReport(e2e ? matched : attempts),
+		...(filter
+			? {
+					againstBaseline: compareWithBaseline(
+						loadSubset(resolve(packageRoot, filter.subset)),
+						attempts,
+					),
+				}
+			: {}),
 	};
 }
 
@@ -309,7 +347,38 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 					`The ${setName} set of ${grammarRoute} is not frozen; run \`bun cli/resolve-grammar.ts freeze\` first`,
 				);
 			const set = await loadGrammarSet(root, setName);
-			const cases = set.cases.slice(0, args.limit ?? set.cases.length);
+			const repetitions = args.repetitions ?? grammarRepetitions;
+			if (
+				!Number.isInteger(repetitions) ||
+				repetitions < 1 ||
+				repetitions > grammarRepetitions
+			)
+				throw Error(
+					`repetitions must be 1 to ${grammarRepetitions}, not ${repetitions}`,
+				);
+			let caseFilter: CaseFilter | undefined;
+			let selected = set.cases;
+			if (args.subset) {
+				const path = resolve(packageRoot, args.subset);
+				const subset = loadSubset(path);
+				if (subset.setHash !== set.hash)
+					throw Error(
+						`The subset was read from set ${subset.setHash}, not the frozen ${set.hash}`,
+					);
+				const ids = subsetCaseIds(subset);
+				const wanted = new Set([...ids.missed, ...ids.guard]);
+				selected = set.cases.filter(({ id }) => wanted.has(id));
+				if (selected.length !== wanted.size)
+					throw Error("The subset names cases the frozen set lacks");
+				caseFilter = {
+					subset: relative(packageRoot, path),
+					baselineRunId: subset.baselineRunId,
+					seed: subset.seed,
+					missed: ids.missed,
+					guard: ids.guard,
+				};
+			}
+			const cases = selected.slice(0, args.limit ?? selected.length);
 			const concurrency = args.concurrency ?? 12;
 			const directory = join(root, "cache");
 			const units = e2e
@@ -324,10 +393,10 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 					directory,
 					mode: "project",
 				});
-				await pass(cases, projecting, concurrency, units);
+				await pass(cases, projecting, concurrency, repetitions, units);
 				price = {
-					repetitions: grammarRepetitions,
-					attempts: cases.length * grammarRepetitions,
+					repetitions,
+					attempts: cases.length * repetitions,
 					...projecting.projection,
 				};
 				if (args.estimate) return { price, set: identity };
@@ -346,7 +415,7 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 					throw Error(
 						"A live resolve.grammar run needs jev and Luna",
 					);
-				await pass(cases, live, concurrency, units);
+				await pass(cases, live, concurrency, repetitions, units);
 				if (live.capHit !== undefined)
 					throw Error(
 						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.spend)}`,
@@ -409,7 +478,7 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 						attempts.set(input.caseId, repetition + 1);
 						const output = await attempt(
 							goldCase,
-							repetition % grammarRepetitions,
+							repetition % repetitions,
 							replay,
 							units,
 						);
@@ -440,10 +509,22 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 					},
 					judgment: {
 						model: pinnedJevModel,
-						settings: { set: set.name, setHash: set.hash },
+						settings: {
+							set: set.name,
+							setHash: set.hash,
+							...(caseFilter
+								? {
+										caseFilter: {
+											...caseFilter,
+											missed: [...caseFilter.missed],
+											guard: [...caseFilter.guard],
+										},
+									}
+								: {}),
+						},
 					},
 				},
-				repetitions: grammarRepetitions,
+				repetitions,
 				...(args.signal ? { signal: args.signal } : {}),
 			});
 			if (args.outputDirectory) await saveRun(args.outputDirectory, run);

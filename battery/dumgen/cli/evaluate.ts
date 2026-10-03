@@ -12,6 +12,7 @@
  *   bun run evaluate --experiment resolve-grammar/de:dev --revision <rev>
  *       --budget <jev input tokens> --luna-budget <Luna input tokens>
  *       --luna-output-budget <Luna output tokens> [--limit N]
+ *       [--subset evidence/resolve-grammar/round-2-subset.json] [--repetitions 1]
  *   bun run evaluate --experiment resolve-reading/de:dev --estimate
  *   bun run evaluate --experiment resolve-reading/de:dev --revision <rev>
  *       --budget <jev input tokens> --luna-budget <Luna input tokens>
@@ -106,6 +107,8 @@ export async function runEvaluationCli(
 			"luna-budget": { type: "string" },
 			"luna-output-budget": { type: "string" },
 			limit: { type: "string" },
+			subset: { type: "string" },
+			repetitions: { type: "string" },
 		},
 	});
 	const write =
@@ -194,6 +197,10 @@ export async function runEvaluationCli(
 				: {}),
 			...(dependencies.split ? { split: dependencies.split } : {}),
 			...(values.limit ? { limit: Number(values.limit) } : {}),
+			...(values.subset ? { grammarSubset: values.subset } : {}),
+			...(values.repetitions
+				? { repetitions: Number(values.repetitions) }
+				: {}),
 			...(grammarLive
 				? {
 						jev: createTypeSafeAsk({
