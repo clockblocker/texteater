@@ -345,6 +345,14 @@ evidence/segment-in-units-lab/
   Held-out came out unchanged at `heldout@1a69c4258c71f152`. Dev runs
   before it stay scored on `dev@9408e60258d4f891`. The round was not
   re-pinned.
+- A sixth refreeze, the same day at 4f601f12, follows the user's approval
+  of batch 3: the nine records rose to Review Depth Knowledge and their
+  sidecar exclusions went. Held-out is now `heldout@28d4be8d9bcafb00`,
+  198 cases (95 Full) with 735 gold units: the nine joined
+  `heldout@1a69c4258c71f152` and no other case changed. Dev came out
+  unchanged at `dev@36d553aa792208e7`. Held-out runs before it stay
+  scored on `heldout@1a69c4258c71f152`. The round was not re-pinned,
+  since a re-pin would change the replayed metrics.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
   committed outcomes otherwise. Outcomes are scored against the frozen
   gold, so `--relabel` needs the raw run.
