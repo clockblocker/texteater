@@ -42,13 +42,58 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: nun",
+				"url": "https://www.duden.de/rechtschreibung/nun_aber_etwa_eben",
+				"supports": "Target 0 Knowledge: 'nun denn! (also, dann wollen wir beginnen!)'"
+			},
+			{
+				"title": "Duden: wohlan",
+				"url": "https://www.duden.de/rechtschreibung/wohlan",
+				"supports": "Target 0 Knowledge: Synonyme: nun denn"
+			},
+			{
+				"title": "OpenThesaurus: nun denn",
+				"url": "https://www.openthesaurus.de/synonyme/nun%20denn",
+				"supports": "Target 0 Knowledge: synset S1 'also dann · also gut · gut denn · nun denn · nun gut · okay · wohlan'; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [24, 26],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "▶" },
+			"reading": {
+				"emojiDescription": "▶",
+				"knowledge": {
+					"formulaRole": "Initiation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "wohlan",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Duden glosses nun denn! as 'also, dann wollen wir beginnen!', so it takes the ▶ of beginnen."
 			},

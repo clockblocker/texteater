@@ -26,13 +26,61 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: entweder … oder",
+				"url": "https://www.duden.de/rechtschreibung/entweder",
+				"supports": "Target 0 Knowledge: Synonyme zu entweder … oder: oder"
+			},
+			{
+				"title": "OpenThesaurus: entweder oder",
+				"url": "https://www.openthesaurus.de/synonyme/entweder%20oder",
+				"supports": "Target 0 Knowledge: synset 'entweder · entweder ... oder ... · sei es ..., sei es ... · aut ... aut ...'; no Gegenteil"
+			},
+			{
+				"title": "DWDS: entweder",
+				"url": "https://www.dwds.de/wb/entweder",
+				"supports": "Target 0 Knowledge: ⟨entweder … oder⟩ dient zur Verknüpfung von Alternativen; no relation"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 11],
 			"route": { "family": "Locution", "kind": "CCONJ" },
-			"reading": { "emojiDescription": "🔀" },
+			"reading": {
+				"emojiDescription": "🔀",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "CCONJ",
+								"canonicalForm": "oder",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "CCONJ",
+								"canonicalForm": "sei es … sei es",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

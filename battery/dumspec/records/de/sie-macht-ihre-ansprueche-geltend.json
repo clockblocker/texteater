@@ -23,13 +23,81 @@
 				"hash": "57f04b272a0e9aeb"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: geltend",
+				"url": "https://www.duden.de/rechtschreibung/geltend",
+				"supports": "Target 0 Knowledge: Wendung 'etwas geltend machen (auf berechtigte Ansprüche hinweisen und sie durchsetzen wollen)': Acc etwas"
+			},
+			{
+				"title": "OpenThesaurus: geltend machen",
+				"url": "https://www.openthesaurus.de/synonyme/geltend%20machen",
+				"supports": "Target 0 Knowledge: synset S4 'geltend machen (Anspruch, Forderung) · anmelden · sich (auf etwas) berufen'; no Gegenteil"
+			},
+			{
+				"title": "DWDS: geltend machen",
+				"url": "https://www.dwds.de/wb/geltend%20machen",
+				"supports": "Target 0 Knowledge: no entry"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "📢⚖" },
+			"reading": {
+				"emojiDescription": "📢⚖",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anmelden",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "machen only supports the adjective predicate geltend, which carries the meaning, so geltend machen is a Collocation. ihre Ansprüche is its free object and stays outside."
 			},

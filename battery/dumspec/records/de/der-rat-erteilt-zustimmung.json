@@ -16,13 +16,94 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Zustimmung",
+				"url": "https://www.duden.de/rechtschreibung/Zustimmung",
+				"supports": "Target 0 Knowledge: 'jemandem seine Zustimmung [zu etwas] geben': noun governs optional zu + Dat; Synonyme are for the noun only"
+			},
+			{
+				"title": "Duden: erteilen",
+				"url": "https://www.duden.de/rechtschreibung/erteilen",
+				"supports": "Target 0 Knowledge: support verb 'jemandem ... erteilen': Dat jemand"
+			},
+			{
+				"title": "E-VALBU: erteilen",
+				"url": "https://grammis.ids-mannheim.de/verbvalenz",
+				"supports": "Target 0 Knowledge: no entry for erteilen"
+			},
+			{
+				"title": "OpenThesaurus: Zustimmung erteilen",
+				"url": "https://www.openthesaurus.de/synonyme/Zustimmung%20erteilen",
+				"supports": "Target 0 Knowledge: no synset"
+			},
+			{
+				"title": "DWDS: Zustimmung erteilen",
+				"url": "https://www.dwds.de/wb/Zustimmung%20erteilen",
+				"supports": "Target 0 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "👍" },
+			"reading": {
+				"emojiDescription": "👍",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "zu",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

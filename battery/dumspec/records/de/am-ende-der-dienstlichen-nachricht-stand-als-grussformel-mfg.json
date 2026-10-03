@@ -37,13 +37,79 @@
 			{ "rule": "de/member-orthography", "hash": "66373ce319bd065a" },
 			{ "rule": "de/routine-formula-is-intj", "hash": "32797f3b5f083780" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: mit freundlichen Grüßen",
+				"url": "https://www.duden.de/rechtschreibung/mit_freundlichen_Grueszen",
+				"supports": "Target 0 Knowledge: Schlussformel in Briefen; Synonyme hochachtungsvoll, herzlich, herzlichst, mit den besten Grüßen/Wünschen"
+			},
+			{
+				"title": "DWDS: mit freundlichen Grüßen",
+				"url": "https://www.dwds.de/wb/mit%20freundlichen%20Gr%C3%BC%C3%9Fen",
+				"supports": "Target 0 Knowledge: Schlussformel in Briefen, im Schriftverkehr; Nebenform mit freundlichem Gruß"
+			},
+			{
+				"title": "OpenThesaurus: mit freundlichen Grüßen",
+				"url": "https://www.openthesaurus.de/synonyme/mit%20freundlichen%20Gr%C3%BC%C3%9Fen",
+				"supports": "Target 0 Knowledge: synsets (Oberbegriff Grußformel, Schlussformel) with Freundliche Grüße, Hochachtungsvoll, Mit vorzüglicher Hochachtung; no Gegenteil"
+			},
+			{
+				"title": "Duden: hochachtungsvoll",
+				"url": "https://www.duden.de/rechtschreibung/hochachtungsvoll",
+				"supports": "Target 0 Knowledge: Adverb, in Grußformeln am Briefschluss"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [19],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "✉👋" },
+			"reading": {
+				"emojiDescription": "✉👋",
+				"knowledge": {
+					"formulaRole": "Farewell",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "freundliche Grüße",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "hochachtungsvoll",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "mit vorzüglicher Hochachtung",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "MfG abbreviates the closing formula mit freundlichen Grüßen, a routine formula and so a Locution INTJ (de/routine-formula-is-intj). It is no name whose initialism is its usual form, so the target is the formula and MfG is its Shorthand member, as z.B. is of zum Beispiel (de/abbreviation-is-one-segment). mit freundlichen Grüßen is one of Duden's 'Grußformeln am Briefschluss', the formal sign-off of a letter."
 			},

@@ -29,6 +29,21 @@
 				"title": "clockblocker/texteater#495",
 				"url": "https://github.com/clockblocker/texteater/issues/495",
 				"supports": "Target 0, zu m Beispiel"
+			},
+			{
+				"title": "DWDS: zum Beispiel",
+				"url": "https://www.dwds.de/wb/zum%20Beispiel",
+				"supports": "Target 0 Knowledge: sense 1 (zur Veranschaulichung): Synonym zu beispielsweise, zum Exempel"
+			},
+			{
+				"title": "OpenThesaurus: zum Beispiel",
+				"url": "https://www.openthesaurus.de/synonyme/zum%20Beispiel",
+				"supports": "Target 0 Knowledge: synset S1 with beispielsweise, etwa, zum Exempel; no Gegenteil"
+			},
+			{
+				"title": "Duden: zum Beispiel",
+				"url": "https://www.duden.de/rechtschreibung/zum_Beispiel",
+				"supports": "Target 0 Knowledge: gloss 'beispielshalber, wie etwa', no Synonyme"
 			}
 		]
 	},
@@ -36,7 +51,44 @@
 		{
 			"memberSegmentIndices": [6, 7, 9],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "👉1⃣" },
+			"reading": {
+				"emojiDescription": "👉1⃣",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "beispielsweise",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "zum Exempel",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The written-out multi-word Lemma with every member attested (issue 495)."
 			},

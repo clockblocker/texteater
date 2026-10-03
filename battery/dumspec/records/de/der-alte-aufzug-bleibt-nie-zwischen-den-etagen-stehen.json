@@ -32,13 +32,71 @@
 			},
 			{ "rule": "de/idiom", "hash": "c05df428b3a42079" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: stehen bleiben",
+				"url": "https://www.duden.de/rechtschreibung/stehen_bleiben",
+				"supports": "Target 0 Knowledge: sense 2 'nicht weiterlaufen, nicht weiter in Funktion sein' (der Motor ist stehen geblieben); Synonyme (anstehen, bleiben, innehalten) belong to sense 1"
+			},
+			{
+				"title": "DWDS: stehen bleiben",
+				"url": "https://www.dwds.de/wb/stehen%20bleiben",
+				"supports": "Target 0 Knowledge: sense 3 [bildlich] ⟨etw. bleibt stehen⟩ stillstehen, stoppen (gloss): Nom etwas frame"
+			},
+			{
+				"title": "OpenThesaurus: stehen bleiben",
+				"url": "https://www.openthesaurus.de/synonyme/stehen%20bleiben",
+				"supports": "Target 0 Knowledge: synset S3 'anhalten · nicht weitergehen · stehen bleiben' (halting); no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 16],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🛑" },
+			"reading": {
+				"emojiDescription": "🛑",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anhalten",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "stehen bleiben in Duden's sense 2, nicht weiterlaufen, nicht weiter in Funktion sein (der Motor ist stehen geblieben): the lift never gets stuck between floors. It is an Idiom over both verbs, cited apart (de/bleiben-with-an-infinitive). This is Duden's stehen bleiben sense 2, 'nicht weiterlaufen, nicht weiter in Funktion sein' (der Motor ist stehen geblieben), a Reading apart from sense 4, 'unverändert belassen werden' 📝🟰."
 			},

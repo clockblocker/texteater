@@ -28,13 +28,79 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: mit freundlichen Grüßen",
+				"url": "https://www.duden.de/rechtschreibung/mit_freundlichen_Grueszen",
+				"supports": "Target 0 Knowledge: Schlussformel in Briefen; Synonyme hochachtungsvoll, herzlich, herzlichst, mit den besten Grüßen/Wünschen"
+			},
+			{
+				"title": "DWDS: mit freundlichen Grüßen",
+				"url": "https://www.dwds.de/wb/mit%20freundlichen%20Gr%C3%BC%C3%9Fen",
+				"supports": "Target 0 Knowledge: Schlussformel in Briefen, im Schriftverkehr; Nebenform mit freundlichem Gruß"
+			},
+			{
+				"title": "OpenThesaurus: mit freundlichen Grüßen",
+				"url": "https://www.openthesaurus.de/synonyme/mit%20freundlichen%20Gr%C3%BC%C3%9Fen",
+				"supports": "Target 0 Knowledge: synsets (Oberbegriff Grußformel, Schlussformel) with Freundliche Grüße, Hochachtungsvoll, Mit vorzüglicher Hochachtung; no Gegenteil"
+			},
+			{
+				"title": "Duden: hochachtungsvoll",
+				"url": "https://www.duden.de/rechtschreibung/hochachtungsvoll",
+				"supports": "Target 0 Knowledge: Adverb, in Grußformeln am Briefschluss"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [13, 15],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "✉👋" },
+			"reading": {
+				"emojiDescription": "✉👋",
+				"knowledge": {
+					"formulaRole": "Farewell",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "freundliche Grüße",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "hochachtungsvoll",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "mit vorzüglicher Hochachtung",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The visible ellipsis marks an unrealized tail; it is not an omitted present member."
 			},

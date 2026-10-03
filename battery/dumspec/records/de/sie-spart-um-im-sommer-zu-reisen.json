@@ -25,13 +25,36 @@
 		"rules": [
 			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: um",
+				"url": "https://www.duden.de/rechtschreibung/um_damit",
+				"supports": "Target 0 Knowledge: Konjunktion, um zu + Infinitiv, leitet einen finalen Infinitiv ein; no Synonyme"
+			},
+			{
+				"title": "OpenThesaurus: um zu",
+				"url": "https://www.openthesaurus.de/synonyme/um%20zu",
+				"supports": "Target 0 Knowledge: synset 'für · um ... zu (bekommen / erhalten / haben ...)' restricted to obtaining, so not the whole Reading"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 11],
 			"route": { "family": "Locution", "kind": "SCONJ" },
-			"reading": { "emojiDescription": "🎯" },
+			"reading": {
+				"emojiDescription": "🎯",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "um … zu is a correlator, a Locution SCONJ made of its anchors um and zu (de/correlator-anchors). im Sommer and reisen belong to the clause it introduces and stay outside."
 			},

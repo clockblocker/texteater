@@ -25,13 +25,66 @@
 		"rules": [
 			{ "rule": "de/correlator-anchors", "hash": "18606bad03311909" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "OpenThesaurus: einerseits andererseits",
+				"url": "https://www.openthesaurus.de/synonyme/einerseits%20andererseits",
+				"supports": "Target 0 Knowledge: synset 'auf der einen Seite ... auf der anderen Seite ... · einerseits ... andererseits ... · zum einen ... zum anderen ... · zwar ... aber ...'; no Gegenteil"
+			},
+			{
+				"title": "Duden: einerseits",
+				"url": "https://www.duden.de/rechtschreibung/einerseits",
+				"supports": "Target 0 Knowledge: Wendung 'einerseits …, andererseits (auf der einen Seite …, auf der anderen Seite …)': gloss only"
+			},
+			{
+				"title": "DWDS: einerseits",
+				"url": "https://www.dwds.de/wb/einerseits",
+				"supports": "Target 0 Knowledge: ⟨einerseits … and(e)rerseits⟩ example; no relation for the pair"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6, 11],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "⚖" },
+			"reading": {
+				"emojiDescription": "⚖",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "auf der einen Seite … auf der anderen Seite",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "zum einen … zum anderen",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "einerseits … andererseits is a correlator made of its two anchors, a Locution ADV with no comparison forms (de/correlator-anchors, ADR 0039). The adjective predicates günstig and riskant stay outside."
 			},

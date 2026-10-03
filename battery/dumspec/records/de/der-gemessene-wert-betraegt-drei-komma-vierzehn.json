@@ -22,13 +22,33 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: drei Komma vierzehn",
+				"url": "https://www.duden.de/rechtschreibung/drei_Komma_vierzehn",
+				"supports": "Target 0 Knowledge: no entry found"
+			},
+			{
+				"title": "DWDS: drei Komma vierzehn",
+				"url": "https://www.dwds.de/wb/drei%20Komma%20vierzehn",
+				"supports": "Target 0 Knowledge: no entry; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8, 10, 12],
 			"route": { "family": "Locution", "kind": "NUM" },
-			"reading": { "emojiDescription": "3⃣🔸1⃣4⃣" },
+			"reading": {
+				"emojiDescription": "3⃣🔸1⃣4⃣",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -24,13 +24,33 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: sieben Komma acht",
+				"url": "https://www.duden.de/rechtschreibung/sieben_Komma_acht",
+				"supports": "Target 0 Knowledge: no entry found"
+			},
+			{
+				"title": "DWDS: sieben Komma acht",
+				"url": "https://www.dwds.de/wb/sieben%20Komma%20acht",
+				"supports": "Target 0 Knowledge: no entry; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8, 10, 12],
 			"route": { "family": "Locution", "kind": "NUM" },
-			"reading": { "emojiDescription": "7⃣🔸8⃣" },
+			"reading": {
+				"emojiDescription": "7⃣🔸8⃣",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

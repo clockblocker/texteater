@@ -35,13 +35,44 @@
 		"rules": [
 			{ "rule": "de/routine-formula-is-intj", "hash": "32797f3b5f083780" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: bitte",
+				"url": "https://www.duden.de/rechtschreibung/bitte",
+				"supports": "Target 0 Knowledge: Höflichkeitsformel zur Unterstreichung einer Bitte; example 'bitte schön!'"
+			},
+			{
+				"title": "DWDS: bitte schön",
+				"url": "https://www.dwds.de/wb/bitte%20sch%C3%B6n",
+				"supports": "Target 0 Knowledge: senses: give-and-take formula, free choice, rhetorical question, forceful demand; Synonym zu bitte sehr only for those senses, not the request"
+			},
+			{
+				"title": "OpenThesaurus: bitte schön",
+				"url": "https://www.openthesaurus.de/synonyme/bitte%20sch%C3%B6n",
+				"supports": "Target 0 Knowledge: synsets are reply to thanks (S1) and 'nur zu' (S2), not the request sense"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [20, 22],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙏" },
+			"reading": {
+				"emojiDescription": "🙏",
+				"knowledge": {
+					"formulaRole": "Request"
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "bitte schön after the order is a routine formula, a Locution INTJ; that it asks for something is its Formula Role, Reading Knowledge, never identity (de/routine-formula-is-intj, ADR 0039). bitte schön after an order is Duden's bitte 'zur Unterstreichung einer Bitte', the please of a request, a Reading apart from handing something over 🫴."
 			},

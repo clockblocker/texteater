@@ -26,6 +26,21 @@
 				"title": "clockblocker/texteater#495",
 				"url": "https://github.com/clockblocker/texteater/issues/495",
 				"supports": "Target 0, I m Allgemeinen"
+			},
+			{
+				"title": "Duden: im Allgemeinen",
+				"url": "https://www.duden.de/rechtschreibung/im_Allgemeinen",
+				"supports": "Target 0 Knowledge: Synonyme gemeinhin, generell, gewöhnlich, größtenteils"
+			},
+			{
+				"title": "OpenThesaurus: im Allgemeinen",
+				"url": "https://www.openthesaurus.de/synonyme/im%20Allgemeinen",
+				"supports": "Target 0 Knowledge: synset S1 with generell, gewöhnlich, grundsätzlich, in der Regel, üblicherweise; no Gegenteil on the phrase"
+			},
+			{
+				"title": "DWDS: im Allgemeinen",
+				"url": "https://www.dwds.de/wb/im%20Allgemeinen",
+				"supports": "Target 0 Knowledge: gloss 'normalerweise, generell, grundsätzlich'; only siehe auch"
 			}
 		]
 	},
@@ -33,7 +48,54 @@
 		{
 			"memberSegmentIndices": [0, 1, 3],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "🌐" },
+			"reading": {
+				"emojiDescription": "🌐",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "generell",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "gewöhnlich",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "gemeinhin",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The written-out multi-word Lemma with every member attested (issue 495)."
 			},

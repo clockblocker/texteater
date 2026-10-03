@@ -228,6 +228,21 @@
 				"title": "Project Gutenberg eBook #25204: Arthur Schnitzler, Der Mörder",
 				"url": "https://www.gutenberg.org/ebooks/25204",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #25204 (released 2008-04-27), transcribed from Verlag Paul Knepler (Wallishaussersche Buchhandlung), Wien, with woodcuts by Ernst Huber. The paragraph after Adele's refusal."
+			},
+			{
+				"title": "Duden: Ende",
+				"url": "https://www.duden.de/rechtschreibung/Ende",
+				"supports": "Target 13 Knowledge: Wendung 'einer Sache ein Ende machen, setzen, bereiten (gehoben; etwas beenden)': the Dat frame; no Synonyme for the phrase"
+			},
+			{
+				"title": "OpenThesaurus: ein Ende machen",
+				"url": "https://www.openthesaurus.de/synonyme/ein%20Ende%20machen",
+				"supports": "Target 13 Knowledge: synset S1 lists '(einer Sache) ein Ende machen' with beenden; Gegenteil markers sit on beenden etc., not on the phrase"
+			},
+			{
+				"title": "DWDS: ein Ende machen",
+				"url": "https://www.dwds.de/wb/ein%20Ende%20machen",
+				"supports": "Target 13 Knowledge: only the narrower 'seinem Leben ein Ende machen'; no relation for the broad sense"
 			}
 		]
 	},
@@ -866,7 +881,59 @@
 				"family": "Locution",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🔚" },
+			"reading": {
+				"emojiDescription": "🔚",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "beenden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "ein Ende machen (Duden: einer Sache ein Ende machen, bereiten, setzen; mit sich ein Ende machen) is a Collocation: machen only supports Ende, and the verb comes from a narrow set. Its members are the verb, the noun and the noun's own article (de/funktionsverbgefuege-are-collocations); zu stays a PART (de/bare-infinitive-zu). Whether it ends the affair or a life is a Reading question, open in the sentence itself. The sentence names no object for ein Ende zu machen, so it takes the broad einer Sache ein Ende machen (Duden: etwas beenden); whether he means his own life (seinem Leben ein Ende machen) the sentence alone does not settle, so that doubt folds into the broad Reading under ADR 0031."
 			},

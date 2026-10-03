@@ -21,13 +21,66 @@
 	"sources": {
 		"adrs": ["ADR-0035"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: und so weiter",
+				"url": "https://www.dwds.de/wb/und%20so%20weiter",
+				"supports": "Target 0 Knowledge: Synonym zu und so fort (et cetera only under siehe auch)"
+			},
+			{
+				"title": "OpenThesaurus: und so weiter",
+				"url": "https://www.openthesaurus.de/synonyme/und%20so%20weiter",
+				"supports": "Target 0 Knowledge: synset S1 with et cetera, und so weiter und so fort, und Ähnliches; no Gegenteil"
+			},
+			{
+				"title": "Duden: und so weiter",
+				"url": "https://www.duden.de/rechtschreibung/und_so_weiter",
+				"supports": "Target 0 Knowledge: no entry found"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "➕⏩" },
+			"reading": {
+				"emojiDescription": "➕⏩",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "und so fort",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "et cetera",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "An abbreviation is one Shorthand member whose Surface is its expansion, und so weiter (ADR 0035)."
 			},

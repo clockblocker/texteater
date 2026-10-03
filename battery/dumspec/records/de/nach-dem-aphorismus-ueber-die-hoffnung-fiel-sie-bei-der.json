@@ -36,13 +36,68 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: aus allen Wolken fallen",
+				"url": "https://www.dwds.de/wb/aus%20allen%20Wolken%20fallen",
+				"supports": "Target 0 Knowledge: ⟨jmd. fällt aus allen Wolken⟩ sehr überrascht sein; Synonym zu jmdm. fällt die Kinnlade herunter, jmdm. klappt die Kinnlade herunter"
+			},
+			{
+				"title": "Duden: Wolke",
+				"url": "https://www.duden.de/rechtschreibung/Wolke",
+				"supports": "Target 0 Knowledge: 'aus allen Wolken fallen (umgangssprachlich: völlig überrascht sein)'"
+			},
+			{
+				"title": "OpenThesaurus: aus allen Wolken fallen",
+				"url": "https://www.openthesaurus.de/synonyme/aus%20allen%20Wolken%20fallen",
+				"supports": "Target 0 Knowledge: synset includes (jemandem) fällt die Kinnlade herunter; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12, 22, 24, 26],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "😲" },
+			"reading": {
+				"emojiDescription": "😲",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "die Kinnlade fällt herunter",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

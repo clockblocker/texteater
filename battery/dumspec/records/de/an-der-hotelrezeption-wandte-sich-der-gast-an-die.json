@@ -42,13 +42,49 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: guten Tag",
+				"url": "https://www.dwds.de/wb/guten%20Tag",
+				"supports": "Target 0 Knowledge: höfliche Formel zur Begrüßung (the formula schönen guten Tag intensifies); siehe auch only"
+			},
+			{
+				"title": "DWDS: schönen guten Tag",
+				"url": "https://www.dwds.de/wb/sch%C3%B6nen%20guten%20Tag",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus: schönen guten Tag",
+				"url": "https://www.openthesaurus.de/synonyme/sch%C3%B6nen%20guten%20Tag",
+				"supports": "Target 0 Knowledge: no synset"
+			},
+			{
+				"title": "Duden: schönen guten Tag",
+				"url": "https://www.duden.de/rechtschreibung/schoenen_guten_Tag",
+				"supports": "Target 0 Knowledge: no entry found; no relation listed (Duden, DWDS, OT)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [22, 24, 26],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👋" },
+			"reading": {
+				"emojiDescription": "👋",
+				"knowledge": {
+					"formulaRole": "Greeting"
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "schönen guten Tag is a warmer guten Tag, so it takes the greeting 👋 that guten Tag has in the gold."
 			},

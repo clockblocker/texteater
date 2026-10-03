@@ -24,13 +24,33 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: zehn bis zwölf",
+				"url": "https://www.duden.de/rechtschreibung/zehn_bis_zwoelf",
+				"supports": "Target 0 Knowledge: no entry found"
+			},
+			{
+				"title": "DWDS: zehn bis zwölf",
+				"url": "https://www.dwds.de/wb/zehn%20bis%20zw%C3%B6lf",
+				"supports": "Target 0 Knowledge: no entry; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [8, 10, 12],
 			"route": { "family": "Locution", "kind": "NUM" },
-			"reading": { "emojiDescription": "🔢➡🔢" },
+			"reading": {
+				"emojiDescription": "🔢➡🔢",
+				"knowledge": {},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "zehn bis zwölf names one range, ten to twelve o'clock: a Locution NUM over both numerals and bis, as ADR 0039 lists zwölf bis sechzehn. Uhr after it stays outside."
 			},

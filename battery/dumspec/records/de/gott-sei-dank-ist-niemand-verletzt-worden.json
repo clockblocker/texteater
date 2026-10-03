@@ -22,13 +22,76 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Gott sei Dank",
+				"url": "https://www.duden.de/rechtschreibung/Gott_sei_Dank",
+				"supports": "Target 0 Knowledge: glücklicher-, dankenswerterweise; Synonyme gottlob"
+			},
+			{
+				"title": "DWDS: Gott sei Dank",
+				"url": "https://www.dwds.de/wb/Gott%20sei%20Dank",
+				"supports": "Target 0 Knowledge: Synonym zu dem Himmel sei Dank, Gott sei gedankt"
+			},
+			{
+				"title": "OpenThesaurus: Gott sei Dank",
+				"url": "https://www.openthesaurus.de/synonyme/Gott%20sei%20Dank",
+				"supports": "Target 0 Knowledge: synset 'zum Glück · erfreulicherweise · glücklicherweise · Gott sei Dank · gottlob · dem Himmel sei Dank'; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "😌" },
+			"reading": {
+				"emojiDescription": "😌",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "gottlob",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "dem Himmel sei Dank",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "zum Glück",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Gott sei Dank opens the clause as its adverbial, with the verb second after it, and means what zum Glück means. A fixed adverbial keeps Kind ADV, so it is a Locution ADV with no comparison forms, also when it stands alone as Gott sei Dank!."
 			},

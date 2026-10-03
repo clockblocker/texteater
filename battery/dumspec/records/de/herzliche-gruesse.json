@@ -12,13 +12,72 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Gruß",
+				"url": "https://www.duden.de/rechtschreibung/Grusz",
+				"supports": "Target 0 Knowledge: '(in Grußformeln am Briefschluss) viele, herzliche, liebe Grüße'"
+			},
+			{
+				"title": "OpenThesaurus: herzliche Grüße",
+				"url": "https://www.openthesaurus.de/synonyme/herzliche%20Gr%C3%BC%C3%9Fe",
+				"supports": "Target 0 Knowledge: synset 'Beste Grüße · Herzliche Grüße · In Verbundenheit · Liebe Grüße · Mit besten Grüßen · Schöne Grüße · Viele Grüße', Oberbegriff Grußformel, Schlussformel; no Gegenteil"
+			},
+			{
+				"title": "DWDS: herzliche Grüße",
+				"url": "https://www.dwds.de/wb/herzliche%20Gr%C3%BC%C3%9Fe",
+				"supports": "Target 0 Knowledge: no entry"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "❤👋" },
+			"reading": {
+				"emojiDescription": "❤👋",
+				"knowledge": {
+					"formulaRole": "Farewell",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "liebe Grüße",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "viele Grüße",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "beste Grüße",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "herzliche Grüße are Duden's Grüße sent as a sign of affection or set under a letter (viele, herzliche, liebe Grüße), a warm 👋 like grüßen's."
 			},

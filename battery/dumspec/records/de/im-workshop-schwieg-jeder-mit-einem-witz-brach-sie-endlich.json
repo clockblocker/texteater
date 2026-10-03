@@ -34,13 +34,94 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: das Eis brechen",
+				"url": "https://www.dwds.de/wb/das%20Eis%20brechen",
+				"supports": "Target 0 Knowledge: sense 1 ⟨jmd., etw. bricht das Eis (zwischen jmdm.)⟩ Anspannung, Zurückhaltung lösen"
+			},
+			{
+				"title": "OpenThesaurus: das Eis brechen",
+				"url": "https://www.openthesaurus.de/synonyme/das%20Eis%20brechen",
+				"supports": "Target 0 Knowledge: synset 'das Eis brechen · die Anfangsscheu verlieren · miteinander warm werden'; no Gegenteil"
+			},
+			{
+				"title": "Duden: Eis",
+				"url": "https://www.duden.de/rechtschreibung/Eis_Gefrorenes",
+				"supports": "Target 0 Knowledge: no entry for the idiom; no relation listed"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 22, 24],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "😶➡😊" },
+			"reading": {
+				"emojiDescription": "😶➡😊",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "zwischen",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "die Anfangsscheu verlieren",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "miteinander warm werden",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -78,6 +159,9 @@
 					},
 					"surfaceFeatures": null
 				}
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): The two OT synset members describe the participants relaxing rather than someone causing it, so they are near, not full, synonyms."
 			}
 		}
 	],

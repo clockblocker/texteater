@@ -35,13 +35,87 @@
 	"sources": {
 		"adrs": [],
 		"rules": [{ "rule": "de/idiom", "hash": "c05df428b3a42079" }],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: das Bett hüten",
+				"url": "https://www.dwds.de/wb/das%20Bett%20h%C3%BCten",
+				"supports": "Target 0 Knowledge: ⟨jmd. hütet das Bett⟩ krankheitsbedingt im Bett bleiben: Nom jemand"
+			},
+			{
+				"title": "Duden: Bett",
+				"url": "https://www.duden.de/rechtschreibung/Bett",
+				"supports": "Target 0 Knowledge: 'das Bett hüten [müssen] (wegen Krankheit im Bett bleiben)'"
+			},
+			{
+				"title": "OpenThesaurus: das Bett hüten",
+				"url": "https://www.openthesaurus.de/synonyme/das%20Bett%20h%C3%BCten",
+				"supports": "Target 0 Knowledge: synset with flachliegen [ugs.], (schwer) darniederliegen [geh.], bettlägerig (sein); no Gegenteil"
+			},
+			{
+				"title": "Duden: flachliegen",
+				"url": "https://www.duden.de/rechtschreibung/flachliegen",
+				"supports": "Target 0 Knowledge: 'krank sein': broader than staying in bed, hence near"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [15, 23, 25],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🤒🛏" },
+			"reading": {
+				"emojiDescription": "🤒🛏",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "flachliegen",
+								"coreFeatures": {
+									"hasSepPrefix": "flach",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "darniederliegen",
+								"coreFeatures": {
+									"hasSepPrefix": "darnieder",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The second hütete das Bett says the sick curator stayed in bed: das Bett hüten 'be ill in bed' is an Idiom, a Locution VERB over the verb and its fixed das Bett (de/idiom). The first, hütete das historische Bett, is literal guarding, so its words resolve on their own."
 			},

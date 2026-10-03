@@ -63,13 +63,78 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "OpenThesaurus: wie dem auch sei",
+				"url": "https://www.openthesaurus.de/synonyme/wie%20dem%20auch%20sei",
+				"supports": "Target 0 Knowledge: synset with wie auch immer, sei es wie es sei, wie es auch sei, jedenfalls (resümierend), nun denn; no Gegenteil"
+			},
+			{
+				"title": "DWDS: wie dem auch sei",
+				"url": "https://www.dwds.de/wb/wie%20dem%20auch%20sei",
+				"supports": "Target 0 Knowledge: gloss 'unabhängig vom zuvor Erwähnten; egal, wie es ist'; no Synonym line"
+			},
+			{
+				"title": "Duden: wie dem auch sei",
+				"url": "https://www.duden.de/rechtschreibung/wie_dem_auch_sei",
+				"supports": "Target 0 Knowledge: no entry found"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [37, 39, 41, 43],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "🤷➡" },
+			"reading": {
+				"emojiDescription": "🤷➡",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "wie auch immer",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "sei es wie es sei",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "jedenfalls",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "wie dem auch sei (however that may be) is a fixed adverbial that closes the digression, a Locution ADV with no comparison forms, never an INTJ (ADR 0039). The proverb quoted before it is a unit of its own."
 			},

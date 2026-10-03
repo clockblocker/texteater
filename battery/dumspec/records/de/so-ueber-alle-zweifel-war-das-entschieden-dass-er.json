@@ -397,6 +397,21 @@
 				"title": "OpenThesaurus: entschieden",
 				"url": "https://www.openthesaurus.de/synonyme/entschieden",
 				"supports": "Target 6 Knowledge: synset endgültig · entschieden · geklärt · geregelt · unumstößlich · definitiv (settled sense); Gegenteil markers sit on the resolute-sense terms only"
+			},
+			{
+				"title": "Duden: nach Hause",
+				"url": "https://www.duden.de/rechtschreibung/nach_Hause",
+				"supports": "Target 13 Knowledge: Synonyme heim, heimwärts, retour, zurück"
+			},
+			{
+				"title": "OpenThesaurus: nach Hause",
+				"url": "https://www.openthesaurus.de/synonyme/nach%20Hause",
+				"supports": "Target 13 Knowledge: synset 'heim · heimwärts · nach Hause · nachhause'; no Gegenteil"
+			},
+			{
+				"title": "DWDS: nach Hause",
+				"url": "https://www.dwds.de/wb/nach%20Hause",
+				"supports": "Target 13 Knowledge: no entry"
 			}
 		]
 	},
@@ -1206,9 +1221,48 @@
 				"family": "Locution",
 				"kind": "ADV"
 			},
-			"reading": { "emojiDescription": "➡🏠" },
+			"reading": {
+				"emojiDescription": "➡🏠",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "heim",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "heimwärts",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "nach Hause 'home' needs this noun in this old dative form: with an ordinary noun phrase (nach dem Haus) it means 'towards the house'. So it is a Locution ADV like zu Hause in ADR 0039, and the -e belongs to its fixed wording, not to an archaic Surface (de/fixed-member-test, de/largest-fixed-unit)."
+				"rationale": "nach Hause 'home' needs this noun in this old dative form: with an ordinary noun phrase (nach dem Haus) it means 'towards the house'. So it is a Locution ADV like zu Hause in ADR 0039, and the -e belongs to its fixed wording, not to an archaic Surface (de/fixed-member-test, de/largest-fixed-unit). Knowledge (#887, dev draft): heimwärts names the direction homeward rather than the destination, and retour/zurück do not hold for the whole Reading."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
