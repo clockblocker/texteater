@@ -4,7 +4,7 @@ import { translationLanguageValues } from "dumrel";
 import {
 	answeredRelationKinds,
 	knowledgeRequestComplete,
-	withoutAnsweredValency,
+	withoutAnswerableEmptyAspects,
 } from "../server/knowledgeCompletion";
 import type {
 	KnowledgeFailure,
@@ -133,6 +133,12 @@ const generationInputValidator = v.union(
 		translationLanguages: v.array(translationLanguageValidator),
 		/** Knowledge is Full: ask only for what this occurrence adds. */
 		topUpOnly: v.boolean(),
+		/**
+		 * Whether this occurrence created the Reading (`New`, its first
+		 * Attestation) or reused it (`TopUp`): only a New occurrence's
+		 * attested government joins the proposed frame (#677).
+		 */
+		origin: v.union(v.literal("New"), v.literal("TopUp")),
 		/** Attested government the Reading's Valency Frame lacks. */
 		government: v.array(
 			v.object({
@@ -191,6 +197,12 @@ export const begin = internalMutation({
 		const runNumber = await claimKnowledgeRun(ctx, attempt);
 		if (runNumber === null) return null;
 		const coverage = knowledgeCoverageOf(accumulated);
+		const first = await ctx.db
+			.query("attestations")
+			.withIndex("by_reading_id", (q) =>
+				q.eq("readingId", occurrence.reading._id),
+			)
+			.first();
 		return {
 			kind: "Generate",
 			reading: occurrence.publicReading,
@@ -204,6 +216,10 @@ export const begin = internalMutation({
 			runNumber,
 			translationLanguages: [...missing.translationLanguages],
 			topUpOnly: !missing.base,
+			origin:
+				first?._id === attempt.attestationId
+					? ("New" as const)
+					: ("TopUp" as const),
 			government: [...missing.government],
 			pluralPattern: missing.pluralPattern,
 			authorization: await loadRelationPublicationAuthorization(ctx),
@@ -350,8 +366,7 @@ export const publish = internalMutation({
 			) &&
 			!args.changes.some(
 				(change) =>
-					change?.aspect === "valency" ||
-					change?.aspect === "pluralPattern",
+					change?.aspect === "valency" || change?.aspect === "plural",
 			)
 		) {
 			await endKnowledgeRun(ctx, attempt, runNumber, {
@@ -454,7 +469,7 @@ export const publish = internalMutation({
 					...answered,
 				],
 			},
-			withoutAnsweredValency(
+			withoutAnswerableEmptyAspects(
 				args.productionEvidence.request as KnowledgeRequest,
 			),
 			args.productionEvidence.failures as KnowledgeFailure[],

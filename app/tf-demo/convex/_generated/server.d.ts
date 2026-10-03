@@ -34,6 +34,7 @@ type Env = {
   readonly TF_INSPECTION: string | undefined;
   readonly TYPESAFE_API_KEY: string | undefined;
   readonly OPENAI_API_KEY: string | undefined;
+  readonly TF_KNOWLEDGE_PRODUCTION: string | undefined;
   readonly CLICK_CALL_DEADLINE_MS: string | undefined;
 };
 

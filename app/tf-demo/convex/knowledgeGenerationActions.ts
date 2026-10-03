@@ -1,8 +1,9 @@
 "use node";
 
 import { v } from "convex/values";
-import type * as Dumrel from "dumrel/types";
+import { createDumgen, createOpenAILuna, createTypeSafeAsk } from "dumgen";
 import * as Effect from "effect/Effect";
+import { dumgenKnowledgeProducer } from "../server/dumgenKnowledgeProducer";
 import {
 	inspected,
 	inspectionStep,
@@ -10,16 +11,15 @@ import {
 	spanHops,
 } from "../server/inspectionCapture";
 import { missingKnowledgeRequest } from "../server/knowledgeCompletion";
-import {
-	idleKnowledgeProducer,
-	type KnowledgeProducer,
-	type KnowledgeProduction,
+import type {
+	KnowledgeProducer,
+	KnowledgeProduction,
 } from "../server/knowledgeProduction";
 import { parseGermanReading } from "../server/operationalParsing";
 import { asksParticipleSource } from "../server/participleSource";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
-import { type ActionCtx, internalAction } from "./_generated/server";
+import { type ActionCtx, env, internalAction } from "./_generated/server";
 import { inspectionFor } from "./inspectionAction";
 import {
 	generatedKnowledgeAllowedForPublication,
@@ -36,20 +36,49 @@ function getGenerationRequestBuilder() {
 	);
 }
 
+/** The aspects an incremental publication may carry (`knowledgeGeneration.publish`). */
+const BASE_TEXT_ASPECTS = new Set([
+	"transcription",
+	"definition",
+	"translations",
+]);
+
 /**
- * Runs Knowledge production for one attempt. Production is idle while
- * click resolution is rebuilt (#848): no click creates a Reading, so no
- * attempt is scheduled, and the producer refuses one that arrives anyway.
+ * The production KnowledgeProducer: Dumgen's `knowledge.produce` (#887),
+ * jev through TypeSafe and Luna through OpenAI with the deployment's keys.
+ * It runs only where `TF_KNOWLEDGE_PRODUCTION=1`, so a deployment turns
+ * Knowledge on once the user rules on shipping it (#883 point 10); elsewhere,
+ * and without a key, a run fails with the safe message and calls no model.
  */
+export function productionKnowledgeProducer(): KnowledgeProducer {
+	return dumgenKnowledgeProducer((onOperation) => {
+		if (env.TF_KNOWLEDGE_PRODUCTION !== "1")
+			throw new Error(
+				"Knowledge production is off on this deployment (TF_KNOWLEDGE_PRODUCTION).",
+			);
+		if (!env.TYPESAFE_API_KEY || !env.OPENAI_API_KEY)
+			throw new Error(
+				"Knowledge production needs TYPESAFE_API_KEY and OPENAI_API_KEY.",
+			);
+		return createDumgen({
+			jev: createTypeSafeAsk({ apiKey: env.TYPESAFE_API_KEY }),
+			luna: createOpenAILuna({ apiKey: env.OPENAI_API_KEY }),
+			onOperation,
+		});
+	});
+}
+
+/** Runs Knowledge production for one attempt with the production producer. */
 export const runKnowledgeGeneration = internalAction({
 	args: { attemptKey: v.string(), inspect: v.optional(v.boolean()) },
 	returns: v.null(),
-	handler: (ctx, args) => generateKnowledge(ctx, args, idleKnowledgeProducer),
+	handler: (ctx, args) =>
+		generateKnowledge(ctx, args, productionKnowledgeProducer()),
 });
 
 /**
  * One attempt's Knowledge run with the given producer, which a test passes
- * in place of the idle one.
+ * in place of the production one.
  *
  * The action owns model execution only. It claims the run with one mutation,
  * publishes each contribution with one mutation, and finishes with one
@@ -104,25 +133,31 @@ export async function generateKnowledge(
 			if (input.reading.lemma.language !== "de") {
 				throw new Error("Unsupported Knowledge language.");
 			}
-			const onContribution = (
-				changes: KnowledgeProduction["changes"],
-			) => {
-				pendingContributions.push(...structuredClone(changes));
-				publicationQueue = publicationQueue
-					.then(async () => {
-						// Coalesce siblings that finish while a commit is in flight.
-						const contribution = pendingContributions.splice(0);
-						if (contribution.length)
-							await publishContribution(contribution);
-					})
-					.catch((error) => {
-						// Keep generation running; the final publication retries unsaved text.
-						console.error(
-							"Incremental Knowledge publication failed",
-							error,
-						);
-					});
-			};
+			// Dumgen waits for each contribution's publication; structural
+			// aspects reach the dictionary with the final publication only.
+			const onContribution = (changes: KnowledgeProduction["changes"]) =>
+				Effect.promise(() => {
+					const text = changes.filter((change) =>
+						BASE_TEXT_ASPECTS.has(change.aspect),
+					);
+					if (text.length === 0) return publicationQueue;
+					pendingContributions.push(...structuredClone(text));
+					publicationQueue = publicationQueue
+						.then(async () => {
+							// Coalesce siblings that finish while a commit is in flight.
+							const contribution = pendingContributions.splice(0);
+							if (contribution.length)
+								await publishContribution(contribution);
+						})
+						.catch((error) => {
+							// Keep generation running; the final publication retries unsaved text.
+							console.error(
+								"Incremental Knowledge publication failed",
+								error,
+							);
+						});
+					return publicationQueue;
+				});
 			const reading = parseGermanReading(input.reading);
 			const { authorization } = input;
 			const qualifiedKinds = authorization.rollbackStopped
@@ -201,7 +236,7 @@ export async function generateKnowledge(
 			publishContribution = async (changes) => {
 				await publish(false, { changes, pendingRelations: [] }, []);
 			};
-			const { encounter } = parseResolvedGrammar({
+			const { encounter, attestation } = parseResolvedGrammar({
 				encounter: input.encounter,
 				attestation: input.attestation,
 			});
@@ -210,6 +245,8 @@ export async function generateKnowledge(
 					{
 						encounter,
 						reading,
+						attestation,
+						origin: input.origin,
 						request: {
 							// A stored frame drops `valency`: only a Reading
 							// with no frame yet asks for one.
@@ -222,21 +259,10 @@ export async function generateKnowledge(
 								? { participleSource: null }
 								: {}),
 						},
-						// Coverage is per occurrence: the stored frame may lack this sentence's government.
-						attestedGovernment: input.government,
-						// The stored plural may lack this sentence's Plural Pattern.
-						...(input.pluralPattern
-							? {
-									attestedPluralPattern:
-										input.pluralPattern as Dumrel.PluralPattern,
-								}
-							: {}),
 					},
 					{
-						...(input.knowledgeDraftJson
-							? { draft: JSON.parse(input.knowledgeDraftJson) }
-							: {}),
 						onContribution,
+						onOperation: (trace) => operationTraces.push(trace),
 					},
 				).pipe(
 					Effect.withSpan(
@@ -246,19 +272,32 @@ export async function generateKnowledge(
 				),
 			);
 			await publicationQueue;
-			if ("decision" in generated) {
+			// An authored Reading the catalog does not cover (ADR 0021).
+			const [catalogMiss] = generated.failures;
+			if (
+				catalogMiss &&
+				generated.changes.length === 0 &&
+				generated.failures.every(({ code }) => code === "CatalogMiss")
+			) {
 				generationCompleted = true;
-				await hop("Record catalog miss", generated, () =>
+				const { family, kind } = reading.lemma;
+				const miss = {
+					decision: "CatalogMiss" as const,
+					stage: "knowledge.produce",
+					route: `de/${family}/${kind}`,
+					message: catalogMiss.message,
+				};
+				await hop("Record catalog miss", miss, () =>
 					ctx.runMutation(
 						internal.catalogGrowthSignals
 							.recordKnowledgeCatalogMiss,
 						{
 							attemptKey,
 							runNumber: input.runNumber,
-							miss: generated,
+							miss,
 							productionEvidence: {
 								request,
-								failures: [],
+								failures: [...generated.failures],
 								operationTraces,
 							},
 						},

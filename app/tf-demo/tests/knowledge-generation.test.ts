@@ -504,11 +504,19 @@ test("a run that proposes an empty frame stores nothing and still completes the 
 	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
 });
 
-test("the idle producer fails a run that arrives anyway, with the safe message", async () => {
+test("a deployment without TF_KNOWLEDGE_PRODUCTION fails a run with the safe message and calls no model (#887)", async () => {
 	const t = createTestConvex();
 	const occurrence = await seedDictionaryReading(t);
 	await insertAttempt(t, occurrence, "idle", { state: "Scheduled" });
 	const errors = spyOn(console, "error").mockImplementation(() => {});
+	const previousFetch = globalThis.fetch;
+	const previousFlag = process.env.TF_KNOWLEDGE_PRODUCTION;
+	delete process.env.TF_KNOWLEDGE_PRODUCTION;
+	const fetched: string[] = [];
+	globalThis.fetch = (async (url) => {
+		fetched.push(String(url));
+		throw new Error("No model may be called.");
+	}) as typeof fetch;
 	try {
 		await t.action(
 			internal.knowledgeGenerationActions.runKnowledgeGeneration,
@@ -516,7 +524,11 @@ test("the idle producer fails a run that arrives anyway, with the safe message",
 		);
 	} finally {
 		errors.mockRestore();
+		globalThis.fetch = previousFetch;
+		if (previousFlag !== undefined)
+			process.env.TF_KNOWLEDGE_PRODUCTION = previousFlag;
 	}
+	expect(fetched).toEqual([]);
 	expect((await attempts(t))[0]).toMatchObject({
 		state: "Failed",
 		failureMessage: "Knowledge generation failed. Please retry.",
@@ -1937,7 +1949,9 @@ test.each([false, true])(
 			const running = generateWith(t, "progress", (_input, options) =>
 				Effect.promise(async () => {
 					// The finished leaves are handed on before the slow one.
-					options.onContribution([definition, russian]);
+					await Effect.runPromise(
+						options.onContribution([definition, russian]),
+					);
 					await slow.promise;
 					return {
 						failures: [],
@@ -2079,3 +2093,77 @@ test.each([false, true])(
 		});
 	},
 );
+
+/** A second saved occurrence of the seeded Reading, in a Sentence of its own. */
+async function seedSecondOccurrence(
+	t: TestConvexDb,
+	occurrence: Occurrence,
+): Promise<Occurrence> {
+	const { sentenceIds, segmentIds } = await submitText(t, [
+		[
+			{ kind: "ResolvableText", text: "Bank" },
+			{ kind: "OpaqueText", text: " am See" },
+		],
+	]);
+	const sentenceId = sentenceIds[0];
+	const segmentId = segmentIds[0]?.[0];
+	if (!sentenceId || !segmentId) throw new Error("Expected a Segment.");
+	return t.run(async (ctx) => {
+		const first = await ctx.db.get(occurrence.attestationId);
+		if (!first) throw new Error("Expected the first Attestation.");
+		const attestationId = await ctx.db.insert("attestations", {
+			surfaceId: first.surfaceId,
+			readingId: occurrence.readingId,
+			realizationCoverage: "Full",
+			articleEvidence: null,
+			valencyEvidence: [],
+		});
+		await ctx.db.patch(segmentId, {
+			attestationMembership: { attestationId, orthography: "Standard" },
+		});
+		return { ...occurrence, attestationId, sentenceId, segmentId };
+	});
+}
+
+test("a run's origin is New for the Reading's first occurrence and TopUp for a later one (#677, #883 point 5)", async () => {
+	const t = createTestConvex();
+	const first = await seedDictionaryReading(t);
+	const second = await seedSecondOccurrence(t, first);
+	await insertAttempt(t, first, "first", { state: "Scheduled" });
+	expect(
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "first",
+		}),
+	).toEqual(expect.objectContaining({ kind: "Generate", origin: "New" }));
+	await insertAttempt(t, second, "second", { state: "Scheduled" });
+	expect(
+		await t.mutation(internal.knowledgeGeneration.begin, {
+			attemptKey: "second",
+		}),
+	).toEqual(expect.objectContaining({ kind: "Generate", origin: "TopUp" }));
+});
+
+test("a run whose every failure is a Catalog Miss records a growth signal and fails as catalogMiss (#883 point 8)", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "miss", { state: "Scheduled" });
+	await generateWith(t, "miss", () =>
+		Effect.succeed({
+			changes: [],
+			pendingRelations: [],
+			failures: [
+				{
+					aspect: "definition",
+					code: "CatalogMiss",
+					message:
+						"The authored NOUN Bank has no reviewed definition",
+				},
+			],
+		}),
+	);
+	expect(await rows(t, "catalogGrowthSignals")).toHaveLength(1);
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Failed",
+		failureCode: "catalogMiss",
+	});
+});

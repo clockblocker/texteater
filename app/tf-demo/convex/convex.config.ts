@@ -10,8 +10,14 @@ const app = defineApp({
 		TF_INSPECTION: v.optional(v.string()),
 		/** The TypeSafe key that Dumgen asks jev with, at intake and on a click. */
 		TYPESAFE_API_KEY: v.optional(v.string()),
-		/** The OpenAI key that Dumgen's `resolve.grammar` and `resolve.reading` write with through Luna. */
+		/** The OpenAI key that Dumgen's `resolve.grammar`, `resolve.reading` and `knowledge.produce` write with through Luna. */
 		OPENAI_API_KEY: v.optional(v.string()),
+		/**
+		 * "1" runs Knowledge production with Dumgen's `knowledge.produce`
+		 * (#887); unset, a Knowledge run fails and calls no model. The user
+		 * turns it on once they rule on shipping it.
+		 */
+		TF_KNOWLEDGE_PRODUCTION: v.optional(v.string()),
 		/**
 		 * Each model call's deadline on a click, in milliseconds; intake's
 		 * 120 s until the first live click measurement sets it (#858).

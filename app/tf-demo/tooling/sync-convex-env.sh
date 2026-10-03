@@ -13,9 +13,10 @@
 set -eu
 
 # The keys the deployment reads (declared in convex/convex.config.ts), the
-# click deadline among them. tests/sync-convex-env.test.ts fails when this
+# click deadline and the Knowledge switch among them; one set nowhere is not
+# pushed. tests/sync-convex-env.test.ts fails when this
 # list and the code drift apart.
-provider_keys="TYPESAFE_API_KEY OPENAI_API_KEY CLICK_CALL_DEADLINE_MS"
+provider_keys="TYPESAFE_API_KEY OPENAI_API_KEY CLICK_CALL_DEADLINE_MS TF_KNOWLEDGE_PRODUCTION"
 # Flags set to "1" on a local deployment only.
 local_flags="TF_DEMO_ADMIN TF_INSPECTION"
 

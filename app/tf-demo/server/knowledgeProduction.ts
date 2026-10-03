@@ -1,24 +1,22 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import * as Effect from "effect/Effect";
-import type { GovernedPrepositionDraft } from "./attestedGovernment";
+import type * as Effect from "effect/Effect";
 import type { ClickEncounter } from "./clickResolution";
-import type { CatalogMissSignal } from "./resolutionGrammar";
 
 /**
  * The Knowledge production port: the model work that fills one Reading's
  * Knowledge from one occurrence. tf-demo owns the request, coverage,
- * publication and dictionary planning around it.
- *
- * It is idle while resolution is rebuilt on the new Dumgen (#701, #848): a
- * click creates no Reading, so no Knowledge is asked for, and the
- * production producer refuses rather than call a model.
+ * publication and dictionary planning around it; Dumgen's
+ * `knowledge.produce` does the model work (#883, #887).
  */
 
-/** Which Knowledge aspects and leaves a run asks for. */
+/** Which Knowledge aspects and leaves a run asks for: what coverage says is missing. */
 export type KnowledgeRequest = Dumrel.KnowledgeRequestMask;
 
-/** One aspect or leaf a run could not produce, and why. */
+/**
+ * One aspect or leaf a run could not produce, and why (#883 point 3). An
+ * uncovered authored or Closed Route Reading comes back as a `CatalogMiss`.
+ */
 export type KnowledgeFailure = {
 	readonly aspect:
 		| "transcription"
@@ -27,17 +25,16 @@ export type KnowledgeFailure = {
 		| "semanticRelations"
 		| "valency"
 		| "participleSource"
-		| "pluralPattern"
-		| "morphologicalTree"
-		| "lexicalBreakdown";
+		| "plural"
+		| "conjugationClass"
+		| "locutionType"
+		| "sayingType"
+		| "formulaRole";
 	readonly leaf?: string;
-	readonly candidate?: string;
 	readonly code:
-		| "InvalidInput"
 		| "ProviderFailure"
 		| "InvalidModelOutput"
 		| "Unresolved"
-		| "NotImplemented"
 		| "CatalogMiss";
 	readonly message: string;
 };
@@ -51,20 +48,24 @@ export type KnowledgeProduction = {
 	})[];
 };
 
-/** One run's input: the occurrence, its Reading and what to produce. */
+/**
+ * One run's input, `knowledge.produce`'s: the occurrence's Encounter and
+ * Attestation, whose `valencyEvidence` is the attested government, its
+ * Reading, whether the occurrence created the Reading (`New`) or reused it
+ * (`TopUp`), and what to produce.
+ */
 export type KnowledgeInput = {
 	readonly encounter: ClickEncounter;
 	readonly reading: Dumling.Reading<"de">;
+	readonly attestation: Dumling.Attestation<"de">;
+	readonly origin: "New" | "TopUp";
 	readonly request: KnowledgeRequest;
-	/** Government this occurrence attests that the stored frame may lack. */
-	readonly attestedGovernment?: readonly GovernedPrepositionDraft[];
-	/** The Plural Pattern this occurrence attests that the stored plural may lack. */
-	readonly attestedPluralPattern?: Dumrel.PluralPattern;
 };
 
 /**
  * Knowledge text drafted from the clicked Sentence and Lemma while the
- * Reading was still being resolved, handed to the run that follows.
+ * Reading was still being resolved. The click orchestrator may still store
+ * one; Knowledge production no longer reads it (#623: no drafts).
  */
 export type KnowledgeDraft = {
 	readonly sourceFingerprint: string;
@@ -79,21 +80,18 @@ export type KnowledgeDraft = {
 	}[];
 };
 
-export type KnowledgeProducer = (
+export type KnowledgeProducer = <E>(
 	input: KnowledgeInput,
 	options: {
-		readonly draft?: KnowledgeDraft;
-		/** Receives each batch of changes as soon as it is produced. */
+		/**
+		 * Receives each aspect's changes as soon as it has them, one at a
+		 * time; the producer waits for its Effect, and its failure is the
+		 * run's only error.
+		 */
 		readonly onContribution: (
 			changes: KnowledgeProduction["changes"],
-		) => void;
+		) => Effect.Effect<void, E>;
+		/** Receives each Dumgen operation's trace, serialized, for the run's evidence. */
+		readonly onOperation?: (trace: string) => void;
 	},
-) => Effect.Effect<KnowledgeProduction | CatalogMissSignal, unknown>;
-
-/** Production while Knowledge is idle: it refuses every run and calls no model. */
-export const idleKnowledgeProducer: KnowledgeProducer = () =>
-	Effect.fail(
-		new Error(
-			"Knowledge generation is idle while click resolution is rebuilt.",
-		),
-	);
+) => Effect.Effect<KnowledgeProduction, E>;

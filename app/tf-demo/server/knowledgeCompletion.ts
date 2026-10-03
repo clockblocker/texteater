@@ -95,15 +95,22 @@ export function knowledgeRequestComplete(
 }
 
 /**
- * The request a final publication must cover in stored content. A proposed
- * Valency Frame may be empty, and an empty frame stores nothing (ADR 0034), so
- * a run without failures has answered `valency` whatever it stored; any
- * failure already leaves the request incomplete.
+ * The request a final publication must cover in stored content. Some
+ * aspects may rightly come back empty and store nothing: a Valency Frame
+ * (ADR 0034), a Locution Type, a Formula Role and a Participle Source (ADR
+ * 0036, ADR 0039). A run without failures has answered them whatever it
+ * stored; any failure already leaves the request incomplete.
  */
-export function withoutAnsweredValency(
+export function withoutAnswerableEmptyAspects(
 	request: KnowledgeRequest,
 ): KnowledgeRequest {
-	const { valency: _valency, ...rest } = request;
+	const {
+		valency: _valency,
+		locutionType: _locutionType,
+		formulaRole: _formulaRole,
+		participleSource: _participleSource,
+		...rest
+	} = request;
 	return rest;
 }
 
