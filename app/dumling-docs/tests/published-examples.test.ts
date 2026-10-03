@@ -1,9 +1,25 @@
-import { expect, test } from "bun:test";
+import { beforeAll, expect, test } from "bun:test";
 import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dir, "..");
+
+// The examples compile against Dumling's published declarations.
+beforeAll(async () => {
+	const child = Bun.spawn([process.execPath, "run", "build"], {
+		cwd: resolve(root, "../../battery/dumling"),
+		stdout: "pipe",
+		stderr: "pipe",
+	});
+	const [output, error, exit] = await Promise.all([
+		new Response(child.stdout).text(),
+		new Response(child.stderr).text(),
+		child.exited,
+	]);
+	if (exit) throw Error(output + error);
+}, 60_000);
+
 test("rendered unit and API examples compile against the published package", async () => {
 	const directory = await mkdtemp(join(tmpdir(), "dumling-docs-examples-"));
 	try {

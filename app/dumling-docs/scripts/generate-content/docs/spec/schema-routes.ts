@@ -207,20 +207,21 @@ function routeFromModule(
 
 const dumlingSchemasDir = join(
 	dirname(fileURLToPath(import.meta.resolve("dumling/package.json"))),
-	"dist/generated/schemas",
+	"src/generated/schemas",
 );
 
 /**
- * Every route of Dumling's concrete schemas, read from the built
- * `dumling/schema/<language>/<family>/<kind>` modules.
+ * Every route of Dumling's concrete schemas, read from the
+ * `dumling/schema/<language>/<family>/<kind>` modules, which Bun resolves to
+ * their source.
  */
 export async function loadSchemaRoutes(): Promise<SchemaRoute[]> {
 	const schemaPaths = readdirSync(dumlingSchemasDir, {
 		encoding: "utf8",
 		recursive: true,
 	})
-		.filter((path) => path.endsWith(".js"))
-		.map((path) => path.replaceAll("\\", "/").slice(0, -".js".length))
+		.filter((path) => path.endsWith(".ts"))
+		.map((path) => path.replaceAll("\\", "/").slice(0, -".ts".length))
 		.toSorted();
 
 	return Promise.all(
