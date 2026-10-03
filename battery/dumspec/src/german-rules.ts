@@ -1591,6 +1591,51 @@ const knowledge: Rule[] = [
 			"de/das-rote-band-lag-auf-dem-geschenk",
 		],
 	},
+	// The user's batch 2 rulings Q1 (paraphrase test) and Q2 (head noun) on #884.
+	{
+		id: "de/participle-source-verb-and-meaning",
+		statement:
+			"A Participial Adjective's Participle Source is the verb its form comes from. Its meaning is Verbal when a current Duden or DWDS sense of the verb paraphrases the Reading, a Partizip II in the passive (geschlossen: has been closed), a Partizip I in the progressive; Drifted when none does (gelassen 'calm', bekannt). Comparability alone is no drift. The head noun picks the verb: the plain verb if it is its object (Tür, schließen), the reflexive if it is the reflexive's subject (verheiratet, sich verheiraten); if both fit, the plain verb, unless Duden or DWDS files the participle under sich.",
+		adrs: ["ADR-0036"],
+		routes: lexeme("ADJ"),
+		records: [
+			"de/die-tuer-ist-geschlossen",
+			"de/der-brief-ist-schon-geschrieben",
+			"de/der-geschriebene-brief-lag-auf-dem-tisch",
+			"de/auf-der-karte-sind-drei-seen-eingezeichnet",
+			// Partizip I, checked in the progressive.
+			"de/der-reisende-haendler-wartete-draussen",
+			"de/er-sass-schweigend-am-fenster",
+			// The head noun is the reflexive verb's subject.
+			"de/sie-ist-verheiratet",
+			"de/die-auf-ihn-abgestimmte-loesung-half-sofort",
+			"de/ein-interessierter-leser-fragte-nach",
+		],
+	},
+	// The user's batch 2 ruling Q3 on #884. A wish (gute Besserung) has no
+	// value in Dumrel's set and is decided when one comes up.
+	{
+		id: "de/formula-role-is-narrow",
+		statement:
+			"A routine formula's Formula Role names the routine it performs in conversation: guten Morgen is a Greeting. Reaction is only a fixed reply to a trigger (gern geschehen after thanks, keine Ursache), never just any reply. An exclamation of feeling (o wei, na ja) or a sound word (wupp) performs no routine and takes no Formula Role.",
+		adrs: ["ADR-0039"],
+		routes: [...lexeme("INTJ"), ...locution("INTJ")],
+		records: [
+			"de/guten-tag-ich-habe-einen-termin",
+			"de/herr-keller-betritt-um-sieben-uhr-das-buero-und-gruesst",
+			"de/na-ja-ganz-ueberzeugt-bin-ich-nicht",
+			"de/die-schoss-das-haeschen-ganz-entzwei",
+		],
+	},
+	// The user's batch 2 ruling Q5 on #884.
+	{
+		id: "de/measure-noun-plural-is-regular",
+		statement:
+			"A measure noun stores only its regular plural: Lot stores Lote. The uninflected form after a number (drei Lot, zwei Pfund) is a measure construction, not a second plural, even where Duden or DWDS gives it as the plural of the measure sense.",
+		adrs: ["ADR-0038"],
+		routes: lexeme("NOUN"),
+		records: ["de/er-wog-vielleicht-ein-halbes-lot"],
+	},
 ];
 
 /** What a Reading's Emoji Description names, and when a Lemma gets another (#877). */
