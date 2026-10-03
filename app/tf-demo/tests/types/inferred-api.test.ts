@@ -76,7 +76,7 @@ describe("Convex API types the client reads", () => {
 
 	it("a Shadow Note names its relations and types its candidates", async () => {
 		expect(await inferred("ShadowPendingRelation")).toMatchInlineSnapshot(
-			`"type ShadowPendingRelation = { locatorKey: string; relation: SemanticRelation; }"`,
+			`"type ShadowPendingRelation = { locatorKey: string; relation: Dumrel.SemanticRelation; }"`,
 		);
 		expect(await inferred("ShadowCandidateFamily")).toMatchInlineSnapshot(
 			`"type ShadowCandidateFamily = "Lexeme" | "Locution" | "Morpheme" | "Saying""`,
@@ -88,7 +88,7 @@ describe("Convex API types the client reads", () => {
 
 	it("a Reading Note names its Reading Knowledge", async () => {
 		expect(await inferred("ReadingNoteKnowledge")).toMatchInlineSnapshot(
-			`"type ReadingNoteKnowledge = Omit<ReadingKnowledge, "semanticRelations"> & { semanticRelations?: PresentedRelations | undefined; }"`,
+			`"type ReadingNoteKnowledge = Omit<Dumrel.ReadingKnowledge, "semanticRelations"> & { semanticRelations?: PresentedRelations | undefined; }"`,
 		);
 	}, 30_000);
 

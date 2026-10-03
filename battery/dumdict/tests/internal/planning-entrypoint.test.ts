@@ -21,6 +21,8 @@ test("planning entrypoint plans without Effect, schema authoring, or retained pa
 			resolveDir: resolve(import.meta.dir, "../.."),
 		},
 		bundle: true,
+		// Bundle workspace packages from source, as Convex does for the transaction.
+		conditions: ["convex", "module"],
 		write: false,
 		format: "esm",
 		platform: "node",
