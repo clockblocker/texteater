@@ -233,14 +233,45 @@ test("a live resolve.grammar run needs granted budgets and stays under them", ()
 			pricedFromCache: 0,
 		},
 	};
-	expect(() => guardGrammarBudget(price, undefined, "5000")).toThrow(
+	expect(() => guardGrammarBudget(price, undefined, "5000", "60")).toThrow(
 		"needs --budget",
 	);
-	expect(() => guardGrammarBudget(price, "2999", "5000")).toThrow(
+	expect(() => guardGrammarBudget(price, "2999", "5000", "60")).toThrow(
 		"past the budgets",
 	);
-	expect(() => guardGrammarBudget(price, "3000", "1200")).toThrow(
+	expect(() => guardGrammarBudget(price, "3000", "1199", "60")).toThrow(
 		"past the budgets",
 	);
-	expect(() => guardGrammarBudget(price, "3000", "1260")).not.toThrow();
+	expect(() => guardGrammarBudget(price, "3000", "1200", "59")).toThrow(
+		"past the budgets",
+	);
+	expect(guardGrammarBudget(price, "3000", "1200", "60")).toEqual({
+		jevInputTokens: 3000,
+		lunaInputTokens: 1200,
+		lunaOutputTokens: 60,
+	});
+});
+
+test("a live run stops at the first cap it would cross and names it", async () => {
+	const { root, cases } = await frozenRoot();
+	const experiment = grammarExperiment("dev", false);
+	const { jev, luna, counter } = goldTransports(cases);
+	await expect(
+		experiment.evaluate({
+			experimentId: experiment.id,
+			sourceRevision: "test",
+			root,
+			jev,
+			luna,
+			concurrency: 1,
+			caps: {
+				jevInputTokens: 1_000_000,
+				lunaInputTokens: 1_000_000,
+				lunaOutputTokens: 100,
+			},
+		}),
+	).rejects.toThrow("stopped at the Luna output cap of 100 tokens");
+	// Each Luna call reports 20 output tokens and holds back 60 until it
+	// answers: after three (60 spent), a fourth would pass 100.
+	expect(counter.luna).toBe(3);
 });

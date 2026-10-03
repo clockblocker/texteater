@@ -70,6 +70,7 @@ import {
 	type GrammarPrice,
 	grammarExperiment,
 } from "./resolve-grammar/experiment.js";
+import type { GrammarCaps } from "./resolve-grammar/models.js";
 import {
 	evaluateRawSegmentInUnits,
 	type RawOutput,
@@ -172,6 +173,8 @@ export type EvaluateArgs = {
 	readonly luna?: LunaAsk;
 	/** Receives a live resolve.grammar run's price before anything is asked; throw to refuse. */
 	readonly beforeGrammarLive?: (price: GrammarPrice) => void | Promise<void>;
+	/** resolve.grammar's hard caps on fresh tokens. */
+	readonly grammarCaps?: GrammarCaps;
 	/** resolve.grammar: only the first this many cases, for a smoke run. */
 	readonly limit?: number;
 	/** resolve.grammar's frozen sets and cache. */
@@ -585,6 +588,7 @@ function resolveGrammarEntry(set: "dev" | "heldout", e2e: boolean): Experiment {
 				...(args.grammarRoot ? { root: args.grammarRoot } : {}),
 				...(args.labRoot ? { segmentLabRoot: args.labRoot } : {}),
 				...(args.limit ? { limit: args.limit } : {}),
+				...(args.grammarCaps ? { caps: args.grammarCaps } : {}),
 			});
 			return {
 				...(evaluated.run ? { run: evaluated.run } : {}),

@@ -89,13 +89,28 @@ export type GrammarModelsOptions = {
 	readonly luna?: LunaAsk;
 	/** Called before every fresh request; throw to stop spending. */
 	readonly beforeSpend?: () => void;
+	/** The round's hard caps on fresh tokens; a request that would cross one is refused. */
+	readonly caps?: GrammarCaps;
 };
+
+/** Hard caps on a live run's fresh tokens (#876: budgets per round). */
+export type GrammarCaps = {
+	readonly jevInputTokens: number;
+	readonly lunaInputTokens: number;
+	readonly lunaOutputTokens: number;
+};
+
+/** Luna output tokens held back per request in flight, against the output cap. */
+const lunaOutputPerRequest = 60;
 
 /** The cached transports of one evaluation, with what they spent or foresaw. */
 export class GrammarModels {
 	readonly spend = { jev: fresh(), luna: fresh() };
 	readonly projection = { jev: projected(), luna: projected() };
+	/** Which cap stopped the run, once one did. */
+	capHit: string | undefined;
 	readonly #options: GrammarModelsOptions;
+	readonly #inFlight = { jevInput: 0, lunaInput: 0, lunaCalls: 0 };
 
 	constructor(options: GrammarModelsOptions) {
 		this.#options = options;
@@ -153,7 +168,29 @@ export class GrammarModels {
 					`jev cache miss in offline mode (${context.stage})`,
 				);
 			this.#options.beforeSpend?.();
-			const response = await this.#options.jev(request, context);
+			const estimate = Math.ceil(
+				stableJson({ state: body.state, questions: body.questions })
+					.length / jevCharsPerToken,
+			);
+			const { caps } = this.#options;
+			if (
+				caps &&
+				(this.capHit !== undefined ||
+					this.spend.jev.freshInputTokens +
+						this.#inFlight.jevInput +
+						estimate >
+						caps.jevInputTokens)
+			) {
+				this.capHit ??= `jev input cap of ${caps.jevInputTokens} tokens`;
+				throw Error(`Stopped at the ${this.capHit}`);
+			}
+			this.#inFlight.jevInput += estimate;
+			let response: JevResponse;
+			try {
+				response = await this.#options.jev(request, context);
+			} finally {
+				this.#inFlight.jevInput -= estimate;
+			}
 			this.spend.jev.freshCalls++;
 			this.spend.jev.freshInputTokens += response.usage.input_tokens;
 			this.spend.jev.freshOutputTokens += response.usage.output_tokens;
@@ -205,7 +242,37 @@ export class GrammarModels {
 					`Luna cache miss in offline mode (${context.stage})`,
 				);
 			this.#options.beforeSpend?.();
-			const response = await this.#options.luna(request, context);
+			const estimate = Math.ceil(
+				(request.systemPrompt.length +
+					stableJson(request.input).length +
+					stableJson(request.outputSchema ?? {}).length) /
+					lunaCharsPerToken,
+			);
+			const { caps } = this.#options;
+			if (caps) {
+				const input =
+					this.spend.luna.freshInputTokens +
+					this.#inFlight.lunaInput +
+					estimate;
+				const output =
+					this.spend.luna.freshOutputTokens +
+					(this.#inFlight.lunaCalls + 1) * lunaOutputPerRequest;
+				if (this.capHit === undefined && input > caps.lunaInputTokens)
+					this.capHit = `Luna input cap of ${caps.lunaInputTokens} tokens`;
+				if (this.capHit === undefined && output > caps.lunaOutputTokens)
+					this.capHit = `Luna output cap of ${caps.lunaOutputTokens} tokens`;
+				if (this.capHit !== undefined)
+					throw Error(`Stopped at the ${this.capHit}`);
+			}
+			this.#inFlight.lunaInput += estimate;
+			this.#inFlight.lunaCalls++;
+			let response: LunaResponse;
+			try {
+				response = await this.#options.luna(request, context);
+			} finally {
+				this.#inFlight.lunaInput -= estimate;
+				this.#inFlight.lunaCalls--;
+			}
 			const tokens = lunaTokens(response.metadata);
 			this.spend.luna.freshCalls++;
 			this.spend.luna.freshInputTokens += tokens.inputTokens;

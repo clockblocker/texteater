@@ -48,6 +48,7 @@ import {
 import {
 	type ExecutorProjection,
 	type ExecutorSpend,
+	type GrammarCaps,
 	GrammarModels,
 } from "./models.js";
 import {
@@ -89,6 +90,8 @@ export type GrammarEvaluateArgs = {
 	readonly estimate?: boolean;
 	readonly beforeLive?: (price: GrammarPrice) => void | Promise<void>;
 	readonly beforeSpend?: () => void;
+	/** The round's hard caps; a live run stops at the first it would cross. */
+	readonly caps?: GrammarCaps;
 	readonly outputDirectory?: string;
 	readonly signal?: AbortSignal;
 	readonly concurrency?: number;
@@ -336,6 +339,7 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 				...(args.jev ? { jev: args.jev } : {}),
 				...(args.luna ? { luna: args.luna } : {}),
 				...(args.beforeSpend ? { beforeSpend: args.beforeSpend } : {}),
+				...(args.caps ? { caps: args.caps } : {}),
 			});
 			if (!args.offline) {
 				if (!args.jev || !args.luna)
@@ -343,6 +347,10 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 						"A live resolve.grammar run needs jev and Luna",
 					);
 				await pass(cases, live, concurrency, units);
+				if (live.capHit !== undefined)
+					throw Error(
+						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.spend)}`,
+					);
 			}
 			const replay = new GrammarModels({ directory, mode: "offline" });
 			const byId = new Map(

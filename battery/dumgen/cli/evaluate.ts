@@ -10,7 +10,8 @@
  *   bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
  *   bun run evaluate --experiment resolve-grammar/de:dev --estimate
  *   bun run evaluate --experiment resolve-grammar/de:dev --revision <rev>
- *       --budget <jev input tokens> --luna-budget <Luna tokens> [--limit N]
+ *       --budget <jev input tokens> --luna-budget <Luna input tokens>
+ *       --luna-output-budget <Luna output tokens> [--limit N]
  *   bun run evaluate --open <runId>
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
@@ -20,8 +21,10 @@
  *
  * A resolve.grammar run prices itself first and goes live only under the
  * budgets the main session granted the round: `--budget` for fresh jev
- * input tokens and `--luna-budget` for Luna's input and output tokens. Its
- * answers are cached, so `--offline` re-scores it for free.
+ * input tokens, `--luna-budget` for Luna's input tokens and
+ * `--luna-output-budget` for its output tokens. The same caps stop it
+ * while it runs. Its answers are cached, so `--offline` re-scores it for
+ * free.
  */
 import { execFileSync } from "node:child_process";
 import { join, resolve } from "node:path";
@@ -44,6 +47,7 @@ import {
 	unitConfigs,
 } from "../src/evaluation/experiments.js";
 import type { GrammarPrice } from "../src/evaluation/resolve-grammar/experiment.js";
+import type { GrammarCaps } from "../src/evaluation/resolve-grammar/models.js";
 import type { Splitter } from "../src/evaluation/split-text.js";
 import { createOpenAILuna } from "../src/openai-luna.js";
 import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
@@ -96,6 +100,7 @@ export async function runEvaluationCli(
 			concurrency: { type: "string" },
 			budget: { type: "string" },
 			"luna-budget": { type: "string" },
+			"luna-output-budget": { type: "string" },
 			limit: { type: "string" },
 		},
 	});
@@ -192,12 +197,19 @@ export async function runEvaluationCli(
 						luna: createOpenAILuna({
 							apiKey: environment("OPENAI_API_KEY"),
 						}),
+						grammarCaps: guardGrammarBudget(
+							undefined,
+							values.budget,
+							values["luna-budget"],
+							values["luna-output-budget"],
+						),
 						beforeGrammarLive(price: GrammarPrice) {
 							warn(JSON.stringify({ price }));
 							guardGrammarBudget(
 								price,
 								values.budget,
 								values["luna-budget"],
+								values["luna-output-budget"],
 							);
 						},
 					}
@@ -322,31 +334,41 @@ export async function runEvaluationCli(
 }
 
 /**
- * Refuses a live resolve.grammar run that has no granted budget or whose
- * price exceeds it: fresh jev input tokens against `--budget`, Luna's
- * input and output tokens against `--luna-budget`.
+ * The caps a live resolve.grammar run was granted, refusing a run with no
+ * granted budget or whose price exceeds it: fresh jev input tokens against
+ * `--budget`, Luna's input against `--luna-budget` and its output against
+ * `--luna-output-budget`.
  */
 export function guardGrammarBudget(
-	price: GrammarPrice,
+	price: GrammarPrice | undefined,
 	jevBudget: string | undefined,
 	lunaBudget: string | undefined,
-): void {
-	const jev = Number(jevBudget);
-	const luna = Number(lunaBudget);
+	lunaOutputBudget: string | undefined,
+): GrammarCaps {
+	const caps = {
+		jevInputTokens: Number(jevBudget),
+		lunaInputTokens: Number(lunaBudget),
+		lunaOutputTokens: Number(lunaOutputBudget),
+	};
 	if (
 		!jevBudget ||
 		!lunaBudget ||
-		!Number.isFinite(jev) ||
-		!Number.isFinite(luna)
+		!lunaOutputBudget ||
+		!Object.values(caps).every(Number.isFinite)
 	)
 		throw Error(
-			"A live resolve.grammar run needs --budget (jev input tokens) and --luna-budget (Luna tokens); price it with --estimate first. Nothing was asked.",
+			"A live resolve.grammar run needs --budget (jev input tokens), --luna-budget (Luna input tokens) and --luna-output-budget (Luna output tokens); price it with --estimate first. Nothing was asked.",
 		);
-	const lunaTokens = price.luna.inputTokens + price.luna.outputTokens;
-	if (price.jev.inputTokens > jev || lunaTokens > luna)
+	if (
+		price &&
+		(price.jev.inputTokens > caps.jevInputTokens ||
+			price.luna.inputTokens > caps.lunaInputTokens ||
+			price.luna.outputTokens > caps.lunaOutputTokens)
+	)
 		throw Error(
-			`This run projects ${price.jev.inputTokens} jev input tokens and ${lunaTokens} Luna tokens, past the budgets of ${jev} and ${luna}. Nothing was asked.`,
+			`This run projects ${price.jev.inputTokens} jev input tokens and ${price.luna.inputTokens} in / ${price.luna.outputTokens} out Luna tokens, past the budgets of ${caps.jevInputTokens}, ${caps.lunaInputTokens} and ${caps.lunaOutputTokens}. Nothing was asked.`,
 		);
+	return caps;
 }
 
 /**
