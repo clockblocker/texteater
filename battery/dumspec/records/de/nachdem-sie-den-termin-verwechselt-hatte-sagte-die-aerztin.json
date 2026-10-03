@@ -42,22 +42,38 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0039"],
+		"adrs": ["ADR-0034", "ADR-0039", "ADR-0044", "dumgen/ADR-0007"],
 		"rules": [
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "1a5d9f3240c41e69"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "19c59bf41ed26810"
+			},
 			{
 				"rule": "de/routine-formula-is-intj",
 				"hash": "32797f3b5f083780"
 			},
 			{
-				"rule": "de/governed-preposition-joins-its-governor",
-				"hash": "19c59bf41ed26810"
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "f0b9c8226ff45fb8"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "b8777ac73be3fda5"
 			}
 		],
 		"references": [
 			{
 				"title": "Duden: Verzeihung",
 				"url": "https://www.duden.de/rechtschreibung/Verzeihung",
-				"supports": "Target 0: Verzeihung! and jemanden um Verzeihung bitten, with no für."
+				"supports": "Target 1: Verzeihung! and jemanden um Verzeihung bitten, with no für; jemanden makes the Optional Acc S"
 			},
 			{
 				"title": "Duden: Entschuldigung",
@@ -68,44 +84,195 @@
 				"title": "Duden: bitten",
 				"url": "https://www.duden.de/rechtschreibung/bitten",
 				"supports": "für die Wartezeit is free: sense 1, eine Bitte aussprechen, takes um (um Hilfe bitten) and no für; für appears only under sense 2, Fürsprache einlegen (er hat für seinen Kollegen gebeten)."
+			},
+			{
+				"title": "OpenThesaurus: um Verzeihung bitten",
+				"url": "https://www.openthesaurus.de/synonyme/um%20Verzeihung%20bitten",
+				"supports": "Target 1 Knowledge: synset sich entschuldigen, um Entschuldigung bitten, um Vergebung bitten, um Verzeihung bitten, Abbitte leisten, …"
 			}
 		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [21, 23, 25, 27],
-			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙇" },
+			"memberSegmentIndices": [21],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "👈",
+				"knowledge": {}
+			},
 			"notes": {
-				"rationale": "ich bitte um Verzeihung apologizes (Duden Verzeihung: Verzeihung!, jemanden um Verzeihung bitten), so it takes the 🙇 of Entschuldigung. für die Wartezeit is free: für names the reason, as wegen could (Duden Entschuldigung: jemanden für etwas, wegen etwas um Entschuldigung bitten), and no word of the formula governs it. E-VALBU lists only verbs, so Duden decides for the head word Verzeihung, and it codes no für, nor does verzeihen (jemandem etwas verzeihen); bitten takes für only for Fürsprache (Duden bitten 2). So für is an adjunct's preposition, unlike the für of vielen Dank (de/governed-preposition-joins-its-governor, ADR 0034). Decided by an agent under the user's delegation (2026-10-02, #853).",
+				"rationale": "Ich, the speaker as subject of bitte, is the personal pronoun ich, Nom.Sg., a unit of its own: it is no member of um Verzeihung bitten, which conjugates freely (user ruling R6, 2026-10-03)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "Ich",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "ich",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": null,
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"canonicalForm": "ich",
+						"coreFeatures": {
+							"case": "Nom",
+							"number": "Sing",
+							"person": "1",
+							"polite": null,
+							"poss": null,
+							"pronType": "Prs",
+							"gender": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [23, 25, 27],
+			"route": {
+				"family": "Locution",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🙇",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich entschuldigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "um Entschuldigung bitten",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "um Vergebung bitten",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
+			"notes": {
+				"rationale": "bitte um Verzeihung is the Locution VERB um Verzeihung bitten, not a routine formula: it conjugates freely (sie bat um Verzeihung), and Duden (jemanden um Verzeihung bitten) and OpenThesaurus list it as a verb phrase, so ich is a unit of its own (user ruling R6, 2026-10-03). um and Verzeihung are fixed members (de/fixed-member-test). It apologizes, so it takes the 🙇 of Entschuldigung. für die Wartezeit is free: für names the reason, as wegen could (Duden Entschuldigung: jemanden für etwas, wegen etwas um Entschuldigung bitten), and no word of the expression governs it. Duden codes no für for Verzeihung, nor does verzeihen (jemandem etwas verzeihen), and bitten takes für only for Fürsprache (Duden bitten 2). So für is an adjunct's preposition, unlike the für of vielen Dank (de/governed-preposition-joins-its-governor, ADR 0034; decided by an agent under the user's delegation, 2026-10-02, #853). Knowledge (#884): Nom S · (Acc S), since ich bitte um Verzeihung is complete without jemanden, as bitten (Acc) (um + Acc); no Locution Type, because bitten keeps its own meaning 'ask for' and the forgiver is not the subject, so it is no Funktionsverbgefüge; synonyms sich entschuldigen, um Entschuldigung bitten and um Vergebung bitten from the OpenThesaurus synset. Decided by agents under the user's delegation. The Apology Formula Role is lost: only an INTJ carries one.",
 				"knownMistakes": [
-					"Taking für into the formula: it marks the reason, as wegen could, and no word of the formula governs it."
+					"Taking für into the expression: it marks the reason, as wegen could, and no word of the expression governs it.",
+					"Taking ich into the expression as an INTJ formula: um Verzeihung bitten conjugates freely."
 				]
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "bitte",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "um",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Verzeihung",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
 				"surface": {
 					"unitKind": "Surface",
 					"language": "de",
+					"normalizedSurface": "bitte um Verzeihung",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "1",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": null,
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
 						"family": "Locution",
-						"kind": "INTJ",
-						"canonicalForm": "ich bitte um Verzeihung",
+						"kind": "VERB",
+						"canonicalForm": "um Verzeihung bitten",
 						"coreFeatures": {}
 					},
-					"normalizedSurface": "ich bitte um Verzeihung",
-					"spelling": { "kind": "Canonical" },
 					"surfaceFeatures": null
-				},
-				"members": [
-					{ "attested": "Ich", "orthography": "Standard" },
-					{ "attested": "bitte", "orthography": "Standard" },
-					{ "attested": "um", "orthography": "Standard" },
-					{ "attested": "Verzeihung", "orthography": "Standard" }
-				],
-				"realizationCoverage": "Full"
+				}
 			}
 		}
 	],

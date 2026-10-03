@@ -207,9 +207,10 @@ export const conjugationClassesSchema = z.array(conjugationClassSchema).min(1);
 /** A Locution Reading's Idiom or Collocation type; never a Lemma split (ADR 0039). */
 export const locutionTypeSchema = z.enum(locutionTypeValues);
 /**
- * A Saying Reading's type, with who it is attributed to where that is known
- * (`Sein oder Nichtsein`: WingedWord, Shakespeare). Never a Lemma split (ADR
- * 0039).
+ * A Saying Reading's type, with its attribution where that is known: the
+ * author, and the work where known (`Sein oder Nichtsein`: WingedWord,
+ * "Shakespeare, Hamlet"; `Wissen ist Macht`: "Francis Bacon, Meditationes
+ * Sacrae"). Never a Lemma split (ADR 0039).
  */
 export const sayingTypeSchema = z.strictObject({
 	type: z.enum(sayingTypeValues),

@@ -31,17 +31,94 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0039", "dumgen/ADR-0007"],
+		"rules": [
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "32797f3b5f083780"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/formula-role-is-narrow",
+				"hash": "68e794801a922563"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "b8777ac73be3fda5"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: Wiedersehen",
+				"url": "https://www.duden.de/rechtschreibung/Wiedersehen",
+				"supports": "Target 0: [auf] Wiedersehen (Abschiedsformel)"
+			},
+			{
+				"title": "OpenThesaurus: auf Wiedersehen",
+				"url": "https://www.openthesaurus.de/synonyme/auf%20Wiedersehen",
+				"supports": "Target 0 Knowledge: synset ade, adieu, auf Wiedersehen, Leb wohl!, tschüs, tschüss, (auf) Wiederschau(e)n, …"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [20, 22],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👋" },
+			"reading": {
+				"emojiDescription": "👋",
+				"knowledge": {
+					"formulaRole": "Farewell",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "tschüss",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "ade",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "adieu",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "auf Wiedersehen is Duden's 'Abschiedsformel', and the parting wave takes the 👋 of grüßen and guten Morgen."
+				"rationale": "auf Wiedersehen is Duden's 'Abschiedsformel', a routine formula over both its words (de/routine-formula-is-intj), and the parting wave takes the 👋 of grüßen and guten Morgen. mit and the quotation marks stay outside. Knowledge (#884): Formula Role Farewell; no Locution Type, as guten Tag; synonyms tschüss, ade and adieu from the OpenThesaurus synset, since register neither demotes nor blocks a claim. Decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -19,17 +19,58 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [
-			{ "rule": "de/routine-formula-is-intj", "hash": "32797f3b5f083780" }
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "32797f3b5f083780"
+			},
+			{
+				"rule": "de/formula-role-is-narrow",
+				"hash": "68e794801a922563"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "b8777ac73be3fda5"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Entschuldigung",
+				"url": "https://www.duden.de/rechtschreibung/Entschuldigung",
+				"supports": "Target 0: sense 3 (Höflichkeitsformel) Entschuldigung!, Äußerung oder Höflichkeitsformel, mit der jemand um Nachsicht, Verständnis bittet"
+			},
+			{
+				"title": "DWDS: Entschuldigung",
+				"url": "https://www.dwds.de/wb/Entschuldigung",
+				"supports": "Target 0 Knowledge: sense 2 Nachsicht und Verständnis; Verzeihung: Entschuldigung (bitte)!, Entschuldigung, können Sie mir sagen, wie spät es ist? (= Höflichkeitsformel)"
+			},
+			{
+				"title": "OpenThesaurus: Entschuldigung!",
+				"url": "https://www.openthesaurus.de/synonyme/Entschuldigung!",
+				"supports": "Target 0 Knowledge: synsets {Entschuldigung!, Bitte entschuldigen Sie, …, Tut mir leid, Tschuldigung!} and {Entschuldigung, …., ich darf doch mal, Pardon …, Sie werden erlauben…}"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙇" },
+			"reading": {
+				"emojiDescription": "🙇",
+				"knowledge": {
+					"formulaRole": "Apology"
+				},
+				"coverage": {
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Entschuldigung, said to a stranger before a question, is the apology formula, one word, so it is a Lexeme INTJ. The noun die Entschuldigung is another Lemma (Sie besteht auf einer Entschuldigung). Entschuldigung! before a stranger is asked something is Duden's 'Höflichkeitsformel' asking for forbearance, an apology for the intrusion, so it takes the 🙇 of the NOUN Entschuldigung."
+				"rationale": "Entschuldigung, said to a stranger before a question, is the apology formula, one word, so it is a Lexeme INTJ. The noun die Entschuldigung is another Lemma (Sie besteht auf einer Entschuldigung). Entschuldigung! before a stranger is asked something is Duden's 'Höflichkeitsformel' asking for forbearance, an apology for the intrusion, so it takes the 🙇 of the NOUN Entschuldigung. Knowledge (#884): Formula Role Apology, which holds for the one INTJ Reading, sorry and excuse me alike (Duden sense 3, DWDS sense 2); Initiation would fit only this use. Decided by agents under the user's delegation. Open for the user: Pardon (synonym or near-synonym) and Tschuldigung (synonym or none), on which the judges split; drafted with no relation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

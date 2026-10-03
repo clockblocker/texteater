@@ -16,17 +16,136 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0034", "ADR-0039", "dumgen/ADR-0007"],
+		"rules": [
+			{
+				"rule": "de/funktionsverbgefuege-are-collocations",
+				"hash": "57f04b272a0e9aeb"
+			},
+			{
+				"rule": "de/fixed-member-test",
+				"hash": "1a5d9f3240c41e69"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "f0b9c8226ff45fb8"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "b8777ac73be3fda5"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: Entscheidung",
+				"url": "https://www.duden.de/rechtschreibung/Entscheidung",
+				"supports": "Target 0: sense 1 das Entscheiden, eine Entscheidung treffen, fällen, herbeiführen; the gloss (etwas entscheiden) backs no relation (R3)"
+			},
+			{
+				"title": "Duden: entscheiden",
+				"url": "https://www.duden.de/rechtschreibung/entscheiden",
+				"supports": "Target 0 Knowledge: über den Einsatz von Truppen entscheiden (the über the Collocation takes on, R4); Synonyme zu entscheiden: eine Entscheidung treffen, an explicit listing"
+			},
+			{
+				"title": "OpenThesaurus: eine Entscheidung treffen",
+				"url": "https://www.openthesaurus.de/synonyme/eine%20Entscheidung%20treffen",
+				"supports": "Target 0 Knowledge: synset sich entscheiden (zu / für), (einen) Beschluss treffen (auf e. Versammlung), (eine) Entscheidung fällen, (eine) Entscheidung treffen, (einen) Entschluss fassen, sich durchringen (zu), sich entschließen (zu), (eine) Wahl treffen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "⚖✅" },
+			"reading": {
+				"emojiDescription": "⚖✅",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "über",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "entscheiden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "eine Entscheidung fällen",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "einen Entschluss fassen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The conventional support-verb expression is non-idiomatic but lexically restricted. Its contextual Surface follows sentence order and takes the finite verb's features."
+				"rationale": "The conventional support-verb expression is non-idiomatic but lexically restricted: treffen only supports Entscheidung, a Collocation (de/funktionsverbgefuege-are-collocations), whose members are the verb, the noun and its own article eine. Its contextual Surface follows sentence order and takes the finite verb's features. Knowledge (#884): Nom S · (über + Acc T), the frame taking on the noun's government as one predicate, entscheiden über (user ruling R4, 2026-10-03). entscheiden is a synonym on Duden's explicit Synonyme listing under entscheiden, not on the gloss (etwas entscheiden) under Entscheidung (R3); eine Entscheidung fällen is a synonym and einen Entschluss fassen a near-synonym from the OpenThesaurus synset. Decided by agents under the user's delegation. Open for the user: sich entscheiden (synonym or near-synonym), and einen Beschluss treffen, sich entschließen and eine Wahl treffen (near-synonym or none), on which the judges split."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

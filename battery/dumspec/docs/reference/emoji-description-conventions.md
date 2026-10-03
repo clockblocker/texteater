@@ -222,7 +222,7 @@ an owned article or an agreeing adjective in the sentence ([ADR 0040]).
 | --- | --- | --- |
 | thanks | 🙏 | `danke`, `vielen Dank`, Hebrew `תודה` |
 | greeting or farewell | 👋 | `hallo`, `guten Morgen`, `auf Wiedersehen`, Hebrew `שלום` |
-| apology | 🙇 | `Entschuldigung`, `ich bitte um Verzeihung` |
+| apology | 🙇 | `Entschuldigung`; the Locution VERB `um Verzeihung bitten` too |
 
 [ADR 0002]: ../../../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
 [ADR 0029]: ../../../../docs/adr/0029-keep-preposition-government-out-of-lemma-identity.md

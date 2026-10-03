@@ -85,7 +85,8 @@ _Avoid_: Phraseme Kind, idiomaticity
 
 **Saying Type**:
 Whether a Saying's Reading is a Proverb or a Winged Word (Dumling), with an
-optional attribution. It never splits a Lemma. See [ADR 0039].
+optional attribution: the author, and the work where known ("Shakespeare,
+Hamlet"). It never splits a Lemma. See [ADR 0039].
 _Avoid_: Aphorism, provenance Kind
 
 **Formula Role**:

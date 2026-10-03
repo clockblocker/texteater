@@ -33,7 +33,7 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0034", "ADR-0039"],
 		"rules": [
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -42,17 +42,81 @@
 			{
 				"rule": "de/routine-formula-is-intj",
 				"hash": "32797f3b5f083780"
+			},
+			{
+				"rule": "de/formula-role-is-narrow",
+				"hash": "68e794801a922563"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "b8777ac73be3fda5"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Dank",
+				"url": "https://www.duden.de/rechtschreibung/Dank",
+				"supports": "Target 0: vielen, herzlichen, tausend Dank!; jemandem [für etwas] Dank sagen, so für is governed"
+			},
+			{
+				"title": "OpenThesaurus: vielen Dank",
+				"url": "https://www.openthesaurus.de/synonyme/vielen%20Dank",
+				"supports": "Target 0 Knowledge: synset danke, danke schön, danke sehr, danke vielmals, vielen Dank, …"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 18, 20],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🙏" },
+			"reading": {
+				"emojiDescription": "🙏",
+				"knowledge": {
+					"formulaRole": "Thanks",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "danke",
+								"coreFeatures": {
+									"partType": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "danke schön",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "danke sehr",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "vielen Dank is one of Duden's thanks formulas, so it takes the 🙏 of danke. Its head word Dank governs für (Duden Dank: Anerkennung für etwas Gutes, jemandem [für etwas] Dank sagen), so für is a member of the formula, as vor joins Angst haben, and stays out of the normalized Surface vielen Dank; Ihre Hilfe is free (de/governed-preposition-joins-its-governor). An INTJ records no valencyEvidence, so the member carries none. Ruled 2026-10-02 (#701, grouping audit Q1)."
+				"rationale": "vielen Dank is one of Duden's thanks formulas, so it takes the 🙏 of danke. Its head word Dank governs für (Duden Dank: Anerkennung für etwas Gutes, jemandem [für etwas] Dank sagen), so für is a member of the formula, as vor joins Angst haben, and stays out of the normalized Surface vielen Dank; Ihre Hilfe is free (de/governed-preposition-joins-its-governor). An INTJ records no valencyEvidence, so the member carries none. Ruled 2026-10-02 (#701, grouping audit Q1). Knowledge (#884): Formula Role Thanks; no Locution Type, as guten Tag; synonyms danke, danke schön and danke sehr from the OpenThesaurus synset. Decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

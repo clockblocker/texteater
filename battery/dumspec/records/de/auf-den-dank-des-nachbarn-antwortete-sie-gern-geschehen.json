@@ -27,17 +27,93 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0039", "dumgen/ADR-0007"],
+		"rules": [
+			{
+				"rule": "de/routine-formula-is-intj",
+				"hash": "32797f3b5f083780"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/formula-role-is-narrow",
+				"hash": "68e794801a922563"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "b8777ac73be3fda5"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: geschehen",
+				"url": "https://www.duden.de/rechtschreibung/geschehen",
+				"supports": "Target 0: (Höflichkeitsfloskel als Reaktion, wenn jemand sich bei einem bedankt) „Danke schön!“ – „Gern geschehen!“"
+			},
+			{
+				"title": "DWDS: gern geschehen",
+				"url": "https://www.dwds.de/wb/gern%20geschehen",
+				"supports": "Target 0 Knowledge: als höfliche Erwiderung auf einen Dank, das habe ich doch gern getan; Synonym zu keine Ursache!"
+			},
+			{
+				"title": "OpenThesaurus: gern geschehen",
+				"url": "https://www.openthesaurus.de/synonyme/gern%20geschehen",
+				"supports": "Target 0 Knowledge: synset Nichts zu danken., bitte schön, Bitte sehr!, Gern geschehen., keine Ursache, …"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [16, 18],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😊" },
+			"reading": {
+				"emojiDescription": "😊",
+				"knowledge": {
+					"formulaRole": "Reaction",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "keine Ursache",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "nichts zu danken",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "bitte schön",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "gern geschehen answers thanks, 'das habe ich doch gern getan' (DWDS), so it takes the 😊 of gern."
+				"rationale": "gern geschehen answers thanks, 'das habe ich doch gern getan' (DWDS), a routine formula over both its words (de/routine-formula-is-intj), so it takes the 😊 of gern. Knowledge (#884): Formula Role Reaction, a fixed reply to thanks (de/formula-role-is-narrow); no Locution Type, as guten Tag; synonyms keine Ursache, nichts zu danken and bitte schön from the OpenThesaurus synset (a relation targets the Lemma bitte schön, whichever of its Readings this is). Decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

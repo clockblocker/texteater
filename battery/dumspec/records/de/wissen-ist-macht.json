@@ -9,18 +9,67 @@
 		{ "kind": "ResolvableText", "text": "Macht" },
 		{ "kind": "Punctuation", "text": "." }
 	],
-	"coverage": "Partial",
+	"coverage": "Full",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
+		"adrs": ["ADR-0039"],
+		"rules": [
+			{
+				"rule": "de/saying-needs-uptake",
+				"hash": "b191e72860fbbf9c"
+			},
+			{
+				"rule": "de/largest-fixed-unit",
+				"hash": "9a404db30f2b7c82"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/multiword-unit-describes-its-whole-meaning",
+				"hash": "99996175abb4200d"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "b8777ac73be3fda5"
+			}
+		],
+		"references": [
+			{
+				"title": "DWDS: Wissen ist Macht",
+				"url": "https://www.dwds.de/wb/Wissen%20ist%20Macht",
+				"supports": "Target 0: Mehrwortausdruck, wer gebildet ist oder umfassende Kenntnisse in etw. hat, ist gegenüber anderen im Vorteil; a Beleg names the philosopher Francis Bacon"
+			},
+			{
+				"title": "Büchmann, Geflügelte Worte (19. Aufl., 1898)",
+				"url": "https://www.gutenberg.org/ebooks/43759",
+				"supports": "Target 0 Knowledge: Francis Bacon, Meditationes sacrae (1597), Art. 11 De Haeresibus: nam et ipsa scientia potestas est, Wissenschaft (selbst) ist Macht"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2, 4],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "📚👑" },
+			"reading": {
+				"emojiDescription": "📚👑",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Francis Bacon, Meditationes Sacrae"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -44,6 +93,9 @@
 					},
 					"surfaceFeatures": null
 				}
+			},
+			"notes": {
+				"rationale": "Wissen ist Macht is a complete saying speakers have taken up, one Saying target over all its words (de/saying-needs-uptake): DWDS lists it, and Büchmann traces it to Francis Bacon. Every word is a member, so coverage is Full. 📚👑 names the whole meaning, knowledge gives power. Knowledge (#884): a Winged Word attributed to Francis Bacon, Meditationes Sacrae (user rulings R1 and R2, 2026-10-03); no dictionary lists a relation to another Saying."
 			}
 		}
 	],

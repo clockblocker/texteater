@@ -209,8 +209,8 @@ const verbs: Rule[] = [
 			"de/als-beide-kisten-endlich-oben-standen-erwiderte-der",
 			// Government read from Duden, since E-VALBU has no schämen.
 			"de/mara-schaemt-sich-fuer-den-irrtum",
-			// A formula's reason adjunct stays free: no word of ich bitte um
-			// Verzeihung governs für.
+			// A reason adjunct stays free: no word of um Verzeihung bitten
+			// governs für.
 			"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin",
 		],
 	},

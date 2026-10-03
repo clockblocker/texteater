@@ -28,17 +28,56 @@
 			{
 				"rule": "de/modification-attests-partially",
 				"hash": "91fc596acb3813f1"
+			},
+			{
+				"rule": "de/saying-needs-uptake",
+				"hash": "b191e72860fbbf9c"
+			},
+			{
+				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
+				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/multiword-unit-describes-its-whole-meaning",
+				"hash": "99996175abb4200d"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "b8777ac73be3fda5"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Büchmann, Geflügelte Worte (19. Aufl., 1898)",
+				"url": "https://www.gutenberg.org/ebooks/43759",
+				"supports": "Target 0: Aus Hamlets Monolog in 3, 1 ist: Sein oder Nichtsein, das ist hier die Frage (To be or not to be, that is the question)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 7, 9, 11, 13, 15],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "⚖🤔" },
+			"reading": {
+				"emojiDescription": "⚖🤔",
+				"knowledge": {
+					"sayingType": {
+						"type": "WingedWord",
+						"attribution": "Shakespeare, Hamlet"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Kaffee and Tee replace Sein and Nichtsein, yet speakers still hear Hamlet's line, and a Saying survives any change: the kept words attest it, Partial. Kaffee and Tee resolve on their own."
+				"rationale": "Kaffee and Tee replace Sein and Nichtsein, yet speakers still hear Hamlet's line, and a Saying survives any change: the kept words attest it, Partial. Kaffee and Tee resolve on their own. Knowledge (#884): the Saying's Reading is a Winged Word attributed to Shakespeare, Hamlet (Büchmann; user ruling R2, 2026-10-03); no dictionary lists a relation to another Saying."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
