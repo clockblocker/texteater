@@ -327,6 +327,21 @@
 				"title": "OpenThesaurus: Nacht",
 				"url": "https://www.openthesaurus.de/synonyme/Nacht",
 				"supports": "Target 20 Knowledge: Oberbegriff Zeitspanne · Abstand · Dauer · Frist · Periode"
+			},
+			{
+				"title": "Duden: Zweifel",
+				"url": "https://www.duden.de/rechtschreibung/Zweifel",
+				"supports": "Target 3 Knowledge: Plural die Zweifel; Synonyme Hin-und-her-Schwanken, innerer Widerstreit, Skepsis, Skrupel; examples Zweifel an …, Zweifel, ob/dass"
+			},
+			{
+				"title": "DWDS: Zweifel",
+				"url": "https://www.dwds.de/wb/Zweifel",
+				"supports": "Target 3 Knowledge: Nominativ Plural Zweifel; sense 'Ungewissheit, Unsicherheit, ob …'"
+			},
+			{
+				"title": "OpenThesaurus: Zweifel",
+				"url": "https://www.openthesaurus.de/synonyme/Zweifel",
+				"supports": "Target 3 Knowledge: synset Bedenken · Ungewissheit · Unsicherheit · Zweifel · Zwiespalt, with Gegenteil Gewissheit on Zweifel; synset Argwohn · Misstrauen · Skepsis · Zweifel (Gegenteil Glaube on Zweifel)"
 			}
 		]
 	},
@@ -483,7 +498,60 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🤨" },
+			"reading": {
+				"emojiDescription": "🤨",
+				"knowledge": {
+					"plural": ["Zweifel"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Ungewissheit",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Skepsis",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gewissheit",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Zweifel is Acc.Plur after über; alle is a DET, so the noun owns no article."
 			},

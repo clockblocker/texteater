@@ -238,6 +238,21 @@
 				"title": "Project Gutenberg eBook #69327: Franz Kafka, Der Prozess",
 				"url": "https://www.gutenberg.org/ebooks/69327",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #69327 (released 2022-11-11), transcribed from Verlag Die Schmiede, Berlin 1925. Chapter 1, paragraph 1, sentences 1-5 of 41."
+			},
+			{
+				"title": "Duden: Uhr",
+				"url": "https://www.duden.de/rechtschreibung/Uhr",
+				"supports": "Target 11 Knowledge: Plural die Uhren; sense 'bestimmte Stunde der Uhrzeit' (es geschah gegen drei Uhr morgens); Synonyme Chronometer, Zeitmesser belong to the instrument sense"
+			},
+			{
+				"title": "DWDS: Uhr",
+				"url": "https://www.dwds.de/wb/Uhr",
+				"supports": "Target 11 Knowledge: Nominativ Plural Uhren; sense 2 'Uhrzeit' (a gloss), no synonym, Gegensatz or Oberbegriff listed for it"
+			},
+			{
+				"title": "OpenThesaurus: Uhr",
+				"url": "https://www.openthesaurus.de/synonyme/Uhr",
+				"supports": "Target 11 Knowledge: only synset is the timepiece (Zeitmesser, Chronometer); nothing for the hour sense"
 			}
 		]
 	},
@@ -800,9 +815,26 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🕐🔢" },
+			"reading": {
+				"emojiDescription": "🕐🔢",
+				"knowledge": {
+					"plural": ["Uhren"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "acht Uhr is Duden's Uhr 'bestimmte Stunde der Uhrzeit' (gegen drei Uhr früh), a Reading apart from the timepiece ⌚. 🕐🔢, the numbered hour, pins the clock face away from the instrument (#877 ruling 5, label decided by agents under the user's delegation, 2026-10-03)."
+				"rationale": "acht Uhr is Duden's Uhr 'bestimmte Stunde der Uhrzeit' (gegen drei Uhr früh), a Reading apart from the timepiece ⌚. 🕐🔢, the numbered hour, pins the clock face away from the instrument (#877 ruling 5, label decided by agents under the user's delegation, 2026-10-03). Knowledge (#887, dev draft): acht Uhr is the uninflected form after a number; the stored plural is the headword's regular Uhren."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

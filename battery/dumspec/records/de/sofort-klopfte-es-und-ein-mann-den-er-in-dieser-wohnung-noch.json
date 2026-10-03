@@ -199,6 +199,21 @@
 				"title": "Project Gutenberg eBook #69327: Franz Kafka, Der Prozess",
 				"url": "https://www.gutenberg.org/ebooks/69327",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #69327 (released 2022-11-11), transcribed from Verlag Die Schmiede, Berlin 1925. Chapter 1, paragraph 1, sentences 1-5 of 41."
+			},
+			{
+				"title": "Duden: Mann",
+				"url": "https://www.duden.de/rechtschreibung/Mann_Person",
+				"supports": "Target 3 Knowledge: sense 'erwachsene Person männlichen Geschlechts', Plural Männer (Mannen only for the vassal sense, Mann after numbers); Synonyme Bursche, Herr, männliche Person"
+			},
+			{
+				"title": "DWDS: Mann",
+				"url": "https://www.dwds.de/wb/Mann",
+				"supports": "Target 3 Knowledge: sense 1 Plural 'Männer'; Mannen historisch, Mann bei Mengenangabe"
+			},
+			{
+				"title": "OpenThesaurus: Mann",
+				"url": "https://www.openthesaurus.de/synonyme/Mann",
+				"supports": "Target 3 Knowledge: synset Mann · Herr · Mannsbild · Mannsperson · Bursche · Kerl; Gegenteil Frau on Mann; Oberbegriff Mensch · Person (catch-all, not claimed)"
 			}
 		]
 	},
@@ -343,7 +358,70 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "👨" },
+			"reading": {
+				"emojiDescription": "👨",
+				"knowledge": {
+					"plural": ["Männer"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Herr",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Mannsbild",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Mannsperson",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Frau",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

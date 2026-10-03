@@ -263,6 +263,21 @@
 				"title": "Duden: Konifere",
 				"url": "https://www.duden.de/rechtschreibung/Konifere",
 				"supports": "Target 2 Knowledge: Konifere = Nadelholz, die"
+			},
+			{
+				"title": "DWDS: Musiktempel",
+				"url": "https://www.dwds.de/wb/Musiktempel",
+				"supports": "Target 0 Knowledge: Nominativ Plural Musiktempel (computergeneriert); no relation listed"
+			},
+			{
+				"title": "Duden: Musiktempel",
+				"url": "https://www.duden.de/rechtschreibung/Musiktempel",
+				"supports": "Target 0 Knowledge: no entry"
+			},
+			{
+				"title": "OpenThesaurus: Musiktempel",
+				"url": "https://www.openthesaurus.de/synonyme/Musiktempel",
+				"supports": "Target 0 Knowledge: no synset"
 			}
 		]
 	},
@@ -273,9 +288,26 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🎵🏛" },
+			"reading": {
+				"emojiDescription": "🎵🏛",
+				"knowledge": {
+					"plural": ["Musiktempel"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Musiktempel is a common noun here (the bandstand), not a name."
+				"rationale": "Musiktempel is a common noun here (the bandstand), not a name. Knowledge (#887, dev draft): Only DWDS's machine-generated grammar line gives the plural; it matches Tempel's zero plural."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -228,6 +228,21 @@
 				"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
 				"url": "https://www.gutenberg.org/ebooks/34811",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 3, Travemünde: Tony and Morten on the promenade."
+			},
+			{
+				"title": "DWDS: Kurgarten",
+				"url": "https://www.dwds.de/wb/Kurgarten",
+				"supports": "Target 6 Knowledge: Nominativ Plural Kurgärten; only 'siehe auch Kurpark' (backs nothing)"
+			},
+			{
+				"title": "OpenThesaurus: Kurgarten",
+				"url": "https://www.openthesaurus.de/synonyme/Kurgarten",
+				"supports": "Target 6 Knowledge: no synset"
+			},
+			{
+				"title": "Duden: Kurgarten",
+				"url": "https://www.duden.de/rechtschreibung/Kurgarten",
+				"supports": "Target 6 Knowledge: no entry; no relation listed (Duden, DWDS, OT)"
 			}
 		]
 	},
@@ -567,7 +582,24 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "♨🌳" },
+			"reading": {
+				"emojiDescription": "♨🌳",
+				"knowledge": {
+					"plural": ["Kurgärten"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

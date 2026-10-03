@@ -393,6 +393,21 @@
 				"title": "Duden: gleichzeitig",
 				"url": "https://www.duden.de/rechtschreibung/gleichzeitig",
 				"supports": "Target [gleichzeitig]: sense 2, 'zugleich erfolgend, auch noch' (selten), shown only as a predicate (das Rauchtischchen ist gleichzeitig ein Schachbrett); sense 1 'zur gleichen Zeit [stattfindend]' is attributive too. No comparison forms."
+			},
+			{
+				"title": "DWDS: Weilchen",
+				"url": "https://www.dwds.de/wb/Weilchen",
+				"supports": "Target 3 Knowledge: wird nur im Singular verwendet; no relation listed"
+			},
+			{
+				"title": "Duden: Weilchen",
+				"url": "https://www.duden.de/rechtschreibung/Weilchen",
+				"supports": "Target 3 Knowledge: 'Verkleinerungsform zu Weile' (a gloss, not a synonym listing)"
+			},
+			{
+				"title": "OpenThesaurus: Weilchen",
+				"url": "https://www.openthesaurus.de/synonyme/Weilchen",
+				"supports": "Target 3 Knowledge: no synset"
 			}
 		]
 	},
@@ -543,7 +558,24 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🤏⏳" },
+			"reading": {
+				"emojiDescription": "🤏⏳",
+				"knowledge": {
+					"plural": "NoPlural"
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

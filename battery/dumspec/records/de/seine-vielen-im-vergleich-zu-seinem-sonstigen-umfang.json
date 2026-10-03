@@ -231,6 +231,21 @@
 				"title": "OpenThesaurus: hilflos",
 				"url": "https://www.openthesaurus.de/synonyme/hilflos",
 				"supports": "Target 11 Knowledge: synset 51471: ausgeliefert · hilflos · machtlos · ohnmächtig · schutzlos · wehrlos; no Gegenteil"
+			},
+			{
+				"title": "Duden: Auge",
+				"url": "https://www.duden.de/rechtschreibung/Auge",
+				"supports": "Target 13 Knowledge: Plural die Augen; 'Sehorgan des Menschen und vieler Tiere'; Synonyme Gucker, Seher, (Fachsprache) Sehorgan, Sehwerkzeug"
+			},
+			{
+				"title": "DWDS: Auge",
+				"url": "https://www.dwds.de/wb/Auge",
+				"supports": "Target 13 Knowledge: Nominativ Plural Augen; sense 1 'Sehorgan'"
+			},
+			{
+				"title": "OpenThesaurus: Auge",
+				"url": "https://www.openthesaurus.de/synonyme/Auge",
+				"supports": "Target 13 Knowledge: synset Auge · Sehwerkzeug · Oculus · Sehorgan · Gucker; Oberbegriff Körperteil | Sinnesorgan"
 			}
 		]
 	},
@@ -993,7 +1008,70 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "👁" },
+			"reading": {
+				"emojiDescription": "👁",
+				"knowledge": {
+					"plural": ["Augen"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Sehorgan",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Sehwerkzeug",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Sinnesorgan",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Körperteil",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

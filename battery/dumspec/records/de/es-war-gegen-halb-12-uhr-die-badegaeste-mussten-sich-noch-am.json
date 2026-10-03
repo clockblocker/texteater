@@ -215,6 +215,36 @@
 				"title": "OpenThesaurus: Strand",
 				"url": "https://www.openthesaurus.de/synonyme/Strand",
 				"supports": "Target 10 Knowledge: synsets Badestrand · Strand and Küste · Strand · Ufer · Gestade (broader/narrower shades, so nearSynonym); no Oberbegriff, no Gegenteil"
+			},
+			{
+				"title": "Duden: Uhr",
+				"url": "https://www.duden.de/rechtschreibung/Uhr",
+				"supports": "Target 4 Knowledge: Plural die Uhren; sense 'bestimmte Stunde der Uhrzeit' (es geschah gegen drei Uhr morgens); Synonyme Chronometer, Zeitmesser belong to the instrument sense"
+			},
+			{
+				"title": "DWDS: Uhr",
+				"url": "https://www.dwds.de/wb/Uhr",
+				"supports": "Target 4 Knowledge: Nominativ Plural Uhren; sense 2 'Uhrzeit' (a gloss), no synonym, Gegensatz or Oberbegriff listed for it"
+			},
+			{
+				"title": "OpenThesaurus: Uhr",
+				"url": "https://www.openthesaurus.de/synonyme/Uhr",
+				"supports": "Target 4 Knowledge: only synset is the timepiece (Zeitmesser, Chronometer); nothing for the hour sense"
+			},
+			{
+				"title": "Duden: Badegast",
+				"url": "https://www.duden.de/rechtschreibung/Badegast",
+				"supports": "Target 5 Knowledge: Plural die Badegäste; '[Kur]gast in einem Badeort' (a gloss); no Synonyme"
+			},
+			{
+				"title": "DWDS: Badegast",
+				"url": "https://www.dwds.de/wb/Badegast",
+				"supports": "Target 5 Knowledge: Nominativ Plural Badegäste; sense 1 gloss 'Kurgast', not a synonym listing"
+			},
+			{
+				"title": "OpenThesaurus: Badegast",
+				"url": "https://www.openthesaurus.de/synonyme/Badegast",
+				"supports": "Target 5 Knowledge: no synset"
 			}
 		]
 	},
@@ -419,9 +449,26 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🕐🔢" },
+			"reading": {
+				"emojiDescription": "🕐🔢",
+				"knowledge": {
+					"plural": ["Uhren"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Uhr after a numeral names the hour of the clock, 🕐🔢, the numbered hour, apart from the timepiece ⌚ (#877 ruling 5, label decided by agents under the user's delegation, 2026-10-03); the form stays singular, and gegen makes it accusative."
+				"rationale": "Uhr after a numeral names the hour of the clock, 🕐🔢, the numbered hour, apart from the timepiece ⌚ (#877 ruling 5, label decided by agents under the user's delegation, 2026-10-03); the form stays singular, and gegen makes it accusative. Knowledge (#887, dev draft): acht Uhr is the uninflected form after a number; the stored plural is the headword's regular Uhren."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -466,7 +513,24 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🏖🧑" },
+			"reading": {
+				"emojiDescription": "🏖🧑",
+				"knowledge": {
+					"plural": ["Badegäste"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -181,6 +181,21 @@
 				"title": "DWDS: kalt",
 				"url": "https://www.dwds.de/wb/kalt",
 				"supports": "Target 9 Knowledge: Adjektiv, kälter, am kältesten"
+			},
+			{
+				"title": "DWDS: Hauch",
+				"url": "https://www.dwds.de/wb/Hauch",
+				"supports": "Target 8 Knowledge: Nominativ Plural Hauche (meist im Singular); sense 2 'sanfter Luftzug, Lüftchen' is a gloss, no synonym listing"
+			},
+			{
+				"title": "Duden: Hauch",
+				"url": "https://www.duden.de/rechtschreibung/Hauch",
+				"supports": "Target 8 Knowledge: Plural die Hauche; sense 'leichter Luftzug'; Synonyme Atem, Luft, Odem belong to the breath sense"
+			},
+			{
+				"title": "OpenThesaurus: Hauch",
+				"url": "https://www.openthesaurus.de/synonyme/Hauch",
+				"supports": "Target 8 Knowledge: synsets only for breath (Atem) and 'a trace' (Spur, Anflug); none for a draught"
 			}
 		]
 	},
@@ -576,7 +591,24 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🌬" },
+			"reading": {
+				"emojiDescription": "🌬",
+				"knowledge": {
+					"plural": ["Hauche"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Hauch owns the article einen across the adjective kalten, deriving einen Acc.Masc.Sg (de/noun-owns-its-article). einen kalten Hauch im Nacken, the draught from the open door, is DWDS Hauch 2 'sanfter Luftzug, Lüftchen', not breath or a faint trace."
 			},

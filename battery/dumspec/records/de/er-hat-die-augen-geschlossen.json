@@ -67,7 +67,23 @@
 				"hash": "17cec6bff2108a22"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Auge",
+				"url": "https://www.duden.de/rechtschreibung/Auge",
+				"supports": "Target 2 Knowledge: Plural die Augen; 'Sehorgan des Menschen und vieler Tiere'; Synonyme Gucker, Seher, (Fachsprache) Sehorgan, Sehwerkzeug"
+			},
+			{
+				"title": "DWDS: Auge",
+				"url": "https://www.dwds.de/wb/Auge",
+				"supports": "Target 2 Knowledge: Nominativ Plural Augen; sense 1 'Sehorgan'"
+			},
+			{
+				"title": "OpenThesaurus: Auge",
+				"url": "https://www.openthesaurus.de/synonyme/Auge",
+				"supports": "Target 2 Knowledge: synset Auge · Sehwerkzeug · Oculus · Sehorgan · Gucker; Oberbegriff Körperteil | Sinnesorgan"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -182,7 +198,70 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "👁" },
+			"reading": {
+				"emojiDescription": "👁",
+				"knowledge": {
+					"plural": ["Augen"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Sehorgan",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Sehwerkzeug",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Sinnesorgan",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Körperteil",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

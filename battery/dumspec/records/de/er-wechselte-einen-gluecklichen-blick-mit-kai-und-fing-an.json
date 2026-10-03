@@ -230,6 +230,21 @@
 				"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
 				"url": "https://www.gutenberg.org/ebooks/34811",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 11, Hanno's school day in Doktor Mantelsack's lesson."
+			},
+			{
+				"title": "Duden: Glied",
+				"url": "https://www.duden.de/rechtschreibung/Glied",
+				"supports": "Target 8 Knowledge: Plural die Glieder; sense 'beweglicher, durch ein Gelenk mit dem Rumpf verbundener Körperteil'; Synonyme listed belong to the Penis sense"
+			},
+			{
+				"title": "DWDS: Glied",
+				"url": "https://www.dwds.de/wb/Glied",
+				"supports": "Target 8 Knowledge: Nominativ Plural Glieder; sense 1 limbs (Arme und Beine sind Glieder)"
+			},
+			{
+				"title": "OpenThesaurus: Glied",
+				"url": "https://www.openthesaurus.de/synonyme/Glied",
+				"supports": "Target 8 Knowledge: Anatomie synset Extremität · Glied · Gliedmaßen · (die) Gliedmaße; Oberbegriff Körperteil"
 			}
 		]
 	},
@@ -664,7 +679,60 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "💪🦵" },
+			"reading": {
+				"emojiDescription": "💪🦵",
+				"knowledge": {
+					"plural": ["Glieder"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gliedmaße",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Extremität",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Körperteil",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

@@ -314,6 +314,21 @@
 				"title": "DWDS: klar",
 				"url": "https://www.dwds.de/wb/klar",
 				"supports": "Target 2 Knowledge: Antonyme block (trüb) belongs to the 'durchsichtig' sense"
+			},
+			{
+				"title": "Duden: Doktor",
+				"url": "https://www.duden.de/rechtschreibung/Doktor",
+				"supports": "Target 4 Knowledge: Plural die Doktoren; Synonyme Arzt, Ärztin, Hakim, Heilkundiger (the physician sense)"
+			},
+			{
+				"title": "DWDS: Doktor",
+				"url": "https://www.dwds.de/wb/Doktor",
+				"supports": "Target 4 Knowledge: Nominativ Plural Doktoren; sense 2 'Inhaber des Doktorgrades' (Herrn Doktor Müller)"
+			},
+			{
+				"title": "OpenThesaurus: Doktor",
+				"url": "https://www.openthesaurus.de/synonyme/Doktor",
+				"supports": "Target 4 Knowledge: synsets for the physician (Arzt) and the degree (Doktorgrad, Doktortitel; Oberbegriff Titel); none for the holder used as a title"
 			}
 		]
 	},
@@ -555,7 +570,24 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🎓" },
+			"reading": {
+				"emojiDescription": "🎓",
+				"knowledge": {
+					"plural": ["Doktoren"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

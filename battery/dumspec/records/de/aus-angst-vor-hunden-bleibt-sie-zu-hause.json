@@ -24,13 +24,102 @@
 	"sources": {
 		"adrs": ["ADR-0034"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Angst",
+				"url": "https://www.duden.de/rechtschreibung/Angst",
+				"supports": "Target 0 Knowledge: Plural die Ängste; 'Angst um jemanden, etwas, vor jemandem, etwas haben'; Synonyme Angstgefühl, Ängstlichkeit, Angstzustand, Bangigkeit; Hinweis: Angst and Furcht used synonymously"
+			},
+			{
+				"title": "DWDS: Angst",
+				"url": "https://www.dwds.de/wb/Angst",
+				"supports": "Target 0 Knowledge: Nominativ Plural Ängste; 'banges Gefühl, Furcht' (Angst vor der Prüfung); Angst um jmdn. is sub-sense b 'Sorge'"
+			},
+			{
+				"title": "OpenThesaurus: Angst",
+				"url": "https://www.openthesaurus.de/synonyme/Angst",
+				"supports": "Target 0 Knowledge: synset Angst · Angstgefühl · Beklemmung · Furcht …; Oberbegriff Gefühl · Emotion"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "😨" },
+			"reading": {
+				"emojiDescription": "😨",
+				"knowledge": {
+					"plural": ["Ängste"],
+					"valency": [
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "vor",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Furcht",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Angstgefühl",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gefühl",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Angst governs vor without any verb, so vor is a governed member of the NOUN (ADR 0034). The Surface projects only the Fixed member: Angst."
 			},

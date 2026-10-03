@@ -22,13 +22,46 @@
 	"sources": {
 		"adrs": ["ADR-0002"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Trillion",
+				"url": "https://www.duden.de/rechtschreibung/Trillion",
+				"supports": "Target 0 Knowledge: Plural die Trillionen; eine Million Billionen; no Synonyme"
+			},
+			{
+				"title": "DWDS: Trillion",
+				"url": "https://www.dwds.de/wb/Trillion",
+				"supports": "Target 0 Knowledge: Nominativ Plural Trillionen; no relation listed"
+			},
+			{
+				"title": "OpenThesaurus: Trillion",
+				"url": "https://www.openthesaurus.de/synonyme/Trillion",
+				"supports": "Target 0 Knowledge: no synset"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🔢" },
+			"reading": {
+				"emojiDescription": "🔢",
+				"knowledge": {
+					"plural": ["Trillionen"]
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Trillion is a feminine noun (Duden: die Trillion), and its plural Trillionen is the subject of würden … füllen, so its Surface marks Nom.Pl. The capital is the noun's own, as Duden's headword shows, so the normalized Surface keeps it: casing never follows the word's position (ADR 0002). A Trillion is Duden's eine Million Billionen, 10 to the 18th, not the English trillion, and like every numeral beyond zwölf its Reading is 🔢."
 			},

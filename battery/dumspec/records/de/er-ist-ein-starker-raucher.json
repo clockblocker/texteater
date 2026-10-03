@@ -23,7 +23,23 @@
 				"hash": "57f04b272a0e9aeb"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Raucher",
+				"url": "https://www.duden.de/rechtschreibung/Raucher",
+				"supports": "Target 1 Knowledge: Plural die Raucher; sense 'Person, die die Gewohnheit hat zu rauchen' (ein starker Raucher)"
+			},
+			{
+				"title": "DWDS: Raucher",
+				"url": "https://www.dwds.de/wb/Raucher",
+				"supports": "Target 1 Knowledge: Nominativ Plural Raucher; sense 1 'in gegensätzlicher Bedeutung zu Nichtraucher (1)'"
+			},
+			{
+				"title": "OpenThesaurus: Raucher",
+				"url": "https://www.openthesaurus.de/synonyme/Raucher",
+				"supports": "Target 1 Knowledge: synset Raucher · Nikotinabhängiger; Oberbegriff (soziale) Randgruppe (not a hypernym of the person)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -69,7 +85,38 @@
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🚬🧑" },
+			"reading": {
+				"emojiDescription": "🚬🧑",
+				"knowledge": {
+					"plural": ["Raucher"],
+					"semanticRelations": {
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Nichtraucher",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Raucher is a NOUN of its own that owns its article ein across the adjective."
 			},

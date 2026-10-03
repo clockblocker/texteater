@@ -24,15 +24,72 @@
 		"rules": [
 			{ "rule": "de/noun-owns-its-article", "hash": "c509d14dcd7d7b41" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Ärztin",
+				"url": "https://www.duden.de/rechtschreibung/Aerztin",
+				"supports": "Target 0 Knowledge: Plural die Ärztinnen; Synonyme Hakim, Heilkundiger, Heilkundige, Mediziner"
+			},
+			{
+				"title": "DWDS: Ärztin",
+				"url": "https://www.dwds.de/wb/%C3%84rztin",
+				"supports": "Target 0 Knowledge: Nominativ Plural Ärztinnen; 'siehe auch Medizinerin' (backs nothing)"
+			},
+			{
+				"title": "OpenThesaurus: Ärztin",
+				"url": "https://www.openthesaurus.de/synonyme/%C3%84rztin",
+				"supports": "Target 0 Knowledge: Medizin synset Arzt · Ärztin · Doktor · Doktorin · Mediziner · Medizinerin …; Oberbegriff Heiler | Berufstätige · Erwerbstätige"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "👩‍⚕" },
+			"reading": {
+				"emojiDescription": "👩‍⚕",
+				"knowledge": {
+					"plural": ["Ärztinnen"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Medizinerin",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Doktorin",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The article is a member of its noun's Attestation, and a click on it opens Ärztin. Its DET cell is derived: Die is die Nom.Fem.Sg.",
+				"rationale": "The article is a member of its noun's Attestation, and a click on it opens Ärztin. Its DET cell is derived: Die is die Nom.Fem.Sg. Knowledge (#887, dev draft): The masculine synset members (Arzt, Mediziner, Doktor) are left out for this feminine Lemma.",
 				"knownMistakes": [
 					"Making the article a DET target of its own: a click on an article never resolves to its DET."
 				]

@@ -112,7 +112,23 @@
 			},
 			{ "rule": "de/modal-particle-is-part", "hash": "cd0286be11031c26" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Küche",
+				"url": "https://www.duden.de/rechtschreibung/Kueche",
+				"supports": "Target 4 Knowledge: Plural die Küchen; sense 'Raum zum Kochen, Backen, Zubereiten der Speisen'; no Synonyme"
+			},
+			{
+				"title": "DWDS: Küche",
+				"url": "https://www.dwds.de/wb/K%C3%BCche",
+				"supports": "Target 4 Knowledge: Nominativ Plural Küchen; sense 1 'Raum, in dem die Speisen zubereitet werden'"
+			},
+			{
+				"title": "OpenThesaurus: Küche",
+				"url": "https://www.openthesaurus.de/synonyme/K%C3%BCche",
+				"supports": "Target 4 Knowledge: synset Kochstube · Küche (Architektur), Oberbegriff Raum · Zimmer · Kammer"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -316,7 +332,50 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🍳🏠" },
+			"reading": {
+				"emojiDescription": "🍳🏠",
+				"knowledge": {
+					"plural": ["Küchen"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Kochstube",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Raum",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "die Küche, already tidied, is DWDS Küche 1 'Raum, in dem die Speisen zubereitet und gekocht werden', not the cuisine."
 			},

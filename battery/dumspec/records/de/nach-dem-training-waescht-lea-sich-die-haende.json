@@ -45,7 +45,23 @@
 				"hash": "c2b1f74a61545177"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Training",
+				"url": "https://www.duden.de/rechtschreibung/Training",
+				"supports": "Target 1 Knowledge: Plural die Trainings; Synonyme Bewegung, Fitnesstraining, Körperertüchtigung, Körperkultur"
+			},
+			{
+				"title": "DWDS: Training",
+				"url": "https://www.dwds.de/wb/Training",
+				"supports": "Target 1 Knowledge: Nominativ Plural Trainings; Sport 'das Trainieren'"
+			},
+			{
+				"title": "OpenThesaurus: Training",
+				"url": "https://www.openthesaurus.de/synonyme/Training",
+				"supports": "Target 1 Knowledge: synset Übung · Probe · Training · Vorübung (other synsets are the course sense: Kurs, Schulung)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -86,7 +102,38 @@
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🏋" },
+			"reading": {
+				"emojiDescription": "🏋",
+				"knowledge": {
+					"plural": ["Trainings"],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Fitnesstraining",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -121,6 +168,9 @@
 					{ "attested": "Training", "orthography": "Standard" }
 				],
 				"realizationCoverage": "Full"
+			},
+			"notes": {
+				"rationale": "Knowledge (#887, dev draft): Übung is broader (any practice) and Fitnesstraining narrower than the sports session, so both are near. Knowledge (#887, dev draft): Übung is broader (any practice) and Fitnesstraining narrower than the sports session, so both are near. Übung (OT synset) is left out because a Knowledge prompt example uses it (#693)."
 			}
 		},
 		{

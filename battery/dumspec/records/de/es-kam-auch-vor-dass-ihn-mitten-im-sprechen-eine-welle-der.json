@@ -324,6 +324,21 @@
 				"title": "Duden: Schamgefühl",
 				"url": "https://www.duden.de/rechtschreibung/Schamgefuehl",
 				"supports": "Target 9 Knowledge: Synonyme Scham, Scheu"
+			},
+			{
+				"title": "DWDS: Sprechen",
+				"url": "https://www.dwds.de/wb/Sprechen",
+				"supports": "Target 7 Knowledge: Substantiv (Neutrum), wird nur im Singular verwendet; no relation listed"
+			},
+			{
+				"title": "Duden: sprechen",
+				"url": "https://www.duden.de/rechtschreibung/sprechen",
+				"supports": "Target 7 Knowledge: only the verb entry (substantiviert: das Sprechen fiel ihr schwer); no listing for the noun"
+			},
+			{
+				"title": "OpenThesaurus: Sprechen",
+				"url": "https://www.openthesaurus.de/synonyme/Sprechen",
+				"supports": "Target 7 Knowledge: synsets are all for the verb sprechen, none for the noun"
 			}
 		]
 	},
@@ -675,7 +690,24 @@
 				"family": "Lexeme",
 				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🗣" },
+			"reading": {
+				"emojiDescription": "🗣",
+				"knowledge": {
+					"plural": "NoPlural"
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"plural": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
