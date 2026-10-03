@@ -129,6 +129,17 @@
 								"kind": "VERB",
 								"canonicalForm": "einen Entschluss fassen",
 								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich entscheiden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
 							}
 						]
 					}
@@ -145,7 +156,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "The conventional support-verb expression is non-idiomatic but lexically restricted: treffen only supports Entscheidung, a Collocation (de/funktionsverbgefuege-are-collocations), whose members are the verb, the noun and its own article eine. Its contextual Surface follows sentence order and takes the finite verb's features. Knowledge (#884): Nom S · (über + Acc T), the frame taking on the noun's government as one predicate, entscheiden über (user ruling R4, 2026-10-03). entscheiden is a synonym on Duden's explicit Synonyme listing under entscheiden, not on the gloss (etwas entscheiden) under Entscheidung (R3); eine Entscheidung fällen is a synonym and einen Entschluss fassen a near-synonym from the OpenThesaurus synset. Decided by agents under the user's delegation. Open for the user: sich entscheiden (synonym or near-synonym), and einen Beschluss treffen, sich entschließen and eine Wahl treffen (near-synonym or none), on which the judges split."
+				"rationale": "The conventional support-verb expression is non-idiomatic but lexically restricted: treffen only supports Entscheidung, a Collocation (de/funktionsverbgefuege-are-collocations), whose members are the verb, the noun and its own article eine. Its contextual Surface follows sentence order and takes the finite verb's features. Knowledge (#884): Nom S · (über + Acc T), the frame taking on the noun's government as one predicate, entscheiden über (user ruling R4, 2026-10-03). entscheiden is a synonym on Duden's explicit Synonyme listing under entscheiden, not on the gloss (etwas entscheiden) under Entscheidung (R3); eine Entscheidung fällen is a synonym and einen Entschluss fassen a near-synonym from the OpenThesaurus synset. Decided by agents under the user's delegation. sich entscheiden is a near-synonym too, since it fits only choosing and takes no über; einen Beschluss treffen, sich entschließen and eine Wahl treffen are dropped (user, 2026-10-03, on the judges' split)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

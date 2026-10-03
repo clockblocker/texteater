@@ -46,7 +46,7 @@
 			{
 				"title": "OpenThesaurus: Entschuldigung!",
 				"url": "https://www.openthesaurus.de/synonyme/Entschuldigung!",
-				"supports": "Target 0 Knowledge: synsets {Entschuldigung!, Bitte entschuldigen Sie, …, Tut mir leid, Tschuldigung!} and {Entschuldigung, …., ich darf doch mal, Pardon …, Sie werden erlauben…}"
+				"supports": "Target 0 Knowledge: synset {Entschuldigung, …., ich darf doch mal, Pardon …, Sie werden erlauben…} backs the synonym Pardon; synset {Entschuldigung!, Bitte entschuldigen Sie, …, Tut mir leid, Tschuldigung!} lists only the clipped Tschuldigung and clauses"
 			}
 		]
 	},
@@ -57,12 +57,26 @@
 			"reading": {
 				"emojiDescription": "🙇",
 				"knowledge": {
-					"formulaRole": "Apology"
+					"formulaRole": "Apology",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "Pardon",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
 				},
 				"coverage": {
 					"formulaRole": "Authored",
 					"semanticRelations": {
-						"synonym": "ReviewedEmpty",
+						"synonym": "Authored",
 						"nearSynonym": "ReviewedEmpty",
 						"antonym": "ReviewedEmpty",
 						"nearAntonym": "ReviewedEmpty"
@@ -70,7 +84,7 @@
 				}
 			},
 			"notes": {
-				"rationale": "Entschuldigung, said to a stranger before a question, is the apology formula, one word, so it is a Lexeme INTJ. The noun die Entschuldigung is another Lemma (Sie besteht auf einer Entschuldigung). Entschuldigung! before a stranger is asked something is Duden's 'Höflichkeitsformel' asking for forbearance, an apology for the intrusion, so it takes the 🙇 of the NOUN Entschuldigung. Knowledge (#884): Formula Role Apology, which holds for the one INTJ Reading, sorry and excuse me alike (Duden sense 3, DWDS sense 2); Initiation would fit only this use. Decided by agents under the user's delegation. Open for the user: Pardon (synonym or near-synonym) and Tschuldigung (synonym or none), on which the judges split; drafted with no relation."
+				"rationale": "Entschuldigung, said to a stranger before a question, is the apology formula, one word, so it is a Lexeme INTJ. The noun die Entschuldigung is another Lemma (Sie besteht auf einer Entschuldigung). Entschuldigung! before a stranger is asked something is Duden's 'Höflichkeitsformel' asking for forbearance, an apology for the intrusion, so it takes the 🙇 of the NOUN Entschuldigung. Knowledge (#884): Formula Role Apology, which holds for the one INTJ Reading, sorry and excuse me alike (Duden sense 3, DWDS sense 2); Initiation would fit only this use. Decided by agents under the user's delegation. Pardon is a synonym: OpenThesaurus lists it with Entschuldigung, and Pardon! covers sorry and excuse me alike. Tschuldigung is dropped as a clipped colloquial form of the same word (user, 2026-10-03, on the judges' split)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
