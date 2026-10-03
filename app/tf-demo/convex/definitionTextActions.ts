@@ -1,12 +1,23 @@
 "use node";
 
 import { v } from "convex/values";
-import { createDumgen, createTypeSafeAsk, type OperationTrace } from "dumgen";
+import {
+	createDumgen,
+	createOpenAILuna,
+	createTypeSafeAsk,
+	type LunaAsk,
+	type OperationTrace,
+} from "dumgen";
 import * as Effect from "effect/Effect";
-
+import { storedUnitOf } from "../server/storedSegments";
 import { internal } from "./_generated/api";
 import { env, internalAction } from "./_generated/server";
 import { stripTextAnalysisGraph } from "./model/textAnalysisStripping";
+
+/** Segmentation never writes, so it needs no OpenAI key; Dumgen still takes a Luna. */
+const noLuna: LunaAsk = async () => {
+	throw Error("Segmentation never asks Luna");
+};
 
 /** Logs why the definition's Sentence failed; only the trace knows. */
 function logFailedSentence(trace: OperationTrace) {
@@ -33,6 +44,9 @@ async function segmentDefinition(definition: string) {
 	const segmented = await Effect.runPromise(
 		createDumgen({
 			jev: createTypeSafeAsk({ apiKey }),
+			luna: env.OPENAI_API_KEY
+				? createOpenAILuna({ apiKey: env.OPENAI_API_KEY })
+				: noLuna,
 			onOperation: logFailedSentence,
 		}).segment.inUnits({
 			language: "de",
@@ -107,20 +121,7 @@ export const materialize = internalAction({
 									? { kind, text }
 									: { kind, text, surface },
 						),
-						units: sentence.units.map((unit) => ({
-							segments: [...unit.segments],
-							route:
-								unit.route === "Unresolved"
-									? ("Unresolved" as const)
-									: { ...unit.route },
-							...(unit.variants
-								? {
-										variants: unit.variants.map(
-											(route) => ({ ...route }),
-										),
-									}
-								: {}),
-						})),
+						units: sentence.units.map(storedUnitOf),
 						...(sentence.failed
 							? { segmentationFailed: true as const }
 							: {}),

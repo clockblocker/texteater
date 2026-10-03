@@ -384,10 +384,22 @@ true satisfies SameMembers<Infer<typeof unitRouteValidator>, Route>;
  * indices of its Segments in the Sentence, ascending (#767), its route or
  * `Unresolved`, and any route variants, its route first.
  */
+/**
+ * The authored DET or PRON identity intake's route judge picked for a
+ * one-piece unit (#864); a click builds the unit's Lemma from it.
+ */
+export const closedClassIdentityValidator = v.object({
+	kind: v.union(v.literal("DET"), v.literal("PRON")),
+	canonicalForm: v.string(),
+	pronType: v.union(v.string(), v.null()),
+	poss: v.optional(v.literal("Yes")),
+});
+
 export const storedUnitValidator = v.object({
 	segments: v.array(v.number()),
 	route: v.union(v.literal("Unresolved"), unitRouteValidator),
 	variants: v.optional(v.array(unitRouteValidator)),
+	identity: v.optional(closedClassIdentityValidator),
 });
 
 export const sentenceInputValidator = v.object({

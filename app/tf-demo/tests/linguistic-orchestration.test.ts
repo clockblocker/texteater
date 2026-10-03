@@ -651,7 +651,7 @@ test("the production stub selects the unit only: Unresolved, no Reading and no c
 	expect(run.writes).toEqual([]);
 });
 
-test("a Resolution Session run with the stub ends Unresolved, and its Note shows the clicked unit's words, route and variants", async () => {
+test("a Resolution Session run on a unit intake left Unresolved ends Unresolved with no model call, and its Note shows the clicked unit", async () => {
 	jest.useFakeTimers();
 	const t = createTestConvex();
 	const verb = { language: "de", family: "Lexeme", kind: "VERB" } as const;
@@ -666,14 +666,7 @@ test("a Resolution Session run with the stub ends Unresolved, and its Note shows
 		{
 			units: [
 				[
-					{
-						segments: [0],
-						route: {
-							language: "de",
-							family: "Lexeme",
-							kind: "PRON",
-						},
-					},
+					{ segments: [0], route: "Unresolved" },
 					{
 						segments: [2, 4],
 						route: verb,
@@ -689,7 +682,7 @@ test("a Resolution Session run with the stub ends Unresolved, and its Note shows
 		requestId: "request-1",
 		visitorId: "visitor-1",
 		sentenceId,
-		clickedSegmentIndex: 4,
+		clickedSegmentIndex: 0,
 	});
 	// The click's context carries the Sentence's units to the port.
 	const loaded = await t.query(internal.resolutionContext.load, {
@@ -724,13 +717,8 @@ test("a Resolution Session run with the stub ends Unresolved, and its Note shows
 		state: "Terminal",
 		outcome: "Unresolved",
 	});
-	expect(note?.unit).toEqual({
-		segments: [2, 4],
-		route: verb,
-		variants: [verb, particleVerb],
-	});
-	// The click selects the whole unit, `gibt … auf`.
-	expect(note?.source.memberSegmentIndices).toEqual([2, 4]);
+	expect(note?.unit).toEqual({ segments: [0], route: "Unresolved" });
+	expect(note?.source.memberSegmentIndices).toEqual([0]);
 	expect(await t.run((ctx) => ctx.db.query("readings").collect())).toEqual(
 		[],
 	);

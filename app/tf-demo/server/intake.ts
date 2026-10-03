@@ -1,7 +1,11 @@
 import { type Dumgen, type SegmentedText, splitText } from "dumgen";
 import * as Effect from "effect/Effect";
 import { inspectionStep } from "./inspectionCapture";
-import type { StoredSegmentValue, StoredUnit } from "./storedSegments";
+import {
+	type StoredSegmentValue,
+	type StoredUnit,
+	storedUnitOf,
+} from "./storedSegments";
 import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
 
 /**
@@ -103,20 +107,7 @@ function submittedSentences(
 						? { kind, text }
 						: { kind, text, surface },
 				),
-				units: sentence.units.map((unit) => ({
-					segments: [...unit.segments],
-					route:
-						unit.route === "Unresolved"
-							? ("Unresolved" as const)
-							: { ...unit.route },
-					...(unit.variants
-						? {
-								variants: unit.variants.map((route) => ({
-									...route,
-								})),
-							}
-						: {}),
-				})),
+				units: sentence.units.map(storedUnitOf),
 				...(sentence.failed
 					? { segmentationFailed: true as const }
 					: {}),

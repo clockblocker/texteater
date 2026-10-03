@@ -26,6 +26,37 @@ export type StoredSegment = Infer<typeof storedSegmentValidator>;
 /** One biggest unit as a Sentence stores it. */
 export type StoredUnit = Infer<typeof storedUnitValidator>;
 
+/**
+ * A unit as Dumgen's `segment.inUnits` returns it, copied as a Sentence
+ * stores it: its Segments, its route, its variants, and the closed-class
+ * identity its route judge picked (#864), which a click reads.
+ */
+export function storedUnitOf(unit: {
+	readonly segments: readonly number[];
+	readonly route:
+		| "Unresolved"
+		| { readonly family: string; readonly kind: string };
+	readonly variants?: readonly {
+		readonly family: string;
+		readonly kind: string;
+	}[];
+	readonly identity?: {
+		readonly kind: "DET" | "PRON";
+		readonly canonicalForm: string;
+		readonly pronType: string | null;
+		readonly poss?: "Yes";
+	};
+}): StoredUnit {
+	return {
+		segments: [...unit.segments],
+		route: unit.route === "Unresolved" ? "Unresolved" : { ...unit.route },
+		...(unit.variants
+			? { variants: unit.variants.map((route) => ({ ...route })) }
+			: {}),
+		...(unit.identity ? { identity: { ...unit.identity } } : {}),
+	} as StoredUnit;
+}
+
 /** Intake stores at most this many Segments in one Sentence. */
 export const MAX_SEGMENTS_PER_SENTENCE = 512;
 

@@ -1,11 +1,17 @@
 "use node";
 
 import { ConvexError, type Infer, type Value, v } from "convex/values";
-import { createDumgen, createTypeSafeAsk, type OperationTrace } from "dumgen";
+import {
+	createDumgen,
+	createOpenAILuna,
+	createTypeSafeAsk,
+	type LunaAsk,
+	type OperationTrace,
+} from "dumgen";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import { selectUnitOnly } from "../server/clickResolution";
+import { dumgenClickResolution } from "../server/dumgenClickResolution";
 import {
 	inspected,
 	inspectionStep,
@@ -93,6 +99,23 @@ function visitorErrorIn(
 }
 
 /**
+ * Luna through OpenAI with the deployment's key, at a deadline. Without a
+ * key, a call that needs Luna fails as a ProviderFailure that says so;
+ * intake never asks Luna.
+ */
+function productionLuna(timeoutMs?: number): LunaAsk {
+	const apiKey = env.OPENAI_API_KEY;
+	if (!apiKey)
+		return async () => {
+			throw Error("OPENAI_API_KEY is not set on the Convex deployment");
+		};
+	return createOpenAILuna({
+		apiKey,
+		...(timeoutMs === undefined ? {} : { timeoutMs }),
+	});
+}
+
+/**
  * The production Dumgen for intake: jev through TypeSafe with the
  * deployment's key. With no key, intake fails with a coded error that tells
  * the Visitor how to fix it.
@@ -101,7 +124,39 @@ function productionDumgen(onOperation: (trace: OperationTrace) => void) {
 	const apiKey = env.TYPESAFE_API_KEY;
 	if (!apiKey)
 		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
-	return createDumgen({ jev: createTypeSafeAsk({ apiKey }), onOperation });
+	return createDumgen({
+		jev: createTypeSafeAsk({ apiKey }),
+		luna: productionLuna(),
+		onOperation,
+	});
+}
+
+/**
+ * Each model call's deadline on a click: `CLICK_CALL_DEADLINE_MS`, or
+ * intake's 120 s until the first live click measurement sets it (#858).
+ */
+export function clickCallDeadlineMs(
+	value: string | undefined = env.CLICK_CALL_DEADLINE_MS,
+): number {
+	const deadline = value === undefined ? 120_000 : Number(value);
+	if (!Number.isInteger(deadline) || deadline <= 0)
+		throw new Error("CLICK_CALL_DEADLINE_MS is a positive whole number");
+	return deadline;
+}
+
+/**
+ * The click's Dumgen instance: jev and Luna at the click deadline. With no
+ * TypeSafe key, a click fails with the coded intake error.
+ */
+function clickDumgen() {
+	const apiKey = env.TYPESAFE_API_KEY;
+	if (!apiKey)
+		throw visitorError("NotConfigured", INTAKE_NOT_CONFIGURED_MESSAGE);
+	const timeoutMs = clickCallDeadlineMs();
+	return createDumgen({
+		jev: createTypeSafeAsk({ apiKey, timeoutMs }),
+		luna: productionLuna(timeoutMs),
+	});
 }
 
 export const submitText = action({
@@ -296,9 +351,9 @@ export const runResolutionSession = internalAction({
 });
 
 /**
- * The click orchestrator for one action. Its ClickResolution is the stub
- * while resolution is rebuilt (#848): a click selects its unit, and no
- * Reading, Knowledge draft or model call follows.
+ * The click orchestrator for one action. Its grammar is Dumgen's
+ * `resolve.grammar` (#876); its Reading is still the stub (#877), so a
+ * resolved click stops after its grammar is shown.
  */
 function orchestratorFor(
 	ctx: ActionCtx,
@@ -306,7 +361,7 @@ function orchestratorFor(
 	observer?: ResolutionProgressObserver,
 ) {
 	return createTfDemoOrchestrator({
-		resolution: selectUnitOnly,
+		resolution: dumgenClickResolution(clickDumgen),
 		findStoredReadings: async (lemma) =>
 			(
 				await ctx.runQuery(

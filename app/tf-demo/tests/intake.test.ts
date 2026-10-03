@@ -23,8 +23,14 @@ function intakeWith(jev: ReturnType<typeof fakeJev>) {
 	const stored: SubmittedText[] = [];
 	const run = createIntakeRunRecorder(3);
 	const intake = createIntake({
-		segment: createDumgen({ jev: jev.ask, onOperation: run.operation })
-			.segment,
+		segment: createDumgen({
+			jev: jev.ask,
+			// Segmentation never asks Luna.
+			luna: async () => {
+				throw Error("segmentation asked Luna");
+			},
+			onOperation: run.operation,
+		}).segment,
 		persistence: {
 			persistSubmittedText: async (input) => {
 				stored.push(input);
