@@ -1,3 +1,4 @@
+import type { ReadingResolution } from "../server/clickResolution";
 import type { SpanHops } from "../server/inspectionCapture";
 import type { ResolutionContext } from "../server/linguisticOrchestration";
 import {
@@ -125,7 +126,9 @@ export function createResolutionSessionLifecycle(
 							progress: event.progress,
 							reading: projectResolutionReading(event.reading),
 							readingCheckpoint: {
-								resolution: event.readingResolution,
+								resolution: readingCheckpointOf(
+									event.readingResolution,
+								),
 								reading: event.reading,
 							},
 						}),
@@ -189,5 +192,13 @@ export function createResolutionSessionLifecycle(
 				}
 			});
 		},
+	};
+}
+
+/** A Reading resolution as its checkpoint stores it. */
+function readingCheckpointOf({ candidates, ...resolution }: ReadingResolution) {
+	return {
+		...resolution,
+		...(candidates ? { candidates: [...candidates] } : {}),
 	};
 }

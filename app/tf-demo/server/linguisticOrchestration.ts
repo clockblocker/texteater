@@ -38,6 +38,9 @@ import {
  */
 const DRAFT_GRACE_MS = 1_500;
 
+/** How often a click judges its Reading again after its New was refused as stale. */
+const MAX_STALE_REJUDGES = 2;
+
 export type PersistedSentence = {
 	readonly sentenceId: string;
 	readonly textId: string;
@@ -70,6 +73,12 @@ export type ResolvedClickPersistence = {
 	readonly readingKey: string;
 	/** The dictionary plan is built where it commits: inside the host transaction. */
 	readonly readingDecision: ReadingResolution["decision"];
+	/**
+	 * For a New its judge decided: the stored Emoji Descriptions it saw. The
+	 * commit refuses the New once the Lemma has gained a Reading outside
+	 * them (ADR 0031).
+	 */
+	readonly readingCandidates?: readonly string[];
 };
 
 export type ReusableAttestation = {
@@ -120,6 +129,15 @@ export type ResolvedClickCommit =
 			readonly status: "DictionaryConflict";
 			readonly code: "semanticPreconditionFailed";
 			readonly message: string;
+	  }
+	| {
+			/**
+			 * A New refused because the Lemma gained a Reading its judge never
+			 * saw; nothing was written, and the click judges again over
+			 * `candidates`, the Lemma's stored Emoji Descriptions now (ADR 0031).
+			 */
+			readonly status: "StaleReading";
+			readonly candidates: readonly string[];
 	  };
 
 type ResolvedGrammatical = ResolvedGrammar;
@@ -484,38 +502,37 @@ export function createTfDemoOrchestrator(options: {
 			const storedReadings = yield* readingsLoaded;
 
 			const lemmaKey = lemmaIdentityKey(lemma);
-			const readingResolution = checkpoints.reading
+			// The helpers below see Grammar as resolved.
+			const resolvedGrammar: ResolvedGrammatical = grammatical;
+			const first = checkpoints.reading
 				? checkpoints.reading.resolution
-				: yield* resolveReading(grammatical, lemma);
-			if (readingResolution.decision === "CatalogMiss") {
-				return { catalogMiss: readingResolution };
+				: lemma.family === "Foreign"
+					? foreignReading()
+					: yield* resolveReading(
+							grammatical,
+							lemma,
+							storedCandidates(),
+						);
+			if (first.decision === "CatalogMiss") {
+				return { catalogMiss: first };
 			}
-			// Both sides compare as Dumling parses them (ADR 0031).
-			const resolved = parseGermanReading({
-				unitKind: "Reading",
-				lemma,
-				emojiDescription: readingResolution.emojiDescription,
-			});
-			const reading = checkpoints.reading
-				? parseGermanReading(checkpoints.reading.reading)
-				: resolved;
-			if (
-				lemmaIdentityKey(reading.lemma) !== lemmaKey ||
-				emojiDescriptionOf(reading) !== emojiDescriptionOf(resolved)
-			) {
-				throw new Error(
-					"The Reading checkpoint does not match Grammar.",
+			let readingResolution: ReadingResolution = first;
+			let reading = readingOf(readingResolution);
+			if (checkpoints.reading) {
+				const checkpointed = parseGermanReading(
+					checkpoints.reading.reading,
 				);
-			}
-
-			if (!checkpoints.reading)
-				yield* Effect.tryPromise(
-					() =>
-						options.observer?.readingAvailable({
-							reading,
-							readingResolution,
-						}) ?? Promise.resolve(),
-				);
+				if (
+					lemmaIdentityKey(checkpointed.lemma) !== lemmaKey ||
+					emojiDescriptionOf(checkpointed) !==
+						emojiDescriptionOf(reading)
+				) {
+					throw new Error(
+						"The Reading checkpoint does not match Grammar.",
+					);
+				}
+				reading = checkpointed;
+			} else yield* announceReading();
 
 			// A new Reading waits a short grace for its drafts, then settles the
 			// leaves still in flight and commits with the finished ones; Knowledge
@@ -541,35 +558,33 @@ export function createTfDemoOrchestrator(options: {
 			const surfaceKey = surfaceIdentityKey(
 				grammatical.attestation.surface,
 			);
-			const readingKey = readingIdentityKey(reading);
-			const commit = yield* Effect.try(
-				(): ResolvedClickPersistence => ({
-					...input,
-					...(draft && (draft.texts.length || draft.relations)
-						? { knowledgeDraftJson: JSON.stringify(draft) }
-						: {}),
-					occurrence: {
-						memberSegmentIndices: storedMemberIndices(
-							context.sentence,
-							grammatical.encounter,
-						),
-						attestation: grammatical.attestation,
-						surfaceKey,
-						lemmaKey,
-					},
-					reading,
-					readingKey,
-					readingDecision: readingResolution.decision,
-				}),
-			);
-			const persisted = yield* Effect.tryPromise(() =>
-				options.persistence.persistResolvedClick(commit),
-			).pipe(
-				Effect.withSpan(
-					"Commit resolved occurrence",
-					inspectionStep("app/tf-demo · persistence", commit),
-				),
-			);
+			let persisted = yield* commitReading();
+			// A New whose judge saw fewer Readings than the Lemma has now is
+			// refused: the judge runs again over the current candidates, and a
+			// second NoMatch keeps the description already written (ADR 0031).
+			for (
+				let rejudged = 0;
+				persisted.status === "StaleReading";
+				rejudged++
+			) {
+				if (rejudged === MAX_STALE_REJUDGES)
+					throw new Error(
+						"The Lemma kept gaining Readings while this click resolved; click it again.",
+					);
+				const again = yield* resolveReading(
+					grammatical,
+					lemma,
+					persisted.candidates,
+					readingResolution.emojiDescription,
+				);
+				if (again.decision === "CatalogMiss") {
+					return { catalogMiss: again };
+				}
+				readingResolution = again;
+				reading = readingOf(readingResolution);
+				yield* announceReading();
+				persisted = yield* commitReading();
+			}
 			if (
 				persisted.status === "MembershipConflict" ||
 				persisted.status === "DictionaryConflict"
@@ -589,6 +604,90 @@ export function createTfDemoOrchestrator(options: {
 				reused: persisted.status === "Reused",
 				persisted,
 			};
+
+			/** A Foreign Lemma's one Reading, which has no Emoji Description (ADR 0045). */
+			function foreignReading(): ReadingResolution {
+				return {
+					decision: loadedReadings().length > 0 ? "Reuse" : "New",
+				};
+			}
+
+			/** The Reading a resolution names; both sides compare as Dumling parses them (ADR 0031). */
+			function readingOf(resolution: ReadingResolution) {
+				return parseGermanReading({
+					unitKind: "Reading",
+					lemma,
+					...(resolution.emojiDescription === undefined
+						? {}
+						: { emojiDescription: resolution.emojiDescription }),
+				});
+			}
+
+			function announceReading() {
+				return Effect.tryPromise(
+					() =>
+						options.observer?.readingAvailable({
+							reading,
+							readingResolution,
+						}) ?? Promise.resolve(),
+				);
+			}
+
+			function commitReading() {
+				const committed = reading;
+				const resolution = readingResolution;
+				return Effect.try(
+					(): ResolvedClickPersistence => ({
+						...input,
+						...(draft && (draft.texts.length || draft.relations)
+							? { knowledgeDraftJson: JSON.stringify(draft) }
+							: {}),
+						occurrence: {
+							memberSegmentIndices: storedMemberIndices(
+								context.sentence,
+								resolvedGrammar.encounter,
+							),
+							attestation: resolvedGrammar.attestation,
+							surfaceKey,
+							lemmaKey,
+						},
+						reading: committed,
+						readingKey: readingIdentityKey(committed),
+						readingDecision: resolution.decision,
+						...(resolution.decision === "New" &&
+						resolution.candidates !== undefined
+							? { readingCandidates: resolution.candidates }
+							: {}),
+					}),
+				).pipe(
+					Effect.flatMap((commit) =>
+						Effect.tryPromise(() =>
+							options.persistence.persistResolvedClick(commit),
+						).pipe(
+							Effect.withSpan(
+								"Commit resolved occurrence",
+								inspectionStep(
+									"app/tf-demo · persistence",
+									commit,
+								),
+							),
+						),
+					),
+				);
+			}
+
+			function loadedReadings() {
+				if (!storedReadings)
+					throw new Error("Reading candidates were not loaded.");
+				return storedReadings;
+			}
+
+			/** The Emoji Descriptions of the Lemma's stored Readings. */
+			function storedCandidates() {
+				return loadedReadings().flatMap(
+					(stored) => emojiDescriptionOf(stored) ?? [],
+				);
+			}
 
 			function resolveGrammatical(request: ResolveSegmentInput) {
 				const stored = context.sentence;
@@ -621,9 +720,9 @@ export function createTfDemoOrchestrator(options: {
 			function resolveReading(
 				resolved: ResolvedGrammatical,
 				resolvedLemma: Dumling.Lemma<"de">,
+				candidates: readonly string[],
+				written?: string,
 			) {
-				if (!storedReadings)
-					throw new Error("Reading candidates were not loaded.");
 				if (
 					resolved.encounter.target.family !== resolvedLemma.family ||
 					resolved.encounter.target.kind !== resolvedLemma.kind
@@ -635,15 +734,15 @@ export function createTfDemoOrchestrator(options: {
 					.reading({
 						grammar: resolved,
 						lemma: resolvedLemma,
-						candidates: storedReadings.flatMap(
-							(reading) => emojiDescriptionOf(reading) ?? [],
-						),
+						candidates,
+						...(written === undefined ? {} : { written }),
 					})
 					.pipe(
 						Effect.withSpan(
 							"Resolve Reading",
 							inspectionStep("app/tf-demo · ClickResolution", {
 								lemma: resolvedLemma,
+								...(written === undefined ? {} : { written }),
 							}),
 						),
 					);

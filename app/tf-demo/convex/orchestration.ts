@@ -406,8 +406,9 @@ export const runResolutionSession = internalAction({
 
 /**
  * The click orchestrator for one action. Its grammar is Dumgen's
- * `resolve.grammar` (#876); its Reading is still the stub (#877), so a
- * resolved click stops after its grammar is shown.
+ * `resolve.grammar` (#876) and its Reading Dumgen's `resolve.reading`
+ * (#877), judged over the Lemma's stored Readings, which Dumdict finds by
+ * the case-folded Lemma identity (#764).
  */
 function orchestratorFor(
 	ctx: ActionCtx,
@@ -470,6 +471,9 @@ function createConvexPersistence(
 			return ctx.runMutation(internal.persistence.persistResolvedClick, {
 				...convexSegmentSelectionArgs(input),
 				readingDecision: input.readingDecision,
+				...(input.readingCandidates
+					? { readingCandidates: [...input.readingCandidates] }
+					: {}),
 				...(input.knowledgeDraftJson
 					? { knowledgeDraftJson: input.knowledgeDraftJson }
 					: {}),

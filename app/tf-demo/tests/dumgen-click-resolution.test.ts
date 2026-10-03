@@ -1,5 +1,11 @@
 import { expect, test } from "bun:test";
-import type { Dumgen, GrammarResolution, ResolveGrammarInput } from "dumgen";
+import type {
+	Dumgen,
+	GrammarResolution,
+	ReadingResolution,
+	ResolveGrammarInput,
+	ResolveReadingInput,
+} from "dumgen";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { clickCallDeadlineMs } from "../convex/orchestration";
@@ -54,9 +60,16 @@ const kommt: Dumling.Attestation<"de"> = {
 	valencyEvidence: [],
 } as Dumling.Attestation<"de">;
 
-/** A Dumgen whose `resolve.grammar` answers `result` and keeps what it got. */
-function fakeDumgen(result: GrammarResolution) {
+/**
+ * A Dumgen whose `resolve.grammar` answers `result`, and whose
+ * `resolve.reading` answers `reading`, keeping what each got.
+ */
+function fakeDumgen(
+	result: GrammarResolution,
+	reading: ReadingResolution = { _tag: "New", emojiDescription: "🚶" },
+) {
 	const inputs: ResolveGrammarInput[] = [];
+	const readingInputs: ResolveReadingInput[] = [];
 	let built = 0;
 	const dumgen = (): Pick<Dumgen, "resolve"> => {
 		built++;
@@ -66,10 +79,14 @@ function fakeDumgen(result: GrammarResolution) {
 					inputs.push(input);
 					return Effect.succeed(result);
 				},
+				reading: (input) => {
+					readingInputs.push(input);
+					return Effect.succeed(reading);
+				},
 			},
 		};
 	};
-	return { dumgen, inputs, built: () => built };
+	return { dumgen, inputs, readingInputs, built: () => built };
 }
 
 const verb = { language: "de", family: "Lexeme", kind: "VERB" } as const;
@@ -179,5 +196,85 @@ test("a stored unit keeps the closed-class identity intake picked (#864)", () =>
 	expect(storedUnitOf({ segments: [2], route: "Unresolved" })).toEqual({
 		segments: [2],
 		route: "Unresolved",
+	});
+});
+
+// The Reading half: Dumgen's resolve.reading (#877).
+
+const kommen = kommt.surface.lemma;
+const resolvedKommt = parseResolvedGrammar({
+	encounter: {
+		sentence,
+		target: { family: "Lexeme", kind: "VERB", memberSegmentIndices: [2] },
+	},
+	attestation: kommt,
+});
+
+test("a click's Reading is Dumgen's resolve.reading over the Attestation, its unit and the stored Emoji Descriptions", async () => {
+	const fake = fakeDumgen(
+		{ _tag: "Unresolved" },
+		{ _tag: "Reuse", emojiDescription: "🚶" },
+	);
+	const reading = await Effect.runPromise(
+		dumgenClickResolution(fake.dumgen).reading({
+			grammar: resolvedKommt,
+			lemma: kommen,
+			candidates: ["🚶", "🔜"],
+		}),
+	);
+	expect(fake.readingInputs[0]).toEqual({
+		attestation: kommt,
+		sentence: {
+			text: "Er kommt.",
+			segments: sentence.segments,
+			units: [{ segments: [2], route: verb }],
+		},
+		unit: { segments: [2], route: verb },
+		candidates: ["🚶", "🔜"],
+	});
+	expect(reading).toEqual({ decision: "Reuse", emojiDescription: "🚶" });
+});
+
+test("a New carries the candidates its judge saw, and a stale re-judge passes the written description back", async () => {
+	const fake = fakeDumgen(
+		{ _tag: "Unresolved" },
+		{ _tag: "New", emojiDescription: "🔜" },
+	);
+	const resolution = dumgenClickResolution(fake.dumgen);
+	expect(
+		await Effect.runPromise(
+			resolution.reading({
+				grammar: resolvedKommt,
+				lemma: kommen,
+				candidates: ["🚶"],
+				written: "🔜",
+			}),
+		),
+	).toEqual({ decision: "New", emojiDescription: "🔜", candidates: ["🚶"] });
+	expect(fake.readingInputs[0]?.written).toBe("🔜");
+});
+
+test("a Reading Catalog Miss comes back as tf-demo's signal", async () => {
+	const fake = fakeDumgen(
+		{ _tag: "Unresolved" },
+		{
+			_tag: "CatalogMiss",
+			route: verb,
+			message: "No authored Reading of VERB kommen",
+		},
+	);
+	expect(
+		await Effect.runPromise(
+			dumgenClickResolution(fake.dumgen).reading({
+				grammar: resolvedKommt,
+				lemma: kommen,
+				candidates: [],
+			}),
+		),
+	).toEqual({
+		decision: "CatalogMiss",
+		stage: "resolve.reading",
+		route: "de/Lexeme/VERB",
+		message: "No authored Reading of VERB kommen",
 	});
 });

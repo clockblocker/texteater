@@ -773,7 +773,10 @@ export const storedGrammaticalCheckpointValidator =
 export const readingCheckpointValidator = v.object({
 	resolution: v.object({
 		decision: v.union(v.literal("Reuse"), v.literal("New")),
-		emojiDescription: v.string(),
+		/** A Foreign Reading has none (ADR 0045). */
+		emojiDescription: v.optional(v.string()),
+		/** For a New: the stored Emoji Descriptions its judge saw (ADR 0031). */
+		candidates: v.optional(v.array(v.string())),
 	}),
 	reading: readingValueValidator,
 });
@@ -838,9 +841,20 @@ const dictionaryConflictValidator = v.object({
 	message: v.string(),
 });
 
+/**
+ * A New refused because the Lemma gained a Reading its judge never saw;
+ * nothing was written, and the click judges again over `candidates`, the
+ * Lemma's stored Emoji Descriptions now (ADR 0031).
+ */
+const staleReadingValidator = v.object({
+	status: v.literal("StaleReading"),
+	candidates: v.array(v.string()),
+});
+
 const resolvedClickConflictValidator = v.union(
 	membershipConflictValidator,
 	dictionaryConflictValidator,
+	staleReadingValidator,
 );
 
 export const resolvedClickCommitValidator = v.union(

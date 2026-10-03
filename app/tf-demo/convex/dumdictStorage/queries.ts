@@ -26,48 +26,55 @@ import {
 } from "./storage";
 
 /**
+ * The Readings the Shared Demo Dictionary stores for a Lemma. A click reads
+ * them before it resolves its Reading, and the commit reads them again to
+ * refuse a stale New (ADR 0031).
+ */
+export async function storedReadingsOf(ctx: ServerCtx, lemmaKey: string) {
+	const lemma = await ctx.db
+		.query("lemmas")
+		.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
+		.unique();
+	if (!lemma) return [];
+	const [dictionaryLemma, readings] = await Promise.all([
+		ctx.db
+			.query("dictionaryLemmas")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.unique(),
+		ctx.db
+			.query("readings")
+			.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
+			.take(MAX_READING_CANDIDATES + 1),
+	]);
+	if (!dictionaryLemma) return [];
+	if (readings.length > MAX_READING_CANDIDATES) {
+		throw new Error(
+			`Stored Reading lookup supports at most ${MAX_READING_CANDIDATES} candidates.`,
+		);
+	}
+	const entries = await Promise.all(
+		readings.map((reading) =>
+			ctx.db
+				.query("readingEntries")
+				.withIndex("by_reading_id", (q) =>
+					q.eq("readingId", reading._id),
+				)
+				.unique(),
+		),
+	);
+	return readings.flatMap((reading, index) =>
+		entries[index] ? [readingValue(reading, lemma)] : [],
+	);
+}
+
+/**
  * The Readings the Shared Demo Dictionary stores for a Lemma: the one
  * dictionary read a click makes outside the commit transaction.
  */
 export const findStoredReadings = internalQuery({
 	args: { lemmaKey: v.string() },
 	returns: v.array(readingValueValidator),
-	handler: async (ctx, { lemmaKey }) => {
-		const lemma = await ctx.db
-			.query("lemmas")
-			.withIndex("by_lemma_key", (q) => q.eq("lemmaKey", lemmaKey))
-			.unique();
-		if (!lemma) return [];
-		const [dictionaryLemma, readings] = await Promise.all([
-			ctx.db
-				.query("dictionaryLemmas")
-				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-				.unique(),
-			ctx.db
-				.query("readings")
-				.withIndex("by_lemma_id", (q) => q.eq("lemmaId", lemma._id))
-				.take(MAX_READING_CANDIDATES + 1),
-		]);
-		if (!dictionaryLemma) return [];
-		if (readings.length > MAX_READING_CANDIDATES) {
-			throw new Error(
-				`Stored Reading lookup supports at most ${MAX_READING_CANDIDATES} candidates.`,
-			);
-		}
-		const entries = await Promise.all(
-			readings.map((reading) =>
-				ctx.db
-					.query("readingEntries")
-					.withIndex("by_reading_id", (q) =>
-						q.eq("readingId", reading._id),
-					)
-					.unique(),
-			),
-		);
-		return readings.flatMap((reading, index) =>
-			entries[index] ? [readingValue(reading, lemma)] : [],
-		);
-	},
+	handler: (ctx, { lemmaKey }) => storedReadingsOf(ctx, lemmaKey),
 });
 
 /** The Readings pending relations start from and the Shadow forms they target. */

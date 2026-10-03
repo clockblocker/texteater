@@ -809,3 +809,196 @@ test("a re-segmentation that fails again fails the click and stores nothing", as
 	expect(run.stored).toEqual([]);
 	expect(run.fake.grammarInputs).toEqual([]);
 });
+
+// A New refused as stale is judged again (ADR 0031 decision 6, #596).
+
+test("a New the commit refuses as stale is judged again over the Lemma's Readings now, keeping its written description on a second NoMatch", async () => {
+	const fake = fakeResolution({
+		reading: (input) =>
+			Effect.succeed({
+				decision: "New" as const,
+				emojiDescription: input.written ?? "🏦",
+				candidates: input.candidates,
+			}),
+	});
+	let commits = 0;
+	const run = setup({
+		resolution: fake.resolution,
+		persistence: {
+			async persistResolvedClick(input) {
+				commits++;
+				if (commits === 1)
+					return { status: "StaleReading", candidates: ["🪑"] };
+				return {
+					status: "Committed",
+					clickId: "click-1",
+					attestationId: "attestation-1",
+					readingId: "reading-1",
+					deduplicated: false,
+					occurrence: {
+						attestationId: "attestation-1",
+						grammatical: grammar,
+						reading: input.reading,
+					},
+				};
+			},
+		},
+	});
+	const result = await run.resolve();
+	expect(
+		fake.readingInputs.map(({ candidates, written }) => ({
+			candidates,
+			written,
+		})),
+	).toEqual([
+		{ candidates: [], written: undefined },
+		{ candidates: ["🪑"], written: "🏦" },
+	]);
+	expect(commits).toBe(2);
+	expect(result).toMatchObject({
+		readingResolution: {
+			decision: "New",
+			emojiDescription: "🏦",
+			candidates: ["🪑"],
+		},
+		persisted: { status: "Committed" },
+	});
+});
+
+test("judged again, a stale New may reuse the Reading stored since, and commits it as a Reuse", async () => {
+	const fake = fakeResolution({
+		reading: (input) =>
+			Effect.succeed(
+				input.written === undefined
+					? {
+							decision: "New" as const,
+							emojiDescription: "🏦",
+							candidates: [],
+						}
+					: { decision: "Reuse" as const, emojiDescription: "🪑" },
+			),
+	});
+	const decisions: unknown[] = [];
+	let commits = 0;
+	const run = setup({
+		resolution: fake.resolution,
+		persistence: {
+			async persistResolvedClick(input) {
+				decisions.push([
+					input.readingDecision,
+					input.reading.emojiDescription,
+					input.readingCandidates,
+				]);
+				commits++;
+				if (commits === 1)
+					return { status: "StaleReading", candidates: ["🪑"] };
+				return {
+					status: "Committed",
+					clickId: "click-1",
+					attestationId: "attestation-1",
+					readingId: "reading-1",
+					deduplicated: false,
+					occurrence: {
+						attestationId: "attestation-1",
+						grammatical: grammar,
+						reading: input.reading,
+					},
+				};
+			},
+		},
+	});
+	await run.resolve();
+	expect(decisions).toEqual([
+		["New", "🏦", []],
+		["Reuse", "🪑", undefined],
+	]);
+});
+
+test("a click whose Lemma keeps gaining Readings stops after judging twice more", async () => {
+	const fake = fakeResolution({
+		reading: (input) =>
+			Effect.succeed({
+				decision: "New" as const,
+				emojiDescription: "🏦",
+				candidates: input.candidates,
+			}),
+	});
+	const run = setup({
+		resolution: fake.resolution,
+		persistence: {
+			async persistResolvedClick() {
+				return { status: "StaleReading", candidates: ["🪑"] };
+			},
+		},
+	});
+	await expect(run.resolve()).rejects.toThrow("kept gaining Readings");
+	expect(fake.readingInputs).toHaveLength(3);
+});
+
+test("a Foreign click asks no Reading: its one Reading has no Emoji Description (ADR 0045)", async () => {
+	const foreignLemma = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Foreign",
+		kind: "Foreign",
+		// A Foreign Surface is its Lemma's Canonical Form.
+		canonicalForm: "Banken",
+		coreFeatures: { sourceLang: "en" },
+	} as const;
+	const foreignEncounter: ClickEncounter = {
+		...encounter,
+		target: {
+			family: "Foreign",
+			kind: "Foreign",
+			memberSegmentIndices: [0],
+		},
+	};
+	const foreignGrammar = parseResolvedGrammar({
+		encounter: foreignEncounter,
+		attestation: {
+			unitKind: "Attestation",
+			members: [{ attested: "Banken", orthography: "Standard" }],
+			realizationCoverage: "Full",
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				normalizedSurface: "Banken",
+				spelling: { kind: "Canonical" },
+				lemma: foreignLemma,
+				surfaceFeatures: null,
+			},
+		},
+	});
+	const fake = fakeResolution({
+		grammar: () => Effect.succeed(foreignGrammar),
+	});
+	const run = setup({
+		resolution: fake.resolution,
+		persistence: {
+			async persistResolvedClick(input) {
+				run.writes.push(input);
+				return {
+					status: "Committed",
+					clickId: "click-1",
+					attestationId: "attestation-1",
+					readingId: "reading-1",
+					deduplicated: false,
+					occurrence: {
+						attestationId: "attestation-1",
+						grammatical: foreignGrammar,
+						reading: input.reading,
+					},
+				};
+			},
+		},
+	});
+	const result = await run.resolve();
+	expect(fake.readingInputs).toEqual([]);
+	expect(run.writes[0]?.reading).toEqual({
+		unitKind: "Reading",
+		lemma: foreignLemma,
+	});
+	expect(run.writes[0]?.readingDecision).toBe("New");
+	expect(run.writes[0]?.readingCandidates).toBeUndefined();
+	expect(result).toMatchObject({ persisted: { status: "Committed" } });
+});

@@ -1,6 +1,7 @@
 import { type Infer, v } from "convex/values";
 import { makeSurfaceId } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
+import { authoredReading } from "dumspec/inventories";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -17,6 +18,7 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
+import { storedReadingsOf } from "./dumdictStorage/queries";
 import {
 	createDumdictTransaction,
 	type DumdictTransactionOutcome,
@@ -169,6 +171,40 @@ async function planAndCommitDictionary(
 	return added.status === "committed" && surfaceStored
 		? dictionary.ensureOwnedSurface({ reading, ownedSurface })
 		: added;
+}
+
+/**
+ * The Lemma's stored Emoji Descriptions when a New must be refused as stale:
+ * its judge saw `readingCandidates`, and the Lemma has gained a Reading
+ * outside them since (ADR 0031). Undefined when the New stands: no judge
+ * took part (an authored or Foreign Reading), or the Reading is stored by
+ * now, which the commit reuses.
+ */
+async function staleNewReading(
+	ctx: MutationCtx,
+	args: {
+		readonly reading: Infer<typeof readingValueValidator>;
+		readonly readingKey: string;
+		readonly readingDecision: Infer<typeof readingDecisionValidator>;
+		readonly readingCandidates?: readonly string[];
+		readonly occurrence: Infer<typeof occurrenceAttestationInputValidator>;
+	},
+): Promise<readonly string[] | undefined> {
+	const seen = args.readingCandidates;
+	if (args.readingDecision !== "New" || seen === undefined) return undefined;
+	if (authoredReading(args.reading)) return undefined;
+	if (await findReadingByKey(ctx, args.readingKey)) return undefined;
+	const { lemma } = parseGermanReading(args.reading);
+	const keyOf = (emojiDescription: string) =>
+		readingIdentityKey({ unitKind: "Reading", lemma, emojiDescription });
+	const judged = new Set(seen.map(keyOf));
+	const stored = await storedReadingsOf(ctx, args.occurrence.lemmaKey);
+	return stored.some((reading) => !judged.has(readingIdentityKey(reading)))
+		? stored.flatMap(
+				(reading) =>
+					emojiDescriptionOf(parseGermanReading(reading)) ?? [],
+			)
+		: undefined;
 }
 
 export const persistSubmittedText = internalMutation({
@@ -382,6 +418,8 @@ export const persistResolvedClick = internalMutation({
 		reading: readingValueValidator,
 		readingKey: v.string(),
 		readingDecision: readingDecisionValidator,
+		/** For a New its judge decided: the stored Emoji Descriptions it saw. */
+		readingCandidates: v.optional(v.array(v.string())),
 	},
 	returns: resolvedClickCommitValidator,
 	handler: async (ctx, args) => {
@@ -500,6 +538,12 @@ export const persistResolvedClick = internalMutation({
 				conflictingAttestationIds: conflictingAttestationIds.sort(),
 			};
 		}
+
+		// A New whose judge never saw a Reading the Lemma has now is refused
+		// before anything is written; the click judges again (ADR 0031).
+		const stale = await staleNewReading(ctx, args);
+		if (stale)
+			return { status: "StaleReading" as const, candidates: [...stale] };
 
 		// The dictionary plan is built and applied here, against the state this
 		// transaction reads, so the occurrence never carries a stale plan.

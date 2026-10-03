@@ -14,9 +14,9 @@ export type { ClickEncounter, ClickSentence } from "./clickEncounter";
  * makes a new one. The orchestrator keeps reuse, checkpoints, commits and
  * conflicts on its side of the port.
  *
- * While resolution is rebuilt on the new Dumgen (#701), production runs
- * `selectUnitOnly`: a click selects its whole unit and resolves nothing, so
- * no Note is created and no model is called (#848).
+ * Production runs Dumgen's `resolve.grammar` and `resolve.reading`
+ * (`dumgenClickResolution`); `selectUnitOnly` selects a click's whole unit
+ * and resolves nothing, calling no model (#848).
  */
 
 /** A stored Lemma and the Sentence texts it was found under. */
@@ -47,10 +47,19 @@ type UnresolvedGrammar = {
 
 type ClickGrammar = ResolvedGrammar | UnresolvedGrammar | CatalogMissSignal;
 
-/** Reuse names a stored Reading's Emoji Description; New makes one. */
+/**
+ * Reuse names a stored Reading's Emoji Description; New makes one. A Foreign
+ * Reading has none (ADR 0045).
+ */
 export type ReadingResolution = {
 	readonly decision: "Reuse" | "New";
-	readonly emojiDescription: string;
+	readonly emojiDescription?: string;
+	/**
+	 * For a New: the stored Emoji Descriptions its judge saw. The commit
+	 * refuses the New once the Lemma has gained a Reading outside them, and
+	 * the judge runs again (ADR 0031). Absent where no judge took part.
+	 */
+	readonly candidates?: readonly string[];
 };
 
 export type ClickReadingInput = {
@@ -58,6 +67,12 @@ export type ClickReadingInput = {
 	readonly lemma: Dumling.Lemma<"de">;
 	/** The Emoji Descriptions of the Lemma's stored Readings. */
 	readonly candidates: readonly string[];
+	/**
+	 * The Emoji Description this click wrote before its commit refused the
+	 * New as stale: the judge runs again over `candidates`, and a second
+	 * NoMatch keeps this one (ADR 0031).
+	 */
+	readonly written?: string;
 };
 
 /**
