@@ -63,6 +63,7 @@ export const valencyPrompt = [
 	shared.reading,
 	shared.evidence,
 	valency.task,
+	valency.subject,
 	valency.lesart,
 	valency.status,
 	valency.alternatives,

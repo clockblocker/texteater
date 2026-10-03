@@ -742,6 +742,74 @@ test("a participle's source verb is named by form, checked by jev, and its meani
 	expect(plain.sent).toEqual([]);
 });
 
+test("a Partizip I is checked by code, so jev judges only its meaning; an inseparable prefix is never separable (#887)", async () => {
+	// Luna names the Partizip II, but the adjective is the Partizip I.
+	const judge = knowledgeJev({ meaning: "Verbal" });
+	const { result } = await produceOnce(
+		{
+			jev: judge.ask,
+			luna: knowledgeLuna({
+				participleSource: {
+					verb: "duften",
+					reflexive: null,
+					separablePrefix: null,
+					preterite: "duftete",
+					participle: "geduftet",
+				},
+			}).ask,
+		},
+		knowledgeInput(
+			adjective("duftend"),
+			"👃",
+			"Ein duftend Brot.",
+			["duftend"],
+			{ request: { participleSource: null } },
+		),
+	);
+	expect(result.changes).toEqual([
+		expect.objectContaining({
+			aspect: "participleSource",
+			value: expect.objectContaining({ meaning: "Verbal" }),
+		}),
+	]);
+	expect(Object.keys(judge.sent[0]?.questions ?? {})).toEqual(["meaning"]);
+
+	const inseparable = await produceOnce(
+		{
+			jev: knowledgeJev({ form: "Participle", meaning: "Verbal" }).ask,
+			luna: knowledgeLuna({
+				participleSource: {
+					verb: "verstecken",
+					reflexive: null,
+					separablePrefix: "ver",
+					preterite: "versteckte",
+					participle: "versteckt",
+				},
+			}).ask,
+		},
+		knowledgeInput(
+			adjective("versteckt"),
+			"🙈",
+			"Ein versteckt Haus.",
+			["versteckt"],
+			{ request: { participleSource: null } },
+		),
+	);
+	expect(inseparable.result.changes).toEqual([
+		expect.objectContaining({
+			value: expect.objectContaining({
+				verb: expect.objectContaining({
+					canonicalForm: "verstecken",
+					coreFeatures: {
+						hasSepPrefix: null,
+						lexicallyReflexive: null,
+					},
+				}),
+			}),
+		}),
+	]);
+});
+
 const locution = (kind: string, canonicalForm: string) => ({
 	family: "Locution",
 	kind,

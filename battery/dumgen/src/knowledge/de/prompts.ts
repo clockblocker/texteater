@@ -229,6 +229,12 @@ export const valency = {
 		"Propose the Reading's Valency Frame: the Satzbauplan E-VALBU gives for this meaning, else Duden's. It lists the complements a learner must know to use the word in this meaning as Slots, in E-VALBU order with the subject first; a Slot holds one complement, or the alternatives that fill the same role.",
 		rules.valency,
 	),
+	subject: paragraph(
+		"valency.subject",
+		"A verb's frame, a verbal Locution's included, opens with its subject: a Required Slot holding a Nom Case complement, whatever this sentence does with it (an imperative, an infinitive or a passive still has a subject in the frame). Only an expletive «es» subject takes no Slot.",
+		rules.valency,
+		rules.verbCore,
+	),
 	lesart: paragraph(
 		"valency.lesart",
 		"The frame is the Satzbauplan of the one Lesart the Emoji Description names. A complement this sentence leaves out still belongs in it; a complement only another meaning of the word takes does not, even when this sentence shows one.",
@@ -247,7 +253,7 @@ export const valency = {
 	),
 	freeMarker: paragraph(
 		"valency.freeMarker",
-		"Include a complement the word requires even when its marker is free: a place («hausen» irgendwo), a direction («rücken» irgendwohin), a manner, a duration or an amount (Adverbial), a predicative, or a zu-infinitive («sich erdreisten»). The test is that dropping it is ungrammatical or changes the meaning. Leave out free adjuncts of time, place, manner or cause, a place or time complement the dictionary marks optional, and a free dative.",
+		"Include a complement the word requires even when its marker is free: a place («hausen» irgendwo), a direction («rücken» irgendwohin), a manner, a duration or an amount (Adverbial), a predicative, or a zu-infinitive («sich erdreisten»). The test is that dropping it is ungrammatical or changes the meaning. Leave out free adjuncts of time, place, manner or cause, a place or time complement the dictionary marks optional, and a free dative. Add an Adverbial, a Predicative or a Clause only when the dictionary's pattern for this meaning names it.",
 		rules.valency,
 		rules.governed,
 	),
@@ -272,7 +278,7 @@ export const valency = {
 	),
 	referent: paragraph(
 		"valency.referent",
-		"A Case or Preposition complement's referent is the dictionary's jemand (Someone) or etwas (Something) for this meaning, Either when it gives both, never just what this sentence happens to show.",
+		"A Case or Preposition complement's referent is the dictionary's jemand (Someone) or etwas (Something) for this meaning: Either when it gives both, or when a person and a thing fill it alike («sich kümmern um»: Either), never just what this sentence happens to show.",
 		rules.valency,
 	),
 	shapes: paragraph(
@@ -304,7 +310,7 @@ export const participle = {
 	),
 	parts: paragraph(
 		"participle.parts",
-		"Write the verb's dictionary infinitive without «sich» (verb), the case of its lexical reflexive, Acc or Dat, or null (reflexive), its separable prefix or null (separablePrefix), its third person singular Präteritum (preterite) and the participle itself (participle).",
+		"Write the verb's dictionary infinitive without «sich» (verb), the case of its lexical reflexive, Acc or Dat, or null (reflexive), its separable prefix or null (separablePrefix; an inseparable prefix such as ver- or ent- is none), its third person singular Präteritum (preterite) and the participle the adjective is, its Partizip II or, for an adjective in -end, its Partizip I (participle).",
 		rules.verbCore,
 		rules.participle,
 	),
@@ -368,12 +374,12 @@ export const locutionType = {
 	),
 	collocation: paragraph(
 		"locutionType.Collocation",
-		"Collocation: a verb that only supports its noun or adjective predicate, a Funktionsverbgefüge («in Erwägung ziehen»)",
+		"Collocation: a Funktionsverbgefüge, a verb that only supports its noun or adjective predicate, which carries the meaning: the whole means what the noun's own verb would («in Erwägung ziehen»: erwägen; «Anklage erheben»: anklagen). Its noun keeping its meaning makes it a Collocation, not Neither",
 		rules.collocation,
 	),
 	none: paragraph(
 		"locutionType.None",
-		"Neither: its words keep their own meanings, as in a routine formula or a fixed pairing",
+		"Neither: neither an idiom nor a support-verb construction: a fixed pairing or formula whose words keep their own meanings and whose verb, if any, is no mere support",
 		rules.idiom,
 		rules.collocation,
 	),
@@ -423,7 +429,7 @@ export const formulaRole = {
 		),
 		Farewell: paragraph(
 			"formulaRole.Farewell",
-			"Farewell: closes an encounter («bis bald»)",
+			"Farewell: closes an encounter or a letter («bis bald»)",
 			rules.formulaRole,
 		),
 		Thanks: paragraph(
@@ -438,7 +444,7 @@ export const formulaRole = {
 		),
 		Sympathy: paragraph(
 			"formulaRole.Sympathy",
-			"Sympathy: condoles or wishes well in misfortune («herzliches Beileid»)",
+			"Sympathy: a formula said to someone to condole or wish them well in misfortune («herzliches Beileid»); a sigh of one's own regret is no Sympathy",
 			rules.formulaRole,
 		),
 		Request: paragraph(
@@ -448,12 +454,12 @@ export const formulaRole = {
 		),
 		Acknowledgment: paragraph(
 			"formulaRole.Acknowledgment",
-			"Acknowledgment: confirms that something was heard or accepted",
+			"Acknowledgment: a fixed formula confirming that something was heard or accepted; a plain answer of yes or no is none",
 			rules.formulaRole,
 		),
 		Refusal: paragraph(
 			"formulaRole.Refusal",
-			"Refusal: declines an offer or request",
+			"Refusal: a fixed formula declining an offer or request; a plain answer of no is none",
 			rules.formulaRole,
 		),
 		Reaction: paragraph(
@@ -473,7 +479,7 @@ export const formulaRole = {
 		),
 		None: paragraph(
 			"formulaRole.None",
-			"None: it performs no routine, such as an exclamation of feeling or a sound word",
+			"None: it performs no routine: an exclamation of feeling, surprise, dismay or disgust, laughter, a sound word, an answer particle such as yes or no, or an attention word that only voices annoyance",
 			rules.formulaRole,
 		),
 	},

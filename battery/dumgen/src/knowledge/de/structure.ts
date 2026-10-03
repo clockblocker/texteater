@@ -201,6 +201,32 @@ type SourceDraft = {
 	readonly participle: string;
 };
 
+/** The German inseparable verb prefixes: never a `hasSepPrefix`. */
+const inseparablePrefixes = new Set([
+	"be",
+	"emp",
+	"ent",
+	"er",
+	"ge",
+	"miss",
+	"ver",
+	"zer",
+]);
+
+/**
+ * Whether the adjective is the source verb's participle: the Partizip II
+ * Luna wrote, or the Partizip I, which is always the infinitive and -d.
+ */
+export function isParticipleOf(
+	adjective: string,
+	draft: Pick<SourceDraft, "verb" | "participle">,
+): "PartizipI" | "PartizipII" | undefined {
+	const folded = foldCase(adjective, "de");
+	if (foldCase(draft.participle, "de") === folded) return "PartizipII";
+	if (foldCase(`${draft.verb}d`, "de") === folded) return "PartizipI";
+	return undefined;
+}
+
 function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
 	if (!output || typeof output !== "object") return undefined;
 	const value = output as Record<string, unknown>;
@@ -216,8 +242,11 @@ function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
 	)
 		return undefined;
 	const infinitive = normalizeText(verb).replace(/^sich\s+/u, "");
-	const prefix =
+	const named =
 		separablePrefix === null ? null : normalizeText(separablePrefix);
+	// An inseparable prefix is no separable one, whatever Luna calls it.
+	const prefix =
+		named !== null && inseparablePrefixes.has(named) ? null : named;
 	if (
 		!/^\p{Ll}+$/u.test(infinitive) ||
 		(prefix !== null &&
@@ -292,10 +321,9 @@ export const produceParticipleSource = (
 			},
 		);
 		const adjective = context.lemma.canonicalForm;
-		if (
-			draft === null ||
-			foldCase(draft.participle, "de") !== foldCase(adjective, "de")
-		) {
+		const form =
+			draft === null ? undefined : isParticipleOf(adjective, draft);
+		if (draft === null || form === undefined) {
 			context.scope.event({
 				name: "NoParticipleSource",
 				data: draft === null ? null : { ...draft },
@@ -309,18 +337,26 @@ export const produceParticipleSource = (
 				verb: sourceVerbLemma(draft).canonicalForm,
 				preterite: draft.preterite,
 			}),
-			questions: participleQuestions,
+			// A Partizip I is the infinitive and -d, so code has checked
+			// its form; only a Partizip II's claimed form needs the judge.
+			questions:
+				form === "PartizipI"
+					? { meaning: participleQuestions.meaning }
+					: participleQuestions,
 		});
-		const form = choiceOf(answers, "form").choice;
+		const verdict =
+			form === "PartizipI"
+				? "Participle"
+				: choiceOf(answers, "form").choice;
 		const meaning = choiceOf(answers, "meaning").choice;
-		if (form === "NotParticiple") {
+		if (verdict === "NotParticiple") {
 			context.scope.event({
 				name: "RejectedParticipleSource",
 				data: { verb: draft.verb },
 			});
 			return [];
 		}
-		if (form !== "Participle" || meaning === "Unresolved")
+		if (verdict !== "Participle" || meaning === "Unresolved")
 			return yield* new KnowledgeUnresolved({
 				message: "jev left the participle's form or meaning undecided",
 			});
