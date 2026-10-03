@@ -18,6 +18,7 @@
  *       --budget <jev input tokens> --luna-budget <Luna input tokens>
  *       --luna-output-budget <Luna output tokens> [--limit N]
  *       [--luna-batch] [--luna-prompt-cache] [--usd-budget <dollars>]
+ *       [--subset evidence/resolve-reading/round-2-subset.json] [--repetitions 1]
  *   bun run evaluate --open <runId>
  *
  * A segment.inUnits run counts against the lab's current round: it writes a

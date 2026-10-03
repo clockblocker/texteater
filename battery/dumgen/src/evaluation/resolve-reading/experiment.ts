@@ -9,13 +9,15 @@
  *   across the corpus as the stored candidates, gold's own present in one
  *   arm and removed in the other.
  *
- * Each attempt runs three times. A live run first prices itself (the
- * cache in `project` mode, answering as gold would), hands the price to
- * `beforeLive`, which may refuse, then fills the cache under the round's
- * caps and runs from it.
+ * Each attempt runs three times, or as many as `repetitions` asks. A live
+ * run first prices itself (the cache in `project` mode, answering as gold
+ * would), hands the price to `beforeLive`, which may refuse, then fills the
+ * cache under the round's caps and runs from it. A run may take only a
+ * frozen subset's cases (`subset.ts`): its manifest records the subset, and
+ * its report compares each line with the baseline on the same cases.
  */
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as Effect from "effect/Effect";
 import {
@@ -61,12 +63,20 @@ import {
 	readingReport,
 	type ScoredReading,
 } from "./scoring.js";
+import {
+	compareReadingWithBaseline,
+	loadReadingSubset,
+	readingSubsetCaseIds,
+} from "./subset.js";
 
 export const defaultReadingRoot = fileURLToPath(
 	new URL("../../../.runs/resolve-reading/", import.meta.url),
 );
 
 export const readingRoute = "resolve-reading/de";
+
+/** The package root a subset's path in the manifest is relative to. */
+const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
 /** The port's ledger, whose latest round's sizes price a run (#891). */
 const readingLedgerPath = fileURLToPath(
@@ -115,6 +125,10 @@ export type ReadingEvaluateArgs = {
 	readonly root?: string;
 	/** Only these cases, for a smoke run; all by default. */
 	readonly limit?: number;
+	/** A frozen subset's file (`subset.ts`): only its cases run. */
+	readonly subset?: string;
+	/** Fewer repetitions than three, for a cheaper round. */
+	readonly repetitions?: number;
 };
 
 export type ReadingEvaluated = {
@@ -185,10 +199,11 @@ async function pass(
 	cases: readonly ReadingCase[],
 	models: ReadingModels,
 	concurrency: number,
+	repetitions: number,
 ): Promise<void> {
 	const work = cases.flatMap((goldCase) =>
 		armsOf(goldCase).flatMap((arm) =>
-			Array.from({ length: readingRepetitions }, (_, repetition) => ({
+			Array.from({ length: repetitions }, (_, repetition) => ({
 				goldCase,
 				arm,
 				repetition,
@@ -232,9 +247,41 @@ export function readingAttempts(run: OperationEvaluationRun): ScoredReading[] {
 	});
 }
 
-/** The report of a run (`scoring.ts`). */
+/** The subset a run took, as its manifest records it. */
+type CaseFilter = {
+	readonly subset: string;
+	readonly baselineRunId: string;
+	readonly seed: number;
+	readonly missed: readonly string[];
+	readonly guard: readonly string[];
+};
+
+const caseFilterOf = (run: OperationEvaluationRun): CaseFilter | undefined =>
+	(
+		run.manifest.configurations.judgment.settings as {
+			caseFilter?: CaseFilter;
+		}
+	).caseFilter;
+
+/**
+ * The report of a run (`scoring.ts`). A run on a subset also reports each
+ * line against the baseline on the same cases, the attempts that moved
+ * from wrong to right, and the guard's regression line.
+ */
 export function readingMetrics(run: OperationEvaluationRun) {
-	return readingReport(readingAttempts(run));
+	const attempts = readingAttempts(run);
+	const filter = caseFilterOf(run);
+	return {
+		...readingReport(attempts),
+		...(filter
+			? {
+					againstBaseline: compareReadingWithBaseline(
+						loadReadingSubset(resolve(packageRoot, filter.subset)),
+						attempts,
+					),
+				}
+			: {}),
+	};
 }
 
 /** The table's entry for one set. */
@@ -257,7 +304,38 @@ export function readingExperiment(setName: ReadingSetName) {
 					`The ${setName} set of ${readingRoute} is not frozen; run \`bun cli/resolve-reading.ts freeze\` first`,
 				);
 			const set = await loadReadingSet(root, setName);
-			const cases = set.cases.slice(0, args.limit ?? set.cases.length);
+			const repetitions = args.repetitions ?? readingRepetitions;
+			if (
+				!Number.isInteger(repetitions) ||
+				repetitions < 1 ||
+				repetitions > readingRepetitions
+			)
+				throw Error(
+					`repetitions must be 1 to ${readingRepetitions}, not ${repetitions}`,
+				);
+			let caseFilter: CaseFilter | undefined;
+			let selected = set.cases;
+			if (args.subset) {
+				const path = resolve(packageRoot, args.subset);
+				const subset = loadReadingSubset(path);
+				if (subset.setHash !== set.hash)
+					throw Error(
+						`The subset was read from set ${subset.setHash}, not the frozen ${set.hash}`,
+					);
+				const ids = readingSubsetCaseIds(subset);
+				const wanted = new Set([...ids.missed, ...ids.guard]);
+				selected = set.cases.filter(({ id }) => wanted.has(id));
+				if (selected.length !== wanted.size)
+					throw Error("The subset names cases the frozen set lacks");
+				caseFilter = {
+					subset: relative(packageRoot, path),
+					baselineRunId: subset.baselineRunId,
+					seed: subset.seed,
+					missed: ids.missed,
+					guard: ids.guard,
+				};
+			}
+			const cases = selected.slice(0, args.limit ?? selected.length);
 			const concurrency = args.concurrency ?? 12;
 			const directory = join(root, "cache");
 			const identity = { name: set.name, hash: set.hash };
@@ -283,11 +361,8 @@ export function readingExperiment(setName: ReadingSetName) {
 						? { wholeRound: true }
 						: {}),
 				});
-				await pass(cases, projecting, concurrency);
-				price = projecting.price(
-					readingRepetitions,
-					attempts * readingRepetitions,
-				);
+				await pass(cases, projecting, concurrency, repetitions);
+				price = projecting.price(repetitions, attempts * repetitions);
 				stageSizes = price.sizes.stages;
 				if (args.estimate) return { price, set: identity };
 				await args.beforeLive?.(price);
@@ -313,9 +388,9 @@ export function readingExperiment(setName: ReadingSetName) {
 				// misses, one batch answers them, and the next pass goes on.
 				const signal = args.signal ?? new AbortController().signal;
 				await live.resumeLunaBatches(signal);
-				await pass(cases, live, concurrency);
+				await pass(cases, live, concurrency, repetitions);
 				while (await live.sendLunaBatch(signal))
-					await pass(cases, live, concurrency);
+					await pass(cases, live, concurrency, repetitions);
 				if (live.capHit !== undefined)
 					throw Error(
 						`The run stopped at the ${live.capHit}; spent ${JSON.stringify(live.report())}`,
@@ -422,7 +497,7 @@ export function readingExperiment(setName: ReadingSetName) {
 						const output = await attempt(
 							found.goldCase,
 							found.arm,
-							repetition % readingRepetitions,
+							repetition % repetitions,
 							replay,
 						);
 						context.recordTrace({
@@ -456,10 +531,22 @@ export function readingExperiment(setName: ReadingSetName) {
 					},
 					judgment: {
 						model: pinnedJevModel,
-						settings: { set: set.name, setHash: set.hash },
+						settings: {
+							set: set.name,
+							setHash: set.hash,
+							...(caseFilter
+								? {
+										caseFilter: {
+											...caseFilter,
+											missed: [...caseFilter.missed],
+											guard: [...caseFilter.guard],
+										},
+									}
+								: {}),
+						},
 					},
 				},
-				repetitions: readingRepetitions,
+				repetitions,
 				...(args.signal ? { signal: args.signal } : {}),
 			});
 			if (args.outputDirectory) await saveRun(args.outputDirectory, run);

@@ -191,6 +191,45 @@ export function guardQuotas(
 	return quotas;
 }
 
+/**
+ * A seeded guard: `size` of the passed case ids, split over their routes by
+ * `guardQuotas` in proportion to dev, each route's share drawn without
+ * repeats by a partial Fisher-Yates shuffle. Ids come back sorted by route
+ * and id, so a seed always draws the same guard.
+ */
+export function drawGuard(
+	devRoutes: ReadonlyMap<string, number>,
+	passedByRoute: ReadonlyMap<string, readonly string[]>,
+	size: number,
+	seed: number,
+): Record<string, string[]> {
+	const quotas = guardQuotas(
+		new Map(
+			[...devRoutes].sort(([left], [right]) => left.localeCompare(right)),
+		),
+		new Map([...passedByRoute].map(([route, ids]) => [route, ids.length])),
+		size,
+	);
+	const random = generator(seed);
+	const guard: Record<string, string[]> = {};
+	for (const [route, ids] of [...passedByRoute].sort(([left], [right]) =>
+		left.localeCompare(right),
+	)) {
+		const quota = quotas.get(route) ?? 0;
+		if (quota === 0) continue;
+		const pool = [...ids];
+		for (let index = 0; index < quota; index++) {
+			const pick = index + Math.floor(random() * (pool.length - index));
+			[pool[index], pool[pick]] = [
+				pool[pick] as string,
+				pool[index] as string,
+			];
+		}
+		guard[route] = pool.slice(0, quota).sort();
+	}
+	return guard;
+}
+
 /** The subset of a baseline run's attempts: its misses and a seeded guard. */
 export function selectSubset(options: {
 	readonly baselineRunId: string;
@@ -227,31 +266,12 @@ export function selectSubset(options: {
 		if (missed.has(caseId) || options.exclude?.has(caseId)) continue;
 		passedByRoute.set(route, [...(passedByRoute.get(route) ?? []), caseId]);
 	}
-	const quotas = guardQuotas(
-		new Map(
-			[...devRoutes].sort(([left], [right]) => left.localeCompare(right)),
-		),
-		new Map([...passedByRoute].map(([route, ids]) => [route, ids.length])),
+	const guard = drawGuard(
+		devRoutes,
+		passedByRoute,
 		options.guardSize,
+		options.seed,
 	);
-	const random = generator(options.seed);
-	const guard: Record<string, string[]> = {};
-	for (const [route, ids] of [...passedByRoute].sort(([left], [right]) =>
-		left.localeCompare(right),
-	)) {
-		const quota = quotas.get(route) ?? 0;
-		if (quota === 0) continue;
-		// A partial Fisher-Yates shuffle draws `quota` ids without repeats.
-		const pool = [...ids];
-		for (let index = 0; index < quota; index++) {
-			const pick = index + Math.floor(random() * (pool.length - index));
-			[pool[index], pool[pick]] = [
-				pool[pick] as string,
-				pool[index] as string,
-			];
-		}
-		guard[route] = pool.slice(0, quota).sort();
-	}
 	const repetitions = Math.max(
 		0,
 		...options.attempts.map(({ repetition }) => repetition + 1),

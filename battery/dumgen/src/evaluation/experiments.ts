@@ -190,9 +190,9 @@ export type EvaluateArgs = {
 	readonly grammarCaps?: GrammarCaps;
 	/** resolve.grammar: only the first this many cases, for a smoke run. */
 	readonly limit?: number;
-	/** resolve.grammar: a frozen subset's file; only its cases run. */
+	/** resolve.grammar and resolve.reading: a frozen subset's file; only its cases run. */
 	readonly grammarSubset?: string;
-	/** resolve.grammar: attempts per case, 1 to 3. */
+	/** resolve.grammar and resolve.reading: attempts per case, 1 to 3. */
 	readonly repetitions?: number;
 	/** resolve.grammar's frozen sets and cache. */
 	readonly grammarRoot?: string;
@@ -656,6 +656,8 @@ function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 				...(args.readingRoot ? { root: args.readingRoot } : {}),
 				...(args.limit ? { limit: args.limit } : {}),
+				...(args.grammarSubset ? { subset: args.grammarSubset } : {}),
+				...(args.repetitions ? { repetitions: args.repetitions } : {}),
 				...(args.grammarCaps ? { caps: args.grammarCaps } : {}),
 			});
 			return {
