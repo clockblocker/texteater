@@ -19,7 +19,12 @@
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": [],
-		"rules": [],
+		"rules": [
+			{
+				"rule": "de/organisation-name-takes-its-article",
+				"hash": "f554775a2a54046e"
+			}
+		],
 		"references": []
 	},
 	"targets": [

@@ -630,6 +630,23 @@ const nouns: Rule[] = [
 		],
 	},
 	{
+		id: "de/organisation-name-takes-its-article",
+		statement:
+			"The name of an organisation, such as a party, broadcaster, authority, armed force, firm or international body, that German uses with the definite article is cited with it: die SPD, das ZDF, die UNESCO, die Bundeswehr. It has Core article Definite, its gender is that article's, and it owns the article in a sentence as a common noun does. An organisation German names without an article (adidas) is cited bare, as any bare name is.",
+		adrs: ["ADR-0035", "ADR-0040"],
+		routes: lexeme("PROPN"),
+		records: [
+			"de/die-spd-beschloss-ein-neues-programm",
+			"de/das-zdf-uebertraegt-die-debatte-live",
+			"de/die-unesco-foerdert-das-neue-bildungsprojekt",
+			"de/die-nato-beraet-heute-ueber-den-antrag",
+			"de/in-berlin-betreibt-die-bvg-die-u-bahn",
+			"de/die-deutsche-bank-veroeffentlichte-den-bericht",
+			"de/das-rote-kreuz-eroeffnete-eine-neue-beratungsstelle",
+			"de/die-kampagne-stellt-adidas-in-den-mittelpunkt",
+		],
+	},
+	{
 		id: "de/title-before-a-name",
 		statement:
 			"A title or form of address before a name (Herr, Frau, Dr., Mr, Mrs) is a common noun of its own, and the name a separate PROPN. It takes the name's case and number, unless it addresses someone. An abbreviated title stands for its expansion, also without the dot British usage drops: Mr und Mrs Parker gives [Mr] NOUN Mister and [Mrs] NOUN Missis.",

@@ -22,6 +22,10 @@
 	"sources": {
 		"adrs": ["ADR-0039"],
 		"rules": [
+			{
+				"rule": "de/organisation-name-takes-its-article",
+				"hash": "f554775a2a54046e"
+			},
 			{ "rule": "de/proper-noun-article", "hash": "c3eb61394edd1818" }
 		],
 		"references": []
