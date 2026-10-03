@@ -39,7 +39,7 @@
 		{
 			"memberSegmentIndices": [6, 12],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🟰⏳" },
+			"reading": { "emojiDescription": "⏳" },
 			"notes": {
 				"rationale": "wären is the perfect auxiliary of geblieben, so the target is the whole perfect [wären, geblieben]. Konjunktiv II: tense Past. bleiben 'stay somewhere' (Duden bleiben 1a) shares the Reading of copular 'remain' (1b, die Tür blieb offen) under ADR 0031: both say that nothing changes."
 			},

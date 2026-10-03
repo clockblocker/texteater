@@ -325,7 +325,7 @@
 				"family": "Lexeme",
 				"kind": "VERB"
 			},
-			"reading": { "emojiDescription": "🟰⏳" },
+			"reading": { "emojiDescription": "⏳" },
 			"notes": {
 				"rationale": "Copular bleiben never joins its predicate (de/copula-stays-apart). The door literally stays open, so this is not Duden's figurative offenbleiben (unresolved). Copular bleiben 'remain in a state' (Duden bleiben 1b); the Reading also covers staying somewhere (1a), merged under ADR 0031 since both say that nothing changes."
 			},

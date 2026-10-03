@@ -1574,7 +1574,7 @@ const readings: Rule[] = [
 	{
 		id: "de/copula-describes-its-own-part",
 		statement:
-			"A copula, a light verb or another verb whose complement carries the sentence's meaning describes only its own part: being, staying, becoming, causing or seeming. The complement's meaning belongs to the complement's Lemma and stays out, even as a second emoji: sein in Nach der Reise bin ich müde is 🟰, bleiben is 🟰⏳ and werden 🔄.",
+			"A copula, a light verb or another verb whose complement carries the sentence's meaning describes only its own part: being, staying, becoming, causing or seeming. The complement's meaning belongs to the complement's Lemma and stays out, even as a second emoji: sein in Nach der Reise bin ich müde is 🟰, bleiben ⏳, werden 🔄 and scheinen 👀. 🟰 marks sein alone.",
 		adrs: ["ADR-0031"],
 		routes: [...lexeme("VERB"), ...locution("VERB")],
 		records: [

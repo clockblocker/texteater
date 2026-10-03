@@ -23,7 +23,7 @@ const rules = {
 		"de/distinct-concepts-get-distinct-readings",
 		"500ad6b7f0020325",
 	],
-	copula: ["de/copula-describes-its-own-part", "5827fe2c3295d1b6"],
+	copula: ["de/copula-describes-its-own-part", "986b2cb2531c76d7"],
 	polarity: [
 		"de/emoji-description-keeps-polarity-and-scale",
 		"6c7521135fde5795",
@@ -209,7 +209,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 				"Er <TARGET>hat</TARGET> die Hose gestern <TARGET>geflickt</TARGET>.",
 			lemma: "flicken",
 		},
-		"🪡",
+		"🩹",
 		rules.meaning,
 		rules.auxiliary,
 	),
@@ -219,7 +219,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 			markedSentence: "Die Lage <TARGET>scheint</TARGET> ernst.",
 			lemma: "scheinen",
 		},
-		"🟰🤔",
+		"👀",
 		rules.copula,
 	),
 	demonstration(

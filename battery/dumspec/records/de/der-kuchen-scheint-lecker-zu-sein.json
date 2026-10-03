@@ -35,7 +35,7 @@
 				"lemma": "scheinen",
 				"context": "Der Kuchen <TARGET>scheint</TARGET> lecker zu sein.",
 				"meaning": "Seem, look, give an impression. Depict only the impression; lecker belongs to its own lemma, so no yummy face.",
-				"accepted": ["👀💭", "👀"],
+				"accepted": ["👀", "👀💭"],
 				"demo": true
 			}
 		}

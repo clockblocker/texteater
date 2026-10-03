@@ -35,7 +35,7 @@
 				"lemma": "bleiben",
 				"context": "Sie <TARGET>bleibt</TARGET> trotz der Kritik ruhig.",
 				"meaning": "Remain in a state. bleiben contributes only the staying; the calm belongs to ruhig, so no calm face.",
-				"accepted": ["📍", "⏸️", "🟰⏳", "⏳🟰", "📍⏳"],
+				"accepted": ["📍", "⏸️", "⏳", "📍⏳"],
 				"demo": true
 			}
 		}

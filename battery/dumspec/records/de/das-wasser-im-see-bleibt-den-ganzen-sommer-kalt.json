@@ -42,7 +42,7 @@
 				"lemma": "bleiben",
 				"context": "Das Wasser im See <TARGET>bleibt</TARGET> den ganzen Sommer kalt.",
 				"meaning": "Remain in a state",
-				"accepted": ["📍", "⏸️", "🟰⏳", "⏳🟰", "📍⏳"],
+				"accepted": ["📍", "⏸️", "⏳", "📍⏳"],
 				"rejected": ["🥶", "🧊", "❄️", "🥶⏳", "🧊⏳", "🏞️", "❄️⏳", "🌊"]
 			}
 		}
