@@ -135,6 +135,16 @@ German PART is authored (#734), so a PART that no authored member spells is
 a Catalog Miss, not Open production. Decided by the user on 2026-10-03
 ([#876](https://github.com/clockblocker/texteater/issues/876)).
 
+Amended on 2026-10-03: an Open Route's authored Readings are not a closed
+set of senses. When a click's Lemma there has authored Readings, the
+Reading judge offers them beside the stored ones; if the clicked sense
+matches none of them, the Lemma gains a New, generated Reading next to the
+authored ones, an ordinary Reading that is not marked authored. A Closed
+Route still returns a Catalog Miss for a Lemma it authors no Reading of.
+"We accept that the authored sets might not cover all possible things."
+Decided by the user on 2026-10-03
+([#877](https://github.com/clockblocker/texteater/issues/877)).
+
 ## Considered Options
 
 - Inventories in Dumling with their Knowledge and relation claims in Dumrel.
