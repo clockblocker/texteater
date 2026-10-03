@@ -15,7 +15,7 @@ export type CallFailure = {
 
 /** One model call, from the moment it held a permit of the request budget. */
 export type CallTrace = {
-	/** The operation's request (`segments`, `candidates`, `route`, …). */
+	/** The operation's request (`segments`, `route`, `grammar`, …). */
 	readonly stage: string;
 	/** The Sentence it asked about, counted across the Text from 0. */
 	readonly sentence?: number;
@@ -54,8 +54,19 @@ export type SentenceOutcome =
 			readonly failure: CallFailure;
 	  };
 
+/**
+ * How a `resolve.grammar` click came out, with why a click came back
+ * Unresolved or a Catalog Miss: `UnresolvedUnit` when intake left the unit
+ * Unresolved, otherwise the question or check that decided. The value the
+ * host receives carries only the outcome; the evaluation buckets by reason.
+ */
+export type ResolutionOutcome = {
+	readonly outcome: "Resolved" | "Unresolved" | "CatalogMiss";
+	readonly reason?: string;
+};
+
 export type OperationTrace = {
-	readonly operation: "segment.inUnits";
+	readonly operation: "segment.inUnits" | "resolve.grammar";
 	/** Epoch milliseconds; `durationMs` reads the monotonic clock. */
 	readonly startedAt: number;
 	readonly durationMs: number;
@@ -64,4 +75,6 @@ export type OperationTrace = {
 	readonly waits: readonly BudgetWait[];
 	/** In the order they finished; a Sentence the operation never finished is absent. */
 	readonly sentences: readonly SentenceOutcome[];
+	/** `resolve.grammar` only, once its click came out. */
+	readonly resolution?: ResolutionOutcome;
 };

@@ -24,6 +24,7 @@ import type {
 	CallFailure,
 	CallTrace,
 	OperationTrace,
+	ResolutionOutcome,
 	SentenceOutcome,
 } from "./operation-trace.js";
 
@@ -63,6 +64,8 @@ export type OperationScope = {
 		exchange: Exchange<Response, Output>,
 	) => Effect.Effect<Output, ProviderFailure | InvalidModelOutput>;
 	readonly sentence: (outcome: SentenceOutcome) => void;
+	/** How a click came out; the last one recorded is traced. */
+	readonly resolution: (outcome: ResolutionOutcome) => void;
 };
 
 export type OperationOptions = {
@@ -113,10 +116,14 @@ export function runOperation<A, E>(
 		const start = performance.now();
 		const record: CallRecord = { calls: [], waits: [], sent: 0 };
 		const sentences: SentenceOutcome[] = [];
+		let resolution: ResolutionOutcome | undefined;
 		const scope: OperationScope = {
 			call: (exchange) => call(options, record, exchange),
 			sentence: (outcome) => {
 				sentences.push(outcome);
+			},
+			resolution: (outcome) => {
+				resolution = outcome;
 			},
 		};
 		return body(scope).pipe(
@@ -135,6 +142,7 @@ export function runOperation<A, E>(
 						),
 						waits: [...record.waits],
 						sentences: [...sentences],
+						...(resolution ? { resolution } : {}),
 					}),
 				),
 			),

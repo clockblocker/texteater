@@ -44,3 +44,16 @@ export type LunaAsk = (
 	request: LunaRequest,
 	context: { readonly stage: string; readonly signal: AbortSignal },
 ) => Promise<LunaResponse>;
+
+/** The model and settings of a Luna request. */
+export type LunaConfiguration = LunaRequest["configuration"];
+
+/**
+ * The Luna configuration Dumgen's writing calls use unless the host passes
+ * another: the generation model the legacy pipeline wrote with, reasoning
+ * off (no reasoning models in resolution) and the fast service tier.
+ */
+export const defaultLunaConfiguration: LunaConfiguration = {
+	model: "gpt-5.6-luna",
+	settings: { reasoning: { effort: "none" }, service_tier: "fast" },
+};

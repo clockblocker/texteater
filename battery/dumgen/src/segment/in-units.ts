@@ -15,22 +15,15 @@
  */
 import * as Effect from "effect/Effect";
 import * as Result from "effect/Result";
-import type { Question } from "promptsmith/typesafe";
 import { callFailureOf, type OperationScope } from "../call.js";
-import { InvalidModelOutput } from "../errors.js";
-import type { Answers, Ask, AskFailure, AskRequest } from "./ask.js";
+import { askThrough, type JevSettings } from "../jev-call.js";
+import type { AskFailure } from "./ask.js";
 import {
 	type GermanSegmentation,
 	segmentGermanSentence,
 	writtenGermanSegments,
 } from "./de/segments.js";
 import { segmentGermanUnits, type UnitSettings } from "./de/units.js";
-import {
-	type JevAsk,
-	type JevRequest,
-	type JevResponse,
-	questionsPerRequest,
-} from "./jev.js";
 import type {
 	SegmentedSentence,
 	SegmentedText,
@@ -45,75 +38,7 @@ export type InUnitsInput = {
 };
 
 /** What `segment.inUnits` reaches jev with: the host's transport and the pinned version. */
-export type InUnitsJev = { readonly ask: JevAsk; readonly model: string };
-
-/** Answers when every question of the chunk has one of its type, from the pinned model. */
-function checkedAnswers(
-	stage: string,
-	model: string,
-	chunk: readonly (readonly [string, Question])[],
-	response: JevResponse,
-): Answers | InvalidModelOutput {
-	const { answers } = response;
-	const unusable = (message: string) =>
-		new InvalidModelOutput({ stage, message });
-	if (response.model !== model)
-		return unusable(
-			`jev answered as ${response.model}, not the pinned ${model}`,
-		);
-	const missing = chunk.flatMap(([id]) => (id in answers ? [] : [id]));
-	if (missing.length > 0)
-		return unusable(
-			`jev answered without ${missing.slice(0, 3).join(", ")}`,
-		);
-	const mistyped = chunk.flatMap(([id, question]) =>
-		answers[id]?.type === question.type ? [] : [id],
-	);
-	if (mistyped.length > 0)
-		return unusable(
-			`jev answered ${mistyped.slice(0, 3).join(", ")} with another type than asked`,
-		);
-	return answers;
-}
-
-/**
- * The stages' `ask` for one Sentence: each request in chunks, sent side by
- * side under the request budget, failing as soon as one chunk fails.
- */
-const askFor =
-	(scope: OperationScope, jev: InUnitsJev, sentence: number): Ask =>
-	({ stage, state, questions }: AskRequest) => {
-		const entries = Object.entries(questions);
-		const chunks: (typeof entries)[] = [];
-		for (let at = 0; at < entries.length; at += questionsPerRequest)
-			chunks.push(entries.slice(at, at + questionsPerRequest));
-		return Effect.forEach(
-			chunks,
-			(chunk) => {
-				const request: JevRequest = {
-					model: jev.model,
-					state,
-					questions: Object.fromEntries(chunk),
-				};
-				return scope.call({
-					stage,
-					sentence,
-					executor: "jev",
-					request,
-					send: (signal) => jev.ask(request, { stage, signal }),
-					tokens: ({ usage }) => ({
-						inputTokens: usage.input_tokens,
-						outputTokens: usage.output_tokens,
-					}),
-					check: (response) =>
-						checkedAnswers(stage, jev.model, chunk, response),
-				});
-			},
-			{ concurrency: "unbounded" },
-		).pipe(
-			Effect.map((answered): Answers => Object.assign({}, ...answered)),
-		);
-	};
+export type InUnitsJev = JevSettings;
 
 /** A Sentence whose segmentation failed, marked so, with its reason in the trace. */
 function failedSentence(
@@ -142,7 +67,7 @@ const segmentSentence = Effect.fnUntraced(function* (
 	text: string,
 	sentence: number,
 ) {
-	const ask = askFor(scope, jev, sentence);
+	const ask = askThrough(scope, jev, sentence);
 	const cut = yield* Effect.result(segmentGermanSentence(text, ask));
 	if (Result.isFailure(cut))
 		return failedSentence(
