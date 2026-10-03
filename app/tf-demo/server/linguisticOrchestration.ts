@@ -1,11 +1,7 @@
 import { makeSurfaceId } from "dumdict/runtime";
 import type * as Dumling from "dumling/types";
-import * as Cause from "effect/Cause";
-import * as Duration from "effect/Duration";
+import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
-import * as Exit from "effect/Exit";
-import * as Fiber from "effect/Fiber";
-import * as Option from "effect/Option";
 import type {
 	ClickEncounter,
 	ClickResolution,
@@ -15,7 +11,6 @@ import type {
 	ReadingResolution,
 } from "./clickResolution";
 import { inspectionStep } from "./inspectionCapture";
-import type { KnowledgeDraft } from "./knowledgeProduction";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -31,12 +26,6 @@ import {
 	type StoredUnit,
 	unitsByMember,
 } from "./storedSegments";
-
-/**
- * Drafts usually land before the Emoji Description (~1.3 s against ~2 s), but
- * one provider stall can hold a leaf for up to the Luna deadline.
- */
-const DRAFT_GRACE_MS = 1_500;
 
 /** How often a click judges its Reading again after its New was refused as stale. */
 const MAX_STALE_REJUDGES = 2;
@@ -57,7 +46,6 @@ export type PersistedSentence = {
 };
 
 export type ResolvedClickPersistence = {
-	readonly knowledgeDraftJson?: string;
 	readonly requestId: string;
 	readonly visitorId: string;
 	readonly sentenceId: string;
@@ -290,19 +278,6 @@ export function createTfDemoOrchestrator(options: {
 	readonly persistence: OrchestrationPersistence;
 	readonly observer?: ResolutionProgressObserver;
 	/**
-	 * Drafts are anchored on the marked sentence and Lemma; they run concurrently
-	 * with Reading resolution. `settle` aborts the leaves still in flight so the
-	 * draft returns the ones that finished.
-	 */
-	readonly draftKnowledge?: (input: {
-		encounter: ClickEncounter;
-		lemma: Dumling.Lemma<"de">;
-		visitorId: string;
-		settle: AbortSignal;
-	}) => Effect.Effect<KnowledgeDraft, unknown>;
-	/** How long a new Reading waits for unfinished drafts before committing. */
-	readonly draftGraceMs?: number;
-	/**
 	 * Segments a Sentence whose intake segmentation failed again, on the
 	 * first click on it (#861): Dumgen's `segment.inUnits` for that one
 	 * Sentence. A segmentation that fails again fails the click; the next
@@ -312,28 +287,6 @@ export function createTfDemoOrchestrator(options: {
 		stitchedText: string,
 	) => Effect.Effect<ResegmentedSentence, unknown>;
 }) {
-	const draftGrace = Duration.millis(options.draftGraceMs ?? DRAFT_GRACE_MS);
-	/** Waits out the grace, then settles the leaves in flight; a draft that ignores the settle is dropped. */
-	function settleDraft(
-		fiber: Fiber.Fiber<KnowledgeDraft | null, never>,
-		settle: AbortController,
-	) {
-		return Effect.gen(function* () {
-			const finished = yield* Effect.timeoutOption(
-				Fiber.join(fiber),
-				draftGrace,
-			);
-			if (Option.isSome(finished)) return finished.value;
-			settle.abort();
-			const settled = yield* Effect.timeoutOption(
-				Fiber.join(fiber),
-				draftGrace,
-			);
-			if (Option.isSome(settled)) return settled.value;
-			yield* Fiber.interrupt(fiber);
-			return null;
-		});
-	}
 	function resolveSegment(
 		selection: ResolveSegmentInput,
 		checkpoints: ResolutionCheckpoints = {},
@@ -341,10 +294,6 @@ export function createTfDemoOrchestrator(options: {
 	) {
 		return Effect.gen(function* () {
 			let input = selection;
-			let knowledgeDraft:
-				| Fiber.Fiber<KnowledgeDraft | null, never>
-				| undefined;
-			const settleDrafts = new AbortController();
 			assertNonEmpty(input.requestId, "requestId");
 			assertNonEmpty(input.visitorId, "visitorId");
 			assertNonEmpty(input.sentenceId, "sentenceId");
@@ -447,26 +396,6 @@ export function createTfDemoOrchestrator(options: {
 			const lemma = parseGermanLemma(
 				grammatical.attestation.surface.lemma,
 			);
-			// Text Knowledge speculates from the sentence and Lemma alone, so
-			// it overlaps Reading resolution instead of waiting for the emoji.
-			// It starts at once rather than on a later tick, which the Reading's
-			// promise hops would overtake. The scope interrupts it whenever
-			// resolution fails.
-			if (options.draftKnowledge && !checkpoints.reading)
-				knowledgeDraft = yield* options
-					.draftKnowledge({
-						encounter: grammatical.encounter,
-						lemma,
-						visitorId: input.visitorId,
-						settle: settleDrafts.signal,
-					})
-					.pipe(
-						withoutFailedWork(
-							"The Knowledge draft",
-							"the click commits without it",
-						),
-						Effect.forkScoped({ startImmediately: true }),
-					);
 			const [grammarSaved, readingsLoaded] = yield* Effect.all(
 				[
 					Effect.exit(
@@ -533,27 +462,6 @@ export function createTfDemoOrchestrator(options: {
 				}
 				reading = checkpointed;
 			} else yield* announceReading();
-
-			// A new Reading waits a short grace for its drafts, then settles the
-			// leaves still in flight and commits with the finished ones; Knowledge
-			// production generates the missing leaves. A reused Reading usually has
-			// its Knowledge already, so only a draft that already finished is
-			// handed on; an unfinished one is dropped rather than delaying the commit.
-			const draft = !knowledgeDraft
-				? null
-				: readingResolution.decision === "New"
-					? yield* settleDraft(knowledgeDraft, settleDrafts)
-					: yield* Effect.sync(() =>
-							knowledgeDraft.pollUnsafe(),
-						).pipe(
-							Effect.flatMap((exit) =>
-								exit && Exit.isSuccess(exit)
-									? Effect.succeed(exit.value)
-									: Fiber.interrupt(knowledgeDraft).pipe(
-											Effect.as(null),
-										),
-							),
-						);
 
 			const surfaceKey = surfaceIdentityKey(
 				grammatical.attestation.surface,
@@ -639,9 +547,6 @@ export function createTfDemoOrchestrator(options: {
 				return Effect.try(
 					(): ResolvedClickPersistence => ({
 						...input,
-						...(draft && (draft.texts.length || draft.relations)
-							? { knowledgeDraftJson: JSON.stringify(draft) }
-							: {}),
 						occurrence: {
 							memberSegmentIndices: storedMemberIndices(
 								context.sentence,
@@ -747,37 +652,10 @@ export function createTfDemoOrchestrator(options: {
 						),
 					);
 			}
-		}).pipe(Effect.scoped);
+		});
 	}
 
 	return Object.freeze({ resolveSegment });
-}
-
-/**
- * Drops optional work that failed or hit a bug, warning on a failure and
- * logging a defect as a bug. Interruption propagates and is never logged.
- */
-function withoutFailedWork(subject: string, consequence: string) {
-	return <Value, Error>(
-		work: Effect.Effect<Value, Error>,
-	): Effect.Effect<Value | null> =>
-		Effect.catchCause(work, (cause) => {
-			if (Cause.hasInterruptsOnly(cause)) return Effect.interrupt;
-			const failure = Cause.findErrorOption(cause);
-			return Effect.sync(() => {
-				if (Option.isSome(failure))
-					console.warn(
-						`${subject} failed; ${consequence}.`,
-						failure.value,
-					);
-				else
-					console.error(
-						`${subject} hit a bug; ${consequence}.`,
-						Cause.squash(cause),
-					);
-				return null;
-			});
-		});
 }
 
 /** Test-port boundary: production Dumdict returns Effects, a test may return a Promise. */

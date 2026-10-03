@@ -324,7 +324,6 @@ export default defineSchema({
 		createdAt: v.number(),
 	}).index("by_attempt_key_and_run", ["attemptKey", "runNumber"]),
 	knowledgeGenerationAttempts: defineTable({
-		knowledgeDraftJson: v.optional(v.string()),
 		attemptKey: v.string(),
 		visitorId: v.string(),
 		ownerReadingKey: v.string(),

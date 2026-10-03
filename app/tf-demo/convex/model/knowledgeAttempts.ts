@@ -196,7 +196,6 @@ export async function demandKnowledgeAttempt(
 	ctx: MutationCtx,
 	demand: {
 		readonly attemptKey: string;
-		readonly knowledgeDraftJson?: string;
 		readonly visitorId: string;
 		readonly readingId: Id<"readings">;
 		readonly attestationId: Id<"attestations">;

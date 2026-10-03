@@ -1042,7 +1042,6 @@ export async function completeResolutionSession(
 	ctx: MutationCtx,
 	session: ResolutionSession,
 	attestationId: Id<"attestations">,
-	options: { readonly knowledgeDraftJson?: string } = {},
 ) {
 	const { clickId } = await ensureVisitorEncounter(ctx, {
 		requestId: session.requestId,
@@ -1076,9 +1075,6 @@ export async function completeResolutionSession(
 	}
 	await scheduleKnowledgeGeneration(ctx, {
 		attemptKey: session.requestId,
-		...(options.knowledgeDraftJson
-			? { knowledgeDraftJson: options.knowledgeDraftJson }
-			: {}),
 		visitorId: session.visitorId,
 		readingId,
 		attestationId,

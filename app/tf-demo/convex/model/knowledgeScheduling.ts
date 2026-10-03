@@ -8,7 +8,6 @@ import {
 	missingKnowledge,
 	nothingMissing,
 	occurrenceGovernment,
-	occurrencePluralPattern,
 } from "./knowledgeCoverage";
 import { loadOccurrenceAttestation } from "./occurrenceAttestations";
 
@@ -27,7 +26,6 @@ export async function scheduleKnowledgeGeneration(
 	ctx: MutationCtx,
 	input: {
 		attemptKey: string;
-		knowledgeDraftJson?: string;
 		visitorId: string;
 		readingId: Id<"readings">;
 		attestationId: Id<"attestations">;
@@ -55,15 +53,13 @@ export async function scheduleKnowledgeGeneration(
 	);
 	const missing = missingKnowledge(accumulated, {
 		translationLanguages,
-		// Government and a plural can only be all that is missing once the base is covered.
+		// Government can only be all that is missing once the base is covered.
+		// An attested plural never is: a later occurrence never changes a
+		// stored aspect (#883 point 5), so it schedules no run.
 		attestedGovernment:
 			accumulated?.status === "Full"
 				? await occurrenceGovernment(ctx, occurrence)
 				: [],
-		attestedPluralPattern:
-			accumulated?.status === "Full"
-				? occurrencePluralPattern(occurrence)
-				: null,
 	});
 	if (nothingMissing(missing)) return;
 	await demandKnowledgeAttempt(ctx, {

@@ -395,21 +395,7 @@ test("intake attests no government, so a Full Reading with its translations dema
 	expect(await attempts(covered)).toEqual([]);
 });
 
-test("a Full Reading still demands the Plural Pattern its new sentence attests", async () => {
-	const input = (occurrence: Occurrence) => ({
-		attemptKey: "plural-top-up",
-		visitorId: "visitor-1",
-		readingId: occurrence.readingId,
-		attestationId: occurrence.attestationId,
-	});
-	const full = (pluralPattern: unknown) => ({
-		knowledge: {
-			translations: { en: ["pizza"], ru: ["пицца"] },
-			pluralPattern,
-		},
-		status: "Full" as const,
-		coveredTranslationLanguages: ["en" as const, "ru" as const],
-	});
+test("a Full Reading's plural occurrence schedules no Knowledge run: a later occurrence never changes a stored aspect (#883 point 5)", async () => {
 	const pizzas = (grammaticalCase: string) => ({
 		normalizedSurface: "Pizzas",
 		inflectionalFeatures: {
@@ -419,45 +405,29 @@ test("a Full Reading still demands the Plural Pattern its new sentence attests",
 		},
 	});
 	jest.useRealTimers();
-	const t = createTestConvex();
-	const occurrence = await seedOccurrence(t, PIZZA_READING, pizzas("Nom"));
-	await addToDictionary(t, occurrence, {
-		knowledge: { pluralPattern: ["En"] },
-	});
-	await insertAccumulatedKnowledge(t, occurrence, full(["En"]));
-	await schedule(t, input(occurrence));
-	expect(await attempts(t)).toHaveLength(1);
-	expect(
-		await t.mutation(internal.knowledgeGeneration.begin, {
-			attemptKey: "plural-top-up",
-		}),
-	).toEqual(
-		expect.objectContaining({
-			kind: "Generate",
-			topUpOnly: true,
-			pluralPattern: "S",
-		}),
-	);
-
-	// A stored pattern, a marker or a dative plural demands nothing.
-	for (const [stored, grammaticalCase] of [
-		[["En", "S"], "Nom"],
-		["NoPlural", "Nom"],
-		[["En"], "Dat"],
-	] as const) {
-		const covered = createTestConvex();
-		const coveredOccurrence = await seedOccurrence(
-			covered,
+	// Whatever the stored plural, its own or none, a plural Surface demands nothing.
+	for (const stored of [["En"], ["En", "S"], "NoPlural", undefined]) {
+		const t = createTestConvex();
+		const occurrence = await seedOccurrence(
+			t,
 			PIZZA_READING,
-			pizzas(grammaticalCase),
+			pizzas("Nom"),
 		);
-		await insertAccumulatedKnowledge(
-			covered,
-			coveredOccurrence,
-			full(stored),
-		);
-		await schedule(covered, input(coveredOccurrence));
-		expect(await attempts(covered)).toEqual([]);
+		await insertAccumulatedKnowledge(t, occurrence, {
+			knowledge: {
+				translations: { en: ["pizza"], ru: ["пицца"] },
+				...(stored === undefined ? {} : { pluralPattern: stored }),
+			},
+			status: "Full" as const,
+			coveredTranslationLanguages: ["en" as const, "ru" as const],
+		});
+		await schedule(t, {
+			attemptKey: "plural-top-up",
+			visitorId: "visitor-1",
+			readingId: occurrence.readingId,
+			attestationId: occurrence.attestationId,
+		});
+		expect(await attempts(t)).toEqual([]);
 	}
 });
 
@@ -982,12 +952,7 @@ test("the production application path keeps generated relations outside Dumdict"
 });
 
 test("scheduling is exact, idempotent, skips Full, and retries Failed", async () => {
-	const knowledgeDraftJson = JSON.stringify({
-		sourceFingerprint: "draft-source",
-		texts: [],
-	});
 	const inputFor = (occurrence: Occurrence, attemptKey: string) => ({
-		knowledgeDraftJson,
 		attemptKey,
 		visitorId: "visitor-1",
 		readingId: occurrence.readingId,
@@ -1005,7 +970,6 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 			attemptKey: "request-1",
 			ownerReadingKey: BANK_READING_KEY,
 			state: "Scheduled",
-			knowledgeDraftJson,
 		}),
 	]);
 	const loaded = await t.mutation(internal.knowledgeGeneration.begin, {
@@ -1014,7 +978,6 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	expect(loaded).toEqual(
 		expect.objectContaining({
 			kind: "Generate",
-			knowledgeDraftJson,
 			reading: expect.objectContaining({ emojiDescription: "🏦" }),
 			encounter: expect.objectContaining({
 				target: {

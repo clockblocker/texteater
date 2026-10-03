@@ -32,7 +32,6 @@ import {
 	missingKnowledge,
 	nothingMissing,
 	occurrenceGovernment,
-	occurrencePluralPattern,
 	recordCoverageEvidence,
 } from "./model/knowledgeCoverage";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
@@ -128,7 +127,6 @@ const generationInputValidator = v.union(
 		existingKnowledge: v.any(),
 		/** Relation kinds already answered; edges cannot show an empty answer. */
 		checkedRelationKinds: v.array(directSemanticRelationValidator),
-		knowledgeDraftJson: v.optional(v.string()),
 		runNumber: v.number(),
 		translationLanguages: v.array(translationLanguageValidator),
 		/** Knowledge is Full: ask only for what this occurrence adds. */
@@ -150,8 +148,6 @@ const generationInputValidator = v.union(
 				),
 			}),
 		),
-		/** The attested Plural Pattern the Reading's plural lacks. */
-		pluralPattern: v.union(v.string(), v.null()),
 		authorization: publicationAuthorizationValidator,
 	}),
 );
@@ -188,7 +184,6 @@ export const begin = internalMutation({
 		const missing = missingKnowledge(accumulated, {
 			translationLanguages: attempt.translationLanguages ?? ["en"],
 			attestedGovernment: await occurrenceGovernment(ctx, occurrence),
-			attestedPluralPattern: occurrencePluralPattern(occurrence),
 		});
 		if (nothingMissing(missing)) {
 			await endKnowledgeRun(ctx, attempt, null, { kind: "LostRace" });
@@ -210,9 +205,6 @@ export const begin = internalMutation({
 			attestation: occurrence.publicAttestation,
 			existingKnowledge: coverage.knowledge,
 			checkedRelationKinds: [...coverage.checkedRelationKinds],
-			...(attempt.knowledgeDraftJson
-				? { knowledgeDraftJson: attempt.knowledgeDraftJson }
-				: {}),
 			runNumber,
 			translationLanguages: [...missing.translationLanguages],
 			topUpOnly: !missing.base,
@@ -221,7 +213,6 @@ export const begin = internalMutation({
 					? ("New" as const)
 					: ("TopUp" as const),
 			government: [...missing.government],
-			pluralPattern: missing.pluralPattern,
 			authorization: await loadRelationPublicationAuthorization(ctx),
 		};
 	},
@@ -351,8 +342,8 @@ export const publish = internalMutation({
 			attempt.ownerReadingKey,
 		);
 		// The race check: before its first batch, did another run cover this
-		// demand since the claim? A Full Reading still takes government or a
-		// plural a new sentence attests, which only the batch itself shows here.
+		// demand since the claim? A batch carrying a frame or a plural still
+		// lands, which only the batch itself shows here.
 		if (
 			!attempt.publicationSequence &&
 			nothingMissing(
@@ -361,7 +352,6 @@ export const publish = internalMutation({
 						"en",
 					],
 					attestedGovernment: [],
-					attestedPluralPattern: null,
 				}),
 			) &&
 			!args.changes.some(

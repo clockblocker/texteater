@@ -488,9 +488,6 @@ function createConvexPersistence(
 				...(input.readingCandidates
 					? { readingCandidates: [...input.readingCandidates] }
 					: {}),
-				...(input.knowledgeDraftJson
-					? { knowledgeDraftJson: input.knowledgeDraftJson }
-					: {}),
 				reading: input.reading,
 				readingKey: input.readingKey,
 				occurrence: {

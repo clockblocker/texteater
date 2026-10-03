@@ -413,7 +413,6 @@ export const persistReusedResolvedClick = internalMutation({
 export const persistResolvedClick = internalMutation({
 	args: {
 		...occurrenceCommitArgs,
-		knowledgeDraftJson: v.optional(v.string()),
 		occurrence: occurrenceAttestationInputValidator,
 		reading: readingValueValidator,
 		readingKey: v.string(),
@@ -663,11 +662,7 @@ export const persistResolvedClick = internalMutation({
 		});
 		return {
 			status: "Committed" as const,
-			...(await completeResolutionSession(ctx, session, attestationId, {
-				...(args.knowledgeDraftJson
-					? { knowledgeDraftJson: args.knowledgeDraftJson }
-					: {}),
-			})),
+			...(await completeResolutionSession(ctx, session, attestationId)),
 			deduplicated: false,
 		};
 	},

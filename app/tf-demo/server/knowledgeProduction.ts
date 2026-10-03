@@ -63,24 +63,6 @@ export type KnowledgeInput = {
 	readonly request: KnowledgeRequest;
 };
 
-/**
- * Knowledge text drafted from the clicked Sentence and Lemma while the
- * Reading was still being resolved. The click orchestrator may still store
- * one; Knowledge production no longer reads it (#623: no drafts).
- */
-export type KnowledgeDraft = {
-	readonly sourceFingerprint: string;
-	readonly relations?: {
-		readonly requested: readonly string[];
-		readonly candidates: readonly string[];
-	};
-	readonly texts: readonly {
-		readonly aspect: "definition" | "transcription" | "translations";
-		readonly language?: string;
-		readonly text: string;
-	}[];
-};
-
 export type KnowledgeProducer = <E>(
 	input: KnowledgeInput,
 	options: {

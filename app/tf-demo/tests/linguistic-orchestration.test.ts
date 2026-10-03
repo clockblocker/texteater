@@ -145,10 +145,7 @@ function setup(
 		readonly persistence?: Partial<OrchestrationPersistence>;
 		readonly candidates?: Dumling.Reading<"de">[];
 		readonly context?: ResolutionContext;
-	} & Pick<
-		Parameters<typeof createTfDemoOrchestrator>[0],
-		"draftKnowledge" | "draftGraceMs" | "observer"
-	> = {},
+	} & Pick<Parameters<typeof createTfDemoOrchestrator>[0], "observer"> = {},
 ) {
 	const fake = fakeResolution();
 	const writes: Parameters<
@@ -204,12 +201,6 @@ function setup(
 		resolution: options.resolution ?? fake.resolution,
 		findStoredReadings: () => Effect.succeed(options.candidates ?? []),
 		persistence,
-		...(options.draftKnowledge
-			? { draftKnowledge: options.draftKnowledge }
-			: {}),
-		...(options.draftGraceMs === undefined
-			? {}
-			: { draftGraceMs: options.draftGraceMs }),
 		...(options.observer ? { observer: options.observer } : {}),
 	});
 	return {
@@ -222,19 +213,6 @@ function setup(
 		fake,
 		writes,
 		unresolved,
-	};
-}
-
-function silencedConsole() {
-	const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
-	const error = jest.spyOn(console, "error").mockImplementation(() => {});
-	return {
-		warn,
-		error,
-		[Symbol.dispose]() {
-			warn.mockRestore();
-			error.mockRestore();
-		},
 	};
 }
 
@@ -416,193 +394,6 @@ test("Knowledge changes validate against the exact tagged source Reading", () =>
 			value: "Bench",
 		}),
 	).toThrow("conflicts");
-});
-
-/** A port whose Reading waits for `release` before answering 🏦. */
-function slowReading(release: Promise<void>, started?: () => void) {
-	return fakeResolution({
-		reading: () =>
-			Effect.promise(async () => {
-				started?.();
-				await release;
-				return { decision: "New" as const, emojiDescription: "🏦" };
-			}),
-	}).resolution;
-}
-
-test("Knowledge drafts start from the Lemma before the Emoji Description and are handed to persistence with the new Reading", async () => {
-	const draftStarted = Promise.withResolvers<void>();
-	const emojiStarted = Promise.withResolvers<void>();
-	const releaseDraft = Promise.withResolvers<void>();
-	const releaseEmoji = Promise.withResolvers<void>();
-	const readingAvailable = Promise.withResolvers<void>();
-	const draft = {
-		sourceFingerprint: "fixture",
-		texts: [{ aspect: "definition" as const, text: "Ein Geldinstitut." }],
-	};
-	let emojiSettled = false;
-	const run = setup({
-		resolution: slowReading(
-			releaseEmoji.promise.then(() => {
-				emojiSettled = true;
-			}),
-			emojiStarted.resolve,
-		),
-		draftKnowledge: (input) =>
-			Effect.tryPromise(async () => {
-				expect(emojiSettled).toBe(false);
-				expect(input.lemma).toEqual(lemma);
-				expect("reading" in input).toBe(false);
-				draftStarted.resolve();
-				await releaseDraft.promise;
-				return draft;
-			}),
-		observer: {
-			async grammarAvailable() {},
-			async readingAvailable() {
-				readingAvailable.resolve();
-			},
-		},
-	});
-	const pending = run.resolve({ grammatical: grammar });
-	await Promise.all([draftStarted.promise, emojiStarted.promise]);
-	expect(run.writes).toEqual([]);
-	releaseEmoji.resolve();
-	await readingAvailable.promise;
-	expect(run.writes).toEqual([]);
-	releaseDraft.resolve();
-	await pending;
-	expect(run.writes).toHaveLength(1);
-	expect(JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null")).toEqual(
-		draft,
-	);
-});
-
-test("a new Reading commits after the draft grace with the leaves that finished", async () => {
-	const finished = {
-		aspect: "translations" as const,
-		language: "en",
-		text: "bank",
-	};
-	const run = setup({
-		draftGraceMs: 20,
-		draftKnowledge: ({ settle }) =>
-			Effect.promise(
-				() =>
-					new Promise((resolve) =>
-						settle.addEventListener("abort", () =>
-							resolve({
-								sourceFingerprint: "fixture",
-								texts: [finished],
-							}),
-						),
-					),
-			),
-	});
-	const started = performance.now();
-	await run.resolve({ grammatical: grammar });
-	expect(performance.now() - started).toBeLessThan(1_000);
-	expect(
-		JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null").texts,
-	).toEqual([finished]);
-});
-
-test("a draft that ignores the settle is dropped instead of holding the commit", async () => {
-	let interrupted = false;
-	const run = setup({
-		draftGraceMs: 20,
-		draftKnowledge: () =>
-			Effect.never.pipe(
-				Effect.onInterrupt(() =>
-					Effect.sync(() => {
-						interrupted = true;
-					}),
-				),
-			),
-	});
-	await run.resolve({ grammatical: grammar });
-	expect(interrupted).toBe(true);
-	expect(run.writes).toHaveLength(1);
-	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
-});
-
-test("a Reading failure interrupts an in-flight Knowledge draft and hands nothing to persistence", async () => {
-	let drafts = 0;
-	let interrupted = false;
-	const run = setup({
-		resolution: fakeResolution({
-			reading: () => Effect.fail(providerFailure("emoji failed")),
-		}).resolution,
-		draftKnowledge: () => {
-			drafts++;
-			return Effect.never.pipe(
-				Effect.onInterrupt(() =>
-					Effect.sync(() => {
-						interrupted = true;
-					}),
-				),
-			);
-		},
-	});
-	await expect(run.resolve({ grammatical: grammar })).rejects.toThrow(
-		"emoji failed",
-	);
-	expect(drafts).toBe(1);
-	expect(interrupted).toBe(true);
-	expect(run.writes).toEqual([]);
-});
-
-test("failed Knowledge speculation does not fail Reading resolution", async () => {
-	using _log = silencedConsole();
-	const run = setup({ draftKnowledge: () => Effect.fail(Error("offline")) });
-	await run.resolve({ grammatical: grammar });
-	expect(run.writes).toHaveLength(1);
-	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
-});
-
-test("a defective Knowledge draft is logged as a bug and does not fail Reading resolution", async () => {
-	using log = silencedConsole();
-	const run = setup({
-		draftKnowledge: () => Effect.die(new TypeError("draft bug")),
-	});
-	await run.resolve({ grammatical: grammar });
-	expect(run.writes).toHaveLength(1);
-	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
-	expect(log.error.mock.calls[0]?.[1]).toBeInstanceOf(TypeError);
-	expect(log.warn).not.toHaveBeenCalled();
-});
-
-test("a reused Reading drops an unfinished Knowledge draft instead of waiting for it", async () => {
-	let interrupted = false;
-	const run = setup({
-		candidates: [reading],
-		draftKnowledge: () =>
-			Effect.never.pipe(
-				Effect.onInterrupt(() =>
-					Effect.sync(() => {
-						interrupted = true;
-					}),
-				),
-			),
-	});
-	await run.resolve({ grammatical: grammar });
-	expect(interrupted).toBe(true);
-	expect(run.writes[0]?.knowledgeDraftJson).toBeUndefined();
-});
-
-test("a reused Reading keeps a Knowledge draft that already finished", async () => {
-	const draft = {
-		sourceFingerprint: "fixture",
-		texts: [{ aspect: "definition" as const, text: "Ein Geldinstitut." }],
-	};
-	const run = setup({
-		candidates: [reading],
-		draftKnowledge: () => Effect.succeed(draft),
-	});
-	await run.resolve({ grammatical: grammar });
-	expect(JSON.parse(run.writes[0]?.knowledgeDraftJson ?? "null")).toEqual(
-		draft,
-	);
 });
 
 test("a failed Reading checkpoint prevents occurrence commit", async () => {

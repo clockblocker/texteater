@@ -227,7 +227,7 @@ test("a commit advances every Visitor's earlier Encounter of its members, so the
 	]);
 });
 
-test("Knowledge drafts follow the committed occurrence and a late writer cannot replace them", async () => {
+test("Knowledge follows the committed occurrence and a late writer reuses it without a run of its own", async () => {
 	const t = createTestConvex();
 	const { selection, guard } = await selectIn(t, ["Banken"]);
 	const lateSelection = {
@@ -236,44 +236,28 @@ test("Knowledge drafts follow the committed occurrence and a late writer cannot 
 		visitorId: "visitor-2",
 	};
 	const lateGuard = await startSession(t, lateSelection);
-	const knowledgeDraftJson = JSON.stringify({
-		sourceFingerprint: "original",
-		texts: [],
-	});
 
-	const first = await t.mutation(internal.persistence.persistResolvedClick, {
-		...bankOccurrenceCommit(selection, guard, "New"),
-		knowledgeDraftJson,
-	});
+	const first = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(selection, guard, "New"),
+	);
 	if (first.status !== "Committed") throw new Error("Expected a commit.");
 	expect(await rows(t, "knowledgeGenerationAttempts")).toEqual([
 		expect.objectContaining({
-			knowledgeDraftJson,
+			attemptKey: "request-1",
 			readingId: first.readingId,
 		}),
 	]);
 
-	const late = await t.mutation(internal.persistence.persistResolvedClick, {
-		...bankOccurrenceCommit(lateSelection, lateGuard, "New"),
-		knowledgeDraftJson: JSON.stringify({
-			sourceFingerprint: "late",
-			texts: [],
-		}),
-	});
+	const late = await t.mutation(
+		internal.persistence.persistResolvedClick,
+		bankOccurrenceCommit(lateSelection, lateGuard, "New"),
+	);
 
 	expect(late).toMatchObject({
 		status: "Reused",
 		attestationId: first.attestationId,
 	});
-	const attempts = await rows(t, "knowledgeGenerationAttempts");
-	expect(
-		attempts.find(({ attemptKey }) => attemptKey === "late-writer")
-			?.knowledgeDraftJson,
-	).toBeUndefined();
-	expect(
-		attempts.find(({ attemptKey }) => attemptKey === "request-1")
-			?.knowledgeDraftJson,
-	).toBe(knowledgeDraftJson);
 	const knowledgeRuns = (
 		await t.run((ctx) =>
 			ctx.db.system.query("_scheduled_functions").collect(),
