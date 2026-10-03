@@ -19,23 +19,85 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Kiefer (Knochen)",
+				"url": "https://www.duden.de/rechtschreibung/Kiefer_Knochen",
+				"supports": "Target 0 Knowledge: plural Kiefer; Schädelknochen, in dem die Zähne sitzen"
+			},
+			{
+				"title": "OpenThesaurus: Kiefer",
+				"url": "https://www.openthesaurus.de/synonyme/Kiefer",
+				"supports": "Target 0 Knowledge: synset Kiefer, Kieferknochen [Anatomie], Oberbegriff Knochen"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🦷" },
+			"reading": {
+				"emojiDescription": "🦷",
+				"knowledge": {
+					"plural": ["Kiefer"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Kieferknochen",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Knochen",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The jaw use resolves to the masculine Kiefer Lemma, distinct through its Core Features from the feminine pine-tree Lemma."
+				"rationale": "The jaw use resolves to the masculine Kiefer Lemma, distinct through its Core Features from the feminine pine-tree Lemma. Knowledge (#884): the hypernym Knochen and no holonym were decided by agents under the user's delegation. Schädelknochen would join the hypernyms if a definition's genus backed one (#884 G2, open for the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

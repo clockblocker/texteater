@@ -57,7 +57,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0034", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -70,17 +70,150 @@
 			{
 				"rule": "de/verb-core-features",
 				"hash": "584917189382edfe"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: erinnern, sich, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400220/1",
+				"supports": "Target 0 Knowledge: Satzbauplan Ksub, Kgen / Kprp (an + Akk); dass-S, Inf-S mit zu, ob-S, w-S with fakultatives Korrelat dessen/daran"
+			},
+			{
+				"title": "Duden Synonyme: erinnern",
+				"url": "https://www.duden.de/synonyme/erinnern",
+				"supports": "Target 0 Knowledge: sich entsinnen, zurückdenken, sich zurückerinnern"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🧠💭" },
+			"reading": {
+				"emojiDescription": "🧠💭",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Gen",
+									"referent": "Either"
+								},
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "an",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Optional"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich entsinnen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "zurückdenken",
+								"coreFeatures": {
+									"hasSepPrefix": "zurück",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich zurückerinnern",
+								"coreFeatures": {
+									"hasSepPrefix": "zurück",
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "sich erinnern is inherently reflexive, so sich is a member and part of the normalized Surface erinnert sich. an is governed by erinnern: it is a member recorded in valencyEvidence as an + Acc and stays out of the normalized Surface."
+				"rationale": "sich erinnern is inherently reflexive, so sich is a member and part of the normalized Surface erinnert sich. an is governed by erinnern: it is a member recorded in valencyEvidence as an + Acc and stays out of the normalized Surface. Knowledge (#884): the an Slot is Required with E-VALBU's Gen alternative, and vergessen is no antonym; decided by agents under the user's delegation. sich entsinnen is a synonym only if register doesn't count (#884 G1, open for the user), and vergessen would be an antonym if a definition by negation backed one (#884 G2, open for the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

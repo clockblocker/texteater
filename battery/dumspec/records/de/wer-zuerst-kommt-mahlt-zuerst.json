@@ -25,6 +25,10 @@
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
 			}
 		],
 		"references": [
@@ -32,6 +36,16 @@
 				"title": "DWDS: wer zuerst kommt, mahlt zuerst",
 				"url": "https://www.dwds.de/wb/wer%20zuerst%20kommt,%20mahlt%20zuerst",
 				"supports": "Target 0, Wer zuerst kommt, mahlt zuerst (sprichwörtlich)"
+			},
+			{
+				"title": "Büchmann, Geflügelte Worte (19. Aufl., 1898)",
+				"url": "https://www.gutenberg.org/ebooks/43759",
+				"supports": "Target 0 Knowledge: Aus dem Sachsenspiegel Eike von Repkows stammt: Wer zuerst kommt, mahlt zuerst"
+			},
+			{
+				"title": "OWID Sprichwörterbuch: Wer zuerst kommt, mahlt zuerst",
+				"url": "https://www.owid.de/artikel/401882",
+				"supports": "Target 0 Knowledge: Sprichwort; ein Synonym zum Sprichwort Der frühe Vogel fängt den Wurm"
 			}
 		]
 	},
@@ -39,9 +53,25 @@
 		{
 			"memberSegmentIndices": [0, 2, 4, 7, 9],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🥇" },
+			"reading": {
+				"emojiDescription": "🥇",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Wer zuerst kommt, mahlt zuerst is a Proverb (DWDS: sprichwörtlich), so one Saying target spans all its words, and wer has no target of its own."
+				"rationale": "Wer zuerst kommt, mahlt zuerst is a Proverb (DWDS: sprichwörtlich), so one Saying target spans all its words, and wer has no target of its own. Knowledge (#884): a Proverb, related to no other Saying, since only OWID and DWDS's siehe auch pair it with Der frühe Vogel fängt den Wurm; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -32,6 +32,15 @@
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
+			{
+				"rule": "de/interjection-counts-its-words",
+				"hash": "b572bad8906b508d"
 			}
 		],
 		"references": [
@@ -39,6 +48,11 @@
 				"title": "Duden: na ja!",
 				"url": "https://www.duden.de/rechtschreibung/na_ja_",
 				"supports": "Target 0, na ja"
+			},
+			{
+				"title": "OpenThesaurus: na ja",
+				"url": "https://www.openthesaurus.de/synonyme/na%20ja",
+				"supports": "Target 0 Knowledge: synsets with nun ja, tja, na ja [ugs.]"
 			}
 		]
 	},
@@ -46,9 +60,48 @@
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "🤷" },
+			"reading": {
+				"emojiDescription": "🤷",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "INTJ",
+								"canonicalForm": "nun ja",
+								"coreFeatures": {}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "INTJ",
+								"canonicalForm": "tja",
+								"coreFeatures": {
+									"partType": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "Authored",
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "na ja is one interjection (Duden: na ja!, 'Ausdruck des Einlenkens, Entgegenkommens, Abmilderns, vorsichtigen Widerspruchs'), a Locution INTJ. ja gives no yes here, so the two words do not resolve on their own as in nein danke. Here it softens a disagreement."
+				"rationale": "na ja is one interjection (Duden: na ja!, 'Ausdruck des Einlenkens, Entgegenkommens, Abmilderns, vorsichtigen Widerspruchs'), a Locution INTJ. ja gives no yes here, so the two words do not resolve on their own as in nein danke. Here it softens a disagreement. Knowledge (#884): no Formula Role, since na ja is no routine formula; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

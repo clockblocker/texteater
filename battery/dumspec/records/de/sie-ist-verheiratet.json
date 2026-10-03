@@ -13,24 +13,146 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036"],
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
-			{ "rule": "de/sein-perfect-or-copula", "hash": "2f0a185d7f35c1e9" }
+			{ "rule": "de/sein-perfect-or-copula", "hash": "2f0a185d7f35c1e9" },
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: verheiraten",
+				"url": "https://www.duden.de/rechtschreibung/verheiraten",
+				"supports": "Target 0 Knowledge: 1 eine eheliche Verbindung eingehen, Grammatik sich verheiraten (sich mit einem Amerikaner verheiratet; oft im 2. Partizip: eine verheiratete Frau)"
+			},
+			{
+				"title": "DWDS: verheiraten",
+				"url": "https://www.dwds.de/wb/verheiraten",
+				"supports": "Target 0 Knowledge: sich verheiraten, mit jmdm. eine Ehe eingehen; a) verheiratet, häufig im Partizip II"
+			},
+			{
+				"title": "OpenThesaurus: verheiratet",
+				"url": "https://www.openthesaurus.de/synonyme/verheiratet",
+				"supports": "Target 0 Knowledge: synset verheiratet, verehelicht, vermählt; antonyms unverheiratet, ledig"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "💍" },
+			"reading": {
+				"emojiDescription": "💍",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "mit",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "sich verheiraten",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": "Acc"
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "verehelicht",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "vermählt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "ledig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "unverheiratet",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Verheiratet describes a state, not the event of marrying: ist is the copula VERB and verheiratet the ADJ verheiratet with Participle Source verheiraten (ADR 0036)."
+				"rationale": "Verheiratet describes a state, not the event of marrying: ist is the copula VERB and verheiratet the ADJ verheiratet with Participle Source verheiraten (ADR 0036). Knowledge (#884): the Participle Source is sich verheiraten, under which Duden and DWDS file the participle, Verbal; decided by agents under the user's delegation, and the user may reword \"verheiraten\" above. verehelicht and vermählt are synonyms only if register doesn't count (#884 G1, open for the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

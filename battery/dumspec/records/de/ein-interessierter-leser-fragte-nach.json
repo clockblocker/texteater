@@ -17,7 +17,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036"],
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
@@ -27,17 +27,129 @@
 			{
 				"rule": "de/attributive-adjective-stands-alone",
 				"hash": "dc0d3ef97ace5bc0"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/governed-preposition-joins-its-governor",
+				"hash": "2d20d7f0e21161bc"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: interessiert",
+				"url": "https://www.duden.de/rechtschreibung/interessiert",
+				"supports": "Target 0 Knowledge: an diesem Problem nicht interessiert; daran interessiert, dieses Geschäft zu machen; Antonym desinteressiert; synonyms aufgeschlossen, neugierig"
+			},
+			{
+				"title": "Duden: interessieren",
+				"url": "https://www.duden.de/rechtschreibung/interessieren",
+				"supports": "Target 0 Knowledge: 2b jemanden für ein Projekt/an einem Projekt interessieren"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🧐" },
+			"reading": {
+				"emojiDescription": "🧐",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "an",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Required"
+								}
+							]
+						}
+					],
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "interessieren",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "neugierig",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "aufgeschlossen",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "desinteressiert",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Interessierter is an attributive participle modifying Leser with nominative masculine singular agreement, so it is the ADJ interessiert with Participle Source interessieren (ADR 0036). interessiert compares (interessierter, am interessiertesten), so this Surface marks Degree Pos. Because the head noun is overt, it is not a substantivized NOUN."
+				"rationale": "Interessierter is an attributive participle modifying Leser with nominative masculine singular agreement, so it is the ADJ interessiert with Participle Source interessieren (ADR 0036). interessiert compares (interessierter, am interessiertesten), so this Surface marks Degree Pos. Because the head noun is overt, it is not a substantivized NOUN. Knowledge (#884): Participle Source interessieren, Verbal, with an Optional an + Dat and a zu-infinitive that needs daran; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

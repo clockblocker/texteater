@@ -17,22 +17,166 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0034", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
 				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: warten, Lesart 2 (warten auf)",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401186/2",
+				"supports": "Target 0 Knowledge: jemand/etwas wartet auf etwas, Satzbauplan Ksub, Kprp, (Kadv), (Kadv); dass-S, Inf-S mit zu, ob-S, w-S with fakultatives Korrelat darauf; wartete"
+			},
+			{
+				"title": "Duden Synonyme: warten",
+				"url": "https://www.duden.de/synonyme/warten",
+				"supports": "Target 0 Knowledge: abwarten, zuwarten, sich gedulden, (gehoben) harren"
+			},
+			{
+				"title": "OpenThesaurus: warten",
+				"url": "https://www.openthesaurus.de/synonyme/warten",
+				"supports": "Target 0 Knowledge: synset warten, abwarten, (sich) gedulden, harren, zuwarten"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "⏳" },
+			"reading": {
+				"emojiDescription": "⏳",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "auf",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Optional"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "harren",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "abwarten",
+								"coreFeatures": {
+									"hasSepPrefix": "ab",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "zuwarten",
+								"coreFeatures": {
+									"hasSepPrefix": "zu",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich gedulden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The governed preposition auf stays an occurrence member, so a click on it opens warten, but it is not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is wartet. Government is not a Lemma feature."
+				"rationale": "The governed preposition auf stays an occurrence member, so a click on it opens warten, but it is not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is wartet. Government is not a Lemma feature. Knowledge (#884): the Nom and the auf complement are Either, and the frame has no Adverbial, since ADR 0034 makes the place a free adjunct; decided by agents under the user's delegation. harren is a synonym only if register doesn't count (#884 G1, open for the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

@@ -21,21 +21,88 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0031", "ADR-0035", "ADR-0038"],
+		"adrs": ["ADR-0031", "ADR-0034", "ADR-0035", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Mutter (Schraube)",
+				"url": "https://www.duden.de/rechtschreibung/Mutter_Schraube",
+				"supports": "Target 0 Knowledge: plural Muttern; Kurzform für Schraubenmutter"
+			},
+			{
+				"title": "DWDS: Schraubenmutter",
+				"url": "https://www.dwds.de/wb/Schraubenmutter",
+				"supports": "Target 0 Knowledge: Schraubenmutter is a synonym of Mutter (2)"
+			},
+			{
+				"title": "OpenThesaurus: Mutter",
+				"url": "https://www.openthesaurus.de/synonyme/Mutter",
+				"supports": "Target 0 Knowledge: synset Mutter, Schraubenmutter [Technik], Oberbegriff Befestigungselement"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🔩" },
+			"reading": {
+				"emojiDescription": "🔩",
+				"knowledge": {
+					"plural": ["Muttern"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Schraubenmutter",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Befestigungselement",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The nut use shares one feminine Mutter Lemma with the mother use; the two are Readings of that Lemma, told apart by their Emoji Descriptions (ADR 0031). Their different plurals, Muttern and Mütter, are Reading Knowledge, not identity (ADR 0038)."
 			},

@@ -20,7 +20,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0034", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -31,17 +31,152 @@
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
 			},
-			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" }
+			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" },
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: übersetzen, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400982/1",
+				"supports": "Target 0 Knowledge: jemand/etwas übersetzt etwas aus etwas in etwas, Satzbauplan Ksub, (Kakk), (Kprp), (Kprp); übersetzte"
+			},
+			{
+				"title": "Duden Synonyme: übersetzen",
+				"url": "https://www.duden.de/synonyme/uebersetzen_uebersetzt",
+				"supports": "Target 0 Knowledge: dolmetschen, übertragen"
+			},
+			{
+				"title": "DWDS: Deutsch",
+				"url": "https://www.dwds.de/wb/Deutsch",
+				"supports": "Target 1 Knowledge: das Deutsche wird nur im Singular verwendet; one lemma with Deutsch"
+			},
+			{
+				"title": "OpenThesaurus: Deutsch",
+				"url": "https://www.openthesaurus.de/synonyme/Deutsch",
+				"supports": "Target 1 Knowledge: synset Deutsch, deutsche Sprache, Oberbegriff Sprache"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🌐" },
+			"reading": {
+				"emojiDescription": "🌐",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "aus",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Something"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "in",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "übertragen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "dolmetschen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The ambiguous surface übersetzt is taken as present finite, not as a participle."
+				"rationale": "The ambiguous surface übersetzt is taken as present finite, not as a participle. Knowledge (#884): the frame takes E-VALBU's (aus + Dat) and (in + Acc), with an Either Nom and an Optional Acc; decided by agents under the user's delegation. By de/governed-preposition-joins-its-governor the in of ins is then a member of this target, a Segmentation change left to the user."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -86,7 +221,50 @@
 		{
 			"memberSegmentIndices": [9, 11],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🇩🇪💬" },
+			"reading": {
+				"emojiDescription": "🇩🇪💬",
+				"knowledge": {
+					"plural": "NoPlural",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Deutsch",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Sprache",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Deutsche is the German language, a neuter with a meaning of its own, so it is a separate Lemma with gender Neut, not the adjectival noun for a person. s stands for das and is the noun's owned article, a Fused member."
 			},

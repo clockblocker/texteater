@@ -32,7 +32,7 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0003", "ADR-0035"],
+		"adrs": ["ADR-0003", "ADR-0034", "ADR-0035", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/expletive-es-joins-its-verb",
@@ -42,15 +42,56 @@
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: anziehen, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400307/2",
+				"supports": "Target 1 Knowledge: jemand zieht jemandem etwas an, Satzbauplan Ksub, Kakk, (Kdat); zog an"
+			},
+			{
+				"title": "Duden: anziehen",
+				"url": "https://www.duden.de/rechtschreibung/anziehen",
+				"supports": "Target 1 Knowledge: Antonyme abstoßen, ausziehen"
+			},
+			{
+				"title": "Duden Synonyme: anziehen",
+				"url": "https://www.duden.de/synonyme/anziehen",
+				"supports": "Target 1 Knowledge: anlegen, hineinschlüpfen, überstreifen, überziehen"
+			},
+			{
+				"title": "Duden: Jägersmann",
+				"url": "https://www.duden.de/rechtschreibung/Jaegersmann",
+				"supports": "Target 2 Knowledge: Plural die Jägersleute; veraltet; synonyms Jäger, (Jägersprache) Weidmann"
+			},
+			{
+				"title": "DWDS: Jägersmann",
+				"url": "https://www.dwds.de/wb/J%C3%A4gersmann",
+				"supports": "Target 2 Knowledge: Nominativ Plural Jägersmänner"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0],
 			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "⚪" },
+			"reading": {
+				"emojiDescription": "⚪",
+				"knowledge": {}
+			},
 			"notes": {
 				"rationale": "Es only fills the first position before the postponed subject der wilde Jägersmann: with anything else in front it disappears (Der wilde Jägersmann zog … an). So it is positional es, which refers to nothing and is a PRON target of its own (de/expletive-es-joins-its-verb)."
 			},
@@ -88,10 +129,110 @@
 		{
 			"memberSegmentIndices": [2, 18],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "👕" },
+			"reading": {
+				"emojiDescription": "👕",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "anlegen",
+								"coreFeatures": {
+									"hasSepPrefix": "an",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "überziehen",
+								"coreFeatures": {
+									"hasSepPrefix": "über",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "hineinschlüpfen",
+								"coreFeatures": {
+									"hasSepPrefix": "hinein",
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "ausziehen",
+								"coreFeatures": {
+									"hasSepPrefix": "aus",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"grundform": false,
 			"notes": {
-				"rationale": "zog and the detached prefix an are the Fixed members of one anziehen occurrence, in source order."
+				"rationale": "zog and the detached prefix an are the Fixed members of one anziehen occurrence, in source order. Knowledge (#884): 👕 is E-VALBU's Lesart 2 (putting on a garment), so its Acc is Something; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -137,10 +278,51 @@
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🏹" },
+			"reading": {
+				"emojiDescription": "🏹",
+				"knowledge": {
+					"plural": ["Jägersleute", "Jägersmänner"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Jäger",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Weidmann",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"grundform": true,
 			"notes": {
-				"rationale": "The noun owns its article across the adjective wilde, as German der does."
+				"rationale": "The noun owns its article across the adjective wilde, as German der does. Knowledge (#884): both plurals, Duden's Jägersleute and DWDS's Jägersmänner, were decided by agents under the user's delegation. Jäger and Weidmann are synonyms only if register doesn't count (#884 G1, open for the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

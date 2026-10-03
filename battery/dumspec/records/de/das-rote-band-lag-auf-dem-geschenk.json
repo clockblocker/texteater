@@ -21,7 +21,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/core-features-are-identity",
@@ -31,17 +31,108 @@
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
 				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Band (Gewebestreifen)",
+				"url": "https://www.duden.de/rechtschreibung/Band_Gewebestreifen",
+				"supports": "Target 0 Knowledge: Plural Bänder; synonyms Gurt, Streifen, (regional) Bändel"
+			},
+			{
+				"title": "OpenThesaurus: Band",
+				"url": "https://www.openthesaurus.de/synonyme/Band",
+				"supports": "Target 0 Knowledge: synset Band, Bändel, Gurt, (schmaler) Streifen"
+			},
+			{
+				"title": "E-VALBU: liegen, Lesart 14",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400765/14",
+				"supports": "Target 1 Knowledge: etwas liegt irgendwo, Satzbauplan Ksub, Kadv; lag"
+			},
+			{
+				"title": "OpenThesaurus: liegen",
+				"url": "https://www.openthesaurus.de/synonyme/liegen",
+				"supports": "Target 1 Knowledge: synset (sich) befinden, (irgendwo) liegen"
+			},
+			{
+				"title": "Duden: auf (Präposition)",
+				"url": "https://www.duden.de/rechtschreibung/auf_Praeposition",
+				"supports": "Target 2 Knowledge: no synonym or Gegenwort for the 'on top' sense"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🎀" },
+			"reading": {
+				"emojiDescription": "🎀",
+				"knowledge": {
+					"plural": ["Bänder"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Bändel",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Streifen",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gurt",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The ribbon or tape use resolves to the neuter Band Lemma; the feminine music-group and masculine book-volume uses resolve to different Lemmas through their Core Features."
+				"rationale": "The ribbon or tape use resolves to the neuter Band Lemma; the feminine music-group and masculine book-volume uses resolve to different Lemmas through their Core Features. Knowledge (#884): Bändel is a synonym only if register doesn't count (#884 G1, open for the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -79,9 +170,61 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "📍" },
+			"reading": {
+				"emojiDescription": "📍",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Adverbial",
+									"standIn": "Irgendwo"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich befinden",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Lag is the past finite form of liegen in a stative location reading, not a causative legen form."
+				"rationale": "Lag is the past finite form of liegen in a stative location reading, not a causative legen form. Knowledge (#884): 📍 is E-VALBU's Lesart 14, so the Nom is Something; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -124,7 +267,18 @@
 		{
 			"memberSegmentIndices": [8],
 			"route": { "family": "Lexeme", "kind": "ADP" },
-			"reading": { "emojiDescription": "🔝" },
+			"reading": {
+				"emojiDescription": "🔝",
+				"knowledge": {},
+				"coverage": {
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "`auf` heads the ordinary locative prepositional phrase `auf dem Geschenk`, so it is a plain preposition, not part of the verb `liegen`. The Lemma carries no case: `auf` is two-way in the ADP Case Table, and this occurrence records the dative of `dem Geschenk` (wo?) as its realized case."
 			},

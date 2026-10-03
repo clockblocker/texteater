@@ -34,17 +34,42 @@
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: guten Tag",
+				"url": "https://www.dwds.de/wb/guten%20Tag",
+				"supports": "Target 0 Knowledge: höfliche Formel zur Begrüßung; siehe auch grüß Gott, guten Morgen, guten Abend"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👋" },
+			"reading": {
+				"emojiDescription": "👋",
+				"knowledge": {
+					"formulaRole": "Greeting"
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Guten Tag is treated as a greeting formula rather than as a compositional adjective plus noun phrase."
+				"rationale": "Guten Tag is treated as a greeting formula rather than as a compositional adjective plus noun phrase. Knowledge (#884): no relation, since DWDS's siehe auch backs none; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

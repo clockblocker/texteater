@@ -39,7 +39,7 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0034", "ADR-0038", "ADR-0039"],
 		"rules": [
 			{ "rule": "de/sein-perfect-or-copula", "hash": "2f0a185d7f35c1e9" },
 			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
@@ -56,17 +56,117 @@
 				"hash": "11bcdacfa342c436"
 			},
 			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
-			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" }
+			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: verbrennen",
+				"url": "https://www.duden.de/rechtschreibung/verbrennen",
+				"supports": "Target 0 Knowledge: 1a vom Feuer verzehrt werden, Perfekt mit ist"
+			},
+			{
+				"title": "DWDS: verbrennen",
+				"url": "https://www.dwds.de/wb/verbrennen",
+				"supports": "Target 0 Knowledge: verbrannte; 1c etw., jmd. verbrennt"
+			},
+			{
+				"title": "Duden Synonyme: verbrennen",
+				"url": "https://www.duden.de/synonyme/verbrennen",
+				"supports": "Target 0 Knowledge: [ab]brennen, niederbrennen, in Flammen aufgehen"
+			},
+			{
+				"title": "DWDS: ganz und gar",
+				"url": "https://www.dwds.de/wb/ganz%20und%20gar",
+				"supports": "Target 1 Knowledge: gänzlich, völlig; Synonym zu durch und durch; in gegensätzlicher Bedeutung zu ganz und gar nicht"
+			},
+			{
+				"title": "Duden: Haut",
+				"url": "https://www.duden.de/rechtschreibung/Haut",
+				"supports": "Target 2 Knowledge: mit Haut und Haar[en]: völlig, ganz und gar, restlos"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🔥" },
+			"reading": {
+				"emojiDescription": "🔥",
+				"knowledge": {
+					"conjugationClass": ["Mixed"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "abbrennen",
+								"coreFeatures": {
+									"hasSepPrefix": "ab",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "niederbrennen",
+								"coreFeatures": {
+									"hasSepPrefix": "nieder",
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "in Flammen aufgehen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Verbrannt ist is the sein-perfect of intransitive verbrennen. de/sein-perfect-or-copula counts it as a perfect because Alles verbrannte ganz und gar reports the same event, which the verse has just narrated. A result-state reading (everything is in a burnt state) is also possible; this record takes the completed event. The fronted participle and ist are one VERB target (de/verbal-participle, de/verb-owns-its-scattered-members), and the Surface records the whole perfect, with tense from ist (de/verbal-surface-is-whole)."
+				"rationale": "Verbrannt ist is the sein-perfect of intransitive verbrennen. de/sein-perfect-or-copula counts it as a perfect because Alles verbrannte ganz und gar reports the same event, which the verse has just narrated. A result-state reading (everything is in a burnt state) is also possible; this record takes the completed event. The fronted participle and ist are one VERB target (de/verbal-participle, de/verb-owns-its-scattered-members), and the Surface records the whole perfect, with tense from ist (de/verbal-surface-is-whole). Knowledge (#884): 🔥 is the intransitive sense only; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -112,9 +212,69 @@
 		{
 			"memberSegmentIndices": [6, 8, 10],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "💯" },
+			"reading": {
+				"emojiDescription": "💯",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "völlig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "gänzlich",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "durch und durch",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "ganz und gar nicht",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "ganz und gar is an Idiom meaning completely, one Locution ADV over all three words (de/idiom). und has no target of its own."
+				"rationale": "ganz und gar is an Idiom meaning completely, one Locution ADV over all three words (de/idiom). und has no target of its own. Knowledge (#884): völlig, gänzlich and durch und durch are synonyms only if register doesn't count (#884 G1, open for the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -145,9 +305,57 @@
 		{
 			"memberSegmentIndices": [19, 21, 23, 25],
 			"route": { "family": "Locution", "kind": "ADV" },
-			"reading": { "emojiDescription": "💯" },
+			"reading": {
+				"emojiDescription": "💯",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADV",
+								"canonicalForm": "ganz und gar",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "völlig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "restlos",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Duden lists mit Haut und Haar[en] as an idiom meaning completely (ganz und gar, völlig), and the stanza supports that reading: the line continues Verbrannt ist alles ganz und gar. That the child also burns literally, skin and hair, does not exclude it. With the idiomatic reading established, the four words are one Locution ADV (de/idiom), and a click on any of them selects it (de/largest-fixed-unit); Haut and Haar stay reachable through its Breakdown. The Canonical Form keeps the attested Haar, because Haaren is another inflected form, not a Variant."
+				"rationale": "Duden lists mit Haut und Haar[en] as an idiom meaning completely (ganz und gar, völlig), and the stanza supports that reading: the line continues Verbrannt ist alles ganz und gar. That the child also burns literally, skin and hair, does not exclude it. With the idiomatic reading established, the four words are one Locution ADV (de/idiom), and a click on any of them selects it (de/largest-fixed-unit); Haut and Haar stay reachable through its Breakdown. The Canonical Form keeps the attested Haar, because Haaren is another inflected form, not a Variant. Knowledge (#884): ganz und gar, völlig and restlos are synonyms only if register doesn't count (#884 G1, open for the user)."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

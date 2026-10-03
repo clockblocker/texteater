@@ -15,22 +15,91 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036"],
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" }
+			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden Synonyme: ungelöst",
+				"url": "https://www.duden.de/synonyme/ungeloest",
+				"supports": "Target 0 Knowledge: offen, ungeklärt, klärungsbedürftig"
+			},
+			{
+				"title": "OpenThesaurus: ungelöst",
+				"url": "https://www.openthesaurus.de/synonyme/ungel%C3%B6st",
+				"supports": "Target 0 Knowledge: synset offen, klärungsbedürftig, ungeklärt, ungelöst; no antonym gelöst"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🧩❓" },
+			"reading": {
+				"emojiDescription": "🧩❓",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "ungeklärt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "offen",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "klärungsbedürftig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "bleibt is the copula VERB and ungelöst the ADJ ungelöst. As an un- form, it has no Participle Source (ADR 0036)."
 			},

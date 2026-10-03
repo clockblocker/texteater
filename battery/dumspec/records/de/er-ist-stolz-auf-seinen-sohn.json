@@ -57,7 +57,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0034", "ADR-0042"],
+		"adrs": ["ADR-0034", "ADR-0036", "ADR-0038", "ADR-0042"],
 		"rules": [
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
@@ -67,17 +67,103 @@
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: stolz",
+				"url": "https://www.duden.de/rechtschreibung/stolz",
+				"supports": "Target 0 Knowledge: auf seine Kinder stolz sein; sie ist stolz, dass sie ihr Ziel erreicht hat"
+			},
+			{
+				"title": "OpenThesaurus: stolz",
+				"url": "https://www.openthesaurus.de/synonyme/stolz",
+				"supports": "Target 0 Knowledge: synset stolz, stolz wie Oskar [ugs.]"
+			},
+			{
+				"title": "E-VALBU: sein, Lesart 7",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400885/7",
+				"supports": "Target 1 Knowledge: jemand/etwas ist so, Satzbauplan Ksub, Kprd; Ksub also dass-S, Inf-S mit zu, ob-S, w-S with fakultatives Korrelat es; war"
+			},
+			{
+				"title": "E-VALBU: sein, Lesart 8",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400885/8",
+				"supports": "Target 1 Knowledge: jemand/etwas ist etwas, Satzbauplan Ksub, Kprd (NP im Nom)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🦚" },
+			"reading": {
+				"emojiDescription": "🦚",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "auf",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "ADJ",
+								"canonicalForm": "stolz wie Oskar",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "stolz governs auf in the same sense on its own, so auf is a member of the ADJ (de/governed-preposition-joins-its-governor), never of the copula. auf is an occurrence member, so a click on it opens stolz, but not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is stolz."
+				"rationale": "stolz governs auf in the same sense on its own, so auf is a member of the ADJ (de/governed-preposition-joins-its-governor), never of the copula. auf is an occurrence member, so a click on it opens stolz, but not a Fixed member: valencyEvidence names it by index with auf + Acc, and the normalized Surface is stolz. Knowledge (#884): neither über nor a zu-infinitive joins the frame; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -140,7 +226,65 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Optional"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Predicative",
+									"of": "Subject",
+									"marker": "None"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "ist is the copula VERB sein, a single-member target; it never joins the predicative adjective stolz (de/copula-stays-apart)."
 			},

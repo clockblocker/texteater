@@ -49,7 +49,7 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0034", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -64,17 +64,153 @@
 				"hash": "17cec6bff2108a22"
 			},
 			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: bitten, Lesart 1 (bitten um)",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400415/1",
+				"supports": "Target 0 Knowledge: jemand bittet jemanden um etwas, Satzbauplan Ksub, (Kakk), Kprp; dass-S and Inf-S mit zu with fakultatives Korrelat darum; bat. The user's convention (d) makes the Acc and the um Slots both Optional"
+			},
+			{
+				"title": "Duden Synonyme: bitten",
+				"url": "https://www.duden.de/synonyme/bitten",
+				"supports": "Target 0 Knowledge: ersuchen, [sich] erbitten, betteln"
+			},
+			{
+				"title": "OpenThesaurus: bitten",
+				"url": "https://www.openthesaurus.de/synonyme/bitten",
+				"supports": "Target 0 Knowledge: synset bitten (um), (sich etwas) erbitten, (jemanden) ersuchen, betteln (um)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🙏" },
+			"reading": {
+				"emojiDescription": "🙏",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "um",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "ersuchen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "erbitten",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "betteln",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "wurde … gebeten is the process passive of bitten: wurde is its werden auxiliary and gebeten its participle, so the whole target has voice Pass and passive Process, and tense Past describes the finite wurde. um is governed by bitten, a member recorded in valencyEvidence as um + Acc and kept out of the normalized Surface wurde gebeten."
+				"rationale": "wurde … gebeten is the process passive of bitten: wurde is its werden auxiliary and gebeten its participle, so the whole target has voice Pass and passive Process, and tense Past describes the finite wurde. um is governed by bitten, a member recorded in valencyEvidence as um + Acc and kept out of the normalized Surface wurde gebeten. Knowledge (#884): ersuchen is a synonym only if register doesn't count (#884 G1, open for the user). The Acc and um Slots are both Optional by the user's convention (d), though E-VALBU makes the um Slot obligatory."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

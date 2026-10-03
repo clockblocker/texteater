@@ -21,7 +21,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036"],
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
@@ -35,6 +35,14 @@
 			{
 				"rule": "de/governed-preposition-joins-its-governor",
 				"hash": "2d20d7f0e21161bc"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
 			}
 		],
 		"references": [
@@ -42,6 +50,16 @@
 				"title": "E-VALBU: abstimmen, Lesart 2",
 				"url": "https://grammis.ids-mannheim.de/verbs/view/400251/2",
 				"supports": "abstimmen 'make fit' takes an obligatory auf + Akk complement: jemand stimmt etwas auf jemanden/etwas ab."
+			},
+			{
+				"title": "E-VALBU: abstimmen, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400251/2",
+				"supports": "Target 0 Knowledge: Satzbauplan Ksub, Kakk, Kprp (auf + Akk); dass-S, Inf-S mit zu, w-S with obligatorisches Korrelat darauf"
+			},
+			{
+				"title": "OpenThesaurus: abgestimmt",
+				"url": "https://www.openthesaurus.de/synonyme/abgestimmt",
+				"supports": "Target 0 Knowledge: synset abgestimmt, angepasst, optimiert, zugeschnitten"
 			}
 		]
 	},
@@ -49,9 +67,96 @@
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🎯" },
+			"reading": {
+				"emojiDescription": "🎯",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "auf",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Required"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Required"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Required"
+								}
+							]
+						}
+					],
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "abstimmen",
+							"coreFeatures": {
+								"hasSepPrefix": "ab",
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "zugeschnitten",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "angepasst",
+								"coreFeatures": {
+									"comparable": "Yes"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Abgestimmte is an attributive participle modifying Lösung with nominative feminine singular agreement, so it is the ADJ abgestimmt with Participle Source abstimmen (ADR 0036). Its source verb governs auf in this sense (E-VALBU abstimmen, Lesart 2: jemand stimmt etwas auf jemanden/etwas ab, Kprp auf + Akk), so the participle governs it too: auf is a member (de/governed-preposition-joins-its-governor), named by valencyEvidence and left out of the normalized Surface. ihn stays outside."
+				"rationale": "Abgestimmte is an attributive participle modifying Lösung with nominative feminine singular agreement, so it is the ADJ abgestimmt with Participle Source abstimmen (ADR 0036). Its source verb governs auf in this sense (E-VALBU abstimmen, Lesart 2: jemand stimmt etwas auf jemanden/etwas ab, Kprp auf + Akk), so the participle governs it too: auf is a member (de/governed-preposition-joins-its-governor), named by valencyEvidence and left out of the normalized Surface. ihn stays outside. Knowledge (#884): the auf Slot is Required, as E-VALBU's Kprp and its darauf are; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

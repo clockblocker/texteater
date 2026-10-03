@@ -33,6 +33,10 @@
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
 			}
 		],
 		"references": [
@@ -40,6 +44,11 @@
 				"title": "DWDS: Morgenstund hat Gold im Mund",
 				"url": "https://www.dwds.de/wb/Morgenstund%20hat%20Gold%20im%20Mund",
 				"supports": "Target 0, Morgenstund hat Gold im Mund (Sprichwort)"
+			},
+			{
+				"title": "OpenThesaurus: Morgenstund hat Gold im Mund",
+				"url": "https://www.openthesaurus.de/synonyme/Morgenstund%20hat%20Gold%20im%20Mund",
+				"supports": "Target 0 Knowledge: synset Der frühe Vogel fängt den Wurm. (Sprichwort) and Morgenstund hat Gold im Mund. (Sprichwort)"
 			}
 		]
 	},
@@ -47,9 +56,37 @@
 		{
 			"memberSegmentIndices": [0, 2, 4, 6, 7, 9],
 			"route": { "family": "Saying", "kind": "Saying" },
-			"reading": { "emojiDescription": "🌅💰" },
+			"reading": {
+				"emojiDescription": "🌅💰",
+				"knowledge": {
+					"sayingType": {
+						"type": "Proverb"
+					},
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Saying",
+								"kind": "Saying",
+								"canonicalForm": "Der frühe Vogel fängt den Wurm",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"sayingType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Morgenstund hat Gold im Mund is a Proverb, one Saying target over all its words, both pieces of im included. The attribution sagte sie verschlafen stays outside."
+				"rationale": "Morgenstund hat Gold im Mund is a Proverb, one Saying target over all its words, both pieces of im included. The attribution sagte sie verschlafen stays outside. Knowledge (#884): Der frühe Vogel fängt den Wurm is a nearSynonym; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

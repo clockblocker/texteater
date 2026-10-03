@@ -15,7 +15,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0036", "ADR-0038", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -23,15 +23,89 @@
 			},
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
-			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" }
+			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" },
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
+			},
+			{
+				"rule": "de/adjectival-noun-plural-is-weak",
+				"hash": "c7da6a431e81b3b7"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Angestellte",
+				"url": "https://www.duden.de/rechtschreibung/Angestellte",
+				"supports": "Target 0 Knowledge: die Angestellten/zwei Angestellte; synonyms Arbeitnehmerin, Beschäftigte, (Amtssprache) Bedienstete"
+			},
+			{
+				"title": "OpenThesaurus: Angestellter",
+				"url": "https://www.openthesaurus.de/synonyme/Angestellter",
+				"supports": "Target 0 Knowledge: synset Arbeitnehmer, Beschäftigter, Angestellter, Bediensteter"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "💼" },
+			"reading": {
+				"emojiDescription": "💼",
+				"knowledge": {
+					"plural": ["Angestellten"],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Arbeitnehmer",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Beschäftigte",
+								"coreFeatures": {
+									"gender": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Bedienstete",
+								"coreFeatures": {
+									"gender": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Angestellten is a substantivized participle, so it is a NOUN that owns its article Die (Rule de/participial-adjective). An adjectival noun for a person is one Lemma cited in its weak form, Angestellte, with gender null, since its gender is the referent's. Subject position and streikten make it nominative plural, and a plural Surface marks no gender."
 			},

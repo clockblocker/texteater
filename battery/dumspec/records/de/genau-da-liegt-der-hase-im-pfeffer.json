@@ -22,7 +22,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0039"],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0039"],
 		"rules": [
 			{ "rule": "de/idiom", "hash": "c05df428b3a42079" },
 			{ "rule": "de/fixed-member-test", "hash": "1a5d9f3240c41e69" },
@@ -36,6 +36,14 @@
 			{
 				"rule": "de/locutions-and-sayings-are-made-of-lexemes",
 				"hash": "fdaeed620ab52c64"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "5a5fb5a55b00e034"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "ad69c69c16a27d62"
 			}
 		],
 		"references": [
@@ -43,6 +51,11 @@
 				"title": "Duden: Hase",
 				"url": "https://www.duden.de/rechtschreibung/Hase",
 				"supports": "Target 0, da liegt der Hase im Pfeffer"
+			},
+			{
+				"title": "DWDS: da liegt der Hase im Pfeffer",
+				"url": "https://www.dwds.de/wb/da%20liegt%20der%20Hase%20im%20Pfeffer",
+				"supports": "Target 0 Knowledge: Synonym zu da liegt der Hund begraben"
 			}
 		]
 	},
@@ -50,7 +63,34 @@
 		{
 			"memberSegmentIndices": [2, 4, 6, 8, 10, 11, 13],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🔑" },
+			"reading": {
+				"emojiDescription": "🔑",
+				"knowledge": {
+					"locutionType": "Idiom",
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "da liegt der Hund begraben",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "da liegt der Hase im Pfeffer (Duden: 'das ist der entscheidende Punkt, die eigentliche Ursache') is an Idiom, a Locution VERB cited by Duden's sentence headword. da is fixed, with hier or dort as its only alternatives, and genau modifies it from outside. Both pieces of im are members."
 			},
