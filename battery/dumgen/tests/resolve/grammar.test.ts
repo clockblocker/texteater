@@ -574,6 +574,37 @@ test("a stem whose referent the sentence settles attests the settled Surface", a
 	});
 });
 
+test("standalone allem means 'everything': its cell question offers no Syncretism", async () => {
+	const jev = fakeJev({ cell: "o1" });
+	const { result } = await resolveOnce(
+		{ jev: jev.ask, luna: fakeLuna().ask },
+		{
+			sentence: sentenceOf("Mit allem bin ich einverstanden."),
+			unit: unitOf([2], "Lexeme", "PRON", {
+				kind: "PRON",
+				canonicalForm: "alle",
+				pronType: "Tot",
+			}),
+			neighbours: { before: "Heute ist Markt." },
+		},
+	);
+	const cell = jev.sent[0]?.questions.cell as
+		| { criteria?: Record<string, string> }
+		| undefined;
+	expect(Object.keys(cell?.criteria ?? {})).toEqual([
+		"o0",
+		"o1",
+		"Unresolved",
+	]);
+	expect(cell?.criteria?.o1).toContain("neuter");
+	const { surface } = attested(result);
+	expect(surface).not.toHaveProperty("syncretic");
+	expect(surface).toMatchObject({
+		normalizedSurface: "allem",
+		inflectionalFeatures: { case: "Dat", number: "Sing", gender: "Neut" },
+	});
+});
+
 // Luna writes the Canonical Form and spellings (#862, #639, #764).
 
 test("Luna writes the Canonical Form in lexical casing with the unit's stored Lemmas as hints, and nothing lowercases by position", async () => {

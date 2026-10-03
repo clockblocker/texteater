@@ -17,6 +17,7 @@ import {
 	type AuthoredRealization,
 	authoredMembers,
 	authoredRealizations,
+	referentCanLeaveOpen,
 	type StemSyncretism,
 	stemSyncretisms,
 } from "dumspec/inventories";
@@ -263,13 +264,16 @@ export type StemOpenOption = {
 /**
  * The generated Surface Syncretisms of a stem (ADR 0046) whose cells are
  * all among the options of its Lemma and spelling: each is an answer that
- * leaves the gender open (jedem, Masc or Neut).
+ * leaves the gender open (jedem, Masc or Neut). Standalone allem gets none:
+ * it means "everything", and an open referent never attests alle's singular
+ * Syncretisms (Rule de/standalone-alles-means-everything).
  */
 export function stemSyncretismOptions(
 	options: readonly ClosedOption[],
 ): readonly StemOpenOption[] {
 	const open: StemOpenOption[] = [];
 	for (const syncretism of stemSyncretisms.values()) {
+		if (!referentCanLeaveOpen(syncretism)) continue;
 		const lemma = lemmaIdentityKey(syncretism.member.lemma);
 		const units = syncretism.cells.map((cell) =>
 			options.find(
