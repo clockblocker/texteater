@@ -1,4 +1,5 @@
 import { afterAll, describe, expect, it } from "bun:test";
+import { fileURLToPath } from "node:url";
 import type { FunctionReturnType } from "convex/server";
 import { closeTestingSessions, inferredType } from "prinfer/testing";
 
@@ -6,6 +7,11 @@ import type { api } from "../../../../convex/_generated/api";
 import type { ReadingRenderContext } from "./renderer";
 
 afterAll(closeTestingSessions);
+
+// tsconfig.app.json excludes test files, so name the project that holds this one.
+const project = fileURLToPath(
+	new URL("../../../../tsconfig.type-tests.json", import.meta.url),
+);
 
 type ReadingNote = Extract<
 	NonNullable<FunctionReturnType<typeof api.readingNotes.get>>,
@@ -30,6 +36,7 @@ describe("Reading renderer inference", () => {
 				name: "GermanVerbReadingNoteIdentity",
 				full: true,
 				backend: "typescript7",
+				project,
 			}),
 		).toMatchInlineSnapshot(
 			`"type GermanVerbReadingNoteIdentity = { lemma: { unitKind: "Lemma"; language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; unitKind: "Reading"; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
@@ -41,6 +48,7 @@ describe("Reading renderer inference", () => {
 			await inferredType(import.meta.url, {
 				name: "GermanVerbRendererReading",
 				backend: "typescript7",
+				project,
 			}),
 		).toMatchInlineSnapshot(
 			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<...>; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<...>; }"`,
@@ -53,6 +61,7 @@ describe("Reading renderer inference", () => {
 				name: "GermanVerbRendererReading",
 				full: true,
 				backend: "typescript7",
+				project,
 			}),
 		).toMatchInlineSnapshot(
 			`"type GermanVerbRendererReading = { lemma: { language: "de"; family: "Lexeme"; kind: "VERB"; canonicalForm: string; coreFeatures: { hasSepPrefix: string | null; lexicallyReflexive: "Acc" | "Dat" | null; }; ownerKind: "Lemma"; ownerKey: string; lemmaId: Id<"lemmas">; }; emojiDescription: string; ownerKind: "Reading"; ownerKey: string; readingId: Id<"readings">; }"`,
