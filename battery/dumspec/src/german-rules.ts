@@ -1658,6 +1658,22 @@ const readings: Rule[] = [
 			"de/er-vergass-seinen-schluessel-im-buero",
 		],
 	},
+	// #887 ruling 3, decided under the user's delegation (#856): the six
+	// translation slips #545 named.
+	{
+		id: "de/translation-gives-the-equivalent",
+		statement:
+			"A Reading's translation is the target language's dictionary equivalent, in citation form, of the meaning its Emoji Description names, not of the sentence's scene: gut 👍 is хороший, not вкусный; schmecken 👅 is taste. A lookalike word is a false friend (Paket: посылка, not пакет). A Locution or Saying takes the established expression with its meaning, else a paraphrase, never a calque or a lookalike idiom (Licht ins Dunkel bringen: shed light on, not bring to light). An abbreviation takes the usual rendering of what it stands for (Dipl.-Ing.: дипломированный инженер), never a coinage.",
+		adrs: ["ADR-0002", "ADR-0031"],
+		routes: [],
+		records: [
+			// schmecken and Paket come from imported cases, not Spec Records.
+			"de/das-essen-war-ganz-gut",
+			"de/durch-die-akten-wurde-endlich-licht-ins-dunkel-gebracht",
+			"de/du-hast-heute-wohl-tomaten-auf-den-augen",
+			"de/dipl-ing-mueller-leitet-das-projekt",
+		],
+	},
 	{
 		id: "de/distinct-concepts-get-distinct-readings",
 		statement:
