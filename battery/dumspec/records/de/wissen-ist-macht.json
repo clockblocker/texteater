@@ -10,6 +10,7 @@
 		{ "kind": "Punctuation", "text": "." }
 	],
 	"coverage": "Full",
+	"reviewDepth": "Knowledge",
 	"provenance": { "kind": "Authored" },
 	"sources": {
 		"adrs": ["ADR-0039"],

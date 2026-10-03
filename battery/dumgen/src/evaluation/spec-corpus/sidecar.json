@@ -13,42 +13,6 @@
 		"de/er-hat-die-tuer-geschlossen": {
 			"reason": "Whether haben + participle is always a perfect (Er hat die Tür geschlossen, imported case participle-boundary-geschlossen-verb-perfect) waits on grilling #653.",
 			"issue": 653
-		},
-		"de/der-ausschuss-trifft-eine-entscheidung": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
-		},
-		"de/sie-hat-hilfe-in-anspruch-genommen": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
-		},
-		"de/nach-der-schnellen-reparatur-sagte-der-mieter-vielen-dank": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
-		},
-		"de/als-der-letzte-zug-einfuhr-verabschiedete-sich-mira-mit-auf": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
-		},
-		"de/auf-den-dank-des-nachbarn-antwortete-sie-gern-geschehen": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
-		},
-		"de/nachdem-sie-den-termin-verwechselt-hatte-sagte-die-aerztin": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
-		},
-		"de/entschuldigung-ist-hier-noch-frei": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
-		},
-		"de/wissen-ist-macht": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
-		},
-		"de/kaffee-oder-tee-das-ist-hier-die-frage": {
-			"reason": "Promoted from dev to held-out by #884's batch 3 (user ruling Q4, 2026-10-03). It leaves dev now and joins held-out once the user has reviewed it through Knowledge and raised its Review Depth; then this exclusion goes.",
-			"issue": 884
 		}
 	}
 }
