@@ -1,13 +1,14 @@
 import { expect, test } from "bun:test";
 import { rm } from "node:fs/promises";
 import { join } from "node:path";
+import { buildPackages } from "../dum-entrypoint-rss/benchmark";
 import { preparePublishedRuntime } from "../dum-entrypoint-rss/published-runtime";
 import { findRepositoryRoot } from "../lib/workspaces";
 
-test("RSS probes resolve built dependencies without development TypeScript aliases and report bytes", async () => {
-	const root = await preparePublishedRuntime(
-		await findRepositoryRoot(import.meta.dir),
-	);
+test("RSS probes resolve built dependencies without the source conditions and report bytes", async () => {
+	const repositoryRoot = await findRepositoryRoot(import.meta.dir);
+	await buildPackages(repositoryRoot);
+	const root = await preparePublishedRuntime(repositoryRoot);
 	try {
 		const resolution = Bun.spawn(
 			[
@@ -40,4 +41,4 @@ test("RSS probes resolve built dependencies without development TypeScript alias
 	} finally {
 		await rm(root, { recursive: true, force: true });
 	}
-});
+}, 180_000);

@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import {
 	cp,
 	mkdir,
@@ -12,7 +13,23 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { DUM_PACKAGE_PATHS } from "./inventory";
 
-/** Stage only built artifacts: Bun must not follow a workspace's development paths back into TypeScript. */
+/** Workspace packages export their src under these conditions for Bun and Convex. */
+const SOURCE_CONDITIONS = new Set(["bun", "convex"]);
+
+function withoutSourceConditions(exports: unknown): unknown {
+	if (Array.isArray(exports)) return exports.map(withoutSourceConditions);
+	if (exports === null || typeof exports !== "object") return exports;
+	return Object.fromEntries(
+		Object.entries(exports)
+			.filter(([key]) => !SOURCE_CONDITIONS.has(key))
+			.map(([key, target]) => [key, withoutSourceConditions(target)]),
+	);
+}
+
+/**
+ * Stage only what each workspace package would publish: its `files` and a
+ * manifest without the source conditions, so Bun loads the built artifacts.
+ */
 export async function preparePublishedRuntime(repositoryRoot: string) {
 	const root = await mkdtemp(join(tmpdir(), "dum-published-rss-"));
 	try {
@@ -24,8 +41,28 @@ export async function preparePublishedRuntime(repositoryRoot: string) {
 				join(repositoryRoot, "tooling/dum-entrypoint-rss", file),
 				join(root, "tooling/dum-entrypoint-rss", file),
 			);
+		const workspacePath = (name: string): string | undefined => {
+			const path =
+				DUM_PACKAGE_PATHS[name as keyof typeof DUM_PACKAGE_PATHS] ??
+				name;
+			return existsSync(
+				join(repositoryRoot, "battery", path, "package.json"),
+			)
+				? path
+				: undefined;
+		};
+		const staged = new Set<string>();
 		const external = new Set<string>();
-		for (const [name, path] of Object.entries(DUM_PACKAGE_PATHS)) {
+		const pending: string[] = Object.keys(DUM_PACKAGE_PATHS);
+		while (pending.length > 0) {
+			const name = pending.pop();
+			if (name === undefined || staged.has(name)) continue;
+			const path = workspacePath(name);
+			if (path === undefined) {
+				external.add(name);
+				continue;
+			}
+			staged.add(name);
 			const source = join(repositoryRoot, "battery", path);
 			const dest = join(root, "node_modules", name);
 			await mkdir(dest, { recursive: true });
@@ -34,14 +71,17 @@ export async function preparePublishedRuntime(repositoryRoot: string) {
 			);
 			await writeFile(
 				join(dest, "package.json"),
-				JSON.stringify(manifest),
+				JSON.stringify({
+					...manifest,
+					exports: withoutSourceConditions(manifest.exports),
+				}),
 			);
-			await cp(join(source, "dist"), join(dest, "dist"), {
-				recursive: true,
-			});
-			for (const dependency of Object.keys(manifest.dependencies ?? {}))
-				if (!(dependency in DUM_PACKAGE_PATHS))
-					external.add(dependency);
+			for (const file of manifest.files ?? ["dist"])
+				if (existsSync(join(source, file)))
+					await cp(join(source, file), join(dest, file), {
+						recursive: true,
+					});
+			pending.push(...Object.keys(manifest.dependencies ?? {}));
 		}
 		for (const name of external) {
 			await mkdir(join(root, "node_modules", name, ".."), {

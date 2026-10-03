@@ -20,7 +20,7 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { rules } from "dumspec";
 import type { Answer, Answers } from "../../segment/ask.js";
@@ -37,8 +37,8 @@ export type Pin = {
 	readonly hash: string;
 	readonly inputs: {
 		/**
-		 * The built `dumspec/inventories` entry and the chunks it imports:
-		 * the AUX, DET and PRON members and the ADP Case Table the
+		 * The `dumspec/inventories` entry Bun resolves and the modules it
+		 * imports: the AUX, DET and PRON members and the ADP Case Table the
 		 * requests quote.
 		 */
 		readonly inventories: string;
@@ -152,7 +152,17 @@ export function roundStatus(
 const sha256 = (contents: string | Uint8Array) =>
 	createHash("sha256").update(contents).digest("hex");
 
-/** The built entry and every chunk it imports, by file name. */
+/** A relative import's file: TypeScript sources import `./x.js` for `./x.ts`. */
+function importedFile(path: string): string | undefined {
+	if (existsSync(path)) return path;
+	const source = path.replace(/\.js$/u, ".ts");
+	return existsSync(source) ? source : undefined;
+}
+
+/**
+ * The entry and every module it imports relatively, by path from the entry's
+ * directory. Bun resolves workspace packages to their source.
+ */
 async function moduleGraph(entry: string): Promise<Record<string, string>> {
 	const directory = dirname(entry);
 	const hashes: Record<string, string> = {};
@@ -160,14 +170,17 @@ async function moduleGraph(entry: string): Promise<Record<string, string>> {
 	while (pending.length > 0) {
 		const file = pending.pop();
 		if (!file) break;
-		const name = file.slice(directory.length + 1);
+		const name = relative(directory, file);
 		if (name in hashes) continue;
 		const source = await readFile(file, "utf8");
 		hashes[name] = sha256(source);
 		for (const [, imported] of source.matchAll(
-			/(?:from|import)\s*"(\.\/[^"]+)"/gu,
-		))
-			if (imported) pending.push(join(directory, imported));
+			/(?:from|import)\s*"(\.\.?\/[^"]+)"/gu,
+		)) {
+			const next =
+				imported && importedFile(join(dirname(file), imported));
+			if (next) pending.push(next);
+		}
 	}
 	return hashes;
 }
@@ -231,7 +244,7 @@ export function checkPin(args: {
 	const message = `dumspec's prompt inputs (${drift.join(", ")}) changed since round ${args.round.id} was pinned at ${pinText(args.round.pin)}; now ${pinText(args.current)}`;
 	if (args.live && !args.repin)
 		throw Error(
-			`${message}. Requests built from them miss the jev cache. Rebuild dumspec's dist at the pinned state, or pass --repin to pin the round at today's dumspec.`,
+			`${message}. Requests built from them miss the jev cache. Check out dumspec at the pinned state, or pass --repin to pin the round at today's dumspec.`,
 		);
 	return args.live
 		? `${message}; re-pinned (--repin)`

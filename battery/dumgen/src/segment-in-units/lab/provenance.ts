@@ -123,27 +123,27 @@ export function gitState(
 }
 
 /**
- * The dumspec the arms import, as it runs: `distHash` covers the built
- * package Bun resolves (Rules, inventories and the ADP Case Table), which
- * may lag dumspec's sources; `rulesHash` and `realizationsHash` name the
- * two data sets the prompts quote.
+ * The dumspec the arms import, as it runs: `sourceHash` covers the source
+ * Bun resolves the package to (Rules, inventories and the ADP Case Table);
+ * `rulesHash` and `realizationsHash` name the two data sets the prompts
+ * quote.
  */
 export async function dumspecFingerprint(): Promise<{
-	readonly distHash: string;
+	readonly sourceHash: string;
 	readonly rulesHash: string;
 	readonly realizationsHash: string;
 }> {
-	const distDirectory = dirname(
+	const sourceDirectory = dirname(
 		fileURLToPath(import.meta.resolve("dumspec")),
 	);
-	const files = (await readdir(distDirectory, { recursive: true }))
-		.filter((file) => file.endsWith(".js"))
+	const files = (await readdir(sourceDirectory, { recursive: true }))
+		.filter((file) => file.endsWith(".ts"))
 		.sort();
 	const hashes: Record<string, string> = {};
 	for (const file of files)
-		hashes[file] = sha256(await readFile(join(distDirectory, file)));
+		hashes[file] = sha256(await readFile(join(sourceDirectory, file)));
 	return {
-		distHash: hashOf(hashes),
+		sourceHash: hashOf(hashes),
 		rulesHash: hashOf(rules),
 		realizationsHash: hashOf(authoredRealizations),
 	};

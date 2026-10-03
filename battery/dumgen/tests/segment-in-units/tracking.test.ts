@@ -445,7 +445,7 @@ const manifestOf = (
 	codeHash: "code",
 	sourceHashes: {},
 	dumspecHash: "dumspec",
-	dumspec: { distHash: "", rulesHash: "", realizationsHash: "" },
+	dumspec: { sourceHash: "", rulesHash: "", realizationsHash: "" },
 	promptHashes: {},
 	modelRequested: pinnedJevModel,
 	modelResolved: [pinnedJevModel],
