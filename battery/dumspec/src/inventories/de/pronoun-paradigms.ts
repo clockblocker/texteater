@@ -744,6 +744,25 @@ reviewed.push(
 	),
 );
 
+// Quantity bisschen is one invariant Lemma in every use (de/quantifier-by-use):
+// ein or der before it is a satellite (ein bisschen Zucker, das bisschen
+// Geld), and alone it grades (klingt bisschen förmlich). Duden lists it as an
+// indeclinable indefinite pronoun; bißchen is its pre-1996 spelling, a
+// Historical Variant (realizations.ts).
+// https://www.duden.de/rechtschreibung/bisschen
+reviewed.push(
+	pronounMember(
+		form("bisschen", "ˈbɪsçən"),
+		description(
+			"Ind",
+			"🤏",
+			"Bezeichnet eine kleine, nicht näher bestimmte Menge oder einen geringen Grad, ein wenig: Gib mir ein bisschen Zucker. Das klingt bisschen förmlich.",
+			["a bit; a little"],
+			["немного; чуть-чуть"],
+		),
+	),
+);
+
 // Standalone einander is one invariant reciprocal Lemma (system ADR 0044); case
 // is supplied by the governing verb or preposition and is not part of identity.
 reviewed.push(
