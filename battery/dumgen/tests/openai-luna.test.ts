@@ -110,3 +110,61 @@ test("sends each request once, and its deadline or the caller's signal ends it",
 	await expect(pending).rejects.toThrow("was aborted");
 	expect(() => createOpenAILuna({ apiKey: " " })).toThrow("API key");
 });
+
+test("JSON wrapped under another single key is unwrapped and marked; JSON without its value or a refusal keeps no output and says why", async () => {
+	const { fetch } = fakeFetch([
+		{ status: 200, body: completed('{"output":{"canonicalForm":"Haus"}}') },
+		{
+			status: 200,
+			body: completed('{"canonicalForm":"Haus","members":[]}'),
+		},
+		{
+			status: 200,
+			body: JSON.stringify({
+				status: "completed",
+				output: [
+					{
+						type: "message",
+						content: [
+							{
+								type: "refusal",
+								refusal: "I can't help with that.",
+							},
+						],
+					},
+				],
+			}),
+		},
+	]);
+	const luna = createOpenAILuna({ apiKey: "key-1", fetch });
+	expect(await luna(request, context())).toMatchObject({
+		output: { canonicalForm: "Haus" },
+		metadata: { unwrapped: "output" },
+	});
+	const bare = await luna(request, context());
+	expect(bare.output).toBeUndefined();
+	expect(bare.metadata).toMatchObject({
+		problem: expect.stringContaining("without its value"),
+	});
+	const refused = await luna(request, context());
+	expect(refused.output).toBeUndefined();
+	expect(refused.metadata).toMatchObject({
+		problem: "Luna refused: I can't help with that.",
+	});
+});
+
+test("an incomplete response throws with its reason", async () => {
+	const { fetch } = fakeFetch([
+		{
+			status: 200,
+			body: JSON.stringify({
+				status: "incomplete",
+				incomplete_details: { reason: "max_output_tokens" },
+			}),
+		},
+	]);
+	const luna = createOpenAILuna({ apiKey: "key-1", fetch });
+	await expect(luna(request, context())).rejects.toThrow(
+		"OpenAI response incomplete (max_output_tokens)",
+	);
+});

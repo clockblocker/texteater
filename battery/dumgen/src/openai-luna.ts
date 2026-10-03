@@ -6,9 +6,15 @@
  * nothing from `node:*`, so a Convex action or Node can run it; the host
  * passes the key.
  *
- * It sends each request once and never retries (#445, #446): any failure
- * throws, and Dumgen reads it as a `ProviderFailure`. The request ends at
- * its deadline or when the caller's signal aborts, whichever comes first.
+ * It sends each request once and never retries (#445, #446): a failed
+ * exchange throws, and Dumgen reads it as a `ProviderFailure`. An answer
+ * that came back but holds no usable output (a refusal, or JSON without
+ * its `value`) is returned with no output and the problem in its metadata,
+ * so the operation's check refuses it as `InvalidModelOutput` with that
+ * reason in the trace (#876). JSON whose only key wraps the value under
+ * another name (`output`, the schema's name) is unwrapped and marked. The
+ * request ends at its deadline or when the caller's signal aborts,
+ * whichever comes first.
  */
 
 import type { LunaAsk, LunaResponse } from "./luna.js";
@@ -33,11 +39,14 @@ const messageOf = (error: unknown) =>
 type ResponsesPayload = {
 	readonly status?: string;
 	readonly output?: readonly {
+		readonly type?: string;
 		readonly content?: readonly {
 			readonly type?: string;
 			readonly text?: string;
+			readonly refusal?: string;
 		}[];
 	}[];
+	readonly incomplete_details?: { readonly reason?: string } | null;
 	readonly usage?: unknown;
 	readonly model?: string;
 };
@@ -52,24 +61,58 @@ function responseOf(body: string, json: boolean): LunaResponse {
 		);
 	}
 	if (payload.status !== "completed")
-		throw Error(`OpenAI response ${payload.status ?? "missing status"}`);
-	const text = (payload.output ?? [])
-		.flatMap((item) => item.content ?? [])
+		throw Error(
+			`OpenAI response ${payload.status ?? "missing status"}${
+				payload.incomplete_details?.reason
+					? ` (${payload.incomplete_details.reason})`
+					: ""
+			}`,
+		);
+	const metadata = {
+		model: payload.model ?? null,
+		usage: payload.usage ?? null,
+	};
+	const contents = (payload.output ?? []).flatMap(
+		(item) => item.content ?? [],
+	);
+	const refusal = contents
+		.filter((content) => content.type === "refusal")
+		.map((content) => content.refusal ?? content.text ?? "")
+		.join("");
+	const text = contents
 		.filter((content) => content.type === "output_text")
 		.map((content) => content.text ?? "")
 		.join("");
-	let output: unknown = text;
-	if (json)
-		try {
-			output = (JSON.parse(text) as { value?: unknown }).value;
-		} catch {
-			throw Error(`OpenAI answered output that is not JSON: ${text}`);
-		}
+	if (refusal && !text)
+		return {
+			output: undefined,
+			metadata: {
+				...metadata,
+				problem: `Luna refused: ${refusal.slice(0, 200)}`,
+			},
+		};
+	if (!json) return { output: text, metadata };
+	let parsed: unknown;
+	try {
+		parsed = JSON.parse(text);
+	} catch {
+		throw Error(`OpenAI answered output that is not JSON: ${text}`);
+	}
+	const record =
+		parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
+			? (parsed as Record<string, unknown>)
+			: undefined;
+	if (record && "value" in record) return { output: record.value, metadata };
+	const keys = record ? Object.keys(record) : [];
+	const [only] = keys;
+	const inner = only === undefined ? undefined : record?.[only];
+	if (keys.length === 1 && inner !== null && typeof inner === "object")
+		return { output: inner, metadata: { ...metadata, unwrapped: only } };
 	return {
-		output,
+		output: undefined,
 		metadata: {
-			model: payload.model ?? null,
-			usage: payload.usage ?? null,
+			...metadata,
+			problem: `Luna answered JSON without its value: ${text.slice(0, 200)}`,
 		},
 	};
 }

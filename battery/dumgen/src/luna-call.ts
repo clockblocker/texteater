@@ -5,7 +5,7 @@
  */
 import type * as Effect from "effect/Effect";
 import type { OperationScope } from "./call.js";
-import type { InvalidModelOutput, ProviderFailure } from "./errors.js";
+import { InvalidModelOutput, type ProviderFailure } from "./errors.js";
 import type { LunaAsk, LunaConfiguration, LunaRequest } from "./luna.js";
 
 /** What an operation reaches Luna with: the host's transport and the configuration. */
@@ -48,6 +48,15 @@ export function askLuna<Output>(
 		request: sent,
 		send: (signal) => luna.ask(sent, { stage, signal }),
 		tokens: (response) => lunaTokens(response.metadata),
-		check: (response) => check(response.output),
+		check: (response) => {
+			// A transport that kept no output says why (a refusal, JSON
+			// without its value); that reason is the refusal's.
+			const problem = (
+				response.metadata as { problem?: unknown } | undefined
+			)?.problem;
+			return response.output === undefined && typeof problem === "string"
+				? new InvalidModelOutput({ stage, message: problem })
+				: check(response.output);
+		},
 	});
 }

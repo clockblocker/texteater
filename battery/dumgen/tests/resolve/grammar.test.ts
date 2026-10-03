@@ -4,6 +4,7 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
+import type { LunaAsk } from "../../src/luna.js";
 import { verbHeadword } from "../../src/resolve/de/open-route.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import type { Segment } from "../../src/segment/segmented-sentence.js";
@@ -962,4 +963,26 @@ test("Luna is told which members are auxiliaries, which stay out of the headword
 			?.auxiliaries,
 	).toEqual(["m0"]);
 	expect(luna.sent[0]?.systemPrompt).toContain("`auxiliaries`");
+});
+
+test("a Luna answer the transport kept no output for is refused with the transport's reason", async () => {
+	const luna: LunaAsk = async () => ({
+		output: undefined,
+		metadata: { problem: "Luna refused: no" },
+	});
+	const failure = await Effect.runPromise(
+		Effect.flip(
+			createDumgen({ jev: fakeJev().ask, luna }).resolve.grammar({
+				language: "de",
+				sentence: sentenceOf("Er kommt."),
+				unit: unitOf([2], "Lexeme", "VERB"),
+				neighbours: {},
+				lemmaCandidates: [],
+			}),
+		),
+	);
+	expect(failure).toBeInstanceOf(InvalidModelOutput);
+	expect(String((failure as InvalidModelOutput).message)).toContain(
+		"Luna refused: no",
+	);
 });
