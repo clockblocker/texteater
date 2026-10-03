@@ -25,6 +25,7 @@ const rules = {
 	nounArticle: ["de/noun-owns-its-article", "c2b1f74a61545177"],
 	adjectivalNoun: ["de/adjectival-noun-lemma", "bcdaf66f8862eb29"],
 	neuterNoun: ["de/neuter-adjectival-noun", "a4bd8e12a664fd8e"],
+	pluralOnly: ["de/plural-only-noun-has-no-gender", "92946b73a6244500"],
 	properArticle: ["de/proper-noun-article", "c3eb61394edd1818"],
 	title: ["de/title-before-a-name", "dd531115e2c8a2ef"],
 	verbalWhole: ["de/verbal-surface-is-whole", "ab79bbe68ce12d4c"],
@@ -639,6 +640,7 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 		rules.nounArticle,
 		rules.adjectivalNoun,
 		rules.neuterNoun,
+		rules.pluralOnly,
 	),
 	nounArticle: paragraph(
 		"canonical.route.Lexeme/NOUN.article",
@@ -646,6 +648,7 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 		rules.core,
 		rules.adjectivalNoun,
 		rules.nounArticle,
+		rules.pluralOnly,
 	),
 	"Lexeme/PROPN": paragraph(
 		"canonical.route.Lexeme/PROPN",

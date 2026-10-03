@@ -21,6 +21,7 @@ import {
 	germanArticleCell,
 	germanArticleSpellings,
 	germanParticles,
+	isGermanPluralOnlyNoun,
 } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type { OperationScope } from "../../call.js";
@@ -1236,8 +1237,9 @@ export function verbHeadword(form: string, core: Values): string {
 /**
  * A common NOUN's Core gender and cells from the article Luna wrote with
  * its headword (der Kran; Rules de/core-features-are-identity,
- * de/adjectival-noun-lemma: none for a person noun made from an adjective
- * or participle or a plural-only noun). Undefined keeps jev's reading,
+ * de/adjectival-noun-lemma, de/plural-only-noun-has-no-gender: none for a
+ * person noun made from an adjective or participle or a plural-only noun).
+ * Undefined keeps jev's reading,
  * which already fell back to the likeliest gender the Sentence's article
  * allows: when Luna wrote none, or a gender the singular head's owned
  * article agrees with in no case, or none for a singular form whose
@@ -1576,7 +1578,14 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	let written: Written | undefined;
 	if (first.noun && first.inflection) {
 		written = yield* writing;
-		cells = nounCells(planned, first, written?.article) ?? cells;
+		// A noun with no singular has gender null, whatever article Luna
+		// wrote (Rule de/plural-only-noun-has-no-gender): dumspec lists the
+		// Pluraletantum nouns Duden gives only in the plural.
+		const article =
+			written && isGermanPluralOnlyNoun(written.canonicalForm)
+				? "none"
+				: written?.article;
+		cells = nounCells(planned, first, article) ?? cells;
 		if (cells.openCases.length === 0)
 			return {
 				_tag: "Unresolved",

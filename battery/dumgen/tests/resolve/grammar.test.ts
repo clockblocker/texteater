@@ -256,6 +256,29 @@ test("a common NOUN's gender is the article Luna writes with its headword, and i
 	expect(attested(plural.result).surface.lemma.coreFeatures).toEqual({
 		gender: null,
 	});
+	// A noun dumspec lists as having no singular stays genderless even when
+	// Luna writes die (Rule de/plural-only-noun-has-no-gender).
+	const costs = fakeLuna(({ members }) => ({
+		canonicalForm: "Kosten",
+		members: members.map(({ text }) => text),
+		article: "die",
+	}));
+	const pluraleTantum = await resolveOnce(
+		{
+			jev: fakeJev({ gender: "die", number: "Plur", case: "Nom" }).ask,
+			luna: costs.ask,
+		},
+		{
+			sentence: sentenceOf("Die Kosten steigen."),
+			unit: unitOf([0, 2], "Lexeme", "NOUN"),
+		},
+	);
+	const tantum = attested(pluraleTantum.result).surface;
+	expect(tantum.lemma.coreFeatures).toEqual({ gender: null });
+	expect(tantum.inflectionalFeatures).toMatchObject({
+		gender: null,
+		number: "Plur",
+	});
 });
 
 // NOUN Case: narrowed in code, asked at most once (#625).
