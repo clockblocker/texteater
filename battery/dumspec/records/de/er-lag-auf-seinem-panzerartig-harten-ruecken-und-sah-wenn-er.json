@@ -427,6 +427,26 @@
 				"title": "Project Gutenberg eBook #22367: Franz Kafka, Die Verwandlung",
 				"url": "https://www.gutenberg.org/ebooks/22367",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #22367 (released 2007-08-21), transcribed from Kurt Wolff Verlag, Leipzig 1917 (Der jüngste Tag 22/23). Chapter I, paragraph 1."
+			},
+			{
+				"title": "Duden: woelben",
+				"url": "https://www.duden.de/rechtschreibung/woelben",
+				"supports": "Target 15 Knowledge: sich-sense 'bogenförmig verlaufen, sich erstrecken': sich nach außen, nach vorn wölben; eine gewölbte (vorgewölbte) Stirn"
+			},
+			{
+				"title": "Duden: gewoelbt",
+				"url": "https://www.duden.de/rechtschreibung/gewoelbt",
+				"supports": "Target 15 Knowledge: Synonyme ausladend, bauchig, gerundet, geschweift"
+			},
+			{
+				"title": "DWDS: wölben",
+				"url": "https://www.dwds.de/wb/wölben",
+				"supports": "Target 15 Knowledge: a) ⟨sich wölben⟩ sich bogenförmig biegen; c) oft im Partizip II"
+			},
+			{
+				"title": "OpenThesaurus: gewölbt",
+				"url": "https://www.openthesaurus.de/synonyme/gewölbt",
+				"supports": "Target 15 Knowledge: no synset"
 			}
 		]
 	},
@@ -1150,7 +1170,59 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🌈" },
+			"reading": {
+				"emojiDescription": "🌈",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "wölben",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": "Acc"
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "bauchig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "gerundet",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

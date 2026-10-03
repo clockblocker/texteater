@@ -215,6 +215,21 @@
 				"title": "Project Gutenberg eBook #34717: Robert Musil, Die Verwirrungen des Zöglings Törleß",
 				"url": "https://www.gutenberg.org/ebooks/34717",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34717 (released 2010-12-21), transcribed from Wiener Verlag, Wien und Leipzig 1906. Paragraph beginning Bald aber lernte er."
+			},
+			{
+				"title": "Duden: zerstreut",
+				"url": "https://www.duden.de/rechtschreibung/zerstreut",
+				"supports": "Target 9 Knowledge: own Adjektiv 'mit seinen Gedanken nicht bei der Sache; abwesend und unkonzentriert'; Synonyme abwesend, desorientiert, durcheinander, fahrig"
+			},
+			{
+				"title": "Duden: zerstreuen",
+				"url": "https://www.duden.de/rechtschreibung/zerstreuen",
+				"supports": "Target 9 Knowledge: senses verstreuen, auseinandertreiben, beseitigen, zur Entspannung ablenken: none paraphrases 'absent-minded'"
+			},
+			{
+				"title": "OpenThesaurus: zerstreut",
+				"url": "https://www.openthesaurus.de/synonyme/zerstreut",
+				"supports": "Target 9 Knowledge: synset 1478: geistesabwesend · konfus · zerstreut · distrait; no Gegenteil"
 			}
 		]
 	},
@@ -687,7 +702,81 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "😶‍🌫" },
+			"reading": {
+				"emojiDescription": "😶‍🌫",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "zerstreuen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Drifted"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "geistesabwesend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "abwesend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "konfus",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "fahrig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

@@ -262,6 +262,21 @@
 				"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
 				"url": "https://www.gutenberg.org/ebooks/34811",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 11, Hanno's school day in Doktor Mantelsack's lesson."
+			},
+			{
+				"title": "Duden: wahrscheinlich_voraussichtlich_denkbar",
+				"url": "https://www.duden.de/rechtschreibung/wahrscheinlich_voraussichtlich_denkbar",
+				"supports": "Target 7 Knowledge: Adjektiv 'ziemlich gewiss; mit ziemlicher Sicherheit in Betracht kommend': es ist nicht wahrscheinlich, dass ...; Synonyme höchstwahrscheinlich, mutmaßlich, sicherlich, vermutlich"
+			},
+			{
+				"title": "OpenThesaurus: wahrscheinlich",
+				"url": "https://www.openthesaurus.de/synonyme/wahrscheinlich",
+				"supports": "Target 7 Knowledge: synset: mutmaßlich (Adjektiv) · wahrscheinlich · putativ · präsumtiv; no Gegenteil"
+			},
+			{
+				"title": "DWDS: wahrscheinlich",
+				"url": "https://www.dwds.de/wb/wahrscheinlich",
+				"supports": "Target 7 Knowledge: Adjektiv, wahrscheinlicher; no Synonym/Gegensatz"
 			}
 		]
 	},
@@ -586,7 +601,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🤔👍" },
+			"reading": {
+				"emojiDescription": "🤔👍",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "mutmaßlich",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

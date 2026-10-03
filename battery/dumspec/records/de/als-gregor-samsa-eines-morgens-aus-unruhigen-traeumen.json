@@ -224,6 +224,21 @@
 				"title": "Project Gutenberg eBook #22367: Franz Kafka, Die Verwandlung",
 				"url": "https://www.gutenberg.org/ebooks/22367",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #22367 (released 2007-08-21), transcribed from Kurt Wolff Verlag, Leipzig 1917 (Der jüngste Tag 22/23). Chapter I, paragraph 1."
+			},
+			{
+				"title": "Duden: verwandeln",
+				"url": "https://www.duden.de/rechtschreibung/verwandeln",
+				"supports": "Target 15 Knowledge: sense 1b 'zu jemand, etwas anderem werden lassen': ein Zauber hatte den Prinzen in einen Frosch verwandelt; no E-VALBU entry"
+			},
+			{
+				"title": "DWDS: verwandeln",
+				"url": "https://www.dwds.de/wb/verwandeln",
+				"supports": "Target 15 Knowledge: 1. ⟨etw., jmd. verwandelt etw., jmdn. (zu, in etw., jmdn.)⟩ zu einer anderen Sache, Person werden lassen"
+			},
+			{
+				"title": "OpenThesaurus: verwandelt",
+				"url": "https://www.openthesaurus.de/synonyme/verwandelt",
+				"supports": "Target 15 Knowledge: no synset; no relation listed (Duden has no verwandelt entry)"
 			}
 		]
 	},
@@ -958,7 +973,68 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔄" },
+			"reading": {
+				"emojiDescription": "🔄",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "zu",
+										"coreFeatures": {}
+									},
+									"governedCase": "Dat",
+									"referent": "Either"
+								},
+								{
+									"kind": "Preposition",
+									"preposition": {
+										"unitKind": "Lemma",
+										"language": "de",
+										"family": "Lexeme",
+										"kind": "ADP",
+										"canonicalForm": "in",
+										"coreFeatures": {}
+									},
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "verwandeln",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "Authored",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {
@@ -1014,7 +1090,7 @@
 				]
 			},
 			"notes": {
-				"rationale": "verwandelt is the predicative of finden's object sich, not a perfect or passive, so it is an ADJ with Participle Source verwandeln (de/participial-adjective). Its source verb governs zu in this sense: E-VALBU has no verwandeln, and Duden gives verwandeln 1b 'zu jemand, etwas anderem werden lassen'. So the participle governs zu too, a member named by valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). No dictionary gives verwandelt comparison forms, so it marks no Degree. Ruled on #743 (VP-A3, A6)."
+				"rationale": "verwandelt is the predicative of finden's object sich, not a perfect or passive, so it is an ADJ with Participle Source verwandeln (de/participial-adjective). Its source verb governs zu in this sense: E-VALBU has no verwandeln, and Duden gives verwandeln 1b 'zu jemand, etwas anderem werden lassen'. So the participle governs zu too, a member named by valencyEvidence and left out of the normalized Surface (de/governed-preposition-joins-its-governor). No dictionary gives verwandelt comparison forms, so it marks no Degree. Ruled on #743 (VP-A3, A6). Knowledge (#887, dev draft): No dictionary gives verwandelt its own preposition, so it takes verwandeln 1b's zu/in complement, which defines that sense."
 			}
 		}
 	],

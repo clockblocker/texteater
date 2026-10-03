@@ -20,13 +20,72 @@
 	"sources": {
 		"adrs": [],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: hold",
+				"url": "https://www.duden.de/rechtschreibung/hold",
+				"supports": "Target 0 Knowledge: sense 'anmutig, lieblich, von zarter Schönheit' (dichterisch veraltend); Synonyme anmutig, anmutsvoll, bezaubernd, entzückend"
+			},
+			{
+				"title": "OpenThesaurus: hold",
+				"url": "https://www.openthesaurus.de/synonyme/hold",
+				"supports": "Target 0 Knowledge: synset 857: hold · lieblich · liebreizend · hübsch · reizend ...; no Gegenteil on hold"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🌸" },
+			"reading": {
+				"emojiDescription": "🌸",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "anmutig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "lieblich",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "liebreizend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "holdes is the regular strong neuter nominative singular of hold. hold is a dated, poetic word, which is true of its Lemma, not of this form, so the Surface carries no historical status (de/variant-and-historical-status)."
 			},

@@ -107,7 +107,23 @@
 				"hash": "c2b1f74a61545177"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: weinen",
+				"url": "https://www.duden.de/rechtschreibung/weinen",
+				"supports": "Target 3 Knowledge: sense a 'Tränen vergießen'"
+			},
+			{
+				"title": "DWDS: weinen",
+				"url": "https://www.dwds.de/wb/weinen",
+				"supports": "Target 3 Knowledge: (aus Schmerz oder Trauer) Tränen vergießen"
+			},
+			{
+				"title": "OpenThesaurus: weinend",
+				"url": "https://www.openthesaurus.de/synonyme/weinend",
+				"supports": "Target 3 Knowledge: synset 29023 is '(heftig) weinend': in Tränen aufgelöst · tränenreich · unter Tränen; no plain-weinend listing (Duden has no weinend entry)"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -273,7 +289,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "😢" },
+			"reading": {
+				"emojiDescription": "😢",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "weinen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

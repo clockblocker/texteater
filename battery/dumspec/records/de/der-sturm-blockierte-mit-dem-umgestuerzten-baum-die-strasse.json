@@ -26,13 +26,57 @@
 	"sources": {
 		"adrs": ["ADR-0036"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: umstuerzen",
+				"url": "https://www.duden.de/rechtschreibung/umstuerzen",
+				"supports": "Target 0 Knowledge: sense 1 'zu Boden, zur Seite stürzen', 'oft im 2. Partizip: die Fahrbahn ist durch einen umgestürzten Baum blockiert'"
+			},
+			{
+				"title": "DWDS: umstürzen",
+				"url": "https://www.dwds.de/wb/umstürzen",
+				"supports": "Target 0 Knowledge: 1. zu Boden stürzen, mit Wucht umfallen; no Synonym/Gegensatz"
+			},
+			{
+				"title": "OpenThesaurus: umgestürzt",
+				"url": "https://www.openthesaurus.de/synonyme/umgestürzt",
+				"supports": "Target 0 Knowledge: no synset; no relation listed (Duden has no umgestürzt entry)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "⤵" },
+			"reading": {
+				"emojiDescription": "⤵",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "umstürzen",
+							"coreFeatures": {
+								"hasSepPrefix": "um",
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "An attributive participle of a separable verb is an ADJ (ADR 0036): Canonical Form umgestürzt; Dat Sing Masc after mit dem."
 			},

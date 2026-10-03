@@ -59,7 +59,23 @@
 				"hash": "b72c043c004f9dc9"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "OpenThesaurus: groß",
+				"url": "https://www.openthesaurus.de/synonyme/groß",
+				"supports": "Target 1 Knowledge: synset 4291: enorm · gewaltig · groß · mächtig · riesig ...; Gegenteil marker on groß in that synset: klein"
+			},
+			{
+				"title": "Duden: grosz",
+				"url": "https://www.duden.de/rechtschreibung/grosz",
+				"supports": "Target 1 Knowledge: Synonyme shown (aufschneiderisch, prahlerisch) belong to another sense"
+			},
+			{
+				"title": "DWDS: groß",
+				"url": "https://www.dwds.de/wb/groß",
+				"supports": "Target 1 Knowledge: Adjektiv, größer, am größten; no Synonym/Gegensatz"
+			}
+		]
 	},
 	"targets": [
 		{
@@ -109,7 +125,57 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🐘" },
+			"reading": {
+				"emojiDescription": "🐘",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "riesig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "gewaltig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "klein",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "groß is the predicative ADJ zu grades, a target of its own. It is comparable (größer, am größten), so its Surface marks Pos (de/comparability-is-lexical)."
 			},

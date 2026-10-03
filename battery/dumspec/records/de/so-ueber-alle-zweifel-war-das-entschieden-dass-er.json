@@ -297,6 +297,21 @@
 				"title": "Project Gutenberg eBook #25204: Arthur Schnitzler, Der Mörder",
 				"url": "https://www.gutenberg.org/ebooks/25204",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #25204 (released 2008-04-27), transcribed from Verlag Paul Knepler (Wallishaussersche Buchhandlung), Wien, with woodcuts by Ernst Huber. The paragraph after Adele's refusal."
+			},
+			{
+				"title": "Duden: schmeicheln",
+				"url": "https://www.duden.de/rechtschreibung/schmeicheln",
+				"supports": "Target 12 Knowledge: sense 'liebkosen, zärtlich sein' (veraltend), übertragen 'ein schmeichelndes (lieblich duftendes) Parfüm'; sich-sense 'in jemandes Ohr, Sinne sanft hineindringen': schmeichelnde Musik"
+			},
+			{
+				"title": "DWDS: schmeicheln",
+				"url": "https://www.dwds.de/wb/schmeicheln",
+				"supports": "Target 12 Knowledge: 4. mit jmdm. zärtlich sein, jmdn. liebkosen"
+			},
+			{
+				"title": "OpenThesaurus: schmeichelnd",
+				"url": "https://www.openthesaurus.de/synonyme/schmeichelnd",
+				"supports": "Target 12 Knowledge: only synset 11301 is the 'flattering, sycophantic' sense (glattzüngig, heuchlerisch), not this one: no relation listed"
 			}
 		]
 	},
@@ -885,7 +900,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🤗" },
+			"reading": {
+				"emojiDescription": "🤗",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "schmeicheln",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Attributive Partizip I: ADJ schmeichelnd from schmeicheln, a single-member target (de/attributive-adjective-stands-alone, de/participial-adjective). der schmeichelnde Frühlingstag is Duden schmeicheln 2, 'liebkosen' and 'in jemandes Ohr, Sinne sanft hineindringen' (schmeichelnde Musik), not 1a, praising someone to excess."
 			},

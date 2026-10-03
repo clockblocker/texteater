@@ -23,13 +23,57 @@
 	"sources": {
 		"adrs": ["ADR-0036"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: spielend",
+				"url": "https://www.duden.de/rechtschreibung/spielend",
+				"supports": "Target 0 Knowledge: sense 1 'sich zum Vergnügen ... betätigend': spielende Kinder; Synonyme bequem, einfach, ein Kinderspiel (sense 'mühelos' only)"
+			},
+			{
+				"title": "DWDS: spielend",
+				"url": "https://www.dwds.de/wb/spielend",
+				"supports": "Target 0 Knowledge: partizipiales Adjektiv"
+			},
+			{
+				"title": "OpenThesaurus: spielend",
+				"url": "https://www.openthesaurus.de/synonyme/spielend",
+				"supports": "Target 0 Knowledge: only synset 34006 'mühelos' (leicht, einfach): no relation for this sense"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [11],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🤸" },
+			"reading": {
+				"emojiDescription": "🤸",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "spielen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "An attributive Partizip I is an ADJ (ADR 0036): Canonical Form spielend; Acc Plur with Kinder."
 			},

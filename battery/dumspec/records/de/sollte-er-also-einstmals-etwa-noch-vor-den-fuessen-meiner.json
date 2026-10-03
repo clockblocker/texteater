@@ -241,6 +241,16 @@
 				"title": "DWDS: einstmals",
 				"url": "https://www.dwds.de/wb/einstmals",
 				"supports": "Target [einstmals]: Adverb, gehoben; sense 2 'einst, künftig'."
+			},
+			{
+				"title": "DWDS: nachschleifen",
+				"url": "https://www.dwds.de/wb/nachschleifen",
+				"supports": "Target 11 Knowledge: schleift nach, schleifte nach: 'etw. schleifend nachziehen, hinterherschleifen' (corpus: das Kreuz schleifte auf dem Boden nach)"
+			},
+			{
+				"title": "OpenThesaurus: nachschleifend",
+				"url": "https://www.openthesaurus.de/synonyme/nachschleifend",
+				"supports": "Target 11 Knowledge: no synset; no relation listed (Duden has no entry)"
 			}
 		]
 	},
@@ -781,7 +791,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔙〰" },
+			"reading": {
+				"emojiDescription": "🔙〰",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "nachschleifen",
+							"coreFeatures": {
+								"hasSepPrefix": "nach",
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "nachschleifendem is an attributive Partizip I of nachschleifen, so a single-member ADJ nachschleifend (de/participial-adjective, de/attributive-adjective-stands-alone); like the Reviewed lachend it is left non-comparable. nachschleifen is DWDS 'etw. schleifend nachziehen, hinterherschleifen', so the thread trails behind along the ground."
 			},

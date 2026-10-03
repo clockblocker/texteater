@@ -25,13 +25,83 @@
 	"sources": {
 		"adrs": ["ADR-0035"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: liegen",
+				"url": "https://www.duden.de/rechtschreibung/liegen",
+				"supports": "Target 0 Knowledge: sense 'an einem Platz zu finden sein; seine (feste) [geografische] Lage haben'; Duden files locative gelegen as the participle (gelegen, zu liegen)"
+			},
+			{
+				"title": "DWDS: gelegen",
+				"url": "https://www.dwds.de/wb/gelegen",
+				"supports": "Target 0 Knowledge: partizipiales Adjektiv, Grundform liegen; its one sense is 'geeignet, passend' (not this Reading)"
+			},
+			{
+				"title": "OpenThesaurus: gelegen",
+				"url": "https://www.openthesaurus.de/synonyme/gelegen",
+				"supports": "Target 0 Knowledge: synset 5768: angesiedelt · befindlich · gelegen; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [7],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "📍" },
+			"reading": {
+				"emojiDescription": "📍",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "liegen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "befindlich",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "angesiedelt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Locative gelegen 'situated' is an attributive ADJ (ADR 0035), the same Lemma as gelegen 'convenient'; Nom Sing Neut."
 			},

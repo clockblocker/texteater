@@ -32,15 +32,59 @@
 				"hash": "b72c043c004f9dc9"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: sogenannt",
+				"url": "https://www.duden.de/rechtschreibung/sogenannt",
+				"supports": "Target 0 Knowledge: one sense 'wie es genannt wird, heißt; als … bezeichnet', spöttisch/distancing use included; Synonyme genannt, alias, anders, auch"
+			},
+			{
+				"title": "DWDS: sogenannt",
+				"url": "https://www.dwds.de/wb/sogenannt",
+				"supports": "Target 0 Knowledge: Adjektiv (attributiv), ohne Steigerung"
+			},
+			{
+				"title": "OpenThesaurus: sogenannt",
+				"url": "https://www.openthesaurus.de/synonyme/sogenannt",
+				"supports": "Target 0 Knowledge: synset 45421: angeblich · so genannt · sogenannt · will ... sein; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🏷" },
+			"reading": {
+				"emojiDescription": "🏷",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "angeblich",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "sog. is Duden's abbreviation of sogenannt. It is one Segment with its period and a Shorthand member whose Surface is the expansion as the phrase needs it: ein sogenannter Experte, nominative masculine singular (de/abbreviation-is-one-segment). Duden gives sogenannt no comparison forms, so the attributive Surface marks case, gender and number only (de/comparability-is-lexical). Duden gives sogenannt one sense, 'wie es genannt wird, heißt', its mocking use (deine sogenannten Freunde) included, so 🏷 holds whether or not the expert is doubted."
+				"rationale": "sog. is Duden's abbreviation of sogenannt. It is one Segment with its period and a Shorthand member whose Surface is the expansion as the phrase needs it: ein sogenannter Experte, nominative masculine singular (de/abbreviation-is-one-segment). Duden gives sogenannt no comparison forms, so the attributive Surface marks case, gender and number only (de/comparability-is-lexical). Duden gives sogenannt one sense, 'wie es genannt wird, heißt', its mocking use (deine sogenannten Freunde) included, so 🏷 holds whether or not the expert is doubted. Knowledge (#887, dev draft): sogenannt is so + genannt with no verb *sonennen, so it is not a Participial Adjective and takes no Participle Source."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

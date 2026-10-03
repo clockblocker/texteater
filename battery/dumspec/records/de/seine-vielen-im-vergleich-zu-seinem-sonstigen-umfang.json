@@ -221,6 +221,16 @@
 				"title": "Project Gutenberg eBook #22367: Franz Kafka, Die Verwandlung",
 				"url": "https://www.gutenberg.org/ebooks/22367",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #22367 (released 2007-08-21), transcribed from Kurt Wolff Verlag, Leipzig 1917 (Der jüngste Tag 22/23). Chapter I, paragraph 1."
+			},
+			{
+				"title": "Duden: hilflos",
+				"url": "https://www.duden.de/rechtschreibung/hilflos",
+				"supports": "Target 11 Knowledge: sense 1 'sich selbst nicht helfen könnend, auf Hilfe angewiesen'; Synonyme abhängig, auf Hilfe angewiesen, hilfsbedürftig, machtlos"
+			},
+			{
+				"title": "OpenThesaurus: hilflos",
+				"url": "https://www.openthesaurus.de/synonyme/hilflos",
+				"supports": "Target 11 Knowledge: synset 51471: ausgeliefert · hilflos · machtlos · ohnmächtig · schutzlos · wehrlos; no Gegenteil"
 			}
 		]
 	},
@@ -845,7 +855,57 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🆘" },
+			"reading": {
+				"emojiDescription": "🆘",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "hilfsbedürftig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "machtlos",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "wehrlos",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "hilflos is used adverbially on flimmerten, so ADJ (de/adjective-stays-adj). Neither Duden nor DWDS gives comparison forms, so it is not comparable and marks no inflection (de/comparability-is-lexical)."
 			},

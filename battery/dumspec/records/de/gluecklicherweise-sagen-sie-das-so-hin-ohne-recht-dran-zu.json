@@ -208,6 +208,21 @@
 				"title": "DWDS: recht",
 				"url": "https://www.dwds.de/wb/recht",
 				"supports": "recht: Adjektiv with rechter, am rechtesten; nicht recht wissen, glauben."
+			},
+			{
+				"title": "Duden: recht",
+				"url": "https://www.duden.de/rechtschreibung/recht",
+				"supports": "Target 6 Knowledge: Adjektiv; Synonyme angebracht, anständig, geeignet, gut (other senses); no listing for 2a 'richtig, wirklich'"
+			},
+			{
+				"title": "DWDS: recht",
+				"url": "https://www.dwds.de/wb/recht",
+				"supports": "Target 6 Knowledge: Adjektiv, rechter, am rechtesten; no Synonym/Gegensatz"
+			},
+			{
+				"title": "OpenThesaurus: recht",
+				"url": "https://www.openthesaurus.de/synonyme/recht",
+				"supports": "Target 6 Knowledge: synsets 'fair, gerecht' and degree 'ziemlich' only: no relation listed for this sense"
 			}
 		]
 	},
@@ -500,7 +515,20 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "💯" },
+			"reading": {
+				"emojiDescription": "💯",
+				"knowledge": {},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

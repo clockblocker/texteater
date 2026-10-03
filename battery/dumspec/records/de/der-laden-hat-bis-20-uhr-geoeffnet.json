@@ -80,6 +80,21 @@
 				"title": "Duden: geöffnet",
 				"url": "https://www.duden.de/rechtschreibung/geoeffnet",
 				"supports": "Wortart: Adjektiv, with no comparison forms."
+			},
+			{
+				"title": "Duden: oeffnen",
+				"url": "https://www.duden.de/rechtschreibung/oeffnen",
+				"supports": "Target 2 Knowledge: sense 1c 'mit der Geschäftszeit beginnen; aufmachen': das Geschäft ist ab acht Uhr geöffnet"
+			},
+			{
+				"title": "Duden: geoeffnet",
+				"url": "https://www.duden.de/rechtschreibung/geoeffnet",
+				"supports": "Target 2 Knowledge: Adjektiv 'offen'; Synonyme aufgeschlossen, nicht geschlossen, offen [stehend], unverschlossen"
+			},
+			{
+				"title": "OpenThesaurus: geöffnet",
+				"url": "https://www.openthesaurus.de/synonyme/geöffnet",
+				"supports": "Target 2 Knowledge: synset 31467: aufgeklappt · aufgesperrt · geöffnet · offen · offen stehend · auf; no Gegenteil"
 			}
 		]
 	},
@@ -196,7 +211,49 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🔓" },
+			"reading": {
+				"emojiDescription": "🔓",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "öffnen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "offen",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "geöffnet describes the shop's state, so it is the Participial Adjective geöffnet with Participle Source öffnen. Duden lists it as an adjective ('offen') with no comparison forms, and DWDS has no adjective entry, so it is not comparable and its predicative Surface has no inflection (de/comparability-is-lexical)."
 			},

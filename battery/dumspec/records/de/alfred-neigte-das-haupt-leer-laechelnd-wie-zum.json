@@ -284,6 +284,21 @@
 				"title": "Project Gutenberg eBook #25204: Arthur Schnitzler, Der Mörder",
 				"url": "https://www.gutenberg.org/ebooks/25204",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #25204 (released 2008-04-27), transcribed from Verlag Paul Knepler (Wallishaussersche Buchhandlung), Wien, with woodcuts by Ernst Huber. The paragraph after Adele's refusal."
+			},
+			{
+				"title": "Duden: entfremden",
+				"url": "https://www.duden.de/rechtschreibung/entfremden",
+				"supports": "Target 15 Knowledge: sense 1 'bewirken, dass eine bestehende enge Beziehung aufgelöst wird, fremd machen': er ist seiner Familie entfremdet"
+			},
+			{
+				"title": "DWDS: entfremden",
+				"url": "https://www.dwds.de/wb/entfremden",
+				"supports": "Target 15 Knowledge: 1. etw. macht jmdn. jmdm. fremd"
+			},
+			{
+				"title": "OpenThesaurus: entfremdet",
+				"url": "https://www.openthesaurus.de/synonyme/entfremdet",
+				"supports": "Target 15 Knowledge: no synset; no relation listed (Duden has no entfremdet entry)"
 			}
 		]
 	},
@@ -1050,7 +1065,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "💔" },
+			"reading": {
+				"emojiDescription": "💔",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "entfremden",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "entfremdet ('estranged') describes the hands while they hang, a depictive Partizip II with no auxiliary: a single-member ADJ with Participle Source entfremden (de/participial-adjective, de/sein-perfect-or-copula). Taken as non-comparable."
 			},

@@ -20,13 +20,108 @@
 	"sources": {
 		"adrs": ["ADR-0036", "ADR-0042"],
 		"rules": [],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: spannend",
+				"url": "https://www.duden.de/rechtschreibung/spannend",
+				"supports": "Target 0 Knowledge: Adjektiv, sense 1 'Spannung erregend; fesselnd'; Synonyme atemberaubend, aufregend, dramatisch, erregend"
+			},
+			{
+				"title": "DWDS: spannend",
+				"url": "https://www.dwds.de/wb/spannend",
+				"supports": "Target 0 Knowledge: partizipiales Adjektiv, 1. große Spannung weckend; packend"
+			},
+			{
+				"title": "OpenThesaurus: spannend",
+				"url": "https://www.openthesaurus.de/synonyme/spannend",
+				"supports": "Target 0 Knowledge: synset 31097: aufregend · fesselnd · packend · spannend ...; Gegenteil marker on spannend in that synset: langweilig"
+			},
+			{
+				"title": "DWDS: spannen",
+				"url": "https://www.dwds.de/wb/spannen",
+				"supports": "Target 0 Knowledge: senses: straff machen, Muskeln, sich erstrecken, ...; 9c 'jmds. Aufmerksamkeit erregen' marked veraltet, so no current sense paraphrases 'exciting'"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🤩" },
+			"reading": {
+				"emojiDescription": "🤩",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "spannen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Drifted"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "packend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "fesselnd",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "aufregend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "langweilig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "spannende is used attributively, so it is an ADJ with Canonical Form spannend (ADR 0036). It compares (spannender), so it is comparable and marks Pos (ADR 0042)."
 			},

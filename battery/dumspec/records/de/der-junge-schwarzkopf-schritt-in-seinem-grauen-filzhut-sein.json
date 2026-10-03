@@ -260,6 +260,21 @@
 				"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
 				"url": "https://www.gutenberg.org/ebooks/34811",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 3, Travemünde: Tony and Morten on the promenade."
+			},
+			{
+				"title": "OpenThesaurus: grau",
+				"url": "https://www.openthesaurus.de/synonyme/grau",
+				"supports": "Target 5 Knowledge: color synset S1: grau · mausgrau (a shade of grey, narrower); no Gegenteil on grau"
+			},
+			{
+				"title": "Duden: grau",
+				"url": "https://www.duden.de/rechtschreibung/grau",
+				"supports": "Target 5 Knowledge: sense 1 colour; Synonyme aschfahl, eisenfarben, ergraut, fahl (pallor/hair senses); no Gegenwort"
+			},
+			{
+				"title": "DWDS: grau",
+				"url": "https://www.dwds.de/wb/grau",
+				"supports": "Target 5 Knowledge: sense 1 Mischfarbe aus Schwarz und Weiß; no Synonym/Gegensatz listed"
 			}
 		]
 	},
@@ -532,7 +547,35 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "🩶" },
+			"reading": {
+				"emojiDescription": "🩶",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "mausgrau",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"surface": {

@@ -24,13 +24,93 @@
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "4435db81cfb4db93" }
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: gelassen_beherrscht_entspannt",
+				"url": "https://www.duden.de/rechtschreibung/gelassen_beherrscht_entspannt",
+				"supports": "Target 0 Knowledge: own Adjektiv headword 'das seelische Gleichgewicht bewahrend; beherrscht, ruhig, gefasst'; Synonyme abgeklärt, ausgeglichen, bedacht, bedächtig"
+			},
+			{
+				"title": "DWDS: gelassen",
+				"url": "https://www.dwds.de/wb/gelassen",
+				"supports": "Target 0 Knowledge: Adjektiv, gelassener, am gelassensten (no lassen sense paraphrases 'calm')"
+			},
+			{
+				"title": "OpenThesaurus: gelassen",
+				"url": "https://www.openthesaurus.de/synonyme/gelassen",
+				"supports": "Target 0 Knowledge: synset 40236: gelassen · unaufgeregt · locker · cool ...; synset 34814: gelassen · sicher · souverän; no Gegenteil"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "😌" },
+			"reading": {
+				"emojiDescription": "😌",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "lassen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Drifted"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "unaufgeregt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "ausgeglichen",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "abgeklärt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "gelassen is a lexicalized participle, no form of lassen here, so it is a single-member ADJ, predicative after the copula blieb."
 			},

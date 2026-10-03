@@ -299,6 +299,21 @@
 				"title": "Project Gutenberg eBook #34811: Thomas Mann, Buddenbrooks",
 				"url": "https://www.gutenberg.org/ebooks/34811",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #34811 (released 2011-01-01), transcribed from Deutsche Buch-Gemeinschaft, Berlin, text copyright 1909 by S. Fischer Verlag. Part 11, Hanno's school day in Doktor Mantelsack's lesson."
+			},
+			{
+				"title": "Duden: klar_erkennbar_anschaulich",
+				"url": "https://www.duden.de/rechtschreibung/klar_erkennbar_anschaulich",
+				"supports": "Target 2 Knowledge: sense 'fest umrissen, eindeutig, für jedermann übersichtlich und verständlich': das ist [doch ganz] klar"
+			},
+			{
+				"title": "OpenThesaurus: klar",
+				"url": "https://www.openthesaurus.de/synonyme/klar",
+				"supports": "Target 2 Knowledge: synset 9538: eindeutig · klar · unmissverständlich · unzweifelhaft ...; Gegenteil marker on klar in that synset: unklar"
+			},
+			{
+				"title": "DWDS: klar",
+				"url": "https://www.dwds.de/wb/klar",
+				"supports": "Target 2 Knowledge: Antonyme block (trüb) belongs to the 'durchsichtig' sense"
 			}
 		]
 	},
@@ -414,7 +429,47 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "💡" },
+			"reading": {
+				"emojiDescription": "💡",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "eindeutig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "unklar",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [

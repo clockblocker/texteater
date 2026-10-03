@@ -166,6 +166,21 @@
 				"title": "Project Gutenberg eBook #25204: Arthur Schnitzler, Der Mörder",
 				"url": "https://www.gutenberg.org/ebooks/25204",
 				"supports": "The sentence, quoted from Project Gutenberg eBook #25204 (released 2008-04-27), transcribed from Verlag Paul Knepler (Wallishaussersche Buchhandlung), Wien, with woodcuts by Ernst Huber. The paragraph after Adele's refusal."
+			},
+			{
+				"title": "Duden: kalt",
+				"url": "https://www.duden.de/rechtschreibung/kalt",
+				"supports": "Target 9 Knowledge: Synonyme eisig [kalt], eiskalt, frisch, frostig"
+			},
+			{
+				"title": "OpenThesaurus: kalt",
+				"url": "https://www.openthesaurus.de/synonyme/kalt",
+				"supports": "Target 9 Knowledge: synset 3834: frisch · frostig · kalt · kühl, Gegenteil marker on kalt there: heiß; synset 'sehr kalt': eisig · eiskalt · frostig"
+			},
+			{
+				"title": "DWDS: kalt",
+				"url": "https://www.dwds.de/wb/kalt",
+				"supports": "Target 9 Knowledge: Adjektiv, kälter, am kältesten"
 			}
 		]
 	},
@@ -615,7 +630,69 @@
 				"family": "Lexeme",
 				"kind": "ADJ"
 			},
-			"reading": { "emojiDescription": "❄" },
+			"reading": {
+				"emojiDescription": "❄",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "frostig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "kühl",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "eisig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "heiß",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Attributive kalten is a single-member ADJ (de/attributive-adjective-stands-alone); kalt compares, so it marks Pos."
 			},
