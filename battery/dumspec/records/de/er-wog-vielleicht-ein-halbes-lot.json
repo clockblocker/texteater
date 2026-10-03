@@ -39,24 +39,130 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0026", "ADR-0035", "ADR-0042"],
+		"adrs": ["ADR-0026", "ADR-0034", "ADR-0035", "ADR-0038", "ADR-0042"],
 		"rules": [
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/measure-noun-plural-is-regular",
+				"hash": "ef9b7f1e15f48290"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: wiegen, Lesart 3",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/401226/3",
+				"supports": "Target 0 Knowledge: jemand/etwas wiegt irgendwieviel, Satzbauplan Ksub, Kadv (Menge: NP im Akk/ProP indefinit); kein Passiv"
+			},
+			{
+				"title": "DWDS: wiegen",
+				"url": "https://www.dwds.de/wb/wiegen",
+				"supports": "Target 0 Knowledge: wiegt, wog, hat gewogen; 2 ein bestimmtes Gewicht haben"
+			},
+			{
+				"title": "OpenThesaurus: wiegen",
+				"url": "https://www.openthesaurus.de/synonyme/wiegen",
+				"supports": "Target 0 Knowledge: synset (soundsoviel) wiegen, (ein bestimmtes Gewicht) auf die Waage bringen, (ein) Gewicht von (… kg) haben"
+			},
+			{
+				"title": "DWDS: Lot",
+				"url": "https://www.dwds.de/wb/Lot",
+				"supports": "Target 1 Knowledge: Nominativ Plural Lote; Plural bei Mengenangabe Lot (5 veraltet kleine Gewichtseinheit), a measure construction under de/measure-noun-plural-is-regular. No Oberbegriff listed for the weight sense"
+			},
+			{
+				"title": "Duden: Lot (Gewicht)",
+				"url": "https://www.duden.de/rechtschreibung/Lot_Gewicht",
+				"supports": "Target 1 Knowledge: Plural die Lote; sense 4 kleine Gewichtseinheit, Plural: Lot (zwei Lot Anis); Gewichtseinheit is only the definition's genus"
+			},
+			{
+				"title": "E-VALBU: sein, Lesart 7",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400885/7",
+				"supports": "Target 2 Knowledge: jemand/etwas ist so, Satzbauplan Ksub, Kprd; Ksub also dass-S, Inf-S mit zu, ob-S, w-S with fakultatives Korrelat es; war"
+			},
+			{
+				"title": "Duden: tot",
+				"url": "https://www.duden.de/rechtschreibung/tot",
+				"supports": "Target 4 Knowledge: Adjektiv, not a participle; Synonyme gestorben, nicht mehr da, umgekommen"
+			},
+			{
+				"title": "OpenThesaurus: tot",
+				"url": "https://www.openthesaurus.de/synonyme/tot",
+				"supports": "Target 4 Knowledge: synsets {tot, gestorben, verstorben …} with Gegenteil lebend on tot, and {entseelt, leblos, tot, unbelebt} with Gegenteil lebendig on tot"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "⚖" },
+			"reading": {
+				"emojiDescription": "⚖",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Adverbial",
+									"standIn": "IrgendwieViel"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Locution",
+								"kind": "VERB",
+								"canonicalForm": "auf die Waage bringen",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Here wog is the past finite form of wiegen in the 'have a weight of' use, not the rocking or swaying use."
+				"rationale": "Here wog is the past finite form of wiegen in the 'have a weight of' use, not the rocking or swaying use. Knowledge (#884): the measure is an Adverbial IrgendwieViel, E-VALBU wiegen Lesart 3's Kadv, like kosten (ADR 0034), which the accusative ein halbes Lot fills; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -99,9 +205,26 @@
 		{
 			"memberSegmentIndices": [6, 10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "⚖" },
+			"reading": {
+				"emojiDescription": "⚖",
+				"knowledge": {
+					"plural": ["Lote"]
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Lot is the old weight unit, a neuter noun that owns its article ein across halbes (de/noun-owns-its-article). It is the accusative measure complement of wog."
+				"rationale": "Lot is the old weight unit, a neuter noun that owns its article ein across halbes (de/noun-owns-its-article). It is the accusative measure complement of wog. Knowledge (#884): the plural is Lote only (de/measure-noun-plural-is-regular, the user's ruling Q5); the Plural Lot that Duden and DWDS give the weight sense is the measure construction."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -139,7 +262,65 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Optional"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Predicative",
+									"of": "Subject",
+									"marker": "None"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "war is the copula before the predicative tot, so it is a single-member VERB sein, and tot is an ADJ of its own. sein is AUX only as the auxiliary of a perfect or passive."
 			},
@@ -184,7 +365,20 @@
 		{
 			"memberSegmentIndices": [21],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "5⃣" },
+			"reading": {
+				"emojiDescription": "5⃣",
+				"knowledge": {},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "fünften is the ordinal fünfte, dative masculine singular after the fused article in am fünften Tage."
 			},
@@ -224,7 +418,79 @@
 		{
 			"memberSegmentIndices": [25],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "💀" },
+			"reading": {
+				"emojiDescription": "💀",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "gestorben",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "verstorben",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "leblos",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "lebendig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "lebend",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Predicative tot has no comparison forms, so its Surface marks no inflection (de/comparability-is-lexical)."
 			},

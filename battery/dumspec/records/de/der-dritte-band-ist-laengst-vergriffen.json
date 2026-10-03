@@ -19,23 +19,76 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035"],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
 			},
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Band (Buch)",
+				"url": "https://www.duden.de/rechtschreibung/Band_Buch",
+				"supports": "Target 0 Knowledge: einzelnes Buch [als Teil eines größeren Druckwerkes]; Plural die Bände; Synonyme Buch, Schmöker, Schwarte"
+			},
+			{
+				"title": "OpenThesaurus: Buch",
+				"url": "https://www.openthesaurus.de/synonyme/Buch",
+				"supports": "Target 0 Knowledge: synset Buch, Band, Bd., Lektüre, Titel"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "📚" },
+			"reading": {
+				"emojiDescription": "📚",
+				"knowledge": {
+					"plural": ["Bände"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Buch",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "The book-volume use resolves to the masculine Band Lemma, distinct through its Core Features from the feminine and neuter Band Lemmas."
+				"rationale": "The book-volume use resolves to the masculine Band Lemma, distinct through its Core Features from the feminine and neuter Band Lemmas. Knowledge (#884): no hypernym, since the Buch synset's Oberbegriffe describe the work or are catch-alls; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

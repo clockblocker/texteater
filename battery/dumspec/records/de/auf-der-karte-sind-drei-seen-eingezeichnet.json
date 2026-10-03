@@ -21,7 +21,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036", "ADR-0038"],
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
@@ -32,15 +32,118 @@
 			{
 				"rule": "de/core-features-are-identity",
 				"hash": "c11b321c41f117a1"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/participle-source-verb-and-meaning",
+				"hash": "a97545caefc4a184"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: See (Binnengewässer)",
+				"url": "https://www.duden.de/rechtschreibung/See_Binnengewaesser",
+				"supports": "Target 0 Knowledge: Plural die Seen; Synonyme Binnengewässer, Teich, Tümpel, Weiher"
+			},
+			{
+				"title": "OpenThesaurus: Gewässer",
+				"url": "https://www.openthesaurus.de/synonyme/Gew%C3%A4sser",
+				"supports": "Target 0 Knowledge: Unterbegriffe {Binnensee, Landsee, See} and {See, Teich, Tümpel, Weiher}, so Gewässer is See's Oberbegriff"
+			},
+			{
+				"title": "Duden: einzeichnen",
+				"url": "https://www.duden.de/rechtschreibung/einzeichnen",
+				"supports": "Target 1 Knowledge: sense 1 ergänzend in etwas zeichnen, eintragen; in etwas markieren paraphrases eingezeichnet in the passive; einen Ort auf der/in der/in die Karte einzeichnen (place or direction, no governed preposition). No relation listed for eingezeichnet"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🏞" },
+			"reading": {
+				"emojiDescription": "🏞",
+				"knowledge": {
+					"plural": ["Seen"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Binnensee",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Landsee",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Teich",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Weiher",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						],
+						"hypernym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gewässer",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "Authored",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Seen is the plural of the Masc NOUN See, the lake. It is distinct from the Fem die See, the sea."
 			},
@@ -77,9 +180,37 @@
 		{
 			"memberSegmentIndices": [12],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🗺✏" },
+			"reading": {
+				"emojiDescription": "🗺✏",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "einzeichnen",
+							"coreFeatures": {
+								"hasSepPrefix": "ein",
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "sein plus eingezeichnet is a state passive: sind is the copula VERB and eingezeichnet the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0036)."
+				"rationale": "sein plus eingezeichnet is a state passive: sind is the copula VERB and eingezeichnet the ADJ eingezeichnet with Participle Source einzeichnen (ADR 0036). Knowledge (#884): no frame, since Duden's auf der/in der/in die Karte einzeichnen is a place or direction with no governed preposition; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

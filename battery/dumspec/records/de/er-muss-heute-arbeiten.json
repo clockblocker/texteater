@@ -15,20 +15,108 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0026"],
+		"adrs": ["ADR-0026", "ADR-0034", "ADR-0038"],
 		"rules": [
 			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" },
-			{ "rule": "de/modal-is-a-verb", "hash": "fbed9130c4b77fbf" }
+			{
+				"rule": "de/modal-is-a-verb",
+				"hash": "fbed9130c4b77fbf"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: müssen",
+				"url": "https://www.duden.de/rechtschreibung/muessen",
+				"supports": "Target 0 Knowledge: 1a mit Infinitiv als Modalverb, gezwungen sein, etwas zu tun; zwangsläufig notwendig sein, dass etwas geschieht; musste (Mixed on the stem, though Duden labels the verb unregelmäßig)"
+			},
+			{
+				"title": "OpenThesaurus: müssen",
+				"url": "https://www.openthesaurus.de/synonyme/m%C3%BCssen",
+				"supports": "Target 0 Knowledge: synset müssen, sollen, zu tun sein"
+			},
+			{
+				"title": "E-VALBU: arbeiten, Lesart 1",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400309/1",
+				"supports": "Target 1 Knowledge: jemand arbeitet, verrichtet eine Tätigkeit, Satzbauplan Ksub; arbeitete"
+			},
+			{
+				"title": "OpenThesaurus: arbeiten",
+				"url": "https://www.openthesaurus.de/synonyme/arbeiten",
+				"supports": "Target 1 Knowledge: synset arbeiten, aktiv sein, (sich) betätigen, tätig sein, werken, wirken, schaffen [ugs.]; Duden lists sich betätigen too"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "❗" },
+			"reading": {
+				"emojiDescription": "❗",
+				"knowledge": {
+					"conjugationClass": ["Mixed"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Clause",
+									"form": "BareInfinitive"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sollen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "A modal is a VERB with a meaning of its own, one Lemma whether it governs an infinitive or an object (de/modal-is-a-verb, ADR 0026). The infinitive it governs is a target of its own."
+				"rationale": "A modal is a VERB with a meaning of its own, one Lemma whether it governs an infinitive or an object (de/modal-is-a-verb, ADR 0026). The infinitive it governs is a target of its own. Knowledge (#884): Mixed by the stem test on musste; Duden's unregelmäßig is a label, not a class; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -71,9 +159,63 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "💼" },
+			"reading": {
+				"emojiDescription": "💼",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "sich betätigen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": "Acc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "schaffen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "arbeiten is the infinitive that muss governs. It is a VERB target of its own, not a member of the modal's target."
+				"rationale": "arbeiten is the infinitive that muss governs. It is a VERB target of its own, not a member of the modal's target. Knowledge (#884): E-VALBU arbeiten Lesart 1, with no employer named; synonym sich betätigen rather than tätig sein, which de/copula-stays-apart splits into two units; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

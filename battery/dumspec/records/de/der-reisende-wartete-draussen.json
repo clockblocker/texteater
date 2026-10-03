@@ -15,7 +15,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0036", "ADR-0040"],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0036", "ADR-0038", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -23,17 +23,94 @@
 			},
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
-			{ "rule": "de/adjectival-noun-lemma", "hash": "bcdaf66f8862eb29" }
+			{
+				"rule": "de/adjectival-noun-lemma",
+				"hash": "bcdaf66f8862eb29"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/adjectival-noun-plural-is-weak",
+				"hash": "c7da6a431e81b3b7"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Reisende",
+				"url": "https://www.duden.de/rechtschreibung/Reisende",
+				"supports": "Target 0 Knowledge: 1 Person, die sich auf einer Reise befindet; die Reisenden; Synonyme Passagier, Tourist"
+			},
+			{
+				"title": "OpenThesaurus: Reisender",
+				"url": "https://www.openthesaurus.de/synonyme/Reisender",
+				"supports": "Target 0 Knowledge: synsets {Fahrgast, Insasse, Mitfahrender, Passagier, Reisender} and {Tourist, Urlauber, …, Reisender}"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🧳" },
+			"reading": {
+				"emojiDescription": "🧳",
+				"knowledge": {
+					"plural": ["Reisenden"],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Fahrgast",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Passagier",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Tourist",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Reisende is a substantivized present participle, so the learner-facing unit is a noun rather than an adjective or verb. An adjectival noun for a person is one Lemma, Reisende, with no gender. The singular Surface marks the gender its form shows, Masc, and der agrees with it. Minimal pair: der reisende Händler, where reisende is an attributive ADJ."
+				"rationale": "Reisende is a substantivized present participle, so the learner-facing unit is a noun rather than an adjective or verb. An adjectival noun for a person is one Lemma, Reisende, with no gender. The singular Surface marks the gender its form shows, Masc, and der agrees with it. Minimal pair: der reisende Händler, where reisende is an attributive ADJ. Knowledge (#884): the Reading is Duden's sense 1, a traveller, not a Handelsvertreter; Fahrgast, Passagier and Tourist are near-synonyms; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

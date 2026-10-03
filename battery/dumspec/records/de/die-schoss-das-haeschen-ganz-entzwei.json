@@ -45,7 +45,7 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0039", "ADR-0042"],
+		"adrs": ["ADR-0034", "ADR-0039", "ADR-0042"],
 		"rules": [
 			{
 				"rule": "de/comparability-is-lexical",
@@ -54,17 +54,93 @@
 			{
 				"rule": "de/interjection-counts-its-words",
 				"hash": "b572bad8906b508d"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/formula-role-is-narrow",
+				"hash": "68e794801a922563"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: entzwei",
+				"url": "https://www.duden.de/rechtschreibung/entzwei",
+				"supports": "Target 0 Knowledge: in Stücke gegangen; Synonyme auseinander[gefallen], defekt, geteilt, in einzelne Stücke/Teile, zerbrochen, (ugs.) kaputt, all one list"
+			},
+			{
+				"title": "OpenThesaurus: entzwei",
+				"url": "https://www.openthesaurus.de/synonyme/entzwei",
+				"supports": "Target 0 Knowledge: synset auseinander(gegangen), auseinandergefallen, entzwei, entzweigegangen"
+			},
+			{
+				"title": "Duden: auwei",
+				"url": "https://www.duden.de/rechtschreibung/auwei",
+				"supports": "Targets 1 and 2 Knowledge: an exclamation of Bestürzung, like o wei, so no Formula Role; o wei is no headword in Duden, DWDS or OpenThesaurus, so no relation"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "✂" },
+			"reading": {
+				"emojiDescription": "✂",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "auseinander",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "zerbrochen",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "kaputt",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "entzwei is an ADJ used only predicatively, here the result of schoß: the hare is shot to pieces. It has no comparison forms, so its Surface marks no inflection (de/comparability-is-lexical)."
+				"rationale": "entzwei is an ADJ used only predicatively, here the result of schoß: the hare is shot to pieces. It has no comparison forms, so its Surface marks no inflection (de/comparability-is-lexical). Knowledge (#884): kaputt is a synonym, in Duden's one list with zerbrochen; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -97,7 +173,19 @@
 		{
 			"memberSegmentIndices": [23, 25],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😩" },
+			"reading": {
+				"emojiDescription": "😩",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "O wei is one interjection of dismay written in two pieces, like oy vey. wei is no German word of its own, so the pieces are not two Heads and there is no Breakdown into Lexemes: it is one INTJ Lexeme, not a Locution. Its Canonical Form is the attested o wei, a Lemma of its own beside o weh."
 			},
@@ -128,7 +216,19 @@
 		{
 			"memberSegmentIndices": [28, 30],
 			"route": { "family": "Lexeme", "kind": "INTJ" },
-			"reading": { "emojiDescription": "😩" },
+			"reading": {
+				"emojiDescription": "😩",
+				"knowledge": {},
+				"coverage": {
+					"formulaRole": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "The second O wei repeats the first for emphasis. An exclamation mark separates the two calls, so each is its own target, and this one is the same INTJ Lexeme o wei again."
 			},

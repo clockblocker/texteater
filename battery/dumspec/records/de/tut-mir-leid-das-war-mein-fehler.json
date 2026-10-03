@@ -22,24 +22,131 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0039"],
+		"adrs": ["ADR-0022", "ADR-0034", "ADR-0038", "ADR-0039"],
 		"rules": [
 			{ "rule": "de/largest-fixed-unit", "hash": "9a404db30f2b7c82" },
 			{
 				"rule": "de/verb-owns-its-scattered-members",
 				"hash": "11bcdacfa342c436"
 			},
-			{ "rule": "de/verb-core-features", "hash": "584917189382edfe" }
+			{
+				"rule": "de/verb-core-features",
+				"hash": "584917189382edfe"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: leidtun, Lesart 2",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400735/2",
+				"supports": "Target 0 Knowledge: etwas tut jemandem leid (Bedauern), Satzbauplan Ksub, Kdat; Ksub also dass-S, Inf-S mit zu with fakultatives Korrelat es"
+			},
+			{
+				"title": "Duden: leidtun",
+				"url": "https://www.duden.de/rechtschreibung/leidtun",
+				"supports": "Target 0 Knowledge: tut leid, tat leid, hat leidgetan; sense 1 von jemandem bedauert werden; Synonyme bedauern, schade finden"
+			},
+			{
+				"title": "OpenThesaurus: leidtun",
+				"url": "https://www.openthesaurus.de/synonyme/leidtun",
+				"supports": "Target 0 Knowledge: synsets {bedauern, (jemandem) leidtun, (jemanden) dauern} and {bereuen, (jemandem) leidtun, Reue zeigen …}"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "😔" },
+			"reading": {
+				"emojiDescription": "😔",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Something"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "bedauern",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "bereuen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Tut … leid is the verb leidtun, not a routine formula (#759 Q1): leid is its separable first part (de/verb-owns-its-scattered-members), and mir is a free dative. The Reading is leidtun 'regret' (Duden sense 1), here an apology."
+				"rationale": "Tut … leid is the verb leidtun, not a routine formula (#759 Q1): leid is its separable first part (de/verb-owns-its-scattered-members), and mir is a free dative. The Reading is leidtun 'regret' (Duden sense 1), here an apology. Knowledge (#884): bedauern is a synonym, since its converse frame is valency, not meaning; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -85,7 +192,10 @@
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "👈" },
+			"reading": {
+				"emojiDescription": "👈",
+				"knowledge": {}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "mir", "orthography": "Standard" }],

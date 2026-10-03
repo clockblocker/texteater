@@ -17,7 +17,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036"],
 		"rules": [
 			{
 				"rule": "de/canonical-form-is-the-headword",
@@ -31,15 +31,61 @@
 			{
 				"rule": "de/attributive-adjective-stands-alone",
 				"hash": "dc0d3ef97ace5bc0"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/participle-source-verb-and-meaning",
+				"hash": "a97545caefc4a184"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: reisen",
+				"url": "https://www.duden.de/rechtschreibung/reisen",
+				"supports": "Target 0 Knowledge: reisend is the Partizip I of reisen; sense a eine Reise machen paraphrases it in the progressive (who is travelling). No relation listed for reisend (Duden, DWDS, OpenThesaurus)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🧳" },
+			"reading": {
+				"emojiDescription": "🧳",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "reisen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Reisende is an attributive participle modifying Händler with nominative masculine singular agreement, so it is the ADJ reisend with Participle Source reisen (ADR 0036). Without an overt noun, Der Reisende is a substantivized NOUN."
 			},

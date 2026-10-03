@@ -15,7 +15,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
+		"adrs": ["ADR-0034", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/auxiliary-joins-the-verb-it-serves",
@@ -26,15 +26,94 @@
 				"rule": "de/verbal-surface-is-whole",
 				"hash": "ab79bbe68ce12d4c"
 			},
-			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" }
+			{
+				"rule": "de/copula-stays-apart",
+				"hash": "abeb2e5948f88fe7"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "E-VALBU: sein, Lesart 7",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400885/7",
+				"supports": "Target 0 Knowledge: jemand/etwas ist so, Satzbauplan Ksub, Kprd; Ksub also dass-S, Inf-S mit zu, ob-S, w-S with fakultatives Korrelat es; war"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 6],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Optional"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Predicative",
+									"of": "Subject",
+									"marker": "None"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "wäre … gewesen is the Konjunktiv II perfect of copular sein. wäre is its auxiliary and never a target alone, and schön is the ADJ predicate outside it."
 			},

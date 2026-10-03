@@ -21,7 +21,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036"],
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
@@ -31,15 +31,61 @@
 			{
 				"rule": "de/attributive-adjective-stands-alone",
 				"hash": "dc0d3ef97ace5bc0"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/participle-source-verb-and-meaning",
+				"hash": "a97545caefc4a184"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: schreiben",
+				"url": "https://www.duden.de/rechtschreibung/schreiben",
+				"supports": "Target 0 Knowledge: geschrieben is the Partizip of schreiben; sense 2b schriftlich formulieren, verfassen paraphrases it in the passive (has been written). No relation listed for geschrieben (Duden, DWDS, OpenThesaurus)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "✍" },
+			"reading": {
+				"emojiDescription": "✍",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "schreiben",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Geschriebene is an attributive participle modifying Brief with nominative masculine singular agreement, so it is the ADJ geschrieben with Participle Source schreiben (ADR 0036)."
 			},

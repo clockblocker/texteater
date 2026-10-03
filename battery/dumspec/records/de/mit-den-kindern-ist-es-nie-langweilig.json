@@ -21,19 +21,89 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0040"],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" }
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Kind",
+				"url": "https://www.duden.de/rechtschreibung/Kind",
+				"supports": "Target 0 Knowledge: Plural die Kinder; sense 2 Mensch, der sich noch im Lebensabschnitt der Kindheit befindet"
+			},
+			{
+				"title": "Duden Synonyme: Kind",
+				"url": "https://www.duden.de/synonyme/Kind",
+				"supports": "Target 0 Knowledge: the child group Kleiner, Kleine, Knirps, Knopf, Bengel, Fratz, Blag, Balg, … Göre, apart from the baby and offspring groups"
+			},
+			{
+				"title": "OpenThesaurus: Kind",
+				"url": "https://www.openthesaurus.de/synonyme/Kind",
+				"supports": "Target 0 Knowledge: synset Kind, Balg [ugs.], Heranwachsender, Nachwuchs, Sprössling, Kid [ugs.] …; Knirps and Gör(e) also sit in its boy and girl Unterbegriff groups; its Oberbegriffe Mensch and Person are catch-alls"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [2, 4],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "🧒" },
+			"reading": {
+				"emojiDescription": "🧒",
+				"knowledge": {
+					"plural": ["Kinder"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Kid",
+								"coreFeatures": {
+									"gender": "Neut"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Balg",
+								"coreFeatures": {
+									"gender": "Masc"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "Kindern is a dative plural noun with plural -n; the surface features carry both case and number."
+				"rationale": "Kindern is a dative plural noun with plural -n; the surface features carry both case and number. Knowledge (#884): the Reading is a child by age; Knirps stays off as an OpenThesaurus Unterbegriff, Sprössling as the offspring sense, Erwachsene as only a definition's negation; decided by agents under the user's delegation. Open for the user: the judges split on nearSynonym Göre, drafted without it."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

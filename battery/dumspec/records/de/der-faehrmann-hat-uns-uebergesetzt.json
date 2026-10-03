@@ -17,7 +17,7 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0022", "ADR-0026"],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0034", "ADR-0038"],
 		"rules": [
 			{
 				"rule": "de/verb-owns-its-scattered-members",
@@ -33,17 +33,101 @@
 				"hash": "17cec6bff2108a22"
 			},
 			{ "rule": "de/verbal-participle", "hash": "8783a18791f95718" },
-			{ "rule": "de/verbal-surface-is-whole", "hash": "ab79bbe68ce12d4c" }
+			{
+				"rule": "de/verbal-surface-is-whole",
+				"hash": "ab79bbe68ce12d4c"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: übersetzen",
+				"url": "https://www.dwds.de/wb/%C3%BCbersetzen",
+				"supports": "Target 0 Knowledge: setzt über, setzte über; 1 ⟨jmd., etw. setzt jmdn., etw. über⟩ jmdn., etw. ans andere Ufer eines Gewässers befördern"
+			},
+			{
+				"title": "Duden: übersetzen (übergesetzt)",
+				"url": "https://www.duden.de/rechtschreibung/uebersetzen_uebergesetzt",
+				"supports": "Target 0 Knowledge: 1a von einem Ufer ans andere befördern; Synonyme ans andere Ufer fahren, hinüberfahren, überqueren. No E-VALBU entry for this verb"
+			},
+			{
+				"title": "OpenThesaurus: übersetzen",
+				"url": "https://www.openthesaurus.de/synonyme/%C3%BCbersetzen",
+				"supports": "Target 0 Knowledge: synset hinüberfahren, übersetzen [Schifffahrt]"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "⛴" },
+			"reading": {
+				"emojiDescription": "⛴",
+				"knowledge": {
+					"conjugationClass": ["Weak"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "hinüberfahren",
+								"coreFeatures": {
+									"hasSepPrefix": "hinüber",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "übergesetzt is the ferry-across verb with the separable prefix über (setzte über), not the inseparable übersetzen 'translate' (übersetzt). hat is its perfect auxiliary, so the target is the whole perfect [hat, übergesetzt], like [hat, mitgebracht]."
+				"rationale": "übergesetzt is the ferry-across verb with the separable prefix über (setzte über), not the inseparable übersetzen 'translate' (übersetzt). hat is its perfect auxiliary, so the target is the whole perfect [hat, übergesetzt], like [hat, mitgebracht]. Knowledge (#884): no direction Slot, since DWDS's frame names none and the sense already names the other bank; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

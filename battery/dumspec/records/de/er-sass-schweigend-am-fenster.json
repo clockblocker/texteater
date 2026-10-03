@@ -18,22 +18,71 @@
 	"reviewDepth": "Reading",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036"],
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
-			{ "rule": "de/adjective-stays-adj", "hash": "5bbd43bbbc51067f" }
+			{
+				"rule": "de/adjective-stays-adj",
+				"hash": "5bbd43bbbc51067f"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/participle-source-verb-and-meaning",
+				"hash": "a97545caefc4a184"
+			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: schweigen",
+				"url": "https://www.duden.de/rechtschreibung/schweigen",
+				"supports": "Target 0 Knowledge: schweigend is the Partizip I of schweigen; nicht sprechen paraphrases it in the progressive (who is keeping silent). No relation listed for schweigend (Duden, DWDS, OpenThesaurus)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🤐" },
+			"reading": {
+				"emojiDescription": "🤐",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "schweigen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "Schweigend is an adverbially used Partizip I, so it is the ADJ schweigend with Participle Source schweigen (ADR 0036)."
 			},

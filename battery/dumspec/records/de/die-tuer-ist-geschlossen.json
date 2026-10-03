@@ -41,20 +41,54 @@
 		"kind": "Authored"
 	},
 	"sources": {
-		"adrs": ["ADR-0036"],
+		"adrs": ["ADR-0034", "ADR-0036", "ADR-0038"],
 		"rules": [
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
 			},
-			{ "rule": "de/sein-perfect-or-copula", "hash": "2f0a185d7f35c1e9" }
+			{
+				"rule": "de/sein-perfect-or-copula",
+				"hash": "2f0a185d7f35c1e9"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/participle-source-verb-and-meaning",
+				"hash": "a97545caefc4a184"
+			}
 		],
 		"references": [
 			{
 				"title": "DWDS: geschlossen",
 				"url": "https://www.dwds.de/wb/geschlossen",
 				"supports": "partizipiales Adjektiv · Komparativ: geschlossener · Superlativ: am geschlossensten."
+			},
+			{
+				"title": "E-VALBU: sein, Lesart 7",
+				"url": "https://grammis.ids-mannheim.de/verbs/view/400885/7",
+				"supports": "Target 0 Knowledge: jemand/etwas ist so, Satzbauplan Ksub, Kprd; Ksub also dass-S, Inf-S mit zu, ob-S, w-S with fakultatives Korrelat es; war"
+			},
+			{
+				"title": "Duden: schließen",
+				"url": "https://www.duden.de/rechtschreibung/schlieszen",
+				"supports": "Target 1 Knowledge: geschlossen is the Partizip of schließen; sense 1a bewirken, dass etwas zu ist paraphrases it in the passive (has been closed); Tür is the plain verb's object"
+			},
+			{
+				"title": "OpenThesaurus: geschlossen",
+				"url": "https://www.openthesaurus.de/synonyme/geschlossen",
+				"supports": "Target 1 Knowledge: synset dicht, geschlossen, gesperrt, zu [ugs.], with no Gegenteil on geschlossen"
 			}
 		]
 	},
@@ -62,7 +96,65 @@
 		{
 			"memberSegmentIndices": [4],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🟰" },
+			"reading": {
+				"emojiDescription": "🟰",
+				"knowledge": {
+					"conjugationClass": ["Strong"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Either"
+								},
+								{
+									"kind": "Clause",
+									"form": "Dass",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "ZuInfinitive",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "Ob",
+									"correlate": "Optional"
+								},
+								{
+									"kind": "Clause",
+									"form": "W",
+									"correlate": "Optional"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Predicative",
+									"of": "Subject",
+									"marker": "None"
+								}
+							]
+						}
+					]
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "In a state passive, ist is the copula VERB sein, a single-member target, and geschlossen is a separate ADJ (ADR 0036)."
 			},
@@ -112,9 +204,61 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🔒" },
+			"reading": {
+				"emojiDescription": "🔒",
+				"knowledge": {
+					"participleSource": {
+						"verb": {
+							"unitKind": "Lemma",
+							"language": "de",
+							"family": "Lexeme",
+							"kind": "VERB",
+							"canonicalForm": "schließen",
+							"coreFeatures": {
+								"hasSepPrefix": null,
+								"lexicallyReflexive": null
+							}
+						},
+						"meaning": "Verbal"
+					},
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "zu",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "dicht",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "Authored",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "sein plus geschlossen is a state passive: ist is the copula VERB and geschlossen the ADJ geschlossen with Participle Source schließen (ADR 0036). Duden gives the adjective geschlossen no comparison forms, but DWDS gives geschlossener, am geschlossensten, so the Lemma is comparable and the predicative Surface marks Pos (de/comparability-is-lexical)."
+				"rationale": "sein plus geschlossen is a state passive: ist is the copula VERB and geschlossen the ADJ geschlossen with Participle Source schließen (ADR 0036). Duden gives the adjective geschlossen no comparison forms, but DWDS gives geschlossener, am geschlossensten, so the Lemma is comparable and the predicative Surface marks Pos (de/comparability-is-lexical). Knowledge (#884): no antonym, since DWDS contrasts geschlossen with offen (2), the gap sense, and no verschlossen, which Duden lists under the other geschlossen headword; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",

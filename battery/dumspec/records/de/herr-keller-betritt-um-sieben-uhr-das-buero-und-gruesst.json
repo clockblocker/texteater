@@ -57,15 +57,44 @@
 			{
 				"rule": "de/canonical-form-is-the-headword",
 				"hash": "43184aac9186aceb"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
+			},
+			{
+				"rule": "de/formula-role-is-narrow",
+				"hash": "68e794801a922563"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "DWDS: guten Morgen",
+				"url": "https://www.dwds.de/wb/guten%20Morgen",
+				"supports": "Target 0 Knowledge: höfliche Formel zur Begrüßung am Morgen und Vormittag; siehe auch guten Abend, gute Nacht, guten Tag (no relation)"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [26],
 			"route": { "family": "Locution", "kind": "INTJ" },
-			"reading": { "emojiDescription": "👋" },
+			"reading": {
+				"emojiDescription": "👋",
+				"knowledge": {
+					"formulaRole": "Greeting"
+				},
+				"coverage": {
+					"locutionType": "ReviewedEmpty",
+					"formulaRole": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
 				"rationale": "grüßt and the early hour make this the greeting, not the ADV morgen, tomorrow. Leaving out guten replaces no word, and speakers still hear the greeting (Duden: [guten] Morgen!), so Morgen attests guten Morgen, Partial."
 			},

@@ -36,7 +36,7 @@
 		"year": 1845
 	},
 	"sources": {
-		"adrs": ["ADR-0035", "ADR-0042"],
+		"adrs": ["ADR-0034", "ADR-0035", "ADR-0038", "ADR-0039", "ADR-0042"],
 		"rules": [
 			{ "rule": "de/noun-owns-its-article", "hash": "c2b1f74a61545177" },
 			{
@@ -64,15 +64,151 @@
 			{
 				"rule": "de/comparability-is-lexical",
 				"hash": "b72c043c004f9dc9"
+			},
+			{
+				"rule": "de/valency-frame-follows-e-valbu",
+				"hash": "d71c5846b57b2c24"
+			},
+			{
+				"rule": "de/conjugation-class-from-praeteritum",
+				"hash": "c9973355dfb7314c"
+			},
+			{
+				"rule": "de/relations-need-a-dictionary",
+				"hash": "3d9e1bc7b0022207"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: Peitsche",
+				"url": "https://www.duden.de/rechtschreibung/Peitsche",
+				"supports": "Target 0 Knowledge: Plural die Peitschen"
+			},
+			{
+				"title": "DWDS: Geißel",
+				"url": "https://www.dwds.de/wb/Gei%C3%9Fel",
+				"supports": "Target 0 Knowledge: Geißel 2 Synonym zu Peitsche"
+			},
+			{
+				"title": "OpenThesaurus: Peitsche",
+				"url": "https://www.openthesaurus.de/synonyme/Peitsche",
+				"supports": "Target 0 Knowledge: synset Geißel, Gerte, Peitsche, Reitgerte, Rute; no Oberbegriff"
+			},
+			{
+				"title": "Duden: Gerte",
+				"url": "https://www.duden.de/rechtschreibung/Gerte",
+				"supports": "Target 0 Knowledge: dünner, sehr biegsamer Stock (no lash), so Gerte and Rute are near-synonyms"
+			},
+			{
+				"title": "Duden: mitbringen",
+				"url": "https://www.duden.de/rechtschreibung/mitbringen",
+				"supports": "Target 1 Knowledge: brachte mit; sense a (mit sich tragend) an einen bestimmten Ort bringen: den Kindern etwas mitbringen, Gäste mitbringen"
+			},
+			{
+				"title": "DWDS: mitbringen",
+				"url": "https://www.dwds.de/wb/mitbringen",
+				"supports": "Target 1 Knowledge: 1 ⟨etw., jmdn. mitbringen⟩ mit sich irgendwohin nehmen; bringt mit, brachte mit"
+			},
+			{
+				"title": "OpenThesaurus: mitbringen",
+				"url": "https://www.openthesaurus.de/synonyme/mitbringen",
+				"supports": "Target 1 Knowledge: synset bringen, herbeibringen, herbeischaffen, herbringen, herschaffen, mitbringen"
+			},
+			{
+				"title": "Duden: und",
+				"url": "https://www.duden.de/rechtschreibung/und",
+				"supports": "Target 3 Knowledge: Synonyme sowie, wie [auch]; (Kaufmannssprache) plus"
+			},
+			{
+				"title": "OpenThesaurus: und",
+				"url": "https://www.openthesaurus.de/synonyme/und",
+				"supports": "Target 3 Knowledge: synset sowie, sowohl … als auch, und, plus …; Gegenteil oder on und itself (weder … noch sits on sowohl … als auch)"
+			},
+			{
+				"title": "Duden: Acht (Fürsorge)",
+				"url": "https://www.duden.de/rechtschreibung/Acht_Fuersorge",
+				"supports": "Target 4 Knowledge: etwas in Acht nehmen (etwas vorsichtig, sorgsam behandeln); Acht veraltet 'Aufmerksamkeit'"
+			},
+			{
+				"title": "DWDS: Acht",
+				"url": "https://www.dwds.de/wb/Acht",
+				"supports": "Target 4 Knowledge: Acht² 5 ⟨etw. in Acht nehmen⟩ auf etw. achten, mit etw. sorgfältig, vorsichtig umgehen. No relation listed for in Acht nehmen (Duden, DWDS, OpenThesaurus)"
+			},
+			{
+				"title": "OpenThesaurus: sorglich",
+				"url": "https://www.openthesaurus.de/synonyme/sorglich",
+				"supports": "Target 6 Knowledge: synset behutsam, mit Sorgfalt, sorgfältig, sorgsam, vorsichtig, sorglich [geh.]; its Gegenteil sorglos sits on sorgsam, not sorglich"
+			},
+			{
+				"title": "DWDS: sorglich",
+				"url": "https://www.dwds.de/wb/sorglich",
+				"supports": "Target 6 Knowledge: 2 fürsorglich, sorgsam; Adjektiv from Sorge, not a participle"
+			},
+			{
+				"title": "OpenThesaurus: sehr",
+				"url": "https://www.openthesaurus.de/synonyme/sehr",
+				"supports": "Target 7 Knowledge: synset sehr (Gradadverb vor Adjektiv oder Adverb), äußerst, besonders, überaus …; its Gegenteil ein wenig sits on stark, not sehr"
+			}
+		]
 	},
 	"targets": [
 		{
 			"memberSegmentIndices": [0, 2],
 			"route": { "family": "Lexeme", "kind": "NOUN" },
-			"reading": { "emojiDescription": "➰" },
+			"reading": {
+				"emojiDescription": "➰",
+				"knowledge": {
+					"plural": ["Peitschen"],
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Geißel",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						],
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Gerte",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "NOUN",
+								"canonicalForm": "Rute",
+								"coreFeatures": {
+									"gender": "Fem"
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"plural": "Authored",
+					"valency": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty",
+						"holonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [
@@ -104,14 +240,91 @@
 					},
 					"surfaceFeatures": null
 				}
+			},
+			"notes": {
+				"rationale": "Knowledge (#884): Gerte and Rute are near-synonyms, sticks without a lash; Knute, Karbatsche and Kantschu are kinds of whip and stay off; decided by agents under the user's delegation."
 			}
 		},
 		{
 			"memberSegmentIndices": [4, 8],
 			"route": { "family": "Lexeme", "kind": "VERB" },
-			"reading": { "emojiDescription": "🎒" },
+			"reading": {
+				"emojiDescription": "🎒",
+				"knowledge": {
+					"conjugationClass": ["Mixed"],
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Either"
+								}
+							]
+						},
+						{
+							"status": "Optional",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Dat",
+									"referent": "Someone"
+								}
+							]
+						}
+					],
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "bringen",
+								"coreFeatures": {
+									"hasSepPrefix": null,
+									"lexicallyReflexive": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "VERB",
+								"canonicalForm": "herbringen",
+								"coreFeatures": {
+									"hasSepPrefix": "her",
+									"lexicallyReflexive": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"conjugationClass": "Authored",
+					"valency": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty",
+						"hypernym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "hat is the perfect auxiliary of mitbringen, so hat and mitgebracht are one VERB target (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle). The Surface records the whole perfect, with tense from the finite hat (de/verbal-surface-is-whole)."
+				"rationale": "hat is the perfect auxiliary of mitbringen, so hat and mitgebracht are one VERB target (de/auxiliary-joins-the-verb-it-serves, de/verbal-participle). The Surface records the whole perfect, with tense from the finite hat (de/verbal-surface-is-whole). Knowledge (#884): the Optional Dat comes from Duden's single sense a (den Kindern etwas mitbringen), and no direction Slot, since no dictionary frames one; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -157,7 +370,10 @@
 		{
 			"memberSegmentIndices": [6],
 			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "👈" },
+			"reading": {
+				"emojiDescription": "👈",
+				"knowledge": {}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "er", "orthography": "Standard" }],
@@ -192,7 +408,48 @@
 		{
 			"memberSegmentIndices": [10],
 			"route": { "family": "Lexeme", "kind": "CCONJ" },
-			"reading": { "emojiDescription": "➕" },
+			"reading": {
+				"emojiDescription": "➕",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "CCONJ",
+								"canonicalForm": "sowie",
+								"coreFeatures": {}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "CCONJ",
+								"canonicalForm": "plus",
+								"coreFeatures": {}
+							}
+						],
+						"antonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "CCONJ",
+								"canonicalForm": "oder",
+								"coreFeatures": {}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"semanticRelations": {
+						"synonym": "Authored",
+						"antonym": "Authored",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"attestation": {
 				"unitKind": "Attestation",
 				"members": [{ "attested": "und", "orthography": "Standard" }],
@@ -212,14 +469,54 @@
 					},
 					"surfaceFeatures": null
 				}
+			},
+			"notes": {
+				"rationale": "Knowledge (#884): antonym oder only, since OpenThesaurus puts its Gegenteil weder … noch on sowohl … als auch; decided by agents under the user's delegation."
 			}
 		},
 		{
 			"memberSegmentIndices": [12, 20, 22],
 			"route": { "family": "Locution", "kind": "VERB" },
-			"reading": { "emojiDescription": "🛡" },
+			"reading": {
+				"emojiDescription": "🛡",
+				"knowledge": {
+					"valency": [
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Nom",
+									"referent": "Someone"
+								}
+							]
+						},
+						{
+							"status": "Required",
+							"complements": [
+								{
+									"kind": "Case",
+									"governedCase": "Acc",
+									"referent": "Something"
+								}
+							]
+						}
+					],
+					"locutionType": "Collocation"
+				},
+				"coverage": {
+					"valency": "Authored",
+					"locutionType": "Authored",
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "nimmt … in acht is one occurrence of the Locution in Acht nehmen (take care of something): the verb and its fixed in and acht are members, and sie, sorglich and sehr stay outside. The 1845 lowercase acht is the spelling before the 1996 reform, so the Surface is a Historical Variant. Acht is not the numeral."
+				"rationale": "nimmt … in acht is one occurrence of the Locution in Acht nehmen (take care of something): the verb and its fixed in and acht are members, and sie, sorglich and sehr stay outside. The 1845 lowercase acht is the spelling before the 1996 reform, so the Surface is a Historical Variant. Acht is not the numeral. Knowledge (#884): Collocation, as de/funktionsverbgefuege-are-collocations shows with this record; the Acc is Something (etw. in Acht nehmen); no dictionary lists a relation; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -266,7 +563,10 @@
 		{
 			"memberSegmentIndices": [14],
 			"route": { "family": "Lexeme", "kind": "PRON" },
-			"reading": { "emojiDescription": "👈" },
+			"reading": {
+				"emojiDescription": "👈",
+				"knowledge": {}
+			},
 			"notes": {
 				"rationale": "Sie is the accusative feminine singular object pronoun referring back to Peitsche, not nominative plural or polite Sie."
 			},
@@ -304,9 +604,57 @@
 		{
 			"memberSegmentIndices": [16],
 			"route": { "family": "Lexeme", "kind": "ADJ" },
-			"reading": { "emojiDescription": "🤲" },
+			"reading": {
+				"emojiDescription": "🤲",
+				"knowledge": {
+					"semanticRelations": {
+						"synonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "sorgsam",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "behutsam",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADJ",
+								"canonicalForm": "vorsichtig",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"valency": "ReviewedEmpty",
+					"participleSource": "ReviewedEmpty",
+					"semanticRelations": {
+						"synonym": "Authored",
+						"nearSynonym": "ReviewedEmpty",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "sorglich (Duden: Adjektiv, veraltend, 'sorgsam') is an adverbially used adjective, so it stays ADJ (de/adjective-stays-adj). Duden gives sorglicher and am sorglichsten, so it is comparable and marks Pos (de/comparability-is-lexical)."
+				"rationale": "sorglich (Duden: Adjektiv, veraltend, 'sorgsam') is an adverbially used adjective, so it stays ADJ (de/adjective-stays-adj). Duden gives sorglicher and am sorglichsten, so it is comparable and marks Pos (de/comparability-is-lexical). Knowledge (#884): no antonym, since OpenThesaurus puts its Gegenteil sorglos on sorgsam, not sorglich; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -344,9 +692,55 @@
 		{
 			"memberSegmentIndices": [18],
 			"route": { "family": "Lexeme", "kind": "ADV" },
-			"reading": { "emojiDescription": "📈" },
+			"reading": {
+				"emojiDescription": "📈",
+				"knowledge": {
+					"semanticRelations": {
+						"nearSynonym": [
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "äußerst",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "überaus",
+								"coreFeatures": {
+									"comparable": null
+								}
+							},
+							{
+								"unitKind": "Lemma",
+								"language": "de",
+								"family": "Lexeme",
+								"kind": "ADV",
+								"canonicalForm": "besonders",
+								"coreFeatures": {
+									"comparable": null
+								}
+							}
+						]
+					}
+				},
+				"coverage": {
+					"semanticRelations": {
+						"synonym": "ReviewedEmpty",
+						"nearSynonym": "Authored",
+						"antonym": "ReviewedEmpty",
+						"nearAntonym": "ReviewedEmpty"
+					}
+				}
+			},
 			"notes": {
-				"rationale": "sehr is an intensifying ADV. Duden gives the suppletive mehr and am meisten, so it is comparable and marks Pos (de/comparability-is-lexical)."
+				"rationale": "sehr is an intensifying ADV. Duden gives the suppletive mehr and am meisten, so it is comparable and marks Pos (de/comparability-is-lexical). Knowledge (#884): no antonym, since OpenThesaurus puts its Gegenteil ein wenig on stark, not sehr; decided by agents under the user's delegation."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
