@@ -1,6 +1,11 @@
 import type { Prettify } from "common-utils";
 import { type Infer, v } from "convex/values";
 import type * as Dumling from "dumling/types";
+import {
+	formulaRoleValues,
+	locutionTypeValues,
+	sayingTypeValues,
+} from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import type { Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
@@ -214,6 +219,22 @@ const readingKnowledgeValidator = v.object({
 			meaning: participleMeaningValidator,
 		}),
 	),
+	// The per-Reading aspects of ADR 0038 and 0039, which Knowledge
+	// production writes (#887); Dumrel's parse has already checked them.
+	plural: v.optional(
+		v.union(v.array(v.string()), literalUnion(["NoPlural", "PluralOnly"])),
+	),
+	conjugationClass: v.optional(
+		v.array(literalUnion(["Strong", "Weak", "Mixed"])),
+	),
+	locutionType: v.optional(literalUnion(locutionTypeValues)),
+	sayingType: v.optional(
+		v.object({
+			type: literalUnion(sayingTypeValues),
+			attribution: v.optional(v.string()),
+		}),
+	),
+	formulaRole: v.optional(literalUnion(formulaRoleValues)),
 	semanticRelations: v.optional(
 		v.union(
 			v.object({

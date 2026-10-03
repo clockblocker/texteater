@@ -394,6 +394,62 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 	);
 });
 
+test("the Reading Note carries the per-Reading aspects Knowledge production writes", async () => {
+	const t = createTestConvex();
+	const cases = [
+		{
+			reading: {
+				unitKind: "Reading",
+				lemma: anrufenLemma,
+				emojiDescription: "📞",
+			},
+			knowledge: { conjugationClass: ["Strong"] },
+		},
+		{
+			reading: {
+				unitKind: "Reading",
+				lemma: bankLemma,
+				emojiDescription: "🏦",
+			},
+			knowledge: { plural: ["Banken"] },
+		},
+		{
+			reading: {
+				unitKind: "Reading",
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "INTJ",
+					canonicalForm: "danke",
+					coreFeatures: { partType: null },
+				},
+				emojiDescription: "🙏",
+			},
+			knowledge: { formulaRole: "Thanks" },
+		},
+	] as const;
+	for (const { reading: value, knowledge } of cases) {
+		const reading = await insertReading(t, value);
+		await t.run(async (ctx) => {
+			await ctx.db.insert("accumulatedKnowledge", {
+				ownerReadingKey: reading.readingKey,
+				knowledge,
+				status: "Partial",
+				updatedAt: 1,
+			});
+		});
+
+		const note = await t.query(api.readingNotes.get, {
+			readingId: reading.readingId,
+			visitorId: "visitor-1",
+		});
+
+		if (!note) throw new Error("Expected a Reading Note.");
+		expect(note.knowledge).toEqual(knowledge);
+	}
+});
+
 test("the Reading Note carries Slot alternatives and every German complement kind", async () => {
 	const t = createTestConvex();
 	const verb = (canonicalForm: string, hasSepPrefix: string | null = null) =>
