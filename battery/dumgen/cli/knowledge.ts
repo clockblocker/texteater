@@ -1,7 +1,9 @@
 /**
- * knowledge.produce's evaluation sets (#887):
+ * knowledge.produce's evaluation sets and round subsets (#887):
  *
  *   bun cli/knowledge.ts freeze
+ *   bun cli/knowledge.ts subset <baselineRunId> --out <file> [--seed N] [--guard N]
+ *   bun cli/knowledge.ts compare <subsetFile> <runId>
  *
  * Freezes dev (the Readings of Draft records with a Reading layer),
  * held-out (the Readings of records reviewed to Knowledge depth) and the
@@ -9,25 +11,126 @@
  * `.runs/knowledge/sets`, with the git commit and a hash of the cases; a
  * refreeze keeps the set it replaces under its hash. Runs, their price
  * and their re-scores go through `bun run evaluate --experiment
- * knowledge/de:<set>`.
+ * knowledge/de:<set>`, `--gold-only` keeping the cases with gold and
+ * `--subset <file>` a round's subset.
+ *
+ * `subset` freezes a round's subset of dev from a saved gold-only baseline
+ * run (`subset.ts`): its missed cases and a seeded guard. `compare` reads a
+ * run on that subset against its baseline on the same case ids.
  */
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { freezeKnowledgeSets } from "../src/evaluation/knowledge/cases.js";
-import { defaultKnowledgeRoot } from "../src/evaluation/knowledge/experiment.js";
+import type { OperationEvaluationRun } from "promptsmith/evaluation";
+import { loadRun } from "promptsmith/storage";
+import { defaultRunOutputDirectory } from "../src/development.js";
+import {
+	freezeKnowledgeSets,
+	loadKnowledgeSet,
+} from "../src/evaluation/knowledge/cases.js";
+import {
+	defaultKnowledgeRoot,
+	knowledgeAttempts,
+} from "../src/evaluation/knowledge/experiment.js";
+import {
+	compareKnowledgeRuns,
+	knowledgeSubsetCaseIds,
+	loadKnowledgeSubset,
+	saveKnowledgeSubset,
+	selectKnowledgeSubset,
+} from "../src/evaluation/knowledge/subset.js";
 
 const repository = resolve(import.meta.dir, "../../..");
 
 export async function runKnowledgeCli(
 	argv: readonly string[],
-	options: { readonly root?: string } = {},
+	options: { readonly root?: string; readonly runDirectory?: string } = {},
 ) {
-	const { positionals } = parseArgs({
+	const { positionals, values } = parseArgs({
 		args: [...argv],
 		allowPositionals: true,
+		options: {
+			seed: { type: "string" },
+			guard: { type: "string" },
+			out: { type: "string" },
+		},
 	});
-	if (positionals[0] !== "freeze")
-		throw Error("Use `bun cli/knowledge.ts freeze`");
+	const [command, first, second] = positionals;
+	const runDirectory = options.runDirectory ?? defaultRunOutputDirectory;
+	const operationRun = async (runId: string) => {
+		const loaded = await loadRun(runDirectory, runId);
+		if (loaded.manifest.version !== 2)
+			throw Error("The run is an operation run (manifest version 2)");
+		return loaded as OperationEvaluationRun;
+	};
+	if (command === "subset") {
+		if (!first || !values.out)
+			throw Error(
+				"Use `bun cli/knowledge.ts subset <baselineRunId> --out <file>`",
+			);
+		const run = await operationRun(first);
+		const settings = run.manifest.configurations.judgment.settings as {
+			set?: string;
+			setHash?: string;
+			subset?: unknown;
+		};
+		if (settings.set !== "dev" || !settings.setHash || settings.subset)
+			throw Error("The subset is read from a whole dev run");
+		const set = await loadKnowledgeSet(
+			options.root ?? defaultKnowledgeRoot,
+			"dev",
+		);
+		if (set.hash !== settings.setHash)
+			throw Error(
+				`The baseline ran on set ${settings.setHash}, not the frozen ${set.hash}`,
+			);
+		const subset = selectKnowledgeSubset({
+			baselineRunId: run.manifest.runId,
+			experimentId: run.manifest.experimentId,
+			setHash: settings.setHash,
+			attempts: knowledgeAttempts(run),
+			seed: Number(values.seed ?? 887),
+			guardSize: Number(values.guard ?? 60),
+		});
+		await saveKnowledgeSubset(resolve(values.out), subset);
+		const ids = knowledgeSubsetCaseIds(subset);
+		const aspects: Record<string, number> = {};
+		for (const missed of Object.values(subset.missed))
+			for (const aspect of missed)
+				aspects[aspect] = (aspects[aspect] ?? 0) + 1;
+		const summary = {
+			baselineRunId: subset.baselineRunId,
+			seed: subset.seed,
+			missed: ids.missed.length,
+			guard: ids.guard.length,
+			missedByAspect: aspects,
+			guardByRoute: Object.fromEntries(
+				Object.entries(subset.guard).map(([route, caseIds]) => [
+					route,
+					caseIds.length,
+				]),
+			),
+		};
+		console.log(JSON.stringify(summary, null, 2));
+		return summary;
+	}
+	if (command === "compare") {
+		if (!first || !second)
+			throw Error(
+				"Use `bun cli/knowledge.ts compare <subsetFile> <runId>`",
+			);
+		const subset = loadKnowledgeSubset(resolve(first));
+		const comparison = compareKnowledgeRuns(
+			subset,
+			knowledgeAttempts(await operationRun(subset.baselineRunId)),
+			knowledgeAttempts(await operationRun(second)),
+		);
+		console.log(JSON.stringify(comparison, null, 2));
+		return comparison;
+	}
+	if (command !== "freeze")
+		throw Error(
+			"Use `bun cli/knowledge.ts freeze`, `subset <baselineRunId> --out <file>` or `compare <subsetFile> <runId>`",
+		);
 	const sets = await freezeKnowledgeSets(
 		options.root ?? defaultKnowledgeRoot,
 		repository,

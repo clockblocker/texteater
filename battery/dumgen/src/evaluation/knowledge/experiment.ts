@@ -17,7 +17,7 @@
  * under the round's caps, Luna batched or not, and runs from it.
  */
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as Effect from "effect/Effect";
 import {
@@ -65,6 +65,10 @@ import {
 	type ScoredKnowledge,
 	spotCheckReport,
 } from "./scoring.js";
+import { knowledgeSubsetCaseIds, loadKnowledgeSubset } from "./subset.js";
+
+/** The package root a subset's path is relative to. */
+const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
 export const defaultKnowledgeRoot = fileURLToPath(
 	new URL("../../../.runs/knowledge/", import.meta.url),
@@ -165,6 +169,10 @@ export type KnowledgeEvaluateArgs = {
 	readonly limit?: number;
 	/** Fewer repetitions than three, for a cheaper round. */
 	readonly repetitions?: number;
+	/** Only the cases with gold Knowledge: dev's drafted Readings (#887 ruling 1). */
+	readonly goldOnly?: boolean;
+	/** A frozen subset's file (`subset.ts`): only its cases run. */
+	readonly subset?: string;
 };
 
 export type KnowledgeEvaluated = {
@@ -354,8 +362,23 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 				throw Error(
 					`repetitions must be 1 to ${knowledgeRepetitions}, not ${repetitions}`,
 				);
+			const subset = args.subset
+				? loadKnowledgeSubset(resolve(packageRoot, args.subset))
+				: undefined;
+			if (subset && subset.setHash !== set.hash)
+				throw Error(
+					`The subset ${args.subset} was drawn from ${setName}@${subset.setHash}, not the frozen ${set.hash}`,
+				);
+			const subsetIds = subset
+				? new Set(Object.values(knowledgeSubsetCaseIds(subset)).flat())
+				: undefined;
 			// tf-demo attaches an authored Reading's Knowledge; nothing to ask.
-			const runnable = set.cases.filter(({ authored }) => !authored);
+			const runnable = set.cases.filter(
+				(goldCase) =>
+					!goldCase.authored &&
+					(!args.goldOnly || goldCase.gold !== undefined) &&
+					(!subsetIds || subsetIds.has(goldCase.id)),
+			);
 			const cases = runnable.slice(0, args.limit ?? runnable.length);
 			const concurrency = args.concurrency ?? 12;
 			const directory = join(root, "cache");
@@ -524,6 +547,18 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 								set: set.name,
 								setHash: set.hash,
 								scope,
+								...(args.goldOnly ? { goldOnly: true } : {}),
+								...(subset && args.subset
+									? {
+											subset: {
+												path: args.subset,
+												baselineRunId:
+													subset.baselineRunId,
+												seed: subset.seed,
+												guardSize: subset.guardSize,
+											},
+										}
+									: {}),
 								...(set.slips ? { slips: set.slips } : {}),
 							}),
 						),

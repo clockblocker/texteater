@@ -20,6 +20,7 @@
  *       [--luna-batch] [--luna-prompt-cache] [--usd-budget <dollars>]
  *       [--subset evidence/resolve-reading/round-2-subset.json] [--repetitions 1]
  *   bun run evaluate --experiment knowledge/de:dev --estimate [--whole-round]
+ *       [--gold-only] [--subset evidence/knowledge/round-2-subset.json]
  *   bun run evaluate --experiment knowledge/de:spot-check --revision <rev>
  *       --budget <jev input tokens> --luna-budget <Luna input tokens>
  *       --luna-output-budget <Luna output tokens> [--luna-batch]
@@ -139,6 +140,7 @@ export async function runEvaluationCli(
 			"luna-prompt-cache": { type: "boolean" },
 			"usd-budget": { type: "string" },
 			"whole-round": { type: "boolean" },
+			"gold-only": { type: "boolean" },
 		},
 	});
 	const write =
@@ -254,6 +256,7 @@ export async function runEvaluationCli(
 			...(dependencies.split ? { split: dependencies.split } : {}),
 			...(values.limit ? { limit: Number(values.limit) } : {}),
 			...(values.subset ? { grammarSubset: values.subset } : {}),
+			...(values["gold-only"] ? { goldOnly: true } : {}),
 			...(values.repetitions
 				? { repetitions: Number(values.repetitions) }
 				: {}),

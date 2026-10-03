@@ -195,8 +195,10 @@ export type EvaluateArgs = {
 	readonly grammarCaps?: GrammarCaps;
 	/** resolve.grammar: only the first this many cases, for a smoke run. */
 	readonly limit?: number;
-	/** resolve.grammar and resolve.reading: a frozen subset's file; only its cases run. */
+	/** resolve.grammar, resolve.reading and knowledge.produce: a frozen subset's file; only its cases run. */
 	readonly grammarSubset?: string;
+	/** knowledge.produce: only the cases with gold Knowledge. */
+	readonly goldOnly?: boolean;
 	/** resolve.grammar and resolve.reading: attempts per case, 1 to 3. */
 	readonly repetitions?: number;
 	/** resolve.grammar's frozen sets and cache. */
@@ -709,6 +711,8 @@ function knowledgeEntry(set: "dev" | "heldout" | "spot-check"): Experiment {
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 				...(args.knowledgeRoot ? { root: args.knowledgeRoot } : {}),
 				...(args.limit ? { limit: args.limit } : {}),
+				...(args.goldOnly ? { goldOnly: true } : {}),
+				...(args.grammarSubset ? { subset: args.grammarSubset } : {}),
 				...(args.repetitions ? { repetitions: args.repetitions } : {}),
 				...(args.grammarCaps ? { caps: args.grammarCaps } : {}),
 			});

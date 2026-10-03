@@ -27,6 +27,11 @@ import {
 	shadowKey,
 	spotCheckReport,
 } from "../../src/evaluation/knowledge/scoring.js";
+import {
+	knowledgeSubsetCaseIds,
+	saveKnowledgeSubset,
+	selectKnowledgeSubset,
+} from "../../src/evaluation/knowledge/subset.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 
@@ -449,4 +454,88 @@ test("the evaluation table lists the three Knowledge experiments", () => {
 			"knowledge/de:spot-check",
 		]),
 	);
+});
+
+test("--gold-only keeps the cases with gold, and a subset keeps its missed and guard cases (#887)", async () => {
+	const root = await mkdtemp(join(tmpdir(), "knowledge-dev-"));
+	const withGold = dev.filter(
+		({ gold, authored }) => gold !== undefined && !authored,
+	);
+	const withoutGold = dev.filter(
+		({ gold, authored }) => gold === undefined && !authored,
+	);
+	const cases = [...withGold.slice(0, 3), ...withoutGold.slice(0, 2)];
+	const set: KnowledgeSet = {
+		name: "dev",
+		createdAt: "2026-10-03T00:00:00.000Z",
+		gitHead: "test",
+		dirtyRecordFiles: 0,
+		hash: "testdev000000000",
+		cases,
+	};
+	await mkdir(join(root, "sets"), { recursive: true });
+	await writeFile(knowledgeSetPath(root, "dev"), stableJson(set));
+	const experiment = knowledgeExperiment("dev");
+	const requests = async (options: { goldOnly?: boolean; subset?: string }) =>
+		(
+			await experiment.evaluate({
+				experimentId: experiment.id,
+				sourceRevision: "test",
+				root,
+				estimate: true,
+				repetitions: 1,
+				...options,
+			})
+		).price?.luna.requests ?? 0;
+	const all = await requests({});
+	const goldOnly = await requests({ goldOnly: true });
+	expect(goldOnly).toBeGreaterThan(0);
+	expect(goldOnly).toBeLessThan(all);
+
+	const [first, second] = withGold;
+	if (!first || !second) throw Error("dev has too little gold");
+	const subset = selectKnowledgeSubset({
+		baselineRunId: "baseline",
+		experimentId: experiment.id,
+		setHash: set.hash,
+		seed: 887,
+		guardSize: 1,
+		attempts: [
+			{
+				caseId: first.id,
+				repetition: 0,
+				route: "Lexeme/VERB",
+				lemma: "a",
+				emojiDescription: "",
+				sentence: "",
+				evaluation: {
+					verdicts: [
+						{ aspect: "valency", produced: true, correct: false },
+					],
+				},
+			},
+			{
+				caseId: second.id,
+				repetition: 0,
+				route: "Lexeme/VERB",
+				lemma: "b",
+				emojiDescription: "",
+				sentence: "",
+				evaluation: {
+					verdicts: [
+						{ aspect: "valency", produced: true, correct: true },
+					],
+				},
+			},
+		],
+	});
+	expect(subset.missed).toEqual({ [first.id]: ["valency"] });
+	expect(knowledgeSubsetCaseIds(subset).guard).toEqual([second.id]);
+	const path = join(root, "subset.json");
+	await saveKnowledgeSubset(path, subset);
+	const subsetRequests = await requests({ subset: path });
+	expect(subsetRequests).toBeGreaterThan(0);
+	expect(subsetRequests).toBeLessThan(goldOnly);
+	await saveKnowledgeSubset(path, { ...subset, setHash: "other" });
+	await expect(requests({ subset: path })).rejects.toThrow(/drawn from/u);
 });
