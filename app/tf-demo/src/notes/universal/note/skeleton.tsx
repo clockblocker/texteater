@@ -24,6 +24,12 @@ type NoteSkeletonKind =
 	| "Attestation"
 	| "Shadow";
 type Presentation = "Card" | "Sheet";
+/** The whole Note, or its Body alone when the host already draws the Heading. */
+export type NoteSkeletonPart = "Note" | "Body";
+type SkeletonProps = {
+	presentation: Presentation;
+	part: NoteSkeletonPart;
+};
 
 /**
  * What a Note looks like while its data is still on the way. Each kind keeps
@@ -33,21 +39,24 @@ type Presentation = "Card" | "Sheet";
 export function NoteSkeletonFor({
 	kind,
 	presentation,
+	part = "Note",
 }: {
 	kind: NoteSkeletonKind;
 	presentation: Presentation;
+	part?: NoteSkeletonPart;
 }) {
+	const props = { presentation, part };
 	switch (kind) {
 		case "Reading":
-			return <ReadingNoteSkeleton presentation={presentation} />;
+			return <ReadingNoteSkeleton {...props} />;
 		case "Lemma":
-			return <LemmaNoteSkeleton presentation={presentation} />;
+			return <LemmaNoteSkeleton {...props} />;
 		case "Surface":
-			return <SurfaceNoteSkeleton presentation={presentation} />;
+			return <SurfaceNoteSkeleton {...props} />;
 		case "Attestation":
-			return <AttestationNoteSkeleton presentation={presentation} />;
+			return <AttestationNoteSkeleton {...props} />;
 		case "Shadow":
-			return <ShadowNoteSkeleton presentation={presentation} />;
+			return <ShadowNoteSkeleton {...props} />;
 	}
 }
 
@@ -60,17 +69,19 @@ function Hop({ hop }: { hop: RouteHop }) {
 	return <RouteMark hop={hop} className="text-ink-faint" />;
 }
 
-function ReadingNoteSkeleton({ presentation }: { presentation: Presentation }) {
+function ReadingNoteSkeleton({ presentation, part }: SkeletonProps) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
 			label="Loading Reading Note"
 		>
-			<NoteTitleSkeleton>
-				<NoteBone className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
-				<NoteBone tone="headword" className="h-[0.8em] w-28" />
-			</NoteTitleSkeleton>
+			{part === "Note" ? (
+				<NoteTitleSkeleton>
+					<NoteBone className="me-[0.35em] h-[0.9em] w-[1em] rounded-[0.3em]" />
+					<NoteBone tone="headword" className="h-[0.8em] w-28" />
+				</NoteTitleSkeleton>
+			) : null}
 			<NoteSection label="">
 				<NoteLinesSkeleton
 					className="px-2"
@@ -109,14 +120,14 @@ function ReadingNoteSkeleton({ presentation }: { presentation: Presentation }) {
 	);
 }
 
-function LemmaNoteSkeleton({ presentation }: { presentation: Presentation }) {
+function LemmaNoteSkeleton({ presentation, part }: SkeletonProps) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
 			label="Loading Lemma Note"
 		>
-			<NoteTitleSkeleton width="w-24" />
+			{part === "Note" ? <NoteTitleSkeleton width="w-24" /> : null}
 			<NoteSectionSkeleton>
 				<NoteRouteRowsSkeleton
 					mark={<Hop hop="leadsTo" />}
@@ -137,14 +148,14 @@ function LemmaNoteSkeleton({ presentation }: { presentation: Presentation }) {
 	);
 }
 
-function SurfaceNoteSkeleton({ presentation }: { presentation: Presentation }) {
+function SurfaceNoteSkeleton({ presentation, part }: SkeletonProps) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
 			label="Loading Surface Note"
 		>
-			<NoteTitleSkeleton width="w-32" />
+			{part === "Note" ? <NoteTitleSkeleton width="w-32" /> : null}
 			<NoteSectionSkeleton>
 				<NoteRouteRowsSkeleton
 					mark={<Hop hop="leadsTo" />}
@@ -156,18 +167,14 @@ function SurfaceNoteSkeleton({ presentation }: { presentation: Presentation }) {
 	);
 }
 
-function AttestationNoteSkeleton({
-	presentation,
-}: {
-	presentation: Presentation;
-}) {
+function AttestationNoteSkeleton({ presentation, part }: SkeletonProps) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
 			label="Loading Attestation Note"
 		>
-			<NoteTitleSkeleton width="w-36" />
+			{part === "Note" ? <NoteTitleSkeleton width="w-36" /> : null}
 			<NoteSectionSkeleton className="compact:before:hidden">
 				<NoteQuoteSkeleton
 					widths={
@@ -190,20 +197,22 @@ function AttestationNoteSkeleton({
 	);
 }
 
-function ShadowNoteSkeleton({ presentation }: { presentation: Presentation }) {
+function ShadowNoteSkeleton({ presentation, part }: SkeletonProps) {
 	const isCard = presentation === "Card";
 	return (
 		<NoteSkeleton
 			density={densityFor(presentation)}
 			label="Loading Shadow Note"
 		>
-			<NoteTitleSkeleton className="opacity-70">
-				<LockIcon
-					aria-hidden="true"
-					className="me-2 inline size-[0.8em] align-middle text-ink-faint"
-				/>
-				<NoteBone tone="headword" className="h-[0.8em] w-24" />
-			</NoteTitleSkeleton>
+			{part === "Note" ? (
+				<NoteTitleSkeleton className="opacity-70">
+					<LockIcon
+						aria-hidden="true"
+						className="me-2 inline size-[0.8em] align-middle text-ink-faint"
+					/>
+					<NoteBone tone="headword" className="h-[0.8em] w-24" />
+				</NoteTitleSkeleton>
+			) : null}
 			<NoteSectionSkeleton>
 				<NoteRouteRowsSkeleton
 					mark={<Hop hop="reachedFrom" />}

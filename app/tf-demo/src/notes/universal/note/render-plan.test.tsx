@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 
 import type { RegisteredBlockMap } from "../../renderer-registry";
 import type { NoteData } from "./data";
-import { renderUniversalNote } from "./render";
+import { renderUniversalNoteBody, renderUniversalNoteHeading } from "./render";
 import { resolveRenderPlan } from "./render-plan";
 
 const coordinates = {
@@ -17,15 +17,16 @@ test("omits unavailable and duplicate Blocks while applying visibility", () => {
 	const registry: RegisteredBlockMap = {
 		Header: () => <p>header</p>,
 		Relations: () => <p>relations</p>,
+		Definition: () => <p>definition</p>,
 	};
 	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
-		order: ["Relations", "Missing", "Header", "Relations"] as never,
-		hidden: new Set(["Header", "Missing"] as never),
+		order: ["Relations", "Missing", "Definition", "Relations"] as never,
+		hidden: new Set(["Definition", "Missing"] as never),
 	});
 
-	expect(layout.order).toEqual(["Relations", "Header"]);
-	expect([...layout.hidden]).toEqual(["Header"]);
-	expect(plan.map(({ blockKind }) => blockKind)).toEqual(["Relations"]);
+	expect(layout.order).toEqual(["Relations", "Definition", "Header"]);
+	expect([...layout.hidden]).toEqual(["Definition"]);
+	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual(["Relations"]);
 });
 
 test("inserts newly available Blocks in their default relative order", () => {
@@ -46,9 +47,8 @@ test("inserts newly available Blocks in their default relative order", () => {
 		"Relations",
 		"Translations",
 	]);
-	expect(plan.map(({ blockKind }) => blockKind)).toEqual([
+	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual([
 		"Definition",
-		"Header",
 		"Relations",
 		"Translations",
 	]);
@@ -61,16 +61,99 @@ test("retains a hidden Block's position while excluding it from the plan", () =>
 		Definition: () => <p>definition</p>,
 	};
 	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
-		order: ["Relations", "Header", "Definition"],
+		order: ["Header", "Relations", "Definition"],
+		hidden: new Set(["Relations"]),
+	});
+
+	expect(layout.order).toEqual(["Header", "Relations", "Definition"]);
+	expect([...layout.hidden]).toEqual(["Relations"]);
+	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual(["Definition"]);
+});
+
+test("pins the Heading Block outside the stored order and visibility", () => {
+	const registry: RegisteredBlockMap = {
+		Header: () => <p>header</p>,
+		Relations: () => <p>relations</p>,
+	};
+	const { plan } = resolveRenderPlan(() => registry, coordinates, {
+		order: ["Relations", "Header"],
 		hidden: new Set(["Header"]),
 	});
 
-	expect(layout.order).toEqual(["Relations", "Header", "Definition"]);
-	expect([...layout.hidden]).toEqual(["Header"]);
-	expect(plan.map(({ blockKind }) => blockKind)).toEqual([
-		"Relations",
-		"Definition",
-	]);
+	expect(plan.heading?.blockKind).toBe("Header");
+	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual(["Relations"]);
+});
+
+test("plans no Heading for a route without a Heading Block", () => {
+	const { plan } = resolveRenderPlan(
+		() => ({ Relations: () => <p>relations</p> }),
+		coordinates,
+		{ order: ["Relations"], hidden: new Set() },
+	);
+
+	expect(plan.heading).toBeNull();
+});
+
+test("splits the Heading from a Body that keeps the Note's tags", () => {
+	const registry: RegisteredBlockMap = {
+		Header: () => <p>header</p>,
+		Relations: () => <p>relations</p>,
+	};
+	const input = {
+		noteData: readingFixture(),
+		capabilities: readingCapabilities(),
+		registryFor: () => registry,
+	};
+	const heading = renderUniversalNoteHeading(input);
+	const body = renderToStaticMarkup(
+		renderUniversalNoteBody({
+			...input,
+			layout: { order: ["Relations", "Header"], hidden: new Set() },
+		}),
+	);
+
+	expect(heading && renderToStaticMarkup(heading)).toBe("<p>header</p>");
+	expect(body).not.toContain("header");
+	expect(body).toContain("relations");
+	expect(body).toContain('data-slot="note-tags"');
+});
+
+test("composes the Heading first inside the Body", () => {
+	const registry: RegisteredBlockMap = {
+		Header: () => <p>header</p>,
+		Relations: () => <p>relations</p>,
+	};
+	const input = {
+		noteData: readingFixture(),
+		capabilities: readingCapabilities(),
+		registryFor: () => registry,
+	};
+	const markup = renderToStaticMarkup(
+		renderUniversalNoteBody({
+			...input,
+			layout: { order: ["Relations", "Header"], hidden: new Set() },
+			heading: renderUniversalNoteHeading(input),
+		}),
+	);
+
+	expect(markup).toMatch(/<article[^>]*><p>header<\/p><p>relations<\/p>/);
+});
+
+test("leaves the Heading out of a Note that cannot render", () => {
+	const input = {
+		noteData: { kind: "Mystery" } as never,
+		registryFor: () => null,
+	};
+
+	expect(renderUniversalNoteHeading(input)).toBeNull();
+	expect(
+		renderToStaticMarkup(
+			renderUniversalNoteBody({
+				...input,
+				layout: { order: [], hidden: new Set() },
+			}),
+		),
+	).toContain("Unknown Note kind: Mystery.");
 });
 
 test("isolates a failing block while preserving subsequent registered blocks", () => {
@@ -80,12 +163,16 @@ test("isolates a failing block while preserving subsequent registered blocks", (
 		},
 		Relations: () => <p>relations survive</p>,
 	};
+	const input = {
+		noteData: readingFixture(),
+		capabilities: readingCapabilities(),
+		registryFor: () => registry,
+	};
 	const markup = renderToStaticMarkup(
-		renderUniversalNote({
-			noteData: readingFixture(),
-			capabilities: readingCapabilities(),
+		renderUniversalNoteBody({
+			...input,
 			layout: { order: ["Header", "Relations"], hidden: new Set() },
-			registryFor: () => registry,
+			heading: renderUniversalNoteHeading(input),
 		}),
 	);
 

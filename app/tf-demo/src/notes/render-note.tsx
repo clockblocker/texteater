@@ -21,10 +21,13 @@ import {
 } from "./universal/note/layout";
 import {
 	defaultCapabilities,
-	renderUniversalNote,
-	renderUniversalNoteBlock,
+	renderUniversalNoteBody,
+	renderUniversalNoteHeading,
 } from "./universal/note/render";
-import { NoteSkeletonFor } from "./universal/note/skeleton";
+import {
+	NoteSkeletonFor,
+	type NoteSkeletonPart,
+} from "./universal/note/skeleton";
 
 type RenderNoteInputFor<K extends NoteKind> = {
 	readonly noteData: NoteDataFor<K>;
@@ -34,21 +37,56 @@ type RenderNoteInput = {
 	readonly [K in NoteKind]: RenderNoteInputFor<K>;
 }[NoteKind];
 
+/**
+ * A Note split where a host places it. A Card or a Cover draws the Heading
+ * Block as its lift handle; a Ground folds it shut. `renderNote` composes the
+ * two the way a host that draws no handle shows them.
+ */
+export type NoteParts = {
+	/** Null when the Note's route has no Heading Block or the Note cannot render. */
+	readonly heading: ReactElement | null;
+	/** The Note's frame holding every other Block, or what stands in for it. */
+	readonly body: ReactElement;
+};
+
+/**
+ * Hands the universal renderer a concrete layout. `part` names what a
+ * stand-in shows while the layout loads: the whole Note, or its Body when the
+ * host already draws the Heading.
+ */
 type LayoutAdapter = (
 	input: RenderNoteInput,
+	part: NoteSkeletonPart,
 	renderWithLayout: (layout: NoteBlockLayout) => ReactElement,
 ) => ReactElement;
 
 function configureRenderNote(layoutAdapter: LayoutAdapter) {
-	return function renderNote(input: RenderNoteInput): ReactElement {
-		return layoutAdapter(input, (layout) =>
-			renderUniversalNote({
-				noteData: input.noteData,
-				capabilities: input.capabilities,
-				layout,
-				registryFor: registeredBlockMap,
-			}),
-		);
+	const universalInput = (input: RenderNoteInput) => ({
+		noteData: input.noteData,
+		capabilities: input.capabilities,
+		registryFor: registeredBlockMap,
+	});
+	return {
+		renderNote(input: RenderNoteInput): ReactElement {
+			return layoutAdapter(input, "Note", (layout) =>
+				renderUniversalNoteBody({
+					...universalInput(input),
+					layout,
+					heading: renderUniversalNoteHeading(universalInput(input)),
+				}),
+			);
+		},
+		renderNoteParts(input: RenderNoteInput): NoteParts {
+			return {
+				heading: renderUniversalNoteHeading(universalInput(input)),
+				body: layoutAdapter(input, "Body", (layout) =>
+					renderUniversalNoteBody({
+						...universalInput(input),
+						layout,
+					}),
+				),
+			};
+		},
 	};
 }
 
@@ -77,7 +115,11 @@ function isReadingInput(
  * The application configures acquisition once. The universal renderer receives
  * only a concrete persisted layout after loading succeeds.
  */
-const acquireConfiguredLayout: LayoutAdapter = (input, renderWithLayout) => {
+const acquireConfiguredLayout: LayoutAdapter = (
+	input,
+	part,
+	renderWithLayout,
+) => {
 	if (!isReadingInput(input) || typeof window === "undefined") {
 		return renderWithLayout(defaultConfiguredLayout(input.noteData));
 	}
@@ -87,6 +129,7 @@ const acquireConfiguredLayout: LayoutAdapter = (input, renderWithLayout) => {
 	return (
 		<ReadingWithConfiguredLayout
 			input={input}
+			part={part}
 			renderWithLayout={renderWithLayout}
 		/>
 	);
@@ -94,9 +137,11 @@ const acquireConfiguredLayout: LayoutAdapter = (input, renderWithLayout) => {
 
 function ReadingWithConfiguredLayout({
 	input,
+	part,
 	renderWithLayout,
 }: {
 	readonly input: RenderNoteInputFor<"Reading">;
+	readonly part: NoteSkeletonPart;
 	readonly renderWithLayout: (layout: NoteBlockLayout) => ReactElement;
 }) {
 	const visitorId = useAnonymousVisitorId();
@@ -116,6 +161,7 @@ function ReadingWithConfiguredLayout({
 			<NoteSkeletonFor
 				kind="Reading"
 				presentation={input.capabilities?.presentation ?? "Sheet"}
+				part={part}
 			/>
 		);
 	}
@@ -132,46 +178,48 @@ function ReadingWithConfiguredLayout({
 }
 
 /** The application-facing Notes interface. */
-export const renderNote = configureRenderNote(acquireConfiguredLayout);
+export const { renderNote, renderNoteParts } = configureRenderNote(
+	acquireConfiguredLayout,
+);
 
-/**
- * Renders a Note from fixture data, as the playground does: on the default
- * Block layout instead of a stored one, with the default capabilities plus the
- * host's presentation and follow. A host that draws the Heading Block as its
- * own handle asks for the `Heading` alone, or for the `Body`: every Block
- * but it.
- */
-export function renderFixtureNote({
-	noteData,
-	presentation,
-	follow,
-	part,
-}: {
+/** Fixtures carry no stored layout; they render on the default one. */
+const fixtureNotes = configureRenderNote((input, _part, renderWithLayout) =>
+	renderWithLayout(defaultConfiguredLayout(input.noteData)),
+);
+
+type FixtureNoteInput = {
 	readonly noteData: NoteData;
 	readonly presentation: "Card" | "Sheet";
 	readonly follow: (target: WorkspaceTarget) => void;
-	readonly part?: "Heading" | "Body";
-}): ReactElement | null {
-	const capabilities = {
-		...defaultCapabilities(noteData),
-		presentation,
-		follow,
-	};
-	if (part === "Heading")
-		return renderUniversalNoteBlock({
-			noteData,
-			capabilities,
-			blockKind: "Header",
-			registryFor: registeredBlockMap,
-		});
-	const layout = defaultConfiguredLayout(noteData);
-	return renderUniversalNote({
+};
+
+/**
+ * Renders a Note from fixture data, as the playground does: on the default
+ * Block layout instead of a stored one, with the default capabilities plus
+ * the host's presentation and follow.
+ */
+export function renderFixtureNote(input: FixtureNoteInput): ReactElement {
+	return fixtureNotes.renderNote(fixtureInput(input));
+}
+
+/** `renderFixtureNote`, split like `renderNoteParts`. */
+export function renderFixtureNoteParts(input: FixtureNoteInput): NoteParts {
+	return fixtureNotes.renderNoteParts(fixtureInput(input));
+}
+
+function fixtureInput({
+	noteData,
+	presentation,
+	follow,
+}: FixtureNoteInput): RenderNoteInput {
+	// `defaultCapabilities` answers for every kind at once; what it returns
+	// is the capabilities of this Note's own kind.
+	return {
 		noteData,
-		capabilities,
-		layout:
-			part === "Body"
-				? { ...layout, hidden: new Set([...layout.hidden, "Header"]) }
-				: layout,
-		registryFor: registeredBlockMap,
-	});
+		capabilities: {
+			...defaultCapabilities(noteData),
+			presentation,
+			follow,
+		},
+	} as RenderNoteInput;
 }

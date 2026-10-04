@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, type ReactNode, useContext, useMemo } from "react";
-import { renderFixtureNote } from "@/notes";
+import { renderFixtureNoteParts } from "@/notes";
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import type { PlaygroundSnapshot } from "../../../../tooling/playground-snapshot";
 import { playgroundNotesQuery } from "../playground-note";
@@ -150,12 +150,11 @@ export function PortedTitle({
 	presentation: "Card" | "Sheet";
 	follow: ReturnType<typeof usePortedFollow>;
 }) {
-	return renderFixtureNote({
+	return renderFixtureNoteParts({
 		noteData: note,
 		presentation,
 		follow: follow.follow,
-		part: "Heading",
-	});
+	}).heading;
 }
 
 /** Every Block but the Header, as the Notes page renders them. */
@@ -168,10 +167,9 @@ export function PortedBlocks({
 	presentation: "Card" | "Sheet";
 	follow: ReturnType<typeof usePortedFollow>;
 }) {
-	return renderFixtureNote({
+	return renderFixtureNoteParts({
 		noteData: note,
 		presentation,
 		follow: follow.follow,
-		part: "Body",
-	});
+	}).body;
 }

@@ -23,23 +23,57 @@ type RegistryFor = (
 	Record<NoteBlockKind, (context: never) => ReactElement | null>
 > | null;
 
-export function renderUniversalNote({
+/**
+ * The Heading Block alone, which a Card or a Cover draws as its lift handle.
+ * It is pinned first and stands outside the stored layout, so it needs none.
+ * Null when the Note's route has no Heading Block or the Note cannot render;
+ * its Body then shows why.
+ */
+export function renderUniversalNoteHeading({
+	noteData,
+	capabilities,
+	registryFor,
+}: {
+	readonly noteData: NoteData;
+	readonly capabilities?: unknown;
+	readonly registryFor: RegistryFor;
+}): ReactElement | null {
+	try {
+		if (!isKnownKind(noteData)) return null;
+		const { coordinates, identity } = describeNote(noteData);
+		const renderer = registryFor(coordinates)?.Header;
+		if (!renderer) return null;
+		const context = blockContext(
+			noteData,
+			coordinates,
+			capabilities ?? defaultCapabilities(noteData),
+		);
+		return renderBlock("Header", renderer, context, identity);
+	} catch {
+		return null;
+	}
+}
+
+/**
+ * The Note's frame holding every Block but the Heading, closed by the tags
+ * that name the Note. A host that draws no handle of its own passes the
+ * Heading back as `heading`; it goes first, as the pinned Block.
+ */
+export function renderUniversalNoteBody({
 	noteData,
 	capabilities,
 	layout,
 	registryFor,
+	heading = null,
 }: {
 	readonly noteData: NoteData;
 	readonly capabilities?: unknown;
 	readonly layout: NoteBlockLayout;
 	readonly registryFor: RegistryFor;
+	readonly heading?: ReactElement | null;
 }): ReactElement {
 	try {
-		if (
-			!(noteKindSchema.options as readonly string[]).includes(
-				noteData.kind,
-			)
-		) {
+		if (!isKnownKind(noteData)) {
 			const kind = (noteData as { readonly kind?: unknown }).kind;
 			return renderErrorNote(
 				`Unknown Note kind: ${typeof kind === "string" ? kind : "missing"}.`,
@@ -51,7 +85,7 @@ export function renderUniversalNote({
 			capabilities ?? defaultCapabilities(noteData);
 		const { plan } = resolveRenderPlan(registryFor, coordinates, layout);
 		const context = blockContext(noteData, coordinates, renderCapabilities);
-		const blocks = plan.flatMap(({ blockKind, renderer }) => {
+		const blocks = plan.body.flatMap(({ blockKind, renderer }) => {
 			const rendered = renderBlock(
 				blockKind,
 				renderer,
@@ -63,7 +97,6 @@ export function renderUniversalNote({
 		const presentation =
 			(renderCapabilities as { presentation?: "Card" | "Sheet" })
 				.presentation ?? "Sheet";
-		const hasHeader = plan.some(({ blockKind }) => blockKind === "Header");
 		return (
 			<DensityScope
 				density={presentation === "Card" ? "compact" : "comfortable"}
@@ -75,41 +108,15 @@ export function renderUniversalNote({
 					className="mx-auto w-full max-w-note px-note-gutter pt-note-top pb-note-top compact:p-3.5"
 					aria-label={`${noteData.kind} Note`}
 				>
+					{heading}
 					{blocks}
-					{hasHeader ? renderNoteMetadata(noteData) : null}
+					{plan.heading ? renderNoteMetadata(noteData) : null}
 				</article>
 			</DensityScope>
 		);
 	} catch (cause) {
 		return renderErrorNote(cause, `${safeKind(noteData)} Note unavailable`);
 	}
-}
-
-/**
- * One Block of a Note on its own, without the Note around it, for a host that
- * draws the Heading Block as its own handle. Null when the Note's route has
- * no such Block.
- */
-export function renderUniversalNoteBlock({
-	noteData,
-	capabilities,
-	blockKind,
-	registryFor,
-}: {
-	readonly noteData: NoteData;
-	readonly capabilities?: unknown;
-	readonly blockKind: NoteBlockKind;
-	readonly registryFor: RegistryFor;
-}): ReactElement | null {
-	const { coordinates, identity } = describeNote(noteData);
-	const renderer = registryFor(coordinates)?.[blockKind];
-	if (!renderer) return null;
-	const context = blockContext(
-		noteData,
-		coordinates,
-		capabilities ?? defaultCapabilities(noteData),
-	);
-	return renderBlock(blockKind, renderer, context, identity);
 }
 
 function blockContext(
@@ -254,7 +261,9 @@ export function defaultCapabilities(
 }
 
 function safeKind(note: NoteData): NoteKind | "Unknown" {
-	return (noteKindSchema.options as readonly string[]).includes(note.kind)
-		? note.kind
-		: "Unknown";
+	return isKnownKind(note) ? note.kind : "Unknown";
+}
+
+function isKnownKind(note: NoteData): boolean {
+	return (noteKindSchema.options as readonly string[]).includes(note.kind);
 }
