@@ -11,7 +11,9 @@ export function nonEmptyFeatureBagError(): string {
 /**
  * Trims, NFC-normalizes and writes a discontinuous form's open slot as `…`
  * (U+2026): `um ... willen` is stored as `um … willen`. NFC keeps ASCII `...`
- * and NFKC would turn `…` into it, so the slot is replaced explicitly.
+ * and NFKC would turn `…` into it, so the slot is replaced explicitly. This
+ * is the one text normalizer: Dumrel's and Dumdict's normalized strings use
+ * it too, so a Unit Shadow's form and a Lemma's agree.
  */
 export function normalizeForm(value: string): string {
 	return value.trim().normalize("NFC").replaceAll("...", "…");

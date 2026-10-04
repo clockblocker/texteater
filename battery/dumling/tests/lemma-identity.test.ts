@@ -1,10 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import {
+	canonicalFormKey,
 	checkIfGrundform,
 	foldCase,
 	lemmaIdentityKey,
+	normalizeForm,
 	readingIdentityKey,
 	sameLemma,
+	sameReading,
 	syncretismView,
 	syncretize,
 } from "dumling";
@@ -44,6 +47,20 @@ describe("case folding", () => {
 		expect(foldCase("Straße", "de")).toBe("straße");
 		expect(foldCase("Hello", "en")).toBe("hello");
 		expect(foldCase("שלום", "he")).toBe("שלום");
+	});
+});
+
+describe("form normalization", () => {
+	test("trims, NFC-normalizes and writes an open slot as …", () => {
+		expect(normalizeForm("  cafe\u0301 ")).toBe("caf\u00e9");
+		expect(normalizeForm("um ... willen")).toBe("um … willen");
+	});
+
+	test("keys a bare Canonical Form as Lemma identity compares it", () => {
+		expect(canonicalFormKey(" Um ... willen", "de")).toBe(
+			canonicalFormKey("um … willen", "de"),
+		);
+		expect(canonicalFormKey("LOL", "de")).toBe("lol");
 	});
 });
 
@@ -209,6 +226,15 @@ describe("Reading identity", () => {
 		);
 		expect(readingIdentityKey(reading("lol", "🖱️"))).toBe(
 			readingIdentityKey(reading("lol", "🖱")),
+		);
+	});
+
+	test("sameReading compares by the Reading key", () => {
+		expect(sameReading(reading("LOL", "😂"), reading("lol", "😂"))).toBe(
+			true,
+		);
+		expect(sameReading(reading("lol", "😂"), reading("lol", "🙄"))).toBe(
+			false,
 		);
 	});
 

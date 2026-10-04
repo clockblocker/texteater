@@ -1,9 +1,23 @@
-import type { Lemma, Reading } from "./types.js";
+import type { Language, Lemma, Reading } from "./types.js";
 import {
 	foldCase,
 	normalizeEmojiDescription,
 	normalizeForm,
 } from "./validation/semantics.js";
+
+/**
+ * A Canonical Form as Lemma identity compares it: normalized as parsing
+ * normalizes it, then case-folded by the language's rules (system ADR 0002).
+ * `Um ... willen` and `um … willen` give one key. Consumers that compare a
+ * bare Canonical Form, such as a Unit Shadow's, use this key so they agree
+ * with {@link lemmaIdentityKey}.
+ */
+export function canonicalFormKey(
+	canonicalForm: string,
+	language: Language,
+): string {
+	return foldCase(normalizeForm(canonicalForm), language);
+}
 
 /**
  * The key of a Lemma's identity: language, Family, Kind, Core Features and
@@ -28,7 +42,7 @@ export function lemmaIdentityKey(lemma: Lemma): string {
 		language,
 		family,
 		kind,
-		foldCase(normalizeForm(canonicalForm), language),
+		canonicalFormKey(canonicalForm, language),
 		Object.entries(core)
 			.filter(([, value]) => value !== null && value !== undefined)
 			.toSorted(([left], [right]) =>
@@ -57,4 +71,9 @@ export function readingIdentityKey(reading: Reading): string {
 			? null
 			: normalizeEmojiDescription(emojiDescription),
 	]);
+}
+
+/** Whether two Readings are one Reading, by {@link readingIdentityKey}. */
+export function sameReading(left: Reading, right: Reading): boolean {
+	return readingIdentityKey(left) === readingIdentityKey(right);
 }

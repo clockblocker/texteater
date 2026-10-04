@@ -10,14 +10,17 @@ test("replacement public operations use the settled unit and Knowledge contracts
 	expect(Object.keys(dumling).sort()).toEqual([
 		"GrundformAssessmentError",
 		"ParsingError",
+		"canonicalFormKey",
 		"checkIfGrundform",
 		"foldCase",
 		"isSyncreticUnit",
 		"isSyncretism",
 		"lemmaIdentityKey",
+		"normalizeForm",
 		"parseUnit",
 		"readingIdentityKey",
 		"sameLemma",
+		"sameReading",
 		"syncretismView",
 		"syncretize",
 	]);

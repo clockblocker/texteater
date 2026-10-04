@@ -46,14 +46,17 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 	expect(Object.keys(module).sort()).toEqual([
 		"GrundformAssessmentError",
 		"ParsingError",
+		"canonicalFormKey",
 		"checkIfGrundform",
 		"foldCase",
 		"isSyncreticUnit",
 		"isSyncretism",
 		"lemmaIdentityKey",
+		"normalizeForm",
 		"parseUnit",
 		"readingIdentityKey",
 		"sameLemma",
+		"sameReading",
 		"syncretismView",
 		"syncretize",
 	]);
