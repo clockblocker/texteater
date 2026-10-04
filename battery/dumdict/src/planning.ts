@@ -1,13 +1,12 @@
 /**
- * Transaction-side dictionary planning without Effect.
+ * Transaction-side dictionary planning.
  *
- * Hosts that plan and commit inside one database transaction import this
- * entry point instead of `dumdict/runtime`: it exposes the same planners the
- * Effect service runs, plus the identity helpers a transaction needs, and
- * loads none of the Effect-based service wrappers. A host that applies plans
- * in its own store parses each change once with `parseAsPlannedChangeOp`,
- * checks `impliedChangePreconditions` beside the change's own, and proves
- * the result with the `dumdict/testing` storage conformance suite.
+ * A host that plans and commits inside one database transaction asks the
+ * planner which slice a request needs, loads it, plans, and applies the plan
+ * in the same transaction. It parses each change once with
+ * `parseAsPlannedChangeOp`, checks `impliedChangePreconditions` beside the
+ * change's own, and proves its store with the `dumdict/testing` storage
+ * conformance suite.
  */
 export { applyDumdictKnowledgeChange } from "./core/apply-reading-knowledge-change";
 export { impliedChangePreconditions } from "./core/implied-preconditions";
@@ -30,6 +29,15 @@ export {
 	parseAsDumdictPlan,
 	parseAsPlannedChangeOp,
 } from "./parsing/lightweight-parsers";
+export type { ReadingEntryContextLoad } from "./planner/context-request";
+export {
+	createDumdictPlanner,
+	type DumdictPlanConflict,
+	type DumdictPlanned,
+	type DumdictPlanner,
+	type DumdictPlanOutcome,
+	type DumdictPlanRejected,
+} from "./planner/planner";
 export type {
 	AddNewNoteRequest,
 	ApplyGeneratedKnowledgeRequest,
@@ -38,17 +46,6 @@ export type {
 	EnsureReadingEntryRequest,
 	MutationRejectedCode,
 } from "./public";
-export type { ReadingEntryContextLoad } from "./service/context-request";
-export {
-	createDumdictPlanner,
-	type DumdictPlanConflict,
-	type DumdictPlanned,
-	type DumdictPlanner,
-	type DumdictPlanOutcome,
-	type DumdictPlanRejected,
-} from "./service/planner";
-/** Type-only: the port's Effect signatures load no Effect code from here. */
-export type { DumdictStoragePort } from "./storage/port";
 export type {
 	AddNewNoteContext,
 	ApplyGeneratedKnowledgeContext,

@@ -1,28 +1,24 @@
 import { describe, expect, test } from "bun:test";
-import * as Effect from "effect/Effect";
 import {
-	createDumdictService,
+	createPlannedDictionary,
 	englishSwimCitationSurface,
 	englishSwimDraft,
 	englishSwimLemma,
 	enSerializedNotes,
-	failure,
 	getBootedUpDumdict,
 	makeSurfaceId,
 	type StoreRevision,
 	type SurfaceEntry,
-	withUnusedCleanupStorageMethods,
+	stubStore,
 } from "./helpers";
 
 describe("configured service", () => {
 	test("addNewNote creates a new learner Reading", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 
-		const result = await Effect.runPromise(
-			dict.addNewNote({
-				draft: englishSwimDraft,
-			}),
-		);
+		const result = dict.addNewNote({
+			draft: englishSwimDraft,
+		});
 
 		const storedSwimNote = storage
 			.loadAll()
@@ -40,23 +36,21 @@ describe("configured service", () => {
 	test("addNewNote creates owned surfaces from the draft", async () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 
-		const result = await Effect.runPromise(
-			dict.addNewNote({
-				draft: {
-					...englishSwimDraft,
-					ownedSurfaces: [
-						{
-							surface: englishSwimCitationSurface,
-							note: {
-								attestedTranslations: ["swim"],
-								attestations: ["They swim every morning."],
-								notes: "Plain present form.",
-							},
+		const result = dict.addNewNote({
+			draft: {
+				...englishSwimDraft,
+				ownedSurfaces: [
+					{
+						surface: englishSwimCitationSurface,
+						note: {
+							attestedTranslations: ["swim"],
+							attestations: ["They swim every morning."],
+							notes: "Plain present form.",
 						},
-					],
-				},
-			}),
-		);
+					},
+				],
+			},
+		});
 
 		const storedSwimNote = storage
 			.loadAll()
@@ -85,22 +79,20 @@ describe("configured service", () => {
 			throw new Error("Expected English walk Reading fixture.");
 		}
 
-		const result = await failure(
-			dict.addNewNote({
-				draft: {
-					reading: existingWalkReading.reading,
-					note: {
-						attestedTranslations:
-							existingWalkReading.attestedTranslations,
-						attestations: existingWalkReading.attestations,
-						notes: existingWalkReading.notes,
-					},
+		const result = dict.addNewNote({
+			draft: {
+				reading: existingWalkReading.reading,
+				note: {
+					attestedTranslations:
+						existingWalkReading.attestedTranslations,
+					attestations: existingWalkReading.attestations,
+					notes: existingWalkReading.notes,
 				},
-			}),
-		);
+			},
+		});
 
 		expect(result).toMatchObject({
-			_tag: "DumdictRejection",
+			status: "rejected",
 			code: "readingAlreadyExists",
 		});
 	});
@@ -115,15 +107,9 @@ describe("configured service", () => {
 			notes: "Already stored elsewhere.",
 		} satisfies SurfaceEntry<"en">;
 		let commitCalls = 0;
-		const storage = withUnusedCleanupStorageMethods({
-			findStoredReadings() {
-				return Effect.die(new Error("Unexpected storage call"));
-			},
-			loadReadingForPatch() {
-				return Effect.die(new Error("Unexpected storage call"));
-			},
+		const storage = stubStore("en", {
 			loadReadingEntryContext() {
-				return Effect.succeed({
+				return {
 					intent: "addNewNote" as const,
 					revision: "stub-1" as StoreRevision,
 					existingOwnedSurfaces: [existingSurfaceEntry],
@@ -132,50 +118,42 @@ describe("configured service", () => {
 					pendingRelationsMatchingProposedLemma: [],
 					relationLemmas: [],
 					relationReadings: [],
-				});
+				};
 			},
 			commitChanges() {
 				commitCalls += 1;
-				return Effect.die(new Error("Unexpected storage call"));
+				throw new Error("Unexpected storage call");
 			},
 		});
-		const dict = createDumdictService({ language: "en", storage });
+		const dict = createPlannedDictionary("en", storage);
 
-		const result = await failure(
-			dict.addNewNote({
-				draft: {
-					...englishSwimDraft,
-					ownedSurfaces: [
-						{
-							surface: englishSwimCitationSurface,
-							note: {
-								attestedTranslations: ["swim"],
-								attestations: ["They swim every morning."],
-								notes: "Plain present form.",
-							},
+		const result = dict.addNewNote({
+			draft: {
+				...englishSwimDraft,
+				ownedSurfaces: [
+					{
+						surface: englishSwimCitationSurface,
+						note: {
+							attestedTranslations: ["swim"],
+							attestations: ["They swim every morning."],
+							notes: "Plain present form.",
 						},
-					],
-				},
-			}),
-		);
+					},
+				],
+			},
+		});
 
 		expect(result).toMatchObject({
-			_tag: "DumdictRejection",
+			status: "rejected",
 			code: "ownedSurfaceAlreadyExists",
 		});
 		expect(commitCalls).toBe(0);
 	});
 
 	test("addNewNote surfaces insert races as conflicts", async () => {
-		const storage = withUnusedCleanupStorageMethods({
-			findStoredReadings() {
-				return Effect.die(new Error("Unexpected storage call"));
-			},
-			loadReadingForPatch() {
-				return Effect.die(new Error("Unexpected storage call"));
-			},
+		const storage = stubStore("en", {
 			loadReadingEntryContext() {
-				return Effect.succeed({
+				return {
 					intent: "addNewNote" as const,
 					revision: "new-1" as StoreRevision,
 					existingOwnedSurfaces: [],
@@ -184,28 +162,26 @@ describe("configured service", () => {
 					pendingRelationsMatchingProposedLemma: [],
 					relationLemmas: [],
 					relationReadings: [],
-				});
+				};
 			},
 			commitChanges() {
-				return Effect.succeed({
+				return {
 					status: "conflict",
 					code: "semanticPreconditionFailed",
 					latestRevision: "new-2" as StoreRevision,
 					message: "Reading was inserted concurrently.",
-				});
+				};
 			},
 		});
-		const dict = createDumdictService({ language: "en", storage });
+		const dict = createPlannedDictionary("en", storage);
 
-		const result = await failure(
-			dict.addNewNote({
-				draft: englishSwimDraft,
-			}),
-		);
+		const result = dict.addNewNote({
+			draft: englishSwimDraft,
+		});
 
 		expect(result).toMatchObject({
-			_tag: "DumdictSemanticPreconditionFailure",
-			baseRevision: "new-1",
+			status: "conflict",
+			code: "semanticPreconditionFailed",
 			latestRevision: "new-2",
 		});
 	});

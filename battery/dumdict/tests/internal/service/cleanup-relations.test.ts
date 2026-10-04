@@ -1,7 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { projectSemanticRelations } from "dumrel";
-import * as Effect from "effect/Effect";
 import type { SerializedDictionaryNote } from "../../../src";
 import {
 	emojiOf,
@@ -33,31 +32,29 @@ function swimNote(
 	};
 }
 
-async function cleanupFirstPending(
-	dict: ReturnType<typeof getBootedUpDumdict<"en">>["dict"],
-) {
-	const info = await Effect.runPromise(
-		dict.getInfoForRelationsCleanup({
-			canonicalForm: "swim",
-		}),
-	);
-	const locator = info.pendingRelations[0]?.locator;
+/** Resolves the store's first pending relation against its current revision. */
+function cleanupFirstPending({
+	dict,
+	storage,
+}: ReturnType<typeof getBootedUpDumdict<"en">>) {
+	const locator = storage
+		.loadAll()
+		.flatMap(({ pendingRelations }) => pendingRelations)[0]?.locator;
 	if (!locator) throw new Error("Expected pending relation.");
-	return Effect.runPromise(
-		dict.cleanupRelations({
-			baseRevision: info.revision,
-			resolutions: [{ locator }],
-		}),
-	);
+	return dict.cleanupRelations({
+		baseRevision: storage.revision(),
+		resolutions: [{ locator }],
+	});
 }
 
 describe("relations cleanup", () => {
 	test("keeps a zero-match Unit Shadow pending", async () => {
-		const { dict, storage } = getBootedUpDumdict(
+		const booted = getBootedUpDumdict(
 			"en",
 			enSerializedNotesWithPendingSwimRelation,
 		);
-		const result = await cleanupFirstPending(dict);
+		const { storage } = booted;
+		const result = cleanupFirstPending(booted);
 		expect(result.status).toBe("applied");
 		expect(
 			storage
@@ -70,11 +67,12 @@ describe("relations cleanup", () => {
 	});
 
 	test("automatically resolves one Lemma, stores only the direct claim, and deletes pending atomically", async () => {
-		const { dict, storage } = getBootedUpDumdict("en", [
+		const booted = getBootedUpDumdict("en", [
 			...enSerializedNotesWithPendingSwimRelation,
 			swimNote(englishSwimReading),
 		]);
-		const result = await cleanupFirstPending(dict);
+		const { storage } = booted;
+		const result = cleanupFirstPending(booted);
 		const readings = storage
 			.loadAll()
 			.flatMap(({ readingEntries }) => readingEntries);
@@ -113,19 +111,19 @@ describe("relations cleanup", () => {
 			lemma: alternateLemma,
 			emojiDescription: "🌊",
 		} satisfies Dumling.Reading<"en">;
-		const run = async (reverse: boolean) => {
+		const run = (reverse: boolean) => {
 			const matches = [
 				swimNote(englishSwimReading),
 				swimNote(alternateReading),
 			];
-			const { dict, storage } = getBootedUpDumdict("en", [
+			const booted = getBootedUpDumdict("en", [
 				...enSerializedNotesWithPendingSwimRelation,
 				...(reverse ? matches.reverse() : matches),
 			]);
-			await cleanupFirstPending(dict);
-			return storage.loadAll();
+			cleanupFirstPending(booted);
+			return booted.storage.loadAll();
 		};
-		for (const notes of [await run(false), await run(true)]) {
+		for (const notes of [run(false), run(true)]) {
 			const readings = notes.flatMap(
 				({ readingEntries }) => readingEntries,
 			);
@@ -177,13 +175,9 @@ describe("relations cleanup", () => {
 				(projection) => projection.relation === "hyponym",
 			);
 		};
-		expect(
-			(
-				await Effect.runPromise(
-					dict.addNewNote({ draft: englishSwimDraft }),
-				)
-			).status,
-		).toBe("applied");
+		expect(dict.addNewNote({ draft: englishSwimDraft }).status).toBe(
+			"applied",
+		);
 		expect(hyponyms()).toEqual([
 			expect.objectContaining({
 				source: englishSwimReading,
@@ -200,10 +194,7 @@ describe("relations cleanup", () => {
 			...englishSwimDraft,
 			reading: { ...englishSwimReading, emojiDescription: "🌊" },
 		};
-		expect(
-			(await Effect.runPromise(dict.addNewNote({ draft: sibling })))
-				.status,
-		).toBe("applied");
+		expect(dict.addNewNote({ draft: sibling }).status).toBe("applied");
 		expect(hyponyms()).toEqual([]);
 	});
 });

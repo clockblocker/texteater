@@ -1,23 +1,14 @@
-import * as Effect from "effect/Effect";
 import {
-	createDumdictService,
-	type DumdictStoragePort,
 	makeSurfaceId,
 	type ReadingEntry,
 	type StoreRevision,
 	type SurfaceEntry,
 } from "../../../src";
 import { derivePendingEntryId } from "../../../src/core/pending";
-import { getBootedUpDumdict } from "../../../src/testing/boot";
-import {
-	deSerializedNotes,
-	germanGehenLemma,
-	germanGehenReading,
-} from "../../fixtures/de-notes";
+import { germanGehenLemma, germanGehenReading } from "../../fixtures/de-notes";
 import {
 	englishRunDraft,
 	englishRunLemma,
-	englishRunReading,
 	englishSwimCitationSurface,
 	englishSwimDraft,
 	englishSwimLemma,
@@ -29,19 +20,18 @@ import {
 	pendingSwimEntryId,
 } from "../../fixtures/en-notes";
 import {
-	hebrewKatavLemma,
-	hebrewKatavReading,
-	heSerializedNotes,
-} from "../../fixtures/he-notes";
+	createPlannedDictionary,
+	getBootedUpDumdict,
+	type PlannedDictionaryStore,
+	plannedOf,
+} from "../../support/planned-dictionary";
 
-export type { DumdictStoragePort, ReadingEntry, StoreRevision, SurfaceEntry };
+export type { ReadingEntry, StoreRevision, SurfaceEntry };
 export {
-	createDumdictService,
+	createPlannedDictionary,
 	derivePendingEntryId,
-	deSerializedNotes,
 	englishRunDraft,
 	englishRunLemma,
-	englishRunReading,
 	englishSwimCitationSurface,
 	englishSwimDraft,
 	englishSwimLemma,
@@ -53,11 +43,9 @@ export {
 	germanGehenLemma,
 	germanGehenReading,
 	getBootedUpDumdict,
-	hebrewKatavLemma,
-	hebrewKatavReading,
-	heSerializedNotes,
 	makeSurfaceId,
 	pendingSwimEntryId,
+	plannedOf,
 };
 
 export const englishWalkReadingEntry = (): ReadingEntry<"en"> => {
@@ -68,57 +56,21 @@ export const englishWalkReadingEntry = (): ReadingEntry<"en"> => {
 	return structuredClone(reading);
 };
 
-/** Runs a typed failing Effect and returns its expected failure value. */
-export async function failure<E>(
-	effect: Effect.Effect<unknown, E>,
-): Promise<E> {
-	const result = await Effect.runPromise(Effect.result(effect));
-	if (result._tag === "Failure") return result.failure;
-	throw new Error("Expected the Effect to fail.");
-}
-
-export function withUnusedCleanupStorageMethods<
-	L extends import("dumling/types").Language,
->(
-	storage: Omit<
-		DumdictStoragePort<L>,
-		"getInfoForRelationsCleanup" | "loadCleanupRelationsContext"
-	>,
-): DumdictStoragePort<L> {
+/** A store whose every operation fails the test unless the test supplies it. */
+export function stubStore<L extends import("dumling/types").Language>(
+	_language: L,
+	operations: Partial<PlannedDictionaryStore<L>>,
+): PlannedDictionaryStore<L> {
+	const unexpected = (): never => {
+		throw new Error("Unexpected storage call");
+	};
 	return {
-		...storage,
-		getInfoForRelationsCleanup() {
-			return Effect.die("Unexpected storage call");
-		},
-		loadCleanupRelationsContext() {
-			return Effect.die("Unexpected storage call");
-		},
+		loadReadingEntryContext: unexpected,
+		loadCleanupRelationsContext: unexpected,
+		commitChanges: unexpected,
+		...operations,
 	};
 }
-
-export const storageRejectingReadingEntryContext = () => {
-	let loadReadingEntryContextCalls = 0;
-	const storage = withUnusedCleanupStorageMethods({
-		findStoredReadings() {
-			return Effect.die("Unexpected storage call");
-		},
-		loadReadingForPatch() {
-			return Effect.die("Unexpected storage call");
-		},
-		loadReadingEntryContext() {
-			loadReadingEntryContextCalls += 1;
-			return Effect.die("Unexpected storage call");
-		},
-		commitChanges() {
-			return Effect.die("Unexpected storage call");
-		},
-	});
-
-	return {
-		storage,
-		getLoadReadingEntryContextCalls: () => loadReadingEntryContextCalls,
-	};
-};
 
 /** A Reading's Emoji Description; a Foreign Reading has none (ADR 0045). */
 export function emojiOf(

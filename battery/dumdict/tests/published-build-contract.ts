@@ -4,9 +4,9 @@ import { build } from "esbuild";
 const result = await build({
 	stdin: {
 		contents: `
-			import { createDumdictService } from "./dist/runtime.js";
+			import { createDumdictPlanner } from "./dist/planning.js";
 			import { derivePendingEntryId } from "./dist/pending.js";
-			console.log(createDumdictService, derivePendingEntryId);
+			console.log(createDumdictPlanner, derivePendingEntryId);
 		`,
 		resolveDir: new URL("..", import.meta.url).pathname,
 	},

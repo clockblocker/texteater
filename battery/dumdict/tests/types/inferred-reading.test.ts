@@ -1,11 +1,7 @@
 import { afterAll, describe, expect, it } from "bun:test";
 import { closeTestingSessions, inferredType } from "prinfer/testing";
 
-import type {
-	DumdictReadingDraft,
-	ReadingCandidate,
-	ReadingEntry,
-} from "../../src";
+import type { DumdictReadingDraft, ReadingEntry } from "../../src";
 
 afterAll(closeTestingSessions);
 
@@ -20,11 +16,6 @@ export type GermanVerbDraftReading = Extract<
 
 export type GermanVerbStoredReading = Extract<
 	ReadingEntry<"de">["reading"],
-	GermanVerb
->;
-
-export type GermanVerbCandidateReading = Extract<
-	ReadingCandidate<"de">["reading"],
 	GermanVerb
 >;
 
@@ -47,14 +38,5 @@ describe("Dumdict Reading inference", () => {
 				backend: "typescript7",
 			}),
 		).toBe(`type GermanVerbStoredReading = ${germanVerbReading}`);
-	}, 30_000);
-
-	it("preserves the selected branch in lookup candidates", async () => {
-		expect(
-			await inferredType(import.meta.url, {
-				name: "GermanVerbCandidateReading",
-				backend: "typescript7",
-			}),
-		).toBe(`type GermanVerbCandidateReading = ${germanVerbReading}`);
 	}, 30_000);
 });

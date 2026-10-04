@@ -1,13 +1,13 @@
 import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 
-import { sameReading } from "../../core/identity";
-import { samePendingSemanticRelationLocator } from "../../core/pending";
+import { sameReading } from "../../../src/core/identity";
+import { samePendingSemanticRelationLocator } from "../../../src/core/pending";
 import type {
 	ChangePrecondition,
 	PendingSemanticRelationRecord,
-} from "../../domain-types";
-import type { SerializedDictionaryNote } from "../../dto";
+} from "../../../src/domain-types";
+import type { SerializedDictionaryNote } from "../../../src/dto";
 
 export type DraftStorageState<L extends Dumling.Language> = {
 	currentRevision(): string;

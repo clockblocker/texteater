@@ -1,4 +1,4 @@
-import { makeSurfaceId } from "dumdict/runtime";
+import { makeSurfaceId } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import type * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";

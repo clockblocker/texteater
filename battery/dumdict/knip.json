@@ -1,11 +1,9 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
 	"entry": [
-		"src/memory.ts",
 		"src/pending.ts",
 		"src/planning.ts",
 		"src/public-schema.ts",
-		"src/runtime.ts",
 		"src/testing/index.ts",
 		"generate-readme/examples/**/*.ts",
 		"tests/**/*.ts"

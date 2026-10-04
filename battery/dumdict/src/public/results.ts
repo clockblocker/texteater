@@ -1,9 +1,4 @@
 import type * as Dumling from "dumling/types";
-import type {
-	PendingSemanticRelationRecord,
-	StoreRevision,
-} from "../domain-types";
-import type { ReadingNoteForDisambiguation } from "../dto";
 import type { SurfaceId } from "../dumling-id";
 
 export type AffectedDictionaryEntities<L extends Dumling.Language> = {
@@ -16,78 +11,6 @@ export type AffectedDictionaryEntities<L extends Dumling.Language> = {
 export type MutationSummary = {
 	message: string;
 };
-
-export type ReadingCandidate<L extends Dumling.Language> = {
-	reading: Dumling.Reading<L>;
-	note: ReadingNoteForDisambiguation<L>;
-};
-
-export type FindStoredReadingsResult<L extends Dumling.Language> = {
-	revision: StoreRevision;
-	candidates: ReadingCandidate<L>[];
-};
-
-export type CleanupPendingRelation<L extends Dumling.Language> =
-	PendingSemanticRelationRecord<L>;
-
-export type GetInfoForRelationsCleanupResult<L extends Dumling.Language> = {
-	revision: StoreRevision;
-	canonicalForm: string;
-	candidateLemmas: Dumling.Lemma<L>[];
-	pendingRelations: CleanupPendingRelation<L>[];
-};
-
-export type MutationResult<L extends Dumling.Language> = {
-	status: "applied";
-	baseRevision: StoreRevision;
-	nextRevision: StoreRevision;
-	affected: AffectedDictionaryEntities<L>;
-	summary: MutationSummary;
-};
-
-export type PreparedMutation<L extends Dumling.Language> = Readonly<{
-	plan: import("../domain-types").DumdictPlan<L>;
-	affected: AffectedDictionaryEntities<L>;
-	summary: MutationSummary;
-}>;
-
-export type DumdictInvalidInput = Readonly<{
-	_tag: "DumdictInvalidInput";
-	expectedLanguage?: Dumling.Language;
-	actualLanguage?: Dumling.Language;
-	message: string;
-}>;
-
-export type DumdictRejection = Readonly<{
-	_tag: "DumdictRejection";
-	code: MutationRejectedCode;
-	message?: string;
-}>;
-
-export type DumdictRevisionConflict = Readonly<{
-	_tag: "DumdictRevisionConflict";
-	baseRevision: StoreRevision;
-	latestRevision?: StoreRevision;
-	message?: string;
-}>;
-
-export type DumdictSemanticPreconditionFailure = Readonly<{
-	_tag: "DumdictSemanticPreconditionFailure";
-	baseRevision: StoreRevision;
-	latestRevision?: StoreRevision;
-	message?: string;
-}>;
-
-export type DumdictStorageFailure = Readonly<{
-	_tag: "DumdictStorageFailure";
-	operation: string;
-	cause: unknown;
-}>;
-
-export type DumdictCommitFailure =
-	| DumdictRevisionConflict
-	| DumdictSemanticPreconditionFailure
-	| DumdictStorageFailure;
 
 export type MutationRejectedCode =
 	| "readingAlreadyExists"

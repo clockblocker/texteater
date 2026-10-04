@@ -1,57 +1,66 @@
 import { describe, expect, test } from "bun:test";
-import * as Effect from "effect/Effect";
 import {
 	emojiOf,
+	englishSwimCitationSurface,
 	englishSwimDraft,
-	englishSwimLemma,
 	englishSwimReading,
 	englishWalkLemma,
-	englishWalkReading,
 	enSerializedNotes,
 	getBootedUpDumdict,
 } from "./helpers";
 
 describe("consumer workflow", () => {
-	test("finds a Reading, enriches it, and stores another Reading", async () => {
+	test("stores a Reading, attaches a Surface, and enriches it through one store", () => {
 		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 
-		const walk = await Effect.runPromise(
-			dict.findStoredReadings({
-				lemma: englishWalkLemma,
-			}),
+		expect(dict.addNewNote({ draft: englishSwimDraft }).status).toBe(
+			"applied",
 		);
-		expect(walk.candidates.map(({ reading }) => reading)).toEqual([
-			englishWalkReading,
-		]);
+		expect(
+			dict.ensureOwnedSurface({
+				reading: englishSwimReading,
+				ownedSurface: {
+					surface: englishSwimCitationSurface,
+					note: {
+						attestedTranslations: [],
+						attestations: [],
+						notes: "",
+					},
+				},
+			}).status,
+		).toBe("applied");
+		expect(
+			dict.applyGeneratedKnowledge({
+				reading: englishSwimReading,
+				changes: [
+					{
+						kind: "Contribute",
+						aspect: "translations",
+						language: "ru",
+						value: ["плавать"],
+					},
+				],
+				pendingRelations: [],
+			}).status,
+		).toBe("applied");
 
-		const attestationResult = await Effect.runPromise(
-			dict.addAttestation({
-				reading: walk.candidates[0]?.reading ?? englishWalkReading,
-				attestation: "We walk to work.",
-			}),
-		);
-		expect(attestationResult.status).toBe("applied");
-
-		const createResult = await Effect.runPromise(
-			dict.addNewNote({
-				draft: englishSwimDraft,
-			}),
-		);
-		expect(createResult.status).toBe("applied");
-
-		const swim = await Effect.runPromise(
-			dict.findStoredReadings({
-				lemma: englishSwimLemma,
-			}),
-		);
-		expect(swim.candidates[0]?.reading).toEqual(englishSwimReading);
-		expect(storage.loadAll()[0]?.readingEntries[0]?.attestations).toContain(
-			"We walk to work.",
-		);
+		const swim = storage
+			.loadAll()
+			.find(
+				({ lemmaRecord }) => lemmaRecord.lemma.canonicalForm === "swim",
+			);
+		expect(
+			swim?.ownedSurfaceEntries.map(
+				({ surface }) => surface.normalizedSurface,
+			),
+		).toEqual(["swim"]);
+		expect(swim?.readingEntries[0]?.knowledge?.translations).toEqual({
+			ru: ["плавать"],
+		});
 	});
 
-	test("one Lemma can own multiple learner Readings", async () => {
-		const { dict } = getBootedUpDumdict("en", enSerializedNotes);
+	test("one Lemma can own multiple learner Readings", () => {
+		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 		const secondWalkReading = {
 			...englishSwimDraft,
 			reading: {
@@ -61,21 +70,17 @@ describe("consumer workflow", () => {
 			},
 		};
 
-		expect(
-			(
-				await Effect.runPromise(
-					dict.addNewNote({ draft: secondWalkReading }),
-				)
-			).status,
-		).toBe("applied");
-		const readings = await Effect.runPromise(
-			dict.findStoredReadings({
-				lemma: englishWalkLemma,
-			}),
+		expect(dict.addNewNote({ draft: secondWalkReading }).status).toBe(
+			"applied",
 		);
-
 		expect(
-			readings.candidates.map(({ reading }) => emojiOf(reading)),
+			storage
+				.loadAll()
+				.find(
+					({ lemmaRecord }) =>
+						lemmaRecord.lemma.canonicalForm === "walk",
+				)
+				?.readingEntries.map(({ reading }) => emojiOf(reading)),
 		).toEqual(["🚶", "🚶‍➡"]);
 	});
 });

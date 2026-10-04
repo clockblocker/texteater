@@ -1,21 +1,13 @@
 import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 
-import { sameReading } from "../../core/identity";
+import { sameReading } from "../../../src/core/identity";
 import type {
 	PendingSemanticRelationRecord,
 	ReadingEntry,
 	StoreRevision,
-} from "../../domain-types";
-import type { SerializedDictionaryNote } from "../../dto";
-import type { DumdictStoragePort } from "../../storage";
-import type { ReadingEntryContextRead } from "./load-slices";
-
-export type InMemoryTestStorage<L extends Dumling.Language> =
-	DumdictStoragePort<L> & {
-		loadAll(): SerializedDictionaryNote<L>[];
-		readingEntryContextReads(): ReadingEntryContextRead[];
-	};
+} from "../../../src/domain-types";
+import type { SerializedDictionaryNote } from "../../../src/dto";
 
 export type InMemoryStorageState<L extends Dumling.Language> = {
 	language: L;

@@ -8,9 +8,9 @@ Dumdict exposes `dumdict/planning` and dumspec exposes `dumspec/inventories`
 as operational entry points that load neither Effect nor promptsmith nor
 model execution. A host that runs inside a database transaction or another
 short-lived isolate imports these instead of the package roots:
-`dumdict/planning` holds a synchronous `createDumdictPlanner` that runs the
-same planners and slice validation as the Effect service over a slice the
-host loaded itself, and `dumspec/inventories` holds the Authored Inventories
+`dumdict/planning` holds a synchronous `createDumdictPlanner` that runs
+Dumdict's workflows and slice validation over a slice the host loaded
+itself, and `dumspec/inventories` holds the Authored Inventories
 with the pure selectors over them, model-free grammatical derivation
 included. Validation is Dumling's `parseUnit`, which the Dumling root exports
 without Zod. Dumgen has no transaction-side entry point: its operations call

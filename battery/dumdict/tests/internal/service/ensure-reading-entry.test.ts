@@ -1,13 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import * as Effect from "effect/Effect";
 import type { ReadingEntry } from "../../../src";
 import {
-	createDumdictService,
+	createPlannedDictionary,
 	englishSwimReading,
 	englishWalkLemma,
 	getBootedUpDumdict,
 	type StoreRevision,
-	withUnusedCleanupStorageMethods,
+	stubStore,
 } from "./helpers";
 
 const fixedEntry = (): ReadingEntry<"en"> => ({
@@ -23,30 +22,22 @@ const fixedEntry = (): ReadingEntry<"en"> => ({
 describe("ensureReadingEntry", () => {
 	test("rejects a mismatched storage context before planning or commit", async () => {
 		let commitCalls = 0;
-		const storage = withUnusedCleanupStorageMethods({
-			findStoredReadings() {
-				return Effect.die("Unexpected storage call");
-			},
-			loadReadingForPatch() {
-				return Effect.die("Unexpected storage call");
-			},
+		const storage = stubStore("en", {
 			loadReadingEntryContext() {
-				return Effect.succeed({
+				return {
 					intent: "ensureReadingEntry" as const,
 					revision: "mismatched-slice" as StoreRevision,
 					existingLemma: { lemma: englishWalkLemma },
-				});
+				};
 			},
 			commitChanges() {
 				commitCalls += 1;
-				return Effect.die("Unexpected commit");
+				throw new Error("Unexpected commit");
 			},
 		});
-		const dict = createDumdictService({ language: "en", storage });
+		const dict = createPlannedDictionary("en", storage);
 
-		await expect(
-			Effect.runPromise(dict.ensureReadingEntry({ entry: fixedEntry() })),
-		).rejects.toThrow(
+		expect(() => dict.ensureReadingEntry({ entry: fixedEntry() })).toThrow(
 			"existing Lemma does not match the requested Reading identity",
 		);
 		expect(commitCalls).toBe(0);
@@ -55,13 +46,9 @@ describe("ensureReadingEntry", () => {
 	test("creates an ordinary Reading Entry and an exact rerun is a no-op", async () => {
 		const { dict, storage } = getBootedUpDumdict("en");
 
-		const created = await Effect.runPromise(
-			dict.ensureReadingEntry({ entry: fixedEntry() }),
-		);
+		const created = dict.ensureReadingEntry({ entry: fixedEntry() });
 		const afterCreate = storage.loadAll();
-		const rerun = await Effect.runPromise(
-			dict.ensureReadingEntry({ entry: fixedEntry() }),
-		);
+		const rerun = dict.ensureReadingEntry({ entry: fixedEntry() });
 
 		expect(created).toMatchObject({
 			status: "applied",
@@ -79,25 +66,16 @@ describe("ensureReadingEntry", () => {
 
 	test("rejects an incompatible entry at the same Reading identity", async () => {
 		const { dict, storage } = getBootedUpDumdict("en");
-		await Effect.runPromise(
-			dict.ensureReadingEntry({ entry: fixedEntry() }),
-		);
+		dict.ensureReadingEntry({ entry: fixedEntry() });
 		const beforeConflict = storage.loadAll();
 
-		const result = await Effect.runPromise(
-			Effect.result(
-				dict.ensureReadingEntry({
-					entry: { ...fixedEntry(), notes: "different" },
-				}),
-			),
-		);
+		const result = dict.ensureReadingEntry({
+			entry: { ...fixedEntry(), notes: "different" },
+		});
 
 		expect(result).toMatchObject({
-			_tag: "Failure",
-			failure: {
-				_tag: "DumdictRejection",
-				code: "readingEntryConflict",
-			},
+			status: "rejected",
+			code: "readingEntryConflict",
 		});
 		expect(storage.loadAll()).toEqual(beforeConflict);
 	});
@@ -106,26 +84,19 @@ describe("ensureReadingEntry", () => {
 		const { dict, storage } = getBootedUpDumdict("en");
 		const entry = fixedEntry();
 
-		const result = await Effect.runPromise(
-			Effect.result(
-				dict.ensureReadingEntry({
-					entry: {
-						...entry,
-						knowledge: {
-							...entry.knowledge,
-							semanticRelations: { synonym: [englishWalkLemma] },
-						},
-					},
-				}),
-			),
-		);
+		const result = dict.ensureReadingEntry({
+			entry: {
+				...entry,
+				knowledge: {
+					...entry.knowledge,
+					semanticRelations: { synonym: [englishWalkLemma] },
+				},
+			},
+		});
 
 		expect(result).toMatchObject({
-			_tag: "Failure",
-			failure: {
-				_tag: "DumdictRejection",
-				code: "invalidRequest",
-			},
+			status: "rejected",
+			code: "invalidRequest",
 		});
 		expect(storage.loadAll()).toEqual([]);
 	});

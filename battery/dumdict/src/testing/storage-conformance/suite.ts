@@ -3,12 +3,16 @@ import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 
 import type {
+	CommitChangesRequest,
 	CommitChangesResult,
 	DumdictPendingSemanticRelation,
 	PlannedChangeOp,
 	ReadingEntry,
 } from "../../domain-types";
-import type { DumdictStoragePort } from "../../storage";
+import type {
+	LoadReadingEntryContextRequest,
+	ReadingEntryContext,
+} from "../../storage";
 import {
 	createLemma,
 	createOwnedSurface,
@@ -32,13 +36,17 @@ import {
 
 /**
  * The storage operations the conformance suite drives: the commit, and the
- * Reading Entry context reads a planner plans from. The other port reads
- * serve only the Effect service's own workflows.
+ * Reading Entry context reads the planner plans from. A failing Effect fails
+ * the test.
  */
-export type ConformanceStorage = Pick<
-	DumdictStoragePort<"de">,
-	"commitChanges" | "loadReadingEntryContext"
->;
+export type ConformanceStorage = {
+	commitChanges(
+		request: CommitChangesRequest<"de">,
+	): Effect.Effect<CommitChangesResult, unknown>;
+	loadReadingEntryContext(
+		request: LoadReadingEntryContextRequest<"de">,
+	): Effect.Effect<ReadingEntryContext<"de">, unknown>;
+};
 
 export type StorageConformanceOptions = {
 	/**
@@ -52,7 +60,7 @@ export type StorageConformanceOptions = {
 /**
  * Registers bun tests that drive the same planned changes through a store's
  * commit and assert the same resulting reads, so every Dumdict storage
- * adapter applies a plan as the reference in-memory store does.
+ * adapter applies a plan the same way.
  *
  * `createStorage` returns a fresh, empty German store for each test. Store
  * revisions are opaque: the suite reads one before each commit and asserts

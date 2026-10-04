@@ -9,28 +9,6 @@ import type {
 	SurfaceEntry,
 } from "../domain-types";
 import type { DumdictSemanticRelationDraft } from "../dto";
-import type { CleanupRelationResolution } from "../public";
-
-export type FindStoredReadingsStorageRequest<L extends Dumling.Language> = {
-	lemma: Dumling.Lemma<L>;
-};
-
-export type StoredReadingsSlice<L extends Dumling.Language> = {
-	revision: StoreRevision;
-	candidates: Array<{
-		reading: ReadingEntry<L>;
-		lemma: LemmaRecord<L>;
-	}>;
-};
-
-export type LoadReadingForPatchRequest<L extends Dumling.Language> = {
-	reading: Dumling.Reading<L>;
-};
-
-export type ReadingPatchSlice<L extends Dumling.Language> = {
-	revision: StoreRevision;
-	reading?: ReadingEntry<L>;
-};
 
 export type LoadReadingEntryContextRequest<L extends Dumling.Language> =
 	| {
@@ -99,23 +77,6 @@ export type ReadingEntryContext<L extends Dumling.Language> =
 	| ApplyGeneratedKnowledgeContext<L>
 	| EnsureOwnedSurfaceContext<L>
 	| EnsureReadingEntryContext<L>;
-
-export type GetInfoForRelationsCleanupStorageRequest<
-	_L extends Dumling.Language,
-> = {
-	canonicalForm: string;
-};
-
-export type RelationsCleanupInfoSlice<L extends Dumling.Language> = {
-	revision: StoreRevision;
-	canonicalForm: string;
-	candidateLemmas: LemmaRecord<L>[];
-	pendingRelations: PendingSemanticRelationRecord<L>[];
-};
-
-export type LoadCleanupRelationsContextRequest<L extends Dumling.Language> = {
-	resolutions: CleanupRelationResolution<L>[];
-};
 
 export type CleanupRelationsSlice<L extends Dumling.Language> = {
 	revision: StoreRevision;

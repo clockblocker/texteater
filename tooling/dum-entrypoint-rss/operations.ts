@@ -123,41 +123,12 @@ export async function runRepresentativeOperation(
 			);
 			break;
 		}
-		case "dumdict.identity":
-			assert.equal(
-				typeof published<typeof import("dumdict/runtime")>(
-					module,
-					"makeSurfaceId",
-				).makeSurfaceId("de", {
-					unitKind: "Surface",
-					language: "de",
-					lemma,
-					normalizedSurface: "Bank",
-					spelling: { kind: "Canonical" },
-					surfaceFeatures: null,
-					inflectionalFeatures: {
-						case: "Nom",
-						gender: null,
-						number: "Sing",
-					},
-				}),
-				"string",
-			);
-			break;
 		case "dumdict.parse-record": {
 			const result = published<typeof import("dumdict")>(
 				module,
 				"parseAsLemmaRecord",
 			).parseAsLemmaRecord({ lemma }, "de");
 			assert.deepEqual(result, { lemma });
-			break;
-		}
-		case "dumdict.session-storage": {
-			const storage = published<typeof import("dumdict/memory")>(
-				module,
-				"createMemoryStorage",
-			).createMemoryStorage("de");
-			assert.deepEqual(storage.snapshot(), []);
 			break;
 		}
 		case "dumdict.pending-identity":

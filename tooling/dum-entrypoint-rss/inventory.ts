@@ -109,16 +109,6 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		rationale: "Explicit schema or experiment authoring surface.",
 	},
 	{
-		specifier: "dumdict/runtime",
-		classification: "operational",
-		rationale:
-			"Published application runtime; must exclude schema authoring.",
-		operation: {
-			id: "dumdict.identity",
-			description: "parse record",
-		},
-	},
-	{
 		specifier: "dumdict/pending",
 		classification: "operational",
 		rationale:
@@ -142,16 +132,6 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		specifier: "dumdict/package.json",
 		classification: "metadata",
 		rationale: "Package metadata.",
-	},
-	{
-		specifier: "dumdict/memory",
-		classification: "operational",
-		rationale:
-			"Published application runtime; must exclude schema authoring.",
-		operation: {
-			id: "dumdict.session-storage",
-			description: "session storage",
-		},
 	},
 	{
 		specifier: "dumdict/testing",

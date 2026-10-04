@@ -26,11 +26,8 @@ import type {
 	EnsureReadingEntryContext,
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
-	ReadingPatchSlice,
-	RelationsCleanupInfoSlice,
-	StoredReadingsSlice,
 } from "../storage";
-import { sameCanonicalForm, sameReading, shadowMatchesLemma } from "./identity";
+import { sameReading, shadowMatchesLemma } from "./identity";
 import {
 	assertPendingSemanticRelationRecordIdentity,
 	derivePendingSemanticRelationLocator,
@@ -168,38 +165,6 @@ function validateRelationInventory<L extends Dumling.Language>(
 			}
 		}
 	}
-}
-
-export function validateStoredReadingsSlice<L extends Dumling.Language>(
-	expected: L,
-	slice: StoredReadingsSlice<L>,
-	requestedLemma?: Dumling.Lemma<L>,
-) {
-	for (const candidate of slice.candidates) {
-		validateReadingEntry(expected, candidate.reading);
-		validateLemmaRecord(expected, candidate.lemma);
-		if (!sameLemma(candidate.reading.reading.lemma, candidate.lemma.lemma))
-			throw new Error(
-				"stored Reading does not reference its candidate Lemma.",
-			);
-		if (requestedLemma && !sameLemma(candidate.lemma.lemma, requestedLemma))
-			throw new Error(
-				"stored Reading candidate does not match the requested Lemma identity.",
-			);
-	}
-}
-
-export function validateReadingPatchSlice<L extends Dumling.Language>(
-	expected: L,
-	slice: ReadingPatchSlice<L>,
-	requested?: Dumling.Reading<L>,
-) {
-	if (!slice.reading) return;
-	validateReadingEntry(expected, slice.reading);
-	if (requested && !sameReading(slice.reading.reading, requested))
-		throw new Error(
-			"reading patch slice does not match the requested Reading.",
-		);
 }
 
 function validateRevision(value: unknown) {
@@ -432,40 +397,6 @@ export function validateReadingEntryContext<L extends Dumling.Language>(
 				request.reading,
 			);
 	}
-}
-
-export function validateRelationsCleanupInfoSlice<L extends Dumling.Language>(
-	expected: L,
-	slice: RelationsCleanupInfoSlice<L>,
-	requestedCanonicalForm?: string,
-) {
-	const matchesRequest = (canonicalForm: string) =>
-		requestedCanonicalForm === undefined ||
-		sameCanonicalForm(canonicalForm, requestedCanonicalForm, expected);
-	if (!matchesRequest(slice.canonicalForm))
-		throw new Error(
-			"relations cleanup slice canonical form does not match the request.",
-		);
-	for (const record of slice.candidateLemmas) {
-		validateLemmaRecord(expected, record);
-		if (!matchesRequest(record.lemma.canonicalForm))
-			throw new Error(
-				"relations cleanup candidate Lemma has a different canonical form.",
-			);
-	}
-	for (const record of slice.pendingRelations) {
-		validatePendingRecord(expected, record);
-		if (!matchesRequest(record.pending.target.canonicalForm))
-			throw new Error(
-				"pending Unit Shadow has a different canonical form.",
-			);
-	}
-	assertNoDuplicates(
-		slice.pendingRelations.map(({ locator }) =>
-			pendingSemanticRelationLocatorKey(locator),
-		),
-		"pending Semantic Relations",
-	);
 }
 
 export function validateCleanupRelationsSlice<L extends Dumling.Language>(

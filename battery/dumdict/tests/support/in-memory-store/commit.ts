@@ -1,10 +1,10 @@
 import type * as Dumling from "dumling/types";
-import { impliedChangePreconditions } from "../../core/implied-preconditions";
+import { impliedChangePreconditions } from "../../../src/core/implied-preconditions";
 import type {
 	CommitChangesRequest,
 	CommitChangesResult,
-} from "../../domain-types";
-import type { SerializedDictionaryNote } from "../../dto";
+} from "../../../src/domain-types";
+import type { SerializedDictionaryNote } from "../../../src/dto";
 import { applyChange } from "./apply-change";
 import {
 	type DraftStorageState,

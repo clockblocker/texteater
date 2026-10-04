@@ -1,10 +1,8 @@
 /** biome-ignore-all lint/correctness/noUnusedVariables: README example file */
 import type * as Dumling from "dumling/types";
 
-
-import * as Effect from "effect/Effect";
 import {type LemmaRecord,makeSurfaceId,type ReadingEntry,type SurfaceEntry} from "../../src";
-import {getBootedUpDumdict} from "../../src/testing/boot";
+import {type AddNewNoteContext,createDumdictPlanner} from "../../src/planning";
 
 const walkLemma = {unitKind: "Lemma" as const,
 	canonicalForm: "walk",
@@ -76,28 +74,10 @@ const walkSurfaceEntry = {
 } satisfies SurfaceEntry<"en">;
 // README_BLOCK:english-walk-surface-entry:end
 
-const serializedWalk = {
-	schemaVersion: 1 as const,
-	lemmaRecord: walkLemmaRecord,
-	readingEntries: [walkReadingEntry],
-	ownedSurfaceEntries: [walkSurfaceEntry],
-	pendingRelations: [],
-};
+// README_BLOCK:planner-context:start
+const planner = createDumdictPlanner("en");
 
-// README_BLOCK:service-lookup:start
-const { dict: lookupDict } = getBootedUpDumdict("en", [serializedWalk]);
-
-const walkReadings = await Effect.runPromise(lookupDict.findStoredReadings({
-	lemma: walkLemma,
-}));
-
-const foundReadings = walkReadings.candidates.map(({ reading }) => reading);
-// README_BLOCK:service-lookup:end
-
-// README_BLOCK:quickstart-walk:start
-const { dict, storage } = getBootedUpDumdict("en", [serializedWalk]);
-
-const addRunResult = await Effect.runPromise(dict.addNewNote({
+const runRequest = {
 	draft: {
 		reading: runReading,
 		note: {
@@ -106,14 +86,36 @@ const addRunResult = await Effect.runPromise(dict.addNewNote({
 			notes: "Core fast-motion sense.",
 		},
 	},
-}));
+};
 
-const storedRunReading = storage
-	.loadAll()
-	.flatMap(({ readingEntries }) => readingEntries)
-	.find(
-		({ reading }) =>
-			"emojiDescription" in reading &&
-			reading.emojiDescription === runReading.emojiDescription,
-	);
-// README_BLOCK:quickstart-walk:end
+// The host reads exactly this slice from its store, inside its transaction.
+const sliceRequest = planner.contextRequest({
+	intent: "addNewNote",
+	request: runRequest,
+});
+
+const runContext = {
+	intent: "addNewNote",
+	revision: "rev-7",
+	existingOwnedSurfaces: [],
+	explicitExistingLemmaTargets: [],
+	exactPendingRelations: [],
+	pendingRelationsMatchingProposedLemma: [],
+	relationLemmas: [walkLemmaRecord],
+	relationReadings: [walkReadingEntry],
+} satisfies AddNewNoteContext<"en">;
+// README_BLOCK:planner-context:end
+
+// README_BLOCK:quickstart-run:start
+const outcome = planner.addNewNote(runContext, runRequest);
+
+if (outcome.status === "planned") {
+	// Apply every change in order, checking its preconditions, in the same
+	// transaction that loaded runContext.
+	const changeTypes = outcome.plan.changes.map(({ type }) => type);
+	// ["createLemma", "createReading"]
+} else {
+	// "rejected" (e.g. readingAlreadyExists) or "conflict"
+	const refusal = outcome.code;
+}
+// README_BLOCK:quickstart-run:end

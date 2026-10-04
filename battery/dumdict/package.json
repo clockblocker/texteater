@@ -24,12 +24,6 @@
 			"types": "./dist/public-schema.d.ts",
 			"import": "./dist/public-schema.js"
 		},
-		"./runtime": {
-			"bun": "./src/runtime.ts",
-			"convex": "./src/runtime.ts",
-			"types": "./dist/runtime.d.ts",
-			"import": "./dist/runtime.js"
-		},
 		"./pending": {
 			"bun": "./src/pending.ts",
 			"convex": "./src/pending.ts",
@@ -43,12 +37,6 @@
 			"import": "./dist/planning.js"
 		},
 		"./package.json": "./package.json",
-		"./memory": {
-			"bun": "./src/memory.ts",
-			"convex": "./src/memory.ts",
-			"types": "./dist/memory.d.ts",
-			"import": "./dist/memory.js"
-		},
 		"./testing": {
 			"bun": "./src/testing/index.ts",
 			"convex": "./src/testing/index.ts",
@@ -67,7 +55,7 @@
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:validation:check && bun run build:js && bun run build:types && bun run build:contract",
 		"build:contract": "bun run tests/published-build-contract.ts",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/runtime.ts src/memory.ts src/pending.ts src/planning.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/schema.ts src/public-schema.ts src/pending.ts src/planning.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",

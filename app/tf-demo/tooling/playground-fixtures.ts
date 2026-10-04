@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { createPendingSemanticRelationRecord } from "dumdict/pending";
-import { makeSurfaceId } from "dumdict/runtime";
+import { makeSurfaceId } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import type { Doc, Id } from "../convex/_generated/dataModel";
 import {

@@ -97,7 +97,7 @@ console.log("shared");
 		).toBe("shared");
 		for (const [provider, consumer] of [
 			["dumling", "dumrel"],
-			["dumrel", "dumdict/runtime"],
+			["dumrel", "dumdict/planning"],
 		]) {
 			const path = join(
 				root,

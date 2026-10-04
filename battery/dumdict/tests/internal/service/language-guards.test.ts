@@ -1,80 +1,48 @@
 import { describe, expect, test } from "bun:test";
+import { createDumdictPlanner } from "../../../src/planner/planner";
+import type { AddNewNoteContext } from "../../../src/storage";
 import {
-	createDumdictService,
 	englishRunLemma,
 	englishSwimCitationSurface,
 	englishSwimDraft,
-	failure,
 	germanGehenLemma,
-	germanGehenReading,
-	storageRejectingReadingEntryContext,
+	type StoreRevision,
 } from "./helpers";
 
+/** A valid empty slice: the request check refuses before the slice matters. */
+const emptyAddNewNoteContext: AddNewNoteContext<"en"> = {
+	intent: "addNewNote",
+	revision: "guard-1" as StoreRevision,
+	existingOwnedSurfaces: [],
+	explicitExistingLemmaTargets: [],
+	exactPendingRelations: [],
+	pendingRelationsMatchingProposedLemma: [],
+	relationLemmas: [],
+	relationReadings: [],
+};
+
 describe("language guards", () => {
-	test("findStoredReadings rejects a requested Lemma language mismatch", async () => {
-		const { storage } = storageRejectingReadingEntryContext();
-		const dict = createDumdictService({ language: "en", storage });
-
+	test("addNewNote rejects a draft Lemma language mismatch", () => {
 		expect(
-			await failure(
-				dict.findStoredReadings({ lemma: germanGehenLemma } as never),
-			),
-		).toMatchObject({
-			_tag: "DumdictInvalidInput",
-			expectedLanguage: "en",
-			actualLanguage: "de",
-		});
-	});
-
-	test("addAttestation rejects a requested Reading language mismatch", async () => {
-		const { storage } = storageRejectingReadingEntryContext();
-		const dict = createDumdictService({ language: "en", storage });
-
-		expect(
-			await failure(
-				dict.addAttestation({
-					reading: germanGehenReading,
-					attestation: "Wir gehen.",
-				} as never),
-			),
-		).toMatchObject({
-			_tag: "DumdictInvalidInput",
-			expectedLanguage: "en",
-			actualLanguage: "de",
-		});
-	});
-
-	test("addNewNote rejects a draft Lemma language mismatch", async () => {
-		const { storage, getLoadReadingEntryContextCalls } =
-			storageRejectingReadingEntryContext();
-		const dict = createDumdictService({ language: "en", storage });
-
-		expect(
-			await failure(
-				dict.addNewNote({
-					draft: {
-						...englishSwimDraft,
-						reading: {
-							...englishSwimDraft.reading,
-							lemma: germanGehenLemma,
-						},
+			createDumdictPlanner("en").addNewNote(emptyAddNewNoteContext, {
+				draft: {
+					...englishSwimDraft,
+					reading: {
+						...englishSwimDraft.reading,
+						lemma: germanGehenLemma,
 					},
-				} as never),
-			),
-		).toMatchObject({
-			_tag: "DumdictInvalidInput",
-			expectedLanguage: "en",
-			actualLanguage: "de",
+				},
+			} as never),
+		).toEqual({
+			status: "rejected",
+			code: "invalidRequest",
+			message: "Draft Reading language does not match the dictionary.",
 		});
-		expect(getLoadReadingEntryContextCalls()).toBe(0);
 	});
 
-	test("addNewNote rejects a Surface owned by another Lemma", async () => {
-		const { storage, getLoadReadingEntryContextCalls } =
-			storageRejectingReadingEntryContext();
-		const dict = createDumdictService({ language: "en", storage });
-		const result = await failure(
-			dict.addNewNote({
+	test("addNewNote rejects a Surface owned by another Lemma", () => {
+		expect(
+			createDumdictPlanner("en").addNewNote(emptyAddNewNoteContext, {
 				draft: {
 					...englishSwimDraft,
 					ownedSurfaces: [
@@ -92,11 +60,6 @@ describe("language guards", () => {
 					],
 				},
 			}),
-		);
-
-		expect(result).toMatchObject({
-			_tag: "DumdictInvalidInput",
-		});
-		expect(getLoadReadingEntryContextCalls()).toBe(0);
+		).toMatchObject({ status: "rejected", code: "invalidRequest" });
 	});
 });

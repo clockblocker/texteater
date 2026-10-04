@@ -1,9 +1,11 @@
 import { expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { projectSemanticRelations } from "dumrel";
-import { Effect } from "effect";
 import { ParsingError, parseAsCommitChangesRequest } from "../../../src";
-import { getBootedUpDumdict } from "../../../src/testing/boot";
+import {
+	getBootedUpDumdict,
+	plannedOf,
+} from "../../support/planned-dictionary";
 import { emojiOf } from "./helpers";
 
 const note = { attestedTranslations: [], attestations: [], notes: "" };
@@ -31,28 +33,19 @@ const bankSurface = {
 	inflectionalFeatures: null,
 } satisfies Dumling.Surface<"de", "Lexeme", "NOUN">;
 
-test("a Reading's Surface, Attestation and generated Knowledge reach dictionary storage and pending-target projection", async () => {
+test("a Reading's Surface and generated Knowledge reach dictionary storage and pending-target projection", async () => {
 	const { dict, storage } = getBootedUpDumdict("de");
 	expect(storage.loadAll()).toEqual([]);
 	const reading = bankReading;
-	await Effect.runPromise(
-		dict.ensureReadingEntry({ entry: { reading, ...note } }),
-	);
-	await Effect.runPromise(
-		dict.ensureOwnedSurface({
-			reading,
-			ownedSurface: { surface: bankSurface, note },
-		}),
-	);
-	await Effect.runPromise(
-		dict.ensureOwnedSurface({
-			reading,
-			ownedSurface: { surface: bankSurface, note },
-		}),
-	);
-	await Effect.runPromise(
-		dict.addAttestation({ reading, attestation: "Bank" }),
-	);
+	dict.ensureReadingEntry({ entry: { reading, ...note } });
+	dict.ensureOwnedSurface({
+		reading,
+		ownedSurface: { surface: bankSurface, note },
+	});
+	dict.ensureOwnedSurface({
+		reading,
+		ownedSurface: { surface: bankSurface, note },
+	});
 	const institution: Dumling.Reading<"de", "Lexeme", "NOUN"> = {
 		unitKind: "Reading",
 		lemma: {
@@ -62,36 +55,32 @@ test("a Reading's Surface, Attestation and generated Knowledge reach dictionary 
 		},
 		emojiDescription: "🏦",
 	};
-	await Effect.runPromise(
-		dict.ensureReadingEntry({ entry: { reading: institution, ...note } }),
-	);
+	dict.ensureReadingEntry({ entry: { reading: institution, ...note } });
 	// Generated Knowledge names relation targets by Lemma identity only.
-	await Effect.runPromise(
-		dict.applyGeneratedKnowledge({
-			reading,
-			changes: [],
-			pendingRelations: [
-				{
-					relation: "synonym",
-					target: {
-						language: "de",
-						family: "Lexeme",
-						kind: "NOUN",
-						canonicalForm: "Geldinstitut",
-					},
+	dict.applyGeneratedKnowledge({
+		reading,
+		changes: [],
+		pendingRelations: [
+			{
+				relation: "synonym",
+				target: {
+					language: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+					canonicalForm: "Geldinstitut",
 				},
-				{
-					relation: "synonym",
-					target: {
-						language: "de",
-						family: "Lexeme",
-						kind: "PROPN",
-						canonicalForm: "Sparkasse",
-					},
+			},
+			{
+				relation: "synonym",
+				target: {
+					language: "de",
+					family: "Lexeme",
+					kind: "PROPN",
+					canonicalForm: "Sparkasse",
 				},
-			],
-		}),
-	);
+			},
+		],
+	});
 	const stored = storage.loadAll();
 	const entries = stored.flatMap((value) => value.readingEntries);
 	expect(stored.flatMap((value) => value.ownedSurfaceEntries)).toHaveLength(
@@ -130,60 +119,44 @@ test("a Reading's Surface, Attestation and generated Knowledge reach dictionary 
 	expect(
 		entries.find((entry) => emojiOf(entry.reading) === "🏦")?.knowledge,
 	).toBeUndefined();
-	const candidates = await Effect.runPromise(
-		dict.findStoredReadings({ lemma: reading.lemma }),
-	);
-	expect(candidates.candidates.map((value) => value.reading)).toEqual([
-		reading,
-	]);
 });
 
 test("conflicting Knowledge changes reject the whole batch and competing plans keep revision checks", async () => {
 	const { dict, storage } = getBootedUpDumdict("de");
-	await Effect.runPromise(
-		dict.ensureReadingEntry({ entry: { reading: bankReading, ...note } }),
-	);
+	dict.ensureReadingEntry({ entry: { reading: bankReading, ...note } });
 	const before = storage.loadAll();
-	const failed = await Effect.runPromise(
-		Effect.result(
-			dict.applyGeneratedKnowledge({
-				reading: bankReading,
-				changes: [
-					{
-						kind: "Contribute",
-						aspect: "definition",
-						value: "first",
-					},
-					{
-						kind: "Contribute",
-						aspect: "definition",
-						value: "second",
-					},
-				],
-				pendingRelations: [],
-			}),
-		),
-	);
-	expect(failed._tag).toBe("Failure");
+	const failed = dict.applyGeneratedKnowledge({
+		reading: bankReading,
+		changes: [
+			{
+				kind: "Contribute",
+				aspect: "definition",
+				value: "first",
+			},
+			{
+				kind: "Contribute",
+				aspect: "definition",
+				value: "second",
+			},
+		],
+		pendingRelations: [],
+	});
+	expect(failed.status).toBe("rejected");
 	expect(storage.loadAll()).toEqual(before);
 	const request = {
 		reading: bankReading,
 		changes: [{ kind: "Correct", aspect: "definition", value: "stored" }],
 		pendingRelations: [],
 	} as const;
-	const first = await Effect.runPromise(
-		dict.prepare.applyGeneratedKnowledge(request),
-	);
-	const second = await Effect.runPromise(
-		dict.prepare.applyGeneratedKnowledge(request),
-	);
-	const commit = async (plan: typeof first.plan) => {
+	const first = plannedOf(dict.plan.applyGeneratedKnowledge(request));
+	const second = plannedOf(dict.plan.applyGeneratedKnowledge(request));
+	const commit = (plan: typeof first.plan) => {
 		const parsed = parseAsCommitChangesRequest(plan, "de");
 		if (parsed instanceof ParsingError) throw parsed;
-		return Effect.runPromise(storage.commitChanges(parsed));
+		return storage.commitChanges(parsed);
 	};
-	expect((await commit(first.plan)).status).toBe("committed");
-	expect(await commit(second.plan)).toMatchObject({
+	expect(commit(first.plan).status).toBe("committed");
+	expect(commit(second.plan)).toMatchObject({
 		status: "conflict",
 		code: "revisionConflict",
 	});
@@ -200,37 +173,31 @@ test("pending target planning observes the Knowledge mode selected in the same b
 		emojiDescription: "🏦",
 	};
 	for (const reading of [bankReading, target])
-		await Effect.runPromise(
-			dict.ensureReadingEntry({ entry: { reading, ...note } }),
-		);
+		dict.ensureReadingEntry({ entry: { reading, ...note } });
 	const before = storage.loadAll();
-	const result = await Effect.runPromise(
-		Effect.result(
-			dict.prepare.applyGeneratedKnowledge({
-				reading: bankReading,
-				changes: [
-					{
-						kind: "Contribute",
-						aspect: "semanticRelations",
-						relation: "synonym",
-						targetKind: "reading",
-						value: [target],
-					},
-				],
-				pendingRelations: [
-					{
-						relation: "synonym",
-						target: {
-							language: "de",
-							family: "Lexeme",
-							kind: "NOUN",
-							canonicalForm: "Sparkasse",
-						},
-					},
-				],
-			}),
-		),
-	);
-	expect(result._tag).toBe("Failure");
+	const result = dict.plan.applyGeneratedKnowledge({
+		reading: bankReading,
+		changes: [
+			{
+				kind: "Contribute",
+				aspect: "semanticRelations",
+				relation: "synonym",
+				targetKind: "reading",
+				value: [target],
+			},
+		],
+		pendingRelations: [
+			{
+				relation: "synonym",
+				target: {
+					language: "de",
+					family: "Lexeme",
+					kind: "NOUN",
+					canonicalForm: "Sparkasse",
+				},
+			},
+		],
+	});
+	expect(result.status).toBe("rejected");
 	expect(storage.loadAll()).toEqual(before);
 });

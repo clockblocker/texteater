@@ -12,7 +12,7 @@ export const SHARED_RSS_SAMPLE_COUNT = 7;
 export const SHARED_RSS_IMPORTS = [
 	"dumling",
 	"dumrel",
-	"dumdict/runtime",
+	"dumdict/planning",
 ] as const;
 const labels = ["effect/Effect", ...SHARED_RSS_IMPORTS];
 export type SharedRssSample = readonly {

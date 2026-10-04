@@ -1,56 +1,18 @@
-import { sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 
-import {
-	readingLemma,
-	sameCanonicalForm,
-	shadowMatchesLemma,
-} from "../../core/identity";
+import { readingLemma, shadowMatchesLemma } from "../../../src/core/identity";
 import {
 	derivePendingSemanticRelationLocator,
 	pendingSemanticRelationLocatorKey,
-} from "../../core/pending";
-import { makeSurfaceId } from "../../dumling-id";
+} from "../../../src/core/pending";
+import { makeSurfaceId } from "../../../src/dumling-id";
+import type { CleanupRelationResolution } from "../../../src/public";
 import type {
 	CleanupRelationsSlice,
-	FindStoredReadingsStorageRequest,
-	GetInfoForRelationsCleanupStorageRequest,
-	LoadCleanupRelationsContextRequest,
 	LoadReadingEntryContextRequest,
-	LoadReadingForPatchRequest,
 	ReadingEntryContext,
-	ReadingPatchSlice,
-	RelationsCleanupInfoSlice,
-	StoredReadingsSlice,
-} from "../../storage";
+} from "../../../src/storage";
 import type { InMemoryStorageState } from "./state";
-
-export function findStoredReadings<L extends Dumling.Language>(
-	state: InMemoryStorageState<L>,
-	request: FindStoredReadingsStorageRequest<L>,
-): StoredReadingsSlice<L> {
-	return {
-		revision: state.currentRevision(),
-		candidates: state.storedNotes.flatMap((bundle) =>
-			sameLemma(bundle.lemmaRecord.lemma, request.lemma)
-				? bundle.readingEntries.map((reading) => ({
-						reading,
-						lemma: bundle.lemmaRecord,
-					}))
-				: [],
-		),
-	};
-}
-
-export function loadReadingForPatch<L extends Dumling.Language>(
-	state: InMemoryStorageState<L>,
-	request: LoadReadingForPatchRequest<L>,
-): ReadingPatchSlice<L> {
-	return {
-		revision: state.currentRevision(),
-		reading: state.findStoredReading(request.reading),
-	};
-}
 
 export type ReadingEntryContextRead =
 	| "existingLemma"
@@ -191,37 +153,9 @@ export function loadReadingEntryContext<L extends Dumling.Language>(
 	};
 }
 
-export function getInfoForRelationsCleanup<L extends Dumling.Language>(
-	state: InMemoryStorageState<L>,
-	request: GetInfoForRelationsCleanupStorageRequest<L>,
-): RelationsCleanupInfoSlice<L> {
-	return {
-		revision: state.currentRevision(),
-		canonicalForm: request.canonicalForm,
-		candidateLemmas: state.storedNotes
-			.map(({ lemmaRecord }) => lemmaRecord)
-			.filter(({ lemma }) =>
-				sameCanonicalForm(
-					lemma.canonicalForm,
-					request.canonicalForm,
-					state.language,
-				),
-			),
-		pendingRelations: state
-			.allPendingRelations()
-			.filter(({ pending }) =>
-				sameCanonicalForm(
-					pending.target.canonicalForm,
-					request.canonicalForm,
-					state.language,
-				),
-			),
-	};
-}
-
 export function loadCleanupRelationsContext<L extends Dumling.Language>(
 	state: InMemoryStorageState<L>,
-	request: LoadCleanupRelationsContextRequest<L>,
+	request: { resolutions: CleanupRelationResolution<L>[] },
 ): CleanupRelationsSlice<L> {
 	const locatorKeys = new Set(
 		request.resolutions.map(({ locator }) =>

@@ -17,5 +17,4 @@ export {
 	parseAsSurfaceEntry,
 } from "./parsing/lightweight-parsers";
 export * from "./public";
-export { createDumdictService } from "./service/create-dumdict-service";
 export type * from "./storage";

@@ -6,49 +6,82 @@ Semantic glue for dictionary-note applications built on top of `dumling`.
 
 `dumdict` sits between host-owned dictionary storage and user-facing application
 workflows. It does not own persistence, sync, conflict UX, or LLM calls. A host
-supplies storage functions at setup time; UI code calls a small
-task-oriented service at runtime.
-
-The intended v1 hosts are:
-
-- an Obsidian plugin that serializes entries into markdown files
-- a Node server backed by SQLite for research-oriented dictionary data
-- an Electron app backed by remote LLM/database services plus a local cache
+loads the storage slice a request needs, asks `dumdict` for a plan, and applies
+that plan in the same transaction.
 
 ## Core idea
 
-A `dumdict` service is bound to one language and one storage adapter:
+`dumdict/planning` exports a synchronous planner bound to one language. It
+never reads or writes storage:
 
 ```ts
-const dict = createDumdictService({ language: "en", storage });
+const planner = createDumdictPlanner("en");
+
+const runRequest = {
+	draft: {
+		reading: runReading,
+		note: {
+			attestedTranslations: ["correr", "laufen"],
+			attestations: ["They run before breakfast."],
+			notes: "Core fast-motion sense.",
+		},
+	},
+};
+
+// The host reads exactly this slice from its store, inside its transaction.
+const sliceRequest = planner.contextRequest({
+	intent: "addNewNote",
+	request: runRequest,
+});
+
+const runContext = {
+	intent: "addNewNote",
+	revision: "rev-7",
+	existingOwnedSurfaces: [],
+	explicitExistingLemmaTargets: [],
+	exactPendingRelations: [],
+	pendingRelationsMatchingProposedLemma: [],
+	relationLemmas: [walkLemmaRecord],
+	relationReadings: [walkReadingEntry],
+} satisfies AddNewNoteContext<"en">;
 ```
 
-The runtime service exposes Effect workflows:
+The planner's workflows each take that host-loaded slice and a request:
 
-- `findStoredReadings`: return learner Readings for an exact structural Lemma
-- `addAttestation`: append evidence to an existing Reading
 - `addNewNote`: store a Lemma and a new learner Reading
-- `applyGeneratedKnowledge`: atomically plan generated Knowledge Changes and pending relations for an existing Reading
+- `applyGeneratedKnowledge`: plan generated Knowledge Changes and pending relations for an existing Reading
 - `ensureReadingEntry`: create or verify an ordinary Reading entry
 - `ensureOwnedSurface`: attach a newly encountered Surface to an existing Reading's Lemma
-- `getInfoForRelationsCleanup`: inspect unresolved relation targets
 - `cleanupRelations`: retry unresolved targets through deterministic Lemma resolution
 
-Each mutation also has a `prepare` variant that returns a detached plan
-without writing. The host can commit that plan together with related writes
-in one transaction; standalone methods prepare and commit through storage.
+Each returns a validated plan, a rejection, or a conflict:
+
+```ts
+const outcome = planner.addNewNote(runContext, runRequest);
+
+if (outcome.status === "planned") {
+	// Apply every change in order, checking its preconditions, in the same
+	// transaction that loaded runContext.
+	const changeTypes = outcome.plan.changes.map(({ type }) => type);
+	// ["createLemma", "createReading"]
+} else {
+	// "rejected" (e.g. readingAlreadyExists) or "conflict"
+	const refusal = outcome.code;
+}
+```
 
 The surrounding application owns the workflow around those calls. In the normal
 flow, the user clicks a text segment, the UI resolves its Surface and Lemma
-through its own LLM flow, `dumdict` returns candidate stored Readings, and the UI asks its LLM whether
-one candidate matches. If one does, the UI calls `addAttestation`; otherwise it
-collects a full note draft and calls `addNewNote`.
+through its own LLM flow, the host reads the stored Readings for that Lemma,
+and the UI asks its LLM whether one matches. If none does, the host plans
+`addNewNote`; otherwise it plans `ensureOwnedSurface` or
+`applyGeneratedKnowledge` for the matched Reading.
 
 `dumdict` owns the dictionary workflow semantics behind those calls:
 
 - validating language and structural identity consistency
 - keeping Lemma, Surface, and learner Reading identities distinct
-- loading only the storage slice required for the operation
+- naming the storage slice each operation needs
 - planning semantic changes and preconditions
 - applying Reading Knowledge Changes
 - resolving unambiguous Unit Shadows, enforcing direct target conflicts, and
@@ -58,15 +91,15 @@ Knowledge DTOs, schemas, and inverse rules come from `dumrel`; Dumdict
 owns the dictionary workflows that apply those rules to stored records.
 
 `dumdict/schema` is the explicit Zod composition surface for broad aggregate
-DTO schemas. It is never re-exported from `dumdict` or `dumdict/runtime`.
-Language-specific schema precision is available only from
-`dumdict/dangerously-heavy-schema-tree` as
-`getDangerouslyHeavyDumdictSchemaTreeForAbout100MiBRss`; importing it reaches
-the concrete Dumling route tree and adds roughly 100 MiB max RSS. Application
-validation should use Dumdict's lightweight parser interfaces instead.
+DTO schemas. It is never re-exported from `dumdict` or `dumdict/planning`.
+Application validation should use Dumdict's lightweight parser interfaces
+instead.
 
-Host storage owns the actual writes. Obsidian can translate planned changes into
-markdown edits, SQLite into a transaction, and Electron into server/cache writes.
+Host storage owns the actual writes. A host parses each planned change with
+`parseAsPlannedChangeOp`, checks its preconditions together with
+`impliedChangePreconditions`, and applies the whole list atomically.
+`dumdict/testing` exports `describeStorageConformance`, a bun test suite that
+proves a store applies plans the same way as Dumdict's reference store.
 Non-relation flows load only their operation slice. Relation planning receives
 the dictionary relation inventory needed for deterministic inferred views.
 
@@ -115,18 +148,6 @@ const walkSurfaceEntry = {
 } satisfies SurfaceEntry<"en">;
 ```
 
-Service reads return learner Reading candidates:
-
-```ts
-const { dict: lookupDict } = getBootedUpDumdict("en", [serializedWalk]);
-
-const walkReadings = await Effect.runPromise(lookupDict.findStoredReadings({
-	lemma: walkLemma,
-}));
-
-const foundReadings = walkReadings.candidates.map(({ reading }) => reading);
-```
-
 Semantic Relation buckets live in Reading Knowledge but contain Lemma values.
 Dumdict resolves generated Unit Shadows only when one exact Lemma descriptor
 matches and stores only the direct claim. Zero-match and ambiguous shadows
@@ -141,44 +162,20 @@ Install the packages:
 npm install dumdict dumling dumrel
 ```
 
-Minimal usage with the in-memory testing storage:
-
-```ts
-const { dict, storage } = getBootedUpDumdict("en", [serializedWalk]);
-
-const addRunResult = await Effect.runPromise(dict.addNewNote({
-	draft: {
-		reading: runReading,
-		note: {
-			attestedTranslations: ["correr", "laufen"],
-			attestations: ["They run before breakfast."],
-			notes: "Core fast-motion sense.",
-		},
-	},
-}));
-
-const storedRunReading = storage
-	.loadAll()
-	.flatMap(({ readingEntries }) => readingEntries)
-	.find(
-		({ reading }) =>
-			"emojiDescription" in reading &&
-			reading.emojiDescription === runReading.emojiDescription,
-	);
-```
-
-Production hosts normally call `createDumdictService` with their own storage
-port implementation. The storage port maps semantic loads and planned changes to
-the host's persistence model.
-
 The root export is intentionally focused:
 
-- `createDumdictService`: creates a language-bound service over a storage port
 - DTO types such as `ReadingEntry`, `SurfaceEntry`, and `DumdictReadingDraft`
 - `applyDumdictKnowledgeChange`: validates an exact Reading identity and applies
   one Dumrel Knowledge Change
-- storage port types for host adapters
-- dumling helpers such as `dumling`, `makeSurfaceId`, and `inspectDumlingId`
+- the lightweight `parseAs*` parsers for stored records and plans
+- request and storage slice types for host adapters
+- `makeSurfaceId`: the stable ID of an owned Surface
+
+The planner lives in `dumdict/planning`, so a transaction loads none of the
+root's parsers it does not use. Hosts outside this repository, such as an
+Obsidian plugin over markdown files, a Node server over SQLite, or an Electron
+app with a local cache, are future work; each would implement the slice reads
+and atomic commit the conformance suite checks.
 
 The version-1 serialized shape is a hard break. Old unversioned,
 Reading-targeted relation data must be reset or rewritten by the host; Dumdict

@@ -22,7 +22,7 @@ export function sameReading(
  * Whether two Canonical Forms in one language spell one Lemma's form, compared
  * without letter case as Lemma identity compares them (system ADR 0002).
  */
-export function sameCanonicalForm(
+function sameCanonicalForm(
 	left: string,
 	right: string,
 	language: Dumling.Language,

@@ -1,26 +1,26 @@
 import { describe, expect, test } from "bun:test";
-import * as Effect from "effect/Effect";
 import {
 	englishRunDraft,
 	englishWalkLemma,
 	englishWalkReading,
 	enSerializedNotes,
 	getBootedUpDumdict,
+	plannedOf,
 } from "./helpers";
 
 describe("host-composed Dumdict commits", () => {
-	test("prepares a plan without publishing dictionary changes", async () => {
-		const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
-		const dictionaryBefore = storage.loadAll();
-		const prepared = await Effect.runPromise(
-			dict.prepare.addNewNote({ draft: englishRunDraft }),
+	test("plans without publishing dictionary changes", () => {
+		const booted = getBootedUpDumdict("en", enSerializedNotes);
+		const dictionaryBefore = booted.storage.loadAll();
+		const planned = plannedOf(
+			booted.dict.plan.addNewNote({ draft: englishRunDraft }),
 		);
-		expect(prepared.plan.changes.length).toBeGreaterThan(0);
-		expect(storage.loadAll()).toEqual(dictionaryBefore);
+		expect(planned.plan.changes.length).toBeGreaterThan(0);
+		expect(booted.storage.loadAll()).toEqual(dictionaryBefore);
 	});
 });
 
-test("plans an unseen Surface and treats an existing Surface as a no-op", async () => {
+test("plans an unseen Surface and treats an existing Surface as a no-op", () => {
 	const { dict, storage } = getBootedUpDumdict("en", enSerializedNotes);
 	const ownedSurface = {
 		surface: {
@@ -42,39 +42,16 @@ test("plans an unseen Surface and treats an existing Surface as a no-op", async 
 		} as const,
 		note: { attestedTranslations: [], attestations: [], notes: "" },
 	};
-	const prepared = await Effect.runPromise(
-		dict.prepare.ensureOwnedSurface({
-			reading: englishWalkReading,
-			ownedSurface,
-		}),
-	);
-	expect(prepared.plan.changes.map(({ type }) => type)).toEqual([
+	const request = { reading: englishWalkReading, ownedSurface };
+	const planned = plannedOf(dict.plan.ensureOwnedSurface(request));
+	expect(planned.plan.changes.map(({ type }) => type)).toEqual([
 		"createOwnedSurface",
 	]);
 	expect(storage.loadAll()[0]?.ownedSurfaceEntries).toEqual([]);
-	await Effect.runPromise(
-		dict.ensureOwnedSurface({ reading: englishWalkReading, ownedSurface }),
-	);
-	const revisionAfterCreate = (
-		await Effect.runPromise(
-			storage.findStoredReadings({ lemma: englishWalkLemma }),
-		)
-	).revision;
-	const noOp = await Effect.runPromise(
-		dict.prepare.ensureOwnedSurface({
-			reading: englishWalkReading,
-			ownedSurface,
-		}),
-	);
+	dict.ensureOwnedSurface(request);
+	const revisionAfterCreate = storage.revision();
+	const noOp = plannedOf(dict.plan.ensureOwnedSurface(request));
 	expect(noOp.plan.changes).toEqual([]);
-	await Effect.runPromise(
-		dict.ensureOwnedSurface({ reading: englishWalkReading, ownedSurface }),
-	);
-	expect(
-		(
-			await Effect.runPromise(
-				storage.findStoredReadings({ lemma: englishWalkLemma }),
-			)
-		).revision,
-	).toBe(revisionAfterCreate);
+	dict.ensureOwnedSurface(request);
+	expect(storage.revision()).toBe(revisionAfterCreate);
 });

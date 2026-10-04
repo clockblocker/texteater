@@ -1,10 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 
-import * as Effect from "effect/Effect";
-import { createInMemoryTestStorage } from "../../../src/testing/in-memory-storage";
+import { createInMemoryTestStorage } from "../../support/in-memory-store";
 import {
-	createDumdictService,
+	createPlannedDictionary,
 	englishRunDraft,
 	englishWalkLemma,
 	englishWalkReading,
@@ -38,17 +37,18 @@ describe("Reading Entry context load", () => {
 			},
 		};
 
-		const result = await Effect.runPromise(
-			createDumdictService({
-				language: "en",
-				storage,
-			}).prepare.ensureReadingEntry({ entry: englishWalkReadingEntry() }),
-		);
+		const result = createPlannedDictionary(
+			"en",
+			storage,
+		).ensureReadingEntry({ entry: englishWalkReadingEntry() });
 
 		expect(requests).toEqual([
 			{ intent: "ensureReadingEntry", reading: englishWalkReading },
 		]);
-		expect(result.plan.baseRevision).toBe("mem-1");
+		expect(result).toMatchObject({
+			status: "applied",
+			baseRevision: "mem-1",
+		});
 	});
 
 	test("rejects a response for another intent before the caller can plan", async () => {
@@ -56,52 +56,43 @@ describe("Reading Entry context load", () => {
 		const storage = {
 			...delegate,
 			loadReadingEntryContext() {
-				return Effect.succeed({
+				return {
 					intent: "ensureOwnedSurface",
 					revision: "mem-1",
 					existingOwnedSurfaces: [],
-				} as never);
+				} as never;
 			},
 		};
 
-		await expect(
-			Effect.runPromise(
-				createDumdictService({
-					language: "en",
-					storage,
-				}).prepare.ensureReadingEntry({
-					entry: englishWalkReadingEntry(),
-				}),
-			),
-		).rejects.toThrow("Reading Entry context intent does not match");
+		expect(() =>
+			createPlannedDictionary("en", storage).ensureReadingEntry({
+				entry: englishWalkReadingEntry(),
+			}),
+		).toThrow("Reading Entry context intent does not match");
 	});
 
 	test("identity-only intents do not read relation inventory or pending records", async () => {
 		const readingEntry = getBootedUpDumdict("en", enSerializedNotes);
-		await Effect.runPromise(
-			readingEntry.dict.ensureReadingEntry({
-				entry: englishWalkReadingEntry(),
-			}),
-		);
+		readingEntry.dict.ensureReadingEntry({
+			entry: englishWalkReadingEntry(),
+		});
 		expect(readingEntry.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"existingLemma",
 		]);
 
 		const ownedSurface = getBootedUpDumdict("en", enSerializedNotes);
-		await Effect.runPromise(
-			ownedSurface.dict.ensureOwnedSurface({
-				reading: englishWalkReading,
-				ownedSurface: {
-					surface: walkSurface,
-					note: {
-						attestedTranslations: [],
-						attestations: [],
-						notes: "",
-					},
+		ownedSurface.dict.ensureOwnedSurface({
+			reading: englishWalkReading,
+			ownedSurface: {
+				surface: walkSurface,
+				note: {
+					attestedTranslations: [],
+					attestations: [],
+					notes: "",
 				},
-			}),
-		);
+			},
+		});
 		expect(ownedSurface.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"existingLemma",
@@ -111,9 +102,7 @@ describe("Reading Entry context load", () => {
 
 	test("relation-aware intents retain exact pending and relation inventory reads", async () => {
 		const add = getBootedUpDumdict("en");
-		await Effect.runPromise(
-			add.dict.addNewNote({ draft: englishRunDraft }),
-		);
+		add.dict.addNewNote({ draft: englishRunDraft });
 		expect(add.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"existingLemma",
@@ -126,13 +115,11 @@ describe("Reading Entry context load", () => {
 		]);
 
 		const generated = getBootedUpDumdict("en", enSerializedNotes);
-		await Effect.runPromise(
-			generated.dict.applyGeneratedKnowledge({
-				reading: englishWalkReading,
-				changes: [],
-				pendingRelations: [],
-			}),
-		);
+		generated.dict.applyGeneratedKnowledge({
+			reading: englishWalkReading,
+			changes: [],
+			pendingRelations: [],
+		});
 		expect(generated.storage.readingEntryContextReads()).toEqual([
 			"existingReading",
 			"exactPendingRelations",

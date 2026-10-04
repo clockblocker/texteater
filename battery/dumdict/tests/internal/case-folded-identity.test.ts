@@ -1,11 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import * as Effect from "effect/Effect";
 import { makeSurfaceId, type SerializedDictionaryNote } from "../../src";
 import { derivePendingEntryId } from "../../src/core/pending";
-import { getBootedUpDumdict } from "../../src/testing/boot";
-import { failure } from "./service/helpers";
+import { getBootedUpDumdict } from "../support/planned-dictionary";
 
 const interjection = (canonicalForm: string) =>
 	({
@@ -64,31 +62,20 @@ describe("case-folded Lemma identity (system ADR 0002)", () => {
 			storedNote(laughing),
 		]);
 
-		const found = await Effect.runPromise(
-			dict.findStoredReadings({ lemma: interjection("lol") }),
-		);
-		expect(found.candidates.map(({ reading }) => reading)).toEqual([
-			laughing,
-		]);
-
-		const repeated = await failure(
-			dict.addNewNote({
-				draft: {
-					reading: reading(interjection("lol"), "😂"),
-					note: entryNote,
-				},
-			}),
-		);
+		const repeated = dict.addNewNote({
+			draft: {
+				reading: reading(interjection("lol"), "😂"),
+				note: entryNote,
+			},
+		});
 		expect(repeated).toMatchObject({ code: "readingAlreadyExists" });
 
-		const added = await Effect.runPromise(
-			dict.addNewNote({
-				draft: {
-					reading: reading(interjection("lol"), "🤣"),
-					note: entryNote,
-				},
-			}),
-		);
+		const added = dict.addNewNote({
+			draft: {
+				reading: reading(interjection("lol"), "🤣"),
+				note: entryNote,
+			},
+		});
 		expect(added.status).toBe("applied");
 		const notes = storage.loadAll();
 		expect(notes).toHaveLength(1);
@@ -106,19 +93,12 @@ describe("case-folded Lemma identity (system ADR 0002)", () => {
 			storedNote(reading(morgenNoun, "🌅")),
 		]);
 
-		const found = await Effect.runPromise(
-			dict.findStoredReadings({ lemma: morgenAdverb }),
-		);
-		expect(found.candidates).toEqual([]);
-
-		const added = await Effect.runPromise(
-			dict.addNewNote({
-				draft: {
-					reading: reading(morgenAdverb, "📅"),
-					note: entryNote,
-				},
-			}),
-		);
+		const added = dict.addNewNote({
+			draft: {
+				reading: reading(morgenAdverb, "📅"),
+				note: entryNote,
+			},
+		});
 		expect(added.status).toBe("applied");
 		expect(
 			storage.loadAll().map(({ lemmaRecord }) => lemmaRecord.lemma.kind),

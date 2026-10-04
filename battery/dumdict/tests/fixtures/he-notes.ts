@@ -1,5 +1,4 @@
 import type * as Dumling from "dumling/types";
-import type { SerializedDictionaryNote } from "../../src";
 
 export const hebrewKatavLemma = {
 	unitKind: "Lemma" as const,
@@ -18,20 +17,3 @@ export const hebrewKatavReading = {
 	lemma: hebrewKatavLemma,
 	emojiDescription: "✍",
 } satisfies Dumling.Reading<"he">;
-
-export const heSerializedNotes = [
-	{
-		schemaVersion: 1,
-		lemmaRecord: { lemma: hebrewKatavLemma },
-		readingEntries: [
-			{
-				reading: hebrewKatavReading,
-				attestedTranslations: ["write"],
-				attestations: ["הוא כתב מכתב."],
-				notes: "Core writing reading.",
-			},
-		],
-		ownedSurfaceEntries: [],
-		pendingRelations: [],
-	},
-] satisfies SerializedDictionaryNote<"he">[];

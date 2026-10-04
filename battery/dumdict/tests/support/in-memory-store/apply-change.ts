@@ -1,9 +1,9 @@
 import type * as Dumling from "dumling/types";
 
-import { applyDumdictKnowledgeChange } from "../../core/apply-reading-knowledge-change";
-import { readingLemma, sameReading } from "../../core/identity";
-import { samePendingSemanticRelationLocator } from "../../core/pending";
-import type { PlannedChangeOp } from "../../domain-types";
+import { applyDumdictKnowledgeChange } from "../../../src/core/apply-reading-knowledge-change";
+import { readingLemma, sameReading } from "../../../src/core/identity";
+import { samePendingSemanticRelationLocator } from "../../../src/core/pending";
+import type { PlannedChangeOp } from "../../../src/domain-types";
 import type { DraftStorageState } from "./preconditions";
 import {
 	findDraftBundleByLemma,

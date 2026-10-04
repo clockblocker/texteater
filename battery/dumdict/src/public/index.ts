@@ -1,2 +1,2 @@
+export * from "./requests";
 export * from "./results";
-export * from "./service";
