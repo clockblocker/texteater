@@ -1,5 +1,7 @@
 import { expect, test } from "bun:test";
-import { resolve } from "node:path";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
 import { build } from "esbuild";
 
 test("planning entrypoint plans without Effect, schema authoring, or retained packages", async () => {
@@ -38,15 +40,23 @@ test("planning entrypoint plans without Effect, schema authoring, or retained pa
 	).toEqual([]);
 	const output = result.outputFiles?.[0];
 	if (!output) throw Error("Missing bundle");
-	const child = Bun.spawn([process.execPath, "--eval", output.text], {
-		stdout: "pipe",
-		stderr: "pipe",
-	});
-	const [stdout, stderr, exit] = await Promise.all([
-		new Response(child.stdout).text(),
-		new Response(child.stderr).text(),
-		child.exited,
-	]);
-	expect(exit, stderr).toBe(0);
-	expect(stdout.trim()).toBe("planning-ok");
+	// Run the bundle from a file: Linux caps one argv string at 128 KiB.
+	const directory = await mkdtemp(join(tmpdir(), "dumdict-planning-"));
+	try {
+		const bundle = join(directory, "planning.mjs");
+		await writeFile(bundle, output.text);
+		const child = Bun.spawn([process.execPath, bundle], {
+			stdout: "pipe",
+			stderr: "pipe",
+		});
+		const [stdout, stderr, exit] = await Promise.all([
+			new Response(child.stdout).text(),
+			new Response(child.stderr).text(),
+			child.exited,
+		]);
+		expect(exit, stderr).toBe(0);
+		expect(stdout.trim()).toBe("planning-ok");
+	} finally {
+		await rm(directory, { force: true, recursive: true });
+	}
 });
