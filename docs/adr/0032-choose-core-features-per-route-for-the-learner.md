@@ -15,12 +15,14 @@ the choice, not the rule.
 
 **The Feature Pool.** Lemma Core bags and Surface inflectional bags draw from
 one catalog, the Feature Pool: Dumling's `UNIVERSAL_FEATURE_SCHEMA`, after
-UD, narrowed per language (`DE_FEATURE_SCHEMA`). Each route splits the
-features it uses into Core and inflectional. Attestation, Reading and
-Knowledge have vocabularies of their own and never carry a Feature Pool
-feature or its name. Their values may coincide with the pool's: an
-Attestation's `realizedCase` has its own case enum, and Dumrel has its own
-literals.
+UD, narrowed per language (`DE_FEATURE_SCHEMA`). The language narrows every
+feature its routes use to that language's values. A route narrows a feature
+further only where its Kind uses fewer values: German PRON has no Art and
+German DET no Rcp. Each route splits the features it uses into Core and
+inflectional. Attestation, Reading and Knowledge have vocabularies of their
+own and never carry a Feature Pool feature or its name. Their values may
+coincide with the pool's: an Attestation's `realizedCase` has its own case
+enum, and Dumrel has its own literals.
 
 **The placement test.** Within the Feature Pool, the test chooses Core or
 inflectional by what is best for the learner. Core tells apart the entity the
@@ -212,6 +214,14 @@ like the ordinals, so neither is a DET. Emphatic `selbst` and `selber` are
 ADVs, which retires DET `selber` with Emp. The dumcorpus Rule is
 `de/canonical-form-is-the-headword`. Decided by the user on 2026-10-02
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
+
+Amended on 2026-10-04: the language narrows every feature its routes use,
+and a route narrows a feature only where its Kind uses fewer values. Before,
+German routes restated the German sets of case, gender, number, person and
+degree, and German's own sets of PronType, PartType, Polarity and Article
+lived only in its routes. One route set, DET's PronType, sat in the German
+catalog and still allowed Emp after DET `selber` retired. Decided by the user
+on [#926](https://github.com/clockblocker/texteater/issues/926).
 
 ## Considered Options
 

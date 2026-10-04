@@ -10,9 +10,9 @@ export const DeNumeralFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
-			case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
-			gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
-			number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
+			case: DE_FEATURE_SCHEMA.case,
+			gender: DE_FEATURE_SCHEMA.gender,
+			number: DE_FEATURE_SCHEMA.number,
 		}),
 	),
 });

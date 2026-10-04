@@ -24,14 +24,14 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 // Possessor features describe a possessive's Surface: sein- serves Masc and Neut.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de
-const gender = DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]);
 export const DePronounFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
-		case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
-		number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
-		person: DE_FEATURE_SCHEMA.person.extract(["1", "2", "3"]),
+		case: DE_FEATURE_SCHEMA.case,
+		number: DE_FEATURE_SCHEMA.number,
+		person: DE_FEATURE_SCHEMA.person,
 		polite: DE_FEATURE_SCHEMA.polite,
 		poss: DE_FEATURE_SCHEMA.poss,
+		// Art is DET only (system ADR 0032, 0040).
 		pronType: DE_FEATURE_SCHEMA.pronType.extract([
 			"Dem",
 			"Ind",
@@ -42,15 +42,15 @@ export const DePronounFeatureBagsSchema = featureBags({
 			"Rel",
 			"Tot",
 		]),
-		gender,
+		gender: DE_FEATURE_SCHEMA.gender,
 	}).refine(isGermanPronounCore, { error: germanPronounCoreError }),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
-			case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
-			gender,
-			number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
-			"gender[psor]": featureValueSetSchema(gender),
-			"number[psor]": DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
+			case: DE_FEATURE_SCHEMA.case,
+			gender: DE_FEATURE_SCHEMA.gender,
+			number: DE_FEATURE_SCHEMA.number,
+			"gender[psor]": featureValueSetSchema(DE_FEATURE_SCHEMA.gender),
+			"number[psor]": DE_FEATURE_SCHEMA.number,
 		}),
 	),
 });

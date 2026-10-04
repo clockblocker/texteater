@@ -12,10 +12,10 @@ export const DeAdjectiveFeatureBagsSchema = featureBags({
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
-			case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
-			degree: DE_FEATURE_SCHEMA.degree.extract(["Cmp", "Pos", "Sup"]),
-			gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
-			number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
+			case: DE_FEATURE_SCHEMA.case,
+			degree: DE_FEATURE_SCHEMA.degree,
+			gender: DE_FEATURE_SCHEMA.gender,
+			number: DE_FEATURE_SCHEMA.number,
 		}),
 	),
 });

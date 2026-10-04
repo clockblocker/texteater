@@ -1275,7 +1275,6 @@ export interface UnitMap {
 					| (
 							| "Art"
 							| "Dem"
-							| "Emp"
 							| "Ind"
 							| "Int"
 							| "Neg"
@@ -1306,7 +1305,6 @@ export interface UnitMap {
 						| (
 								| "Art"
 								| "Dem"
-								| "Emp"
 								| "Ind"
 								| "Int"
 								| "Neg"
@@ -1374,7 +1372,6 @@ export interface UnitMap {
 						| (
 								| "Art"
 								| "Dem"
-								| "Emp"
 								| "Ind"
 								| "Int"
 								| "Neg"
@@ -1409,7 +1406,6 @@ export interface UnitMap {
 							| (
 									| "Art"
 									| "Dem"
-									| "Emp"
 									| "Ind"
 									| "Int"
 									| "Neg"

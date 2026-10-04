@@ -11,12 +11,10 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 // wording no feature describes, so the Surface marks only case and number.
 export const DeNounLocutionFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
-		gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
+		gender: DE_FEATURE_SCHEMA.gender,
 	}),
 	[FeatureBagKind.Inflectional]: z.strictObject({
-		case: DE_FEATURE_SCHEMA.case
-			.extract(["Acc", "Dat", "Gen", "Nom"])
-			.nullable(),
-		number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]).nullable(),
+		case: DE_FEATURE_SCHEMA.case.nullable(),
+		number: DE_FEATURE_SCHEMA.number.nullable(),
 	}),
 });

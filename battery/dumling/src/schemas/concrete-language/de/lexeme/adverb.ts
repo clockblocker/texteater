@@ -15,7 +15,7 @@ export const DeAdverbFeatureBagsSchema = featureBags({
 	}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
-			degree: DE_FEATURE_SCHEMA.degree.extract(["Cmp", "Pos", "Sup"]),
+			degree: DE_FEATURE_SCHEMA.degree,
 		}),
 	),
 });

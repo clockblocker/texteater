@@ -16,6 +16,6 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 export const DeParticleFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		partType: DE_FEATURE_SCHEMA.partType.extract(["Inf", "Mod"]),
-		polarity: DE_FEATURE_SCHEMA.polarity.extract(["Neg"]),
+		polarity: DE_FEATURE_SCHEMA.polarity,
 	}).refine(isGermanParticleCore, { error: germanParticleCoreError }),
 });

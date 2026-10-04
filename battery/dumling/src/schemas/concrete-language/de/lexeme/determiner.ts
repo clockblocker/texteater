@@ -23,7 +23,10 @@ const DeDeterminerCoreFeatureBagSchema = z
 		person: DE_FEATURE_SCHEMA.person.nullable(),
 		polite: DE_FEATURE_SCHEMA.polite.nullable(),
 		poss: DE_FEATURE_SCHEMA.poss.nullable(),
-		pronType: DE_FEATURE_SCHEMA.determinerPronType.nullable(),
+		// Rcp is PRON only: einander (system ADR 0044).
+		pronType: DE_FEATURE_SCHEMA.pronType
+			.extract(["Art", "Dem", "Ind", "Int", "Neg", "Prs", "Rel", "Tot"])
+			.nullable(),
 	})
 	.refine(isGermanDeterminerCore, { error: germanDeterminerCoreError });
 

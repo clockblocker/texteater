@@ -36,18 +36,28 @@ const DeDegreeSchema = UNIVERSAL_FEATURE_SCHEMA.degree.extract([
 	"Sup",
 ]);
 const DePoliteSchema = UNIVERSAL_FEATURE_SCHEMA.polite.extract(["Form"]);
-const DeDeterminerPronTypeSchema = UNIVERSAL_FEATURE_SCHEMA.pronType.extract([
+const DePronTypeSchema = UNIVERSAL_FEATURE_SCHEMA.pronType.extract([
 	"Art",
 	"Dem",
-	"Emp",
 	"Ind",
 	"Int",
 	"Neg",
 	"Prs",
+	"Rcp",
 	"Rel",
 	"Tot",
 ]);
+const DePartTypeSchema = UNIVERSAL_FEATURE_SCHEMA.partType.extract([
+	"Inf",
+	"Mod",
+	"Res",
+]);
+const DePolaritySchema = UNIVERSAL_FEATURE_SCHEMA.polarity.extract(["Neg"]);
+const DeArticleSchema = UNIVERSAL_FEATURE_SCHEMA.article.extract(["Definite"]);
 
+// The German Feature Pool (system ADR 0032): every feature a German route uses
+// is narrowed here to German's values. A route narrows a feature's values only
+// where its Kind uses fewer than German's.
 export const DE_FEATURE_SCHEMA = {
 	...UNIVERSAL_FEATURE_SCHEMA,
 	aspect: DeAspectSchema,
@@ -64,7 +74,10 @@ export const DE_FEATURE_SCHEMA = {
 	case: DeCaseSchema,
 	degree: DeDegreeSchema,
 	polite: DePoliteSchema,
-	determinerPronType: DeDeterminerPronTypeSchema,
+	pronType: DePronTypeSchema,
+	partType: DePartTypeSchema,
+	polarity: DePolaritySchema,
+	article: DeArticleSchema,
 } as const;
 
 // Whole-Surface form and finite coordinates are independent of construction.
