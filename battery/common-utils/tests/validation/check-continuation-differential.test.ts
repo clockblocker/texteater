@@ -163,3 +163,140 @@ describe("checks after a failure", () => {
 			]);
 	});
 });
+
+// Known gap (#925): when a node's children fail only continuable checks (a
+// `min` on a field, not a type error), Zod still runs the node's own checks on
+// the partial value. The runtime does that for a string, number or array base
+// only. A pipe over a reference, object, record or union stops at the base's
+// issues, so the issues of its later checks are missing; pass or fail still
+// matches Zod. If a test here fails because the runtime now reports the
+// refinement's issue, the gap has closed: expect Zod's full list and drop the
+// note in the README.
+
+type Counted = { count: number; name: string };
+
+function hasPositiveCount(value: Counted): boolean {
+	return value.count > 0;
+}
+
+function hasTwoEntries(value: Record<string, number>): boolean {
+	return Object.keys(value).length >= 2;
+}
+
+function isTextOrCounted(value: Counted | string): boolean {
+	return typeof value === "string" || hasPositiveCount(value);
+}
+
+const counted = z.object({ count: z.number(), name: z.string().min(3) });
+
+const gapSchemas = {
+	object: counted.refine(hasPositiveCount),
+	record: z.record(z.string(), z.number().min(1)).refine(hasTwoEntries),
+	reference: z.lazy(() => counted).refine(hasPositiveCount),
+	union: z.union([counted, z.string()]).refine(isTextOrCounted),
+};
+
+const gapCompiled = compileZodValidationArtifacts({
+	operations: [
+		{
+			construct: "custom",
+			implementation: hasPositiveCount as (...args: never[]) => unknown,
+			name: "hasPositiveCount",
+			version: 1,
+		},
+		{
+			construct: "custom",
+			implementation: hasTwoEntries as (...args: never[]) => unknown,
+			name: "hasTwoEntries",
+			version: 1,
+		},
+		{
+			construct: "custom",
+			implementation: isTextOrCounted as (...args: never[]) => unknown,
+			name: "isTextOrCounted",
+			version: 1,
+		},
+	],
+	schemas: gapSchemas,
+});
+
+function refinement<Value>(
+	holds: (value: Value) => boolean,
+): ValidationOperations[string] {
+	return (value) => ({
+		issues: holds(value as Value)
+			? []
+			: [{ code: "custom", message: "Invalid input", path: [] }],
+		value,
+	});
+}
+
+const gapOperations: ValidationOperations = {
+	hasPositiveCount: refinement(hasPositiveCount),
+	hasTwoEntries: refinement(hasTwoEntries),
+	isTextOrCounted: refinement(isTextOrCounted),
+};
+
+const refinementIssue = { code: "custom", message: "Invalid input", path: [] };
+
+const shortName = { count: 0, name: "ab" };
+
+const shortNameIssue = {
+	code: "too_small",
+	inclusive: true,
+	message: "Too small: expected string to have >=3 characters",
+	minimum: 3,
+	origin: "string",
+	path: ["name"],
+};
+
+const gapCases: Readonly<
+	Record<
+		keyof typeof gapSchemas,
+		Readonly<{ input: unknown; issues: readonly object[] }>
+	>
+> = {
+	object: { input: shortName, issues: [shortNameIssue] },
+	record: {
+		input: { a: 0 },
+		issues: [
+			{
+				code: "too_small",
+				inclusive: true,
+				message: "Too small: expected number to be >=1",
+				minimum: 1,
+				origin: "number",
+				path: ["a"],
+			},
+		],
+	},
+	reference: { input: shortName, issues: [shortNameIssue] },
+	union: { input: shortName, issues: [shortNameIssue] },
+};
+
+describe("a pipe over a reference, object, record or union skips its checks after a non-aborting failure", () => {
+	for (const [name, { input, issues }] of Object.entries(gapCases)) {
+		test(`${name} rejects as Zod does but omits the refinement's issue`, () => {
+			const schema = name as keyof typeof gapSchemas;
+			const expected = gapSchemas[schema].safeParse(input);
+			const actual = parseValidationArtifact(
+				{
+					definitions: gapCompiled.definitions,
+					root: gapCompiled.roots[schema],
+					version: 1,
+				},
+				input,
+				gapOperations,
+			);
+			expect(expected.success).toBe(false);
+			if (!expected.success)
+				expect(expected.error.issues).toEqual([
+					...issues,
+					refinementIssue,
+				] as never);
+			expect(actual).toBeInstanceOf(ParsingError);
+			if (actual instanceof ParsingError)
+				expect(actual.issues).toEqual(issues as never);
+		});
+	}
+});

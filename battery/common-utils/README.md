@@ -47,3 +47,16 @@ Domain schemas and their generated rules belong to those packages.
   pins Zod to one exact version.
 
 A provider change requires regenerating and rebuilding its consumers.
+
+The runtime accepts and rejects exactly what Zod does, and reports the same
+issues with one known exception. When a node's children fail only continuable
+checks (a field's `min`, not a type error), Zod still runs the node's own
+checks, such as a `refine`, on the partial value. The runtime does that only
+when the pipe's base is a string, number or array. A pipe over a reference
+(`z.lazy(...)`), object, record or union stops at the base's issues, so a
+schema like `z.object({ name: z.string().min(3) }).refine(...)` reports the
+`too_small` without the refinement's issue. This stays because the runtime
+can't tell such a pipe from a transform or readonly stage, which Zod skips
+after any base issue, and it has no partial value for these bases.
+`tests/validation/check-continuation-differential.test.ts` pins the shorter
+issue lists.
