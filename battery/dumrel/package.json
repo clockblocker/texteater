@@ -60,7 +60,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts src/generated/linked-validation.ts src/generated/validation.ts --bundle --external:dumval --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/schemas.ts src/generated/linked-validation.ts src/generated/validation.ts --bundle --external:common-utils --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
@@ -75,8 +75,7 @@
 	"dependencies": {
 		"common-utils": "workspace:^",
 		"dumling": "workspace:^",
-		"zod": "^4.4.0",
-		"dumval": "workspace:^"
+		"zod": "4.4.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",

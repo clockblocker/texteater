@@ -1,9 +1,9 @@
-import { validationOperations } from "dumling/validation";
-import * as relSchemas from "dumrel/schema";
 import {
 	parseCompiledValidation,
 	type ValidationOperations,
-} from "dumval/runtime";
+} from "common-utils/validation";
+import { validationOperations } from "dumling/validation";
+import * as relSchemas from "dumrel/schema";
 import { z } from "zod";
 import { canonicalDumdictValidationSchemas } from "../../battery/dumdict/codegen/validation-artifacts";
 import { validationRegistry as dictionary } from "../../battery/dumdict/src/generated/linked-validation";
@@ -34,7 +34,7 @@ function mutations(value: unknown): unknown[] {
 }
 function targets(
 	packageName: string,
-	registry: import("dumval/runtime").CompiledValidationRegistry,
+	registry: import("common-utils/validation").CompiledValidationRegistry,
 	schemas: Record<string, z.ZodType>,
 	examples: Record<string, unknown[]>,
 	runtimeOperations: ValidationOperations = validationOperations,

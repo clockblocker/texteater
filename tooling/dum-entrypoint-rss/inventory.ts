@@ -23,14 +23,14 @@ export type DumEntryPoint = OperationalEntryPoint | ExemptEntryPoint;
 
 /**
  * Canonical classification of every public export from Dumling, Dumrel,
- * Dumdict, and Dumval. Tests compare this list to the package manifests so a
+ * Dumdict, and common-utils, which holds the compiled-validation runtime. Tests compare this list to the package manifests so a
  * new public subpath cannot silently escape the memory audit.
  */
 export const DUM_PACKAGE_PATHS = {
 	dumling: "dumling",
 	dumrel: "dumrel",
 	dumdict: "dumdict",
-	dumval: "dumval",
+	"common-utils": "common-utils",
 } as const;
 export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 	{
@@ -178,22 +178,32 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
-		specifier: "dumval/runtime",
+		specifier: "common-utils",
+		classification: "operational",
+		rationale:
+			"Shared helpers every Dum package loads; must stay free of Zod and the validation compiler.",
+		operation: {
+			id: "common-utils.canonical-json",
+			description: "Write canonical JSON",
+		},
+	},
+	{
+		specifier: "common-utils/validation",
 		classification: "operational",
 		rationale:
 			"Shared compiled validation; runtime must remain schema-free.",
 		operation: {
-			id: "dumval.validate",
+			id: "common-utils.validate",
 			description: "Validate through the shared rule protocol",
 		},
 	},
 	{
-		specifier: "dumval/compiler",
+		specifier: "common-utils/validation-compiler",
 		classification: "schema-authoring-exempt",
 		rationale: "Build-time Zod compilation and rule linking.",
 	},
 	{
-		specifier: "dumval/package.json",
+		specifier: "common-utils/package.json",
 		classification: "metadata",
 		rationale: "Package metadata.",
 	},

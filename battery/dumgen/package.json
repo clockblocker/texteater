@@ -57,7 +57,7 @@
 		"dumcorpus": "workspace:^",
 		"effect": "4.0.0",
 		"promptsmith": "workspace:^",
-		"zod": "^4.4.0"
+		"zod": "4.4.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",

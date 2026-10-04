@@ -8,7 +8,7 @@ import {
 	compileZodValidationArtifacts,
 	emitInlineOutputType,
 	emitValidationOutputTypes,
-} from "../src/compiler.js";
+} from "../../src/validation-compiler.js";
 
 test("emitted types preserve recursive, optional, tuple, and empty-object values", async () => {
 	const text = z.string();
@@ -62,7 +62,7 @@ const invalidLabel: Node = {...leaf, label: 123};
 				process.execPath,
 				fileURLToPath(
 					new URL(
-						"../../../node_modules/typescript/bin/tsc",
+						"../../../../node_modules/typescript/bin/tsc",
 						import.meta.url,
 					),
 				),

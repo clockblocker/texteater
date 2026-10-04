@@ -1,5 +1,10 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { formatTypeScript } from "codegen";
+import {
+	compileZodValidationArtifacts,
+	emitLinkedValidationRegistry,
+	type ZodValidationOperationRegistration,
+} from "common-utils/validation-compiler";
 import { registrations as dumlingOperations } from "dumling/codegen";
 import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
 import {
@@ -8,11 +13,6 @@ import {
 	readingKnowledgeSchema,
 } from "dumrel/schema";
 import { encodedValidation as dumrelValidation } from "dumrel/validation-artifact";
-import {
-	compileZodValidationArtifacts,
-	emitLinkedValidationRegistry,
-	type ZodValidationOperationRegistration,
-} from "dumval/compiler";
 import { unitSchemas } from "../src/generated/unit-schemas.js";
 import {
 	commitChangesResultSchema,

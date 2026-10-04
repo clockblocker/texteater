@@ -1,3 +1,4 @@
+import type { ParsingError } from "common-utils/validation";
 import type {
 	ChangePrecondition,
 	CommitChangesRequest,
@@ -12,13 +13,12 @@ import type {
 	SurfaceEntry,
 } from "dumdict";
 import type * as Dumling from "dumling/types";
-import type { ParsingError } from "dumval/runtime";
 
 type Parsed<Value> = Value | ParsingError<Value>;
 
 /** Frozen package-root parser contract for Dumdict's lightweight boundary. */
 export interface DumdictParserInterface {
-	readonly ParsingError: typeof import("dumval/runtime").ParsingError;
+	readonly ParsingError: typeof import("common-utils/validation").ParsingError;
 	readonly parseAsLemmaRecord: <const L extends Dumling.Language>(
 		input: unknown,
 		language: L,

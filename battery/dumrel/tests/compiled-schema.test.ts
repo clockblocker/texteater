@@ -1,12 +1,12 @@
 import { expect, test } from "bun:test";
 import { required } from "common-utils";
-import { validationOperations } from "dumling/validation";
-import * as schemas from "dumrel/schema";
 import {
 	ParsingError,
 	parseValidationArtifact,
 	type ValidationArtifact,
-} from "dumval/runtime";
+} from "common-utils/validation";
+import { validationOperations } from "dumling/validation";
+import * as schemas from "dumrel/schema";
 import { encodedValidation } from "../src/generated/validation";
 
 const registry = JSON.parse(encodedValidation) as {

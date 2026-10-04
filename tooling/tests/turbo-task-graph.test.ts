@@ -65,7 +65,6 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"dumgen#build:package",
 		"dumling#build:package",
 		"dumrel#build:package",
-		"dumval#build:package",
 		"lego#build:package",
 		"promptsmith#build:package",
 		"react-resizable-panels#build:package",
@@ -92,7 +91,6 @@ test("a battery's build script builds its in-house dependencies first", () => {
 		"dumgen#build:package",
 		"dumling#build:package",
 		"dumrel#build:package",
-		"dumval#build:package",
 		"promptsmith#build:package",
 	]);
 });

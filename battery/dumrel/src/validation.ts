@@ -1,10 +1,10 @@
-import { validationOperations as dumlingValidationOperations } from "dumling/validation";
 import {
 	type CompiledValidationRegistry,
 	type ParsingError,
 	parseCompiledValidation,
 	type ValidationOperations,
-} from "dumval/runtime";
+} from "common-utils/validation";
+import { validationOperations as dumlingValidationOperations } from "dumling/validation";
 import { validationRegistry } from "./generated/linked-validation.js";
 import type { KnowledgeChange, ReadingKnowledge } from "./types.js";
 

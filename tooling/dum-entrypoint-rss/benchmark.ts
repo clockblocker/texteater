@@ -23,7 +23,7 @@ import {
 } from "./shared";
 
 export const SAMPLE_COUNT = 5;
-const packages = ["dumval", "dumling", "dumrel", "dumdict"] as const;
+const packages = ["common-utils", "dumling", "dumrel", "dumdict"] as const;
 
 type MeasurementMode = "baseline" | "import-only" | "import-plus-operation";
 

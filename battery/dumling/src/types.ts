@@ -1,4 +1,4 @@
-import type { ParsingError } from "dumval/runtime";
+import type { ParsingError } from "common-utils/validation";
 
 export type {
 	Attestation,

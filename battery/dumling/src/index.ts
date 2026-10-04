@@ -1,4 +1,4 @@
-export { ParsingError } from "dumval/runtime";
+export { ParsingError } from "common-utils/validation";
 export { checkIfGrundform } from "./check-if-grundform.js";
 export { GrundformAssessmentError } from "./grundform/result.js";
 export {

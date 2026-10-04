@@ -4,7 +4,7 @@ import {
 	compileZodValidationArtifacts,
 	emitInlineOutputType,
 	emitLinkedValidationRegistry,
-} from "dumval/compiler";
+} from "common-utils/validation-compiler";
 import { UnitKindSchema, VariantTagSchema } from "../src/schemas/units.js";
 import { registrations } from "./operations.js";
 import { loadRoutes } from "./routes.js";

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { required } from "./required.js";
-import type { Constraint } from "./validation-artifact.js";
+import { required } from "../required.js";
+import type { Constraint } from "../validation/validation-artifact.js";
 
 type Registry = {
 	readonly roots: Readonly<Record<string, Constraint>>;
@@ -261,7 +261,7 @@ export function emitLinkedValidationRegistry(
 		"A linked validation owner is required",
 	);
 	const provider = linked.at(-2);
-	return `// Generated shared validation. Run the owning package's generator.\nimport {bindValidationRegistry} from "dumval/runtime";\n${provider ? `import {validationRegistry as provider} from ${JSON.stringify(`${provider.owner}/compiled-validation`)};\n` : ""}export const validationRegistry=bindValidationRegistry<${
+	return `// Generated shared validation. Run the owning package's generator.\nimport {bindValidationRegistry} from "common-utils/validation";\n${provider ? `import {validationRegistry as provider} from ${JSON.stringify(`${provider.owner}/compiled-validation`)};\n` : ""}export const validationRegistry=bindValidationRegistry<${
 		Object.keys(current.artifact.roots)
 			.map((name) => JSON.stringify(name))
 			.join("|") || "never"

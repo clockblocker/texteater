@@ -2,7 +2,7 @@ import {
 	type CompiledValidationRegistry,
 	ParsingError,
 	parseCompiledValidation,
-} from "dumval/runtime";
+} from "common-utils/validation";
 import { validationRegistry } from "./generated/linked-validation.js";
 import type { ParsedUnit, ParseResult, UnitRoute } from "./types.js";
 import { validationOperations } from "./validation/operations.js";

@@ -7,7 +7,7 @@ import type {
 	NumberConstraintCheck,
 	StringConstraintCheck,
 	ValidationEffect,
-} from "./validation-artifact.js";
+} from "../validation/validation-artifact.js";
 
 type ZodValidationSemanticOperationConstruct =
 	| "custom"

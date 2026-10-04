@@ -1,5 +1,5 @@
+import { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
-import { ParsingError } from "dumval/runtime";
 import { contextualizeKnowledge, issue } from "./context.js";
 import type { ReadingWithKnowledge } from "./types.js";
 import { parseProjectionShape } from "./validation.js";

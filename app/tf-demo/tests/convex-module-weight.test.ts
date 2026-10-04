@@ -27,7 +27,7 @@ const FORBIDDEN_INPUTS = [
 	/\/zod\//,
 ];
 const DUM_PACKAGE_INPUT =
-	/\/(?:dumcorpus|dumdict|dumling|dumrel|dumval)\/(?:dist|src)\//;
+	/\/(?:common-utils|dumcorpus|dumdict|dumling|dumrel)\/(?:dist|src)\//;
 /**
  * Convex bundles workspace packages from their source ("convex" export
  * condition). A built copy beside it would load the same package twice.

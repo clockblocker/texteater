@@ -1,6 +1,6 @@
+import { ParsingError } from "common-utils/validation";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import { ParsingError } from "dumval/runtime";
 import { structuralKeys } from "./fingerprint.js";
 import type {
 	ConjugationClasses,

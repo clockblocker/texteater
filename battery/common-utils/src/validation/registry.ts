@@ -42,7 +42,7 @@ export function bindValidationRegistry<Root extends string = string>(
 			dependency.registry.fingerprint !== dependency.fingerprint)
 	)
 		throw Error(
-			"Incompatible compiled validation provider; rebuild its consumers with the same dumval runtime",
+			"Incompatible compiled validation provider; rebuild its consumers with the same common-utils/validation runtime",
 		);
 	Object.setPrototypeOf(artifact.definitions, parent?.definitions ?? null);
 	const roots = Object.fromEntries(
@@ -68,7 +68,7 @@ export function parseCompiledValidation<Output>(
 	const artifact = registries.get(registry);
 	if (!artifact)
 		throw Error(
-			"Unknown compiled validation provider; use the same dumval runtime",
+			"Unknown compiled validation provider; use the same common-utils/validation runtime",
 		);
 	if (!Object.hasOwn(artifact.roots, root))
 		throw Error(`Missing validator ${root}`);

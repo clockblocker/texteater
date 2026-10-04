@@ -2,7 +2,8 @@
 
 `common-utils` holds the small TypeScript helpers several workspaces share:
 compile-time assertions for type tests, type-display helpers, `required` and
-`canonicalJson`.
+`canonicalJson`. Two subpaths hold the compiled-validation machinery the Dum
+packages share.
 
 ```ts
 import { canonicalJson, type Equal, type Expect, required } from "common-utils";
@@ -29,4 +30,20 @@ canonicalJson({ b: 1, a: undefined, C: [2] }); // '{"C":[2],"b":1}'
   objects. Every workspace that keys or hashes JSON uses it instead of its own
   sorted stringify.
 
-`ParsingError` and the validation runtime live in `dumval/runtime`.
+## Validation
+
+Zod schemas are the authoring source for Dumling, Dumrel and Dumdict, and each
+package compiles them into committed validation rules
+([ADR 0013](../../docs/adr/0013-compile-zod-authored-schemas-into-package-owned-lightweight-validators.md)).
+Domain schemas and their generated rules belong to those packages.
+
+- `common-utils/validation` is the runtime: it interprets the rules, owns
+  `ParsingError`, and binds generated providers by exact compatibility
+  fingerprint. It loads neither Zod nor compiler code, so a short-lived isolate
+  can import it (system ADR 0025).
+- `common-utils/validation-compiler` runs at generation time. It compiles Zod
+  schemas, emits structural output types and links identical rule definitions
+  across package dependencies. It reads Zod's internals, so the repository
+  pins Zod to one exact version.
+
+A provider change requires regenerating and rebuilding its consumers.

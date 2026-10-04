@@ -1,5 +1,5 @@
+import type { ExternalOutputTypes } from "common-utils/validation-compiler";
 import { dumlingTypePreservingOperations } from "dumling/codegen";
-import type { ExternalOutputTypes } from "dumval/compiler";
 import { encodedValidation } from "../src/generated/validation.js";
 
 /** Public Dumrel output types, keyed by the compiled root each one names. */

@@ -1,5 +1,5 @@
 // Generated shared validation. Run the owning package's generator.
-import { bindValidationRegistry } from "dumval/runtime";
+import { bindValidationRegistry } from "common-utils/validation";
 export const validationRegistry = bindValidationRegistry<
 	| "Attestation/de/Foreign/Foreign"
 	| "Attestation/de/Lexeme/ADJ"

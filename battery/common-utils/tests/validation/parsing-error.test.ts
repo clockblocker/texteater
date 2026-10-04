@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import type { z } from "zod";
-import { ParsingError, type ParsingIssue } from "../src/runtime";
+import { ParsingError, type ParsingIssue } from "../../src/validation";
 
 type Expect<Value extends true> = Value;
 type _IssuesRemainStructurallyCompatible = Expect<

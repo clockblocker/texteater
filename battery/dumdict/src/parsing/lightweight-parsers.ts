@@ -1,10 +1,10 @@
-import type * as Dumling from "dumling/types";
 import {
 	type CompiledValidationRegistry,
 	ParsingError,
 	type ParsingIssue,
 	parseCompiledValidation,
-} from "dumval/runtime";
+} from "common-utils/validation";
+import type * as Dumling from "dumling/types";
 import type {
 	ChangePrecondition,
 	CommitChangesRequest,

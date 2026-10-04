@@ -1,12 +1,12 @@
 import { expect, test } from "bun:test";
-import { type LinkInput, linkRegistries } from "../src/compiler";
-import { required } from "../src/required.js";
+import { required } from "../../src/required.js";
 import {
 	bindValidationRegistry,
 	ParsingError,
 	parseCompiledValidation,
 	parseValidationArtifact,
-} from "../src/runtime";
+} from "../../src/validation";
+import { type LinkInput, linkRegistries } from "../../src/validation-compiler";
 
 const fixture = (
 	definitions: LinkInput["definitions"],
@@ -159,7 +159,9 @@ test("linking preserves inline-versus-referenced string checks and exact diagnos
 
 test("runtime bundles for browser and isolate consumers without compiler or external imports", async () => {
 	const result = await Bun.build({
-		entrypoints: [new URL("../src/runtime.ts", import.meta.url).pathname],
+		entrypoints: [
+			new URL("../../src/validation.ts", import.meta.url).pathname,
+		],
 		target: "browser",
 	});
 	expect(result.success).toBe(true);

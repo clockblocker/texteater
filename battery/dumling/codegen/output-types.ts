@@ -1,4 +1,4 @@
-import type { ExternalOutputTypes } from "dumval/compiler";
+import type { ExternalOutputTypes } from "common-utils/validation-compiler";
 import { encodedValidation } from "../src/generated/validation.js";
 import { registrations } from "./operations.js";
 

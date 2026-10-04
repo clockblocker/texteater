@@ -1,11 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
-import { compileZodValidationArtifacts } from "../src/compiler";
 import {
 	ParsingError,
 	parseValidationArtifact,
 	type ValidationOperations,
-} from "../src/runtime";
+} from "../../src/validation";
+import { compileZodValidationArtifacts } from "../../src/validation-compiler";
 
 // Zod keeps running a node's checks after a failure: length checks run on any
 // value with a `length` unless an issue halted the payload (`continue: false`,

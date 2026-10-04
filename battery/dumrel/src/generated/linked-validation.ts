@@ -1,7 +1,6 @@
 // Generated shared validation. Run the owning package's generator.
-
+import { bindValidationRegistry } from "common-utils/validation";
 import { validationRegistry as provider } from "dumling/compiled-validation";
-import { bindValidationRegistry } from "dumval/runtime";
 export const validationRegistry = bindValidationRegistry<
 	| "conjugationClass"
 	| "conjugationClasses"

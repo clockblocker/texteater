@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import { ParsingError, parseValidationArtifact } from "common-utils/validation";
 import { validationRegistry as units } from "dumling/compiled-validation";
 import { validationOperations } from "dumling/validation";
 import { validationRegistry as knowledge } from "dumrel/compiled-validation";
-import { ParsingError, parseValidationArtifact } from "dumval/runtime";
 import { encodedDumdictValidationArtifacts } from "../../battery/dumdict/src/generated/validation-artifacts";
 import { dumdictValidationOperations } from "../../battery/dumdict/src/parsing/validation-operations";
 import { encodedValidation as linguistic } from "../../battery/dumling/src/generated/validation";
@@ -83,7 +83,7 @@ test("providers share readonly objects and package builds reject incompatible pr
 			await run(`
 import {validationRegistry as a} from "dumling/compiled-validation";
 import {validationRegistry as b} from "dumrel/compiled-validation";
-import {ParsingError as e} from "dumval/runtime";
+import {ParsingError as e} from "common-utils/validation";
 import {ParsingError as l,parseUnit} from "dumling";
 import {ParsingError as r} from "dumrel";
 if("definitions" in a||"definitions" in b||e!==l||e!==r)throw Error("Duplicated runtime or provider");

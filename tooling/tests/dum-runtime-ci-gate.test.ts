@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { ParsingError } from "dumval/runtime";
+import { ParsingError } from "common-utils/validation";
 import {
 	compareDifferentialTarget,
 	type DifferentialTarget,

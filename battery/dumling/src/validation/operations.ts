@@ -1,4 +1,7 @@
-import type { ValidationOperation, ValidationOperations } from "dumval/runtime";
+import type {
+	ValidationOperation,
+	ValidationOperations,
+} from "common-utils/validation";
 import {
 	articleAttestationError,
 	caselessValencyAttestationError,

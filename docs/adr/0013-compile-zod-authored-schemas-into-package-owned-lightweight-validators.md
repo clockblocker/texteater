@@ -6,8 +6,10 @@ status: accepted
 
 Zod schemas are the authoring source for Dumling, Dumrel, Dumdict, and Dumgen,
 but each package compiles committed lightweight validation artifacts for its
-operational entrypoints. The shared `dumval/compiler` compiler fails on unsupported Zod
-behavior rather than dropping semantics or falling back to Zod at runtime.
+operational entrypoints. The shared compiler, `common-utils/validation-compiler`,
+fails on unsupported Zod behavior rather than dropping semantics or falling back
+to Zod at runtime. It reads Zod's internal schema definitions, so the
+repository pins Zod to one exact version.
 
 Callers use typed package parsers that return the canonical value or the shared
 `ParsingError`. For Dumling,
@@ -20,14 +22,14 @@ normalization, recursive rules and exact diagnostics. Original compiler graphs
 remain generation and differential-test inputs; operational imports use only
 the linked tables.
 
-`dumval/runtime` owns interpretation, `ParsingError`, and provider binding.
+The runtime, `common-utils/validation`, owns interpretation, `ParsingError`, and
+provider binding.
 Handles expose root names and a fingerprint. The runtime keeps rule tables in a
 private WeakMap and shares dependency definitions without copying them. This
 prevents consumer mutation without recursively freezing thousands of rule
 objects, which erased the memory saving in the first production build. Its
-imports and declarations remain independent of Zod and compilation. Existing
-`common-utils` validation exports forward to this runtime for compatibility;
-existing `codegen` compilation exports forward to `dumval/compiler`.
+imports and declarations remain independent of Zod and compilation; Zod is a
+`common-utils` dependency only the compiler subpath loads.
 
 Each generated provider has a fingerprint covering its rules, operation
 signatures and dependency fingerprint. Consumers bind only to the exact provider

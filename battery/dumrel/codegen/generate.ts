@@ -1,15 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { formatTypeScript } from "codegen";
 import {
+	compileZodValidationArtifacts,
+	emitLinkedValidationRegistry,
+	emitValidationOutputTypes,
+} from "common-utils/validation-compiler";
+import {
 	registrations as dumlingOperations,
 	dumlingOutputTypes,
 } from "dumling/codegen";
 import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
-import {
-	compileZodValidationArtifacts,
-	emitLinkedValidationRegistry,
-	emitValidationOutputTypes,
-} from "dumval/compiler";
 import {
 	conjugationClassesSchema,
 	conjugationClassSchema,

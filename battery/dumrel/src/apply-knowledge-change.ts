@@ -1,5 +1,5 @@
+import { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
-import { ParsingError } from "dumval/runtime";
 import { contextualizeChange, issue, parseSource } from "./context.js";
 import { structuralKeys } from "./fingerprint.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";

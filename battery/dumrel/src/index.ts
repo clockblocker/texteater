@@ -1,4 +1,4 @@
-export { ParsingError } from "dumval/runtime";
+export { ParsingError } from "common-utils/validation";
 export { applyKnowledgeChange } from "./apply-knowledge-change.js";
 export { germanConjugationClass } from "./german-conjugation-class.js";
 export { parseReadingKnowledge } from "./parse-reading-knowledge.js";

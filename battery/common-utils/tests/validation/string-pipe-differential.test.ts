@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { z } from "zod";
-import { ParsingError, parseValidationArtifact } from "../src/runtime";
+import { ParsingError, parseValidationArtifact } from "../../src/validation";
 
 test("string pipelines preserve canonical array-length issues without invoking overwrites", () => {
 	const canonical = z

@@ -44,7 +44,7 @@
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
 		"react-resizable-panels": "workspace:^",
-		"zod": "^4.4.0"
+		"zod": "4.4.3"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.62.1",

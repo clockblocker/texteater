@@ -1,5 +1,5 @@
 import { isDeepStrictEqual } from "node:util";
-import { ParsingError, type ParsingIssue } from "dumval/runtime";
+import { ParsingError, type ParsingIssue } from "common-utils/validation";
 
 type CanonicalResult<Output> =
 	| { readonly data: Output; readonly success: true }

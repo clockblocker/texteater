@@ -10,14 +10,13 @@ The workspaces are:
 - `app/spec-review`: maintainer review of German Spec Records' Segmentation
 - `app/tf-demo`: end-to-end product probe
 - `battery/codegen`: deterministic, filesystem-safe code generation recipes
-- `battery/common-utils`: shared TypeScript type helpers, `required()` and
-  `canonicalJson()`
+- `battery/common-utils`: shared TypeScript type helpers, `required()`,
+  `canonicalJson()`, and the compiled-validation runtime and its Zod compiler
+- `battery/dumcorpus`: Spec Records, classification Rules and authored inventories
 - `battery/dumdict`: dictionary workflows
 - `battery/dumgen`: German `segment.inUnits`, rebuilt from scratch (#701)
 - `battery/dumling`: grammatical values and operations
 - `battery/dumrel`: Knowledge and relation algebra
-- `battery/dumcorpus`: Spec Records, classification Rules and authored inventories
-- `battery/dumval`: Zod validation compilation, rule linking and lightweight parsing
 - `battery/lego`: shared Tailwind design tokens, theme and React atoms and molecules
 - `battery/promptsmith`: schema-bound prompt authoring and reproducible evaluation
 - `battery/react-resizable-panels`: local fork of the resizable panel components

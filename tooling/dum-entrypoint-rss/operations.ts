@@ -33,9 +33,19 @@ export async function runRepresentativeOperation(
 	module: PublicModule,
 ): Promise<void> {
 	switch (id) {
-		case "dumval.validate": {
+		case "common-utils.canonical-json": {
+			const { canonicalJson, required } = published<
+				typeof import("common-utils")
+			>(module, "canonicalJson", "required");
+			assert.equal(
+				canonicalJson({ b: 1, a: required([2].at(0)) }),
+				'{"a":2,"b":1}',
+			);
+			break;
+		}
+		case "common-utils.validate": {
 			const { parseValidationArtifact, ParsingError } = published<
-				typeof import("dumval/runtime")
+				typeof import("common-utils/validation")
 			>(module, "parseValidationArtifact", "ParsingError");
 			const artifact = { version: 1, root: ["string"] } as const;
 			assert.equal(parseValidationArtifact(artifact, "value"), "value");
@@ -47,10 +57,10 @@ export async function runRepresentativeOperation(
 		case "dumling.compiled-validation":
 		case "dumrel.compiled-validation": {
 			const { parseCompiledValidation, ParsingError } = await import(
-				"dumval/runtime"
+				"common-utils/validation"
 			);
 			const registry =
-				module.validationRegistry as import("dumval/runtime").CompiledValidationRegistry;
+				module.validationRegistry as import("common-utils/validation").CompiledValidationRegistry;
 			const { validationOperations } = await import("dumling/validation");
 			const key = id.startsWith("dumling")
 				? "Lemma/de/Lexeme/NOUN"

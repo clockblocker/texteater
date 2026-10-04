@@ -60,10 +60,10 @@
 		// packages' own test tasks.
 		"//#test:tooling": {
 			"dependsOn": [
+				"common-utils#build:package",
 				"dumdict#build:package",
 				"dumling#build:package",
-				"dumrel#build:package",
-				"dumval#build:package"
+				"dumrel#build:package"
 			],
 			"cache": false
 		},

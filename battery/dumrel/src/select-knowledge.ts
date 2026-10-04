@@ -1,4 +1,4 @@
-import { ParsingError } from "dumval/runtime";
+import { ParsingError } from "common-utils/validation";
 import { DE_REL_MAP } from "./selection-policy-de.js";
 import type { KnowledgeRequestMask, KnowledgeSelectionInput } from "./types.js";
 import { parseSelectionShape } from "./validation.js";

@@ -1,7 +1,6 @@
 // Generated shared validation. Run the owning package's generator.
-
+import { bindValidationRegistry } from "common-utils/validation";
 import { validationRegistry as provider } from "dumrel/compiled-validation";
-import { bindValidationRegistry } from "dumval/runtime";
 export const validationRegistry = bindValidationRegistry<
 	| "internal:knowledge-change"
 	| "internal:pending-semantic-relation"
