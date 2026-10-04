@@ -1,7 +1,6 @@
 import type { PendingSemanticRelationRecord } from "dumdict/pending";
+import type { ReadingEntry } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
-import { directSemanticRelationValues } from "dumrel";
-import type * as Dumrel from "dumrel/types";
 import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
@@ -17,7 +16,6 @@ import {
 } from "../model/occurrenceAttestations";
 import {
 	type AnyRecord,
-	applyTrustedReadingKnowledgeChange,
 	requireRecord,
 	requireString,
 	withoutKeys,
@@ -32,7 +30,6 @@ const MAX_CLEANUP_CANDIDATE_LEMMAS = 100;
 const MAX_RELATION_NEIGHBOURHOOD_LEMMAS = 100;
 const MAX_RELATION_NEIGHBOURHOOD_READINGS = 200;
 export const MAX_RELATIONS_PER_READING = 200;
-const directSemanticRelations = new Set<string>(directSemanticRelationValues);
 
 export type ServerCtx = QueryCtx | MutationCtx;
 export type CompactReadingEntry = AnyRecord & {
@@ -49,22 +46,6 @@ export type CompactReadingEntry = AnyRecord & {
  * never advances and `revisionMatches` always holds.
  */
 export const DICTIONARY_REVISION = "convex";
-
-export function assertLemmaRecordHasNoKnowledge(record: AnyRecord): void {
-	if (record.knowledge !== undefined) {
-		throw new Error("Lemma Records cannot contain Knowledge.");
-	}
-}
-
-export function requireDirectSemanticRelation(
-	value: unknown,
-): Dumrel.DirectSemanticRelation {
-	const relation = requireString(value, "Semantic Relation");
-	if (!directSemanticRelations.has(relation)) {
-		throw new Error(`Unsupported direct Semantic Relation: ${relation}`);
-	}
-	return relation as Dumrel.DirectSemanticRelation;
-}
 
 export function withoutSemanticRelationTargets(value: unknown): unknown {
 	const knowledge =
@@ -83,35 +64,15 @@ export function withoutSemanticRelationTargets(value: unknown): unknown {
 	return Object.keys(result).length === 0 ? undefined : result;
 }
 
-export function applyReadingKnowledgeChange(
-	entry: CompactReadingEntry,
-	envelopeValue: unknown,
-): CompactReadingEntry {
-	const envelope = requireRecord(
-		envelopeValue,
-		"Reading Knowledge Change envelope",
-	);
-	if (
-		readingIdentityKey(envelope.reading) !==
-		readingIdentityKey(entry.reading)
-	) {
-		throw new Error(
-			"Knowledge Change Reading does not match the patched Reading Entry.",
-		);
-	}
-	const change = requireRecord(
-		envelope.change,
-		"Reading Knowledge Change value",
-	);
-	const knowledge = applyTrustedReadingKnowledgeChange(
-		entry.reading,
-		entry.knowledge,
-		change,
-	);
-	const withoutKnowledge = withoutKeys(entry, ["knowledge"]);
-	return Object.keys(knowledge).length === 0
-		? (withoutKnowledge as CompactReadingEntry)
-		: ({ ...withoutKnowledge, knowledge } as CompactReadingEntry);
+/**
+ * A stored Reading Entry as Dumdict's type. Entries are written only from
+ * planned changes parsed at the write boundary, and every Knowledge Change
+ * revalidates the Knowledge it extends against its Reading.
+ */
+export function storedReadingEntry(stored: {
+	readonly entry: CompactReadingEntry;
+}): ReadingEntry<"de"> {
+	return structuredClone(stored.entry) as unknown as ReadingEntry<"de">;
 }
 
 export function pendingLocatorKey(recordValue: unknown): string {

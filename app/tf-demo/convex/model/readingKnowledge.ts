@@ -25,20 +25,6 @@ export function withoutKeys(
 	return result;
 }
 
-export function requireChangeKind(
-	value: unknown,
-): "Contribute" | "Correct" | "Retract" {
-	if (value !== "Contribute" && value !== "Correct" && value !== "Retract") {
-		throw new Error(`Unsupported Knowledge Change kind: ${String(value)}`);
-	}
-	return value;
-}
-
-export function requireArray(value: unknown, context: string): unknown[] {
-	if (!Array.isArray(value)) throw new Error(`${context} must be an array.`);
-	return value;
-}
-
 /** Revalidates persisted Knowledge against its source before every change. */
 export function applyTrustedReadingKnowledgeChange(
 	sourceValue: unknown,

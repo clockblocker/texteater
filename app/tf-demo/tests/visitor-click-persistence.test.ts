@@ -162,7 +162,7 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 								family: "Lexeme",
 								kind: "NOUN",
 								canonicalForm: "Haus",
-								coreFeatures: {},
+								coreFeatures: { gender: "Neut" },
 							},
 							knowledge: { transcription: "haʊs" },
 						},
@@ -170,7 +170,8 @@ test("the storage adapter rejects a malformed internal plan before writes", asyn
 					},
 				],
 			}),
-		).rejects.toThrow("cannot contain Knowledge");
+			// A Lemma Record owns no Knowledge, so the parse refuses the key.
+		).rejects.toThrow("Unrecognized keys");
 		expect(await ctx.db.query("lemmas").collect()).toEqual([]);
 	});
 });
