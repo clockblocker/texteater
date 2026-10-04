@@ -10,7 +10,7 @@ artifacts and flat structural types from those schemas. Operational imports
 and consumer declarations do not reach Zod or the schema-authoring graph.
 Unsupported validation behavior or output-type effects fail generation.
 Named pure functions are shared by schema refinements and runtime operations;
-function-source inspection belongs only to the retained experiment.
+no code inspects function source.
 
 The rewrite exposes one synchronous `parseUnit` accepting unknown input and
 optional expected coordinates. Success contains a correlated `chain` with

@@ -32,7 +32,6 @@ const ignoredDirectories = new Set([
 	".runs",
 	"dist",
 	"node_modules",
-	"experimets",
 ]);
 async function sourceFiles(dir: string): Promise<string[]> {
 	const files: string[] = [];

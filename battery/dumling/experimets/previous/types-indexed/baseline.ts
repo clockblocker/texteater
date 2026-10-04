@@ -1,1 +1,0 @@
-import type {Bags} from "./model.js"; export type B = Bags;

@@ -1,8 +1,0 @@
-node_modules/
-previous/runtime/*.mjs
-previous/runtime/*.meta.json
-comparison/generated/
-comparison/dist/
-comparison/consumer/
-
-!previous/runtime/runner.mjs

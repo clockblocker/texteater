@@ -1,13 +1,7 @@
 {
 	"extends": "//",
 	"files": {
-		"includes": [
-			"!!dist",
-			"!!node_modules",
-			"!!.astro",
-			"!src/lu/test.ts",
-			"!!experimets"
-		]
+		"includes": ["!!dist", "!!node_modules", "!!.astro", "!src/lu/test.ts"]
 	},
 	"formatter": {
 		"includes": ["**", "!src/generated/.validation-artifacts.json"]
