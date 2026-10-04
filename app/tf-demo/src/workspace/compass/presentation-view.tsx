@@ -19,6 +19,7 @@ import {
 } from "./heading";
 import { useDeckInteractions } from "./interaction-policy";
 import { sheetColumn } from "./layout";
+import { RestingControls } from "./resting-controls";
 import type { Form, Place, SubjectRenderer, SubjectView } from "./subject";
 
 /**
@@ -413,7 +414,9 @@ export function PresentationView<S>({
 					transition={{ layout: positionSpec }}
 					className={`relative order-1 min-h-0 flex-1 ${scrolls ? "overflow-y-auto" : "overflow-hidden"}`}
 				>
-					{renderer.render(subject, view(form), "body")}
+					<RestingControls resting={!sheet}>
+						{renderer.render(subject, view(form), "body")}
+					</RestingControls>
 					{/* the Card's clip fades its content out; the Sheet lifts the fade */}
 					<motion.div
 						aria-hidden="true"

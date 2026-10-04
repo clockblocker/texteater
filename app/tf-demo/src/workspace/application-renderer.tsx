@@ -72,11 +72,9 @@ function PlacedSubject({
 				) : subject.kind === "Text" ? (
 					renderApplicationSubject(subject, card ? "Card" : "Sheet")
 				) : (
-					/* a Card's Blocks are inert until it is a Sheet (#485), so a
-					   press anywhere on it lifts it; a Sheet's Heading is its
-					   bar, so its first Block keeps only the air under one */
+					/* a Sheet's Heading is its bar, so its first Block keeps
+					   only the air under one */
 					<div
-						inert={card}
 						className={
 							card
 								? ""

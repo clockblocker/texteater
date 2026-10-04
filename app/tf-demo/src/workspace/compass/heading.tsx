@@ -13,6 +13,7 @@ import { after, type motionOf } from "@/workspace/motion/motion-spec";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import { COVER_GUTTER_REM, remPx } from "./layout";
+import { RestingControls } from "./resting-controls";
 import type { Form } from "./subject";
 
 /**
@@ -367,13 +368,13 @@ export function HeadingBlock({
 							className="relative flex h-full w-full min-w-0 items-end"
 							style={{ maxWidth: column }}
 						>
-							{/* a Card's links are inert until it is a Sheet (#485) */}
-							<div
-								inert
+							{/* a Card's title reads, but its links rest until it is a Sheet (#485) */}
+							<RestingControls
+								resting
 								className={`flex min-w-0 flex-1 items-end gap-4 ${ONE_LINE_TITLE} ${atBottom ? "pb-3" : ""}`}
 							>
 								{cardTitle}
-							</div>
+							</RestingControls>
 						</div>
 					</motion.div>
 				) : face === "cover" && back && clear ? (
