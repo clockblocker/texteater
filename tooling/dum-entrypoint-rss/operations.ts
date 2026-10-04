@@ -8,16 +8,25 @@ const lemma = {
 	kind: "NOUN",
 	canonicalForm: "Bank",
 	coreFeatures: { gender: "Fem" },
-};
-const reading = { unitKind: "Reading", lemma, emojiDescription: "🏦" };
-function call(module: PublicModule, name: string, ...args: unknown[]): any {
-	const operation = module[name];
-	assert.equal(
-		typeof operation,
-		"function",
-		`Missing public operation ${name}`,
-	);
-	return (operation as (...args: unknown[]) => unknown)(...args);
+} as const;
+const reading = {
+	unitKind: "Reading",
+	lemma,
+	emojiDescription: "🏦",
+} as const;
+/** Views a published module through its workspace declarations once each probed export is a function. */
+function published<Module>(
+	module: PublicModule,
+	...names: readonly (keyof Module & string)[]
+): Module {
+	for (const name of names) {
+		assert.equal(
+			typeof module[name],
+			"function",
+			`Missing public operation ${name}`,
+		);
+	}
+	return module as Module;
 }
 export async function runRepresentativeOperation(
 	id: string,
@@ -25,22 +34,13 @@ export async function runRepresentativeOperation(
 ): Promise<void> {
 	switch (id) {
 		case "dumval.validate": {
-			assert.equal(
-				call(
-					module,
-					"parseValidationArtifact",
-					{ version: 1, root: ["string"] },
-					"value",
-				),
-				"value",
-			);
+			const { parseValidationArtifact, ParsingError } = published<
+				typeof import("dumval/runtime")
+			>(module, "parseValidationArtifact", "ParsingError");
+			const artifact = { version: 1, root: ["string"] } as const;
+			assert.equal(parseValidationArtifact(artifact, "value"), "value");
 			assert.ok(
-				call(
-					module,
-					"parseValidationArtifact",
-					{ version: 1, root: ["string"] },
-					42,
-				) instanceof (module.ParsingError as typeof Error),
+				parseValidationArtifact(artifact, 42) instanceof ParsingError,
 			);
 			break;
 		}
@@ -67,25 +67,37 @@ export async function runRepresentativeOperation(
 		}
 
 		case "dumling.parse-unit":
-			assert.equal(call(module, "parseUnit", lemma).success, true);
+			assert.equal(
+				published<typeof import("dumling")>(
+					module,
+					"parseUnit",
+				).parseUnit(lemma).success,
+				true,
+			);
 			break;
 		case "dumling.validate-feature-bag": {
 			const operations = module.validationOperations as Record<
 				string,
-				(input: unknown) => { value: unknown; issues?: unknown[] }
+				| ((input: unknown) => { value: unknown; issues?: unknown[] })
+				| undefined
 			>;
-			assert.equal(
-				typeof operations["dumling.feature-bag.marked"],
-				"function",
-			);
-			assert.ok(
-				(operations["dumling.feature-bag.marked"]!({ case: "Nom" })
-					.issues?.length ?? 0) === 0,
-			);
+			const marked = operations["dumling.feature-bag.marked"];
+			assert.ok(marked, "Missing dumling.feature-bag.marked operation");
+			assert.equal(marked({ case: "Nom" }).issues?.length ?? 0, 0);
 			break;
 		}
 		case "dumrel.knowledge-projection": {
-			const result = call(module, "applyKnowledgeChange", {
+			const {
+				applyKnowledgeChange,
+				projectSemanticRelations,
+				selectKnowledge,
+			} = published<typeof import("dumrel")>(
+				module,
+				"applyKnowledgeChange",
+				"projectSemanticRelations",
+				"selectKnowledge",
+			);
+			const result = applyKnowledgeChange({
 				source: reading,
 				knowledge: {},
 				change: {
@@ -99,22 +111,24 @@ export async function runRepresentativeOperation(
 				value: { definition: "bank" },
 			});
 			assert.equal(
-				call(module, "selectKnowledge", {
+				selectKnowledge({
 					route: { language: "de", family: "Lexeme", kind: "NOUN" },
 				}).success,
 				true,
 			);
 			assert.equal(
-				call(module, "projectSemanticRelations", [
-					{ reading, knowledge: result.value },
-				]).success,
+				projectSemanticRelations([{ reading, knowledge: result.value }])
+					.success,
 				true,
 			);
 			break;
 		}
 		case "dumdict.identity":
 			assert.equal(
-				typeof call(module, "makeSurfaceId", "de", {
+				typeof published<typeof import("dumdict/runtime")>(
+					module,
+					"makeSurfaceId",
+				).makeSurfaceId("de", {
 					unitKind: "Surface",
 					language: "de",
 					lemma,
@@ -131,27 +145,36 @@ export async function runRepresentativeOperation(
 			);
 			break;
 		case "dumdict.parse-record": {
-			const result = call(module, "parseAsLemmaRecord", { lemma }, "de");
+			const result = published<typeof import("dumdict")>(
+				module,
+				"parseAsLemmaRecord",
+			).parseAsLemmaRecord({ lemma }, "de");
 			assert.deepEqual(result, { lemma });
 			break;
 		}
 		case "dumdict.session-storage": {
-			const storage = call(module, "createMemoryStorage", "de");
+			const storage = published<typeof import("dumdict/memory")>(
+				module,
+				"createMemoryStorage",
+			).createMemoryStorage("de");
 			assert.deepEqual(storage.snapshot(), []);
 			break;
 		}
 		case "dumdict.pending-identity":
-			assert.equal(
-				typeof module.createPendingSemanticRelationRecord,
-				"function",
-			);
 			assert.deepEqual(
-				call(module, "deduplicatePendingSemanticRelationRecords", []),
+				published<typeof import("dumdict/pending")>(
+					module,
+					"createPendingSemanticRelationRecord",
+					"deduplicatePendingSemanticRelationRecords",
+				).deduplicatePendingSemanticRelationRecords([]),
 				[],
 			);
 			break;
 		case "dumdict.plan-reading-entry": {
-			const planner = call(module, "createDumdictPlanner", "de");
+			const planner = published<typeof import("dumdict/planning")>(
+				module,
+				"createDumdictPlanner",
+			).createDumdictPlanner("de");
 			const planned = planner.ensureReadingEntry(
 				{ intent: "ensureReadingEntry", revision: "rss-0" },
 				{
@@ -165,9 +188,7 @@ export async function runRepresentativeOperation(
 			);
 			assert.equal(planned.status, "planned");
 			assert.deepEqual(
-				planned.plan.changes.map(
-					(change: { type: string }) => change.type,
-				),
+				planned.plan.changes.map((change) => change.type),
 				["createLemma", "createReading"],
 			);
 			break;

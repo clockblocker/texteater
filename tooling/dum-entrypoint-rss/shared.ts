@@ -41,6 +41,13 @@ export function processEnvWithoutBunInspect(): Record<
 	return environment;
 }
 
+function peakBytesAt(sample: SharedRssSample, index: number): number {
+	const point = sample[index];
+	if (point === undefined)
+		throw new Error(`RSS sample is missing stage ${index}`);
+	return point.peakBytes;
+}
+
 /** Subtract within each process before taking medians; shared dependencies are charged once. */
 export function summarizeSharedRss(samples: readonly SharedRssSample[]) {
 	if (samples.length !== SHARED_RSS_SAMPLE_COUNT)
@@ -56,7 +63,7 @@ export function summarizeSharedRss(samples: readonly SharedRssSample[]) {
 					!Number.isSafeInteger(point.peakBytes) ||
 					point.peakBytes <= 0 ||
 					(index > 0 &&
-						point.peakBytes < sample[index - 1]!.peakBytes),
+						point.peakBytes < peakBytesAt(sample, index - 1)),
 			)
 		)
 			throw new Error("Invalid or incomplete sequential RSS sample");
@@ -66,16 +73,19 @@ export function summarizeSharedRss(samples: readonly SharedRssSample[]) {
 		addedPeakMedianBytes: median(
 			samples.map(
 				(sample) =>
-					sample[index + 1]!.peakBytes - sample[index]!.peakBytes,
+					peakBytesAt(sample, index + 1) - peakBytesAt(sample, index),
 			),
 		),
 		cumulativePeakMedianBytes: median(
 			samples.map(
-				(sample) => sample[index + 1]!.peakBytes - sample[0]!.peakBytes,
+				(sample) =>
+					peakBytesAt(sample, index + 1) - peakBytesAt(sample, 0),
 			),
 		),
 	}));
-	const addedPeakMedianBytes = stages.at(-1)!.cumulativePeakMedianBytes;
+	const finalStage = stages.at(-1);
+	if (finalStage === undefined) throw new Error("No shared RSS imports");
+	const addedPeakMedianBytes = finalStage.cumulativePeakMedianBytes;
 	return {
 		baseline: "effect/Effect already loaded in the same process",
 		metric: "Median of paired final peak RSS minus post-Effect peak RSS; sequential imports, no forced GC",
@@ -126,16 +136,14 @@ console.log(JSON.stringify(points));
 }
 
 export function formatSharedRss(report: SharedRssReport): string {
-	return (
-		[
-			`${report.passed ? "PASS" : "FAIL"} shared Dum import RSS: +${mib(report.addedPeakMedianBytes)} MiB after Effect; ceiling ${mib(report.budgetBytes)} MiB`,
-			...report.stages.map(
-				(stage) =>
-					`  ${stage.specifier}: +${mib(stage.addedPeakMedianBytes)} MiB at this step; +${mib(stage.cumulativePeakMedianBytes)} MiB since Effect`,
-			),
-			"  Seven-process median of paired peak deltas. Local import replay; not deployed tf-demo or operation memory.",
-		].join("\n") + "\n"
-	);
+	return `${[
+		`${report.passed ? "PASS" : "FAIL"} shared Dum import RSS: +${mib(report.addedPeakMedianBytes)} MiB after Effect; ceiling ${mib(report.budgetBytes)} MiB`,
+		...report.stages.map(
+			(stage) =>
+				`  ${stage.specifier}: +${mib(stage.addedPeakMedianBytes)} MiB at this step; +${mib(stage.cumulativePeakMedianBytes)} MiB since Effect`,
+		),
+		"  Seven-process median of paired peak deltas. Local import replay; not deployed tf-demo or operation memory.",
+	].join("\n")}\n`;
 }
 
 if (import.meta.main) {

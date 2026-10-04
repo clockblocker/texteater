@@ -75,12 +75,14 @@ for (const route of routes)
 		unitSchemas[key] = route.schemas[kind as keyof typeof route.schemas];
 		unitSamples[key] = [value];
 	}
-const relRegistry = knowledge;
+const relSchemaExports: Readonly<Record<string, unknown>> = { ...relSchemas };
 const knowledgeSchemas = Object.fromEntries(
-	Object.keys(relRegistry.roots).map((root) => [
-		root,
-		relSchemas[`${root}Schema` as keyof typeof relSchemas],
-	]),
+	Object.keys(knowledge.roots).map((root) => {
+		const schema = relSchemaExports[`${root}Schema`];
+		if (!(schema instanceof z.ZodType))
+			throw Error(`Missing dumrel schema export ${root}Schema`);
+		return [root, schema];
+	}),
 );
 const dictionarySamples = Object.fromEntries(
 	Object.entries(successfulInputs()).map(([key, value]) => [key, [value]]),
