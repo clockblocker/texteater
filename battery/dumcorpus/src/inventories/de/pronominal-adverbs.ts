@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import { type AuthoredMember, defineAuthoredMember } from "./member.js";
+import type { AuthoredMember } from "./member.js";
 
 /**
  * One preposition that forms pronominal adverbs. `vowel` inserts the linking r
@@ -267,7 +267,7 @@ function pronominalAdverb(
 		// A pronominal adverb has no comparison forms (ADR 0042).
 		coreFeatures: { comparable: null },
 	} satisfies Dumling.Lemma<"de", "Lexeme", "ADV">;
-	return defineAuthoredMember({
+	return {
 		lemma,
 		reading: {
 			unitKind: "Reading",
@@ -294,7 +294,7 @@ function pronominalAdverb(
 				nearAntonym: "ReviewedEmpty",
 			},
 		},
-	});
+	};
 }
 
 /** Knowledge of one authored ADV Reading whose Lemma has no comparison forms. */
@@ -314,7 +314,7 @@ function adverbReading(
 		canonicalForm: form,
 		coreFeatures: { comparable: null },
 	} satisfies Dumling.Lemma<"de", "Lexeme", "ADV">;
-	return defineAuthoredMember({
+	return {
 		lemma,
 		reading: { unitKind: "Reading", emojiDescription: emoji, lemma },
 		knowledge: {
@@ -334,7 +334,7 @@ function adverbReading(
 				nearAntonym: "ReviewedEmpty",
 			},
 		},
-	});
+	};
 }
 
 // Each da(r)- form has one generic Reading, its preposition's emoji. Causal

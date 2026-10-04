@@ -1323,8 +1323,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1349,8 +1349,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			translations: { en: ["who", "which", "that"], ru: ["которому"] },
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1378,8 +1378,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1407,8 +1407,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1436,8 +1436,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1465,8 +1465,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1494,8 +1494,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1523,8 +1523,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1552,8 +1552,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1581,8 +1581,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1659,8 +1659,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			translations: { en: ["him", "it"], ru: ["ему"] },
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1685,8 +1685,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			translations: { en: ["you (formal)", "them"], ru: ["Вам", "им"] },
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1711,8 +1711,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			translations: { en: ["her", "them"], ru: ["её", "их"] },
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1740,8 +1740,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1766,8 +1766,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			translations: { en: ["you (formal)", "them"], ru: ["Вас", "их"] },
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1792,8 +1792,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			translations: { en: ["of him", "of it"], ru: ["его"] },
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1821,8 +1821,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1850,8 +1850,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1879,8 +1879,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1908,8 +1908,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1937,8 +1937,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {
@@ -1966,8 +1966,8 @@ export const germanSyncretisms: readonly AuthoredMember[] = [
 			},
 		},
 		coverage: {
-			transcription: "Authored",
 			definition: "Authored",
+			transcription: "Authored",
 			translations: { en: "Authored", ru: "Authored" },
 			semanticRelationTargetKind: "lemma",
 			semanticRelations: {

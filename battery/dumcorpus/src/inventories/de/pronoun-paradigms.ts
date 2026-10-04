@@ -1,6 +1,9 @@
 import type * as Dumling from "dumling/types";
+import type { AuthoredMember } from "./member.js";
 import {
 	form,
+	type PillarForm,
+	type PronounCell,
 	type PronounDescription,
 	type PronounTable,
 	pronounLocution,
@@ -29,9 +32,8 @@ const description = (
 ): PronounDescription => ({ core: { pronType }, emoji, definition, en, ru });
 const reviewed: ReviewedMember[] = [];
 // A pillar's forms cannot be derived from another paradigm (system ADR 0032).
-// Pillars are one Lemma per cell: the personal and der-series cells are member
-// files, and attributive dessen and deren, and einer are pushed explicitly
-// below. Every add() is a stem with borrowed endings: one Lemma whose
+// Pillars are one Lemma per cell: the personal and der-series tables below,
+// and einer. Every add() is a stem with borrowed endings: one Lemma whose
 // Surfaces mark the cell.
 const add = (
 	table: PronounTable,
@@ -43,6 +45,296 @@ const plural = (table: PronounTable) => {
 	if (!cited) throw Error("A plural citation needs a Nom.Plur cell");
 	return { citation: cited };
 };
+
+/** A pillar cell with its Russian translation and, where it differs from its paradigm's, its English one. */
+const cell = (
+	text: string,
+	ipa: string,
+	ru: readonly string[],
+	en?: readonly string[],
+	remark?: string,
+): PillarForm => ({
+	text,
+	ipa,
+	ru,
+	...(en ? { en } : {}),
+	...(remark ? { remark } : {}),
+});
+
+// The personal pronouns, one table per person and politeness. Their
+// definitions name the referent rather than the cell.
+const personal = (text: string, predicate: string) =>
+	`Die Personalpronomenform „${text}“ ${predicate}.`;
+const numberName = ({ number }: Partial<PronounCell>) =>
+	number === "Plur" ? "Mehrzahl" : "Einzahl";
+reviewed.push(
+	...pronounParadigm(
+		{
+			Sing: [
+				cell("ich", "ɪç", ["я"], ["I"]),
+				cell("mich", "mɪç", ["меня"], ["me"]),
+				cell("mir", "miːɐ̯", ["мне"], ["me"]),
+				cell("meiner", "ˈmaɪ̯nɐ", ["меня"], ["me"]),
+			],
+			Plur: [
+				cell("wir", "viːɐ̯", ["мы"], ["we"]),
+				cell("uns", "ʊns", ["нас"], ["us"]),
+				cell("uns", "ʊns", ["нам"], ["us"]),
+				cell("unser", "ˈʊnzɐ", ["нас"], ["us"]),
+			],
+		},
+		{
+			core: { pronType: "Prs", person: "1" },
+			emoji: "👈",
+			definition: (text, of) =>
+				personal(text, `verweist auf die sprechende ${numberName(of)}`),
+			namesCell: false,
+		},
+	),
+	...pronounParadigm(
+		{
+			Sing: [
+				cell("du", "duː", ["ты"]),
+				cell("dich", "dɪç", ["тебя"]),
+				cell("dir", "diːɐ̯", ["тебе"]),
+				cell("deiner", "ˈdaɪ̯nɐ", ["тебя"]),
+			],
+			Plur: [
+				cell("ihr", "iːɐ̯", ["вы"]),
+				cell("euch", "ɔʏç", ["вас"]),
+				cell("euch", "ɔʏç", ["вам"]),
+				cell("euer", "ˈɔʏ̯ɐ", ["вас"]),
+			],
+		},
+		{
+			core: { pronType: "Prs", person: "2" },
+			emoji: "👈",
+			definition: (text, of) =>
+				personal(
+					text,
+					`verweist auf die angesprochene ${numberName(of)}`,
+				),
+			namesCell: false,
+			en: ["you"],
+		},
+	),
+);
+// ihm and seiner spell both an er and an es cell, so those cells' definitions
+// name the Nominative they decline.
+const thirdPersonReferents = {
+	Masc: "die männliche dritte Person Einzahl",
+	Neut: "die sächliche dritte Person Einzahl",
+	Fem: "die weibliche dritte Person Einzahl",
+};
+const thirdPerson = pronounParadigm(
+	{
+		Masc: [
+			cell("er", "eːɐ̯", ["он"], ["he"]),
+			cell("ihn", "iːn", ["его"], ["him"]),
+			cell("ihm", "iːm", ["ему"], ["him"]),
+			cell("seiner", "ˈzaɪ̯nɐ", ["его"], ["of him"]),
+		],
+		Neut: [
+			cell("es", "ɛs", ["оно"], ["it"]),
+			cell("es", "ɛs", ["его"], ["it"]),
+			cell("ihm", "iːm", ["ему"], ["it"]),
+			cell("seiner", "ˈzaɪ̯nɐ", ["его"], ["of it"]),
+		],
+		Fem: [
+			cell("sie", "ziː", ["она"], ["she", "her"]),
+			cell("sie", "ziː", ["её"], ["she", "her"]),
+			cell("ihr", "iːɐ̯", ["ей"], ["her"]),
+			cell("ihrer", "ˈiːʁɐ", ["её"], ["her"]),
+		],
+		Plur: [
+			cell("sie", "ziː", ["они"], ["they", "them"]),
+			cell("sie", "ziː", ["их"], ["they", "them"]),
+			cell("ihnen", "ˈiːnən", ["им"], ["them"]),
+			cell("ihrer", "ˈiːʁɐ", ["их"], ["them"]),
+		],
+	},
+	{
+		core: { pronType: "Prs", person: "3" },
+		emoji: "👈",
+		definition: (text, { case: grammaticalCase, gender }) => {
+			if (!gender)
+				return personal(
+					text,
+					"verweist auf die dritte Person Mehrzahl",
+				);
+			const declines =
+				gender !== "Fem" &&
+				(grammaticalCase === "Dat" || grammaticalCase === "Gen")
+					? `ist der ${grammaticalCase === "Dat" ? "Dativ" : "Genitiv"} von „${gender === "Masc" ? "er" : "es"}“ und `
+					: "";
+			return personal(
+				text,
+				`${declines}verweist auf ${thirdPersonReferents[gender]}`,
+			);
+		},
+		namesCell: false,
+	},
+);
+reviewed.push(
+	...thirdPerson,
+	...pronounParadigm(
+		{
+			Plur: [
+				cell("Sie", "ziː", ["Вы"]),
+				cell("Sie", "ziː", ["Вас"]),
+				cell("Ihnen", "ˈiːnən", ["Вам"]),
+				cell("Ihrer", "ˈiːʁɐ", ["Вас"]),
+			],
+		},
+		{
+			core: { pronType: "Prs", person: "3", polite: "Form" },
+			emoji: "👈",
+			definition: (text) =>
+				personal(
+					text,
+					"verweist auf eine oder mehrere höflich angesprochene Personen",
+				),
+			namesCell: false,
+			en: ["you (formal)"],
+		},
+	),
+);
+/** The referential es cell of a case, whose Lemma the correlate and expletive es share. */
+export function referentialEs(grammaticalCase: "Nom" | "Acc"): AuthoredMember {
+	const found = thirdPerson.find(
+		({ member: { lemma } }) =>
+			lemma.canonicalForm === "es" &&
+			"case" in lemma.coreFeatures &&
+			lemma.coreFeatures.case === grammaticalCase,
+	);
+	if (!found) throw Error(`No referential es ${grammaticalCase} cell`);
+	return found.member;
+}
+
+// The der-series demonstrative and relative pronouns. Before a noun the
+// genitives dessen and deren assign it to their referent.
+reviewed.push(
+	...pronounParadigm(
+		{
+			Masc: [
+				cell("der", "deːɐ̯", ["тот", "этот"]),
+				cell("den", "deːn", ["тот", "этот", "того", "этого"]),
+				cell("dem", "deːm", ["тому", "этому"]),
+				cell(
+					"dessen",
+					"ˈdɛsn̩",
+					["его"],
+					["that one", "this one", "his"],
+					"Vor einem Nomen ordnet es dieses ihr zu: mein Freund und dessen Hund.",
+				),
+			],
+			Neut: [
+				cell("das", "das", ["то", "это"]),
+				cell("das", "das", ["то", "это"]),
+				cell("dem", "deːm", ["тому", "этому"]),
+				cell(
+					"dessen",
+					"ˈdɛsn̩",
+					["его"],
+					["that one", "this one", "its"],
+					"Vor einem Nomen ordnet es dieses ihr zu: das Haus und dessen Dach.",
+				),
+			],
+			Fem: [
+				cell("die", "diː", ["та", "эта"]),
+				cell("die", "diː", ["ту", "эту"]),
+				cell("der", "deːɐ̯", ["той", "этой"]),
+				cell(
+					"deren",
+					"ˈdeːʁən",
+					["её"],
+					["that one", "this one", "her"],
+					"Vor einem Nomen ordnet es dieses ihr zu: meine Schwester und deren Mann.",
+				),
+			],
+			Plur: [
+				cell("die", "diː", ["те", "эти"]),
+				cell("die", "diː", ["те", "эти", "тех", "этих"]),
+				cell("denen", "ˈdeːnən", ["тем", "этим"]),
+				cell(
+					"deren",
+					"ˈdeːʁən",
+					["их"],
+					["that one", "this one", "their"],
+					"Vor einem Nomen ordnet es dieses ihr zu: die Gäste und deren Kinder.",
+				),
+			],
+		},
+		{
+			core: { pronType: "Dem" },
+			emoji: "👉",
+			definition: (text) =>
+				`Das Demonstrativpronomen „${text}“ verweist betont auf eine im Kontext bestimmte Person oder Sache.`,
+			namesCell: false,
+			en: ["that one", "this one"],
+		},
+	),
+	...pronounParadigm(
+		{
+			Masc: [
+				cell("der", "deːɐ̯", ["который", "кто"]),
+				cell("den", "deːn", ["который", "которого", "кого"]),
+				cell("dem", "deːm", ["которому"]),
+				cell(
+					"dessen",
+					"ˈdɛsn̩",
+					["которого", "чей"],
+					["whose", "who", "which", "that"],
+					"Vor einem Nomen ordnet es dieses dem Bezugswort zu: der Autor, dessen Buch fehlt.",
+				),
+			],
+			Neut: [
+				cell("das", "das", ["которое", "что"]),
+				cell("das", "das", ["которое", "что"]),
+				cell("dem", "deːm", ["которому"]),
+				cell(
+					"dessen",
+					"ˈdɛsn̩",
+					["которого", "чей"],
+					["whose", "who", "which", "that"],
+					"Vor einem Nomen ordnet es dieses dem Bezugswort zu: das Haus, dessen Tür offen steht.",
+				),
+			],
+			Fem: [
+				cell("die", "diː", ["которая", "кто"]),
+				cell("die", "diː", ["которую", "кого"]),
+				cell("der", "deːɐ̯", ["которой"]),
+				cell(
+					"deren",
+					"ˈdeːʁən",
+					["которой", "чьей"],
+					["whose", "who", "which", "that"],
+					"Vor einem Nomen ordnet es dieses dem Bezugswort zu: die Zeugin, deren Aussage zählt.",
+				),
+			],
+			Plur: [
+				cell("die", "diː", ["которые", "кто"]),
+				cell("die", "diː", ["которые", "которых"]),
+				cell("denen", "ˈdeːnən", ["которым"]),
+				cell(
+					"deren",
+					"ˈdeːʁən",
+					["которых", "чьих"],
+					["whose", "who", "which", "that"],
+					"Vor einem Nomen ordnet es dieses dem Bezugswort zu: die Geräte, deren Nummern wir notieren.",
+				),
+			],
+		},
+		{
+			core: { pronType: "Rel" },
+			emoji: "🧩",
+			definition: (text) =>
+				`Das Relativpronomen „${text}“ leitet einen Relativsatz ein und verweist auf dessen Bezugswort.`,
+			namesCell: false,
+			en: ["who", "which", "that"],
+		},
+	),
+);
 
 // LEO 1.5.1.5: the same demonstrative can accompany or replace a noun.
 // These are the standalone PRON identities; DET has its own existing members.

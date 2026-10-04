@@ -1,4 +1,4 @@
-import { authoredMembers } from "./inventory.js";
+import { germanArticles } from "./determiner-paradigms.js";
 import type { AuthoredMember } from "./member.js";
 
 /**
@@ -24,14 +24,6 @@ export type ArticleAgreement = {
 	readonly number: string | null;
 	readonly gender: string | null;
 };
-
-/** The der and ein pillar cells, one authored Lemma per Paradigm Cell. */
-const articleCells: readonly AuthoredMember[] = authoredMembers.filter(
-	({ lemma }) =>
-		lemma.kind === "DET" &&
-		(lemma.coreFeatures as Readonly<Record<string, unknown>>).pronType ===
-			"Art",
-);
 
 /**
  * The shortened articles a Shorthand member may spell, with or without the
@@ -87,7 +79,7 @@ export function germanArticleCell(
 	head: ArticleAgreement,
 ): AuthoredMember | undefined {
 	const spellings = germanArticleSpellings(member) ?? [];
-	return articleCells.find(({ lemma }) => {
+	return germanArticles.find(({ lemma }) => {
 		const core = lemma.coreFeatures as Readonly<Record<string, unknown>>;
 		return (
 			spellings.includes(lemma.canonicalForm) &&

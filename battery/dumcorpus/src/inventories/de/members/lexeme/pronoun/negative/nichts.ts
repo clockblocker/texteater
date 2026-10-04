@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import { defineAuthoredMember } from "../../../../member.js";
+import type { AuthoredMember } from "../../../../member.js";
 
 const lemma = {
 	language: "de",
@@ -17,7 +17,7 @@ const lemma = {
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
-export const member = defineAuthoredMember({
+export const member: AuthoredMember = {
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "🚫" }, lemma },
 	knowledge: {
@@ -38,4 +38,4 @@ export const member = defineAuthoredMember({
 			nearAntonym: "ReviewedEmpty",
 		},
 	},
-});
+};

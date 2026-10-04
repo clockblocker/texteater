@@ -4,6 +4,10 @@ import type * as Dumrel from "dumrel/types";
 /** An authored unit is closed-class, never Foreign, so its Reading has an Emoji Description. */
 type AuthoredFamily = Exclude<Dumling.Family<"de">, "Foreign">;
 
+/**
+ * An authored member. dumcorpus's inventory tests check every member with
+ * Dumling and Dumrel and against its route's Knowledge policy (ADR 0021).
+ */
 export type AuthoredMember = {
 	readonly lemma: Dumling.Lemma<"de", AuthoredFamily>;
 	readonly reading: Dumling.Reading<"de", AuthoredFamily>;
@@ -18,10 +22,3 @@ export type AuthoredMember = {
 		readonly locutionType?: string;
 	};
 };
-/**
- * Types an authored member. dumcorpus's inventory tests check every member with
- * Dumling and Dumrel and against its route's Knowledge policy (ADR 0021).
- */
-export function defineAuthoredMember(member: AuthoredMember): AuthoredMember {
-	return member;
-}

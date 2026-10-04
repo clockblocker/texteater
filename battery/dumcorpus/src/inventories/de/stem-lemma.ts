@@ -1,6 +1,6 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import { type AuthoredMember, defineAuthoredMember } from "./member.js";
+import type { AuthoredMember } from "./member.js";
 import type { PronounForm, PronounTable } from "./pronoun-paradigm.js";
 
 /**
@@ -141,7 +141,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 				: { knowledge: {}, coverage: { locutionType: "ReviewedEmpty" } }
 			: { knowledge: {}, coverage: {} };
 	return {
-		member: defineAuthoredMember({
+		member: {
 			lemma,
 			reading: {
 				unitKind: "Reading",
@@ -171,7 +171,7 @@ export function stemMember<Kind extends "PRON" | "DET">(input: {
 				},
 				...locutionType.coverage,
 			},
-		}),
+		},
 		// The first of a spelling and cell wins, so a cell's own form keeps
 		// its Canonical spelling over a variant spelled alike.
 		spellings: input.spellings.filter(({ spelled, cell }) => {

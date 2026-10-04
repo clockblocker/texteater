@@ -1,7 +1,9 @@
-import { defineAuthoredMember } from "../../../../member.js";
-import { member as referential } from "./es-third-person-neuter-singular-nominative.js";
+import type { AuthoredMember } from "../../../../member.js";
+import { referentialEs } from "../../../../pronoun-paradigms.js";
 
-export const member = defineAuthoredMember({
+const referential = referentialEs("Nom");
+
+export const member: AuthoredMember = {
 	lemma: referential.lemma,
 	reading: { ...referential.reading, emojiDescription: "⚪" },
 	knowledge: {
@@ -21,4 +23,4 @@ export const member = defineAuthoredMember({
 		},
 	},
 	coverage: referential.coverage,
-});
+};

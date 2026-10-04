@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import { defineAuthoredMember } from "../../../../member.js";
+import type { AuthoredMember } from "../../../../member.js";
 
 // etwas before a noun is DET (etwas Ruhe), standing alone PRON (Rule
 // de/pron-or-det-by-use). Like PRON etwas it does not inflect, so its
@@ -20,7 +20,7 @@ const lemma = {
 	},
 	unitKind: "Lemma",
 } satisfies Dumling.Lemma<"de">;
-export const member = defineAuthoredMember({
+export const member: AuthoredMember = {
 	lemma,
 	reading: { ...{ unitKind: "Reading", emojiDescription: "📦" }, lemma },
 	knowledge: {
@@ -41,4 +41,4 @@ export const member = defineAuthoredMember({
 			nearAntonym: "ReviewedEmpty",
 		},
 	},
-});
+};

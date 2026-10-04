@@ -1,6 +1,5 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import { defineAuthoredMember } from "./member.js";
 import {
 	type AuthoredSpelling,
 	canonical,
@@ -12,7 +11,13 @@ import {
 	tableSpellings,
 } from "./stem-lemma.js";
 
-type Core = Dumling.Lemma<"de", "Lexeme", "PRON">["coreFeatures"];
+/** The kinds whose pillars are one Lemma per Paradigm Cell: the der-series and personal pronouns, and the articles. */
+type PillarKind = "PRON" | "DET";
+type Core<Kind extends PillarKind = "PRON"> = Dumling.Lemma<
+	"de",
+	"Lexeme",
+	Kind
+>["coreFeatures"];
 export type PronounCell = Pick<Core, "case" | "gender" | "number">;
 export type PronounForm = {
 	readonly text: string;
@@ -31,6 +36,53 @@ export type PronounTable = Readonly<
 			PronounForm | null,
 			PronounForm | null,
 		]
+	>
+>;
+
+/**
+ * A pillar cell's form. Where its siblings' translations differ (mich меня,
+ * mir мне), its own replace its paradigm's, and a remark is a sentence the
+ * cell adds to its paradigm's definition (attributive dessen).
+ */
+export type PillarForm = PronounForm & {
+	readonly en?: readonly string[];
+	readonly ru?: readonly string[];
+	readonly remark?: string;
+};
+/**
+ * A pillar paradigm's shared Knowledge. Its definition may be written from
+ * each cell's form and coordinates (Die Personalpronomenform „mich“ …). It
+ * ends naming the cell, "Form: Dativ, Singular, Maskulinum.", unless
+ * `namesCell` is false.
+ */
+export type PillarDescription<Kind extends PillarKind = "PRON"> = Omit<
+	StemDescription<Core<Kind>>,
+	"definition" | "en" | "ru"
+> & {
+	readonly definition:
+		| string
+		| ((text: string, cell: Partial<PronounCell>) => string);
+	readonly namesCell?: boolean;
+	/** The cells' translations, for each cell that has none of its own. */
+	readonly en?: readonly string[];
+	readonly ru?: readonly string[];
+};
+/**
+ * A pillar's columns: the agreement columns, and Sing for a singular that
+ * marks no gender (ich, du). Each holds its Nom, Acc, Dat and Gen cells.
+ */
+type PillarColumn = AgreementColumn | "Sing";
+export type PillarTable = Readonly<
+	Partial<
+		Record<
+			PillarColumn,
+			readonly [
+				PillarForm | null,
+				PillarForm | null,
+				PillarForm | null,
+				PillarForm | null,
+			]
+		>
 	>
 >;
 
@@ -70,36 +122,51 @@ function cellCoordinates(core: Partial<PronounCell>): string {
  * System ADR 0044 and ADR 0032, not LEO, determine this project's Lemma granularity.
  * https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/index.xml?lang=de
  */
-export function pronounMember(
-	form: PronounForm,
-	description: PronounDescription,
-	cell: Partial<PronounCell> = {},
+function pillarMember<Kind extends PillarKind>(
+	kind: Kind,
+	form: PillarForm,
+	description: PillarDescription<Kind>,
+	cell: Partial<PronounCell>,
 ): ReviewedMember {
-	const coreFeatures: Core = { ...emptyCore, ...description.core, ...cell };
-	const lemma: Dumling.Lemma<"de", "Lexeme", "PRON"> = {
+	const coreFeatures = { ...emptyCore, ...description.core, ...cell };
+	const lemma = {
 		unitKind: "Lemma",
 		language: "de",
 		family: "Lexeme",
-		kind: "PRON",
+		kind,
 		canonicalForm: form.text,
 		coreFeatures,
-	};
+	} as Dumling.Lemma<"de", "Lexeme", Kind>;
+	const en = form.en ?? description.en;
+	const ru = form.ru ?? description.ru;
+	if (!en || !ru)
+		throw Error(
+			`${form.text}: a pillar cell needs translations, its own or its paradigm's`,
+		);
 	const coordinates = cellCoordinates(coreFeatures);
+	const definition = [
+		typeof description.definition === "string"
+			? description.definition
+			: description.definition(form.text, cell),
+		form.remark,
+		description.namesCell !== false && coordinates
+			? `Form: ${coordinates}.`
+			: undefined,
+	]
+		.filter(Boolean)
+		.join(" ");
 	return {
-		member: defineAuthoredMember({
+		member: {
 			lemma,
 			reading: {
 				unitKind: "Reading",
 				lemma,
 				emojiDescription: description.emoji,
-			},
+			} as Dumling.Reading<"de", "Lexeme", Kind>,
 			knowledge: {
-				definition: `${description.definition}${coordinates ? ` Form: ${coordinates}.` : ""}`,
+				definition,
 				transcription: form.ipa,
-				translations: {
-					en: [...description.en],
-					ru: [...description.ru],
-				},
+				translations: { en: [...en], ru: [...ru] },
 			},
 			coverage: {
 				definition: "Authored",
@@ -114,7 +181,7 @@ export function pronounMember(
 					nearAntonym: "ReviewedEmpty",
 				},
 			},
-		}),
+		},
 		// The cell's own form is Canonical and its variants (eins beside
 		// eines) Licensed.
 		spellings: [
@@ -127,28 +194,57 @@ export function pronounMember(
 	};
 }
 
+/** A pronoun pillar cell, or an invariant pronoun when no cell is given (man, etwas). */
+export function pronounMember(
+	form: PillarForm,
+	description: PillarDescription,
+	cell: Partial<PronounCell> = {},
+): ReviewedMember {
+	return pillarMember("PRON", form, description, cell);
+}
+
 /** A pillar paradigm: one Lemma per occupied cell. */
-export function pronounParadigm(
-	table: PronounTable,
-	description: PronounDescription,
+function pillarParadigm<Kind extends PillarKind>(
+	kind: Kind,
+	table: PillarTable,
+	description: PillarDescription<Kind>,
 ): ReviewedMember[] {
 	const result: ReviewedMember[] = [];
-	for (const column of ["Masc", "Neut", "Fem", "Plur"] as const) {
+	for (const column of ["Masc", "Neut", "Fem", "Sing", "Plur"] as const) {
 		for (const [index, grammaticalCase] of (
 			["Nom", "Acc", "Dat", "Gen"] as const
 		).entries()) {
-			const form = table[column][index];
+			const form = table[column]?.[index];
 			if (form)
 				result.push(
-					pronounMember(form, description, {
+					pillarMember(kind, form, description, {
 						case: grammaticalCase,
-						gender: column === "Plur" ? null : column,
+						gender:
+							column === "Plur" || column === "Sing"
+								? null
+								: column,
 						number: column === "Plur" ? "Plur" : "Sing",
 					}),
 				);
 		}
 	}
 	return result;
+}
+
+/** A pronoun pillar paradigm (der-series, personal, einer): one Lemma per occupied cell. */
+export function pronounParadigm(
+	table: PillarTable,
+	description: PillarDescription,
+): ReviewedMember[] {
+	return pillarParadigm("PRON", table, description);
+}
+
+/** An article paradigm (der, ein): one DET Lemma per occupied cell. */
+export function determinerParadigm(
+	table: PillarTable,
+	description: PillarDescription<"DET">,
+): ReviewedMember[] {
+	return pillarParadigm("DET", table, description);
 }
 
 /**

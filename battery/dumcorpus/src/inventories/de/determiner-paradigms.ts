@@ -1,6 +1,8 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
+import type { AuthoredMember } from "./member.js";
 import {
+	determinerParadigm,
 	form,
 	type PronounForm,
 	type PronounTable,
@@ -143,11 +145,60 @@ function adjectivalGenitive(stem: string, ipa: string): PronounTable {
 		],
 	};
 }
-// The definite and indefinite articles are pillars, authored one Lemma per
-// cell under members/lexeme/determiner/article. Every other declining
-// determiner is a stem with borrowed article endings: one Lemma here whose
-// Surfaces mark the cell (system ADR 0032). Invariant ones (derlei, etwas,
-// lauter) keep their single-Lemma files.
+
+// The definite and indefinite articles are pillars: one Lemma per Paradigm
+// Cell (system ADR 0032), each named in its definition. ein has no plural.
+/** The der and ein articles, one DET Lemma per Paradigm Cell. */
+export const germanArticles: readonly AuthoredMember[] = [
+	...determinerParadigm(
+		{
+			Masc: [
+				form("der", "deːɐ̯"),
+				form("den", "deːn"),
+				form("dem", "deːm"),
+				form("des", "dɛs"),
+			],
+			Neut: [
+				form("das", "das"),
+				form("das", "das"),
+				form("dem", "deːm"),
+				form("des", "dɛs"),
+			],
+			Fem: [
+				form("die", "diː"),
+				form("die", "diː"),
+				form("der", "deːɐ̯"),
+				form("der", "deːɐ̯"),
+			],
+			Plur: [
+				form("die", "diː"),
+				form("die", "diː"),
+				form("den", "deːn"),
+				form("der", "deːɐ̯"),
+			],
+		},
+		{
+			core: { pronType: "Art" },
+			emoji: "👉",
+			definition: (text) =>
+				`Der bestimmte Artikel „${text}“ kennzeichnet einen bestimmten Bezug.`,
+			en: ["the"],
+			ru: ["определённый артикль"],
+		},
+	),
+	...determinerParadigm(einWord("ein", "ˈaɪ̯n", false), {
+		core: { pronType: "Art" },
+		emoji: "1⃣",
+		definition: (text) =>
+			`Der unbestimmte Artikel „${text}“ führt einen nicht näher bestimmten Bezug ein.`,
+		en: ["a", "an"],
+		ru: ["неопределённый артикль"],
+	}),
+].map(({ member }) => member);
+
+// Every other declining determiner is a stem with borrowed article endings:
+// one Lemma here whose Surfaces mark the cell (system ADR 0032). Invariant
+// ones (derlei, etwas, lauter) keep their single-Lemma files.
 
 for (const [stem, ipa, definition, en, ru] of [
 	[

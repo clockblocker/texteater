@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import { type AuthoredMember, defineAuthoredMember } from "./member.js";
+import type { AuthoredMember } from "./member.js";
 
 type Lemma = Dumling.Lemma<"de", "Lexeme", "ADV">;
 /**
@@ -723,7 +723,7 @@ function whAdverb(
 ): AuthoredMember {
 	const lemma = lemmaOf(adverb.text);
 	const synonym = adverb.synonymOf ? [lemmaOf(adverb.synonymOf)] : undefined;
-	return defineAuthoredMember({
+	return {
 		lemma,
 		reading: {
 			unitKind: "Reading",
@@ -748,7 +748,7 @@ function whAdverb(
 				nearAntonym: "ReviewedEmpty",
 			},
 		},
-	});
+	};
 }
 
 /**
