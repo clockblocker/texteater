@@ -9,10 +9,14 @@ import { useCallback, useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { visitorErrorMessage } from "@/lib/visitor-error";
-import { NoteSkeletonFor, renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
 import { ResolvingReadingNote } from "@/views/resolving-reading-note";
+import {
+	PlacedNote,
+	PlacedNoteSkeleton,
+	useOwnsNoteEffects,
+} from "@/workspace/note-part";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
@@ -51,7 +55,7 @@ export function UnitReadingNoteView({
 				presentation={presentation}
 			/>
 		) : (
-			<NoteSkeletonFor kind="Reading" presentation={presentation} />
+			<PlacedNoteSkeleton kind="Reading" presentation={presentation} />
 		);
 	}
 	if (noteQuery.data?.kind !== "Reading" || !settingsQuery.data) {
@@ -92,7 +96,9 @@ function ResolvingReadingNoteStandIn({
 	);
 	const note = noteQuery.data;
 	if (!note?.grammar)
-		return <NoteSkeletonFor kind="Reading" presentation={presentation} />;
+		return (
+			<PlacedNoteSkeleton kind="Reading" presentation={presentation} />
+		);
 	return (
 		<ResolvingReadingNote
 			note={note}
@@ -151,8 +157,9 @@ function ReadingNoteContainer({
 		loadSourceContextPage,
 	);
 	const attestationId = note.sourceContexts.page[0]?.attestationId;
+	const ownsEffects = useOwnsNoteEffects();
 	useEffect(() => {
-		if (!attestationId) return;
+		if (!attestationId || !ownsEffects) return;
 		void ensureKnowledge({
 			visitorId,
 			readingId: note.target.readingId,
@@ -164,6 +171,7 @@ function ReadingNoteContainer({
 		knowledgeSettings.translations.en,
 		knowledgeSettings.translations.ru,
 		note.target.readingId,
+		ownsEffects,
 		visitorId,
 	]);
 
@@ -210,5 +218,5 @@ function ReadingNoteContainer({
 		follow,
 	};
 
-	return renderNote({ noteData: loadedNote, capabilities });
+	return <PlacedNote input={{ noteData: loadedNote, capabilities }} />;
 }

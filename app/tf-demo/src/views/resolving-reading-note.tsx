@@ -2,7 +2,8 @@ import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { renderNote } from "@/notes";
+import type { renderNote } from "@/notes";
+import { PlacedNote } from "@/workspace/note-part";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id, TableNames } from "../../convex/_generated/dataModel";
@@ -129,25 +130,34 @@ export function ResolvingReadingNote({
 	);
 	const noteData = resolvingReadingNoteData(note, { animateArrivals });
 	if (!noteData) return null;
-	return renderNote({
-		noteData,
-		capabilities: {
-			presentation,
-			knowledgeSettings: settingsQuery.data ?? DEFAULT_KNOWLEDGE_SETTINGS,
-			sourceContexts: {
-				items: noteData.sourceContexts.page,
-				hasMore: false,
-				isLoading: false,
-				error: null,
-				loadMore: null,
-			},
-			personalAnnotation: { isSaving: false, error: null, save: null },
-			// Nothing here has an identity yet; the only real destination is
-			// the source Text, reached without a focus on a placeholder occurrence.
-			follow: (target) => {
-				if (target.kind === "Text")
-					follow({ kind: "Text", textId: target.textId });
-			},
-		},
-	});
+	return (
+		<PlacedNote
+			input={{
+				noteData,
+				capabilities: {
+					presentation,
+					knowledgeSettings:
+						settingsQuery.data ?? DEFAULT_KNOWLEDGE_SETTINGS,
+					sourceContexts: {
+						items: noteData.sourceContexts.page,
+						hasMore: false,
+						isLoading: false,
+						error: null,
+						loadMore: null,
+					},
+					personalAnnotation: {
+						isSaving: false,
+						error: null,
+						save: null,
+					},
+					// Nothing here has an identity yet; the only real destination is
+					// the source Text, reached without a focus on a placeholder occurrence.
+					follow: (target) => {
+						if (target.kind === "Text")
+							follow({ kind: "Text", textId: target.textId });
+					},
+				},
+			}}
+		/>
+	);
 }

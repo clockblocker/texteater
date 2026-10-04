@@ -4,9 +4,9 @@ import { useConvex } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { NoteSkeletonFor, renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
+import { PlacedNote, PlacedNoteSkeleton } from "@/workspace/note-part";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -35,7 +35,10 @@ export function RouteNoteView({
 	);
 	if (noteQuery.isPending)
 		return (
-			<NoteSkeletonFor kind={target.kind} presentation={presentation} />
+			<PlacedNoteSkeleton
+				kind={target.kind}
+				presentation={presentation}
+			/>
 		);
 	if (noteQuery.data?.kind !== target.kind) {
 		return (
@@ -55,10 +58,12 @@ export function RouteNoteView({
 		);
 	}
 	return noteQuery.data.kind === "Attestation" ? (
-		renderNote({
-			noteData: noteQuery.data,
-			capabilities: routeNoteCapabilities(follow, presentation),
-		})
+		<PlacedNote
+			input={{
+				noteData: noteQuery.data,
+				capabilities: routeNoteCapabilities(follow, presentation),
+			}}
+		/>
 	) : (
 		<PaginatedRouteNote
 			initialNote={noteQuery.data}
@@ -112,7 +117,7 @@ function PaginatedSurfaceNote({
 		pagination,
 		follow,
 	};
-	return renderNote({ noteData: note, capabilities });
+	return <PlacedNote input={{ noteData: note, capabilities }} />;
 }
 
 function PaginatedRouteNote({
@@ -142,10 +147,18 @@ function PaginatedRouteNote({
 		loadRoutePage,
 	);
 
-	return renderNote({
-		noteData: note,
-		capabilities: routeNoteCapabilities(follow, presentation, pagination),
-	});
+	return (
+		<PlacedNote
+			input={{
+				noteData: note,
+				capabilities: routeNoteCapabilities(
+					follow,
+					presentation,
+					pagination,
+				),
+			}}
+		/>
+	);
 }
 
 function routeNoteQueryArgs(

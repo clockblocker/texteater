@@ -4,9 +4,9 @@ import { useConvex, useMutation } from "convex/react";
 import type { FunctionReturnType } from "convex/server";
 import { useCallback, useReducer, useRef, useState } from "react";
 import { visitorErrorMessage } from "@/lib/visitor-error";
-import { NoteSkeletonFor, renderNote } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { usePaginatedNoteLoading } from "@/views/paginated-note-loading";
+import { PlacedNote, PlacedNoteSkeleton } from "@/workspace/note-part";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { ShadowNoteTarget } from "../../shared/navigation";
@@ -29,7 +29,7 @@ export function ShadowNoteView({
 		}),
 	);
 	if (noteQuery.isPending)
-		return <NoteSkeletonFor kind="Shadow" presentation={presentation} />;
+		return <PlacedNoteSkeleton kind="Shadow" presentation={presentation} />;
 	if (noteQuery.data?.kind !== "Shadow") {
 		return (
 			<NotFoundView
@@ -119,5 +119,5 @@ function ShadowNoteContainer({
 		},
 		follow,
 	};
-	return renderNote({ noteData: loadedNote, capabilities });
+	return <PlacedNote input={{ noteData: loadedNote, capabilities }} />;
 }

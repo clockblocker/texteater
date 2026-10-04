@@ -4,10 +4,14 @@ import { useMutation as useConvexMutation } from "convex/react";
 import { Button } from "lego";
 import { useEffect } from "react";
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import { NoteSkeletonFor } from "@/notes";
 import { NotFoundView } from "@/views/not-found-view";
 import { resolutionDeckCards } from "@/views/resolution-deck";
 import { ResolvingReadingNote } from "@/views/resolving-reading-note";
+import {
+	PlacedNoteSkeleton,
+	useNotePart,
+	useOwnsNoteEffects,
+} from "@/workspace/note-part";
 import type { ResolutionStepTarget } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
@@ -39,7 +43,10 @@ export function ResolutionNoteView({
 
 	if (noteQuery.isPending)
 		return (
-			<NoteSkeletonFor kind="Attestation" presentation={presentation} />
+			<PlacedNoteSkeleton
+				kind="Attestation"
+				presentation={presentation}
+			/>
 		);
 	if (!note) {
 		return (
@@ -78,7 +85,7 @@ export function ResolutionStepNoteView({
 
 	if (noteQuery.isPending)
 		return (
-			<NoteSkeletonFor
+			<PlacedNoteSkeleton
 				kind={target.stepKind}
 				presentation={presentation}
 			/>
@@ -100,14 +107,16 @@ export function ResolutionStepNoteView({
 	);
 }
 
+/** The Deck holding this Resolution's Cards keeps up with it, Card by Card. */
 function useResolutionDeck(
 	note: ResolutionNote | null,
 	presentCards: ReturnType<typeof useWorkspaceInteraction>["presentCards"],
 ) {
+	const ownsEffects = useOwnsNoteEffects();
 	useEffect(() => {
-		if (!note) return;
+		if (!note || !ownsEffects) return;
 		presentCards(resolutionDeckCards(note));
-	}, [note, presentCards]);
+	}, [note, ownsEffects, presentCards]);
 }
 
 export function ResolutionNoteFrame({
@@ -120,25 +129,30 @@ export function ResolutionNoteFrame({
 	onRetry?: () => Promise<unknown>;
 }) {
 	const { lifecycle } = note;
+	const part = useNotePart();
 	// A click shows the unit it selected until Grammar resolves, and keeps
 	// showing it when the unit stays Unresolved (#848, #886).
+	const unit =
+		lifecycle.state === "Active" || lifecycle.outcome === "Unresolved"
+			? note.unit
+			: undefined;
 	if (
-		note.unit &&
-		(lifecycle.state === "Active" || lifecycle.outcome === "Unresolved")
-	)
-		return <UnitCard note={note} unit={note.unit} />;
-	if (lifecycle.state === "Active" || lifecycle.outcome === "Complete") {
+		!unit &&
+		(lifecycle.state === "Active" || lifecycle.outcome === "Complete")
+	) {
 		return (
-			<NoteSkeletonFor kind="Attestation" presentation={presentation} />
+			<PlacedNoteSkeleton
+				kind="Attestation"
+				presentation={presentation}
+			/>
 		);
 	}
-
-	// A Foreign Reading has no Emoji Description (ADR 0045).
-	const title = note.reading
-		? [note.reading.emojiDescription, note.reading.canonicalForm]
-				.filter(Boolean)
-				.join(" ")
-		: (note.grammar?.canonicalForm ?? note.route.selectedSegment);
+	const title = resolutionTitle(note);
+	if (part === "heading")
+		return <span className="min-w-0 truncate">{title}</span>;
+	if (unit) return <UnitCard note={note} unit={unit} />;
+	if (lifecycle.state === "Active" || lifecycle.outcome === "Complete")
+		return null;
 	return (
 		<div className="min-h-full bg-paper px-note-gutter pt-note-top compact:p-3.5">
 			<div className="mx-auto flex w-full max-w-note flex-col gap-5">
@@ -171,6 +185,25 @@ export function ResolutionNoteFrame({
 			</div>
 		</div>
 	);
+}
+
+/**
+ * What a settled Resolution Note is titled: the unit it selected while that
+ * is what it shows, else its Reading. A Foreign Reading has no Emoji
+ * Description (ADR 0045).
+ */
+function resolutionTitle(note: ResolutionNote): string {
+	const { lifecycle } = note;
+	if (
+		note.unit &&
+		(lifecycle.state === "Active" || lifecycle.outcome === "Unresolved")
+	)
+		return unitWords(note.source.segments, note.unit.segments);
+	return note.reading
+		? [note.reading.emojiDescription, note.reading.canonicalForm]
+				.filter(Boolean)
+				.join(" ")
+		: (note.grammar?.canonicalForm ?? note.route.selectedSegment);
 }
 
 type StoredUnit = NonNullable<ResolutionNote["unit"]>;
@@ -256,5 +289,5 @@ export function ResolutionStepNoteFrame({
 }) {
 	if (stepKind === "Reading" && note?.grammar)
 		return <ResolvingReadingNote note={note} presentation={presentation} />;
-	return <NoteSkeletonFor kind={stepKind} presentation={presentation} />;
+	return <PlacedNoteSkeleton kind={stepKind} presentation={presentation} />;
 }
