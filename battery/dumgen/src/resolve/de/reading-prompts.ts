@@ -192,10 +192,15 @@ export const generation = {
 	// and `json` there.
 	draft: paragraph(
 		"generation.draft.task",
-		"Then write the Emoji Description of the same unit in `emojiDescription`: one to four emoji naming what it means where `markedSentence` marks it with <TARGET>…</TARGET>. Every marked span belongs to the one unit, its auxiliaries, its article and a subject es included. Its dictionary headword is the `canonicalForm` you wrote, which the examples give as `lemma`.",
+		"Then write the Emoji Description of the same unit in `emojiDescription`: one to four emoji naming what it means where `emojiDescriptionInput.markedSentence` marks it with <TARGET>…</TARGET>. Every marked span belongs to the one unit, its auxiliaries, its article and a subject es included. Its dictionary headword is the `canonicalForm` you wrote, which the examples give as `lemma`.",
 		rules.meaning,
 		rules.auxiliary,
 		rules.expletive,
+	),
+	draftScope: paragraph(
+		"generation.draft.scope",
+		"The description rests on `emojiDescriptionInput.markedSentence` and that `canonicalForm` alone. Ignore every other input for it: the route, `sentence`, `marked`, the members and their orthography, `fixedMembers`, `judged`, `outsideHeadword`, `auxiliaries` and `lemmaCandidates`, and the Canonical Form instructions and their examples above.",
+		rules.meaning,
 	),
 	draftJson: paragraph(
 		"generation.draft.output",

@@ -94,12 +94,14 @@ export const generationPrompt = [
 
 /**
  * What Luna's Canonical Form call adds to its system prompt to draft the
- * Emoji Description after the headword: the generation prompt, with its
- * task and output lines naming the draft's field, and the same
- * demonstrations.
+ * Emoji Description after the headword (ADR 0031): the generation prompt,
+ * with its task and output lines naming the draft's fields, a line that
+ * confines the draft to the marked Sentence and the written Canonical
+ * Form, and the same demonstrations.
  */
 export const draftPrompt = [
 	generation.draft,
+	generation.draftScope,
 	generation.meaning,
 	generation.distinct,
 	generation.copula,

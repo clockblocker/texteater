@@ -130,7 +130,9 @@ export function hintsFor(
 /**
  * The Canonical Form request, without its configuration. With `drafts`,
  * Luna writes the Emoji Description too, after the headword, from the unit
- * marked as `resolve.reading` marks it.
+ * marked as `resolve.reading` marks it, in `emojiDescriptionInput`, and
+ * the written headword alone. No stored Reading reaches the request: the
+ * hints are Lemmas, their Canonical Form and Core Features only.
  */
 export function canonicalFormRequest(
 	target: Target,
@@ -180,12 +182,16 @@ export function canonicalFormRequest(
 						})),
 					}
 				: {}),
+			// The draft's one input, in its own block: the rest is the
+			// Canonical Form's, and the prompt tells Luna to ignore it there.
 			...(drafts
 				? {
-						markedSentence: markedSentence(
-							target.segments,
-							target.members.map(({ segment }) => segment),
-						),
+						emojiDescriptionInput: {
+							markedSentence: markedSentence(
+								target.segments,
+								target.members.map(({ segment }) => segment),
+							),
+						},
 					}
 				: {}),
 		},

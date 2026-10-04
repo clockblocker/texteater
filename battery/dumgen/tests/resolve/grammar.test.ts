@@ -669,18 +669,45 @@ test("Luna drafts the Emoji Description after the headword in the same call, fro
 		article: "das",
 		emojiDescription: " 🏰️",
 	}));
+	// A stored Lemma found under the word reaches the call as a hint.
+	const stored: Dumling.Lemma<"de"> = {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "NOUN",
+		canonicalForm: "Schloss",
+		coreFeatures: { gender: "Neut" },
+	};
 	const { result } = await resolveOnce(
 		{ jev: fakeJev().ask, luna: luna.ask },
 		{
 			sentence: sentenceOf("Das Schloss klemmt."),
 			unit: unitOf([2], "Lexeme", "NOUN"),
+			lemmaCandidates: [{ lemma: stored, foundUnder: ["Schloss"] }],
 		},
 	);
 	expect(luna.sent).toHaveLength(1);
 	const [request] = luna.sent;
-	expect(request?.input).toMatchObject({
-		markedSentence: "Das <TARGET>Schloss</TARGET> klemmt.",
+	// The drafter's one input sits in its own block; everything else is
+	// the Canonical Form's. Sent on the guess, the call has no judged
+	// features yet.
+	expect(request?.input).toEqual({
+		route: "Lexeme NOUN",
+		sentence: "Das Schloss klemmt.",
+		marked: "Das ⟦Schloss⟧ klemmt.",
+		members: [{ member: "m0", text: "Schloss", orthography: "Standard" }],
+		lemmaCandidates: [
+			{ canonicalForm: "Schloss", coreFeatures: { gender: "Neut" } },
+		],
+		emojiDescriptionInput: {
+			markedSentence: "Das <TARGET>Schloss</TARGET> klemmt.",
+		},
 	});
+	// No stored Emoji Description, or any other emoji, reaches the input.
+	expect(JSON.stringify(request?.input)).not.toMatch(
+		/\p{Extended_Pictographic}/u,
+	);
+	expect(request?.systemPrompt).toContain(generation.draftScope);
 	const schema = request?.outputSchema as {
 		properties: Record<string, unknown>;
 		required: readonly string[];
@@ -730,7 +757,7 @@ test("a draft that is no Emoji Description is dropped and the headword kept, and
 		},
 	);
 	expect(cool.result).not.toHaveProperty("drafted");
-	expect(foreign.sent[0]?.input).not.toHaveProperty("markedSentence");
+	expect(foreign.sent[0]?.input).not.toHaveProperty("emojiDescriptionInput");
 	expect(foreign.sent[0]?.outputSchema).not.toMatchObject({
 		properties: { emojiDescription: expect.anything() },
 	});
