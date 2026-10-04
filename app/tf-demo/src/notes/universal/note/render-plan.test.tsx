@@ -80,19 +80,51 @@ test("plans the Heading Block apart from the Body's layout", () => {
 	expect(plan.body).toEqual([]);
 });
 
-test("drops a Heading that a stale layout still names", () => {
+test("drops Anchor Blocks that a stale layout still names", () => {
 	const registry: RegisteredBlockMap = {
 		Heading: () => <p>heading</p>,
+		SourceContexts: () => <p>source contexts</p>,
 		Relations: () => <p>relations</p>,
 	};
 	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
-		order: ["Relations", "Heading"] as never,
-		hidden: new Set(["Heading"] as never),
+		order: ["Relations", "SourceContexts", "Heading"] as never,
+		hidden: new Set(["Heading", "SourceContexts"] as never),
 	});
 
 	expect(layout.order).toEqual(["Relations"]);
 	expect([...layout.hidden]).toEqual([]);
 	expect(plan.heading?.blockKind).toBe("Heading");
+	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual([
+		"SourceContexts",
+		"Relations",
+	]);
+});
+
+test("pins Source Contexts first in the Body, ahead of the layout", () => {
+	const registry: RegisteredBlockMap = {
+		Heading: () => <p>heading</p>,
+		Relations: () => <p>relations</p>,
+		Definition: () => <p>definition</p>,
+		SourceContexts: () => <p>source contexts</p>,
+	};
+	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
+		order: ["Definition", "Relations"],
+		hidden: new Set(["Definition", "Relations"]),
+	});
+
+	expect(layout.order).toEqual(["Definition", "Relations"]);
+	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual([
+		"SourceContexts",
+	]);
+});
+
+test("plans no Source Contexts for a route without that Block", () => {
+	const { plan } = resolveRenderPlan(
+		() => ({ Relations: () => <p>relations</p> }),
+		coordinates,
+		{ order: ["Relations"], hidden: new Set() },
+	);
+
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual(["Relations"]);
 });
 
@@ -134,6 +166,7 @@ test("composes the Heading first inside the Body", () => {
 	const registry: RegisteredBlockMap = {
 		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
+		SourceContexts: () => <p>source contexts</p>,
 	};
 	const input = {
 		noteData: readingFixture(),
@@ -148,7 +181,9 @@ test("composes the Heading first inside the Body", () => {
 		}),
 	);
 
-	expect(markup).toMatch(/<article[^>]*><p>heading<\/p><p>relations<\/p>/);
+	expect(markup).toMatch(
+		/<article[^>]*><p>heading<\/p><p>source contexts<\/p><p>relations<\/p>/,
+	);
 });
 
 test("leaves the Heading out of a Note that cannot render", () => {

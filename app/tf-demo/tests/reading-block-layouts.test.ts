@@ -53,13 +53,11 @@ const LANGUAGE_ORDER: readonly ReadingBlockKind[] = [
 	"Definition",
 	"Relations",
 	"Translations",
-	"SourceContexts",
 	"Valency",
 	"PersonalAnnotation",
 ];
 const LOCAL_VERB_ORDER: readonly ReadingBlockKind[] = [
 	"Translations",
-	"SourceContexts",
 	"Definition",
 	"Valency",
 	"Relations",
@@ -252,40 +250,44 @@ describe("Reading Block layout persistence", () => {
 		expect(await layoutRows(t, "readingFamilyKindLayouts")).toHaveLength(1);
 	});
 
-	test("cannot store the pinned Heading Block", async () => {
-		const t = createTestConvex();
+	test.each(["Heading", "SourceContexts"])(
+		"cannot store the pinned %s Block",
+		async (anchor) => {
+			const t = createTestConvex();
+			const blockKind = anchor as never;
 
-		await expect(
-			t.mutation(setFamilyKindBlockOrder, {
-				visitorId: VISITOR_ID,
-				route: VERB_ROUTE,
-				order: ["Heading" as never, "Definition"],
-			}),
-		).rejects.toThrow();
-		await expect(
-			t.mutation(setFamilyKindBlockVisibility, {
-				visitorId: VISITOR_ID,
-				route: VERB_ROUTE,
-				blockKind: "Heading" as never,
-				visible: false,
-			}),
-		).rejects.toThrow();
-		await expect(
-			t.mutation(setLanguageBlockOrder, {
-				visitorId: VISITOR_ID,
-				targetLanguage: "de",
-				order: ["Heading" as never, "Definition"],
-			}),
-		).rejects.toThrow();
-		await expect(
-			t.mutation(setLanguageBlockVisibility, {
-				visitorId: VISITOR_ID,
-				targetLanguage: "de",
-				blockKind: "Heading" as never,
-				visible: false,
-			}),
-		).rejects.toThrow();
-		expect(await layoutRows(t, "readingLanguageLayouts")).toEqual([]);
-		expect(await layoutRows(t, "readingFamilyKindLayouts")).toEqual([]);
-	});
+			await expect(
+				t.mutation(setFamilyKindBlockOrder, {
+					visitorId: VISITOR_ID,
+					route: VERB_ROUTE,
+					order: [blockKind, "Definition"],
+				}),
+			).rejects.toThrow();
+			await expect(
+				t.mutation(setFamilyKindBlockVisibility, {
+					visitorId: VISITOR_ID,
+					route: VERB_ROUTE,
+					blockKind,
+					visible: false,
+				}),
+			).rejects.toThrow();
+			await expect(
+				t.mutation(setLanguageBlockOrder, {
+					visitorId: VISITOR_ID,
+					targetLanguage: "de",
+					order: [blockKind, "Definition"],
+				}),
+			).rejects.toThrow();
+			await expect(
+				t.mutation(setLanguageBlockVisibility, {
+					visitorId: VISITOR_ID,
+					targetLanguage: "de",
+					blockKind,
+					visible: false,
+				}),
+			).rejects.toThrow();
+			expect(await layoutRows(t, "readingLanguageLayouts")).toEqual([]);
+			expect(await layoutRows(t, "readingFamilyKindLayouts")).toEqual([]);
+		},
+	);
 });

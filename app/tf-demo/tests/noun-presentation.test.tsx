@@ -59,6 +59,29 @@ test("noun Reading heading takes its gender tone and links its Lemma", () => {
 	expect(followed).toEqual([{ kind: "Lemma", lemmaId: "lemma-1" }]);
 });
 
+test("a Reading Note pins its Heading, then its Source Contexts", () => {
+	const note = readingNote([
+		{
+			attestationId: "attestation-1",
+			textId: "text-1",
+			sentencePosition: 0,
+			sentenceSnippet: "",
+			segments: [],
+			memberSegmentIndices: [],
+			memberTexts: [],
+			origin: { kind: "Text" },
+			target: { kind: "Text", textId: "text-1" },
+		},
+	]);
+	const kinds: unknown[] = [];
+	find(renderReading(note), (props) => {
+		if (props.resetToken) kinds.push(props.blockKind);
+		return false;
+	});
+	expect(kinds.slice(0, 2)).toEqual(["Heading", "SourceContexts"]);
+	expect(kinds.length).toBeGreaterThan(2);
+});
+
 test("Surface heading takes the gender tone of its active analysis", () => {
 	const follow = () => {};
 	const analysis = {

@@ -15,7 +15,7 @@ import {
 import { renderErrorNote } from "./universal/note/error";
 import type { NoteKind } from "./universal/note/kind";
 import {
-	availableBodyBlockKinds,
+	availableLayoutBlockKinds,
 	defaultNoteBlockLayout,
 	type NoteBlockLayout,
 } from "./universal/note/layout";
@@ -93,7 +93,7 @@ function configureRenderNote(layoutAdapter: LayoutAdapter) {
 function defaultConfiguredLayout(noteData: NoteData): NoteBlockLayout {
 	const registry = configuredRegistry(noteData);
 	return defaultNoteBlockLayout(
-		registry ? availableBodyBlockKinds(registry) : [],
+		registry ? availableLayoutBlockKinds(registry) : [],
 	);
 }
 

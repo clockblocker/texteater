@@ -1,11 +1,10 @@
 import { z } from "zod";
 
 /**
- * The Blocks of a Note's Body, the only ones a stored layout orders and hides.
- * The Heading Block is pinned first (tf-demo ADR 0006), so it is not one.
+ * The Blocks a stored layout orders and hides. The Anchor Blocks are pinned
+ * (tf-demo ADR 0006), so they are not among them.
  */
-export const noteBodyBlockKindSchema = z.enum([
-	"SourceContexts",
+export const noteLayoutBlockKindSchema = z.enum([
 	"Valency",
 	"Definition",
 	"Translations",
@@ -16,10 +15,16 @@ export const noteBodyBlockKindSchema = z.enum([
 	"Routes",
 ]);
 
-export type NoteBodyBlockKind = z.infer<typeof noteBodyBlockKindSchema>;
+export type NoteLayoutBlockKind = z.infer<typeof noteLayoutBlockKindSchema>;
 
-/** The registry key of a route's Heading Block. */
+/** The registry key of a route's Heading Block, pinned first. */
 export type NoteHeadingBlockKind = "Heading";
 
-/** Every Block a route's registry can render: its Heading and its Body. */
-export type NoteBlockKind = NoteHeadingBlockKind | NoteBodyBlockKind;
+/** The registry key of a route's Source Contexts Block, pinned after the Heading. */
+export type NoteSourceContextsBlockKind = "SourceContexts";
+
+/** Every Block a route's registry can render: its Anchor and its laid-out Blocks. */
+export type NoteBlockKind =
+	| NoteHeadingBlockKind
+	| NoteSourceContextsBlockKind
+	| NoteLayoutBlockKind;

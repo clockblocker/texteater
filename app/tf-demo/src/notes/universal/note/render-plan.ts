@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 import type { NoteBlockKind } from "../blocks/kind";
 import type { NoteCoordinates } from "./data";
 import {
-	availableBodyBlockKinds,
+	availableLayoutBlockKinds,
 	type NoteBlockLayout,
 	reconcileNoteBlockLayout,
 } from "./layout";
@@ -16,12 +16,14 @@ type PlannedBlock = {
 /**
  * The Blocks a Note renders, split where a host places them: the Heading
  * Block, which a Card or a Cover draws as its lift handle, and the Body,
- * every other Block. The Heading is pinned first (tf-demo ADR 0006), so a
- * layout names only Body Blocks.
+ * every other Block. The Anchor Blocks are pinned (tf-demo ADR 0006): the
+ * Heading first and Source Contexts right after it, at the top of the Body,
+ * so a Card's box clips neither. A layout orders and hides only the rest.
  */
 export type RenderPlan = {
 	/** Null when the Note's route has no Heading Block. */
 	readonly heading: PlannedBlock | null;
+	/** Source Contexts, when the route has it, then the layout's visible Blocks. */
 	readonly body: readonly PlannedBlock[];
 };
 
@@ -42,7 +44,7 @@ export function resolveRenderPlan(
 	}
 	const layout = reconcileNoteBlockLayout(
 		requestedLayout,
-		availableBodyBlockKinds(registry),
+		availableLayoutBlockKinds(registry),
 	);
 	return {
 		layout,
@@ -50,11 +52,21 @@ export function resolveRenderPlan(
 			heading: registry.Heading
 				? { blockKind: "Heading", renderer: registry.Heading }
 				: null,
-			body: layout.order.flatMap((blockKind) => {
-				if (layout.hidden.has(blockKind)) return [];
-				const renderer = registry[blockKind];
-				return renderer ? [{ blockKind, renderer }] : [];
-			}),
+			body: [
+				...(registry.SourceContexts
+					? [
+							{
+								blockKind: "SourceContexts" as const,
+								renderer: registry.SourceContexts,
+							},
+						]
+					: []),
+				...layout.order.flatMap((blockKind) => {
+					if (layout.hidden.has(blockKind)) return [];
+					const renderer = registry[blockKind];
+					return renderer ? [{ blockKind, renderer }] : [];
+				}),
+			],
 		},
 	};
 }

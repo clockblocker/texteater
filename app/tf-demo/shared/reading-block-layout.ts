@@ -1,11 +1,10 @@
 /**
  * Stored Reading Block layouts and their algebra, which the direct
  * manipulation in {@link https://github.com/clockblocker/texteater/issues/408}
- * will edit. They order and hide the Body only: the Heading Block is pinned
- * first (tf-demo ADR 0006), so no layout can store it.
+ * will edit. The Anchor Blocks, Heading and Source Contexts, are pinned
+ * (tf-demo ADR 0006), so no layout can store them.
  */
 export const READING_BLOCK_KIND_VALUES = [
-	"SourceContexts",
 	"Valency",
 	"Definition",
 	"Translations",
@@ -33,7 +32,6 @@ export type SerializedReadingBlockLayout = {
  */
 export const DEFAULT_DE_READING_LANGUAGE_LAYOUT = {
 	order: [
-		"SourceContexts",
 		"Valency",
 		"Relations",
 		"Translations",

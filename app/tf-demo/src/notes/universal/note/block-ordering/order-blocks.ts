@@ -1,26 +1,26 @@
 import {
-	type NoteBodyBlockKind,
-	noteBodyBlockKindSchema,
+	type NoteLayoutBlockKind,
+	noteLayoutBlockKindSchema,
 } from "../../blocks/kind";
-import { WEIGHT_FOR_NOTE_BODY_BLOCK_KIND } from "./default-order";
+import { WEIGHT_FOR_NOTE_LAYOUT_BLOCK_KIND } from "./default-order";
 
-export function orderNoteBodyBlockKinds(
-	blockKinds: ReadonlySet<NoteBodyBlockKind>,
+export function orderNoteLayoutBlockKinds(
+	blockKinds: ReadonlySet<NoteLayoutBlockKind>,
 	weightFor: Readonly<
-		Record<NoteBodyBlockKind, number>
-	> = WEIGHT_FOR_NOTE_BODY_BLOCK_KIND,
-): readonly NoteBodyBlockKind[] {
-	assertStrictNoteBodyBlockKindWeights(weightFor);
+		Record<NoteLayoutBlockKind, number>
+	> = WEIGHT_FOR_NOTE_LAYOUT_BLOCK_KIND,
+): readonly NoteLayoutBlockKind[] {
+	assertStrictNoteLayoutBlockKindWeights(weightFor);
 	return [...blockKinds].sort(
 		(left, right) => weightFor[left] - weightFor[right],
 	);
 }
 
-function assertStrictNoteBodyBlockKindWeights(
-	weightFor: Readonly<Record<NoteBodyBlockKind, number>>,
+function assertStrictNoteLayoutBlockKindWeights(
+	weightFor: Readonly<Record<NoteLayoutBlockKind, number>>,
 ): void {
-	const kindForWeight = new Map<number, NoteBodyBlockKind>();
-	for (const kind of noteBodyBlockKindSchema.options) {
+	const kindForWeight = new Map<number, NoteLayoutBlockKind>();
+	for (const kind of noteLayoutBlockKindSchema.options) {
 		const weight = weightFor[kind];
 		if (!Number.isFinite(weight)) {
 			throw new Error(
