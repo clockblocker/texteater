@@ -3,7 +3,7 @@ import { defineUniversalConceptPage } from "../../../../../lib/docs/source-mirro
 const document = defineUniversalConceptPage({
 	order: 12002,
 	title: "Inflection",
-	body: "Inflectional features describe the grammatical realization of a Surface. Routes that represent inflection carry a nullable feature bag. Use `checkIfGrundform` to assess whether that realization is canonical, and preserve assessment failures as undetermined.",
+	body: "Inflectional features describe the grammatical realization of a Surface. Routes that represent inflection carry a nullable feature bag. Use `checkIfGrundform` from `dumcorpus/inventories` to assess whether that realization is canonical, and preserve assessment failures as undetermined.",
 });
 
 export default document;

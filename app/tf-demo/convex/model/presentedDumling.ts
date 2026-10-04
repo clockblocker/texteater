@@ -1,5 +1,5 @@
 import { type Infer, v } from "convex/values";
-import { checkIfGrundform } from "dumling";
+import { checkIfGrundform } from "dumcorpus/inventories";
 import { parseUnitAs } from "../../server/operationalParsing";
 import {
 	attestationMemberValidator,

@@ -54,15 +54,17 @@ test("a consumer on Node reads the authored inventories through their entry", as
 
 test("the inventories entry reads no files and loads no Zod", async () => {
 	const files = ["./inventories.js"];
-	const external: string[] = [];
+	const external = new Set<string>();
 	for (const file of files) {
 		const text = await Bun.file(resolve(packageRoot, "dist", file)).text();
 		// Anchored to statements, so a string such as "where from" is no import.
 		for (const [, specifier = ""] of text.matchAll(
 			/^(?:import|export)\b[^";]*?"([^"]+)"/gm,
 		))
-			if (!specifier.startsWith("./")) external.push(specifier);
+			if (!specifier.startsWith("./")) external.add(specifier);
 			else if (!files.includes(specifier)) files.push(specifier);
 	}
-	expect(external).toEqual([]);
+	// Dumling's runtime root, for foldCase, loads no Zod either: its own
+	// package test pins that.
+	expect([...external]).toEqual(["dumling"]);
 });

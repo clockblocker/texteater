@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { checkIfGrundform, parseUnit } from "../src/index.js";
+import { parseUnit } from "../src/index.js";
 
 const noun = {
 	unitKind: "Surface",
@@ -52,10 +52,6 @@ test("a noun Surface is its own form and marks no article", () => {
 	expect(result.success).toBe(true);
 	if (!result.success || result.chain.unitKind !== "Surface")
 		throw Error("Expected Surface");
-	expect(checkIfGrundform(result.chain.value)).toEqual({
-		success: true,
-		value: false,
-	});
 	expect(result.chain.value.lemma).toEqual(noun.lemma);
 	for (const invalid of [
 		{ ...noun, articleReference: null },
@@ -191,14 +187,14 @@ test("subject evidence retains capitalization and genuine typos in an owned memb
 });
 // A clitic 's is a way of writing es: Fused in Mir geht's gut, Shorthand in
 // Wenn 's morgen regnet.
-const fusedEs = (attested: string, spelling: string, surface = "es") => ({
+const fusedEs = (attested: string, spelling: string) => ({
 	attested,
 	orthography: "Fused",
 	fusion: {
 		spelling,
 		components: [
 			{ span: "geht", surface: "geht" },
-			{ span: attested, surface },
+			{ span: attested, surface: "es" },
 		],
 	},
 	component: 1,
@@ -216,33 +212,18 @@ const expletiveAttestation = (evidence: object) => ({
 	expletiveEvidence: evidence,
 	valencyEvidence: [],
 });
-test("subject evidence accepts a Fused or Shorthand clitic 's", () => {
+test("subject evidence is an owned member, whatever it spells", () => {
+	// dumcorpus checks that the member spells es (ADR 0041).
 	for (const evidence of [
 		fusedEs("'s", "geht's"),
-		fusedEs("’s", "geht’s"),
-		fusedEs("s", "gehts"),
 		{ attested: "'s", orthography: "Shorthand" },
-		{ attested: "’s", orthography: "Shorthand" },
-		{ attested: "'S", orthography: "Shorthand" },
+		{ attested: "'n", orthography: "Shorthand" },
 	])
 		expect(parseUnit(expletiveAttestation(evidence)).success).toBe(true);
-});
-test("subject evidence rejects any other spelling of a Fused or Shorthand member", () => {
-	for (const evidence of [
-		// A full es is Standard, never Fused or Shorthand.
-		{ attested: "es", orthography: "Shorthand" },
-		fusedEs("es", "gehtes"),
-		// A clitic that is not es.
-		{ attested: "'n", orthography: "Shorthand" },
-		{ attested: "'ne", orthography: "Shorthand" },
-		{ attested: "`s", orthography: "Shorthand" },
-		fusedEs("'m", "geht'm"),
-		// A Fused s that realizes another word, as in ins.
-		fusedEs("s", "gehts", "das"),
-		// A clitic spelling is no Standard es.
-		{ attested: "'s", orthography: "Standard" },
-	])
-		expect(parseUnit(expletiveAttestation(evidence)).success).toBe(false);
+	const unowned = expletiveAttestation(fusedEs("'s", "geht's"));
+	expect(
+		parseUnit({ ...unowned, members: [unowned.members[0]] }).success,
+	).toBe(false);
 });
 // Ich bin im Wald: i is the ADP in, m the article the noun owns (ADR 0035).
 const im = {

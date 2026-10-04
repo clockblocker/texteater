@@ -1,50 +1,154 @@
 import { describe, expect, test } from "bun:test";
+import { parseUnit } from "dumling";
+import { dumlingRoutes } from "dumling/codegen";
+import { surfaceSchema as determinerSurfaceSchema } from "dumling/schema/de/lexeme/determiner";
+import type * as Dumling from "dumling/types";
 import { z } from "zod";
-import { loadRoutes } from "../codegen/routes.js";
 import {
 	checkIfGrundform,
 	GrundformAssessmentError,
-	parseUnit,
-} from "../src/index.js";
-import type { Surface } from "../src/types.js";
-import { unitFixtures } from "./unit-fixtures.js";
+} from "../src/inventories.js";
 
-const routes = await loadRoutes();
+type Surface = Dumling.Surface;
+type Bag = Record<string, unknown>;
+interface Shape {
+	anyOf?: Shape[];
+	const?: unknown;
+	enum?: unknown[];
+	items?: Shape;
+	properties?: Record<string, Shape>;
+	type?: string;
+}
+/** The first value a JSON Schema allows, preferring a non-null one. */
+function example(shape: Shape): unknown {
+	if (shape.anyOf)
+		return example(
+			shape.anyOf.find((option) => option.type !== "null") ??
+				shape.anyOf[0] ??
+				{},
+		);
+	if ("const" in shape) return shape.const;
+	if (shape.enum) return shape.enum[0];
+	if (shape.type === "object")
+		return Object.fromEntries(
+			Object.entries(shape.properties ?? {}).map(([key, value]) => [
+				key,
+				example(value),
+			]),
+		);
+	if (shape.type === "array") return [example(shape.items ?? {})];
+	if (shape.type === "null") return null;
+	if (shape.type === "boolean") return true;
+	if (shape.type === "number" || shape.type === "integer") return 1;
+	return "example";
+}
+/**
+ * A route's Core and inflection as its Surface schema first allows them,
+ * adjusted where the first values break a cross-feature check.
+ */
+function exampleBags(key: string, surfaceSchema: z.ZodType) {
+	const shape = z.toJSONSchema(surfaceSchema, {
+		io: "input",
+		unrepresentable: "any",
+	}) as Shape;
+	const core = example(
+		shape.properties?.lemma?.properties?.coreFeatures ?? {},
+	) as Bag;
+	const inflection = shape.properties?.inflectionalFeatures;
+	const inflectional = inflection
+		? (example(inflection) as Bag | null)
+		: undefined;
+	if (key === "de/Lexeme/PRON")
+		for (const feature of Object.keys(core)) core[feature] = null;
+	// A Foreign unit's source language is an ISO 639 code (ADR 0045).
+	if (key.endsWith("/Foreign/Foreign")) core.sourceLang = "en";
+	// The first German number value is plural, whose agreement has no gender.
+	if (key === "de/Lexeme/DET") core.gender = null;
+	// A German PART names exactly one type (partType Inf here).
+	if (key === "de/Lexeme/PART") core.polarity = null;
+	if (inflectional) {
+		// A DET or PRON Locution's first number value is plural too.
+		if (key === "de/Locution/DET" || key === "de/Locution/PRON")
+			inflectional.gender = null;
+		// A Paradigm Cell coordinate is marked in Core or on the Surface,
+		// never both. The PRON sample Core is unmarked, so it is no
+		// possessive and its Surface marks the case.
+		if (key === "de/Lexeme/DET" || key === "de/Lexeme/PRON")
+			Object.assign(inflectional, {
+				...(key === "de/Lexeme/DET" ? { case: null } : {}),
+				gender: null,
+				number: null,
+			});
+		if (key === "de/Lexeme/PRON")
+			Object.assign(inflectional, {
+				"gender[psor]": null,
+				"number[psor]": null,
+			});
+		// Only a singular whose Lemma has no gender marks gender on the Surface.
+		if (key === "de/Lexeme/NOUN" || key === "de/Lexeme/PROPN")
+			inflectional.gender = null;
+		if (
+			["de/Lexeme/VERB", "de/Lexeme/AUX", "de/Locution/VERB"].includes(
+				key,
+			)
+		)
+			inflectional.expletive = null;
+	}
+	return { core, inflectional };
+}
+const routes = await Promise.all(
+	dumlingRoutes.map(async ({ language, family, kind, schemaPath }) => {
+		const key = `${language}/${family}/${kind}`;
+		const { surfaceSchema } = (await import(
+			`dumling/schema/${schemaPath}`
+		)) as { surfaceSchema: z.ZodType };
+		return {
+			key,
+			language,
+			family,
+			kind,
+			...exampleBags(key, surfaceSchema),
+		};
+	}),
+);
 function surface(
 	key: string,
 	options: {
 		form?: string;
 		canonical?: string;
 		spelling?: Surface["spelling"];
-		core?: Record<string, unknown>;
-		features?: Record<string, unknown> | null;
+		core?: Bag;
+		features?: Bag | null;
 	} = {},
 ): Surface {
 	const route = routes.find((candidate) => candidate.key === key);
 	if (!route) throw Error(key);
-	const fixture = unitFixtures(route, z).Surface;
-	const core = fixture.lemma.coreFeatures;
-	if (core === null || typeof core !== "object")
-		throw Error("Expected Core Features object");
+	const { language, family, kind, core, inflectional } = route;
+	const features = "features" in options ? options.features : inflectional;
 	const result = parseUnit({
-		...fixture,
+		unitKind: "Surface",
+		language,
 		normalizedSurface: options.form ?? options.canonical ?? "example",
 		spelling: options.spelling ?? { kind: "Canonical" },
+		surfaceFeatures: null,
 		lemma: {
-			...fixture.lemma,
+			unitKind: "Lemma",
+			language,
+			family,
+			kind,
 			canonicalForm: options.canonical ?? "example",
 			coreFeatures: { ...core, ...options.core },
 		},
-		...("features" in options
-			? {
+		...(inflectional === undefined
+			? {}
+			: {
 					inflectionalFeatures:
 						(key === "de/Lexeme/NOUN" ||
 							key === "de/Lexeme/PROPN") &&
-						options.features
-							? { gender: null, ...options.features }
-							: options.features,
-				}
-			: {}),
+						features
+							? { gender: null, ...features }
+							: features,
+				}),
 	});
 	if (!result.success) throw result.error;
 	if (result.chain.unitKind !== "Surface") throw Error("Expected Surface");
@@ -851,5 +955,141 @@ describe("Grundform assessment", () => {
 				).toEqual({ success: true, value: false });
 			}
 		}
+	});
+});
+
+// German determiners: each article cell is its own Lemma, and a stem Lemma
+// marks its cell on the Surface (system ADR 0044).
+const determinerCore = {
+	case: null,
+	gender: null,
+	number: null,
+	person: null,
+	polite: null,
+	poss: null,
+	pronType: null,
+};
+function determiner(
+	canonicalForm: string,
+	features: Partial<Record<keyof typeof determinerCore, string | null>>,
+) {
+	return {
+		unitKind: "Lemma",
+		language: "de",
+		family: "Lexeme",
+		kind: "DET",
+		canonicalForm,
+		coreFeatures: { ...determinerCore, ...features },
+	};
+}
+const article = { pronType: "Art" };
+const dieser = determiner("dieser", { pronType: "Dem" });
+function stemSurface(
+	normalizedSurface: string,
+	inflectionalFeatures: Record<string, string | null> | null,
+	source: ReturnType<typeof determiner> = dieser,
+) {
+	return {
+		unitKind: "Surface",
+		language: "de",
+		lemma: source,
+		normalizedSurface,
+		spelling: { kind: "Canonical" },
+		surfaceFeatures: null,
+		inflectionalFeatures: inflectionalFeatures && {
+			case: null,
+			degree: null,
+			gender: null,
+			"gender[psor]": null,
+			number: null,
+			"number[psor]": null,
+			...inflectionalFeatures,
+		},
+	};
+}
+
+test("a cell Surface spelled as its Lemma is Grundform without inflection", () => {
+	const den = determiner("den", {
+		...article,
+		case: "Acc",
+		number: "Sing",
+		gender: "Masc",
+	});
+	const surface = {
+		unitKind: "Surface",
+		language: "de",
+		lemma: den,
+		normalizedSurface: "den",
+		spelling: { kind: "Canonical" },
+		surfaceFeatures: null,
+		inflectionalFeatures: null,
+	};
+	expect(determinerSurfaceSchema.safeParse(surface).success).toBe(true);
+	const parsed = determinerSurfaceSchema.parse(surface);
+	expect(checkIfGrundform(parsed)).toEqual({ success: true, value: true });
+});
+
+test("a stem Lemma's Grundform is its Nom.Masc.Sg or plural-cited Surface", () => {
+	const grundform = (value: unknown) =>
+		checkIfGrundform(determinerSurfaceSchema.parse(value));
+	expect(
+		grundform(
+			stemSurface("dieser", {
+				case: "Nom",
+				number: "Sing",
+				gender: "Masc",
+			}),
+		),
+	).toEqual({ success: true, value: true });
+	// dieser is also the Gen.Plur and Dat/Gen.Fem.Sg spelling.
+	expect(
+		grundform(stemSurface("dieser", { case: "Gen", number: "Plur" })),
+	).toEqual({ success: true, value: false });
+	expect(
+		grundform(
+			stemSurface("diesem", {
+				case: "Dat",
+				number: "Sing",
+				gender: "Masc",
+			}),
+		),
+	).toEqual({ success: true, value: false });
+	const beide = determiner("beide", { pronType: "Tot" });
+	expect(
+		grundform(stemSurface("beide", { case: "Nom", number: "Plur" }, beide)),
+	).toEqual({ success: true, value: true });
+	const viel = determiner("viel", { pronType: "Ind" });
+	expect(grundform(stemSurface("viel", null, viel))).toEqual({
+		success: true,
+		value: true,
+	});
+});
+
+describe("Grundform spelling", () => {
+	test("compares the Surface with its Canonical Form without case", () => {
+		const surface = (normalizedSurface: string) =>
+			({
+				unitKind: "Surface",
+				language: "de",
+				lemma: {
+					unitKind: "Lemma",
+					language: "de",
+					family: "Lexeme",
+					kind: "INTJ",
+					canonicalForm: "LOL",
+					coreFeatures: { partType: null },
+				},
+				normalizedSurface,
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+			}) satisfies Dumling.Surface<"de", "Lexeme", "INTJ">;
+		expect(checkIfGrundform(surface("lol"))).toEqual({
+			success: true,
+			value: true,
+		});
+		expect(checkIfGrundform(surface("lool"))).toEqual({
+			success: true,
+			value: false,
+		});
 	});
 });

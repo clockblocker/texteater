@@ -44,10 +44,8 @@ test("built operational entrypoint has no schema or compiler dependency", async 
 	).toBe(false);
 	const module = await import(join(packageRoot, "dist/index.js"));
 	expect(Object.keys(module).sort()).toEqual([
-		"GrundformAssessmentError",
 		"ParsingError",
 		"canonicalFormKey",
-		"checkIfGrundform",
 		"foldCase",
 		"isSyncreticUnit",
 		"isSyncretism",
@@ -68,13 +66,10 @@ test("published types stay precise without loading Zod declarations", async () =
 	try {
 		await writeFile(
 			join(directory, "consumer.ts"),
-			`import {parseUnit,checkIfGrundform} from ${JSON.stringify(join(packageRoot, "dist/index.js"))};
+			`import {parseUnit} from ${JSON.stringify(join(packageRoot, "dist/index.js"))};
 import type {Unit} from ${JSON.stringify(join(packageRoot, "dist/types.js"))};
 type Noun=Unit<"Lemma","de","Lexeme","NOUN">;
 declare const prefix:Unit<"Surface","de","Morpheme","Prefix">;
-const assessment=checkIfGrundform(prefix);
-if(assessment.success){const result:boolean=assessment.value;}
-else{const tag:"GrundformAssessmentError"=assessment.error._tag;const path:readonly string[]=assessment.error.issues[0].path;}
 // @ts-expect-error This route has no inflectional features.
 prefix.inflectionalFeatures;
 declare const noun:Noun;

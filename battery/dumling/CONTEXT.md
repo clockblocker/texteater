@@ -136,12 +136,6 @@ mistake; a mistake is a Typo member. Its tags, such as Licensed or Regional,
 say why it differs, and they combine. See [ADR 0041].
 _Avoid_: licensed variant, for Variant in general; Variant type, for its tags
 
-**Grundform**:
-A Surface's realization of its particular Lemma's canonical grammatical form.
-Each language's rules assess it from the Surface; it is never stored. See
-[Dumling ADR 0002].
-_Avoid_: Surface Kind, stored Citation/Inflection discriminator
-
 **Attestation**:
 A fleeting occurrence of one Surface: its ordered attested members, each with
 an orthography, and Full or Partial Realization Coverage. It has value
@@ -218,4 +212,3 @@ _Avoid_: argument, valent, complement slot, Ergänzung
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
-[Dumling ADR 0002]: ./docs/adr/0002-assess-grundform-with-language-owned-rules.md

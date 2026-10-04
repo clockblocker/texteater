@@ -46,8 +46,9 @@ The Surface always contains a \`Lemma\`. It owns:
 - inflectional features and Lemma identity
 
 Routes with represented inflection carry nullable \`inflectionalFeatures\`,
-such as number, case, tense, person or verb form. \`checkIfGrundform\` assesses
-whether a Surface realizes its Lemma's canonical grammar and spelling. It
+such as number, case, tense, person or verb form. \`checkIfGrundform\`, from
+\`dumcorpus/inventories\`, assesses whether a Surface realizes its Lemma's
+canonical grammar and spelling. It
 returns an assessment error when the supplied evidence cannot establish that
 distinction; there is no stored Surface-kind tag.
 

@@ -332,46 +332,18 @@ export function articleAttestationError(): string {
 	return "A Head's article is an owned member with Full coverage, or a shared article or hidden Fusion component with Partial coverage; a Head without an article has no article evidence and Full coverage; a NOUN Locution's other fixed words may leave it Partial";
 }
 
-type ExpletiveEvidence = {
-	attested: string;
-	orthography: string;
-	fusion?: { components: { surface: string }[] };
-	component?: number;
-};
-
-/** A clitic `es`: `geht's`, typographic `geht’s`, or `gehts` with no apostrophe. */
-const cliticEsSpellings = new Set(["'s", "’s", "s"]);
+type ExpletiveEvidence = { attested: string; orthography: string };
 
 /**
- * Expletive evidence spells `es`: in full when Standard, as a clitic when
- * Fused (`'s` of `geht's`, realizing an `es` component) or Shorthand (`'s` of
- * `Wenn 's morgen regnet`), or anyhow when a Typo. Capitals are allowed.
+ * A German verbal Attestation names owned valency evidence, and expletive
+ * evidence exactly when its Surface has a subject expletive: an owned member
+ * of a complete realization, whose finite verb agrees in third person
+ * singular. Whether that member spells `es` (`es`, or a clitic `'s`) is a
+ * fact about German, checked in dumcorpus (ADR 0041).
  */
-function spellsExpletiveEs(evidence: ExpletiveEvidence): boolean {
-	const spelling = evidence.attested.toLocaleLowerCase("de");
-	switch (evidence.orthography) {
-		case "Typo":
-			return true;
-		case "Standard":
-			return spelling === "es";
-		case "Shorthand":
-			return cliticEsSpellings.has(spelling);
-		case "Fused":
-			return (
-				cliticEsSpellings.has(spelling) &&
-				evidence.component !== undefined &&
-				evidence.fusion?.components[evidence.component]?.surface ===
-					"es"
-			);
-		default:
-			return false;
-	}
-}
-
 export function isGermanVerbalAttestation(input: unknown): boolean {
 	const value = input as {
 		surface: {
-			normalizedSurface: string;
 			inflectionalFeatures: {
 				expletive: string | null;
 				verbForm: string;
@@ -392,18 +364,14 @@ export function isGermanVerbalAttestation(input: unknown): boolean {
 	if (!evidence || value.realizationCoverage !== "Full") return false;
 	if (bag.verbForm === "Fin" && (bag.person !== "3" || bag.number !== "Sing"))
 		return false;
-	return (
-		value.surface.normalizedSurface.split(" ").includes("es") &&
-		spellsExpletiveEs(evidence) &&
-		value.members.some(
-			(member) =>
-				member.attested === evidence.attested &&
-				member.orthography === evidence.orthography,
-		)
+	return value.members.some(
+		(member) =>
+			member.attested === evidence.attested &&
+			member.orthography === evidence.orthography,
 	);
 }
 export function germanVerbalAttestationError(): string {
-	return "Subject expletive requires third-person singular agreement and owned es evidence in the complete verbal realization, spelled es or, when Fused or Shorthand, 's; valency evidence must name distinct owned members spelling its preposition, keeping the slot's case";
+	return "Subject expletive requires third-person singular agreement and owned expletive evidence in the complete verbal realization; valency evidence must name distinct owned members spelling its preposition, keeping the slot's case";
 }
 
 /**

@@ -1,4 +1,4 @@
-import type { Surface } from "../types.js";
+import type * as Dumling from "dumling/types";
 import { type GrundformRule, inflectionalFeatures } from "./features.js";
 import { lemmaRule, lexicalConvention } from "./lemma-rule.js";
 
@@ -14,7 +14,7 @@ const hebrewPast: GrundformRule = {
 		verbForm: [null],
 	},
 };
-function hebrewVerb(surface: Surface): GrundformRule {
+function hebrewVerb(surface: Dumling.Surface): GrundformRule {
 	const core = surface.lemma.coreFeatures;
 	if ("hebExistential" in core && core.hebExistential === "Yes")
 		return ["יש", "אין"].includes(surface.lemma.canonicalForm)
@@ -26,7 +26,7 @@ function hebrewVerb(surface: Surface): GrundformRule {
 		);
 	return hebrewPast;
 }
-function hebrewAuxiliary(surface: Surface): GrundformRule {
+function hebrewAuxiliary(surface: Dumling.Surface): GrundformRule {
 	if (surface.lemma.canonicalForm === "היה") return hebrewPast;
 	return lexicalConvention;
 }
@@ -34,7 +34,7 @@ function hebrewAuxiliary(surface: Surface): GrundformRule {
 // The article is the noun's own member (ADR 0035): a definite form cites like
 // a bare one, and only the construct state is not the Grundform.
 const citableDefiniteness = [null, "Ind", "Def"];
-function hebrewNoun(surface: Surface): GrundformRule {
+function hebrewNoun(surface: Dumling.Surface): GrundformRule {
 	const number = inflectionalFeatures(surface)?.number;
 	if (
 		number === "Plur" ||
@@ -50,7 +50,7 @@ function hebrewNoun(surface: Surface): GrundformRule {
 	return { features: { number: ["Sing"], definite: citableDefiniteness } };
 }
 
-function properNoun(surface: Surface): GrundformRule {
+function properNoun(surface: Dumling.Surface): GrundformRule {
 	if (inflectionalFeatures(surface)?.number === "Plur")
 		return lemmaRule(
 			"This Hebrew proper-name Lemma needs its canonical Number convention",

@@ -84,7 +84,7 @@ export const operationTable = [
 		implementation: isGermanVerbalAttestation,
 		error: germanVerbalAttestationError,
 		name: "dumling.de-verbal.attestation",
-		version: 5,
+		version: 6,
 	},
 	{
 		construct: "custom",

@@ -89,22 +89,6 @@ The four units are plain structural values. Lemma sits inside Surface, and
 Surface sits inside Attestation. Reading branches from Lemma because semantic
 identity is separate from occurrence evidence.
 
-## Grundform is derived
-
-A Surface does not store a Citation/Inflection discriminator. Ask whether its
-spelling and grammatical evidence realize the Lemma's Grundform:
-
-```ts
-import { checkIfGrundform } from "dumling";
-
-const grundform = checkIfGrundform(surface);
-
-// => { success: true, value: true }
-```
-
-Known contrary evidence returns `false`. Missing or ambiguous evidence returns
-a typed `GrundformAssessmentError`, rather than guessing.
-
 ## Validate unknown input
 
 At an input boundary, `parseUnit` validates and normalizes the whole nested

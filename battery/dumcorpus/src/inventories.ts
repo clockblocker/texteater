@@ -13,17 +13,23 @@
  * answer names and the stem Surface Syncretisms. Its selectors find the
  * authored member of a Lemma or Reading, tell a Closed Route (system ADR
  * 0021), step between Paradigm Cells (system ADR 0019) and derive the
- * grammatical component a Surface brings without a model.
+ * grammatical component a Surface brings without a model. `checkIfGrundform`
+ * assesses a Surface's Grundform by each language's citation conventions
+ * (dumcorpus ADR 0001).
  *
  * This entry reads no files and loads neither Zod nor the other record
  * checks, so a host inside a database transaction or another short-lived
- * isolate can import it (ADR 0025). The package root re-exports it.
+ * isolate can import it (ADR 0025). Of its dependencies it loads only
+ * Dumling's runtime root, which is light in the same way. The package root
+ * re-exports it.
  */
 
 export {
 	type AdpositionCaseIssue,
 	frameAdpositionCaseIssues,
 } from "./check-adposition-cases.js";
+export { checkIfGrundform } from "./grundform/check-if-grundform.js";
+export { GrundformAssessmentError } from "./grundform/result.js";
 export {
 	type GermanAdpositionCase,
 	type GermanAdpositionCases,

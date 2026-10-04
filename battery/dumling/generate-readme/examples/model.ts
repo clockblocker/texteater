@@ -47,14 +47,6 @@ const attestation = {
 
 // README_BLOCK:attestation:end
 
-// README_BLOCK:grundform:start
-import { checkIfGrundform } from "dumling";
-
-const grundform = checkIfGrundform(surface);
-
-// => { success: true, value: true }
-// README_BLOCK:grundform:end
-
 // README_BLOCK:parse:start
 import { parseUnit } from "dumling";
 

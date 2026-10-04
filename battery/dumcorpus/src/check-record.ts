@@ -1,4 +1,4 @@
-import { checkIfGrundform, parseUnit } from "dumling";
+import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -6,11 +6,13 @@ import { z } from "zod";
 import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
 import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
 import { authoredReadingIssues } from "./check-authored-readings.js";
+import { attestationExpletiveSpellingIssues } from "./check-expletive-spelling.js";
 import { knowledgeCoverageIssues } from "./check-knowledge-coverage.js";
 import { attestationParticleIssues } from "./check-particles.js";
 import { attestationPluralOnlyIssues } from "./check-plural-only.js";
 import { attestationSyncretismIssues } from "./check-syncretisms.js";
 import { unitRoutes } from "./generated/routes.js";
+import { checkIfGrundform } from "./grundform/check-if-grundform.js";
 import { specRecordIdPattern } from "./ids.js";
 import type { SpecCheck, SpecIssue } from "./issues.js";
 import { annotationLayers, layerRank } from "./layers.js";
@@ -452,6 +454,12 @@ function checkTargetLayers(
 			`${path}.attestation.${found.path}`,
 			found.message,
 		);
+	for (const found of attestationExpletiveSpellingIssues(attestation))
+		attestationIssue(
+			"ExpletiveSpelling",
+			`${path}.attestation.${found.path}`,
+			found.message,
+		);
 	for (const found of attestationParticleIssues(attestation))
 		attestationIssue(
 			"ClosedPart",
@@ -491,19 +499,19 @@ function checkTargetLayers(
 	}
 	if (target.grundform !== undefined) {
 		const verdict = checkIfGrundform(attestation.surface);
-		// A stated verdict Dumling cannot assess is not checked, so it fails
-		// (ADR 0042).
+		// A stated verdict the assessment cannot settle is not checked, so it
+		// fails (ADR 0042).
 		if (!verdict.success)
 			attestationIssue(
 				"Grundform",
 				`${path}.grundform`,
-				`Dumling cannot assess this Surface's Grundform: ${verdict.error.message}`,
+				`This Surface's Grundform cannot be assessed: ${verdict.error.message}`,
 			);
 		else if (verdict.value !== target.grundform)
 			attestationIssue(
 				"Grundform",
 				`${path}.grundform`,
-				`Dumling assesses this Surface as ${verdict.value ? "" : "not "}Grundform`,
+				`The assessment finds this Surface ${verdict.value ? "" : "not "}Grundform`,
 			);
 	}
 

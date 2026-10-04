@@ -1,16 +1,15 @@
-import type { UnitMap } from "../generated/units.js";
-import type { Surface } from "../types.js";
+import type * as Dumling from "dumling/types";
 import { germanRules } from "./de.js";
 import { englishRules } from "./en.js";
 import type { GrundformRule } from "./features.js";
 import { hebrewRules } from "./he.js";
 
 type InflectableRoute = {
-	[R in keyof UnitMap]: "inflectionalFeatures" extends keyof UnitMap[R]["Surface"]
+	[R in keyof Dumling.UnitMap]: "inflectionalFeatures" extends keyof Dumling.UnitMap[R]["Surface"]
 		? R
 		: never;
-}[keyof UnitMap];
-type Rule = GrundformRule | ((surface: Surface) => GrundformRule);
+}[keyof Dumling.UnitMap];
+type Rule = GrundformRule | ((surface: Dumling.Surface) => GrundformRule);
 
 /** Every route with represented inflection has a language-owned policy. */
 const rules = {
@@ -19,7 +18,7 @@ const rules = {
 	...hebrewRules,
 } satisfies Record<InflectableRoute, Rule>;
 
-export function ruleFor(surface: Surface): GrundformRule {
+export function ruleFor(surface: Dumling.Surface): GrundformRule {
 	if (!("inflectionalFeatures" in surface)) return { features: {} };
 	const { language, family, kind } = surface.lemma;
 	const key = `${language}/${family}/${kind}`;

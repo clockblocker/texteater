@@ -1,7 +1,7 @@
-import type { Surface } from "../types.js";
+import type * as Dumling from "dumling/types";
 import { type GrundformRule, inflectionalFeatures } from "./features.js";
 
-function isComparable(surface: Surface): boolean {
+function isComparable(surface: Dumling.Surface): boolean {
 	const core: Readonly<Record<string, unknown>> = surface.lemma.coreFeatures;
 	return core.comparable === "Yes";
 }
@@ -10,7 +10,7 @@ function isComparable(surface: Surface): boolean {
  * A comparable ADV cites its positive. A non-comparable one marks no Degree
  * and has no inflection, so its spelling decides (ADR 0042).
  */
-export function adverb(surface: Surface): GrundformRule {
+export function adverb(surface: Dumling.Surface): GrundformRule {
 	return isComparable(surface)
 		? { features: { degree: ["Pos"] } }
 		: { features: {} };
@@ -24,7 +24,7 @@ export function adverb(surface: Surface): GrundformRule {
  */
 export function adjective(
 	agreement: readonly string[],
-): (surface: Surface) => GrundformRule {
+): (surface: Dumling.Surface) => GrundformRule {
 	const unmarked = Object.fromEntries(
 		agreement.map((feature) => [feature, [null]]),
 	);

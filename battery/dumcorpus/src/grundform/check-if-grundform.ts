@@ -1,11 +1,8 @@
-import { matchFeatures } from "./grundform/features.js";
-import {
-	GrundformAssessmentError,
-	type GrundformResult,
-} from "./grundform/result.js";
-import { ruleFor } from "./grundform/rules.js";
-import { spellsCanonicalForm } from "./grundform/wording.js";
-import type { Surface } from "./types.js";
+import type * as Dumling from "dumling/types";
+import { matchFeatures } from "./features.js";
+import { GrundformAssessmentError, type GrundformResult } from "./result.js";
+import { ruleFor } from "./rules.js";
+import { spellsCanonicalForm } from "./wording.js";
 
 /**
  * Assesses a validated Surface against its Lemma's canonical realization.
@@ -24,7 +21,7 @@ import type { Surface } from "./types.js";
  * Parse unknown input with parseUnit first. No field or caller override stores
  * the assessment, and neither the Surface nor its feature bags are modified.
  */
-export function checkIfGrundform(surface: Surface): GrundformResult {
+export function checkIfGrundform(surface: Dumling.Surface): GrundformResult {
 	if (surface.spelling.kind !== "Variant" && !spellsCanonicalForm(surface))
 		return { success: true, value: false };
 	const { mismatch, issues } = matchFeatures(surface, ruleFor(surface));

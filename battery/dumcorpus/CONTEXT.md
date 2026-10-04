@@ -35,6 +35,12 @@ Dumcorpus checks each adposition occurrence's case and each Governor's
 Preposition Slot (Dumrel) against the table. See [ADR 0034] and [ADR 0041].
 _Avoid_: governed case, governedCase, case government feature
 
+**Grundform**:
+A Surface's realization of its particular Lemma's canonical grammatical form.
+Each language's citation conventions assess it from the Surface (Dumling); it
+is never stored. See [Dumcorpus ADR 0001].
+_Avoid_: Surface Kind, stored Citation/Inflection discriminator
+
 **Spec Record**:
 One sentence of the golden corpus with its Segments and targets. Each target
 names its member Segments and route and, as review deepens, its Dumling
@@ -212,6 +218,7 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0045]: ../../docs/adr/0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
+[Dumcorpus ADR 0001]: ./docs/adr/0001-assess-grundform-with-language-owned-rules.md
 [Dumgen ADR 0007]: ../dumgen/docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
 [Emoji Description conventions]: ./docs/reference/emoji-description-conventions.md
 [inventories]: ./src/inventories/

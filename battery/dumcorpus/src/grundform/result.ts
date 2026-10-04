@@ -1,4 +1,4 @@
-import type { Surface } from "../types.js";
+import type * as Dumling from "dumling/types";
 
 export type GrundformFeatureValue = string | readonly string[] | null;
 
@@ -22,14 +22,14 @@ export class GrundformAssessmentError extends Error {
 	override readonly name = "GrundformAssessmentError";
 	readonly issues: readonly [GrundformIssue, ...GrundformIssue[]];
 	readonly route: {
-		language: Surface["language"];
-		family: Surface["lemma"]["family"];
-		kind: Surface["lemma"]["kind"];
+		language: Dumling.Surface["language"];
+		family: Dumling.Surface["lemma"]["family"];
+		kind: Dumling.Surface["lemma"]["kind"];
 	};
 	readonly canonicalForm: string;
 
 	constructor(
-		surface: Surface,
+		surface: Dumling.Surface,
 		issues: readonly [GrundformIssue, ...GrundformIssue[]],
 	) {
 		super(issues.map((issue) => issue.message).join("; "));

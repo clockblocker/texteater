@@ -1,4 +1,4 @@
-import type { Surface } from "../types.js";
+import type * as Dumling from "dumling/types";
 import { adjective, adverb } from "./comparability.js";
 import type { GrundformRule } from "./features.js";
 import { lexicalConvention } from "./lemma-rule.js";
@@ -16,7 +16,7 @@ const noun: GrundformRule = { features: { number: ["Sing", "Ptan"] } };
 const verb: GrundformRule = {
 	features: { ...infinitive.features, voice: [null] },
 };
-function englishAuxiliary(surface: Surface): GrundformRule {
+function englishAuxiliary(surface: Dumling.Surface): GrundformRule {
 	const form = surface.lemma.canonicalForm;
 	if (["be", "have", "do"].includes(form)) return infinitive;
 	if (

@@ -1,4 +1,4 @@
-import { checkIfGrundform } from "dumling";
+import { checkIfGrundform } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
 
 /** A Surface's spelling: Canonical, or a Variant with its tags (ADR 0041). */

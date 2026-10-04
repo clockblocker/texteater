@@ -111,3 +111,19 @@ The selectors read the inventories without a model. `authoredReading` and
 Paradigm Cells (system ADR 0019), and `deriveGrammaticalComponent` gives the
 article of a name cited with one, or the subject expletive `es`, that a
 Surface brings.
+
+`checkIfGrundform` asks whether a Surface realizes its Lemma's Grundform.
+A Surface stores no Citation/Inflection discriminator, so the entry assesses
+its spelling and grammatical evidence by each language's citation
+conventions:
+
+```ts
+import { checkIfGrundform } from "dumcorpus/inventories";
+
+const grundform = checkIfGrundform(surface);
+
+// => { success: true, value: true }
+```
+
+Known contrary evidence returns `false`. Missing or ambiguous evidence returns
+a typed `GrundformAssessmentError`, rather than guessing.

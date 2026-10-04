@@ -359,8 +359,6 @@
 	],
 	"battery/dumling": [
 		"battery/dumling/src/generated/units.ts: types SyncretizableUnitKind",
-		"battery/dumling/src/types.ts: types GrundformIssue",
-		"battery/dumling/src/types.ts: types GrundformResult",
 		"battery/dumling/src/types.ts: types SyncretizableUnitKind"
 	],
 	"battery/dumrel": [

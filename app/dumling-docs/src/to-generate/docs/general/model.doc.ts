@@ -28,8 +28,8 @@ A Surface has \`unitKind: "Surface"\`, its Lemma, \`language\`, \`normalizedSurf
 nullable \`inflectionalFeatures\`. A marked feature bag contains at least one
 non-null value; null means no marked features were supplied.
 
-\`checkIfGrundform(surface)\` assesses canonical realization from spelling and
-grammar. It returns a boolean on success or an assessment error when evidence
+\`checkIfGrundform(surface)\`, from \`dumcorpus/inventories\`, assesses
+canonical realization from spelling and grammar. It returns a boolean on success or an assessment error when evidence
 is missing, ambiguous, or unrepresentable. Matching spelling alone does not
 establish Grundform. For example, English past-tense *read* has the same spelling
 as its infinitive.

@@ -14,10 +14,10 @@ export type {
 	SyncretizableUnitKind,
 	Unit,
 	UnitKind,
+	UnitMap,
 	UnitRoute,
 	VariantTag,
 } from "./generated/units.js";
-export type { GrundformIssue, GrundformResult } from "./grundform/result.js";
 export type ParseResult<T> =
 	| { success: true; chain: T }
 	| { success: false; error: ParsingError };

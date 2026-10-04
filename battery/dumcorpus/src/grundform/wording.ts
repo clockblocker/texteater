@@ -1,5 +1,5 @@
-import type { Surface } from "../types.js";
-import { foldCase } from "../validation/semantics.js";
+import { foldCase } from "dumling";
+import type * as Dumling from "dumling/types";
 
 // A word is letters, marks and digits, joined inside by an apostrophe, a
 // hyphen or a Hebrew geresh or gershayim (geht's, Wer-A, צה״ל).
@@ -16,7 +16,7 @@ function words(value: string): string {
  * rastet, der rostet!` spells `Wer rastet, der rostet`. Every other route
  * compares the whole spelling.
  */
-export function spellsCanonicalForm(surface: Surface): boolean {
+export function spellsCanonicalForm(surface: Dumling.Surface): boolean {
 	const { canonicalForm, family, language } = surface.lemma;
 	const spelling = (value: string) =>
 		foldCase(family === "Saying" ? words(value) : value, language);

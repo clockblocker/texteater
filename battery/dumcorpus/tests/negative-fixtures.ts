@@ -503,7 +503,7 @@ export const negativeFixtures: {
 		},
 	},
 	{
-		name: "a Grundform verdict Dumling contradicts",
+		name: "a Grundform verdict the assessment contradicts",
 		seed: "de/ich-bin-im-wald",
 		check: "Grundform",
 		edit: (record) => {
@@ -511,9 +511,9 @@ export const negativeFixtures: {
 		},
 	},
 	{
-		// A plural noun needs its Lemma's plural-only convention, so Dumling
-		// returns an assessment error instead of a verdict (ADR 0042).
-		name: "a Grundform verdict Dumling cannot assess",
+		// A plural noun needs its Lemma's plural-only convention, so the
+		// assessment returns an error instead of a verdict (ADR 0042).
+		name: "a Grundform verdict the assessment cannot settle",
 		seed: "de/ich-bin-im-wald",
 		check: "Grundform",
 		edit: (record) => {
@@ -546,6 +546,20 @@ export const negativeFixtures: {
 		edit: (record) => {
 			record.targets[1].attestation.surface.inflectionalFeatures.case =
 				"Acc";
+		},
+	},
+	{
+		// geht's whose Fused s realizes das, as in ins: no clitic es.
+		name: "expletive evidence that does not spell es",
+		seed: "de/mir-geht-s-gut",
+		check: "ExpletiveSpelling",
+		edit: (record) => {
+			const { attestation } = record.targets[0];
+			for (const member of [
+				...attestation.members,
+				attestation.expletiveEvidence,
+			])
+				member.fusion.components[1].surface = "das";
 		},
 	},
 	{

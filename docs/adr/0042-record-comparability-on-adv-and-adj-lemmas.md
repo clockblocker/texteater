@@ -72,8 +72,9 @@ article paradigm, stay in dumcorpus.
   well-formed values passes the scope test.
 - Amends [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md):
   German and English ADV and ADJ carry comparability in Core.
-- Amends Dumling ADR 0002 (`battery/dumling/docs/adr/`): a non-comparable ADV
-  or ADJ with no inflection is assessed by its spelling.
+- Amends the Grundform rules, now
+  [dumcorpus ADR 0001](../../battery/dumcorpus/docs/adr/0001-assess-grundform-with-language-owned-rules.md):
+  a non-comparable ADV or ADJ with no inflection is assessed by its spelling.
 - A Locution route borrows its Lexeme route's inflection and Grundform rule
   ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)). The ADV
   and ADJ Locution routes therefore take the same Core Feature.

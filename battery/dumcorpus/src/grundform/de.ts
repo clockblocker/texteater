@@ -1,4 +1,4 @@
-import type { Surface } from "../types.js";
+import type * as Dumling from "dumling/types";
 import {
 	adverb,
 	adjective as comparabilityAdjective,
@@ -25,7 +25,7 @@ const infinitive: GrundformRule = {
 	},
 };
 const adjective = comparabilityAdjective(["case", "gender", "number"]);
-function noun(surface: Surface): GrundformRule {
+function noun(surface: Dumling.Surface): GrundformRule {
 	const features: FeatureRequirements = { case: ["Nom"] };
 	if (inflectionalFeatures(surface)?.number === "Plur")
 		return {
@@ -44,7 +44,7 @@ function noun(surface: Surface): GrundformRule {
  * Canonical Form check already tells them apart. A Surface without a bag is
  * an uninflected realization (viel Geld, derlei) and its spelling decides.
  */
-function germanClosedClass(surface: Surface): GrundformRule {
+function germanClosedClass(surface: Dumling.Surface): GrundformRule {
 	const core: Readonly<Record<string, unknown>> = surface.lemma.coreFeatures;
 	if (
 		["case", "number", "gender"].some(

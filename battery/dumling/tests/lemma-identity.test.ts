@@ -1,7 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import {
 	canonicalFormKey,
-	checkIfGrundform,
 	foldCase,
 	lemmaIdentityKey,
 	normalizeForm,
@@ -11,7 +10,7 @@ import {
 	syncretismView,
 	syncretize,
 } from "dumling";
-import type { Lemma, Reading, Surface } from "dumling/types";
+import type { Lemma, Reading } from "dumling/types";
 
 const interjection = (canonicalForm: string) =>
 	({
@@ -254,27 +253,5 @@ describe("Reading identity", () => {
 		expect(readingIdentityKey(foreign("Whatever"))).toBe(
 			readingIdentityKey(foreign("whatever")),
 		);
-	});
-});
-
-describe("Grundform spelling", () => {
-	test("compares the Surface with its Canonical Form without case", () => {
-		const surface = (normalizedSurface: string) =>
-			({
-				unitKind: "Surface",
-				language: "de",
-				lemma: interjection("LOL"),
-				normalizedSurface,
-				spelling: { kind: "Canonical" },
-				surfaceFeatures: null,
-			}) satisfies Surface<"de", "Lexeme", "INTJ">;
-		expect(checkIfGrundform(surface("lol"))).toEqual({
-			success: true,
-			value: true,
-		});
-		expect(checkIfGrundform(surface("lool"))).toEqual({
-			success: true,
-			value: false,
-		});
 	});
 });

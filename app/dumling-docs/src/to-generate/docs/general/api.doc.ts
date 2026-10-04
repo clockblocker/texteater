@@ -10,31 +10,29 @@ Dumling separates runtime validation, public types and schema authoring.
 
 | Import path | Purpose |
 | --- | --- |
-| \`dumling\` | \`parseUnit\`, \`checkIfGrundform\`, and error values |
+| \`dumling\` | \`parseUnit\` and error values |
 | \`dumling/types\` | Structural units and valid route coordinates |
 | \`dumling/schema/<language>/<family>/<kind-name>\` | Concrete composable Zod schemas |
 
 ## Validate a unit
 
 \`\`\`ts
-import { parseUnit, checkIfGrundform } from "dumling";
+import { parseUnit } from "dumling";
 
 declare const input: unknown;
 const parsed = parseUnit(input, {
   unitKind: "Surface", language: "de", family: "Lexeme", kind: "NOUN",
 });
 if (parsed.success) {
-  const surface = parsed.chain.value;
-  const assessment = checkIfGrundform(surface);
-  if (assessment.success) {
-    console.log(assessment.value);
-  } else {
-    console.log(assessment.error.issues);
-  }
+  console.log(parsed.chain.value.normalizedSurface);
 } else {
   console.log(parsed.error.issues);
 }
 \`\`\`
+
+Whether a parsed Surface is its Lemma's Grundform depends on each language's
+citation conventions, so \`checkIfGrundform\` comes from
+\`dumcorpus/inventories\`, not from Dumling.
 
 Create units with object literals containing their \`unitKind\` and complete
 route-specific fields. Use \`satisfies Dumling.Lemma<"de", "Lexeme", "NOUN">\`
