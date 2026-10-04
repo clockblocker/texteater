@@ -7,7 +7,7 @@ import { RouteMark } from "../../common/route-mark";
  * An Attestation is the form exactly as it was met in a Text. The headword
  * is the attested spelling; the aside says what it was read as.
  */
-export const renderDefaultAttestationHeader = (({
+export const renderDefaultAttestationHeading = (({
 	noteData,
 	PresentationCapabilities,
 }) => {

@@ -15,7 +15,7 @@ const coordinates = {
 
 test("omits unavailable and duplicate Blocks while applying visibility", () => {
 	const registry: RegisteredBlockMap = {
-		Header: () => <p>header</p>,
+		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
 		Definition: () => <p>definition</p>,
 	};
@@ -31,7 +31,7 @@ test("omits unavailable and duplicate Blocks while applying visibility", () => {
 
 test("inserts newly available Blocks in their default relative order", () => {
 	const registry: RegisteredBlockMap = {
-		Header: () => <p>header</p>,
+		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
 		Translations: () => <p>translations</p>,
 		Definition: () => <p>definition</p>,
@@ -51,7 +51,7 @@ test("inserts newly available Blocks in their default relative order", () => {
 
 test("retains a hidden Block's position while excluding it from the plan", () => {
 	const registry: RegisteredBlockMap = {
-		Header: () => <p>header</p>,
+		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
 		Definition: () => <p>definition</p>,
 	};
@@ -67,7 +67,7 @@ test("retains a hidden Block's position while excluding it from the plan", () =>
 
 test("plans the Heading Block apart from the Body's layout", () => {
 	const registry: RegisteredBlockMap = {
-		Header: () => <p>header</p>,
+		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
 	};
 	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
@@ -76,23 +76,23 @@ test("plans the Heading Block apart from the Body's layout", () => {
 	});
 
 	expect(layout.order).toEqual(["Relations"]);
-	expect(plan.heading?.blockKind).toBe("Header");
+	expect(plan.heading?.blockKind).toBe("Heading");
 	expect(plan.body).toEqual([]);
 });
 
 test("drops a Heading that a stale layout still names", () => {
 	const registry: RegisteredBlockMap = {
-		Header: () => <p>header</p>,
+		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
 	};
 	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
-		order: ["Relations", "Header"] as never,
-		hidden: new Set(["Header"] as never),
+		order: ["Relations", "Heading"] as never,
+		hidden: new Set(["Heading"] as never),
 	});
 
 	expect(layout.order).toEqual(["Relations"]);
 	expect([...layout.hidden]).toEqual([]);
-	expect(plan.heading?.blockKind).toBe("Header");
+	expect(plan.heading?.blockKind).toBe("Heading");
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual(["Relations"]);
 });
 
@@ -108,7 +108,7 @@ test("plans no Heading for a route without a Heading Block", () => {
 
 test("splits the Heading from a Body that keeps the Note's tags", () => {
 	const registry: RegisteredBlockMap = {
-		Header: () => <p>header</p>,
+		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
 	};
 	const input = {
@@ -124,15 +124,15 @@ test("splits the Heading from a Body that keeps the Note's tags", () => {
 		}),
 	);
 
-	expect(heading && renderToStaticMarkup(heading)).toBe("<p>header</p>");
-	expect(body).not.toContain("header");
+	expect(heading && renderToStaticMarkup(heading)).toBe("<p>heading</p>");
+	expect(body).not.toContain("heading");
 	expect(body).toContain("relations");
 	expect(body).toContain('data-slot="note-tags"');
 });
 
 test("composes the Heading first inside the Body", () => {
 	const registry: RegisteredBlockMap = {
-		Header: () => <p>header</p>,
+		Heading: () => <p>heading</p>,
 		Relations: () => <p>relations</p>,
 	};
 	const input = {
@@ -148,7 +148,7 @@ test("composes the Heading first inside the Body", () => {
 		}),
 	);
 
-	expect(markup).toMatch(/<article[^>]*><p>header<\/p><p>relations<\/p>/);
+	expect(markup).toMatch(/<article[^>]*><p>heading<\/p><p>relations<\/p>/);
 });
 
 test("leaves the Heading out of a Note that cannot render", () => {
@@ -170,8 +170,8 @@ test("leaves the Heading out of a Note that cannot render", () => {
 
 test("isolates a failing block while preserving subsequent registered blocks", () => {
 	const registry: RegisteredBlockMap = {
-		Header: () => {
-			throw new Error("header failed");
+		Heading: () => {
+			throw new Error("heading failed");
 		},
 		Relations: () => <p>relations survive</p>,
 	};
@@ -188,7 +188,7 @@ test("isolates a failing block while preserving subsequent registered blocks", (
 		}),
 	);
 
-	expect(markup).toContain("Header unavailable");
+	expect(markup).toContain("Heading unavailable");
 	expect(markup).toContain("relations survive");
 });
 

@@ -2,7 +2,7 @@ import { DensityScope, NoteTags } from "lego";
 import { createElement, type ReactElement } from "react";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../../../../shared/knowledge-preferences";
 import type { NoteBlockKind } from "../blocks/kind";
-import { ReadingMetadata } from "../blocks/renderers/reading/header/default";
+import { ReadingMetadata } from "../blocks/renderers/reading/heading/default";
 import type {
 	ReadingPresentationCapabilities,
 	RoutePresentationCapabilities,
@@ -41,14 +41,14 @@ export function renderUniversalNoteHeading({
 	try {
 		if (!isKnownKind(noteData)) return null;
 		const { coordinates, identity } = describeNote(noteData);
-		const renderer = registryFor(coordinates)?.Header;
+		const renderer = registryFor(coordinates)?.Heading;
 		if (!renderer) return null;
 		const context = blockContext(
 			noteData,
 			coordinates,
 			capabilities ?? defaultCapabilities(noteData),
 		);
-		return renderBlock("Header", renderer, context, identity);
+		return renderBlock("Heading", renderer, context, identity);
 	} catch {
 		return null;
 	}

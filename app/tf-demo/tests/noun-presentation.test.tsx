@@ -50,7 +50,7 @@ test("noun Reading heading takes its gender tone and links its Lemma", () => {
 	const note = renderReading(readingNote(), (target) =>
 		followed.push(target),
 	);
-	const markup = renderToStaticMarkup(blockOf(note, "Header"));
+	const markup = renderToStaticMarkup(blockOf(note, "Heading"));
 	expect(markup).toContain("[--link:var(--gender-masculine)]");
 	expect(markup).toContain("Aufstieg, open its Lemma");
 	expect(markup).toContain("⛰️⬆️");
@@ -100,7 +100,7 @@ test("Surface heading takes the gender tone of its active analysis", () => {
 						: {}),
 				},
 			}),
-			"Header",
+			"Heading",
 		);
 	const markup = renderToStaticMarkup(heading([analysis]));
 	expect(markup).toContain("[--link:var(--gender-masculine)]");

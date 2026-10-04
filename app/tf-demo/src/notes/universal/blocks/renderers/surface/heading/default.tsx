@@ -6,7 +6,7 @@ import { genderTone } from "../../common/feature-values";
  * The active analysis supplies the heading's gender. An ambiguous aggregate
  * without an active analysis keeps its bare, neutral title.
  */
-export const renderDefaultSurfaceHeader = (({
+export const renderDefaultSurfaceHeading = (({
 	noteData,
 	PresentationCapabilities,
 }) => {

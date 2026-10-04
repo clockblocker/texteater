@@ -47,8 +47,8 @@ export function resolveRenderPlan(
 	return {
 		layout,
 		plan: {
-			heading: registry.Header
-				? { blockKind: "Header", renderer: registry.Header }
+			heading: registry.Heading
+				? { blockKind: "Heading", renderer: registry.Heading }
 				: null,
 			body: layout.order.flatMap((blockKind) => {
 				if (layout.hidden.has(blockKind)) return [];

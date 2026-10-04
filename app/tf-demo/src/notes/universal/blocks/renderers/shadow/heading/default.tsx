@@ -8,7 +8,7 @@ import type { GrammaticalDefaultRenderer } from "../../../renderer";
  * hold yet. It wears the same lock and shadow tone a relation to it wears
  * inside a Reading Note.
  */
-export const renderDefaultShadowHeader = (({ noteData }) => {
+export const renderDefaultShadowHeading = (({ noteData }) => {
 	const { descriptor, inspection } = noteData;
 	return (
 		<header>

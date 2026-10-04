@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import type { NoteBlockRenderer } from "../../../../universal/blocks/renderer";
-import { ReadingHeader } from "../../../../universal/blocks/renderers/reading/header/default";
+import { ReadingHeading } from "../../../../universal/blocks/renderers/reading/heading/default";
 
-export const renderHeaderDeLexemeVerb = (({
+export const renderHeadingDeLexemeVerb = (({
 	noteData,
 	PresentationCapabilities,
 }) => {
@@ -10,7 +10,7 @@ export const renderHeaderDeLexemeVerb = (({
 		noteData.reading.lemma.coreFeatures;
 
 	return (
-		<ReadingHeader
+		<ReadingHeading
 			note={noteData}
 			capabilities={PresentationCapabilities}
 			title={verbCanonicalForm(

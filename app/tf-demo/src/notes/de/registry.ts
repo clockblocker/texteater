@@ -1,21 +1,21 @@
 import type { RendererRegistry } from "../universal/blocks/renderer-registry";
 import { renderDefaultAttestationFusion } from "../universal/blocks/renderers/attestation/fusion/default";
-import { renderDefaultAttestationHeader } from "../universal/blocks/renderers/attestation/header/default";
+import { renderDefaultAttestationHeading } from "../universal/blocks/renderers/attestation/heading/default";
 import { renderDefaultAttestationRoutes } from "../universal/blocks/renderers/attestation/routes/default";
 import { renderDefaultAttestationSource } from "../universal/blocks/renderers/attestation/source-contexts/default";
-import { renderDefaultLemmaHeader } from "../universal/blocks/renderers/lemma/header/default";
+import { renderDefaultLemmaHeading } from "../universal/blocks/renderers/lemma/heading/default";
 import { renderDefaultLemmaRoutes } from "../universal/blocks/renderers/lemma/routes/default";
 import { renderReadingDefinition } from "../universal/blocks/renderers/reading/definition/static";
-import { DefaultReadingHeaderRenderer } from "../universal/blocks/renderers/reading/header/default";
+import { DefaultReadingHeadingRenderer } from "../universal/blocks/renderers/reading/heading/default";
 import { renderReadingPersonalAnnotation } from "../universal/blocks/renderers/reading/personal-annotation/default";
 import { renderDefaultReadingRelations } from "../universal/blocks/renderers/reading/relations/default";
 import { renderDefaultReadingSourceContexts } from "../universal/blocks/renderers/reading/source-contexts/default";
 import { renderDefaultReadingTranslations } from "../universal/blocks/renderers/reading/translations/default";
-import { renderDefaultShadowHeader } from "../universal/blocks/renderers/shadow/header/default";
+import { renderDefaultShadowHeading } from "../universal/blocks/renderers/shadow/heading/default";
 import { renderDefaultShadowRelations } from "../universal/blocks/renderers/shadow/relations/default";
-import { renderDefaultSurfaceHeader } from "../universal/blocks/renderers/surface/header/default";
+import { renderDefaultSurfaceHeading } from "../universal/blocks/renderers/surface/heading/default";
 import { renderDefaultSurfaceRoutes } from "../universal/blocks/renderers/surface/routes/default";
-import { renderHeaderDeLexemeVerb } from "./block-renderer-overrides/reading/header/lexeme-verb";
+import { renderHeadingDeLexemeVerb } from "./block-renderer-overrides/reading/heading/lexeme-verb";
 import {
 	renderDeAdpositionSourceContexts,
 	renderDeAdpositionValency,
@@ -23,7 +23,7 @@ import {
 import { renderDeReadingValency } from "./block-renderers/reading/valency/default";
 
 const READING_BASE = {
-	Header: DefaultReadingHeaderRenderer,
+	Heading: DefaultReadingHeadingRenderer,
 	SourceContexts: renderDefaultReadingSourceContexts,
 	Definition: renderReadingDefinition,
 	Translations: renderDefaultReadingTranslations,
@@ -63,7 +63,7 @@ const READING = {
 		PUNCT: READING_BASE,
 		SCONJ: READING_RELATIONAL,
 		SYM: READING_RELATIONAL,
-		VERB: { ...READING_VALENT, Header: renderHeaderDeLexemeVerb },
+		VERB: { ...READING_VALENT, Heading: renderHeadingDeLexemeVerb },
 	},
 	Locution: {
 		ADJ: READING_VALENT,
@@ -95,17 +95,17 @@ const READING = {
 } satisfies RendererRegistry<"de", "Reading">;
 
 const LEMMA_ROUTE = {
-	Header: renderDefaultLemmaHeader,
+	Heading: renderDefaultLemmaHeading,
 	Routes: renderDefaultLemmaRoutes,
 };
 const ATTESTATION_ROUTE = {
-	Header: renderDefaultAttestationHeader,
+	Heading: renderDefaultAttestationHeading,
 	SourceContexts: renderDefaultAttestationSource,
 	Fusion: renderDefaultAttestationFusion,
 	Routes: renderDefaultAttestationRoutes,
 };
 const SHADOW_ROUTE = {
-	Header: renderDefaultShadowHeader,
+	Heading: renderDefaultShadowHeading,
 	Relations: renderDefaultShadowRelations,
 };
 
@@ -251,7 +251,7 @@ const SHADOW = {
 	},
 } satisfies RendererRegistry<"de", "Shadow">;
 const SURFACE = {
-	Header: renderDefaultSurfaceHeader,
+	Heading: renderDefaultSurfaceHeading,
 	Routes: renderDefaultSurfaceRoutes,
 } satisfies RendererRegistry<"de", "Surface">;
 

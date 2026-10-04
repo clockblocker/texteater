@@ -14,14 +14,14 @@ import type { ReadingNotePending } from "../../../../note/data";
 import type { ReadingDefaultRenderer } from "../../../renderer";
 import { genderTone } from "../../common/feature-values";
 
-export const DefaultReadingHeaderRenderer = (({
+export const DefaultReadingHeadingRenderer = (({
 	noteData,
 	PresentationCapabilities,
 }) => (
-	<ReadingHeader note={noteData} capabilities={PresentationCapabilities} />
+	<ReadingHeading note={noteData} capabilities={PresentationCapabilities} />
 )) satisfies ReadingDefaultRenderer;
 
-export function ReadingHeader({
+export function ReadingHeading({
 	note,
 	capabilities,
 	title,

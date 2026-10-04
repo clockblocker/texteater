@@ -19,7 +19,7 @@ export const noteBodyBlockKindSchema = z.enum([
 export type NoteBodyBlockKind = z.infer<typeof noteBodyBlockKindSchema>;
 
 /** The registry key of a route's Heading Block. */
-export type NoteHeadingBlockKind = "Header";
+export type NoteHeadingBlockKind = "Heading";
 
 /** Every Block a route's registry can render: its Heading and its Body. */
 export type NoteBlockKind = NoteHeadingBlockKind | NoteBodyBlockKind;

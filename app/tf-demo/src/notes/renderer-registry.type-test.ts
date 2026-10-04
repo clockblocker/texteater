@@ -5,7 +5,7 @@ import type {
 	ReadingRenderContext,
 } from "./universal/blocks/renderer";
 import type { RendererRegistry } from "./universal/blocks/renderer-registry";
-import { DefaultReadingHeaderRenderer } from "./universal/blocks/renderers/reading/header/default";
+import { DefaultReadingHeadingRenderer } from "./universal/blocks/renderers/reading/heading/default";
 
 DE_RENDERER_REGISTRY satisfies RendererRegistry<"de">;
 RENDERER_REGISTRY satisfies RendererRegistry;
@@ -34,13 +34,13 @@ DE_RENDERER_REGISTRY.Reading.Lexeme.VERB satisfies RendererRegistry<
 	"VERB"
 >;
 
-DefaultReadingHeaderRenderer satisfies NoteBlockRenderer<
+DefaultReadingHeadingRenderer satisfies NoteBlockRenderer<
 	"de",
 	"Reading",
 	"Lexeme",
 	"NOUN"
 >;
-DE_RENDERER_REGISTRY.Reading.Lexeme.VERB.Header satisfies NoteBlockRenderer<
+DE_RENDERER_REGISTRY.Reading.Lexeme.VERB.Heading satisfies NoteBlockRenderer<
 	"de",
 	"Reading",
 	"Lexeme",
@@ -66,22 +66,22 @@ void (null as unknown as UnknownNoteRegistry);
 void (null as unknown as InvalidFamilyRegistry);
 void invalidFamilyKindRegistry;
 
-const nounOnlyHeader = (
+const nounOnlyHeading = (
 	_context: ReadingRenderContext<"de", "Lexeme", "NOUN">,
 ) => null;
 const verbRoute = {
 	Lexeme: {
 		VERB: {
 			// @ts-expect-error A NOUN renderer cannot be registered for a VERB route.
-			Header: nounOnlyHeader,
+			Heading: nounOnlyHeading,
 		},
 	},
 } satisfies RendererRegistry<"de", "Reading">;
 void verbRoute;
 
 const invalidBlock = {
-	Header: DefaultReadingHeaderRenderer,
+	Heading: DefaultReadingHeadingRenderer,
 	// @ts-expect-error Unknown Blocks cannot enter a route map.
-	PronunciationGuide: DefaultReadingHeaderRenderer,
+	PronunciationGuide: DefaultReadingHeadingRenderer,
 } satisfies RendererRegistry<"de", "Reading", "Lexeme", "NOUN">;
 void invalidBlock;

@@ -259,14 +259,14 @@ describe("Reading Block layout persistence", () => {
 			t.mutation(setFamilyKindBlockOrder, {
 				visitorId: VISITOR_ID,
 				route: VERB_ROUTE,
-				order: ["Header" as never, "Definition"],
+				order: ["Heading" as never, "Definition"],
 			}),
 		).rejects.toThrow();
 		await expect(
 			t.mutation(setFamilyKindBlockVisibility, {
 				visitorId: VISITOR_ID,
 				route: VERB_ROUTE,
-				blockKind: "Header" as never,
+				blockKind: "Heading" as never,
 				visible: false,
 			}),
 		).rejects.toThrow();
@@ -274,14 +274,14 @@ describe("Reading Block layout persistence", () => {
 			t.mutation(setLanguageBlockOrder, {
 				visitorId: VISITOR_ID,
 				targetLanguage: "de",
-				order: ["Header" as never, "Definition"],
+				order: ["Heading" as never, "Definition"],
 			}),
 		).rejects.toThrow();
 		await expect(
 			t.mutation(setLanguageBlockVisibility, {
 				visitorId: VISITOR_ID,
 				targetLanguage: "de",
-				blockKind: "Header" as never,
+				blockKind: "Heading" as never,
 				visible: false,
 			}),
 		).rejects.toThrow();

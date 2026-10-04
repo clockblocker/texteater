@@ -7,7 +7,7 @@ import { genderTone } from "../../common/feature-values";
  * A Lemma collects Readings. It takes the gender tone of its headword but
  * no emoji: each Reading below brings its own.
  */
-export const renderDefaultLemmaHeader = (({ noteData }) => {
+export const renderDefaultLemmaHeading = (({ noteData }) => {
 	const { presented } = noteData;
 	const readings = noteData.connections.readings.length;
 	return (
