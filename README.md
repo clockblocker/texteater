@@ -4,14 +4,22 @@ This Bun monorepo contains the Textfresser applications and the reusable
 linguistic packages behind them. Apps are user-facing products; batteries are
 reusable modules.
 
-The main workspaces are:
+The workspaces are:
 
 - `app/dumling-docs`: public Dumling documentation
+- `app/spec-review`: maintainer review of German Spec Records' Segmentation
 - `app/tf-demo`: end-to-end product probe
-- `battery/dumling`: grammatical values and operations
-- `battery/dumrel`: Knowledge and relation algebra
+- `battery/codegen`: deterministic, filesystem-safe code generation recipes
+- `battery/common-utils`: shared TypeScript type helpers and `required()`
 - `battery/dumdict`: dictionary workflows
 - `battery/dumgen`: German `segment.inUnits`, rebuilt from scratch (#701)
+- `battery/dumling`: grammatical values and operations
+- `battery/dumrel`: Knowledge and relation algebra
+- `battery/dumspec`: Spec Records, classification Rules and authored inventories
+- `battery/dumval`: Zod validation compilation, rule linking and lightweight parsing
+- `battery/lego`: shared Tailwind design tokens, theme and React atoms and molecules
+- `battery/promptsmith`: schema-bound prompt authoring and reproducible evaluation
+- `battery/react-resizable-panels`: local fork of the resizable panel components
 
 ## Install
 
