@@ -1,12 +1,7 @@
 export {
 	type AdpositionCaseIssue,
-	attestationAdpositionCaseIssues,
 	frameAdpositionCaseIssues,
 } from "./check-adposition-cases.js";
-export {
-	type ArticleAgreementIssue,
-	attestationArticleAgreementIssues,
-} from "./check-article-agreement.js";
 export {
 	type AuthoredReadingIssue,
 	authoredReadingIssues,

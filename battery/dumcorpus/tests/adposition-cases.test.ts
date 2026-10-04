@@ -3,8 +3,8 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { attestationAdpositionCaseIssues } from "../src/check-adposition-cases.js";
 import {
-	attestationAdpositionCaseIssues,
 	frameAdpositionCaseIssues,
 	germanAdpositionAllowedCases,
 	germanAdpositionAllows,

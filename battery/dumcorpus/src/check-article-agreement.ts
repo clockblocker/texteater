@@ -7,7 +7,7 @@ import {
 } from "./inventories/de/article-cells.js";
 
 /** An article that does not agree with its Head, at a path inside the checked Attestation. */
-export type ArticleAgreementIssue = {
+type ArticleAgreementIssue = {
 	readonly path: string;
 	readonly message: string;
 };
