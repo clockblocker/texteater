@@ -2,7 +2,6 @@ import { z } from "zod";
 import { UNIVERSAL_FEATURE_SCHEMA } from "../../universal/features/catalog.js";
 
 // Common
-const DeAspectSchema = UNIVERSAL_FEATURE_SCHEMA.aspect.extract(["Perf"]);
 const DeGenderSchema = UNIVERSAL_FEATURE_SCHEMA.gender.extract([
 	"Fem",
 	"Masc",
@@ -55,12 +54,16 @@ const DePartTypeSchema = UNIVERSAL_FEATURE_SCHEMA.partType.extract([
 const DePolaritySchema = UNIVERSAL_FEATURE_SCHEMA.polarity.extract(["Neg"]);
 const DeArticleSchema = UNIVERSAL_FEATURE_SCHEMA.article.extract(["Definite"]);
 
-// The German Feature Pool (system ADR 0032): every feature a German route uses
-// is narrowed here to German's values. A route narrows a feature's values only
-// where its Kind uses fewer than German's.
+// The German Feature Pool (system ADR 0032): German picks from the universal
+// pool only the features its routes use, each narrowed here to German's
+// values. A route narrows a feature's values only where its Kind uses fewer
+// than German's.
 export const DE_FEATURE_SCHEMA = {
-	...UNIVERSAL_FEATURE_SCHEMA,
-	aspect: DeAspectSchema,
+	comparable: UNIVERSAL_FEATURE_SCHEMA.comparable,
+	hasSepPrefix: UNIVERSAL_FEATURE_SCHEMA.hasSepPrefix,
+	lexicallyReflexive: UNIVERSAL_FEATURE_SCHEMA.lexicallyReflexive,
+	poss: UNIVERSAL_FEATURE_SCHEMA.poss,
+	sourceLang: UNIVERSAL_FEATURE_SCHEMA.sourceLang,
 	gender: DeGenderSchema,
 	finiteMood: DeMoodSchema,
 	imperativeMood: DeImperativeMoodSchema,

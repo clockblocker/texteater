@@ -31,8 +31,19 @@ const HeVoiceSchema = UNIVERSAL_FEATURE_SCHEMA.voice.extract([
 	"Pass",
 ]);
 
+// The Hebrew Feature Pool (system ADR 0032): Hebrew picks from the universal
+// pool only the features its routes use, some narrowed here to Hebrew's values.
 export const HE_FEATURE_SCHEMA = {
-	...UNIVERSAL_FEATURE_SCHEMA,
+	abbr: UNIVERSAL_FEATURE_SCHEMA.abbr,
+	article: UNIVERSAL_FEATURE_SCHEMA.article,
+	case: UNIVERSAL_FEATURE_SCHEMA.case,
+	hebBinyan: UNIVERSAL_FEATURE_SCHEMA.hebBinyan,
+	hebExistential: UNIVERSAL_FEATURE_SCHEMA.hebExistential,
+	prefix: UNIVERSAL_FEATURE_SCHEMA.prefix,
+	pronType: UNIVERSAL_FEATURE_SCHEMA.pronType,
+	reflex: UNIVERSAL_FEATURE_SCHEMA.reflex,
+	sourceLang: UNIVERSAL_FEATURE_SCHEMA.sourceLang,
+	verbType: UNIVERSAL_FEATURE_SCHEMA.verbType,
 	definite: HeDefiniteSchema,
 	nominalDefinite: UNIVERSAL_FEATURE_SCHEMA.definite.extract([
 		"Cons",
