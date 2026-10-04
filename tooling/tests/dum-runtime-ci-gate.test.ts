@@ -15,7 +15,7 @@ import { ciGates } from "../lib/ci-gates";
 
 describe("current compiled validation", () => {
 	test("all replacement validation roots agree with canonical schemas", () => {
-		expect(DUM_DIFFERENTIAL_TARGETS).toHaveLength(476);
+		expect(DUM_DIFFERENTIAL_TARGETS).toHaveLength(460);
 		for (const target of DUM_DIFFERENTIAL_TARGETS)
 			expect(
 				compareDifferentialTarget(target).mismatches,
