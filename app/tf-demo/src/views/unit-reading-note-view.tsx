@@ -70,7 +70,6 @@ export function UnitReadingNoteView({
 			presentation={presentation}
 			note={noteQuery.data}
 			knowledgeSettings={settingsQuery.data}
-			focus={target.focus ?? null}
 		/>
 	);
 }
@@ -108,13 +107,11 @@ function ReadingNoteContainer({
 	visitorId,
 	note,
 	knowledgeSettings,
-	focus,
 }: {
 	presentation: "Card" | "Sheet";
 	visitorId: string;
 	note: UnitReadingNote;
 	knowledgeSettings: KnowledgePreferences;
-	focus: ReadingNoteTarget["focus"] | null;
 }) {
 	const { follow } = useWorkspaceInteraction();
 	const definitionSelection = useSegmentSelection(visitorId);
@@ -203,10 +200,6 @@ function ReadingNoteContainer({
 		...(presentation === "Sheet"
 			? {
 					definition: {
-						focus:
-							focus?.kind === "Definition"
-								? { attestationId: focus.attestationId }
-								: null,
 						selectedSegmentKey:
 							definitionSelection.selectedSegmentKey,
 						error: definitionSelection.error,

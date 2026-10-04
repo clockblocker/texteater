@@ -1,5 +1,4 @@
 import { NoteLinesSkeleton, NoteSection } from "lego";
-import { useEffect, useRef } from "react";
 
 import { ReaderSentence } from "@/views/reader-sentence";
 import type { DefinitionCapabilities } from "../../../../note/capabilities";
@@ -10,9 +9,9 @@ type DefinitionText =
 
 /**
  * The Reading's definition. In a Sheet it reads like a Sentence: every word
- * selects the way the reader's words do, and a Source Context that came from
- * this definition lands here with its members lit and the block set back.
- * A Card shows the bare prose. The block is loaded only once the definition
+ * selects the way the reader's words do. A Source Context that came from this
+ * definition opens its Definition Text instead (tf-demo ADR 0005). A Card
+ * shows the bare prose. The block is loaded only once the definition
  * is both generated and segmented; until then it keeps its skeleton.
  */
 export const renderReadingDefinition = (({
@@ -95,37 +94,14 @@ function DefinitionSentence({
 	readonly sentence: Extract<DefinitionText, { state: "Ready" }>["sentence"];
 	readonly capabilities: DefinitionCapabilities;
 }) {
-	const sentenceElement = useRef<HTMLParagraphElement | null>(null);
-	const focusAttestationId = capabilities.focus?.attestationId ?? null;
-	const focusMemberIndices = focusAttestationId
-		? sentence.segments
-				.filter(
-					(segment) => segment.attestationId === focusAttestationId,
-				)
-				.map(({ index }) => index)
-		: [];
-	const focused = focusMemberIndices.length > 0;
-
-	useEffect(() => {
-		if (!focused) return;
-		const frame = window.requestAnimationFrame(() => {
-			const paragraph = sentenceElement.current;
-			paragraph?.scrollIntoView({ block: "center", behavior: "auto" });
-		});
-		return () => window.cancelAnimationFrame(frame);
-		// The focus is fixed for the life of this Presentation.
-	}, [focused, focusAttestationId, sentence.sentenceId]);
-
 	return (
 		<div
 			data-slot="definition-sentence"
-			data-focused={focused || undefined}
-			className="py-1 leading-relaxed text-pretty transition-opacity duration-150 data-[focused=true]:opacity-70 motion-reduce:transition-none"
+			className="py-1 leading-relaxed text-pretty"
 		>
 			<ReaderSentence
 				sentence={sentence}
 				className="text-reader__sentence"
-				focusMemberIndices={focusMemberIndices}
 				selectedSegmentKey={capabilities.selectedSegmentKey}
 				onSegmentClick={(clicked, index, altKey, anchor) =>
 					capabilities.selectSegment(
@@ -135,9 +111,6 @@ function DefinitionSentence({
 						anchor,
 					)
 				}
-				onSentenceElement={(element) => {
-					sentenceElement.current = element;
-				}}
 			/>
 			{capabilities.error ? (
 				<p className="mt-2 text-sm text-destructive" role="alert">

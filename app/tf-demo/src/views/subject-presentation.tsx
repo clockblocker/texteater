@@ -25,7 +25,7 @@ export function renderApplicationSubject(
 		case "Reading":
 			return (
 				<UnitReadingNoteView
-					key={`${target.readingId}:${target.focus?.attestationId ?? ""}`}
+					key={target.readingId}
 					target={target}
 					presentation={presentation}
 					resolutionRequestId={

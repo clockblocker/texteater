@@ -121,7 +121,6 @@ function render(
 }
 
 const selection = {
-	focus: null,
 	selectedSegmentKey: null,
 	error: null,
 	selectSegment: async () => {},
@@ -137,22 +136,6 @@ test("a Sheet reads the definition as a Sentence of selectable Segments", () => 
 	expect(markup.match(/data-slot="reader-segment"/g)).toHaveLength(5);
 	expect(markup).toContain('aria-label="Haus, part of a known occurrence"');
 	expect(markup).toContain('aria-label="ist, click to resolve"');
-	expect(markup).not.toContain('data-focused="true"');
-});
-
-test("a focused occurrence sets the block back and lights only its members", () => {
-	const markup = render(
-		{ state: "Ready", sentence: SENTENCE },
-		{
-			definition: {
-				...selection,
-				focus: { attestationId: "attestations-1" },
-			},
-		},
-	);
-	expect(markup).toContain('data-focused="true"');
-	expect(markup.match(/aria-pressed="true"/g)).toHaveLength(1);
-	expect(markup).toMatch(/aria-pressed="true"[^>]*>Haus<\/button>/);
 });
 
 test("a Card and a definition without a Definition Text stay plain prose", () => {
@@ -210,9 +193,9 @@ test("a definition-sourced Source Context is prefixed with the defined Reading a
 				canonicalForm: "Gebäude",
 			},
 			target: {
-				kind: "Reading",
-				readingId: "readings-2",
-				focus: { kind: "Definition", attestationId: "attestations-9" },
+				kind: "Text",
+				textId: "texts-definition",
+				focusAttestationId: "attestations-9",
 			},
 		} as unknown as ReadingNote["sourceContexts"]["page"][number],
 	]);

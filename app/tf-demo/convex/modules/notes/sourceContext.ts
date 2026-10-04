@@ -27,21 +27,15 @@ export const sourceOriginValidator = v.union(
 	}),
 );
 
-export const sourceTargetValidator = v.union(
-	v.object({
-		kind: v.literal("Text"),
-		textId: v.id("texts"),
-		focusAttestationId: v.id("attestations"),
-	}),
-	v.object({
-		kind: v.literal("Reading"),
-		readingId: v.id("readings"),
-		focus: v.object({
-			kind: v.literal("Definition"),
-			attestationId: v.id("attestations"),
-		}),
-	}),
-);
+/**
+ * The Text that shows the occurrence in place: a Visitor-submitted Text or a
+ * Definition Text alike (tf-demo ADR 0005).
+ */
+export const sourceTargetValidator = v.object({
+	kind: v.literal("Text"),
+	textId: v.id("texts"),
+	focusAttestationId: v.id("attestations"),
+});
 
 export const sourceSegmentValidator = v.object({
 	kind: segmentKindValidator,
@@ -58,20 +52,11 @@ export type SourceOrigin =
 			readonly canonicalForm: string;
 	  };
 
-export type SourceTarget =
-	| {
-			readonly kind: "Text";
-			readonly textId: Id<"texts">;
-			readonly focusAttestationId: Id<"attestations">;
-	  }
-	| {
-			readonly kind: "Reading";
-			readonly readingId: Id<"readings">;
-			readonly focus: {
-				readonly kind: "Definition";
-				readonly attestationId: Id<"attestations">;
-			};
-	  };
+export type SourceTarget = {
+	readonly kind: "Text";
+	readonly textId: Id<"texts">;
+	readonly focusAttestationId: Id<"attestations">;
+};
 
 /**
  * Names the Reading a Definition Text defines. Returns null when the Text is
@@ -99,19 +84,16 @@ async function projectSourceOrigin(
 	};
 }
 
-/** The workspace destination that shows this occurrence in place. */
+/**
+ * The workspace destination that shows this occurrence in place: its Text,
+ * pushed as a Cover scrolled to the Sentence, whether a Visitor submitted it
+ * or it holds a definition.
+ */
 function sourceTargetFor(
-	origin: SourceOrigin,
 	textId: Id<"texts">,
 	attestationId: Id<"attestations">,
 ): SourceTarget {
-	return origin.kind === "Definition"
-		? {
-				kind: "Reading",
-				readingId: origin.readingId,
-				focus: { kind: "Definition", attestationId },
-			}
-		: { kind: "Text", textId, focusAttestationId: attestationId };
+	return { kind: "Text", textId, focusAttestationId: attestationId };
 }
 
 /**
@@ -155,6 +137,6 @@ export async function projectOccurrenceSource(
 		),
 		memberSegmentIndices: [...occurrence.memberSegmentIndices],
 		origin,
-		target: sourceTargetFor(origin, text._id, attestationId),
+		target: sourceTargetFor(text._id, attestationId),
 	};
 }

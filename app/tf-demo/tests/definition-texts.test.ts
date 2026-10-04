@@ -627,6 +627,7 @@ test(
 			);
 			return {
 				definedReadingId: definedReading._id,
+				definitionTextId: definitionRow.textId,
 				citedReadingId: citedReading._id,
 				citedAttestation,
 				selfAttestation,
@@ -674,13 +675,11 @@ test(
 			emojiDescription: defined.reading.emojiDescription,
 			canonicalForm: defined.reading.lemma.canonicalForm,
 		});
+		// Go to source pushes the Definition Text as a Cover, like any Text.
 		expect(context?.target).toEqual({
-			kind: "Reading",
-			readingId: seeded.definedReadingId,
-			focus: {
-				kind: "Definition",
-				attestationId: seeded.citedAttestation,
-			},
+			kind: "Text",
+			textId: seeded.definitionTextId,
+			focusAttestationId: seeded.citedAttestation,
 		});
 		expect(context?.segments.length).toBeGreaterThan(0);
 		expect(context?.memberSegmentIndices).toEqual([
