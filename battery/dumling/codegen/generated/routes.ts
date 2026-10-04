@@ -417,12 +417,6 @@ export const routes = [
 	{
 		language: "en",
 		family: "Morpheme",
-		kind: "ToneMarking",
-		schemaPath: "en/morpheme/tone-marking",
-	},
-	{
-		language: "en",
-		family: "Morpheme",
 		kind: "Transfix",
 		schemaPath: "en/morpheme/transfix",
 	},
@@ -593,12 +587,6 @@ export const routes = [
 		family: "Morpheme",
 		kind: "Suffixoid",
 		schemaPath: "he/morpheme/suffixoid",
-	},
-	{
-		language: "he",
-		family: "Morpheme",
-		kind: "ToneMarking",
-		schemaPath: "he/morpheme/tone-marking",
 	},
 	{
 		language: "he",

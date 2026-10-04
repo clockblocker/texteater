@@ -15,6 +15,10 @@ const _tag: UnitKind = noun.unitKind;
 type _WrongFamily = Lemma<"de", "Morpheme", "NOUN">;
 // @ts-expect-error German has no ToneMarking route.
 type _UnsupportedMorpheme = Lemma<"de", "Morpheme", "ToneMarking">;
+// @ts-expect-error English is not tonal, so it picks no ToneMarking route.
+type _UntonalEnglish = Lemma<"en", "Morpheme", "ToneMarking">;
+// @ts-expect-error Hebrew is not tonal, so it picks no ToneMarking route.
+type _UntonalHebrew = Lemma<"he", "Morpheme", "ToneMarking">;
 declare const prefix: Surface<"de", "Morpheme", "Prefix">;
 // @ts-expect-error A route without an inflectional bag has no Surface field.
 prefix.inflectionalFeatures;

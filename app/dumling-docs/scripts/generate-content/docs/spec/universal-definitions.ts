@@ -64,7 +64,6 @@ export const kindDefinitions: readonly KindDefinition[] = [
 		"Transfix",
 		"A discontinuous affix interleaved with a consonantal root.",
 	),
-	morpheme("ToneMarking", "A tone pattern that marks a distinction."),
 	morpheme("Duplifix", "An affix made by repeating part of the stem."),
 	locution("ADJ", "`fix und fertig`"),
 	locution("ADV", "`zum Teil`, `ganz und gar`"),

@@ -32,7 +32,7 @@ test("the check reports stale pages and routes without a page", () => {
 		...pageRouteIds.filter(
 			(routeId) =>
 				routeId !== "he/entity/lemma/lexeme/noun" &&
-				routeId !== "u/entity/lemma/morpheme/tone-marking",
+				routeId !== "u/entity/lemma/morpheme/transfix",
 		),
 		"de/entity/lemma/morpheme/clitic",
 		"de/entity/lemma/morpheme/tone-marking",
@@ -43,7 +43,7 @@ test("the check reports stale pages and routes without a page", () => {
 		"The page de/entity/lemma/morpheme/tone-marking has no schema route.",
 		"The page de/feature/aspect names a feature no de route allows.",
 		"The schema route he/entity/lemma/lexeme/noun has no page.",
-		"The schema route u/entity/lemma/morpheme/tone-marking has no page.",
+		"The schema route u/entity/lemma/morpheme/transfix has no page.",
 	]);
 });
 

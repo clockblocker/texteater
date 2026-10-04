@@ -127,7 +127,6 @@ export type KnowledgeSelectionInput = {
 		| { language: "en"; family: "Morpheme"; kind: "Root" }
 		| { language: "en"; family: "Morpheme"; kind: "Suffix" }
 		| { language: "en"; family: "Morpheme"; kind: "Suffixoid" }
-		| { language: "en"; family: "Morpheme"; kind: "ToneMarking" }
 		| { language: "en"; family: "Morpheme"; kind: "Transfix" }
 		| { language: "en"; family: "Saying"; kind: "Saying" }
 		| { language: "he"; family: "Foreign"; kind: "Foreign" }
@@ -157,7 +156,6 @@ export type KnowledgeSelectionInput = {
 		| { language: "he"; family: "Morpheme"; kind: "Root" }
 		| { language: "he"; family: "Morpheme"; kind: "Suffix" }
 		| { language: "he"; family: "Morpheme"; kind: "Suffixoid" }
-		| { language: "he"; family: "Morpheme"; kind: "ToneMarking" }
 		| { language: "he"; family: "Morpheme"; kind: "Transfix" }
 		| { language: "he"; family: "Saying"; kind: "Saying" };
 	settings?: KnowledgeSettings | undefined;
@@ -395,12 +393,6 @@ export type UnitShadow =
 			language: "en";
 			canonicalForm: string;
 			family: "Morpheme";
-			kind: "ToneMarking";
-	  }
-	| {
-			language: "en";
-			canonicalForm: string;
-			family: "Morpheme";
 			kind: "Transfix";
 	  }
 	| {
@@ -490,12 +482,6 @@ export type UnitShadow =
 			language: "he";
 			canonicalForm: string;
 			family: "Morpheme";
-			kind: "ToneMarking";
-	  }
-	| {
-			language: "he";
-			canonicalForm: string;
-			family: "Morpheme";
 			kind: "Transfix";
 	  }
 	| {
@@ -577,7 +563,6 @@ export type MorphologicalTreeNode =
 				| Dumling.Reading<"en", "Morpheme", "Root">
 				| Dumling.Reading<"en", "Morpheme", "Suffix">
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"he", "Morpheme", "Circumfix">
 				| Dumling.Reading<"he", "Morpheme", "Duplifix">
@@ -587,7 +572,6 @@ export type MorphologicalTreeNode =
 				| Dumling.Reading<"he", "Morpheme", "Root">
 				| Dumling.Reading<"he", "Morpheme", "Suffix">
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">;
 	  }
 	| {
@@ -1111,7 +1095,6 @@ export type SemanticRelations =
 						| Dumling.Reading<"en", "Morpheme", "Root">
 						| Dumling.Reading<"en", "Morpheme", "Suffix">
 						| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-						| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 						| Dumling.Reading<"en", "Morpheme", "Transfix">
 						| Dumling.Reading<"en", "Saying", "Saying">
 						| Dumling.Reading<"he", "Foreign", "Foreign">
@@ -1141,7 +1124,6 @@ export type SemanticRelations =
 						| Dumling.Reading<"he", "Morpheme", "Root">
 						| Dumling.Reading<"he", "Morpheme", "Suffix">
 						| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-						| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 						| Dumling.Reading<"he", "Morpheme", "Transfix">
 						| Dumling.Reading<"he", "Saying", "Saying">
 				  >
@@ -1220,7 +1202,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Root">
 						| Dumling.Lemma<"en", "Morpheme", "Suffix">
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -1250,7 +1231,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Root">
 						| Dumling.Lemma<"he", "Morpheme", "Suffix">
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
 						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
@@ -1326,7 +1306,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Root">
 						| Dumling.Lemma<"en", "Morpheme", "Suffix">
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -1356,7 +1335,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Root">
 						| Dumling.Lemma<"he", "Morpheme", "Suffix">
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
 						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
@@ -1432,7 +1410,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Root">
 						| Dumling.Lemma<"en", "Morpheme", "Suffix">
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -1462,7 +1439,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Root">
 						| Dumling.Lemma<"he", "Morpheme", "Suffix">
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
 						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
@@ -1538,7 +1514,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Root">
 						| Dumling.Lemma<"en", "Morpheme", "Suffix">
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -1568,7 +1543,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Root">
 						| Dumling.Lemma<"he", "Morpheme", "Suffix">
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
 						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
@@ -1644,7 +1618,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Root">
 						| Dumling.Lemma<"en", "Morpheme", "Suffix">
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -1674,7 +1647,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Root">
 						| Dumling.Lemma<"he", "Morpheme", "Suffix">
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
 						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
@@ -1750,7 +1722,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Root">
 						| Dumling.Lemma<"en", "Morpheme", "Suffix">
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -1780,7 +1751,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Root">
 						| Dumling.Lemma<"he", "Morpheme", "Suffix">
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
 						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
@@ -1856,7 +1826,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"en", "Morpheme", "Root">
 						| Dumling.Lemma<"en", "Morpheme", "Suffix">
 						| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"en", "Morpheme", "Transfix">
 						| Dumling.Lemma<"en", "Saying", "Saying">
 						| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -1886,7 +1855,6 @@ export type SemanticRelations =
 						| Dumling.Lemma<"he", "Morpheme", "Root">
 						| Dumling.Lemma<"he", "Morpheme", "Suffix">
 						| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-						| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 						| Dumling.Lemma<"he", "Morpheme", "Transfix">
 						| Dumling.Lemma<"he", "Saying", "Saying">
 				  >
@@ -1997,7 +1965,6 @@ export type KnowledgeChange =
 				| Dumling.Reading<"en", "Morpheme", "Root">
 				| Dumling.Reading<"en", "Morpheme", "Suffix">
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Foreign", "Foreign">
@@ -2027,7 +1994,6 @@ export type KnowledgeChange =
 				| Dumling.Reading<"he", "Morpheme", "Root">
 				| Dumling.Reading<"he", "Morpheme", "Suffix">
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
 				| Dumling.Reading<"he", "Saying", "Saying">
 			>;
@@ -2107,7 +2073,6 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"en", "Morpheme", "Root">
 				| Dumling.Lemma<"en", "Morpheme", "Suffix">
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -2137,7 +2102,6 @@ export type KnowledgeChange =
 				| Dumling.Lemma<"he", "Morpheme", "Root">
 				| Dumling.Lemma<"he", "Morpheme", "Suffix">
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
 				| Dumling.Lemma<"he", "Saying", "Saying">
 			>;
@@ -2282,7 +2246,6 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"en", "Morpheme", "Root">
 		| Dumling.Reading<"en", "Morpheme", "Suffix">
 		| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-		| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"en", "Morpheme", "Transfix">
 		| Dumling.Reading<"en", "Saying", "Saying">
 		| Dumling.Reading<"he", "Foreign", "Foreign">
@@ -2312,7 +2275,6 @@ export type SemanticRelationProjection = {
 		| Dumling.Reading<"he", "Morpheme", "Root">
 		| Dumling.Reading<"he", "Morpheme", "Suffix">
 		| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-		| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"he", "Morpheme", "Transfix">
 		| Dumling.Reading<"he", "Saying", "Saying">;
 	relation: SemanticRelation;
@@ -2387,7 +2349,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"en", "Morpheme", "Root">
 				| Dumling.Lemma<"en", "Morpheme", "Suffix">
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -2417,7 +2378,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Lemma<"he", "Morpheme", "Root">
 				| Dumling.Lemma<"he", "Morpheme", "Suffix">
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
 				| Dumling.Lemma<"he", "Saying", "Saying">
 		  )
@@ -2491,7 +2451,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"en", "Morpheme", "Root">
 				| Dumling.Reading<"en", "Morpheme", "Suffix">
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Foreign", "Foreign">
@@ -2521,7 +2480,6 @@ export type SemanticRelationProjection = {
 				| Dumling.Reading<"he", "Morpheme", "Root">
 				| Dumling.Reading<"he", "Morpheme", "Suffix">
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
 				| Dumling.Reading<"he", "Saying", "Saying">
 		  );
@@ -2700,7 +2658,6 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"en", "Morpheme", "Root">
 		| Dumling.Reading<"en", "Morpheme", "Suffix">
 		| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-		| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"en", "Morpheme", "Transfix">
 		| Dumling.Reading<"en", "Saying", "Saying">
 		| Dumling.Reading<"he", "Foreign", "Foreign">
@@ -2730,7 +2687,6 @@ export type GovernmentProjection = {
 		| Dumling.Reading<"he", "Morpheme", "Root">
 		| Dumling.Reading<"he", "Morpheme", "Suffix">
 		| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-		| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 		| Dumling.Reading<"he", "Morpheme", "Transfix">
 		| Dumling.Reading<"he", "Saying", "Saying">;
 	relation: GovernmentRelation;
@@ -2805,7 +2761,6 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"en", "Morpheme", "Root">
 				| Dumling.Lemma<"en", "Morpheme", "Suffix">
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -2835,7 +2790,6 @@ export type GovernmentProjection = {
 				| Dumling.Lemma<"he", "Morpheme", "Root">
 				| Dumling.Lemma<"he", "Morpheme", "Suffix">
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
 				| Dumling.Lemma<"he", "Saying", "Saying">
 		  )
@@ -2909,7 +2863,6 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"en", "Morpheme", "Root">
 				| Dumling.Reading<"en", "Morpheme", "Suffix">
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Foreign", "Foreign">
@@ -2939,7 +2892,6 @@ export type GovernmentProjection = {
 				| Dumling.Reading<"he", "Morpheme", "Root">
 				| Dumling.Reading<"he", "Morpheme", "Suffix">
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
 				| Dumling.Reading<"he", "Saying", "Saying">
 		  );
@@ -3027,7 +2979,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Morpheme", "Root">
 				| Dumling.Reading<"en", "Morpheme", "Suffix">
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Foreign", "Foreign">
@@ -3057,7 +3008,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Morpheme", "Root">
 				| Dumling.Reading<"he", "Morpheme", "Suffix">
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
 				| Dumling.Reading<"he", "Saying", "Saying">;
 			relation: "participleSource";
@@ -3131,7 +3081,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Morpheme", "Root">
 				| Dumling.Lemma<"en", "Morpheme", "Suffix">
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -3161,7 +3110,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Morpheme", "Root">
 				| Dumling.Lemma<"he", "Morpheme", "Suffix">
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
 				| Dumling.Lemma<"he", "Saying", "Saying">;
 			meaning: ParticipleMeaning;
@@ -3238,7 +3186,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"en", "Morpheme", "Root">
 				| Dumling.Lemma<"en", "Morpheme", "Suffix">
 				| Dumling.Lemma<"en", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"en", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"en", "Morpheme", "Transfix">
 				| Dumling.Lemma<"en", "Saying", "Saying">
 				| Dumling.Lemma<"he", "Foreign", "Foreign">
@@ -3268,7 +3215,6 @@ export type ParticipleProjection =
 				| Dumling.Lemma<"he", "Morpheme", "Root">
 				| Dumling.Lemma<"he", "Morpheme", "Suffix">
 				| Dumling.Lemma<"he", "Morpheme", "Suffixoid">
-				| Dumling.Lemma<"he", "Morpheme", "ToneMarking">
 				| Dumling.Lemma<"he", "Morpheme", "Transfix">
 				| Dumling.Lemma<"he", "Saying", "Saying">;
 			relation: "participialAdjective";
@@ -3342,7 +3288,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"en", "Morpheme", "Root">
 				| Dumling.Reading<"en", "Morpheme", "Suffix">
 				| Dumling.Reading<"en", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"en", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"en", "Morpheme", "Transfix">
 				| Dumling.Reading<"en", "Saying", "Saying">
 				| Dumling.Reading<"he", "Foreign", "Foreign">
@@ -3372,7 +3317,6 @@ export type ParticipleProjection =
 				| Dumling.Reading<"he", "Morpheme", "Root">
 				| Dumling.Reading<"he", "Morpheme", "Suffix">
 				| Dumling.Reading<"he", "Morpheme", "Suffixoid">
-				| Dumling.Reading<"he", "Morpheme", "ToneMarking">
 				| Dumling.Reading<"he", "Morpheme", "Transfix">
 				| Dumling.Reading<"he", "Saying", "Saying">;
 			provenance: "inferred";

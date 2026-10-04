@@ -31,7 +31,7 @@ const lexemeKindValues = [
 	"SYM",
 	"VERB",
 ] as const;
-const germanMorphemeKindValues = [
+const morphemeKindValues = [
 	"Circumfix",
 	"Duplifix",
 	"Infix",
@@ -41,10 +41,6 @@ const germanMorphemeKindValues = [
 	"Suffix",
 	"Suffixoid",
 	"Transfix",
-] as const;
-const morphemeKindValues = [
-	...germanMorphemeKindValues,
-	"ToneMarking",
 ] as const;
 
 /**
@@ -70,7 +66,7 @@ const lemmaRouteKinds = {
 		],
 		Saying: ["Saying"],
 		Foreign: ["Foreign"],
-		Morpheme: germanMorphemeKindValues,
+		Morpheme: morphemeKindValues,
 	},
 	en: {
 		Lexeme: lexemeKindValues,

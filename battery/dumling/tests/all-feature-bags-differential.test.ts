@@ -3,10 +3,11 @@ import { z } from "zod";
 import fixtures from "./fixtures/legacy-feature-acceptance.json";
 
 // Clitic is no Morpheme Kind (ADR 0035), the Phraseme Family is split into
-// Locution and Saying (ADR 0039), and Lexeme X gave way to the Foreign Family
-// (ADR 0045): their routes are retired.
+// Locution and Saying (ADR 0039), Lexeme X gave way to the Foreign Family
+// (ADR 0045), and no supported language is tonal, so none picks ToneMarking:
+// their routes are retired.
 const retired =
-	/^[a-z]+\/(morpheme\/clitic|phraseme\/[a-z-]+|lexeme\/other)\.ts$/;
+	/^[a-z]+\/(morpheme\/(clitic|tone-marking)|phraseme\/[a-z-]+|lexeme\/other)\.ts$/;
 
 // No English route carries UD Style any more: archaism and register are
 // parked on #727, so a legacy English sample that sets it is rejected.
