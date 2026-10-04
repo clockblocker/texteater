@@ -1,264 +1,146 @@
-import { Workspace } from "lego";
 import {
-	createContext,
-	type Dispatch,
 	type ReactNode,
-	useCallback,
-	useContext,
 	useEffect,
 	useLayoutEffect,
 	useMemo,
-	useReducer,
 	useRef,
+	useState,
 } from "react";
 import {
-	type PresentationForm,
-	selectVisibleSheets,
-	type WorkspaceCommand,
-	type WorkspaceRenderContext,
-} from "react-resizable-panels/workspace/legacy";
+	BAR_REM,
+	createWorkspace,
+	groundOf,
+	panesOf,
+	type WorkspaceState,
+	workspaceReducer,
+} from "react-resizable-panels/workspace";
+import { LibraryView } from "@/views/library-view";
+import { SettingsView } from "@/views/settings-view";
+import { Compass } from "@/workspace/compass/compass";
+import type { MenuItem, MenuItemView } from "@/workspace/compass/subject";
+import { useCompassWorkspace } from "@/workspace/compass/use-compass-workspace";
+import { applicationRenderer } from "./application-renderer";
 import {
 	loadApplicationWorkspace,
 	saveApplicationWorkspace,
 } from "./application-workspace-persistence";
+import { type WorkspaceSubject, workspaceSubjectFor } from "./sheet-workspace";
 import {
-	type ApplicationWorkspaceAction,
-	type ApplicationWorkspaceSession,
-	type ApplicationWorkspaceSubject,
-	createApplicationWorkspaceSession,
-	type OccurrenceReveal,
-	reduceApplicationWorkspaceSession,
-} from "./application-workspace-state";
-import type { WorkspaceSubject } from "./sheet-workspace";
-import { useWorkspaceSentenceReveal } from "./useWorkspaceSentenceReveal";
-import {
-	type OccurrenceRevealHandle,
-	OccurrenceRevealProvider,
 	WorkspaceControllerProvider,
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
 } from "./workspace-controller";
 
 /**
- * Reading geometry shared by Texts and Reading Notes. The Card Layer top sits
- * below the first two sentences (two text lines plus one paragraph gap) with a
- * line of breathing room, and its left edge lines up with the inner reading
- * column (half the leftover width, plus the gutter, minus the Card's own
- * padding and border).
+ * tf-demo's workspace: the Compass over the application's Subjects, with
+ * one URL (tf-demo ADR 0003). Every Pane's Ground walks its line; a Rooted
+ * Pane's runs Menu › Library › Text, and Settings is the Menu Item beside the
+ * Library (tf-demo ADR 0008). The workspace survives a reload through
+ * Workspace Persistence.
  */
-const READING_LAYOUT_CLASS = [
-	"flex h-full min-h-0 [--reading-top:5rem] [--reading-deck-top:calc(var(--reading-top)+2*1.71rem+1.75rem+1rem)]",
-	"[--workspace-cards-top:var(--reading-deck-top)]",
-	"[--workspace-cards-height:min(calc(100%-var(--reading-deck-top)-12px),34rem)]",
-	"[--workspace-cards-left:calc(max(0px,50%-24rem)+var(--spacing-note-gutter)-0.9rem-1px)]",
-	"[--workspace-cards-transform:none]",
-	"[&>.workspace]:min-w-0 [&>.workspace]:flex-1",
-	"[&_.workspace\\_\\_sheet>*]:min-h-full",
-].join(" ");
 
-type Runtime = {
-	session: ApplicationWorkspaceSession;
-	dispatch: Dispatch<ApplicationWorkspaceAction>;
-};
-const RuntimeContext = createContext<Runtime | null>(null);
+const LIBRARY = "library";
+const SETTINGS = "settings";
 
-export function ApplicationWorkspaceProvider({
-	children,
-}: {
-	children: ReactNode;
-}) {
-	const [session, dispatch] = useReducer(
-		reduceApplicationWorkspaceSession,
-		undefined,
-		() => loadApplicationWorkspace(createApplicationWorkspaceSession()),
-	);
-	useEffect(() => saveApplicationWorkspace(session), [session]);
-	const { workspace } = session;
-	const visible = selectVisibleSheets(workspace, workspace.activePaneId);
-	const activeText = visible.findLast(
-		(presentation) => presentation.subject.kind === "Text",
-	);
-	const revealLibrary = useCallback(
-		() => dispatch({ type: "RevealLibrary" }),
-		[],
-	);
-	const closeAllSheets = useCallback(
-		() => dispatch({ type: "CloseAllSheets" }),
-		[],
-	);
-	const canCloseAllSheets =
-		Object.keys(workspace.presentations).length > 1 ||
-		Object.keys(workspace.layers).length > 0 ||
-		Object.keys(workspace.panes).length > 1 ||
-		visible.at(-1)?.subject.kind !== "Library";
-	const controller = useMemo(
-		() => ({
-			activeTextId:
-				activeText?.subject.kind === "Text"
-					? activeText.subject.target.textId
-					: null,
-			isLibraryVisible: visible.at(-1)?.subject.kind === "Library",
-			revealLibrary,
-			canCloseAllSheets,
-			closeAllSheets,
-		}),
-		[activeText, visible, revealLibrary, canCloseAllSheets, closeAllSheets],
-	);
-	const runtime = useMemo(() => ({ session, dispatch }), [session]);
-	return (
-		<RuntimeContext.Provider value={runtime}>
-			<WorkspaceControllerProvider controller={controller}>
-				{children}
-			</WorkspaceControllerProvider>
-		</RuntimeContext.Provider>
-	);
-}
+const MENU: readonly MenuItem[] = [
+	{ key: LIBRARY, label: "Library" },
+	{ key: SETTINGS, label: "Settings" },
+];
+const MENU_ITEMS: ReadonlySet<string> = new Set(MENU.map(({ key }) => key));
 
-type ApplicationWorkspaceProps = {
-	renderSubject(
-		subject: WorkspaceSubject,
-		presentation: PresentationForm,
-	): ReactNode;
-	renderLibrary(): ReactNode;
-	labelSubject(subject: WorkspaceSubject): string;
-};
-
-export function ApplicationWorkspace(props: ApplicationWorkspaceProps) {
-	const runtime = useContext(RuntimeContext);
-	if (!runtime)
-		throw new Error(
-			"ApplicationWorkspace requires ApplicationWorkspaceProvider.",
-		);
-	return <ApplicationWorkspaceCanvas {...props} {...runtime} />;
-}
-
-function ApplicationWorkspaceCanvas({
-	session,
-	dispatch,
-	renderSubject,
-	renderLibrary,
-	labelSubject,
-}: ApplicationWorkspaceProps & Runtime) {
-	const root = useRef<HTMLDivElement>(null);
-	const queueReveal = useWorkspaceSentenceReveal({
-		root,
-		state: session.workspace,
-		isReady: (state) => !state.gesture,
-		findDeck: (element, pending, state) => {
-			const layer = Object.values(state.layers).find(
-				(candidate) =>
-					candidate.originPresentationId === pending.presentationId,
-			);
-			return layer
-				? element.querySelector<HTMLElement>(
-						`[data-card-layer="${layer.id}"]`,
-					)
-				: null;
-		},
+/** Where the workspace starts: one Rooted Pane, at the Library. */
+function initialWorkspace(): WorkspaceState<WorkspaceSubject> {
+	const fresh = createWorkspace<WorkspaceSubject>();
+	return workspaceReducer(fresh, {
+		type: "StepUp",
+		paneId: fresh.activePaneId,
+		to: { kind: "MenuItem", item: LIBRARY },
 	});
-	const dispatchCommand = useCallback(
-		(command: WorkspaceCommand<ApplicationWorkspaceSubject>) => {
-			dispatch({ type: "Command", command });
-		},
-		[dispatch],
-	);
+}
+
+/** Whether the workspace is still where it starts. */
+function atStart(state: WorkspaceState<WorkspaceSubject>): boolean {
+	const panes = panesOf(state.layout);
+	const pane = panes[0];
+	if (panes.length !== 1 || !pane || pane.covers.length) return false;
+	const ground = groundOf(pane);
 	return (
-		<div ref={root} className={READING_LAYOUT_CLASS}>
-			<Workspace
-				state={session.workspace}
-				dispatch={dispatchCommand}
-				labelSubject={(subject) =>
-					subject.kind === "Library"
-						? "Library"
-						: labelSubject(subject)
-				}
-				renderSubject={(subject, context) => (
-					<ApplicationPresentation
-						subject={subject}
-						context={context}
-						dispatch={dispatch}
-						pendingReveal={
-							session.pendingReveal?.presentationId ===
-							context.presentationId
-								? session.pendingReveal
-								: null
-						}
-						queueReveal={queueReveal}
-						renderSubject={renderSubject}
-						renderLibrary={renderLibrary}
-					/>
-				)}
+		pane.line.length === 2 &&
+		ground.kind === "MenuItem" &&
+		ground.item === LIBRARY &&
+		ground.deck === null
+	);
+}
+
+export function ApplicationWorkspace() {
+	const workspace = useCompassWorkspace(() =>
+		loadApplicationWorkspace(initialWorkspace, MENU_ITEMS),
+	);
+	/** A fresh Compass after starting over, so no gesture outlives its workspace. */
+	const [run, setRun] = useState(0);
+	const { state } = workspace;
+	useEffect(() => saveApplicationWorkspace(state), [state]);
+	const controller = {
+		canCloseAllSheets: !atStart(state),
+		closeAllSheets: () => {
+			workspace.reset(initialWorkspace());
+			setRun((value) => value + 1);
+		},
+	};
+	return (
+		<WorkspaceControllerProvider controller={controller}>
+			<Compass
+				key={run}
+				workspace={workspace}
+				renderer={applicationRenderer}
+				menu={MENU}
+				renderMenuItem={renderMenuItem}
 			/>
+		</WorkspaceControllerProvider>
+	);
+}
+
+function renderMenuItem(item: string, view: MenuItemView<WorkspaceSubject>) {
+	return (
+		<MenuItemRung>
+			{item === SETTINGS ? <SettingsView /> : <LibraryRung view={view} />}
+		</MenuItemRung>
+	);
+}
+
+/** A Menu Item's rung fills its Pane under the Pane bar and scrolls. */
+function MenuItemRung({ children }: { children: ReactNode }) {
+	return (
+		<div
+			className="flex h-full min-h-0 flex-col"
+			style={{ paddingTop: `${BAR_REM.toString()}rem` }}
+		>
+			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+				{children}
+			</div>
 		</div>
 	);
 }
 
-function ApplicationPresentation({
-	subject,
-	context,
-	dispatch,
-	pendingReveal,
-	queueReveal,
-	renderSubject,
-	renderLibrary,
-}: Omit<ApplicationWorkspaceProps, "labelSubject"> & {
-	subject: ApplicationWorkspaceSubject;
-	context: WorkspaceRenderContext<ApplicationWorkspaceSubject>;
-	dispatch: Dispatch<ApplicationWorkspaceAction>;
-	pendingReveal: OccurrenceReveal | null;
-	queueReveal(anchor: HTMLElement, presentationId: string): void;
-}) {
-	// Content effects (in particular live resolution) need stable interaction callbacks.
-	const selectAnchor = useRef(context.selectAnchor);
+/** The Library's selection is the Ground's: a Text picked or added there is its content. */
+function LibraryRung({ view }: { view: MenuItemView<WorkspaceSubject> }) {
+	const latest = useRef(view);
 	useLayoutEffect(() => {
-		selectAnchor.current = context.selectAnchor;
-	}, [context.selectAnchor]);
-	const presentationId = context.presentationId;
-	const reveal = useMemo<OccurrenceRevealHandle | null>(
-		() =>
-			pendingReveal
-				? {
-						attestationId: pendingReveal.attestationId,
-						acknowledge: () =>
-							dispatch({
-								type: "AcknowledgeReveal",
-								presentationId,
-							}),
-					}
-				: null,
-		[dispatch, pendingReveal, presentationId],
-	);
+		latest.current = view;
+	});
 	const interaction = useMemo<WorkspaceInteraction>(
 		() => ({
-			follow: (target, presentationContext) =>
-				dispatch({
-					type: "Follow",
-					presentationContext,
-					originPresentationId: presentationId,
-					target,
-				}),
-			presentCards: (candidates, options) => {
-				const anchor = options?.anchor;
-				if (anchor instanceof HTMLElement) {
-					selectAnchor.current(anchor);
-					queueReveal(anchor, presentationId);
-				}
-				dispatch({
-					type: "ReconcileCardLayer",
-					originPresentationId: presentationId,
-					candidates,
-				});
+			follow: (target) => {
+				if (target.kind === "Text")
+					latest.current.select(workspaceSubjectFor(target));
 			},
+			presentCards: () => {},
 		}),
-		[dispatch, presentationId, queueReveal],
+		[],
 	);
 	return (
 		<WorkspaceInteractionProvider interaction={interaction}>
-			<OccurrenceRevealProvider reveal={reveal}>
-				{subject.kind === "Library"
-					? renderLibrary()
-					: renderSubject(subject, context.presentation)}
-			</OccurrenceRevealProvider>
+			<LibraryView />
 		</WorkspaceInteractionProvider>
 	);
 }

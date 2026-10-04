@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { segmentSelectionDeckCards } from "@/views/resolution-deck";
-import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
+import {
+	useDealtSelection,
+	useWorkspaceInteraction,
+} from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -14,17 +17,19 @@ export function segmentKey(sentenceId: string, segmentIndex: number): string {
 
 /**
  * One Segment Selection, wherever the Segment lives: the reader or a
- * Definition block. Presents the resulting deck of Cards below the clicked
- * word and remembers which Segment is selected until the next click.
+ * Definition block. Deals the resulting Cards to the Sheet the word was
+ * clicked in. The clicked Segment is lit while the selection runs, and from
+ * then on for as long as the Deck it dealt is live.
  */
 export function useSegmentSelection(visitorId: string) {
 	const recordSelectionTiming = useMutation(
 		api.resolutionInspection.recordSelectionTiming,
 	);
 	const { presentCards } = useWorkspaceInteraction();
+	const dealtSelection = useDealtSelection();
 	const [routeNotesEnabled] = useRouteNotePreference();
 	const selectSegment = useMutation(api.resolutionSessions.selectSegment);
-	const [selectedSegmentKey, setSelectedSegmentKey] = useState<string | null>(
+	const [pendingSegmentKey, setPendingSegmentKey] = useState<string | null>(
 		null,
 	);
 	const [error, setError] = useState<string | null>(null);
@@ -36,7 +41,8 @@ export function useSegmentSelection(visitorId: string) {
 		anchorElement: HTMLElement,
 	): Promise<void> {
 		setError(null);
-		setSelectedSegmentKey(segmentKey(sentenceId, clickedSegmentIndex));
+		const selection = segmentKey(sentenceId, clickedSegmentIndex);
+		setPendingSegmentKey(selection);
 		try {
 			const requestId = crypto.randomUUID();
 			const startedAt = Date.now();
@@ -63,17 +69,20 @@ export function useSegmentSelection(visitorId: string) {
 			// Resolving deck follows the returned requestId, not this one.
 			presentCards(segmentSelectionDeckCards(requestId, result), {
 				anchor: anchorElement,
+				selection,
 			});
 		} catch (cause) {
-			setSelectedSegmentKey(null);
 			setError(visitorErrorMessage(cause));
+		} finally {
+			setPendingSegmentKey((pending) =>
+				pending === selection ? null : pending,
+			);
 		}
 	}
 
-	/** Marks a Segment selected without a Segment Selection, as an arrival does. */
-	function markSelected(sentenceId: string, segmentIndex: number): void {
-		setSelectedSegmentKey(segmentKey(sentenceId, segmentIndex));
-	}
-
-	return { select, markSelected, selectedSegmentKey, error } as const;
+	return {
+		select,
+		selectedSegmentKey: pendingSegmentKey ?? dealtSelection,
+		error,
+	} as const;
 }

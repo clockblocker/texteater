@@ -22,7 +22,8 @@ import { visitorErrorMessage } from "@/lib/visitor-error";
 import { api } from "../../convex/_generated/api";
 import { KnowledgeSettingsForm } from "./unit-reading-knowledge-settings";
 
-export function SettingsView({ textId }: { textId?: string }) {
+/** The Settings Menu Item's rung: what this browser shows, and the demo's data. */
+export function SettingsView() {
 	const visitorId = useAnonymousVisitorId();
 	const settingsQuery = useQuery(
 		convexQuery(api.knowledgeSettings.get, { visitorId }),
@@ -90,11 +91,7 @@ export function SettingsView({ textId }: { textId?: string }) {
 					</CardContent>
 				</Card>
 
-				{textId ? (
-					<TextDataControls textId={textId} visitorId={visitorId} />
-				) : (
-					<DataControls />
-				)}
+				<DataControls />
 			</div>
 		</div>
 	);
@@ -146,44 +143,5 @@ function ThemeSettings() {
 				/>
 			</Field>
 		</FieldLabel>
-	);
-}
-
-function TextDataControls({
-	textId,
-	visitorId,
-}: {
-	textId: string;
-	visitorId: string;
-}) {
-	const textQuery = useQuery(
-		convexQuery(api.textViews.get, { textId, visitorId }),
-	);
-
-	if (textQuery.isPending) {
-		return (
-			<div className="flex flex-col gap-6" role="status">
-				<Skeleton className="h-32 w-full rounded-xl" />
-				<Skeleton className="h-36 w-full rounded-xl" />
-			</div>
-		);
-	}
-
-	const text = textQuery.data;
-	return (
-		<DataControls
-			text={
-				text
-					? {
-							textId: text.textId,
-							submissionKey: text.submissionKey,
-							sourceText: text.sourceText,
-							isAnalyzed: text.sentences.some(
-								(sentence) => sentence.segments.length > 0,
-							),
-						}
-					: undefined
-			}
-		/>
 	);
 }

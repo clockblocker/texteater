@@ -18,15 +18,16 @@ import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
 import type { TextSubjectTarget } from "@/workspace/sheet-workspace";
-import {
-	type OccurrenceRevealHandle,
-	useOccurrenceReveal,
-} from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 
-/** The reading column: shared with Reading Notes, padded so the last sentence clears the deck. */
+/**
+ * The reading column, shared with Reading Notes. The Deck sits at one place
+ * in its Pane, 12rem below its top (the battery's `DECK_TOP_REM`), so the
+ * column's top leaves the first two lines above it under the Pane bar, and
+ * its foot lets the last Sentence scroll clear of it.
+ */
 const READER_BODY_CLASS =
-	"mx-auto w-full max-w-note px-note-gutter pt-[var(--reading-top,5rem)] pb-[max(5rem,calc(100cqh-var(--reading-deck-top,10.25rem)+0.875rem))] @max-md:pt-8";
+	"mx-auto w-full max-w-note px-note-gutter pt-14 pb-[max(5rem,calc(100svh-12rem))] @max-md:pt-8";
 
 const MISSING_SOURCE_CONTEXT_NOTICE =
 	"This Source Context is no longer available. The Text is still open, and no new resolution was started.";
@@ -43,11 +44,11 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 	);
 	const selection = useSegmentSelection(visitorId);
 	const segmentText = usePendingAction(api.orchestration.submitText);
-	const reveal = useOccurrenceReveal();
-	const revealSentenceId = useOccurrenceArrival(target.textId, reveal, {
-		onOccurrence: selection.markSelected,
-		onMissing: () => setNotice(MISSING_SOURCE_CONTEXT_NOTICE),
-	});
+	const focus = useOccurrenceFocus(
+		target.textId,
+		target.focusAttestationId ?? null,
+		() => setNotice(MISSING_SOURCE_CONTEXT_NOTICE),
+	);
 
 	const textQuery = useQuery(
 		convexQuery(api.textViews.get, { textId: target.textId, visitorId }),
@@ -122,8 +123,7 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 			error={error}
 			notice={notice}
 			onSegmentClick={handleSegmentSelection}
-			revealSentenceId={revealSentenceId}
-			onRevealed={reveal?.acknowledge}
+			focus={focus}
 			selectedSegmentKey={selection.selectedSegmentKey}
 			sentences={sentences}
 			showSegmentAction={needsSegmentation}
@@ -133,25 +133,23 @@ export function TextView({ target }: { target: TextSubjectTarget }) {
 	);
 }
 
+/** Where Go to source lands in a Text: one occurrence's Sentence and members. */
+type OccurrenceFocus = {
+	readonly sentenceId: string;
+	readonly memberSegmentIndices: readonly number[];
+};
+
 /**
- * Consumes a pending occurrence reveal once. The occurrence is looked up
- * apart from the Text, its members are selected exactly as a click would
- * select them, and its Sentence is handed back for one scroll. A reveal
- * that no longer resolves leaves a notice instead. Either way the gesture
- * is acknowledged, and from then on the Text is an ordinary open Text.
+ * The occurrence a Text Cover pushed by Go to source lands on, looked up
+ * apart from the Text so the Text query keeps its identity. One that no
+ * longer resolves is reported once, and the Text reads as if opened from
+ * the Library.
  */
-function useOccurrenceArrival(
+function useOccurrenceFocus(
 	textId: string,
-	reveal: OccurrenceRevealHandle | null,
-	handlers: {
-		readonly onOccurrence: (
-			sentenceId: string,
-			segmentIndex: number,
-		) => void;
-		readonly onMissing: () => void;
-	},
-): string | null {
-	const attestationId = reveal?.attestationId ?? null;
+	attestationId: string | null,
+	onMissing: () => void,
+): OccurrenceFocus | null {
 	const focusQuery = useQuery(
 		convexQuery(
 			api.textViews.occurrenceFocus,
@@ -159,44 +157,27 @@ function useOccurrenceArrival(
 		),
 	);
 	const focus = focusQuery.data;
-	const [revealSentenceId, setRevealSentenceId] = useState<string | null>(
-		null,
-	);
-	const consumedAttestationId = useRef<string | null>(null);
-	const latestHandlers = useRef(handlers);
-	latestHandlers.current = handlers;
-
+	const reported = useRef(false);
+	const latestOnMissing = useRef(onMissing);
+	latestOnMissing.current = onMissing;
 	useEffect(() => {
-		if (!reveal || !focus) return;
-		if (consumedAttestationId.current === reveal.attestationId) return;
-		consumedAttestationId.current = reveal.attestationId;
-		if (focus.kind === "Occurrence") {
-			const [firstMember] = focus.memberSegmentIndices;
-			if (firstMember !== undefined)
-				latestHandlers.current.onOccurrence(
-					focus.sentenceId,
-					firstMember,
-				);
-			setRevealSentenceId(focus.sentenceId);
-			return;
-		}
-		latestHandlers.current.onMissing();
-		reveal.acknowledge();
-	}, [reveal, focus]);
-
-	useEffect(() => {
-		if (!reveal) setRevealSentenceId(null);
-	}, [reveal]);
-
-	return revealSentenceId;
+		if (focus?.kind !== "Missing" || reported.current) return;
+		reported.current = true;
+		latestOnMissing.current();
+	}, [focus]);
+	return focus?.kind === "Occurrence"
+		? {
+				sentenceId: focus.sentenceId,
+				memberSegmentIndices: focus.memberSegmentIndices,
+			}
+		: null;
 }
 
 export function TextPresentation({
 	sentences,
 	selectedSegmentKey,
 	onSegmentClick,
-	revealSentenceId = null,
-	onRevealed,
+	focus = null,
 	notice = null,
 	error = null,
 	showSegmentAction = false,
@@ -211,8 +192,7 @@ export function TextPresentation({
 		altKey: boolean,
 		anchorElement: HTMLElement,
 	) => Promise<void>;
-	readonly revealSentenceId?: string | null;
-	readonly onRevealed?: () => void;
+	readonly focus?: OccurrenceFocus | null;
 	readonly notice?: string | null;
 	readonly error?: string | null;
 	readonly showSegmentAction?: boolean;
@@ -229,8 +209,7 @@ export function TextPresentation({
 					sentences={sentences}
 					selectedSegmentKey={selectedSegmentKey}
 					onSegmentClick={onSegmentClick}
-					revealSentenceId={revealSentenceId}
-					onRevealed={onRevealed}
+					focus={focus}
 				/>
 				{showSegmentAction ? (
 					<div className="mt-8">
@@ -273,8 +252,7 @@ export function SentenceList({
 	sentences,
 	selectedSegmentKey,
 	onSegmentClick,
-	revealSentenceId = null,
-	onRevealed,
+	focus = null,
 }: {
 	sentences: readonly SentenceView[];
 	selectedSegmentKey: string | null;
@@ -284,23 +262,23 @@ export function SentenceList({
 		altKey: boolean,
 		anchorElement: HTMLElement,
 	) => Promise<void>;
-	/** A Sentence to scroll to once it is on screen; reported back through `onRevealed`. */
-	revealSentenceId?: string | null;
-	onRevealed?: () => void;
+	/** The occurrence Go to source lands on: its Sentence is scrolled to once, its members lit. */
+	focus?: OccurrenceFocus | null;
 }) {
 	const sentenceElements = useRef(new Map<string, HTMLParagraphElement>());
-	const latestOnRevealed = useRef(onRevealed);
-	latestOnRevealed.current = onRevealed;
+	const focusSentenceId = focus?.sentenceId ?? null;
+	const landed = useRef<string | null>(null);
 
 	useEffect(() => {
-		if (!revealSentenceId) return;
+		if (!focusSentenceId || landed.current === focusSentenceId) return;
 		const frame = window.requestAnimationFrame(() => {
-			const sentence = sentenceElements.current.get(revealSentenceId);
-			sentence?.scrollIntoView({ block: "center", behavior: "auto" });
-			latestOnRevealed.current?.();
+			const sentence = sentenceElements.current.get(focusSentenceId);
+			if (!sentence) return;
+			landed.current = focusSentenceId;
+			centerInScroller(sentence);
 		});
 		return () => window.cancelAnimationFrame(frame);
-	}, [revealSentenceId]);
+	}, [focusSentenceId]);
 
 	return (
 		<article
@@ -320,6 +298,11 @@ export function SentenceList({
 							<ReaderSentence
 								sentence={sentence}
 								selectedSegmentKey={selectedSegmentKey}
+								focusMemberIndices={
+									sentence.sentenceId === focusSentenceId
+										? focus?.memberSegmentIndices
+										: undefined
+								}
 								onSegmentClick={onSegmentClick}
 								className="text-reader__sentence inline"
 								onSentenceElement={(element) => {
@@ -341,6 +324,21 @@ export function SentenceList({
 			))}
 		</article>
 	);
+}
+
+/**
+ * Scrolls the Sheet's own scroller, and only it, so the Sentence sits in
+ * its middle; nothing around the Sheet moves.
+ */
+function centerInScroller(sentence: HTMLElement): void {
+	const scroller = sentence.closest<HTMLElement>("[data-scroller]");
+	if (!scroller) {
+		sentence.scrollIntoView({ block: "center", behavior: "auto" });
+		return;
+	}
+	const frame = scroller.getBoundingClientRect();
+	const box = sentence.getBoundingClientRect();
+	scroller.scrollTop += box.top - frame.top - (frame.height - box.height) / 2;
 }
 
 type Paragraph = readonly [SentenceView, ...SentenceView[]];

@@ -12,7 +12,7 @@ import {
 	ResolutionStepNoteFrame,
 } from "../src/views/resolution-note-view";
 import { resolvingReadingNoteData } from "../src/views/resolving-reading-note";
-import { renderCardTail } from "../src/views/subject-presentation";
+import { subjectLabel } from "../src/views/subject-presentation";
 
 const route = {
 	textId: "text-1" as never,
@@ -566,7 +566,7 @@ test("a unit selection settles on one Unit Card with no step left loading", () =
 	expect(running).toContain("Resolving this unit…");
 	expect(running).not.toContain("paused");
 	expect(
-		renderCardTail({
+		subjectLabel({
 			kind: "Note",
 			target: { kind: "Resolution", requestId: "request-1" },
 		}),

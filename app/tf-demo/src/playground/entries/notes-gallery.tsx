@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "lego";
 import { type ReactNode, useMemo } from "react";
 
-import { renderCardTail } from "@/views/subject-presentation";
+import { subjectLabel } from "@/views/subject-presentation";
 import type {
 	ResolutionStepKind,
 	WorkspaceSubject,
@@ -79,7 +79,7 @@ export function NotesGallery({ route }: { readonly route: EntryRoute }) {
 					<WorkspaceInteractionProvider interaction={interaction}>
 						<div className="flex flex-wrap items-start gap-8">
 							<Stage label="Card">
-								<CardFrame tail={renderCardTail(subject)}>
+								<CardFrame tail={subjectLabel(subject)}>
 									<PlaygroundNote
 										target={subject.target}
 										presentation="Card"

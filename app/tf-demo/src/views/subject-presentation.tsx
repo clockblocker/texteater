@@ -1,4 +1,3 @@
-import type { PresentationForm } from "react-resizable-panels/workspace/legacy";
 import {
 	ResolutionNoteView,
 	ResolutionStepNoteView,
@@ -13,10 +12,10 @@ import {
 	workspaceSubjectKey,
 } from "@/workspace/sheet-workspace";
 
-/** Maps one workspace Subject to the view that presents it. */
+/** Maps one workspace Subject to the view that presents it, as a Card or a Sheet. */
 export function renderApplicationSubject(
 	subject: WorkspaceSubject,
-	presentation: PresentationForm,
+	presentation: "Card" | "Sheet",
 ) {
 	const { target } = subject;
 	switch (target.kind) {
@@ -80,12 +79,15 @@ export function renderApplicationSubject(
 	}
 }
 
-/** The label on an occluded Card's tail. */
-export function renderCardTail(subject: WorkspaceSubject) {
+/**
+ * What a Subject is called where the workspace names it: its aria-labels and
+ * the Pane bar's trail. A Text goes by what the Library called it.
+ */
+export function subjectLabel(subject: WorkspaceSubject): string {
 	const { target } = subject;
 	switch (target.kind) {
 		case "Text":
-			return "Text";
+			return target.title ?? "Text";
 		case "Reading":
 			return "Reading";
 		case "Lemma":

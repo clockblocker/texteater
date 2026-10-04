@@ -1,5 +1,5 @@
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "lego";
-import { lazy, Suspense, useState } from "react";
+import { lazy, type ReactNode, Suspense } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
 	isPlaygroundPath,
@@ -13,17 +13,7 @@ import {
 	PLAYGROUND_ENTRIES,
 	PlaygroundView,
 } from "@/playground/playground-view";
-import { LibraryView } from "@/views/library-view";
-import { SettingsView } from "@/views/settings-view";
-import {
-	renderApplicationSubject,
-	renderCardTail,
-} from "@/views/subject-presentation";
-import {
-	ApplicationWorkspace,
-	ApplicationWorkspaceProvider,
-} from "@/workspace/application-workspace";
-import { useWorkspaceController } from "@/workspace/workspace-controller";
+import { ApplicationWorkspace } from "@/workspace/application-workspace";
 
 const ResolutionInspector = import.meta.env.DEV
 	? lazy(() =>
@@ -33,47 +23,37 @@ const ResolutionInspector = import.meta.env.DEV
 		)
 	: null;
 
+/**
+ * One URL, one workspace (tf-demo ADR 0003): the Library and Settings are
+ * Menu Items on a Pane's Ground line, not shell destinations. A production
+ * build has no sidebar; a development build keeps one for the Playground,
+ * which is open exactly when the URL says so, so Back, Forward and reload
+ * behave.
+ */
 function App() {
-	return (
-		<ApplicationWorkspaceProvider>
-			<ApplicationShell />
-		</ApplicationWorkspaceProvider>
+	const workspace = (
+		<section
+			aria-label="Workspace"
+			className="h-svh min-h-0 min-w-0 flex-1 bg-canvas p-3 max-md:h-[calc(100svh-3rem)] max-md:p-0"
+		>
+			<ApplicationWorkspace />
+		</section>
 	);
+	if (!import.meta.env.DEV) return workspace;
+	return <DevelopmentShell workspace={workspace} />;
 }
 
-function ApplicationShell() {
-	// Library and Settings are shell state and never change the URL. The
-	// dev-only Playground is the opposite: it is open exactly when the URL says
-	// so, so Back/Forward and reload behave.
-	const [shell, setShell] = useState<"workspace" | "settings">("workspace");
+function DevelopmentShell({ workspace }: { workspace: ReactNode }) {
 	const pathname = usePathname();
-	const playgroundOpen = import.meta.env.DEV && isPlaygroundPath(pathname);
+	const playgroundOpen = isPlaygroundPath(pathname);
 	const [playgroundEntryKey] = playgroundSegments(pathname);
-	const settingsOpen = !playgroundOpen && shell === "settings";
-	const { activeTextId, isLibraryVisible, revealLibrary } =
-		useWorkspaceController();
-	const leavePlayground = () => {
-		if (playgroundOpen) navigate("/");
-	};
-
 	return (
 		<SidebarProvider open={false}>
 			<AppSidebar
-				libraryActive={!settingsOpen && isLibraryVisible}
-				onShowLibrary={() => {
-					leavePlayground();
-					setShell("workspace");
-					revealLibrary();
-				}}
-				onShowSettings={() => {
-					leavePlayground();
-					setShell("settings");
-				}}
-				settingsActive={settingsOpen}
-				onShowPlayground={
-					import.meta.env.DEV ? () => navigate(PLAYGROUND_BASE) : null
-				}
 				playgroundActive={playgroundOpen}
+				onTogglePlayground={() =>
+					navigate(playgroundOpen ? "/" : PLAYGROUND_BASE)
+				}
 				playgroundPages={
 					playgroundOpen
 						? PLAYGROUND_ENTRIES.map((entry) => ({
@@ -90,22 +70,7 @@ function ApplicationShell() {
 				<header className="flex h-12 shrink-0 items-center border-b px-3 md:hidden">
 					<SidebarTrigger />
 				</header>
-				{playgroundOpen ? (
-					<PlaygroundView />
-				) : settingsOpen ? (
-					<SettingsView textId={activeTextId ?? undefined} />
-				) : (
-					<section
-						aria-label="Workspace"
-						className="h-svh min-h-0 min-w-0 flex-1 bg-canvas p-3 max-md:h-[calc(100svh-3rem)] max-md:p-0"
-					>
-						<ApplicationWorkspace
-							renderLibrary={() => <LibraryView />}
-							labelSubject={renderCardTail}
-							renderSubject={renderApplicationSubject}
-						/>
-					</section>
-				)}
+				{playgroundOpen ? <PlaygroundView /> : workspace}
 			</SidebarInset>
 			{ResolutionInspector && (
 				<Suspense fallback={null}>

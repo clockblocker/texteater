@@ -71,8 +71,11 @@ type ContextFreeNoteSubject = {
 	readonly presentationContext?: never;
 };
 
-/** A Text as a workspace Subject: which Text, and nothing about how it was reached. */
-export type TextSubjectTarget = Omit<TextTarget, "focusAttestationId">;
+/**
+ * A Text as a workspace Subject: which Text, what the Library called it, and
+ * for a Cover pushed by Go to source, the occurrence it lands on.
+ */
+export type TextSubjectTarget = TextTarget;
 
 export type WorkspaceSubject =
 	| { readonly kind: "Text"; readonly target: TextSubjectTarget }
@@ -102,11 +105,7 @@ export function workspaceSubjectFor(
 	target: WorkspaceTarget,
 	presentationContext?: NotePresentationContext,
 ): WorkspaceSubject {
-	if (target.kind === "Text")
-		return {
-			kind: "Text",
-			target: { kind: "Text", textId: target.textId },
-		};
+	if (target.kind === "Text") return { kind: "Text", target };
 	if (
 		target.kind === "Surface" &&
 		presentationContext &&
@@ -150,7 +149,8 @@ export function isWorkspaceSubject(value: unknown): value is WorkspaceSubject {
 	if (value.kind === "Text" && target.kind === "Text") {
 		return (
 			typeof target.textId === "string" &&
-			target.focusAttestationId === undefined &&
+			isOptionalString(target.focusAttestationId) &&
+			isOptionalString(target.title) &&
 			value.presentationContext === undefined
 		);
 	}
@@ -225,31 +225,16 @@ function isResolutionStepKind(value: unknown): value is ResolutionStepKind {
 	);
 }
 
-export function workspaceSubjectsEqual(
-	left: WorkspaceSubject,
-	right: WorkspaceSubject,
-): boolean {
-	if (workspaceSubjectKey(left) !== workspaceSubjectKey(right)) return false;
-	if (
-		left.kind === "Note" &&
-		right.kind === "Note" &&
-		left.target.kind === "Surface" &&
-		right.target.kind === "Surface"
-	) {
-		return (
-			activeAnalysisKeyOf(left.presentationContext) ===
-			activeAnalysisKeyOf(right.presentationContext)
-		);
-	}
-	return true;
-}
-
 export function activeAnalysisKeyOf(
 	context: NotePresentationContext | undefined,
 ): Id<"surfaces"> | undefined {
 	return context && "activeAnalysisKey" in context
 		? context.activeAnalysisKey
 		: undefined;
+}
+
+function isOptionalString(value: unknown): boolean {
+	return value === undefined || typeof value === "string";
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

@@ -9,12 +9,7 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "lego";
-import {
-	FlaskConicalIcon,
-	LibraryIcon,
-	type LucideIcon,
-	SettingsIcon,
-} from "lucide-react";
+import { FlaskConicalIcon, type LucideIcon } from "lucide-react";
 
 /** One dev-only Playground entry, shown while the Playground is open. */
 export type SidebarPlaygroundPage = {
@@ -25,24 +20,21 @@ export type SidebarPlaygroundPage = {
 	readonly onShow: () => void;
 };
 
+/**
+ * The development build's sidebar: the Playground link, and while the
+ * Playground is open, its entries. The Library and Settings are Menu Items
+ * in the workspace, and a production build has no sidebar (tf-demo ADR 0003).
+ */
 export function AppSidebar({
-	libraryActive,
-	settingsActive,
-	onShowLibrary,
-	onShowSettings,
-	onShowPlayground = null,
-	playgroundActive = false,
-	playgroundPages = [],
+	onTogglePlayground,
+	playgroundActive,
+	playgroundPages,
 }: {
-	readonly libraryActive: boolean;
-	readonly settingsActive: boolean;
-	readonly onShowLibrary: () => void;
-	readonly onShowSettings: () => void;
-	/** Present only in development builds. */
-	readonly onShowPlayground?: (() => void) | null;
-	readonly playgroundActive?: boolean;
+	/** Opens the Playground, or leaves it for the workspace while it is open. */
+	readonly onTogglePlayground: () => void;
+	readonly playgroundActive: boolean;
 	/** Non-empty only while the Playground is open. */
-	readonly playgroundPages?: readonly SidebarPlaygroundPage[];
+	readonly playgroundPages: readonly SidebarPlaygroundPage[];
 }) {
 	const { setOpenMobile } = useSidebar();
 	const runAndClose = (command: () => void) => {
@@ -53,26 +45,6 @@ export function AppSidebar({
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarContent>
-				<SidebarGroup>
-					<SidebarGroupContent>
-						<nav aria-label="Primary">
-							<SidebarMenu>
-								<SidebarMenuItem>
-									<SidebarMenuButton
-										isActive={libraryActive}
-										onClick={() =>
-											runAndClose(onShowLibrary)
-										}
-										tooltip="Library"
-									>
-										<LibraryIcon strokeWidth={1.5} />
-										<span>Library</span>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							</SidebarMenu>
-						</nav>
-					</SidebarGroupContent>
-				</SidebarGroup>
 				{playgroundPages.length > 0 ? (
 					<SidebarGroup>
 						<SidebarGroupContent>
@@ -99,30 +71,20 @@ export function AppSidebar({
 				) : null}
 			</SidebarContent>
 			<SidebarFooter>
-				<nav aria-label="Preferences">
+				<nav aria-label="Development">
 					<SidebarMenu>
-						{onShowPlayground ? (
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									isActive={playgroundActive}
-									onClick={() =>
-										runAndClose(onShowPlayground)
-									}
-									tooltip="Playground"
-								>
-									<FlaskConicalIcon strokeWidth={1.5} />
-									<span>Playground</span>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-						) : null}
 						<SidebarMenuItem>
 							<SidebarMenuButton
-								isActive={settingsActive}
-								onClick={() => runAndClose(onShowSettings)}
-								tooltip="Settings"
+								isActive={playgroundActive}
+								onClick={() => runAndClose(onTogglePlayground)}
+								tooltip={
+									playgroundActive
+										? "Leave the Playground"
+										: "Playground"
+								}
 							>
-								<SettingsIcon strokeWidth={1.5} />
-								<span>Settings</span>
+								<FlaskConicalIcon strokeWidth={1.5} />
+								<span>Playground</span>
 							</SidebarMenuButton>
 						</SidebarMenuItem>
 					</SidebarMenu>

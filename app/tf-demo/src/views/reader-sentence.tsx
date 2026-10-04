@@ -90,6 +90,7 @@ export function ReaderSentence<S extends ReaderSentenceData>({
 		<p
 			className={className}
 			ref={onSentenceElement}
+			data-sentence={sentence.sentenceId}
 			data-segmentation={notSegmented ? "failed" : undefined}
 			title={notSegmented ? "Not segmented" : undefined}
 		>

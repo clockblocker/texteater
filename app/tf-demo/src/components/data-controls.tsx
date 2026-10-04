@@ -14,7 +14,6 @@ import {
 	FieldLabel,
 } from "lego";
 import {
-	BookOpenIcon,
 	DatabaseZapIcon,
 	EraserIcon,
 	PanelTopCloseIcon,
@@ -28,19 +27,11 @@ import { useRouteNotePreference } from "@/lib/route-note-preference";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { useWorkspaceController } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
-import type { Id } from "../../convex/_generated/dataModel";
 
-type DemoText = {
-	textId: Id<"texts">;
-	submissionKey: string;
-	sourceText: string;
-	isAnalyzed: boolean;
-};
-
-export function DataControls({ text }: { text?: DemoText }) {
+export function DataControls() {
 	const [routeNotesEnabled, setRouteNotesEnabled] = useRouteNotePreference();
 	const { canCloseAllSheets, closeAllSheets } = useWorkspaceController();
-	const demoData = useDemoDataControls(text);
+	const demoData = useDemoDataControls();
 	const flags = useQuery(convexQuery(api.deploymentFlags.get, {}));
 	return (
 		<div className="flex flex-col gap-6">
@@ -52,11 +43,7 @@ export function DataControls({ text }: { text?: DemoText }) {
 				canCloseAllSheets={canCloseAllSheets}
 				onCloseAllSheets={closeAllSheets}
 			/>
-			<DemoDataCard
-				text={text}
-				admin={flags.data?.admin === true}
-				{...demoData}
-			/>
+			<DemoDataCard admin={flags.data?.admin === true} {...demoData} />
 		</div>
 	);
 }
@@ -91,20 +78,18 @@ function WorkspaceCard({
 	);
 }
 
-function useDemoDataControls(text: DemoText | undefined) {
-	const { revealLibrary } = useWorkspaceController();
+function useDemoDataControls() {
+	const { closeAllSheets } = useWorkspaceController();
 	const visitorId = useAnonymousVisitorId();
 	const [notice, setNotice] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const clearSharedData = usePendingAction(api.demoReset.clearSharedData);
 	const clearVisitorData = usePendingAction(api.demoReset.clearVisitorData);
 	const stripAnalyses = usePendingAction(api.demoReset.stripAnalyses);
-	const segmentText = usePendingAction(api.orchestration.submitText);
 	const isBusy =
 		clearSharedData.isPending ||
 		clearVisitorData.isPending ||
-		stripAnalyses.isPending ||
-		segmentText.isPending;
+		stripAnalyses.isPending;
 
 	async function handleClearVisitorData() {
 		setNotice(null);
@@ -130,39 +115,13 @@ function useDemoDataControls(text: DemoText | undefined) {
 		}
 	}
 
-	async function handleSegmentText() {
-		if (!text) return;
-		setNotice(null);
-		setError(null);
-		try {
-			const result = await segmentText.run({
-				visitorId,
-				inspectionVisitorId: import.meta.env.DEV
-					? visitorId
-					: undefined,
-				submissionKey: text.submissionKey,
-				sourceText: text.sourceText,
-			});
-			if (result.status === "Rejected") {
-				setError(result.message);
-				return;
-			}
-			if (result.textId !== text.textId) {
-				setError("Analysis was saved to a different Text.");
-				return;
-			}
-			setNotice("Text split into segments.");
-		} catch (cause) {
-			setError(visitorErrorMessage(cause));
-		}
-	}
-
 	async function handleClearSharedData() {
 		setNotice(null);
 		setError(null);
 		try {
 			const result = await clearSharedData.run({});
-			revealLibrary();
+			// Every Text and Note the workspace held is gone with the data.
+			closeAllSheets();
 			setNotice(
 				`Cleared ${result.deleted} shared records. Visitor-owned history was kept.`,
 			);
@@ -178,10 +137,8 @@ function useDemoDataControls(text: DemoText | undefined) {
 		isClearingSharedData: clearSharedData.isPending,
 		isClearingVisitorData: clearVisitorData.isPending,
 		isStrippingTextAnalysis: stripAnalyses.isPending,
-		isSegmentingText: segmentText.isPending,
 		handleClearVisitorData,
 		handleStripTextAnalysis,
-		handleSegmentText,
 		handleClearSharedData,
 	};
 }
@@ -222,7 +179,6 @@ function ReadingBehaviorCard({
 }
 
 function DemoDataCard({
-	text,
 	admin,
 	notice,
 	error,
@@ -230,13 +186,10 @@ function DemoDataCard({
 	isClearingSharedData,
 	isClearingVisitorData,
 	isStrippingTextAnalysis,
-	isSegmentingText,
 	handleClearVisitorData,
 	handleStripTextAnalysis,
-	handleSegmentText,
 	handleClearSharedData,
 }: {
-	text?: DemoText;
 	/** Whether this deployment allows the global wipes (TF_DEMO_ADMIN). */
 	admin: boolean;
 	notice: string | null;
@@ -245,24 +198,14 @@ function DemoDataCard({
 	isClearingSharedData: boolean;
 	isClearingVisitorData: boolean;
 	isStrippingTextAnalysis: boolean;
-	isSegmentingText: boolean;
 	handleClearVisitorData(): Promise<void>;
 	handleStripTextAnalysis(): Promise<void>;
-	handleSegmentText(): Promise<void>;
 	handleClearSharedData(): Promise<void>;
 }) {
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>Demo data</CardTitle>
-				{text ? (
-					<CardDescription
-						className="truncate"
-						title={text.sourceText}
-					>
-						{text.sourceText}
-					</CardDescription>
-				) : null}
 			</CardHeader>
 			<CardContent className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
 				<ConfirmDialog
@@ -302,18 +245,6 @@ function DemoDataCard({
 							? "Stripping analyses…"
 							: "Strip analyses"}
 					</ConfirmDialog>
-				) : null}
-				{text && !text.isAnalyzed ? (
-					<Button
-						type="button"
-						disabled={isBusy}
-						onClick={() => void handleSegmentText()}
-					>
-						<BookOpenIcon data-icon="inline-start" />
-						{isSegmentingText
-							? "Splitting…"
-							: "Split into segments"}
-					</Button>
 				) : null}
 				{admin ? (
 					<ConfirmDialog

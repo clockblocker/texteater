@@ -1,15 +1,16 @@
 import type { Id } from "../convex/_generated/dataModel";
 
 /**
- * A Text to open. `focusAttestationId` is a one-shot arrival gesture: on
- * landing, the reader scrolls to that occurrence's Sentence and selects its
- * members, exactly as a click would. It is presentation state and adds no
- * identity: the workspace Subject keeps only the Text.
+ * A Text to open. `focusAttestationId` names the occurrence Go to source
+ * lands on: the Text arrives scrolled to its Sentence with its members lit.
+ * `title` is what the Library calls the Text. Both are presentation state
+ * and add no identity.
  */
 export type TextTarget = {
 	readonly kind: "Text";
 	readonly textId: string;
 	readonly focusAttestationId?: string;
+	readonly title?: string;
 };
 
 export type ReadingNoteTarget = {
