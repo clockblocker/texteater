@@ -30,9 +30,10 @@
  * The second also asked bleiben with an infinitive
  * (de/bleiben-with-an-infinitive), which the judge never accepted (cfd482be).
  */
+
+import type { Questions } from "@typesafe-ai/sdk";
 import { closedVerbForms } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
-import type { Questions } from "promptsmith/typesafe";
 import {
 	type Answers,
 	type Ask,

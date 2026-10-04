@@ -4,9 +4,10 @@
  * replays to find the follow-up requests a run would send, and the fake
  * answers the harness's tests run on. It reads gold only; no model.
  */
+
+import type { Question, Questions } from "@typesafe-ai/sdk";
 import { foldCase, lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import type { Question, Questions } from "promptsmith/typesafe";
 import { authoredOptions, openOptions } from "../../resolve/de/closed-class.js";
 import { auxiliaryUses } from "../../resolve/de/prompts.js";
 import { targetOf } from "../../resolve/de/target.js";

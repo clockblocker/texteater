@@ -37,9 +37,10 @@
  * lexical at 0.91, es herrschte selected at 0.92); production asks the
  * other three.
  */
+
+import type { Questions } from "@typesafe-ai/sdk";
 import { authoredRealizations, closedVerbForms } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
-import type { Questions } from "promptsmith/typesafe";
 import {
 	type Answers,
 	type Ask,

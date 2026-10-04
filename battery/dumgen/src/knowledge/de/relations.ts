@@ -9,10 +9,11 @@
  * most three claims, the judge's most confident (`de/relations-need-a-
  * dictionary`). Candidate discovery never establishes absence.
  */
+
+import type { EntryType, Question } from "@typesafe-ai/sdk";
 import { foldCase, normalizeForm } from "dumling";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
-import type { EntryType, Question } from "promptsmith/typesafe";
 import { choice, choiceOf } from "../../segment/ask.js";
 import type { GermanPendingRelation } from "../types.js";
 import {

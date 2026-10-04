@@ -24,8 +24,9 @@
  * setting. A group no batch asked about gets `route-extra`, or routes
  * `Unresolved` unasked.
  */
+
+import type { Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Questions } from "promptsmith/typesafe";
 import {
 	type Answers,
 	type Ask,

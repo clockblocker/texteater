@@ -5,7 +5,7 @@
  * `m0`, `m1`, … in the order of the unit's Segments, so member `i` is the
  * Attestation's member `i` (ADR 0003).
  */
-import type { EntryType } from "promptsmith/typesafe";
+import type { EntryType } from "@typesafe-ai/sdk";
 import type {
 	Route,
 	Segment,

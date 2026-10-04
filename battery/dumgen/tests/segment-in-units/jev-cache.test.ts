@@ -2,7 +2,7 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { Questions } from "promptsmith/typesafe";
+import type { Questions } from "@typesafe-ai/sdk";
 import { noul } from "../../src/segment/ask.js";
 import {
 	type JevAsk,

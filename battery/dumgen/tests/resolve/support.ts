@@ -1,5 +1,5 @@
+import type { Question } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Question } from "promptsmith/typesafe";
 import { createDumgen, type DumgenOptions } from "../../src/create-dumgen.js";
 import type { LunaAsk, LunaRequest } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";

@@ -5,7 +5,7 @@
  * the segmenter through a `JevAsk` in chunks of `questionsPerRequest`.
  * `createTypeSafeAsk` sends them to the TypeSafe API; a test passes a fake.
  */
-import type { EntryType, Questions } from "promptsmith/typesafe";
+import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import type { Answers } from "./ask.js";
 
 /**

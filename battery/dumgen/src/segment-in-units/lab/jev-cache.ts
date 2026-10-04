@@ -28,9 +28,9 @@
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import type { EntryType, Question, Questions } from "@typesafe-ai/sdk";
 import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
-import type { EntryType, Question, Questions } from "promptsmith/typesafe";
 import { checkedAnswers } from "../../jev-call.js";
 import type { Answer, Answers, Ask } from "../../segment/ask.js";
 import {

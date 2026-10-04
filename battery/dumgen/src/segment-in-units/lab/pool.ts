@@ -11,8 +11,9 @@
  * `Other` when the Choice offers it, else an `Unresolved` Choice with no
  * shares, which routes its group `Unresolved`.
  */
+
+import type { Question } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Question } from "promptsmith/typesafe";
 import type { Answer, Ask } from "../../segment/ask.js";
 
 /**

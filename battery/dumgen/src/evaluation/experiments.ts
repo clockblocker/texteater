@@ -37,6 +37,7 @@
  */
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import type { JsonValue } from "@typesafe-ai/sdk";
 import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
 import {
@@ -50,7 +51,6 @@ import {
 	runOperationExperiment,
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
-import type { JsonValue } from "promptsmith/typesafe";
 import type { z } from "zod";
 import type { LunaAsk } from "../luna.js";
 import { segmentGermanSentence } from "../segment/de/segments.js";

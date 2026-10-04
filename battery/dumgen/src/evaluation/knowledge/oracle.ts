@@ -6,9 +6,10 @@
  * stand-ins of a typical size, so a pricing pass finds every request a run
  * would send and sizes its answers. It reads gold only; no model.
  */
+
+import type { Question, Questions } from "@typesafe-ai/sdk";
 import { foldCase } from "dumling";
 import type * as Dumrel from "dumrel/types";
-import type { Question, Questions } from "promptsmith/typesafe";
 import type { Answer, Answers } from "../../segment/ask.js";
 import type { GoldOracle } from "../resolve-grammar/models.js";
 import type { KnowledgeCase, KnowledgeScope } from "./cases.js";

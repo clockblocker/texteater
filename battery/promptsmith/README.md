@@ -12,7 +12,7 @@ before execution. Assembly includes only the selected demonstrations.
 its effective configuration, fingerprints, outputs, evaluator results, timing
 and failures. Execution status is separate from the evaluator's score.
 `promptsmith/storage` saves, validates, reopens and compares these records.
-`promptsmith/openai` supplies an optional Responses transport.
+Promptsmith ships no model transport; the consumer injects its executor.
 
 ## Repeated runs
 

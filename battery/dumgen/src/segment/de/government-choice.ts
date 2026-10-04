@@ -40,8 +40,9 @@
  * differ only in floor or applied families read the same answers. A
  * Sentence with no flag asks nothing.
  */
+
+import type { Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Questions } from "promptsmith/typesafe";
 import {
 	type Answers,
 	type Ask,

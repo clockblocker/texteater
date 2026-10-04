@@ -21,8 +21,9 @@
  * Foreign word in a German Sentence. A fused word splits unless jev
  * confidently keeps it whole, though: the Rule makes the split the norm.
  */
+
+import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { EntryType, Questions } from "promptsmith/typesafe";
 import {
 	type Answers,
 	type Ask,

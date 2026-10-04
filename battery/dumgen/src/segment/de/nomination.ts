@@ -15,8 +15,9 @@
  * These are candidates v3's requests and candidates4's `final` request,
  * worded byte for byte as the lab sent them, so cached answers replay.
  */
+
+import type { Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Questions } from "promptsmith/typesafe";
 import {
 	type Answers,
 	type Ask,

@@ -8,8 +8,9 @@
  * Nothing here reads files or imports `node:*`, so a host in a short-lived
  * isolate can run the segmenters.
  */
+
+import type { EntryType, Question, Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { EntryType, Question, Questions } from "promptsmith/typesafe";
 import type { InvalidModelOutput, ProviderFailure } from "../errors.js";
 
 export type Answer =

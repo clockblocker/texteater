@@ -7,11 +7,11 @@
  * that aspect's failure value.
  */
 
+import type { EntryType } from "@typesafe-ai/sdk";
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange } from "dumrel";
 import * as Data from "effect/Data";
 import type * as Effect from "effect/Effect";
-import type { EntryType } from "promptsmith/typesafe";
 import type { OperationScope } from "../../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../../errors.js";
 import { askThrough, type JevSettings } from "../../jev-call.js";

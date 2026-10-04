@@ -33,19 +33,7 @@
 			"types": "./dist/schemas.d.ts",
 			"import": "./dist/schemas.js"
 		},
-		"./package.json": "./package.json",
-		"./openai": {
-			"bun": "./src/openai.ts",
-			"convex": "./src/openai.ts",
-			"types": "./dist/openai.d.ts",
-			"import": "./dist/openai.js"
-		},
-		"./typesafe": {
-			"bun": "./src/typesafe.ts",
-			"convex": "./src/typesafe.ts",
-			"types": "./dist/typesafe.d.ts",
-			"import": "./dist/typesafe.js"
-		}
+		"./package.json": "./package.json"
 	},
 	"files": [
 		"dist",
@@ -58,7 +46,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/evaluation.ts src/storage.ts src/openai.ts src/typesafe.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/evaluation.ts src/storage.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
@@ -69,7 +57,6 @@
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
-		"@typesafe-ai/sdk": "^0.6.0",
 		"common-utils": "workspace:^",
 		"zod": "^4.4.0"
 	},

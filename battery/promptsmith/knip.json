@@ -4,8 +4,6 @@
 		"src/index.ts",
 		"src/evaluation.ts",
 		"src/storage.ts",
-		"src/openai.ts",
-		"src/typesafe.ts",
 		"src/schemas.ts"
 	]
 }

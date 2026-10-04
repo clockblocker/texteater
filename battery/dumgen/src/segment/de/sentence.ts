@@ -5,7 +5,7 @@
  * is the judge's word, kept inside the German implementation (Dumgen ADR
  * 0007); the stage's output names Segments by index.
  */
-import type { EntryType } from "promptsmith/typesafe";
+import type { EntryType } from "@typesafe-ai/sdk";
 import type { Segment } from "../segmented-sentence.js";
 import { unitGuide } from "./unit-guide.js";
 

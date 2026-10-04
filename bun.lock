@@ -146,6 +146,7 @@
       "name": "dumgen",
       "version": "0.1.0",
       "dependencies": {
+        "@typesafe-ai/sdk": "^0.6.0",
         "common-utils": "workspace:^",
         "dumling": "workspace:^",
         "dumrel": "workspace:^",
@@ -276,7 +277,6 @@
       "name": "promptsmith",
       "version": "0.1.0",
       "dependencies": {
-        "@typesafe-ai/sdk": "^0.6.0",
         "common-utils": "workspace:^",
         "zod": "^4.4.0",
       },

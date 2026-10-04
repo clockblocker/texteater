@@ -6,7 +6,7 @@
  * asked in the same request in case it applies, is read only where it
  * does.
  */
-import type { EntryType, Questions } from "promptsmith/typesafe";
+import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import { type Answers, choice, choiceOf } from "../../segment/ask.js";
 import { type PolicyName, policy, question } from "./prompts.js";
 

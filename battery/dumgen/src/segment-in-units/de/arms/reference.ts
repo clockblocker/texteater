@@ -20,8 +20,9 @@
  * (`--opt expression=0.6`), and a policy is named after the floors it
  * moves from the run's.
  */
+
+import type { Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Questions } from "promptsmith/typesafe";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
 import { type Answer, choice, choiceOf, noulOf } from "../../../segment/ask.js";
 import {

@@ -32,8 +32,8 @@
 import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import type { Questions } from "@typesafe-ai/sdk";
 import { canonicalJson } from "common-utils";
-import type { Questions } from "promptsmith/typesafe";
 import {
 	defaultLunaConfiguration,
 	type LunaAsk,

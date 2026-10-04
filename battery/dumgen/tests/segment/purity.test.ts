@@ -34,13 +34,13 @@ const allowedPackages = new Set([
 	"effect/Result",
 	"effect/Scope",
 	"effect/Semaphore",
-	"promptsmith/typesafe",
+	"@typesafe-ai/sdk",
 ]);
 const typeOnlyPackages = new Set([
 	"dumling/types",
 	"dumrel/types",
 	"dumspec/types",
-	"promptsmith/typesafe",
+	"@typesafe-ai/sdk",
 ]);
 const forbidden = [
 	/\bBun\./u,

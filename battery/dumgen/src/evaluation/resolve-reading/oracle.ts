@@ -6,7 +6,7 @@
  * find every request a run would send; the harness's tests run on them.
  * It reads gold only; no model.
  */
-import type { Question, Questions } from "promptsmith/typesafe";
+import type { Question, Questions } from "@typesafe-ai/sdk";
 import type { Answer, Answers } from "../../segment/ask.js";
 import type { GoldOracle } from "../resolve-grammar/models.js";
 import { descriptionKey, type ReadingArm, type ReadingCase } from "./cases.js";

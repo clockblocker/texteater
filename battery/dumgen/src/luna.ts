@@ -1,8 +1,8 @@
 /**
  * Luna, the generation model, as Dumgen reaches it: one Responses request
  * of a system prompt and an input, answered with its output. The host
- * supplies the transport; promptsmith's `createOpenAIExecutor` fits it once
- * the call's signal is passed on, and it sends each request once.
+ * supplies the transport, `createOpenAILuna` in production, which sends
+ * each request once.
  *
  * Only the operations that write reach Luna. Segmentation never receives
  * this port (no Luna in segmentation): nothing under `src/segment/` may

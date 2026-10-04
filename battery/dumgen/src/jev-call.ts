@@ -5,8 +5,9 @@
  * before its answers are used. The first chunk that fails fails the
  * request and interrupts the others.
  */
+
+import type { Question } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Question } from "promptsmith/typesafe";
 import type { OperationScope } from "./call.js";
 import { InvalidModelOutput } from "./errors.js";
 import type { Answers, Ask, AskRequest } from "./segment/ask.js";

@@ -5,8 +5,8 @@
  * small-chunk baseline and with the baseline's own repetition noise.
  */
 
+import type { Questions } from "@typesafe-ai/sdk";
 import * as Effect from "effect/Effect";
-import type { Questions } from "promptsmith/typesafe";
 import { type Answers, noul } from "../../segment/ask.js";
 import { judgeState, sentenceOf } from "../../segment/de/sentence.js";
 import type { LabCase } from "./corpus.js";
