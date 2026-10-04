@@ -7,19 +7,23 @@
  * reviewed pronoun and determiner paradigms, the closed verb forms, and the
  * reflexive drill-down. The authored members include the pronoun
  * Syncretisms generated from the pronoun cells (system ADR 0046). It also
- * exports German lookups: the ADP Case Table, the conjunction Locutions the
- * Rules cite, the der or ein cell an article derives to, the nouns with no
- * singular, the Syncretism a classifier's answer names and the stem Surface
- * Syncretisms. Its selectors find the authored member of a
- * Lemma or Reading, tell a Closed Route (system ADR 0021), step between
- * Paradigm Cells (system ADR 0019) and derive the grammatical component a
- * Surface brings without a model.
+ * exports German lookups: the ADP Case Table and its Valency Frame check, the
+ * conjunction Locutions the Rules cite, the der or ein cell an article
+ * derives to, the nouns with no singular, the Syncretism a classifier's
+ * answer names and the stem Surface Syncretisms. Its selectors find the
+ * authored member of a Lemma or Reading, tell a Closed Route (system ADR
+ * 0021), step between Paradigm Cells (system ADR 0019) and derive the
+ * grammatical component a Surface brings without a model.
  *
- * This entry reads no files and loads neither Zod nor the record checks, so a
- * host inside a database transaction or another short-lived isolate can
- * import it (ADR 0025). The package root re-exports it.
+ * This entry reads no files and loads neither Zod nor the other record
+ * checks, so a host inside a database transaction or another short-lived
+ * isolate can import it (ADR 0025). The package root re-exports it.
  */
 
+export {
+	type AdpositionCaseIssue,
+	frameAdpositionCaseIssues,
+} from "./check-adposition-cases.js";
 export {
 	type GermanAdpositionCase,
 	type GermanAdpositionCases,

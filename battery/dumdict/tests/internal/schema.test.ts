@@ -146,6 +146,8 @@ describe("public storage-facing schemas", () => {
 			schema.safeParse(
 				entry(preposition("über", "Acc"), preposition("für", "Dat")),
 			),
+			// The table does not list `à`, so it takes no case.
+			schema.safeParse(entry(preposition("à", "Dat"))),
 		]) {
 			expect(rejected.success).toBe(false);
 			if (!rejected.success)

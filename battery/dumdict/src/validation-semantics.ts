@@ -2,7 +2,7 @@ import { readingIdentityKey, sameLemma } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { germanAdpositionAllows } from "dumspec/inventories";
+import { frameAdpositionCaseIssues } from "dumspec/inventories";
 import { sameReading } from "./core/identity";
 
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
@@ -148,31 +148,15 @@ function valencyUsesLanguage(
 }
 
 /**
- * Each German Preposition complement, alternatives included, takes a case
- * the ADP Case Table allows its preposition. The table and its check are
- * dumspec's (ADR 0034); its frame walk, `frameAdpositionCaseIssues`, sits
- * behind dumspec's Node-only entry, which tf-demo's Convex isolate cannot
- * load. A Hebrew or English complement names no case, so it has nothing to
- * check.
+ * Each German Preposition complement, alternatives included, names a
+ * preposition the ADP Case Table lists and a case it allows. The table and
+ * its frame check are dumspec's (ADR 0034). A Hebrew or English complement
+ * names no case, so it has nothing to check.
  */
-function valencyCasesAllowed(frame: Dumrel.ValencyFrame): boolean {
-	return frame.every(({ complements }) =>
-		complements.every(
-			(complement) =>
-				complement.kind !== "Preposition" ||
-				!("governedCase" in complement) ||
-				germanAdpositionAllows(
-					complement.preposition,
-					complement.governedCase,
-				),
-		),
-	);
-}
-
 function knowledgePrepositionCasesAllowed(
 	knowledge: Dumrel.ReadingKnowledge,
 ): boolean {
-	return valencyCasesAllowed(knowledge.valency ?? []);
+	return frameAdpositionCaseIssues(knowledge.valency ?? []).length === 0;
 }
 
 function knowledgeChangePrepositionCasesAllowed(
@@ -180,9 +164,10 @@ function knowledgeChangePrepositionCasesAllowed(
 ): boolean {
 	if (change.aspect !== "valency") return true;
 	return "value" in change
-		? valencyCasesAllowed(change.value)
+		? frameAdpositionCaseIssues(change.value).length === 0
 		: !change.complement ||
-				valencyCasesAllowed(retractedSlot(change.complement));
+				frameAdpositionCaseIssues(retractedSlot(change.complement))
+					.length === 0;
 }
 
 type ReadingEntryLike = {
