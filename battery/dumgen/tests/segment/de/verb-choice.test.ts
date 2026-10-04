@@ -112,6 +112,41 @@ test("de/sein-perfect-or-copula: a state answer drops the auxiliary link; the fa
 	expect(off.groups).toEqual([[0, 2], [4, 8], [6]]);
 });
 
+// Das0 _1 Geld2 _3 ist4 _5 schnell6 _7 ausgegeben8 .9
+const geld = "Das Geld ist schnell ausgegeben.";
+const geldHeard = {
+	s_article_1: picked("p2"),
+	s_auxiliary_3: picked("p5", { p5: 0.96, none: 0.04 }),
+	v_state_3_5: picked("perfect", { perfect: 0.6, state: 0.4 }),
+};
+
+test("de/sein-perfect-or-copula: sein with the participle of a verb whose perfect takes haben is a state, whatever the event answer", async () => {
+	const { groups, judge } = await run(geld, {
+		...geldHeard,
+		"v_perfect-auxiliary_3_5": picked("haben", { haben: 0.98, sein: 0.02 }),
+	});
+	expect(groups).toEqual([[0, 2], [4], [6], [8]]);
+	const verb = judge.requests.find(({ stage }) => stage === "verb");
+	expect(Object.keys(verb?.questions ?? {})).toEqual([
+		"v_state_3_5",
+		"v_perfect-auxiliary_3_5",
+	]);
+	const sein = await run(geld, {
+		...geldHeard,
+		"v_perfect-auxiliary_3_5": picked("sein", { sein: 0.9, haben: 0.1 }),
+	});
+	expect(sein.groups).toEqual([[0, 2], [4, 8], [6]]);
+});
+
+test("haben with a participle asks no perfect-auxiliary question", async () => {
+	const { judge } = await run(museum, {
+		...museumHeard,
+		v_state_3_5: picked("perfect", { perfect: 0.8, state: 0.2 }),
+	});
+	const verb = judge.requests.find(({ stage }) => stage === "verb");
+	expect(Object.keys(verb?.questions ?? {})).toEqual(["v_state_3_5"]);
+});
+
 test("#725: haben with a participle the sentence can't settle joins as the perfect", async () => {
 	const { groups } = await run(museum, {
 		s_article_1: picked("p2"),

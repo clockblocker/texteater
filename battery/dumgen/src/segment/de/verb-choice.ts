@@ -17,7 +17,12 @@
  * - `state` (de/sein-perfect-or-copula, de/verbal-participle, ADR 0036):
  *   haben or sein with a participle reports the event (joins it) or
  *   describes a state (apart). Haben that the sentence can't settle joins as
- *   the perfect (#725, de/unresolved-over-repair).
+ *   the perfect (#725, de/unresolved-over-repair). A sein form also asks
+ *   which auxiliary the participle's verb takes in its perfect, since sein
+ *   is a perfect only when that is sein: a haben answer splits whatever the
+ *   event answer says, so Sein bisschen Geld ist schnell ausgegeben gives
+ *   [ist] and [ausgegeben] (ausgeben has hat ausgegeben), where the event
+ *   question heard a perfect at 0.6.
  * - `expletive` (de/expletive-es-joins-its-verb): es that its verb selects
  *   and that refers to nothing joins the verb, weather and time es with
  *   sein included; positional, anticipatory and referential es stay apart.
@@ -102,6 +107,8 @@ const auxiliaryForms = (lemma: string): ReadonlySet<string> =>
 
 let lassenForms: ReadonlySet<string> | undefined;
 let bekommenForms: ReadonlySet<string> | undefined;
+
+const seinForms: ReadonlySet<string> = new Set(closedVerbForms.sein ?? []);
 
 /** haben and sein forms that can carry a perfect; their participles are hosts' business (`sein-chain`). */
 const perfectAuxiliaries = new Set(
@@ -235,6 +242,30 @@ export function flaggedVerbs(nomination: Nomination): VerbFlag[] {
 export const verbId = (flag: VerbFlag) =>
 	`v_${flag.family}_${flag.piece}_${flag.host}`;
 
+/** The perfect-auxiliary question of a `state` flag on a sein form. */
+const perfectAuxiliaryId = (flag: VerbFlag) =>
+	`v_perfect-auxiliary_${flag.piece}_${flag.host}`;
+
+/** Whether a flag asks the perfect-auxiliary question: a `state` flag on a sein form. */
+const asksPerfectAuxiliary = (nomination: Nomination, flag: VerbFlag) =>
+	flag.family === "state" &&
+	seinForms.has(
+		nomination.sentence.pieces[flag.piece - 1]?.text.toLowerCase() ?? "",
+	);
+
+/**
+ * Which auxiliary the participle's verb takes in its perfect, asked of the
+ * verb rather than the clause, which a state passive makes look like a sein
+ * perfect (de/sein-perfect-or-copula: sein only when the verb's perfect
+ * takes sein).
+ */
+const perfectAuxiliaryCriteria: Record<string, string> = {
+	haben: "haben: in this sense the verb takes an accusative object, is reflexive, or names an activity or a lasting situation, and no change of place or state happens to its subject (Er hat das Geld ausgegeben; Sie hat die Tür geschlossen; Er hat sich verliebt; Sie hat lange geschlafen)",
+	sein: "sein: in this sense the verb names a change of place or state that happens to its subject, with no accusative object, or it is sein, bleiben, werden, geschehen or passieren (Er ist gegangen; Sie ist eingeschlafen; Der Zug ist angekommen; Er ist geblieben; Es ist geschehen)",
+	either: "Either, with this sense, and nothing decides between them (Er hat getanzt or Er ist durch den Saal getanzt)",
+	other: "The piece is no participle of a verb",
+};
+
 const criteria: Record<VerbFamily, Record<string, string>> = {
 	lassen: {
 		causative:
@@ -310,6 +341,11 @@ export function verbQuestions(
 			instruction[flag.family](ref(piece), ref(host)),
 			criteria[flag.family],
 		);
+		if (asksPerfectAuxiliary(nomination, flag))
+			questions[perfectAuxiliaryId(flag)] = choice(
+				`In \`sentence\`, ${ref(host)} is the participle of a verb. In the sense it has here, which auxiliary does that verb take in its perfect, in an active clause?`,
+				perfectAuxiliaryCriteria,
+			);
 	}
 	return questions;
 }
@@ -357,9 +393,12 @@ function clauseSich(nomination: Nomination, id: number): number | undefined {
 function actionOf(
 	nomination: Nomination,
 	flag: VerbFlag,
-	shares: Readonly<Record<string, number>>,
+	answers: Answers,
 	floor: number,
 ): Action[] {
+	const answer = answers[verbId(flag)];
+	if (answer?.type !== "choice") return [];
+	const shares = answer.probabilities;
 	const share = (...keys: string[]) =>
 		keys.reduce((total, key) => total + (shares[key] ?? 0), 0);
 	const pair = [flag.piece, flag.host] as const;
@@ -386,6 +425,14 @@ function actionOf(
 				]?.text.toLowerCase() ?? "",
 			);
 			if (share("state") >= floor) return [{ split: pair }];
+			// de/sein-perfect-or-copula: sein is no perfect of a verb whose perfect takes haben.
+			const auxiliary = answers[perfectAuxiliaryId(flag)];
+			if (
+				asksPerfectAuxiliary(nomination, flag) &&
+				auxiliary?.type === "choice" &&
+				(auxiliary.probabilities.haben ?? 0) >= floor
+			)
+				return [{ split: pair }];
 			// #725: haben with a participle the sentence can't settle is the perfect.
 			return share("perfect", ...(haben ? ["open"] : [])) >= floor
 				? [{ join: pair }]
@@ -420,17 +467,9 @@ export function withVerbChoice(
 ): Membership {
 	const actions = asked.flags
 		.filter((flag) => settings.families.includes(flag.family))
-		.flatMap((flag) => {
-			const answer = asked.answers[verbId(flag)];
-			return answer?.type === "choice"
-				? actionOf(
-						nomination,
-						flag,
-						answer.probabilities,
-						settings.floor,
-					)
-				: [];
-		});
+		.flatMap((flag) =>
+			actionOf(nomination, flag, asked.answers, settings.floor),
+		);
 	if (actions.length === 0) return membership;
 	const saying = new Set(
 		membership.edges
