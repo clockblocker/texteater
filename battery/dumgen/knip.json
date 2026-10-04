@@ -1,6 +1,6 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
-	"entry": ["src/development.ts", "cli/*.ts", "tests/**/*.ts"],
-	"project": ["cli/**/*.ts", "src/**/*.ts", "tests/**/*.ts"],
+	"entry": ["cli/*.ts", "tests/**/*.ts"],
+	"project": ["cli/**/*.ts", "lab/**/*.ts", "src/**/*.ts", "tests/**/*.ts"],
 	"ignoreDependencies": ["@biomejs/biome", "bun-types", "dependency-cruiser"]
 }

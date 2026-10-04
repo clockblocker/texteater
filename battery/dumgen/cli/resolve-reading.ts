@@ -20,18 +20,18 @@ import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import { loadRun } from "promptsmith/storage";
-import { defaultRunOutputDirectory } from "../src/development.js";
 import {
 	freezeReadingSets,
 	loadReadingSet,
 	trackedReadingSetsRoot,
-} from "../src/evaluation/resolve-reading/cases.js";
-import { readingAttempts } from "../src/evaluation/resolve-reading/experiment.js";
+} from "../lab/evaluation/resolve-reading/cases.js";
+import { readingAttempts } from "../lab/evaluation/resolve-reading/experiment.js";
 import {
 	readingSubsetCaseIds,
 	saveReadingSubset,
 	selectReadingSubset,
-} from "../src/evaluation/resolve-reading/subset.js";
+} from "../lab/evaluation/resolve-reading/subset.js";
+import { defaultRunOutputDirectory } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
 export const defaultReadingSubsetPath = resolve(

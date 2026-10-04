@@ -1,6 +1,6 @@
 /**
  * Runs one Dumgen experiment and prints its manifest, summary and metrics
- * (`docs/reference/segment-in-units-jev-lab.md`, "Evaluate").
+ * (`docs/reference/segmentation-jev-lab.md`, "Evaluate").
  *
  *   bun run evaluate --list
  *   bun run evaluate --experiment segment-in-units/de:dev --revision <rev>
@@ -65,7 +65,6 @@ import { appendFile, mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { compareRuns, loadRun } from "promptsmith/storage";
-import { defaultRunOutputDirectory } from "../src/development.js";
 import {
 	defaultLabRoot,
 	evaluateExperiment,
@@ -76,23 +75,21 @@ import {
 	spendsJev,
 	type UnitConfig,
 	unitConfigs,
-} from "../src/evaluation/experiments.js";
-import { createOpenAILunaBatch } from "../src/evaluation/luna-batch.js";
+} from "../lab/evaluation/experiments.js";
+import { createOpenAILunaBatch } from "../lab/evaluation/luna-batch.js";
 import type {
 	GrammarCaps,
 	GrammarPrice,
 	LunaBatchEvent,
-} from "../src/evaluation/resolve-grammar/models.js";
-import type { RoundCost } from "../src/evaluation/resolve-grammar/pricing.js";
-import type { Splitter } from "../src/evaluation/split-text.js";
-import { createOpenAILuna } from "../src/openai-luna.js";
-import type { JevAsk } from "../src/segment/jev.js";
-import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
-import { transportText } from "../src/segment-in-units/lab/jev-cache.js";
+} from "../lab/evaluation/resolve-grammar/models.js";
+import type { RoundCost } from "../lab/evaluation/resolve-grammar/pricing.js";
+import type { Splitter } from "../lab/evaluation/split-text.js";
+import { defaultRunOutputDirectory } from "../lab/run-directory.js";
+import { transportText } from "../lab/segmentation/harness/jev-cache.js";
 import {
 	appendLedger,
 	readLedger,
-} from "../src/segment-in-units/lab/ledger.js";
+} from "../lab/segmentation/harness/ledger.js";
 import {
 	enterRound,
 	guardProjectedSpend,
@@ -100,8 +97,11 @@ import {
 	projectionText,
 	roundSpend,
 	stopLineOf,
-} from "../src/segment-in-units/lab/round.js";
-import { loadLabRun } from "../src/segment-in-units/lab/run.js";
+} from "../lab/segmentation/harness/round.js";
+import { loadLabRun } from "../lab/segmentation/harness/run.js";
+import { createOpenAILuna } from "../src/openai-luna.js";
+import type { JevAsk } from "../src/segment/jev.js";
+import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
 
 const packageRoot = resolve(import.meta.dir, "..");
 

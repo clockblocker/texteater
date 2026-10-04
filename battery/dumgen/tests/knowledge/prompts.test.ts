@@ -4,7 +4,7 @@ import { foldCase } from "dumling";
 import {
 	knowledgeCases,
 	spotCheckCases,
-} from "../../src/evaluation/knowledge/cases.js";
+} from "../../lab/evaluation/knowledge/cases.js";
 import {
 	knowledgeExamples,
 	knowledgeParagraphs,

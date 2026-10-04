@@ -2,12 +2,12 @@ import { expect, test } from "bun:test";
 import { canonicalJson } from "common-utils";
 import { lemmaIdentityKey } from "dumling";
 import * as Effect from "effect/Effect";
-import { createDumgen } from "../../src/create-dumgen.js";
-import { grammarCases } from "../../src/evaluation/resolve-grammar/cases.js";
+import { grammarCases } from "../../lab/evaluation/resolve-grammar/cases.js";
 import {
 	goldAnswers,
 	goldWritten,
-} from "../../src/evaluation/resolve-grammar/oracle.js";
+} from "../../lab/evaluation/resolve-grammar/oracle.js";
+import { createDumgen } from "../../src/create-dumgen.js";
 
 /**
  * A judge and a writer that always answer as gold does: what is left

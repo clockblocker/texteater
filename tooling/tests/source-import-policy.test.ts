@@ -419,8 +419,8 @@ test("runtime code may load only dumcorpus/inventories, and name any corpus type
 		await writeSource(workspace, path, inventories + types);
 	// Development and evaluation code may read the gold.
 	for (const [workspace, path] of [
-		[dumgen, "src/evaluation/spec-corpus/gold.ts"],
-		[dumgen, "src/segment-in-units/lab/round.ts"],
+		[dumgen, "lab/evaluation/spec-corpus/gold.ts"],
+		[dumgen, "lab/segmentation/harness/round.ts"],
 		[dumgen, "cli/evaluate.ts"],
 		[dumgen, "tests/resolve/prompts.test.ts"],
 		[tfDemo, "src/notes/render.test.ts"],

@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { checkPromptCitations, rules } from "dumcorpus";
 import { foldCase } from "dumling";
-import { readingCases } from "../../src/evaluation/resolve-reading/cases.js";
+import { readingCases } from "../../lab/evaluation/resolve-reading/cases.js";
 import {
 	generation,
 	judgePolicy,

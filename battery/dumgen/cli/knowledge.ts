@@ -22,20 +22,20 @@ import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import { loadRun } from "promptsmith/storage";
-import { defaultRunOutputDirectory } from "../src/development.js";
 import {
 	freezeKnowledgeSets,
 	loadKnowledgeSet,
 	trackedKnowledgeSetsRoot,
-} from "../src/evaluation/knowledge/cases.js";
-import { knowledgeAttempts } from "../src/evaluation/knowledge/experiment.js";
+} from "../lab/evaluation/knowledge/cases.js";
+import { knowledgeAttempts } from "../lab/evaluation/knowledge/experiment.js";
 import {
 	compareKnowledgeRuns,
 	knowledgeSubsetCaseIds,
 	loadKnowledgeSubset,
 	saveKnowledgeSubset,
 	selectKnowledgeSubset,
-} from "../src/evaluation/knowledge/subset.js";
+} from "../lab/evaluation/knowledge/subset.js";
+import { defaultRunOutputDirectory } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
 

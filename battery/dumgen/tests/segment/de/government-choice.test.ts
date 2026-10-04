@@ -10,7 +10,7 @@ import {
 	productionUnitSettings,
 	segmentGermanUnits,
 } from "../../../src/segment/de/units.js";
-import { segmentsOf } from "../../spec-corpus/fixtures.js";
+import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
 import { fakeJudge, picked } from "./fake-judge.js";
 
 const withGovernment = (

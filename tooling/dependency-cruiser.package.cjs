@@ -25,6 +25,14 @@ module.exports = {
 			to: { path: "(^|/)(tests?|__tests__)/" },
 		},
 		{
+			name: "production-does-not-import-lab",
+			comment:
+				"Runtime source cannot depend on the evaluation and experiment code under lab/.",
+			severity: "error",
+			from: { path: "^src/" },
+			to: { path: "^lab/" },
+		},
+		{
 			name: "runtime-dependencies-are-declared",
 			comment: "Runtime source can only use declared packages.",
 			severity: "error",

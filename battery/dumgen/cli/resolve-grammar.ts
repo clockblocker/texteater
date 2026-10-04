@@ -21,19 +21,19 @@ import { resolve } from "node:path";
 import { parseArgs } from "node:util";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import { loadRun } from "promptsmith/storage";
-import { defaultRunOutputDirectory } from "../src/development.js";
 import {
 	freezeGrammarSets,
 	loadGrammarSet,
 	trackedGrammarSetsRoot,
-} from "../src/evaluation/resolve-grammar/cases.js";
-import { grammarAttempts } from "../src/evaluation/resolve-grammar/experiment.js";
+} from "../lab/evaluation/resolve-grammar/cases.js";
+import { grammarAttempts } from "../lab/evaluation/resolve-grammar/experiment.js";
 import {
 	loadSubset,
 	saveSubset,
 	selectSubset,
 	subsetCaseIds,
-} from "../src/evaluation/resolve-grammar/subset.js";
+} from "../lab/evaluation/resolve-grammar/subset.js";
+import { defaultRunOutputDirectory } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
 export const defaultSubsetPath = resolve(

@@ -344,8 +344,7 @@ const runtimeCorpusConsumers = [
 	/^battery\/dumdict\/src\//,
 	/^app\/tf-demo\/(?:convex|server)\//,
 	/^app\/tf-demo\/src\/(?!.*\.test\.tsx?$)/,
-	// Dumgen's evaluator and jev lab still live in src until #919 moves them.
-	/^battery\/dumgen\/src\/(?!evaluation\/|segment-in-units\/|development\.ts$)/,
+	/^battery\/dumgen\/src\//,
 ];
 
 function loadsCorpusOutsideRuntimeEntry(
@@ -367,13 +366,6 @@ function isExplicitAuthoringSource(
 	specifier: string,
 ): boolean {
 	const path = relative(workspace.dir, file).replaceAll("\\", "/");
-	if (
-		specifier === `${workspace.manifest.name}/development` &&
-		workspace.manifest.name === "dumgen" &&
-		path === "cli/evaluate.ts"
-	)
-		return true;
-
 	const segments = path.split("/");
 	const topLevel = segments[0];
 	if (
@@ -655,6 +647,7 @@ export function conventionalArchitectureInputs(packageDir: string): string[] {
 		"convex",
 		"codegen",
 		"cli",
+		"lab",
 		"tests",
 		"test",
 		"scripts",

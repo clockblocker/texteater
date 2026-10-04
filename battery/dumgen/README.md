@@ -10,10 +10,12 @@ Sentences in code, and `createDumgen({ jev }).segment.inUnits`, an Effect
 each Sentence: the Segment stage cuts it into Segments, and the unit stage
 groups and routes them. The stages reach jev only through the host's
 `JevAsk` and read no files; `createTypeSafeAsk` is the production `JevAsk`,
-a `fetch` to the TypeSafe API with the host's key. Beside them are the
-`segment.inUnits` jev lab that configures and measures them, the
-spec-corpus evaluator that scores them against dumcorpus, and the evaluation
-CLI.
+a `fetch` to the TypeSafe API with the host's key. Everything under `src/`
+ships. Outside it, `lab/` holds what doesn't: the `segment.inUnits` jev lab
+that configures and measures the stages (`lab/segmentation/`) and the
+spec-corpus evaluator that scores them against dumcorpus
+(`lab/evaluation/`). The CLIs under `cli/` run them, and `src/` never
+imports `lab/`.
 
 ```sh
 bun run --cwd battery/dumgen evaluate --list
@@ -32,7 +34,7 @@ run counts against the lab's current round. `--estimate` prices a run and
 asks nothing. Each run is a Promptsmith run (`manifest.json`, `cases.jsonl`,
 `summary.json`) in `--output`, `DUMGEN_RUN_DIRECTORY` or the untracked
 `.runs/dumgen/`. The
-[lab reference](docs/reference/segment-in-units-jev-lab.md) describes the
+[lab reference](docs/reference/segmentation-jev-lab.md) describes the
 modes, the lab and its rounds.
 
 Prompt authoring follows the

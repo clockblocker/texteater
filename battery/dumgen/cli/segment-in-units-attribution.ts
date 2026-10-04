@@ -25,7 +25,7 @@ import {
 	floorsKey,
 	floorsOf,
 	referenceStagesUnder,
-} from "../src/segment-in-units/de/arms/reference.js";
+} from "../lab/segmentation/de/arms/reference.js";
 import {
 	attributeUnit,
 	type Bucket,
@@ -33,23 +33,23 @@ import {
 	type Cause,
 	causes,
 	type UnitAttribution,
-} from "../src/segment-in-units/lab/attribution.js";
+} from "../lab/segmentation/harness/attribution.js";
 import {
 	type LabCase,
 	loadSet,
 	type SetName,
 	subset,
 	trackedSetsRoot,
-} from "../src/segment-in-units/lab/corpus.js";
+} from "../lab/segmentation/harness/corpus.js";
 import {
 	type CallRecord,
 	JevCache,
-} from "../src/segment-in-units/lab/jev-cache.js";
-import { loadLabRun } from "../src/segment-in-units/lab/run.js";
+} from "../lab/segmentation/harness/jev-cache.js";
+import { loadLabRun } from "../lab/segmentation/harness/run.js";
 import {
 	runStages,
 	type StageTrace,
-} from "../src/segment-in-units/lab/stages.js";
+} from "../lab/segmentation/harness/stages.js";
 
 const packageRoot = resolve(import.meta.dir, "..");
 const labRoot = join(packageRoot, ".runs", "segment-in-units-lab");
@@ -60,7 +60,7 @@ const evidenceRoot = join(
 );
 const manifestPath = join(
 	packageRoot,
-	"src",
+	"lab",
 	"evaluation",
 	"ud-drafts",
 	"manifest.json",

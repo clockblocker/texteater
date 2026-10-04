@@ -1,0 +1,9 @@
+{
+	"extends": "./tsconfig.json",
+	"include": [
+		"lab/segmentation/**/*.ts",
+		"cli/segment-in-units-lab.ts",
+		"cli/segment-in-units-attribution.ts",
+		"tests/lab/segmentation/**/*.ts"
+	]
+}

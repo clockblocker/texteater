@@ -3,7 +3,7 @@ import * as Effect from "effect/Effect";
 import { authoredInventory } from "../../../src/segment/de/inventory.js";
 import { storedIdentity } from "../../../src/segment/de/routing.js";
 import { segmentGermanUnits } from "../../../src/segment/de/units.js";
-import { segmentsOf } from "../../spec-corpus/fixtures.js";
+import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
 import { fakeJudge, noul, picked, route } from "./fake-judge.js";
 
 // Dieser0 _1 kommt2 .3

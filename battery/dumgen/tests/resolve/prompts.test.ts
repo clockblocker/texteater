@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { checkPromptCitations, rules } from "dumcorpus";
 import { foldCase } from "dumling";
-import { grammarCases } from "../../src/evaluation/resolve-grammar/cases.js";
+import { grammarCases } from "../../lab/evaluation/resolve-grammar/cases.js";
 import {
 	grammarPromptTexts,
 	promptExamples,

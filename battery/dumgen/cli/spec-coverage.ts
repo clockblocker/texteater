@@ -7,10 +7,10 @@ import { parseArgs } from "node:util";
 import {
 	coverageOf,
 	formatCoverage,
-} from "../src/evaluation/spec-corpus/coverage.js";
-import { loadGold } from "../src/evaluation/spec-corpus/gold.js";
-import { projectCorpus } from "../src/evaluation/spec-corpus/projection.js";
-import { segmentInUnits } from "../src/evaluation/spec-corpus/segment-in-units.js";
+} from "../lab/evaluation/spec-corpus/coverage.js";
+import { loadGold } from "../lab/evaluation/spec-corpus/gold.js";
+import { projectCorpus } from "../lab/evaluation/spec-corpus/projection.js";
+import { segmentInUnits } from "../lab/evaluation/spec-corpus/segment-in-units.js";
 
 const { values } = parseArgs({
 	args: Bun.argv.slice(2),

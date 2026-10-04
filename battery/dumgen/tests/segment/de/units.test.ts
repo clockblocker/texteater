@@ -13,7 +13,7 @@ import {
 	type UnitSettings,
 } from "../../../src/segment/de/units.js";
 import type { Segment } from "../../../src/segment/segmented-sentence.js";
-import { segmentsOf } from "../../spec-corpus/fixtures.js";
+import { segmentsOf } from "../../lab/evaluation/spec-corpus/fixtures.js";
 import { fakeJudge, noul, picked, route } from "./fake-judge.js";
 
 // Er0 _1 zog2 _3 sich4 _5 an6 ,7 _8 zu9 m10 _11 Glück12 .13

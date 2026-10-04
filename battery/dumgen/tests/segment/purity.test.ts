@@ -3,19 +3,17 @@ import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 
 /**
- * The production code, the package entry with the files beside it and
- * everything under `src/segment/`, `src/resolve/` and `src/knowledge/`,
- * runs where a host
- * has no file system (a Convex action, a short-lived isolate): none of it
- * may import `node:*`, read files or the environment, or reach the
- * evaluator or the lab, and it imports packages only from the list here.
- * Only the TypeSafe ask and the OpenAI Luna touch the network; the stages
- * reach jev and Luna through their ports, and segmentation never Luna.
+ * Everything under `src/` is production code: it ships, and it runs where a
+ * host has no file system (a Convex action, a short-lived isolate). None of
+ * it may import `node:*`, read files or the environment, or reach the
+ * evaluator and the jev lab under `lab/`, and it imports packages only from
+ * the list here. Only the TypeSafe ask and the OpenAI Luna touch the
+ * network; the stages reach jev and Luna through their ports, and
+ * segmentation never Luna.
  */
 const src = resolve(import.meta.dir, "../../src");
+const lab = resolve(import.meta.dir, "../../lab");
 const segment = join(src, "segment");
-const resolveDirectory = join(src, "resolve");
-const knowledgeDirectory = join(src, "knowledge");
 const allowedPackages = new Set([
 	// Reads no files (dumcorpus ADR 0025).
 	"dumcorpus/inventories",
@@ -51,22 +49,11 @@ const forbidden = [
 const network = /\bfetch\(/u;
 const networkFiles = new Set(["segment/typesafe-ask.ts", "openai-luna.ts"]);
 
-const files = [
-	...readdirSync(src, { withFileTypes: true })
-		.filter(
-			(entry) =>
-				entry.isFile() &&
-				entry.name.endsWith(".ts") &&
-				entry.name !== "development.ts",
-		)
-		.map((entry) => join(src, entry.name)),
-	...[segment, resolveDirectory, knowledgeDirectory].flatMap((directory) =>
-		readdirSync(directory, { recursive: true, withFileTypes: true })
-			.filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
-			.map((entry) => join(entry.parentPath, entry.name)),
-	),
-];
+const files = readdirSync(src, { recursive: true, withFileTypes: true })
+	.filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
+	.map((entry) => join(entry.parentPath, entry.name));
 const production = new Set(files);
+const importPattern = /^(import|export)(\s+type)?[^;]*?from\s+"([^"]+)"/gmu;
 
 test("the production code imports nothing that needs a file system", () => {
 	expect(files.length).toBeGreaterThan(1);
@@ -74,9 +61,7 @@ test("the production code imports nothing that needs a file system", () => {
 	for (const file of files) {
 		const source = readFileSync(file, "utf8");
 		const name = relative(src, file);
-		for (const match of source.matchAll(
-			/^(import|export)(\s+type)?[^;]*?from\s+"([^"]+)"/gmu,
-		)) {
+		for (const match of source.matchAll(importPattern)) {
 			const typeOnly = match[2] !== undefined;
 			const specifier = match[3] ?? "";
 			if (specifier.startsWith(".")) {
@@ -99,6 +84,30 @@ test("the production code imports nothing that needs a file system", () => {
 			problems.push(`${name} uses the network`);
 	}
 	expect(problems).toEqual([]);
+});
+
+test("no production file imports the lab, not even a type", () => {
+	const reaching = files.flatMap((file) =>
+		[
+			...[...readFileSync(file, "utf8").matchAll(importPattern)].map(
+				(match) => match[3] ?? "",
+			),
+			...[
+				...readFileSync(file, "utf8").matchAll(
+					/\bimport\(\s*"([^"]+)"/gu,
+				),
+			].map((match) => match[1] ?? ""),
+		]
+			.filter(
+				(specifier) =>
+					specifier.startsWith(".") &&
+					`${resolve(dirname(file), specifier)}/`.startsWith(
+						`${lab}/`,
+					),
+			)
+			.map((specifier) => `${relative(src, file)} imports ${specifier}`),
+	);
+	expect(reaching).toEqual([]);
 });
 
 test("segmentation never receives Luna", () => {

@@ -17,7 +17,7 @@
  *   bun run segment-in-units-lab round --open <id> --cap <tokens> --stop-line <tokens> [--note "<text>"]
  *
  * `run`, `noise` and `limit-qpc` count against the current round
- * (`lab/round.ts`): `--estimate` prices a run offline and stops, a live run
+ * (`lab/segmentation/harness/round.ts`): `--estimate` prices a run offline and stops, a live run
  * refuses to start when its projected spend would cross the round's stop
  * line or when dumcorpus's prompt inputs moved since the round was pinned
  * (`--repin` accepts today's dumcorpus), and every run stops at the line.
@@ -33,14 +33,13 @@ import { parseArgs } from "node:util";
 import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
 import { compareRuns, loadRun } from "promptsmith/storage";
-import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
-import { arms } from "../src/segment-in-units/de/arms/index.js";
+import { arms } from "../lab/segmentation/de/arms/index.js";
 import {
 	deltaBetween,
 	focusBetween,
 	loadSide,
 	type Side,
-} from "../src/segment-in-units/lab/compare.js";
+} from "../lab/segmentation/harness/compare.js";
 import {
 	currentSetHash,
 	focusOf,
@@ -50,7 +49,7 @@ import {
 	type SetName,
 	subset,
 	trackedSetsRoot,
-} from "../src/segment-in-units/lab/corpus.js";
+} from "../lab/segmentation/harness/corpus.js";
 import {
 	readManifest,
 	readManifests,
@@ -62,8 +61,8 @@ import {
 	writeNoise,
 	writeOutcomes,
 	writeSummary,
-} from "../src/segment-in-units/lab/evidence.js";
-import { exportPolicy } from "../src/segment-in-units/lab/export.js";
+} from "../lab/segmentation/harness/evidence.js";
+import { exportPolicy } from "../lab/segmentation/harness/export.js";
 import {
 	type Change,
 	type FocusComparison,
@@ -73,21 +72,21 @@ import {
 	rateOf,
 	scoreFocus,
 	type UnitTally,
-} from "../src/segment-in-units/lab/focus.js";
+} from "../lab/segmentation/harness/focus.js";
 import {
 	type CallRecord,
 	JevCache,
 	type JevCacheOptions,
 	transportText,
-} from "../src/segment-in-units/lab/jev-cache.js";
+} from "../lab/segmentation/harness/jev-cache.js";
 import {
 	appendLedger,
 	type CompareEntry,
 	ledgerTotals,
 	readLedger,
 	spendOf,
-} from "../src/segment-in-units/lab/ledger.js";
-import { questionsPerCall } from "../src/segment-in-units/lab/limits.js";
+} from "../lab/segmentation/harness/ledger.js";
+import { questionsPerCall } from "../lab/segmentation/harness/limits.js";
 import {
 	breakdown,
 	byGoldRoute,
@@ -104,8 +103,8 @@ import {
 	primaryOf,
 	summarizeCost,
 	summarizePolicy,
-} from "../src/segment-in-units/lab/metrics.js";
-import { noiseFloor } from "../src/segment-in-units/lab/noise.js";
+} from "../lab/segmentation/harness/metrics.js";
+import { noiseFloor } from "../lab/segmentation/harness/noise.js";
 import {
 	accuracyOf,
 	membershipFlipsOf,
@@ -114,11 +113,11 @@ import {
 	outcomesOf,
 	pickScore,
 	variantsOf,
-} from "../src/segment-in-units/lab/outcomes.js";
+} from "../lab/segmentation/harness/outcomes.js";
 import {
 	provenanceOf,
 	type RunManifest,
-} from "../src/segment-in-units/lab/provenance.js";
+} from "../lab/segmentation/harness/provenance.js";
 import {
 	currentPin,
 	enterRound,
@@ -139,25 +138,26 @@ import {
 	standInAnswers,
 	stopLineOf,
 	writeRounds,
-} from "../src/segment-in-units/lab/round.js";
+} from "../lab/segmentation/harness/round.js";
 import {
 	conformTo734,
 	rerouted,
-} from "../src/segment-in-units/lab/ruling734.js";
+} from "../lab/segmentation/harness/ruling734.js";
 import {
 	type LabRun,
 	loadLabRun,
 	runArm,
 	saveLabRun,
-} from "../src/segment-in-units/lab/run.js";
-import { sweepRows, sweepTable } from "../src/segment-in-units/lab/sweep.js";
+} from "../lab/segmentation/harness/run.js";
+import { sweepRows, sweepTable } from "../lab/segmentation/harness/sweep.js";
 import {
 	type FocusIterationRow,
 	focusIterationTable,
 	formatP,
 	type IterationRow,
 	iterationTable,
-} from "../src/segment-in-units/lab/table.js";
+} from "../lab/segmentation/harness/table.js";
+import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
 
 const packageRoot = resolve(import.meta.dir, "..");
 const repository = resolve(packageRoot, "../..");
