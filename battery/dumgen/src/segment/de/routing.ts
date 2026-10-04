@@ -13,6 +13,9 @@
  *   `de/interjection-counts-its-words`).
  * - Closed-class identity (#734) overrides the route of a one-piece unit
  *   whose spelling it covers.
+ * - A code rule may fix the route of a unit it closed: the `quantifier`
+ *   rule's ein wenig, ein paar and article + bisschen are Lexeme PRON
+ *   (de/quantifier-by-use), whatever the route Choice says.
  * - A one-piece DET or PRON unit keeps the authored identity the identity
  *   Choice picked, re-read for the final Kind when a Rule test flipped it
  *   (#864, `storedIdentity`).
@@ -481,6 +484,9 @@ export const structuralRoute =
 /** Two adjacent pieces that stay apart although both are interjections. */
 export type KeepApart = (left: Piece, right: Piece) => boolean;
 
+/** The route a code rule fixed for a group it closed; undefined for any other group. */
+export type FixedRoute = (group: readonly number[]) => RouteKey | undefined;
+
 /**
  * Adjacent one-piece units both routed INTJ, with only whitespace between,
  * merge into one Locution INTJ (Rule `de/interjection-counts-its-words`),
@@ -631,8 +637,9 @@ export type RoutedMembership = {
  * shares summed by route), the abbreviation route for an abbreviation, the
  * route Choice for any other word, and the Choice restricted to the Family
  * code named for a multi-piece unit. A Saying, a merged interjection, a
- * fixed closed-class route and a unit holding part of a fused word carry
- * none, and variants span only `variantKindPairs` (#827).
+ * fixed closed-class route, a route a code rule fixed (`fixedRoute`) and a
+ * unit holding part of a fused word carry none, and variants span only
+ * `variantKindPairs` (#827).
  */
 export function routeMembership(
 	nomination: Nomination,
@@ -640,6 +647,7 @@ export function routeMembership(
 	answers: RouteAnswers,
 	extra?: Routes,
 	keepApart?: KeepApart,
+	fixedRoute?: FixedRoute,
 ): RoutedMembership {
 	const { sentence } = nomination;
 	const { route2, closed: closedAnswers } = answers;
@@ -687,7 +695,7 @@ export function routeMembership(
 			? "Locution/INTJ"
 			: structural(group);
 	const route = (group: readonly number[]): RouteKey =>
-		closedRoute(group) ?? openRoute(group);
+		closedRoute(group) ?? fixedRoute?.(group) ?? openRoute(group);
 	const decidingShares = (
 		group: readonly number[],
 	): Readonly<Record<string, number>> | undefined => {
@@ -708,7 +716,11 @@ export function routeMembership(
 				return abbreviation.probabilities;
 			return distributions.get(groupKey(group));
 		}
-		if (merged.merged.has(groupKey(group))) return undefined;
+		if (
+			merged.merged.has(groupKey(group)) ||
+			fixedRoute?.(group) !== undefined
+		)
+			return undefined;
 		const family = membership.familyOf(group);
 		if (family === "Saying") return undefined;
 		return Object.fromEntries(

@@ -1,0 +1,137 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Er bekam ein Paar Handschuhe geschenkt.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Er"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "bekam"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Paar"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Handschuhe"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "geschenkt"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "f320e2bb7e4a76f5"
+			},
+			{
+				"rule": "de/noun-owns-its-article",
+				"hash": "c2b1f74a61545177"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: paar (einige)",
+				"url": "https://www.duden.de/rechtschreibung/paar_einige",
+				"supports": "Lowercase paar in ein paar is an indeclinable indefinite pronoun meaning 'einige, wenige'."
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [4, 6],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "2⃣🔗"
+			},
+			"notes": {
+				"rationale": "Capitalized Paar is the NOUN 'pair', not the pronoun ein paar (de/quantifier-by-use): it owns its article ein (de/noun-owns-its-article), which agrees with it as Acc.Neut.Sg, and it counts the gloves in pairs. Handschuhe is its own word."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Paar",
+						"coreFeatures": {
+							"gender": "Neut"
+						}
+					},
+					"normalizedSurface": "Paar",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Acc",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "Paar",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": {
+					"kind": "Owned",
+					"member": 0
+				},
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

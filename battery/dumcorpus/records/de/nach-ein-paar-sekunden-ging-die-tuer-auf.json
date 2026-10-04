@@ -1,0 +1,196 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Nach ein paar Sekunden ging die Tür auf.",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Nach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ein"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "paar"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Sekunden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ging"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "die"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Tür"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "auf"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "."
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/quantifier-by-use",
+				"hash": "f320e2bb7e4a76f5"
+			}
+		],
+		"references": [
+			{
+				"title": "Duden: paar (einige)",
+				"url": "https://www.duden.de/rechtschreibung/paar_einige",
+				"supports": "Lowercase paar in ein paar is an indeclinable indefinite pronoun meaning 'einige, wenige'."
+			}
+		]
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [2, 4],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PRON"
+			},
+			"reading": {
+				"emojiDescription": "🤏🔢"
+			},
+			"notes": {
+				"rationale": "ein paar is one Lexeme PRON ein paar in every use, as ein wenig is (de/quantifier-by-use). Its ein is fixed and never inflects, so it is no article of Sekunden and gives no Article evidence: singular ein agreeing with plural Sekunden would fail ADR 0040's check. Here it stands before a noun; Sekunden stays its own word, not a member."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "ein",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "paar",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"surface": {
+					"unitKind": "Surface",
+					"inflectionalFeatures": null,
+					"language": "de",
+					"normalizedSurface": "ein paar",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "ein paar",
+						"family": "Lexeme",
+						"kind": "PRON",
+						"coreFeatures": {
+							"case": null,
+							"number": null,
+							"person": null,
+							"polite": null,
+							"poss": null,
+							"pronType": "Ind",
+							"gender": null
+						}
+					},
+					"surfaceFeatures": null
+				}
+			}
+		},
+		{
+			"memberSegmentIndices": [6],
+			"route": {
+				"family": "Lexeme",
+				"kind": "NOUN"
+			},
+			"reading": {
+				"emojiDescription": "⏱"
+			},
+			"notes": {
+				"rationale": "Sekunden is its own NOUN target, owning no article: ein paar quantifies it but is no article of it (de/quantifier-by-use). Dative plural, governed by nach."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Sekunde",
+						"coreFeatures": {
+							"gender": "Fem"
+						}
+					},
+					"normalizedSurface": "Sekunden",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
+				"members": [
+					{
+						"attested": "Sekunden",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
+			}
+		}
+	],
+	"noTarget": []
+}

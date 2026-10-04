@@ -1197,30 +1197,37 @@ describe("the German authored inventory", () => {
 		expect(emojiOf("einander")).toEqual(["🤝"]);
 	});
 
-	test("authors ein wenig as one invariant Ind PRON with one Reading (de/quantifier-by-use)", () => {
-		expect(
-			authoredMembers
-				.filter(({ lemma }) => lemma.canonicalForm === "ein wenig")
-				.map(({ lemma, reading }) => [
-					lemma.kind,
-					lemma.coreFeatures as Readonly<Record<string, unknown>>,
-					reading.emojiDescription,
-				]),
-		).toEqual([
-			[
-				"PRON",
-				{
-					person: null,
-					polite: null,
-					poss: null,
-					pronType: "Ind",
-					case: null,
-					number: null,
-					gender: null,
-				},
-				"🤏",
-			],
-		]);
+	test("authors ein wenig and ein paar as one invariant Ind PRON each with one Reading (de/quantifier-by-use)", () => {
+		for (const [canonicalForm, emoji] of [
+			["ein wenig", "🤏"],
+			["ein paar", "🤏🔢"],
+		] as const)
+			expect(
+				authoredMembers
+					.filter(
+						(member) =>
+							member.lemma.canonicalForm === canonicalForm,
+					)
+					.map(({ lemma, reading }) => [
+						lemma.kind,
+						lemma.coreFeatures as Readonly<Record<string, unknown>>,
+						reading.emojiDescription,
+					]),
+			).toEqual([
+				[
+					"PRON",
+					{
+						person: null,
+						polite: null,
+						poss: null,
+						pronType: "Ind",
+						case: null,
+						number: null,
+						gender: null,
+					},
+					emoji,
+				],
+			]);
 	});
 
 	test("authors the her- and hin- adverbs as one ADV with no series marker and one Reading", () => {

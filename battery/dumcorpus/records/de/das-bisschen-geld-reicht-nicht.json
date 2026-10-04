@@ -18,7 +18,7 @@
 	"sources": {
 		"adrs": ["ADR-0040"],
 		"rules": [
-			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" },
+			{ "rule": "de/quantifier-by-use", "hash": "f320e2bb7e4a76f5" },
 			{ "rule": "de/nicht-is-part", "hash": "c6631f0c8009c067" }
 		],
 		"references": []

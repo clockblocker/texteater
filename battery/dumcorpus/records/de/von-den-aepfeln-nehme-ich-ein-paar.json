@@ -1,10 +1,10 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Gib mir ein wenig Zucker.",
+	"sentence": "Von den Äpfeln nehme ich ein paar.",
 	"segments": [
 		{
 			"kind": "ResolvableText",
-			"text": "Gib"
+			"text": "Von"
 		},
 		{
 			"kind": "Whitespace",
@@ -12,7 +12,31 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "mir"
+			"text": "den"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Äpfeln"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nehme"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ich"
 		},
 		{
 			"kind": "Whitespace",
@@ -28,15 +52,7 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "wenig"
-		},
-		{
-			"kind": "Whitespace",
-			"text": " "
-		},
-		{
-			"kind": "ResolvableText",
-			"text": "Zucker"
+			"text": "paar"
 		},
 		{
 			"kind": "Punctuation",
@@ -55,18 +71,26 @@
 				"hash": "f320e2bb7e4a76f5"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: paar (einige)",
+				"url": "https://www.duden.de/rechtschreibung/paar_einige",
+				"supports": "Lowercase paar in ein paar is an indeclinable indefinite pronoun meaning 'einige, wenige'."
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6],
+			"memberSegmentIndices": [10, 12],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "🤏" },
+			"reading": {
+				"emojiDescription": "🤏🔢"
+			},
 			"notes": {
-				"rationale": "ein wenig is one Lexeme PRON ein wenig in every use (de/quantifier-by-use, #734's 2026-09-30 decision). Its ein is fixed lexical material that never inflects, so it gives no Article evidence, and the invariant PRON marks no case on its Surface. Here it stands before a noun (STTS PIDAT); Zucker stays its own word, not a member."
+				"rationale": "ein paar is one Lexeme PRON ein paar in every use (de/quantifier-by-use). Here it stands alone for some of the apples, the object of nehme; its fixed ein gives no Article evidence, and the invariant PRON marks no case on its Surface."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -76,7 +100,7 @@
 						"orthography": "Standard"
 					},
 					{
-						"attested": "wenig",
+						"attested": "paar",
 						"orthography": "Standard"
 					}
 				],
@@ -86,14 +110,14 @@
 					"unitKind": "Surface",
 					"inflectionalFeatures": null,
 					"language": "de",
-					"normalizedSurface": "ein wenig",
+					"normalizedSurface": "ein paar",
 					"spelling": {
 						"kind": "Canonical"
 					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "ein wenig",
+						"canonicalForm": "ein paar",
 						"family": "Lexeme",
 						"kind": "PRON",
 						"coreFeatures": {

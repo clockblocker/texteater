@@ -35,6 +35,7 @@ import { type Floors, membershipOf, type SayingAssembly } from "./assembly.js";
 import {
 	answerBeforeFormula,
 	type CodeRule,
+	quantifierRoutes,
 	withCodeRules,
 } from "./code-rules.js";
 import {
@@ -209,6 +210,9 @@ export const segmentGermanUnits = Effect.fnUntraced(function* (
 		extra,
 		settings.rules.includes("answer-apart")
 			? answerBeforeFormula
+			: undefined,
+		settings.rules.includes("quantifier")
+			? quantifierRoutes(nomination)
 			: undefined,
 	).units(settings.variantMargin, { identity: true });
 });

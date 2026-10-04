@@ -1,6 +1,6 @@
 {
 	"$schema": "../../schema/spec-record.de.json",
-	"sentence": "Sie war ein wenig müde.",
+	"sentence": "Sie fuhr mit ein paar Freunden nach Berlin.",
 	"segments": [
 		{
 			"kind": "ResolvableText",
@@ -12,7 +12,15 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "war"
+			"text": "fuhr"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "mit"
 		},
 		{
 			"kind": "Whitespace",
@@ -28,7 +36,7 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "wenig"
+			"text": "paar"
 		},
 		{
 			"kind": "Whitespace",
@@ -36,7 +44,23 @@
 		},
 		{
 			"kind": "ResolvableText",
-			"text": "müde"
+			"text": "Freunden"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "nach"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Berlin"
 		},
 		{
 			"kind": "Punctuation",
@@ -53,24 +77,28 @@
 			{
 				"rule": "de/quantifier-by-use",
 				"hash": "f320e2bb7e4a76f5"
-			},
-			{
-				"rule": "de/comparability-is-lexical",
-				"hash": "b72c043c004f9dc9"
 			}
 		],
-		"references": []
+		"references": [
+			{
+				"title": "Duden: paar (einige)",
+				"url": "https://www.duden.de/rechtschreibung/paar_einige",
+				"supports": "Lowercase paar in ein paar is an indeclinable indefinite pronoun meaning 'einige, wenige'."
+			}
+		]
 	},
 	"targets": [
 		{
-			"memberSegmentIndices": [4, 6],
+			"memberSegmentIndices": [6, 8],
 			"route": {
 				"family": "Lexeme",
 				"kind": "PRON"
 			},
-			"reading": { "emojiDescription": "🤏" },
+			"reading": {
+				"emojiDescription": "🤏🔢"
+			},
 			"notes": {
-				"rationale": "ein wenig is one Lexeme PRON ein wenig in every use (de/quantifier-by-use, #734's 2026-09-30 decision). Its ein is fixed lexical material that never inflects, so it gives no Article evidence, and its degree use marks no case. müde stays its own target."
+				"rationale": "ein paar is one Lexeme PRON ein paar in every use (de/quantifier-by-use). After mit its ein stays uninflected (not einem), which shows it is fixed lexical material rather than an article of Freunden; it gives no Article evidence. Freunden stays its own word."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
@@ -80,7 +108,7 @@
 						"orthography": "Standard"
 					},
 					{
-						"attested": "wenig",
+						"attested": "paar",
 						"orthography": "Standard"
 					}
 				],
@@ -90,14 +118,14 @@
 					"unitKind": "Surface",
 					"inflectionalFeatures": null,
 					"language": "de",
-					"normalizedSurface": "ein wenig",
+					"normalizedSurface": "ein paar",
 					"spelling": {
 						"kind": "Canonical"
 					},
 					"lemma": {
 						"unitKind": "Lemma",
 						"language": "de",
-						"canonicalForm": "ein wenig",
+						"canonicalForm": "ein paar",
 						"family": "Lexeme",
 						"kind": "PRON",
 						"coreFeatures": {
@@ -115,51 +143,52 @@
 			}
 		},
 		{
-			"memberSegmentIndices": [8],
+			"memberSegmentIndices": [10],
 			"route": {
 				"family": "Lexeme",
-				"kind": "ADJ"
+				"kind": "NOUN"
 			},
-			"reading": { "emojiDescription": "🥱" },
+			"reading": {
+				"emojiDescription": "🤝"
+			},
 			"notes": {
-				"rationale": "müde is the predicative ADJ ein wenig grades, a target of its own. It is comparable (müder, am müdesten), so its Surface marks Pos (de/comparability-is-lexical)."
+				"rationale": "Freunden is its own NOUN target with no article: ein paar quantifies it (de/quantifier-by-use). Dative plural, governed by mit; the -n marks the dative plural."
 			},
 			"attestation": {
 				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "NOUN",
+						"canonicalForm": "Freund",
+						"coreFeatures": {
+							"gender": "Masc"
+						}
+					},
+					"normalizedSurface": "Freunden",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"gender": null,
+						"number": "Plur"
+					}
+				},
 				"members": [
 					{
-						"attested": "müde",
+						"attested": "Freunden",
 						"orthography": "Standard"
 					}
 				],
 				"realizationCoverage": "Full",
 				"articleEvidence": null,
-				"valencyEvidence": [],
-				"surface": {
-					"unitKind": "Surface",
-					"inflectionalFeatures": {
-						"case": null,
-						"degree": "Pos",
-						"gender": null,
-						"number": null
-					},
-					"language": "de",
-					"normalizedSurface": "müde",
-					"spelling": {
-						"kind": "Canonical"
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"canonicalForm": "müde",
-						"family": "Lexeme",
-						"kind": "ADJ",
-						"coreFeatures": {
-							"comparable": "Yes"
-						}
-					},
-					"surfaceFeatures": null
-				}
+				"valencyEvidence": []
 			}
 		}
 	],

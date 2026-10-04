@@ -222,7 +222,7 @@
 			{ "rule": "de/fused-word-pieces", "hash": "53eb6d28dab42ddc" },
 			{
 				"rule": "de/quantifier-by-use",
-				"hash": "b5504b9423a22bbb"
+				"hash": "f320e2bb7e4a76f5"
 			}
 		],
 		"references": [

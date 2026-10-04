@@ -135,6 +135,48 @@ test("quantifier: ein bisschen is one unit, and the noun it quantifies its own",
 	expect(result.with).toEqual([[0], [2], [4, 6], [8]]);
 });
 
+test("quantifier: ein paar is one unit and its noun its own, but ein Paar is the noun's article", async () => {
+	// Nach0 _1 ein2 _3 paar4 _5 Sekunden6 _7 ging8 _9 er10 .11
+	const paar = await groups(
+		segmentsOf("Nach ein paar Sekunden ging er."),
+		{ s_article_2: picked("p4") },
+		"quantifier",
+	);
+	expect(paar.without).toContainEqual([2, 6]);
+	expect(paar.with).toEqual([[0], [2, 4], [6], [8], [10]]);
+	// Er0 _1 kaufte2 _3 ein4 _5 Paar6 _7 Schuhe8 .9
+	const noun = await groups(
+		segmentsOf("Er kaufte ein Paar Schuhe."),
+		{ s_article_3: picked("p4") },
+		"quantifier",
+	);
+	expect(noun.with).toEqual(noun.without);
+	expect(noun.with).toContainEqual([4, 6]);
+});
+
+test("quantifier: its unit routes Lexeme PRON, though the route Choice hears a noun", async () => {
+	// Nach0 _1 ein2 _3 paar4 _5 Sekunden6 _7 ging8 _9 er10 .11
+	const units = await Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: segmentsOf("Nach ein paar Sekunden ging er.") },
+			fakeJudge({
+				s_article_2: picked("p4"),
+				r_2_3: picked("Lexeme/NOUN"),
+				r_4: picked("Lexeme/NOUN"),
+			}).ask,
+			{ ...productionUnitSettings, rules: ["quantifier"] },
+		),
+	);
+	expect(units).toContainEqual({
+		segments: [2, 4],
+		route: route("Lexeme", "PRON"),
+	});
+	expect(units).toContainEqual({
+		segments: [6],
+		route: route("Lexeme", "NOUN"),
+	});
+});
+
 test("pronoun: mir stays out of tut … leid, but a reflexive coreferent with ich keeps its links", async () => {
 	// Tut0 _1 mir2 _3 leid4 .5
 	const leid = await groups(

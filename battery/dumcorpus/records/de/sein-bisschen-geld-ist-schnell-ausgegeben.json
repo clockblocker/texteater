@@ -21,7 +21,7 @@
 	"sources": {
 		"adrs": ["ADR-0036", "ADR-0040"],
 		"rules": [
-			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" },
+			{ "rule": "de/quantifier-by-use", "hash": "f320e2bb7e4a76f5" },
 			{ "rule": "de/sein-perfect-or-copula", "hash": "2f0a185d7f35c1e9" },
 			{ "rule": "de/copula-stays-apart", "hash": "abeb2e5948f88fe7" },
 			{ "rule": "de/participial-adjective", "hash": "5d4481bf31cb7267" },

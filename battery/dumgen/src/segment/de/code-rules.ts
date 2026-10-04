@@ -19,9 +19,14 @@
  *   circumposition is one Locution of its anchors only, the auch and nur of
  *   sowohl … als auch and nicht nur … sondern auch included. The words they
  *   connect or govern stay outside.
- * - `quantifier` (de/quantifier-by-use): ein wenig, and an article right
- *   before quantity bisschen, are one unit each, and what they quantify is
- *   its own.
+ * - `quantifier` (de/quantifier-by-use): ein wenig, ein paar, and an
+ *   article right before quantity bisschen, are one Lexeme PRON unit each,
+ *   and what they quantify is its own: Nach ein paar Sekunden gives
+ *   [ein, paar] and [Sekunden], though the judge read ein as the article of
+ *   Sekunden. Only lowercase paar counts; ein Paar Schuhe is the noun Paar
+ *   with its article, left to the judge. Routing reads the PRON
+ *   (`quantifierRoutes`), since the route Choice hears an article and its
+ *   noun in such a unit.
  * - `pronoun` (de/verb-owns-its-scattered-members, de/fixed-member-test): a
  *   personal object pronoun joins a verb or Locution only as its lexical
  *   reflexive, coreferent with the subject. Its fixed-word links drop
@@ -85,6 +90,7 @@ import {
 } from "./candidates.js";
 import { type Nomination, slotId } from "./nomination.js";
 import { argmax, groupKey, partitionOf } from "./partition.js";
+import type { RouteKey } from "./routes.js";
 import type { Piece } from "./sentence.js";
 
 export const codeRules = [
@@ -317,20 +323,47 @@ function anchors(nomination: Nomination): Decision {
 	};
 }
 
-function quantifiers(nomination: Nomination): Decision {
+/** The two pieces of each unit the `quantifier` rule closes. */
+function quantifierPairs(
+	nomination: Nomination,
+): (readonly [number, number])[] {
 	const { pieces } = nomination.sentence;
-	const closed: ClosedUnit[] = [];
+	const pairs: (readonly [number, number])[] = [];
 	for (const piece of pieces) {
 		const before = pieces[piece.id - 2];
 		if (!before || before.clause !== piece.clause) continue;
 		const word = lower(piece);
 		if (
 			(word === "bisschen" && isArticle(before)) ||
-			(word === "wenig" && lower(before) === "ein")
+			(word === "wenig" && lower(before) === "ein") ||
+			// Capitalized Paar is the noun 'pair' (ein Paar Schuhe).
+			(piece.text === "paar" && lower(before) === "ein")
 		)
-			closed.push({ pieces: [before.id, piece.id], family: "Lexeme" });
+			pairs.push([before.id, piece.id]);
 	}
-	return { closed };
+	return pairs;
+}
+
+function quantifiers(nomination: Nomination): Decision {
+	return {
+		closed: quantifierPairs(nomination).map((pieces) => ({
+			pieces,
+			family: "Lexeme",
+		})),
+	};
+}
+
+/**
+ * The route of a unit the `quantifier` rule closes, and undefined for any
+ * other group: Lexeme PRON in every use (de/quantifier-by-use).
+ */
+export function quantifierRoutes(
+	nomination: Nomination,
+): (group: readonly number[]) => RouteKey | undefined {
+	const closed = new Set(
+		quantifierPairs(nomination).map((pair) => groupKey(pair)),
+	);
+	return (group) => (closed.has(groupKey(group)) ? "Lexeme/PRON" : undefined);
 }
 
 /** Each personal object pronoun and the subject its reflexive use needs, if any. */

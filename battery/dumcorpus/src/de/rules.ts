@@ -756,7 +756,7 @@ const pronounsAndAdjectives: Rule[] = [
 	{
 		id: "de/quantifier-by-use",
 		statement:
-			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides. After a determiner they are ADJ, noun elided or not; standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig, with no pronType. mehr 'any longer' (nicht mehr) is Duden's Adverb mehr, not a form of viel. It overrides de/pron-or-det-by-use and de/adjective-stays-adj. ein wenig and quantity bisschen are one Lexeme PRON each in every use: the ein of ein wenig is fixed, ein or der before bisschen is a satellite, and what they quantify is its own target.",
+			"viel, wenig, mehr and meist are classed by use, and the first test that fits decides. After a determiner they are ADJ, noun elided or not; standing for a noun phrase, PRON; determining a noun, DET; used adverbially, the comparable ADV viel or wenig, with no pronType. mehr 'any longer' (nicht mehr) is Duden's Adverb mehr, not a form of viel. It overrides de/pron-or-det-by-use and de/adjective-stays-adj. ein wenig, ein paar and quantity bisschen are one Lexeme PRON each in every use: ein is fixed in the first two, ein or der before bisschen a satellite, and what they quantify is its own target.",
 		adrs: ["ADR-0040", "ADR-0042"],
 		routes: lexeme("ADJ", "PRON", "DET", "ADV"),
 		records: [
@@ -778,6 +778,11 @@ const pronounsAndAdjectives: Rule[] = [
 			"de/er-ass-nur-ein-wenig",
 			"de/sie-war-ein-wenig-muede",
 			"de/ich-will-ein-wenig-ausruhen",
+			"de/nach-ein-paar-sekunden-ging-die-tuer-auf",
+			"de/von-den-aepfeln-nehme-ich-ein-paar",
+			"de/sie-fuhr-mit-ein-paar-freunden-nach-berlin",
+			// Capitalized Paar is the noun 'pair', which owns its article.
+			"de/er-bekam-ein-paar-handschuhe-geschenkt",
 			"de/es-war-jetzt-nicht-mehr-so-drohend-wahrscheinlich-dass-hanno",
 			"de/heute-regnete-es-viel-gestern-mehr-und-vorgestern-am-meisten",
 			"de/seit-dem-umbau-laermt-die-anlage-weniger-als-zuvor",

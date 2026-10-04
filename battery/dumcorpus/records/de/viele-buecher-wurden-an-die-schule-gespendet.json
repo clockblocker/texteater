@@ -22,7 +22,7 @@
 	"sources": {
 		"adrs": [],
 		"rules": [
-			{ "rule": "de/quantifier-by-use", "hash": "b5504b9423a22bbb" }
+			{ "rule": "de/quantifier-by-use", "hash": "f320e2bb7e4a76f5" }
 		],
 		"references": []
 	},

@@ -1036,6 +1036,26 @@ reviewed.push(
 	),
 );
 
+// ein paar 'a few' is one invariant Lemma in every use, as ein wenig is
+// (de/quantifier-by-use): its ein never inflects (mit ein paar Freunden), so
+// it is no article agreeing with the plural noun after it, and it stands
+// before a noun (ein paar Sekunden) or alone (ich nehme ein paar). Duden
+// lists lowercase paar as an indeclinable indefinite pronoun; capitalized
+// Paar 'pair' is the noun (ein Paar Schuhe).
+// https://www.duden.de/rechtschreibung/paar_einige
+reviewed.push(
+	pronounMember(
+		form("ein paar", "aɪ̯n ˈpaːɐ̯"),
+		description(
+			"Ind",
+			"🤏🔢",
+			"Bezeichnet eine kleine, nicht näher bestimmte Anzahl, einige wenige: Nach ein paar Sekunden ging die Tür auf. Von den Äpfeln nehme ich ein paar.",
+			["a few; a couple of"],
+			["несколько; пара"],
+		),
+	),
+);
+
 // Quantity bisschen is one invariant Lemma in every use (de/quantifier-by-use):
 // ein or der before it is a satellite (ein bisschen Zucker, das bisschen
 // Geld), and alone it grades (klingt bisschen förmlich). Duden lists it as an
