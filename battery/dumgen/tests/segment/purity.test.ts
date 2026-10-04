@@ -30,7 +30,9 @@ const allowedPackages = new Set([
 	"effect/Data",
 	"effect/Effect",
 	"effect/Exit",
+	"effect/Fiber",
 	"effect/Result",
+	"effect/Scope",
 	"effect/Semaphore",
 	"promptsmith/typesafe",
 ]);

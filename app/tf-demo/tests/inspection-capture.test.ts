@@ -348,3 +348,39 @@ test("Dumgen keeps payloads only under DEV inspection (#885)", () => {
 	expect(dumgenTracing(undefined).tracePayloads).toBe(false);
 	expect(dumgenTracing(createInspectionCapture()).tracePayloads).toBe(true);
 });
+
+test("a click that came out is a successful operation, its dropped guessed call shown as interrupted", () => {
+	const call = {
+		executor: "luna",
+		inputTokens: 0,
+		outputTokens: 0,
+		startedAt: 1_000,
+		durationMs: 20,
+	} as const;
+	const trace = {
+		operation: "resolve.grammar",
+		startedAt: 1_000,
+		durationMs: 60,
+		calls: [
+			{
+				...call,
+				stage: "canonical",
+				failure: { tag: "Interrupted", message: "aborted" },
+			},
+			{ ...call, stage: "grammar", executor: "jev" },
+			{ ...call, stage: "canonical" },
+		],
+		waits: [],
+		sentences: [],
+		resolution: { outcome: "Resolved" },
+	} as const;
+	const [operation, ...rows] = operationSteps(trace, "root");
+	expect(operation?.status).toBe("Success");
+	expect(rows.map(({ status }) => status)).toEqual([
+		"Interrupted",
+		"Success",
+		"Success",
+	]);
+	const { resolution: _resolution, ...failedClick } = trace;
+	expect(operationSteps(failedClick, "root")[0]?.status).toBe("Interrupted");
+});

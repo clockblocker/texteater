@@ -6,7 +6,9 @@
  * inflection, the auxiliaries' uses, the prepositions a head governs,
  * coverage. Then, side by side, a NOUN's Case question over the cells its
  * article and form leave open, when more than one remains (#625), and
- * Luna's Canonical Form and spellings (#862). Code derives the rest: the
+ * Luna's Canonical Form and spellings (#862). Luna is asked while jev
+ * judges, on the guess that jev changes nothing Luna reads; when it does,
+ * Luna is asked again with jev's answers. Code derives the rest: the
  * article's cell and evidence (#681), perfect, future, passive and
  * causative from the auxiliaries (#686), a lexical reflexive's case where
  * its form shows it, a VERB's subject es, an ADP's case where the ADP Case
@@ -24,7 +26,10 @@ import {
 	isGermanPluralOnlyNoun,
 } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
+import * as Fiber from "effect/Fiber";
+import type * as Scope from "effect/Scope";
 import type { OperationScope } from "../../call.js";
+import type { LunaRequest } from "../../luna.js";
 import { askLuna, type LunaSettings } from "../../luna-call.js";
 import type { Ask, AskFailure } from "../../segment/ask.js";
 import {
@@ -1482,9 +1487,63 @@ const particlesSpelled = (form: string) => [
 ];
 
 /**
- * Resolves a unit on an open route: the grammar request, then the Case
- * question and Luna's call side by side, then the Attestation as an
- * unchecked value.
+ * What Luna reads before jev has answered: every member Standard unless
+ * the unit or dumspec's tables already fix its orthography, the opening
+ * article outside the headword, no auxiliary, no governed member, only
+ * the readings code fixes, and no judged features.
+ */
+function guessedJudgment(target: Target, planned: Plan): Judged {
+	const { article } = planned;
+	return {
+		orthographies: target.members.map(
+			(member): MemberOrthography =>
+				member.spelling?.orthography ??
+				(member === article?.member ? article.orthography : "Standard"),
+		),
+		outsideHeadword: new Set(article ? [article.member.position] : []),
+		readings: new Map(planned.presetReadings),
+	};
+}
+
+/**
+ * Why Luna's answer to the guess cannot stand once jev has judged, or
+ * undefined when it can: the request jev's answers make reads otherwise,
+ * judged features aside, as for a Typo or Shorthand, another fixed
+ * spelling, an auxiliary or a governed member.
+ */
+function guessMisses(
+	guessed: Omit<LunaRequest, "configuration">,
+	judged: Omit<LunaRequest, "configuration">,
+): string | undefined {
+	const { judged: _features, ...read } = judged.input as Values;
+	return JSON.stringify(guessed.input) === JSON.stringify(read)
+		? undefined
+		: "jev changed what Luna reads";
+}
+
+/**
+ * Why a VERB's headword Luna wrote on the guess cannot stand: it carries a
+ * sich or a separable prefix jev judged away, which `verbHeadword` adds
+ * but never takes off.
+ */
+function verbGuessMisses(
+	form: string,
+	core: Values,
+	prefixes: readonly string[],
+): string | undefined {
+	if (/^sich\s/u.test(form) && !core.lexicallyReflexive)
+		return "jev judged the verb not lexically reflexive";
+	const bare = fold(form.replace(/^sich\s+/u, ""));
+	return core.hasSepPrefix === null &&
+		prefixes.some((prefix) => bare.startsWith(fold(prefix)))
+		? "jev judged the verb without a separable prefix"
+		: undefined;
+}
+
+/**
+ * Resolves a unit on an open route: the grammar request, with Luna's call
+ * on a guess beside it, then the Case question and Luna's call again
+ * should the guess miss, then the Attestation as an unchecked value.
  */
 export const resolveOpenRoute = Effect.fnUntraced(function* (
 	scope: OperationScope,
@@ -1492,10 +1551,34 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	ask: Ask,
 	luna: LunaSettings,
 	candidates: readonly LemmaCandidate[],
-): Effect.fn.Return<OpenOutcome, AskFailure> {
+): Effect.fn.Return<OpenOutcome, AskFailure, Scope.Scope> {
 	const planned = plan(target);
 	const { shape } = planned;
 	const state = targetState(target);
+	// A PART is authored (#734): its spelling names its member, or Luna's
+	// headword does when the member is no Standard spelling.
+	const particleSpelled =
+		target.route.kind === "PART" && target.members.length === 1
+			? particlesSpelled(spellingOf(target.members[0] as Member))
+			: [];
+	const hints = hintsFor(target, candidates);
+	const drafts = draftsEmojiDescription(target.route);
+	const request = (judged: Judged) =>
+		canonicalFormRequest(target, judged, hints, drafts);
+	const write = (judged: Judged) =>
+		askLuna(scope, luna, "canonical", request(judged), (output) =>
+			checkWritten(target, judged, output),
+		);
+	// Luna writes while jev judges, on a guess at jev's answers; the
+	// guessed call ends with the scope unless it is joined. A PART spelled
+	// Standard needs no call, and with nothing to ask jev there is no guess.
+	const guessed =
+		planned.questionnaire.empty || particleSpelled.length === 1
+			? undefined
+			: guessedJudgment(target, planned);
+	const guess = guessed
+		? yield* Effect.forkScoped(write(guessed), { startImmediately: true })
+		: undefined;
 	const answers = planned.questionnaire.empty
 		? {}
 		: yield* ask({
@@ -1511,12 +1594,6 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	);
 	if (first instanceof UnresolvedAnswer)
 		return { _tag: "Unresolved", reason: first.reason };
-	// A PART is authored (#734): its spelling names its member, or Luna's
-	// headword does when the member is no Standard spelling.
-	const particleSpelled =
-		target.route.kind === "PART" && target.members.length === 1
-			? particlesSpelled(spellingOf(target.members[0] as Member))
-			: [];
 	const article = planned.article;
 	const outsideHeadword = new Set<number>([
 		...(article ? [article.member.position] : []),
@@ -1558,21 +1635,33 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 				})
 			: Effect.succeed(undefined);
 	const caseRequest = caseRequestOver(first.openCases);
+	// The guessed answer stands when jev changed nothing Luna reads;
+	// otherwise Luna writes again with jev's answers.
 	const writing: Effect.Effect<Written | undefined, AskFailure> =
 		particleSpelled.length === 1 && first.orthographies[0] === "Standard"
 			? Effect.succeed(undefined)
-			: askLuna(
-					scope,
-					luna,
-					"canonical",
-					canonicalFormRequest(
-						target,
-						judged,
-						hintsFor(target, candidates),
-						draftsEmojiDescription(target.route),
-					),
-					(output) => checkWritten(target, judged, output),
-				);
+			: Effect.gen(function* () {
+					if (!guess || !guessed) return yield* write(judged);
+					let missed = guessMisses(request(guessed), request(judged));
+					if (missed) yield* Fiber.interrupt(guess);
+					else {
+						const written = yield* Fiber.join(guess);
+						missed =
+							shape.verbal && shape.lexeme
+								? verbGuessMisses(
+										written.canonicalForm,
+										first.core,
+										planned.prefixes,
+									)
+								: undefined;
+						if (!missed) return written;
+					}
+					scope.event({
+						name: "CanonicalRewritten",
+						data: { reason: missed },
+					});
+					return yield* write(judged);
+				});
 	// A common NOUN's gender is the article Luna writes with its headword
 	// when it fits the Sentence's article; its Case is asked over the cells
 	// that gender leaves, after Luna.
@@ -1794,4 +1883,4 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		attestation,
 		...(written?.drafted === undefined ? {} : { drafted: written.drafted }),
 	};
-});
+}, Effect.scoped);

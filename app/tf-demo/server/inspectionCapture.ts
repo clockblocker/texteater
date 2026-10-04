@@ -89,6 +89,9 @@ const isStep = (span: Tracer.Span) => span.attributes.has(OWNER);
 
 /** How a Dumgen operation came out, by its calls and its Sentences. */
 function operationStatus(trace: OperationTrace): InspectionStep["status"] {
+	// A click that came out succeeded, whatever became of the guessed Luna
+	// call `resolve.grammar` dropped once jev answered.
+	if (trace.resolution) return "Success";
 	const failed =
 		trace.calls.filter(
 			({ failure }) => failure && failure.tag !== "Interrupted",

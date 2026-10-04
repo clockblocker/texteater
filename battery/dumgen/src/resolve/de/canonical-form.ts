@@ -27,8 +27,12 @@ import { fixedSpelling, type Target, targetState } from "./target.js";
 /** What grammar fixed before Luna writes: the judged features and what stays out of the headword. */
 export type Judged = {
 	readonly orthographies: readonly MemberOrthography[];
-	/** The judged Core Features and Surface features Luna's headword must fit. */
-	readonly features: Readonly<Record<string, unknown>>;
+	/**
+	 * The judged Core Features and Surface features Luna's headword must
+	 * fit; absent while jev is still judging them, for a request sent
+	 * before its answer.
+	 */
+	readonly features?: Readonly<Record<string, unknown>>;
 	/** Members that are no part of the headword: an owned article, a governed preposition. */
 	readonly outsideHeadword: ReadonlySet<number>;
 	/**
@@ -153,7 +157,7 @@ export function canonicalFormRequest(
 				orthography: judged.orthographies[member.position],
 			})),
 			...(Object.keys(fixedMembers).length ? { fixedMembers } : {}),
-			judged: judged.features,
+			...(judged.features ? { judged: judged.features } : {}),
 			...(judged.outsideHeadword.size
 				? {
 						outsideHeadword: [...judged.outsideHeadword].map(
