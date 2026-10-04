@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 import {
 	discoverWorkspaces,
@@ -55,6 +57,26 @@ const dependencyFields = [
 	"devDependencies",
 	"optionalDependencies",
 	"peerDependencies",
+] as const;
+
+/**
+ * Compiler options that change what type-checks. A consumer checks a
+ * sibling's exported source under its own settings, so a package that
+ * exports source keeps these at the base values.
+ */
+const sharedCheckerOptions = [
+	"exactOptionalPropertyTypes",
+	"noFallthroughCasesInSwitch",
+	"noImplicitAny",
+	"noImplicitOverride",
+	"noImplicitReturns",
+	"noPropertyAccessFromIndexSignature",
+	"noUncheckedIndexedAccess",
+	"strict",
+	"strictBindCallApply",
+	"strictFunctionTypes",
+	"strictNullChecks",
+	"useUnknownInCatchVariables",
 ] as const;
 
 function add(
@@ -175,6 +197,44 @@ function validateWorkspaceManifest(
 	return issues;
 }
 
+function exportsSource(value: unknown): boolean {
+	if (typeof value !== "object" || value === null) return false;
+	return Object.entries(value).some(
+		([key, target]) => key === "convex" || exportsSource(target),
+	);
+}
+
+async function readCompilerOptions(path: string): Promise<JsonObject> {
+	const config = Bun.JSONC.parse(await readFile(path, "utf8")) as {
+		compilerOptions?: JsonObject;
+	};
+	return config.compilerOptions ?? {};
+}
+
+async function validateSourceCompilerOptions(
+	workspace: Workspace,
+	repositoryRoot: string,
+): Promise<PolicyIssue[]> {
+	const tsconfigPath = join(workspace.dir, "tsconfig.json");
+	if (!exportsSource(workspace.manifest.exports) || !existsSync(tsconfigPath))
+		return [];
+	const base = await readCompilerOptions(
+		join(repositoryRoot, "tooling/typescript/base.json"),
+	);
+	const own = await readCompilerOptions(tsconfigPath);
+	const issues: PolicyIssue[] = [];
+	for (const option of sharedCheckerOptions) {
+		if (!(option in own)) continue;
+		add(
+			issues,
+			`${workspace.relativePath}/tsconfig.json`,
+			own[option] === base[option],
+			`compilerOptions.${option} must keep the base value, because consumers type-check this package's exported source`,
+		);
+	}
+	return issues;
+}
+
 function allDependencyVersions(
 	location: string,
 	manifest: JsonObject,
@@ -282,11 +342,14 @@ export async function validateManifestPolicy(options: {
 			manifest: await readJson(join(options.cwd, "package.json")),
 			relativePath,
 		};
-		return validateWorkspaceManifest(
-			target,
-			expectedPackageManager,
-			expectedNodeEngine,
-		);
+		return [
+			...validateWorkspaceManifest(
+				target,
+				expectedPackageManager,
+				expectedNodeEngine,
+			),
+			...(await validateSourceCompilerOptions(target, repositoryRoot)),
+		];
 	}
 
 	const workspaces = await discoverWorkspaces(repositoryRoot);
@@ -325,6 +388,7 @@ export async function validateManifestPolicy(options: {
 				expectedPackageManager,
 				expectedNodeEngine,
 			),
+			...(await validateSourceCompilerOptions(workspace, repositoryRoot)),
 		);
 	}
 

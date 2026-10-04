@@ -122,3 +122,49 @@ test("package policy requires build and dev to enter through Turbo", async () =>
 		'dev requires a "dev:package" script for Turbo to run',
 	]);
 });
+
+test("package policy keeps a source-exporting package on the base checker options", async () => {
+	const root = await temporaryRepository();
+	await writeJson(join(root, "tooling/typescript/base.json"), {
+		compilerOptions: {
+			noUncheckedIndexedAccess: true,
+			strictNullChecks: true,
+		},
+	});
+	const source = await addWorkspace(root, {
+		kind: "battery",
+		name: "source",
+		exports: {
+			".": { convex: "./src/index.ts", default: "./dist/index.js" },
+		},
+	});
+	const built = await addWorkspace(root, { kind: "app", name: "built" });
+	for (const dir of [source, built]) {
+		await writeJson(join(dir, "tsconfig.json"), {
+			extends: "../../tooling/typescript/base.json",
+			compilerOptions: {
+				jsx: "react-jsx",
+				noUncheckedIndexedAccess: false,
+				strictNullChecks: true,
+			},
+		});
+	}
+
+	const sourceIssues = await validateManifestPolicy({
+		cwd: source,
+		mode: "package",
+	});
+	const builtIssues = await validateManifestPolicy({
+		cwd: built,
+		mode: "package",
+	});
+
+	expect(sourceIssues).toEqual([
+		{
+			location: "battery/source/tsconfig.json",
+			message:
+				"compilerOptions.noUncheckedIndexedAccess must keep the base value, because consumers type-check this package's exported source",
+		},
+	]);
+	expect(builtIssues).toEqual([]);
+});
