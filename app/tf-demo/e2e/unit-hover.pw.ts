@@ -233,20 +233,18 @@ test("hovering or focusing a word highlights its whole unit with no network call
 		)
 		.toBe(true);
 	const card = page
-		.getByRole("article")
-		.filter({ has: page.getByRole("heading", { name: "gibt … frei" }) })
+		.locator('[data-form="card"]')
+		.filter({ hasText: "gibt … frei" })
 		.first();
 	await expect(card).toBeVisible();
-	await expect(card.getByRole("status")).toHaveText(
+	await expect(card.locator('[role="status"]')).toHaveText(
 		"Readings are paused while click resolution is rebuilt.",
 	);
 	// The deck settles at once: one Unit Card, and nothing left loading (#850).
 	await expect(
-		card.getByRole("button", { name: "Lift Unit Card", exact: true }),
+		card.getByRole("button", { name: "Lift Unit", exact: true }),
 	).toBeVisible();
-	await expect(page.locator('[data-presentation-form="Card"]')).toHaveCount(
-		1,
-	);
+	await expect(page.locator('[data-form="card"]')).toHaveCount(1);
 	await expect(page.locator('[data-slot="note-skeleton"]')).toHaveCount(0);
 	await expect(word("gibt")).toHaveAttribute("data-state", "selected");
 	await expect(word("frei")).toHaveAttribute("data-state", "selected");

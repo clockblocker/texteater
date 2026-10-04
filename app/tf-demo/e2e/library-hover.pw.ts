@@ -17,6 +17,15 @@ declare global {
 	}
 }
 
+const STORAGE_KEY = "tf-demo.workspace.compass.v1";
+
+/** Where the recorded trace starts, crosses the Pane divider, and clicks. */
+const RECORDED = {
+	start: { x: 770, y: 407 },
+	divider: { x: 896 },
+	click: { x: 885, y: 436 },
+};
+
 test.afterEach(async ({ page }, testInfo) => {
 	const events = await page
 		.evaluate(() => window.__libraryHoverEvents ?? [])
@@ -40,71 +49,54 @@ test("Library hover responds immediately after the recorded background click", a
 	test.setTimeout(30_000);
 	await page.goto("/");
 	await page
-		.getByRole("button", {
-			name: /Der Aufstieg und Abstieg waren gestern anstrengend\./,
-		})
+		.locator('section[aria-labelledby="library-title"] button')
+		.first()
 		.click();
-	await expect(
-		page.getByRole("article", { name: "Text", exact: true }),
-	).toBeVisible();
-	// Restore the trace's five-Sheet Library stack beside a Text Sheet.
+	await expect(page.locator('[data-slot="text-reader"]')).toBeVisible();
+	// Restore the trace's layout, the Library beside a Text, in two Panes.
 	// Only setup uses storage; every interaction under test is browser mouse input.
-	await page.evaluate(() => {
-		const saved = JSON.parse(
-			localStorage.getItem("tf-demo.workspace.v2") ?? "null",
-		);
-		const text = saved?.presentations.find(
-			(item: { subject: { kind: string } }) =>
-				item.subject.kind === "Text",
-		)?.subject;
-		if (!text)
+	await page.evaluate((key) => {
+		const saved = JSON.parse(localStorage.getItem(key) ?? "null");
+		const ground = saved?.layout?.line?.at(-1);
+		if (ground?.kind !== "Sheet")
 			throw new Error("Text did not persist for the hover fixture.");
 		localStorage.setItem(
-			"tf-demo.workspace.v2",
+			key,
 			JSON.stringify({
-				version: 2,
 				layout: {
 					kind: "Split",
 					id: "split-55",
-					axis: "horizontal",
+					direction: "horizontal",
 					children: [
-						{ kind: "Pane", id: "pane-1" },
-						{ kind: "Pane", id: "pane-54" },
+						{
+							kind: "Pane",
+							id: "pane-1",
+							line: [
+								{ id: "sheet-2", kind: "Menu", deck: null },
+								{
+									id: "sheet-3",
+									kind: "MenuItem",
+									item: "library",
+									deck: null,
+								},
+							],
+							covers: [],
+						},
+						{
+							kind: "Pane",
+							id: "pane-54",
+							line: [{ ...ground, id: "sheet-53" }],
+							covers: [],
+						},
 					],
 				},
-				panes: {
-					"pane-1": {
-						id: "pane-1",
-						presentationIds: [
-							"presentation-2",
-							"presentation-3",
-							"presentation-4",
-							"presentation-5",
-							"presentation-6",
-						],
-					},
-					"pane-54": {
-						id: "pane-54",
-						presentationIds: ["presentation-7"],
-					},
-				},
-				presentations: [2, 3, 4, 5, 6, 7].map((id) => ({
-					id: `presentation-${id}`,
-					subject:
-						id === 2 || id === 4 || id === 6
-							? { kind: "Library" }
-							: text,
-					locked: id === 2 || id === 7,
-				})),
-				layers: {},
-				candidateKeyByPresentationId: {},
 				activePaneId: "pane-1",
 				nextId: 56,
 			}),
 		);
-	});
+	}, STORAGE_KEY);
 	await page.reload();
-	await expect(page.locator("[data-workspace-pane]")).toHaveCount(2);
+	await expect(page.locator("[data-deck-pane]")).toHaveCount(2);
 	const library = page.locator(
 		'section[aria-labelledby="library-title"]:visible',
 	);
@@ -114,24 +106,50 @@ test("Library hover responds immediately after the recorded background click", a
 	await expect(cards.locator(":scope:hover")).toHaveCount(0);
 	// Let the normal 150 ms hover-out transition finish before recording idle colors.
 	await page.waitForTimeout(200);
-	// Verify the recorded coordinates hit the intended surfaces before replaying.
-	const surfaces = await page.evaluate(() => ({
-		startsOnCard: Boolean(
-			document
-				.elementFromPoint(770, 407)
-				?.closest('section[aria-labelledby="library-title"] button'),
-		),
-		divider:
-			document
-				.elementFromPoint(896, 381)
-				?.closest('[role="separator"]') !== null,
-		clickIsBackground: document
-			.elementFromPoint(885, 436)
-			?.classList.contains("overflow-y-auto"),
+	// The trace was recorded on another layout. Move it so the divider it
+	// crossed is this one, and it starts on a Library card's row.
+	const divider = await page.locator('[role="separator"]').boundingBox();
+	const firstCard = await cards.first().boundingBox();
+	if (!divider || !firstCard) throw new Error("Missing divider or card.");
+	const shift = {
+		x: divider.x + divider.width / 2 - RECORDED.divider.x,
+		y: firstCard.y + firstCard.height / 2 - RECORDED.start.y,
+	};
+	const moved = recordedInput.map((input) => ({
+		...input,
+		x: input.x + shift.x,
+		y: input.y + shift.y,
 	}));
+	// Verify the moved coordinates hit the intended surfaces before replaying.
+	// The divider lies under the Text Pane's Ground, which the Compass draws
+	// over the Panes; the trace crosses it by construction, and resizing
+	// finds it by position rather than by what is on top.
+	const surfaces = await page.evaluate(
+		({ start, click }) => ({
+			startsOnCard: Boolean(
+				document
+					.elementFromPoint(start.x, start.y)
+					?.closest(
+						'section[aria-labelledby="library-title"] button',
+					),
+			),
+			clickIsBackground: document
+				.elementFromPoint(click.x, click.y)
+				?.classList.contains("overflow-y-auto"),
+		}),
+		{
+			start: {
+				x: RECORDED.start.x + shift.x,
+				y: RECORDED.start.y + shift.y,
+			},
+			click: {
+				x: RECORDED.click.x + shift.x,
+				y: RECORDED.click.y + shift.y,
+			},
+		},
+	);
 	expect(surfaces).toEqual({
 		startsOnCard: true,
-		divider: true,
 		clickIsBackground: true,
 	});
 	const targets = await cards.evaluateAll((elements) =>
@@ -179,7 +197,7 @@ test("Library hover responds immediately after the recorded background click", a
 	});
 	// Actual mouse input from tf-demo-mouse-2026-09-18T05-34-31.096Z.json.
 	const start = performance.now();
-	for (const input of recordedInput) {
+	for (const input of moved) {
 		const remaining = input.at - (performance.now() - start);
 		if (remaining > 0)
 			await new Promise((resolve) => setTimeout(resolve, remaining));
