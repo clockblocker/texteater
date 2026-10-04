@@ -52,7 +52,18 @@ export type SubjectView<S> = {
 		event: ReactPointerEvent<HTMLElement>,
 		subject: () => S,
 	) => void;
+	/**
+	 * As a Resolution progresses, the live Deck that holds this
+	 * Presentation's slot takes these Cards by key (`ReconcileDeck`): kept
+	 * keys keep their slot, new ones join at the end, dropped ones leave.
+	 * A Card, a Sheet and a Held Card may send it; a ghost's does nothing,
+	 * and neither does one with no slot in a live Deck.
+	 */
+	readonly reconcile: (cards: readonly KeyedCard<S>[]) => void;
 };
+
+/** A dealt Card with the caller's stable key, which `reconcile` matches on. */
+export type KeyedCard<S> = DealtCard<S> & { readonly key: string };
 
 export type SubjectRenderer<S> = {
 	/** What a Subject is called: its aria-labels, the trail, and the log. */

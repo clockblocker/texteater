@@ -15,7 +15,7 @@ import {
 import { clearSentence } from "./clear-sentence";
 import type { DeckInteraction } from "./interaction-policy";
 import { findSheet, rungLabel, type SheetView, topSheetOf } from "./sheets";
-import type { MenuItem, SubjectRenderer } from "./subject";
+import type { KeyedCard, MenuItem, SubjectRenderer } from "./subject";
 import type { CompassWorkspace } from "./use-compass-workspace";
 
 /**
@@ -145,6 +145,23 @@ export function useWorkspaceCommands<S>({
 				`Select "${selection}": ${before ? "replace the Deck, " : ""}deal ${cards.length.toString()}`,
 			);
 			dispatch({ type: "Deal", sheetId, selection, cards });
+		},
+		/**
+		 * A Presentation's Deck catches up with what it presents, such as
+		 * a Resolution's progress: the live Deck holding its slot takes
+		 * the Cards by key. It may run while a Card is in hand.
+		 */
+		reconcile(presentationId: string, cards: readonly KeyedCard<S>[]) {
+			const holder = deckHolding(current().layout, presentationId);
+			if (!holder?.deck) return;
+			const before = holder.deck;
+			const next = dispatch({
+				type: "ReconcileDeck",
+				deckId: before.id,
+				cards,
+			});
+			if (findSheet(next.layout, holder.sheetId)?.deck !== before)
+				log(`Reconcile: the Deck holds ${cards.length.toString()}`);
 		},
 		bringToFront(sheetId: string, card: Presentation<S>) {
 			if (!allows("select")) return;

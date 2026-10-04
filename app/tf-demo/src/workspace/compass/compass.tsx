@@ -281,13 +281,25 @@ function CompassRuntime<S>({
 		if (handle) handles.current.set(id, handle);
 		else handles.current.delete(id);
 	};
+	/** A Card's Segments and Links do nothing, but its Deck still keeps up with it. */
+	function cardActionsOf(presentationId: string): SheetActions<S> {
+		return {
+			...inert,
+			reconcile: (cards) => commands.reconcile(presentationId, cards),
+		};
+	}
 	/** What a Sheet's Segments and Links do, bound to its Pane. */
-	function actionsOf(paneId: string, sheetId: string): SheetActions<S> {
+	function actionsOf(
+		paneId: string,
+		sheetId: string,
+		presentationId: string,
+	): SheetActions<S> {
 		return {
 			deal: (selection, cards, from) =>
 				commands.deal(paneId, sheetId, selection, cards, from),
 			follow: (subject) => commands.follow(paneId, subject),
 			liftOnDrag: (event, make) => drags.segmentDown(event, paneId, make),
+			reconcile: (cards) => commands.reconcile(presentationId, cards),
 		};
 	}
 	function handleIn(selector: string): HTMLElement | null {
@@ -425,7 +437,11 @@ function CompassRuntime<S>({
 										lit: null,
 										...(preview
 											? inert
-											: actionsOf(pane.id, ground.id)),
+											: actionsOf(
+													pane.id,
+													ground.id,
+													ground.presentation.id,
+												)),
 									},
 									"heading",
 								)
@@ -578,7 +594,7 @@ function CompassRuntime<S>({
 							onPress: () => keyboard.liftCard(card, sheet),
 						},
 					]}
-					actions={inert}
+					actions={cardActionsOf(card.id)}
 					onDown={(event) => drags.cardDown(event, card, sheet)}
 				/>
 			);
@@ -694,7 +710,9 @@ function CompassRuntime<S>({
 									]
 						}
 						actions={
-							ghost ? inert : actionsOf(pane.id, sheet.sheetId)
+							ghost
+								? inert
+								: actionsOf(pane.id, sheet.sheetId, card.id)
 						}
 						onDown={
 							grabs
@@ -761,7 +779,7 @@ function CompassRuntime<S>({
 					lit={null}
 					epoch={layoutEpoch}
 					register={register}
-					actions={inert}
+					actions={cardActionsOf(inHand.card.id)}
 					onDown={ignore}
 				/>,
 			);

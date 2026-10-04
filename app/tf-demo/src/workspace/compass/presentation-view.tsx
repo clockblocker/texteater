@@ -21,14 +21,22 @@ import { useDeckInteractions } from "./interaction-policy";
 import { sheetColumn } from "./layout";
 import type { Form, Place, SubjectRenderer, SubjectView } from "./subject";
 
-/** What a Note's Segments and Links do; a Card's and a ghost's do nothing. */
+/**
+ * What a Note's Segments and Links do, and how it updates its Deck. A
+ * Card's Segments and Links do nothing, and a ghost does nothing at all.
+ */
 export type SheetActions<S> = Pick<
 	SubjectView<S>,
-	"deal" | "follow" | "liftOnDrag"
+	"deal" | "follow" | "liftOnDrag" | "reconcile"
 >;
 
 export function inertActions<S>(): SheetActions<S> {
-	return { deal: () => {}, follow: () => {}, liftOnDrag: () => {} };
+	return {
+		deal: () => {},
+		follow: () => {},
+		liftOnDrag: () => {},
+		reconcile: () => {},
+	};
 }
 
 /**
