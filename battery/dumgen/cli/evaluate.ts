@@ -26,6 +26,12 @@
  *       --luna-output-budget <Luna output tokens> [--luna-batch]
  *       [--usd-budget <dollars>] [--limit N] [--repetitions 1]
  *   bun run evaluate --open <runId>
+ *   bun run evaluate --compare <leftRunId> <rightRunId>
+ *
+ * `--compare` reads two saved runs the way `--open` does and prints, through
+ * promptsmith's `compareRuns`, each side's verdict counts, the cases only one
+ * side has, and every case whose status, verdict or output changed with its
+ * field-level output diff. It asks no model.
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
  * line to the lab ledger, refuses to go live when dumspec's prompt inputs
@@ -54,7 +60,7 @@ import { execFileSync } from "node:child_process";
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { loadRun } from "promptsmith/storage";
+import { compareRuns, loadRun } from "promptsmith/storage";
 import {
 	createTypeSafeExecutor,
 	type TypeSafeExecutor,
@@ -113,8 +119,9 @@ export async function runEvaluationCli(
 		repository?: string;
 	} = {},
 ) {
-	const { values } = parseArgs({
+	const { values, positionals } = parseArgs({
 		args: argv,
+		allowPositionals: true,
 		options: {
 			list: { type: "boolean" },
 			experiment: { type: "string" },
@@ -122,6 +129,7 @@ export async function runEvaluationCli(
 			output: { type: "string" },
 			revision: { type: "string" },
 			open: { type: "string" },
+			compare: { type: "string" },
 			offline: { type: "boolean" },
 			units: { type: "string" },
 			parity: { type: "string" },
@@ -147,6 +155,8 @@ export async function runEvaluationCli(
 		dependencies.write ??
 		((value) => console.log(JSON.stringify(value, null, 2)));
 	const warn = dependencies.warn ?? ((message) => console.warn(message));
+	if (positionals.length > 0 && !values.compare)
+		throw Error(`Unexpected argument ${positionals[0]}`);
 	if (values.list) {
 		const experiments = listExperiments();
 		write(experiments);
@@ -161,9 +171,20 @@ export async function runEvaluationCli(
 		write(run);
 		return run;
 	}
+	if (values.compare) {
+		const [right, ...rest] = positionals;
+		if (!right || rest.length > 0)
+			throw Error("--compare takes two run ids: --compare LEFT RIGHT");
+		const report = runComparison(
+			await loadRun(outputDirectory, values.compare),
+			await loadRun(outputDirectory, right),
+		);
+		write(report);
+		return report;
+	}
 	if (!values.experiment)
 		throw Error(
-			"Use --list, --open RUN_ID, or --experiment ID --revision REVISION",
+			"Use --list, --open RUN_ID, --compare LEFT RIGHT, or --experiment ID --revision REVISION",
 		);
 	if (!values.revision && !values.estimate)
 		throw Error("--revision is required to identify the evaluated source");
@@ -416,6 +437,69 @@ export async function runEvaluationCli(
 	} finally {
 		process.removeListener("SIGINT", interrupt);
 	}
+}
+
+type StoredRun = Awaited<ReturnType<typeof loadRun>>;
+const verdicts = ["Passed", "Failed", "Mixed", "Unscored"] as const;
+
+/**
+ * Two runs side by side (`--compare`): what each ran and scored, the cases
+ * only one has, and each shared case whose status, verdict or output
+ * changed, as `before → after` with the output's field-level diff.
+ */
+export function runComparison(left: StoredRun, right: StoredRun) {
+	const comparison = compareRuns(left, right);
+	const side = (run: StoredRun, key: "left" | "right") => ({
+		runId: run.manifest.runId,
+		experimentId: run.manifest.experimentId,
+		sourceRevision: run.manifest.sourceRevision,
+		model:
+			"configurations" in run.manifest
+				? run.manifest.configurations.judgment.model
+				: run.manifest.configuration.model,
+		cases: run.cases.length,
+		verdicts: Object.fromEntries(
+			verdicts.map((verdict) => [
+				verdict,
+				comparison.cases.filter(
+					(entry) => entry.verdict[key] === verdict,
+				).length,
+			]),
+		),
+	});
+	const arrow = (before: unknown, after: unknown) => `${before} → ${after}`;
+	const changed = comparison.cases.flatMap((entry) => {
+		if (!entry.left || !entry.right) return [];
+		const status = entry.left.status !== entry.right.status;
+		if (!status && !entry.verdictChanged && !entry.outputChanges.length)
+			return [];
+		return [
+			{
+				caseId: entry.caseId,
+				...(status
+					? { status: arrow(entry.left.status, entry.right.status) }
+					: {}),
+				verdict: entry.verdictChanged
+					? arrow(entry.verdict.left, entry.verdict.right)
+					: entry.verdict.left,
+				outputChanges: entry.outputChanges,
+			},
+		];
+	});
+	return {
+		left: side(left, "left"),
+		right: side(right, "right"),
+		sameExperiment: comparison.sameExperiment,
+		sameCorpus: comparison.sameCorpus,
+		unchanged:
+			comparison.cases.length -
+			changed.length -
+			comparison.onlyLeft.length -
+			comparison.onlyRight.length,
+		onlyLeft: comparison.onlyLeft,
+		onlyRight: comparison.onlyRight,
+		changed,
+	};
 }
 
 /**
