@@ -90,7 +90,7 @@
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"generate:validation": "bun codegen/generate.ts",
 		"generate:validation:check": "bun codegen/generate.ts --check",
-		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
+		"knip": "bun ../../tooling/knip.ts",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun test ./tests",

@@ -9,5 +9,8 @@
 		"tooling/print-playground-snapshot.ts",
 		"tooling/resolution-inspector.ts"
 	],
+	"ignoreIssues": {
+		"playwright.live.config.ts": ["exports"]
+	},
 	"ignoreDependencies": []
 }

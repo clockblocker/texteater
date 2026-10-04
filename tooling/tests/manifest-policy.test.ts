@@ -123,6 +123,36 @@ test("package policy requires build and dev to enter through Turbo", async () =>
 	]);
 });
 
+test("every workspace and the root run knip through tooling/knip.ts", async () => {
+	const root = await temporaryRepository();
+	const workspace = await addWorkspace(root, {
+		kind: "battery",
+		name: "isolated",
+	});
+	const manifest = await Bun.file(join(workspace, "package.json")).json();
+	manifest.scripts.knip = "knip";
+	await writeJson(join(workspace, "package.json"), manifest);
+	const rootManifest = await Bun.file(join(root, "package.json")).json();
+	delete rootManifest.scripts.knip;
+	await writeJson(join(root, "package.json"), rootManifest);
+
+	const issues = await validateManifestPolicy({
+		cwd: root,
+		mode: "repository",
+	});
+
+	expect(issues).toEqual([
+		{
+			location: "package.json",
+			message: 'knip must be "bun tooling/knip.ts"',
+		},
+		{
+			location: "battery/isolated/package.json",
+			message: 'knip must be "bun ../../tooling/knip.ts"',
+		},
+	]);
+});
+
 test("package policy keeps a source-exporting package on the base checker options", async () => {
 	const root = await temporaryRepository();
 	await writeJson(join(root, "tooling/typescript/base.json"), {

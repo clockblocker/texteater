@@ -66,7 +66,7 @@
 		"fix": "bun run --silent biome check --write .",
 		"generate": "bun codegen/generate-dumling-schemas.ts && bun codegen/generate.ts",
 		"generate:check": "bun codegen/generate-dumling-schemas.ts --check && bun codegen/generate.ts --check",
-		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
+		"knip": "bun ../../tooling/knip.ts",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
 		"test": "bun test",

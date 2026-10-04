@@ -22,6 +22,7 @@
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"test:e2e": "playwright test",
 		"test:pipeline:live": "bun tooling/run-live-pipeline.ts",
+		"knip": "bun ../../tooling/knip.ts",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {

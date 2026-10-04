@@ -12,7 +12,8 @@ export async function temporaryRepository(): Promise<string> {
 		workspaces: ["app/*", "battery/*"],
 		scripts: {
 			build: "bun tooling/manifest-policy.ts repository && turbo run build:package",
-			validate: "bun tooling/ci.ts validate dum-runtime",
+			knip: "bun tooling/knip.ts",
+			validate: "bun tooling/ci.ts validate knip dum-runtime",
 		},
 		devDependencies: {
 			"@biomejs/biome": "2.5.13",
@@ -55,6 +56,7 @@ export async function addWorkspace(
 			build: "turbo run build:package",
 			"build:package":
 				"bun ../../tooling/manifest-policy.ts package && bun build src/index.ts",
+			knip: "bun ../../tooling/knip.ts",
 			test: "bun test",
 			validate: "bun ../../tooling/validate-package.ts",
 		},

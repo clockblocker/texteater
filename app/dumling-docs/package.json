@@ -22,6 +22,7 @@
 		"prebuild:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:content",
 		"preview": "astro preview",
 		"test": "bun test",
+		"knip": "bun ../../tooling/knip.ts",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {

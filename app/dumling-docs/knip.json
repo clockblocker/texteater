@@ -1,5 +1,15 @@
 {
 	"$schema": "https://unpkg.com/knip@6/schema.json",
-	"entry": ["astro.config.mjs", "scripts/**/*.ts", "src/**/*.{ts,astro}"],
-	"project": ["helper-types.ts", "scripts/**/*.ts", "src/**/*.{ts,astro}"]
+	"entry": [
+		"astro.config.mjs",
+		"scripts/*.ts",
+		"src/pages/**/*.astro",
+		"src/content.config.ts",
+		"src/to-generate/**/*.doc.ts",
+		"tests/**/*.test.ts"
+	],
+	"project": ["helper-types.ts", "scripts/**/*.ts", "src/**/*.{ts,astro}"],
+	"ignoreIssues": {
+		"src/to-generate/**/*.doc.ts": ["exports"]
+	}
 }

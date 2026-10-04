@@ -122,6 +122,12 @@ function validateWorkspaceManifest(
 		scripts.validate === "bun ../../tooling/validate-package.ts",
 		'validate must be "bun ../../tooling/validate-package.ts"',
 	);
+	add(
+		issues,
+		location,
+		scripts.knip === "bun ../../tooling/knip.ts",
+		'knip must be "bun ../../tooling/knip.ts"',
+	);
 	for (const [entry, expected] of Object.entries(turboEntryScripts)) {
 		const local = `${entry}:package`;
 		if (!scripts[entry] && !scripts[local]) continue;
@@ -361,6 +367,12 @@ export async function validateManifestPolicy(options: {
 		'workspaces must include "app/*" and "battery/*"',
 	);
 	const rootScripts = stringRecord(rootManifest.scripts);
+	add(
+		issues,
+		"package.json",
+		rootScripts.knip === "bun tooling/knip.ts",
+		'knip must be "bun tooling/knip.ts"',
+	);
 	for (const script of ["build", "run"] as const) {
 		if (!rootScripts[script]) continue;
 		add(

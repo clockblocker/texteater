@@ -42,6 +42,7 @@
 		"test": "bun test",
 		"lint": "bun run --silent biome check .",
 		"fix": "bun run --silent biome check --write .",
+		"knip": "bun ../../tooling/knip.ts",
 		"validate": "bun ../../tooling/validate-package.ts",
 		"evaluate": "bun --env-file=../../.env.local cli/evaluate.ts",
 		"spec-coverage": "bun cli/spec-coverage.ts",

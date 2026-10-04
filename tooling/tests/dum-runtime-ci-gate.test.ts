@@ -73,7 +73,7 @@ describe("operational RSS CI contract", () => {
 			"bun tooling/dum-runtime-verification/verify.ts",
 		);
 		expect(manifest.scripts.validate).toBe(
-			"bun tooling/ci.ts validate dum-runtime",
+			"bun tooling/ci.ts validate knip dum-runtime",
 		);
 		expect(
 			ciGates.find((gate) => gate.name === "dum-runtime")?.args,

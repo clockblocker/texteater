@@ -74,7 +74,7 @@
 		"generate:validation": "bun codegen/generate-validation-artifacts.ts",
 		"generate:validation:check": "bun codegen/generate-validation-artifacts.ts --check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
-		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
+		"knip": "bun ../../tooling/knip.ts",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun test",

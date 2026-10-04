@@ -1,8 +1,13 @@
 /**
- * A package's policy stages: manifest policy, dependencies (knip) and
- * architecture (dependency-cruiser). Turbo's `validate` task runs them after
- * the package's `check`, `lint` and `test` tasks (turbo.json). Run outside
- * Turbo, as `bun validate` in a package, it hands that whole graph to Turbo.
+ * A package's policy stages: manifest policy and architecture
+ * (dependency-cruiser). Turbo's `validate` task runs them after the package's
+ * `check`, `lint` and `test` tasks (turbo.json). Run outside Turbo, as
+ * `bun validate` in a package, it hands that whole graph to Turbo.
+ *
+ * Unused files, exports and dependencies are not a stage here: whether an
+ * export is used depends on the packages that import it, which a package's
+ * Turbo cache key doesn't cover. `bun run knip` (tooling/knip.ts) checks them
+ * against the whole repository.
  */
 import { join } from "node:path";
 import { validateManifestPolicy } from "./lib/manifest-policy";
@@ -59,14 +64,6 @@ function overrideOrDefault(stage: string, defaultArgs: string[]): Command {
 }
 
 const commands = [
-	overrideOrDefault("dependencies", [
-		"bun",
-		tools.knip,
-		"--config",
-		join(repositoryRoot, "tooling/knip-package.ts"),
-		"--no-config-hints",
-		"--dependencies",
-	]),
 	overrideOrDefault("architecture", [
 		"bun",
 		tools.dependencyCruiser,

@@ -30,6 +30,12 @@ export const ciGates = [
 		],
 	},
 	{
+		// Unused files, exports and dependencies across the repository,
+		// against tooling/knip-baseline.json.
+		name: "knip",
+		args: ["bun", "tooling/knip.ts"],
+	},
+	{
 		name: "dum-runtime",
 		args: ["bun", "tooling/dum-runtime-verification/verify.ts"],
 	},

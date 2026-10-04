@@ -58,6 +58,10 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: bun tooling/ci.ts validate
 
+      - name: knip
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun tooling/ci.ts knip
+
       - name: dum-runtime
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: bun tooling/ci.ts dum-runtime
