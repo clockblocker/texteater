@@ -42,7 +42,8 @@ _Avoid_: panel
 
 **Split Handle**:
 The control between two Split Regions that resizes them by pointer drag or
-arrow keys.
+arrow keys. Its first Split Region is the inline-start one, on the right under
+right-to-left text.
 _Avoid_: separator, divider
 
 **Sheet Stack**:

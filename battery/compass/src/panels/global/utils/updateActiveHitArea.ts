@@ -45,7 +45,7 @@ export function updateActiveHitAreas({
 	// Note that HitAreas are frozen once a drag has started
 	// Modify the Split layouts for all matching HitAreas though
 	hitAreas.forEach((current) => {
-		const { split, splitSize } = current;
+		const { rightToLeft, split, splitSize } = current;
 		const { orientation, regions } = split;
 		const { disableCursor } = split.mutableState;
 
@@ -81,7 +81,9 @@ export function updateActiveHitAreas({
 		} = splitState;
 		if (derivedRegionConstraints && prevLayout && handleToRegions) {
 			const nextLayout = adjustLayoutByDelta({
-				delta: deltaAsPercentage,
+				// The layout grows inline-start; the delta and cursor flags above
+				// are physical
+				delta: rightToLeft ? -deltaAsPercentage : deltaAsPercentage,
 				initialLayout,
 				regionConstraints: derivedRegionConstraints,
 				pivotIndices: current.regions.map((region) =>

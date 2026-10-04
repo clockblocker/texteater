@@ -1,4 +1,5 @@
 import { assert } from "../../utils/assert";
+import { isRightToLeft } from "../dom/isRightToLeft";
 import { getMountedSplitState } from "../mutable-state/splits";
 import { adjustLayoutForHandle } from "../utils/adjustLayoutForHandle";
 import { findHandleSplit } from "../utils/findHandleSplit";
@@ -24,11 +25,16 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
 			}
 			break;
 		}
+		// The arrows move the handle the way they point, which under dir="rtl"
+		// is toward inline-end for ArrowLeft
 		case "ArrowLeft": {
 			event.preventDefault();
 
 			if (split.orientation === "horizontal") {
-				adjustLayoutForHandle(handleElement, -5);
+				adjustLayoutForHandle(
+					handleElement,
+					isRightToLeft(split.element) ? 5 : -5,
+				);
 			}
 			break;
 		}
@@ -36,7 +42,10 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
 			event.preventDefault();
 
 			if (split.orientation === "horizontal") {
-				adjustLayoutForHandle(handleElement, 5);
+				adjustLayoutForHandle(
+					handleElement,
+					isRightToLeft(split.element) ? -5 : 5,
+				);
 			}
 			break;
 		}

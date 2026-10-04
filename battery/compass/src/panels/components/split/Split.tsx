@@ -2,6 +2,7 @@
 
 import { type CSSProperties, useEffect, useMemo, useRef } from "react";
 import { calculateRegionConstraints } from "../../global/dom/calculateRegionConstraints";
+import { isRightToLeft } from "../../global/dom/isRightToLeft";
 import { mountSplit } from "../../global/mountSplit";
 import { getInteractionState } from "../../global/mutable-state/interactions";
 import {
@@ -153,10 +154,11 @@ export function Split({
 			orientation,
 			registerRegion: (region: RegisteredRegion) => {
 				const inMemoryValues = inMemoryValuesRef.current;
-				inMemoryValues.regions = sortByElementOffset(orientation, [
-					...inMemoryValues.regions,
-					region,
-				]);
+				inMemoryValues.regions = sortByElementOffset(
+					orientation,
+					[...inMemoryValues.regions, region],
+					isRightToLeft(region.element),
+				);
 
 				forceUpdate();
 
@@ -170,10 +172,11 @@ export function Split({
 			},
 			registerHandle: (handle: RegisteredHandle) => {
 				const inMemoryValues = inMemoryValuesRef.current;
-				inMemoryValues.handles = sortByElementOffset(orientation, [
-					...inMemoryValues.handles,
-					handle,
-				]);
+				inMemoryValues.handles = sortByElementOffset(
+					orientation,
+					[...inMemoryValues.handles, handle],
+					isRightToLeft(handle.element),
+				);
 
 				forceUpdate();
 

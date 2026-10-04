@@ -7,6 +7,7 @@ import { isHTMLElement } from "../../utils/isHTMLElement";
 import { findClosestRect } from "../utils/findClosestRect";
 import { isCoarsePointer } from "../utils/isCoarsePointer";
 import { calculateAvailableSplitSize } from "./calculateAvailableSplitSize";
+import { isRightToLeft } from "./isRightToLeft";
 
 type RegionsTuple = [region: RegisteredRegion, region: RegisteredRegion];
 
@@ -16,6 +17,11 @@ export type HitArea = {
 	regions: RegionsTuple;
 	rect: DOMRect;
 	handle?: RegisteredHandle | undefined;
+	/**
+	 * The Split runs horizontally under `dir="rtl"`: its regions run right to
+	 * left, so a pointer moving right moves toward inline-start.
+	 */
+	rightToLeft: boolean;
 };
 
 /**
@@ -27,6 +33,8 @@ export type HitArea = {
  */
 export function calculateHitAreas(split: RegisteredSplit) {
 	const { element: splitElement, orientation, regions, handles } = split;
+	const rightToLeft =
+		orientation === "horizontal" && isRightToLeft(splitElement);
 
 	// Sort elements by offset before traversing
 	const sortedChildElements: HTMLElement[] = sortByElementOffset(
@@ -34,6 +42,7 @@ export function calculateHitAreas(split: RegisteredSplit) {
 		Array.from(splitElement.children)
 			.filter(isHTMLElement)
 			.map((element) => ({ element: element as HTMLElement })),
+		rightToLeft,
 	).map(({ element }) => element);
 
 	const hitAreas: HitArea[] = [];
@@ -93,10 +102,14 @@ export function calculateHitAreas(split: RegisteredSplit) {
 						// The one caveat is when there are non-interactive element(s) between regions,
 						// in which case we may need to watch individual region edges
 						if (hasInterleavedStaticContent) {
+							// The previous region's inline-end edge and this region's
+							// inline-start edge
 							const firstRegionEdgeRect =
 								orientation === "horizontal"
 									? new DOMRect(
-											prevRect.right,
+											rightToLeft
+												? prevRect.left
+												: prevRect.right,
 											prevRect.top,
 											0,
 											prevRect.height,
@@ -110,7 +123,9 @@ export function calculateHitAreas(split: RegisteredSplit) {
 							const secondRegionEdgeRect =
 								orientation === "horizontal"
 									? new DOMRect(
-											rect.left,
+											rightToLeft
+												? rect.right
+												: rect.left,
 											rect.top,
 											0,
 											rect.height,
@@ -159,12 +174,19 @@ export function calculateHitAreas(split: RegisteredSplit) {
 							} else {
 								pendingRectsOrHandles = [
 									orientation === "horizontal"
-										? new DOMRect(
-												prevRect.right,
-												rect.top,
-												rect.left - prevRect.right,
-												rect.height,
-											)
+										? rightToLeft
+											? new DOMRect(
+													rect.right,
+													rect.top,
+													prevRect.left - rect.right,
+													rect.height,
+												)
+											: new DOMRect(
+													prevRect.right,
+													rect.top,
+													rect.left - prevRect.right,
+													rect.height,
+												)
 										: new DOMRect(
 												rect.left,
 												prevRect.bottom,
@@ -214,6 +236,7 @@ export function calculateHitAreas(split: RegisteredSplit) {
 										split,
 									}),
 									regions: [prevRegion, regionData],
+									rightToLeft,
 									handle:
 										"width" in rectOrHandle
 											? undefined
