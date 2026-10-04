@@ -90,7 +90,6 @@ const READING = {
 		Root: READING_BASE,
 		Suffix: READING_BASE,
 		Suffixoid: READING_BASE,
-		Transfix: READING_BASE,
 	},
 } satisfies RendererRegistry<"de", "Reading">;
 
@@ -153,7 +152,6 @@ const LEMMA = {
 		Root: LEMMA_ROUTE,
 		Suffix: LEMMA_ROUTE,
 		Suffixoid: LEMMA_ROUTE,
-		Transfix: LEMMA_ROUTE,
 	},
 } satisfies RendererRegistry<"de", "Lemma">;
 const ATTESTATION = {
@@ -200,7 +198,6 @@ const ATTESTATION = {
 		Root: ATTESTATION_ROUTE,
 		Suffix: ATTESTATION_ROUTE,
 		Suffixoid: ATTESTATION_ROUTE,
-		Transfix: ATTESTATION_ROUTE,
 	},
 } satisfies RendererRegistry<"de", "Attestation">;
 const SHADOW = {
@@ -247,7 +244,6 @@ const SHADOW = {
 		Root: SHADOW_ROUTE,
 		Suffix: SHADOW_ROUTE,
 		Suffixoid: SHADOW_ROUTE,
-		Transfix: SHADOW_ROUTE,
 	},
 } satisfies RendererRegistry<"de", "Shadow">;
 const SURFACE = {

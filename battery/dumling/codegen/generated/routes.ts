@@ -218,12 +218,6 @@ export const routes = [
 	},
 	{
 		language: "de",
-		family: "Morpheme",
-		kind: "Transfix",
-		schemaPath: "de/morpheme/transfix",
-	},
-	{
-		language: "de",
 		family: "Saying",
 		kind: "Saying",
 		schemaPath: "de/saying/saying",
@@ -413,12 +407,6 @@ export const routes = [
 		family: "Morpheme",
 		kind: "Suffixoid",
 		schemaPath: "en/morpheme/suffixoid",
-	},
-	{
-		language: "en",
-		family: "Morpheme",
-		kind: "Transfix",
-		schemaPath: "en/morpheme/transfix",
 	},
 	{
 		language: "en",

@@ -40,8 +40,9 @@ const morphemeKindValues = [
 	"Root",
 	"Suffix",
 	"Suffixoid",
-	"Transfix",
 ] as const;
+/** Root-and-pattern morphology is Semitic, so only Hebrew picks Transfix. */
+const hebrewMorphemeKindValues = [...morphemeKindValues, "Transfix"] as const;
 
 /**
  * Every Dumling Lemma route as language → Family → Kinds. A Kind name may
@@ -80,7 +81,7 @@ const lemmaRouteKinds = {
 		Locution: ["ADV", "INTJ"],
 		Saying: ["Saying"],
 		Foreign: ["Foreign"],
-		Morpheme: morphemeKindValues,
+		Morpheme: hebrewMorphemeKindValues,
 	},
 } as const;
 type ListedRoutes = typeof lemmaRouteKinds;
@@ -153,7 +154,7 @@ const familyValues = [
 ] as const;
 const kindValues = [
 	...lexemeKindValues,
-	...morphemeKindValues,
+	...hebrewMorphemeKindValues,
 	"Saying",
 	"Foreign",
 ] as const;

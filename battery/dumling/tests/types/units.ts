@@ -19,6 +19,12 @@ type _UnsupportedMorpheme = Lemma<"de", "Morpheme", "ToneMarking">;
 type _UntonalEnglish = Lemma<"en", "Morpheme", "ToneMarking">;
 // @ts-expect-error Hebrew is not tonal, so it picks no ToneMarking route.
 type _UntonalHebrew = Lemma<"he", "Morpheme", "ToneMarking">;
+// @ts-expect-error Root-and-pattern morphology is Semitic; ablaut is no Transfix.
+type _EnglishTransfix = Lemma<"en", "Morpheme", "Transfix">;
+// @ts-expect-error Root-and-pattern morphology is Semitic; ablaut is no Transfix.
+type _GermanTransfix = Lemma<"de", "Morpheme", "Transfix">;
+// Hebrew keeps its Transfix route.
+type _HebrewTransfix = Lemma<"he", "Morpheme", "Transfix">;
 declare const prefix: Surface<"de", "Morpheme", "Prefix">;
 // @ts-expect-error A route without an inflectional bag has no Surface field.
 prefix.inflectionalFeatures;

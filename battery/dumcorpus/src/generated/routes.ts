@@ -40,7 +40,6 @@ export const unitRoutes: Readonly<Record<string, readonly string[]>> = {
 		"Morpheme/Root",
 		"Morpheme/Suffix",
 		"Morpheme/Suffixoid",
-		"Morpheme/Transfix",
 		"Saying/Saying",
 	],
 	en: [
@@ -75,7 +74,6 @@ export const unitRoutes: Readonly<Record<string, readonly string[]>> = {
 		"Morpheme/Root",
 		"Morpheme/Suffix",
 		"Morpheme/Suffixoid",
-		"Morpheme/Transfix",
 		"Saying/Saying",
 	],
 	he: [

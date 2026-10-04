@@ -57,7 +57,7 @@ function* corruptions(
 }
 describe("compiled unit interface", () => {
 	test("all unit routes preserve canonical outputs and malformed nested acceptance", () => {
-		expect(routes).toHaveLength(100);
+		expect(routes).toHaveLength(98);
 		for (const route of routes) {
 			const fixtures = unitFixtures(route, z);
 			for (const kind of UnitKindSchema.options) {
