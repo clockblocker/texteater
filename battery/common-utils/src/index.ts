@@ -1,3 +1,4 @@
+export { canonicalJson } from "./canonical-json.js";
 export { required } from "./required.js";
 export type {
 	Assert,

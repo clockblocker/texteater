@@ -10,7 +10,8 @@ The workspaces are:
 - `app/spec-review`: maintainer review of German Spec Records' Segmentation
 - `app/tf-demo`: end-to-end product probe
 - `battery/codegen`: deterministic, filesystem-safe code generation recipes
-- `battery/common-utils`: shared TypeScript type helpers and `required()`
+- `battery/common-utils`: shared TypeScript type helpers, `required()` and
+  `canonicalJson()`
 - `battery/dumdict`: dictionary workflows
 - `battery/dumgen`: German `segment.inUnits`, rebuilt from scratch (#701)
 - `battery/dumling`: grammatical values and operations

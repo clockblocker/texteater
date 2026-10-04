@@ -1,7 +1,7 @@
 {
 	"name": "common-utils",
 	"version": "0.1.0",
-	"description": "Shared TypeScript type helpers and the required() invariant.",
+	"description": "Shared TypeScript type helpers, the required() invariant and canonical JSON.",
 	"type": "module",
 	"packageManager": "bun@1.4.2",
 	"license": "MIT",
