@@ -20,6 +20,13 @@ one German Sentence with no `splitText`. The Definition Text stores that
 Sentence's Segments and its biggest units, as intake stores a Visitor
 Text's Sentences. A Reading in another language gets no Definition Text.
 
+Amended 2026-10-04 ([#484](https://github.com/clockblocker/texteater/issues/484)):
+a Source Context from a definition follows the rule every Source Context
+follows. Go to source pushes the Definition Text as a Cover scrolled to the
+Sentence with the Segment lit
+([tf-demo ADR 0008](./0008-give-every-pane-a-ground-beneath-its-covers.md)).
+It no longer opens the defining Reading Note on its Definition block.
+
 A Corrected definition writes a new Definition Text after stripping and
 deleting the previous one, and a Retracted definition strips and deletes with
 no successor, so ADR 0001's rule that only stripping and reset end
@@ -41,8 +48,8 @@ one-off migration rather than on demand.
 
 - The Definition block is loaded only when the definition is generated and
   segmented; a permanent segmentation failure shows the bare prose.
-- A Source Context from a definition targets the defining Reading Note in
-  Sheet form with a Definition focus, never a Text Sheet.
+- Go to source from a definition's Source Context pushes its Definition Text
+  as a Cover, like any other Text.
 - A Reading's own Definition Text is excluded from its Source Contexts.
 - Readings that lose their last source inside a stripped definition are
   pruned like any other orphan, and their own Definition Texts are removed

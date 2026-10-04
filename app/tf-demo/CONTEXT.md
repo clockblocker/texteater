@@ -126,14 +126,10 @@ _Avoid_: clicked context, Reading identity evidence
 
 **Definition Text**:
 The hidden Text that holds one Reading's Knowledge definition as a single
-Sentence so its Segments can be selected. It is never listed in the Library.
-See [tf-demo ADR 0005].
+Sentence so its Segments can be selected. It is never listed in the Library;
+Go to source from one of its Source Contexts pushes it as a Cover. See
+[tf-demo ADR 0005] and [tf-demo ADR 0008].
 _Avoid_: definition sentence row, synthetic text
-
-**Definition Focus**:
-The part of a Reading Note target that lands on the Definition block and
-lights the members of one occurrence inside it. It is presentation state and
-adds no identity. See [tf-demo ADR 0005].
 
 **Lemma Note**:
 A projection of one Lemma and its Readings. A VERB's Lemma Note also lists the

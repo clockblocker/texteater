@@ -86,6 +86,10 @@ Menu stays reachable without a central Pane.
 - The Card Layer is retired. A Card's place is its rank in the Deck that dealt
   it. Opening it as a Cover does not move it, and collapsing returns it to the
   same slot.
+- On narrow screens, below the `md` breakpoint, the renderer shows one Pane
+  and makes no splits. Edge drops are off, and a Presentation that would
+  become a Floating Pane's Ground opens full-screen as a Cover instead. Decks
+  and going back work as usual.
 - [tf-demo ADR 0003] keeps its single URL and Workspace Persistence. The
   Library and Texts it opens sit on a Rooted Pane's Ground line.
 
