@@ -219,7 +219,7 @@ test("enforces the installed Context Map headings", () => {
 	).toMatchObject([{ kind: "context-map-structure" }]);
 });
 
-test("enforces the minimal installed ADR structure and status vocabulary", () => {
+test("enforces the minimal ADR structure and the accepted-only status", () => {
 	expect(
 		adrStructureIssues(
 			"docs/adr/0001-use-events.md",
@@ -235,6 +235,26 @@ test("enforces the minimal installed ADR structure and status vocabulary", () =>
 		{ kind: "adr-structure", line: 1 },
 		{ kind: "adr-structure" },
 	]);
+	for (const frontmatter of [
+		"",
+		"---\nstatus: proposed\n---\n\n",
+		"---\nstatus: deprecated\n---\n\n",
+	]) {
+		expect(
+			adrStructureIssues(
+				"docs/adr/0001-use-events.md",
+				`${frontmatter}# Use events\n\nReason.\n`,
+			),
+		).toMatchObject([
+			{ kind: "adr-structure", line: 1, severity: "error" },
+		]);
+	}
+	expect(
+		adrStructureIssues(
+			"docs/adr/0001-use-events.md",
+			"---\nstatus: superseded by ADR-0002\n---\n\n# Use events\n\nReason.\n",
+		),
+	).toMatchObject([{ kind: "adr-structure", severity: "advisory" }]);
 });
 
 test("allows ADR number gaps left by deleted decisions", async () => {
@@ -242,7 +262,7 @@ test("allows ADR number gaps left by deleted decisions", async () => {
 	await writeSource(
 		root,
 		"docs/adr/0002-skip-the-first-decision.md",
-		"# Skip the first decision\n\nThis entry has no 0001 predecessor.\n",
+		"---\nstatus: accepted\n---\n\n# Skip the first decision\n\nThis entry has no 0001 predecessor.\n",
 	);
 	expect(
 		await auditAdrs(root, ["docs/adr/0002-skip-the-first-decision.md"]),

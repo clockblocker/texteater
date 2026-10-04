@@ -664,14 +664,23 @@ export function adrStructureIssues(
 ): DocumentationIssue[] {
 	const issues: DocumentationIssue[] = [];
 	const { body, frontmatter } = stripFrontmatter(text);
+	const status = frontmatter?.trim();
+	// A superseded ADR still cited by Spec Records waits for an owner ruling
+	// instead of failing the gate; developer-documentation.md says delete it.
 	if (
-		frontmatter !== undefined &&
-		!/^status: (?:proposed|accepted|deprecated|superseded by ADR-\d{4})$/u.test(
-			frontmatter.trim(),
-		)
+		status !== undefined &&
+		/^status: superseded by ADR-\d{4}$/u.test(status)
 	) {
 		issues.push({
-			detail: "ADR frontmatter may contain only a supported status from ADR-FORMAT.md",
+			detail: "superseded ADR: move its references to its successor and delete it",
+			file,
+			kind: "adr-structure",
+			line: 1,
+			severity: "advisory",
+		});
+	} else if (status !== "status: accepted") {
+		issues.push({
+			detail: "ADR must start with the frontmatter `status: accepted` (docs/reference/developer-documentation.md)",
 			file,
 			kind: "adr-structure",
 			line: 1,

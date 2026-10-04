@@ -17,6 +17,17 @@ that code, configuration, tests, command help, or GitHub does not already own.
 Create these paths lazily. Do not add placeholder files, empty categories, or
 documentation indexes.
 
+## ADRs
+
+An ADR directory holds accepted decisions only. Each file is
+`NNNN-kebab-slug.md`, numbered in its own directory's sequence, and starts
+with the frontmatter `status: accepted`. This narrows the installed
+`ADR-FORMAT.md` status vocabulary: write no `proposed`, `deprecated` or
+`superseded by` ADRs. When a new ADR replaces an old one, state what still
+stands in the new ADR, move every reference to it, and delete the old file in
+the same change. Never renumber or reuse a number; gaps are expected. Issues
+and git history keep how a decision evolved.
+
 ## What stays elsewhere
 
 GitHub owns plans, reviews, queues, WIP, logbooks, unresolved questions,
