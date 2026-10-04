@@ -1,7 +1,7 @@
 import {
+	canonicalFormKey,
 	lemmaIdentityKey as dumlingLemmaIdentityKey,
 	readingIdentityKey as dumlingReadingIdentityKey,
-	foldCase,
 } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseUnitAs } from "./operationalParsing";
@@ -20,15 +20,16 @@ export function lemmaIdentityKey(lemma: unknown): string {
 }
 
 /**
- * A Lemma's or Unit Shadow's Canonical Form folded as Lemma identity folds it
- * (system ADR 0002). Indexes that find Lemmas by form use it, and the rows
- * keep the display casing for rendering.
+ * A Lemma's or Unit Shadow's Canonical Form keyed as Lemma identity keys it:
+ * Dumling's Canonical Form key, normalized and case-folded (system ADR 0002).
+ * Indexes that find Lemmas by form use it, and the rows keep the display
+ * casing for rendering.
  */
 export function foldedCanonicalForm(value: {
 	readonly language: Dumling.Language;
 	readonly canonicalForm: string;
 }): string {
-	return foldCase(value.canonicalForm, value.language);
+	return canonicalFormKey(value.canonicalForm, value.language);
 }
 
 /** A Reading's Emoji Description; a Foreign Reading has none (ADR 0045). */
