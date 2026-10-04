@@ -12,15 +12,18 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
  * same deployment with VITE_CONVEX_URL.
  *
  * The deployment is shared, so a unit may or may not be attested by the time
- * this runs. The spec reads which are and expects each previewed unit to
- * wear the look that follows. It never clicks: a click on an unattested unit
- * starts a paid resolution.
+ * this runs. The hover spec reads which are and expects each previewed unit
+ * to wear the look that follows. A click on an unattested unit starts a
+ * resolution, which a resolvable unit pays for, so the click spec clicks a
+ * second Text's unit stored as Unresolved: Dumgen answers it with no call
+ * (#861), and no click can ever attest it.
  */
 
 const appRoot = fileURLToPath(new URL("..", import.meta.url));
 const submissionKey = "e2e:unit-hover";
+const clickSubmissionKey = "e2e:unit-hover:click";
 
-type Route = { language: "de"; family: "Lexeme"; kind: string };
+type Route = { language: "de"; family: "Lexeme"; kind: string } | "Unresolved";
 const lexeme = (kind: string): Route => ({
 	language: "de",
 	family: "Lexeme",
@@ -32,9 +35,10 @@ function sentence(
 	position: number,
 	words: readonly string[],
 	units: readonly { segments: number[]; route: Route }[],
+	key = submissionKey,
 ) {
 	return {
-		segmentedSentenceId: `${submissionKey}:${position}`,
+		segmentedSentenceId: `${key}:${position}`,
 		position,
 		paragraph: 0,
 		language: "de",
@@ -93,6 +97,21 @@ const sentences = [
 	),
 ];
 
+// `ruft … an` is one unit around `sie morgen`, stored as Unresolved.
+const clickSentences = [
+	sentence(
+		0,
+		["Er", " ", "ruft", " ", "sie", " ", "morgen", " ", "an", "."],
+		[
+			{ segments: [0], route: lexeme("PRON") },
+			{ segments: [2, 8], route: "Unresolved" },
+			{ segments: [4], route: lexeme("PRON") },
+			{ segments: [6], route: lexeme("ADV") },
+		],
+		clickSubmissionKey,
+	),
+];
+
 /** Runs one Convex function on the e2e deployment and returns its JSON result. */
 function convexRun(name: string, args: unknown): unknown {
 	const envFile = process.env.TF_DEMO_E2E_CONVEX_ENV_FILE;
@@ -114,16 +133,19 @@ function convexRun(name: string, args: unknown): unknown {
 	return JSON.parse(output);
 }
 
-/** Stores the Text once per deployment; a rerun finds it by its submissionKey. */
-function seedText(): string {
-	const stored = convexRun("persistence:persistSubmittedText", {
-		submissionKey,
-		sourceText: sentences.map((s) => s.stitchedText).join(" "),
-		sentences,
+/** Stores a Text once per deployment; a rerun finds it by its submissionKey. */
+function seedText(
+	key = submissionKey,
+	stored: readonly ReturnType<typeof sentence>[] = sentences,
+): string {
+	const persisted = convexRun("persistence:persistSubmittedText", {
+		submissionKey: key,
+		sourceText: stored.map((s) => s.stitchedText).join(" "),
+		sentences: stored,
 	}) as { textId?: string };
-	if (!stored.textId)
-		throw new Error(`Seeding stored no Text: ${JSON.stringify(stored)}`);
-	return stored.textId;
+	if (!persisted.textId)
+		throw new Error(`Seeding stored no Text: ${JSON.stringify(persisted)}`);
+	return persisted.textId;
 }
 
 type PreviewState = "known-preview" | "unknown-preview";
@@ -278,4 +300,60 @@ test("hovering or focusing a word highlights its whole unit with no network call
 
 	await page.waitForTimeout(500);
 	expect(sent.slice(beforeHover)).toEqual([]);
+});
+
+test("a click selects a discontinuous unit whole, and its Deck settles at once on one Unit Card", async ({
+	page,
+}) => {
+	test.setTimeout(60_000);
+	seedText(clickSubmissionKey, clickSentences);
+	const sent = recordTraffic(page);
+
+	await page.goto("/");
+	await page
+		.getByRole("button", { name: /^Er ruft sie morgen an\./ })
+		.first()
+		.click();
+	const reader = page.locator('[data-slot="text-reader"]');
+	const word = (text: string) =>
+		reader
+			.locator('[data-slot="reader-segment"]')
+			.filter({ hasText: new RegExp(`^${text}$`) });
+	await expect(word("ruft")).toBeVisible();
+	await settle(page, sent);
+	const beforeClick = sent.length;
+
+	// The click goes out, and the recorder hears it.
+	await word("an").click();
+	await expect
+		.poll(() =>
+			sent
+				.slice(beforeClick)
+				.some((line) =>
+					line.includes("resolutionSessions:selectSegment"),
+				),
+		)
+		.toBe(true);
+	const card = page
+		.locator('[data-form="card"]')
+		.filter({ hasText: "ruft … an" })
+		.first();
+	await expect(card).toBeVisible();
+	await expect(card.locator('[role="status"]')).toHaveText(
+		"This unit could not be resolved.",
+		{ timeout: 15_000 },
+	);
+	// The Deck settles at once: one Unit Card, and nothing left loading (#850).
+	await expect(
+		card.getByRole("button", { name: "Lift Unit", exact: true }),
+	).toBeVisible();
+	await expect(page.locator('[data-form="card"]')).toHaveCount(1);
+	await expect(page.locator('[data-slot="note-skeleton"]')).toHaveCount(0);
+	// The Heading names the unit; the Body does not again.
+	await expect(card.locator("[data-scroller]")).not.toContainText("ruft");
+	await expect(word("ruft")).toHaveAttribute("data-state", "selected");
+	await expect(word("an")).toHaveAttribute("data-state", "selected");
+	await expect(word("ruft")).toHaveAttribute("aria-pressed", "true");
+	await expect(reader.locator('[aria-pressed="true"]')).toHaveCount(2);
+	await expect.poll(() => underlinedWords(reader)).toEqual(["ruft", "an"]);
 });
