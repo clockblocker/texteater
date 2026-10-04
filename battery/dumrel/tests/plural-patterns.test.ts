@@ -1,11 +1,11 @@
 import { expect, test } from "bun:test";
 import {
 	applyKnowledgeChange,
-	germanPluralPattern,
 	parseReadingKnowledge,
 	selectKnowledge,
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { germanPluralPattern } from "../src/german-plural-pattern.js";
 import { houseLemma, houseReading, wartenReading } from "./fixtures.js";
 
 test("a German noun's plural derives its Plural Pattern from the singular", () => {

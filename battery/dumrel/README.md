@@ -37,10 +37,9 @@ Required or Optional and holding one complement or several alternatives.
 German complements are a bare case, an ADP Lemma with the case it governs, an
 Adverbial named by its stand-in, a Predicative, or a Clause of one form.
 `Contribute` adds a whole Slot or nothing, and a `Retract` that names a
-complement removes it from its Slot. `projectPrepositionalGovernment` derives
-the inverse `governedBy` edges from every Preposition complement over a
-dictionary inventory, so a preposition lists its Governors without storing
-them.
+complement removes it from its Slot. Dumrel derives the inverse `governedBy`
+edges internally from every Preposition complement over a dictionary
+inventory, so a preposition lists its Governors without storing them.
 
 `participleSource` records the VERB Lemma an adjectival participle Reading's
 form comes from and whether the Reading's meaning is a sense of it
@@ -51,8 +50,8 @@ adjectives without storing them.
 
 `plural` records a German NOUN Reading's plural forms (`Pizzen`, `Pizzas`),
 or `NoPlural` or `PluralOnly`. `Contribute` adds the forms it lacks, and a
-marker is atomic. `germanPluralPattern` derives a form's Plural Pattern from
-the singular (`Mutter`, `Muttern` → `En`); patterns are never stored.
+marker is atomic. Dumrel derives a form's Plural Pattern internally from the
+singular (`Mutter`, `Muttern` → `En`); patterns are never stored.
 
 `conjugationClass` records how a German VERB Reading forms its Präteritum: the
 Strong, Weak and Mixed classes its Präteritum forms attest. `Contribute` adds

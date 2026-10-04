@@ -4,10 +4,10 @@ import type * as Dumling from "dumling/types";
 import {
 	applyKnowledgeChange,
 	parseReadingKnowledge,
-	projectPrepositionalGovernment,
 	selectKnowledge,
 } from "dumrel";
 import { governmentProjectionSchema } from "dumrel/schema";
+import { projectPrepositionalGovernment } from "../src/project-prepositional-government.js";
 import {
 	alLemma,
 	aufLemma,

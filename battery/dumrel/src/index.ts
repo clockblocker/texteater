@@ -1,10 +1,8 @@
 export { ParsingError } from "dumval/runtime";
 export { applyKnowledgeChange } from "./apply-knowledge-change.js";
 export { germanConjugationClass } from "./german-conjugation-class.js";
-export { germanPluralPattern } from "./german-plural-pattern.js";
 export { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 export { projectParticipleSources } from "./project-participle-sources.js";
-export { projectPrepositionalGovernment } from "./project-prepositional-government.js";
 export { projectSemanticRelations } from "./project-semantic-relations.js";
 export {
 	KnowledgePolicyUnavailable,
