@@ -1,7 +1,6 @@
 "use client";
 
-import type { Properties } from "csstype";
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { subscribeToMountedGroup } from "../../global/mutable-state/groups";
 import { subscribeToInteractionState } from "../../global/mutable-state/interactions";
 import type { InteractionState } from "../../global/mutable-state/types";
@@ -136,7 +135,7 @@ export function Separator({
 		updateSeparatorProps(id, { disabled, disableDoubleClick });
 	}, [disabled, disableDoubleClick, id, updateSeparatorProps]);
 
-	let cursor: Properties["cursor"];
+	let cursor: CSSProperties["cursor"];
 	if (disabled && !disableCursor) {
 		cursor = "not-allowed";
 	}

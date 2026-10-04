@@ -9,7 +9,7 @@
  */
 
 /** The axis a split lays its two children along; only side-by-side is made for now. */
-export type SplitDirection = "horizontal" | "vertical";
+type SplitDirection = "horizontal" | "vertical";
 
 /**
  * A Pane's side edge, in the writing direction: a Held Card dropped there
@@ -65,7 +65,7 @@ export type PaneNode<S> = {
 	readonly covers: readonly Cover<S>[];
 };
 
-export type SplitNode<S> = {
+type SplitNode<S> = {
 	readonly kind: "Split";
 	readonly id: string;
 	readonly direction: SplitDirection;
@@ -80,7 +80,7 @@ export type SplitNode<S> = {
 export type LayoutNode<S> = PaneNode<S> | SplitNode<S>;
 
 /** Where a Held Card was lifted from, which decides where letting it go sends it. */
-export type LiftOrigin =
+type LiftOrigin =
 	| {
 			readonly kind: "Deck";
 			readonly paneId: string;
@@ -102,14 +102,14 @@ export type LiftOrigin =
  */
 export type HeldHome = "slot" | "restore" | "close" | "vanish";
 
-export type WorkspaceSnapshot<S> = {
+type WorkspaceSnapshot<S> = {
 	readonly layout: LayoutNode<S>;
 	readonly activePaneId: string;
 	/** The next number to mint an id from. */
 	readonly nextId: number;
 };
 
-export type HeldCard<S> = {
+type HeldCard<S> = {
 	readonly presentation: Presentation<S>;
 	readonly origin: LiftOrigin;
 	/** The workspace as it was when the Lift began; Cancel gesture restores it. */
@@ -405,7 +405,7 @@ export function heldHome<S>(state: WorkspaceState<S>): HeldHome | null {
 /* --- layout helpers, pure over the tree --- */
 
 /** Replaces a Pane by id; `null` removes it and lets its sibling take its place. */
-export function replacePane<S>(
+function replacePane<S>(
 	node: LayoutNode<S>,
 	paneId: string,
 	next: LayoutNode<S> | null,

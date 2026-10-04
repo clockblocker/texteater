@@ -132,7 +132,7 @@ export function mountGroup(group: RegisteredGroup) {
 	const panelIdsKey = group.panels.map(({ id }) => id).join(",");
 
 	// Gracefully handle an invalid default layout
-	// This could happen when e.g. useDefaultLayout is combined with dynamic Panels
+	// This could happen when e.g. a stored layout is combined with dynamic Panels
 	// In this case the best we can do is ignore the incoming layout
 	let defaultLayout: Layout | undefined = group.mutableState.defaultLayout;
 	if (defaultLayout) {

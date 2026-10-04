@@ -4,18 +4,18 @@ import type { RegisteredSeparator } from "../../components/separator/types";
 import type { Point } from "../../types";
 import type { HitRegion } from "../dom/calculateHitRegions";
 
-export type InteractionInactive = {
+type InteractionInactive = {
 	cursorFlags: 0;
 	state: "inactive";
 };
 
-export type InteractionHover = {
+type InteractionHover = {
 	cursorFlags: 0;
 	hitRegions: HitRegion[];
 	state: "hover";
 };
 
-export type InteractionActive = {
+type InteractionActive = {
 	cursorFlags: number;
 	hitRegions: HitRegion[];
 	initialLayoutMap: Map<RegisteredGroup, Layout>;

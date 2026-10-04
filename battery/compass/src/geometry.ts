@@ -40,7 +40,7 @@ export const LOOSE_CARD_REM = 18;
 /** How far below a Pane's top its Deck starts. */
 export const DECK_TOP_REM = 12;
 /** How far the return band reaches below the Deck's Cards. */
-export const RETURN_PAD_REM = 3;
+const RETURN_PAD_REM = 3;
 /**
  * The least a Deck shrinks to in a short Pane: room for a front Card's
  * Heading and a few lines of it under the Headings of the Cards behind.
@@ -132,8 +132,8 @@ export function cardHeightPx(
 	);
 }
 
-/** The Deck's left edge inside its Pane: the Deck is centred. */
-export function deckLeftIn(paneWidth: number, cardWidth: number): number {
+/** The Deck's inset from either inline edge of its Pane: the Deck is centred. */
+function deckInsetIn(paneWidth: number, cardWidth: number): number {
 	return (paneWidth - cardWidth) / 2;
 }
 
@@ -170,7 +170,7 @@ export function deckColumnIn(
 		),
 	);
 	return {
-		left: pane.left + deckLeftIn(pane.width, width),
+		left: pane.left + deckInsetIn(pane.width, width),
 		top: pane.top + Math.max(highest, Math.min(preferred, room - height)),
 		width,
 		height,

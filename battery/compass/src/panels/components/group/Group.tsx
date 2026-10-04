@@ -28,7 +28,6 @@ import type {
 	RegisteredGroup,
 	ResizeTargetMinimumSize,
 } from "./types";
-import { useGroupImperativeHandle } from "./useGroupImperativeHandle";
 
 /**
  * A Group wraps a set of resizable Panel components.
@@ -49,7 +48,6 @@ export function Group({
 	disableCursor,
 	disabled,
 	elementRef: elementRefProp,
-	groupRef,
 	id: idProp,
 	onLayoutChange: onLayoutChangeUnstable,
 	onLayoutChanged: onLayoutChangedUnstable,
@@ -112,8 +110,6 @@ export function Group({
 	});
 
 	const mergedRef = useMergedRefs(elementRef, elementRefProp);
-
-	useGroupImperativeHandle(id, groupRef);
 
 	// TRICKY Don't read for state; it will always lag behind by one tick
 	const getPanelStyles = useStableCallback(

@@ -1,4 +1,4 @@
-export type Dimensions = {
+type Dimensions = {
 	height: number;
 	width: number;
 };
@@ -6,11 +6,6 @@ export type Dimensions = {
 export type Point = {
 	x: number;
 	y: number;
-};
-
-export type PointerPrecision = {
-	coarse: number;
-	precise: number;
 };
 
 export type Rect = Dimensions & Point;

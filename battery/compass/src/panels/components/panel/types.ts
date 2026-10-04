@@ -5,7 +5,7 @@ export type PanelSize = {
 	inPixels: number;
 };
 
-export type GroupResizeBehavior =
+type GroupResizeBehavior =
 	| "preserve-relative-size"
 	| "preserve-pixel-size";
 
@@ -39,9 +39,7 @@ export type RegisteredPanel = {
 };
 
 /**
- * Imperative Panel API
- *
- * ℹ️ The `usePanelRef` and `usePanelCallbackRef` hooks are exported for convenience use in TypeScript projects.
+ * Reads and resizes a Panel from outside React.
  */
 export interface PanelImperativeHandle {
 	/**
@@ -201,18 +199,6 @@ export type PanelProps = BasePanelAttributes & {
 		| undefined;
 
 	/**
-	 * Exposes the following imperative API:
-	 * - `collapse(): void`
-	 * - `expand(): void`
-	 * - `getSize(): number`
-	 * - `isCollapsed(): boolean`
-	 * - `resize(size: number): void`
-	 *
-	 * ℹ️ The `usePanelRef` and `usePanelCallbackRef` hooks are exported for convenience use in TypeScript projects.
-	 */
-	panelRef?: Ref<PanelImperativeHandle | null> | undefined;
-
-	/**
 	 * CSS properties.
 	 *
 	 * ⚠️ Style is applied to nested `HTMLDivElement` to avoid styles that interfere with Flex layout.
@@ -220,7 +206,7 @@ export type PanelProps = BasePanelAttributes & {
 	style?: CSSProperties | undefined;
 };
 
-export type OnPanelResize = PanelProps["onResize"];
+type OnPanelResize = PanelProps["onResize"];
 
 /**
  * Size constraints may be specified in a variety of ways:
@@ -237,7 +223,7 @@ export type OnPanelResize = PanelProps["onResize"];
  *
  * Other units should be specified as strings ending with their CSS property units (e.g. 1rem, 50vh)
  */
-export type PanelConstraintProps = Pick<
+type PanelConstraintProps = Pick<
 	PanelProps,
 	| "collapsedSize"
 	| "collapsible"

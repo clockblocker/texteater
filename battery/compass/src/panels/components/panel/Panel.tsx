@@ -14,7 +14,6 @@ import { useStableCallback } from "../../hooks/useStableCallback";
 import { useStableObject } from "../../hooks/useStableObject";
 import { useGroupContext } from "../group/useGroupContext";
 import type { PanelProps, PanelSize, RegisteredPanel } from "./types";
-import { usePanelImperativeHandle } from "./usePanelImperativeHandle";
 
 /**
  * A Panel wraps resizable content and can be configured with min/max size constraints and collapsible behavior.
@@ -54,7 +53,6 @@ export function Panel({
 	maxSize = "100%",
 	minSize = "0%",
 	onResize: onResizeUnstable,
-	panelRef,
 	style,
 	...rest
 }: PanelProps) {
@@ -134,8 +132,6 @@ export function Panel({
 	useEffect(() => {
 		updatePanelProps(id, { disabled });
 	}, [disabled, id, updatePanelProps]);
-
-	usePanelImperativeHandle(id, panelRef);
 
 	// useSyncExternalStore does not support a custom equality check
 	// stringify avoids re-rendering when the style value hasn't changed

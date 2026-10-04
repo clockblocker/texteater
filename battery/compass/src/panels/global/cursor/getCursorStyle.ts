@@ -1,4 +1,4 @@
-import type { Properties } from "csstype";
+import type { CSSProperties } from "react";
 import type { RegisteredGroup } from "../../components/group/types";
 import {
 	CURSOR_FLAG_HORIZONTAL_MAX,
@@ -17,7 +17,7 @@ export function getCursorStyle({
 	cursorFlags: number;
 	groups: RegisteredGroup[];
 	state: InteractionState["state"];
-}): Properties["cursor"] {
+}): CSSProperties["cursor"] {
 	let horizontalCount = 0;
 	let verticalCount = 0;
 

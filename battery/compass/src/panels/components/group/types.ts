@@ -15,13 +15,11 @@ export type Layout = {
 	[id: string]: number;
 };
 
-export type LayoutStorage = Pick<Storage, "getItem" | "setItem">;
-
 /**
  * Metadata describing a completed layout change, passed as the second argument
  * to the `onLayoutChanged` callback. See #716.
  */
-export type LayoutChangedMeta = {
+type LayoutChangedMeta = {
 	/**
 	 * `true` when the change was caused by the user directly manipulating a
 	 * separator — releasing a pointer drag or pressing a resize key (arrow keys,
@@ -31,11 +29,6 @@ export type LayoutChangedMeta = {
 	 * there.
 	 */
 	isUserInteraction: boolean;
-};
-
-export type DragState = {
-	state: "default" | "hover" | "dragging";
-	separatorId: string | undefined;
 };
 
 export type ResizeTargetMinimumSize = {
@@ -87,9 +80,7 @@ export type GroupContextType = {
 };
 
 /**
- * Imperative Group API.
- *
- * ℹ️ The `useGroupRef` and `useGroupCallbackRef` hooks are exported for convenience use in TypeScript projects.
+ * Reads and sets a Group's layout from outside React.
  */
 export interface GroupImperativeHandle {
 	/**
@@ -144,15 +135,6 @@ export type GroupProps = HTMLAttributes<HTMLDivElement> & {
 	 * Ref attached to the root `HTMLDivElement`.
 	 */
 	elementRef?: Ref<HTMLDivElement | null> | undefined;
-
-	/**
-	 * Exposes the following imperative API:
-	 * - `getLayout(): Layout`
-	 * - `setLayout(layout: Layout): void`
-	 *
-	 * ℹ️ The `useGroupRef` and `useGroupCallbackRef` hooks are exported for convenience use in TypeScript projects.
-	 */
-	groupRef?: Ref<GroupImperativeHandle | null> | undefined;
 
 	/**
 	 * Uniquely identifies this group within an application.
@@ -211,6 +193,3 @@ export type GroupProps = HTMLAttributes<HTMLDivElement> & {
 	 */
 	style?: CSSProperties | undefined;
 };
-
-export type OnGroupLayoutChange = GroupProps["onLayoutChange"];
-export type OnGroupLayoutChanged = GroupProps["onLayoutChanged"];

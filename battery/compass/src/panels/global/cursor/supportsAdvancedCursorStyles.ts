@@ -1,11 +1,5 @@
 let cached: boolean | undefined;
 
-export function overrideSupportsAdvancedCursorStylesForTesting(
-	override: boolean,
-) {
-	cached = override;
-}
-
 /**
  * Caches and returns if advanced cursor CSS styles are supported.
  */
