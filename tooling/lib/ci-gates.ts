@@ -12,8 +12,8 @@ export const ciGates = [
 		args: ["bun", "run", "build"],
 	},
 	{
-		// Turbo runs each workspace's check, lint, test and policy stages
-		// (turbo.json), next to the repository's manifest policy, import
+		// Turbo runs each workspace's check, lint, test, generated-file
+		// freshness and policy stages (turbo.json), next to the repository's manifest policy, import
 		// policy, documentation integrity and tooling's types, lint and tests.
 		name: "validate",
 		args: [

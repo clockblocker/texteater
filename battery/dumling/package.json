@@ -88,6 +88,7 @@
 		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
 		"generate": "bun run generate:validation && bun run generate:readme",
+		"generate:check": "bun run generate:validation:check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
 		"generate:validation": "bun codegen/generate.ts",
 		"generate:validation:check": "bun codegen/generate.ts --check",

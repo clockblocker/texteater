@@ -28,8 +28,20 @@
 			"dependsOn": ["transit"],
 			"outputs": []
 		},
+		// Rewrites a package's committed generated files after its
+		// dependencies have rewritten theirs.
+		"generate": {
+			"dependsOn": ["^generate"],
+			"cache": false
+		},
+		// Fails when a package's committed generated files differ from what
+		// its generators produce from the current sources.
+		"generate:check": {
+			"dependsOn": ["transit"],
+			"outputs": []
+		},
 		"validate": {
-			"dependsOn": ["transit", "check", "lint", "test"],
+			"dependsOn": ["transit", "check", "lint", "test", "generate:check"],
 			"outputs": []
 		},
 		"fix": {

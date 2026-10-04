@@ -21,7 +21,11 @@ function plan(cwd: string, args: string[]) {
 	);
 	expect(result.exitCode, result.stderr.toString()).toBe(0);
 	return JSON.parse(result.stdout.toString()) as {
-		tasks: Array<{ dependencies: string[]; taskId: string }>;
+		tasks: Array<{
+			command: string;
+			dependencies: string[];
+			taskId: string;
+		}>;
 	};
 }
 
@@ -128,4 +132,50 @@ test("validate gates each workspace once and builds only for build-output gates"
 		"dumrel#test",
 		"dumspec#test",
 	]);
+});
+
+test("generate rewrites each package's generated files after its dependencies'", () => {
+	const manifest = JSON.parse(
+		readFileSync(resolve(repositoryRoot, "package.json"), "utf8"),
+	) as { scripts: Record<string, string> };
+	expect(manifest.scripts.generate).toBe("turbo run generate");
+
+	const graph = plan(repositoryRoot, ["generate"]);
+	const generators = graph.tasks.filter(
+		(task) => task.command !== "<NONEXISTENT>",
+	);
+	const dependencies = new Map(
+		generators.map((task) => [task.taskId, task.dependencies]),
+	);
+	expect([...dependencies.keys()].toSorted()).toEqual([
+		"dumdict#generate",
+		"dumling#generate",
+		"dumrel#generate",
+		"dumspec#generate",
+	]);
+	expect(dependencies.get("dumrel#generate")).toContain("dumling#generate");
+	expect(dependencies.get("dumspec#generate")).toEqual(
+		expect.arrayContaining(["dumling#generate", "dumrel#generate"]),
+	);
+	expect(dependencies.get("dumdict#generate")).toEqual(
+		expect.arrayContaining(["dumling#generate", "dumrel#generate"]),
+	);
+});
+
+test("validate runs every package's generated-file freshness check", () => {
+	const graph = plan(repositoryRoot, ["validate"]);
+	const checks = graph.tasks
+		.filter(
+			(task) =>
+				task.taskId.endsWith("#generate:check") &&
+				task.command !== "<NONEXISTENT>",
+		)
+		.map((task) => task.taskId.slice(0, -"#generate:check".length))
+		.toSorted();
+	expect(checks).toEqual(["dumdict", "dumling", "dumrel", "dumspec"]);
+	for (const workspace of checks)
+		expect(
+			graph.tasks.find((task) => task.taskId === `${workspace}#validate`)
+				?.dependencies,
+		).toContain(`${workspace}#generate:check`);
 });

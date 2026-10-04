@@ -1,7 +1,7 @@
 /**
  * A package's policy stages: manifest policy and architecture
  * (dependency-cruiser). Turbo's `validate` task runs them after the package's
- * `check`, `lint` and `test` tasks (turbo.json). Run outside Turbo, as
+ * `check`, `lint`, `test` and `generate:check` tasks (turbo.json). Run outside Turbo, as
  * `bun validate` in a package, it hands that whole graph to Turbo.
  *
  * Unused files, exports and dependencies are not a stage here: whether an

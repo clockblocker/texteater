@@ -59,6 +59,8 @@
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
+		"generate": "bun run generate:validation && bun run generate:readme",
+		"generate:check": "bun run generate:validation:check",
 		"generate:validation": "bun codegen/generate-validation-artifacts.ts",
 		"generate:validation:check": "bun codegen/generate-validation-artifacts.ts --check",
 		"generate:readme": "bun run generate-readme/generate-readme.ts",
