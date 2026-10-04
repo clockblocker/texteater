@@ -15,6 +15,7 @@ import { listLibraryTexts } from "../convex/texts";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { unresolvedUnits } from "../server/storedSegments";
 import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
+import { textTitle } from "../shared/text-title";
 import { proseSegments } from "../tooling/playground-example-collection";
 import {
 	actionContext,
@@ -680,6 +681,7 @@ test(
 			kind: "Text",
 			textId: seeded.definitionTextId,
 			focusAttestationId: seeded.citedAttestation,
+			title: textTitle({ sourceText: defined.knowledge.definition }),
 		});
 		expect(context?.segments.length).toBeGreaterThan(0);
 		expect(context?.memberSegmentIndices).toEqual([

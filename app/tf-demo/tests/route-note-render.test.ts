@@ -53,6 +53,7 @@ test("routes Lemma and Attestation subjects through the universal pipeline", () 
 				kind: "Text",
 				textId: "text-1",
 				focusAttestationId: "attestation-1",
+				title: "Er steht auf.",
 			},
 		},
 		presented: {
@@ -128,6 +129,7 @@ test("an Attestation holding a piece of a fused word reaches its Fusion", () => 
 				kind: "Text",
 				textId: "text-1",
 				focusAttestationId: "attestation-1",
+				title: "Ich bin im Wald.",
 			},
 		},
 		presented: {

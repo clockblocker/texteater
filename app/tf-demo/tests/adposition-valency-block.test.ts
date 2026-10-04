@@ -170,6 +170,7 @@ function readingNote(
 					kind: "Text",
 					textId: "text-1",
 					focusAttestationId: `attestation-${index}`,
+					title: "A source sentence.",
 				},
 				...(realizedCase ? { realizedCase } : {}),
 			})),

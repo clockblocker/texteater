@@ -13,6 +13,15 @@ export type TextTarget = {
 	readonly title?: string;
 };
 
+/**
+ * Where Go to source lands: a Text at one occurrence, named as the Library
+ * names it, so its Cover is titled before the Text loads (tf-demo ADR 0008).
+ */
+export type SourceTextTarget = TextTarget & {
+	readonly focusAttestationId: string;
+	readonly title: string;
+};
+
 export type ReadingNoteTarget = {
 	readonly kind: "Reading";
 	readonly readingId: string;

@@ -196,6 +196,7 @@ test("a definition-sourced Source Context is prefixed with the defined Reading a
 				kind: "Text",
 				textId: "texts-definition",
 				focusAttestationId: "attestations-9",
+				title: "Ein Bauwerk mit Dach.",
 			},
 		} as unknown as ReadingNote["sourceContexts"]["page"][number],
 	]);

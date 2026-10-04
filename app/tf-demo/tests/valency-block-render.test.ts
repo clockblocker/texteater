@@ -378,6 +378,7 @@ function readingNote(
 						kind: "Text",
 						textId: "text-1",
 						focusAttestationId: "attestation-1",
+						title: "A source sentence.",
 					},
 				},
 			],

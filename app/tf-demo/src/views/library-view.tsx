@@ -31,6 +31,7 @@ import { usePendingAction } from "@/hooks/use-pending-action";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
+import { textTitle } from "../../shared/text-title";
 
 const exampleText = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
 const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -70,7 +71,7 @@ export function LibraryView() {
 			follow({
 				kind: "Text",
 				textId: result.textId,
-				title: titleOf(normalized),
+				title: textTitle({ sourceText: normalized }),
 			});
 			setIsAddTextOpen(false);
 		} catch (cause) {
@@ -122,9 +123,7 @@ export function LibraryView() {
 											follow({
 												kind: "Text",
 												textId: text.textId,
-												title:
-													text.title ??
-													titleOf(text.sourceText),
+												title: textTitle(text),
 											})
 										}
 										className="group rounded-xl bg-card p-4 text-start text-card-foreground ring-1 ring-foreground/10 transition-[background-color,scale] duration-150 ease-out hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
@@ -254,16 +253,6 @@ function LibrarySkeleton() {
 function formatDate(timestamp: number): string {
 	return shortDateFormatter.format(timestamp);
 }
-
-/** What a Text without a title is called: its first line, cut short. */
-function titleOf(sourceText: string): string {
-	const line = sourceText.trim().split("\n")[0] ?? "";
-	return line.length > TITLE_LENGTH
-		? `${line.slice(0, TITLE_LENGTH - 1).trimEnd()}…`
-		: line;
-}
-
-const TITLE_LENGTH = 48;
 
 function submissionKeyFor(sourceText: string): string {
 	return `text:v1:${sourceText.trim().normalize("NFC")}`;

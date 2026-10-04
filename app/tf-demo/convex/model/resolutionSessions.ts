@@ -7,6 +7,7 @@ import {
 	type ResolutionReadingProjection,
 } from "../../server/resolutionSessionProjection";
 import { type StoredUnit, unitsByMember } from "../../server/storedSegments";
+import { textTitle } from "../../shared/text-title";
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
@@ -203,13 +204,15 @@ const resolutionRouteValidator = v.object({
 
 /**
  * The clicked Sentence's stored Segments and the stored indices of the
- * occurrence's members, so the pending Note quotes what the stored Note will.
+ * occurrence's members, so the pending Note quotes what the stored Note will,
+ * and its Text's title, so Go to source from that quote names the Text.
  */
 const resolutionSourceValidator = v.object({
 	segments: v.array(
 		v.object({ kind: segmentKindValidator, text: v.string() }),
 	),
 	memberSegmentIndices: v.array(v.number()),
+	textTitle: v.string(),
 });
 type ResolutionSource = Infer<typeof resolutionSourceValidator>;
 
@@ -278,9 +281,10 @@ export async function loadResolutionNote(
 		.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 		.unique();
 	if (!session) return null;
-	const [sentence, segments] = await Promise.all([
+	const [sentence, segments, text] = await Promise.all([
 		ctx.db.get(session.sentenceId),
 		loadStoredSegments(ctx, session.sentenceId),
+		ctx.db.get(session.route.textId),
 	]);
 	const unit = unitsByMember(sentence?.units).get(
 		session.clickedSegmentIndex,
@@ -290,7 +294,7 @@ export async function loadResolutionNote(
 		target: { kind: "Resolution", requestId },
 		lifecycle: await resolutionNoteLifecycle(ctx, session),
 		route: session.route,
-		source: await resolutionSource(ctx, session, segments, unit),
+		source: await resolutionSource(ctx, session, segments, unit, text),
 		...(unit ? { unit } : {}),
 		// The Session stores what projectResolutionGrammar and
 		// projectResolutionReading produced.
@@ -314,6 +318,7 @@ async function resolutionSource(
 	session: ResolutionSession,
 	segments: readonly Doc<"segments">[],
 	unit: StoredUnit | undefined,
+	text: Doc<"texts"> | null,
 ): Promise<ResolutionSource> {
 	const committed = session.attestationId
 		? await loadCompleteOccurrenceMembers(ctx, session.attestationId)
@@ -332,6 +337,9 @@ async function resolutionSource(
 	return {
 		segments: segments.map(({ kind, text }) => ({ kind, text })),
 		memberSegmentIndices,
+		textTitle: textTitle(
+			text ?? { sourceText: session.route.stitchedText },
+		),
 	};
 }
 

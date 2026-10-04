@@ -6,6 +6,8 @@
  */
 import { type Infer, v } from "convex/values";
 
+import type { SourceTextTarget } from "../../../shared/navigation";
+import { textTitle } from "../../../shared/text-title";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { loadStoredSegments } from "../../model/storedSegments";
@@ -35,6 +37,7 @@ export const sourceTargetValidator = v.object({
 	kind: v.literal("Text"),
 	textId: v.id("texts"),
 	focusAttestationId: v.id("attestations"),
+	title: v.string(),
 });
 
 export const sourceSegmentValidator = v.object({
@@ -52,8 +55,7 @@ export type SourceOrigin =
 			readonly canonicalForm: string;
 	  };
 
-export type SourceTarget = {
-	readonly kind: "Text";
+export type SourceTarget = SourceTextTarget & {
 	readonly textId: Id<"texts">;
 	readonly focusAttestationId: Id<"attestations">;
 };
@@ -86,14 +88,19 @@ async function projectSourceOrigin(
 
 /**
  * The workspace destination that shows this occurrence in place: its Text,
- * pushed as a Cover scrolled to the Sentence, whether a Visitor submitted it
- * or it holds a definition.
+ * pushed as a Cover scrolled to the Sentence and titled as the Library
+ * titles it, whether a Visitor submitted it or it holds a definition.
  */
 function sourceTargetFor(
-	textId: Id<"texts">,
+	text: Doc<"texts">,
 	attestationId: Id<"attestations">,
 ): SourceTarget {
-	return { kind: "Text", textId, focusAttestationId: attestationId };
+	return {
+		kind: "Text",
+		textId: text._id,
+		focusAttestationId: attestationId,
+		title: textTitle(text),
+	};
 }
 
 /**
@@ -137,6 +144,6 @@ export async function projectOccurrenceSource(
 		),
 		memberSegmentIndices: [...occurrence.memberSegmentIndices],
 		origin,
-		target: sourceTargetFor(text._id, attestationId),
+		target: sourceTargetFor(text, attestationId),
 	};
 }

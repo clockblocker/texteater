@@ -8,6 +8,7 @@ import {
 } from "@/views/subject-presentation";
 import type { SubjectRenderer, SubjectView } from "@/workspace/compass/subject";
 import { api } from "../../convex/_generated/api";
+import { textTitle } from "../../shared/text-title";
 import { HeadingSkeleton, type NotePart, NotePartProvider } from "./note-part";
 import {
 	type TextSubjectTarget,
@@ -127,7 +128,7 @@ function dealtCard({ key, target, presentationContext }: WorkspaceCardTarget) {
 	return { key, subject: workspaceSubjectFor(target, presentationContext) };
 }
 
-/** A Text's Heading: what the Library called it, or its opening words. */
+/** A Text's Heading: what the Library calls it. */
 function TextHeading({ target }: { target: TextSubjectTarget }) {
 	const visitorId = useAnonymousVisitorId();
 	const textQuery = useQuery({
@@ -135,7 +136,8 @@ function TextHeading({ target }: { target: TextSubjectTarget }) {
 		enabled: target.title === undefined,
 	});
 	const title =
-		target.title ?? textQuery.data?.sourceText.trim().split("\n")[0];
+		target.title ??
+		(textQuery.data ? textTitle(textQuery.data) : undefined);
 	if (title === undefined) return <HeadingSkeleton />;
 	return <span className="min-w-0 truncate font-serif">{title}</span>;
 }

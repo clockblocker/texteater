@@ -30,6 +30,7 @@ const source = {
 		{ kind: "Punctuation" as const, text: "." },
 	],
 	memberSegmentIndices: [2],
+	textTitle: "Die Banken.",
 };
 
 const grammar = {
@@ -420,6 +421,7 @@ test("the resolving Reading Note quotes the clicked occurrence of a repeated wor
 				{ kind: "Punctuation", text: "." },
 			],
 			memberSegmentIndices: [4],
+			textTitle: "Banken und Banken.",
 		},
 		grammar,
 		updatedAt: 1,

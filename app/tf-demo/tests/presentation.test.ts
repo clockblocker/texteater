@@ -830,10 +830,12 @@ test("pages distinct Source Contexts newest-first with complete discontinuous me
 	expect(quotedB?.memberSegmentIndices).toEqual([2, 6]);
 	expect(quotedB?.memberTexts).toEqual(["steht", "dazwischen"]);
 	expect(quotedB?.origin).toEqual({ kind: "Text" });
+	// Go to source names the Text as the Library does: its opening line.
 	expect(quotedB?.target).toEqual({
 		kind: "Text",
 		textId: textB.textId,
 		focusAttestationId: newBId,
+		title: "Heute steht etwas dazwischen.",
 	});
 	expect(first.isDone).toBe(false);
 

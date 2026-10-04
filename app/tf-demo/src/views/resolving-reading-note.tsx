@@ -108,6 +108,7 @@ function resolvingSourceContext(
 			kind: "Text",
 			textId: note.route.textId,
 			focusAttestationId: attestationId,
+			title: note.source.textTitle,
 		},
 	};
 }
@@ -154,7 +155,13 @@ export function ResolvingReadingNote({
 					// the source Text, reached without a focus on a placeholder occurrence.
 					follow: (target) => {
 						if (target.kind === "Text")
-							follow({ kind: "Text", textId: target.textId });
+							follow({
+								kind: "Text",
+								textId: target.textId,
+								...(target.title
+									? { title: target.title }
+									: {}),
+							});
 					},
 				},
 			}}
