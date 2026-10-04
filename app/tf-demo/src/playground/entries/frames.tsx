@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { CARD_WIDTH_REM } from "react-resizable-panels/workspace";
 
 export function Stage({
 	label,
@@ -19,22 +20,23 @@ export function Stage({
 	);
 }
 
-/** Mirrors `.workspace__card` from the panels battery, tail included. */
-export function CardFrame({
-	tail,
-	children,
-}: {
-	tail: string;
-	children: ReactNode;
-}) {
+/**
+ * A Card-sized paper surface: the width and edge a Compass Card rests at.
+ * Its Heading is the Note's own, and its content fades out at the clip.
+ */
+export function CardFrame({ children }: { children: ReactNode }) {
 	return (
 		<article
 			data-presentation-form="Card"
-			className="relative h-[34rem] w-[25.775rem] max-w-full overflow-hidden rounded-[0.7rem] border border-line-strong bg-paper pt-6 pb-[calc(28px+0.7rem)] shadow-[0_1rem_2rem_#0005]"
+			className="relative flex h-[34rem] max-w-full flex-col overflow-hidden rounded-[0.9rem] border border-line-strong bg-paper shadow-[0_1rem_2rem_#0005]"
+			style={{ width: `${CARD_WIDTH_REM.toString()}rem` }}
 		>
-			<div className="h-full overflow-auto">{children}</div>
-			<div className="absolute inset-x-0 bottom-0 flex h-[calc(28px+0.7rem)] items-start justify-center border-t border-line bg-paper pt-[0.7rem] text-[0.7rem] text-ink-soft">
-				{tail}
+			<div className="min-h-0 flex-1 overflow-auto">
+				{children}
+				<div
+					aria-hidden="true"
+					className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-gradient-to-t from-paper to-transparent"
+				/>
 			</div>
 		</article>
 	);
