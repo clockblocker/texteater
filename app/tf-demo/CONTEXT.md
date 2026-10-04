@@ -8,32 +8,35 @@ definition, edge cases and examples.
 ## Language
 
 The [react-resizable-panels workspace context](../../battery/react-resizable-panels/CONTEXT.md)
-defines Presentation, Card, Sheet, Pane, Card Layer, Sheet Stack, Lift, Expand,
-Collapse, Close, and cancellation. tf-demo uses that model in production.
+defines Presentation, Card, Sheet, Pane, Sheet Stack, Ground, Cover, Ground
+line, Menu, Menu Item, Rooted Pane, Floating Pane, Deck, Lift, Expand,
+Collapse, Close, Sweep, and cancellation. In tf-demo a click on a Segment
+deals a Deck to the Sheet it was clicked in.
 
-**Library Sheet**:
-The initial Locked Sheet containing the Library. See [tf-demo ADR 0003].
+**Library**:
+The Menu Item listing Texts. A Text selected there becomes the Ground's
+content, so the initial Rooted Pane's Ground line runs Menu › Library › Text.
+See [tf-demo ADR 0008].
+_Avoid_: Library Sheet, Text Sheet
 
-**Text Sheet**:
-A Locked Sheet containing a Text Subject. See [tf-demo ADR 0003].
+**Link**:
+A reference inside a Note naming one Note, or a location in a Text as Go to
+source does. A click pushes a fresh Cover in the same Pane; a drag lifts a
+fresh Held Card. See [tf-demo ADR 0008].
 
 **Note Presentation**:
 A Subject such as a Reading, a Surface or a Resolution Step, presented as a
 Note in Card or Sheet form. It is one element in every form, and its Blocks
 adapt. See [tf-demo ADR 0006].
 
-**Deck**:
-The Cards dealt for one selection, attached to the Sheet they were dealt from.
-A Sheet has at most one Deck.
-_Avoid_: pile
-
 **Block**:
 One ordered member of a Note's content. It reads the Presentation's form and
 renders accordingly. See [tf-demo ADR 0006].
 
 **Heading Block**:
-The pinned first Block naming the Note's Subject. It is the lift handle in
-every form. See [tf-demo ADR 0006].
+The pinned first Block naming the Note's Subject. It is the lift handle as a
+Card and as a Cover; as a Ground it folds shut and the Pane bar lifts the
+Ground. See [tf-demo ADR 0006].
 
 **Source Contexts Block**:
 The pinned Block listing where the Subject was met. See [tf-demo ADR 0006].
@@ -54,8 +57,9 @@ Presentation reads as one thing while it changes. See [tf-demo ADR 0006].
 _Avoid_: header, card tail content
 
 **Workspace Persistence**:
-The workspace state that survives a reload: the placed Sheets and the Card
-Layer membership an expanded Note needs to return. See [tf-demo ADR 0003].
+The workspace state that survives a reload: the Panes with their Ground lines
+and Covers, and the Deck slot a Cover needs to collapse back to. See
+[tf-demo ADR 0003].
 
 **Occurrence Attestation**:
 tf-demo's durable record for one resolved high-level occurrence in one
@@ -209,3 +213,4 @@ that ends Occurrence Attestations. See [tf-demo ADR 0001] and
 [tf-demo ADR 0004]: ./docs/adr/0004-share-segment-resolution-state-behind-visitor-encounters.md
 [tf-demo ADR 0005]: ./docs/adr/0005-materialize-definitions-as-hidden-definition-texts.md
 [tf-demo ADR 0006]: ./docs/adr/0006-render-a-note-presentation-as-one-element-of-blocks.md
+[tf-demo ADR 0008]: ./docs/adr/0008-give-every-pane-a-ground-beneath-its-covers.md

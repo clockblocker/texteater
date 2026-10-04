@@ -6,7 +6,7 @@
   records occurrence-specific Attestations, Visitor Encounter history, and
   Personal Annotations.
 - [react-resizable-panels](./battery/react-resizable-panels/CONTEXT.md): owns
-  workspace Presentation, Card, Sheet, and gesture terminology.
+  workspace Presentation, Pane, Ground, Cover, Deck, and gesture terminology.
 - [lego](./battery/lego/CONTEXT.md): owns the shared token palette, theme
   choice, and the atoms and molecules Notes and reading text are built from.
 - [Dumling](./battery/dumling/CONTEXT.md): names, in language-neutral terms,

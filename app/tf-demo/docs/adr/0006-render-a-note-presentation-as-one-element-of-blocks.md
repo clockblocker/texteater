@@ -1,23 +1,28 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Render a Note Presentation as one element of Blocks
 
 A Note Presentation is one rendered element in every form: resting Card, Held
-Card, and Sheet. It never becomes a second component, a drag ghost, or a
-crossfade between two faces. Changing form is a layout animation of that one
-element and of its Blocks, which read the Presentation's form and adapt. Every
-edge of the Note is its own: nothing drawn beside it stands in for part of its
-box.
+Card, and Sheet, whether that Sheet is a Ground or a Cover. It never becomes a
+second component, a drag ghost, or a crossfade between two faces. A drop
+preview, the translucent Cover or Pane a release would make, is a separate
+element showing the destination; the Note in hand stays the one element.
+Changing form is a layout animation of that one element and of its Blocks,
+which read the Presentation's form and adapt. Every edge of the Note is its
+own: nothing drawn beside it stands in for part of its box.
 
 A Note is an ordered list of Blocks. The Heading Block is pinned first and the
 Source Contexts Block is pinned; together they are the Anchor and are visible
 in every form, so the eye has something to hold while the box grows. The
-Heading is the lift handle in every form. As a Card it is the title row, at the
-lower edge when the Card is a Card Tail. As a Cover it is the Cover's bar: its
-← and its label. As a Ground it folds shut, because the Pane bar carries the
-label. The Heading row's height rides the same morph as the box; only its words
+Heading is the lift handle in Card and Cover form. As a Card it is the title
+row, at the lower edge when the Card is a Card Tail. As a Cover it is the
+Cover's bar: its ← and its label. As a Ground it folds shut, because the Pane
+bar carries the label and is the Ground's lift handle: a plain drag lifts a
+Floating Ground, and a press of about one second lifts a Rooted Ground
+([tf-demo ADR 0008](./0008-give-every-pane-a-ground-beneath-its-covers.md)).
+The Heading row's height rides the same morph as the box; only its words
 change, and the row itself never fades. Every other Block renders at full size
 in Card form and is clipped by the Card's box; a Block may opt into a compact
 Card form instead. Source Contexts shows two in Card form and an expandable
