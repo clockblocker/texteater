@@ -80,6 +80,11 @@ test("uses role-specific #307 census exclusions", () => {
 			"battery/dumgen/evidence/target-attestation-drafts/review-sheet.md",
 		),
 	).toBeFalse();
+	expect(
+		isDeveloperDocumentationPath(
+			"battery/dumgen/evidence/segment-in-units-lab/runs/example/sweep.md",
+		),
+	).toBeFalse();
 });
 
 test("enforces canonical developer-documentation paths", () => {
