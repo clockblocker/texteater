@@ -1248,7 +1248,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		};
 
 		await expect(commitInTransaction(t, badPlan)).rejects.toThrow(
-			"Reading does not match",
+			"Knowledge Change Reading must match the patched Reading",
 		);
 		expect(await snapshot(t)).toEqual(before);
 
