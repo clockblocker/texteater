@@ -41,8 +41,8 @@ export function updateCursorStyle(ownerDocument: Document) {
 		case "hover": {
 			const cursorStyle = getCursorStyle({
 				cursorFlags: interactionState.cursorFlags,
-				groups: interactionState.hitRegions.map(
-					(current) => current.group,
+				splits: interactionState.hitAreas.map(
+					(current) => current.split,
 				),
 				state: interactionState.state,
 			});

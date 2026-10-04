@@ -1,31 +1,32 @@
-import type { Layout } from "../../components/group/types";
-import type { PanelConstraints } from "../../components/panel/types";
+import type { RegionConstraints } from "../../components/region/types";
+import type { Layout } from "../../components/split/types";
 import { formatLayoutNumber } from "./formatLayoutNumber";
 
 export function calculateDefaultLayout(
-	derivedPanelConstraints: PanelConstraints[],
+	derivedRegionConstraints: RegionConstraints[],
 ): Layout {
 	let explicitCount = 0;
 	let total = 0;
 
-	for (const current of derivedPanelConstraints) {
+	for (const current of derivedRegionConstraints) {
 		if (current.defaultSize !== undefined) {
 			explicitCount++;
 			total += formatLayoutNumber(current.defaultSize);
 		}
 	}
 
-	// Panels without a default size share what the others leave
-	const remainingPanelCount = derivedPanelConstraints.length - explicitCount;
+	// Regions without a default size share what the others leave
+	const remainingRegionCount =
+		derivedRegionConstraints.length - explicitCount;
 	const remainingSize =
-		remainingPanelCount === 0
+		remainingRegionCount === 0
 			? 0
-			: formatLayoutNumber((100 - total) / remainingPanelCount);
+			: formatLayoutNumber((100 - total) / remainingRegionCount);
 
-	// Keys follow Panel order, which simplifies traversal elsewhere
+	// Keys follow Region order, which simplifies traversal elsewhere
 	const layout: Layout = {};
-	for (const current of derivedPanelConstraints) {
-		layout[current.panelId] =
+	for (const current of derivedRegionConstraints) {
+		layout[current.regionId] =
 			current.defaultSize === undefined
 				? remainingSize
 				: formatLayoutNumber(current.defaultSize);

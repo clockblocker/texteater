@@ -1,25 +1,25 @@
-import { getMountedGroups } from "../mutable-state/groups";
-import { findMatchingHitRegions } from "../utils/findMatchingHitRegions";
-import { getImperativePanelMethods } from "../utils/getImperativePanelMethods";
+import { getMountedSplits } from "../mutable-state/splits";
+import { findMatchingHitAreas } from "../utils/findMatchingHitAreas";
+import { getImperativeRegionMethods } from "../utils/getImperativeRegionMethods";
 
 export function onDocumentDoubleClick(event: MouseEvent) {
 	if (event.defaultPrevented) {
 		return;
 	}
 
-	const mountedGroups = getMountedGroups();
-	const hitRegions = findMatchingHitRegions(event, mountedGroups);
-	hitRegions.forEach((current) => {
-		if (current.separator && !current.separator.disableDoubleClick) {
-			const panelWithDefaultSize = current.panels.find(
-				(panel) => panel.panelConstraints.defaultSize !== undefined,
+	const mountedSplits = getMountedSplits();
+	const hitAreas = findMatchingHitAreas(event, mountedSplits);
+	hitAreas.forEach((current) => {
+		if (current.handle && !current.handle.disableDoubleClick) {
+			const regionWithDefaultSize = current.regions.find(
+				(region) => region.regionConstraints.defaultSize !== undefined,
 			);
-			if (panelWithDefaultSize) {
+			if (regionWithDefaultSize) {
 				const defaultSize =
-					panelWithDefaultSize.panelConstraints.defaultSize;
-				const api = getImperativePanelMethods({
-					groupId: current.group.id,
-					panelId: panelWithDefaultSize.id,
+					regionWithDefaultSize.regionConstraints.defaultSize;
+				const api = getImperativeRegionMethods({
+					splitId: current.split.id,
+					regionId: regionWithDefaultSize.id,
 				});
 				if (api && defaultSize !== undefined) {
 					api.resize(defaultSize);

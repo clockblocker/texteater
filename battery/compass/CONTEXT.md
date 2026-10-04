@@ -29,6 +29,22 @@ A resizable workspace region holding one Sheet Stack and the Decks its Sheets
 dealt. A Pane is Rooted or Floating, by its Ground line.
 _Avoid_: panel, docking region
 
+**Split**:
+The layout primitive that divides a space between Split Regions along one
+axis and lets the reader resize them. A split in the Pane layout renders as a
+Split. It holds no Sheets or Decks; Panes do.
+_Avoid_: Group, panel group
+
+**Split Region**:
+One part of a Split's space. A Pane occupies a Split Region: the region is the
+space and its size, the Pane is what the workspace keeps in it.
+_Avoid_: panel
+
+**Split Handle**:
+The control between two Split Regions that resizes them by pointer drag or
+arrow keys.
+_Avoid_: separator, divider
+
 **Sheet Stack**:
 The Sheets in one Pane, from the Ground up through its Covers. It is the path
 the reader took, and going back retraces it one Sheet at a time. A covered

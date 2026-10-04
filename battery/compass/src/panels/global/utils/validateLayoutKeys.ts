@@ -1,16 +1,19 @@
-import type { Layout } from "../../components/group/types";
-import type { RegisteredPanel } from "../../components/panel/types";
+import type { RegisteredRegion } from "../../components/region/types";
+import type { Layout } from "../../components/split/types";
 
-export function validateLayoutKeys(panels: RegisteredPanel[], layout: Layout) {
-	const panelIds = panels.map((panel) => panel.id);
+export function validateLayoutKeys(
+	regions: RegisteredRegion[],
+	layout: Layout,
+) {
+	const regionIds = regions.map((region) => region.id);
 	const layoutKeys = Object.keys(layout);
 
-	if (panelIds.length !== layoutKeys.length) {
+	if (regionIds.length !== layoutKeys.length) {
 		return false;
 	}
 
-	for (const panelId of panelIds) {
-		if (!layoutKeys.includes(panelId)) {
+	for (const regionId of regionIds) {
+		if (!layoutKeys.includes(regionId)) {
 			return false;
 		}
 	}

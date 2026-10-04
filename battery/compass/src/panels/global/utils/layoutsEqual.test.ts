@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { Layout } from "../../components/group/types";
+import type { Layout } from "../../components/split/types";
 import { layoutsEqual } from "./layoutsEqual";
 
 const EMPTY: Layout = {};

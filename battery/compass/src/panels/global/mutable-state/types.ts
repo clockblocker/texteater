@@ -1,8 +1,8 @@
-import type { Layout, RegisteredGroup } from "../../components/group/types";
-import type { RegisteredPanel } from "../../components/panel/types";
-import type { RegisteredSeparator } from "../../components/separator/types";
+import type { RegisteredHandle } from "../../components/handle/types";
+import type { RegisteredRegion } from "../../components/region/types";
+import type { Layout, RegisteredSplit } from "../../components/split/types";
 import type { Point } from "../../types";
-import type { HitRegion } from "../dom/calculateHitRegions";
+import type { HitArea } from "../dom/calculateHitAreas";
 
 type InteractionInactive = {
 	cursorFlags: 0;
@@ -11,14 +11,14 @@ type InteractionInactive = {
 
 type InteractionHover = {
 	cursorFlags: 0;
-	hitRegions: HitRegion[];
+	hitAreas: HitArea[];
 	state: "hover";
 };
 
 type InteractionActive = {
 	cursorFlags: number;
-	hitRegions: HitRegion[];
-	initialLayoutMap: Map<RegisteredGroup, Layout>;
+	hitAreas: HitArea[];
+	initialLayoutMap: Map<RegisteredSplit, Layout>;
 	pointerDownAtPoint: Point;
 	state: "active";
 };
@@ -28,7 +28,7 @@ export type InteractionState =
 	| InteractionHover
 	| InteractionActive;
 
-export type SeparatorToPanelsMap = Map<
-	RegisteredSeparator,
-	[primaryPanel: RegisteredPanel, secondaryPanel: RegisteredPanel]
+export type HandleToRegionsMap = Map<
+	RegisteredHandle,
+	[primaryRegion: RegisteredRegion, secondaryRegion: RegisteredRegion]
 >;

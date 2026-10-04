@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import type { Layout } from "../../components/group/types";
-import type { PanelConstraints } from "../../components/panel/types";
+import type { RegionConstraints } from "../../components/region/types";
+import type { Layout } from "../../components/split/types";
 import { adjustLayoutByDelta as adjustLayoutByDeltaExternal } from "./adjustLayoutByDelta";
 
 type Args = Parameters<typeof adjustLayoutByDeltaExternal>[0];
@@ -8,7 +8,7 @@ type Args = Parameters<typeof adjustLayoutByDeltaExternal>[0];
 function adjustLayoutByDelta({
 	delta,
 	initialLayout,
-	panelConstraints,
+	regionConstraints,
 	pivotIndices = [0, 1],
 	prevLayout,
 	trigger = "imperative-api",
@@ -19,15 +19,15 @@ function adjustLayoutByDelta({
 	return adjustLayoutByDeltaExternal({
 		delta,
 		initialLayout,
-		panelConstraints,
+		regionConstraints,
 		pivotIndices,
 		prevLayout,
 		trigger,
 	});
 }
 
-function c(partials: Partial<PanelConstraints>[]) {
-	const constraints: PanelConstraints[] = [];
+function c(partials: Partial<RegionConstraints>[]) {
+	const constraints: RegionConstraints[] = [];
 
 	partials.forEach((current, index) => {
 		constraints.push({
@@ -38,7 +38,7 @@ function c(partials: Partial<PanelConstraints>[]) {
 			maxSize: 100,
 			minSize: 0,
 			...current,
-			panelId: `${index}`,
+			regionId: `${index}`,
 		});
 	});
 
@@ -61,7 +61,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 1,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([{}, {}]),
+				regionConstraints: c([{}, {}]),
 				prevLayout: l([50, 50]),
 			}),
 		).toEqual(l([51, 49]));
@@ -72,7 +72,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([{}, {}]),
+				regionConstraints: c([{}, {}]),
 				prevLayout: l([50, 50]),
 			}),
 		).toEqual(l([75, 25]));
@@ -81,7 +81,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([{}, {}]),
+				regionConstraints: c([{}, {}]),
 				prevLayout: l([50, 50]),
 			}),
 		).toEqual(l([100, 0]));
@@ -92,7 +92,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						minSize: 20,
 						maxSize: 60,
@@ -112,7 +112,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -130,7 +130,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 40,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -150,7 +150,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 5,
 				initialLayout: l([10, 90]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 10,
 						collapsible: true,
@@ -164,13 +164,13 @@ describe("adjustLayoutByDelta", () => {
 	});
 
 	// Edge case
-	// Keyboard interactions should always expand a collapsed panel
+	// Keyboard interactions should always expand a collapsed region
 	test("[1++,2]", () => {
 		expect(
 			adjustLayoutByDelta({
 				delta: 5,
 				initialLayout: l([10, 90]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 10,
 						collapsible: true,
@@ -185,13 +185,13 @@ describe("adjustLayoutByDelta", () => {
 	});
 
 	// Edge case
-	// Keyboard interactions should always collapse a collapsible panel once it's at the minimum size
+	// Keyboard interactions should always collapse a collapsible region once it's at the minimum size
 	test("[1++,2]", () => {
 		expect(
 			adjustLayoutByDelta({
 				delta: 5,
 				initialLayout: l([75, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsible: true,
@@ -211,7 +211,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 1,
 				initialLayout: l([4, 96]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 4,
 						collapsible: true,
@@ -235,7 +235,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 1,
 				initialLayout: l([4, 96]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 4,
 						collapsible: true,
@@ -260,7 +260,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([4, 96]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 4,
 						collapsible: true,
@@ -284,7 +284,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 30,
 				initialLayout: l([5, 95]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -307,7 +307,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 30,
 				initialLayout: l([5, 95]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -331,7 +331,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 30,
 				initialLayout: l([0, 100]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 0,
 						collapsible: true,
@@ -351,7 +351,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -1,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([{}, {}]),
+				regionConstraints: c([{}, {}]),
 				prevLayout: l([50, 50]),
 			}),
 		).toEqual(l([49, 51]));
@@ -362,7 +362,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -25,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([{}, {}]),
+				regionConstraints: c([{}, {}]),
 				prevLayout: l([50, 50]),
 			}),
 		).toEqual(l([25, 75]));
@@ -373,7 +373,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([{}, {}]),
+				regionConstraints: c([{}, {}]),
 				prevLayout: l([50, 50]),
 			}),
 		).toEqual(l([0, 100]));
@@ -384,7 +384,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						minSize: 20,
 						maxSize: 60,
@@ -404,7 +404,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -25,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -422,7 +422,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -30,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -438,7 +438,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -36,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -453,12 +453,12 @@ describe("adjustLayoutByDelta", () => {
 
 	test("[1--,2]", () => {
 		// Edge case
-		// The second panel should prevent the first panel from collapsing
+		// The second region should prevent the first region from collapsing
 		expect(
 			adjustLayoutByDelta({
 				delta: -30,
 				initialLayout: l([50, 50]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -472,13 +472,13 @@ describe("adjustLayoutByDelta", () => {
 	});
 
 	// Edge case
-	// Keyboard interactions should always expand a collapsed panel
+	// Keyboard interactions should always expand a collapsed region
 	test("[1--,2]", () => {
 		expect(
 			adjustLayoutByDelta({
 				delta: -5,
 				initialLayout: l([90, 10]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 10,
@@ -493,13 +493,13 @@ describe("adjustLayoutByDelta", () => {
 	});
 
 	// Edge case
-	// Keyboard interactions should always collapse a collapsible panel once it's at the minimum size
+	// Keyboard interactions should always collapse a collapsible region once it's at the minimum size
 	test("[1++,2]", () => {
 		expect(
 			adjustLayoutByDelta({
 				delta: -5,
 				initialLayout: l([25, 75]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 10,
 						collapsible: true,
@@ -518,7 +518,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 1,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([26, 49, 25]));
@@ -529,7 +529,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([50, 25, 25]));
@@ -540,7 +540,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([75, 0, 25]));
@@ -551,7 +551,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 75,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([100, 0, 0]));
@@ -562,7 +562,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{ maxSize: 35 }, { minSize: 25 }, {}]),
+				regionConstraints: c([{ maxSize: 35 }, { minSize: 25 }, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([35, 40, 25]));
@@ -574,7 +574,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{ maxSize: 35 }, { minSize: 25 }, {}]),
+				regionConstraints: c([{ maxSize: 35 }, { minSize: 25 }, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([35, 40, 25]));
@@ -585,7 +585,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 5,
 				initialLayout: l([25, 40, 35]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -604,7 +604,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 26,
 				initialLayout: l([25, 40, 35]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -623,7 +623,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 80,
 				initialLayout: l([25, 40, 35]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -642,7 +642,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -1,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([24, 51, 25]));
@@ -653,7 +653,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -25,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([0, 75, 25]));
@@ -664,7 +664,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -1,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{ minSize: 20 }, {}, {}]),
+				regionConstraints: c([{ minSize: 20 }, {}, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([24, 51, 25]));
@@ -675,7 +675,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{ minSize: 20 }, {}, {}]),
+				regionConstraints: c([{ minSize: 20 }, {}, {}]),
 				prevLayout: l([25, 50, 25]),
 			}),
 		).toEqual(l([20, 55, 25]));
@@ -686,7 +686,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -5,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						// Implied min size 10
 					},
@@ -703,7 +703,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -20,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						// Implied min size 10
 					},
@@ -720,7 +720,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -739,7 +739,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -20,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -758,7 +758,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -20,
 				initialLayout: l([45, 50, 5]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						maxSize: 50,
@@ -779,7 +779,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -1,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -791,7 +791,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -25,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -803,7 +803,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -815,7 +815,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -75,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -827,7 +827,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 5,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, { minSize: 15 }]),
+				regionConstraints: c([{}, {}, { minSize: 15 }]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -839,7 +839,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 20,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, { minSize: 15 }]),
+				regionConstraints: c([{}, {}, { minSize: 15 }]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -851,7 +851,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 5,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{},
 					{ collapsible: true, minSize: 20 },
@@ -867,7 +867,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 10,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{},
 					{ collapsible: true, minSize: 20 },
@@ -881,7 +881,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 16,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{},
 					{ collapsible: true, minSize: 20 },
@@ -897,7 +897,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 1,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -909,7 +909,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -921,7 +921,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -20,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, { minSize: 40 }, {}]),
+				regionConstraints: c([{}, { minSize: 40 }, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -933,7 +933,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([{}, {}, { maxSize: 30 }]),
+				regionConstraints: c([{}, {}, { maxSize: 30 }]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 50, 25]),
 			}),
@@ -945,7 +945,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -35,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -963,7 +963,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -40,
 				initialLayout: l([25, 50, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -983,7 +983,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 0, 75]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1001,7 +1001,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -20,
 				initialLayout: l([25, 0, 75]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1022,7 +1022,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -100,
 				initialLayout: l([100 / 3, 100 / 3, 100 / 3]),
-				panelConstraints: c([{}, {}, {}]),
+				regionConstraints: c([{}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([100 / 3, 100 / 3, 100 / 3]),
 				trigger: "mouse-or-touch",
@@ -1035,7 +1035,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 1,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([26, 24, 25, 25]));
@@ -1046,7 +1046,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([50, 0, 25, 25]));
@@ -1057,7 +1057,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([75, 0, 0, 25]));
@@ -1068,7 +1068,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 75,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([100, 0, 0, 0]));
@@ -1079,7 +1079,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 25,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{ maxSize: 35 }, {}, {}, {}]),
+				regionConstraints: c([{ maxSize: 35 }, {}, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([35, 15, 25, 25]));
@@ -1090,7 +1090,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 100,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{ minSize: 10 },
 					{ minSize: 10 },
@@ -1106,7 +1106,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -1132,7 +1132,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 15,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -1160,7 +1160,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 40,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -1188,7 +1188,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 100,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -1216,7 +1216,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -1,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([24, 26, 25, 25]));
@@ -1227,7 +1227,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -25,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([0, 50, 25, 25]));
@@ -1238,7 +1238,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{ minSize: 20 }, {}, {}, {}]),
+				regionConstraints: c([{ minSize: 20 }, {}, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([20, 30, 25, 25]));
@@ -1249,7 +1249,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -25,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, { maxSize: 35 }, {}, {}]),
+				regionConstraints: c([{}, { maxSize: 35 }, {}, {}]),
 				prevLayout: l([25, 25, 25, 25]),
 			}),
 		).toEqual(l([0, 35, 40, 25]));
@@ -1260,7 +1260,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1278,7 +1278,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -15,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1298,7 +1298,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1316,7 +1316,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -15,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1333,16 +1333,16 @@ describe("adjustLayoutByDelta", () => {
 
 	test("[1--,2,3,4]", () => {
 		// This might be controversial behavior;
-		// Perhaps the 1st panel should collapse
-		// rather than being blocked by the max size constraints of the 2nd panel
-		// since the 3rd panel has room to grow still
+		// Perhaps the 1st region should collapse
+		// rather than being blocked by the max size constraints of the 2nd region
+		// since the 3rd region has room to grow still
 		//
 		// An alternate layout result might be: [5, 30, 40, 25]
 		expect(
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1359,16 +1359,16 @@ describe("adjustLayoutByDelta", () => {
 
 	test("[1--,2,3,4]", () => {
 		// This might be controversial behavior;
-		// Perhaps the 1st panel should collapse
-		// rather than being blocked by the max size constraints of the 2nd panel
-		// since the 3rd panel has room to grow still
+		// Perhaps the 1st region should collapse
+		// rather than being blocked by the max size constraints of the 2nd region
+		// since the 3rd region has room to grow still
 		//
 		// An alternate layout result might be: [5, 30, 35, 30]
 		expect(
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1385,12 +1385,12 @@ describe("adjustLayoutByDelta", () => {
 
 	// Edge case (issues/210)
 	test("[1--,2,3,4]", () => {
-		// If the size doesn't drop below the halfway point, the panel should not collapse
+		// If the size doesn't drop below the halfway point, the region should not collapse
 		expect(
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1404,14 +1404,14 @@ describe("adjustLayoutByDelta", () => {
 			}),
 		).toEqual(l([20, 30, 25, 25]));
 
-		// If the size drops below the halfway point, the panel should collapse
-		// In this case it needs to add sizes to multiple other panels in order to collapse
-		// because the nearest neighbor panel's max size constraints won't allow it to expand to cover all of the difference
+		// If the size drops below the halfway point, the region should collapse
+		// In this case it needs to add sizes to multiple other regions in order to collapse
+		// because the nearest neighbor region's max size constraints won't allow it to expand to cover all of the difference
 		expect(
 			adjustLayoutByDelta({
 				delta: -20,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1431,7 +1431,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1443,7 +1443,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 30,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1455,7 +1455,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1467,7 +1467,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, { maxSize: 35 }, {}, {}]),
+				regionConstraints: c([{}, { maxSize: 35 }, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1479,7 +1479,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, { minSize: 20 }, {}]),
+				regionConstraints: c([{}, {}, { minSize: 20 }, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1491,7 +1491,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{},
 					{},
@@ -1512,7 +1512,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 30,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{},
 					{
@@ -1533,7 +1533,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{},
 					{
@@ -1554,7 +1554,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -25,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1566,7 +1566,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1578,7 +1578,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, { minSize: 20 }, {}, {}]),
+				regionConstraints: c([{}, { minSize: 20 }, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1590,7 +1590,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{ minSize: 20 }, {}, {}, {}]),
+				regionConstraints: c([{ minSize: 20 }, {}, {}, {}]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1602,7 +1602,12 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{ minSize: 20 }, { minSize: 20 }, {}, {}]),
+				regionConstraints: c([
+					{ minSize: 20 },
+					{ minSize: 20 },
+					{},
+					{},
+				]),
 				pivotIndices: [1, 2],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1614,7 +1619,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -5,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1635,7 +1640,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1656,7 +1661,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{
 						collapsedSize: 5,
@@ -1677,7 +1682,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1689,7 +1694,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 30,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1701,7 +1706,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 30,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, { maxSize: 40 }, {}]),
+				regionConstraints: c([{}, {}, { maxSize: 40 }, {}]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1713,7 +1718,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 30,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, { minSize: 10 }]),
+				regionConstraints: c([{}, {}, {}, { minSize: 10 }]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1725,7 +1730,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 5,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{},
 					{},
@@ -1746,7 +1751,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{},
 					{},
 					{},
@@ -1767,7 +1772,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -10,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1779,7 +1784,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -40,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1791,7 +1796,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -100,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, {}]),
+				regionConstraints: c([{}, {}, {}, {}]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1803,7 +1808,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{ minSize: 10 },
 					{ minSize: 10 },
 					{ minSize: 10 },
@@ -1820,7 +1825,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, {}, {}, { maxSize: 40 }]),
+				regionConstraints: c([{}, {}, {}, { maxSize: 40 }]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1832,7 +1837,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -50,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([{}, { minSize: 5 }, {}, {}]),
+				regionConstraints: c([{}, { minSize: 5 }, {}, {}]),
 				pivotIndices: [2, 3],
 				prevLayout: l([25, 25, 25, 25]),
 			}),
@@ -1844,7 +1849,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -100,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1873,7 +1878,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: -100,
 				initialLayout: l([25, 25, 25, 25]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						minSize: 20,
 					},
@@ -1899,7 +1904,7 @@ describe("adjustLayoutByDelta", () => {
 				adjustLayoutByDelta({
 					delta: 1,
 					initialLayout: l([50, 50]),
-					panelConstraints: c([{ maxSize: 50 }, {}]),
+					regionConstraints: c([{ maxSize: 50 }, {}]),
 					prevLayout: l([50, 50]),
 				}),
 			).toEqual(l([50, 50]));
@@ -1908,7 +1913,7 @@ describe("adjustLayoutByDelta", () => {
 				adjustLayoutByDelta({
 					delta: 1,
 					initialLayout: l([50, 50]),
-					panelConstraints: c([{}, { minSize: 50 }]),
+					regionConstraints: c([{}, { minSize: 50 }]),
 					prevLayout: l([50, 50]),
 				}),
 			).toEqual(l([50, 50]));
@@ -1921,7 +1926,7 @@ describe("adjustLayoutByDelta", () => {
 			adjustLayoutByDelta({
 				delta: 16,
 				initialLayout: l([5, 15, 40, 40]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1938,12 +1943,12 @@ describe("adjustLayoutByDelta", () => {
 	});
 
 	// Edge case (issues/311)
-	test("should (re)collapse an already-collapsed panel that's been expanded and (re)collapsed as part of a single drag", () => {
+	test("should (re)collapse an already-collapsed region that's been expanded and (re)collapsed as part of a single drag", () => {
 		expect(
 			adjustLayoutByDelta({
 				delta: -3,
 				initialLayout: l([5, 15, 40, 40]),
-				panelConstraints: c([
+				regionConstraints: c([
 					{
 						collapsedSize: 5,
 						collapsible: true,
@@ -1960,28 +1965,28 @@ describe("adjustLayoutByDelta", () => {
 	});
 
 	// Edge case issues/210 and issues/629
-	describe("collapsible panel thresholds", () => {
-		["left", "right"].forEach((panelId) => {
-			describe(`${panelId} panel with collapsedSize:0`, () => {
-				const collapsiblePanelConstraints = {
+	describe("collapsible region thresholds", () => {
+		["left", "right"].forEach((regionId) => {
+			describe(`${regionId} region with collapsedSize:0`, () => {
+				const collapsibleRegionConstraints = {
 					collapsedSize: 0,
 					collapsible: true,
 					minSize: 10,
 				};
 
-				const open = panelId === "left" ? l([10, 90]) : l([90, 10]);
-				const closed = panelId === "left" ? l([0, 100]) : l([100, 0]);
-				const panelConstraints =
-					panelId === "left"
-						? c([collapsiblePanelConstraints, {}])
-						: c([{}, collapsiblePanelConstraints]);
+				const open = regionId === "left" ? l([10, 90]) : l([90, 10]);
+				const closed = regionId === "left" ? l([0, 100]) : l([100, 0]);
+				const regionConstraints =
+					regionId === "left"
+						? c([collapsibleRegionConstraints, {}])
+						: c([{}, collapsibleRegionConstraints]);
 
 				test("remain open if delta is less than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? -4 : 4,
+							delta: regionId === "left" ? -4 : 4,
 							initialLayout: open,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: open,
 							trigger: "mouse-or-touch",
 						}),
@@ -1991,9 +1996,9 @@ describe("adjustLayoutByDelta", () => {
 				test("close if delta is greater than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? -6 : 6,
+							delta: regionId === "left" ? -6 : 6,
 							initialLayout: open,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: open,
 							trigger: "mouse-or-touch",
 						}),
@@ -2003,9 +2008,9 @@ describe("adjustLayoutByDelta", () => {
 				test("re-open if delta is less than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? -4 : 4,
+							delta: regionId === "left" ? -4 : 4,
 							initialLayout: open,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: closed,
 							trigger: "mouse-or-touch",
 						}),
@@ -2015,9 +2020,9 @@ describe("adjustLayoutByDelta", () => {
 				test("remain closed if delta is more than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? -6 : 6,
+							delta: regionId === "left" ? -6 : 6,
 							initialLayout: open,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: closed,
 							trigger: "mouse-or-touch",
 						}),
@@ -2027,9 +2032,9 @@ describe("adjustLayoutByDelta", () => {
 				test("remain closed if delta is less than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? 4 : -4,
+							delta: regionId === "left" ? 4 : -4,
 							initialLayout: closed,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: closed,
 							trigger: "mouse-or-touch",
 						}),
@@ -2039,9 +2044,9 @@ describe("adjustLayoutByDelta", () => {
 				test("open if delta is greater than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? 6 : -6,
+							delta: regionId === "left" ? 6 : -6,
 							initialLayout: closed,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: closed,
 							trigger: "mouse-or-touch",
 						}),
@@ -2051,9 +2056,9 @@ describe("adjustLayoutByDelta", () => {
 				test("close if delta is less than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? 4 : -4,
+							delta: regionId === "left" ? 4 : -4,
 							initialLayout: closed,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: open,
 							trigger: "mouse-or-touch",
 						}),
@@ -2063,9 +2068,9 @@ describe("adjustLayoutByDelta", () => {
 				test("remain open if delta is more than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? 6 : -6,
+							delta: regionId === "left" ? 6 : -6,
 							initialLayout: closed,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: open,
 							trigger: "mouse-or-touch",
 						}),
@@ -2073,26 +2078,26 @@ describe("adjustLayoutByDelta", () => {
 				});
 			});
 
-			describe(`${panelId} panel with collapsedSize:5`, () => {
-				const collapsiblePanelConstraints = {
+			describe(`${regionId} region with collapsedSize:5`, () => {
+				const collapsibleRegionConstraints = {
 					collapsedSize: 5,
 					collapsible: true,
 					minSize: 15,
 				};
 
-				const open = panelId === "left" ? l([15, 85]) : l([85, 15]);
-				const closed = panelId === "left" ? l([5, 95]) : l([95, 5]);
-				const panelConstraints =
-					panelId === "left"
-						? c([collapsiblePanelConstraints, {}])
-						: c([{}, collapsiblePanelConstraints]);
+				const open = regionId === "left" ? l([15, 85]) : l([85, 15]);
+				const closed = regionId === "left" ? l([5, 95]) : l([95, 5]);
+				const regionConstraints =
+					regionId === "left"
+						? c([collapsibleRegionConstraints, {}])
+						: c([{}, collapsibleRegionConstraints]);
 
 				test("remain open if delta is less than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? -4 : 4,
+							delta: regionId === "left" ? -4 : 4,
 							initialLayout: open,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: open,
 							trigger: "mouse-or-touch",
 						}),
@@ -2102,9 +2107,9 @@ describe("adjustLayoutByDelta", () => {
 				test("close if delta is greater than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? -6 : 6,
+							delta: regionId === "left" ? -6 : 6,
 							initialLayout: open,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: open,
 							trigger: "mouse-or-touch",
 						}),
@@ -2114,9 +2119,9 @@ describe("adjustLayoutByDelta", () => {
 				test("re-open if delta is less than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? -4 : 4,
+							delta: regionId === "left" ? -4 : 4,
 							initialLayout: open,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: closed,
 							trigger: "mouse-or-touch",
 						}),
@@ -2126,9 +2131,9 @@ describe("adjustLayoutByDelta", () => {
 				test("remain closed if delta is more than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? -6 : 6,
+							delta: regionId === "left" ? -6 : 6,
 							initialLayout: open,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: closed,
 							trigger: "mouse-or-touch",
 						}),
@@ -2138,9 +2143,9 @@ describe("adjustLayoutByDelta", () => {
 				test("remain closed if delta is less than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? 4 : -4,
+							delta: regionId === "left" ? 4 : -4,
 							initialLayout: closed,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: closed,
 							trigger: "mouse-or-touch",
 						}),
@@ -2150,9 +2155,9 @@ describe("adjustLayoutByDelta", () => {
 				test("open if delta is greater than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? 6 : -6,
+							delta: regionId === "left" ? 6 : -6,
 							initialLayout: closed,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: closed,
 							trigger: "mouse-or-touch",
 						}),
@@ -2162,9 +2167,9 @@ describe("adjustLayoutByDelta", () => {
 				test("close if delta is less than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? 4 : -4,
+							delta: regionId === "left" ? 4 : -4,
 							initialLayout: closed,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: open,
 							trigger: "mouse-or-touch",
 						}),
@@ -2174,9 +2179,9 @@ describe("adjustLayoutByDelta", () => {
 				test("remain open if delta is more than minimum threshold", () => {
 					expect(
 						adjustLayoutByDelta({
-							delta: panelId === "left" ? 6 : -6,
+							delta: regionId === "left" ? 6 : -6,
 							initialLayout: closed,
-							panelConstraints,
+							regionConstraints,
 							prevLayout: open,
 							trigger: "mouse-or-touch",
 						}),
@@ -2185,19 +2190,19 @@ describe("adjustLayoutByDelta", () => {
 			});
 		});
 
-		describe("3-panel layouts", () => {
+		describe("3-region layouts", () => {
 			const collapsibleConstraints = {
 				collapsedSize: 5,
 				collapsible: true,
 				minSize: 15,
 			};
 
-			test("expand left when there are multiple panels", () => {
+			test("expand left when there are multiple regions", () => {
 				expect(
 					adjustLayoutByDelta({
 						delta: -70,
 						initialLayout: l([25, 50, 25]),
-						panelConstraints: c([{}, {}, collapsibleConstraints]),
+						regionConstraints: c([{}, {}, collapsibleConstraints]),
 						prevLayout: l([25, 50, 25]),
 						pivotIndices: [1, 2],
 						trigger: "mouse-or-touch",
@@ -2205,12 +2210,12 @@ describe("adjustLayoutByDelta", () => {
 				).toEqual(l([5, 0, 95]));
 			});
 
-			test("expand right when there are multiple panels", () => {
+			test("expand right when there are multiple regions", () => {
 				expect(
 					adjustLayoutByDelta({
 						delta: 70,
 						initialLayout: l([25, 50, 25]),
-						panelConstraints: c([collapsibleConstraints, {}, {}]),
+						regionConstraints: c([collapsibleConstraints, {}, {}]),
 						prevLayout: l([25, 50, 25]),
 						pivotIndices: [0, 1],
 						trigger: "mouse-or-touch",
@@ -2232,7 +2237,7 @@ describe("adjustLayoutByDelta", () => {
 						adjustLayoutByDelta({
 							delta,
 							initialLayout: l([20, 50, 30]),
-							panelConstraints: c([
+							regionConstraints: c([
 								{
 									collapsedSize: 0,
 									collapsible: true,
@@ -2275,13 +2280,13 @@ describe("adjustLayoutByDelta", () => {
 						[6, c([collapsible, {}]), l([56, 44])],
 						[4, c([{}, collapsible]), l([54, 46])],
 						[6, c([{}, collapsible]), l([56, 44])],
-					] satisfies [number, PanelConstraints[], Layout][]
-				).forEach(([delta, panelConstraints, expectedLayout]) => {
+					] satisfies [number, RegionConstraints[], Layout][]
+				).forEach(([delta, regionConstraints, expectedLayout]) => {
 					expect(
 						adjustLayoutByDelta({
 							delta,
 							initialLayout: l([50, 50]),
-							panelConstraints,
+							regionConstraints,
 							prevLayout: l([50, 50]),
 							pivotIndices: [0, 1],
 							trigger: "mouse-or-touch",
@@ -2306,7 +2311,7 @@ describe("adjustLayoutByDelta", () => {
 						adjustLayoutByDelta({
 							delta,
 							initialLayout: l([10, 90]),
-							panelConstraints: c([
+							regionConstraints: c([
 								{
 									collapsedSize: 10,
 									collapsible: true,
@@ -2322,7 +2327,7 @@ describe("adjustLayoutByDelta", () => {
 					).toEqual(expectedLayout);
 				});
 
-				// 2nd panel variation of the above
+				// 2nd region variation of the above
 				(
 					[
 						[-4, l([90, 10])],
@@ -2338,7 +2343,7 @@ describe("adjustLayoutByDelta", () => {
 						adjustLayoutByDelta({
 							delta,
 							initialLayout: l([90, 10]),
-							panelConstraints: c([
+							regionConstraints: c([
 								{},
 								{
 									collapsedSize: 10,
@@ -2357,21 +2362,21 @@ describe("adjustLayoutByDelta", () => {
 		});
 	});
 
-	describe("disabled panels", () => {
-		test("should not be resizable in a 2 panel group", () => {
+	describe("disabled regions", () => {
+		test("should not be resizable in a 2 region split", () => {
 			(
 				[
 					[-50, c([{ disabled: true }, {}])],
 					[50, c([{ disabled: true }, {}])],
 					[-50, c([{}, { disabled: true }])],
 					[50, c([{}, { disabled: true }])],
-				] satisfies [number, PanelConstraints[]][]
-			).forEach(([delta, panelConstraints]) => {
+				] satisfies [number, RegionConstraints[]][]
+			).forEach(([delta, regionConstraints]) => {
 				expect(
 					adjustLayoutByDelta({
 						delta,
 						initialLayout: l([50, 50]),
-						panelConstraints,
+						regionConstraints,
 						prevLayout: l([50, 50]),
 						trigger: "mouse-or-touch",
 					}),
@@ -2379,18 +2384,18 @@ describe("adjustLayoutByDelta", () => {
 			});
 		});
 
-		test("should not be resizable if 1 of 3 panels are disabled", () => {
+		test("should not be resizable if 1 of 3 regions are disabled", () => {
 			const layout = l([25, 50, 25]);
 
 			{
-				// Left panel disabled
-				const panelConstraints = c([{ disabled: true }, {}, {}]);
+				// Left region disabled
+				const regionConstraints = c([{ disabled: true }, {}, {}]);
 
 				expect(
 					adjustLayoutByDelta({
 						delta: -25,
 						initialLayout: layout,
-						panelConstraints,
+						regionConstraints,
 						pivotIndices: [0, 1],
 						prevLayout: layout,
 						trigger: "mouse-or-touch",
@@ -2401,7 +2406,7 @@ describe("adjustLayoutByDelta", () => {
 					adjustLayoutByDelta({
 						delta: -75,
 						initialLayout: layout,
-						panelConstraints,
+						regionConstraints,
 						pivotIndices: [1, 2],
 						prevLayout: layout,
 						trigger: "mouse-or-touch",
@@ -2410,14 +2415,14 @@ describe("adjustLayoutByDelta", () => {
 			}
 
 			{
-				// Center panel disabled
-				const panelConstraints = c([{}, { disabled: true }, {}]);
+				// Center region disabled
+				const regionConstraints = c([{}, { disabled: true }, {}]);
 
 				expect(
 					adjustLayoutByDelta({
 						delta: -25,
 						initialLayout: layout,
-						panelConstraints,
+						regionConstraints,
 						pivotIndices: [0, 1],
 						prevLayout: layout,
 						trigger: "mouse-or-touch",
@@ -2428,7 +2433,7 @@ describe("adjustLayoutByDelta", () => {
 					adjustLayoutByDelta({
 						delta: -25,
 						initialLayout: layout,
-						panelConstraints,
+						regionConstraints,
 						pivotIndices: [1, 2],
 						prevLayout: layout,
 						trigger: "mouse-or-touch",
@@ -2437,14 +2442,14 @@ describe("adjustLayoutByDelta", () => {
 			}
 
 			{
-				// Right panel disabled
-				const panelConstraints = c([{}, {}, { disabled: true }]);
+				// Right region disabled
+				const regionConstraints = c([{}, {}, { disabled: true }]);
 
 				expect(
 					adjustLayoutByDelta({
 						delta: -25,
 						initialLayout: layout,
-						panelConstraints,
+						regionConstraints,
 						pivotIndices: [0, 1],
 						prevLayout: layout,
 						trigger: "mouse-or-touch",
@@ -2455,7 +2460,7 @@ describe("adjustLayoutByDelta", () => {
 					adjustLayoutByDelta({
 						delta: -25,
 						initialLayout: layout,
-						panelConstraints,
+						regionConstraints,
 						pivotIndices: [1, 2],
 						prevLayout: layout,
 						trigger: "mouse-or-touch",
@@ -2464,7 +2469,7 @@ describe("adjustLayoutByDelta", () => {
 			}
 		});
 
-		test("should not be resizable if 2 of 3 panels are disabled", () => {
+		test("should not be resizable if 2 of 3 regions are disabled", () => {
 			(
 				[
 					[-50, c([{ disabled: true }, { disabled: true }, {}])],
@@ -2473,13 +2478,13 @@ describe("adjustLayoutByDelta", () => {
 					[50, c([{ disabled: true }, {}, { disabled: true }])],
 					[-50, c([{}, { disabled: true }, { disabled: true }])],
 					[50, c([{}, { disabled: true }, { disabled: true }])],
-				] satisfies [number, PanelConstraints[]][]
-			).forEach(([delta, panelConstraints]) => {
+				] satisfies [number, RegionConstraints[]][]
+			).forEach(([delta, regionConstraints]) => {
 				expect(
 					adjustLayoutByDelta({
 						delta,
 						initialLayout: l([25, 50, 25]),
-						panelConstraints,
+						regionConstraints,
 						pivotIndices: [0, 1],
 						prevLayout: l([25, 50, 25]),
 						trigger: "mouse-or-touch",
@@ -2490,7 +2495,7 @@ describe("adjustLayoutByDelta", () => {
 					adjustLayoutByDelta({
 						delta,
 						initialLayout: l([25, 50, 25]),
-						panelConstraints,
+						regionConstraints,
 						pivotIndices: [1, 2],
 						prevLayout: l([25, 50, 25]),
 						trigger: "mouse-or-touch",
@@ -2506,13 +2511,13 @@ describe("adjustLayoutByDelta", () => {
 					[5, c([{ disabled: true }, {}]), l([55, 45])],
 					[-5, c([{}, { disabled: true }]), l([45, 55])],
 					[5, c([{}, { disabled: true }]), l([55, 45])],
-				] satisfies [number, PanelConstraints[], Layout][]
-			).forEach(([delta, panelConstraints, expectedLayout]) => {
+				] satisfies [number, RegionConstraints[], Layout][]
+			).forEach(([delta, regionConstraints, expectedLayout]) => {
 				expect(
 					adjustLayoutByDelta({
 						delta,
 						initialLayout: l([50, 50]),
-						panelConstraints,
+						regionConstraints,
 						prevLayout: l([50, 50]),
 						trigger: "imperative-api",
 					}),

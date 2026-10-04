@@ -1,4 +1,4 @@
-import type { Layout } from "../../components/group/types";
+import type { Layout } from "../../components/split/types";
 import { compareLayoutNumbers } from "./compareLayoutNumbers";
 
 export function layoutsEqual(a: Layout, b: Layout): boolean {
@@ -7,7 +7,7 @@ export function layoutsEqual(a: Layout, b: Layout): boolean {
 	}
 
 	for (const [id, size] of Object.entries(a)) {
-		// Edge case: Panel id has been changed
+		// Edge case: Region id has been changed
 		const otherSize = b[id];
 		if (
 			otherSize === undefined ||

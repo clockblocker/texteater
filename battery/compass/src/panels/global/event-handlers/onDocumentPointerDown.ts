@@ -1,7 +1,7 @@
-import type { Layout, RegisteredGroup } from "../../components/group/types";
-import { getMountedGroups } from "../mutable-state/groups";
+import type { Layout, RegisteredSplit } from "../../components/split/types";
 import { updateInteractionState } from "../mutable-state/interactions";
-import { findMatchingHitRegions } from "../utils/findMatchingHitRegions";
+import { getMountedSplits } from "../mutable-state/splits";
+import { findMatchingHitAreas } from "../utils/findMatchingHitAreas";
 
 export function onDocumentPointerDown(event: PointerEvent) {
 	if (event.defaultPrevented) {
@@ -10,20 +10,20 @@ export function onDocumentPointerDown(event: PointerEvent) {
 		return;
 	}
 
-	const mountedGroups = getMountedGroups();
+	const mountedSplits = getMountedSplits();
 
-	const hitRegions = findMatchingHitRegions(event, mountedGroups);
+	const hitAreas = findMatchingHitAreas(event, mountedSplits);
 
-	const initialLayoutMap = new Map<RegisteredGroup, Layout>();
+	const initialLayoutMap = new Map<RegisteredSplit, Layout>();
 
 	let didChangeFocus = false;
 
-	hitRegions.forEach((current) => {
-		if (current.separator) {
+	hitAreas.forEach((current) => {
+		if (current.handle) {
 			if (!didChangeFocus) {
 				didChangeFocus = true;
 
-				current.separator.element.focus({
+				current.handle.element.focus({
 					focusVisible: false,
 					preventScroll: true,
 				});
@@ -35,21 +35,21 @@ export function onDocumentPointerDown(event: PointerEvent) {
 			}
 		}
 
-		const match = mountedGroups.get(current.group);
+		const match = mountedSplits.get(current.split);
 		if (match) {
-			initialLayoutMap.set(current.group, match.layout);
+			initialLayoutMap.set(current.split, match.layout);
 		}
 	});
 
 	updateInteractionState({
 		cursorFlags: 0,
-		hitRegions,
+		hitAreas,
 		initialLayoutMap,
 		pointerDownAtPoint: { x: event.clientX, y: event.clientY },
 		state: "active",
 	});
 
-	if (hitRegions.length) {
+	if (hitAreas.length) {
 		event.preventDefault();
 	}
 }

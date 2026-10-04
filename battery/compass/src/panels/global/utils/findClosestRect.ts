@@ -1,4 +1,4 @@
-import type { Orientation } from "../../components/group/types";
+import type { Orientation } from "../../components/split/types";
 import { assert } from "../../utils/assert";
 import { getDistanceBetweenPointAndRect } from "./getDistanceBetweenPointAndRect";
 

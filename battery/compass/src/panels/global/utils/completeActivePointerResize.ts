@@ -1,17 +1,17 @@
 import { updateCursorStyle } from "../cursor/updateCursorStyle.ts";
 import {
-	getMountedGroupState,
-	getMountedGroups,
-	updateMountedGroup,
-} from "../mutable-state/groups.ts";
-import {
 	getInteractionState,
 	updateInteractionState,
 } from "../mutable-state/interactions.ts";
+import {
+	getMountedSplitState,
+	getMountedSplits,
+	updateMountedSplit,
+} from "../mutable-state/splits.ts";
 
 export function completeActivePointerResize(document: Document) {
 	const interactionState = getInteractionState();
-	const mountedGroups = getMountedGroups();
+	const mountedSplits = getMountedSplits();
 
 	let match = false;
 
@@ -22,26 +22,26 @@ export function completeActivePointerResize(document: Document) {
 				state: "inactive",
 			});
 
-			if (interactionState.hitRegions.length > 0) {
+			if (interactionState.hitAreas.length > 0) {
 				updateCursorStyle(document);
 
 				match = true;
 
 				// Dispatch one more "change" event after the interaction state has been reset.
-				// Groups use this as a signal to call onLayoutChanged.
+				// Splits use this as a signal to call onLayoutChanged.
 				// This is the canonical user-pointer-up site, so flag the dispatch with
 				// isUserInteraction: true. See #716.
-				interactionState.hitRegions.forEach((hitRegion) => {
-					// Skip if the group was re-registered mid-gesture, so the old hit region
-					// doesn't resurrect a stale entry in the mounted-groups map. See #729.
-					if (!mountedGroups.has(hitRegion.group)) {
+				interactionState.hitAreas.forEach((hitArea) => {
+					// Skip if the split was re-registered mid-gesture, so the old hit region
+					// doesn't resurrect a stale entry in the mounted-splits map. See #729.
+					if (!mountedSplits.has(hitArea.split)) {
 						return;
 					}
-					const groupState = getMountedGroupState(
-						hitRegion.group.id,
+					const splitState = getMountedSplitState(
+						hitArea.split.id,
 						true,
 					);
-					updateMountedGroup(hitRegion.group, groupState, {
+					updateMountedSplit(hitArea.split, splitState, {
 						isUserInteraction: true,
 					});
 				});

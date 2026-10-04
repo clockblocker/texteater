@@ -1,17 +1,17 @@
 import { assert } from "../../utils/assert";
-import { getMountedGroupState } from "../mutable-state/groups";
-import { adjustLayoutForSeparator } from "../utils/adjustLayoutForSeparator";
-import { findSeparatorGroup } from "../utils/findSeparatorGroup";
+import { getMountedSplitState } from "../mutable-state/splits";
+import { adjustLayoutForHandle } from "../utils/adjustLayoutForHandle";
+import { findHandleSplit } from "../utils/findHandleSplit";
 
 export function onDocumentKeyDown(event: KeyboardEvent) {
 	if (event.defaultPrevented) {
 		return;
 	}
 
-	const separatorElement = event.currentTarget as HTMLElement;
+	const handleElement = event.currentTarget as HTMLElement;
 
-	const group = findSeparatorGroup(separatorElement);
-	if (group.disabled) {
+	const split = findHandleSplit(handleElement);
+	if (split.disabled) {
 		return;
 	}
 
@@ -19,32 +19,32 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
 		case "ArrowDown": {
 			event.preventDefault();
 
-			if (group.orientation === "vertical") {
-				adjustLayoutForSeparator(separatorElement, 5);
+			if (split.orientation === "vertical") {
+				adjustLayoutForHandle(handleElement, 5);
 			}
 			break;
 		}
 		case "ArrowLeft": {
 			event.preventDefault();
 
-			if (group.orientation === "horizontal") {
-				adjustLayoutForSeparator(separatorElement, -5);
+			if (split.orientation === "horizontal") {
+				adjustLayoutForHandle(handleElement, -5);
 			}
 			break;
 		}
 		case "ArrowRight": {
 			event.preventDefault();
 
-			if (group.orientation === "horizontal") {
-				adjustLayoutForSeparator(separatorElement, 5);
+			if (split.orientation === "horizontal") {
+				adjustLayoutForHandle(handleElement, 5);
 			}
 			break;
 		}
 		case "ArrowUp": {
 			event.preventDefault();
 
-			if (group.orientation === "vertical") {
-				adjustLayoutForSeparator(separatorElement, -5);
+			if (split.orientation === "vertical") {
+				adjustLayoutForHandle(handleElement, -5);
 			}
 			break;
 		}
@@ -54,7 +54,7 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
 			// Moves splitter to the position that gives the primary pane its largest allowed size.
 			// This may completely collapse the secondary pane.
 
-			adjustLayoutForSeparator(separatorElement, 100);
+			adjustLayoutForHandle(handleElement, 100);
 			break;
 		}
 		case "Enter": {
@@ -63,36 +63,36 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
 			// If the primary pane is not collapsed, collapses the pane.
 			// If the pane is collapsed, restores the splitter to its previous position.
 
-			const group = findSeparatorGroup(separatorElement);
+			const split = findHandleSplit(handleElement);
 
-			const groupState = getMountedGroupState(group.id, true);
-			const { derivedPanelConstraints, layout, separatorToPanels } =
-				groupState;
+			const splitState = getMountedSplitState(split.id, true);
+			const { derivedRegionConstraints, layout, handleToRegions } =
+				splitState;
 
-			const separator = group.separators.find(
-				(current) => current.element === separatorElement,
+			const handle = split.handles.find(
+				(current) => current.element === handleElement,
 			);
-			assert(separator, "Matching separator not found");
+			assert(handle, "Matching handle not found");
 
-			const panels = separatorToPanels.get(separator);
-			assert(panels, "Matching panels not found");
+			const regions = handleToRegions.get(handle);
+			assert(regions, "Matching regions not found");
 
-			const primaryPanel = panels[0];
-			const constraints = derivedPanelConstraints.find(
-				(current) => current.panelId === primaryPanel.id,
+			const primaryRegion = regions[0];
+			const constraints = derivedRegionConstraints.find(
+				(current) => current.regionId === primaryRegion.id,
 			);
-			assert(constraints, "Panel metadata not found");
+			assert(constraints, "Region metadata not found");
 
-			const prevSize = layout[primaryPanel.id];
+			const prevSize = layout[primaryRegion.id];
 			if (constraints.collapsible && prevSize !== undefined) {
 				const nextSize =
 					constraints.collapsedSize === prevSize
-						? (group.mutableState.expandedPanelSizes[
-								primaryPanel.id
+						? (split.mutableState.expandedRegionSizes[
+								primaryRegion.id
 							] ?? constraints.minSize)
 						: constraints.collapsedSize;
 
-				adjustLayoutForSeparator(separatorElement, nextSize - prevSize);
+				adjustLayoutForHandle(handleElement, nextSize - prevSize);
 			}
 			break;
 		}
@@ -101,29 +101,27 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
 
 			// Cycle through window panes.
 
-			const group = findSeparatorGroup(separatorElement);
+			const split = findHandleSplit(handleElement);
 
-			const separatorElements = group.separators.map(
-				(separator) => separator.element,
+			const handleElements = split.handles.map(
+				(handle) => handle.element,
 			);
 
-			const index = group.separators.findIndex(
-				(separator) => separator.element === event.currentTarget,
+			const index = split.handles.findIndex(
+				(handle) => handle.element === event.currentTarget,
 			);
 			assert(index !== null, "Index not found");
 
 			const nextIndex = event.shiftKey
 				? index > 0
 					? index - 1
-					: separatorElements.length - 1
-				: index + 1 < separatorElements.length
+					: handleElements.length - 1
+				: index + 1 < handleElements.length
 					? index + 1
 					: 0;
 
-			const nextSeparatorElement = separatorElements[
-				nextIndex
-			] as HTMLElement;
-			nextSeparatorElement.focus({
+			const nextHandleElement = handleElements[nextIndex] as HTMLElement;
+			nextHandleElement.focus({
 				preventScroll: true,
 			});
 			break;
@@ -134,7 +132,7 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
 			// Moves splitter to the position that gives the primary pane its smallest allowed size.
 			// This may completely collapse the primary pane.
 
-			adjustLayoutForSeparator(separatorElement, -100);
+			adjustLayoutForHandle(handleElement, -100);
 			break;
 		}
 	}

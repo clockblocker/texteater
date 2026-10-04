@@ -1,6 +1,6 @@
-export { Group } from "./components/group/Group";
-export type { GroupProps } from "./components/group/types";
-export { Panel } from "./components/panel/Panel";
-export type { PanelProps } from "./components/panel/types";
-export { Separator } from "./components/separator/Separator";
-export type { SeparatorProps } from "./components/separator/types";
+export { SplitHandle } from "./components/handle/SplitHandle";
+export type { SplitHandleProps } from "./components/handle/types";
+export { SplitRegion } from "./components/region/SplitRegion";
+export type { SplitRegionProps } from "./components/region/types";
+export { Split } from "./components/split/Split";
+export type { SplitProps } from "./components/split/types";

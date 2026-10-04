@@ -1,0 +1,35 @@
+import type { RegisteredSplit } from "../../components/split/types";
+import { calculateAvailableSplitSize } from "../dom/calculateAvailableSplitSize";
+import { formatLayoutNumber } from "./formatLayoutNumber";
+
+export function notifyRegionOnResize(
+	split: RegisteredSplit,
+	element: HTMLElement,
+	borderBoxSize: readonly ResizeObserverSize[],
+) {
+	const resizeObserverSize = borderBoxSize[0];
+	if (!resizeObserverSize) {
+		return;
+	}
+
+	const region = split.regions.find((current) => current.element === element);
+	if (!region?.onResize) {
+		return;
+	}
+
+	const splitSize = calculateAvailableSplitSize({ split });
+
+	const regionSize =
+		split.orientation === "horizontal"
+			? region.element.offsetWidth
+			: region.element.offsetHeight;
+
+	const prevSize = region.mutableValues.prevSize;
+	const nextSize = {
+		asPercentage: formatLayoutNumber((regionSize / splitSize) * 100),
+		inPixels: regionSize,
+	};
+	region.mutableValues.prevSize = nextSize;
+
+	region.onResize(nextSize, region.id, prevSize);
+}

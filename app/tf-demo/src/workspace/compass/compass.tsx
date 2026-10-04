@@ -21,7 +21,11 @@ import {
 	returnBandIn,
 	Z,
 } from "compass";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "lego";
+import {
+	ResizableSplit,
+	ResizableSplitHandle,
+	ResizableSplitRegion,
+} from "lego";
 import { MotionConfig } from "motion/react";
 import { type ReactNode, useMemo, useRef } from "react";
 import { useMotionPreference } from "@/lib/motion-preference";
@@ -470,11 +474,11 @@ function CompassRuntime<S>({
 		return (
 			/* keyed by its shape too: a preview that swaps sides is a new
 			   split, and opens at its size rather than inheriting one */
-			<ResizablePanelGroup
+			<ResizableSplit
 				key={`${node.id}:${a.id}:${b.id}`}
 				orientation={node.direction}
 			>
-				<ResizablePanel
+				<ResizableSplitRegion
 					id={a.id}
 					minSize={240}
 					defaultSize={
@@ -484,9 +488,9 @@ function CompassRuntime<S>({
 					}
 				>
 					{renderLayout(a)}
-				</ResizablePanel>
-				<ResizableHandle aria-label="Resize panes" />
-				<ResizablePanel
+				</ResizableSplitRegion>
+				<ResizableSplitHandle aria-label="Resize panes" />
+				<ResizableSplitRegion
 					id={b.id}
 					minSize={240}
 					defaultSize={
@@ -496,8 +500,8 @@ function CompassRuntime<S>({
 					}
 				>
 					{renderLayout(b)}
-				</ResizablePanel>
-			</ResizablePanelGroup>
+				</ResizableSplitRegion>
+			</ResizableSplit>
 		);
 	}
 

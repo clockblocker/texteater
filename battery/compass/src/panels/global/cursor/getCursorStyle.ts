@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import type { RegisteredGroup } from "../../components/group/types";
+import type { RegisteredSplit } from "../../components/split/types";
 import {
 	CURSOR_FLAG_HORIZONTAL_MAX,
 	CURSOR_FLAG_HORIZONTAL_MIN,
@@ -11,11 +11,11 @@ import { supportsAdvancedCursorStyles } from "./supportsAdvancedCursorStyles";
 
 export function getCursorStyle({
 	cursorFlags,
-	groups,
+	splits,
 	state,
 }: {
 	cursorFlags: number;
-	groups: RegisteredGroup[];
+	splits: RegisteredSplit[];
 	state: InteractionState["state"];
 }): CSSProperties["cursor"] {
 	let horizontalCount = 0;
@@ -24,12 +24,12 @@ export function getCursorStyle({
 	switch (state) {
 		case "active":
 		case "hover": {
-			groups.forEach((group) => {
-				if (group.mutableState.disableCursor) {
+			splits.forEach((split) => {
+				if (split.mutableState.disableCursor) {
 					return;
 				}
 
-				switch (group.orientation) {
+				switch (split.orientation) {
 					case "horizontal": {
 						horizontalCount++;
 						break;

@@ -1,19 +1,19 @@
-import { getMountedGroups } from "../mutable-state/groups";
 import { getInteractionState } from "../mutable-state/interactions";
-import { updateActiveHitRegions } from "../utils/updateActiveHitRegion";
+import { getMountedSplits } from "../mutable-state/splits";
+import { updateActiveHitAreas } from "../utils/updateActiveHitArea";
 
 export function onDocumentPointerLeave(event: PointerEvent) {
-	const mountedGroups = getMountedGroups();
+	const mountedSplits = getMountedSplits();
 	const interactionState = getInteractionState();
 
 	switch (interactionState.state) {
 		case "active": {
-			updateActiveHitRegions({
+			updateActiveHitAreas({
 				document: event.currentTarget as Document,
 				event,
-				hitRegions: interactionState.hitRegions,
+				hitAreas: interactionState.hitAreas,
 				initialLayoutMap: interactionState.initialLayoutMap,
-				mountedGroups,
+				mountedSplits,
 				prevCursorFlags: interactionState.cursorFlags,
 			});
 		}

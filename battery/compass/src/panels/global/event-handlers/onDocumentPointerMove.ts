@@ -1,15 +1,15 @@
 import { updateCursorStyle } from "../cursor/updateCursorStyle";
 import {
-	getMountedGroupState,
-	getMountedGroups,
-	updateMountedGroup,
-} from "../mutable-state/groups";
-import {
 	getInteractionState,
 	updateInteractionState,
 } from "../mutable-state/interactions";
-import { findMatchingHitRegions } from "../utils/findMatchingHitRegions";
-import { updateActiveHitRegions } from "../utils/updateActiveHitRegion";
+import {
+	getMountedSplitState,
+	getMountedSplits,
+	updateMountedSplit,
+} from "../mutable-state/splits";
+import { findMatchingHitAreas } from "../utils/findMatchingHitAreas";
+import { updateActiveHitAreas } from "../utils/updateActiveHitArea";
 
 export function onDocumentPointerMove(event: PointerEvent) {
 	if (event.defaultPrevented) {
@@ -17,7 +17,7 @@ export function onDocumentPointerMove(event: PointerEvent) {
 	}
 
 	const interactionState = getInteractionState();
-	const mountedGroups = getMountedGroups();
+	const mountedSplits = getMountedSplits();
 
 	switch (interactionState.state) {
 		case "active": {
@@ -33,20 +33,20 @@ export function onDocumentPointerMove(event: PointerEvent) {
 				});
 
 				// Dispatch one more "change" event after the interaction state has been reset.
-				// Groups use this as a signal to call onLayoutChanged.
+				// Splits use this as a signal to call onLayoutChanged.
 				// This is the missed-pointerup fallback (pointer released outside a
 				// cross-origin iframe, see #340) — still a real user interaction.
-				interactionState.hitRegions.forEach((hitRegion) => {
-					// Skip if the group was re-registered mid-gesture, so the old hit region
-					// doesn't resurrect a stale entry in the mounted-groups map. See #729.
-					if (!mountedGroups.has(hitRegion.group)) {
+				interactionState.hitAreas.forEach((hitArea) => {
+					// Skip if the split was re-registered mid-gesture, so the old hit region
+					// doesn't resurrect a stale entry in the mounted-splits map. See #729.
+					if (!mountedSplits.has(hitArea.split)) {
 						return;
 					}
-					const groupState = getMountedGroupState(
-						hitRegion.group.id,
+					const splitState = getMountedSplitState(
+						hitArea.split.id,
 						true,
 					);
-					updateMountedGroup(hitRegion.group, groupState, {
+					updateMountedSplit(hitArea.split, splitState, {
 						isUserInteraction: true,
 					});
 				});
@@ -54,31 +54,31 @@ export function onDocumentPointerMove(event: PointerEvent) {
 				return;
 			}
 
-			for (const hitRegion of interactionState.hitRegions) {
-				if (hitRegion.separator) {
-					const { element } = hitRegion.separator;
+			for (const hitArea of interactionState.hitAreas) {
+				if (hitArea.handle) {
+					const { element } = hitArea.handle;
 					if (!element.hasPointerCapture?.(event.pointerId)) {
 						element.setPointerCapture?.(event.pointerId);
 					}
 				}
 			}
 
-			updateActiveHitRegions({
+			updateActiveHitAreas({
 				document: event.currentTarget as Document,
 				event,
-				hitRegions: interactionState.hitRegions,
+				hitAreas: interactionState.hitAreas,
 				initialLayoutMap: interactionState.initialLayoutMap,
-				mountedGroups,
+				mountedSplits,
 				pointerDownAtPoint: interactionState.pointerDownAtPoint,
 				prevCursorFlags: interactionState.cursorFlags,
 			});
 			break;
 		}
 		default: {
-			// Update HitRegions if a drag has not been started
-			const hitRegions = findMatchingHitRegions(event, mountedGroups);
+			// Update HitAreas if a drag has not been started
+			const hitAreas = findMatchingHitAreas(event, mountedSplits);
 
-			if (hitRegions.length === 0) {
+			if (hitAreas.length === 0) {
 				if (interactionState.state !== "inactive") {
 					updateInteractionState({
 						cursorFlags: 0,
@@ -88,7 +88,7 @@ export function onDocumentPointerMove(event: PointerEvent) {
 			} else {
 				updateInteractionState({
 					cursorFlags: 0,
-					hitRegions,
+					hitAreas,
 					state: "hover",
 				});
 			}

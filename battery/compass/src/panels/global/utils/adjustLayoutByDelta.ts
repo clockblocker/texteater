@@ -1,23 +1,23 @@
-import type { Layout } from "../../components/group/types";
-import type { PanelConstraints } from "../../components/panel/types";
+import type { RegionConstraints } from "../../components/region/types";
+import type { Layout } from "../../components/split/types";
 import { assert } from "../../utils/assert";
 import { isArrayEqual } from "../../utils/isArrayEqual";
 import { compareLayoutNumbers } from "../utils/compareLayoutNumbers";
 import { layoutNumbersEqual } from "../utils/layoutNumbersEqual";
-import { validatePanelSize } from "../utils/validatePanelSize";
+import { validateRegionSize } from "../utils/validateRegionSize";
 
 // All units must be in percentages; pixel values should be pre-converted
 export function adjustLayoutByDelta({
 	delta,
 	initialLayout: initialLayoutProp,
-	panelConstraints: panelConstraintsArray,
+	regionConstraints: regionConstraintsArray,
 	pivotIndices,
 	prevLayout: prevLayoutProp,
 	trigger,
 }: {
 	delta: number;
 	initialLayout: Layout;
-	panelConstraints: PanelConstraints[];
+	regionConstraints: RegionConstraints[];
 	pivotIndices: number[];
 	prevLayout: Layout;
 	trigger?: "imperative-api" | "keyboard" | "mouse-or-touch";
@@ -26,7 +26,7 @@ export function adjustLayoutByDelta({
 		return initialLayoutProp;
 	}
 
-	const overrideDisabledPanels = trigger === "imperative-api";
+	const overrideDisabledRegions = trigger === "imperative-api";
 
 	const initialLayout = Object.values(initialLayoutProp);
 	const prevLayout = Object.values(prevLayoutProp);
@@ -40,21 +40,21 @@ export function adjustLayoutByDelta({
 	switch (trigger) {
 		case "keyboard": {
 			// If this is a resize triggered by a keyboard event, our logic for expanding/collapsing is different.
-			// We no longer check the halfway threshold because this may prevent the panel from expanding at all.
+			// We no longer check the halfway threshold because this may prevent the region from expanding at all.
 			{
-				// Check if we should expand a collapsed panel
+				// Check if we should expand a collapsed region
 				const index = delta < 0 ? secondPivotIndex : firstPivotIndex;
-				const panelConstraints = panelConstraintsArray[index];
+				const regionConstraints = regionConstraintsArray[index];
 				assert(
-					panelConstraints,
-					`Panel constraints not found for index ${index}`,
+					regionConstraints,
+					`Region constraints not found for index ${index}`,
 				);
 
 				const {
 					collapsedSize = 0,
 					collapsible,
 					minSize = 0,
-				} = panelConstraints;
+				} = regionConstraints;
 
 				// DEBUG.push(`edge case check 1: ${index}`);
 				// DEBUG.push(`  -> collapsible? ${collapsible}`);
@@ -62,7 +62,7 @@ export function adjustLayoutByDelta({
 					const prevSize = initialLayout[index];
 					assert(
 						prevSize != null,
-						`Previous layout not found for panel index ${index}`,
+						`Previous layout not found for region index ${index}`,
 					);
 
 					if (layoutNumbersEqual(prevSize, collapsedSize)) {
@@ -81,19 +81,19 @@ export function adjustLayoutByDelta({
 			}
 
 			{
-				// Check if we should collapse a panel at its minimum size
+				// Check if we should collapse a region at its minimum size
 				const index = delta < 0 ? firstPivotIndex : secondPivotIndex;
-				const panelConstraints = panelConstraintsArray[index];
+				const regionConstraints = regionConstraintsArray[index];
 				assert(
-					panelConstraints,
-					`No panel constraints found for index ${index}`,
+					regionConstraints,
+					`No region constraints found for index ${index}`,
 				);
 
 				const {
 					collapsedSize = 0,
 					collapsible,
 					minSize = 0,
-				} = panelConstraints;
+				} = regionConstraints;
 
 				// DEBUG.push(`edge case check 2: ${index}`);
 				// DEBUG.push(`  -> collapsible? ${collapsible}`);
@@ -101,7 +101,7 @@ export function adjustLayoutByDelta({
 					const prevSize = initialLayout[index];
 					assert(
 						prevSize != null,
-						`Previous layout not found for panel index ${index}`,
+						`Previous layout not found for region index ${index}`,
 					);
 
 					if (layoutNumbersEqual(prevSize, minSize)) {
@@ -121,27 +121,27 @@ export function adjustLayoutByDelta({
 			break;
 		}
 		default: {
-			// If we're starting from a collapsed state, dragging past the halfway point should cause the panel to expand
-			// This can happen for positive or negative drags, and panels on either side of the separator can be collapsible
+			// If we're starting from a collapsed state, dragging past the halfway point should cause the region to expand
+			// This can happen for positive or negative drags, and regions on either side of the handle can be collapsible
 			// The easiest way to support this is to detect this scenario and pre-adjust the delta before applying the rest of the layout algorithm
-			// DEBUG.push(`edge case check 3: collapsible panels`);
+			// DEBUG.push(`edge case check 3: collapsible regions`);
 
 			const index = delta < 0 ? secondPivotIndex : firstPivotIndex;
-			const panelConstraints = panelConstraintsArray[index];
+			const regionConstraints = regionConstraintsArray[index];
 			assert(
-				panelConstraints,
-				`Panel constraints not found for index ${index}`,
+				regionConstraints,
+				`Region constraints not found for index ${index}`,
 			);
 
 			const prevSize = initialLayout[index];
 			assert(
 				prevSize != null,
-				`Previous layout not found for panel index ${index}`,
+				`Previous layout not found for region index ${index}`,
 			);
 
-			const { collapsible, collapsedSize, minSize } = panelConstraints;
+			const { collapsible, collapsedSize, minSize } = regionConstraints;
 			if (collapsible && compareLayoutNumbers(prevSize, minSize) < 0) {
-				// DEBUG.push(`  -> collapsible ${delta < 0 ? "2nd" : "1st"} panel`);
+				// DEBUG.push(`  -> collapsible ${delta < 0 ? "2nd" : "1st"} region`);
 				if (delta > 0) {
 					const gapSize = minSize - collapsedSize;
 					const halfwayDelta = gapSize / 2;
@@ -184,10 +184,10 @@ export function adjustLayoutByDelta({
 
 	{
 		// Pre-calculate max available delta in the opposite direction of our pivot.
-		// This will be the maximum amount we're allowed to expand/contract the panels in the primary direction.
+		// This will be the maximum amount we're allowed to expand/contract the regions in the primary direction.
 		// If this amount is less than the requested delta, adjust the requested delta.
 		// If this amount is greater than the requested delta, that's useful information too–
-		// as an expanding panel might change from collapsed to min size.
+		// as an expanding region might change from collapsed to min size.
 
 		const increment = delta < 0 ? 1 : -1;
 
@@ -199,18 +199,18 @@ export function adjustLayoutByDelta({
 			const prevSize = initialLayout[index];
 			assert(
 				prevSize != null,
-				`Previous layout not found for panel index ${index}`,
+				`Previous layout not found for region index ${index}`,
 			);
 
-			const panelConstraints = panelConstraintsArray[index];
+			const regionConstraints = regionConstraintsArray[index];
 			assert(
-				panelConstraints,
-				`Panel constraints not found for index ${index}`,
+				regionConstraints,
+				`Region constraints not found for index ${index}`,
 			);
 
-			const maxSafeSize = validatePanelSize({
-				overrideDisabledPanels,
-				panelConstraints,
+			const maxSafeSize = validateRegionSize({
+				overrideDisabledRegions,
+				regionConstraints,
 				prevSize,
 				size: 100,
 			});
@@ -220,7 +220,7 @@ export function adjustLayoutByDelta({
 			maxAvailableDelta += delta;
 			index += increment;
 
-			if (index < 0 || index >= panelConstraintsArray.length) {
+			if (index < 0 || index >= regionConstraintsArray.length) {
 				break;
 			}
 		}
@@ -236,29 +236,29 @@ export function adjustLayoutByDelta({
 	}
 
 	{
-		// Delta added to a panel needs to be subtracted from other panels (within the constraints that those panels allow).
+		// Delta added to a region needs to be subtracted from other regions (within the constraints that those regions allow).
 
 		const pivotIndex = delta < 0 ? firstPivotIndex : secondPivotIndex;
 		let index = pivotIndex;
-		while (index >= 0 && index < panelConstraintsArray.length) {
+		while (index >= 0 && index < regionConstraintsArray.length) {
 			const deltaRemaining = Math.abs(delta) - Math.abs(deltaApplied);
 
 			const prevSize = initialLayout[index];
 			assert(
 				prevSize != null,
-				`Previous layout not found for panel index ${index}`,
+				`Previous layout not found for region index ${index}`,
 			);
 
-			const panelConstraints = panelConstraintsArray[index];
+			const regionConstraints = regionConstraintsArray[index];
 			assert(
-				panelConstraints,
-				`Panel constraints not found for index ${index}`,
+				regionConstraints,
+				`Region constraints not found for index ${index}`,
 			);
 
 			const unsafeSize = prevSize - deltaRemaining;
-			const safeSize = validatePanelSize({
-				overrideDisabledPanels,
-				panelConstraints,
+			const safeSize = validateRegionSize({
+				overrideDisabledRegions,
+				regionConstraints,
 				prevSize,
 				size: unsafeSize,
 			});
@@ -290,8 +290,8 @@ export function adjustLayoutByDelta({
 	// DEBUG.push(`  deltaApplied: ${deltaApplied}`);
 	// DEBUG.push("");
 
-	// If we were unable to resize any of the panels panels, return the previous state.
-	// This will essentially bailout and ignore e.g. drags past a panel's boundaries
+	// If we were unable to resize any of the regions regions, return the previous state.
+	// This will essentially bailout and ignore e.g. drags past a region's boundaries
 	if (isArrayEqual(prevLayout, nextLayout)) {
 		// DEBUG.push(`bailout to previous layout: ${prevLayout.join(", ")}`);
 		// console.log(DEBUG.join("\n"));
@@ -300,55 +300,55 @@ export function adjustLayoutByDelta({
 	}
 
 	{
-		// Now distribute the applied delta to the panels in the other direction
+		// Now distribute the applied delta to the regions in the other direction
 		const pivotIndex = delta < 0 ? secondPivotIndex : firstPivotIndex;
 
 		const prevSize = initialLayout[pivotIndex];
 		assert(
 			prevSize != null,
-			`Previous layout not found for panel index ${pivotIndex}`,
+			`Previous layout not found for region index ${pivotIndex}`,
 		);
 
-		const panelConstraints = panelConstraintsArray[pivotIndex];
+		const regionConstraints = regionConstraintsArray[pivotIndex];
 		assert(
-			panelConstraints,
-			`Panel constraints not found for index ${pivotIndex}`,
+			regionConstraints,
+			`Region constraints not found for index ${pivotIndex}`,
 		);
 
 		const unsafeSize = prevSize + deltaApplied;
-		const safeSize = validatePanelSize({
-			overrideDisabledPanels,
-			panelConstraints,
+		const safeSize = validateRegionSize({
+			overrideDisabledRegions,
+			regionConstraints,
 			prevSize,
 			size: unsafeSize,
 		});
 
-		// Adjust the pivot panel before, but only by the amount that surrounding panels were able to shrink/contract.
+		// Adjust the pivot region before, but only by the amount that surrounding regions were able to shrink/contract.
 		nextLayout[pivotIndex] = safeSize;
 
-		// Edge case where expanding or contracting one panel caused another one to change collapsed state
+		// Edge case where expanding or contracting one region caused another one to change collapsed state
 		if (!layoutNumbersEqual(safeSize, unsafeSize)) {
 			let deltaRemaining = unsafeSize - safeSize;
 
 			const pivotIndex = delta < 0 ? secondPivotIndex : firstPivotIndex;
 			let index = pivotIndex;
-			while (index >= 0 && index < panelConstraintsArray.length) {
+			while (index >= 0 && index < regionConstraintsArray.length) {
 				const prevSize = nextLayout[index];
 				assert(
 					prevSize != null,
-					`Previous layout not found for panel index ${index}`,
+					`Previous layout not found for region index ${index}`,
 				);
 
-				const panelConstraints = panelConstraintsArray[index];
+				const regionConstraints = regionConstraintsArray[index];
 				assert(
-					panelConstraints,
-					`Panel constraints not found for index ${index}`,
+					regionConstraints,
+					`Region constraints not found for index ${index}`,
 				);
 
 				const unsafeSize = prevSize + deltaRemaining;
-				const safeSize = validatePanelSize({
-					overrideDisabledPanels,
-					panelConstraints,
+				const safeSize = validateRegionSize({
+					overrideDisabledRegions,
+					regionConstraints,
 					prevSize,
 					size: unsafeSize,
 				});
@@ -383,7 +383,7 @@ export function adjustLayoutByDelta({
 
 	// If our new layout doesn't add up to 100%, that means the requested delta can't be applied
 	// In that case, fall back to our most recent valid layout
-	// Allow for a small rounding difference, else e.g. 3 panel layouts may never be considered valid
+	// Allow for a small rounding difference, else e.g. 3 region layouts may never be considered valid
 	if (!layoutNumbersEqual(totalSize, 100, 0.1)) {
 		// DEBUG.push(`bailout to previous layout: ${prevLayout.join(", ")}`);
 		// console.log(DEBUG.join("\n"));
