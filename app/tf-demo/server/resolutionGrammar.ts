@@ -12,6 +12,12 @@ export type ResolvedGrammar = {
 	readonly language: "de";
 	readonly encounter: ClickEncounter;
 	readonly attestation: Dumling.Attestation<"de">;
+	/**
+	 * The Emoji Description Luna drafted with the Canonical Form, for the
+	 * Reading. The checkpoint keeps no draft: a resumed click has Luna write
+	 * the description when it needs one.
+	 */
+	readonly drafted?: string;
 };
 export type CatalogMissSignal = {
 	readonly decision: "CatalogMiss";

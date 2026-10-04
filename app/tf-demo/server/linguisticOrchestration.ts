@@ -656,6 +656,7 @@ export function createTfDemoOrchestrator(options: {
 					);
 			}
 
+			/** The Reading over `candidates`; Grammar's draft stands in for a description not yet written. */
 			function resolveReading(
 				resolved: ResolvedGrammatical,
 				resolvedLemma: Dumling.Lemma<"de">,
@@ -675,6 +676,10 @@ export function createTfDemoOrchestrator(options: {
 						lemma: resolvedLemma,
 						candidates,
 						...(written === undefined ? {} : { written }),
+						...(written === undefined &&
+						resolved.drafted !== undefined
+							? { drafted: resolved.drafted }
+							: {}),
 					})
 					.pipe(
 						Effect.withSpan(

@@ -33,9 +33,10 @@ function dumgenSentence(
  * under its words, and the Attestation, Unresolved or Catalog Miss comes
  * back as an answer. The clicked Segment stays tf-demo's Segment Selection;
  * Dumgen sees the unit. A click on a Segment with no stored unit resolves
- * nothing. Reading: the Attestation and the Emoji Descriptions of its
- * Lemma's stored Readings go in, and a Reuse, a New or a Catalog Miss comes
- * back; a New carries the candidates its judge saw, so the commit can
+ * nothing; Luna's draft of the Emoji Description comes back with the
+ * Attestation. Reading: the Attestation, the Emoji Descriptions of its
+ * Lemma's stored Readings and the draft go in, and a Reuse, a New or a
+ * Catalog Miss comes back; a New carries the candidates its judge saw, so the commit can
  * refuse it once stale (ADR 0031). `dumgen` builds the instance when a
  * click first needs it.
  */
@@ -89,6 +90,9 @@ export function dumgenClickResolution(
 					...(input.written === undefined
 						? {}
 						: { written: input.written }),
+					...(input.drafted === undefined
+						? {}
+						: { drafted: input.drafted }),
 				}),
 			).pipe(Effect.map((result) => clickReadingOf(result, input)));
 		},
@@ -144,6 +148,7 @@ function clickGrammarOf(
 			},
 		},
 		attestation: result.attestation,
+		...(result.drafted === undefined ? {} : { drafted: result.drafted }),
 	};
 	return grammar;
 }

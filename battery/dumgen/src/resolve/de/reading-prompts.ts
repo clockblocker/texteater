@@ -187,6 +187,21 @@ export const generation = {
 		"Examples, each an input and the description it takes:",
 		rules.meaning,
 	),
+	// The Canonical Form call drafts the description after its headword,
+	// so the click needs no second Luna call: these two stand in for `task`
+	// and `json` there.
+	draft: paragraph(
+		"generation.draft.task",
+		"Then write the Emoji Description of the same unit in `emojiDescription`: one to four emoji naming what it means where `markedSentence` marks it with <TARGET>…</TARGET>. Every marked span belongs to the one unit, its auxiliaries, its article and a subject es included. Its dictionary headword is the `canonicalForm` you wrote, which the examples give as `lemma`.",
+		rules.meaning,
+		rules.auxiliary,
+		rules.expletive,
+	),
+	draftJson: paragraph(
+		"generation.draft.output",
+		"Give `emojiDescription` as the emoji alone: one to four emoji and nothing else. Never a letter, a word in any language or script, a bare digit, punctuation or a sign that is no emoji: write a number with keycap emoji, and describe a sign or symbol by what it means instead of copying it.",
+		rules.meaning,
+	),
 } as const;
 
 /** One demonstration: an input as production sends it and its description. */

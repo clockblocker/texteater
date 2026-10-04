@@ -152,7 +152,8 @@ export function spotCheckOf(attempts: readonly ScoredReading[]) {
 				arm === "removed" &&
 				repetition === 0 &&
 				evaluation?.outcome === "New" &&
-				evaluation.reason === "Written",
+				(evaluation.reason === "Written" ||
+					evaluation.reason === "Drafted"),
 		)
 		.sort((left, right) =>
 			hash(left.caseId) < hash(right.caseId) ? -1 : 1,

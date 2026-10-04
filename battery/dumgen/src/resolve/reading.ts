@@ -13,6 +13,10 @@
  *   alone. An authored set may miss a sense, so its Lemma can gain a New
  *   Reading beside it (#877 R4). Luna writing an offered one takes it: the
  *   judge was wrong.
+ * - Luna drafts the description in `resolve.grammar`'s Canonical Form
+ *   call, so a click needs no second Luna call. The host passes it as
+ *   `drafted`, and it stands in for the description Luna would write here:
+ *   the judge still runs first over the stored ones.
  * - A host that refused a New as stale passes the description Luna wrote
  *   as `written`: the judge runs again over the current candidates, and a
  *   second NoMatch takes it (ADR 0031).
@@ -89,6 +93,35 @@ export const generationPrompt = [
 ].join("\n");
 
 /**
+ * What Luna's Canonical Form call adds to its system prompt to draft the
+ * Emoji Description after the headword: the generation prompt, with its
+ * task and output lines naming the draft's field, and the same
+ * demonstrations.
+ */
+export const draftPrompt = [
+	generation.draft,
+	generation.meaning,
+	generation.distinct,
+	generation.copula,
+	generation.polarity,
+	generation.modal,
+	generation.existential,
+	generation.multiword,
+	generation.draftJson,
+	generation.examples,
+	...readingDemonstrations.map(({ text }) => text),
+].join("\n");
+
+/**
+ * Whether `resolve.reading` may ask Luna for a unit's Emoji Description,
+ * so its Canonical Form call drafts one: an Open Route, but not Foreign
+ * material, whose one Reading has none (ADR 0045).
+ */
+export function draftsEmojiDescription(route: Route): boolean {
+	return !closedRoute(route) && route.family !== "Foreign";
+}
+
+/**
  * The string schema Luna answers under. Strict mode stays off, E10's arm RS
  * (#526, ruled 2026-10-03), so the provider enforces none of it: the schema
  * states the constraint, and Dumling's emoji-grapheme parse enforces it.
@@ -118,7 +151,7 @@ export function emojiDescriptionRequest(input: {
 }
 
 /** An Emoji Description as Dumling parses it, or undefined when it is none. */
-function parsedDescription(
+export function parsedDescription(
 	lemma: Dumling.Lemma<"de">,
 	value: unknown,
 ): string | undefined {
@@ -309,26 +342,40 @@ export const resolveReading = Effect.fnUntraced(function* (
 		);
 	if (written !== undefined && offered.has(keyOf(written)))
 		return answer(written, "WrittenStored");
+	const drafted =
+		input.drafted === undefined
+			? undefined
+			: parsedDescription(lemma, input.drafted);
+	if (input.drafted !== undefined && drafted === undefined)
+		return yield* defect(
+			`The drafted ${JSON.stringify(input.drafted)} is no Emoji Description`,
+		);
 	if (options.length > 0) {
 		const index = yield* pick(ask, "reading", state, options);
 		const picked = index === undefined ? undefined : options[index];
 		if (picked !== undefined) return answer(picked.description, "Judged");
 	}
 	if (written !== undefined) return answer(written, "Rejudged");
-	const emojiDescription = yield* askLuna(
-		scope,
-		models.luna,
-		"emojiDescription",
-		emojiDescriptionRequest(state),
-		(output) =>
-			parsedDescription(lemma, output) ??
-			new InvalidModelOutput({
-				stage: "emojiDescription",
-				message: `Luna answered no Emoji Description: ${JSON.stringify(output).slice(0, 80)}`,
-			}),
-	);
+	const emojiDescription =
+		drafted ??
+		(yield* askLuna(
+			scope,
+			models.luna,
+			"emojiDescription",
+			emojiDescriptionRequest(state),
+			(output) =>
+				parsedDescription(lemma, output) ??
+				new InvalidModelOutput({
+					stage: "emojiDescription",
+					message: `Luna answered no Emoji Description: ${JSON.stringify(output).slice(0, 80)}`,
+				}),
+		));
 	return answer(
 		emojiDescription,
-		offered.has(keyOf(emojiDescription)) ? "Collision" : "Written",
+		offered.has(keyOf(emojiDescription))
+			? "Collision"
+			: drafted === undefined
+				? "Written"
+				: "Drafted",
 	);
 });

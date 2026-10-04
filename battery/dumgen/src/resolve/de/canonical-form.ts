@@ -7,11 +7,18 @@
  * for a suspended fragment; a Standard member keeps its own letters, in
  * the casing Luna gave it when Luna wrote the same word, so a member Luna
  * dropped or wrote as its headword never loses the click (#876). No code
- * lowercases by position.
+ * lowercases by position. Where `resolve.reading` may ask Luna for an
+ * Emoji Description, the same call drafts it after the headword, so the
+ * click needs no second Luna call.
  */
 import { foldCase } from "dumling";
 import { InvalidModelOutput } from "../../errors.js";
 import type { LunaRequest } from "../../luna.js";
+import {
+	draftPrompt,
+	emojiDescriptionSchema,
+	markedSentence,
+} from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
 import type { MemberOrthography } from "./member-spelling.js";
 import { canonicalForm, routeGuidance } from "./prompts.js";
@@ -39,6 +46,8 @@ export type Written = {
 	readonly members: readonly string[];
 	/** A NOUN's definite article in the nominative singular, or none (#876). */
 	readonly article?: "der" | "die" | "das" | "none";
+	/** The Emoji Description Luna drafted after the headword, unchecked. */
+	readonly drafted?: string;
 };
 
 /** Whether Luna writes the unit's article beside its headword: a common NOUN Lexeme. */
@@ -59,8 +68,11 @@ const discontinuous = new Set([
 /** A fragment ending in a hyphen, which a coordinated compound completes. */
 const suspendedFragment = /^(.+)[-‐‑]$/u;
 
-/** The system prompt: the task, the casing and member lines, and the route's line. */
-function systemPrompt(target: Target): string {
+/**
+ * The system prompt: the task, the casing and member lines, the route's
+ * line, and the Emoji Description's guidance when the call drafts one.
+ */
+function systemPrompt(target: Target, drafts: boolean): string {
 	const key = `${target.route.family}/${target.route.kind}`;
 	const guidance =
 		routeGuidance[key] ??
@@ -79,6 +91,7 @@ function systemPrompt(target: Target): string {
 			: []),
 		...(guidance ? [guidance] : []),
 		...(writesArticle(target) ? [routeGuidance.nounArticle] : []),
+		...(drafts ? [draftPrompt] : []),
 	].join("\n");
 }
 
@@ -110,11 +123,16 @@ export function hintsFor(
 	);
 }
 
-/** The Canonical Form request, without its configuration. */
+/**
+ * The Canonical Form request, without its configuration. With `drafts`,
+ * Luna writes the Emoji Description too, after the headword, from the unit
+ * marked as `resolve.reading` marks it.
+ */
 export function canonicalFormRequest(
 	target: Target,
 	judged: Judged,
 	hints: readonly LemmaCandidate[],
+	drafts = false,
 ): Omit<LunaRequest, "configuration"> {
 	const state = targetState(target);
 	const fixedMembers = Object.fromEntries(
@@ -124,7 +142,7 @@ export function canonicalFormRequest(
 		}),
 	);
 	return {
-		systemPrompt: systemPrompt(target),
+		systemPrompt: systemPrompt(target, drafts),
 		input: {
 			route: state.route,
 			sentence: state.sentence,
@@ -158,6 +176,14 @@ export function canonicalFormRequest(
 						})),
 					}
 				: {}),
+			...(drafts
+				? {
+						markedSentence: markedSentence(
+							target.segments,
+							target.members.map(({ segment }) => segment),
+						),
+					}
+				: {}),
 		},
 		outputSchema: {
 			type: "object",
@@ -172,11 +198,13 @@ export function canonicalFormRequest(
 				...(writesArticle(target)
 					? { article: { type: "string", enum: [...nounArticles] } }
 					: {}),
+				...(drafts ? { emojiDescription: emojiDescriptionSchema } : {}),
 			},
 			required: [
 				"canonicalForm",
 				"members",
 				...(writesArticle(target) ? ["article"] : []),
+				...(drafts ? ["emojiDescription"] : []),
 			],
 			additionalProperties: false,
 		},
@@ -300,7 +328,10 @@ export function checkWritten(
 			);
 		members.push(word);
 	}
-	const article = (value as { article?: unknown }).article;
+	const { article, emojiDescription } = value as {
+		article?: unknown;
+		emojiDescription?: unknown;
+	};
 	return {
 		canonicalForm: form,
 		members,
@@ -308,6 +339,10 @@ export function checkWritten(
 		typeof article === "string" &&
 		(nounArticles as readonly string[]).includes(article)
 			? { article: article as Written["article"] & string }
+			: {}),
+		// A draft is checked against the Lemma once there is one.
+		...(typeof emojiDescription === "string"
+			? { drafted: emojiDescription.trim() }
 			: {}),
 	};
 }

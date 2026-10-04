@@ -73,6 +73,11 @@ export type ClickReadingInput = {
 	 * NoMatch keeps this one (ADR 0031).
 	 */
 	readonly written?: string;
+	/**
+	 * The Emoji Description Grammar drafted: it stands in for the one Luna
+	 * would write once the judge finds no stored Reading (ADR 0031).
+	 */
+	readonly drafted?: string;
 };
 
 /**

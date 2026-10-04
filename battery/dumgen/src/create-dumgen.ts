@@ -39,8 +39,9 @@ export type DumgenOptions = {
 	readonly jev: JevAsk;
 	/**
 	 * Luna, for the operations that write: `resolve.grammar` writes Canonical
-	 * Forms and spelling corrections with it, `resolve.reading` Emoji
-	 * Descriptions (#862) and `knowledge.produce` Knowledge text, plural and
+	 * Forms and spelling corrections with it and drafts Emoji Descriptions
+	 * in the same call, `resolve.reading` writes those no draft supplies
+	 * (#862), and `knowledge.produce` Knowledge text, plural and
 	 * Präteritum forms, frames and relation candidates. Segmentation never
 	 * receives it. `createOpenAILuna` in production.
 	 */

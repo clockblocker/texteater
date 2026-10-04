@@ -3,7 +3,8 @@
  * comes in, its Attestation goes out, or the judge's Unresolved, or a
  * Catalog Miss. A unit intake left Unresolved stays Unresolved with no
  * call (#861). A closed DET or PRON unit builds its Lemma from the
- * identity intake stored (#864); any other unit asks jev and Luna (#862).
+ * identity intake stored (#864); any other unit asks jev and Luna (#862),
+ * and Luna drafts the Emoji Description `resolve.reading` may need.
  * Whatever comes back is checked by Dumling before it is returned, and
  * the operation's trace says how the click came out and why.
  */
@@ -28,6 +29,7 @@ import {
 import { resolveOpenRoute } from "./de/open-route.js";
 import { Answered, UnresolvedAnswer } from "./de/questions.js";
 import { type Target, targetOf, targetState } from "./de/target.js";
+import { parsedDescription } from "./reading.js";
 import type { GrammarResolution, ResolveGrammarInput } from "./types.js";
 
 /** What `resolve.grammar` reaches its models with. */
@@ -47,7 +49,11 @@ function settle<T>(read: () => T): T | UnresolvedAnswer {
 }
 
 type Outcome =
-	| { readonly _tag: "Attestation"; readonly attestation: unknown }
+	| {
+			readonly _tag: "Attestation";
+			readonly attestation: unknown;
+			readonly drafted?: string;
+	  }
 	| { readonly _tag: "Unresolved"; readonly reason: string }
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
@@ -220,9 +226,22 @@ export const resolveGrammar = Effect.fnUntraced(function* (
 		chain.kind !== route.kind
 	)
 		throw Error("The Attestation left the unit's route");
+	const attestation = chain.value as Dumling.Attestation<"de">;
+	// A draft that is no Emoji Description is dropped: should the Reading
+	// need one, `resolve.reading` asks Luna for it.
+	const drafted =
+		outcome.drafted === undefined
+			? undefined
+			: parsedDescription(attestation.surface.lemma, outcome.drafted);
+	if (outcome.drafted !== undefined && drafted === undefined)
+		scope.event({
+			name: "DraftDropped",
+			data: { drafted: outcome.drafted.slice(0, 80) },
+		});
 	scope.resolution({ outcome: "Resolved" });
 	return {
 		_tag: "Resolved",
-		attestation: chain.value as Dumling.Attestation<"de">,
+		attestation,
+		...(drafted === undefined ? {} : { drafted }),
 	};
 });

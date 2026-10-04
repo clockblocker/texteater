@@ -254,6 +254,36 @@ test("a New carries the candidates its judge saw, and a stale re-judge passes th
 	expect(fake.readingInputs[0]?.written).toBe("🔜");
 });
 
+test("Luna's draft comes back with the Attestation, reaches resolve.reading, and stays out of the Grammar checkpoint", async () => {
+	const fake = fakeDumgen({
+		_tag: "Resolved",
+		attestation: kommt,
+		drafted: "🚶",
+	});
+	const resolution = dumgenClickResolution(fake.dumgen);
+	const grammar = await Effect.runPromise(
+		resolution.grammar({
+			sentence,
+			clickedSegmentIndex: 2,
+			unit: { segments: [2], route: verb },
+			lemmaCandidates: [],
+			neighbours: {},
+		}),
+	);
+	if (grammar.decision !== "Resolved") throw Error("Expected Resolved");
+	expect(grammar.drafted).toBe("🚶");
+	expect(parseResolvedGrammar(grammar)).not.toHaveProperty("drafted");
+	await Effect.runPromise(
+		resolution.reading({
+			grammar,
+			lemma: kommen,
+			candidates: [],
+			drafted: "🚶",
+		}),
+	);
+	expect(fake.readingInputs[0]?.drafted).toBe("🚶");
+});
+
 test("a Reading Catalog Miss comes back as tf-demo's signal", async () => {
 	const fake = fakeDumgen(
 		{ _tag: "Unresolved" },

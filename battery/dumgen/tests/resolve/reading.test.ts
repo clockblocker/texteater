@@ -344,6 +344,66 @@ test("judged again, a pick reuses the Reading stored since, and a written one st
 	expect(jev.sent).toEqual([]);
 });
 
+// The description Grammar's Canonical Form call drafted stands in for
+// Luna's after the judge (ADR 0031).
+
+test("with nothing stored, the drafted description is the New one, with no call", async () => {
+	const jev = fakeJev();
+	const luna = writes("🧩");
+	const { result, trace } = await readOnce(jev, luna, {
+		candidates: [],
+		drafted: "🔐",
+	});
+	expect(result).toEqual({ _tag: "New", emojiDescription: "🔐" });
+	expect(jev.sent).toEqual([]);
+	expect(luna.sent).toEqual([]);
+	expect(trace?.resolution).toEqual({ outcome: "New", reason: "Drafted" });
+});
+
+test("with stored Readings jev still judges first: its pick is reused and the draft dropped", async () => {
+	const jev = fakeJev({ reading: "c0" });
+	const luna = writes("🧩");
+	const { result } = await readOnce(jev, luna, {
+		candidates: ["🏰"],
+		drafted: "🔐",
+	});
+	expect(result).toEqual({ _tag: "Reuse", emojiDescription: "🏰" });
+	expect(jev.stages()).toEqual(["reading"]);
+	// The judge sees the stored descriptions only, never the draft.
+	expect(JSON.stringify(jev.sent[0])).not.toContain("🔐");
+	expect(luna.sent).toEqual([]);
+});
+
+test("after NoMatch the draft is the New one, and a draft already stored is a Reuse of it", async () => {
+	const noMatch = await readOnce(
+		fakeJev({ reading: "NoMatch" }),
+		writes("🧩"),
+		{
+			candidates: ["🏰"],
+			drafted: "🔐",
+		},
+	);
+	expect(noMatch.result).toEqual({ _tag: "New", emojiDescription: "🔐" });
+	expect(noMatch.trace?.calls.map(({ stage }) => stage)).toEqual(["reading"]);
+	const collided = await readOnce(
+		fakeJev({ reading: "NoMatch" }),
+		writes("🧩"),
+		{ candidates: ["🏰", "🕰"], drafted: "🕰️" },
+	);
+	expect(collided.result).toEqual({ _tag: "Reuse", emojiDescription: "🕰" });
+	expect(collided.trace?.resolution?.reason).toBe("Collision");
+});
+
+test("a stale New judged again keeps the written description over the draft", async () => {
+	const { result, trace } = await readOnce(
+		fakeJev({ reading: "NoMatch" }),
+		writes("🧩"),
+		{ candidates: ["🏰"], written: "🔐", drafted: "🗝" },
+	);
+	expect(result).toEqual({ _tag: "New", emojiDescription: "🔐" });
+	expect(trace?.resolution?.reason).toBe("Rejudged");
+});
+
 // The error channel (#859, #858) and no salvage (#889).
 
 test("Luna's text that is no Emoji Description is an InvalidModelOutput, neither salvaged nor asked again", async () => {
@@ -415,6 +475,7 @@ test("a Foreign Attestation, a unit off its route, a failed Sentence or a candid
 		],
 		[{ sentence: { ...sentence, failed: true } }, "segment it again"],
 		[{ candidates: ["castle"] }, "no Emoji Description"],
+		[{ drafted: "castle" }, "The drafted"],
 	];
 	for (const [change, message] of cases)
 		await expect(

@@ -31,6 +31,7 @@ import {
 	moreParticleForms,
 	particleForms,
 } from "../../segment/de/candidates.js";
+import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
 import {
 	canonicalFormRequest,
@@ -62,7 +63,12 @@ type AdpCase = "Acc" | "Dat" | "Gen";
 
 /** What an open-route click comes to before it is checked against Dumling. */
 export type OpenOutcome =
-	| { readonly _tag: "Attestation"; readonly attestation: Values }
+	| {
+			readonly _tag: "Attestation";
+			readonly attestation: Values;
+			/** The Emoji Description Luna drafted with the headword, unchecked. */
+			readonly drafted?: string;
+	  }
 	| { readonly _tag: "Unresolved"; readonly reason: string }
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
@@ -1563,6 +1569,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 						target,
 						judged,
 						hintsFor(target, candidates),
+						draftsEmojiDescription(target.route),
 					),
 					(output) => checkWritten(target, judged, output),
 				);
@@ -1782,5 +1789,9 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			: {}),
 		...(shape.governor || shape.adposition ? { valencyEvidence } : {}),
 	};
-	return { _tag: "Attestation", attestation };
+	return {
+		_tag: "Attestation",
+		attestation,
+		...(written?.drafted === undefined ? {} : { drafted: written.drafted }),
+	};
 });

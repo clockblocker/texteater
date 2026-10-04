@@ -3,8 +3,9 @@
  * Grammar takes the stored unit a click landed on, the Sentence and its
  * neighbours, and the stored Lemmas that may name it; out comes the
  * unit's Attestation, or the judge's Unresolved, or a Catalog Miss.
- * Reading takes that Attestation and the stored Emoji Descriptions of its
- * Lemma; out comes a Reuse, a New or a Catalog Miss. All are answers; the
+ * Reading takes that Attestation, the stored Emoji Descriptions of its
+ * Lemma and the one Grammar drafted; out comes a Reuse, a New or a Catalog
+ * Miss. All are answers; the
  * error channel says only that no usable answer came back.
  */
 import type * as Dumling from "dumling/types";
@@ -51,6 +52,13 @@ export type GrammarResolution =
 	| {
 			readonly _tag: "Resolved";
 			readonly attestation: Dumling.Attestation<"de">;
+			/**
+			 * The Emoji Description Luna drafted in the Canonical Form call,
+			 * for `resolve.reading`'s `drafted`; absent where `resolve.reading`
+			 * writes none, where Luna wrote no headword, or where the draft is
+			 * no Emoji Description.
+			 */
+			readonly drafted?: string;
 	  }
 	| { readonly _tag: "Unresolved" }
 	| {
@@ -80,6 +88,13 @@ export type ResolveReadingInput = {
 	 * writing another.
 	 */
 	readonly written?: string;
+	/**
+	 * The Emoji Description `resolve.grammar` drafted for this click. Only
+	 * the judge's NoMatch, or no stored Reading to judge, lets it stand,
+	 * where Luna would otherwise write one; never the stored descriptions
+	 * shaped it (ADR 0031).
+	 */
+	readonly drafted?: string;
 };
 
 /**

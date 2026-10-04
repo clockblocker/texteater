@@ -7,7 +7,12 @@ import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { LunaAsk } from "../../src/luna.js";
 import { guardedHeadword } from "../../src/resolve/de/headword-guards.js";
 import { verbHeadword } from "../../src/resolve/de/open-route.js";
+import { generation } from "../../src/resolve/de/reading-prompts.js";
 import { targetOf } from "../../src/resolve/de/target.js";
+import {
+	draftPrompt,
+	draftsEmojiDescription,
+} from "../../src/resolve/reading.js";
 import type { JevAsk } from "../../src/segment/jev.js";
 import type { Route, Segment } from "../../src/segment/segmented-sentence.js";
 import {
@@ -653,6 +658,89 @@ test("Luna writes the Canonical Form in lexical casing with the unit's stored Le
 		},
 	);
 	expect(attested(capital.result).surface.normalizedSurface).toBe("Mangels");
+});
+
+test("Luna drafts the Emoji Description after the headword in the same call, from the unit marked as resolve.reading marks it", async () => {
+	// Das0 _1 Schloss2 _3 klemmt4 .5
+	const luna = fakeLuna(({ members }) => ({
+		canonicalForm: "Schloss",
+		members: members.map(({ text }) => text),
+		article: "das",
+		emojiDescription: " 🏰️",
+	}));
+	const { result } = await resolveOnce(
+		{ jev: fakeJev().ask, luna: luna.ask },
+		{
+			sentence: sentenceOf("Das Schloss klemmt."),
+			unit: unitOf([2], "Lexeme", "NOUN"),
+		},
+	);
+	expect(luna.sent).toHaveLength(1);
+	const [request] = luna.sent;
+	expect(request?.input).toMatchObject({
+		markedSentence: "Das <TARGET>Schloss</TARGET> klemmt.",
+	});
+	const schema = request?.outputSchema as {
+		properties: Record<string, unknown>;
+		required: readonly string[];
+	};
+	// The headword comes first, the description last.
+	expect(Object.keys(schema.properties)).toEqual([
+		"canonicalForm",
+		"members",
+		"article",
+		"emojiDescription",
+	]);
+	expect(schema.required).toContain("emojiDescription");
+	expect(request?.systemPrompt).toContain(draftPrompt);
+	expect(request?.systemPrompt).toContain(generation.copula);
+	// Dumling's parse drops the variation selector.
+	expect(result).toMatchObject({ _tag: "Resolved", drafted: "🏰" });
+});
+
+test("a draft that is no Emoji Description is dropped and the headword kept, and Foreign material or a closed PART drafts none", async () => {
+	const castle = fakeLuna(({ members }) => ({
+		canonicalForm: "Schloss",
+		members: members.map(({ text }) => text),
+		article: "das",
+		emojiDescription: "castle",
+	}));
+	const dropped = await resolveOnce(
+		{ jev: fakeJev().ask, luna: castle.ask },
+		{
+			sentence: sentenceOf("Das Schloss klemmt."),
+			unit: unitOf([2], "Lexeme", "NOUN"),
+		},
+	);
+	expect(attested(dropped.result).surface.lemma.canonicalForm).toBe(
+		"Schloss",
+	);
+	expect(dropped.result).not.toHaveProperty("drafted");
+	expect(dropped.trace?.events).toEqual([
+		{ name: "DraftDropped", data: { drafted: "castle" } },
+	]);
+	// Er0 _1 sagte2 _3 cool4 .5
+	const foreign = writes("cool");
+	const cool = await resolveOnce(
+		{ jev: fakeJev().ask, luna: foreign.ask },
+		{
+			sentence: sentenceOf("Er sagte cool."),
+			unit: unitOf([4], "Foreign", "Foreign"),
+		},
+	);
+	expect(cool.result).not.toHaveProperty("drafted");
+	expect(foreign.sent[0]?.input).not.toHaveProperty("markedSentence");
+	expect(foreign.sent[0]?.outputSchema).not.toMatchObject({
+		properties: { emojiDescription: expect.anything() },
+	});
+	expect(foreign.sent[0]?.systemPrompt).not.toContain(draftPrompt);
+	expect(
+		draftsEmojiDescription({
+			language: "de",
+			family: "Lexeme",
+			kind: "PART",
+		}),
+	).toBe(false);
 });
 
 test("Luna may correct a Typo, while a Standard member keeps its letters in Luna's casing", async () => {

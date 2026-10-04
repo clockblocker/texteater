@@ -268,6 +268,18 @@ test("retry uses its exact Grammar checkpoint and asks only for the Reading", as
 	expect(run.writes[0]?.reading).toEqual(reading);
 });
 
+test("Grammar's draft reaches the Reading, and a checkpointed Grammar has none to pass", async () => {
+	const drafting = fakeResolution({
+		grammar: () => Effect.succeed({ ...grammar, drafted: "🏦" }),
+	});
+	const run = setup({ resolution: drafting.resolution });
+	await run.resolve();
+	expect(drafting.readingInputs[0]?.drafted).toBe("🏦");
+	const resumed = setup();
+	await resumed.resolve({ grammatical: grammar });
+	expect(resumed.fake.readingInputs[0]).not.toHaveProperty("drafted");
+});
+
 test("stored Reading candidates reach the port and a match is reused without a new Reading plan", async () => {
 	const run = setup({ candidates: [reading] });
 	const result = await run.resolve({ grammatical: grammar });
@@ -675,6 +687,76 @@ test("a New the commit refuses as stale is judged again over the Lemma's Reading
 		},
 		persisted: { status: "Committed" },
 	});
+});
+
+test("a stale New's re-judge passes its written description, not Grammar's draft, and each commit carries its own Reading and record", async () => {
+	const fake = fakeResolution({
+		grammar: () => Effect.succeed({ ...grammar, drafted: "🏦" }),
+		reading: (input) =>
+			Effect.succeed({
+				decision: "New" as const,
+				emojiDescription: input.written ?? input.drafted ?? "🧩",
+				candidates: input.candidates,
+			}),
+	});
+	const progress: unknown[] = [];
+	let commits = 0;
+	const run = setup({
+		resolution: fake.resolution,
+		observer: {
+			async grammarAvailable() {},
+			committing: (input) => ({
+				...input,
+				succeeded: { phase: "Commit", generationEvents: [] },
+			}),
+		},
+		persistence: {
+			async persistResolvedClick(input) {
+				progress.push(input.progress);
+				commits++;
+				if (commits === 1)
+					return { status: "StaleReading", candidates: ["🪑"] };
+				return {
+					status: "Committed",
+					clickId: "click-1",
+					attestationId: "attestation-1",
+					readingId: "reading-1",
+					deduplicated: false,
+					occurrence: {
+						attestationId: "attestation-1",
+						grammatical: grammar,
+						reading: input.reading,
+					},
+				};
+			},
+		},
+	});
+	await run.resolve();
+	expect(
+		fake.readingInputs.map(({ written, drafted }) => ({
+			written,
+			drafted,
+		})),
+	).toEqual([
+		{ written: undefined, drafted: "🏦" },
+		{ written: "🏦", drafted: undefined },
+	]);
+	expect(progress).toEqual([
+		expect.objectContaining({
+			readingAvailable: expect.objectContaining({
+				readingResolution: expect.objectContaining({ candidates: [] }),
+			}),
+			succeeded: { phase: "Commit", generationEvents: [] },
+		}),
+		expect.objectContaining({
+			readingAvailable: expect.objectContaining({
+				readingResolution: expect.objectContaining({
+					candidates: ["🪑"],
+				}),
+			}),
+			succeeded: { phase: "Commit", generationEvents: [] },
+		}),
+	]);
 });
 
 test("judged again, a stale New may reuse the Reading stored since, and commits it as a Reuse", async () => {
