@@ -79,9 +79,16 @@ interface ParseSuccess {
 }
 
 interface ParseFailure {
+	// Zod's abort states: an aborted payload skips its remaining checks except
+	// length checks; a halted one (an issue with `continue: false`, such as a
+	// non-integer for `int`) skips those too, in every enclosing node.
 	readonly aborted: boolean;
+	readonly halted: boolean;
 	readonly ok: false;
 	readonly issues: ParsingIssue[];
+	// The value Zod's payload holds after a non-aborting failure of a string,
+	// number or array node, which the node's remaining checks still receive.
+	readonly partial?: Readonly<{ value: unknown }>;
 }
 
 type ParseResult = ParseFailure | ParseSuccess;
@@ -234,6 +241,7 @@ function parseRecord(
 	const output: Record<string, unknown> = {};
 	const issues: ParsingIssue[] = [];
 	let aborted = false;
+	let halted = false;
 	const fixedKeys =
 		constraint[0] === "record"
 			? fixedRecordKeys(constraint[1], definitions)
@@ -249,6 +257,7 @@ function parseRecord(
 			);
 			if (!parsedValue.ok) {
 				aborted ||= parsedValue.aborted;
+				halted ||= parsedValue.halted;
 				issues.push(...parsedValue.issues);
 				continue;
 			}
@@ -268,7 +277,9 @@ function parseRecord(
 						: `Unrecognized keys: ${unknownKeys.map((key) => JSON.stringify(key)).join(", ")}`,
 			});
 		}
-		return issues.length === 0 ? success(output) : failure(issues, aborted);
+		return issues.length === 0
+			? success(output)
+			: failure(issues, aborted, halted);
 	}
 	for (const [key, value] of Object.entries(input)) {
 		const parsedKey = parseConstraint(
@@ -298,12 +309,15 @@ function parseRecord(
 		);
 		if (!parsedValue.ok) {
 			aborted ||= parsedValue.aborted;
+			halted ||= parsedValue.halted;
 			issues.push(...parsedValue.issues);
 			continue;
 		}
 		output[String(parsedKey.value)] = parsedValue.value;
 	}
-	return issues.length === 0 ? success(output) : failure(issues, aborted);
+	return issues.length === 0
+		? success(output)
+		: failure(issues, aborted, halted);
 }
 
 function fixedRecordKeys(
@@ -337,10 +351,23 @@ function parseArray(
 	definitions: Readonly<Record<string, Constraint>>,
 	operations: ValidationOperations,
 ): ParseResult {
-	if (!Array.isArray(input)) return invalidType("array", input, path);
+	if (!Array.isArray(input)) {
+		const invalid = invalidType("array", input, path);
+		return failure(
+			[
+				...invalid.issues,
+				...constraint[2].flatMap((check) =>
+					lengthCheckIssues(input, check, path),
+				),
+			],
+			true,
+		);
+	}
 	const output: unknown[] = [];
 	const issues: ParsingIssue[] = [];
 	let aborted = false;
+	let halted = false;
+	let partial = true;
 	for (const [index, value] of input.entries()) {
 		const child = parseConstraint(
 			constraint[1],
@@ -352,13 +379,19 @@ function parseArray(
 		if (child.ok) output.push(child.value);
 		else {
 			aborted ||= child.aborted;
+			halted ||= child.halted;
 			issues.push(...child.issues);
+			if (child.partial === undefined) partial = false;
+			output.push(child.partial?.value);
 		}
 	}
-	for (const check of constraint[2]) {
-		issues.push(...arrayCheckIssues(input, check, path));
-	}
-	return issues.length === 0 ? success(output) : failure(issues, aborted);
+	if (!halted)
+		for (const check of constraint[2])
+			issues.push(...lengthCheckIssues(input, check, path));
+	if (issues.length === 0) return success(output);
+	return aborted || !partial
+		? failure(issues, aborted, halted)
+		: partialFailure(issues, output);
 }
 
 function parseTuple(
@@ -386,6 +419,7 @@ function parseTuple(
 	const output: unknown[] = [];
 	const issues: ParsingIssue[] = [];
 	let aborted = false;
+	let halted = false;
 	if (rest === undefined && input.length > items.length) {
 		issues.push({
 			origin: "array",
@@ -408,6 +442,7 @@ function parseTuple(
 			if (child.ok) output[index] = child.value;
 			else {
 				aborted ||= child.aborted;
+				halted ||= child.halted;
 				issues.push(...child.issues);
 			}
 		}
@@ -423,42 +458,74 @@ function parseTuple(
 		if (child.ok) output[index] = child.value;
 		else {
 			aborted ||= child.aborted;
+			halted ||= child.halted;
 			issues.push(...child.issues);
 		}
 	}
-	return issues.length === 0 ? success(output) : failure(issues, aborted);
+	return issues.length === 0
+		? success(output)
+		: failure(issues, aborted, halted);
 }
 
-function arrayCheckIssues(
-	input: readonly unknown[],
-	check: ArrayConstraintCheck,
+// Zod guards its length checks with `when` instead of the abort flag, so they
+// run on any non-nullish value with a `length`, even after the base type check
+// failed. They compare with JavaScript's operators, so a non-numeric `length`
+// can fail, and the issue's origin names the value, not the schema.
+function lengthCheckIssues(
+	value: unknown,
+	check: ArrayConstraintCheck | StringConstraintCheck,
 	path: ParsingPath,
 ): ParsingIssue[] {
+	if (value === null || value === undefined) return [];
+	let length: unknown;
+	try {
+		length = (value as { readonly length?: unknown }).length;
+	} catch {
+		return [];
+	}
+	if (length === undefined) return [];
+	const measured = length as number;
 	const [kind, size] = check;
-	const issues: ParsingIssue[] = [];
-	if ((kind === "min" || kind === "length") && input.length < size) {
-		issues.push({
-			origin: "array",
-			code: "too_small",
-			minimum: size,
-			inclusive: true,
-			...(kind === "length" ? { exact: true } : {}),
-			path,
-			message: `Too small: expected array to have >=${size} items`,
-		});
-	}
-	if ((kind === "max" || kind === "length") && input.length > size) {
-		issues.push({
-			origin: "array",
-			code: "too_big",
-			maximum: size,
-			inclusive: true,
-			...(kind === "length" ? { exact: true } : {}),
-			path,
-			message: `Too big: expected array to have <=${size} items`,
-		});
-	}
-	return issues;
+	const exact = kind === "length";
+	const tooBig = exact
+		? measured > size
+		: kind === "max" && !(measured <= size);
+	const tooSmall = exact
+		? measured !== size && !tooBig
+		: kind === "min" && !(measured >= size);
+	if (!tooBig && !tooSmall) return [];
+	const origin = Array.isArray(value)
+		? "array"
+		: typeof value === "string"
+			? "string"
+			: "unknown";
+	const unit =
+		origin === "array" ? "items" : origin === "string" ? "characters" : "";
+	const bound = (relation: string) =>
+		unit === ""
+			? `expected ${origin} to be ${relation}${size}`
+			: `expected ${origin} to have ${relation}${size} ${unit}`;
+	return [
+		tooBig
+			? {
+					origin,
+					code: "too_big",
+					maximum: size,
+					inclusive: true,
+					...(exact ? { exact: true } : {}),
+					path,
+					message: `Too big: ${bound("<=")}`,
+				}
+			: {
+					origin,
+					code: "too_small",
+					minimum: size,
+					inclusive: true,
+					...(exact ? { exact: true } : {}),
+					path,
+					message: `Too small: ${bound(">=")}`,
+				},
+	];
 }
 
 function parseEnum(
@@ -494,8 +561,14 @@ function parseNumber(
 	const issues: ParsingIssue[] = [];
 	for (const check of constraint[1] ?? []) {
 		issues.push(...numberCheckIssues(input, check, path));
+		if (haltsNumber(input, check)) return failure(issues, true, true);
 	}
-	return issues.length === 0 ? success(input) : failure(issues);
+	return issues.length === 0 ? success(input) : partialFailure(issues, input);
+}
+
+// Zod's `int` reports a non-integer with `continue: false`.
+function haltsNumber(value: number, check: NumberConstraintCheck): boolean {
+	return check[0] === "int" && !Number.isInteger(value);
 }
 
 function numberCheckIssues(
@@ -617,57 +690,43 @@ function parsePipe(
 	definitions: Readonly<Record<string, Constraint>>,
 	operations: ValidationOperations,
 ): ParseResult {
-	const parsed = parseConstraint(
-		constraint[1],
-		input,
-		path,
-		definitions,
-		operations,
-	);
-	if (!parsed.ok) {
-		// Zod length checks still inspect array-like inputs after a string type
-		// failure, while overwrite/refinement callbacks remain skipped.
-		if (constraint[1][0] === "string" && typeof input !== "string")
-			return failure(
-				[
-					...parsed.issues,
-					...constraint[2].flatMap((effect) =>
-						effect[0] === "string"
-							? crossTypeStringCheckIssues(input, effect[1], path)
-							: [],
-					),
-				],
-				parsed.aborted,
-			);
-		return parsed;
+	const [, base, effects] = constraint;
+	const parsed = parseConstraint(base, input, path, definitions, operations);
+	let value: unknown;
+	let aborted = false;
+	let halted = false;
+	const issues: ParsingIssue[] = [];
+	if (parsed.ok) value = parsed.value;
+	else {
+		// Only a string, number or array node's own checks follow its base
+		// inline; any other base is a reference, which a transform or readonly
+		// stage also uses, and Zod skips those stages after any base issue.
+		const inline =
+			base[0] === "string" || base[0] === "number" || base[0] === "array";
+		if (!inline && !parsed.aborted) return parsed;
+		aborted = parsed.aborted;
+		halted = parsed.halted;
+		issues.push(...parsed.issues);
+		// After an aborting failure only length checks run, and the base's
+		// value has the input's length. The same holds when only length checks
+		// remain and the base's value isn't known.
+		if (parsed.partial !== undefined) value = parsed.partial.value;
+		else if (aborted || effects.every(isLengthEffect)) value = input;
+		else return parsed;
 	}
 
-	let value = parsed.value;
-	const issues: ParsingIssue[] = [];
-	for (const effect of constraint[2]) {
+	for (const effect of effects) {
+		if (halted) break;
+		if (isLengthEffect(effect)) {
+			issues.push(...lengthCheckIssues(value, effect[1], path));
+			continue;
+		}
+		if (aborted) continue;
 		if (effect[0] === "operation") {
 			const result = requiredOperation(effect[1], operations)(value);
 			value = result.value;
 			if (result.issues !== undefined)
 				issues.push(...prefixIssues(result.issues, path));
-			continue;
-		}
-		if (effect[0] === "string") {
-			if (typeof value !== "string") {
-				throw new TypeError(
-					"Validation artifact string effect received a non-string value.",
-				);
-			}
-			issues.push(...stringCheckIssues(value, effect[1], path));
-			continue;
-		}
-		if (effect[0] === "array") {
-			if (!Array.isArray(value)) {
-				throw new TypeError(
-					"Validation artifact array effect received a non-array value.",
-				);
-			}
-			issues.push(...arrayCheckIssues(value, effect[1], path));
 			continue;
 		}
 		if (effect[0] === "number") {
@@ -677,6 +736,7 @@ function parsePipe(
 				);
 			}
 			issues.push(...numberCheckIssues(value, effect[1], path));
+			if (haltsNumber(value, effect[1])) aborted = halted = true;
 			continue;
 		}
 		if (typeof value !== "string") {
@@ -696,7 +756,16 @@ function parsePipe(
 			});
 		}
 	}
-	return issues.length === 0 ? success(value) : failure(issues);
+	if (issues.length === 0) return success(value);
+	return aborted
+		? failure(issues, aborted, halted)
+		: partialFailure(issues, value);
+}
+
+function isLengthEffect(
+	effect: ValidationEffect,
+): effect is Extract<ValidationEffect, readonly ["array" | "string", unknown]> {
+	return effect[0] === "array" || effect[0] === "string";
 }
 
 function requiredOperation(
@@ -726,132 +795,23 @@ function parseString(
 	input: unknown,
 	path: ParsingPath,
 ): ParseResult {
+	const checks = constraint[1] ?? [];
 	if (typeof input !== "string") {
 		const invalid = invalidType("string", input, path);
-		const lengthIssues = (constraint[1] ?? []).flatMap((check) =>
-			crossTypeStringCheckIssues(input, check, path),
-		);
-		return failure([...invalid.issues, ...lengthIssues], true);
-	}
-	const issues: ParsingIssue[] = [];
-	for (const check of constraint[1] ?? []) {
-		issues.push(...stringCheckIssues(input, check, path));
-	}
-	return issues.length === 0 ? success(input) : failure(issues);
-}
-
-function crossTypeStringCheckIssues(
-	input: unknown,
-	check: StringConstraintCheck,
-	path: ParsingPath,
-): ParsingIssue[] {
-	if (Array.isArray(input)) return arrayCheckIssues(input, check, path);
-	if (
-		input === null ||
-		(typeof input !== "object" && typeof input !== "function")
-	)
-		return [];
-	let length: unknown;
-	try {
-		length = Reflect.get(input, "length");
-	} catch {
-		return [];
-	}
-	if (length === undefined) return [];
-	const [kind, size] = check;
-	if ((kind === "min" || kind === "length") && (length as number) < size) {
-		return [
-			{
-				origin: "unknown",
-				code: "too_small",
-				minimum: size,
-				inclusive: true,
-				...(kind === "length" ? { exact: true } : {}),
-				path,
-				message: `Too small: expected unknown to be >=${size}`,
-			},
-		];
-	}
-	if ((kind === "max" || kind === "length") && (length as number) > size) {
-		return [
-			{
-				origin: "unknown",
-				code: "too_big",
-				maximum: size,
-				inclusive: true,
-				...(kind === "length" ? { exact: true } : {}),
-				path,
-				message: `Too big: expected unknown to be <=${size}`,
-			},
-		];
-	}
-	if (kind === "length" && length !== size) {
-		return [
-			{
-				origin: "unknown",
-				code: "too_big",
-				maximum: size,
-				inclusive: true,
-				exact: true,
-				path,
-				message: `Too big: expected unknown to be <=${size}`,
-			},
-		];
-	}
-	return [];
-}
-
-function stringCheckIssues(
-	input: string,
-	check: StringConstraintCheck,
-	path: ParsingPath,
-): ParsingIssue[] {
-	const [kind, size] = check;
-	const issues: ParsingIssue[] = [];
-	if (kind === "min" && input.length < size) {
-		issues.push({
-			origin: "string",
-			code: "too_small",
-			minimum: size,
-			inclusive: true,
-			path,
-			message: `Too small: expected string to have >=${size} characters`,
-		});
-	}
-	if (kind === "max" && input.length > size) {
-		issues.push({
-			origin: "string",
-			code: "too_big",
-			maximum: size,
-			inclusive: true,
-			path,
-			message: `Too big: expected string to have <=${size} characters`,
-		});
-	}
-	if (kind === "length" && input.length !== size) {
-		issues.push(
-			input.length < size
-				? {
-						origin: "string",
-						code: "too_small",
-						minimum: size,
-						inclusive: true,
-						exact: true,
-						path,
-						message: `Too small: expected string to have >=${size} characters`,
-					}
-				: {
-						origin: "string",
-						code: "too_big",
-						maximum: size,
-						inclusive: true,
-						exact: true,
-						path,
-						message: `Too big: expected string to have <=${size} characters`,
-					},
+		return failure(
+			[
+				...invalid.issues,
+				...checks.flatMap((check) =>
+					lengthCheckIssues(input, check, path),
+				),
+			],
+			true,
 		);
 	}
-	return issues;
+	const issues = checks.flatMap((check) =>
+		lengthCheckIssues(input, check, path),
+	);
+	return issues.length === 0 ? success(input) : partialFailure(issues, input);
 }
 
 function parseObject(
@@ -870,6 +830,7 @@ function parseObject(
 		unknownKeyPolicy === "passthrough" ? { ...source } : {};
 	const issues: ParsingIssue[] = [];
 	let aborted = false;
+	let halted = false;
 	for (const [key, childConstraint] of Object.entries(shape)) {
 		const child = parseConstraint(
 			childConstraint,
@@ -882,6 +843,7 @@ function parseObject(
 			if (key in source) output[key] = child.value;
 		} else {
 			aborted ||= child.aborted;
+			halted ||= child.halted;
 			issues.push(...child.issues);
 		}
 	}
@@ -900,7 +862,9 @@ function parseObject(
 			});
 		}
 	}
-	return issues.length === 0 ? success(output) : failure(issues, aborted);
+	return issues.length === 0
+		? success(output)
+		: failure(issues, aborted, halted);
 }
 
 function invalidType(
@@ -962,8 +926,22 @@ function inputType(input: unknown): string {
 	return typeof input;
 }
 
-function failure(issues: ParsingIssue[], aborted = false): ParseFailure {
-	return { aborted, ok: false, issues };
+function failure(
+	issues: ParsingIssue[],
+	aborted = false,
+	halted = false,
+): ParseFailure {
+	return { aborted, halted, ok: false, issues };
+}
+
+function partialFailure(issues: ParsingIssue[], value: unknown): ParseFailure {
+	return {
+		aborted: false,
+		halted: false,
+		ok: false,
+		issues,
+		partial: { value },
+	};
 }
 
 function success(value: unknown): ParseSuccess {
