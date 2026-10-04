@@ -54,10 +54,6 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: bun tooling/ci.ts build
 
-      - name: check
-        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
-        run: bun tooling/ci.ts check
-
       - name: validate
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: bun tooling/ci.ts validate

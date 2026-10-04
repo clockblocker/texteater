@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"build": "turbo run build:package",
-		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run check && vite build",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && vite build",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"env:sync": "sh tooling/sync-convex-env.sh",
 		"dev": "turbo run dev:package",
