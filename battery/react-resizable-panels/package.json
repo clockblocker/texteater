@@ -30,23 +30,7 @@
 			"development": "./workspace/index.ts",
 			"import": "./dist/workspace.js",
 			"require": "./dist/workspace.cjs"
-		},
-		"./workspace/legacy": {
-			"bun": "./workspace/legacy/index.ts",
-			"convex": "./workspace/legacy/index.ts",
-			"types": "./dist/workspace/legacy/index.d.ts",
-			"development": "./workspace/legacy/index.ts",
-			"import": "./dist/workspace-legacy.js",
-			"require": "./dist/workspace-legacy.cjs"
-		},
-		"./workspace.css": {
-			"bun": "./workspace/workspace.css",
-			"development": "./workspace/workspace.css",
-			"default": "./dist/workspace.css"
-		},
-		"./e2e/harness": "./e2e/harness/harness.tsx",
-		"./e2e/harness.css": "./e2e/harness/harness.css",
-		"./e2e/workspace.pw": "./e2e/workspace.pw.ts"
+		}
 	},
 	"files": [
 		"dist",
@@ -59,7 +43,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run check && bun run build:js && bun run build:types",
-		"build:js": "rm -rf dist && bun run esbuild lib/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/react-resizable-panels.js && bun run esbuild lib/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/react-resizable-panels.cjs && bun run esbuild workspace/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace.js && bun run esbuild workspace/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace.cjs && bun run esbuild workspace/legacy/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace-legacy.js && bun run esbuild workspace/legacy/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace-legacy.cjs && cp workspace/workspace.css dist/workspace.css",
+		"build:js": "rm -rf dist && bun run esbuild lib/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/react-resizable-panels.js && bun run esbuild lib/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/react-resizable-panels.cjs && bun run esbuild workspace/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace.js && bun run esbuild workspace/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace.cjs",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json && mv dist/index.d.ts dist/react-resizable-panels.d.ts && bun ../../node_modules/typescript/bin/tsc -p tsconfig.workspace.json",
 		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
 		"fix": "bun run --silent biome check --write .",
@@ -68,8 +52,7 @@
 		"test": "bun run --bun vitest run",
 		"validate": "bun ../../tooling/validate-package.ts",
 		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config ../../tooling/dependency-cruiser.package.cjs --ts-config tsconfig.json --exclude '(^|/)vitest\\.d\\.ts$' -- lib workspace",
-		"validate:test": "bun run test",
-		"test:e2e": "playwright test"
+		"validate:test": "bun run test"
 	},
 	"peerDependencies": {
 		"react": "^19.2.6",
@@ -80,14 +63,12 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",
-		"@playwright/test": "^1.62.1",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.0",
 		"@testing-library/user-event": "^14.6.1",
 		"@types/node": "^24.13.3",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
-		"@vitejs/plugin-react": "^6",
 		"bun-types": "1.4.2",
 		"dependency-cruiser": "^18.1.0",
 		"esbuild": "^0.28.1",

@@ -1,8 +1,0 @@
-{
-	"vite": {
-		"config": ["e2e/vite.config.ts"]
-	},
-	"playwright": {
-		"config": ["playwright.config.ts"]
-	}
-}
