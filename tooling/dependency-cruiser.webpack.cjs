@@ -25,6 +25,30 @@ function sourceTarget(workspaceDir, target, fallback) {
 	return resolve(workspaceDir, fallback);
 }
 
+/**
+ * A wildcard export such as `./schema/*` → `./src/generated/schemas/*.ts`
+ * as a prefix alias, `dumling/schema` → that folder, so its imports resolve
+ * into the package's sources and meet the layer rules. Only a pattern that
+ * ends in `/*` on both sides (the target may add an extension) maps this
+ * way.
+ */
+function wildcardAlias(workspaceDir, packageName, key, value) {
+	const target =
+		typeof value === "string"
+			? value
+			: value &&
+					typeof value === "object" &&
+					typeof value.bun === "string"
+				? value.bun
+				: undefined;
+	const keyMatch = /^\.\/(.+)\/\*$/.exec(key);
+	const targetMatch = target && /^\.\/(.+)\/\*(\.[a-z]+)?$/.exec(target);
+	if (!keyMatch || !targetMatch) return undefined;
+	const directory = resolve(workspaceDir, targetMatch[1]);
+	if (!existsSync(directory)) return undefined;
+	return { alias: directory, name: `${packageName}/${keyMatch[1]}` };
+}
+
 const aliases = [];
 for (const kind of ["app", "battery"]) {
 	const parent = join(repositoryRoot, kind);
@@ -44,7 +68,16 @@ for (const kind of ["app", "battery"]) {
 				: { ".": manifest.exports };
 		for (const [key, value] of Object.entries(exports)) {
 			if (key !== "." && !key.startsWith("./")) continue;
-			if (key.includes("*")) continue;
+			if (key.includes("*")) {
+				const alias = wildcardAlias(
+					workspaceDir,
+					manifest.name,
+					key,
+					value,
+				);
+				if (alias) aliases.push(alias);
+				continue;
+			}
 			const request =
 				key === "."
 					? manifest.name

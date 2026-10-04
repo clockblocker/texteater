@@ -442,6 +442,54 @@ function matchesExport(exportKey: string, requested: string): boolean {
 	return new RegExp(`^${escaped}$`).test(requested);
 }
 
+/**
+ * The file in the repository an export target names: its `bun` condition or
+ * a plain string. The `types` and `import` targets point into `dist/`, which
+ * is build output and may not exist.
+ */
+function sourceExportTarget(value: unknown): string | undefined {
+	if (typeof value === "string") return value;
+	if (
+		value &&
+		typeof value === "object" &&
+		"bun" in value &&
+		typeof value.bun === "string"
+	)
+		return value.bun;
+	return undefined;
+}
+
+/**
+ * Why `requested` (`.` or `./subpath`) is not a usable entry of `target`:
+ * no `exports` key matches it, or the key is a wildcard whose source target
+ * has no file behind the requested path.
+ */
+function exportIssue(
+	repositoryRoot: string,
+	target: Workspace,
+	requested: string,
+): string | undefined {
+	const targetName = target.manifest.name as string;
+	const key = exportsKeys(target.manifest).find((candidate) =>
+		matchesExport(candidate, requested),
+	);
+	if (key === undefined)
+		return `${requested} is not declared by ${targetName}#exports`;
+	if (!key.includes("*")) return undefined;
+	const pattern = sourceExportTarget(
+		(target.manifest.exports as Record<string, unknown>)[key],
+	);
+	if (!pattern?.includes("*")) return undefined;
+	const [prefix = "", suffix = ""] = key.split("*");
+	const matched = requested.slice(
+		prefix.length,
+		requested.length - suffix.length,
+	);
+	const file = join(target.dir, pattern.replace("*", matched));
+	if (existsSync(file)) return undefined;
+	return `${requested} matches ${targetName}#exports "${key}", but its target ${relative(repositoryRoot, file).replaceAll("\\", "/")} does not exist`;
+}
+
 function declaredDependencies(workspace: Workspace): Set<string> {
 	return new Set(
 		[
@@ -478,6 +526,124 @@ function findCycles(edges: Map<string, Set<string>>): string[][] {
 
 	for (const node of edges.keys()) visit(node);
 	return cycles;
+}
+
+function requestedEntry(specifier: string, packageName: string): string {
+	return specifier === packageName
+		? "."
+		: `.${specifier.slice(packageName.length)}`;
+}
+
+/**
+ * Tooling's deliberate reaches into a package's internals: the resolved
+ * repository file, the importer and why no declared export serves it.
+ * Everything else tooling imports from a workspace goes through that
+ * package's `exports`.
+ */
+const toolingReaches: readonly {
+	importer: string;
+	target: string;
+	reason: string;
+}[] = [
+	{
+		importer: "tooling/dum-runtime-verification/differential-targets.ts",
+		target: "battery/dumdict/codegen/validation-artifacts.ts",
+		reason: "the Zod schemas Dumdict's generator compiles, the differential's reference side",
+	},
+	{
+		importer: "tooling/dum-runtime-verification/differential-targets.ts",
+		target: "battery/dumdict/src/generated/linked-validation.ts",
+		reason: "Dumdict's compiled validators, which it exports only behind its operations",
+	},
+	{
+		importer: "tooling/dum-runtime-verification/differential-targets.ts",
+		target: "battery/dumdict/src/parsing/validation-operations.ts",
+		reason: "the operation table pairing each compiled validator with its schema",
+	},
+	{
+		importer: "tooling/dum-runtime-verification/differential-targets.ts",
+		target: "battery/dumdict/tests/internal/differential-fixtures.ts",
+		reason: "Dumdict's test fixtures, the differential's inputs",
+	},
+	{
+		importer: "tooling/dum-runtime-verification/differential-targets.ts",
+		target: "battery/dumling/codegen/routes.ts",
+		reason: "the live route discovery with each route's Zod schemas; `dumling/codegen` exports only the plain route manifest",
+	},
+	{
+		importer: "tooling/dum-runtime-verification/differential-targets.ts",
+		target: "battery/dumling/tests/unit-fixtures.ts",
+		reason: "Dumling's test fixtures, the differential's inputs",
+	},
+	{
+		importer: "tooling/dum-runtime-verification/differential-targets.ts",
+		target: "battery/dumrel/tests/compiled-schema-fixtures.ts",
+		reason: "Dumrel's test fixtures, the differential's inputs",
+	},
+	{
+		importer: "tooling/tests/linked-validation.test.ts",
+		target: "battery/dumdict/src/generated/validation-artifacts.ts",
+		reason: "Dumdict's encoded validation artifacts, which no entry exports",
+	},
+	{
+		importer: "tooling/tests/linked-validation.test.ts",
+		target: "battery/dumdict/src/parsing/validation-operations.ts",
+		reason: "the operation table pairing each compiled validator with its schema",
+	},
+];
+
+/**
+ * `tooling/` is no workspace, but its imports follow the same boundaries: a
+ * package only through its declared `exports`, a package's internals only
+ * through a `toolingReaches` entry. Tooling is development code, so the
+ * schema-authoring, codegen-only and runtime-corpus rules don't apply. Nor
+ * does the declared-dependency check: the root manifest is the workspace
+ * root, which Bun links every workspace into, not a package, and declaring
+ * the workspaces there would make the root depend on its own members.
+ */
+async function validateToolingImports(options: {
+	repositoryRoot: string;
+	workspaces: Workspace[];
+}): Promise<ImportPolicyIssue[]> {
+	const toolingDir = join(options.repositoryRoot, "tooling");
+	if (!existsSync(toolingDir)) return [];
+	const issues: ImportPolicyIssue[] = [];
+	const repositoryPath = (path: string) =>
+		relative(options.repositoryRoot, path).replaceAll("\\", "/");
+	for (const file of await sourceFiles(toolingDir)) {
+		const importer = repositoryPath(file);
+		const contents = await readFile(file, "utf8");
+		for (const { specifier } of importReferences(contents, file)) {
+			if (specifier.startsWith(".") || isAbsolute(specifier)) {
+				const resolved = resolveFile(resolve(dirname(file), specifier));
+				const target = workspaceForPath(resolved, options.workspaces);
+				if (!target) continue;
+				const targetPath = repositoryPath(resolved);
+				if (
+					!toolingReaches.some(
+						(reach) =>
+							reach.importer === importer &&
+							reach.target === targetPath,
+					)
+				)
+					issues.push({
+						file: importer,
+						message: `tooling reaches into ${target.relativePath} by path; import a declared export or list the reach in toolingReaches with a reason`,
+						specifier,
+					});
+				continue;
+			}
+			const target = importedWorkspace(specifier, options.workspaces);
+			if (!target) continue;
+			const message = exportIssue(
+				options.repositoryRoot,
+				target,
+				requestedEntry(specifier, target.manifest.name as string),
+			);
+			if (message) issues.push({ file: importer, message, specifier });
+		}
+	}
+	return issues;
 }
 
 export async function validateSourceImports(options: {
@@ -608,24 +774,21 @@ export async function validateSourceImports(options: {
 						specifier,
 					});
 				}
-				const requested =
-					specifier === targetName
-						? "."
-						: `.${specifier.slice(targetName.length)}`;
-				if (
-					!exportsKeys(target.manifest).some((key) =>
-						matchesExport(key, requested),
-					)
-				) {
+				const message = exportIssue(
+					options.repositoryRoot,
+					target,
+					requestedEntry(specifier, targetName),
+				);
+				if (message)
 					issues.push({
 						file: relative(options.repositoryRoot, file),
-						message: `${requested} is not declared by ${targetName}#exports`,
+						message,
 						specifier,
 					});
-				}
 			}
 		}
 	}
+	issues.push(...(await validateToolingImports(options)));
 
 	for (const cycle of findCycles(graph)) {
 		issues.push({

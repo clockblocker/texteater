@@ -4,11 +4,11 @@ import { join, resolve } from "node:path";
 import { ParsingError, parseValidationArtifact } from "common-utils/validation";
 import { validationRegistry as units } from "dumling/compiled-validation";
 import { validationOperations } from "dumling/validation";
+import { encodedValidation as linguistic } from "dumling/validation-artifact";
 import { validationRegistry as knowledge } from "dumrel/compiled-validation";
+import { encodedValidation as relations } from "dumrel/validation-artifact";
 import { encodedDumdictValidationArtifacts } from "../../battery/dumdict/src/generated/validation-artifacts";
 import { dumdictValidationOperations } from "../../battery/dumdict/src/parsing/validation-operations";
-import { encodedValidation as linguistic } from "../../battery/dumling/src/generated/validation";
-import { encodedValidation as relations } from "../../battery/dumrel/src/generated/validation";
 import { preparePublishedRuntime } from "../dum-entrypoint-rss/published-runtime";
 import { DUM_DIFFERENTIAL_TARGETS } from "../dum-runtime-verification/differential-targets";
 

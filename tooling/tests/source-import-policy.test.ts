@@ -458,3 +458,94 @@ test("runtime code may load only dumcorpus/inventories, and name any corpus type
 			"runtime code may load only dumcorpus/inventories",
 		);
 });
+
+test("tooling imports a package through its exports and reaches into one only from the allowlist", async () => {
+	const root = await temporaryRepository();
+	const dumling = await addWorkspace(root, {
+		exports: {
+			".": "./dist/index.js",
+			"./validation": "./dist/validation.js",
+		},
+		kind: "battery",
+		name: "dumling",
+	});
+	const dumdict = await addWorkspace(root, {
+		kind: "battery",
+		name: "dumdict",
+	});
+	await writeSource(dumling, "src/internal.ts", "export const x = 1;\n");
+	await writeSource(
+		dumdict,
+		"src/parsing/validation-operations.ts",
+		"export const y = 1;\n",
+	);
+	// Undeclared in the root manifest, which tooling needn't declare.
+	await writeSource(
+		root,
+		"tooling/check.ts",
+		'import { a } from "dumling";\n' +
+			'import { b } from "dumling/validation";\n' +
+			'import { c } from "dumling/src/internal";\n' +
+			'import { d } from "../battery/dumling/src/internal";\n',
+	);
+	// A reach toolingReaches lists.
+	await writeSource(
+		root,
+		"tooling/tests/linked-validation.test.ts",
+		'import { y } from "../../battery/dumdict/src/parsing/validation-operations";\n',
+	);
+
+	expect(
+		(await issuesFor(root)).map(
+			({ file, message, specifier }) =>
+				`${file} ${specifier}: ${message}`,
+		),
+	).toEqual([
+		"tooling/check.ts dumling/src/internal: ./src/internal is not declared by dumling#exports",
+		"tooling/check.ts ../battery/dumling/src/internal: tooling reaches into battery/dumling by path; import a declared export or list the reach in toolingReaches with a reason",
+	]);
+});
+
+test("a wildcard export's source target must exist", async () => {
+	const root = await temporaryRepository();
+	const dumling = await addWorkspace(root, {
+		exports: {
+			"./schema/*": {
+				bun: "./src/generated/schemas/*.ts",
+				types: "./dist/generated/schemas/*.d.ts",
+				import: "./dist/generated/schemas/*.js",
+			},
+		},
+		kind: "battery",
+		name: "dumling",
+	});
+	const dumcorpus = await addWorkspace(root, {
+		exports: { "./schema/*": "./schema/*" },
+		kind: "battery",
+		name: "dumcorpus",
+	});
+	const consumer = await addWorkspace(root, {
+		dependencies: { dumcorpus: "workspace:^", dumling: "workspace:^" },
+		kind: "battery",
+		name: "dumdict",
+	});
+	await writeSource(
+		dumling,
+		"src/generated/schemas/de/lexeme/noun.ts",
+		"export const lemmaSchema = 1;\n",
+	);
+	await writeSource(dumcorpus, "schema/spec-record.de.json", "{}\n");
+	await writeSource(
+		consumer,
+		"codegen/generate.ts",
+		'import "dumling/schema/de/lexeme/noun";\n' +
+			'import "dumling/schema/de/lexeme/does-not-exist";\n' +
+			'import "dumcorpus/schema/spec-record.de.json";\n' +
+			'import "dumcorpus/schema/missing.json";\n',
+	);
+
+	expect((await issuesFor(root)).map(({ message }) => message)).toEqual([
+		'./schema/de/lexeme/does-not-exist matches dumling#exports "./schema/*", but its target battery/dumling/src/generated/schemas/de/lexeme/does-not-exist.ts does not exist',
+		'./schema/missing.json matches dumcorpus#exports "./schema/*", but its target battery/dumcorpus/schema/missing.json does not exist',
+	]);
+});

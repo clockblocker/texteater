@@ -2,7 +2,9 @@ import {
 	parseCompiledValidation,
 	type ValidationOperations,
 } from "common-utils/validation";
+import { validationRegistry as units } from "dumling/compiled-validation";
 import { validationOperations } from "dumling/validation";
+import { validationRegistry as knowledge } from "dumrel/compiled-validation";
 import * as relSchemas from "dumrel/schema";
 import { z } from "zod";
 import { canonicalDumdictValidationSchemas } from "../../battery/dumdict/codegen/validation-artifacts";
@@ -10,9 +12,7 @@ import { validationRegistry as dictionary } from "../../battery/dumdict/src/gene
 import { dumdictValidationOperations } from "../../battery/dumdict/src/parsing/validation-operations";
 import { successfulInputs } from "../../battery/dumdict/tests/internal/differential-fixtures";
 import { loadRoutes } from "../../battery/dumling/codegen/routes";
-import { validationRegistry as units } from "../../battery/dumling/src/generated/linked-validation";
 import { unitFixtures } from "../../battery/dumling/tests/unit-fixtures";
-import { validationRegistry as knowledge } from "../../battery/dumrel/src/generated/linked-validation";
 import { samples as knowledgeSamples } from "../../battery/dumrel/tests/compiled-schema-fixtures";
 import type { DifferentialTarget } from "./differential";
 
