@@ -49,6 +49,19 @@ const pronTypeNames: Readonly<Record<string, string>> = {
 	Exc: "exclamative",
 };
 
+/**
+ * The use of a PRON that stands before a noun or grades a word as well as
+ * standing for a noun phrase, keyed by Canonical Form. Quantity bisschen is
+ * one PRON in every use (de/quantifier-by-use), so the default "standing
+ * for a whole noun phrase" made jev answer Other for ein bisschen Milch and
+ * klingt bisschen förmlich. ein wenig and ein paar are two pieces, which
+ * the identity Choice never asks about.
+ */
+const pronounUses: Readonly<Record<string, string>> = {
+	bisschen:
+		"the quantity word 'a bit, a little' in every use: before a noun (ein bisschen Brot, kein bisschen Zeit), alone (Iss noch ein bisschen) or grading a word (ein bisschen kalt, wartet bisschen länger)",
+};
+
 function identityIndex(): Map<string, IdentityCandidate[]> {
 	const map = new Map<string, Map<string, IdentityCandidate>>();
 	for (const realization of authoredRealizations) {
@@ -73,7 +86,8 @@ function identityIndex(): Map<string, IdentityCandidate[]> {
 					? pronType === "Art"
 						? "the article of a noun phrase"
 						: "a determiner directly before its noun"
-					: "a pronoun standing for a whole noun phrase";
+					: (pronounUses[lemma.canonicalForm] ??
+						"a pronoun standing for a whole noun phrase");
 			group.set(key, {
 				key,
 				kind: lemma.kind,
