@@ -17,73 +17,15 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
-			"caseId": "reading-de-phraseme-collocation-entscheidung-treffen-new",
 			"memberSegmentIndices": [4, 8, 10],
-			"case": {
-				"input": {
-					"markedContext": "Das Team <TARGET>trifft</TARGET> heute <TARGET>eine</TARGET> <TARGET>Entscheidung</TARGET>.",
-					"lemma": "eine Entscheidung treffen",
-					"existingEmojiDescriptions": []
-				},
-				"idealOutput": { "emojiDescription": "🤔✅" },
-				"explanation": "The collocation denotes reaching a decision; all three lexical members form one stable concept. New."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-de-phraseme-collocation-entscheidung-treffen-new",
-			"memberSegmentIndices": [4, 8, 10],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-de-phraseme-collocation-entscheidung-treffen-new",
-							"language": "de",
-							"segments": [
-								{ "kind": "OpaqueText", "text": "Das Team " },
-								{ "kind": "ResolvableText", "text": "trifft" },
-								{ "kind": "OpaqueText", "text": " heute " },
-								{ "kind": "ResolvableText", "text": "eine" },
-								{ "kind": "OpaqueText", "text": " " },
-								{
-									"kind": "ResolvableText",
-									"text": "Entscheidung"
-								},
-								{ "kind": "OpaqueText", "text": "." }
-							]
-						},
-						"target": {
-							"family": "Phraseme",
-							"kind": "Collocation",
-							"memberSegmentIndices": [1, 3, 5]
-						}
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Phraseme",
-						"kind": "Collocation",
-						"canonicalForm": "eine Entscheidung treffen",
-						"coreFeatures": {}
-					},
-					"candidates": []
-				},
-				"idealOutput": {
-					"decision": "New",
-					"emojiDescription": "🤔✅"
-				},
-				"explanation": "The collocation denotes reaching a decision; all three lexical members form one stable concept. New."
+			"route": { "family": "Locution", "kind": "VERB" },
+			"notes": {
+				"rationale": "eine Entscheidung treffen is a Collocation: treffen only supports Entscheidung. The noun's own article is a member (de/funktionsverbgefuege-are-collocations), and heute between them stays out. Its Reading is ⚖✅, as in der-ausschuss-trifft-eine-entscheidung."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

@@ -139,54 +139,44 @@
 					"surfaceFeatures": null
 				}
 			}
-		}
-	],
-	"noTarget": [],
-	"legacy": [
+		},
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-fixed-function-near-hungrigen",
 			"memberSegmentIndices": [23],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 23,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Aus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Opportunismus" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "folgt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mehrheit" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "heult" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "mit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "den" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hungrigen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wölfen" },
-						{ "kind": "Punctuation", "text": "." }
-					]
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "hungrigen is an attributive ADJ on Wölfen, no fixed word of mit den Wölfen heulen (de/attributive-adjective-stands-alone). Its Lemma is hungrig as in k-wartete-noch-ein-weilchen-sah-von-seinem-kopfkissen-aus, not comparable, so it marks no degree; its Reading would be 🍽 as there."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "hungrig",
+						"coreFeatures": { "comparable": null }
+					},
+					"normalizedSurface": "hungrigen",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Dat",
+						"degree": null,
+						"gender": null,
+						"number": "Plur"
+					}
 				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADJ",
-					"memberSegmentIndices": [23]
-				},
-				"explanation": "This IDS publication records mit den Wölfen heulen as a conventional expression. Its broader paremiological label does not determine Dumgen's occurrence route: issue #82 product policy classifies the inflected predicate here as Phraseme/Idiom, includes its fixed function words, and excludes the inserted adjective. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/13241/file/Matulina_Die_Verwendung_von_Sprichwoertern_2012.pdf"
+				"members": [
+					{ "attested": "hungrigen", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null,
+				"valencyEvidence": []
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

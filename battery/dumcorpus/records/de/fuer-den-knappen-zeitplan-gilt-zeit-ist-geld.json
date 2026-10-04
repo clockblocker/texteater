@@ -75,71 +75,9 @@
 			"memberSegmentIndices": [11, 13, 15],
 			"route": { "family": "Saying", "kind": "Saying" },
 			"notes": {
-				"rationale": "Zeit ist Geld is a Proverb that Duden lists under Zeit, quoted after the colon as a complete saying, so it is one Saying target over all its words (de/saying-needs-uptake), as in wir-muessen-hoeflich-bleiben-zeit-ist-geld."
+				"rationale": "Zeit ist Geld is a Proverb that Duden lists under Zeit, quoted after the colon as a complete saying, so it is one Saying target over all its words (de/saying-needs-uptake), as in wir-muessen-hoeflich-bleiben-zeit-ist-geld. Its Reading is ⏳💰, as in zeit-ist-geld."
 			}
 		}
 	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
-			"caseId": "reading-de-phraseme-aphorism-zeit-ist-geld",
-			"memberSegmentIndices": [11, 13, 15],
-			"case": {
-				"input": {
-					"markedContext": "Für den knappen Zeitplan gilt: <TARGET>Zeit</TARGET> <TARGET>ist</TARGET> <TARGET>Geld</TARGET>.",
-					"lemma": "Zeit ist Geld",
-					"existingEmojiDescriptions": ["⏳💰"]
-				},
-				"idealOutput": { "emojiDescription": "⏳💰" },
-				"explanation": "The aphorism equates time with money. Reuse."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-de-phraseme-aphorism-zeit-ist-geld",
-			"memberSegmentIndices": [11, 13, 15],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-de-phraseme-aphorism-zeit-ist-geld",
-							"language": "de",
-							"segments": [
-								{
-									"kind": "OpaqueText",
-									"text": "Für den knappen Zeitplan gilt: "
-								},
-								{ "kind": "ResolvableText", "text": "Zeit" },
-								{ "kind": "OpaqueText", "text": " " },
-								{ "kind": "ResolvableText", "text": "ist" },
-								{ "kind": "OpaqueText", "text": " " },
-								{ "kind": "ResolvableText", "text": "Geld" },
-								{ "kind": "OpaqueText", "text": "." }
-							]
-						},
-						"target": {
-							"family": "Phraseme",
-							"kind": "Aphorism",
-							"memberSegmentIndices": [1, 3, 5]
-						}
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Phraseme",
-						"kind": "Aphorism",
-						"canonicalForm": "Zeit ist Geld",
-						"coreFeatures": {}
-					},
-					"candidates": ["⏳💰"]
-				},
-				"idealOutput": {
-					"decision": "Reuse",
-					"emojiDescription": "⏳💰"
-				},
-				"explanation": "The aphorism equates time with money. Reuse."
-			}
-		}
-	]
+	"noTarget": []
 }

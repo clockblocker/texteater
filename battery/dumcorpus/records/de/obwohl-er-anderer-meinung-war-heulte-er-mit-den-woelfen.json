@@ -76,7 +76,7 @@
 			"memberSegmentIndices": [11, 15, 17, 19],
 			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
-				"rationale": "Going along against his own opinion is mit den Wölfen heulen 'follow the majority out of opportunism', an Idiom, a Locution VERB over heulte, mit, den and Wölfen; the subject er between them stays out."
+				"rationale": "Going along against his own opinion is mit den Wölfen heulen 'follow the majority out of opportunism', an Idiom, a Locution VERB over heulte, mit, den and Wölfen; the subject er between them stays out. Its Reading is 🐑👥, as in heult-nicht-laenger-mit-den-woelfen and aus-opportunismus-folgt-sie-immer-der-mehrheit-sie-heult-mit."
 			}
 		},
 		{
@@ -84,69 +84,5 @@
 			"route": { "family": "Lexeme", "kind": "PRON" }
 		}
 	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/resolve/source-data.json",
-			"caseId": "reading-de-idiom-mit-den-woelfen-heulen",
-			"memberSegmentIndices": [11, 15, 17, 19],
-			"case": {
-				"input": {
-					"markedContext": "Obwohl er anderer Meinung war, <TARGET>heulte</TARGET> er <TARGET>mit</TARGET> <TARGET>den</TARGET> <TARGET>Wölfen</TARGET>.",
-					"lemma": "mit den Wölfen heulen",
-					"existingEmojiDescriptions": []
-				},
-				"idealOutput": { "emojiDescription": "👥🤝" },
-				"explanation": "Follow the group despite disagreement. Whole idiom. New."
-			}
-		},
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/reading-emoji-description/operation-cases.json",
-			"caseId": "reading-de-idiom-mit-den-woelfen-heulen",
-			"memberSegmentIndices": [11, 15, 17, 19],
-			"case": {
-				"input": {
-					"encounter": {
-						"sentence": {
-							"id": "reading-de-idiom-mit-den-woelfen-heulen",
-							"language": "de",
-							"segments": [
-								{
-									"kind": "OpaqueText",
-									"text": "Obwohl er anderer Meinung war, "
-								},
-								{ "kind": "ResolvableText", "text": "heulte" },
-								{ "kind": "OpaqueText", "text": " er " },
-								{ "kind": "ResolvableText", "text": "mit" },
-								{ "kind": "OpaqueText", "text": " " },
-								{ "kind": "ResolvableText", "text": "den" },
-								{ "kind": "OpaqueText", "text": " " },
-								{ "kind": "ResolvableText", "text": "Wölfen" },
-								{ "kind": "OpaqueText", "text": "." }
-							]
-						},
-						"target": {
-							"family": "Phraseme",
-							"kind": "Idiom",
-							"memberSegmentIndices": [1, 3, 5, 7]
-						}
-					},
-					"lemma": {
-						"unitKind": "Lemma",
-						"language": "de",
-						"family": "Phraseme",
-						"kind": "Idiom",
-						"canonicalForm": "mit den Wölfen heulen",
-						"coreFeatures": {}
-					},
-					"candidates": []
-				},
-				"idealOutput": {
-					"decision": "New",
-					"emojiDescription": "👥🤝"
-				},
-				"explanation": "Follow the group despite disagreement. Whole idiom. New."
-			}
-		}
-	]
+	"noTarget": []
 }

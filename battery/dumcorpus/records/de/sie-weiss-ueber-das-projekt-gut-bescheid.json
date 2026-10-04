@@ -79,53 +79,5 @@
 			}
 		}
 	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
-			"caseId": "sentence-de-government-bescheid-wissen",
-			"case": {
-				"input": {
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "weiß" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "über" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Projekt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "gut" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Bescheid" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"slots": [
-						{
-							"governors": [4, 30],
-							"offset": 9,
-							"preposition": "über",
-							"case": "Acc",
-							"referent": "Something"
-						}
-					],
-					"targets": [
-						{ "kind": "ADP", "members": [{ "offset": 9 }] }
-					],
-					"phrasemes": [
-						{
-							"kind": "Collocation",
-							"words": [4, 30],
-							"governed": [9]
-						}
-					]
-				},
-				"explanation": "The Collocation Bescheid wissen governs über with the accusative; Bescheid governs it only inside the Collocation, so über is the Collocation's governed preposition and not a fixed word (ADR 0034)."
-			}
-		}
-	]
+	"noTarget": []
 }

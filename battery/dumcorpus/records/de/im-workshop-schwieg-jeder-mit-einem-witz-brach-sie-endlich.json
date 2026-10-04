@@ -163,53 +163,37 @@
 			"notes": {
 				"rationale": "Knowledge (#887, dev draft): The two OT synset members describe the participants relaxing rather than someone causing it, so they are near, not full, synonyms."
 			}
-		}
-	],
-	"noTarget": [],
-	"legacy": [
+		},
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-boundary-idiom-near-endlich",
 			"memberSegmentIndices": [20],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 20,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "I" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Workshop" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "schwieg" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "jeder" },
-						{ "kind": "Punctuation", "text": "." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Mit" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "einem" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Witz" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "brach" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sie" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "endlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Eis" },
-						{ "kind": "Punctuation", "text": "." }
-					]
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "endlich 'at last' modifies the clause and is no fixed word of das Eis brechen, so it is an ADV of its own, as in der-tyrann-biss-endlich-ins-gras."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADV",
+						"canonicalForm": "endlich",
+						"coreFeatures": { "comparable": null }
+					},
+					"normalizedSurface": "endlich",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": null
 				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADV",
-					"memberSegmentIndices": [20]
-				},
-				"explanation": "This IDS idiom study uses das Eis brechen to contrast literal and figurative readings. Issue #82 product policy selects Phraseme/Idiom only in the figurative occurrence and fixes the realized member indices; the literal control remains independently classified Lexemes. Source: https://ids-pub.bsz-bw.de/frontdoor/deliver/index/docId/7790/file/Harras_Idiome_1997.pdf"
+				"members": [
+					{ "attested": "endlich", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
 			}
 		}
-	]
+	],
+	"noTarget": []
 }
