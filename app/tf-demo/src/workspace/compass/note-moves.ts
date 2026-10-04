@@ -1,5 +1,5 @@
+import type { Box, WritingDirection } from "compass";
 import { animate, type MotionValue } from "motion/react";
-import type { Box, WritingDirection } from "react-resizable-panels/workspace";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import { inlineSign, type NoteHandle } from "./gesture";

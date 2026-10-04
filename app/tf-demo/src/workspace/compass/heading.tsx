@@ -1,3 +1,4 @@
+import { BAR_REM, HEADER_REM } from "compass";
 import { ArrowLeftIcon, XIcon } from "lucide-react";
 import { AnimatePresence, type MotionValue, motion } from "motion/react";
 import {
@@ -8,7 +9,6 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { BAR_REM, HEADER_REM } from "react-resizable-panels/workspace";
 import { after, type motionOf } from "@/workspace/motion/motion-spec";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";

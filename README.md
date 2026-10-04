@@ -12,6 +12,8 @@ The workspaces are:
 - `battery/codegen`: deterministic, filesystem-safe code generation recipes
 - `battery/common-utils`: shared TypeScript type helpers, `required()`,
   `canonicalJson()`, and the compiled-validation runtime and its Zod compiler
+- `battery/compass`: the workspace's pure Pane model and its resizable layout
+  components
 - `battery/dumcorpus`: Spec Records, classification Rules and authored inventories
 - `battery/dumdict`: dictionary workflows
 - `battery/dumgen`: German `segment.inUnits`, rebuilt from scratch (#701)
@@ -19,7 +21,6 @@ The workspaces are:
 - `battery/dumrel`: Knowledge and relation algebra
 - `battery/lego`: shared Tailwind design tokens, theme and React atoms and molecules
 - `battery/promptsmith`: schema-bound prompt authoring and reproducible evaluation
-- `battery/react-resizable-panels`: local fork of the resizable panel components
 
 ## Install
 

@@ -7,7 +7,7 @@ import {
 	isRooted,
 	type Presentation,
 	restingCards,
-} from "react-resizable-panels/workspace";
+} from "compass";
 import { clearSentence } from "./clear-sentence";
 import type { DeckInteraction } from "./interaction-policy";
 import { findSheet, type SheetView, topSheetOf } from "./sheets";

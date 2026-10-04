@@ -1,7 +1,4 @@
-import {
-	CARD_WIDTH_REM,
-	type WritingDirection,
-} from "react-resizable-panels/workspace";
+import { CARD_WIDTH_REM, type WritingDirection } from "compass";
 
 /**
  * The renderer's side of the geometry: what reads the page, and the CSS

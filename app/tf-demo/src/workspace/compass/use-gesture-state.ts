@@ -1,6 +1,6 @@
+import type { Box, Presentation } from "compass";
 import { animate } from "motion/react";
 import { useRef, useState } from "react";
-import type { Box, Presentation } from "react-resizable-panels/workspace";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import type { Destination, Drag, NoteHandle } from "./gesture";

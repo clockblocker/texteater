@@ -1,11 +1,11 @@
-import type { MotionValue } from "motion/react";
 import type {
 	Box,
 	Edge,
 	HeldHome,
 	Presentation,
 	WritingDirection,
-} from "react-resizable-panels/workspace";
+} from "compass";
+import type { MotionValue } from "motion/react";
 
 /**
  * A gesture on a Note, and the arithmetic of a throw. Pure: no DOM, no

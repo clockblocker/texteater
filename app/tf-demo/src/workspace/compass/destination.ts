@@ -11,7 +11,7 @@ import {
 	returnBandIn,
 	spawnSize,
 	type WritingDirection,
-} from "react-resizable-panels/workspace";
+} from "compass";
 import {
 	type Destination,
 	type Drag,

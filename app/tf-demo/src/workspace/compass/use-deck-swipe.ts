@@ -1,5 +1,5 @@
+import type { WritingDirection } from "compass";
 import { animate, motionValue } from "motion/react";
-import type { WritingDirection } from "react-resizable-panels/workspace";
 import { rubberBand } from "@/workspace/motion/motion-spec";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import {

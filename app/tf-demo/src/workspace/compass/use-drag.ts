@@ -1,10 +1,3 @@
-import { animate } from "motion/react";
-import {
-	type PointerEvent as ReactPointerEvent,
-	type RefObject,
-	useEffect,
-	useRef,
-} from "react";
 import {
 	type Box,
 	cardHeightPx,
@@ -19,7 +12,14 @@ import {
 	type Presentation,
 	restingCards,
 	type WritingDirection,
-} from "react-resizable-panels/workspace";
+} from "compass";
+import { animate } from "motion/react";
+import {
+	type PointerEvent as ReactPointerEvent,
+	type RefObject,
+	useEffect,
+	useRef,
+} from "react";
 import { LEAVING, LEAVING_OPACITY } from "@/workspace/motion/motion-spec";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import { type DropReading, destinationAt } from "./destination";

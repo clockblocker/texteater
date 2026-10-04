@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { motionValue } from "motion/react";
 import {
 	createWorkspace,
 	type WorkspaceState,
 	workspaceReducer,
-} from "react-resizable-panels/workspace";
+} from "compass";
+import { motionValue } from "motion/react";
 import { keyboardDestinations } from "./destination";
 import {
 	type Drag,

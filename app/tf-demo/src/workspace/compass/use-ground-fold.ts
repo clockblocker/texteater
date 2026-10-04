@@ -1,10 +1,5 @@
+import { BAR_REM, groundOf, isRooted, type PaneNode } from "compass";
 import { type UIEvent, useState } from "react";
-import {
-	BAR_REM,
-	groundOf,
-	isRooted,
-	type PaneNode,
-} from "react-resizable-panels/workspace";
 import { coverHeadingRem, foldedAt } from "./heading";
 
 /**

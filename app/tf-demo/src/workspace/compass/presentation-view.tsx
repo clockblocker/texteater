@@ -1,3 +1,4 @@
+import type { Box, Presentation } from "compass";
 import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import {
 	type PointerEvent as ReactPointerEvent,
@@ -5,7 +6,6 @@ import {
 	useLayoutEffect,
 	useRef,
 } from "react";
-import type { Box, Presentation } from "react-resizable-panels/workspace";
 import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import type { Fate, NoteHandle } from "./gesture";

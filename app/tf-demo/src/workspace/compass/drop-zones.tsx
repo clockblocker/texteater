@@ -4,7 +4,7 @@ import {
 	sideOf,
 	type WritingDirection,
 	Z,
-} from "react-resizable-panels/workspace";
+} from "compass";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import type { Destination } from "./gesture";
 

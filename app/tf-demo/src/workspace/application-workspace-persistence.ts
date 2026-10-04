@@ -6,8 +6,8 @@ import type {
 	Presentation,
 	Rung,
 	WorkspaceState,
-} from "react-resizable-panels/workspace";
-import { findPane, panesOf } from "react-resizable-panels/workspace";
+} from "compass";
+import { findPane, panesOf } from "compass";
 import { isWorkspaceSubject, type WorkspaceSubject } from "./workspace-subject";
 
 /**

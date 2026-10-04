@@ -1,6 +1,3 @@
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "lego";
-import { MotionConfig } from "motion/react";
-import { type ReactNode, useMemo, useRef } from "react";
 import {
 	type Box,
 	cardHeightPx,
@@ -23,7 +20,10 @@ import {
 	restingCards,
 	returnBandIn,
 	Z,
-} from "react-resizable-panels/workspace";
+} from "compass";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "lego";
+import { MotionConfig } from "motion/react";
+import { type ReactNode, useMemo, useRef } from "react";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { VELOCITY_SAMPLE_MS } from "@/workspace/motion/motion-spec";
 import {

@@ -1,5 +1,5 @@
+import { CARD_WIDTH_REM } from "compass";
 import type { ReactNode } from "react";
-import { CARD_WIDTH_REM } from "react-resizable-panels/workspace";
 
 export function Stage({
 	label,

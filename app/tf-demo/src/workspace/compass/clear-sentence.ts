@@ -1,4 +1,4 @@
-import { DEAL_GAP_PX } from "react-resizable-panels/workspace";
+import { DEAL_GAP_PX } from "compass";
 
 /**
  * The Deck sits at one place in its Pane; the Text moves instead. The

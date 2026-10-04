@@ -1,4 +1,4 @@
-import * as ResizablePrimitive from "react-resizable-panels";
+import * as ResizablePrimitive from "compass/panels";
 
 import { cn } from "../utils";
 

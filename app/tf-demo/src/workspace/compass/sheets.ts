@@ -1,4 +1,4 @@
-import * as Panes from "react-resizable-panels/workspace";
+import * as Panes from "compass";
 import type { Destination } from "./gesture";
 import type { MenuItem, SubjectRenderer } from "./subject";
 

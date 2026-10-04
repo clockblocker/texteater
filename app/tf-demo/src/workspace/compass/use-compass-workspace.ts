@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
 import {
 	type WorkspaceCommand,
 	type WorkspaceState,
 	workspaceReducer,
-} from "react-resizable-panels/workspace";
+} from "compass";
+import { useRef, useState } from "react";
 
 /**
  * The Panes, their Decks and the Held Card, as the battery's reducer keeps

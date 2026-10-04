@@ -1,0 +1,60 @@
+{
+	"name": "compass",
+	"private": true,
+	"version": "0.0.1",
+	"description": "The Compass workspace's pure Pane model and geometry, and its resizable layout components.",
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"license": "MIT",
+	"engines": {
+		"node": "24.x"
+	},
+	"exports": {
+		".": {
+			"bun": "./src/index.ts",
+			"convex": "./src/index.ts",
+			"types": "./dist/index.d.ts",
+			"development": "./src/index.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./panels": {
+			"bun": "./src/panels/index.ts",
+			"convex": "./src/panels/index.ts",
+			"types": "./dist/panels/index.d.ts",
+			"development": "./src/panels/index.ts",
+			"import": "./dist/panels/index.js",
+			"default": "./dist/panels/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
+		"build:js": "rm -rf dist && bun run esbuild src/index.ts --bundle --platform=browser --format=esm --packages=external --outfile=dist/index.js && bun run esbuild src/panels/index.ts --bundle --platform=browser --format=esm --packages=external --banner:js='\"use client\";' --outfile=dist/panels/index.js",
+		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+		"check": "bun ../../tooling/check-package-types.ts",
+		"fix": "bun run --silent biome check --write .",
+		"lint": "bun run --silent biome check .",
+		"test": "bun ../../tooling/run-package-tests.ts",
+		"knip": "bun ../../tooling/knip.ts",
+		"validate": "bun ../../tooling/validate-package.ts"
+	},
+	"peerDependencies": {
+		"react": "^19.2.6"
+	},
+	"dependencies": {
+		"csstype": "^3.1.3"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.13",
+		"@types/node": "^24.13.3",
+		"@types/react": "^19.2.14",
+		"bun-types": "1.4.2",
+		"dependency-cruiser": "^18.1.0",
+		"esbuild": "^0.28.1",
+		"knip": "^6.29.0",
+		"react": "^19.2.6",
+		"typescript": "^7.0.2"
+	}
+}

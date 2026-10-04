@@ -47,19 +47,20 @@ test("tf-demo development builds every in-house dependency before starting", () 
 	);
 	expect(dev?.dependencies.toSorted()).toEqual([
 		"common-utils#build:package",
+		"compass#build:package",
 		"dumcorpus#build:package",
 		"dumdict#build:package",
 		"dumgen#build:package",
 		"dumling#build:package",
 		"dumrel#build:package",
 		"lego#build:package",
-		"react-resizable-panels#build:package",
 	]);
 	// promptsmith stays in the graph only as Dumgen's dependency.
 	expect(graph.tasks.map((task) => task.taskId).toSorted()).toEqual([
 		"@texteater/tf-demo#dev:package",
 		"codegen#build:package",
 		"common-utils#build:package",
+		"compass#build:package",
 		"dumcorpus#build:package",
 		"dumdict#build:package",
 		"dumgen#build:package",
@@ -67,7 +68,6 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"dumrel#build:package",
 		"lego#build:package",
 		"promptsmith#build:package",
-		"react-resizable-panels#build:package",
 	]);
 });
 

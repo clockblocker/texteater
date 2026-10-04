@@ -1,5 +1,5 @@
+import type { DealtCard } from "compass";
 import type { ReactNode, PointerEvent as ReactPointerEvent } from "react";
-import type { DealtCard } from "react-resizable-panels/workspace";
 
 /**
  * The seam between the Compass renderer and the application. The renderer

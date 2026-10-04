@@ -1,10 +1,5 @@
+import { type Box, isNarrow, sameBoxes, type WritingDirection } from "compass";
 import { type RefObject, useLayoutEffect, useRef, useState } from "react";
-import {
-	type Box,
-	isNarrow,
-	sameBoxes,
-	type WritingDirection,
-} from "react-resizable-panels/workspace";
 import { directionOf, remPx, viewportWidth } from "./layout";
 
 /**

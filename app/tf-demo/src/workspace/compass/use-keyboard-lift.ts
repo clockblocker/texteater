@@ -1,8 +1,5 @@
+import type { Presentation, WritingDirection } from "compass";
 import { type RefObject, useEffect, useState } from "react";
-import type {
-	Presentation,
-	WritingDirection,
-} from "react-resizable-panels/workspace";
 import { type DropReading, keyboardDestinations } from "./destination";
 import {
 	type Destination,

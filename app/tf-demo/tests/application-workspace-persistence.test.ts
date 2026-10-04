@@ -6,7 +6,7 @@ import {
 	type WorkspaceCommand,
 	type WorkspaceState,
 	workspaceReducer,
-} from "react-resizable-panels/workspace";
+} from "compass";
 import {
 	type ApplicationWorkspaceStorage,
 	loadApplicationWorkspace,

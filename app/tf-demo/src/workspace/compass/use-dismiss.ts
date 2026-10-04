@@ -1,3 +1,4 @@
+import { findPane, restingCards } from "compass";
 import {
 	type MouseEvent as ReactMouseEvent,
 	type PointerEvent as ReactPointerEvent,
@@ -5,7 +6,6 @@ import {
 	useEffect,
 	useRef,
 } from "react";
-import { findPane, restingCards } from "react-resizable-panels/workspace";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import type { DeckInteraction } from "./interaction-policy";
 import { findSheet, PREVIEW_PANE, topSheetOf } from "./sheets";

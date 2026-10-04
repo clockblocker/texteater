@@ -1,4 +1,12 @@
 import {
+	BAR_REM,
+	createWorkspace,
+	groundOf,
+	panesOf,
+	type WorkspaceState,
+	workspaceReducer,
+} from "compass";
+import {
 	type ReactNode,
 	useEffect,
 	useLayoutEffect,
@@ -6,14 +14,6 @@ import {
 	useRef,
 	useState,
 } from "react";
-import {
-	BAR_REM,
-	createWorkspace,
-	groundOf,
-	panesOf,
-	type WorkspaceState,
-	workspaceReducer,
-} from "react-resizable-panels/workspace";
 import { LibraryView } from "@/views/library-view";
 import { SettingsView } from "@/views/settings-view";
 import { Compass } from "@/workspace/compass/compass";

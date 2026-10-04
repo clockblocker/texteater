@@ -1,4 +1,4 @@
-import { CARD_WIDTH_REM } from "react-resizable-panels/workspace";
+import { CARD_WIDTH_REM } from "compass";
 import { sheetColumn } from "@/workspace/compass/layout";
 import type { SubjectRenderer, SubjectView } from "@/workspace/compass/subject";
 import { BodyBlock, ContextsBlock, LinksBlock, TextBlock } from "./blocks";
