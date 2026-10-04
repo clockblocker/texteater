@@ -64,7 +64,7 @@ export function SourceQuote({
 		<Quote data-origin="Definition" {...quote}>
 			<LinkButton
 				className="me-[0.35em]"
-				aria-label={`${origin.canonicalForm}, open its Reading Note`}
+				aria-label={`${origin.canonicalForm}, open its definition`}
 				onClick={(event) => {
 					if (event.detail > 0) event.currentTarget.blur();
 					follow();

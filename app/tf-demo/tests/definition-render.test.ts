@@ -167,7 +167,7 @@ test("the block waits for generation and segmentation, and keeps the prose when 
 	expect(failed).toContain("Segmenter unavailable.");
 });
 
-test("a definition-sourced Source Context is prefixed with the defined Reading and leads back to it", () => {
+test("a definition-sourced Source Context is prefixed with the defined Reading and leads to its Definition Text", () => {
 	const markup = render({ state: "Plain" }, {}, [
 		{
 			attestationId: "attestations-9",
@@ -200,7 +200,7 @@ test("a definition-sourced Source Context is prefixed with the defined Reading a
 		} as unknown as ReadingNote["sourceContexts"]["page"][number],
 	]);
 	expect(markup).toContain('data-origin="Definition"');
-	expect(markup).toContain('aria-label="Gebäude, open its Reading Note"');
+	expect(markup).toContain('aria-label="Gebäude, open its definition"');
 	expect(markup).toContain("🏡");
 	expect(markup).toContain("Gebäude:");
 	expect(markup).toContain(
