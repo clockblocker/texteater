@@ -5,9 +5,7 @@ export type PanelSize = {
 	inPixels: number;
 };
 
-type GroupResizeBehavior =
-	| "preserve-relative-size"
-	| "preserve-pixel-size";
+type GroupResizeBehavior = "preserve-relative-size" | "preserve-pixel-size";
 
 /**
  * Numeric Panel constraints are represented as numeric percentages (0..100)

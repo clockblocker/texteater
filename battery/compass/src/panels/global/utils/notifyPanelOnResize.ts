@@ -13,7 +13,7 @@ export function notifyPanelOnResize(
 	}
 
 	const panel = group.panels.find((current) => current.element === element);
-	if (!panel || !panel.onResize) {
+	if (!panel?.onResize) {
 		return;
 	}
 

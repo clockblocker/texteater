@@ -62,7 +62,7 @@ export function validatePanelGroupLayout({
 			size: unsafeSize,
 		});
 
-		if (unsafeSize != safeSize) {
+		if (unsafeSize !== safeSize) {
 			remainingSize += unsafeSize - safeSize;
 
 			nextLayout[index] = safeSize;

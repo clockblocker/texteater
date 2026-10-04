@@ -150,7 +150,7 @@ export type GroupProps = HTMLAttributes<HTMLDivElement> & {
 	 * ⚠️ For layout changes caused by pointer events, this method is called each time the pointer is moved.
 	 * For most cases, it is recommended to use the `onLayoutChanged` callback instead.
 	 */
-	onLayoutChange?: (layout: Layout) => void | undefined;
+	onLayoutChange?: (layout: Layout) => void;
 
 	/**
 	 * Called after the Group's layout has  been changed.

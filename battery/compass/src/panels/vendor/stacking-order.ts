@@ -3,6 +3,7 @@
 // - github.com/Rich-Harris/stacking-order/issues/6
 
 import { assert } from "../utils/assert";
+import { isHTMLElement } from "../utils/isHTMLElement";
 import { isShadowRoot } from "../utils/isShadowRoot";
 
 /**
@@ -22,11 +23,11 @@ export function compare(
 		b: get_ancestors(b),
 	};
 
-	let common_ancestor;
+	let common_ancestor: HTMLElement | SVGElement | undefined;
 
 	// remove shared ancestors
 	while (ancestors.a.at(-1) === ancestors.b.at(-1)) {
-		common_ancestor = ancestors.a.pop() as HTMLElement;
+		common_ancestor = ancestors.a.pop();
 		ancestors.b.pop();
 	}
 
@@ -64,7 +65,6 @@ const props =
 
 /** @param {HTMLElement | SVGElement} node */
 function is_flex_item(node: HTMLElement | SVGElement) {
-	// @ts-expect-error ParentNode vs Element
 	const display = getComputedStyle(get_parent(node) ?? node).display;
 	return display === "flex" || display === "inline-flex";
 }
@@ -94,8 +94,8 @@ function creates_stacking_context(node: HTMLElement | SVGElement) {
 	if ("webkitFilter" in style && style.webkitFilter !== "none") return true;
 	if ("isolation" in style && style.isolation === "isolate") return true;
 	if (props.test(style.willChange)) return true;
-	// @ts-expect-error Unrecognized prop
-	if (style.webkitOverflowScrolling === "touch") return true;
+	if (style.getPropertyValue("-webkit-overflow-scrolling") === "touch")
+		return true;
 
 	return false;
 }
@@ -124,18 +124,15 @@ function get_ancestors(node: HTMLElement | SVGElement | null) {
 
 	while (node) {
 		ancestors.push(node);
-		// @ts-expect-error ParentNode vs Element
 		node = get_parent(node);
 	}
 
-	return ancestors; // [ node, ... <body>, <html>, document ]
+	return ancestors; // [ node, ... <body>, <html> ]
 }
 
 /** @param {HTMLElement} node */
-function get_parent(node: HTMLElement) {
+function get_parent(node: HTMLElement | SVGElement) {
 	const { parentNode } = node;
-	if (isShadowRoot(parentNode)) {
-		return parentNode.host;
-	}
-	return parentNode;
+	const parent = isShadowRoot(parentNode) ? parentNode.host : parentNode;
+	return isHTMLElement(parent) ? parent : null;
 }

@@ -3,7 +3,7 @@ export function isArrayEqual(a: number[], b: number[]) {
 		return false;
 	} else {
 		for (let index = 0; index < a.length; index++) {
-			if (a[index] != b[index]) {
+			if (a[index] !== b[index]) {
 				return false;
 			}
 		}

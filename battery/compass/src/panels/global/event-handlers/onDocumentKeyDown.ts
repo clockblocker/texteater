@@ -107,8 +107,8 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
 				(separator) => separator.element,
 			);
 
-			const index = Array.from(separatorElements).findIndex(
-				(current) => current === event.currentTarget,
+			const index = group.separators.findIndex(
+				(separator) => separator.element === event.currentTarget,
 			);
 			assert(index !== null, "Index not found");
 

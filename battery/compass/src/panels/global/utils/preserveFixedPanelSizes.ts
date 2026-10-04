@@ -43,7 +43,6 @@ export function preserveFixedPanelSizes({
 				fixedPanelsTotalSize += nextPanelSize;
 				break;
 			}
-			case "preserve-relative-size":
 			default: {
 				flexiblePanelIds.push(panel.id);
 				flexiblePanelsTotalPrevSize += prevPanelSize;

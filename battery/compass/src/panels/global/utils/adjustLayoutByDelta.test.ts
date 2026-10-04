@@ -38,7 +38,7 @@ function c(partials: Partial<PanelConstraints>[]) {
 			maxSize: 100,
 			minSize: 0,
 			...current,
-			panelId: "" + index,
+			panelId: `${index}`,
 		});
 	});
 

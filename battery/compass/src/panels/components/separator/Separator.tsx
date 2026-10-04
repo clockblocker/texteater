@@ -140,7 +140,7 @@ export function Separator({
 		cursor = "not-allowed";
 	}
 
-	let dataSeparator;
+	let dataSeparator: string;
 	if (disabled) {
 		dataSeparator = "disabled";
 	} else {
@@ -160,6 +160,7 @@ export function Separator({
 	}
 
 	return (
+		// biome-ignore lint/a11y/useSemanticElements: a focusable window splitter holds children and a value; <hr> can do neither.
 		<div
 			{...rest}
 			aria-controls={aria.valueControls}

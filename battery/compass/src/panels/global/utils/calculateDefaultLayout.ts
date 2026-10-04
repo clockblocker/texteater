@@ -8,31 +8,27 @@ export function calculateDefaultLayout(
 	let explicitCount = 0;
 	let total = 0;
 
-	const layout: Layout = {};
-
 	for (const current of derivedPanelConstraints) {
 		if (current.defaultSize !== undefined) {
 			explicitCount++;
-
-			const size = formatLayoutNumber(current.defaultSize);
-
-			total += size;
-			layout[current.panelId] = size;
-		} else {
-			// @ts-expect-error Add panel keys in order to simplify traversal elsewhere; we'll fill them in in the loop below
-			layout[current.panelId] = undefined;
+			total += formatLayoutNumber(current.defaultSize);
 		}
 	}
 
+	// Panels without a default size share what the others leave
 	const remainingPanelCount = derivedPanelConstraints.length - explicitCount;
-	if (remainingPanelCount !== 0) {
-		const size = formatLayoutNumber((100 - total) / remainingPanelCount);
+	const remainingSize =
+		remainingPanelCount === 0
+			? 0
+			: formatLayoutNumber((100 - total) / remainingPanelCount);
 
-		for (const current of derivedPanelConstraints) {
-			if (current.defaultSize === undefined) {
-				layout[current.panelId] = size;
-			}
-		}
+	// Keys follow Panel order, which simplifies traversal elsewhere
+	const layout: Layout = {};
+	for (const current of derivedPanelConstraints) {
+		layout[current.panelId] =
+			current.defaultSize === undefined
+				? remainingSize
+				: formatLayoutNumber(current.defaultSize);
 	}
 
 	return layout;
