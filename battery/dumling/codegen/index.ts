@@ -2,7 +2,8 @@
  * `dumling/codegen`: what sibling packages' generators read from Dumling
  * (ADR 0001). It is plain data and build-time helpers, not a runtime
  * registry; the repository import policy keeps operational code from
- * importing it.
+ * importing it. It stays in Dumling, not in the `codegen` battery, so that
+ * `codegen` never has to know Dumling's route layout (#923).
  */
 import type { Family, Kind, Language } from "../src/generated/units.js";
 import { routes } from "./generated/routes.js";

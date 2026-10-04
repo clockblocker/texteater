@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
+import { formatTypeScript } from "codegen";
 import {
 	canonicalFormKey,
 	lemmaIdentityKey,
@@ -271,35 +271,7 @@ const source = [
 	"",
 ].join("\n");
 
-/** Formats TypeScript with Biome, as `bun run fix` would. */
-async function formatted(text: string): Promise<string> {
-	const biome = Bun.spawn(
-		[
-			fileURLToPath(
-				new URL(
-					"../../../node_modules/@biomejs/biome/bin/biome",
-					import.meta.url,
-				),
-			),
-			"check",
-			"--write",
-			"--linter-enabled=false",
-			`--stdin-file-path=${fileURLToPath(output)}`,
-		],
-		{ stdin: "pipe", stdout: "pipe", stderr: "pipe" },
-	);
-	biome.stdin.write(text);
-	biome.stdin.end();
-	const [out, error, exit] = await Promise.all([
-		new Response(biome.stdout).text(),
-		new Response(biome.stderr).text(),
-		biome.exited,
-	]);
-	if (exit) throw Error(error);
-	return out;
-}
-
-const content = await formatted(source);
+const content = await formatTypeScript(source, output);
 if (!check) await writeFile(output, content);
 else if ((await readFile(output, "utf8").catch(() => "")) !== content)
 	throw Error(
