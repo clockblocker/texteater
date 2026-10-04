@@ -11,8 +11,11 @@
 /** The axis a split lays its two children along; only side-by-side is made for now. */
 export type SplitDirection = "horizontal" | "vertical";
 
-/** A Pane's side edge: a Held Card dropped there spawns a Floating Pane beside it. */
-export type Edge = "left" | "right";
+/**
+ * A Pane's side edge, in the writing direction: a Held Card dropped there
+ * spawns a Floating Pane beside it. The renderer maps it to a physical side.
+ */
+export type Edge = "inline-start" | "inline-end";
 
 /**
  * One workspace instance of a Subject. Every Open mints a fresh one, so more
@@ -424,7 +427,10 @@ export function updatePane<S>(
 	return replacePane(node, paneId, update(pane)) ?? node;
 }
 
-/** Puts `fresh` beside a Pane, side by side, on the side the edge names. */
+/**
+ * Puts `fresh` beside a Pane, side by side, on the side the edge names. A
+ * split's children run in reading order, so `inline-start` puts it first.
+ */
 export function splitBeside<S>(
 	node: LayoutNode<S>,
 	paneId: string,
@@ -438,7 +444,7 @@ export function splitBeside<S>(
 		kind: "Split",
 		id: split.id,
 		direction: "horizontal",
-		children: edge === "left" ? [fresh, pane] : [pane, fresh],
+		children: edge === "inline-start" ? [fresh, pane] : [pane, fresh],
 		...(split.size === undefined
 			? {}
 			: { fresh: { paneId: fresh.id, size: split.size } }),

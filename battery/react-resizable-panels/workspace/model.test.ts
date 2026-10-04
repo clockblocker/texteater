@@ -256,7 +256,7 @@ describe("Drag a word or link", () => {
 		const state = reduce(
 			atText(),
 			{ type: "LiftFresh", paneId: ROOT, subject: note("Lemma") },
-			{ type: "Expand", paneId: ROOT, edge: "right", size: "40%" },
+			{ type: "Expand", paneId: ROOT, edge: "inline-end", size: "40%" },
 		);
 		const panes = panesOf(state.layout);
 		expect(panes.map((p) => p.id)[0]).toBe(ROOT);
@@ -273,11 +273,11 @@ describe("Drag a word or link", () => {
 		expect(state.held).toBeNull();
 	});
 
-	test("Drop on the left side puts the new Pane first", () => {
+	test("Drop on the inline-start side puts the new Pane first", () => {
 		const state = reduce(
 			atText(),
 			{ type: "LiftFresh", paneId: ROOT, subject: note("Lemma") },
-			{ type: "Expand", paneId: ROOT, edge: "left" },
+			{ type: "Expand", paneId: ROOT, edge: "inline-start" },
 		);
 		expect(
 			panesOf(state.layout)
@@ -484,7 +484,7 @@ describe("← on the Ground", () => {
 	});
 });
 
-/** The Text's Deck dealt, and its first Card dropped on the right edge. */
+/** The Text's Deck dealt, and its first Card dropped on the inline-end edge. */
 function floatingFromCard(): State {
 	const dealt = dealOn(atText(), ground(atText()).sheetId);
 	return reduce(
@@ -494,7 +494,7 @@ function floatingFromCard(): State {
 			sheetId: ground(dealt).sheetId,
 			presentationId: ground(dealt).deck?.cards[0]?.id ?? "",
 		},
-		{ type: "Expand", paneId: ROOT, edge: "right" },
+		{ type: "Expand", paneId: ROOT, edge: "inline-end" },
 	);
 }
 
@@ -702,7 +702,7 @@ describe("Spawn an empty Rooted Pane", () => {
 		const state = reduce(atText(), {
 			type: "SpawnRootedPane",
 			paneId: ROOT,
-			edge: "right",
+			edge: "inline-end",
 		});
 		const fresh = panesOf(state.layout)[1] as PaneNode<Subject>;
 		expect(isRooted(fresh)).toBe(true);
