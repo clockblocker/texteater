@@ -6,6 +6,8 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { after, CONTEXT_PAGE } from "@/workspace/motion/motion-spec";
+import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import {
 	cleanWord,
 	type DummyNote,
@@ -17,8 +19,6 @@ import {
 } from "./dummy";
 import { useDeckInteractions } from "./interaction-policy";
 import { type NoteForm, type Subject, subjectOfLink } from "./model";
-import { after, CONTEXT_PAGE } from "./motion-spec";
-import { useDeckMotion } from "./runtime-config";
 
 /** A Note's Blocks and a Text's Sentences, and the Segments inside them. */
 

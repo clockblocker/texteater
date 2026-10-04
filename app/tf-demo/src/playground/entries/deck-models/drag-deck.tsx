@@ -51,6 +51,18 @@ import {
 	Z,
 } from "react-resizable-panels/workspace";
 import { useMotionPreference } from "@/lib/motion-preference";
+import {
+	LEAVING,
+	LEAVING_OPACITY,
+	rubberBand,
+	VELOCITY_SAMPLE_MS,
+} from "@/workspace/motion/motion-spec";
+import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
+import {
+	type DeckMotionOverrides,
+	DeckMotionProvider,
+	useDeckMotion,
+} from "@/workspace/motion/runtime-config";
 import { DropZones, fateOf, homeLabel } from "./drop-zones";
 import {
 	cleanWord,
@@ -107,22 +119,10 @@ import {
 	type Workspace,
 	type WorkspaceCommand,
 } from "./model";
-import {
-	LEAVING,
-	LEAVING_OPACITY,
-	rubberBand,
-	VELOCITY_SAMPLE_MS,
-} from "./motion-spec";
 import { PresentationView } from "./note-view";
 import { GROUND_LIST_WIDTH, GroundList, PaneBarFace } from "./pane-chrome";
 import { FixtureNotesProvider } from "./real-note";
-import { useDeckReducedMotion } from "./reduced-motion";
 import { RULES } from "./rules";
-import {
-	type DeckMotionOverrides,
-	DeckMotionProvider,
-	useDeckMotion,
-} from "./runtime-config";
 import { ModelShell, useEventLog } from "./shared";
 
 /**

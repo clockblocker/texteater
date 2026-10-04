@@ -4,8 +4,8 @@ import {
 	type WritingDirection,
 	Z,
 } from "react-resizable-panels/workspace";
+import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import type { Destination, Drag, Fate } from "./model";
-import { useDeckMotion } from "./runtime-config";
 
 /** The drop regions as drawn, and what letting go over one does to a Card. */
 

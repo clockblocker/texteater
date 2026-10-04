@@ -3,18 +3,22 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseSync, Visitor } from "oxc-parser";
 
-const HERE = new URL(".", import.meta.url).pathname;
+/** tf-demo's `src`: every file in it that animates answers to the spec. */
+const SRC = new URL("../../", import.meta.url).pathname;
 
 type Undeclared = { readonly at: string; readonly what: string };
 
-const MOTION_SOURCES = readdirSync(HERE)
-	.filter((f) => f.endsWith(".tsx"))
-	.map((f) => join(HERE, f))
-	.filter((path) =>
-		readFileSync(path, "utf8").includes('from "motion/react"'),
-	);
+/** Every source file under `src` that imports Motion, as a path from `src`. */
+const MOTION_SOURCES = readdirSync(SRC, { recursive: true, encoding: "utf8" })
+	.filter(
+		(file) =>
+			/\.tsx?$/.test(file) && !/\.(test|type-test)\.tsx?$/.test(file),
+	)
+	.filter((file) =>
+		/from "motion(\/[\w-]+)?"/.test(readFileSync(join(SRC, file), "utf8")),
+	)
+	.sort();
 
-/** A transition the spec owns: `MORPH`, or `motionOf(NOTE_BORDER)`. */
 /**
  * A transition the spec declares: a named export, `motionOf(SOME_SPEC)`,
  * or an object built out of nothing but those.
@@ -125,18 +129,16 @@ function undeclaredMotion(file: string, source: string): Undeclared[] {
 }
 
 describe("nothing animates that the spec does not declare", () => {
-	test("there is a prototype to read", () => {
-		expect(MOTION_SOURCES.map((p) => p.split("/").pop())).toContain(
-			"drag-deck.tsx",
+	test("the scan reaches the playground and the workspace", () => {
+		expect(MOTION_SOURCES).toContain(
+			"playground/entries/deck-models/drag-deck.tsx",
 		);
+		expect(MOTION_SOURCES).toContain("workspace/motion/reduced-motion.ts");
 	});
 
 	test("every Motion element declares its first frame, and every transition is a spec", () => {
-		const offences = MOTION_SOURCES.flatMap((path) =>
-			undeclaredMotion(
-				path.split("/").pop() ?? path,
-				readFileSync(path, "utf8"),
-			),
+		const offences = MOTION_SOURCES.flatMap((file) =>
+			undeclaredMotion(file, readFileSync(join(SRC, file), "utf8")),
 		);
 		expect(offences).toEqual([]);
 	});

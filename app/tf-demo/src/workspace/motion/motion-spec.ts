@@ -1,7 +1,10 @@
 /**
- * Default motion for the live deck runtime. Both playgrounds render that
- * runtime; the workbench injects overrides through runtime-config.tsx.
- * Durations are milliseconds here and seconds at the Motion boundary.
+ * The workspace's motion: how Notes, Decks and Pane bars move. Nothing in
+ * tf-demo animates unless this file declares it, and motion-spec.test.ts
+ * holds every file under `src` that imports Motion to that. The deck
+ * runtime reads it through runtime-config.tsx, where the animation
+ * workbench injects overrides. Durations are milliseconds here and
+ * seconds at the Motion boundary.
  */
 
 /* ---------------------------------------------------------------- kinds */

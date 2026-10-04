@@ -1,10 +1,10 @@
 import { SlidersHorizontalIcon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CompassModel } from "../deck-models/drag-deck";
 import {
 	DEFAULT_DECK_MOTION,
 	type DeckMotionOverrides,
-} from "../deck-models/runtime-config";
+} from "@/workspace/motion/runtime-config";
+import { CompassModel } from "../deck-models/drag-deck";
 import type { Entry } from "./catalog";
 import { KEEP, type Recording } from "./trace";
 import { TraceView } from "./trace-view";

@@ -14,6 +14,9 @@ import {
 	useRef,
 } from "react";
 import { HEADER_REM } from "react-resizable-panels/workspace";
+import { after, type motionOf } from "@/workspace/motion/motion-spec";
+import { useDeckReducedMotion } from "@/workspace/motion/reduced-motion";
+import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import { BodyBlock, ContextsBlock, LinksBlock, TextBlock } from "./blocks";
 import type { NoteLink } from "./dummy";
 import {
@@ -37,15 +40,12 @@ import {
 	subjectGloss,
 	subjectLabel,
 } from "./model";
-import { after, type motionOf } from "./motion-spec";
 import {
 	PortedBlocks,
 	PortedTitle,
 	usePortedFollow,
 	usePortedReading,
 } from "./real-note";
-import { useDeckReducedMotion } from "./reduced-motion";
-import { useDeckMotion } from "./runtime-config";
 
 /** A Presentation, drawn in whatever form it is in: `PresentationView` and its Heading. */
 

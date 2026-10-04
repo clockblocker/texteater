@@ -1,5 +1,5 @@
+import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
 import type { DeckInteraction } from "../deck-models/interaction-policy";
-import type { DeckMotionOverrides } from "../deck-models/runtime-config";
 
 /**
  * An alternative the entry ships with, in the Version list beside the

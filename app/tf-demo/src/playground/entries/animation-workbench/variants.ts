@@ -1,4 +1,4 @@
-import type { DeckMotionOverrides } from "../deck-models/runtime-config";
+import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
 
 export type Variant = {
 	readonly id: string;
