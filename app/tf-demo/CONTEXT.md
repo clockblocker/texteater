@@ -19,6 +19,10 @@ content, so the initial Rooted Pane's Ground line runs Menu › Library › Text
 See [tf-demo ADR 0008].
 _Avoid_: Library Sheet, Text Sheet
 
+**Settings**:
+The Menu Item beside the Library that holds the application's settings. It is
+reached through the Ground line, not a sidebar. See [tf-demo ADR 0003].
+
 **Link**:
 A reference inside a Note naming one Note, or a location in a Text as Go to
 source does. A click pushes a fresh Cover in the same Pane; a drag lifts a

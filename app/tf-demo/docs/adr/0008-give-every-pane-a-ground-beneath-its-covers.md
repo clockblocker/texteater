@@ -15,14 +15,15 @@ deck-models playground.
 
 **Ground line.** The Ground's content walks a line, bottom rung first. A Rooted
 Pane's line starts at the Menu, then a Menu Item, then that item's selection:
-in tf-demo, Menu › Library › Text. Going back on the Ground (←) steps one rung
-down the line and ends the Deck of the rung it leaves. Once a selection is on
-the Ground, only going back or a lift changes it. Dropping a Held Card on a
-Pane's side edge makes a Floating Pane whose Ground is the dropped Note or
-Text, with no rung below it. Its bar shows X in place of ←, and X closes the
-Pane with its Covers and its Deck. A Pane's kind belongs to its line, by
-whether the line contains the Menu, and not to what the Ground shows. A Rooted
-Pane may be spawned empty, at its Menu.
+in tf-demo, Menu › Library › Text, where the Menu's items are the Library and
+Settings. Going back on the Ground (←) steps one rung down the line and ends
+the Deck of the rung it leaves. Once a selection is on the Ground, only going
+back or a lift changes it. Dropping a Held Card on a Pane's side edge makes a
+Floating Pane whose Ground is the dropped Note or Text, with no rung below it.
+Its bar shows X in place of ←, and X closes the Pane with its Covers and its
+Deck. A Pane's kind belongs to its line, by whether the line contains the Menu,
+and not to what the Ground shows. A Rooted Pane may be spawned empty, at its
+Menu.
 
 **Covers.** Following a Link pushes a Cover in the same Pane. Each push is a
 fresh Presentation, even when that Note is already open here or in another
