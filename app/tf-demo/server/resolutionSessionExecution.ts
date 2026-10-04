@@ -31,6 +31,10 @@ export type ResolutionSessionRunInput = {
 	readonly context?: ResolutionContext;
 };
 
+/**
+ * The progress a run saves on its own. ReadingAvailable is saved by the
+ * commit it precedes (`ResolutionProgressObserver.committing`).
+ */
 export type ResolutionSessionAdvance =
 	| { readonly progress: "RouteAvailable" }
 	| {
@@ -38,15 +42,6 @@ export type ResolutionSessionAdvance =
 			readonly grammatical: Parameters<
 				ResolutionProgressObserver["grammarAvailable"]
 			>[0]["grammatical"];
-	  }
-	| {
-			readonly progress: "ReadingAvailable";
-			readonly reading: Parameters<
-				ResolutionProgressObserver["readingAvailable"]
-			>[0]["reading"];
-			readonly readingResolution: Parameters<
-				ResolutionProgressObserver["readingAvailable"]
-			>[0]["readingResolution"];
 	  };
 
 /**
@@ -108,6 +103,15 @@ export type ResolutionSessionExecution = {
 };
 
 /**
+ * Whether the run's success was recorded by the commit itself: the commit
+ * of a resolved click, which alone carries its Reading resolution, writes
+ * its progress and the run's record in its own transaction.
+ */
+function recordedByCommit(result: ResolveSegmentResult): boolean {
+	return "readingResolution" in result;
+}
+
+/**
  * Executes one guarded Resolution Session run. Callers cross one seam; this
  * module owns progress ordering, checkpoint resume, settlement, diagnostics,
  * and success/failure recording.
@@ -144,13 +148,15 @@ export function executeResolutionSession({
 				});
 				phase = "Reading";
 			},
-			async readingAvailable({ reading, readingResolution }) {
-				await lifecycle.advance({
-					progress: "ReadingAvailable",
-					reading,
-					readingResolution,
-				});
+			committing({ readingAvailable }) {
 				phase = "Commit";
+				return {
+					...(readingAvailable ? { readingAvailable } : {}),
+					succeeded: {
+						phase,
+						generationEvents: [...generationEvents],
+					},
+				};
 			},
 		};
 
@@ -186,6 +192,7 @@ export function executeResolutionSession({
 			);
 			return;
 		}
+		if (recordedByCommit(result)) return;
 		yield* Effect.tryPromise(() =>
 			lifecycle.record({
 				kind: "Succeeded",

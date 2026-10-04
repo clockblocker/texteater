@@ -70,6 +70,82 @@ describe("Resolution Session execution", () => {
 		]);
 	});
 
+	test("a resolved commit carries the run's success record, so the run records nothing after it", async () => {
+		const advances: ResolutionSessionAdvance[] = [];
+		const records: ResolutionSessionRunRecord[] = [];
+		const progress: unknown[] = [];
+		await Effect.runPromise(
+			executeResolutionSession({
+				identity,
+				lifecycle: {
+					begin: async () => ({ selection, checkpoints: {} }),
+					advance: async (event) => {
+						advances.push(event);
+					},
+					settle: async () => {},
+					record: async (record) => {
+						records.push(record);
+					},
+				},
+				resolve: (_input, _checkpoints, observer) =>
+					Effect.sync(() => {
+						observer.generationEvent?.(generationEvent);
+						progress.push(
+							observer.committing({
+								readingAvailable: {
+									reading: readingInput() as never,
+									readingResolution: {
+										decision: "New",
+										emojiDescription: "🏦",
+									},
+								},
+							}),
+						);
+						return {
+							grammatical: grammaticalInput(),
+							readingResolution: {
+								decision: "New",
+								emojiDescription: "🏦",
+							},
+							reading: readingInput(),
+							reused: false,
+							persisted: {
+								status: "Committed",
+								clickId: "click-1",
+								attestationId: "attestation-1",
+								readingId: "reading-1",
+								deduplicated: false,
+								occurrence: {},
+							},
+						} as never;
+					}),
+				diagnostics: { info: () => {}, error: () => {} },
+			}),
+		);
+
+		expect(advances).toEqual([{ progress: "RouteAvailable" }]);
+		expect(records).toEqual([]);
+		expect(progress).toEqual([
+			{
+				readingAvailable: expect.objectContaining({
+					readingResolution: {
+						decision: "New",
+						emojiDescription: "🏦",
+					},
+				}),
+				succeeded: {
+					phase: "Commit",
+					generationEvents: [
+						expect.objectContaining({
+							...identity,
+							phase: "Grammar",
+						}),
+					],
+				},
+			},
+		]);
+	});
+
 	test("an invalidated guard stops before linguistic work or lifecycle writes", async () => {
 		let resolved = false;
 		let wrote = false;
@@ -182,3 +258,9 @@ function readingInput(emojiDescription = "🏦", canonicalForm = "Bank") {
 		plan: { raw: "must not leak" },
 	};
 }
+
+const generationEvent = {
+	kind: "AttemptStarted" as const,
+	attempt: 1,
+	model: "luna",
+};

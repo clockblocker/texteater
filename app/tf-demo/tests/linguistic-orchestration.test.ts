@@ -396,40 +396,61 @@ test("Knowledge changes validate against the exact tagged source Reading", () =>
 	).toThrow("conflicts");
 });
 
-test("a failed Reading checkpoint prevents occurrence commit", async () => {
+test("the commit carries the Reading as its ReadingAvailable progress and the run's record, in one write", async () => {
+	const succeeded = { phase: "Commit" as const, generationEvents: [] };
+	const asked: unknown[] = [];
 	const run = setup({
-		candidates: [reading],
 		observer: {
 			async grammarAvailable() {},
-			async readingAvailable() {
-				throw Error("Checkpoint unavailable");
+			committing(input) {
+				asked.push(input);
+				return { ...input, succeeded };
 			},
 		},
 	});
-	await expect(run.resolve({ grammatical: grammar })).rejects.toThrow();
-	expect(run.writes).toEqual([]);
+	await run.resolve({ grammatical: grammar });
+	expect(asked).toEqual([
+		{
+			readingAvailable: {
+				reading,
+				readingResolution: {
+					decision: "New",
+					emojiDescription: "🏦",
+				},
+			},
+		},
+	]);
+	expect(run.writes).toHaveLength(1);
+	expect(run.writes[0]?.progress).toEqual({
+		readingAvailable: {
+			reading,
+			readingResolution: { decision: "New", emojiDescription: "🏦" },
+		},
+		succeeded,
+	});
 });
 
-test("the occurrence commit waits for the in-flight Reading checkpoint", async () => {
-	const checkpoint = Promise.withResolvers<void>();
-	let commitsWhenSaved: number | undefined;
+test("a checkpointed Reading commits with the run's record and no ReadingAvailable progress", async () => {
 	const run = setup({
-		candidates: [reading],
 		observer: {
 			async grammarAvailable() {},
-			async readingAvailable() {
-				await checkpoint.promise;
-				commitsWhenSaved = run.writes.length;
-			},
+			committing: (input) => ({
+				...input,
+				succeeded: { phase: "Commit", generationEvents: [] },
+			}),
 		},
 	});
-	const outcome = run.resolve({ grammatical: grammar });
-	await Bun.sleep(0);
-	expect(run.writes).toEqual([]);
-	checkpoint.resolve();
-	await outcome;
-	expect(commitsWhenSaved).toBe(0);
-	expect(run.writes).toHaveLength(1);
+	await run.resolve({
+		grammatical: grammar,
+		reading: {
+			resolution: { decision: "New", emojiDescription: "🏦" },
+			reading,
+		},
+	});
+	expect(run.fake.readingInputs).toEqual([]);
+	expect(run.writes[0]?.progress).toEqual({
+		succeeded: { phase: "Commit", generationEvents: [] },
+	});
 });
 
 test("the production stub selects the unit only: Unresolved, no Reading and no commit", async () => {

@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
 import type { WithoutSystemFields } from "convex/server";
+import type * as Dumling from "dumling/types";
 import { api, internal } from "../convex/_generated/api";
 import type { Doc, Id } from "../convex/_generated/dataModel";
 import crons from "../convex/crons";
+import { createDumdictTransaction } from "../convex/dumdictTransaction";
 import {
 	assertResolutionLifecycle,
 	assertResolutionProgressTransition,
@@ -1110,25 +1112,25 @@ describe("Resolution Session", () => {
 			grammar: grammarProjection(),
 			grammaticalCheckpoint: bankGrammar(sentenceId),
 		});
-		await t.mutation(internal.resolutionSessions.advance, {
-			guard,
-			progress: "ReadingAvailable",
-			reading: readingProjection(),
-			readingCheckpoint: {
-				resolution: { decision: "New", emojiDescription: "🏦" },
-				reading: bankReading,
-			},
-		});
+		// The Reading and the run's record ride along with the commit.
 		expect(
-			await t.mutation(
-				internal.persistence.persistResolvedClick,
-				dieBankenOccurrenceCommit(loser, guard, [0, 2]),
-			),
+			await t.mutation(internal.persistence.persistResolvedClick, {
+				...dieBankenOccurrenceCommit(loser, guard, [0, 2]),
+				...commitProgress,
+			}),
 		).toMatchObject({ status: "MembershipConflict" });
 		expect(await session(t, "request-1")).toMatchObject({
-			lifecycle: { state: "Terminal", outcome: "PermanentFailure" },
+			lifecycle: {
+				state: "Terminal",
+				outcome: "PermanentFailure",
+				progress: "ReadingAvailable",
+			},
 			failureCode: "MembershipConflict",
+			reading: readingProjection(),
 		});
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({ state: "Succeeded", phase: "Commit" }),
+		]);
 
 		expect(
 			await t.mutation(api.resolutionSessions.retryResolution, {
@@ -1154,6 +1156,82 @@ describe("Resolution Session", () => {
 			guard: await startSessionGuard(t, "request-1"),
 		});
 		expect(claimed?.checkpoints).toEqual({});
+	});
+
+	test("a resolved commit saves its ReadingAvailable progress and the run's success in its own transaction", async () => {
+		const t = createTestConvex();
+		const { sentenceId, select } = await bankenSource(t);
+		const guard = await startSession(t, select("request-1"));
+		await t.mutation(internal.resolutionSessions.beginRun, { guard });
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard,
+			progress: "GrammarAvailable",
+			grammar: grammarProjection(),
+			grammaticalCheckpoint: bankGrammar(sentenceId),
+		});
+		expect(
+			await t.mutation(internal.persistence.persistResolvedClick, {
+				...bankOccurrenceCommit(select("request-1"), guard),
+				...commitProgress,
+			}),
+		).toMatchObject({ status: "Committed" });
+		expect(await session(t, "request-1")).toMatchObject({
+			lifecycle: { state: "Terminal", outcome: "Complete" },
+			readingCheckpoint:
+				commitProgress.readingAvailable.readingCheckpoint,
+		});
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({
+				runToken: guard.runToken,
+				state: "Succeeded",
+				phase: "Commit",
+				generationEvents: [],
+			}),
+		]);
+	});
+
+	test("a New refused as stale saves its progress and leaves the run's record to the commit that follows", async () => {
+		const t = createTestConvex();
+		const { sentenceId, select } = await bankenSource(t);
+		const guard = await startSession(t, select("request-1"));
+		await t.mutation(internal.resolutionSessions.beginRun, { guard });
+		await t.mutation(internal.resolutionSessions.advance, {
+			guard,
+			progress: "GrammarAvailable",
+			grammar: grammarProjection(),
+			grammaticalCheckpoint: bankGrammar(sentenceId),
+		});
+		// Another click stores Bank's 🪑 after this judge saw no Reading.
+		await t.run((ctx) =>
+			createDumdictTransaction(ctx).addNewNote({
+				draft: {
+					reading: {
+						...bankReading,
+						emojiDescription: "🪑",
+					} as Dumling.Reading<"de">,
+					note: {
+						attestedTranslations: [],
+						attestations: [],
+						notes: "",
+					},
+				},
+			}),
+		);
+		const stale = await t.mutation(
+			internal.persistence.persistResolvedClick,
+			{
+				...bankOccurrenceCommit(select("request-1"), guard, "New"),
+				readingCandidates: [],
+				...commitProgress,
+			},
+		);
+		expect(stale).toMatchObject({ status: "StaleReading" });
+		expect(await session(t, "request-1")).toMatchObject({
+			lifecycle: { state: "Active", progress: "ReadingAvailable" },
+		});
+		expect(await rows(t, "resolutionRuns")).toEqual([
+			expect.objectContaining({ state: "Running" }),
+		]);
 	});
 
 	test("cleanup removes stale active and old terminal sessions, even a completed one whose Reading vanished", async () => {
@@ -2100,6 +2178,18 @@ function grammarProjection(canonicalForm = "Bank") {
 		coreFeatures: { gender: "Fem" as const },
 	};
 }
+
+/** What a resolved click's commit saves beside it: its Reading and its run's record. */
+const commitProgress = {
+	readingAvailable: {
+		reading: readingProjection(),
+		readingCheckpoint: {
+			resolution: { decision: "New" as const, emojiDescription: "🏦" },
+			reading: bankReading,
+		},
+	},
+	succeeded: { phase: "Commit" as const, generationEvents: [] },
+};
 
 function readingProjection(emojiDescription = "🏦", canonicalForm = "Bank") {
 	return {

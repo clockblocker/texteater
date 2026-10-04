@@ -17,7 +17,11 @@ import {
 	readingIdentityKey,
 } from "./linguisticIdentity";
 import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
-import type { GenerationEvent } from "./resolutionFailure";
+import type {
+	GenerationEvent,
+	ResolutionGenerationEvent,
+	ResolutionRunPhase,
+} from "./resolutionFailure";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
 import {
 	assertStoredSentence,
@@ -67,6 +71,26 @@ export type ResolvedClickPersistence = {
 	 * them (ADR 0031).
 	 */
 	readonly readingCandidates?: readonly string[];
+	/** What the commit writes besides the occurrence, in the same transaction. */
+	readonly progress?: CommitProgress;
+};
+
+/**
+ * What the commit of a resolved click writes besides the occurrence, so one
+ * mutation replaces three: the ReadingAvailable progress, absent when a
+ * checkpoint already holds the Reading, and the run's success record. A
+ * commit refused as stale writes the progress and keeps the record for the
+ * commit that follows.
+ */
+export type CommitProgress = {
+	readonly readingAvailable?: {
+		readonly reading: Dumling.Reading<"de">;
+		readonly readingResolution: ReadingResolution;
+	};
+	readonly succeeded?: {
+		readonly phase: ResolutionRunPhase;
+		readonly generationEvents: readonly ResolutionGenerationEvent[];
+	};
 };
 
 export type ReusableAttestation = {
@@ -234,10 +258,14 @@ export type ResolutionProgressObserver = {
 	grammarAvailable(input: {
 		readonly grammatical: ResolvedGrammatical;
 	}): Promise<void>;
-	readingAvailable(input: {
-		readonly reading: Dumling.Reading<"de">;
-		readonly readingResolution: ReadingResolution;
-	}): Promise<void>;
+	/**
+	 * A resolved click is about to commit, with the Reading it resolved
+	 * unless a checkpoint already holds it: what that commit writes in its
+	 * own transaction besides the occurrence. Called before every commit.
+	 */
+	committing(input: {
+		readonly readingAvailable?: CommitProgress["readingAvailable"];
+	}): CommitProgress;
 };
 
 export type ResolutionContext = {
@@ -461,12 +489,14 @@ export function createTfDemoOrchestrator(options: {
 					);
 				}
 				reading = checkpointed;
-			} else yield* announceReading();
+			}
 
 			const surfaceKey = surfaceIdentityKey(
 				grammatical.attestation.surface,
 			);
-			let persisted = yield* commitReading();
+			// A checkpointed Reading is saved already; any other rides along
+			// with its commit as the ReadingAvailable progress.
+			let persisted = yield* commitReading(!checkpoints.reading);
 			// A New whose judge saw fewer Readings than the Lemma has now is
 			// refused: the judge runs again over the current candidates, and a
 			// second NoMatch keeps the description already written (ADR 0031).
@@ -490,8 +520,7 @@ export function createTfDemoOrchestrator(options: {
 				}
 				readingResolution = again;
 				reading = readingOf(readingResolution);
-				yield* announceReading();
-				persisted = yield* commitReading();
+				persisted = yield* commitReading(true);
 			}
 			if (
 				persisted.status === "MembershipConflict" ||
@@ -531,17 +560,7 @@ export function createTfDemoOrchestrator(options: {
 				});
 			}
 
-			function announceReading() {
-				return Effect.tryPromise(
-					() =>
-						options.observer?.readingAvailable({
-							reading,
-							readingResolution,
-						}) ?? Promise.resolve(),
-				);
-			}
-
-			function commitReading() {
+			function commitReading(announce: boolean) {
 				const committed = reading;
 				const resolution = readingResolution;
 				return Effect.try(
@@ -562,6 +581,21 @@ export function createTfDemoOrchestrator(options: {
 						...(resolution.decision === "New" &&
 						resolution.candidates !== undefined
 							? { readingCandidates: resolution.candidates }
+							: {}),
+						...(options.observer
+							? {
+									progress: options.observer.committing(
+										announce
+											? {
+													readingAvailable: {
+														reading: committed,
+														readingResolution:
+															resolution,
+													},
+												}
+											: {},
+									),
+								}
 							: {}),
 					}),
 				).pipe(

@@ -1,4 +1,3 @@
-import type { ReadingResolution } from "../server/clickResolution";
 import type { SpanHops } from "../server/inspectionCapture";
 import type { ResolutionContext } from "../server/linguisticOrchestration";
 import {
@@ -9,10 +8,7 @@ import type {
 	ResolutionSessionLifecyclePort,
 	ResolutionSessionRunInput,
 } from "../server/resolutionSessionExecution";
-import {
-	projectResolutionGrammar,
-	projectResolutionReading,
-} from "../server/resolutionSessionProjection";
+import { projectResolutionGrammar } from "../server/resolutionSessionProjection";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import type { ActionCtx } from "./_generated/server";
@@ -35,9 +31,9 @@ export function convexId<TableName extends TableNames>(
  * The Convex adapter for one guarded Resolution Session run.
  *
  * Every lifecycle event maps to at most one mutation hop. Route availability
- * is published when the run is claimed and terminal progress is published by
- * the commit itself, so those two events are free and are neither sent nor
- * traced. With `spans`, each real hop is a span where it is made, under a
+ * is published when the run is claimed, and Reading availability and
+ * terminal progress by the commit itself, so those events are free and are
+ * neither sent nor traced. With `spans`, each real hop is a span where it is made, under a
  * label derived from the event.
  */
 export function createResolutionSessionLifecycle(
@@ -118,21 +114,6 @@ export function createResolutionSessionLifecycle(
 								),
 						}),
 					);
-					return;
-				case "ReadingAvailable":
-					await hop(`Save ${event.progress}`, event, () =>
-						ctx.runMutation(internal.resolutionSessions.advance, {
-							guard,
-							progress: event.progress,
-							reading: projectResolutionReading(event.reading),
-							readingCheckpoint: {
-								resolution: readingCheckpointOf(
-									event.readingResolution,
-								),
-								reading: event.reading,
-							},
-						}),
-					);
 			}
 		},
 		settle: (result) =>
@@ -192,13 +173,5 @@ export function createResolutionSessionLifecycle(
 				}
 			});
 		},
-	};
-}
-
-/** A Reading resolution as its checkpoint stores it. */
-function readingCheckpointOf({ candidates, ...resolution }: ReadingResolution) {
-	return {
-		...resolution,
-		...(candidates ? { candidates: [...candidates] } : {}),
 	};
 }

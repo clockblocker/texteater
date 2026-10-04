@@ -13,6 +13,7 @@ import {
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
+import type { ReadingResolution } from "../server/clickResolution";
 import { dumgenClickResolution } from "../server/dumgenClickResolution";
 import {
 	dumgenTracing,
@@ -50,6 +51,7 @@ import {
 	parseGermanReading,
 } from "../server/operationalParsing";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
+import { projectResolutionReading } from "../server/resolutionSessionProjection";
 import { storedUnitOf } from "../server/storedSegments";
 import { textSubmissionLimitViolation } from "../server/textSubmissionLimits";
 import { internal } from "./_generated/api";
@@ -482,11 +484,37 @@ function createConvexPersistence(
 			} as ResolutionContext;
 		},
 		async persistResolvedClick(input) {
+			const { readingAvailable, succeeded } = input.progress ?? {};
 			return ctx.runMutation(internal.persistence.persistResolvedClick, {
 				...convexSegmentSelectionArgs(input),
 				readingDecision: input.readingDecision,
 				...(input.readingCandidates
 					? { readingCandidates: [...input.readingCandidates] }
+					: {}),
+				...(readingAvailable
+					? {
+							readingAvailable: {
+								reading: projectResolutionReading(
+									readingAvailable.reading,
+								),
+								readingCheckpoint: {
+									resolution: readingCheckpointOf(
+										readingAvailable.readingResolution,
+									),
+									reading: readingAvailable.reading,
+								},
+							},
+						}
+					: {}),
+				...(succeeded
+					? {
+							succeeded: {
+								phase: succeeded.phase,
+								generationEvents: [
+									...succeeded.generationEvents,
+								],
+							},
+						}
 					: {}),
 				reading: input.reading,
 				readingKey: input.readingKey,
@@ -535,6 +563,14 @@ function createConvexPersistence(
 				},
 			) as Promise<UnresolvedClickCommit | LateResolvedClickCommit>;
 		},
+	};
+}
+
+/** A Reading resolution as its checkpoint stores it. */
+function readingCheckpointOf({ candidates, ...resolution }: ReadingResolution) {
+	return {
+		...resolution,
+		...(candidates ? { candidates: [...candidates] } : {}),
 	};
 }
 

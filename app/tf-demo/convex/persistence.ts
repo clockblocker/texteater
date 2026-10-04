@@ -1,4 +1,4 @@
-import { type Infer, v } from "convex/values";
+import { type Infer, type ObjectType, v } from "convex/values";
 import { makeSurfaceId } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import { authoredReading } from "dumspec/inventories";
@@ -33,17 +33,23 @@ import {
 	requireClickableSegment,
 } from "./model/resolutionLookup";
 import {
+	advanceResolutionSession,
 	type CommittedOccurrence,
 	completeResolutionSession,
 	type ResolutionSessionGuard,
+	recordResolutionRunSuccess,
 	requireCommittingSession,
 	settleResolutionSession,
 } from "./model/resolutionSessions";
 import { loadStoredSegments } from "./model/storedSegments";
 import {
 	occurrenceAttestationInputValidator,
+	readingCheckpointValidator,
 	readingDecisionValidator,
 	readingValueValidator,
+	resolutionGenerationEventValidator,
+	resolutionPhaseValidator,
+	resolutionReadingProjectionValidator,
 	resolutionSessionGuardValidator,
 	resolvedClickCommitValidator,
 	reusedResolvedClickCommitValidator,
@@ -410,260 +416,297 @@ export const persistReusedResolvedClick = internalMutation({
 	},
 });
 
+const resolvedClickCommitArgs = {
+	...occurrenceCommitArgs,
+	occurrence: occurrenceAttestationInputValidator,
+	reading: readingValueValidator,
+	readingKey: v.string(),
+	readingDecision: readingDecisionValidator,
+	/** For a New its judge decided: the stored Emoji Descriptions it saw. */
+	readingCandidates: v.optional(v.array(v.string())),
+};
+
+/**
+ * Commits a resolved click and, in the same transaction, saves what the
+ * run would otherwise send as two more mutations: the ReadingAvailable
+ * progress first, so a conflict still ends the session showing its
+ * Reading, and the run's success record last, unless the New is refused as
+ * stale and the click judges again.
+ */
 export const persistResolvedClick = internalMutation({
 	args: {
-		...occurrenceCommitArgs,
-		occurrence: occurrenceAttestationInputValidator,
-		reading: readingValueValidator,
-		readingKey: v.string(),
-		readingDecision: readingDecisionValidator,
-		/** For a New its judge decided: the stored Emoji Descriptions it saw. */
-		readingCandidates: v.optional(v.array(v.string())),
+		...resolvedClickCommitArgs,
+		/** The Reading this run resolved; absent when a checkpoint holds it. */
+		readingAvailable: v.optional(
+			v.object({
+				reading: resolutionReadingProjectionValidator,
+				readingCheckpoint: readingCheckpointValidator,
+			}),
+		),
+		/** The run's success record, written once the commit stands. */
+		succeeded: v.optional(
+			v.object({
+				phase: resolutionPhaseValidator,
+				generationEvents: v.array(resolutionGenerationEventValidator),
+			}),
+		),
 	},
 	returns: resolvedClickCommitValidator,
-	handler: async (ctx, args) => {
-		assertNonEmpty(args.readingKey, "readingKey");
-		const {
-			session,
-			segment: clickedSegment,
-			existing: existingClick,
-		} = await openOccurrenceCommit(ctx, args);
-		// Segment Selection recorded the Visitor Encounter before the run, so
-		// an unresolved one is this session's own. A committed occurrence on
-		// the clicked Segment wins over this proposal (ADR-0004).
-		const committedAttestationId =
-			existingClick?.attestationId ??
-			clickedSegment.attestationMembership?.attestationId;
-		if (committedAttestationId) {
-			return reusedCommit(
-				await completeResolutionSession(
-					ctx,
-					session,
-					committedAttestationId,
-				),
-				existingClick,
-			);
-		}
-		if (
-			readingIdentityKey(args.reading as Dumling.Reading<"de">) !==
-			args.readingKey
-		) {
-			throw new Error(
-				"readingKey does not match the selected Reading identity.",
-			);
-		}
-		if (
-			lemmaIdentityKey(args.reading.lemma) !== args.occurrence.lemmaKey ||
-			lemmaIdentityKey(args.occurrence.attestation.surface.lemma) !==
-				args.occurrence.lemmaKey
-		) {
-			throw new Error(
-				"Attestation Surface and Reading must share the proposed Lemma.",
-			);
-		}
-
-		const memberIndices = args.occurrence.memberSegmentIndices;
-		const attestedMembers = args.occurrence.attestation.members;
-		if (memberIndices.length === 0) {
-			throw new Error(
-				"An Attestation needs at least one member Segment.",
-			);
-		}
-		if (memberIndices.length !== attestedMembers.length) {
-			throw new Error(
-				"Attestation members must match member Segment indices.",
-			);
-		}
-		let previous = -1;
-		for (const index of memberIndices) {
-			assertIndex(index, "memberSegmentIndex");
-			if (index <= previous) {
-				throw new Error(
-					"Attestation member Segment indices must be ordered and unique.",
-				);
-			}
-			previous = index;
-		}
-		const queriedMembers = await Promise.all(
-			memberIndices.map((index) =>
-				ctx.db
-					.query("segments")
-					.withIndex("by_sentence_id_and_index", (q) =>
-						q.eq("sentenceId", args.sentenceId).eq("index", index),
-					)
-					.unique(),
-			),
-		);
-		const members = queriedMembers.map((member, memberPosition) => {
-			if (member?.kind !== "ResolvableText") {
-				throw new Error(
-					"Attestation members must refer to ResolvableText Segments.",
-				);
-			}
-			// A piece of a fused word is attested as its own letters.
-			if (member.text !== attestedMembers[memberPosition]?.attested) {
-				throw new Error(
-					"Attestation member text must equal its Segment text.",
-				);
-			}
-			return member;
-		});
-		if (!memberIndices.includes(args.clickedSegmentIndex)) {
-			throw new Error(
-				"The Attestation must contain the clicked Segment.",
-			);
-		}
-		const conflictingAttestationIds = [
-			...new Set(
-				members.flatMap((member) =>
-					member.attestationMembership
-						? [member.attestationMembership.attestationId]
-						: [],
-				),
-			),
-		];
-		if (conflictingAttestationIds.length > 0) {
-			await settleResolutionSession(ctx, session, {
-				kind: "PermanentFailure",
-				message:
-					"This occurrence overlaps a different saved occurrence.",
-				failureCode: "MembershipConflict",
+	handler: async (ctx, { readingAvailable, succeeded, ...args }) => {
+		if (readingAvailable)
+			await advanceResolutionSession(ctx, {
+				guard: args.sessionGuard,
+				progress: "ReadingAvailable",
+				...readingAvailable,
 			});
-			return {
-				status: "MembershipConflict" as const,
-				code: "partialOverlap" as const,
-				message:
-					"Proposed Attestation members partially overlap committed membership.",
-				conflictingAttestationIds: conflictingAttestationIds.sort(),
-			};
-		}
-
-		// A New whose judge never saw a Reading the Lemma has now is refused
-		// before anything is written; the click judges again (ADR 0031).
-		const stale = await staleNewReading(ctx, args);
-		if (stale)
-			return { status: "StaleReading" as const, candidates: [...stale] };
-
-		// The dictionary plan is built and applied here, against the state this
-		// transaction reads, so the occurrence never carries a stale plan.
-		const dictionaryCommit = await planAndCommitDictionary(ctx, args);
-		if (dictionaryCommit.status !== "committed") {
-			await settleResolutionSession(ctx, session, {
-				kind: "PermanentFailure",
-				message:
-					"The shared dictionary rejected this resolution before it could be saved.",
-				failureCode: "DictionaryConflict",
+		const committed = await commitResolvedClick(ctx, args);
+		if (succeeded && committed.status !== "StaleReading")
+			await recordResolutionRunSuccess(ctx, {
+				guard: args.sessionGuard,
+				...succeeded,
 			});
-			return {
-				status: "DictionaryConflict" as const,
-				code: "semanticPreconditionFailed" as const,
-				message:
-					dictionaryCommit.message ??
-					"The Shared Demo Dictionary rejected this click.",
-			};
-		}
-
-		const [reading, surface, lemma] = await Promise.all([
-			ctx.db
-				.query("readings")
-				.withIndex("by_reading_key", (q) =>
-					q.eq("readingKey", args.readingKey),
-				)
-				.unique(),
-			ctx.db
-				.query("surfaces")
-				.withIndex("by_surface_key", (q) =>
-					q.eq("surfaceKey", args.occurrence.surfaceKey),
-				)
-				.unique(),
-			ctx.db
-				.query("lemmas")
-				.withIndex("by_lemma_key", (q) =>
-					q.eq("lemmaKey", args.occurrence.lemmaKey),
-				)
-				.unique(),
-		]);
-		if (!reading || !surface || !lemma) {
-			throw new Error(
-				"Canonical Lemma, Surface, and Reading must be committed first.",
-			);
-		}
-		if (reading.lemmaId !== lemma._id || surface.lemmaId !== lemma._id) {
-			throw new Error(
-				"Attestation Surface and Reading must share one Lemma.",
-			);
-		}
-		if (
-			reading.emojiDescription !==
-			emojiDescriptionOf(parseGermanReading(args.reading))
-		) {
-			throw new Error(
-				"Stored Reading does not match the selected Reading value.",
-			);
-		}
-		if (
-			lemmaIdentityKey(args.occurrence.attestation.surface.lemma) !==
-			lemma.lemmaKey
-		) {
-			throw new Error(
-				"Attestation Surface Lemma does not match lemmaKey.",
-			);
-		}
-
-		const attestationId = await ctx.db.insert("attestations", {
-			...(args.occurrence.attestation.expletiveEvidence === undefined
-				? {}
-				: {
-						expletiveEvidence:
-							args.occurrence.attestation.expletiveEvidence,
-					}),
-			...(args.occurrence.attestation.valencyEvidence === undefined
-				? {}
-				: {
-						valencyEvidence:
-							args.occurrence.attestation.valencyEvidence,
-					}),
-			...(args.occurrence.attestation.articleEvidence === undefined
-				? {}
-				: {
-						articleEvidence:
-							args.occurrence.attestation.articleEvidence,
-					}),
-			surfaceId: surface._id,
-			readingId: reading._id,
-			realizationCoverage:
-				args.occurrence.attestation.realizationCoverage,
-		});
-		await Promise.all(
-			members.map((member, memberPosition) => {
-				const attested = attestedMembers[memberPosition];
-				if (!attested)
-					throw new Error("Missing Attestation member evidence.");
-				return ctx.db.patch(member._id, {
-					resolutionState: undefined,
-					attestationMembership:
-						attested.orthography === "Fused"
-							? {
-									attestationId,
-									orthography: attested.orthography,
-									fusion: attested.fusion,
-									component: attested.component,
-								}
-							: {
-									attestationId,
-									orthography: attested.orthography,
-								},
-				});
-			}),
-		);
-		await advanceMemberEncounters(ctx, {
-			segmentIds: members.map(({ _id }) => _id),
-			attestationId,
-		});
-		return {
-			status: "Committed" as const,
-			...(await completeResolutionSession(ctx, session, attestationId)),
-			deduplicated: false,
-		};
+		return committed;
 	},
 });
+
+/** The occurrence commit itself: the Segment's owner, the dictionary, the Attestation. */
+async function commitResolvedClick(
+	ctx: MutationCtx,
+	args: ObjectType<typeof resolvedClickCommitArgs>,
+): Promise<Infer<typeof resolvedClickCommitValidator>> {
+	assertNonEmpty(args.readingKey, "readingKey");
+	const {
+		session,
+		segment: clickedSegment,
+		existing: existingClick,
+	} = await openOccurrenceCommit(ctx, args);
+	// Segment Selection recorded the Visitor Encounter before the run, so
+	// an unresolved one is this session's own. A committed occurrence on
+	// the clicked Segment wins over this proposal (ADR-0004).
+	const committedAttestationId =
+		existingClick?.attestationId ??
+		clickedSegment.attestationMembership?.attestationId;
+	if (committedAttestationId) {
+		return reusedCommit(
+			await completeResolutionSession(
+				ctx,
+				session,
+				committedAttestationId,
+			),
+			existingClick,
+		);
+	}
+	if (
+		readingIdentityKey(args.reading as Dumling.Reading<"de">) !==
+		args.readingKey
+	) {
+		throw new Error(
+			"readingKey does not match the selected Reading identity.",
+		);
+	}
+	if (
+		lemmaIdentityKey(args.reading.lemma) !== args.occurrence.lemmaKey ||
+		lemmaIdentityKey(args.occurrence.attestation.surface.lemma) !==
+			args.occurrence.lemmaKey
+	) {
+		throw new Error(
+			"Attestation Surface and Reading must share the proposed Lemma.",
+		);
+	}
+
+	const memberIndices = args.occurrence.memberSegmentIndices;
+	const attestedMembers = args.occurrence.attestation.members;
+	if (memberIndices.length === 0) {
+		throw new Error("An Attestation needs at least one member Segment.");
+	}
+	if (memberIndices.length !== attestedMembers.length) {
+		throw new Error(
+			"Attestation members must match member Segment indices.",
+		);
+	}
+	let previous = -1;
+	for (const index of memberIndices) {
+		assertIndex(index, "memberSegmentIndex");
+		if (index <= previous) {
+			throw new Error(
+				"Attestation member Segment indices must be ordered and unique.",
+			);
+		}
+		previous = index;
+	}
+	const queriedMembers = await Promise.all(
+		memberIndices.map((index) =>
+			ctx.db
+				.query("segments")
+				.withIndex("by_sentence_id_and_index", (q) =>
+					q.eq("sentenceId", args.sentenceId).eq("index", index),
+				)
+				.unique(),
+		),
+	);
+	const members = queriedMembers.map((member, memberPosition) => {
+		if (member?.kind !== "ResolvableText") {
+			throw new Error(
+				"Attestation members must refer to ResolvableText Segments.",
+			);
+		}
+		// A piece of a fused word is attested as its own letters.
+		if (member.text !== attestedMembers[memberPosition]?.attested) {
+			throw new Error(
+				"Attestation member text must equal its Segment text.",
+			);
+		}
+		return member;
+	});
+	if (!memberIndices.includes(args.clickedSegmentIndex)) {
+		throw new Error("The Attestation must contain the clicked Segment.");
+	}
+	const conflictingAttestationIds = [
+		...new Set(
+			members.flatMap((member) =>
+				member.attestationMembership
+					? [member.attestationMembership.attestationId]
+					: [],
+			),
+		),
+	];
+	if (conflictingAttestationIds.length > 0) {
+		await settleResolutionSession(ctx, session, {
+			kind: "PermanentFailure",
+			message: "This occurrence overlaps a different saved occurrence.",
+			failureCode: "MembershipConflict",
+		});
+		return {
+			status: "MembershipConflict" as const,
+			code: "partialOverlap" as const,
+			message:
+				"Proposed Attestation members partially overlap committed membership.",
+			conflictingAttestationIds: conflictingAttestationIds.sort(),
+		};
+	}
+
+	// A New whose judge never saw a Reading the Lemma has now is refused
+	// before anything is written; the click judges again (ADR 0031).
+	const stale = await staleNewReading(ctx, args);
+	if (stale)
+		return { status: "StaleReading" as const, candidates: [...stale] };
+
+	// The dictionary plan is built and applied here, against the state this
+	// transaction reads, so the occurrence never carries a stale plan.
+	const dictionaryCommit = await planAndCommitDictionary(ctx, args);
+	if (dictionaryCommit.status !== "committed") {
+		await settleResolutionSession(ctx, session, {
+			kind: "PermanentFailure",
+			message:
+				"The shared dictionary rejected this resolution before it could be saved.",
+			failureCode: "DictionaryConflict",
+		});
+		return {
+			status: "DictionaryConflict" as const,
+			code: "semanticPreconditionFailed" as const,
+			message:
+				dictionaryCommit.message ??
+				"The Shared Demo Dictionary rejected this click.",
+		};
+	}
+
+	const [reading, surface, lemma] = await Promise.all([
+		ctx.db
+			.query("readings")
+			.withIndex("by_reading_key", (q) =>
+				q.eq("readingKey", args.readingKey),
+			)
+			.unique(),
+		ctx.db
+			.query("surfaces")
+			.withIndex("by_surface_key", (q) =>
+				q.eq("surfaceKey", args.occurrence.surfaceKey),
+			)
+			.unique(),
+		ctx.db
+			.query("lemmas")
+			.withIndex("by_lemma_key", (q) =>
+				q.eq("lemmaKey", args.occurrence.lemmaKey),
+			)
+			.unique(),
+	]);
+	if (!reading || !surface || !lemma) {
+		throw new Error(
+			"Canonical Lemma, Surface, and Reading must be committed first.",
+		);
+	}
+	if (reading.lemmaId !== lemma._id || surface.lemmaId !== lemma._id) {
+		throw new Error(
+			"Attestation Surface and Reading must share one Lemma.",
+		);
+	}
+	if (
+		reading.emojiDescription !==
+		emojiDescriptionOf(parseGermanReading(args.reading))
+	) {
+		throw new Error(
+			"Stored Reading does not match the selected Reading value.",
+		);
+	}
+	if (
+		lemmaIdentityKey(args.occurrence.attestation.surface.lemma) !==
+		lemma.lemmaKey
+	) {
+		throw new Error("Attestation Surface Lemma does not match lemmaKey.");
+	}
+
+	const attestationId = await ctx.db.insert("attestations", {
+		...(args.occurrence.attestation.expletiveEvidence === undefined
+			? {}
+			: {
+					expletiveEvidence:
+						args.occurrence.attestation.expletiveEvidence,
+				}),
+		...(args.occurrence.attestation.valencyEvidence === undefined
+			? {}
+			: {
+					valencyEvidence:
+						args.occurrence.attestation.valencyEvidence,
+				}),
+		...(args.occurrence.attestation.articleEvidence === undefined
+			? {}
+			: {
+					articleEvidence:
+						args.occurrence.attestation.articleEvidence,
+				}),
+		surfaceId: surface._id,
+		readingId: reading._id,
+		realizationCoverage: args.occurrence.attestation.realizationCoverage,
+	});
+	await Promise.all(
+		members.map((member, memberPosition) => {
+			const attested = attestedMembers[memberPosition];
+			if (!attested)
+				throw new Error("Missing Attestation member evidence.");
+			return ctx.db.patch(member._id, {
+				resolutionState: undefined,
+				attestationMembership:
+					attested.orthography === "Fused"
+						? {
+								attestationId,
+								orthography: attested.orthography,
+								fusion: attested.fusion,
+								component: attested.component,
+							}
+						: {
+								attestationId,
+								orthography: attested.orthography,
+							},
+			});
+		}),
+	);
+	await advanceMemberEncounters(ctx, {
+		segmentIds: members.map(({ _id }) => _id),
+		attestationId,
+	});
+	return {
+		status: "Committed" as const,
+		...(await completeResolutionSession(ctx, session, attestationId)),
+		deduplicated: false,
+	};
+}
