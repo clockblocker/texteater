@@ -8,9 +8,11 @@ Build output is written to `dist/`; the package root preserves the upstream `Gro
 
 Biome excludes the imported `lib/` tree and copied Vitest setup so upstream style and import order remain comparable during future updates. Put locally authored extensions outside `lib/`.
 
-The local `react-resizable-panels/workspace` entry point supplies the Card/Sheet state model and controlled React renderer. Import `react-resizable-panels/workspace.css` for layout and gesture geometry; it contains no theme. Texteater applications use the styled `Workspace` from `lego` with `lego/styles.css`. Terminology lives in [CONTEXT.md](./CONTEXT.md).
+The local `react-resizable-panels/workspace` entry point supplies the pure Pane reducer: Panes with a Ground beneath their Covers, Decks, and the Held Card of a Lift, generic over the Subject. Applications own the renderer. Terminology lives in [CONTEXT.md](./CONTEXT.md).
 
-Browser behaviour of the workspace renderer (lifts, drops, returns, edge
+`react-resizable-panels/workspace/legacy` holds the retired Locked Sheet and Card Layer model and its controlled React renderer, which `lego`'s styled `Workspace` and tf-demo's main app still use. It is transitional and goes when they move to the Pane reducer. Import `react-resizable-panels/workspace.css` for its layout and gesture geometry; it contains no theme.
+
+Browser behaviour of the legacy workspace renderer (lifts, drops, returns, edge
 splits, double presses, back and forward swipes, overscroll containment) is
 covered by Playwright tests in `e2e/`. They run against `e2e/harness`, a small
 Vite page that presents opaque fixture Subjects and a live view of the state

@@ -23,7 +23,7 @@ import {
 	type WorkspacePresentation,
 	type WorkspaceState,
 	workspaceReducer,
-} from "./model";
+} from "./locked-model";
 
 /** The narrowest useful canvas for a Sheet and its Card counterpart. */
 const MINIMUM_SHEET_WIDTH = 416;

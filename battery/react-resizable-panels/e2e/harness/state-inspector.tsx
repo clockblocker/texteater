@@ -4,7 +4,7 @@ import {
 	selectWorkspaceTransitionDescriptors,
 	WORKSPACE_TRANSITIONS,
 	type WorkspaceState,
-} from "react-resizable-panels/workspace";
+} from "react-resizable-panels/workspace/legacy";
 
 export type TransitionRecord = { from: string; command: string; to: string };
 

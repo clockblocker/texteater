@@ -1,4 +1,4 @@
-import type { PresentationForm } from "react-resizable-panels/workspace";
+import type { PresentationForm } from "react-resizable-panels/workspace/legacy";
 import {
 	ResolutionNoteView,
 	ResolutionStepNoteView,

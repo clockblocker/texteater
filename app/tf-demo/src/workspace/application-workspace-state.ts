@@ -4,7 +4,7 @@ import {
 	type WorkspaceCommand,
 	type WorkspaceState,
 	workspaceReducer,
-} from "react-resizable-panels/workspace";
+} from "react-resizable-panels/workspace/legacy";
 
 import {
 	type NotePresentationContext,

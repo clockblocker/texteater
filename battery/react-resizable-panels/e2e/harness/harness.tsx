@@ -7,7 +7,7 @@ import {
 	type WorkspaceRenderContext,
 	type WorkspaceState,
 	workspaceReducer,
-} from "react-resizable-panels/workspace";
+} from "react-resizable-panels/workspace/legacy";
 import "react-resizable-panels/workspace.css";
 import {
 	type TransitionRecord,

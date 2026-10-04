@@ -16,6 +16,10 @@ export default defineConfig({
 				replacement: battery("workspace/workspace.css"),
 			},
 			{
+				find: "react-resizable-panels/workspace/legacy",
+				replacement: battery("workspace/legacy/index.ts"),
+			},
+			{
 				find: "react-resizable-panels/workspace",
 				replacement: battery("workspace/index.ts"),
 			},

@@ -12,7 +12,10 @@
 		],
 		"paths": {
 			"react-resizable-panels": ["./lib/index.ts"],
-			"react-resizable-panels/workspace": ["./workspace/index.ts"]
+			"react-resizable-panels/workspace": ["./workspace/index.ts"],
+			"react-resizable-panels/workspace/legacy": [
+				"./workspace/legacy/index.ts"
+			]
 		}
 	},
 	"include": [

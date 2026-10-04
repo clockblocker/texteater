@@ -16,7 +16,7 @@ import {
 	selectVisibleSheets,
 	type WorkspaceCommand,
 	type WorkspaceRenderContext,
-} from "react-resizable-panels/workspace";
+} from "react-resizable-panels/workspace/legacy";
 import {
 	loadApplicationWorkspace,
 	saveApplicationWorkspace,

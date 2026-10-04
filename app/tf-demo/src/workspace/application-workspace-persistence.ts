@@ -2,7 +2,7 @@ import type {
 	WorkspaceLayout,
 	WorkspacePresentation,
 	WorkspaceState,
-} from "react-resizable-panels/workspace";
+} from "react-resizable-panels/workspace/legacy";
 import {
 	type ApplicationWorkspaceSession,
 	type ApplicationWorkspaceSubject,

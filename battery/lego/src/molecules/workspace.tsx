@@ -4,7 +4,7 @@ import {
 	type WorkspaceClassNames,
 	Workspace as WorkspacePrimitive,
 	type WorkspaceProps,
-} from "react-resizable-panels/workspace";
+} from "react-resizable-panels/workspace/legacy";
 import { cn } from "../utils";
 
 const workspaceClasses: WorkspaceClassNames = {
