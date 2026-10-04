@@ -18,6 +18,23 @@ judge was wrong and the decision is Reuse. Both prompts ask the same question,
 which emoji describes the target's meaning here, so a matching output is
 evidence of the same Reading.
 
+Amended on 2026-10-04: the generator writes its description in the same
+Luna call as the Canonical Form, after the headword, so a click waits on one
+Luna call instead of two in a row. That call may start before jev has judged
+the grammar. Most of what the call reads serves the Canonical Form. The
+description's one input is the marked sentence, in its own
+`emojiDescriptionInput` block, and the prompt tells Luna to rest the
+description on that and the Canonical Form it has just written. Every other
+input is to be ignored, and so are the Canonical Form instructions. The call
+never carries stored Emoji Descriptions or Readings; its Lemma hints carry
+Canonical Form and Core Features only. The judge still runs first over the
+stored descriptions and never sees the draft. The draft stands only after
+NoMatch, or when nothing is stored, and a draft already stored is a Reuse.
+Without a usable draft, as on a click resumed from its Grammar checkpoint,
+the standalone generation prompt writes the description as before. The
+measured click went from about 1.8 s of Luna calls in a row to 1.0–1.8 s.
+Decided by the user on 2026-10-04.
+
 No outside sense inventory sets the granularity. Different concepts are
 expected to get different descriptions: `Absatz` as paragraph and as shoe heel.
 Whether a figurative or metonymic use shares a Reading with its literal use is
