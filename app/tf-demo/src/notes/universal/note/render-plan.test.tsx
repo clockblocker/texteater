@@ -24,7 +24,7 @@ test("omits unavailable and duplicate Blocks while applying visibility", () => {
 		hidden: new Set(["Definition", "Missing"] as never),
 	});
 
-	expect(layout.order).toEqual(["Relations", "Definition", "Header"]);
+	expect(layout.order).toEqual(["Relations", "Definition"]);
 	expect([...layout.hidden]).toEqual(["Definition"]);
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual(["Relations"]);
 });
@@ -37,16 +37,11 @@ test("inserts newly available Blocks in their default relative order", () => {
 		Definition: () => <p>definition</p>,
 	};
 	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
-		order: ["Definition", "Header"],
+		order: ["Definition"],
 		hidden: new Set(),
 	});
 
-	expect(layout.order).toEqual([
-		"Definition",
-		"Header",
-		"Relations",
-		"Translations",
-	]);
+	expect(layout.order).toEqual(["Definition", "Relations", "Translations"]);
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual([
 		"Definition",
 		"Relations",
@@ -61,25 +56,42 @@ test("retains a hidden Block's position while excluding it from the plan", () =>
 		Definition: () => <p>definition</p>,
 	};
 	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
-		order: ["Header", "Relations", "Definition"],
+		order: ["Relations", "Definition"],
 		hidden: new Set(["Relations"]),
 	});
 
-	expect(layout.order).toEqual(["Header", "Relations", "Definition"]);
+	expect(layout.order).toEqual(["Relations", "Definition"]);
 	expect([...layout.hidden]).toEqual(["Relations"]);
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual(["Definition"]);
 });
 
-test("pins the Heading Block outside the stored order and visibility", () => {
+test("plans the Heading Block apart from the Body's layout", () => {
 	const registry: RegisteredBlockMap = {
 		Header: () => <p>header</p>,
 		Relations: () => <p>relations</p>,
 	};
-	const { plan } = resolveRenderPlan(() => registry, coordinates, {
-		order: ["Relations", "Header"],
-		hidden: new Set(["Header"]),
+	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
+		order: ["Relations"],
+		hidden: new Set(["Relations"]),
 	});
 
+	expect(layout.order).toEqual(["Relations"]);
+	expect(plan.heading?.blockKind).toBe("Header");
+	expect(plan.body).toEqual([]);
+});
+
+test("drops a Heading that a stale layout still names", () => {
+	const registry: RegisteredBlockMap = {
+		Header: () => <p>header</p>,
+		Relations: () => <p>relations</p>,
+	};
+	const { layout, plan } = resolveRenderPlan(() => registry, coordinates, {
+		order: ["Relations", "Header"] as never,
+		hidden: new Set(["Header"] as never),
+	});
+
+	expect(layout.order).toEqual(["Relations"]);
+	expect([...layout.hidden]).toEqual([]);
 	expect(plan.heading?.blockKind).toBe("Header");
 	expect(plan.body.map(({ blockKind }) => blockKind)).toEqual(["Relations"]);
 });
@@ -108,7 +120,7 @@ test("splits the Heading from a Body that keeps the Note's tags", () => {
 	const body = renderToStaticMarkup(
 		renderUniversalNoteBody({
 			...input,
-			layout: { order: ["Relations", "Header"], hidden: new Set() },
+			layout: { order: ["Relations"], hidden: new Set() },
 		}),
 	);
 
@@ -131,7 +143,7 @@ test("composes the Heading first inside the Body", () => {
 	const markup = renderToStaticMarkup(
 		renderUniversalNoteBody({
 			...input,
-			layout: { order: ["Relations", "Header"], hidden: new Set() },
+			layout: { order: ["Relations"], hidden: new Set() },
 			heading: renderUniversalNoteHeading(input),
 		}),
 	);
@@ -171,7 +183,7 @@ test("isolates a failing block while preserving subsequent registered blocks", (
 	const markup = renderToStaticMarkup(
 		renderUniversalNoteBody({
 			...input,
-			layout: { order: ["Header", "Relations"], hidden: new Set() },
+			layout: { order: ["Relations"], hidden: new Set() },
 			heading: renderUniversalNoteHeading(input),
 		}),
 	);

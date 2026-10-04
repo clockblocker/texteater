@@ -2,7 +2,11 @@ import type { ReactElement } from "react";
 
 import type { NoteBlockKind } from "../blocks/kind";
 import type { NoteCoordinates } from "./data";
-import { type NoteBlockLayout, reconcileNoteBlockLayout } from "./layout";
+import {
+	availableBodyBlockKinds,
+	type NoteBlockLayout,
+	reconcileNoteBlockLayout,
+} from "./layout";
 
 type PlannedBlock = {
 	readonly blockKind: NoteBlockKind;
@@ -13,7 +17,7 @@ type PlannedBlock = {
  * The Blocks a Note renders, split where a host places them: the Heading
  * Block, which a Card or a Cover draws as its lift handle, and the Body,
  * every other Block. The Heading is pinned first (tf-demo ADR 0006), so a
- * stored layout orders and hides only the Body.
+ * layout names only Body Blocks.
  */
 export type RenderPlan = {
 	/** Null when the Note's route has no Heading Block. */
@@ -36,8 +40,10 @@ export function resolveRenderPlan(
 			`Unsupported ${coordinates.noteKind} route: ${coordinates.language}/${coordinates.family ?? "direct"}/${coordinates.kind ?? "direct"}.`,
 		);
 	}
-	const available = Object.keys(registry) as NoteBlockKind[];
-	const layout = reconcileNoteBlockLayout(requestedLayout, available);
+	const layout = reconcileNoteBlockLayout(
+		requestedLayout,
+		availableBodyBlockKinds(registry),
+	);
 	return {
 		layout,
 		plan: {
@@ -45,8 +51,7 @@ export function resolveRenderPlan(
 				? { blockKind: "Header", renderer: registry.Header }
 				: null,
 			body: layout.order.flatMap((blockKind) => {
-				if (blockKind === "Header" || layout.hidden.has(blockKind))
-					return [];
+				if (layout.hidden.has(blockKind)) return [];
 				const renderer = registry[blockKind];
 				return renderer ? [{ blockKind, renderer }] : [];
 			}),

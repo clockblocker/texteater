@@ -1,7 +1,6 @@
-import type { NoteBlockKind } from "../../blocks/kind";
+import type { NoteBodyBlockKind } from "../../blocks/kind";
 
-export const WEIGHT_FOR_NOTE_BLOCK_KIND = {
-	Header: 0,
+export const WEIGHT_FOR_NOTE_BODY_BLOCK_KIND = {
 	SourceContexts: 1,
 	Valency: 2,
 	Relations: 3,
@@ -11,4 +10,4 @@ export const WEIGHT_FOR_NOTE_BLOCK_KIND = {
 	MorphologicalTree: 7,
 	Fusion: 8,
 	Routes: 9,
-} as const satisfies Record<NoteBlockKind, number>;
+} as const satisfies Record<NoteBodyBlockKind, number>;

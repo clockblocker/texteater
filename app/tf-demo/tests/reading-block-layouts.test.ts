@@ -54,13 +54,11 @@ const LANGUAGE_ORDER: readonly ReadingBlockKind[] = [
 	"Relations",
 	"Translations",
 	"SourceContexts",
-	"Header",
 	"Valency",
 	"PersonalAnnotation",
 ];
 const LOCAL_VERB_ORDER: readonly ReadingBlockKind[] = [
 	"Translations",
-	"Header",
 	"SourceContexts",
 	"Definition",
 	"Valency",
@@ -233,7 +231,7 @@ describe("Reading Block layout persistence", () => {
 			t.mutation(setFamilyKindBlockOrder, {
 				visitorId: VISITOR_ID,
 				route: VERB_ROUTE,
-				order: ["Header", "Definition", "Header"],
+				order: ["Definition", "Relations", "Definition"],
 			}),
 		).rejects.toThrow(
 			"Reading Block order must contain configured Blocks at most once.",
@@ -252,5 +250,42 @@ describe("Reading Block layout persistence", () => {
 		).toEqual(DEFAULT_DE_READING_LANGUAGE_LAYOUT);
 		expect(await layoutRows(t, "readingLanguageLayouts")).toEqual([]);
 		expect(await layoutRows(t, "readingFamilyKindLayouts")).toHaveLength(1);
+	});
+
+	test("cannot store the pinned Heading Block", async () => {
+		const t = createTestConvex();
+
+		await expect(
+			t.mutation(setFamilyKindBlockOrder, {
+				visitorId: VISITOR_ID,
+				route: VERB_ROUTE,
+				order: ["Header" as never, "Definition"],
+			}),
+		).rejects.toThrow();
+		await expect(
+			t.mutation(setFamilyKindBlockVisibility, {
+				visitorId: VISITOR_ID,
+				route: VERB_ROUTE,
+				blockKind: "Header" as never,
+				visible: false,
+			}),
+		).rejects.toThrow();
+		await expect(
+			t.mutation(setLanguageBlockOrder, {
+				visitorId: VISITOR_ID,
+				targetLanguage: "de",
+				order: ["Header" as never, "Definition"],
+			}),
+		).rejects.toThrow();
+		await expect(
+			t.mutation(setLanguageBlockVisibility, {
+				visitorId: VISITOR_ID,
+				targetLanguage: "de",
+				blockKind: "Header" as never,
+				visible: false,
+			}),
+		).rejects.toThrow();
+		expect(await layoutRows(t, "readingLanguageLayouts")).toEqual([]);
+		expect(await layoutRows(t, "readingFamilyKindLayouts")).toEqual([]);
 	});
 });

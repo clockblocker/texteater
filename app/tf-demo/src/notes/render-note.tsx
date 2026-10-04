@@ -6,7 +6,6 @@ import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
 import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
 import { api } from "../../convex/_generated/api";
 import { registeredBlockMap } from "./renderer-registry";
-import type { NoteBlockKind } from "./universal/blocks/kind";
 import type { NotePresentationCapabilitiesFor } from "./universal/blocks/renderer";
 import {
 	describeNote,
@@ -16,6 +15,7 @@ import {
 import { renderErrorNote } from "./universal/note/error";
 import type { NoteKind } from "./universal/note/kind";
 import {
+	availableBodyBlockKinds,
 	defaultNoteBlockLayout,
 	type NoteBlockLayout,
 } from "./universal/note/layout";
@@ -93,7 +93,7 @@ function configureRenderNote(layoutAdapter: LayoutAdapter) {
 function defaultConfiguredLayout(noteData: NoteData): NoteBlockLayout {
 	const registry = configuredRegistry(noteData);
 	return defaultNoteBlockLayout(
-		registry ? (Object.keys(registry) as NoteBlockKind[]) : [],
+		registry ? availableBodyBlockKinds(registry) : [],
 	);
 }
 

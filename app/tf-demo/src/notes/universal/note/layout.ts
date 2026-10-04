@@ -1,8 +1,19 @@
+import type { ReactElement } from "react";
 import { reconcileSerializedBlockLayout } from "../../../../shared/note-block-layout";
-import type { NoteBlockKind } from "../blocks/kind";
-import { orderNoteBlockKinds } from "./block-ordering/order-blocks";
+import {
+	type NoteBlockKind,
+	type NoteBodyBlockKind,
+	noteBodyBlockKindSchema,
+} from "../blocks/kind";
+import { orderNoteBodyBlockKinds } from "./block-ordering/order-blocks";
 
-export type NoteBlockLayoutFor<B extends NoteBlockKind = NoteBlockKind> = {
+/**
+ * Presentation order and visibility of a Note's Body. The Heading Block is
+ * pinned first, so a layout cannot name it.
+ */
+export type NoteBlockLayoutFor<
+	B extends NoteBodyBlockKind = NoteBodyBlockKind,
+> = {
 	/** Includes visible and hidden Blocks so re-enabling preserves position. */
 	readonly order: readonly B[];
 	readonly hidden: ReadonlySet<B>;
@@ -10,11 +21,20 @@ export type NoteBlockLayoutFor<B extends NoteBlockKind = NoteBlockKind> = {
 
 export type NoteBlockLayout = NoteBlockLayoutFor;
 
-export function defaultNoteBlockLayout<B extends NoteBlockKind>(
+/** The Body Blocks a route's registry renders. */
+export function availableBodyBlockKinds(
+	registry: Partial<
+		Record<NoteBlockKind, (context: never) => ReactElement | null>
+	>,
+): readonly NoteBodyBlockKind[] {
+	return noteBodyBlockKindSchema.options.filter((kind) => registry[kind]);
+}
+
+export function defaultNoteBlockLayout<B extends NoteBodyBlockKind>(
 	available: readonly B[],
 ): NoteBlockLayoutFor<B> {
 	return {
-		order: orderNoteBlockKinds(new Set(available)) as readonly B[],
+		order: orderNoteBodyBlockKinds(new Set(available)) as readonly B[],
 		hidden: new Set(),
 	};
 }
@@ -22,12 +42,12 @@ export function defaultNoteBlockLayout<B extends NoteBlockKind>(
 /** Reconciles presentation preferences against registry-owned availability. */
 export function reconcileNoteBlockLayout(
 	layout: NoteBlockLayout,
-	available: readonly NoteBlockKind[],
+	available: readonly NoteBodyBlockKind[],
 ): NoteBlockLayout {
 	const reconciled = reconcileSerializedBlockLayout(
 		{ order: layout.order, hidden: [...layout.hidden] },
 		available,
-		orderNoteBlockKinds(new Set(available)),
+		orderNoteBodyBlockKinds(new Set(available)),
 	);
 	return {
 		order: reconciled.order,
