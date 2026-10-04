@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdir } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 
 import {
 	adrStructureIssues,
@@ -14,6 +14,7 @@ import {
 	auditScopedCount,
 	contextMapStructureIssues,
 	contextStructureIssues,
+	developerDocumentationFiles,
 	formatDocumentationIssue,
 	isDeveloperDocumentationPath,
 	isEmptyScaffoldingContent,
@@ -22,6 +23,30 @@ import {
 	markdownLinks,
 } from "../documentation-integrity";
 import { temporaryRepository, writeSource } from "./helpers";
+
+async function gitRepository(): Promise<string> {
+	const root = await temporaryRepository();
+	expect(Bun.spawnSync(["git", "init", "-q"], { cwd: root }).exitCode).toBe(
+		0,
+	);
+	return root;
+}
+
+function git(root: string, ...args: string[]): void {
+	expect(
+		Bun.spawnSync(
+			[
+				"git",
+				"-c",
+				"user.name=fixture",
+				"-c",
+				"user.email=fixture@example.com",
+				...args,
+			],
+			{ cwd: root },
+		).exitCode,
+	).toBe(0);
+}
 
 test("reproduces the #307 baseline from the pinned pre-migration commit", async () => {
 	const baseline = await loadDocumentationBaseline();
@@ -47,11 +72,6 @@ test("reproduces the #307 baseline from the pinned pre-migration commit", async 
 });
 
 test("uses role-specific #307 census exclusions", () => {
-	expect(
-		isDeveloperDocumentationPath(
-			".runs/dumgen/historical-learning/note.md",
-		),
-	).toBeFalse();
 	expect(isDeveloperDocumentationPath("README.md")).toBeTrue();
 	expect(isDeveloperDocumentationPath("app/tf-demo/README.md")).toBeTrue();
 	expect(
@@ -68,9 +88,6 @@ test("uses role-specific #307 census exclusions", () => {
 		),
 	).toBeFalse();
 	expect(
-		isDeveloperDocumentationPath("app/dumling-docs/public/de/entity.md"),
-	).toBeFalse();
-	expect(
 		isDeveloperDocumentationPath(
 			"battery/legacy-dumgen/docs/prototypes/example/runs/2026-01-01/diagnostic-report.md",
 		),
@@ -85,6 +102,28 @@ test("uses role-specific #307 census exclusions", () => {
 			"battery/dumgen/evidence/segment-in-units-lab/runs/example/sweep.md",
 		),
 	).toBeFalse();
+});
+
+test("censuses only the documents git would track", async () => {
+	const root = await gitRepository();
+	await writeSource(root, ".gitignore", "test-results/\n.runs/\n");
+	await writeSource(root, "docs/reference/committed.md", "# Committed\n");
+	await writeSource(root, "docs/reference/deleted.md", "# Deleted\n");
+	git(root, "add", ".");
+	git(root, "commit", "-q", "-m", "fixture");
+	await rm(`${root}/docs/reference/deleted.md`);
+	await writeSource(root, "docs/reference/uncommitted.md", "# New\n");
+	await writeSource(
+		root,
+		"app/demo/test-results/run/error-context.md",
+		"# Playwright output\n",
+	);
+	await writeSource(root, ".runs/dumgen/note.md", "# Run output\n");
+
+	expect(await developerDocumentationFiles(root)).toEqual([
+		"docs/reference/committed.md",
+		"docs/reference/uncommitted.md",
+	]);
 });
 
 test("enforces canonical developer-documentation paths", () => {
@@ -338,7 +377,7 @@ test("extracts inline and reference links while ignoring fenced examples", () =>
 });
 
 test("reports exact local link and anchor failures", async () => {
-	const root = await temporaryRepository();
+	const root = await gitRepository();
 	await writeSource(
 		root,
 		"docs/reference/source.md",
@@ -366,8 +405,32 @@ test("reports exact local link and anchor failures", async () => {
 	]);
 });
 
+test("reports links to gitignored targets that only this checkout has", async () => {
+	const root = await gitRepository();
+	await writeSource(root, ".gitignore", "test-results/\n");
+	await writeSource(
+		root,
+		"docs/reference/source.md",
+		"[ignored](../../app/demo/test-results/report.md)\n[folder](../../app/demo)\n[root](../..)\n",
+	);
+	await writeSource(root, "app/demo/test-results/report.md", "# Report\n");
+	await writeSource(root, "app/demo/index.ts", "export {};\n");
+
+	expect(
+		await auditMarkdownLinks(root, ["docs/reference/source.md"]),
+	).toEqual([
+		{
+			detail: "target is ignored by git: ../../app/demo/test-results/report.md",
+			file: "docs/reference/source.md",
+			kind: "broken-link",
+			line: 1,
+			severity: "error",
+		},
+	]);
+});
+
 test("keeps protected-link findings advisory for human review", async () => {
-	const root = await temporaryRepository();
+	const root = await gitRepository();
 	await writeSource(
 		root,
 		"app/demo/VISION.md",

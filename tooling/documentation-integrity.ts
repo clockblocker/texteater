@@ -52,19 +52,6 @@ const baselinePath = join(
 	"developer-documentation-baseline.json",
 );
 
-const excludedDirectoryNames = new Set([
-	".astro",
-	".git",
-	".next",
-	".runs",
-	".turbo",
-	"coverage",
-	"dist",
-	"node_modules",
-	"repos-for-refrence",
-	"worktrees",
-]);
-
 const coordinationTokens = new Set([
 	"backlog",
 	"backlogs",
@@ -99,26 +86,61 @@ async function pathExists(path: string): Promise<boolean> {
 	}
 }
 
-async function markdownFilesUnder(root: string): Promise<string[]> {
-	if (!(await pathExists(root))) return [];
-	const files: string[] = [];
+async function gitPaths(
+	repositoryRoot: string,
+	args: readonly string[],
+): Promise<string[]> {
+	const process = Bun.spawn(["git", "ls-files", "-z", ...args], {
+		cwd: repositoryRoot,
+		stderr: "pipe",
+		stdout: "pipe",
+	});
+	const [output, error] = await Promise.all([
+		new Response(process.stdout).text(),
+		new Response(process.stderr).text(),
+	]);
+	if ((await process.exited) !== 0) {
+		throw new Error(`git ls-files failed in ${repositoryRoot}: ${error}`);
+	}
+	return output.split("\0").filter((path) => path.length > 0);
+}
 
-	async function walk(path: string): Promise<void> {
-		for (const entry of await readdir(path, { withFileTypes: true })) {
-			if (entry.isDirectory()) {
-				if (!excludedDirectoryNames.has(entry.name)) {
-					await walk(join(path, entry.name));
-				}
-				continue;
-			}
-			if (entry.isFile() && entry.name.endsWith(".md")) {
-				files.push(join(path, entry.name));
-			}
+/**
+ * The files git would track: tracked files still present in the working tree
+ * plus untracked files that no ignore rule covers, so gitignored local output
+ * stays out and an uncommitted new document is still checked.
+ */
+export async function gitVisibleFiles(
+	repositoryRoot: string,
+): Promise<string[]> {
+	const [listed, deleted] = await Promise.all([
+		gitPaths(repositoryRoot, [
+			"--cached",
+			"--others",
+			"--exclude-standard",
+		]),
+		gitPaths(repositoryRoot, ["--deleted"]),
+	]);
+	const deletedFiles = new Set(deleted);
+	return [...new Set(listed)]
+		.filter((path) => !deletedFiles.has(path))
+		.toSorted();
+}
+
+/** Visible files and every directory that contains one; "" is the root. */
+function gitVisiblePaths(files: readonly string[]): Set<string> {
+	const paths = new Set([""]);
+	for (const file of files) {
+		paths.add(file);
+		for (
+			let directory = dirname(file);
+			directory !== "." && !paths.has(directory);
+			directory = dirname(directory)
+		) {
+			paths.add(directory);
 		}
 	}
-
-	await walk(root);
-	return files.toSorted();
+	return paths;
 }
 
 function isPackageConsumerDocument(path: string): boolean {
@@ -131,9 +153,6 @@ function isPackageConsumerDocument(path: string): boolean {
 function isProducedArtifact(path: string): boolean {
 	return (
 		path.startsWith("docs/benchmarks/") ||
-		path.startsWith("app/dumling-docs/public/") ||
-		path.startsWith("app/dumling-docs/src/generated/") ||
-		path.startsWith("app/dumling-docs/dist/") ||
 		path.startsWith("battery/dumling/resources/") ||
 		path.startsWith("battery/dumgen/docs/learning/") ||
 		/^battery\/(?:legacy-)?dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
@@ -150,9 +169,6 @@ export function isDeveloperDocumentationPath(candidate: string): boolean {
 	const path = normalizeRepositoryPath(candidate);
 	return (
 		path.endsWith(".md") &&
-		![...path.split("/")].some((part) =>
-			excludedDirectoryNames.has(part),
-		) &&
 		!isPackageConsumerDocument(path) &&
 		!isProducedArtifact(path)
 	);
@@ -161,10 +177,9 @@ export function isDeveloperDocumentationPath(candidate: string): boolean {
 export async function developerDocumentationFiles(
 	repositoryRoot: string,
 ): Promise<string[]> {
-	return (await markdownFilesUnder(repositoryRoot))
-		.map((path) => normalizeRepositoryPath(relative(repositoryRoot, path)))
-		.filter(isDeveloperDocumentationPath)
-		.toSorted();
+	return (await gitVisibleFiles(repositoryRoot)).filter(
+		isDeveloperDocumentationPath,
+	);
 }
 
 export function isProtectedDeveloperDocument(candidate: string): boolean {
@@ -374,8 +389,10 @@ export async function auditMarkdownLinks(
 ): Promise<DocumentationIssue[]> {
 	const issues: DocumentationIssue[] = [];
 	const anchorCache = new Map<string, Set<string>>();
+	const visibleFiles = await gitVisibleFiles(repositoryRoot);
+	const visiblePaths = gitVisiblePaths(visibleFiles);
 	const relativeFiles =
-		files ?? (await developerDocumentationFiles(repositoryRoot));
+		files ?? visibleFiles.filter(isDeveloperDocumentationPath);
 
 	for (const relativeSource of relativeFiles) {
 		const sourcePath = resolve(repositoryRoot, relativeSource);
@@ -391,9 +408,16 @@ export async function auditMarkdownLinks(
 				parts.path.length === 0
 					? sourcePath
 					: resolve(dirname(sourcePath), parts.path);
-			if (!(await pathExists(targetPath))) {
+			// A gitignored target exists only in this checkout, never on GitHub.
+			if (
+				!visiblePaths.has(
+					normalizeRepositoryPath(
+						relative(repositoryRoot, targetPath),
+					),
+				)
+			) {
 				issues.push({
-					detail: `target does not exist: ${link.target}`,
+					detail: `${(await pathExists(targetPath)) ? "target is ignored by git" : "target does not exist"}: ${link.target}`,
 					file: normalizeRepositoryPath(relativeSource),
 					kind: "broken-link",
 					line: link.line,
