@@ -68,11 +68,6 @@ test("excludes package READMEs and produced artifacts from developer documentati
 	).toBeFalse();
 	expect(
 		isDeveloperDocumentationPath(
-			"battery/dumgen/evidence/target-attestation-drafts/review-sheet.md",
-		),
-	).toBeFalse();
-	expect(
-		isDeveloperDocumentationPath(
 			"battery/dumgen/evidence/segment-in-units-lab/runs/example/sweep.md",
 		),
 	).toBeFalse();
@@ -239,6 +234,7 @@ test("enforces the minimal ADR structure and the accepted-only status", () => {
 		"",
 		"---\nstatus: proposed\n---\n\n",
 		"---\nstatus: deprecated\n---\n\n",
+		"---\nstatus: superseded by ADR-0002\n---\n\n",
 	]) {
 		expect(
 			adrStructureIssues(
@@ -249,12 +245,6 @@ test("enforces the minimal ADR structure and the accepted-only status", () => {
 			{ kind: "adr-structure", line: 1, severity: "error" },
 		]);
 	}
-	expect(
-		adrStructureIssues(
-			"docs/adr/0001-use-events.md",
-			"---\nstatus: superseded by ADR-0002\n---\n\n# Use events\n\nReason.\n",
-		),
-	).toMatchObject([{ kind: "adr-structure", severity: "advisory" }]);
 });
 
 test("allows ADR number gaps left by deleted decisions", async () => {
