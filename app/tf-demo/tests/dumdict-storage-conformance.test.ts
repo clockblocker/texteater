@@ -5,10 +5,10 @@ import {
 	describeStorageConformance,
 } from "dumdict/testing";
 import * as Effect from "effect/Effect";
-import { readingEntryContextArgs } from "../convex/dumdictStorage/contextRequest";
 import {
 	applyDumdictPlanInTransaction,
 	loadReadingEntryContextSlice,
+	readingEntryContextArgs,
 } from "../convex/dumdictTransaction";
 import { createTestConvex } from "./support/convex";
 

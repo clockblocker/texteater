@@ -35,9 +35,13 @@ import type { dictionaryPlanValidator } from "./model/validators";
  * lookups it branches on, the reviewed-component writes outside a planned
  * commit, and the applier for a plan built elsewhere. The two slice loaders
  * are the reads the workflow methods plan from, exported so tests can check
- * a slice and its commit budget directly.
+ * a slice and its commit budget directly, and the key builder turns a
+ * Dumdict storage request into the args those loaders take.
  */
-export type { ReadingEntryContextArgs } from "./dumdictStorage/contextRequest";
+export {
+	type ReadingEntryContextArgs,
+	readingEntryContextArgs,
+} from "./dumdictStorage/contextRequest";
 export { dictionaryPlanResult } from "./dumdictStorage/dictionaryPlan";
 export {
 	loadCleanupRelationsSlice,
