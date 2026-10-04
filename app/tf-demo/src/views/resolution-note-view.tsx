@@ -155,10 +155,8 @@ export function ResolutionNoteFrame({
 		return null;
 	return (
 		<div className="min-h-full bg-paper px-note-gutter pt-note-top compact:p-3.5">
+			{/* the Heading names it; the Body does not again */}
 			<div className="mx-auto flex w-full max-w-note flex-col gap-5">
-				<h1 className="text-xl font-semibold tracking-tight text-balance">
-					{title}
-				</h1>
 				{lifecycle.outcome === "Unresolved" ? (
 					<p className="text-sm text-ink-muted" role="status">
 						This Segment could not be resolved. This Resolution URL
@@ -249,10 +247,8 @@ function UnitCard({ note, unit }: { note: ResolutionNote; unit: StoredUnit }) {
 	);
 	return (
 		<div className="min-h-full bg-paper px-note-gutter pt-note-top compact:p-3.5">
+			{/* the Heading names the unit; the Body does not again */}
 			<div className="mx-auto flex w-full max-w-note flex-col gap-3">
-				<h1 className="text-xl font-semibold tracking-tight text-balance">
-					{unitWords(note.source.segments, unit.segments)}
-				</h1>
 				<dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
 					<dt className="text-ink-muted">Route</dt>
 					<dd>{routeLabel(unit.route)}</dd>

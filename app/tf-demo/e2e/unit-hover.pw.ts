@@ -10,6 +10,11 @@ import { expect, type Locator, type Page, test } from "@playwright/test";
  * lands on the deployment `.env.local` selects, or on the one named by
  * TF_DEMO_E2E_CONVEX_ENV_FILE (a `convex --env-file`); point the app at the
  * same deployment with VITE_CONVEX_URL.
+ *
+ * The deployment is shared, so a unit may or may not be attested by the time
+ * this runs. The spec reads which are and expects each previewed unit to
+ * wear the look that follows. It never clicks: a click on an unattested unit
+ * starts a paid resolution.
  */
 
 const appRoot = fileURLToPath(new URL("..", import.meta.url));
@@ -88,8 +93,8 @@ const sentences = [
 	),
 ];
 
-/** Stores the Text once per deployment; a rerun finds it by its submissionKey. */
-function seedText(): void {
+/** Runs one Convex function on the e2e deployment and returns its JSON result. */
+function convexRun(name: string, args: unknown): unknown {
 	const envFile = process.env.TF_DEMO_E2E_CONVEX_ENV_FILE;
 	const output = execFileSync(
 		"bunx",
@@ -97,12 +102,8 @@ function seedText(): void {
 			"convex",
 			"run",
 			...(envFile ? ["--env-file", envFile] : []),
-			"persistence:persistSubmittedText",
-			JSON.stringify({
-				submissionKey,
-				sourceText: sentences.map((s) => s.stitchedText).join(" "),
-				sentences,
-			}),
+			name,
+			JSON.stringify(args),
 		],
 		{
 			cwd: appRoot,
@@ -110,8 +111,46 @@ function seedText(): void {
 			encoding: "utf8",
 		},
 	);
-	if (!output.includes('"textId"'))
-		throw new Error(`Seeding stored no Text: ${output}`);
+	return JSON.parse(output);
+}
+
+/** Stores the Text once per deployment; a rerun finds it by its submissionKey. */
+function seedText(): string {
+	const stored = convexRun("persistence:persistSubmittedText", {
+		submissionKey,
+		sourceText: sentences.map((s) => s.stitchedText).join(" "),
+		sentences,
+	}) as { textId?: string };
+	if (!stored.textId)
+		throw new Error(`Seeding stored no Text: ${JSON.stringify(stored)}`);
+	return stored.textId;
+}
+
+type PreviewState = "known-preview" | "unknown-preview";
+
+/**
+ * The look each word's unit previews in, by Sentence and word, for a
+ * Visitor who has encountered nothing: known once an occurrence attests it,
+ * unknown before. Read from the reader's own query, which writes nothing.
+ */
+function previewStates(textId: string): Map<string, PreviewState> {
+	const view = convexRun("textViews:get", {
+		textId,
+		visitorId: "e2e-unit-hover-reader",
+	}) as {
+		sentences: {
+			segments: { text: string; attestationId?: string }[];
+		}[];
+	};
+	const states = new Map<string, PreviewState>();
+	view.sentences.forEach((sentence, position) => {
+		for (const segment of sentence.segments)
+			states.set(
+				`${position.toString()}:${segment.text}`,
+				segment.attestationId ? "known-preview" : "unknown-preview",
+			);
+	});
+	return states;
 }
 
 /** Everything the page sends: HTTP requests and frames on any WebSocket, Convex's included. */
@@ -169,7 +208,12 @@ test("hovering or focusing a word highlights its whole unit with no network call
 	page,
 }, testInfo) => {
 	test.setTimeout(60_000);
-	seedText();
+	const states = previewStates(seedText());
+	const stateOf = (position: number, text: string) => {
+		const state = states.get(`${position.toString()}:${text}`);
+		if (!state) throw new Error(`No stored word "${text}"`);
+		return state;
+	};
 	const sent = recordTraffic(page);
 
 	await page.goto("/");
@@ -192,11 +236,20 @@ test("hovering or focusing a word highlights its whole unit with no network call
 	expect(sent.some((line) => /^ws \S+\/sync /.test(line))).toBe(true);
 	const beforeHover = sent.length;
 
+	/* every member of the hovered unit wears its preview, attested or not,
+	   and no other word does */
 	await word("gibt").hover();
 	await expect.poll(() => underlinedWords(reader)).toEqual(["gibt", "frei"]);
-	await expect(word("gibt")).toHaveAttribute("data-state", "unknown-preview");
-	await expect(word("frei")).toHaveAttribute("data-state", "unknown-preview");
+	await expect(word("gibt")).toHaveAttribute(
+		"data-state",
+		stateOf(0, "gibt"),
+	);
+	await expect(word("frei")).toHaveAttribute(
+		"data-state",
+		stateOf(0, "frei"),
+	);
 	await expect(word("die")).not.toHaveAttribute("data-state", /./);
+	await expect(word("nicht")).not.toHaveAttribute("data-state", /./);
 	const hovered = testInfo.outputPath("gibt-frei-hovered.png");
 	await reader.locator("article").screenshot({ path: hovered });
 	await testInfo.attach("gibt-frei-hovered", {
@@ -206,55 +259,23 @@ test("hovering or focusing a word highlights its whole unit with no network call
 
 	await word("Rauch").hover();
 	await expect.poll(() => underlinedWords(reader)).toEqual(["Der", "Rauch"]);
+	await expect(word("Der")).toHaveAttribute("data-state", stateOf(0, "Der"));
+	await word("Sicht").hover();
+	await expect.poll(() => underlinedWords(reader)).toEqual(["die", "Sicht"]);
+	await expect(word("die")).toHaveAttribute("data-state", stateOf(0, "die"));
 	await word("frei").hover();
 	await expect.poll(() => underlinedWords(reader)).toEqual(["gibt", "frei"]);
 	await page.mouse.move(2, 2);
 	await expect.poll(() => underlinedWords(reader)).toEqual([]);
+	await expect(word("gibt")).not.toHaveAttribute("data-state", /./);
 
 	// Keyboard focus previews the unit just as hover does.
 	await word("müssen").focus();
 	await expect.poll(() => underlinedWords(reader)).toEqual(["hat", "müssen"]);
+	await expect(word("hat")).toHaveAttribute("data-state", stateOf(1, "hat"));
 	await word("müssen").blur();
 	await expect.poll(() => underlinedWords(reader)).toEqual([]);
 
 	await page.waitForTimeout(500);
 	expect(sent.slice(beforeHover)).toEqual([]);
-
-	// A click selects the whole unit, and its card names it. The same
-	// recorder hears the click's mutation, so its silence above is real.
-	await word("frei").click();
-	await expect
-		.poll(() =>
-			sent
-				.slice(beforeHover)
-				.some((line) =>
-					line.includes("resolutionSessions:selectSegment"),
-				),
-		)
-		.toBe(true);
-	const card = page
-		.locator('[data-form="card"]')
-		.filter({ hasText: "gibt … frei" })
-		.first();
-	await expect(card).toBeVisible();
-	await expect(card.locator('[role="status"]')).toHaveText(
-		"Readings are paused while click resolution is rebuilt.",
-	);
-	// The deck settles at once: one Unit Card, and nothing left loading (#850).
-	await expect(
-		card.getByRole("button", { name: "Lift Unit", exact: true }),
-	).toBeVisible();
-	await expect(page.locator('[data-form="card"]')).toHaveCount(1);
-	await expect(page.locator('[data-slot="note-skeleton"]')).toHaveCount(0);
-	await expect(word("gibt")).toHaveAttribute("data-state", "selected");
-	await expect(word("frei")).toHaveAttribute("data-state", "selected");
-	await expect(word("gibt")).toHaveAttribute("aria-pressed", "true");
-	await expect(reader.locator('[aria-pressed="true"]')).toHaveCount(2);
-	await expect.poll(() => underlinedWords(reader)).toEqual(["gibt", "frei"]);
-	const selected = testInfo.outputPath("gibt-frei-selected.png");
-	await page.screenshot({ path: selected });
-	await testInfo.attach("gibt-frei-selected", {
-		path: selected,
-		contentType: "image/png",
-	});
 });

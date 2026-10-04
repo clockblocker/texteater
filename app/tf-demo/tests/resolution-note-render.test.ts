@@ -13,6 +13,7 @@ import {
 } from "../src/views/resolution-note-view";
 import { resolvingReadingNoteData } from "../src/views/resolving-reading-note";
 import { subjectLabel } from "../src/views/subject-presentation";
+import { type NotePart, NotePartProvider } from "../src/workspace/note-part";
 
 const route = {
 	textId: "text-1" as never,
@@ -549,13 +550,21 @@ test("a unit selection settles on one Unit Card with no step left loading", () =
 			},
 		]);
 
-	const settled = renderToStaticMarkup(
-		createElement(ResolutionNoteFrame, {
-			note: unresolved,
-			presentation: "Card",
-		}),
-	);
-	expect(settled).toContain(">Die Banken<");
+	const settledPart = (part: NotePart) =>
+		renderToStaticMarkup(
+			createElement(
+				NotePartProvider,
+				{ value: part },
+				createElement(ResolutionNoteFrame, {
+					note: unresolved,
+					presentation: "Card",
+				}),
+			),
+		);
+	// The Heading names the unit, and the Body does not name it again.
+	expect(settledPart("heading")).toContain(">Die Banken<");
+	const settled = settledPart("body");
+	expect(settled).not.toContain("Die Banken");
 	expect(settled).toContain("Lexeme · NOUN");
 	expect(settled).toContain("This unit could not be resolved.");
 	expect(settled).not.toContain('data-slot="note-skeleton"');
