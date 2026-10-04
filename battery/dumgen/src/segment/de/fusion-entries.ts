@@ -385,8 +385,8 @@ const abbreviation = (
 
 /**
  * Abbreviations are one Segment whose surface is the expansion. Multi-word
- * expansions are multi-member Lexemes with a whole-unit Kind (ADR 0009), not
- * Collocations; the Kinds ruled on issue 498 are marked in
+ * expansions are Locutions whose Kind is the part of speech the whole acts as
+ * (ADR 0039), not Collocations; the Kinds ruled on issue 498 are marked in
  * `reviewedAbbreviationKinds`, the rest are the obvious whole-unit Kind and
  * stay open to review. Candidate surfaces mark an ambiguous abbreviation the
  * sentence must decide.

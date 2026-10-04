@@ -13,13 +13,11 @@ import type {
 } from "./types.js";
 
 /**
- * Each ADR's frontmatter status, such as `accepted` or `superseded by
- * ADR-0036`. Hosts read it from the repository's ADR files.
+ * The ADRs that exist. An ADR directory holds accepted decisions only, and a
+ * superseded ADR is deleted, so existing is current. Hosts read them from the
+ * repository's ADR files.
  */
-export type AdrStatuses = ReadonlyMap<AdrId, string>;
-
-/** An ADR status that reopens whatever cites the ADR. */
-export const staleAdrStatus = /^(?:superseded|deprecated)\b/u;
+export type AdrIds = ReadonlySet<AdrId>;
 
 /** The hash a citation of Rule `id` stores now; undefined for no such Rule. */
 function currentHash(id: RuleId, rules: readonly Rule[]): string | undefined {
@@ -79,13 +77,14 @@ type CitingRecord = {
 
 /**
  * The stale-citation guard (ADR 0037, guard 1). Every record must cite ADRs
- * and Rules that exist. A record reviewed through any layer must not cite a
- * superseded or deprecated ADR, or a Rule whose statement changed since its
- * review: Rules are not assigned to layers, so either reopens the record.
+ * and Rules that exist; a superseded ADR is deleted, so citing one fails. A
+ * record reviewed through any layer must not cite a Rule whose statement
+ * changed since its review: Rules are not assigned to layers, so that reopens
+ * the record.
  */
 export function checkCitations(
 	records: readonly CitingRecord[],
-	context: { adrStatuses: AdrStatuses; rules: readonly Rule[] },
+	context: { adrs: AdrIds; rules: readonly Rule[] },
 ): SpecIssue[] {
 	const issues: SpecIssue[] = [];
 	for (const { id, reviewDepth, status: recordStatus, sources } of records) {
@@ -97,18 +96,13 @@ export function checkCitations(
 		) => issues.push({ record: id, check, path, message });
 		const reviewed =
 			reviewDepth !== undefined || recordStatus === "Reviewed";
-		for (const [index, adr] of sources.adrs.entries()) {
-			const path = `sources.adrs.${index}`;
-			const status = context.adrStatuses.get(adr);
-			if (status === undefined)
-				issue("UnknownCitation", path, `No ADR ${adr}`);
-			else if (reviewed && staleAdrStatus.test(status))
+		for (const [index, adr] of sources.adrs.entries())
+			if (!context.adrs.has(adr))
 				issue(
-					"StaleCitation",
-					path,
-					`${adr} is ${status}; re-review the record against the ADR that replaced it`,
+					"UnknownCitation",
+					`sources.adrs.${index}`,
+					`No ADR ${adr}`,
 				);
-		}
 		for (const [index, citation] of sources.rules.entries()) {
 			const path = `sources.rules.${index}`;
 			const checked = checkRuleCitation(

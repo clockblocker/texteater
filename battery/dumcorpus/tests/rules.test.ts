@@ -8,14 +8,12 @@ import {
 import { loadSpecRecords, rules } from "../src/index.js";
 import { rulesAwaitingRecords } from "../src/rules-awaiting-records.js";
 import type { Rule } from "../src/types.js";
-import { readRepositoryAdrStatuses } from "./adr-statuses.js";
+import { readRepositoryAdrIds } from "./adr-ids.js";
 
-const adrStatuses = readRepositoryAdrStatuses();
+const adrs = readRepositoryAdrIds();
 const recordIds = loadSpecRecords().map((record) => record.id);
 const checks = (checked: readonly Rule[]) =>
-	checkRules(checked, { adrStatuses, recordIds }).map(
-		(issue) => issue.message,
-	);
+	checkRules(checked, { adrs, recordIds }).map((issue) => issue.message);
 
 describe("the Rules", () => {
 	test("rest on current ADRs and show existing records", () => {
@@ -105,7 +103,7 @@ describe("the Rule checks", () => {
 		]);
 	});
 
-	test("fail a bad id, a foreign route, a superseded ADR or a missing record", () => {
+	test("fail a bad id, a foreign route, a missing ADR or a missing record", () => {
 		expect(checks([rule])).toEqual([]);
 		expect(
 			checks([
@@ -123,7 +121,7 @@ describe("the Rule checks", () => {
 		).toEqual([
 			"Another Rule has this id",
 			"Route en/Lexeme/NOUN is not in the Rule's language",
-			"ADR-0033 is superseded by ADR-0036; restate the Rule on the ADR that replaced it",
+			"No ADR ADR-0033",
 			"No ADR ADR-9999",
 			"No Spec Record de/no-such-record",
 			"A Rule id is <language>/<kebab-case name>, in ASCII",

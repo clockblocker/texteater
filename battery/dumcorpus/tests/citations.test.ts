@@ -11,9 +11,9 @@ import type {
 	Rule,
 	SpecRecord,
 } from "../src/types.js";
-import { readRepositoryAdrStatuses } from "./adr-statuses.js";
+import { readRepositoryAdrIds } from "./adr-ids.js";
 
-const adrStatuses = readRepositoryAdrStatuses();
+const adrs = readRepositoryAdrIds();
 const seed = loadSpecRecords().find((record) => record.coverage === "Full");
 if (!seed) throw Error("Expected a Full seed record");
 
@@ -40,25 +40,24 @@ const citing = (
 	};
 };
 const checks = (record: SpecRecord, rules: readonly Rule[] = []) =>
-	checkCitations([record], { adrStatuses, rules }).map((issue) => [
+	checkCitations([record], { adrs, rules }).map((issue) => [
 		issue.path,
 		issue.check,
 	]);
 
 describe("the stale-citation guard", () => {
-	test("reads ADR statuses from the repository", () => {
-		expect(adrStatuses.get("ADR-0035")).toBe("accepted");
-		expect(adrStatuses.get("ADR-0033")).toBe("superseded by ADR-0036");
+	test("reads ADR ids from the repository", () => {
+		expect(adrs.has("ADR-0035")).toBe(true);
+		expect(adrs.has("ADR-0033")).toBe(false);
 	});
 
-	test("fails a record reviewed through any layer citing a superseded ADR", () => {
+	test("fails a reviewed record or a Draft citing a deleted ADR", () => {
 		expect(checks(citing({ adrs: ["ADR-0035", "ADR-0033"] }))).toEqual([
-			["sources.adrs.1", "StaleCitation"],
+			["sources.adrs.1", "UnknownCitation"],
 		]);
-	});
-
-	test("lets a Draft cite a superseded ADR until its review", () => {
-		expect(checks(citing({ adrs: ["ADR-0033"] }, "Draft"))).toEqual([]);
+		expect(checks(citing({ adrs: ["ADR-0033"] }, "Draft"))).toEqual([
+			["sources.adrs.0", "UnknownCitation"],
+		]);
 	});
 
 	test("fails any record citing an ADR or Rule that does not exist", () => {

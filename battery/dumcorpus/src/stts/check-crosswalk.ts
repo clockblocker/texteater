@@ -1,4 +1,4 @@
-import { type AdrStatuses, staleAdrStatus } from "../check-citations.js";
+import type { AdrIds } from "../check-citations.js";
 import { isReviewed } from "../layers.js";
 import type { Rule, SpecRecord, SpecSegmentation } from "../types.js";
 import {
@@ -15,7 +15,7 @@ export interface CrosswalkContext {
 	/** Every record whose Attestation passes, for the `lemma` check. */
 	records: readonly SpecRecord[];
 	rules: readonly Rule[];
-	adrStatuses: AdrStatuses;
+	adrs: AdrIds;
 	/** The German routes, as `<Family>/<Kind>`. */
 	routes: readonly string[];
 }
@@ -151,11 +151,8 @@ export function checkSttsCrosswalk(
 		if (row.mappings.length === 0) issue("No mapping");
 		for (const rule of row.rules)
 			if (!ruleIds.has(rule)) issue(`No Rule ${rule}`);
-		for (const adr of row.adrs) {
-			const status = context.adrStatuses.get(adr);
-			if (status === undefined) issue(`No ADR ${adr}`);
-			else if (staleAdrStatus.test(status)) issue(`${adr} is ${status}`);
-		}
+		for (const adr of row.adrs)
+			if (!context.adrs.has(adr)) issue(`No ADR ${adr}`);
 		for (const [side, status] of [
 			["model", row.model],
 			["pipeline", row.pipeline],

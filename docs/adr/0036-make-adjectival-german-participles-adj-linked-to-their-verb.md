@@ -49,7 +49,7 @@ The AUX Reading `sein` as Zustandspassiv auxiliary is retired, and `passive`
 loses the value `State`; `Process` and `Recipient` remain. A verbal participle
 Surface carries no case, number, gender or degree again.
 
-This supersedes [ADR 0033](./0033-resolve-productive-german-participles-to-their-verb.md),
+This supersedes ADR 0033,
 which resolved productive participles to their verb in every use. Under 0033 a
 learner who met *gekochten* got `kochen`, but agreement, comparison and
 predicative use belong to the adjective, and the verb's Surfaces had to carry

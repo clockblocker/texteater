@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-import { staleAdrStatus } from "../src/check-citations.js";
 import { rules } from "../src/index.js";
 import { uncitedRecordsByStatus } from "../src/worklist/evidence-gaps.js";
 import {
@@ -16,7 +15,7 @@ import {
 	splitsFamilyOrKind,
 } from "../src/worklist/identity-splits.js";
 import type { LemmaInFile, RecordFile } from "../src/worklist/record-files.js";
-import { readRepositoryAdrStatuses } from "./adr-statuses.js";
+import { readRepositoryAdrIds } from "./adr-ids.js";
 
 const lemma = (
 	canonicalForm: string,
@@ -266,17 +265,14 @@ describe("sorting a split", () => {
 });
 
 describe("the German split rulings", () => {
-	const adrStatuses = readRepositoryAdrStatuses();
+	const adrs = readRepositoryAdrIds();
 	const ruleIds = new Set(rules.map((rule) => rule.id));
 
 	test("each cite a current ADR or an existing Rule", () => {
 		for (const ruling of germanSplitRulings) {
 			expect(ruling.adrs.length + ruling.rules.length).toBeGreaterThan(0);
-			for (const adr of ruling.adrs) {
-				const status = adrStatuses.get(adr);
-				expect(status, `${ruling.split}: ${adr}`).toBeDefined();
-				expect(staleAdrStatus.test(status ?? "")).toBe(false);
-			}
+			for (const adr of ruling.adrs)
+				expect(adrs.has(adr), `${ruling.split}: ${adr}`).toBe(true);
 			for (const rule of ruling.rules)
 				expect(ruleIds.has(rule), `${ruling.split}: ${rule}`).toBe(
 					true,

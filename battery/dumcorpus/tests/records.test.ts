@@ -33,7 +33,7 @@ import type { SpecIssue } from "../src/issues.js";
 import { layerRank } from "../src/layers.js";
 import { readRecords } from "../src/load.js";
 import { knowledgeCoverageSchema } from "../src/record-schema.js";
-import { readRepositoryAdrStatuses } from "./adr-statuses.js";
+import { readRepositoryAdrIds } from "./adr-ids.js";
 import {
 	attestJedem,
 	attestSie,
@@ -69,7 +69,7 @@ describe("the corpus", () => {
 		);
 		expect(
 			checkCitations([...records, ...textRecords], {
-				adrStatuses: readRepositoryAdrStatuses(),
+				adrs: readRepositoryAdrIds(),
 				rules,
 			}),
 		).toEqual([]);

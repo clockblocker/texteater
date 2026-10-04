@@ -1,4 +1,4 @@
-import { type AdrStatuses, staleAdrStatus } from "./check-citations.js";
+import type { AdrIds } from "./check-citations.js";
 import { ruleIdPattern } from "./ids.js";
 import type { Rule, RuleId, SpecRecordId } from "./types.js";
 
@@ -16,13 +16,12 @@ export interface RuleIssue {
 
 /**
  * Checks the Rules themselves: unique ids of the form `<language>/<name>`,
- * routes in that language, and ADRs and showing records that exist. A Rule
- * resting on a superseded or deprecated ADR fails, as a Reviewed record does.
+ * routes in that language, and ADRs and showing records that exist.
  * A `longStatement` reason must be given and must be needed.
  */
 export function checkRules(
 	rules: readonly Rule[],
-	context: { adrStatuses: AdrStatuses; recordIds: readonly SpecRecordId[] },
+	context: { adrs: AdrIds; recordIds: readonly SpecRecordId[] },
 ): RuleIssue[] {
 	const issues: RuleIssue[] = [];
 	const recordIds = new Set(context.recordIds);
@@ -49,14 +48,8 @@ export function checkRules(
 				issue(
 					`Route ${route.language}/${route.family}/${route.kind} is not in the Rule's language`,
 				);
-		for (const adr of rule.adrs) {
-			const status = context.adrStatuses.get(adr);
-			if (status === undefined) issue(`No ADR ${adr}`);
-			else if (staleAdrStatus.test(status))
-				issue(
-					`${adr} is ${status}; restate the Rule on the ADR that replaced it`,
-				);
-		}
+		for (const adr of rule.adrs)
+			if (!context.adrs.has(adr)) issue(`No ADR ${adr}`);
 		for (const record of rule.records)
 			if (!recordIds.has(record)) issue(`No Spec Record ${record}`);
 	}

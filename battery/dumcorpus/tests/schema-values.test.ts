@@ -1,5 +1,4 @@
 import { describe, expect, test } from "bun:test";
-import { staleAdrStatus } from "../src/check-citations.js";
 import { loadSpecRecords, rules } from "../src/index.js";
 import { germanKeptValues } from "../src/worklist/kept-values.js";
 import {
@@ -9,7 +8,7 @@ import {
 	schemaValueKey,
 	unkeptValues,
 } from "../src/worklist/schema-values.js";
-import { readRepositoryAdrStatuses } from "./adr-statuses.js";
+import { readRepositoryAdrIds } from "./adr-ids.js";
 
 const germanValues = await loadSchemaValues("de");
 
@@ -105,7 +104,7 @@ describe("the schema values", () => {
 });
 
 describe("the German keep list", () => {
-	const adrStatuses = readRepositoryAdrStatuses();
+	const adrs = readRepositoryAdrIds();
 	const allowed = new Set(germanValues.map(schemaValueKey));
 
 	test("keeps only values the schema allows, once each", () => {
@@ -122,12 +121,9 @@ describe("the German keep list", () => {
 				expect(rule?.statement, schemaValueKey(kept)).toContain(
 					`${kept.feature} ${kept.value}`,
 				);
-			} else if ("adr" in keptBy) {
-				const status = adrStatuses.get(keptBy.adr) ?? "missing";
-				expect(
-					staleAdrStatus.test(status) || status === "missing",
-				).toBe(false);
-			} else expect(keptBy.issue).toBeGreaterThan(0);
+			} else if ("adr" in keptBy)
+				expect(adrs.has(keptBy.adr), schemaValueKey(kept)).toBe(true);
+			else expect(keptBy.issue).toBeGreaterThan(0);
 			expect(kept.why.trim()).not.toBe("");
 		}
 	});

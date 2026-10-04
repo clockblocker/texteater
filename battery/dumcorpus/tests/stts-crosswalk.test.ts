@@ -9,13 +9,13 @@ import {
 import { germanSttsCrosswalk } from "../src/stts/crosswalk.js";
 import { renderSttsTable } from "../src/stts/table.js";
 import { type SttsRow, sttsTags } from "../src/stts/types.js";
-import { readRepositoryAdrStatuses } from "./adr-statuses.js";
+import { readRepositoryAdrIds } from "./adr-ids.js";
 
 const context: CrosswalkContext = {
 	segmentations: loadSpecSegmentations(),
 	records: loadSpecRecords(),
 	rules,
-	adrStatuses: readRepositoryAdrStatuses(),
+	adrs: readRepositoryAdrIds(),
 	routes: unitRoutes.de ?? [],
 };
 const messages = (rows: readonly SttsRow[]) =>

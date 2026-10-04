@@ -10,13 +10,13 @@ import { loadSpecRecords, loadSpecSegmentations, rules } from "../src/index.js";
 import { sttsGold } from "../src/stts/check-crosswalk.js";
 import { germanSttsCrosswalk } from "../src/stts/crosswalk.js";
 import { renderSttsTable } from "../src/stts/table.js";
-import { readRepositoryAdrStatuses } from "../tests/adr-statuses.js";
+import { readRepositoryAdrIds } from "../tests/adr-ids.js";
 
 const context = {
 	segmentations: loadSpecSegmentations(),
 	records: loadSpecRecords(),
 	rules,
-	adrStatuses: readRepositoryAdrStatuses(),
+	adrs: readRepositoryAdrIds(),
 	routes: unitRoutes.de ?? [],
 };
 console.log(
