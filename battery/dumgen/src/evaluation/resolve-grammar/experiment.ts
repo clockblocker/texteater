@@ -40,7 +40,7 @@ import { segmentGermanUnits } from "../../segment/de/units.js";
 import { type JevAsk, pinnedJevModel } from "../../segment/jev.js";
 import type { Unit } from "../../segment/segmented-sentence.js";
 import { askOf } from "../../segment-in-units/de/arm.js";
-import { loadSet } from "../../segment-in-units/lab/corpus.js";
+import { loadSet, trackedSetsRoot } from "../../segment-in-units/lab/corpus.js";
 import { type CallRecord, Jev } from "../../segment-in-units/lab/jev.js";
 import type { LunaBatch } from "../luna-batch.js";
 import {
@@ -118,6 +118,8 @@ export type GrammarEvaluateArgs = {
 	readonly root?: string;
 	/** The segment.inUnits lab whose cached answers the end-to-end line replays. */
 	readonly segmentLabRoot?: string;
+	/** The segment.inUnits lab's frozen sets; the tracked ones by default. */
+	readonly segmentSetsRoot?: string;
 	/** Only these cases, for a smoke run; all by default. */
 	readonly limit?: number;
 	/** A frozen subset's file (`subset.ts`): only its cases run. */
@@ -240,8 +242,11 @@ async function pass(
  * gold mode runs); undefined when the lab set lacks the record or the
  * cache misses.
  */
-async function cachedUnits(labRoot: string): Promise<UnitSource> {
-	const set = await loadSet(labRoot, "dev");
+async function cachedUnits(
+	labRoot: string,
+	setsRoot: string,
+): Promise<UnitSource> {
+	const set = await loadSet(setsRoot, "dev");
 	const byRecord = new Map(
 		set.cases.map((labCase) => [labCase.record, labCase]),
 	);
@@ -394,6 +399,7 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 			const units = e2e
 				? await cachedUnits(
 						args.segmentLabRoot ?? defaultSegmentLabRoot,
+						args.segmentSetsRoot ?? trackedSetsRoot,
 					)
 				: undefined;
 			const identity = { name: set.name, hash: set.hash };

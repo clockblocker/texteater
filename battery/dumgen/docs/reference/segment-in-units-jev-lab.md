@@ -57,7 +57,7 @@ it and score it against frozen gold. Results live in the lab tickets
   `reference` is the #755 reference.
   The retired arms and candidates4's other levers are at ec467e8d, and
   reference-floors at 5335f033.
-- `src/segment-in-units/lab/` holds the frozen sets, the cached jev
+- `src/segment-in-units/lab/` holds the set freezing, the cached jev
   client, metrics, run evidence, the promptsmith export, the ledger and
   the rounds (`round.ts`). The CLI is `cli/segment-in-units-lab.ts`.
 - `src/evaluation/experiments.ts` is the table of experiments
@@ -99,8 +99,10 @@ bun run segment-in-units-lab round --open <id> --cap <tokens> --stop-line <token
   an output differs or a case fails. A refactor of `src/segment/` must
   replay the latest runs exactly. The inventories it reads shape the
   requests; Bun loads them from dumspec's source.
-- `freeze --force` keeps each set it replaces at `sets/<name>@<hash>.json`,
-  and `report`, `compare`, `sweep`, `replay` and
+- `freeze --force` adds each new set beside the one it replaces, at
+  `evidence/segment-in-units-lab/sets/<name>@<hash>.json.gz`, and points
+  `current.json` there. A set whose hash is kept already stays as first
+  frozen. `report`, `compare`, `sweep`, `replay` and
   `segment-in-units-attribution` read a run's set by its hash, so a run
   stays scored against the gold it ran on. `withheldRecords` in
   `lab/corpus.ts` keeps a record out of both sets while its gold waits for
@@ -201,15 +203,19 @@ names the current one; `round` prints what it has spent and has left.
 
 ## Artifacts
 
-Frozen sets, raw runs, promptsmith exports and the answer cache live in
-`.runs/segment-in-units-lab/`, which is gitignored. Commit a gzipped copy
-of each frozen set, each run's evidence and the ledger:
+The frozen sets are tracked, so a fresh clone can re-score committed
+evidence and re-run any set, which spends jev tokens. An offline replay
+(`--offline`, `replay`, gold-mode parity) needs the answer cache, which
+stays local. Raw runs, promptsmith exports and the answer cache (about
+300 MB) live in `.runs/segment-in-units-lab/`, which is gitignored. Commit
+the frozen sets, each run's evidence and the ledger:
 
 ```text
 evidence/segment-in-units-lab/
   ledger.jsonl               one line per model-calling command (run, noise, limit-qpc, evaluate) and per compare --record, each naming its round
   rounds.json                the rounds: budget, stop line and pin, and the current round
-  sets/<name>@<hash>.json.gz a frozen set; gunzip it to .runs/segment-in-units-lab/sets/<name>.json to restore it
+  sets/<name>@<hash>.json.gz every frozen set, read in place
+  sets/current.json          the current hash of dev and of heldout
   runs/<runId>/
     manifest.json            provenance: see RunManifest in lab/provenance.ts
     diff.patch               only when run with --allow-dirty

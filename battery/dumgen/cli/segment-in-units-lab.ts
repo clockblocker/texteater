@@ -22,11 +22,10 @@
  * line or when dumspec's prompt inputs moved since the round was pinned
  * (`--repin` accepts today's dumspec), and every run stops at the line.
  *
- * Frozen sets, raw runs and the answer cache live under
- * `.runs/segment-in-units-lab/` (gitignored). Each run's manifest, outcomes
- * and summary, and the ledger, live under `evidence/segment-in-units-lab/`.
+ * Raw runs and the answer cache live under `.runs/segment-in-units-lab/`
+ * (gitignored). The frozen sets, each run's manifest, outcomes and summary,
+ * and the ledger live under `evidence/segment-in-units-lab/`.
  */
-import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -40,13 +39,14 @@ import {
 	type Side,
 } from "../src/segment-in-units/lab/compare.js";
 import {
+	currentSetHash,
 	focusOf,
 	freezeSets,
 	type LabCase,
 	loadSet,
 	type SetName,
-	setPath,
 	subset,
+	trackedSetsRoot,
 } from "../src/segment-in-units/lab/corpus.js";
 import {
 	readManifest,
@@ -159,6 +159,7 @@ const packageRoot = resolve(import.meta.dir, "..");
 const repository = resolve(packageRoot, "../..");
 const cli = "cli/segment-in-units-lab.ts";
 const labRoot = join(packageRoot, ".runs", "segment-in-units-lab");
+const setsRoot = trackedSetsRoot;
 const evidenceRoot = join(packageRoot, "evidence", "segment-in-units-lab");
 const ledgerPath = join(evidenceRoot, "ledger.jsonl");
 const roundBook = roundsPath(evidenceRoot);
@@ -269,9 +270,9 @@ const plainCases = (cases: readonly LabCase[]) =>
 
 async function freeze() {
 	for (const name of ["dev", "heldout"] as const)
-		if (existsSync(setPath(labRoot, name)) && !values.force)
+		if (currentSetHash(setsRoot, name) !== undefined && !values.force)
 			throw Error(`${name} is frozen already; pass --force to refreeze`);
-	for (const set of await freezeSets(labRoot, repository))
+	for (const set of await freezeSets(setsRoot, repository))
 		console.log(
 			`${set.name}: ${set.cases.length} cases (${set.cases.filter((labCase) => labCase.facts.coverage === "Full").length} Full), ${set.cases.reduce((total, labCase) => total + labCase.idealOutput.units.length, 0)} gold units, hash ${set.hash}, git ${set.gitHead.slice(0, 8)}, ${set.dirtyRecordFiles} uncommitted record files, withheld ${set.withheld?.join(", ") || "none"}`,
 		);
@@ -359,7 +360,7 @@ async function execute(args: {
 	const arm = arms[args.armId];
 	if (!arm)
 		throw Error(`--arm must be one of ${Object.keys(arms).join(", ")}`);
-	const set = await loadSet(labRoot, args.setName);
+	const set = await loadSet(setsRoot, args.setName);
 	let cases = subset(set, args.subsetName);
 	if (args.limit !== null) cases = cases.slice(0, args.limit);
 	const live = !values.offline;
@@ -569,7 +570,7 @@ async function replayRun() {
 			`${runId} ran ${original.arm}, which is retired; replay it at ec467e8d`,
 		);
 	const set = await loadSet(
-		labRoot,
+		setsRoot,
 		original.set as SetName,
 		original.setHash,
 	);
@@ -746,7 +747,7 @@ type RunSummary = {
 
 async function report(runId: string) {
 	const labRun = await loadLabRun(labRoot, runId);
-	const set = await loadSet(labRoot, labRun.set as SetName, labRun.setHash);
+	const set = await loadSet(setsRoot, labRun.set as SetName, labRun.setHash);
 	const cases = casesOf(set.cases);
 	if (values.relabel === "734")
 		console.log(
@@ -1115,7 +1116,7 @@ async function compare() {
 	const [rightId = "", rightPolicy] = (values.right ?? "").split(":");
 	if (!leftId || !rightId) throw Error("--left and --right name runs");
 	const setCases = async (setName: string, setHash: string) =>
-		casesOf((await loadSet(labRoot, setName as SetName, setHash)).cases);
+		casesOf((await loadSet(setsRoot, setName as SetName, setHash)).cases);
 	const side = (runId: string, policy: string | undefined) =>
 		loadSide({
 			labRoot,
@@ -1136,7 +1137,7 @@ async function compare() {
 		? new Set(
 				subset(
 					await loadSet(
-						labRoot,
+						setsRoot,
 						left.setName as SetName,
 						left.setHash,
 					),
@@ -1300,7 +1301,7 @@ async function compareCases(
 	for (const entry of [left, right]) {
 		if (!entry.raw) return;
 		const set = await loadSet(
-			labRoot,
+			setsRoot,
 			entry.raw.set as SetName,
 			entry.raw.setHash,
 		);
@@ -1330,7 +1331,7 @@ async function compareCases(
 		`same corpus: ${comparison.sameCorpus}; changed verdicts ${verdicts.length}; changed outputs ${comparison.changedOutputs.length}`,
 	);
 	const cases = casesOf(
-		(await loadSet(labRoot, left.setName as SetName, left.setHash)).cases,
+		(await loadSet(setsRoot, left.setName as SetName, left.setHash)).cases,
 	);
 	for (const entry of verdicts.slice(0, Number(values.limit ?? 40))) {
 		const labCase = cases.get(entry.caseId);
@@ -1350,7 +1351,7 @@ async function compareCases(
 async function sweep() {
 	const runId = values.run ?? "";
 	const labRun = await loadLabRun(labRoot, runId);
-	const set = await loadSet(labRoot, labRun.set as SetName, labRun.setHash);
+	const set = await loadSet(setsRoot, labRun.set as SetName, labRun.setHash);
 	const focus = focusOf({ name: labRun.set, hash: labRun.setHash });
 	if (!focus)
 		throw Error(
@@ -1629,7 +1630,7 @@ async function focusIterationRows(
 }
 
 async function limitQuestionsPerCall() {
-	const set = await loadSet(labRoot, "dev");
+	const set = await loadSet(setsRoot, "dev");
 	const pieces = (labCase: LabCase) =>
 		labCase.input.segments.filter(
 			(segment) => segment.kind === "ResolvableText",

@@ -1,5 +1,5 @@
 import { afterAll, expect, test } from "bun:test";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
@@ -12,7 +12,11 @@ import {
 	productionPolicy,
 } from "../../src/evaluation/experiments.js";
 import type { SegmentInUnitsInput } from "../../src/evaluation/spec-corpus/segment-in-units.js";
-import type { LabCase, LabSet } from "../../src/segment-in-units/lab/corpus.js";
+import {
+	type LabCase,
+	type LabSet,
+	storeSet,
+} from "../../src/segment-in-units/lab/corpus.js";
 import { readLedger } from "../../src/segment-in-units/lab/ledger.js";
 import {
 	currentPin,
@@ -123,11 +127,11 @@ function goldJudge() {
 	return { judge, counter };
 }
 
-async function labRootWithSet(name: string) {
+async function labWithSet(name: string) {
 	const labRoot = join(directory, name);
-	await mkdir(join(labRoot, "sets"), { recursive: true });
-	await writeFile(join(labRoot, "sets", "dev.json"), JSON.stringify(set));
-	return labRoot;
+	const setsRoot = join(labRoot, "sets");
+	await storeSet(setsRoot, set);
+	return { labRoot, setsRoot };
 }
 
 test("the table lists gold and raw mode per frozen set, text mode, and resolve.grammar's, resolve.reading's and knowledge.produce's sets", () => {
@@ -149,13 +153,13 @@ test("the table lists gold and raw mode per frozen set, text mode, and resolve.g
 });
 
 test("gold mode runs production's unit stage, prices itself before asking, then replays offline", async () => {
-	const labRoot = await labRootWithSet("gold");
+	const lab = await labWithSet("gold");
 	const { judge, counter } = goldJudge();
 	const estimate = await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev",
 		judge,
 		sourceRevision: "test",
-		labRoot,
+		...lab,
 		estimate: true,
 	});
 	expect(estimate.run).toBeUndefined();
@@ -167,7 +171,7 @@ test("gold mode runs production's unit stage, prices itself before asking, then 
 		experimentId: "segment-in-units/de:dev",
 		judge,
 		sourceRevision: "test",
-		labRoot,
+		...lab,
 		beforeLive: (projection) => {
 			priced.push(projection.requests);
 		},
@@ -189,7 +193,7 @@ test("gold mode runs production's unit stage, prices itself before asking, then 
 		experimentId: "segment-in-units/de:dev",
 		judge,
 		sourceRevision: "test",
-		labRoot,
+		...lab,
 		offline: true,
 	});
 	expect(counter.calls).toBe(calls);
@@ -240,20 +244,20 @@ test("gold mode runs production's unit stage, prices itself before asking, then 
 });
 
 test("raw mode cuts the Sentence first, and pieces equal to gold's replay gold mode's unit requests", async () => {
-	const labRoot = await labRootWithSet("raw");
+	const lab = await labWithSet("raw");
 	const { judge, counter } = goldJudge();
 	await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev",
 		judge,
 		sourceRevision: "test",
-		labRoot,
+		...lab,
 	});
 	const before = counter.calls;
 	const estimate = await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev:raw",
 		judge,
 		sourceRevision: "test",
-		labRoot,
+		...lab,
 		estimate: true,
 	});
 	// Only the Segment stage's question about zum, once per repetition.
@@ -264,7 +268,7 @@ test("raw mode cuts the Sentence first, and pieces equal to gold's replay gold m
 		experimentId: "segment-in-units/de:dev:raw",
 		judge,
 		sourceRevision: "test",
-		labRoot,
+		...lab,
 	});
 	expect(counter.calls - before).toBe(3);
 	const run = raw.run;
@@ -307,7 +311,7 @@ async function evidenceWith(name: string, round: Round) {
 
 test("evaluate writes a ledger line for its round, refuses a run past the stop line, and refuses drifted dumspec unless it re-pins", async () => {
 	const pin = await currentPin(repository);
-	const labRoot = await labRootWithSet("cli");
+	const lab = await labWithSet("cli");
 	const { judge, counter } = goldJudge();
 	const warnings: string[] = [];
 	const cli = (argv: string[], evidenceRoot: string) =>
@@ -323,7 +327,7 @@ test("evaluate writes a ledger line for its round, refuses a run past the stop l
 			],
 			{
 				judge,
-				labRoot,
+				...lab,
 				evidenceRoot,
 				repository,
 				write: () => {},

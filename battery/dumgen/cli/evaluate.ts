@@ -110,8 +110,10 @@ export async function runEvaluationCli(
 		write?: (value: unknown) => void;
 		warn?: (message: string) => void;
 		split?: Splitter;
-		/** The lab's frozen sets and cache. */
+		/** The lab's answer cache and raw runs. */
 		labRoot?: string;
+		/** The lab's frozen sets; the tracked ones by default. */
+		setsRoot?: string;
 		/** The lab's evidence: the ledger and the round book. */
 		evidenceRoot?: string;
 		/** Where resolve.grammar's and resolve.reading's ledgers are; `evidence/` by default. */
@@ -271,6 +273,9 @@ export async function runEvaluationCli(
 			signal: controller.signal,
 			units,
 			labRoot,
+			...(dependencies.setsRoot
+				? { setsRoot: dependencies.setsRoot }
+				: {}),
 			...(values.concurrency
 				? { concurrency: Number(values.concurrency) }
 				: {}),

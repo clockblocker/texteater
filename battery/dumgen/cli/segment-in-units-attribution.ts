@@ -13,8 +13,8 @@
  * Cases whose run failed a repetition, a cache miss in an offline run, are
  * left out and listed.
  *
- * Reads the frozen sets, the raw run and the answer cache under
- * `.runs/segment-in-units-lab/`; writes the report under
+ * Reads the run's tracked frozen set, and the raw run and the answer cache
+ * under `.runs/segment-in-units-lab/`; writes the report under
  * `evidence/segment-in-units-attribution/`. Makes no fresh jev call: a
  * cache miss fails the replay.
  */
@@ -39,6 +39,7 @@ import {
 	loadSet,
 	type SetName,
 	subset,
+	trackedSetsRoot,
 } from "../src/segment-in-units/lab/corpus.js";
 import { type CallRecord, Jev } from "../src/segment-in-units/lab/jev.js";
 import { loadLabRun } from "../src/segment-in-units/lab/run.js";
@@ -91,7 +92,11 @@ async function disputedRecords(): Promise<Set<string>> {
 const runId = values.run;
 if (!runId) throw Error("--run <runId> is required");
 const original = await loadLabRun(labRoot, runId);
-const set = await loadSet(labRoot, original.set as SetName, original.setHash);
+const set = await loadSet(
+	trackedSetsRoot,
+	original.set as SetName,
+	original.setHash,
+);
 const floors = floorsOf({ floors: values.floors ?? "run" });
 const policy = floorsKey(floors);
 const stages = referenceStagesUnder(floors);

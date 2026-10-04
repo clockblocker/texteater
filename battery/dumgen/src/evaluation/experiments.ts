@@ -30,7 +30,6 @@
  * itself offline (`lab/round.ts`), hands the price to `beforeLive`, which
  * may refuse, then fills the cache concurrently and runs from it.
  */
-import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as Effect from "effect/Effect";
@@ -56,11 +55,11 @@ import { splitText } from "../segment/split-text.js";
 import { askOf } from "../segment-in-units/de/arm.js";
 import { referenceArm } from "../segment-in-units/de/arms/reference.js";
 import {
+	currentSetSize,
 	type LabCase,
-	type LabSet,
 	loadSet,
 	type SetName,
-	setPath,
+	trackedSetsRoot,
 } from "../segment-in-units/lab/corpus.js";
 import {
 	type CallRecord,
@@ -167,7 +166,10 @@ export type EvaluateArgs = {
 	readonly units?: UnitConfig;
 	/** Cases run at once while a live run fills the cache. */
 	readonly concurrency?: number;
+	/** The lab's answer cache; `.runs/segment-in-units-lab` by default. */
 	readonly labRoot?: string;
+	/** The lab's frozen sets; the tracked ones by default. */
+	readonly setsRoot?: string;
 	/** Price the run and stop: nothing is asked and no run is saved. */
 	readonly estimate?: boolean;
 	/** resolve.grammar and resolve.reading: price every request, cached ones included. */
@@ -367,13 +369,6 @@ function traced<I, O>(
 	};
 }
 
-function readSetSize(labRoot: string, name: SetName): number {
-	const path = setPath(labRoot, name);
-	return existsSync(path)
-		? (JSON.parse(readFileSync(path, "utf8")) as LabSet).cases.length
-		: 0;
-}
-
 function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 	mode: Mode<I, O>,
 	setName: SetName,
@@ -381,15 +376,14 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 	const id = idOf(setName, mode.suffix);
 	return {
 		id,
-		caseCount: () => readSetSize(defaultLabRoot, setName),
+		caseCount: () => currentSetSize(trackedSetsRoot, setName),
 		metrics: mode.metrics,
 		async evaluate(args) {
 			const labRoot = args.labRoot ?? defaultLabRoot;
-			if (!existsSync(setPath(labRoot, setName)))
-				throw Error(
-					`The lab's ${setName} set is not frozen; run \`bun run segment-in-units-lab freeze\` first`,
-				);
-			const set = await loadSet(labRoot, setName);
+			const set = await loadSet(
+				args.setsRoot ?? trackedSetsRoot,
+				setName,
+			);
 			const units = args.units ?? "production";
 			const operation = mode.run(units);
 			const cases = set.cases.map((labCase) => ({
@@ -615,6 +609,7 @@ function resolveGrammarEntry(set: "dev" | "heldout", e2e: boolean): Experiment {
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 				...(args.grammarRoot ? { root: args.grammarRoot } : {}),
 				...(args.labRoot ? { segmentLabRoot: args.labRoot } : {}),
+				...(args.setsRoot ? { segmentSetsRoot: args.setsRoot } : {}),
 				...(args.limit ? { limit: args.limit } : {}),
 				...(args.grammarSubset ? { subset: args.grammarSubset } : {}),
 				...(args.repetitions ? { repetitions: args.repetitions } : {}),

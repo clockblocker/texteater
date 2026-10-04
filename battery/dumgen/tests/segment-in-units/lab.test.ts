@@ -1,16 +1,16 @@
 import { afterAll, expect, test } from "bun:test";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import type { SegmentInUnitsInput } from "../../src/evaluation/spec-corpus/segment-in-units.js";
 import { arms } from "../../src/segment-in-units/de/arms/index.js";
 import {
-	archivedSetPath,
+	currentSetHash,
 	type LabCase,
 	type LabSet,
 	loadSet,
-	setPath,
+	storeSet,
 } from "../../src/segment-in-units/lab/corpus.js";
 import { Jev } from "../../src/segment-in-units/lab/jev.js";
 import { summarizePolicy } from "../../src/segment-in-units/lab/metrics.js";
@@ -157,19 +157,25 @@ test("candidates4 and the reference score every gold unit with a gold judge, thr
 	).rejects.toThrow("other levers are retired");
 });
 
-test("a run's set is read by its hash, from the archive once a refreeze replaced it", async () => {
+test("a run's set is read by its hash, after a refreeze replaced it too", async () => {
 	const root = join(directory, "sets-root");
-	await mkdir(join(root, "sets"), { recursive: true });
-	await writeFile(setPath(root, "dev"), JSON.stringify(set));
 	const replaced = { ...set, hash: "older", cases: [] };
-	await writeFile(
-		archivedSetPath(root, "dev", "older"),
-		JSON.stringify(replaced),
-	);
+	await storeSet(root, replaced);
+	expect((await loadSet(root, "dev")).hash).toBe("older");
+	await storeSet(root, set);
+	expect(currentSetHash(root, "dev")).toBe("test");
 	expect((await loadSet(root, "dev")).hash).toBe("test");
 	expect((await loadSet(root, "dev", "test")).cases.length).toBe(1);
 	expect((await loadSet(root, "dev", "older")).cases.length).toBe(0);
 	expect(loadSet(root, "dev", "unknown")).rejects.toThrow(
-		"neither the frozen dev@test nor archived",
+		"neither the frozen dev@test nor kept",
 	);
+	expect(loadSet(root, "heldout")).rejects.toThrow("is not frozen");
+});
+
+test("a refreeze to a kept hash keeps the set as first frozen", async () => {
+	const root = join(directory, "refrozen-root");
+	await storeSet(root, set);
+	await storeSet(root, { ...set, createdAt: "later" });
+	expect((await loadSet(root, "dev")).createdAt).toBe(set.createdAt);
 });

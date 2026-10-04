@@ -3,14 +3,18 @@
  * the lab freezes the projected cases once, with the git commit and a hash
  * of the cases, and every run reads the frozen file: arms compared case by
  * case always see the same gold. `dev` is Draft − excluded (tuning);
- * `heldout` is Reviewed − excluded, scored only for finalists. A refreeze
- * keeps the set it replaces beside it, under its hash, so a run is always
- * scored against the set it ran on.
+ * `heldout` is Reviewed − excluded, scored only for finalists.
+ *
+ * The sets are tracked in git, in `evidence/segment-in-units-lab/sets/`:
+ * every set ever frozen, gzipped under its hash, and `current.json`, which
+ * names each set's current hash. A refreeze adds its sets beside the ones
+ * it replaces, so a run is always scored against the set it ran on.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { gunzipSync, gzipSync } from "node:zlib";
 import { rules } from "dumspec";
 import { loadGold } from "../../evaluation/spec-corpus/gold.js";
 import { projectCorpus } from "../../evaluation/spec-corpus/projection.js";
@@ -60,17 +64,52 @@ export type LabSet = {
 const git = (args: readonly string[], cwd: string) =>
 	execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
-export function setPath(root: string, name: SetName): string {
-	return join(root, "sets", `${name}.json`);
+/** The tracked frozen sets. */
+export const trackedSetsRoot = join(
+	import.meta.dir,
+	"..",
+	"..",
+	"..",
+	"evidence",
+	"segment-in-units-lab",
+	"sets",
+);
+
+/** Where the set `name` of `hash` is kept. */
+export function setPath(root: string, name: SetName, hash: string): string {
+	return join(root, `${name}@${hash}.json.gz`);
 }
 
-/** Where a refreeze keeps the set it replaced. */
-export function archivedSetPath(
+type CurrentSets = Partial<Record<SetName, string>>;
+
+const currentPath = (root: string) => join(root, "current.json");
+
+const readCurrent = (root: string): CurrentSets =>
+	existsSync(currentPath(root))
+		? (JSON.parse(readFileSync(currentPath(root), "utf8")) as CurrentSets)
+		: {};
+
+/** The hash of the current set `name`; undefined before its first freeze. */
+export function currentSetHash(
 	root: string,
 	name: SetName,
-	hash: string,
-): string {
-	return join(root, "sets", `${name}@${hash}.json`);
+): string | undefined {
+	return readCurrent(root)[name];
+}
+
+/**
+ * Keeps `set` under its hash and makes it the current set of its name. A
+ * set of a hash already kept stays as first frozen.
+ */
+export async function storeSet(root: string, set: LabSet): Promise<void> {
+	await mkdir(root, { recursive: true });
+	const path = setPath(root, set.name, set.hash);
+	if (!existsSync(path)) await writeFile(path, gzipSync(JSON.stringify(set)));
+	const current = { ...readCurrent(root), [set.name]: set.hash };
+	await writeFile(
+		currentPath(root),
+		`${JSON.stringify(current, null, "\t")}\n`,
+	);
 }
 
 /**
@@ -147,42 +186,45 @@ export async function freezeSets(
 			).slice(0, 16),
 			cases,
 		};
-		await mkdir(join(root, "sets"), { recursive: true });
-		await archiveSet(root, name);
-		await writeFile(setPath(root, name), JSON.stringify(set));
+		await storeSet(root, set);
 		sets.push(set);
 	}
 	return sets;
 }
 
-/** Keeps the current set under its hash before a refreeze replaces it. */
-async function archiveSet(root: string, name: SetName): Promise<void> {
-	const path = setPath(root, name);
-	if (!existsSync(path)) return;
-	const { hash } = JSON.parse(await readFile(path, "utf8")) as LabSet;
-	const archived = archivedSetPath(root, name, hash);
-	if (!existsSync(archived)) await copyFile(path, archived);
-}
-
 /**
- * The frozen set `name`; with `hash`, the set of that hash, read from the
- * archive when a refreeze has replaced it.
+ * The frozen set `name`: the current one, or with `hash` the set of that
+ * hash, current or replaced.
  */
 export async function loadSet(
 	root: string,
 	name: SetName,
 	hash?: string,
 ): Promise<LabSet> {
-	const set = JSON.parse(
-		await readFile(setPath(root, name), "utf8"),
-	) as LabSet;
-	if (hash === undefined || set.hash === hash) return set;
-	const archived = archivedSetPath(root, name, hash);
-	if (!existsSync(archived))
+	const current = currentSetHash(root, name);
+	const wanted = hash ?? current;
+	if (wanted === undefined)
 		throw Error(
-			`${name}@${hash} is neither the frozen ${name}@${set.hash} nor archived at ${archived}`,
+			`The lab's ${name} set is not frozen; run \`bun run segment-in-units-lab freeze\` first`,
 		);
-	return JSON.parse(await readFile(archived, "utf8")) as LabSet;
+	const path = setPath(root, name, wanted);
+	if (!existsSync(path))
+		throw Error(
+			`${name}@${wanted} is neither the frozen ${name}@${current} nor kept at ${path}`,
+		);
+	return readSet(await readFile(path));
+}
+
+const readSet = (gzipped: Uint8Array) =>
+	JSON.parse(gunzipSync(gzipped).toString("utf8")) as LabSet;
+
+/** The number of cases in the current set `name`; 0 before its first freeze. */
+export function currentSetSize(root: string, name: SetName): number {
+	const hash = currentSetHash(root, name);
+	const path = hash === undefined ? undefined : setPath(root, name, hash);
+	return path && existsSync(path)
+		? readSet(readFileSync(path)).cases.length
+		: 0;
 }
 
 /**
