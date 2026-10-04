@@ -1,5 +1,6 @@
 import { convexQuery } from "@convex-dev/react-query";
 import { useQuery } from "@tanstack/react-query";
+import type { FunctionReturnType } from "convex/server";
 import {
 	Badge,
 	Button,
@@ -22,6 +23,8 @@ import {
 import {
 	ArrowRightIcon,
 	BookOpenIcon,
+	ChevronRightIcon,
+	FolderIcon,
 	LibraryIcon,
 	PlusIcon,
 } from "lucide-react";
@@ -32,6 +35,8 @@ import { visitorErrorMessage } from "@/lib/visitor-error";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
 import { api } from "../../convex/_generated/api";
 import { textTitle } from "../../shared/text-title";
+
+type LibraryText = FunctionReturnType<typeof api.texts.list>[number];
 
 const exampleText = "Die Banken sind geöffnet. Morgen bleiben sie geschlossen.";
 const shortDateFormatter = new Intl.DateTimeFormat(undefined, {
@@ -79,6 +84,13 @@ export function LibraryView() {
 		}
 	}
 
+	const storedTexts = textsQuery.data?.filter((text) => !text.fixture);
+	const fixtureTexts = textsQuery.data?.filter((text) => text.fixture);
+
+	function openText(text: LibraryText) {
+		follow({ kind: "Text", textId: text.textId, title: textTitle(text) });
+	}
+
 	const error =
 		interactionError ??
 		(textsQuery.error ? visitorErrorMessage(textsQuery.error) : null);
@@ -104,46 +116,20 @@ export function LibraryView() {
 							>
 								Stored texts
 							</h2>
-							{textsQuery.data ? (
+							{storedTexts ? (
 								<Badge variant="secondary">
-									{textsQuery.data.length}
+									{storedTexts.length}
 								</Badge>
 							) : null}
 						</div>
 
 						{textsQuery.isPending ? (
 							<LibrarySkeleton />
-						) : textsQuery.data && textsQuery.data.length > 0 ? (
-							<div className="grid gap-3 sm:grid-cols-2">
-								{textsQuery.data.map((text) => (
-									<button
-										key={text.textId}
-										type="button"
-										onClick={() =>
-											follow({
-												kind: "Text",
-												textId: text.textId,
-												title: textTitle(text),
-											})
-										}
-										className="group rounded-xl bg-card p-4 text-start text-card-foreground ring-1 ring-foreground/10 transition-[background-color,scale] duration-150 ease-out hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
-									>
-										<div className="flex items-start justify-between gap-4">
-											<div className="flex min-w-0 flex-col gap-2">
-												<p className="line-clamp-3 text-base leading-relaxed font-medium">
-													{text.title ??
-														text.sourceText}
-												</p>
-												<p className="text-xs text-ink-muted tabular-nums">
-													Added{" "}
-													{formatDate(text.createdAt)}
-												</p>
-											</div>
-											<ArrowRightIcon className="mt-1 size-4 shrink-0 text-ink-muted transition-transform group-hover:translate-x-0.5" />
-										</div>
-									</button>
-								))}
-							</div>
+						) : storedTexts && storedTexts.length > 0 ? (
+							<LibraryTextGrid
+								texts={storedTexts}
+								onOpen={openText}
+							/>
 						) : (
 							<Card size="sm">
 								<CardContent className="flex items-center gap-3 py-3 text-ink-muted">
@@ -159,6 +145,35 @@ export function LibraryView() {
 							</Card>
 						)}
 					</section>
+
+					{fixtureTexts && fixtureTexts.length > 0 ? (
+						<details className="group/fixtures">
+							<summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-md select-none focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
+								<span className="flex items-center gap-2">
+									<ChevronRightIcon
+										className="size-4 text-ink-muted transition-transform group-open/fixtures:rotate-90 rtl:-scale-x-100"
+										aria-hidden="true"
+									/>
+									<FolderIcon
+										className="size-4 text-ink-muted"
+										aria-hidden="true"
+									/>
+									<span className="text-lg font-semibold text-balance">
+										E2E fixtures
+									</span>
+								</span>
+								<Badge variant="secondary">
+									{fixtureTexts.length}
+								</Badge>
+							</summary>
+							<div className="pt-3">
+								<LibraryTextGrid
+									texts={fixtureTexts}
+									onOpen={openText}
+								/>
+							</div>
+						</details>
+					) : null}
 				</div>
 			</div>
 
@@ -227,6 +242,39 @@ export function LibraryView() {
 					</form>
 				</DialogContent>
 			</Dialog>
+		</div>
+	);
+}
+
+function LibraryTextGrid({
+	texts,
+	onOpen,
+}: {
+	readonly texts: readonly LibraryText[];
+	readonly onOpen: (text: LibraryText) => void;
+}) {
+	return (
+		<div className="grid gap-3 sm:grid-cols-2">
+			{texts.map((text) => (
+				<button
+					key={text.textId}
+					type="button"
+					onClick={() => onOpen(text)}
+					className="group rounded-xl bg-card p-4 text-start text-card-foreground ring-1 ring-foreground/10 transition-[background-color,scale] duration-150 ease-out hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.96]"
+				>
+					<div className="flex items-start justify-between gap-4">
+						<div className="flex min-w-0 flex-col gap-2">
+							<p className="line-clamp-3 text-base leading-relaxed font-medium">
+								{text.title ?? text.sourceText}
+							</p>
+							<p className="text-xs text-ink-muted tabular-nums">
+								Added {formatDate(text.createdAt)}
+							</p>
+						</div>
+						<ArrowRightIcon className="mt-1 size-4 shrink-0 text-ink-muted transition-transform group-hover:translate-x-0.5" />
+					</div>
+				</button>
+			))}
 		</div>
 	);
 }
