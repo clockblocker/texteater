@@ -146,7 +146,10 @@ export type WorkspaceCommand<S> =
 			readonly selection: string;
 			readonly cards: readonly DealtCard<S>[];
 	  }
-	/** Rewrite a live Deck's Cards by key, keeping the Presentations of kept keys. */
+	/**
+	 * Rewrite a live Deck's Cards by key as a Resolution progresses: kept
+	 * keys keep their Presentation and slot, new keys are appended in order.
+	 */
 	| {
 			readonly type: "ReconcileDeck";
 			readonly deckId: string;
@@ -690,10 +693,11 @@ function reconcileDeck<S>(
 }
 
 /**
- * Reconciles one Deck in a layout by key. Kept keys keep their Presentation
- * (and any Sheet showing it takes the new Subject); dropped keys lose their
- * slot, so a Sheet showing one closes on going back; new keys are minted, or
- * reuse `minted` so a checkpoint names them as the live layout does.
+ * Reconciles one Deck in a layout by key. A kept key keeps its Presentation
+ * and its slot, and any Sheet showing it takes the new Subject. New keys are
+ * appended in the order given, minted, or reusing `minted` so a checkpoint
+ * names them as the live layout does. A key no longer given loses its slot,
+ * so a Sheet showing it closes on going back. Unkeyed Cards stay as dealt.
  */
 function reconcileIn<S>(
 	node: LayoutNode<S>,
@@ -712,22 +716,23 @@ function reconcileIn<S>(
 	const deck = sheet?.deck;
 	if (!sheet || !deck)
 		return { layout: node, changed: false, subjects, minted };
-	const byKey = new Map(
-		deck.cards.flatMap((card) =>
-			card.key === undefined ? [] : [[card.key, card] as const],
-		),
-	);
-	const next = cards.map((card) => {
-		const current = byKey.get(card.key);
-		if (!current) {
-			const id = minted.get(card.key) ?? mint("presentation");
-			minted.set(card.key, id);
-			return present(id, card);
-		}
-		if (sameValue(current.subject, card.subject)) return current;
+	const given = new Map(cards.map((card) => [card.key, card] as const));
+	const kept = deck.cards.flatMap((current) => {
+		if (current.key === undefined) return [current];
+		const card = given.get(current.key);
+		if (!card) return [];
+		if (sameValue(current.subject, card.subject)) return [current];
 		subjects.set(current.id, card.subject);
-		return { ...current, subject: card.subject };
+		return [{ ...current, subject: card.subject }];
 	});
+	const held = new Set(deck.cards.map((card) => card.key));
+	const added = cards.flatMap((card) => {
+		if (held.has(card.key)) return [];
+		const id = minted.get(card.key) ?? mint("presentation");
+		minted.set(card.key, id);
+		return [present(id, card)];
+	});
+	const next = [...kept, ...added];
 	const frontId = next.some((card) => card.id === deck.frontId)
 		? deck.frontId
 		: null;

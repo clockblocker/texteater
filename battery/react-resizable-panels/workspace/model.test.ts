@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
 	createWorkspace,
 	deckHolding,
+	findDeck,
 	findPane,
 	findSheet,
 	groundOf,
@@ -735,23 +736,95 @@ describe("ReconcileDeck", () => {
 		});
 	}
 
-	test("keeps the Presentations of kept keys, adds new ones, and drops the rest, in the given order", () => {
-		const dealt = keyed(atText(), "resolver");
+	test("keys already in the Deck keep their Presentation and slot; new keys are appended in order", () => {
+		const dealt = keyed(atText(), "resolver", "lemma");
 		const deck = ground(dealt).deck ?? never();
 		const state = reconcile(
 			dealt,
 			deck.id,
 			["reading", "Reading"],
+			["lemma", "lemma"],
 			["resolver", "resolver"],
+			["surface", "Surface"],
 		);
 		const cards = ground(state).deck?.cards ?? [];
-		expect(cards.map((card) => card.key)).toEqual(["reading", "resolver"]);
-		expect(cards[1]).toBe(deck.cards[0]);
-		const dropped = reconcile(state, deck.id, ["reading", "Reading"]);
-		expect(ground(dropped).deck?.cards.map((card) => card.key)).toEqual([
+		expect(cards.map((card) => card.key)).toEqual([
+			"resolver",
+			"lemma",
 			"reading",
+			"surface",
 		]);
-		expect(ground(dropped).deck?.cards[0]?.id).toBe(cards[0]?.id);
+		expect(cards[0]).toBe(deck.cards[0]);
+		expect(cards[1]).toBe(deck.cards[1]);
+	});
+
+	test("the Deck keeps its id, its Sheet and its front Card", () => {
+		const dealt = keyed(atText(), "a", "b");
+		const deck = ground(dealt).deck ?? never();
+		const fronted = reduce(dealt, {
+			type: "BringToFront",
+			sheetId: ground(dealt).sheetId,
+			presentationId: deck.cards[1]?.id ?? "",
+		});
+		const state = reconcile(
+			fronted,
+			deck.id,
+			["a", "a"],
+			["b", "b"],
+			["c", "c"],
+		);
+		const sheet = findDeck(state.layout, deck.id);
+		expect(sheet?.sheetId).toBe(ground(dealt).sheetId);
+		expect(sheet?.deck?.frontId).toBe(deck.cards[1]?.id);
+	});
+
+	test("a key no longer given leaves the Deck; the others keep their places", () => {
+		const dealt = keyed(atText(), "resolver", "lemma");
+		const deck = ground(dealt).deck ?? never();
+		const state = reconcile(
+			dealt,
+			deck.id,
+			["lemma", "lemma"],
+			["reading", "Reading"],
+		);
+		const cards = ground(state).deck?.cards ?? [];
+		expect(cards.map((card) => card.key)).toEqual(["lemma", "reading"]);
+		expect(cards[0]).toBe(deck.cards[1]);
+	});
+
+	test("a Cover keeps the slot it collapses back to as new Cards arrive", () => {
+		const dealt = keyed(atText(), "a", "b");
+		const card = ground(dealt).deck?.cards[1];
+		const covered = reduce(
+			dealt,
+			{
+				type: "LiftCard",
+				sheetId: ground(dealt).sheetId,
+				presentationId: card?.id ?? "",
+			},
+			{ type: "Expand", paneId: ROOT },
+		);
+		const state = reconcile(
+			covered,
+			ground(covered).deck?.id ?? "",
+			["a", "a"],
+			["b", "b"],
+			["c", "c"],
+		);
+		expect(deckHolding(state.layout, card?.id ?? "")?.sheetId).toBe(
+			ground(covered).sheetId,
+		);
+		expect(ground(state).deck?.cards[1]?.id).toBe(card?.id);
+		const back = reduce(state, {
+			type: "GoBack",
+			sheetId: top(state).sheetId,
+		});
+		expect(ground(back).deck?.frontId).toBe(card?.id);
+		expect(
+			restingCards(back.layout, ground(back).deck ?? never()).map(
+				(c) => c.key,
+			),
+		).toEqual(["a", "b", "c"]);
 	});
 
 	test("an unchanged reconcile returns the same state", () => {
