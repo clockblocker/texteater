@@ -267,8 +267,8 @@ export function createInspectionCapture() {
 
 	function record(
 		span: Tracer.Span,
-		startTime: bigint,
-		endTime: bigint,
+		startedAt: number,
+		durationMs: number,
 		exit: Exit.Exit<unknown, unknown>,
 	) {
 		const root = rootOf(span);
@@ -281,8 +281,8 @@ export function createInspectionCapture() {
 			name: span.name,
 			owner: String(span.attributes.get(OWNER)),
 			kind: "Code",
-			startedAt: Number(startTime / 1000n) / 1000,
-			durationMs: Number(endTime - startTime) / 1_000_000,
+			startedAt,
+			durationMs,
 			status: statusOf(exit, span.attributes.get(FAILED) === true),
 			payloadJson: inspectionJson({
 				input: span.attributes.get(INPUT),
@@ -300,6 +300,11 @@ export function createInspectionCapture() {
 
 	const tracer = Tracer.make({
 		span({ name, parent, annotations, links, startTime, kind }) {
+			// Effect's span times are monotonic time anchored to the wall clock
+			// once per process, so in a long-lived executor they drift from
+			// `Date.now()`, which Dumgen calls and Convex stamp with. A step
+			// starts on the wall clock and keeps Effect's monotonic duration.
+			const startedAt = Date.now();
 			const spanId = crypto.randomUUID();
 			const attributes = new Map<string, unknown>();
 			const allLinks = [...links];
@@ -327,7 +332,13 @@ export function createInspectionCapture() {
 				},
 				end(endTime, exit) {
 					status = { _tag: "Ended", startTime, endTime, exit };
-					if (isStep(span)) record(span, startTime, endTime, exit);
+					if (isStep(span))
+						record(
+							span,
+							startedAt,
+							Number(endTime - startTime) / 1_000_000,
+							exit,
+						);
 					else if (name === "dumgen.operation")
 						operationRoots.push(rootOf(span));
 				},

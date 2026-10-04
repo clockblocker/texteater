@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import {
@@ -137,6 +138,43 @@ test("without the inspection Tracer, spans keep their inputs and outputs unseria
 		input: "value",
 		output: "value",
 	});
+});
+
+test("steps start on the wall clock when Effect's clock drifts from it", async () => {
+	// An Effect clock three hours behind the wall clock that advances 250 ms
+	// on every reading, as a long-lived executor's drifted span clock would.
+	const wall = Effect.runSync(Clock.clockWith(Effect.succeed));
+	let reading = 0n;
+	const currentTimeNanosUnsafe = () =>
+		BigInt(Date.now() - 3 * 60 * 60 * 1000) * 1_000_000n +
+		250_000_000n * reading++;
+	const drifted: Clock.Clock = {
+		currentTimeMillisUnsafe: () =>
+			Number(currentTimeNanosUnsafe() / 1_000_000n),
+		currentTimeMillis: Effect.sync(() =>
+			Number(currentTimeNanosUnsafe() / 1_000_000n),
+		),
+		currentTimeNanosUnsafe,
+		currentTimeNanos: Effect.sync(currentTimeNanosUnsafe),
+		monotonicTimeNanosUnsafe: () => wall.monotonicTimeNanosUnsafe(),
+		monotonicTimeNanos: wall.monotonicTimeNanos,
+		sleep: (duration) => wall.sleep(duration),
+	};
+	const capture = createInspectionCapture();
+	const before = Date.now();
+	await Effect.runPromise(
+		inspected(
+			Effect.void.pipe(
+				Effect.withSpan("Persist", inspectionStep("app/tf-demo")),
+				Effect.provideService(Clock.Clock, drifted),
+			),
+			capture,
+		),
+	);
+	const after = Date.now();
+	expect(capture.steps[0]?.startedAt).toBeGreaterThanOrEqual(before);
+	expect(capture.steps[0]?.startedAt).toBeLessThanOrEqual(after);
+	expect(capture.steps[0]?.durationMs).toBe(250);
 });
 
 test("large Unicode payloads survive chunking without truncation or broken surrogates", () => {
