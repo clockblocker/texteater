@@ -1,7 +1,8 @@
+import { sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 
 import { applyDumdictKnowledgeChange } from "../../../src/core/apply-reading-knowledge-change";
-import { readingLemma, sameReading } from "../../../src/core/identity";
+import { readingLemma } from "../../../src/core/identity";
 import { samePendingSemanticRelationLocator } from "../../../src/core/pending";
 import type { PlannedChangeOp } from "../../../src/domain-types";
 import type { DraftStorageState } from "./preconditions";

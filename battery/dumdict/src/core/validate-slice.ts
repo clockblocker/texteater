@@ -1,4 +1,9 @@
-import { lemmaIdentityKey, readingIdentityKey, sameLemma } from "dumling";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey,
+	sameLemma,
+	sameReading,
+} from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type {
@@ -27,7 +32,7 @@ import type {
 	LoadReadingEntryContextRequest,
 	ReadingEntryContext,
 } from "../storage";
-import { sameReading, shadowMatchesLemma } from "./identity";
+import { shadowMatchesLemma } from "./identity";
 import {
 	assertPendingSemanticRelationRecordIdentity,
 	derivePendingSemanticRelationLocator,

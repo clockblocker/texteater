@@ -1,4 +1,4 @@
-import { readingIdentityKey, sameLemma } from "dumling";
+import { readingIdentityKey, sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 import type {
 	PendingSemanticRelationRecord,
@@ -13,7 +13,6 @@ import {
 import type { ApplyGeneratedKnowledgeRequest } from "../../public";
 import type { ApplyGeneratedKnowledgeContext } from "../../storage";
 import { applyDumdictKnowledgeChange } from "../apply-reading-knowledge-change.js";
-import { sameReading } from "../identity";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,

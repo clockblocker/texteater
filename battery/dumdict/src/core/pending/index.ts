@@ -1,4 +1,4 @@
-import { foldCase, readingIdentityKey } from "dumling";
+import { canonicalFormKey, normalizeForm, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type {
@@ -13,15 +13,16 @@ function normalizeUnitShadow<L extends Dumling.Language>(
 ): Dumrel.UnitShadow & { language: L } {
 	return {
 		...target,
-		canonicalForm: target.canonicalForm.trim().normalize("NFC"),
-		family: target.family.trim().normalize("NFC"),
-		kind: target.kind.trim().normalize("NFC"),
+		canonicalForm: normalizeForm(target.canonicalForm),
+		family: normalizeForm(target.family),
+		kind: normalizeForm(target.kind),
 	} as Dumrel.UnitShadow & { language: L };
 }
 
 /**
- * A Pending Entry's ID names its Unit Shadow with the Canonical Form folded,
- * so `LOL` and `lol` name one entry, as they name one Lemma (system ADR 0002).
+ * A Pending Entry's ID names its Unit Shadow with the Canonical Form keyed as
+ * Lemma identity keys it, so `LOL` and `lol`, and `um ... willen` and
+ * `um … willen`, name one entry, as they name one Lemma (system ADR 0002).
  */
 export function derivePendingEntryId<L extends Dumling.Language>(
 	target: Dumrel.UnitShadow & { language: L },
@@ -31,7 +32,7 @@ export function derivePendingEntryId<L extends Dumling.Language>(
 		normalized.language,
 		normalized.family,
 		normalized.kind,
-		foldCase(normalized.canonicalForm, normalized.language),
+		canonicalFormKey(normalized.canonicalForm, normalized.language),
 	].map(encodeURIComponent);
 	return `pending-entry:v2:${description.join(":")}` as PendingEntryId<L>;
 }

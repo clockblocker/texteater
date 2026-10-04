@@ -1,4 +1,9 @@
-import { lemmaIdentityKey, readingIdentityKey, sameLemma } from "dumling";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey,
+	sameLemma,
+	sameReading,
+} from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type {
@@ -15,7 +20,7 @@ import {
 } from "../../parsing/lightweight-parsers";
 import type { AddNewNoteRequest } from "../../public";
 import type { AddNewNoteContext } from "../../storage";
-import { readingLemma, sameReading } from "../identity";
+import { readingLemma } from "../identity";
 import {
 	createPendingSemanticRelationRecord,
 	deduplicatePendingSemanticRelationRecords,

@@ -1,4 +1,9 @@
-import { lemmaIdentityKey, readingIdentityKey, sameLemma } from "dumling";
+import {
+	lemmaIdentityKey,
+	readingIdentityKey,
+	sameLemma,
+	sameReading,
+} from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -7,7 +12,7 @@ import type {
 	PendingSemanticRelationRecord,
 	ReadingEntry,
 } from "../domain-types";
-import { compareLemmas, sameReading, shadowMatchesLemma } from "./identity";
+import { compareLemmas, shadowMatchesLemma } from "./identity";
 
 export type RelationRequest<L extends Dumling.Language> = {
 	sourceReading: Dumling.Reading<L>;

@@ -1,4 +1,4 @@
-import { readingIdentityKey, sameLemma } from "dumling";
+import { readingIdentityKey, sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import type {
@@ -7,7 +7,6 @@ import type {
 	ReadingKnowledgeChange,
 	StoreRevision,
 } from "../../domain-types";
-import { sameReading } from "../identity";
 import type { PlannedRelationRemoval } from "../plan-relation-maintenance";
 
 type ReadingPatch<L extends Dumling.Language> = Extract<

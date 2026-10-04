@@ -1,9 +1,8 @@
-import { sameLemma } from "dumling";
+import { sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange } from "dumrel";
 
 import type { ReadingEntry, ReadingKnowledgeChange } from "../domain-types";
-import { sameReading } from "./identity";
 
 export function applyDumdictKnowledgeChange<L extends Dumling.Language>(
 	record: ReadingEntry<L>,

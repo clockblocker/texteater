@@ -1,9 +1,8 @@
-import { readingIdentityKey, sameLemma } from "dumling";
+import { readingIdentityKey, sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { frameAdpositionCaseIssues } from "dumspec/inventories";
-import { sameReading } from "./core/identity";
 
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
 import { makeSurfaceId } from "./dumling-id.js";

@@ -1,8 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import { sameLemma } from "dumling";
+import { sameLemma, sameReading } from "dumling";
 import { projectSemanticRelations } from "dumrel";
 import type { ReadingEntry } from "../../src";
-import { sameReading } from "../../src/core/identity";
 import { planRelationMaintenance } from "../../src/core/plan-relation-maintenance";
 import {
 	englishRunLemma,
