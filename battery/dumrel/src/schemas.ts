@@ -437,64 +437,45 @@ export const semanticRelationSchema = z.enum([
 	"endonym",
 	"exonym",
 ]);
-const settingsLeaf = z.boolean().optional();
-const maskLeaf = z.null().optional();
-export const knowledgeSettingsSchema = z.strictObject({
-	transcription: settingsLeaf,
-	definition: settingsLeaf,
-	morphologicalTree: settingsLeaf,
-	valency: settingsLeaf,
-	participleSource: settingsLeaf,
-	plural: settingsLeaf,
-	conjugationClass: settingsLeaf,
-	locutionType: settingsLeaf,
-	sayingType: settingsLeaf,
-	formulaRole: settingsLeaf,
-	translations: z
-		.strictObject({ en: settingsLeaf, ru: settingsLeaf })
-		.optional(),
-	semanticRelations: z
-		.strictObject({
-			synonym: settingsLeaf,
-			nearSynonym: settingsLeaf,
-			antonym: settingsLeaf,
-			nearAntonym: settingsLeaf,
-			hypernym: settingsLeaf,
-			hyponym: settingsLeaf,
-			meronym: settingsLeaf,
-			holonym: settingsLeaf,
-			endonym: settingsLeaf,
-			exonym: settingsLeaf,
-		})
-		.optional(),
-});
-export const knowledgeRequestMaskSchema = z.strictObject({
-	transcription: maskLeaf,
-	definition: maskLeaf,
-	morphologicalTree: maskLeaf,
-	valency: maskLeaf,
-	participleSource: maskLeaf,
-	plural: maskLeaf,
-	conjugationClass: maskLeaf,
-	locutionType: maskLeaf,
-	sayingType: maskLeaf,
-	formulaRole: maskLeaf,
-	translations: z.strictObject({ en: maskLeaf, ru: maskLeaf }).optional(),
-	semanticRelations: z
-		.strictObject({
-			synonym: maskLeaf,
-			nearSynonym: maskLeaf,
-			antonym: maskLeaf,
-			nearAntonym: maskLeaf,
-			hypernym: maskLeaf,
-			hyponym: maskLeaf,
-			meronym: maskLeaf,
-			holonym: maskLeaf,
-			endonym: maskLeaf,
-			exonym: maskLeaf,
-		})
-		.optional(),
-});
+/**
+ * The Knowledge aspects a source route can enable or request, keyed once
+ * and parameterized by the schema each aspect holds.
+ */
+function knowledgeAspectsSchema<Leaf extends z.ZodType>(leaf: Leaf) {
+	return z.strictObject({
+		transcription: leaf,
+		definition: leaf,
+		morphologicalTree: leaf,
+		valency: leaf,
+		participleSource: leaf,
+		plural: leaf,
+		conjugationClass: leaf,
+		locutionType: leaf,
+		sayingType: leaf,
+		formulaRole: leaf,
+		translations: z.strictObject({ en: leaf, ru: leaf }).optional(),
+		semanticRelations: z
+			.strictObject({
+				synonym: leaf,
+				nearSynonym: leaf,
+				antonym: leaf,
+				nearAntonym: leaf,
+				hypernym: leaf,
+				hyponym: leaf,
+				meronym: leaf,
+				holonym: leaf,
+				endonym: leaf,
+				exonym: leaf,
+			})
+			.optional(),
+	});
+}
+export const knowledgeSettingsSchema = knowledgeAspectsSchema(
+	z.boolean().optional(),
+);
+export const knowledgeRequestMaskSchema = knowledgeAspectsSchema(
+	z.null().optional(),
+);
 
 export const knowledgeSelectionInputSchema = z.strictObject({
 	route: knowledgeRouteSchema,
