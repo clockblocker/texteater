@@ -20,11 +20,11 @@
  * whose verdict flips between repetitions are named.
  */
 import { createHash } from "node:crypto";
+import { canonicalJson } from "common-utils";
 import { foldCase } from "dumling";
 import type * as Dumling from "dumling/types";
 import { applyKnowledgeChange } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { stableJson } from "promptsmith";
 import { z } from "zod";
 import { type Line, lineOf, wilson } from "../resolve-grammar/scoring.js";
 import type { KnowledgeCase, TranslationSlip } from "./cases.js";
@@ -123,7 +123,7 @@ type Values = Readonly<Record<string, unknown>>;
 /** A complement's identity: everything but the preposition Lemma's features. */
 function complementKey(complement: Values): string {
 	const { preposition, ...rest } = complement;
-	return stableJson({
+	return canonicalJson({
 		...rest,
 		...(preposition
 			? {
@@ -140,20 +140,22 @@ type Slot = {
 };
 
 const slotKey = (slot: Slot) =>
-	stableJson({
+	canonicalJson({
 		status: slot.status,
 		complements: slot.complements.map(complementKey).sort(),
 	});
 
 /** Whether two frames hold the same Slots, in any order. */
 const sameFrame = (left: readonly Slot[], right: readonly Slot[]) =>
-	stableJson(left.map(slotKey).sort()) ===
-	stableJson(right.map(slotKey).sort());
+	canonicalJson(left.map(slotKey).sort()) ===
+	canonicalJson(right.map(slotKey).sort());
 
 const pluralKey = (value: unknown) =>
 	Array.isArray(value)
-		? stableJson(value.map((form) => foldCase(String(form), "de")).sort())
-		: stableJson(value ?? null);
+		? canonicalJson(
+				value.map((form) => foldCase(String(form), "de")).sort(),
+			)
+		: canonicalJson(value ?? null);
 
 const verbKey = (source: unknown) => {
 	if (!source) return null;
@@ -161,7 +163,7 @@ const verbKey = (source: unknown) => {
 		verb: { canonicalForm: string; coreFeatures: Values };
 		meaning: string;
 	};
-	return stableJson({
+	return canonicalJson({
 		verb: foldCase(verb.canonicalForm, "de"),
 		hasSepPrefix: verb.coreFeatures.hasSepPrefix ?? null,
 		lexicallyReflexive: verb.coreFeatures.lexicallyReflexive ?? null,
@@ -175,8 +177,8 @@ const sameValue: Readonly<
 > = {
 	plural: (gold, produced) => pluralKey(gold) === pluralKey(produced),
 	conjugationClass: (gold, produced) =>
-		stableJson([...((gold as string[]) ?? [])].sort()) ===
-		stableJson([...((produced as string[]) ?? [])].sort()),
+		canonicalJson([...((gold as string[]) ?? [])].sort()) ===
+		canonicalJson([...((produced as string[]) ?? [])].sort()),
 	participleSource: (gold, produced) => verbKey(gold) === verbKey(produced),
 	locutionType: (gold, produced) => gold === produced,
 	formulaRole: (gold, produced) => gold === produced,
@@ -405,7 +407,7 @@ export function knowledgeFlips(attempts: readonly ScoredKnowledge[]): string[] {
 			verdict.correct !== undefined
 				? String(verdict.correct)
 				: verdict.goldClaims !== undefined
-					? stableJson(verdict.found)
+					? canonicalJson(verdict.found)
 					: undefined;
 		if (verdictOf === undefined) continue;
 		const id = `${attempt.caseId}:${verdict.aspect}`;

@@ -41,8 +41,9 @@
  *   `government` request over all five families, asked over production's
  *   membership. Groups no batch asked about route as `--opt unasked` says.
  */
+
+import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
-import { stableJson } from "promptsmith";
 import type { SegmentInUnitsOutput } from "../../../evaluation/spec-corpus/segment-in-units.js";
 import type { Ask } from "../../../segment/ask.js";
 import {
@@ -666,7 +667,7 @@ function heardOf(
 ): Promise<Heard[]> {
 	const byCase = heardCache.get(context.jev) ?? new Map();
 	heardCache.set(context.jev, byCase);
-	const key = stableJson(input);
+	const key = canonicalJson(input);
 	const known = byCase.get(key);
 	if (known) return known;
 	const heard = Promise.all(

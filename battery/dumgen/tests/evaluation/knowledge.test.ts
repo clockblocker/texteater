@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { stableJson } from "promptsmith";
+import { canonicalJson } from "common-utils";
 import { listExperiments } from "../../src/evaluation/experiments.js";
 import { storeFrozenSet } from "../../src/evaluation/frozen-sets.js";
 import {
@@ -47,7 +47,7 @@ const caseOf = (lemma: string, cases: readonly KnowledgeCase[] = heldout) => {
 
 test("held-out is the Readings reviewed to Knowledge depth, each once with its gold; dev is the Draft Readings held-out lacks (#873, #884)", () => {
 	expect(heldout.length).toBeGreaterThan(60);
-	const keys = heldout.map(({ reading }) => stableJson(reading));
+	const keys = heldout.map(({ reading }) => canonicalJson(reading));
 	expect(new Set(keys).size).toBe(keys.length);
 	// Every open held-out Reading has gold; authored ones are tf-demo's.
 	for (const goldCase of heldout)
@@ -59,7 +59,7 @@ test("held-out is the Readings reviewed to Knowledge depth, each once with its g
 	expect(dev.length).toBeGreaterThan(800);
 	const heldoutKeys = new Set(keys);
 	for (const goldCase of dev)
-		expect(heldoutKeys.has(stableJson(goldCase.reading))).toBe(false);
+		expect(heldoutKeys.has(canonicalJson(goldCase.reading))).toBe(false);
 });
 
 test("a structural run asks for the route's structural aspects only, a text run for its text aspects", () => {
@@ -442,8 +442,8 @@ test("the harness prices a round from the oracle without a call, runs live once 
 		repetitions: 1,
 	});
 	expect({ jev: jevCalls, luna: lunaCalls }).toEqual(calls);
-	expect(stableJson(knowledgeMetrics(replayed.run as never))).toBe(
-		stableJson(metrics),
+	expect(canonicalJson(knowledgeMetrics(replayed.run as never))).toBe(
+		canonicalJson(metrics),
 	);
 });
 

@@ -6,11 +6,11 @@
  */
 import { rm } from "node:fs/promises";
 import { join } from "node:path";
+import { canonicalJson } from "common-utils";
 import {
 	defineGoldenCaseCollection,
 	defineGoldenCaseGroup,
 	defineGoldenCorpus,
-	stableJson,
 } from "promptsmith";
 import {
 	type OperationEvaluationRun,
@@ -64,7 +64,7 @@ export async function exportPolicy(args: {
 	});
 	const stored = new Map(
 		selected.map(({ caseRun, labCase }) => [
-			stableJson(labCase.input),
+			canonicalJson(labCase.input),
 			caseRun,
 		]),
 	);
@@ -77,7 +77,7 @@ export async function exportPolicy(args: {
 			),
 			demonstrations: corpus.select([]),
 			async run(input, context) {
-				const key = stableJson(input);
+				const key = canonicalJson(input);
 				const caseRun = stored.get(key);
 				if (!caseRun) throw Error("No stored case for this input");
 				const index = served.get(key) ?? 0;
@@ -121,7 +121,7 @@ export async function exportPolicy(args: {
 			),
 		},
 		experimentId: `segment-in-units-lab/${run.arm}`,
-		operationVersion: `${run.arm}:${policy}:${stableJson(run.options)}`,
+		operationVersion: `${run.arm}:${policy}:${canonicalJson(run.options)}`,
 		evaluatorVersion: "757",
 		// The commit alone does not name the code that ran; the manifest's code hash does.
 		sourceRevision: run.codeHash

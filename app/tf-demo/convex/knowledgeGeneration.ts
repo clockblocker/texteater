@@ -1,3 +1,4 @@
+import { canonicalJson } from "common-utils";
 import { type Infer, v } from "convex/values";
 import type { ApplyGeneratedKnowledgeRequest } from "dumdict/planning";
 import { translationLanguageValues } from "dumrel";
@@ -14,7 +15,6 @@ import { parseGermanReading } from "../server/operationalParsing";
 import { internalMutation, mutation } from "./_generated/server";
 import { createDumdictTransaction } from "./dumdictTransaction";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
-import { canonicalJson } from "./model/canonicalJson";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import {
 	claimKnowledgeRun,

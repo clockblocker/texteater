@@ -9,7 +9,7 @@
  * latency, and breakdowns by gold route and cited Rule and the calibration
  * of route and membership judgments.
  */
-import { stableJson } from "promptsmith";
+import { canonicalJson } from "common-utils";
 import type { Unit } from "../../evaluation/spec-corpus/segment-in-units.js";
 import {
 	evaluateSegmentInUnits,
@@ -562,7 +562,7 @@ export function summarizePolicy(
 			});
 			const repetitionTally = byRepetition[index];
 			if (repetitionTally) add(repetitionTally, labCase, score);
-			outputs.add(stableJson(repetition.outputs?.[policy] ?? null));
+			outputs.add(canonicalJson(repetition.outputs?.[policy] ?? null));
 			const pass = score.evaluation?.contractPass;
 			if (pass !== undefined || score.error) passes.push(pass ?? false);
 		}
@@ -703,7 +703,7 @@ export function groupingExamples(
 				})),
 			];
 			for (const { where, example } of found) {
-				const key = stableJson({ where, example });
+				const key = canonicalJson({ where, example });
 				const entry = examples.get(key) ?? { example, repetitions: [] };
 				entry.repetitions.push(index);
 				examples.set(key, entry);

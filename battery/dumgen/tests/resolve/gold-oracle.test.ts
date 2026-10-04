@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
+import { canonicalJson } from "common-utils";
 import { lemmaIdentityKey } from "dumling";
 import * as Effect from "effect/Effect";
-import { stableJson } from "promptsmith";
 import { createDumgen } from "../../src/create-dumgen.js";
 import { grammarCases } from "../../src/evaluation/resolve-grammar/cases.js";
 import {
@@ -51,7 +51,7 @@ test("with gold's answers, resolve.grammar rebuilds nearly every gold Attestatio
 		)
 			lemmas++;
 		else misses.push(`${goldCase.id}: Lemma`);
-		if (stableJson(result.attestation) === stableJson(goldCase.ideal))
+		if (canonicalJson(result.attestation) === canonicalJson(goldCase.ideal))
 			exact++;
 	}
 	expect(cases.length).toBeGreaterThan(2000);

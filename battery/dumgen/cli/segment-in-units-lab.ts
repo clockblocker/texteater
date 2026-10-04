@@ -30,7 +30,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
-import { stableJson } from "promptsmith";
+import { canonicalJson } from "common-utils";
 import { compareRuns, loadRun } from "promptsmith/storage";
 import { arms } from "../src/segment-in-units/de/arms/index.js";
 import {
@@ -633,8 +633,9 @@ async function replayRun() {
 						for (const policy of policies) {
 							compared++;
 							if (
-								stableJson(result.outputs[policy] ?? null) ===
-								stableJson(stored[policy] ?? null)
+								canonicalJson(
+									result.outputs[policy] ?? null,
+								) === canonicalJson(stored[policy] ?? null)
 							)
 								identical++;
 							else differing.push(`${at} ${policy}`);
@@ -657,7 +658,7 @@ async function replayRun() {
 		),
 	);
 	console.log(
-		`replay ${runId} (${original.arm} ${stableJson(original.options)}, ${original.cases.length} cases × ${original.repetitions}, set ${set.name}@${set.hash}): ${identical}/${compared} policy outputs identical, ${differing.length} differ, ${failed.length} case repetitions fail, ${failedBefore.length} failed in the run too, ${fresh} fresh calls`,
+		`replay ${runId} (${original.arm} ${canonicalJson(original.options)}, ${original.cases.length} cases × ${original.repetitions}, set ${set.name}@${set.hash}): ${identical}/${compared} policy outputs identical, ${differing.length} differ, ${failed.length} case repetitions fail, ${failedBefore.length} failed in the run too, ${fresh} fresh calls`,
 	);
 	for (const line of [...differing, ...failed].slice(0, 40))
 		console.log(`  ${line}`);
@@ -714,7 +715,8 @@ async function noise() {
 	if (!executed) return;
 	const { manifest, outcomes } = executed;
 	const promptsMatch =
-		stableJson(manifest.promptHashes) === stableJson(baseline.promptHashes);
+		canonicalJson(manifest.promptHashes) ===
+		canonicalJson(baseline.promptHashes);
 	const floors = Object.fromEntries(
 		outcomePolicies(baselineRows).map((policy) => [
 			policy,
@@ -1411,7 +1413,8 @@ async function sweep() {
 				const output = repetition.outputs?.[baseline];
 				if (
 					output &&
-					stableJson(output) === stableJson(other?.outputs?.[policy])
+					canonicalJson(output) ===
+						canonicalJson(other?.outputs?.[policy] ?? null)
 				)
 					identical++;
 			}

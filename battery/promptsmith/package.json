@@ -70,6 +70,7 @@
 	},
 	"dependencies": {
 		"@typesafe-ai/sdk": "^0.6.0",
+		"common-utils": "workspace:^",
 		"zod": "^4.4.0"
 	},
 	"devDependencies": {

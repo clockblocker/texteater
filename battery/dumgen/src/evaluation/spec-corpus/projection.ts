@@ -4,6 +4,8 @@
  * file adds what every prompt shares: origins, record contamination keys,
  * sidecar explanations, review groups, slices, exclusions, and the test set.
  */
+
+import { canonicalJson } from "common-utils";
 import type * as Dumling from "dumling/types";
 import { isReviewed } from "dumspec";
 import type * as Dumspec from "dumspec/types";
@@ -14,7 +16,6 @@ import {
 	defineGoldenCorpus,
 	type GoldenCase,
 	type GoldenCorpus,
-	stableJson,
 } from "promptsmith";
 import type { z } from "zod";
 import type { Gold } from "./gold.js";
@@ -196,7 +197,7 @@ export function projectCorpus<
 			});
 			continue;
 		}
-		const fingerprints = result.map(({ input }) => stableJson(input));
+		const fingerprints = result.map(({ input }) => canonicalJson(input));
 		const taken = fingerprints.flatMap(
 			(fingerprint) => inputs.get(fingerprint) ?? [],
 		);

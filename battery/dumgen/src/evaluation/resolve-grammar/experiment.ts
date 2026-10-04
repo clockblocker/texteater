@@ -19,12 +19,12 @@
  */
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
 import {
 	defineGoldenCaseCollection,
 	defineGoldenCaseGroup,
 	defineGoldenCorpus,
-	stableJson,
 } from "promptsmith";
 import {
 	type OperationEvaluationRun,
@@ -167,9 +167,10 @@ async function attempt(
 		const produced = await units(goldCase, repetition);
 		const match = produced?.find(
 			(candidate) =>
-				stableJson(candidate.segments) ===
-					stableJson(goldCase.unit.segments) &&
-				stableJson(candidate.route) === stableJson(goldCase.unit.route),
+				canonicalJson(candidate.segments) ===
+					canonicalJson(goldCase.unit.segments) &&
+				canonicalJson(candidate.route) ===
+					canonicalJson(goldCase.unit.route),
 		);
 		if (!match)
 			return {

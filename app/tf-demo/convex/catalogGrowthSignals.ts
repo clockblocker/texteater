@@ -1,7 +1,7 @@
+import { canonicalJson } from "common-utils";
 import { type Infer, v } from "convex/values";
 import type { CatalogMissSignal } from "../server/resolutionGrammar";
 import { internalMutation, type MutationCtx } from "./_generated/server";
-import { canonicalJson } from "./model/canonicalJson";
 import {
 	failKnowledgeRun,
 	findKnowledgeAttempt,

@@ -1,4 +1,4 @@
-import { stableJson } from "../stable-json";
+import { canonicalJson } from "common-utils";
 import type { PromptSource } from "./contracts";
 
 export function assembleSystemPrompt(source: PromptSource): string {
@@ -24,8 +24,8 @@ export function assembleSystemPrompt(source: PromptSource): string {
 		const output =
 			source.outputFormat === "text"
 				? example.idealOutput
-				: stableJson(example.idealOutput);
-		return `Example ${index + 1}\nInput:\n${stableJson(example.input)}\nIdeal output:\n${output}${explanation}`;
+				: canonicalJson(example.idealOutput);
+		return `Example ${index + 1}\nInput:\n${canonicalJson(example.input)}\nIdeal output:\n${output}${explanation}`;
 	});
 	return `${body}\n\nExamples to follow:\n\n${renderedExamples.join("\n\n")}`;
 }

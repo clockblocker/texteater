@@ -38,7 +38,7 @@ With two or more repetitions:
   not under review) and at least one other did not. An execution failure
   counts as not passing. Interrupted repetitions are ignored, so cancelling a
   run never creates flips. `distinctOutputs` counts the different outputs
-  produced, compared by `stableJson`.
+  produced, compared by common-utils' `canonicalJson`.
 - `summary.stability` reports `flipped` and `varyingOutputs` (cases with more
   than one distinct output) across the run, and `quality` over every
   repetition. "11 of 238 cases flipped" reads as `summary.stability.flipped`
@@ -65,7 +65,7 @@ The comparison also lists `onlyLeft`, `onlyRight`, `changedVerdicts` and
 missing side and no output changes.
 
 For a case with repetitions, the compared output is its most frequent output
-by `stableJson`, with ties going to the earliest repetition. The compared
+by `canonicalJson`, with ties going to the earliest repetition. The compared
 verdict is the one its non-interrupted repetitions share, or `Mixed` when
 they disagree, so every flipped case is `Mixed`. This keeps one diff per case
 whichever side repeated. It also means a case that goes from `Passed` to

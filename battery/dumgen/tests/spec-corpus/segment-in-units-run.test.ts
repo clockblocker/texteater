@@ -2,7 +2,7 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { stableJson } from "promptsmith";
+import { canonicalJson } from "common-utils";
 import { runOperationExperiment } from "promptsmith/evaluation";
 import { compareRuns, loadRun, saveRun } from "promptsmith/storage";
 import { goldOf } from "../../src/evaluation/spec-corpus/gold.js";
@@ -43,7 +43,7 @@ const projected = projectCorpus(
 const demonstrations = projected.corpus.select(["de/wir-lachen"]);
 const ideal = new Map(
 	Object.values(projected.corpus.cases).map((golden) => [
-		stableJson(golden.input),
+		canonicalJson(golden.input),
 		golden.idealOutput,
 	]),
 );
@@ -58,7 +58,7 @@ function fakeSegmenter(flaky: boolean) {
 		input: SegmentInUnitsInput,
 	): Promise<SegmentInUnitsOutput> => {
 		calls++;
-		const gold = ideal.get(stableJson(input));
+		const gold = ideal.get(canonicalJson(input));
 		if (!gold) throw Error("Unknown input");
 		const units = gold.units.flatMap((unit) =>
 			flaky && calls % 3 !== 1 && unit.segments.length > 1

@@ -25,7 +25,6 @@ import type * as intakeRuns from "../intakeRuns.js";
 import type * as knowledgeGeneration from "../knowledgeGeneration.js";
 import type * as knowledgeGenerationActions from "../knowledgeGenerationActions.js";
 import type * as knowledgeSettings from "../knowledgeSettings.js";
-import type * as model_canonicalJson from "../model/canonicalJson.js";
 import type * as model_definitionTexts from "../model/definitionTexts.js";
 import type * as model_dumdictPendingIndexes from "../model/dumdictPendingIndexes.js";
 import type * as model_generatedKnowledgeContainment from "../model/generatedKnowledgeContainment.js";
@@ -103,7 +102,6 @@ declare const fullApi: ApiFromModules<{
   knowledgeGeneration: typeof knowledgeGeneration;
   knowledgeGenerationActions: typeof knowledgeGenerationActions;
   knowledgeSettings: typeof knowledgeSettings;
-  "model/canonicalJson": typeof model_canonicalJson;
   "model/definitionTexts": typeof model_definitionTexts;
   "model/dumdictPendingIndexes": typeof model_dumdictPendingIndexes;
   "model/generatedKnowledgeContainment": typeof model_generatedKnowledgeContainment;

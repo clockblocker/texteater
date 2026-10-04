@@ -1,4 +1,4 @@
-import { stableJson } from "../stable-json";
+import { canonicalJson } from "common-utils";
 import type {
 	CaseSelection,
 	GoldenCase,
@@ -158,7 +158,7 @@ export function defineGoldenCorpus<
 			location,
 			goldenCase.contaminationKeys,
 		);
-		const exactFingerprint = stableJson(parsedInput.data);
+		const exactFingerprint = canonicalJson(parsedInput.data);
 		const duplicateId = exactFingerprints.get(exactFingerprint);
 		if (duplicateId !== undefined) {
 			throw new Error(

@@ -12,7 +12,7 @@
  * gold Segment no prediction matches sits in no returned unit and so hovers
  * only itself.
  */
-import { stableJson } from "promptsmith";
+import { canonicalJson } from "common-utils";
 import { z } from "zod";
 import {
 	evaluateSourceAndUnits,
@@ -202,7 +202,9 @@ export function evaluateRawSegmentInUnits(
 				).length,
 				exactSentence: source.kindExact ? 1 : 0,
 				goldSegments:
-					stableJson(predicted) === stableJson(gold.segments) ? 1 : 0,
+					canonicalJson(predicted) === canonicalJson(gold.segments)
+						? 1
+						: 0,
 				unresolved: source.unresolvedSegments,
 				unaligned: extra.length,
 			},

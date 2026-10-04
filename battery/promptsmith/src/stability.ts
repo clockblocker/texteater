@@ -1,9 +1,9 @@
+import { canonicalJson } from "common-utils";
 import {
 	type EvaluationVerdict,
 	evaluationVerdict,
 	summarizeQuality,
 } from "./quality.js";
-import { stableJson } from "./stable-json.js";
 
 type Repetition = {
 	readonly status: string;
@@ -66,7 +66,7 @@ function summarizeCaseStability(repetitions: readonly Repetition[]) {
 		distinctOutputs: new Set(
 			repetitions
 				.filter((repetition) => repetition.output !== undefined)
-				.map((repetition) => stableJson(repetition.output)),
+				.map((repetition) => canonicalJson(repetition.output)),
 		).size,
 	};
 }
@@ -109,8 +109,8 @@ export function repetitionsMismatch(run: {
 			)
 		);
 	return (
-		stableJson(run.summary.stability) !==
-			stableJson(summarizeRunStability(run.cases, expected)) ||
+		canonicalJson(run.summary.stability ?? null) !==
+			canonicalJson(summarizeRunStability(run.cases, expected)) ||
 		run.cases.some((record) => {
 			const {
 				caseId: _caseId,
@@ -122,10 +122,10 @@ export function repetitionsMismatch(run: {
 			} = record as typeof record & Record<string, unknown>;
 			if (repetitions?.length !== expected) return true;
 			return (
-				stableJson(stability) !==
-					stableJson(summarizeCaseStability(repetitions)) ||
-				stableJson(attempt) !==
-					stableJson(representativeRepetition(repetitions))
+				canonicalJson(stability ?? null) !==
+					canonicalJson(summarizeCaseStability(repetitions)) ||
+				canonicalJson(attempt) !==
+					canonicalJson(representativeRepetition(repetitions))
 			);
 		})
 	);
@@ -152,7 +152,7 @@ export function modalOutput(record: RepeatedRecord): unknown {
 	const counts = new Map<string, { output: unknown; count: number }>();
 	for (const { output } of record.repetitions) {
 		if (output === undefined) continue;
-		const key = stableJson(output);
+		const key = canonicalJson(output);
 		const seen = counts.get(key);
 		if (seen) seen.count++;
 		else counts.set(key, { output, count: 1 });

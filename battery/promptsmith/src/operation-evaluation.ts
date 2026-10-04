@@ -9,6 +9,7 @@ import {
 	getSelectionState,
 } from "./authoring/golden-corpus.js";
 import { assertCaseSelectionsUncontaminated } from "./authoring/selection-contamination.js";
+import { fingerprint } from "./fingerprint.js";
 import { summarizeQuality } from "./quality.js";
 import {
 	type configurationSchema,
@@ -23,7 +24,6 @@ import {
 	repetitionCount,
 	summarizeRunStability,
 } from "./stability.js";
-import { fingerprint } from "./stable-json.js";
 
 type ModelConfiguration = z.infer<typeof configurationSchema>;
 

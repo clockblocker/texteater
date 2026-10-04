@@ -6,6 +6,7 @@ import type {
 	PromptOutputSchema,
 } from "./authoring/contracts.js";
 import { defineExperiment } from "./authoring/define-experiment.js";
+import { fingerprint } from "./fingerprint.js";
 import { summarizeQuality } from "./quality.js";
 import {
 	caseRecordSchema,
@@ -21,7 +22,6 @@ import {
 	repetitionCount,
 	summarizeRunStability,
 } from "./stability.js";
-import { fingerprint } from "./stable-json.js";
 
 export type {
 	OperationEvaluationRun,

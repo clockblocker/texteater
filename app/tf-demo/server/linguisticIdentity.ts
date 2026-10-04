@@ -6,25 +6,6 @@ import {
 import type * as Dumling from "dumling/types";
 import { parseUnitAs } from "./operationalParsing";
 
-function stableValue(value: unknown): unknown {
-	if (Array.isArray(value)) return value.map(stableValue);
-	if (value !== null && typeof value === "object") {
-		return Object.fromEntries(
-			Object.entries(value)
-				.sort(([left], [right]) =>
-					left < right ? -1 : left > right ? 1 : 0,
-				)
-				.map(([key, member]) => [key, stableValue(member)]),
-		);
-	}
-	return value;
-}
-
-/** JSON with object keys sorted recursively, so key order never matters. */
-export function stableFingerprint(value: unknown): string {
-	return JSON.stringify(stableValue(value));
-}
-
 /**
  * tf-demo's database key for a Lemma: Dumling's case-folded Lemma identity
  * key of the parsed value, so INTJ `LOL` and `lol` share one row (system ADR

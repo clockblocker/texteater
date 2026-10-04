@@ -19,7 +19,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { stableJson } from "promptsmith";
+import { canonicalJson } from "common-utils";
 import {
 	createTypeSafeExecutor,
 	type EntryType,
@@ -108,7 +108,7 @@ export class Semaphore {
 }
 
 export function hashOf(value: unknown): string {
-	return createHash("sha256").update(stableJson(value)).digest("hex");
+	return createHash("sha256").update(canonicalJson(value)).digest("hex");
 }
 
 export async function readCache<T>(path: string): Promise<T | undefined> {
@@ -270,7 +270,8 @@ export class Jev {
 			if (this.#options.project)
 				this.projection.samples.push({
 					stage: args.stage,
-					chars: stableJson({ state: args.state, questions }).length,
+					chars: canonicalJson({ state: args.state, questions })
+						.length,
 					inputTokens: hit.usage.input_tokens,
 				});
 			args.calls.push({
@@ -388,7 +389,7 @@ export class Jev {
 	): Promise<Answers> {
 		const request = {
 			stage: args.stage,
-			chars: stableJson({ state: args.state, questions }).length,
+			chars: canonicalJson({ state: args.state, questions }).length,
 			questions: Object.keys(questions).length,
 		};
 		for (const repetition of projectedRepetitions) {

@@ -32,7 +32,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { stableJson } from "promptsmith";
+import { canonicalJson } from "common-utils";
 import type { Questions } from "promptsmith/typesafe";
 import {
 	defaultLunaConfiguration,
@@ -194,7 +194,7 @@ export type ModelsSpend = {
 };
 
 const sha256 = (value: unknown) =>
-	createHash("sha256").update(stableJson(value)).digest("hex");
+	createHash("sha256").update(canonicalJson(value)).digest("hex");
 
 async function readEntry<T>(path: string): Promise<T | undefined> {
 	try {
@@ -270,11 +270,12 @@ type Executor = "jev" | "luna";
 
 /** The characters a request's size is measured by. */
 const jevChars = (request: JevRequest) =>
-	stableJson({ state: request.state, questions: request.questions }).length;
+	canonicalJson({ state: request.state, questions: request.questions })
+		.length;
 const lunaChars = (request: LunaRequest) =>
 	request.systemPrompt.length +
-	stableJson(request.input).length +
-	stableJson(request.outputSchema ?? {}).length;
+	canonicalJson(request.input).length +
+	canonicalJson(request.outputSchema ?? {}).length;
 
 /** A Luna request waiting for the run's next batch. */
 type PendingLuna = { readonly request: LunaRequest; readonly stage: string };
@@ -725,7 +726,7 @@ export class CachedModels<Case> {
 					executor: "luna",
 					stage: context.stage,
 					chars: lunaChars(request),
-					outputChars: stableJson({ value: output }).length,
+					outputChars: canonicalJson({ value: output }).length,
 				});
 				return { output };
 			}

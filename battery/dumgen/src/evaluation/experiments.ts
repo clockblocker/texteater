@@ -32,12 +32,12 @@
  */
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
 import {
 	defineGoldenCaseCollection,
 	defineGoldenCaseGroup,
 	defineGoldenCorpus,
-	stableJson,
 } from "promptsmith";
 import {
 	type OperationEvaluationRun,
@@ -347,7 +347,7 @@ function traced<I, O>(
 		input: I,
 		context: { recordTrace: (trace: OperationEvidence) => void },
 	): Promise<O> => {
-		const key = stableJson(input);
+		const key = canonicalJson(input);
 		const attempt = attempts.get(key) ?? 0;
 		attempts.set(key, attempt + 1);
 		const own: CallRecord[] = [];
@@ -837,8 +837,8 @@ export function parityWith(
 			}
 			compared++;
 			if (
-				stableJson(withoutIdentity(attempt.output ?? null)) ===
-				stableJson(stored?.outputs?.[policy] ?? null)
+				canonicalJson(withoutIdentity(attempt.output ?? null)) ===
+				canonicalJson(stored?.outputs?.[policy] ?? null)
 			)
 				identical++;
 			else differing.push(at);

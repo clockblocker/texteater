@@ -50,6 +50,7 @@
 		"segment-in-units-attribution": "bun cli/segment-in-units-attribution.ts"
 	},
 	"dependencies": {
+		"common-utils": "workspace:^",
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
 		"dumspec": "workspace:^",

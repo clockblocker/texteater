@@ -8,4 +8,3 @@ export {
 	defineGoldenCorpus,
 } from "./authoring/golden-corpus.js";
 export { diffJson, type JsonChange } from "./json-diff.js";
-export { stableJson } from "./stable-json.js";

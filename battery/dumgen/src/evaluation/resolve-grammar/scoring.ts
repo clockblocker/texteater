@@ -8,9 +8,10 @@
  * reports its count and a 95% Wilson interval, and the cases whose Lemma
  * verdict flips between repetitions are named.
  */
+
+import { canonicalJson } from "common-utils";
 import { lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import { stableJson } from "promptsmith";
 import { z } from "zod";
 
 /** What one attempt at a case returned, as a run stores it. */
@@ -44,7 +45,7 @@ type AttestationValue = Values & {
 
 /** A bag's set features, a null and a missing one counted alike. */
 const bagOf = (value: unknown) =>
-	stableJson(
+	canonicalJson(
 		Object.fromEntries(
 			Object.entries((value ?? {}) as Values).filter(
 				([, feature]) => feature !== null && feature !== undefined,
@@ -55,7 +56,7 @@ const bagOf = (value: unknown) =>
 /** The cell: a pillar's coordinates in Core and the Surface's inflection. */
 function cellOf(attestation: AttestationValue): string {
 	const core = attestation.surface.lemma.coreFeatures as Values;
-	return stableJson({
+	return canonicalJson({
 		core: bagOf({
 			case: core.case,
 			number: core.number,
@@ -90,7 +91,7 @@ export function evaluateGrammar(
 		};
 	const got = output.attestation as AttestationValue;
 	const surfaceSpelling = (attestation: AttestationValue) =>
-		stableJson({
+		canonicalJson({
 			normalizedSurface: attestation.surface.normalizedSurface,
 			spelling: attestation.surface.spelling,
 			surfaceFeatures: attestation.surface.surfaceFeatures,
@@ -101,16 +102,16 @@ export function evaluateGrammar(
 			lemmaIdentityKey(got.surface.lemma) ===
 			lemmaIdentityKey(gold.surface.lemma),
 		cell: cellOf(got) === cellOf(gold),
-		members: stableJson(got.members) === stableJson(gold.members),
+		members: canonicalJson(got.members) === canonicalJson(gold.members),
 		spelling: surfaceSpelling(got) === surfaceSpelling(gold),
 		...(hasValency
 			? {
 					valency:
-						stableJson(got.valencyEvidence ?? []) ===
-						stableJson(gold.valencyEvidence),
+						canonicalJson(got.valencyEvidence ?? []) ===
+						canonicalJson(gold.valencyEvidence),
 				}
 			: {}),
-		exact: stableJson(got) === stableJson(gold),
+		exact: canonicalJson(got) === canonicalJson(gold),
 	};
 }
 

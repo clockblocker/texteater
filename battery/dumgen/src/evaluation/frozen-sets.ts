@@ -11,7 +11,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { gunzipSync, gzipSync } from "node:zlib";
-import { stableJson } from "promptsmith";
+import { canonicalJson } from "common-utils";
 
 /** What every frozen set carries: its name and the hash of its cases. */
 export type FrozenSet = { readonly name: string; readonly hash: string };
@@ -66,7 +66,7 @@ export async function storeFrozenSet(
 ): Promise<void> {
 	await mkdir(root, { recursive: true });
 	const path = frozenSetPath(root, set.name, set.hash);
-	if (!existsSync(path)) await writeFile(path, gzipSync(stableJson(set)));
+	if (!existsSync(path)) await writeFile(path, gzipSync(canonicalJson(set)));
 	await writeFile(
 		currentPath(root),
 		`${JSON.stringify({ ...readCurrent(root), [set.name]: set.hash }, null, "\t")}\n`,

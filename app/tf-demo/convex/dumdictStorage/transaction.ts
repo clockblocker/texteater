@@ -1,3 +1,4 @@
+import { canonicalJson } from "common-utils";
 import {
 	applyDumdictKnowledgeChange,
 	type ChangePrecondition,
@@ -22,7 +23,6 @@ import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey,
-	stableFingerprint,
 } from "../../server/linguisticIdentity";
 import { parseUnitAs } from "../../server/operationalParsing";
 import type { Doc, Id } from "../_generated/dataModel";
@@ -708,10 +708,12 @@ export async function completeAuthoredComponentKnowledge(
 		...optionalRecord(record.knowledge),
 		...accumulated?.knowledge,
 	};
+	const knowledgeJson = canonicalJson(knowledge);
 	if (
-		stableFingerprint(record.knowledge) === stableFingerprint(knowledge) &&
-		stableFingerprint(accumulated?.knowledge) ===
-			stableFingerprint(knowledge)
+		record.knowledge !== undefined &&
+		canonicalJson(record.knowledge) === knowledgeJson &&
+		accumulated !== null &&
+		canonicalJson(accumulated.knowledge) === knowledgeJson
 	)
 		return false;
 	await ctx.db.patch(entry._id, { record: { ...record, knowledge } });
