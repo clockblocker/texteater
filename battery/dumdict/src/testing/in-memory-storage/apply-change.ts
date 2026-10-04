@@ -30,6 +30,15 @@ export function applyChange<L extends Dumling.Language>(
 				readingLemma(change.entry.reading),
 			);
 			if (!bundle) return false;
+			const relations = change.entry.knowledge?.semanticRelations;
+			if (relations)
+				for (const [relation, targets] of Object.entries(relations))
+					if (relation !== "targetKind" && Array.isArray(targets))
+						assertRelationTargetsStored(
+							draft,
+							relations.targetKind,
+							targets,
+						);
 			bundle.readingEntries.push(structuredClone(change.entry));
 			return true;
 		}
@@ -84,13 +93,47 @@ function applyReadingPatch<L extends Dumling.Language>(
 	let reading = bundle.readingEntries[index];
 	if (!reading) return false;
 	for (const op of change.ops) {
-		if (op.kind === "addAttestation")
+		if (op.kind === "addAttestation") {
 			reading = {
 				...reading,
 				attestations: [...reading.attestations, op.value],
 			};
-		else reading = applyDumdictKnowledgeChange(reading, op.envelope);
+			continue;
+		}
+		const knowledgeChange = op.envelope.change;
+		if (
+			knowledgeChange.aspect === "semanticRelations" &&
+			"value" in knowledgeChange
+		)
+			assertRelationTargetsStored(
+				draft,
+				knowledgeChange.targetKind,
+				knowledgeChange.value,
+			);
+		reading = applyDumdictKnowledgeChange(reading, op.envelope);
 	}
 	bundle.readingEntries[index] = reading;
 	return true;
+}
+
+/**
+ * A direct Semantic Relation names a stored Lemma or Reading; a target the
+ * dictionary does not hold is a pending relation. Naming a missing target is
+ * an invalid Knowledge Change, so the commit throws and writes nothing.
+ */
+function assertRelationTargetsStored<L extends Dumling.Language>(
+	draft: DraftStorageState<L>,
+	targetKind: unknown,
+	targets: readonly unknown[],
+) {
+	for (const target of targets) {
+		if (
+			targetKind === "reading"
+				? !findDraftBundleByReading(draft, target as Dumling.Reading<L>)
+				: !findDraftBundleByLemma(draft, target as Dumling.Lemma<L>)
+		)
+			throw new Error(
+				`A Semantic Relation target ${targetKind === "reading" ? "Reading" : "Lemma"} is missing.`,
+			);
+	}
 }

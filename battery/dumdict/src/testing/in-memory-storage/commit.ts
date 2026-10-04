@@ -1,4 +1,5 @@
 import type * as Dumling from "dumling/types";
+import { impliedChangePreconditions } from "../../core/implied-preconditions";
 import type {
 	CommitChangesRequest,
 	CommitChangesResult,
@@ -32,7 +33,10 @@ export function commitChanges<L extends Dumling.Language>(
 
 	for (const change of request.changes) {
 		if (
-			change.preconditions.some((precondition) =>
+			[
+				...change.preconditions,
+				...impliedChangePreconditions(change),
+			].some((precondition) =>
 				draftPreconditionFails(draft, precondition),
 			)
 		) {
