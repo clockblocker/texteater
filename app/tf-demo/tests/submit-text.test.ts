@@ -5,6 +5,7 @@ import {
 	GERMAN_ONLY_MESSAGE,
 	INTAKE_NOT_CONFIGURED_MESSAGE,
 } from "../server/intake";
+import type { TextLanguage } from "../shared/supported-target-language";
 import { visitorErrorMessage } from "../src/lib/visitor-error";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
 import { asksAbout, fakeJev, germanAnswers } from "./support/jev";
@@ -46,7 +47,7 @@ function intakeRuns(t: TestConvexDb) {
 const submit = (
 	t: TestConvexDb,
 	sourceText: string,
-	options: { submissionKey?: string; language?: "de" | "en" | "he" } = {},
+	options: { submissionKey?: string; language?: TextLanguage } = {},
 ) =>
 	t.action(api.orchestration.submitText, {
 		visitorId: "visitor-1",

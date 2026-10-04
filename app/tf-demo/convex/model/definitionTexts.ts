@@ -9,6 +9,7 @@ import {
 	type StoredUnit,
 	unresolvedUnits,
 } from "../../server/storedSegments";
+import type { TextLanguage } from "../../shared/supported-target-language";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 
@@ -170,7 +171,7 @@ export async function writeDefinitionText(
 	input: {
 		readonly ownerReadingKey: string;
 		readonly definition: string;
-		readonly language: "de" | "en" | "he";
+		readonly language: TextLanguage;
 		readonly segmentedSentenceId: string;
 		readonly segments: readonly StoredSegmentValue[];
 		readonly units: readonly StoredUnit[];
@@ -237,7 +238,7 @@ export async function ensureInlineDefinitionText(
 	input: {
 		readonly ownerReadingKey: string;
 		readonly knowledge: unknown;
-		readonly language: "de" | "en" | "he";
+		readonly language: TextLanguage;
 		/** Code segmentation for fixtures; each ResolvableText Segment becomes its own Unresolved unit. */
 		readonly segment: (text: string) => readonly StoredSegmentValue[];
 	},

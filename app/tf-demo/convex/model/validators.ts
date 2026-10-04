@@ -6,7 +6,6 @@ import {
 	translationLanguageValues,
 } from "dumrel";
 
-const enabledSegmentationLanguageValues = ["de", "en", "he"] as const;
 const grammaticalResolutionLanguageValues = ["de"] as const;
 const segmentKindValues = [
 	"ResolvableText",
@@ -138,6 +137,7 @@ const semanticRelationValues = [
 ] as const;
 
 import { READING_BLOCK_KIND_VALUES } from "../../shared/reading-block-layout";
+import { TEXT_LANGUAGE_VALUES } from "../../shared/supported-target-language";
 
 export function literalUnion<const Value extends string>(
 	values: readonly [Value, ...Value[]],
@@ -146,9 +146,7 @@ export function literalUnion<const Value extends string>(
 	return v.union(v.literal(first), ...rest.map((value) => v.literal(value)));
 }
 
-export const languageValidator = literalUnion(
-	enabledSegmentationLanguageValues,
-);
+export const languageValidator = literalUnion(TEXT_LANGUAGE_VALUES);
 
 const familyValues = [
 	"Lexeme",

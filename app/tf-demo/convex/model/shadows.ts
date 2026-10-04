@@ -4,6 +4,7 @@ import {
 	foldedCanonicalForm,
 	lemmaIdentityKey,
 } from "../../server/linguisticIdentity";
+import type { TextLanguage } from "../../shared/supported-target-language";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
@@ -15,7 +16,7 @@ const descriptorKeys = ["canonicalForm", "family", "kind", "language"];
 type UnknownRecord = Record<string, unknown>;
 
 export type ShadowDescriptor = {
-	readonly language: "de" | "en" | "he";
+	readonly language: TextLanguage;
 	readonly canonicalForm: string;
 	readonly family: Dumling.Family;
 	readonly kind: Dumling.Kind;

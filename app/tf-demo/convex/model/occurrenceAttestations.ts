@@ -11,6 +11,7 @@ import {
 	germanGovernorKinds,
 	germanVerbalKinds,
 } from "../../shared/german-evidence-kinds";
+import type { TextLanguage } from "../../shared/supported-target-language";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadStoredSegments } from "./storedSegments";
@@ -19,7 +20,7 @@ import type { StoredSurfaceSpelling } from "./validators";
 type ServerCtx = QueryCtx | MutationCtx;
 
 type LemmaRecord = {
-	language: "de" | "en" | "he";
+	language: TextLanguage;
 	family: string;
 	kind: string;
 	canonicalForm: string;
@@ -27,7 +28,7 @@ type LemmaRecord = {
 };
 
 type SurfaceRecord = {
-	language: "de" | "en" | "he";
+	language: TextLanguage;
 	normalizedSurface: string;
 	spelling: StoredSurfaceSpelling;
 	surfaceFeatures: unknown;

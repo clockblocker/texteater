@@ -9,6 +9,7 @@ import { useMemo, useState } from "react";
 
 import { segmentKey } from "@/hooks/use-segment-selection";
 import type { api } from "../../convex/_generated/api";
+import type { TextLanguage } from "../../shared/supported-target-language";
 
 /** A stored Segment as a Visitor sees it in the reader. */
 type SentenceSegmentView = NonNullable<
@@ -29,7 +30,7 @@ type SegmentDisplayState =
 /** What one Sentence needs to read and click, wherever it is shown. */
 export type ReaderSentenceData = {
 	readonly sentenceId: string;
-	readonly language: "de" | "en" | "he";
+	readonly language: TextLanguage;
 	readonly stitchedText: string;
 	readonly segments: readonly SentenceSegmentView[];
 	/** Intake could not segment the Sentence, so its words have no units. */

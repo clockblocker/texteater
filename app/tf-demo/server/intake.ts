@@ -1,5 +1,6 @@
 import { type Dumgen, type SegmentedText, splitText } from "dumgen";
 import * as Effect from "effect/Effect";
+import type { TextLanguage } from "../shared/supported-target-language";
 import { inspectionStep } from "./inspectionCapture";
 import {
 	type StoredSegmentValue,
@@ -15,16 +16,13 @@ import { assertTextSubmissionWithinLimits } from "./textSubmissionLimits";
  * German only for now; the language stays a parameter so Hebrew can follow.
  */
 
-/** The languages a Text names when it is submitted. */
-export type SubmissionLanguage = "de" | "en" | "he";
-
 /** What a Visitor reads when a Text in another language is turned away. */
 export const GERMAN_ONLY_MESSAGE =
 	"tf-demo reads German Texts only for now. Support for other languages is planned.";
 
 /** Why intake turns a Text in `language` away, or undefined for German. */
 export function unsupportedLanguageMessage(
-	language: SubmissionLanguage,
+	language: TextLanguage,
 ): string | undefined {
 	return language === "de" ? undefined : GERMAN_ONLY_MESSAGE;
 }
@@ -80,7 +78,7 @@ export type IntakePersistence = {
 export type SubmitTextInput = {
 	readonly submissionKey: string;
 	readonly sourceText: string;
-	readonly language: SubmissionLanguage;
+	readonly language: TextLanguage;
 };
 
 /**
