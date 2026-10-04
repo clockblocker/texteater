@@ -2,6 +2,7 @@ import { ParsingError } from "common-utils/validation";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { structuralKeys } from "./fingerprint.js";
+import { knowledgePolicyApplies } from "./knowledge-policies.js";
 import type {
 	ConjugationClasses,
 	KnowledgeChange,
@@ -301,16 +302,15 @@ function parseParticipleSource<R extends Dumling.Reading>(
 }
 
 /**
- * A plural belongs to a German NOUN Reading, and each plural form appears
- * once (#657).
+ * A plural belongs to a Reading whose route the Knowledge Policy gives one,
+ * a German NOUN, and each plural form appears once (#657).
  */
 function parseNounPlural<R extends Dumling.Reading>(
 	source: R,
 	value: NounPlural,
 	path: Path,
 ): NounPlural | ParsingError {
-	const { language, family, kind } = source.lemma;
-	if (language !== "de" || family !== "Lexeme" || kind !== "NOUN")
+	if (!knowledgePolicyApplies(source.lemma, "plural"))
 		return issue(path, "Only a German NOUN Reading has a plural");
 	if (typeof value !== "string" && new Set(value).size !== value.length)
 		return issue(path, "A plural lists each form once");
@@ -318,16 +318,15 @@ function parseNounPlural<R extends Dumling.Reading>(
 }
 
 /**
- * Conjugation classes belong to a German VERB Reading, and each class appears
- * once (ADR 0038).
+ * Conjugation classes belong to a Reading whose route the Knowledge Policy
+ * gives them, a German VERB, and each class appears once (ADR 0038).
  */
 function parseConjugationClasses<R extends Dumling.Reading>(
 	source: R,
 	value: ConjugationClasses,
 	path: Path,
 ): ConjugationClasses | ParsingError {
-	const { language, family, kind } = source.lemma;
-	if (language !== "de" || family !== "Lexeme" || kind !== "VERB")
+	if (!knowledgePolicyApplies(source.lemma, "conjugationClass"))
 		return issue(
 			path,
 			"Only a German VERB Reading has a conjugation class",

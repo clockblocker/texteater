@@ -1,5 +1,5 @@
 import { ParsingError } from "common-utils/validation";
-import { DE_REL_MAP } from "./selection-policy-de.js";
+import { knowledgePolicyMask } from "./knowledge-policies.js";
 import type { KnowledgeRequestMask, KnowledgeSelectionInput } from "./types.js";
 import { parseSelectionShape } from "./validation.js";
 
@@ -19,16 +19,7 @@ export function selectKnowledge(input: KnowledgeSelectionInput) {
 	if (parsed instanceof ParsingError)
 		return { success: false, error: parsed } as const;
 	const { route, settings = {} } = parsed;
-	if (route.language !== "de")
-		return {
-			success: false,
-			error: new KnowledgePolicyUnavailable(route),
-		} as const;
-	const policy: Record<
-		string,
-		Record<string, KnowledgeRequestMask>
-	> = DE_REL_MAP;
-	const mask = policy[route.family]?.[route.kind];
+	const mask = knowledgePolicyMask(route);
 	if (!mask)
 		return {
 			success: false,
