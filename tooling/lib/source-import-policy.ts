@@ -322,6 +322,10 @@ const buildSourceSeams = new Map<string, readonly string[]>([
 		],
 	],
 	[
+		"battery/legacy-dumgen/codegen/hebrew-word-list.ts",
+		["../../dumrel/codegen/format-typescript.js"],
+	],
+	[
 		"battery/dumrel/codegen/generate.ts",
 		[
 			"../../dumling/codegen/operations.js",

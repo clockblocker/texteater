@@ -18,12 +18,12 @@ import {
 	internalQuery,
 	type MutationCtx,
 } from "./_generated/server";
-import { storedReadingsOf } from "./dumdictStorage/queries";
 import {
 	createDumdictTransaction,
 	type DumdictTransactionOutcome,
 	findReadingByKey,
 	findSurface,
+	storedReadingsOf,
 } from "./dumdictTransaction";
 import {
 	assertIndex,

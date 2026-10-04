@@ -42,6 +42,7 @@ export { dictionaryPlanResult } from "./dumdictStorage/dictionaryPlan";
 export {
 	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
+	storedReadingsOf,
 } from "./dumdictStorage/queries";
 export {
 	DICTIONARY_REVISION,
