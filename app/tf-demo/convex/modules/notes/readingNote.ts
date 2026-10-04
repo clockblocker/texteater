@@ -1,5 +1,6 @@
 import type { Prettify } from "common-utils";
 import { type Infer, v } from "convex/values";
+import { normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	formulaRoleValues,
@@ -499,7 +500,7 @@ async function projectDefinitionText(
 	}
 	if (
 		row.state !== "Ready" ||
-		row.materializedDefinition !== definition.trim().normalize("NFC") ||
+		row.materializedDefinition !== normalizeForm(definition) ||
 		!row.sentenceId
 	) {
 		return { state: "Pending" as const };

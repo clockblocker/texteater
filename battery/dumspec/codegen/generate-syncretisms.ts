@@ -1,6 +1,11 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { foldCase, lemmaIdentityKey, parseUnit, syncretize } from "dumling";
+import {
+	canonicalFormKey,
+	lemmaIdentityKey,
+	parseUnit,
+	syncretize,
+} from "dumling";
 import type * as Dumrel from "dumrel/types";
 import { sourceMembers } from "../src/inventories/de/inventory.js";
 import type { AuthoredMember } from "../src/inventories/de/member.js";
@@ -142,7 +147,7 @@ for (const cell of cells.values()) {
 		.map((feature) => [feature, core[feature] ?? null]);
 	const key = json([
 		cell.lemma.kind,
-		foldCase(cell.lemma.canonicalForm, cell.lemma.language),
+		canonicalFormKey(cell.lemma.canonicalForm, cell.lemma.language),
 		settled,
 	]);
 	groups.set(key, [...(groups.get(key) ?? []), cell]);

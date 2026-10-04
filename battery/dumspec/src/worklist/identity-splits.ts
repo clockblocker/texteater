@@ -1,4 +1,4 @@
-import { foldCase } from "dumling";
+import { canonicalFormKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import type { AdrId, AnnotationLayer, RuleId, SpecRecordId } from "../types.js";
 import type { LemmaInFile, RecordFile } from "./record-files.js";
@@ -118,7 +118,7 @@ export function identitySplits(files: readonly RecordFile[]): IdentitySplit[] {
 		for (const lemma of file.lemmas) {
 			const identity = lemmaIdentity(lemma);
 			const key = formatIdentity(identity);
-			const form = foldCase(
+			const form = canonicalFormKey(
 				lemma.canonicalForm,
 				lemma.language as Dumling.Language,
 			);

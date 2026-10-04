@@ -1,5 +1,6 @@
 import type { FunctionReference } from "convex/server";
 import { makeFunctionReference } from "convex/server";
+import { normalizeForm } from "dumling";
 
 import {
 	assertSentenceUnits,
@@ -55,7 +56,7 @@ export function definitionOf(knowledge: unknown): string | null {
 	}
 	const value = Reflect.get(knowledge, "definition");
 	if (typeof value !== "string") return null;
-	const normalized = value.trim().normalize("NFC");
+	const normalized = normalizeForm(value);
 	return normalized.length > 0 ? normalized : null;
 }
 

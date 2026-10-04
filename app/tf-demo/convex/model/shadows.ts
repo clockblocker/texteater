@@ -1,3 +1,4 @@
+import { normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
 	foldedCanonicalForm,
@@ -37,7 +38,7 @@ function normalizedString(value: unknown, context: string): string {
 	if (typeof value !== "string") {
 		throw new Error(`${context} must be a string.`);
 	}
-	const normalized = value.trim().normalize("NFC");
+	const normalized = normalizeForm(value);
 	if (normalized.length === 0) {
 		throw new Error(`${context} must not be empty.`);
 	}
