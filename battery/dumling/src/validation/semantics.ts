@@ -277,25 +277,15 @@ export function fusedMemberError(): string {
  * (`[das, Berlin]`, `[die, Schweiz]`). A Head without an article has no
  * article evidence and Full coverage; an owned article keeps Full coverage; a
  * shared article or a hidden Fusion component leaves the Head Partial.
- * Hebrew marks its article with `definite: Def` on the noun or adjective it
- * prefixes, and only such a form, or a proper noun cited with its article,
- * names evidence; a `Def` form may name none. A NOUN Locution owns its
- * article the same way (`[a, walk, in, the, park]`), but its other fixed
- * words decide its coverage too (ADR 0039), so only a shared or hidden
- * article ties it to Partial. Whether the article agrees with its Head is a
+ * Hebrew adds its own condition, `isHebrewArticleAttestation`. A NOUN
+ * Locution owns its article the same way (`[a, walk, in, the, park]`), but
+ * its other fixed words decide its coverage too (ADR 0039), so only a shared
+ * or hidden article ties it to Partial. Whether the article agrees with its Head is a
  * fact about the language, checked in dumcorpus (ADR 0041).
  */
 export function isArticleAttestation(input: unknown): boolean {
 	const value = input as {
-		surface: {
-			language: string;
-			inflectionalFeatures: { definite?: string | null } | null;
-			lemma: {
-				family: string;
-				kind: string;
-				coreFeatures: { article?: string | null };
-			};
-		};
+		surface: { lemma: { family: string } };
 		articleEvidence?:
 			| { kind: "Owned"; member: number }
 			| { kind: "Shared" }
@@ -312,13 +302,6 @@ export function isArticleAttestation(input: unknown): boolean {
 		surface.lemma.family === "Locution" ||
 		value.realizationCoverage === "Full";
 	if (!evidence) return coverageWithOwnArticle;
-	if (
-		surface.language === "he" &&
-		!(surface.lemma.kind === "PROPN"
-			? surface.lemma.coreFeatures.article === "Definite"
-			: surface.inflectionalFeatures?.definite === "Def")
-	)
-		return false;
 	if (evidence.kind === "Owned")
 		return coverageWithOwnArticle && evidence.member < value.members.length;
 	if (evidence.kind === "Hidden")
@@ -330,6 +313,29 @@ export function isArticleAttestation(input: unknown): boolean {
 }
 export function articleAttestationError(): string {
 	return "A Head's article is an owned member with Full coverage, or a shared article or hidden Fusion component with Partial coverage; a Head without an article has no article evidence and Full coverage; a NOUN Locution's other fixed words may leave it Partial";
+}
+
+/**
+ * Hebrew marks its article with `definite: Def` on the noun or adjective it
+ * prefixes, and only such a form, or a proper noun cited with its article,
+ * names article evidence; a `Def` form may name none (ADR 0040).
+ */
+export function isHebrewArticleAttestation(input: unknown): boolean {
+	const value = input as {
+		surface: {
+			inflectionalFeatures: { definite?: string | null } | null;
+			lemma: { kind: string; coreFeatures: { article?: string | null } };
+		};
+		articleEvidence?: unknown;
+	};
+	const { surface } = value;
+	if (!value.articleEvidence) return true;
+	return surface.lemma.kind === "PROPN"
+		? surface.lemma.coreFeatures.article === "Definite"
+		: surface.inflectionalFeatures?.definite === "Def";
+}
+export function hebrewArticleAttestationError(): string {
+	return "A Hebrew Head names article evidence only on a Def form, or as a proper noun cited with its article";
 }
 
 type ExpletiveEvidence = { attested: string; orthography: string };

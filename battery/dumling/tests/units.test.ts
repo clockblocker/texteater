@@ -4,7 +4,7 @@ import { z } from "zod";
 import { registrations } from "../codegen/operations.js";
 import { loadRoutes } from "../codegen/routes.js";
 import { parseUnit, syncretismView, syncretize } from "../src/index.js";
-import { UnitKindSchema } from "../src/schemas/units.js";
+import { UnitKindSchema } from "../src/schemas/unit-parts.js";
 import {
 	operationTable,
 	validationOperations,

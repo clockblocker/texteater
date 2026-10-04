@@ -5,7 +5,7 @@ import {
 	emitInlineOutputType,
 	emitLinkedValidationRegistry,
 } from "common-utils/validation-compiler";
-import { UnitKindSchema, VariantTagSchema } from "../src/schemas/units.js";
+import { UnitKindSchema, VariantTagSchema } from "../src/schemas/unit-parts.js";
 import { registrations } from "./operations.js";
 import { loadRoutes } from "./routes.js";
 
