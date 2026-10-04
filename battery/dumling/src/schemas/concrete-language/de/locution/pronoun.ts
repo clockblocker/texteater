@@ -1,16 +1,14 @@
-import type { Assert } from "common-utils";
-import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
 import {
 	FeatureBagKind,
 	featureBagSchema,
+	featureBags,
 	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
 // A PRON Locution (was für einer) is a stem: one Lemma whose Surfaces mark
 // case, number and gender, under the closed-class rule (ADR 0039).
-export const DePronounLocutionFeatureBagsSchema = z.strictObject({
+export const DePronounLocutionFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({}),
 	[FeatureBagKind.Inflectional]: nonEmptyFeatureBagSchema(
 		featureBagSchema({
@@ -20,11 +18,3 @@ export const DePronounLocutionFeatureBagsSchema = z.strictObject({
 		}),
 	),
 });
-
-export type DePronounLocutionFeatureBags = z.infer<
-	typeof DePronounLocutionFeatureBagsSchema
->;
-
-type _DePronounLocutionFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<DePronounLocutionFeatureBags>
->;

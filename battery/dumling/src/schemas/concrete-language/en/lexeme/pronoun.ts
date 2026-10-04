@@ -1,16 +1,14 @@
-import type { Assert } from "common-utils";
-import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
 import {
 	FeatureBagKind,
 	featureBagSchema,
+	featureBags,
 	featureValueSetSchema,
 } from "../../../universal/index.js";
 import { EN_FEATURE_SCHEMA } from "../en-feature-catalog.js";
 
 // Each spelled paradigm cell is its own Lemma: I, me, my, mine and myself
 // differ in Core case, number, gender or reflex (system ADR 0032).
-export const EnPronounFeatureBagsSchema = z.strictObject({
+export const EnPronounFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["ADV", "PRON"]),
@@ -35,9 +33,3 @@ export const EnPronounFeatureBagsSchema = z.strictObject({
 		reflex: EN_FEATURE_SCHEMA.reflex,
 	}),
 });
-
-export type EnPronounFeatureBags = z.infer<typeof EnPronounFeatureBagsSchema>;
-
-type _EnPronounFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<EnPronounFeatureBags>
->;

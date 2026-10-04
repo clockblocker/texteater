@@ -1,14 +1,12 @@
-import type { Assert } from "common-utils";
-import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
 import {
 	FeatureBagKind,
 	featureBagSchema,
+	featureBags,
 	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
-export const DeAdverbFeatureBagsSchema = z.strictObject({
+export const DeAdverbFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		// No pronType: it split no ADV Lemma. An adverb's series shows in its
 		// Reading's Emoji Description, and whether it is closed-class is a
@@ -21,9 +19,3 @@ export const DeAdverbFeatureBagsSchema = z.strictObject({
 		}),
 	),
 });
-
-export type DeAdverbFeatureBags = z.infer<typeof DeAdverbFeatureBagsSchema>;
-
-type _DeAdverbFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<DeAdverbFeatureBags>
->;

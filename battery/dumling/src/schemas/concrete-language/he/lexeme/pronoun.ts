@@ -1,15 +1,13 @@
-import type { Assert } from "common-utils";
-import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
 import {
 	FeatureBagKind,
 	featureBagSchema,
+	featureBags,
 	featureValueSetSchema,
 	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
 import { HE_FEATURE_SCHEMA } from "../he-feature-catalog.js";
 
-export const HePronounFeatureBagsSchema = z.strictObject({
+export const HePronounFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		definite: HE_FEATURE_SCHEMA.definite.extract(["Def"]),
 		pronType: HE_FEATURE_SCHEMA.pronType.extract([
@@ -30,9 +28,3 @@ export const HePronounFeatureBagsSchema = z.strictObject({
 		}),
 	),
 });
-
-export type HePronounFeatureBags = z.infer<typeof HePronounFeatureBagsSchema>;
-
-type _HePronounFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<HePronounFeatureBags>
->;

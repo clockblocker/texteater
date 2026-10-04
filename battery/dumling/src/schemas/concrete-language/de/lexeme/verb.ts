@@ -1,9 +1,5 @@
-import type { Assert } from "common-utils";
 import { z } from "zod";
-import {
-	FeatureBagKind,
-	type IsUniversalFeatureBags,
-} from "../../../universal/index.js";
+import { FeatureBagKind, featureBags } from "../../../universal/index.js";
 import {
 	DE_FEATURE_SCHEMA,
 	DeVerbalInflectionalFeatureBagSchema,
@@ -14,13 +10,7 @@ const DeVerbCoreFeatureBagSchema = z.strictObject({
 	lexicallyReflexive: DE_FEATURE_SCHEMA.lexicallyReflexive.nullable(),
 });
 
-export const DeVerbFeatureBagsSchema = z.strictObject({
+export const DeVerbFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: DeVerbCoreFeatureBagSchema,
 	[FeatureBagKind.Inflectional]: DeVerbalInflectionalFeatureBagSchema,
 });
-
-export type DeVerbFeatureBags = z.infer<typeof DeVerbFeatureBagsSchema>;
-
-type _DeVerbFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<DeVerbFeatureBags>
->;

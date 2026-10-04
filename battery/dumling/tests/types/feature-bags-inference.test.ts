@@ -1,11 +1,12 @@
 import { afterAll, describe, expect, test } from "bun:test";
 import { closeTestingSessions, inferredType } from "prinfer/testing";
-import type { DeNounFeatureBags as SourceDeNounFeatureBags } from "../../src/schemas/concrete-language/de/lexeme/noun.js";
+import type { z } from "zod";
+import type { DeNounFeatureBagsSchema } from "../../src/schemas/concrete-language/de/lexeme/noun.js";
 import type { UniversalFeatureBag as SourceUniversalFeatureBag } from "../../src/schemas/universal/features/catalog.js";
 
 afterAll(closeTestingSessions);
 
-export type DeNounFeatureBags = SourceDeNounFeatureBags;
+export type DeNounFeatureBags = z.infer<typeof DeNounFeatureBagsSchema>;
 export type UniversalFeatureBag = SourceUniversalFeatureBag;
 
 describe("Feature Bag inference", () => {

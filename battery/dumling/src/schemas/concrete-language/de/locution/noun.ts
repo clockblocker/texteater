@@ -1,13 +1,15 @@
-import type { Assert } from "common-utils";
 import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
-import { FeatureBagKind, featureBagSchema } from "../../../universal/index.js";
+import {
+	FeatureBagKind,
+	featureBagSchema,
+	featureBags,
+} from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
 // A NOUN Locution declines like a noun: unter weißen Raben (ADR 0039). Core
 // gender lets a host show its article. An article that grammar changes is
 // wording no feature describes, so the Surface marks only case and number.
-export const DeNounLocutionFeatureBagsSchema = z.strictObject({
+export const DeNounLocutionFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
 	}),
@@ -18,11 +20,3 @@ export const DeNounLocutionFeatureBagsSchema = z.strictObject({
 		number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]).nullable(),
 	}),
 });
-
-export type DeNounLocutionFeatureBags = z.infer<
-	typeof DeNounLocutionFeatureBagsSchema
->;
-
-type _DeNounLocutionFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<DeNounLocutionFeatureBags>
->;

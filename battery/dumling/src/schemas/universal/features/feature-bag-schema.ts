@@ -4,6 +4,7 @@ import {
 	hasMarkedFeature,
 	nonEmptyFeatureBagError,
 } from "../../../validation/semantics.js";
+import { FeatureBagKind } from "./feature-bag-kind.js";
 
 type FeatureSchemaShape = Record<string, z.ZodType>;
 
@@ -30,6 +31,26 @@ export function featureBagSchema<const Shape extends FeatureSchemaShape>(
 
 	return z.strictObject(nullableShape) as unknown as FeatureBagSchema<Shape>;
 }
+
+type FeatureBagsShape = {
+	[FeatureBagKind.Core]: unknown;
+	[FeatureBagKind.Inflectional]?: unknown;
+};
+
+/**
+ * A route's Feature Bags: its Core bag and, when its Surfaces inflect, its
+ * inflectional bag, each drawn from the Feature Pool (system ADR 0032). The
+ * route's generated schema entrypoint asserts that, so a feature outside the
+ * pool fails `bun run check` there.
+ */
+export function featureBags<Shape extends FeatureBagsShape>(bags: Shape) {
+	return z.strictObject(bags);
+}
+
+/** The Feature Bags of a route with no features: one empty Core bag. */
+export const featurelessBags = featureBags({
+	[FeatureBagKind.Core]: featureBagSchema({}),
+});
 
 export function featureValueSetSchema<const Schema extends z.ZodType>(
 	schema: Schema,

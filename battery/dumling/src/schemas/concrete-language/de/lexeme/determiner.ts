@@ -1,4 +1,3 @@
-import type { Assert } from "common-utils";
 import { z } from "zod";
 import {
 	germanDeterminerCoreError,
@@ -6,8 +5,8 @@ import {
 } from "../../../../validation/semantics.js";
 import {
 	FeatureBagKind,
+	featureBags,
 	featureValueSetSchema,
-	type IsUniversalFeatureBags,
 	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
@@ -41,15 +40,7 @@ const DeDeterminerInflectionalFeatureBagSchema = nonEmptyFeatureBagSchema(
 	}),
 );
 
-export const DeDeterminerFeatureBagsSchema = z.strictObject({
+export const DeDeterminerFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: DeDeterminerCoreFeatureBagSchema,
 	[FeatureBagKind.Inflectional]: DeDeterminerInflectionalFeatureBagSchema,
 });
-
-export type DeDeterminerFeatureBags = z.infer<
-	typeof DeDeterminerFeatureBagsSchema
->;
-
-type _DeDeterminerFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<DeDeterminerFeatureBags>
->;

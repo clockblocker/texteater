@@ -4,6 +4,5 @@ export * from "./core/supported-language.js";
 export * from "./core/unit-kind/foreign-kind.js";
 export * from "./core/unit-kind/morpheme-kind.js";
 export * from "./core/unit-kind/saying-kind.js";
-export type { IsUniversalFeatureBags } from "./features/catalog.js";
 export * from "./features/feature-bag-kind.js";
 export * from "./features/feature-bag-schema.js";

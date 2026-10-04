@@ -1,15 +1,13 @@
-import type { Assert } from "common-utils";
-import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
 import {
 	FeatureBagKind,
 	featureBagSchema,
+	featureBags,
 	featureValueSetSchema,
 	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
 import { HE_FEATURE_SCHEMA } from "../he-feature-catalog.js";
 
-export const HeAuxiliaryFeatureBagsSchema = z.strictObject({
+export const HeAuxiliaryFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		verbType: HE_FEATURE_SCHEMA.verbType.extract(["Cop", "Mod"]),
 	}),
@@ -28,11 +26,3 @@ export const HeAuxiliaryFeatureBagsSchema = z.strictObject({
 		}),
 	),
 });
-
-export type HeAuxiliaryFeatureBags = z.infer<
-	typeof HeAuxiliaryFeatureBagsSchema
->;
-
-type _HeAuxiliaryFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<HeAuxiliaryFeatureBags>
->;

@@ -1,14 +1,12 @@
-import type { Assert } from "common-utils";
-import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
 import {
 	FeatureBagKind,
 	featureBagSchema,
+	featureBags,
 	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
-export const DeAdjectiveFeatureBagsSchema = z.strictObject({
+export const DeAdjectiveFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		comparable: DE_FEATURE_SCHEMA.comparable,
 	}),
@@ -21,11 +19,3 @@ export const DeAdjectiveFeatureBagsSchema = z.strictObject({
 		}),
 	),
 });
-
-export type DeAdjectiveFeatureBags = z.infer<
-	typeof DeAdjectiveFeatureBagsSchema
->;
-
-type _DeAdjectiveFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<DeAdjectiveFeatureBags>
->;

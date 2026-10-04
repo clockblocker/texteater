@@ -1,7 +1,14 @@
 // Generated concrete schemas. Run bun run generate.
+import type { Assert } from "common-utils";
+import type { z } from "zod";
 import { EnCoordinatingConjunctionFeatureBagsSchema as featureBags } from "../../../../schemas/concrete-language/en/lexeme/coordinating-conjunction.js";
 import { buildUnitSchemas } from "../../../../schemas/units.js";
+import type { IsUniversalFeatureBags } from "../../../../schemas/universal/features/catalog.js";
 
+// The route's Feature Bags draw only on the Feature Pool (system ADR 0032).
+type _InFeaturePool = Assert<
+	IsUniversalFeatureBags<z.infer<typeof featureBags>>
+>;
 const schemas = buildUnitSchemas(
 	{ language: "en", family: "Lexeme", kind: "CCONJ" },
 	featureBags.shape.core,

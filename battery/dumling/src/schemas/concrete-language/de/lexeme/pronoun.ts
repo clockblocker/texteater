@@ -1,13 +1,11 @@
-import type { Assert } from "common-utils";
-import { z } from "zod";
 import {
 	germanPronounCoreError,
 	isGermanPronounCore,
 } from "../../../../validation/semantics.js";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
 import {
 	FeatureBagKind,
 	featureBagSchema,
+	featureBags,
 	featureValueSetSchema,
 	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
@@ -27,7 +25,7 @@ import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/RelPron-der-die-das.xml?lang=de
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Posses/index.html?lang=de
 const gender = DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]);
-export const DePronounFeatureBagsSchema = z.strictObject({
+export const DePronounFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		case: DE_FEATURE_SCHEMA.case.extract(["Acc", "Dat", "Gen", "Nom"]),
 		number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]),
@@ -56,9 +54,3 @@ export const DePronounFeatureBagsSchema = z.strictObject({
 		}),
 	),
 });
-
-export type DePronounFeatureBags = z.infer<typeof DePronounFeatureBagsSchema>;
-
-type _DePronounFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<DePronounFeatureBags>
->;

@@ -1,10 +1,12 @@
-import type { Assert } from "common-utils";
 import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
-import { FeatureBagKind, featureBagSchema } from "../../../universal/index.js";
+import {
+	FeatureBagKind,
+	featureBagSchema,
+	featureBags,
+} from "../../../universal/index.js";
 import { DE_FEATURE_SCHEMA } from "../de-feature-catalog.js";
 
-export const DeNounFeatureBagsSchema = z.strictObject({
+export const DeNounFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		gender: DE_FEATURE_SCHEMA.gender.extract(["Fem", "Masc", "Neut"]),
 	}),
@@ -22,9 +24,3 @@ export const DeNounFeatureBagsSchema = z.strictObject({
 		number: DE_FEATURE_SCHEMA.number.extract(["Plur", "Sing"]).nullable(),
 	}),
 });
-
-export type DeNounFeatureBags = z.infer<typeof DeNounFeatureBagsSchema>;
-
-type _DeNounFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<DeNounFeatureBags>
->;

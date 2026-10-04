@@ -1,9 +1,8 @@
-import type { Assert } from "common-utils";
 import { z } from "zod";
 import {
 	FeatureBagKind,
+	featureBags,
 	featureValueSetSchema,
-	type IsUniversalFeatureBags,
 	nonEmptyFeatureBagSchema,
 } from "../../../universal/index.js";
 import { HE_FEATURE_SCHEMA } from "../he-feature-catalog.js";
@@ -27,13 +26,7 @@ const HeVerbInflectionalFeatureBagSchema = nonEmptyFeatureBagSchema(
 	}),
 );
 
-export const HeVerbFeatureBagsSchema = z.strictObject({
+export const HeVerbFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: HeVerbCoreFeatureBagSchema,
 	[FeatureBagKind.Inflectional]: HeVerbInflectionalFeatureBagSchema,
 });
-
-export type HeVerbFeatureBags = z.infer<typeof HeVerbFeatureBagsSchema>;
-
-type _HeVerbFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<HeVerbFeatureBags>
->;

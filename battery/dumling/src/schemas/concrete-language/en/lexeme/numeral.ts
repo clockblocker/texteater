@@ -1,10 +1,11 @@
-import type { Assert } from "common-utils";
-import { z } from "zod";
-import type { IsUniversalFeatureBags } from "../../../universal/index.js";
-import { FeatureBagKind, featureBagSchema } from "../../../universal/index.js";
+import {
+	FeatureBagKind,
+	featureBagSchema,
+	featureBags,
+} from "../../../universal/index.js";
 import { EN_FEATURE_SCHEMA } from "../en-feature-catalog.js";
 
-export const EnNumeralFeatureBagsSchema = z.strictObject({
+export const EnNumeralFeatureBagsSchema = featureBags({
 	[FeatureBagKind.Core]: featureBagSchema({
 		abbr: EN_FEATURE_SCHEMA.abbr,
 		extPos: EN_FEATURE_SCHEMA.extPos.extract(["PROPN"]),
@@ -12,9 +13,3 @@ export const EnNumeralFeatureBagsSchema = z.strictObject({
 		numType: EN_FEATURE_SCHEMA.numType.extract(["Card", "Frac"]),
 	}),
 });
-
-export type EnNumeralFeatureBags = z.infer<typeof EnNumeralFeatureBagsSchema>;
-
-type _EnNumeralFeatureBagsAreUniversal = Assert<
-	IsUniversalFeatureBags<EnNumeralFeatureBags>
->;
