@@ -1,6 +1,6 @@
 import { readdir } from "node:fs/promises";
 import { z } from "zod";
-import { buildUnitSchemas } from "../src/schemas/units.js";
+import { buildDiscoveredUnitSchemas } from "../src/schemas/units.js";
 import {
 	ForeignKindSchema,
 	LemmaFamilySchema,
@@ -92,7 +92,11 @@ export async function loadRoutes() {
 				...coordinate,
 				key: `${language}/${family}/${kind}`,
 				bag,
-				schemas: buildUnitSchemas(coordinate, core, inflectional),
+				schemas: buildDiscoveredUnitSchemas(
+					coordinate,
+					core,
+					inflectional,
+				),
 			};
 		}),
 	);

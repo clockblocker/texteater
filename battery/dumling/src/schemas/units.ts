@@ -172,20 +172,89 @@ function featureNameSchema(bag: z.core.$ZodType) {
 	return z.enum([first, ...rest]);
 }
 /**
- * German PRON opts in first: only the referent tells some of its pillar
- * cells, and some of a stem's Surfaces, apart (system ADR 0046). Other
- * routes reject both fields.
+ * Each route condition of the unit schemas, stated once as the
+ * `language/Family/Kind` keys of the routes it holds for. The runtime schemas
+ * test a route with `holds`, and their types read the same lists through
+ * `RoutesOf`, so the two cannot disagree.
  */
-function allowsSyncretism(route: {
-	language: string;
-	family: string;
-	kind: string;
-}): boolean {
-	return (
-		route.language === "de" &&
-		route.family === "Lexeme" &&
-		route.kind === "PRON"
-	);
+const routeConditions = {
+	/**
+	 * German PRON opts in first: only the referent tells some of its pillar
+	 * cells, and some of a stem's Surfaces, apart (system ADR 0046). Other
+	 * routes reject both fields.
+	 */
+	syncretism: ["de/Lexeme/PRON"],
+	foreign: ["de/Foreign/Foreign", "en/Foreign/Foreign", "he/Foreign/Foreign"],
+	germanNoun: ["de/Lexeme/NOUN"],
+	germanProperNoun: ["de/Lexeme/PROPN"],
+	lexemeArticleOwner: [
+		"de/Lexeme/NOUN",
+		"de/Lexeme/PROPN",
+		"de/Lexeme/ADJ",
+		"de/Lexeme/NUM",
+		"de/Lexeme/PRON",
+		"en/Lexeme/NOUN",
+		"en/Lexeme/PROPN",
+		"en/Lexeme/ADJ",
+		"en/Lexeme/NUM",
+		"en/Lexeme/PRON",
+		"he/Lexeme/NOUN",
+		"he/Lexeme/PROPN",
+		"he/Lexeme/ADJ",
+	],
+	// A NOUN Locution heads its phrase and owns its article as a Lexeme NOUN
+	// does (ADR 0040, amended 2026-10-02).
+	locutionArticleOwner: ["de/Locution/NOUN", "en/Locution/NOUN"],
+	germanVerbal: ["de/Lexeme/VERB", "de/Lexeme/AUX", "de/Locution/VERB"],
+	germanAdposition: ["de/Lexeme/ADP", "de/Locution/ADP"],
+	germanAdnominalGovernor: [
+		"de/Lexeme/ADJ",
+		"de/Lexeme/NOUN",
+		"de/Locution/ADJ",
+		"de/Locution/NOUN",
+	],
+	hebrewGovernor: [
+		"he/Lexeme/VERB",
+		"he/Lexeme/ADJ",
+		"he/Lexeme/NOUN",
+		"he/Locution/VERB",
+		"he/Locution/ADJ",
+		"he/Locution/NOUN",
+	],
+	englishGovernor: [
+		"en/Lexeme/VERB",
+		"en/Lexeme/ADJ",
+		"en/Lexeme/NOUN",
+		"en/Locution/VERB",
+		"en/Locution/ADJ",
+		"en/Locution/NOUN",
+	],
+	// Comparability decides Degree on German and English ADV and ADJ (ADR 0042).
+	comparability: [
+		"de/Lexeme/ADV",
+		"de/Lexeme/ADJ",
+		"de/Locution/ADV",
+		"de/Locution/ADJ",
+		"en/Lexeme/ADV",
+		"en/Lexeme/ADJ",
+		"en/Locution/ADV",
+		"en/Locution/ADJ",
+	],
+	germanClosedClass: [
+		"de/Lexeme/PRON",
+		"de/Lexeme/DET",
+		"de/Locution/PRON",
+		"de/Locution/DET",
+	],
+} as const;
+type RouteCondition = keyof typeof routeConditions;
+/** The keys of the routes a route condition holds for. */
+type RoutesOf<Condition extends RouteCondition> =
+	(typeof routeConditions)[Condition][number];
+/** Whether a route condition holds for the route `key` names. */
+function holds(condition: RouteCondition, key: string): boolean {
+	const routes: readonly string[] = routeConditions[condition];
+	return routes.includes(key);
 }
 /**
  * A Lemma of a route that allows Syncretisms (system ADR 0046). It is a plain
@@ -203,10 +272,10 @@ type SyncretizableLemmaSchema<
 	},
 	z.core.$strict
 >;
-function syncretizableLemmaSchema(
-	plainLemma: z.ZodObject,
-	core: z.core.$ZodType,
-) {
+function syncretizableLemmaSchema<
+	P extends z.ZodObject,
+	C extends z.core.$ZodType,
+>(plainLemma: P, core: C): SyncretizableLemmaSchema<P, C> {
 	const name = featureNameSchema(core);
 	return plainLemma
 		.extend({
@@ -216,7 +285,9 @@ function syncretizableLemmaSchema(
 				.optional(),
 		})
 		.refine(isSyncretismView, { error: syncretismViewError })
-		.refine(isLemmaSyncretism, { error: lemmaSyncretismError });
+		.refine(isLemmaSyncretism, {
+			error: lemmaSyncretismError,
+		}) as SyncretizableLemmaSchema<P, C>;
 }
 /**
  * A Surface of a route that allows Syncretisms (system ADR 0046), shaped as
@@ -234,11 +305,18 @@ type SyncretizableSurfaceSchema<
 	},
 	z.core.$strict
 >;
-function syncretizableSurfaceSchema(
-	plainSurface: z.ZodObject,
-	inflectional: z.core.$ZodType,
+function syncretizableSurfaceSchema<
+	P extends z.ZodObject,
+	I extends z.core.$ZodType,
+>(
+	plainSurface: P,
+	inflectional: I | undefined,
 	refine: <S extends z.ZodObject>(schema: S) => S,
-) {
+): SyncretizableSurfaceSchema<P, I> {
+	if (inflectional === undefined)
+		throw Error(
+			"A Surface Syncretism needs a route with inflectional features",
+		);
 	const name = featureNameSchema(inflectional);
 	const unit = refine(plainSurface);
 	return refine(
@@ -249,7 +327,9 @@ function syncretizableSurfaceSchema(
 		}),
 	)
 		.refine(isSurfaceSyncretismView, { error: surfaceSyncretismViewError })
-		.refine(isSurfaceSyncretism, { error: surfaceSyncretismError });
+		.refine(isSurfaceSyncretism, {
+			error: surfaceSyncretismError,
+		}) as SyncretizableSurfaceSchema<P, I>;
 }
 
 /** Missing inflectional schemas omit the Surface field; present schemas retain their refinements. */
@@ -271,12 +351,13 @@ function buildBaseUnitSchemas<
 				: normalizedFormSchema,
 		coreFeatures: core,
 	});
-	const syncretizable = allowsSyncretism(route);
-	// The conditional type keeps the concrete schema exports exact; runtime
-	// construction uses the same route condition.
+	const key = `${route.language}/${route.family}/${route.kind}` as const;
+	// The type picks the branch the runtime picks, from the same route list.
 	const Lemma = (
-		syncretizable ? syncretizableLemmaSchema(PlainLemma, core) : PlainLemma
-	) as `${L}/${F}/${K}` extends "de/Lexeme/PRON"
+		holds("syncretism", key)
+			? syncretizableLemmaSchema(PlainLemma, core)
+			: PlainLemma
+	) as typeof key extends RoutesOf<"syncretism">
 		? SyncretizableLemmaSchema<typeof PlainLemma, C>
 		: typeof PlainLemma;
 	const surfaceShape = {
@@ -309,23 +390,17 @@ function buildBaseUnitSchemas<
 	};
 	const Reading = z.strictObject({
 		...readingShape,
-		...(route.family === "Foreign"
+		...(holds("foreign", key)
 			? {}
 			: { emojiDescription: emojiDescriptionSchema }),
 	}) as z.ZodObject<
 		typeof readingShape &
-			(F extends "Foreign"
+			(typeof key extends RoutesOf<"foreign">
 				? Record<never, never>
 				: { emojiDescription: typeof emojiDescriptionSchema }),
 		z.core.$strict
 	>;
-	const Attestation = z.strictObject({
-		unitKind: z.literal(UnitKindSchema.enum.Attestation),
-		surface: Surface,
-		members: z.tuple([memberSchema], memberSchema),
-		realizationCoverage: z.enum(["Full", "Partial"]),
-	});
-	return { Lemma, Surface, Reading, Attestation };
+	return { key, Lemma, Surface, Reading };
 }
 
 const germanCaseSchema = z.enum(["Nom", "Acc", "Dat", "Gen"]);
@@ -442,6 +517,72 @@ const englishValencyEvidenceSchema = z.array(
 );
 
 /**
+ * The Attestation's evidence fields, in field order, each with its schema on
+ * the routes of every route condition that adds it. No route meets two
+ * conditions that add one field.
+ */
+const attestationEvidence = {
+	articleEvidence: {
+		lexemeArticleOwner: articleEvidenceSchema.nullable(),
+		// Optional, so Attestations recorded before a NOUN Locution owned its
+		// article stay valid.
+		locutionArticleOwner: articleEvidenceSchema.nullable().optional(),
+	},
+	expletiveEvidence: { germanVerbal: memberSchema.nullable() },
+	valencyEvidence: {
+		germanVerbal: valencyEvidenceSchema,
+		germanAdposition: valencyEvidenceSchema,
+		germanAdnominalGovernor: valencyEvidenceSchema,
+		hebrewGovernor: hebrewValencyEvidenceSchema.optional(),
+		englishGovernor: englishValencyEvidenceSchema.optional(),
+	},
+} satisfies Record<string, { [Condition in RouteCondition]?: unknown }>;
+type AttestationEvidence = typeof attestationEvidence;
+/** The route condition under which `Entry` gives the route `Key` names a field. */
+type HeldCondition<Key extends string, Entry> = {
+	[Condition in keyof Entry & RouteCondition]: Key extends RoutesOf<Condition>
+		? Condition
+		: never;
+}[keyof Entry & RouteCondition];
+/** A route's evidence field `Field`, or no such field where no condition adds it. */
+type EvidenceField<
+	Key extends string,
+	Field extends keyof AttestationEvidence,
+	Held = HeldCondition<Key, AttestationEvidence[Field]>,
+> = [Held] extends [never]
+	? Record<never, never>
+	: {
+			[Name in Field]: AttestationEvidence[Field][Held &
+				keyof AttestationEvidence[Field]];
+		};
+/** The evidence field `Field` of the route `key` names, read from the same table as its type. */
+function evidenceField<
+	Key extends string,
+	Field extends keyof AttestationEvidence,
+>(key: Key, field: Field) {
+	const entry: Record<string, unknown> = attestationEvidence[field];
+	const held = Object.keys(entry).find((condition) =>
+		holds(condition as RouteCondition, key),
+	);
+	return (
+		held === undefined ? {} : { [field]: entry[held] }
+	) as EvidenceField<Key, Field>;
+}
+
+/** A route's check on one unit, with the error it reports. */
+type Check = [(input: unknown) => boolean, () => string];
+/** The schema with each check refined onto it, in order. */
+function withChecks<S extends z.ZodObject>(
+	schema: S,
+	checks: readonly Check[],
+): S {
+	return checks.reduce(
+		(refined, [check, error]) => refined.refine(check, { error }),
+		schema,
+	);
+}
+
+/**
  * Composition stores grammatical features; source evidence belongs to the
  * Attestation. A German or English Head that can open a phrase (NOUN, PROPN,
  * ADJ, NUM, PRON) and a Hebrew noun, proper noun or adjective name where
@@ -465,212 +606,85 @@ export function buildUnitSchemas<
 	I extends z.core.$ZodType | undefined,
 >(route: { language: L; family: F; kind: K }, core: C, inflectional: I) {
 	const base = buildBaseUnitSchemas(route, core, inflectional);
-	const noun =
-		route.language === "de" &&
-		route.family === "Lexeme" &&
-		route.kind === "NOUN";
-	const properNoun =
-		route.language === "de" &&
-		route.family === "Lexeme" &&
-		route.kind === "PROPN";
-	const lexemeArticleOwner =
-		route.family === "Lexeme" &&
-		(route.language === "he"
-			? ["NOUN", "PROPN", "ADJ"].includes(route.kind)
-			: ["de", "en"].includes(route.language) &&
-				["NOUN", "PROPN", "ADJ", "NUM", "PRON"].includes(route.kind));
-	// A NOUN Locution heads its phrase and owns its article as a Lexeme NOUN
-	// does (ADR 0040, amended 2026-10-02). Its evidence is optional, so
-	// Attestations recorded before it stay valid.
-	const locutionArticleOwner =
-		route.family === "Locution" &&
-		["de", "en"].includes(route.language) &&
-		route.kind === "NOUN";
-	const articleOwner = lexemeArticleOwner || locutionArticleOwner;
-	const lexemeOrLocution =
-		route.family === "Lexeme" || route.family === "Locution";
-	const verbal =
-		route.language === "de" &&
-		((route.family === "Lexeme" && ["VERB", "AUX"].includes(route.kind)) ||
-			(route.family === "Locution" && route.kind === "VERB"));
-	const adposition =
-		route.language === "de" && lexemeOrLocution && route.kind === "ADP";
-	const adnominalGovernor =
-		route.language === "de" &&
-		lexemeOrLocution &&
-		["ADJ", "NOUN"].includes(route.kind);
-	const caselessGovernor =
-		["he", "en"].includes(route.language) &&
-		lexemeOrLocution &&
-		["VERB", "ADJ", "NOUN"].includes(route.kind);
-	// Comparability decides Degree on German and English ADV and ADJ (ADR 0042).
-	const comparability =
-		["de", "en"].includes(route.language) &&
-		lexemeOrLocution &&
-		["ADV", "ADJ"].includes(route.kind);
-	const closedClass =
-		route.language === "de" &&
-		lexemeOrLocution &&
-		["PRON", "DET"].includes(route.kind);
-	const surfaceChecks: [(input: unknown) => boolean, () => string][] = [];
-	if (route.family === "Foreign")
+	const { key } = base;
+	const surfaceChecks: Check[] = [];
+	if (holds("foreign", key))
 		surfaceChecks.push([isForeignSurface, foreignSurfaceError]);
-	if (comparability)
+	if (holds("comparability", key))
 		surfaceChecks.push([isComparabilitySurface, comparabilitySurfaceError]);
-	if (closedClass)
+	if (holds("germanClosedClass", key))
 		surfaceChecks.push([
 			isGermanClosedClassSurface,
 			germanClosedClassSurfaceError,
 		]);
-	if (noun) surfaceChecks.push([isGermanNounSurface, germanNounSurfaceError]);
-	if (properNoun)
+	if (holds("germanNoun", key))
+		surfaceChecks.push([isGermanNounSurface, germanNounSurfaceError]);
+	if (holds("germanProperNoun", key))
 		surfaceChecks.push([
 			isGermanProperNounSurface,
 			germanProperNounSurfaceError,
 		]);
-	if (verbal)
+	if (holds("germanVerbal", key))
 		surfaceChecks.push([isGermanVerbalSurface, germanVerbalSurfaceError]);
 	const refineSurface = <S extends z.ZodObject>(schema: S): S =>
-		surfaceChecks.reduce(
-			(refined, [check, error]) => refined.refine(check, { error }),
-			schema,
-		);
-	// The conditional type keeps the concrete schema exports exact; runtime
-	// construction uses the same route condition.
+		withChecks(schema, surfaceChecks);
 	const Surface = (
-		allowsSyncretism(route) && inflectional !== undefined
-			? syncretizableSurfaceSchema(
+		holds("syncretism", key)
+			? syncretizableSurfaceSchema<typeof base.Surface, NonNullable<I>>(
 					base.Surface,
 					inflectional,
 					refineSurface,
 				)
 			: refineSurface(base.Surface)
-	) as `${L}/${F}/${K}` extends "de/Lexeme/PRON"
-		? I extends z.core.$ZodType
-			? SyncretizableSurfaceSchema<typeof base.Surface, I>
-			: typeof base.Surface
+	) as typeof key extends RoutesOf<"syncretism">
+		? SyncretizableSurfaceSchema<typeof base.Surface, NonNullable<I>>
 		: typeof base.Surface;
-	let Attestation = base.Attestation.extend({
-		surface: Surface,
-		...(lexemeArticleOwner
-			? { articleEvidence: articleEvidenceSchema.nullable() }
-			: {}),
-		...(locutionArticleOwner
-			? { articleEvidence: articleEvidenceSchema.nullable().optional() }
-			: {}),
-		...(verbal
-			? {
-					expletiveEvidence: memberSchema.nullable(),
-					valencyEvidence: valencyEvidenceSchema,
-				}
-			: {}),
-		...(adposition || adnominalGovernor
-			? { valencyEvidence: valencyEvidenceSchema }
-			: {}),
-		...(caselessGovernor
-			? {
-					valencyEvidence: (route.language === "he"
-						? hebrewValencyEvidenceSchema
-						: englishValencyEvidenceSchema
-					).optional(),
-				}
-			: {}),
-	}) as unknown as z.ZodObject<
-		Omit<typeof base.Attestation.shape, "surface"> & {
-			surface: typeof Surface;
-		} & (F extends "Lexeme"
-				? `${L}/${K}` extends
-						| `${"de" | "en"}/${"NOUN" | "PROPN" | "ADJ" | "NUM" | "PRON"}`
-						| `he/${"NOUN" | "PROPN" | "ADJ"}`
-					? {
-							articleEvidence: z.ZodNullable<
-								typeof articleEvidenceSchema
-							>;
-						}
-					: Record<never, never>
-				: F extends "Locution"
-					? `${L}/${K}` extends `${"de" | "en"}/NOUN`
-						? {
-								articleEvidence: z.ZodOptional<
-									z.ZodNullable<typeof articleEvidenceSchema>
-								>;
-							}
-						: Record<never, never>
-					: Record<never, never>) &
-			(L extends "de"
-				? `${F}/${K}` extends
-						| "Lexeme/VERB"
-						| "Lexeme/AUX"
-						| "Locution/VERB"
-					? {
-							expletiveEvidence: z.ZodNullable<
-								typeof memberSchema
-							>;
-							valencyEvidence: typeof valencyEvidenceSchema;
-						}
-					: Record<never, never>
-				: Record<never, never>) &
-			(L extends "de"
-				? `${F}/${K}` extends
-						| "Lexeme/ADP"
-						| "Locution/ADP"
-						| "Lexeme/ADJ"
-						| "Lexeme/NOUN"
-						| "Locution/ADJ"
-						| "Locution/NOUN"
-					? { valencyEvidence: typeof valencyEvidenceSchema }
-					: Record<never, never>
-				: Record<never, never>) &
-			(L extends "he"
-				? `${F}/${K}` extends
-						| "Lexeme/VERB"
-						| "Lexeme/ADJ"
-						| "Lexeme/NOUN"
-						| "Locution/VERB"
-						| "Locution/ADJ"
-						| "Locution/NOUN"
-					? {
-							valencyEvidence: z.ZodOptional<
-								typeof hebrewValencyEvidenceSchema
-							>;
-						}
-					: Record<never, never>
-				: Record<never, never>) &
-			(L extends "en"
-				? `${F}/${K}` extends
-						| "Lexeme/VERB"
-						| "Lexeme/ADJ"
-						| "Lexeme/NOUN"
-						| "Locution/VERB"
-						| "Locution/ADJ"
-						| "Locution/NOUN"
-					? {
-							valencyEvidence: z.ZodOptional<
-								typeof englishValencyEvidenceSchema
-							>;
-						}
-					: Record<never, never>
-				: Record<never, never>)
-	>;
-	if (articleOwner)
-		Attestation = Attestation.refine(isArticleAttestation, {
-			error: articleAttestationError,
-		});
-	if (adnominalGovernor)
-		Attestation = Attestation.refine(isGermanValencyAttestation, {
-			error: germanValencyAttestationError,
-		});
-	if (caselessGovernor)
-		Attestation = Attestation.refine(isCaselessValencyAttestation, {
-			error: caselessValencyAttestationError,
-		});
-	if (verbal)
-		Attestation = Attestation.refine(isGermanVerbalAttestation, {
-			error: germanVerbalAttestationError,
-		});
-	if (adposition)
-		Attestation = Attestation.refine(isGermanAdpositionAttestation, {
-			error: germanAdpositionAttestationError,
-		});
+	const attestationChecks: Check[] = [];
+	if (holds("lexemeArticleOwner", key) || holds("locutionArticleOwner", key))
+		attestationChecks.push([isArticleAttestation, articleAttestationError]);
+	if (holds("germanAdnominalGovernor", key))
+		attestationChecks.push([
+			isGermanValencyAttestation,
+			germanValencyAttestationError,
+		]);
+	if (holds("hebrewGovernor", key) || holds("englishGovernor", key))
+		attestationChecks.push([
+			isCaselessValencyAttestation,
+			caselessValencyAttestationError,
+		]);
+	if (holds("germanVerbal", key))
+		attestationChecks.push([
+			isGermanVerbalAttestation,
+			germanVerbalAttestationError,
+		]);
+	if (holds("germanAdposition", key))
+		attestationChecks.push([
+			isGermanAdpositionAttestation,
+			germanAdpositionAttestationError,
+		]);
+	const Attestation = withChecks(
+		z.strictObject({
+			unitKind: z.literal(UnitKindSchema.enum.Attestation),
+			surface: Surface,
+			members: z.tuple([memberSchema], memberSchema),
+			realizationCoverage: z.enum(["Full", "Partial"]),
+			...evidenceField(key, "articleEvidence"),
+			...evidenceField(key, "expletiveEvidence"),
+			...evidenceField(key, "valencyEvidence"),
+		}),
+		attestationChecks,
+	);
 	return { Lemma: base.Lemma, Surface, Reading: base.Reading, Attestation };
+}
+
+/**
+ * The unit schemas of a route that codegen discovers at runtime, whose
+ * coordinates are only strings, so their types cannot be exact.
+ */
+export function buildDiscoveredUnitSchemas(
+	route: { language: string; family: string; kind: string },
+	core: z.core.$ZodType,
+	inflectional: z.core.$ZodType | undefined,
+): Record<z.infer<typeof UnitKindSchema>, z.ZodObject> {
+	return buildUnitSchemas(route, core, inflectional);
 }
