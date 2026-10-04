@@ -15,8 +15,9 @@ import type { Answers } from "./ask.js";
 export const pinnedJevModel = "jev-1.13.0";
 
 /**
- * Questions per jev request. A larger request is split in order, as the
- * lab splits it, so each chunk matches a cached lab request.
+ * Questions per jev request; a larger request is split in order. The
+ * evaluations' cache keys each answer by its question, so the chunking
+ * never decides a cache hit.
  */
 export const questionsPerRequest = 300;
 

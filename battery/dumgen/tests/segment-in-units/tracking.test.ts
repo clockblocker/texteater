@@ -4,12 +4,12 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 } from "../../src/evaluation/spec-corpus/segment-in-units.js";
-import { noul } from "../../src/segment/ask.js";
+import { type Answers, noul } from "../../src/segment/ask.js";
+import { type JevAsk, pinnedJevModel } from "../../src/segment/jev.js";
 import { candidates4Arm } from "../../src/segment-in-units/de/arms/candidates4.js";
 import {
 	deltaBetween,
@@ -23,12 +23,7 @@ import {
 	writeNoise,
 	writeOutcomes,
 } from "../../src/segment-in-units/lab/evidence.js";
-import {
-	hashOf,
-	Jev,
-	pinnedJevModel,
-	writeCache,
-} from "../../src/segment-in-units/lab/jev.js";
+import { JevCache } from "../../src/segment-in-units/lab/jev-cache.js";
 import {
 	confusions,
 	summarizePolicy,
@@ -273,7 +268,7 @@ test("the lab's provenance hashes its own sources and the dumspec it imports", a
 });
 
 const answeringAs =
-	(model: string, counter?: { calls: number }): TypeSafeExecutor =>
+	(model: string, counter?: { calls: number }): JevAsk =>
 	async (request) => {
 		if (counter) counter.calls++;
 		const answers = Object.fromEntries(
@@ -301,74 +296,39 @@ const answeringAs =
 		);
 		return {
 			model,
-			answers,
+			answers: answers as Answers,
 			usage: { input_tokens: 10, output_tokens: 0 },
-		} as never;
+		};
 	};
 
-const ask = (jev: Jev) =>
-	jev.ask({
-		stage: "test",
-		state: "A sentence",
-		questions: { q: noul("Does the sentence exist?") },
-		repetition: 0,
-		calls: [],
-	});
+const ask = (jev: JevCache) =>
+	jev.ask(0)(
+		{
+			model: jev.model,
+			state: { sentence: "A sentence" },
+			questions: { q: noul("Does the sentence exist?") },
+		},
+		{ stage: "test", signal: new AbortController().signal },
+	);
 
 test("jev is pinned: aliases need consent and another version's answer fails", async () => {
 	const cacheDirectory = join(directory, "pinned");
-	expect(() => new Jev({ cacheDirectory, model: "jev-latest" })).toThrow(
+	expect(() => new JevCache({ cacheDirectory, model: "jev-latest" })).toThrow(
 		"floats",
 	);
 	expect(
-		new Jev({
+		new JevCache({
 			cacheDirectory,
 			model: "jev-latest",
 			allowFloatingModel: true,
 		}).model,
 	).toBe("jev-latest");
-	const jev = new Jev({ cacheDirectory, executor: answeringAs("jev-9.9.9") });
+	const jev = new JevCache({
+		cacheDirectory,
+		transport: answeringAs("jev-9.9.9"),
+	});
 	expect(jev.model).toBe(pinnedJevModel);
 	await expect(ask(jev)).rejects.toThrow("jev answered as jev-9.9.9");
-});
-
-test("an alias-keyed cache entry is reused only when the pinned version answered it", async () => {
-	const cacheDirectory = join(directory, "legacy");
-	const legacyPath = (state: string) => {
-		const key = hashOf({
-			model: "jev-latest",
-			state,
-			questions: { q: noul("Does the sentence exist?") },
-			repetition: 0,
-		});
-		return join(cacheDirectory, "jev", key.slice(0, 2), `${key}.json`);
-	};
-	const entry = (model: string) => ({
-		model,
-		answers: { q: { type: "noul", noul: 0.25 } },
-		usage: { input_tokens: 10, output_tokens: 0 },
-		latencyMs: 1,
-	});
-	await writeCache(legacyPath("A sentence"), entry(pinnedJevModel));
-	const counter = { calls: 0 };
-	const jev = new Jev({
-		cacheDirectory,
-		executor: answeringAs(pinnedJevModel, counter),
-	});
-	expect(await ask(jev)).toEqual({ q: { type: "noul", noul: 0.25 } });
-	expect(counter.calls).toBe(0);
-	expect([...jev.resolvedModels]).toEqual([pinnedJevModel]);
-
-	await writeCache(legacyPath("Another sentence"), entry("jev-1.12.0"));
-	const answers = await jev.ask({
-		stage: "test",
-		state: "Another sentence",
-		questions: { q: noul("Does the sentence exist?") },
-		repetition: 0,
-		calls: [],
-	});
-	expect(answers).toEqual({ q: { type: "noul", noul: 0.9 } });
-	expect(counter.calls).toBe(1);
 });
 
 test("a repetition offset misses the cache while sending the same prompts", async () => {
@@ -383,9 +343,9 @@ test("a repetition offset misses the cache while sending the same prompts", asyn
 		cases: [labCase],
 	};
 	const runWith = async (repetitionOffset: number) => {
-		const jev = new Jev({
+		const jev = new JevCache({
 			cacheDirectory,
-			executor: answeringAs(pinnedJevModel, counter),
+			transport: answeringAs(pinnedJevModel, counter),
 		});
 		const run = await runArm({
 			runId: `offset-${repetitionOffset}`,

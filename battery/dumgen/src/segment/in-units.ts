@@ -12,6 +12,10 @@
  * answer, fails its Sentence at once, interrupts that Sentence's other
  * chunks, and marks it `failed`. A Defect or an interruption fails the
  * Text.
+ *
+ * A Sentence whose Segment stage kept some runs unresolved (their spelling
+ * kept, no plan for them) records an `UnresolvedSegments` event with their
+ * indices; the raw-mode evaluation reads it.
  */
 import * as Effect from "effect/Effect";
 import * as Result from "effect/Result";
@@ -76,6 +80,11 @@ const segmentSentence = Effect.fnUntraced(function* (
 			cut.failure,
 			writtenGermanSegments(text),
 		);
+	if (cut.success.unresolved.length > 0)
+		scope.event({
+			name: "UnresolvedSegments",
+			data: { sentence, segments: [...cut.success.unresolved] },
+		});
 	const units = yield* Effect.result(
 		segmentGermanUnits(cut.success, ask, settings),
 	);

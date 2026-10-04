@@ -2,8 +2,9 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import type { SegmentInUnitsInput } from "../../src/evaluation/spec-corpus/segment-in-units.js";
+import type { Answers } from "../../src/segment/ask.js";
+import type { JevAsk } from "../../src/segment/jev.js";
 import { arms } from "../../src/segment-in-units/de/arms/index.js";
 import {
 	currentSetHash,
@@ -12,7 +13,7 @@ import {
 	loadSet,
 	storeSet,
 } from "../../src/segment-in-units/lab/corpus.js";
-import { Jev } from "../../src/segment-in-units/lab/jev.js";
+import { JevCache } from "../../src/segment-in-units/lab/jev-cache.js";
 import { summarizePolicy } from "../../src/segment-in-units/lab/metrics.js";
 import { runArm } from "../../src/segment-in-units/lab/run.js";
 import { segmentsOf } from "../spec-corpus/fixtures.js";
@@ -65,7 +66,7 @@ const labCase: LabCase = {
  * gold route. Everything else is answered no: a Noul 0.1, a Choice its
  * last option (`none`, `Other`, …).
  */
-const goldJudge: TypeSafeExecutor = async (request) => {
+const goldJudge: JevAsk = async (request) => {
 	const known: Record<string, string> = {
 		s_reflexive_3: "p2",
 		s_particle_4: "p2",
@@ -97,9 +98,9 @@ const goldJudge: TypeSafeExecutor = async (request) => {
 	);
 	return {
 		model: request.model,
-		answers,
+		answers: answers as Answers,
 		usage: { input_tokens: 100, output_tokens: 0 },
-	} as never;
+	};
 };
 
 const set: LabSet = {
@@ -112,7 +113,10 @@ const set: LabSet = {
 };
 
 test("candidates4 and the reference score every gold unit with a gold judge, through the lab's runner", async () => {
-	const jev = new Jev({ cacheDirectory: directory, executor: goldJudge });
+	const jev = new JevCache({
+		cacheDirectory: directory,
+		transport: goldJudge,
+	});
 	for (const [arm, options, policy] of [
 		[
 			arms.candidates4,

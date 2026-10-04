@@ -9,7 +9,7 @@
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { FocusDelta } from "./focus.js";
-import type { CallRecord } from "./jev.js";
+import type { CallRecord, TransportRecord } from "./jev-cache.js";
 
 export type Spend = {
 	readonly jev: {
@@ -51,6 +51,8 @@ export type SpendEntry = Spend & {
 	readonly model?: string;
 	readonly parent?: string | null;
 	readonly hypothesis?: string | null;
+	/** The fresh requests' retries and failures; absent before #858's follow-up. */
+	readonly transport?: TransportRecord;
 };
 
 export type ComparedSide = { readonly runId: string; readonly policy: string };

@@ -12,8 +12,8 @@ import {
 	sumHover,
 } from "../../src/evaluation/spec-corpus/segment-in-units-grouping.js";
 import { segmentInUnitsMetrics } from "../../src/evaluation/spec-corpus/segment-in-units-metrics.js";
+import { pinnedJevModel } from "../../src/segment/jev.js";
 import type { LabCase } from "../../src/segment-in-units/lab/corpus.js";
-import { pinnedJevModel } from "../../src/segment-in-units/lab/jev.js";
 import {
 	groupingExamples,
 	summarizePolicy,

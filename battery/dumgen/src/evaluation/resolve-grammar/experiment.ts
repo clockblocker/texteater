@@ -35,14 +35,13 @@ import { z } from "zod";
 import { createDumgen } from "../../create-dumgen.js";
 import { defaultLunaConfiguration, type LunaAsk } from "../../luna.js";
 import type { OperationTrace } from "../../operation-trace.js";
-import { segmentGermanUnits } from "../../segment/de/units.js";
 import { type JevAsk, pinnedJevModel } from "../../segment/jev.js";
 import type { Unit } from "../../segment/segmented-sentence.js";
-import { askOf } from "../../segment-in-units/de/arm.js";
 import { loadSet, trackedSetsRoot } from "../../segment-in-units/lab/corpus.js";
-import { type CallRecord, Jev } from "../../segment-in-units/lab/jev.js";
+import { JevCache } from "../../segment-in-units/lab/jev-cache.js";
 import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
+import { groupSegments } from "../production-segmenter.js";
 import {
 	type GrammarCase,
 	type GrammarSetName,
@@ -67,7 +66,7 @@ import {
 } from "./scoring.js";
 import { compareWithBaseline, loadSubset, subsetCaseIds } from "./subset.js";
 
-export const defaultGrammarRoot = fileURLToPath(
+const defaultGrammarRoot = fileURLToPath(
 	new URL("../../../.runs/resolve-grammar/", import.meta.url),
 );
 const defaultSegmentLabRoot = fileURLToPath(
@@ -253,7 +252,7 @@ async function cachedUnits(
 	const byRecord = new Map(
 		set.cases.map((labCase) => [labCase.record, labCase]),
 	);
-	const jev = new Jev({
+	const jev = new JevCache({
 		cacheDirectory: join(labRoot, "cache"),
 		offline: true,
 	});
@@ -263,13 +262,10 @@ async function cachedUnits(
 		let units = memo.get(key);
 		if (!units) {
 			const labCase = byRecord.get(goldCase.record);
-			const calls: CallRecord[] = [];
 			units = labCase
-				? Effect.runPromise(
-						segmentGermanUnits(
-							{ segments: labCase.input.segments },
-							askOf({ jev, repetition, calls }),
-						),
+				? groupSegments(
+						{ ask: jev.ask(repetition), model: jev.model },
+						labCase.input.segments,
 					).catch(() => undefined)
 				: Promise.resolve(undefined);
 			memo.set(key, units);

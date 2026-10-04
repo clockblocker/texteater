@@ -70,7 +70,7 @@ import { knowledgeSubsetCaseIds, loadKnowledgeSubset } from "./subset.js";
 /** The package root a subset's path is relative to. */
 const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
-export const defaultKnowledgeRoot = fileURLToPath(
+const defaultKnowledgeRoot = fileURLToPath(
 	new URL("../../../.runs/knowledge/", import.meta.url),
 );
 

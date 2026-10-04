@@ -58,8 +58,13 @@ it and score it against frozen gold. Results live in the lab tickets
   The retired arms and candidates4's other levers are at ec467e8d, and
   reference-floors at 5335f033.
 - `src/segment-in-units/lab/` holds the set freezing, the cached jev
-  client, metrics, run evidence, the promptsmith export, the ledger and
-  the rounds (`round.ts`). The CLI is `cli/segment-in-units-lab.ts`.
+  (`jev-cache.ts`), metrics, run evidence, the promptsmith export, the
+  ledger and the rounds (`round.ts`). The CLI is
+  `cli/segment-in-units-lab.ts`. The cached jev is a `JevAsk` over
+  production's TypeSafe ask (`src/segment/typesafe-ask.ts`): it keys each
+  answer by its question, so how a request is chunked never decides a
+  hit, and it retries a fresh request that met a 429, a 5xx or no status,
+  up to six times with backoff. Production never retries (#858, #871).
 - `src/evaluation/experiments.ts` is the table of experiments
   `cli/evaluate.ts` runs, in gold, raw and text mode (see Evaluate). It
   reads the lab's sets and cache; `segment-in-units-raw.ts`,
@@ -107,7 +112,7 @@ bun run segment-in-units-lab round --open <id> --cap <tokens> --stop-line <token
   stays scored against the gold it ran on. `withheldRecords` in
   `lab/corpus.ts` keeps a record out of both sets while its gold waits for
   a person's approval.
-- jev is pinned to `pinnedJevModel` in `lab/jev.ts`. `--model` picks another
+- jev is pinned to `pinnedJevModel` in `src/segment/jev.ts`. `--model` picks another
   version. A floating alias needs `--allow-floating-model`. An answer from a
   version other than the one requested fails the call.
 - `--offline` answers from the cache only. A cache miss becomes a case
@@ -168,6 +173,18 @@ bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
   counts against the round like a lab run: `--estimate`, the stop line, the
   projection and the pin all apply. A live run fills the cache
   concurrently before promptsmith replays it case by case.
+- The production mode runs production's code path: raw mode calls
+  `createDumgen`'s `segment.inUnits` with the cached jev as its transport,
+  and gold mode runs the unit stage under the same operation and call
+  adapter (`src/evaluation/production-segmenter.ts`), since `createDumgen`
+  takes no Segments. `--units reference` keeps the lab's port.
+- **Transport is recorded apart from accuracy.** Every retry and every
+  request that still failed is counted by cause (an HTTP status, `no
+  status`, `invalid answer`), and requests abandoned with their operation
+  as `interrupted`. An evaluate run gives the counts as `transport` in its
+  ledger line and output, and each attempt's trace marks a call's
+  `retries` and `error`; a lab `run` keeps them in `manifest.json` and its
+  ledger line.
 
 ## Rounds
 
@@ -208,8 +225,13 @@ spends jev tokens, and score a run against the gold it ran on. An offline
 replay (`--offline`, `replay`, gold-mode parity) needs the answer cache,
 and comparing past runs needs their raw runs or outcomes; all of these
 stay local. Raw runs, their outcomes, promptsmith exports and the answer
-cache (about 300 MB) live in `.runs/segment-in-units-lab/`, which is
-gitignored; a run writes its outcomes to `outcomes/<runId>.jsonl.gz`
+cache live in `.runs/segment-in-units-lab/`, which is gitignored. The
+cache keeps one file per model, judge state and repetition under
+`cache/jev-questions/`, with each answer keyed by its question. The
+answers cached per request before that, under `cache/jev/` (about
+300 MB), are no longer read: their keys used the `localeCompare` key
+order that common-utils' `canonicalJson` replaced (#817), so jev answers
+those requests once more; a run writes its outcomes to `outcomes/<runId>.jsonl.gz`
 there, one row per (case, gold unit) with verdict letters per repetition
 per policy. Commit the frozen sets, each run's manifest and summary, and
 the ledger:

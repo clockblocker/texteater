@@ -11,13 +11,13 @@ import {
 	variantKindPairs,
 } from "../../src/segment/de/routing.js";
 import { type Sentence, sentenceOf } from "../../src/segment/de/sentence.js";
+import { pinnedJevModel } from "../../src/segment/jev.js";
 import {
 	pickedOutput,
 	pickId,
 	pickQuestions,
 } from "../../src/segment-in-units/de/arms/reference.js";
 import type { LabCase } from "../../src/segment-in-units/lab/corpus.js";
-import { pinnedJevModel } from "../../src/segment-in-units/lab/jev.js";
 import { summarizePolicy } from "../../src/segment-in-units/lab/metrics.js";
 import {
 	outcomesOf,

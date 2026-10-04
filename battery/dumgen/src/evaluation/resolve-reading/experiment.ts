@@ -69,7 +69,7 @@ import {
 	readingSubsetCaseIds,
 } from "./subset.js";
 
-export const defaultReadingRoot = fileURLToPath(
+const defaultReadingRoot = fileURLToPath(
 	new URL("../../../.runs/resolve-reading/", import.meta.url),
 );
 

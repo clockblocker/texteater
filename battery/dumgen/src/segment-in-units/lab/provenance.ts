@@ -10,7 +10,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { authoredRealizations, rules } from "dumspec";
-import { hashOf } from "./jev.js";
+import { hashOf, type TransportRecord } from "./jev-cache.js";
 import type { Pin } from "./round.js";
 
 /**
@@ -186,6 +186,11 @@ export type RunManifest = {
 	readonly round?: string;
 	/** The dumspec state the run's requests were built from; absent before rounds. */
 	readonly pin?: Pin;
+	/**
+	 * What the fresh requests met, apart from the accuracy: retries and
+	 * requests that still failed, by cause. Absent before #858's follow-up.
+	 */
+	readonly transport?: TransportRecord;
 	readonly extra?: Readonly<Record<string, unknown>>;
 };
 

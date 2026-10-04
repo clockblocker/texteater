@@ -4,11 +4,13 @@
  * sentences in chunks of different sizes and compares the answers with a
  * small-chunk baseline and with the baseline's own repetition noise.
  */
+
+import * as Effect from "effect/Effect";
 import type { Questions } from "promptsmith/typesafe";
 import { type Answers, noul } from "../../segment/ask.js";
 import { judgeState, sentenceOf } from "../../segment/de/sentence.js";
 import type { LabCase } from "./corpus.js";
-import type { CallRecord, Jev } from "./jev.js";
+import type { CallRecord, JevCache } from "./jev-cache.js";
 
 export type ChunkingResult = {
 	readonly questionsPerCall: number;
@@ -44,7 +46,7 @@ function pairQuestions(
 
 export async function questionsPerCall(args: {
 	readonly cases: readonly LabCase[];
-	readonly jev: Jev;
+	readonly jev: JevCache;
 	readonly sizes: readonly number[];
 	readonly baselineRepetitions: number;
 }): Promise<ChunkingResult[]> {
@@ -79,14 +81,13 @@ export async function questionsPerCall(args: {
 		const answers = await Promise.all(
 			prepared.map(async ({ state, questions }) => {
 				try {
-					return await args.jev.ask({
-						stage: `qpc-${size}`,
-						state,
-						questions,
-						repetition,
-						calls,
-						questionsPerCall: size,
-					});
+					// Each size keeps its own answers: comparing them is the test.
+					return await Effect.runPromise(
+						args.jev.port(repetition, calls, {
+							questionsPerRequest: size,
+							salt: `qpc-${size}`,
+						})({ stage: `qpc-${size}`, state, questions }),
+					);
 				} catch (error) {
 					errors.push(
 						error instanceof Error

@@ -33,7 +33,7 @@ import {
 import { authoredInventory } from "../../segment/de/inventory.js";
 import { keyOf } from "../../segment/de/routes.js";
 import type { LabCase } from "./corpus.js";
-import type { CallRecord } from "./jev.js";
+import type { CallRecord } from "./jev-cache.js";
 import type { LabRun, RepetitionRecord } from "./run.js";
 
 export type Tally = {

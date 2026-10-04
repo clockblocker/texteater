@@ -36,7 +36,11 @@
  * A segment.inUnits run counts against the lab's current round: it writes a
  * line to the lab ledger, refuses to go live when dumspec's prompt inputs
  * moved since the round was pinned (unless `--repin`) or when its projected
- * spend would cross the stop line, and stops at the line.
+ * spend would cross the stop line, and stops at the line. It runs
+ * production's `createDumgen` with the lab's cached jev as its transport,
+ * which retries a rate limit or a server error; the ledger line and the
+ * output give those retries and the requests that still failed as
+ * `transport`.
  *
  * A resolve.grammar, resolve.reading or knowledge run prices itself first and goes
  * live only under the budgets the main session granted the round:
@@ -61,10 +65,6 @@ import { appendFile, mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { compareRuns, loadRun } from "promptsmith/storage";
-import {
-	createTypeSafeExecutor,
-	type TypeSafeExecutor,
-} from "promptsmith/typesafe";
 import { defaultRunOutputDirectory } from "../src/development.js";
 import {
 	defaultLabRoot,
@@ -86,7 +86,9 @@ import type {
 import type { RoundCost } from "../src/evaluation/resolve-grammar/pricing.js";
 import type { Splitter } from "../src/evaluation/split-text.js";
 import { createOpenAILuna } from "../src/openai-luna.js";
+import type { JevAsk } from "../src/segment/jev.js";
 import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
+import { transportText } from "../src/segment-in-units/lab/jev-cache.js";
 import {
 	appendLedger,
 	readLedger,
@@ -106,7 +108,8 @@ const packageRoot = resolve(import.meta.dir, "..");
 export async function runEvaluationCli(
 	argv: string[],
 	dependencies: {
-		judge?: TypeSafeExecutor;
+		/** jev for a live run; production's TypeSafe ask by default. */
+		jev?: JevAsk;
 		write?: (value: unknown) => void;
 		warn?: (message: string) => void;
 		split?: Splitter;
@@ -258,10 +261,17 @@ export async function runEvaluationCli(
 	try {
 		const evaluated = await evaluateExperiment({
 			experimentId: values.experiment,
-			judge:
-				dependencies.judge ??
-				((request, options) =>
-					createTypeSafeExecutor()(request, options)),
+			// Every live run that asks jev asks it through production's
+			// TypeSafe ask; segment.inUnits wraps it in the lab's cache.
+			...(live && (grammar || account)
+				? {
+						jev:
+							dependencies.jev ??
+							createTypeSafeAsk({
+								apiKey: environment("TYPESAFE_API_KEY"),
+							}),
+					}
+				: {}),
 			...(values["judgment-model"]
 				? { judgmentModel: values["judgment-model"] }
 				: {}),
@@ -288,9 +298,6 @@ export async function runEvaluationCli(
 				: {}),
 			...(grammarLive
 				? {
-						jev: createTypeSafeAsk({
-							apiKey: environment("TYPESAFE_API_KEY"),
-						}),
 						...(lunaBatch
 							? {
 									lunaBatch: createOpenAILunaBatch({
@@ -416,8 +423,13 @@ export async function runEvaluationCli(
 					).length > 0,
 				model: run.manifest.configurations.judgment.model,
 				...evaluated.spend,
+				...(evaluated.transport
+					? { transport: evaluated.transport }
+					: {}),
 			});
 		}
+		if (evaluated.transport && evaluated.transport.requests > 0)
+			warn(transportText(evaluated.transport));
 		const parity = values.parity
 			? await parityOf(values.parity, run, units, labRoot)
 			: undefined;
@@ -426,6 +438,7 @@ export async function runEvaluationCli(
 			summary: run.summary,
 			metrics: evaluationMetrics(run),
 			...(evaluated.spend ? { spend: evaluated.spend } : {}),
+			...(evaluated.transport ? { transport: evaluated.transport } : {}),
 			...(evaluated.grammarSpend
 				? { spend: evaluated.grammarSpend }
 				: {}),

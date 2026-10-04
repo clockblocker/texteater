@@ -28,7 +28,7 @@ import { isReviewed, loadSpecRecords } from "dumspec";
 import { authoredReading, closedRoute } from "dumspec/inventories";
 import type * as Dumspec from "dumspec/types";
 import type { KnowledgeSentence } from "../../knowledge/types.js";
-import { hashOf } from "../../segment-in-units/lab/jev.js";
+import { hashOf } from "../../segment-in-units/lab/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
 

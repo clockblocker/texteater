@@ -24,7 +24,7 @@ import {
 	type SegmentInUnitsOutput,
 	segmentInUnits,
 } from "../../evaluation/spec-corpus/segment-in-units.js";
-import { hashOf } from "./jev.js";
+import { hashOf } from "./jev-cache.js";
 
 /** Records the German Rules name as their examples (the guide may quote them). */
 function ruleExampleRecords(): ReadonlySet<string> {

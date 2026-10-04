@@ -2,7 +2,6 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import { runEvaluationCli } from "../../cli/evaluate.js";
 import {
 	evaluateExperiment,
@@ -12,6 +11,8 @@ import {
 	productionPolicy,
 } from "../../src/evaluation/experiments.js";
 import type { SegmentInUnitsInput } from "../../src/evaluation/spec-corpus/segment-in-units.js";
+import type { Answers } from "../../src/segment/ask.js";
+import type { JevAsk } from "../../src/segment/jev.js";
 import {
 	type LabCase,
 	type LabSet,
@@ -82,7 +83,7 @@ const set: LabSet = {
  */
 function goldJudge() {
 	const counter = { calls: 0, tokens: 0 };
-	const judge: TypeSafeExecutor = async (request) => {
+	const jev: JevAsk = async (request) => {
 		counter.calls++;
 		counter.tokens += 100;
 		const known: Record<string, string> = {
@@ -120,11 +121,11 @@ function goldJudge() {
 		);
 		return {
 			model: request.model,
-			answers,
+			answers: answers as Answers,
 			usage: { input_tokens: 100, output_tokens: 0 },
-		} as never;
+		};
 	};
-	return { judge, counter };
+	return { jev, counter };
 }
 
 async function labWithSet(name: string) {
@@ -154,10 +155,10 @@ test("the table lists gold and raw mode per frozen set, text mode, and resolve.g
 
 test("gold mode runs production's unit stage, prices itself before asking, then replays offline", async () => {
 	const lab = await labWithSet("gold");
-	const { judge, counter } = goldJudge();
+	const { jev, counter } = goldJudge();
 	const estimate = await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev",
-		judge,
+		jev,
 		sourceRevision: "test",
 		...lab,
 		estimate: true,
@@ -169,7 +170,7 @@ test("gold mode runs production's unit stage, prices itself before asking, then 
 	const priced: number[] = [];
 	const live = await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev",
-		judge,
+		jev,
 		sourceRevision: "test",
 		...lab,
 		beforeLive: (projection) => {
@@ -191,7 +192,7 @@ test("gold mode runs production's unit stage, prices itself before asking, then 
 	const calls = counter.calls;
 	const offline = await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev",
-		judge,
+		jev,
 		sourceRevision: "test",
 		...lab,
 		offline: true,
@@ -243,19 +244,54 @@ test("gold mode runs production's unit stage, prices itself before asking, then 
 	});
 });
 
+test("a live run retries a rate limit and counts every retry and failure as transport, apart from the accuracy", async () => {
+	const lab = await labWithSet("transport");
+	const { jev, counter } = goldJudge();
+	let sent = 0;
+	// The first request meets a rate limit, the second a bad request.
+	const flaky: JevAsk = async (request, context) => {
+		sent++;
+		if (sent === 1)
+			throw Object.assign(Error("TypeSafe answered 429: slow down"), {
+				status: 429,
+			});
+		if (sent === 2)
+			throw Object.assign(Error("TypeSafe answered 400: no"), {
+				status: 400,
+			});
+		return jev(request, context);
+	};
+	const live = await evaluateExperiment({
+		experimentId: "segment-in-units/de:dev",
+		jev: flaky,
+		sourceRevision: "test",
+		...lab,
+	});
+	// The refused request is asked again when promptsmith replays the case.
+	expect(live.run?.summary.quality).toMatchObject({ passed: 1, failed: 0 });
+	expect(live.transport).toMatchObject({
+		requests: counter.calls + 1,
+		retries: 1,
+		retriedRequests: 1,
+		failures: 1,
+		retriesBy: { "429": 1 },
+		failuresBy: { "400": 1 },
+	});
+});
+
 test("raw mode cuts the Sentence first, and pieces equal to gold's replay gold mode's unit requests", async () => {
 	const lab = await labWithSet("raw");
-	const { judge, counter } = goldJudge();
+	const { jev, counter } = goldJudge();
 	await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev",
-		judge,
+		jev,
 		sourceRevision: "test",
 		...lab,
 	});
 	const before = counter.calls;
 	const estimate = await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev:raw",
-		judge,
+		jev,
 		sourceRevision: "test",
 		...lab,
 		estimate: true,
@@ -266,7 +302,7 @@ test("raw mode cuts the Sentence first, and pieces equal to gold's replay gold m
 	});
 	const raw = await evaluateExperiment({
 		experimentId: "segment-in-units/de:dev:raw",
-		judge,
+		jev,
 		sourceRevision: "test",
 		...lab,
 	});
@@ -312,7 +348,7 @@ async function evidenceWith(name: string, round: Round) {
 test("evaluate writes a ledger line for its round, refuses a run past the stop line, and refuses drifted dumspec unless it re-pins", async () => {
 	const pin = await currentPin(repository);
 	const lab = await labWithSet("cli");
-	const { judge, counter } = goldJudge();
+	const { jev, counter } = goldJudge();
 	const warnings: string[] = [];
 	const cli = (argv: string[], evidenceRoot: string) =>
 		runEvaluationCli(
@@ -326,7 +362,7 @@ test("evaluate writes a ledger line for its round, refuses a run past the stop l
 				...argv,
 			],
 			{
-				judge,
+				jev,
 				...lab,
 				evidenceRoot,
 				repository,
@@ -350,6 +386,7 @@ test("evaluate writes a ledger line for its round, refuses a run past the stop l
 		cases: 1,
 		repetitions: 3,
 		jev: { freshCalls: counter.calls, freshInputTokens: counter.tokens },
+		transport: { requests: counter.calls, retries: 0, failures: 0 },
 	});
 
 	const drifted = {

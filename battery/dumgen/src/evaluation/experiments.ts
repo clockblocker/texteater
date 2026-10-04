@@ -4,10 +4,12 @@
  * its evaluator and its metrics:
  *
  * - `segment-in-units/de:<set>`, gold mode: a lab set's gold Segments go in
- *   and the production unit stage's units come out.
+ *   and the production unit stage's units come out, under the operation and
+ *   call adapter `createDumgen` builds (`production-segmenter.ts`).
  * - `segment-in-units/de:<set>:raw`, raw mode, the production headline: the
- *   record's Sentence goes in, the Segment stage cuts it and the unit stage
- *   groups the Segments (`segment-in-units-raw.ts`).
+ *   record's Sentence goes into `createDumgen`'s `segment.inUnits`, whose
+ *   Segment stage cuts it and whose unit stage groups the Segments
+ *   (`segment-in-units-raw.ts`).
  * - `split-text/de:ud-drafts`, text mode: `splitText` cuts the ud-drafts
  *   Texts into Sentences (`split-text.ts`).
  * - `resolve-grammar/de:<set>` and `resolve-grammar/de:dev:e2e`: a click's
@@ -25,7 +27,10 @@
  *
  * `<set>` is one of the lab's frozen sets, `dev` or `heldout`. Each case
  * runs three times, as in the lab's runs, and jev answers come through the
- * lab's cache, so a case the lab has run replays without a call.
+ * lab's cache (`lab/jev-cache.ts`), the transport `createDumgen` is given,
+ * so a case the lab has run replays without a call. The cache retries a
+ * fresh request that met a rate limit or a server error, which production
+ * never does, and the run reports every retry and failure as `transport`.
  * `offline` makes a cache miss fail its case. A live run first prices
  * itself offline (`lab/round.ts`), hands the price to `beforeLive`, which
  * may refuse, then fills the cache concurrently and runs from it.
@@ -45,12 +50,12 @@ import {
 	runOperationExperiment,
 } from "promptsmith/evaluation";
 import { saveRun } from "promptsmith/storage";
-import type { JsonValue, TypeSafeExecutor } from "promptsmith/typesafe";
+import type { JsonValue } from "promptsmith/typesafe";
 import type { z } from "zod";
 import type { LunaAsk } from "../luna.js";
 import { segmentGermanSentence } from "../segment/de/segments.js";
-import { segmentGermanUnits } from "../segment/de/units.js";
 import type { JevAsk } from "../segment/jev.js";
+import type { Segment } from "../segment/segmented-sentence.js";
 import { splitText } from "../segment/split-text.js";
 import { askOf } from "../segment-in-units/de/arm.js";
 import { referenceArm } from "../segment-in-units/de/arms/reference.js";
@@ -63,9 +68,9 @@ import {
 } from "../segment-in-units/lab/corpus.js";
 import {
 	type CallRecord,
-	Jev,
-	Semaphore,
-} from "../segment-in-units/lab/jev.js";
+	JevCache,
+	type TransportRecord,
+} from "../segment-in-units/lab/jev-cache.js";
 import { type Spend, spendOf } from "../segment-in-units/lab/ledger.js";
 import {
 	type PricedProjection,
@@ -75,6 +80,11 @@ import {
 import type { LabRun } from "../segment-in-units/lab/run.js";
 import { knowledgeExperiment } from "./knowledge/experiment.js";
 import type { LunaBatch } from "./luna-batch.js";
+import {
+	groupSegments,
+	type ProductionJev,
+	segmentSentence,
+} from "./production-segmenter.js";
 import {
 	type GrammarEvaluated,
 	type GrammarPrice,
@@ -126,10 +136,16 @@ export const unitConfigs: readonly UnitConfig[] = ["production", "reference"];
 
 /** What one run of an operation reads: the lab's cached jev at one repetition. */
 type Context = {
-	readonly jev: Jev;
+	readonly jev: JevCache;
 	readonly repetition: number;
 	readonly calls: CallRecord[];
 };
+
+/** The cached jev at the context's repetition, as `createDumgen`'s transport. */
+const productionJev = ({ jev, repetition, calls }: Context): ProductionJev => ({
+	ask: jev.ask(repetition, calls),
+	model: jev.model,
+});
 
 const unitStages: Readonly<
 	Record<
@@ -141,7 +157,7 @@ const unitStages: Readonly<
 	>
 > = {
 	production: (segments, context) =>
-		Effect.runPromise(segmentGermanUnits({ segments }, askOf(context))),
+		groupSegments(productionJev(context), segments),
 	async reference(segments, context) {
 		const result = await referenceArm.run(
 			{ language: "de", segments },
@@ -155,8 +171,6 @@ const unitStages: Readonly<
 
 export type EvaluateArgs = {
 	readonly experimentId: string;
-	/** Asked on a cache miss when not `offline`. */
-	readonly judge: TypeSafeExecutor;
 	/** A pinned jev version; the lab's by default. */
 	readonly judgmentModel?: string;
 	readonly offline?: boolean;
@@ -184,7 +198,12 @@ export type EvaluateArgs = {
 	readonly settings?: Readonly<Record<string, JsonValue>>;
 	/** Text mode's splitter; production's `splitText` by default. */
 	readonly split?: Splitter;
-	/** A live resolve.grammar run's transports, asked on a cache miss. */
+	/**
+	 * A live run's transports, asked on a cache miss: jev for every
+	 * experiment that asks it, Luna for resolve.grammar, resolve.reading
+	 * and knowledge.produce. segment.inUnits wraps jev in the lab's cache,
+	 * which retries a rate limit or a server error (`lab/jev-cache.ts`).
+	 */
 	readonly jev?: JevAsk;
 	readonly luna?: LunaAsk;
 	/** resolve.grammar and resolve.reading: Luna's misses through the Batch API instead (#891). */
@@ -223,6 +242,12 @@ type Evaluated = {
 	readonly projection?: PricedProjection;
 	/** The jev calls of the run, the cache fill included; none for text mode. */
 	readonly spend?: Spend;
+	/**
+	 * segment.inUnits: what the fresh jev requests met, the cache fill
+	 * included: retries and requests that still failed, by cause. Kept
+	 * apart from the accuracy.
+	 */
+	readonly transport?: TransportRecord;
 	readonly set?: { readonly name: string; readonly hash: string };
 	/** resolve.grammar's projected spend. */
 	readonly price?: GrammarPrice;
@@ -277,6 +302,14 @@ const goldMode: Mode<
 	metrics: segmentInUnitsMetrics,
 };
 
+/** Segments as the raw-mode output keeps them: no absent `surface`. */
+const plainSegments = (segments: readonly Segment[]) =>
+	segments.map(({ kind, text, surface }) => ({
+		kind,
+		text,
+		...(surface === undefined ? {} : { surface }),
+	}));
+
 const rawMode: Mode<typeof rawInputSchema, typeof rawOutputSchema> = {
 	suffix: ":raw",
 	inputSchema: rawInputSchema,
@@ -285,16 +318,22 @@ const rawMode: Mode<typeof rawInputSchema, typeof rawOutputSchema> = {
 	run:
 		(units) =>
 		async (input, context): Promise<RawOutput> => {
+			if (units === "production") {
+				const segmented = await segmentSentence(
+					productionJev(context),
+					input.sentence,
+				);
+				return {
+					segments: plainSegments(segmented.segments),
+					units: [...segmented.units],
+					unresolved: [...segmented.unresolved],
+				};
+			}
+			// The reference takes the Segment stage's cut through the lab's port.
 			const segmentation = await Effect.runPromise(
 				segmentGermanSentence(input.sentence, askOf(context)),
 			);
-			const segments = segmentation.segments.map(
-				({ kind, text, surface }) => ({
-					kind,
-					text,
-					...(surface === undefined ? {} : { surface }),
-				}),
-			);
+			const segments = plainSegments(segmentation.segments);
 			return {
 				segments,
 				units: await unitStages[units](segments, context),
@@ -312,22 +351,25 @@ const idOf = (set: SetName, suffix: string) =>
 async function pass<I>(
 	cases: readonly { readonly input: I }[],
 	operation: (input: I, context: Context) => Promise<unknown>,
-	jev: Jev,
+	jev: JevCache,
 	concurrency: number,
 	calls: CallRecord[],
 ): Promise<void> {
-	const semaphore = new Semaphore(concurrency);
-	await Promise.all(
-		cases.flatMap(({ input }) =>
-			Array.from({ length: repetitions }, (_, repetition) =>
-				semaphore.use(async () => {
-					try {
-						await operation(input, { jev, repetition, calls });
-					} catch {
-						// The run records the failure.
-					}
-				}),
+	await Effect.runPromise(
+		Effect.forEach(
+			cases.flatMap(({ input }) =>
+				Array.from({ length: repetitions }, (_, repetition) => ({
+					input,
+					repetition,
+				})),
 			),
+			({ input, repetition }) =>
+				Effect.promise(() =>
+					operation(input, { jev, repetition, calls }).catch(() => {
+						// The run records the failure.
+					}),
+				),
+			{ concurrency: Math.max(1, concurrency), discard: true },
 		),
 	);
 }
@@ -339,7 +381,7 @@ async function pass<I>(
  */
 function traced<I, O>(
 	operation: (input: I, context: Context) => Promise<O>,
-	jev: Jev,
+	jev: JevCache,
 	calls: CallRecord[],
 ) {
 	const attempts = new Map<string, number>();
@@ -368,7 +410,12 @@ function traced<I, O>(
 							output_tokens: call.outputTokens,
 						},
 					},
-					metadata: { stage: call.stage, cached: call.cached },
+					metadata: {
+						stage: call.stage,
+						cached: call.cached,
+						...(call.retries ? { retries: call.retries } : {}),
+						...(call.error ? { error: call.error } : {}),
+					},
 				})),
 			});
 		}
@@ -401,17 +448,23 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 				input: mode.inputSchema.parse(input),
 			}));
 			const concurrency = args.concurrency ?? 12;
+			const live = !args.offline && !args.estimate;
+			if (live && !args.jev)
+				throw Error(
+					`A live ${id} run needs a jev transport; run it --offline or --estimate`,
+				);
 			const jevOf = (options: {
 				readonly offline: boolean;
 				readonly project?: typeof standInAnswers;
 			}) =>
-				new Jev({
+				new JevCache({
 					cacheDirectory: join(labRoot, "cache"),
 					...(args.judgmentModel
 						? { model: args.judgmentModel }
 						: {}),
-					executor: args.judge,
-					concurrency,
+					...(args.jev && !options.offline
+						? { transport: args.jev }
+						: {}),
 					...options,
 					...(args.beforeSpend
 						? { beforeSpend: args.beforeSpend }
@@ -514,6 +567,7 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 					},
 					luna: ran.luna,
 				},
+				transport: jev.transport,
 				set: identity,
 			};
 		},

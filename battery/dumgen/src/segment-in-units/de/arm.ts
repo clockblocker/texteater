@@ -2,24 +2,23 @@
  * What every lab arm shares: its contract and the context the lab runs it
  * in. The arms are thin configurations of the production unit stage
  * (`src/segment/de/`); they reach jev through its `ask` port, which the lab
- * backs with its cached jev client.
+ * backs with its cached jev (`lab/jev-cache.ts`).
  */
 
-import * as Effect from "effect/Effect";
 import type {
 	SegmentInUnitsInput,
 	SegmentInUnitsOutput,
 } from "../../evaluation/spec-corpus/segment-in-units.js";
 import type { Ask } from "../../segment/ask.js";
 import type { RouteJudgment } from "../../segment/de/routing.js";
-import type { CallRecord, Jev } from "../lab/jev.js";
+import type { CallRecord, JevCache } from "../lab/jev-cache.js";
 
 export type { RouteJudgment };
 
 export type ArmOptions = Readonly<Record<string, string>>;
 
 export type ArmContext = {
-	readonly jev: Jev;
+	readonly jev: JevCache;
 	readonly repetition: number;
 	readonly calls: CallRecord[];
 	readonly options: ArmOptions;
@@ -54,13 +53,6 @@ export type Arm = {
  * The production stage's `ask` port, answered from the lab's cached jev at
  * this repetition. A failed request rejects with the lab's own error.
  */
-export const askOf =
-	(context: Pick<ArmContext, "jev" | "repetition" | "calls">): Ask =>
-	(request) =>
-		Effect.promise(() =>
-			context.jev.ask({
-				...request,
-				repetition: context.repetition,
-				calls: context.calls,
-			}),
-		);
+export const askOf = (
+	context: Pick<ArmContext, "jev" | "repetition" | "calls">,
+): Ask => context.jev.port(context.repetition, context.calls);

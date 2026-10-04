@@ -2,14 +2,9 @@ import { afterAll, expect, test } from "bun:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import type { TypeSafeExecutor } from "promptsmith/typesafe";
 import { choice, noul } from "../../src/segment/ask.js";
-import {
-	hashOf,
-	Jev,
-	pinnedJevModel,
-	writeCache,
-} from "../../src/segment-in-units/lab/jev.js";
+import { type JevAsk, pinnedJevModel } from "../../src/segment/jev.js";
+import { JevCache } from "../../src/segment-in-units/lab/jev-cache.js";
 import {
 	type LedgerEntry,
 	readLedger,
@@ -205,40 +200,38 @@ test("a projection prices a request cached at another repetition exactly and the
 test("a projecting client asks nothing and writes nothing, answering a miss from another repetition or by stand-in", async () => {
 	const cacheDirectory = join(directory, "projection");
 	const questions = { q: noul("Does the sentence exist?") };
-	const cachedAt = (repetition: number) => {
-		const key = hashOf({
-			model: pinnedJevModel,
-			state: "A sentence",
-			questions,
-			repetition,
-		});
-		return join(cacheDirectory, "jev", key.slice(0, 2), `${key}.json`);
-	};
-	await writeCache(cachedAt(0), {
-		model: pinnedJevModel,
-		answers: { q: { type: "noul", noul: 0.25 } },
-		usage: { input_tokens: 42, output_tokens: 0 },
-		latencyMs: 1,
-	});
+	const signal = new AbortController().signal;
+	const askOf =
+		(jev: JevCache) =>
+		(sentence: string, repetition: number, stage = "test") =>
+			jev
+				.ask(repetition)(
+					{ model: pinnedJevModel, state: { sentence }, questions },
+					{ stage, signal },
+				)
+				.then(({ answers }) => answers);
+	await askOf(
+		new JevCache({
+			cacheDirectory,
+			transport: async () => ({
+				model: pinnedJevModel,
+				answers: { q: { type: "noul", noul: 0.25 } },
+				usage: { input_tokens: 42, output_tokens: 0 },
+			}),
+		}),
+	)("A sentence", 0);
 	let asked = 0;
-	const executor: TypeSafeExecutor = async () => {
+	const transport: JevAsk = async () => {
 		asked++;
 		throw Error("asked");
 	};
-	const jev = new Jev({
+	const jev = new JevCache({
 		cacheDirectory,
-		executor,
+		transport,
 		offline: true,
 		project: standInAnswers,
 	});
-	const ask = (state: string, repetition: number, stage = "test") =>
-		jev.ask({
-			stage,
-			state,
-			questions,
-			repetition,
-			calls: [],
-		});
+	const ask = askOf(jev);
 	expect(await ask("A sentence", 0)).toEqual({
 		q: { type: "noul", noul: 0.25 },
 	});
@@ -246,18 +239,21 @@ test("a projecting client asks nothing and writes nothing, answering a miss from
 		q: { type: "noul", noul: 0.25 },
 	});
 	expect(
-		await jev.ask({
-			stage: "segments",
-			state: "Another sentence",
-			questions: {
-				c: choice("Which plan?", {
-					Fusion: "split",
-					AsWritten: "whole",
-				}),
-			},
-			repetition: 0,
-			calls: [],
-		}),
+		(
+			await jev.ask(0)(
+				{
+					model: pinnedJevModel,
+					state: { sentence: "Another sentence" },
+					questions: {
+						c: choice("Which plan?", {
+							Fusion: "split",
+							AsWritten: "whole",
+						}),
+					},
+				},
+				{ stage: "segments", signal },
+			)
+		).answers,
 	).toEqual({
 		c: {
 			type: "choice",
@@ -274,8 +270,12 @@ test("a projecting client asks nothing and writes nothing, answering a miss from
 	]);
 	expect(jev.projection.requests[1]).not.toHaveProperty("inputTokens");
 	// Nothing was cached for the projected requests.
-	const { existsSync } = await import("node:fs");
-	expect(existsSync(cachedAt(1000))).toBe(false);
+	await expect(
+		askOf(new JevCache({ cacheDirectory, offline: true }))(
+			"A sentence",
+			1000,
+		),
+	).rejects.toThrow("cache miss");
 });
 
 test("the current round is 2026-10-02-5usd: 119,047,619 tokens, stopping at 104M, opened by fa59d50e's fill", async () => {

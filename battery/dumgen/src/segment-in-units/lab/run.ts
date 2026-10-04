@@ -6,6 +6,7 @@
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import * as Effect from "effect/Effect";
 import type { SegmentInUnitsOutput } from "../../evaluation/spec-corpus/segment-in-units.js";
 import type {
 	Arm,
@@ -14,7 +15,7 @@ import type {
 	RouteJudgment,
 } from "../de/arm.js";
 import type { LabCase, LabSet } from "./corpus.js";
-import { type CallRecord, type Jev, Semaphore } from "./jev.js";
+import type { CallRecord, JevCache, TransportRecord } from "./jev-cache.js";
 
 export type RepetitionRecord = {
 	readonly outputs?: Readonly<Record<string, SegmentInUnitsOutput>>;
@@ -52,6 +53,8 @@ export type LabRun = {
 	/** The manifest's code identity; absent in runs made before manifests. */
 	readonly codeHash?: string;
 	readonly dirty?: boolean;
+	/** The fresh requests' retries and failures; absent in runs made before #858's follow-up. */
+	readonly transport?: TransportRecord;
 	readonly cases: readonly CaseRun[];
 };
 
@@ -76,7 +79,7 @@ export async function runArm(args: {
 	readonly subset: string;
 	readonly cases: readonly LabCase[];
 	readonly repetitions: number;
-	readonly jev: Jev;
+	readonly jev: JevCache;
 	readonly concurrency: number;
 	readonly gitHead: string;
 	readonly repetitionOffset?: number;
@@ -85,59 +88,59 @@ export async function runArm(args: {
 	readonly onProgress?: (done: number, total: number) => void;
 }): Promise<LabRun> {
 	const startedAt = new Date().toISOString();
-	const semaphore = new Semaphore(args.concurrency);
 	let done = 0;
 	const total = args.cases.length * args.repetitions;
-	const cases = await Promise.all(
-		args.cases.map(async (labCase): Promise<CaseRun> => {
-			const repetitions: RepetitionRecord[] = [];
-			for (
-				let repetition = 0;
-				repetition < args.repetitions;
-				repetition++
-			) {
-				repetitions.push(
-					await semaphore.use(async () => {
-						const calls: CallRecord[] = [];
-						const started = performance.now();
-						try {
-							const result = await args.arm.run(labCase.input, {
-								jev: args.jev,
-								repetition:
-									repetition + (args.repetitionOffset ?? 0),
-								calls,
-								options: args.options,
-							});
-							return {
-								outputs: result.outputs,
-								primary: result.primary,
-								calls,
-								wallMs: performance.now() - started,
-								...(result.routes
-									? { routes: result.routes }
-									: {}),
-								...(result.links
-									? { links: result.links }
-									: {}),
-							};
-						} catch (error) {
-							return {
-								calls,
-								wallMs: performance.now() - started,
-								error:
-									error instanceof Error
-										? error.message
-										: String(error),
-							};
-						} finally {
-							done++;
-							args.onProgress?.(done, total);
-						}
-					}),
-				);
-			}
-			return { id: labCase.id, repetitions };
-		}),
+	const repetitionOf = async (
+		labCase: LabCase,
+		repetition: number,
+	): Promise<RepetitionRecord> => {
+		const calls: CallRecord[] = [];
+		const started = performance.now();
+		try {
+			const result = await args.arm.run(labCase.input, {
+				jev: args.jev,
+				repetition: repetition + (args.repetitionOffset ?? 0),
+				calls,
+				options: args.options,
+			});
+			return {
+				outputs: result.outputs,
+				primary: result.primary,
+				calls,
+				wallMs: performance.now() - started,
+				...(result.routes ? { routes: result.routes } : {}),
+				...(result.links ? { links: result.links } : {}),
+			};
+		} catch (error) {
+			return {
+				calls,
+				wallMs: performance.now() - started,
+				error: error instanceof Error ? error.message : String(error),
+			};
+		} finally {
+			done++;
+			args.onProgress?.(done, total);
+		}
+	};
+	// `concurrency` cases at once, each case's repetitions in turn.
+	const cases = await Effect.runPromise(
+		Effect.forEach(
+			args.cases,
+			(labCase) =>
+				Effect.promise(async (): Promise<CaseRun> => {
+					const repetitions: RepetitionRecord[] = [];
+					for (
+						let repetition = 0;
+						repetition < args.repetitions;
+						repetition++
+					)
+						repetitions.push(
+							await repetitionOf(labCase, repetition),
+						);
+					return { id: labCase.id, repetitions };
+				}),
+			{ concurrency: Math.max(1, args.concurrency) },
+		),
 	);
 	return {
 		runId: args.runId,
@@ -156,6 +159,7 @@ export async function runArm(args: {
 		modelResolved: [...args.jev.resolvedModels].sort(),
 		...(args.codeHash === undefined ? {} : { codeHash: args.codeHash }),
 		...(args.dirty === undefined ? {} : { dirty: args.dirty }),
+		transport: args.jev.transport,
 		cases,
 	};
 }

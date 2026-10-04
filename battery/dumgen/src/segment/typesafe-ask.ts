@@ -6,8 +6,10 @@
  * `node:*`, so a Convex action or Node can run it; the host passes the key.
  *
  * It sends each request once and never retries (#445, #446): any failure
- * throws, and Dumgen reads it as a `ProviderFailure`. The request ends at
- * its deadline or when the caller's signal aborts, whichever comes first.
+ * throws, and Dumgen reads it as a `ProviderFailure`. A refused request's
+ * error carries the HTTP `status`, so an evaluation that retries can tell
+ * a rate limit from a bad request. The request ends at its deadline or
+ * when the caller's signal aborts, whichever comes first.
  */
 import type { Answers } from "./ask.js";
 import type { JevAsk, JevResponse } from "./jev.js";
@@ -116,7 +118,10 @@ export function createTypeSafeAsk(options: TypeSafeAskOptions): JevAsk {
 			);
 		}
 		if (!ok)
-			throw Error(`TypeSafe answered ${status}: ${text.slice(0, 200)}`);
+			throw Object.assign(
+				Error(`TypeSafe answered ${status}: ${text.slice(0, 200)}`),
+				{ status },
+			);
 		return responseOf(text);
 	};
 }

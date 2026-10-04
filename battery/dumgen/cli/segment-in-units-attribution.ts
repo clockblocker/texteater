@@ -41,7 +41,10 @@ import {
 	subset,
 	trackedSetsRoot,
 } from "../src/segment-in-units/lab/corpus.js";
-import { type CallRecord, Jev } from "../src/segment-in-units/lab/jev.js";
+import {
+	type CallRecord,
+	JevCache,
+} from "../src/segment-in-units/lab/jev-cache.js";
 import { loadLabRun } from "../src/segment-in-units/lab/run.js";
 import {
 	runStages,
@@ -70,7 +73,6 @@ const { values } = parseArgs({
 		subset: { type: "string", default: "all" },
 		floors: { type: "string", default: "run" },
 		disputed: { type: "string", default: "ud-drafts" },
-		concurrency: { type: "string", default: "12" },
 	},
 });
 
@@ -109,9 +111,8 @@ const failed = (labCase: LabCase) =>
 const uncovered = subset(set, values.subset).filter(failed);
 const cases = subset(set, values.subset).filter((labCase) => !failed(labCase));
 const disputed = await disputedRecords();
-const jev = new Jev({
+const jev = new JevCache({
 	cacheDirectory: join(labRoot, "cache"),
-	concurrency: Number(values.concurrency),
 	offline: true,
 });
 const stringify = (value: unknown) => JSON.stringify(value);

@@ -24,7 +24,7 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { rules } from "dumspec";
 import type { Answer, Answers } from "../../segment/ask.js";
-import { hashOf, type Projection, type Projector } from "./jev.js";
+import { hashOf, type Projection, type Projector } from "./jev-cache.js";
 import { isSpend, type LedgerEntry } from "./ledger.js";
 
 /** The dumspec state a round's prompts were built from. */

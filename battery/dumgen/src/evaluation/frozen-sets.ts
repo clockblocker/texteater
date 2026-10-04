@@ -17,7 +17,7 @@ import { canonicalJson } from "common-utils";
 export type FrozenSet = { readonly name: string; readonly hash: string };
 
 /** Where the set `name` of `hash` is kept. */
-export const frozenSetPath = (root: string, name: string, hash: string) =>
+const frozenSetPath = (root: string, name: string, hash: string) =>
 	join(root, `${name}@${hash}.json.gz`);
 
 const currentPath = (root: string) => join(root, "current.json");
@@ -31,10 +31,8 @@ const readCurrent = (root: string): Record<string, string> =>
 		: {};
 
 /** The hash of the current set `name`; undefined before its first freeze. */
-export const currentFrozenHash = (
-	root: string,
-	name: string,
-): string | undefined => readCurrent(root)[name];
+const currentFrozenHash = (root: string, name: string): string | undefined =>
+	readCurrent(root)[name];
 
 /** Whether the current set `name` is kept under `root`. */
 export function isFrozen(root: string, name: string): boolean {

@@ -31,7 +31,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { canonicalJson } from "common-utils";
+import * as Effect from "effect/Effect";
 import { compareRuns, loadRun } from "promptsmith/storage";
+import { createTypeSafeAsk } from "../src/segment/typesafe-ask.js";
 import { arms } from "../src/segment-in-units/de/arms/index.js";
 import {
 	deltaBetween,
@@ -74,9 +76,10 @@ import {
 } from "../src/segment-in-units/lab/focus.js";
 import {
 	type CallRecord,
-	Jev,
-	Semaphore,
-} from "../src/segment-in-units/lab/jev.js";
+	JevCache,
+	type JevCacheOptions,
+	transportText,
+} from "../src/segment-in-units/lab/jev-cache.js";
 import {
 	appendLedger,
 	type CompareEntry,
@@ -165,6 +168,23 @@ const evidenceRoot = join(packageRoot, "evidence", "segment-in-units-lab");
 const ledgerPath = join(evidenceRoot, "ledger.jsonl");
 const roundBook = roundsPath(evidenceRoot);
 const roots = { labRoot, evidenceRoot };
+
+/**
+ * The lab's cached jev under `.runs/`. Unless it is offline or projecting,
+ * it asks production's TypeSafe ask on a miss, retrying as the cache does,
+ * and needs `TYPESAFE_API_KEY`.
+ */
+function jevCache(options: Omit<JevCacheOptions, "cacheDirectory">) {
+	const live = !options.offline && !options.project;
+	const apiKey = process.env.TYPESAFE_API_KEY;
+	if (live && !apiKey)
+		throw Error("TYPESAFE_API_KEY is not set; a live command asks jev");
+	return new JevCache({
+		cacheDirectory: join(labRoot, "cache"),
+		...(live && apiKey ? { transport: createTypeSafeAsk({ apiKey }) } : {}),
+		...options,
+	});
+}
 
 const { positionals, values } = parseArgs({
 	args: Bun.argv.slice(2),
@@ -373,10 +393,8 @@ async function execute(args: {
 		spent: spentBefore,
 	} = await account(live && !values.estimate, args.kind);
 	if (live || values.estimate) {
-		const projecting = new Jev({
-			cacheDirectory: join(labRoot, "cache"),
-			concurrency: Number(values.concurrency),
-			...(values.qpc ? { questionsPerCall: Number(values.qpc) } : {}),
+		const projecting = jevCache({
+			...(values.qpc ? { questionsPerRequest: Number(values.qpc) } : {}),
 			...(args.model ? { model: args.model } : {}),
 			allowFloatingModel: values["allow-floating-model"],
 			offline: true,
@@ -410,10 +428,8 @@ async function execute(args: {
 				`Round ${round.id} reached its stop line: ${spentBefore + spentNow} of ${stopLine} fresh jev input tokens`,
 			);
 	};
-	const jev = new Jev({
-		cacheDirectory: join(labRoot, "cache"),
-		concurrency: Number(values.concurrency),
-		...(values.qpc ? { questionsPerCall: Number(values.qpc) } : {}),
+	const jev = jevCache({
+		...(values.qpc ? { questionsPerRequest: Number(values.qpc) } : {}),
 		...(args.model ? { model: args.model } : {}),
 		allowFloatingModel: values["allow-floating-model"],
 		offline: values.offline,
@@ -498,6 +514,7 @@ async function execute(args: {
 		...(args.baseline ? { baseline: args.baseline } : {}),
 		round: round.id,
 		pin,
+		transport: jev.transport,
 	};
 	await writeManifest(evidenceRoot, manifest, patch);
 	const outcomes = outcomesOf(labRun, plainCases(set.cases));
@@ -526,9 +543,10 @@ async function execute(args: {
 		parent: args.parent,
 		hypothesis: args.hypothesis,
 		...spend,
+		transport: manifest.transport,
 	});
 	console.log(
-		`jev fresh ${spend.jev.freshInputTokens} input tokens, luna fresh ${spend.luna.freshInputTokens}/${spend.luna.freshOutputTokens} tokens`,
+		`jev fresh ${spend.jev.freshInputTokens} input tokens, luna fresh ${spend.luna.freshInputTokens}/${spend.luna.freshOutputTokens} tokens; ${transportText(jev.transport)}`,
 	);
 	await report(runId);
 	return { manifest, outcomes };
@@ -585,76 +603,80 @@ async function replayRun() {
 		console.warn(
 			`\n*** ${runId} read dumspec at ${pinText(recordedPin as Pin)}; today's ${pinText(pin)} differs in ${drift.join(", ")}, so requests built from them miss the cache\n`,
 		);
-	const jev = new Jev({
-		cacheDirectory: join(labRoot, "cache"),
+	const jev = jevCache({
 		model: original.model,
 		allowFloatingModel: values["allow-floating-model"],
 		offline: true,
 	});
-	const semaphore = new Semaphore(Number(values.concurrency));
 	let compared = 0;
 	let identical = 0;
 	let fresh = 0;
 	const differing: string[] = [];
 	const failed: string[] = [];
 	const failedBefore: string[] = [];
-	await Promise.all(
-		original.cases.map((caseRun) =>
-			semaphore.use(async () => {
-				const labCase = byId.get(caseRun.id);
-				if (!labCase)
-					throw Error(`${set.name} has no case ${caseRun.id}`);
-				for (const [
-					repetition,
-					recorded,
-				] of caseRun.repetitions.entries()) {
-					const at = `${caseRun.id}#${repetition}`;
-					const calls: CallRecord[] = [];
-					try {
-						const result = await arm.run(labCase.input, {
-							jev,
-							repetition:
-								repetition + (original.repetitionOffset ?? 0),
-							calls,
-							options: original.options,
-						});
-						fresh += calls.filter((call) => !call.cached).length;
-						if (recorded.error) {
-							differing.push(
-								`${at}: the run failed, the replay succeeds`,
+	await Effect.runPromise(
+		Effect.forEach(
+			original.cases,
+			(caseRun) =>
+				Effect.promise(async () => {
+					const labCase = byId.get(caseRun.id);
+					if (!labCase)
+						throw Error(`${set.name} has no case ${caseRun.id}`);
+					for (const [
+						repetition,
+						recorded,
+					] of caseRun.repetitions.entries()) {
+						const at = `${caseRun.id}#${repetition}`;
+						const calls: CallRecord[] = [];
+						try {
+							const result = await arm.run(labCase.input, {
+								jev,
+								repetition:
+									repetition +
+									(original.repetitionOffset ?? 0),
+								calls,
+								options: original.options,
+							});
+							fresh += calls.filter(
+								(call) => !call.cached,
+							).length;
+							if (recorded.error) {
+								differing.push(
+									`${at}: the run failed, the replay succeeds`,
+								);
+								continue;
+							}
+							const stored = recorded.outputs ?? {};
+							const policies = new Set([
+								...Object.keys(stored),
+								...Object.keys(result.outputs),
+							]);
+							for (const policy of policies) {
+								compared++;
+								if (
+									canonicalJson(
+										result.outputs[policy] ?? null,
+									) === canonicalJson(stored[policy] ?? null)
+								)
+									identical++;
+								else differing.push(`${at} ${policy}`);
+							}
+							if (result.primary !== recorded.primary)
+								differing.push(
+									`${at}: primary ${result.primary}, was ${recorded.primary}`,
+								);
+						} catch (error) {
+							const message =
+								error instanceof Error
+									? error.message
+									: String(error);
+							(recorded.error ? failedBefore : failed).push(
+								`${at}: ${message}`,
 							);
-							continue;
 						}
-						const stored = recorded.outputs ?? {};
-						const policies = new Set([
-							...Object.keys(stored),
-							...Object.keys(result.outputs),
-						]);
-						for (const policy of policies) {
-							compared++;
-							if (
-								canonicalJson(
-									result.outputs[policy] ?? null,
-								) === canonicalJson(stored[policy] ?? null)
-							)
-								identical++;
-							else differing.push(`${at} ${policy}`);
-						}
-						if (result.primary !== recorded.primary)
-							differing.push(
-								`${at}: primary ${result.primary}, was ${recorded.primary}`,
-							);
-					} catch (error) {
-						const message =
-							error instanceof Error
-								? error.message
-								: String(error);
-						(recorded.error ? failedBefore : failed).push(
-							`${at}: ${message}`,
-						);
 					}
-				}
-			}),
+				}),
+			{ concurrency: Number(values.concurrency), discard: true },
 		),
 	);
 	console.log(
@@ -1641,8 +1663,7 @@ async function limitQuestionsPerCall() {
 		"limit-qpc",
 	);
 	const sizes = (values.sizes ?? "").split(",").map(Number);
-	const projecting = new Jev({
-		cacheDirectory: join(labRoot, "cache"),
+	const projecting = jevCache({
 		...(values.model ? { model: values.model } : {}),
 		allowFloatingModel: values["allow-floating-model"],
 		offline: true,
@@ -1664,9 +1685,7 @@ async function limitQuestionsPerCall() {
 	const provenance = await provenanceOf({ packageRoot, repository, cli });
 	const calls: CallRecord[] = [];
 	let fresh = 0;
-	const jev = new Jev({
-		cacheDirectory: join(labRoot, "cache"),
-		concurrency: Number(values.concurrency),
+	const jev = jevCache({
 		...(values.model ? { model: values.model } : {}),
 		allowFloatingModel: values["allow-floating-model"],
 		beforeSpend: () => {

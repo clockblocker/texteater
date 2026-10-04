@@ -22,7 +22,7 @@ import type {
 	SegmentedSentence,
 	Unit,
 } from "../../segment/segmented-sentence.js";
-import { hashOf } from "../../segment-in-units/lab/jev.js";
+import { hashOf } from "../../segment-in-units/lab/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
 
