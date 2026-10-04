@@ -190,8 +190,7 @@ member of its verb. Decided on
 [#766](https://github.com/clockblocker/texteater/issues/766).
 
 Amended on 2026-10-01: free `sich` and its reciprocal use are stated here.
-ADR 0018 held them until a rewrite on 2026-08-30 cut them, and ADR 0044 did
-not restate them. Decided on
+Decided on
 [#237](https://github.com/clockblocker/texteater/issues/237) and
 [#238](https://github.com/clockblocker/texteater/issues/238).
 
@@ -258,8 +257,7 @@ UD supplies feature meanings, not this project's Lemma granularity:
 
 ## Consequences
 
-- Supersedes [ADR 0018](./0018-promote-german-personal-case-forms-to-lemmas.md)
-  and takes over the German pronoun parts of ADR 0032 and its amendments.
+- Takes over the German pronoun parts of ADR 0032 and its amendments.
 - Dumling's check binds gender to person and number only on personal
   pronouns, and rejects a cell coordinate marked both in Core and on the
   Surface.

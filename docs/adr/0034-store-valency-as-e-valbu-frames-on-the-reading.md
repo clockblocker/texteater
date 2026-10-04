@@ -240,14 +240,14 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
 
 ## Consequences
 
-- This supersedes [ADR 0030](./0030-store-preposition-government-as-reading-knowledge.md),
-  its `governedPrepositions` aspect and its rule that no valency comes from
-  the sense alone, and the Attestation's `governedPrepositionEvidence` from
+- This replaces the Reading's `governedPrepositions` aspect, the rule that
+  no valency comes from the sense alone, and the Attestation's
+  `governedPrepositionEvidence` from
   [ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md).
-  What stands of ADR 0030 is stated above. ADR 0029 still keeps government
-  out of Lemma identity and pronominal adverbs as ADV Lexemes.
-- ADR 0030 rejected a per-Reading call that guessed valency from the sense.
-  That call ran in every sentence. The frame is proposed once, by the
+  ADR 0029 still keeps government out of Lemma identity and pronominal
+  adverbs as ADV Lexemes.
+- The `governedPrepositions` design rejected a per-Reading call that guessed
+  valency from the sense, because that call ran in every sentence. The frame is proposed once, by the
   Knowledge call that creates the Reading, so a guess can be wrong and is
   fixed through Correct.
 - The `governedBy` view of a preposition is projected from every Preposition

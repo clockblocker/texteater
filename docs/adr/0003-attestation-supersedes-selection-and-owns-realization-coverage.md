@@ -32,5 +32,3 @@ Until ADR 0035, a fused article such as the `m` of `im` stayed outside its
 noun as article evidence with Partial coverage. It is now an owned `Fused`
 member, and `articleEvidence` names every article of a Head: Owned, Shared or
 Hidden ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)).
-The member, article-sharing and suspended-compound rules came from ADR 0004
-and moved here when it was superseded on 2026-09-28.

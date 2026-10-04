@@ -39,8 +39,9 @@ depend on it.
 spelling realizes authored DET, PRON or AUX members, its identity is chosen
 among those candidates, never classified first and located by features
 afterwards. A spelling that lists no candidate on a Closed Route is an
-observable Catalog Miss (system ADR 0021). This rule comes from ADR 0005,
-where the candidate choice beat the route vote on closed-class Kinds.
+observable Catalog Miss (system ADR 0021). In the intake lab the candidate
+choice beat the route vote on closed-class Kinds
+([#487](https://github.com/clockblocker/texteater/issues/487)).
 
 **A click classifies only among the unit's variants.** When the unit carries
 route variants, a focused prompt first picks one of them. The click never
@@ -64,7 +65,7 @@ implementation and out of the output.
 
 - `string → string[]`. Rejected: it cannot express discontinuous units or a
   word split between two units.
-- Two layers in one call, Lexeme Targets under Phraseme Targets (ADR 0006).
+- Two layers in one call, Lexeme Targets under Phraseme Targets.
   Rejected: task 1 needs only the biggest unit, and a second layer duplicates
   `segment.inLexemes`.
 - A route distribution handed to the click. Rejected: it puts open
@@ -78,10 +79,8 @@ implementation and out of the output.
 
 ## Consequences
 
-- Supersedes [ADR 0005](./0005-intake-owns-segments-and-analysis-targets.md)
-  and [ADR 0006](./0006-segment-in-two-layers-lexeme-targets-and-phraseme-targets.md):
-  intake owns pieces and biggest units, not two layers of targets with
-  masses, and keeps ADR 0005's closed-class identity rule.
+- Intake owns pieces and biggest units, not two layers of targets with
+  masses, roles and a Resolution Selector.
 - dumspec sentence records are `segment.inUnits` gold, their No Target
   entries `Unresolved`; Breakdown Records are `segment.inLexemes` gold.
 - Implemented by the segmentation rewrite, which also decides the role and

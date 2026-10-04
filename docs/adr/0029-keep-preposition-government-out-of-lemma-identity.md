@@ -37,7 +37,7 @@ already separates senses such as `es geht um` from `gehen`.
 
 Until ADR 0034, only verbs took in their governed preposition as a member,
 and government was stored as the Attestation's `governedPrepositionEvidence`
-and the Reading's `governedPrepositions` aspect (ADR 0030).
+and the Reading's `governedPrepositions` Knowledge aspect.
 
 Amended on 2026-09-28 (#717): a split pronominal adverb, or a split `da …`
 or `wo …` with `hin` or `her`, is one target of the whole adverb, with two

@@ -28,8 +28,7 @@ Retiring Construction and keeping Fusion as an occurrence value still stand.
   Construction.
 - Existing Attestations that pointed at a Fusion Lemma migrate to Fused
   members with evidence pointing at the Fusion value; that migration belongs
-  to the production effort that Dumgen ADR 0005 named and the segmentation
-  rewrite of Dumgen ADR 0007 now carries.
+  to the segmentation rewrite of Dumgen ADR 0007.
 
 Ruled on
 [Piece production for fused words](https://github.com/clockblocker/texteater/issues/492)

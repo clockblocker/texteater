@@ -156,15 +156,13 @@ cannot see the link.
 
 ## Consequences
 
-- Supersedes [ADR 0028](./0028-treat-funktionsverbgefuege-as-collocations.md).
-  Amends [ADR 0020](./0020-keep-semantic-relations-inside-one-family.md):
+- Amends [ADR 0020](./0020-keep-semantic-relations-inside-one-family.md):
   Lexeme and Locution share one relation space. Amends
   [ADR 0027](./0027-retire-the-construction-family.md): a Kind no longer
   implies its Family. Amends
   [ADR 0032](./0032-choose-core-features-per-route-for-the-learner.md),
-  [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md),
-  [ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md) and
-  [Dumgen ADR 0006](../../battery/dumgen/docs/adr/0006-segment-in-two-layers-lexeme-targets-and-phraseme-targets.md).
+  [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md) and
+  [ADR 0035](./0035-attest-articles-and-fused-words-segment-by-segment.md).
 - Dumling drops `PhrasemeKind`, the Phraseme routes and the Core
   `discourseFormulaRole`, and gains Locution and Saying routes. English idioms
   gain verbal inflection (`kicked the bucket`). Hebrew construct compounds

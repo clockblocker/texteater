@@ -96,7 +96,7 @@
 					"kind": "ADV",
 					"memberSegmentIndices": [6]
 				},
-				"explanation": "The adverb between the support verb and its predicate noun is free material: Lexeme/ADV [6], outside the Collocation eine Entscheidung treffen (Dumgen ADR 0006). Source: https://grammis.ids-mannheim.de/vggf/2202",
+				"explanation": "The adverb between the support verb and its predicate noun is free material: Lexeme/ADV [6], outside the Collocation eine Entscheidung treffen (ADR 0039). Source: https://grammis.ids-mannheim.de/vggf/2202",
 				"contaminationKeys": [
 					"target-lexical-unit:eine-entscheidung-treffen"
 				]

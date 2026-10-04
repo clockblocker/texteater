@@ -35,8 +35,7 @@ gelegene Haus* are VERB because 'formed' and 'situated' are senses of
 plain adjectives stay ADJ (*er läuft schnell*); adverbial use never makes an
 ADV.
 
-This supersedes [ADR 0007](./0007-use-the-tiger-boundary-for-german-participles.md),
-which followed TIGER in tagging attributive and adverbial participles ADJ. That
+This replaced the earlier boundary, which followed TIGER in tagging attributive and adverbial participles ADJ. That
 gave every productive participle an ADJ Lemma of its own, so a learner who
 clicked *gekochten* met an entry for *gekocht* that is only *kochen* again. The
 new boundary follows UD German-HDT, where part of speech follows use but the

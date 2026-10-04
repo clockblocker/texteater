@@ -20,8 +20,6 @@ its footprint and server-only deployment violate that boundary.
 
 ADR 0004 amends the boundary: deterministic Source Segmentation is the first
 internal step of intake-time Segment production, and word-internal splitting
-happens there rather than at click resolution. ADR 0005 amended it a second
-time, making the intake call also produce the Segmented Sentence. ADR 0007
-superseded ADR 0005: `segment.inUnits` (then `Segment.Text`) returns a
-text's pieces and biggest units.
+happens there rather than at click resolution. ADR 0007 makes intake return
+each sentence's pieces and biggest units through `segment.inUnits`.
 Neither changes the per-sentence judgments above.

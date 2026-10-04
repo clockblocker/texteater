@@ -88,8 +88,8 @@
 				"explanation": "sich bei jemandem für etwas bedanken: both prepositional complements are governed and Optional, and the lexical reflexive is not a slot.",
 				"sources": [
 					{
-						"title": "ADR 0030",
-						"path": "docs/adr/0030-store-preposition-government-as-reading-knowledge.md",
+						"title": "ADR 0034",
+						"path": "docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md",
 						"supports": "bedanken governs bei + Dat and für + Acc."
 					}
 				]

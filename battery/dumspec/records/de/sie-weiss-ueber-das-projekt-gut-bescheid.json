@@ -21,7 +21,7 @@
 	"reviewDepth": "Segmentation",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": ["ADR-0028", "ADR-0029", "ADR-0034", "ADR-0039", "ADR-0040"],
+		"adrs": ["ADR-0029", "ADR-0034", "ADR-0039", "ADR-0040"],
 		"rules": [
 			{
 				"rule": "de/funktionsverbgefuege-are-collocations",

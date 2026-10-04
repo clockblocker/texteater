@@ -138,8 +138,7 @@ morph.
 
 - This supersedes the `im Wald` paragraphs of
   [ADR 0003](./0003-attestation-supersedes-selection-and-owns-realization-coverage.md)
-  and [ADR 0004](./0004-align-german-high-level-targets-with-fixed-realized-attestation-members.md),
-  and ADR 0004's rule that `normalizedSurface` prepends the recovered article.
+  and the rule that `normalizedSurface` prepends the recovered article.
   It amends [ADR 0027](./0027-retire-the-construction-family.md) with the
   `Shorthand` orthography and the Fusion reference on a `Fused` member.
 - The German noun check that `normalizedSurface` starts with the article is
