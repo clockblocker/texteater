@@ -9,13 +9,13 @@ import {
 	ruleCitationStatus,
 	rules,
 	setReviewDepth,
-} from "dumspec";
-import type * as Dumspec from "dumspec/types";
+} from "dumcorpus";
+import type * as Dumcorpus from "dumcorpus/types";
 import type { CitationStatus, RuleCitationView } from "./shared/contract";
 
 /** One record file as it is on disk now. */
 export interface StoredRecord {
-	id: Dumspec.SpecRecordId;
+	id: Dumcorpus.SpecRecordId;
 	/** The file's bytes' sha256; absent when there is no file. */
 	sha256?: string;
 	text?: string;
@@ -51,7 +51,7 @@ const citationStatus = {
 
 /** Whether each Rule a record cites is current, reworded, or unknown. */
 export function citationStatuses(
-	citations: readonly Dumspec.RuleCitation[],
+	citations: readonly Dumcorpus.RuleCitation[],
 ): RuleCitationView[] {
 	return citations.map((citation) => ({
 		rule: citation.rule,
@@ -62,7 +62,7 @@ export function citationStatuses(
 
 function withDepth(
 	json: unknown,
-	depth: Dumspec.AnnotationLayer | undefined,
+	depth: Dumcorpus.AnnotationLayer | undefined,
 ): Record<string, unknown> {
 	const { reviewDepth: _, ...rest } = json as Record<string, unknown>;
 	return depth === undefined ? rest : { ...rest, reviewDepth: depth };
@@ -70,20 +70,20 @@ function withDepth(
 
 /**
  * Why setting a readable record's Review Depth to `depth` would leave it
- * failing dumspec, or undefined when it would pass: a reviewed record must
+ * failing dumcorpus, or undefined when it would pass: a reviewed record must
  * pass every layer through its depth and every whole-record check, and
  * must cite only current Rules.
  */
 export function depthChangeProblem(
 	record: ReadableRecord,
-	depth: Dumspec.AnnotationLayer | undefined,
+	depth: Dumcorpus.AnnotationLayer | undefined,
 ): string | undefined {
 	const { errors } = checkRecord(record.id, withDepth(record.json, depth));
 	const [first] = errors;
 	if (first)
 		return `${depth ?? "Draft"} would fail ${first.path || "the record"}: ${first.message}${errors.length > 1 ? ` (and ${errors.length - 1} more)` : ""}`;
 	if (depth === undefined) return undefined;
-	const sources = (record.json as { sources: Dumspec.Sources }).sources;
+	const sources = (record.json as { sources: Dumcorpus.Sources }).sources;
 	const notCurrent = citationStatuses(sources.rules).filter(
 		(citation) => citation.status !== "current",
 	);
@@ -92,9 +92,9 @@ export function depthChangeProblem(
 	return undefined;
 }
 
-/** dumspec's package directory, whose biome configuration formats records. */
-export const dumspecDirectory = dirname(
-	fileURLToPath(import.meta.resolve("dumspec/package.json")),
+/** dumcorpus's package directory, whose biome configuration formats records. */
+export const dumcorpusDirectory = dirname(
+	fileURLToPath(import.meta.resolve("dumcorpus/package.json")),
 );
 
 const biomePath = fileURLToPath(
@@ -102,12 +102,12 @@ const biomePath = fileURLToPath(
 );
 
 /**
- * Formats a record file's text as biome formats dumspec's record `id`, with
- * dumspec's configuration, wherever the records directory lies.
+ * Formats a record file's text as biome formats dumcorpus's record `id`, with
+ * dumcorpus's configuration, wherever the records directory lies.
  */
 export async function formatRecordText(
 	text: string,
-	id: Dumspec.SpecRecordId,
+	id: Dumcorpus.SpecRecordId,
 ): Promise<string> {
 	const child = Bun.spawn(
 		[
@@ -117,7 +117,7 @@ export async function formatRecordText(
 			`--stdin-file-path=records/${id}.json`,
 		],
 		{
-			cwd: dumspecDirectory,
+			cwd: dumcorpusDirectory,
 			stdin: new Blob([text]),
 			stdout: "pipe",
 			stderr: "pipe",
@@ -135,7 +135,7 @@ export async function formatRecordText(
 
 /**
  * Reads and edits the Spec Record files under one directory. Each read
- * checks one file with dumspec's `checkRecord`, so a broken file never hides
+ * checks one file with dumcorpus's `checkRecord`, so a broken file never hides
  * another. A save changes only `reviewDepth`, keeps the file's layout, and
  * writes only when the file still has the hash the edit was based on.
  */
@@ -143,7 +143,7 @@ export function createRecordStore(recordsDirectory: string) {
 	const pathOf = (id: string) => join(recordsDirectory, `${id}.json`);
 	let saving: Promise<unknown> = Promise.resolve();
 
-	async function read(id: Dumspec.SpecRecordId): Promise<StoredRecord> {
+	async function read(id: Dumcorpus.SpecRecordId): Promise<StoredRecord> {
 		if (!isSpecRecordId(id))
 			return { id, problem: `${id} is not a sentence record id` };
 		let text: string;
@@ -178,9 +178,9 @@ export function createRecordStore(recordsDirectory: string) {
 	}
 
 	async function save(
-		id: Dumspec.SpecRecordId,
+		id: Dumcorpus.SpecRecordId,
 		expectedSha256: string,
-		depth: Dumspec.AnnotationLayer | undefined,
+		depth: Dumcorpus.AnnotationLayer | undefined,
 	): Promise<SaveResult> {
 		const current = await read(id);
 		if (current.sha256 !== expectedSha256)
@@ -220,12 +220,12 @@ export function createRecordStore(recordsDirectory: string) {
 		 * Sets the record's Review Depth, or makes it a Draft for
 		 * `undefined`. Writes nothing and answers `conflict` with the record
 		 * as it is now when the file's hash is not `expectedSha256`, and
-		 * `refused` when the result would fail dumspec's checks.
+		 * `refused` when the result would fail dumcorpus's checks.
 		 */
 		setReviewDepth(
-			id: Dumspec.SpecRecordId,
+			id: Dumcorpus.SpecRecordId,
 			expectedSha256: string,
-			depth: Dumspec.AnnotationLayer | undefined,
+			depth: Dumcorpus.AnnotationLayer | undefined,
 		): Promise<SaveResult> {
 			const result = saving.then(() => save(id, expectedSha256, depth));
 			saving = result.catch(() => undefined);

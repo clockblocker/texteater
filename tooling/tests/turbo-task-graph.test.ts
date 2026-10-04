@@ -47,11 +47,11 @@ test("tf-demo development builds every in-house dependency before starting", () 
 	);
 	expect(dev?.dependencies.toSorted()).toEqual([
 		"common-utils#build:package",
+		"dumcorpus#build:package",
 		"dumdict#build:package",
 		"dumgen#build:package",
 		"dumling#build:package",
 		"dumrel#build:package",
-		"dumspec#build:package",
 		"lego#build:package",
 		"react-resizable-panels#build:package",
 	]);
@@ -60,11 +60,11 @@ test("tf-demo development builds every in-house dependency before starting", () 
 		"@texteater/tf-demo#dev:package",
 		"codegen#build:package",
 		"common-utils#build:package",
+		"dumcorpus#build:package",
 		"dumdict#build:package",
 		"dumgen#build:package",
 		"dumling#build:package",
 		"dumrel#build:package",
-		"dumspec#build:package",
 		"dumval#build:package",
 		"lego#build:package",
 		"promptsmith#build:package",
@@ -88,10 +88,10 @@ test("a battery's build script builds its in-house dependencies first", () => {
 	expect(graph.tasks.map((task) => task.taskId).toSorted()).toEqual([
 		"codegen#build:package",
 		"common-utils#build:package",
+		"dumcorpus#build:package",
 		"dumgen#build:package",
 		"dumling#build:package",
 		"dumrel#build:package",
-		"dumspec#build:package",
 		"dumval#build:package",
 		"promptsmith#build:package",
 	]);
@@ -128,9 +128,9 @@ test("validate gates each workspace once and builds only for build-output gates"
 	expect(builders).toEqual([
 		"@dumling/docs-site#check",
 		"@dumling/docs-site#test",
+		"dumcorpus#test",
 		"dumling#test",
 		"dumrel#test",
-		"dumspec#test",
 	]);
 });
 
@@ -148,13 +148,13 @@ test("generate rewrites each package's generated files after its dependencies'",
 		generators.map((task) => [task.taskId, task.dependencies]),
 	);
 	expect([...dependencies.keys()].toSorted()).toEqual([
+		"dumcorpus#generate",
 		"dumdict#generate",
 		"dumling#generate",
 		"dumrel#generate",
-		"dumspec#generate",
 	]);
 	expect(dependencies.get("dumrel#generate")).toContain("dumling#generate");
-	expect(dependencies.get("dumspec#generate")).toEqual(
+	expect(dependencies.get("dumcorpus#generate")).toEqual(
 		expect.arrayContaining(["dumling#generate", "dumrel#generate"]),
 	);
 	expect(dependencies.get("dumdict#generate")).toEqual(
@@ -172,7 +172,7 @@ test("validate runs every package's generated-file freshness check", () => {
 		)
 		.map((task) => task.taskId.slice(0, -"#generate:check".length))
 		.toSorted();
-	expect(checks).toEqual(["dumdict", "dumling", "dumrel", "dumspec"]);
+	expect(checks).toEqual(["dumcorpus", "dumdict", "dumling", "dumrel"]);
 	for (const workspace of checks)
 		expect(
 			graph.tasks.find((task) => task.taskId === `${workspace}#validate`)

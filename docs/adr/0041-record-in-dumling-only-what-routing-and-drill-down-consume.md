@@ -15,21 +15,21 @@ test.
 
 **Dumling holds types and schemas.** It states what a unit is and which
 feature values are well-formed. Facts about a language and the checks that
-need them live in dumspec, next to the gold and the Rules: the authored
-closed-class inventories ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)),
+need them live in dumcorpus, next to the gold and the Rules: the authored
+closed-class inventories ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md)),
 the ADP Case Table with its check of governors' frames, and the
 `der`/`ein` paradigm with the article agreement check and the derivation of an
 article's DET cell. A hand-built `ein Häuser` passes Dumling and fails
-dumspec.
+dumcorpus.
 
 **Members carry no Member Role, and Dumling counts no Heads.** A Lexeme has
 one Head and a Locution two or more, but that line is a classification Rule,
-and Rules live in dumspec. The Attestation stores the Family as a result, as
+and Rules live in dumcorpus. The Attestation stores the Family as a result, as
 it stores the Kind. Where something downstream reads a member, Dumling keeps a
 targeted evidence field instead of a role: `articleEvidence` names the
 article, `expletiveEvidence` the expletive, `valencyEvidence` the governed
 prepositions. Which roles segmentation uses, if any, is decided with the
-segmentation rewrite; dumspec then records them as annotation beside the
+segmentation rewrite; dumcorpus then records them as annotation beside the
 Attestation.
 
 **A shared or elided fixed word leaves the other unit Partial, with no
@@ -53,16 +53,16 @@ something clickable is an implementation choice.
 - a governed preposition from the Reading's Valency Frame (`warten` → ADP
   `auf`);
 - an article from the Lemma's gender for the header and `articleEvidence` for
-  an occurrence, its DET cell derived in dumspec;
+  an occurrence, its DET cell derived in dumcorpus;
 - an auxiliary (`hat` in `hat gekocht` → AUX `haben` perfect) from the
-  authored units in dumspec;
+  authored units in dumcorpus;
 - a reflexive to the one authored unit per language that explains
   reflexivity, never to a case cell: `sich` alone cannot tell *er schämt
   sich* (Acc) from *er bildet sich etwas ein* (Dat).
 
 A separable particle is a Morpheme and is not a drill-down target.
 
-**Gold.** A dumspec sentence record lists only biggest units, one target per
+**Gold.** A dumcorpus sentence record lists only biggest units, one target per
 Segment. A Breakdown Record holds one multiword Lemma's Breakdown: the Lemma's
 wording as its sentence, its Lexeme targets as full Attestations, and a
 pointer to the Lemma. Every target in every record, Breakdown Records
@@ -87,16 +87,16 @@ included, eventually names its Reading; a Reviewed target must (added
 - Amends ADR 0039: Head and Member Role describe the Family Rule and are not
   recorded on the Attestation, and the shared-word evidence is dropped.
 - Amends ADR 0040: the article is identified by `articleEvidence`, and the
-  agreement check and DET-cell derivation move to dumspec.
+  agreement check and DET-cell derivation move to dumcorpus.
 - Moves the ADP Case Table decided in
   [#604](https://github.com/clockblocker/texteater/issues/604) from Dumling to
-  dumspec.
+  dumcorpus.
 - How segmentation produces units and Breakdowns is decided in Dumgen's
   segmentation ADRs.
 - Decided in [#664](https://github.com/clockblocker/texteater/issues/664) on
   [#595](https://github.com/clockblocker/texteater/issues/595).
 
-Amended by [ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md): a fact about one Lemma that decides which feature values its own Surfaces may carry belongs on the Lemma, even if no click or drill-down reads it. German and English ADV and ADJ record comparability in Core. Tables that cover a whole language stay in dumspec.
+Amended by [ADR 0042](./0042-record-comparability-on-adv-and-adj-lemmas.md): a fact about one Lemma that decides which feature values its own Surfaces may carry belongs on the Lemma, even if no click or drill-down reads it. German and English ADV and ADJ record comparability in Core. Tables that cover a whole language stay in dumcorpus.
 
 **Amended on 2026-09-29: judge a field by the learner and by
 classification.** This replaces the scope test above. Where a click routes

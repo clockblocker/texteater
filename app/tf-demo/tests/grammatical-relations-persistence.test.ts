@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import { authoredComponent, germanArticleCell } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
-import { authoredComponent, germanArticleCell } from "dumspec/inventories";
 import { api } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import {

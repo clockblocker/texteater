@@ -1,7 +1,7 @@
 /**
  * Experiment rounds: the jev budget the main session grants one round of
  * experiments, in fresh input tokens (the repository tracks tokens only),
- * and the dumspec state its prompts are pinned to (#845).
+ * and the dumcorpus state its prompts are pinned to (#845).
  *
  * `evidence/segment-in-units-lab/rounds.json` holds every round and names
  * the current one. A round counts only the ledger lines tagged with its id,
@@ -9,10 +9,10 @@
  * between the stop line and the cap are kept for the round's final
  * held-out run, which raises the line to the cap with `--token-budget`.
  *
- * The pin: the requests the unit stage sends quote dumspec's Authored
+ * The pin: the requests the unit stage sends quote dumcorpus's Authored
  * Inventories (AUX spellings, the ADP Case Table, DET and PRON identities),
  * so a peer edit to them silently changes prompts and misses the jev cache.
- * A round records the dumspec commit and a hash of those inputs; a live run
+ * A round records the dumcorpus commit and a hash of those inputs; a live run
  * refuses to start when they differ, unless it re-pins (`--repin`), and an
  * offline replay reports the difference.
  */
@@ -22,27 +22,27 @@ import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { rules } from "dumspec";
+import { rules } from "dumcorpus";
 import type { Answer, Answers } from "../../segment/ask.js";
 import { hashOf, type Projection, type Projector } from "./jev-cache.js";
 import { isSpend, type LedgerEntry } from "./ledger.js";
 
-/** The dumspec state a round's prompts were built from. */
+/** The dumcorpus state a round's prompts were built from. */
 export type Pin = {
-	/** The last commit that changed `battery/dumspec/src`. */
-	readonly dumspecCommit: string;
-	/** Whether `battery/dumspec/src` had uncommitted changes. */
-	readonly dumspecDirty: boolean;
+	/** The last commit that changed `battery/dumcorpus/src`. */
+	readonly dumcorpusCommit: string;
+	/** Whether `battery/dumcorpus/src` had uncommitted changes. */
+	readonly dumcorpusDirty: boolean;
 	/** One hash over `inputs`; the gate compares it. */
 	readonly hash: string;
 	readonly inputs: {
 		/**
-		 * The `dumspec/inventories` entry Bun resolves and the modules it
+		 * The `dumcorpus/inventories` entry Bun resolves and the modules it
 		 * imports: the AUX, DET and PRON members and the ADP Case Table the
 		 * requests quote.
 		 */
 		readonly inventories: string;
-		/** dumspec's Rules, their text included. */
+		/** dumcorpus's Rules, their text included. */
 		readonly rules: string;
 	};
 	readonly at: string;
@@ -188,28 +188,28 @@ async function moduleGraph(entry: string): Promise<Record<string, string>> {
 const git = (repository: string, args: readonly string[]) =>
 	execFileSync("git", args, { cwd: repository, encoding: "utf8" }).trim();
 
-/** The dumspec state the requests would be built from now. */
+/** The dumcorpus state the requests would be built from now. */
 export async function currentPin(repository: string): Promise<Pin> {
 	const inventories = hashOf(
 		await moduleGraph(
-			fileURLToPath(import.meta.resolve("dumspec/inventories")),
+			fileURLToPath(import.meta.resolve("dumcorpus/inventories")),
 		),
 	);
 	const inputs = { inventories, rules: hashOf(rules) };
 	return {
-		dumspecCommit: git(repository, [
+		dumcorpusCommit: git(repository, [
 			"log",
 			"-1",
 			"--format=%H",
 			"--",
-			"battery/dumspec/src",
+			"battery/dumcorpus/src",
 		]),
-		dumspecDirty:
+		dumcorpusDirty:
 			git(repository, [
 				"status",
 				"--porcelain",
 				"--",
-				"battery/dumspec/src",
+				"battery/dumcorpus/src",
 			]).length > 0,
 		hash: hashOf(inputs),
 		inputs,
@@ -226,7 +226,7 @@ export function pinDrift(pinned: Pin, current: Pin): string[] {
 }
 
 export const pinText = (pin: Pin) =>
-	`dumspec ${pin.dumspecCommit.slice(0, 8)}${pin.dumspecDirty ? "+dirty" : ""} inputs ${pin.hash.slice(0, 12)}`;
+	`dumcorpus ${pin.dumcorpusCommit.slice(0, 8)}${pin.dumcorpusDirty ? "+dirty" : ""} inputs ${pin.hash.slice(0, 12)}`;
 
 /**
  * The pin gate. A live run refuses to start when the prompt inputs moved
@@ -241,10 +241,10 @@ export function checkPin(args: {
 }): string | undefined {
 	const drift = pinDrift(args.round.pin, args.current);
 	if (drift.length === 0) return undefined;
-	const message = `dumspec's prompt inputs (${drift.join(", ")}) changed since round ${args.round.id} was pinned at ${pinText(args.round.pin)}; now ${pinText(args.current)}`;
+	const message = `dumcorpus's prompt inputs (${drift.join(", ")}) changed since round ${args.round.id} was pinned at ${pinText(args.round.pin)}; now ${pinText(args.current)}`;
 	if (args.live && !args.repin)
 		throw Error(
-			`${message}. Requests built from them miss the jev cache. Check out dumspec at the pinned state, or pass --repin to pin the round at today's dumspec.`,
+			`${message}. Requests built from them miss the jev cache. Check out dumcorpus at the pinned state, or pass --repin to pin the round at today's dumcorpus.`,
 		);
 	return args.live
 		? `${message}; re-pinned (--repin)`
@@ -426,10 +426,10 @@ export const projectionText = (priced: PricedProjection) =>
 		.join("; ")}`;
 
 /**
- * Opens a command's account with the current round: the round, the dumspec
+ * Opens a command's account with the current round: the round, the dumcorpus
  * state the command reads, and the drift warning to print. A live command
  * whose prompt inputs drifted refuses unless `repin`, which pins the round
- * at today's dumspec in the round book and keeps the old pin with `reason`.
+ * at today's dumcorpus in the round book and keeps the old pin with `reason`.
  */
 export async function enterRound(args: {
 	readonly evidenceRoot: string;

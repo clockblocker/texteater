@@ -25,7 +25,7 @@ continues to mark owned members only. A source click on an owned article
 follows its Head's route and contributes no DET Source Context.
 
 The article's DET cell comes from the article's spelling and its Head's case,
-number and gender, derived in dumspec (system ADRs 0040 and 0041). Until
+number and gender, derived in dumcorpus (system ADRs 0040 and 0041). Until
 ADR 0040 it came from a noun `article` feature, and tf-demo's code still reads
 that until it is rebuilt after the segmentation rewrite
 ([#701](https://github.com/clockblocker/texteater/issues/701)).
@@ -34,6 +34,6 @@ Amended 2026-10-02 ([#848](https://github.com/clockblocker/texteater/issues/848)
 tf-demo no longer reads a noun `article` feature. A common noun's owned
 article is still a member of its occurrence, but it derives no DET Reading
 until [#683](https://github.com/clockblocker/texteater/issues/683) derives the
-cell through dumspec. A name cited with its definite article (die Schweiz)
+cell through dumcorpus. A name cited with its definite article (die Schweiz)
 still derives its der cell, and a subject expletive `es` its reviewed Reading.
 

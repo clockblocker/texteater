@@ -1,6 +1,6 @@
 /**
  * The Verb Choice (#851, D4): one follow-up request, `verb`, for the verb
- * satellites whose grouping a dumspec Rule decides from the sense, which
+ * satellites whose grouping a dumcorpus Rule decides from the sense, which
  * the `candidates` request's slot questions don't ask. The auxiliary slot
  * asks for a perfect, future or passive auxiliary, so it misses causative
  * lassen and the recipient passive and has no state reading; the reflexive
@@ -39,7 +39,7 @@
  */
 
 import type { Questions } from "@typesafe-ai/sdk";
-import { authoredRealizations, closedVerbForms } from "dumspec/inventories";
+import { authoredRealizations, closedVerbForms } from "dumcorpus/inventories";
 import * as Effect from "effect/Effect";
 import {
 	type Answers,

@@ -16,7 +16,7 @@ The workspaces are:
 - `battery/dumgen`: German `segment.inUnits`, rebuilt from scratch (#701)
 - `battery/dumling`: grammatical values and operations
 - `battery/dumrel`: Knowledge and relation algebra
-- `battery/dumspec`: Spec Records, classification Rules and authored inventories
+- `battery/dumcorpus`: Spec Records, classification Rules and authored inventories
 - `battery/dumval`: Zod validation compilation, rule linking and lightweight parsing
 - `battery/lego`: shared Tailwind design tokens, theme and React atoms and molecules
 - `battery/promptsmith`: schema-bound prompt authoring and reproducible evaluation

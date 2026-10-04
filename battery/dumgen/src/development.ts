@@ -1,7 +1,7 @@
 /**
  * The experiments `cli/evaluate.ts` lists and runs: German `segment.inUnits`
  * in gold and raw mode over the lab's frozen sets, and `splitText` over
- * dumspec's ud-drafts (#701, #845).
+ * dumcorpus's ud-drafts (#701, #845).
  */
 import { fileURLToPath } from "node:url";
 

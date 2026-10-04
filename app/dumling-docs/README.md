@@ -3,12 +3,12 @@
 Dumling Docs publishes Markdown and HTML from executable sources.
 
 Edit `src/to-generate/docs/**/*.doc.ts` for prose pages. Examples are Spec
-Records of the `dumspec` battery: a page cites one with
+Records of the `dumcorpus` battery: a page cites one with
 `specExample("<record id>", <target index>)`, and every record target gets an
 attestation page. Do not edit `src/generated/`, `public/`, or `dist/`; those
 are derived caches or builds.
 
-`scripts/generate-content/docs/spec/` generates the spec pages from `dumspec`
+`scripts/generate-content/docs/spec/` generates the spec pages from `dumcorpus`
 and the built `dumling/schema/*` modules (ADR 0037):
 
 - one page per language × Family × Kind route, with its Rules, its Core and

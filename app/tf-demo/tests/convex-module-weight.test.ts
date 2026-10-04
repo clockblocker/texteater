@@ -12,7 +12,7 @@ import { build } from "esbuild";
  *   Dumgen's segmenter, or the Effect-based dumdict service). Only "use node"
  *   actions load those.
  * - Bytes from the Dum packages are budgeted separately from the rest, because
- *   the reviewed authored catalog behind `dumspec/inventories` is data the
+ *   the reviewed authored catalog behind `dumcorpus/inventories` is data the
  *   dictionary transaction needs and dominates that share on its own.
  */
 const MAX_DUM_PACKAGE_BYTES = 960 * 1024;
@@ -27,7 +27,7 @@ const FORBIDDEN_INPUTS = [
 	/\/zod\//,
 ];
 const DUM_PACKAGE_INPUT =
-	/\/(?:dumspec|dumdict|dumling|dumrel|dumval)\/(?:dist|src)\//;
+	/\/(?:dumcorpus|dumdict|dumling|dumrel|dumval)\/(?:dist|src)\//;
 /**
  * Convex bundles workspace packages from their source ("convex" export
  * condition). A built copy beside it would load the same package twice.

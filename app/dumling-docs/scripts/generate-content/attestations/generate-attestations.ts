@@ -32,7 +32,7 @@ export function assertUniqueAttestationOutputs(
 	return [...byRouteId.values()];
 }
 
-/** Generates one attestation page per target of every dumspec Spec Record. */
+/** Generates one attestation page per target of every dumcorpus Spec Record. */
 export async function generateAttestations(): Promise<void> {
 	const outputs: PageOutput[] = [];
 

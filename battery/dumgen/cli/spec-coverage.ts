@@ -1,6 +1,6 @@
 /**
  * Prints, for each prompt projected from the Spec Records, its case counts,
- * exclusions, skips and the records dumspec leaves out, split by Reviewed
+ * exclusions, skips and the records dumcorpus leaves out, split by Reviewed
  * and Draft. `--list <n>` lists the records of every group of at most n.
  */
 import { parseArgs } from "node:util";

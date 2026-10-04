@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { checkRecord } from "dumspec";
+import { checkRecord } from "dumcorpus";
 import { blockedReason } from "../src/batch";
 import { changedRecordIds } from "../src/git-status";
 import { createRecordStore } from "../src/record-store";

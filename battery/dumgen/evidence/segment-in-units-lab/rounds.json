@@ -8,8 +8,8 @@
 			"capTokens": 119047619,
 			"stopLineTokens": 104000000,
 			"pin": {
-				"dumspecCommit": "3a6b7b89d6902388c80319e1adbd59d1a7806cb1",
-				"dumspecDirty": false,
+				"dumcorpusCommit": "3a6b7b89d6902388c80319e1adbd59d1a7806cb1",
+				"dumcorpusDirty": false,
 				"hash": "b291801d72c97b22d9396087bdbf362614d8f960538e5dcd03db35a6325f7b71",
 				"inputs": {
 					"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",
@@ -21,8 +21,8 @@
 				{
 					"at": "2026-10-02T15:26:30.894Z",
 					"from": {
-						"dumspecCommit": "a95cecf17658757d7d650e0aca364cfd461627e9",
-						"dumspecDirty": false,
+						"dumcorpusCommit": "a95cecf17658757d7d650e0aca364cfd461627e9",
+						"dumcorpusDirty": false,
 						"hash": "5dd8dd10a89667c611dbf2f0e482650bdc8484ad70dbd9dd38a3fd53377e1cc5",
 						"inputs": {
 							"inventories": "8d7cb8423e919a11234c8a235f477dc501f0ca26f2760e7ea30b7b9877088688",
@@ -35,8 +35,8 @@
 				{
 					"at": "2026-10-03T04:25:57.766Z",
 					"from": {
-						"dumspecCommit": "58932ee2a031234fd6300387837bb56ee0429d46",
-						"dumspecDirty": false,
+						"dumcorpusCommit": "58932ee2a031234fd6300387837bb56ee0429d46",
+						"dumcorpusDirty": false,
 						"hash": "73511f91eafbf2b8f29ce0018bc2400e3187ab4f0ebc6fc71d2e2221cf046ab1",
 						"inputs": {
 							"inventories": "8d7cb8423e919a11234c8a235f477dc501f0ca26f2760e7ea30b7b9877088688",
@@ -49,8 +49,8 @@
 				{
 					"at": "2026-10-03T05:06:48.350Z",
 					"from": {
-						"dumspecCommit": "82ff1f1e70ea2d45db6422eb6cb4eaddad6bcd63",
-						"dumspecDirty": false,
+						"dumcorpusCommit": "82ff1f1e70ea2d45db6422eb6cb4eaddad6bcd63",
+						"dumcorpusDirty": false,
 						"hash": "85449ef04e955360a038bed638911781ff7aa2714182309565cdf9e6146163a4",
 						"inputs": {
 							"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",
@@ -63,8 +63,8 @@
 				{
 					"at": "2026-10-03T05:30:21.061Z",
 					"from": {
-						"dumspecCommit": "703f3081ec2b3394a1125d40bb170de9ac4b9b26",
-						"dumspecDirty": false,
+						"dumcorpusCommit": "703f3081ec2b3394a1125d40bb170de9ac4b9b26",
+						"dumcorpusDirty": false,
 						"hash": "556a0dcf8e4dd7ce3c6d66b2ea217d5d7a69768fc936e2942527396d54124f2a",
 						"inputs": {
 							"inventories": "91b8a21fca8529aae43cdad00cbd1aef185c06d73616835906cde020b28f4fd5",

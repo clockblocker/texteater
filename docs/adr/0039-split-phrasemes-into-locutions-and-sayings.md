@@ -54,7 +54,7 @@ Grundform.
 or adjective predicate: `eine Entscheidung treffen`, `Angst haben`, `Kritik
 üben`, `geltend machen`. A weak collocation whose meaning is literal
 (`starker Raucher`, `Zähne putzen`) is ordinary Lexemes. This one definition
-replaces the three that `CONTEXT.md`, ADR 0034 and dumspec held.
+replaces the three that `CONTEXT.md`, ADR 0034 and dumcorpus held.
 
 **Formulas.** A routine formula is an INTJ: a Lexeme when it is one word
 (`danke`, `Entschuldigung!`), a Locution otherwise. `Entschuldigung!` and the
@@ -167,7 +167,7 @@ cannot see the link.
   `discourseFormulaRole`, and gains Locution and Saying routes. English idioms
   gain verbal inflection (`kicked the bucket`). Hebrew construct compounds
   (`בית ספר`) are Locution/NOUN, pending the Hebrew owner.
-- In dumspec, the Reviewed Aphorism records return to review, the multiword
+- In dumcorpus, the Reviewed Aphorism records return to review, the multiword
   Lexeme records other than names become Locutions, and the phraseme Rules are
   rewritten.
 - How intake assigns Member Roles, counts Heads, keeps names whole and picks a
@@ -209,7 +209,7 @@ members, as `auf Grund` is of `aufgrund`. Apart around a word, `so … dass`
 stays a correlator Locution. A preposition that joins `dass` into one
 subordinator (`ohne dass`, `statt dass`, `anstatt dass`) is one Locution
 SCONJ, and `statt` and `anstatt` forms are separate Lemmas, related as
-synonyms, as `je … desto` and `je … umso` are. dumspec lists this family and
+synonyms, as `je … desto` and `je … umso` are. dumcorpus lists this family and
 the zu-infinitive one (`um … zu`, `ohne … zu`, `statt … zu`, `anstatt … zu`),
 and its Rules cite the list instead of naming them inline. A German ADP never
 takes `extPos: SCONJ`: `anstatt dass` is not the ADP `anstatt` used as a
@@ -220,7 +220,7 @@ a Locution ADP's Attestation records the case its complement took, as a
 Lexeme ADP's does ([ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)):
 at most one bare-case slot, with no member. `um des Friedens willen` records
 Gen, and `von da an` none, since `da` shows no case. It records no position,
-since its words are its Canonical Form, and dumspec's ADP Case Table gives
+since its words are its Canonical Form, and dumcorpus's ADP Case Table gives
 it one case set.
 
 Amended on 2026-10-01 ([#759](https://github.com/clockblocker/texteater/issues/759),

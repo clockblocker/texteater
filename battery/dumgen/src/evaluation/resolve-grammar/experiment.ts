@@ -462,7 +462,7 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 				inputSchema,
 				outputSchema: grammarOutputSchema,
 				collections: {
-					dumspec: defineGoldenCaseCollection({
+					dumcorpus: defineGoldenCaseCollection({
 						groups: {
 							cases: defineGoldenCaseGroup(
 								Object.fromEntries(

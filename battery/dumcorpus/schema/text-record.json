@@ -1,0 +1,124 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://unpkg.com/dumcorpus/schema/text-record.json",
+	"title": "Dumcorpus Text Record",
+	"type": "object",
+	"properties": {
+		"$schema": {
+			"type": "string"
+		},
+		"sourceText": {
+			"type": "string",
+			"minLength": 1
+		},
+		"status": {
+			"type": "string",
+			"enum": [
+				"Draft",
+				"Reviewed"
+			]
+		},
+		"sources": {
+			"type": "object",
+			"properties": {
+				"adrs": {
+					"type": "array",
+					"items": {
+						"type": "string",
+						"pattern": "^(?:[a-z][a-z0-9-]*\\/)?ADR-\\d{4}$"
+					}
+				},
+				"rules": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"rule": {
+								"type": "string",
+								"minLength": 1
+							},
+							"hash": {
+								"type": "string",
+								"pattern": "^[0-9a-f]{16}$"
+							}
+						},
+						"required": [
+							"rule",
+							"hash"
+						],
+						"additionalProperties": false
+					}
+				},
+				"references": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"title": {
+								"type": "string",
+								"minLength": 1
+							},
+							"url": {
+								"type": "string",
+								"format": "uri"
+							},
+							"supports": {
+								"type": "string",
+								"minLength": 1
+							}
+						},
+						"required": [
+							"title",
+							"url",
+							"supports"
+						],
+						"additionalProperties": false
+					}
+				}
+			},
+			"required": [
+				"adrs",
+				"rules",
+				"references"
+			],
+			"additionalProperties": false
+		},
+		"legacy": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"source": {
+						"type": "string",
+						"minLength": 1
+					},
+					"caseId": {
+						"type": "string",
+						"minLength": 1
+					},
+					"memberSegmentIndices": {
+						"minItems": 1,
+						"type": "array",
+						"items": {
+							"type": "integer",
+							"minimum": 0,
+							"maximum": 9007199254740991
+						}
+					},
+					"case": {}
+				},
+				"required": [
+					"source",
+					"caseId",
+					"case"
+				],
+				"additionalProperties": false
+			}
+		}
+	},
+	"required": [
+		"sourceText",
+		"status"
+	],
+	"additionalProperties": false
+}

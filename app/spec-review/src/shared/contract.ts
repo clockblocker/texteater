@@ -3,8 +3,8 @@
  * Records and the batch; the page only renders these views and posts
  * approvals back.
  */
-import type { SpecIssue } from "dumspec";
-import type * as Dumspec from "dumspec/types";
+import type { SpecIssue } from "dumcorpus";
+import type * as Dumcorpus from "dumcorpus/types";
 
 export type Split = "held-out" | "dev";
 
@@ -18,15 +18,15 @@ export interface OpenQuestion {
 /** One batch row as the list shows it. */
 export interface BatchRowView {
 	row: string;
-	record: Dumspec.SpecRecordId;
+	record: Dumcorpus.SpecRecordId;
 	bucket: string;
 	split: Split;
 	change: string;
 	consistencySets: readonly string[];
 	openQuestion?: OpenQuestion;
 	sentence?: string;
-	reviewDepth?: Dumspec.AnnotationLayer;
-	validThrough?: Dumspec.AnnotationLayer;
+	reviewDepth?: Dumcorpus.AnnotationLayer;
+	validThrough?: Dumcorpus.AnnotationLayer;
 	/** Whether git sees the file changed; null outside a git work tree. */
 	dirty: boolean | null;
 	/** Why the batch forbids approving the row, whatever the record holds. */
@@ -55,7 +55,7 @@ export interface UnitView {
 export type CitationStatus = "current" | "stale" | "unknown";
 
 export interface RuleCitationView {
-	rule: Dumspec.RuleId;
+	rule: Dumcorpus.RuleId;
 	hash: string;
 	status: CitationStatus;
 }
@@ -67,7 +67,7 @@ export interface ActionView {
 }
 
 interface RecordHead {
-	id: Dumspec.SpecRecordId;
+	id: Dumcorpus.SpecRecordId;
 	row: BatchRowView;
 	/** The file's sha256, sent back with a save. */
 	sha256?: string;
@@ -79,12 +79,12 @@ export interface ReadableRecordView extends RecordHead {
 	status: "readable";
 	sha256: string;
 	sentence: string;
-	segments: readonly Dumspec.Segment[];
-	coverage: Dumspec.Coverage;
-	reviewDepth?: Dumspec.AnnotationLayer;
-	validThrough?: Dumspec.AnnotationLayer;
+	segments: readonly Dumcorpus.Segment[];
+	coverage: Dumcorpus.Coverage;
+	reviewDepth?: Dumcorpus.AnnotationLayer;
+	validThrough?: Dumcorpus.AnnotationLayer;
 	units: readonly UnitView[];
-	noTarget: readonly Dumspec.NoTarget[];
+	noTarget: readonly Dumcorpus.NoTarget[];
 	/** Checks of the whole record: id, shape, Rule citation. */
 	recordIssues: readonly IssueView[];
 	segmentationIssues: readonly IssueView[];
@@ -106,7 +106,7 @@ export type RecordView = ReadableRecordView | UnreadableRecordView;
 
 /** The body of a save: the record and the hash its edit was based on. */
 export interface SaveRequest {
-	id: Dumspec.SpecRecordId;
+	id: Dumcorpus.SpecRecordId;
 	sha256: string;
 }
 

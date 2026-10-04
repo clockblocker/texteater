@@ -82,7 +82,7 @@ one Surface with or without \`the\`. Hebrew marks the article with
 as in \`der Aufstieg und Abstieg\` (Partial), or a \`Hidden\` Fusion component
 with no letters, such as the article in Hebrew \`בבית\` (Partial). A Head
 without an article has \`articleEvidence: null\`. Whether the article agrees
-with its Head (\`ein Häuser\` does not) is checked in \`dumspec\`, which also
+with its Head (\`ein Häuser\` does not) is checked in \`dumcorpus\`, which also
 derives the article's \`DET\` cell.
 
 A proper noun cited with its article has the Core Feature

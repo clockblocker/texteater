@@ -39,7 +39,7 @@ const READING_VALENT = {
 	Valency: renderDeReadingValency,
 };
 
-/** An ADP renders its cases from dumspec's ADP Case Table instead of a frame. */
+/** An ADP renders its cases from dumcorpus's ADP Case Table instead of a frame. */
 const READING_ADPOSITION = {
 	...READING_RELATIONAL,
 	SourceContexts: renderDeAdpositionSourceContexts,

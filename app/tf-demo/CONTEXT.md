@@ -47,7 +47,7 @@ The pinned Block listing where the Subject was met. See [tf-demo ADR 0006].
 
 **Valency Block**:
 The Block showing a Reading's Lemma with its Valency Frame. A German ADP
-Reading has no frame, and its block renders from dumspec's ADP Case Table
+Reading has no frame, and its block renders from dumcorpus's ADP Case Table
 instead. See [ADR 0034].
 
 **Fusion Block**:

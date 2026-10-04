@@ -1,5 +1,5 @@
+import type * as Dumcorpus from "dumcorpus/types";
 import type * as Dumling from "dumling/types";
-import type * as Dumspec from "dumspec/types";
 import { publicHrefForRouteId } from "../../../../src/lib/navigation.ts";
 import { spellingTagLabels } from "../../../../src/lib/unit-presentation";
 import {
@@ -23,7 +23,7 @@ import {
 } from "./universal-definitions";
 
 /**
- * A page generated from dumspec and the Dumling schemas. A hand-written page
+ * A page generated from dumcorpus and the Dumling schemas. A hand-written page
  * at the same route becomes its introduction.
  */
 export type SpecPage = Readonly<{
@@ -46,9 +46,9 @@ export type SpecAppendix = Readonly<{
 export type SpecPagesInput = Readonly<{
 	/** Routes of every hand-written page, to link only pages that exist. */
 	handWrittenRouteIds: ReadonlySet<string>;
-	records: readonly Dumspec.SpecRecord[];
+	records: readonly Dumcorpus.SpecRecord[];
 	routes: readonly SchemaRoute[];
-	rules: readonly Dumspec.Rule[];
+	rules: readonly Dumcorpus.Rule[];
 }>;
 
 /**
@@ -258,15 +258,15 @@ function renderFeatureTable(route: SchemaRoute): string {
 }
 
 function recordsById(
-	records: readonly Dumspec.SpecRecord[],
-): Map<string, Dumspec.SpecRecord> {
+	records: readonly Dumcorpus.SpecRecord[],
+): Map<string, Dumcorpus.SpecRecord> {
 	return new Map(records.map((record) => [record.id, record]));
 }
 
 function renderRule(
-	rule: Dumspec.Rule,
+	rule: Dumcorpus.Rule,
 	language: Dumling.Language,
-	byId: ReadonlyMap<string, Dumspec.SpecRecord>,
+	byId: ReadonlyMap<string, Dumcorpus.SpecRecord>,
 	headingLevel: "##" | "###",
 ): string {
 	const shownBy = rule.records.map((id) => {
@@ -309,13 +309,13 @@ function renderRule(
 }
 
 function languageRules(
-	rules: readonly Dumspec.Rule[],
+	rules: readonly Dumcorpus.Rule[],
 	language: Dumling.Language,
-): Dumspec.Rule[] {
+): Dumcorpus.Rule[] {
 	return rules.filter((rule) => rule.id.startsWith(`${language}/`));
 }
 
-function appliesTo(rule: Dumspec.Rule, route: SchemaRoute): boolean {
+function appliesTo(rule: Dumcorpus.Rule, route: SchemaRoute): boolean {
 	return rule.routes.some(
 		(candidate) =>
 			candidate.language === route.language &&
@@ -326,8 +326,8 @@ function appliesTo(rule: Dumspec.Rule, route: SchemaRoute): boolean {
 
 function renderRouteRules(
 	route: SchemaRoute,
-	rules: readonly Dumspec.Rule[],
-	byId: ReadonlyMap<string, Dumspec.SpecRecord>,
+	rules: readonly Dumcorpus.Rule[],
+	byId: ReadonlyMap<string, Dumcorpus.SpecRecord>,
 ): string {
 	const ofLanguage = languageRules(rules, route.language);
 	if (ofLanguage.length === 0) {
@@ -356,7 +356,7 @@ function routePages(
 	route: SchemaRoute,
 	entries: readonly RecordTarget[],
 	input: SpecPagesInput,
-	byId: ReadonlyMap<string, Dumspec.SpecRecord>,
+	byId: ReadonlyMap<string, Dumcorpus.SpecRecord>,
 ): SpecPage[] {
 	const language = languageNames[route.language];
 	const routeId = routePageId(route.language, route.family, route.kind);
@@ -620,12 +620,12 @@ function universalFeaturePage(
 
 function rulesPage(
 	language: Dumling.Language,
-	rules: readonly Dumspec.Rule[],
-	byId: ReadonlyMap<string, Dumspec.SpecRecord>,
+	rules: readonly Dumcorpus.Rule[],
+	byId: ReadonlyMap<string, Dumcorpus.SpecRecord>,
 ): SpecPage {
 	const ofLanguage = languageRules(rules, language);
 	return {
-		description: `The ${languageNames[language]} classification Rules from dumspec, with the records that show them.`,
+		description: `The ${languageNames[language]} classification Rules from dumcorpus, with the records that show them.`,
 		order: 200,
 		routeId: rulesPageId(language),
 		lead:

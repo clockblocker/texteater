@@ -1,6 +1,6 @@
 import { join, resolve } from "node:path";
 import { z } from "zod";
-import { dumspecDirectory } from "./record-store";
+import { dumcorpusDirectory } from "./record-store";
 import { createReview } from "./review";
 
 const saveRequestSchema = z.object({
@@ -11,7 +11,7 @@ const saveRequestSchema = z.object({
 /**
  * Where the server reads: `SPEC_REVIEW_BATCH` names the batch file and
  * `SPEC_REVIEW_RECORDS` the records directory its ids are relative to.
- * They default to dumspec's membership-hard batch and records.
+ * They default to dumcorpus's membership-hard batch and records.
  */
 function configurationFromEnvironment(
 	environment: Record<string, string | undefined> = process.env,
@@ -19,11 +19,11 @@ function configurationFromEnvironment(
 	return {
 		batchPath: resolve(
 			environment.SPEC_REVIEW_BATCH ??
-				join(dumspecDirectory, "batches/membership-hard.json"),
+				join(dumcorpusDirectory, "batches/membership-hard.json"),
 		),
 		recordsDirectory: resolve(
 			environment.SPEC_REVIEW_RECORDS ??
-				join(dumspecDirectory, "records"),
+				join(dumcorpusDirectory, "records"),
 		),
 		port: Number(environment.SPEC_REVIEW_API_PORT ?? 3186),
 	};

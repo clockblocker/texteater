@@ -54,7 +54,7 @@
 		"common-utils": "workspace:^",
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
-		"dumspec": "workspace:^",
+		"dumcorpus": "workspace:^",
 		"effect": "4.0.0",
 		"promptsmith": "workspace:^",
 		"zod": "^4.4.0"

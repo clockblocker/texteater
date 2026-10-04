@@ -34,7 +34,7 @@
  * field-level output diff. It asks no model.
  *
  * A segment.inUnits run counts against the lab's current round: it writes a
- * line to the lab ledger, refuses to go live when dumspec's prompt inputs
+ * line to the lab ledger, refuses to go live when dumcorpus's prompt inputs
  * moved since the round was pinned (unless `--repin`) or when its projected
  * spend would cross the stop line, and stops at the line. It runs
  * production's `createDumgen` with the lab's cached jev as its transport,
@@ -337,7 +337,7 @@ export async function runEvaluationCli(
 						settings: {
 							round: account.round.id,
 							pin: account.pin.hash,
-							dumspecCommit: account.pin.dumspecCommit,
+							dumcorpusCommit: account.pin.dumcorpusCommit,
 						},
 						beforeLive(priced) {
 							warn(projectionText(priced));
@@ -419,7 +419,7 @@ export async function runEvaluationCli(
 						"--",
 						"battery/dumgen/src",
 						"battery/dumgen/cli",
-						"battery/dumspec/src",
+						"battery/dumcorpus/src",
 					).length > 0,
 				model: run.manifest.configurations.judgment.model,
 				...evaluated.spend,

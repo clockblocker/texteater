@@ -7,7 +7,7 @@
  * each case carries its grouping: what hovering each Segment highlights
  * (B-cubed), Segment pairs and the units merged across or split (#701).
  */
-import type * as Dumspec from "dumspec/types";
+import type * as Dumcorpus from "dumcorpus/types";
 import type {
 	GoldUnitSource,
 	SegmentInUnitsFacts,
@@ -91,7 +91,7 @@ export type SegmentInUnitsEvaluation = {
 	 * Unscored.
 	 */
 	readonly contractPass?: boolean;
-	readonly coverage: Dumspec.Coverage;
+	readonly coverage: Dumcorpus.Coverage;
 	/** Scored gold units whose Segment set came back exactly. */
 	readonly membership: number;
 	/** Of those, the units whose route is acceptable: the same, a tolerated confusion, or among the variants. */

@@ -13,9 +13,9 @@
  */
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { isReviewed, loadSpecRecords } from "dumcorpus";
+import type * as Dumcorpus from "dumcorpus/types";
 import type * as Dumling from "dumling/types";
-import { isReviewed, loadSpecRecords } from "dumspec";
-import type * as Dumspec from "dumspec/types";
 import type {
 	ClosedClassIdentity,
 	Route,
@@ -44,7 +44,7 @@ export type GrammarSet = {
 	readonly name: GrammarSetName;
 	readonly createdAt: string;
 	readonly gitHead: string;
-	/** Uncommitted changes under battery/dumspec/records when frozen. */
+	/** Uncommitted changes under battery/dumcorpus/records when frozen. */
 	readonly dirtyRecordFiles: number;
 	readonly hash: string;
 	readonly cases: readonly GrammarCase[];
@@ -69,11 +69,11 @@ export function identityOf(
 	};
 }
 
-const routeOf = (route: Dumspec.SpecRoute): Route =>
+const routeOf = (route: Dumcorpus.SpecRoute): Route =>
 	({ language: "de", family: route.family, kind: route.kind }) as Route;
 
 /** The cases of one record, one per target with an Attestation. */
-export function casesOf(record: Dumspec.SpecRecord): GrammarCase[] {
+export function casesOf(record: Dumcorpus.SpecRecord): GrammarCase[] {
 	const sentence: SegmentedSentence = {
 		text: record.segments.map(({ text }) => text).join(""),
 		segments: record.segments.map(({ kind, text, surface }) => ({
@@ -106,7 +106,7 @@ export function casesOf(record: Dumspec.SpecRecord): GrammarCase[] {
 
 /** The German records that carry the Attestation layer, split by review. */
 export function grammarCases(
-	records: readonly Dumspec.SpecRecord[] = loadSpecRecords(),
+	records: readonly Dumcorpus.SpecRecord[] = loadSpecRecords(),
 	excluded: ReadonlySet<string> = new Set(
 		Object.keys(readSidecar().exclusions),
 	),
@@ -144,7 +144,7 @@ export async function freezeGrammarSets(
 ): Promise<GrammarSet[]> {
 	const gitHead = git(["rev-parse", "HEAD"], repository);
 	const dirtyRecordFiles = git(
-		["status", "--porcelain", "--", "battery/dumspec/records"],
+		["status", "--porcelain", "--", "battery/dumcorpus/records"],
 		repository,
 	)
 		.split("\n")

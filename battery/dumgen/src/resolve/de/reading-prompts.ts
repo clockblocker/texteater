@@ -1,6 +1,6 @@
 /**
  * Every text `resolve.reading` sends, each a paragraph that cites the
- * dumspec Rules it states at the statement hash it was last checked
+ * dumcorpus Rules it states at the statement hash it was last checked
  * against (ADR 0037, #695): the judge's policy and question, which jev
  * reads with the stored Emoji Descriptions bare, and Luna's generation
  * prompt with its demonstrations. Both ask the same question, which emoji
@@ -12,7 +12,7 @@
  * Their Lemmas and target words stay off the evaluation (#693); the
  * disjointness test reads `readingDemonstrations` and `readingExamples`.
  */
-import type { CitingPrompt } from "dumspec/types";
+import type { CitingPrompt } from "dumcorpus/types";
 
 type Cite = readonly [rule: string, hash: string];
 
@@ -330,7 +330,7 @@ export const readingDemonstrations: readonly ReadingDemonstration[] = [
 	),
 ];
 
-/** Every registered paragraph, as dumspec's citation check reads it. */
+/** Every registered paragraph, as dumcorpus's citation check reads it. */
 export function readingPromptTexts(): readonly CitingPrompt[] {
 	return registry.map(({ name, text, cites }) => ({
 		name: `de/resolve-reading/${name}`,

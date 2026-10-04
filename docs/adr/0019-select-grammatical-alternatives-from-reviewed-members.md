@@ -13,15 +13,15 @@ Cartesian product, infers membership from spelling, or stores subgroup IDs.
 This replaces explicit Counterpart claims, Grammatical Series compilation and
 grammatical relation projection. Those abstractions connected distinct
 spellings without reliably preserving their claimed axis. Semantic Relation
-algebra stays in Dumrel. The reviewed members are `dumspec`'s Authored
-Inventories, and the selection lives beside them in `dumspec/inventories`.
+algebra stays in Dumrel. The reviewed members are `dumcorpus`'s Authored
+Inventories, and the selection lives beside them in `dumcorpus/inventories`.
 `selectGrammaticalAlternatives`, which tf-demo's Note navigation calls, is a
 pure function over the inventories, next to the selectors that tf-demo's
 dictionary transaction and Dumgen share
-([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)).
+([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md)).
 Dumling owns values and validation.
 
-German composition stores grammatical coordinates on the Surface. `dumspec`
+German composition stores grammatical coordinates on the Surface. `dumcorpus`
 derives a contextual component Surface and exact reviewed Reading when
 requested (`deriveGrammaticalComponent`); neither value is embedded in the
 parent or included in its identity. A noun Surface carries case and number,

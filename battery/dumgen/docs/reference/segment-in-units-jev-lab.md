@@ -17,7 +17,7 @@ it and score it against frozen gold. Results live in the lab tickets
   membership (`assembly.ts`) assembles units under floors, and routing
   (`routing.ts`) routes them. Its default, `productionUnitSettings`, is
   candidates4's maxim+closed policy (#843) with the code rules of X3, X5,
-  D4 and X4 (`code-rules.ts`, #851): each enforces one dumspec Rule over the
+  D4 and X4 (`code-rules.ts`, #851): each enforces one dumcorpus Rule over the
   assembled membership, dropping a link its Rule forbids or adding one its
   Rule decides from the words alone. Then X5's Locution Choice
   (`locution-choice.ts`) asks one more request, `locution`, about the units
@@ -71,7 +71,7 @@ it and score it against frozen gold. Results live in the lab tickets
   `source-evaluation.ts` and `split-text.ts` beside it score raw and text
   mode.
 - Besides the production segmenter, the lab imports only the #731 harness
-  (`src/evaluation/spec-corpus/`), promptsmith and dumspec. Keep it that
+  (`src/evaluation/spec-corpus/`), promptsmith and dumcorpus. Keep it that
   way. Typecheck it with `bun run check:segment-in-units` and test it with
   `bun test tests/segment-in-units`.
 - Model calls go through jev (TypeSafe) only. The lab tracks tokens only.
@@ -95,15 +95,15 @@ bun run segment-in-units-lab round --open <id> --cap <tokens> --stop-line <token
 
 - `run` refuses a dirty tree unless `--allow-dirty` is passed. A tree is
   dirty when the production segmenter, the lab's sources, the harness, the
-  CLI or `battery/dumspec/src` have uncommitted changes. Commit first, so
-  that `gitHead` names the code. dumspec records are outside this check,
+  CLI or `battery/dumcorpus/src` have uncommitted changes. Commit first, so
+  that `gitHead` names the code. dumcorpus records are outside this check,
   because a run reads the frozen set.
 - `replay` reruns a raw run offline with today's code and compares every
   policy's output, case by case and repetition by repetition, with what
   the run stored. It asks nothing and writes nothing, and it exits 1 when
   an output differs or a case fails. A refactor of `src/segment/` must
   replay the latest runs exactly. The inventories it reads shape the
-  requests; Bun loads them from dumspec's source.
+  requests; Bun loads them from dumcorpus's source.
 - `freeze --force` adds each new set beside the one it replaces, at
   `evidence/segment-in-units-lab/sets/<name>@<hash>.json.gz`, and points
   `current.json` there. A set whose hash is kept already stays as first
@@ -162,7 +162,7 @@ bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
   Sentences cut exactly, and those cut exactly as gold, surfaces included,
   whose unit-stage requests are gold mode's and replay its cache.
 - **Text mode** (`split-text/de:ud-drafts`): `splitText` cuts each Text of
-  `battery/dumspec/ud-drafts` into paragraphs and Sentences, scored by
+  `battery/dumcorpus/ud-drafts` into paragraphs and Sentences, scored by
   sentence-boundary P/R/F1 in the Text's visible characters, so trimmed
   whitespace and joined hard wraps don't count. #738's Text Records will
   replace ud-drafts. Code splits; no model runs.
@@ -205,13 +205,13 @@ names the current one; `round` prints what it has spent and has left.
   It refuses to start when the round's spend plus the price, its estimated
   part ×1.25, would cross the stop line, and stops at the line while it
   runs. `--estimate` prints the price and asks nothing.
-- The pin: the unit stage's requests quote dumspec's Authored Inventories,
+- The pin: the unit stage's requests quote dumcorpus's Authored Inventories,
   so a peer edit to them changes prompts and misses the cache. A round
-  records the last commit of `battery/dumspec/src` and a hash of the
-  prompt inputs: the `dumspec/inventories` source with the modules it
+  records the last commit of `battery/dumcorpus/src` and a hash of the
+  prompt inputs: the `dumcorpus/inventories` source with the modules it
   imports, and the Rules. Each run manifest and ledger line keeps the pin
   it read. A live run refuses to start when today's inputs differ from the
-  round's pin, unless `--repin`, which pins the round at today's dumspec
+  round's pin, unless `--repin`, which pins the round at today's dumcorpus
   and keeps the old pin in `repins`. `replay` and offline runs report the
   drift. Pins taken before #881 hashed the built dist instead. No
   request quotes Rule text, so drift in `rules` alone still hits the
@@ -394,7 +394,7 @@ evidence/segment-in-units-lab/
   baseline's flip rate r per bucket then sets a floor of 1.96·√(r·n) for n
   paired units. A delta counts as **beyond noise** only when McNemar p <
   0.05 and |a − b| exceeds that floor. `noise` refuses to run when the code
-  or dumspec changed since the baseline, unless `--allow-drift` is passed.
+  or dumcorpus changed since the baseline, unless `--allow-drift` is passed.
   It also flags a rerun whose prompts differ from the baseline's.
 - `ledger --table` prints the Markdown iteration table for the active lab
   ticket. Each row shows a run with its parent, hypothesis, membership%,

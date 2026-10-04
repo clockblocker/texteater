@@ -8,10 +8,11 @@
  * Whatever comes back is checked by Dumling before it is returned, and
  * the operation's trace says how the click came out and why.
  */
+
+import type { AuthoredRealization } from "dumcorpus/inventories";
+import { closedRoute } from "dumcorpus/inventories";
 import { lemmaIdentityKey, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import type { AuthoredRealization } from "dumspec/inventories";
-import { closedRoute } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type { OperationScope } from "../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../errors.js";

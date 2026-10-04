@@ -13,7 +13,7 @@ Meanwhile Dumgen held about 1,750 German gold cases and the prose rulebook its
 prompts use, and shared no sentence with the spec. Two sources of truth
 disagreed, and the one the pipeline was scored against was not public.
 
-A new published battery, `dumspec`, now owns the gold and the rules. Dumgen and
+A new published battery, `dumcorpus`, now owns the gold and the rules. Dumgen and
 `app/dumling-docs` depend on it; neither owns it.
 
 **Records.** A Spec Record is one sentence stored as one JSON file, validated
@@ -33,14 +33,14 @@ It holds:
 - `provenance`: `Authored`, or `Quoted { work, author, year }`;
 - per-target notes: the rationale and known mistakes.
 
-**Rules.** `dumspec` owns the classification rules as entries: an id, a
+**Rules.** `dumcorpus` owns the classification rules as entries: an id, a
 statement written for people, the ADRs it rests on, the routes it applies to,
 and the records that show it, minimal pairs included. Dumgen's prompt
 paragraphs stay in Dumgen and cite the rule ids they implement. The prompt is
 Dumgen's implementation; whether it obeys the spec is decided by the eval,
 not by shared wording.
 
-**Guards.** `bun test` in `dumspec` enforces:
+**Guards.** `bun test` in `dumcorpus` enforces:
 
 1. Stale citation. A Reviewed record or a Dumgen prompt paragraph that cites a
    superseded ADR, or a Rule changed since it was reviewed, fails. An ADR that
@@ -62,7 +62,7 @@ contamination keys. Knowledge, relation, emoji, translation and segmentation
 gold stay in Dumgen, because they are not Dumling values.
 
 **Pages.** Each language × Family × Kind route page and each feature page is
-generated from `dumspec` and the Dumling schemas: the route's Rules, its Core
+generated from `dumcorpus` and the Dumling schemas: the route's Rules, its Core
 and Inflectional features, and every record attesting it, Reviewed first and
 records with archaic Surfaces last. A check fails when a schema route lacks a
 page or a page lacks a route. Hand-written pages remain for concept prose.
@@ -83,10 +83,10 @@ This replaced Dumgen's Canonical Classification Corpus (its former ADR 0002)
 and moves evaluation gold out of Dumgen. The Fixed Catalog stayed in Dumgen
 until the amendment below.
 
-Amended on 2026-09-27: `dumspec` owns all gold, and a Draft may fail the
+Amended on 2026-09-27: `dumcorpus` owns all gold, and a Draft may fail the
 current model.
 
-`dumspec` also owns the Knowledge gold (Semantic Relations, Valency Frames,
+`dumcorpus` also owns the Knowledge gold (Semantic Relations, Valency Frames,
 translations), the Reading Emoji Description gold for generating a description
 and for resolving one as Reuse or New, and the text-intake gold. This reverses
 the rejected option below and the Projections rule that kept this gold in
@@ -119,14 +119,14 @@ valid:
 The target-classification and sentence-analysis cases no record held entered
 the same way, with every other remaining case in Dumgen, so drafting and
 reviewing their Attestations moves into that pass. Their Dumgen projections
-wait for the pipeline rewrite against `dumspec`.
+wait for the pipeline rewrite against `dumcorpus`.
 
-Amended on 2026-09-27 with [ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md):
-`dumspec` also owns the Authored Inventories, the closed-class units authored
+Amended on 2026-09-27 with [ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md):
+`dumcorpus` also owns the Authored Inventories, the closed-class units authored
 instead of generated, with their Reading Knowledge. They live apart from
 `records/`, because they are the model's content, not gold a run is scored
 against. The package roles follow: Dumling is the model's types and schemas;
-`dumspec` connects the model to reality through gold, Rules and authored
+`dumcorpus` connects the model to reality through gold, Rules and authored
 units, and is meant to become part of the Dumling docs; Dumgen is a pipeline
 that reads them. `bun test` parses every authored Lemma and Reading with
 `parseUnit`, every Reading's Knowledge with Dumrel, and checks it against the

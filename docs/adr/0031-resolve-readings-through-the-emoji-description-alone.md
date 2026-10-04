@@ -65,7 +65,7 @@ one is generated. A New decision carries the candidates its judge saw. If the
 Lemma has gained a Reading with a different description since, the commit
 refuses and resolution runs the judge again over the current candidates.
 
-Conventions: see [Emoji Description conventions](../../battery/dumspec/docs/reference/emoji-description-conventions.md).
+Conventions: see [Emoji Description conventions](../../battery/dumcorpus/docs/reference/emoji-description-conventions.md).
 
 ## Considered Options
 

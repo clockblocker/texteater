@@ -32,7 +32,7 @@
  */
 
 import type { Questions } from "@typesafe-ai/sdk";
-import { closedVerbForms } from "dumspec/inventories";
+import { closedVerbForms } from "dumcorpus/inventories";
 import * as Effect from "effect/Effect";
 import {
 	type Answers,

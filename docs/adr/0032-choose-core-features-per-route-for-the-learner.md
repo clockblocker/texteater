@@ -30,7 +30,7 @@ layer's own terms:
 
 - Attestation evidence, if it describes this occurrence;
 - Reading Knowledge, if it is a fact about a sense, a class or a type;
-- a dumspec Rule or table, if it says which uses the language allows;
+- a dumcorpus Rule or table, if it says which uses the language allows;
 - or nothing, and it is dropped.
 
 Each has been done before. Inflection class
@@ -38,12 +38,12 @@ Each has been done before. Inflection class
 valency ([ADR 0029](./0029-keep-preposition-government-out-of-lemma-identity.md),
 [ADR 0034](./0034-store-valency-as-e-valbu-frames-on-the-reading.md)) and the
 Locution and Saying Types ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md))
-went to Reading Knowledge. Governed case went to a dumspec table plus
+went to Reading Knowledge. Governed case went to a dumcorpus table plus
 Attestation evidence (ADR 0034), the article to an Attestation member plus
 evidence ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)),
 and `foreign` was dropped
 ([ADR 0045](./0045-give-foreign-material-a-foreign-family-and-retire-lexeme-x.md)).
-An adposition's position went to the dumspec table alone (below).
+An adposition's position went to the dumcorpus table alone (below).
 
 One check helps: does a standard learner's dictionary of the language give the
 value its own headword, or only a usage line under one headword? A usage line
@@ -117,7 +117,7 @@ cells, and their spellings tell them apart.
   not identity, so `wegen des Sturms` and `des Nebels wegen` attest one Lemma
   `wegen`; Duden, grammis and LEO each give the position as a usage line
   under one headword. No Lemma or Attestation records the position, since
-  the sentence shows it. The ADP Case Table in dumspec lists the positions
+  the sentence shows it. The ADP Case Table in dumcorpus lists the positions
   each adposition takes, with the cases for each (ADR 0034). `Circ` left
   German ADP: a circumposition is a Locution ADP (ADR 0039), its bracket part
   of its Canonical Form. `partType: Vbp` left too, since a separated verb
@@ -130,7 +130,7 @@ cells, and their spellings tell them apart.
 **Articles are derived, not chosen.** An Article satellite's spelling, read
 through its Fusion or Shorthand, and its Head's case, number and gender name
 one DET cell ([ADR 0040](./0040-make-the-article-a-satellite-of-its-phrase-head.md)),
-and dumspec performs the derivation (ADR 0041). `der` in `der Frau` is the
+and dumcorpus performs the derivation (ADR 0041). `der` in `der Frau` is the
 Lemma `der` Dat.Fem.Sg.
 
 **Forms of one word are not synonyms.** Cells are reached through grammatical
@@ -171,7 +171,7 @@ Decided on [#766](https://github.com/clockblocker/texteater/issues/766).
 Amended on 2026-10-01: the article cells carried `definite` (Def in the `der`
 table, Ind in the `ein` table), and German DET also carried `numType` and
 `extPos`. None split a Lemma or told a learner anything the spelling does
-not, and dumspec derives an article's cell from its spelling and its Head
+not, and dumcorpus derives an article's cell from its spelling and its Head
 (ADR 0040), so they left with the other pure labels: `numType` on ADJ, ADV,
 NUM and SYM, ADJ `variant`, NOUN `hyph` and PUNCT `punctType`. The two
 article tables now share their coordinates, so per-cell uniqueness and
@@ -209,7 +209,7 @@ degree, so standalone `mehr` and `weniger` stay PRON Lemmas. Exclamative
 gives the exclamation under the one headword, so Exc left German DET. `wie
 viel` is ADV `wie` and DET `viel`, word by word, and `wievielte` is an ADJ
 like the ordinals, so neither is a DET. Emphatic `selbst` and `selber` are
-ADVs, which retires DET `selber` with Emp. The dumspec Rule is
+ADVs, which retires DET `selber` with Emp. The dumcorpus Rule is
 `de/canonical-form-is-the-headword`. Decided by the user on 2026-10-02
 ([#595](https://github.com/clockblocker/texteater/issues/595)).
 

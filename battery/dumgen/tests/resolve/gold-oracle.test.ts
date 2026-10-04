@@ -13,7 +13,7 @@ import {
  * A judge and a writer that always answer as gold does: what is left
  * wrong is code's. Today's misses are gold that no question reaches (a
  * shared article or auxiliary, a governed preposition outside the unit,
- * authored spellings dumspec lacks) and a few gold quirks.
+ * authored spellings dumcorpus lacks) and a few gold quirks.
  */
 test("with gold's answers, resolve.grammar rebuilds nearly every gold Attestation", async () => {
 	const { dev, heldout } = grammarCases();

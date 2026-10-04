@@ -112,7 +112,7 @@ const NULL_CORE_FEATURES_BY_ROUTE = {
 
 /**
  * The Core Features a studied Reading knows; the rest stay unknown. An
- * answer word is an INTJ with partType Res, as dumspec's gold has it.
+ * answer word is an INTJ with partType Res, as dumcorpus's gold has it.
  */
 const KNOWN_CORE_FEATURES: Partial<Record<string, object>> = {
 	Doch: { partType: "Res" },

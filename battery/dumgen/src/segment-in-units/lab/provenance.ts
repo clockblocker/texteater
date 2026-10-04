@@ -9,7 +9,7 @@ import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { authoredRealizations, rules } from "dumspec";
+import { authoredRealizations, rules } from "dumcorpus";
 import { hashOf, type TransportRecord } from "./jev-cache.js";
 import type { Pin } from "./round.js";
 
@@ -27,7 +27,7 @@ export const labSources = [
 ] as const;
 
 /**
- * The repository paths whose uncommitted changes make a run dirty. dumspec's
+ * The repository paths whose uncommitted changes make a run dirty. dumcorpus's
  * records are left out: a run reads the frozen set, whose hash the manifest
  * keeps, and the records change under a concurrent review.
  */
@@ -37,7 +37,7 @@ export const dirtyScope = (cli: string) => [
 	"battery/dumgen/src/evaluation/spec-corpus",
 	"battery/dumgen/tsconfig.segment-in-units.json",
 	`battery/dumgen/${cli}`,
-	"battery/dumspec/src",
+	"battery/dumcorpus/src",
 ];
 
 const sha256 = (contents: string | Uint8Array) =>
@@ -123,18 +123,18 @@ export function gitState(
 }
 
 /**
- * The dumspec the arms import, as it runs: `sourceHash` covers the source
+ * The dumcorpus the arms import, as it runs: `sourceHash` covers the source
  * Bun resolves the package to (Rules, inventories and the ADP Case Table);
  * `rulesHash` and `realizationsHash` name the two data sets the prompts
  * quote.
  */
-export async function dumspecFingerprint(): Promise<{
+export async function dumcorpusFingerprint(): Promise<{
 	readonly sourceHash: string;
 	readonly rulesHash: string;
 	readonly realizationsHash: string;
 }> {
 	const sourceDirectory = dirname(
-		fileURLToPath(import.meta.resolve("dumspec")),
+		fileURLToPath(import.meta.resolve("dumcorpus")),
 	);
 	const files = (await readdir(sourceDirectory, { recursive: true }))
 		.filter((file) => file.endsWith(".ts"))
@@ -161,8 +161,8 @@ export type RunManifest = {
 	readonly dirtyFiles: readonly string[];
 	readonly codeHash: string;
 	readonly sourceHashes: Readonly<Record<string, string>>;
-	readonly dumspecHash: string;
-	readonly dumspec: Awaited<ReturnType<typeof dumspecFingerprint>>;
+	readonly dumcorpusHash: string;
+	readonly dumcorpus: Awaited<ReturnType<typeof dumcorpusFingerprint>>;
 	/** Per stage, one hash over every distinct request (state and questions) sent. */
 	readonly promptHashes: Readonly<Record<string, string>>;
 	readonly modelRequested: string;
@@ -184,7 +184,7 @@ export type RunManifest = {
 	readonly baseline?: string;
 	/** The experiment round the run's spend counts against; absent before rounds (#845). */
 	readonly round?: string;
-	/** The dumspec state the run's requests were built from; absent before rounds. */
+	/** The dumcorpus state the run's requests were built from; absent before rounds. */
 	readonly pin?: Pin;
 	/**
 	 * What the fresh requests met, apart from the accuracy: retries and
@@ -208,8 +208,8 @@ export async function provenanceOf(args: {
 		| "dirtyFiles"
 		| "codeHash"
 		| "sourceHashes"
-		| "dumspecHash"
-		| "dumspec"
+		| "dumcorpusHash"
+		| "dumcorpus"
 	> & { readonly patch: string }
 > {
 	const hashes = await sourceHashes(args.packageRoot, [
@@ -217,15 +217,15 @@ export async function provenanceOf(args: {
 		args.cli,
 	]);
 	const state = gitState(args.repository, dirtyScope(args.cli));
-	const dumspec = await dumspecFingerprint();
+	const dumcorpus = await dumcorpusFingerprint();
 	return {
 		gitHead: state.gitHead,
 		dirty: state.dirty.length > 0,
 		dirtyFiles: state.dirty,
 		codeHash: codeHashOf(hashes),
 		sourceHashes: hashes,
-		dumspecHash: hashOf(dumspec),
-		dumspec,
+		dumcorpusHash: hashOf(dumcorpus),
+		dumcorpus,
 		patch: state.patch,
 	};
 }

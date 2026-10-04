@@ -1,8 +1,8 @@
+import { frameAdpositionCaseIssues } from "dumcorpus/inventories";
 import { readingIdentityKey, sameLemma, sameReading } from "dumling";
 import type * as Dumling from "dumling/types";
 import { directSemanticRelationValues } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { frameAdpositionCaseIssues } from "dumspec/inventories";
 
 import type { DeepReadonly, PendingEntryId } from "./domain-types.js";
 import { makeSurfaceId } from "./dumling-id.js";
@@ -149,7 +149,7 @@ function valencyUsesLanguage(
 /**
  * Each German Preposition complement, alternatives included, names a
  * preposition the ADP Case Table lists and a case it allows. The table and
- * its frame check are dumspec's (ADR 0034). A Hebrew or English complement
+ * its frame check are dumcorpus's (ADR 0034). A Hebrew or English complement
  * names no case, so it has nothing to check.
  */
 function knowledgePrepositionCasesAllowed(

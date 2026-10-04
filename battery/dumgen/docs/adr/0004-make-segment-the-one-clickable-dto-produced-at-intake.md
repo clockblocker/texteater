@@ -18,7 +18,7 @@ Segments, and a Segment carries no character offset. Offsets were chosen
 because a rule change can re-split a word and shift the indices after it.
 A stored Sentence keeps its own Segments, though, so a rule change cannot
 shift indices under rows already stored, and every consumer already keys by
-index: `segment.inUnits` units, Analysis Target members, dumspec gold and
+index: `segment.inUnits` units, Analysis Target members, dumcorpus gold and
 tf-demo's stored Segments.
 
 Segments are produced at intake. The deterministic, package-free tokenizer

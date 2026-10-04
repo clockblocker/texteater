@@ -81,7 +81,7 @@ implementation and out of the output.
 
 - Intake owns pieces and biggest units, not two layers of targets with
   masses, roles and a Resolution Selector.
-- dumspec sentence records are `segment.inUnits` gold, their No Target
+- dumcorpus sentence records are `segment.inUnits` gold, their No Target
   entries `Unresolved`; Breakdown Records are `segment.inLexemes` gold.
 - Implemented by the segmentation rewrite, which also decides the role and
   judgment vocabulary each language uses.

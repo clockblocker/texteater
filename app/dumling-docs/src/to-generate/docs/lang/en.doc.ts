@@ -5,7 +5,7 @@ const document = defineLanguageOverlayPage({
 	order: 100,
 	title: "English",
 	body: `
-The English route and feature pages, generated from the \`dumspec\` records
+The English route and feature pages, generated from the \`dumcorpus\` records
 and the Dumling schemas.
 `,
 });

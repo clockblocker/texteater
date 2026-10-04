@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import { authoredFor } from "dumcorpus/inventories";
 import { makeSurfaceId } from "dumdict";
-import { authoredFor } from "dumspec/inventories";
 import { internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
@@ -556,7 +556,7 @@ test("a noun's owned article is a member of its one occurrence, and derives no D
 	);
 
 	if (result.status !== "Committed") throw new Error("Expected a commit.");
-	// The article's DET cell comes from dumspec once #683 rebuilds it
+	// The article's DET cell comes from dumcorpus once #683 rebuilds it
 	// (system ADR 0040); a noun Surface no longer carries an article.
 	expect(await rows(t, "lemmas")).toHaveLength(1);
 	expect(await rows(t, "readings")).toHaveLength(1);

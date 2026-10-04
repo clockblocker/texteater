@@ -1,12 +1,13 @@
 /**
  * How much of the gold one prompt's corpus covers, split into Reviewed and
  * Draft by the Annotation Layer the prompt outputs: its cases, the excluded
- * ones among them, the records it skips and why, and the records dumspec
+ * ones among them, the records it skips and why, and the records dumcorpus
  * leaves out. The skips and left-out records are the worklist that would
  * grow the corpus.
  */
+
+import { isReviewed } from "dumcorpus";
 import type * as Dumling from "dumling/types";
-import { isReviewed } from "dumspec";
 import type { z } from "zod";
 import type { Gold } from "./gold.js";
 import type { ProjectedCorpus, ReviewGroup } from "./projection.js";
@@ -21,7 +22,7 @@ export type CoverageRow = {
 	readonly excluded: Listing;
 	/** Skipped records, by reason. */
 	readonly skipped: Listing;
-	/** Records dumspec leaves out, by the checks they fail. */
+	/** Records dumcorpus leaves out, by the checks they fail. */
 	readonly unloaded: Listing;
 };
 
@@ -172,6 +173,6 @@ export function formatCoverage(coverage: Coverage, listUpTo = 8): string {
 	row("  from Full records", Reviewed.fullCoverage, Draft.fullCoverage);
 	groups("excluded from test sets", "excluded", "  ");
 	groups("Skipped by the projection", "skipped");
-	groups("Not loaded (dumspec leaves the record out)", "unloaded");
+	groups("Not loaded (dumcorpus leaves the record out)", "unloaded");
 	return `${lines.join("\n")}\n`;
 }

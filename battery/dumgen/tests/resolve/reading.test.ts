@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
+import { authoredFor, authoredMembers } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
-import { authoredFor, authoredMembers } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import { createDumgen } from "../../src/create-dumgen.js";
 import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";

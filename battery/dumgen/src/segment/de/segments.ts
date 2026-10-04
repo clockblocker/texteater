@@ -7,7 +7,7 @@
  * among them. Every other run needs no question, and a Sentence with none
  * makes no call.
  *
- * Code decides where a dumspec Rule does: an infinitive's infixed zu is a
+ * Code decides where a dumcorpus Rule does: an infinitive's infixed zu is a
  * piece (abzuspannen, de/fused-word-pieces), am before a superlative with
  * no noun after it stays one Segment (am besten), a period inside the
  * Sentence that ends a short word is the abbreviation's own (K., u.,

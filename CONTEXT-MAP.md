@@ -11,7 +11,7 @@
   choice, and the atoms and molecules Notes and reading text are built from.
 - [Dumling](./battery/dumling/CONTEXT.md): names, in language-neutral terms,
   the grammatical entities and semantic values to which learner text resolves.
-- [Dumspec](./battery/dumspec/CONTEXT.md): owns the gold Dumgen is scored
+- [Dumcorpus](./battery/dumcorpus/CONTEXT.md): owns the gold Dumgen is scored
   against, Spec Records, Text Records and classification Rules, the Authored
   Inventories of closed-class units, and each language's classification
   terms.

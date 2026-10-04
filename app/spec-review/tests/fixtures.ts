@@ -1,13 +1,13 @@
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { ruleStatementHash, rules } from "dumspec";
+import { ruleStatementHash, rules } from "dumcorpus";
 import { formatRecordText } from "../src/record-store";
 
-/** A current citation of one of dumspec's Rules. */
+/** A current citation of one of dumcorpus's Rules. */
 function currentCitation(): { rule: string; hash: string } {
 	const [rule] = rules;
-	if (!rule) throw new Error("dumspec has no Rules");
+	if (!rule) throw new Error("dumcorpus has no Rules");
 	return { rule: rule.id, hash: ruleStatementHash(rule.statement) };
 }
 

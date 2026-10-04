@@ -15,7 +15,7 @@ import {
 
 /**
  * The German ADP Valency Block: the adposition with its complement and the
- * cases dumspec's ADP Case Table allows, as in
+ * cases dumcorpus's ADP Case Table allows, as in
  * `` auf `etw` · Akk: wohin? · Dat: wo? ``, one line per position. An
  * adposition the table does not list has no block.
  */

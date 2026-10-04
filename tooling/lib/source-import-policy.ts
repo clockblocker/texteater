@@ -315,7 +315,7 @@ const codegenFolders = new Set([
 ]);
 /** Source modules outside those folders that only scripts and tests load. */
 const codegenOnlyConsumers = new Set([
-	"battery/dumspec/src/worklist/schema-values.ts",
+	"battery/dumcorpus/src/worklist/schema-values.ts",
 ]);
 
 function mayLoadCodegenOnlyEntry(

@@ -1,4 +1,4 @@
-import type * as Dumspec from "dumspec/types";
+import type * as Dumcorpus from "dumcorpus/types";
 import { Badge, Button, cn } from "lego";
 import { type ReactNode, useState } from "react";
 import type {
@@ -19,7 +19,7 @@ import { type Focus, Sentence, sameFocus } from "./Sentence";
  */
 function memberText(
 	{ memberSegmentIndices }: { memberSegmentIndices: readonly number[] },
-	segments: readonly Dumspec.Segment[],
+	segments: readonly Dumcorpus.Segment[],
 ): string {
 	return memberSegmentIndices
 		.map((index, position) => {

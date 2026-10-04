@@ -444,7 +444,7 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 				inputSchema,
 				outputSchema: knowledgeOutputSchema,
 				collections: {
-					dumspec: defineGoldenCaseCollection({
+					dumcorpus: defineGoldenCaseCollection({
 						groups: {
 							cases: defineGoldenCaseGroup(
 								Object.fromEntries(

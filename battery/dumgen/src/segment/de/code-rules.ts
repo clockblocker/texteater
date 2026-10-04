@@ -1,6 +1,6 @@
 /**
  * Code rules over an assembled membership (#851, X3). Each rule enforces
- * one dumspec Rule over the links the judge chose: it drops a link its
+ * one dumcorpus Rule over the links the judge chose: it drops a link its
  * Rule forbids, or adds one its Rule decides from the words alone. The
  * judge's other answers stand, and a Saying span is never cut.
  *
@@ -35,7 +35,7 @@
  *   with an adjective's ending before another one is left to the judge (die
  *   Berliner Polizei, das Rote Kreuz).
  * - `sein-chain` (de/verbal-participle, de/auxiliary-joins-the-verb-it-serves,
- *   on dumspec's AUX forms of sein): worden, gewesen and geworden take sein
+ *   on dumcorpus's AUX forms of sein): worden, gewesen and geworden take sein
  *   as their perfect's auxiliary, so the nearest sein form in their clause
  *   joins them, and worden, only ever the passive's auxiliary, also joins
  *   the participle right before it: ist … aufgefunden worden, examiniert
@@ -74,7 +74,7 @@
 import {
 	closedVerbForms,
 	germanConjunctionLocutions,
-} from "dumspec/inventories";
+} from "dumcorpus/inventories";
 import type { AssembledEdge, Family, Membership } from "./assembly.js";
 import {
 	fusedSiblings,
@@ -275,7 +275,7 @@ const extraAnchors: Readonly<
 };
 
 /**
- * The zu-infinitive conjunctions dumspec lists (um … zu): a circumposition
+ * The zu-infinitive conjunctions dumcorpus lists (um … zu): a circumposition
  * candidate so named is one. Other circumpositions are left to the judge,
  * since a bracket particle verb (führt an … vorbei) or an idiom (Um Himmels
  * willen) can hold their pieces (de/bracket-particle-or-circumposition).

@@ -1,6 +1,6 @@
 /**
  * Every text `knowledge.produce` sends, each a paragraph that cites the
- * dumspec Rules it states at the statement hash it was last checked
+ * dumcorpus Rules it states at the statement hash it was last checked
  * against (ADR 0037, #695): Luna's system prompts for the text it writes,
  * jev's policies, questions and options for the choices it judges.
  *
@@ -17,7 +17,7 @@
  * German examples are quoted «…», so the disjointness test can read them;
  * none is a Lemma of the Knowledge gold or the spot-check samples (#693).
  */
-import type { CitingPrompt } from "dumspec/types";
+import type { CitingPrompt } from "dumcorpus/types";
 
 type Cite = readonly [rule: string, hash: string];
 
@@ -623,7 +623,7 @@ export const kindDefinitions = {
 	DET: paragraph("kinds.DET", "DET: a determiner", rules.headword),
 } as const;
 
-/** Every registered paragraph, as dumspec's citation check reads it. */
+/** Every registered paragraph, as dumcorpus's citation check reads it. */
 export function knowledgePromptTexts(): readonly CitingPrompt[] {
 	return registry.map(({ name, text, cites }) => ({
 		name: `de/knowledge/${name}`,

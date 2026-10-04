@@ -99,7 +99,7 @@ export function fakeLuna(
 	return { ask, sent, aborted };
 }
 
-/** Segments of `text`, the way dumspec records split them, with no units yet. */
+/** Segments of `text`, the way dumcorpus records split them, with no units yet. */
 export function sentenceOf(
 	text: string,
 	segments: readonly Segment[] = segmentsOf(text),

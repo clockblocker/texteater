@@ -143,7 +143,7 @@ whether noun `definite` survives beyond the construct state.
 - Dumgen drops the article feature question. Its noun-article resolution
   judges the article of any Head. Intake decides whether `am` splits, and a
   whole `am` before a superlative is a valid Segment.
-- In dumspec, `de/noun-article-feature` is retired and
+- In dumcorpus, `de/noun-article-feature` is retired and
   `de/possessive-after-article` reverses. `de/proper-noun-article` gives a
   bare-cited name the article that opens its phrase, and nominalized
   adjectives join the substantivized participle rule. The Reviewed
@@ -151,7 +151,7 @@ whether noun `definite` survives beyond the construct state.
 - tf-demo's German noun header derives its article from the Lemma's gender.
 - Every change under `battery/dumgen/src` recompiles the relation verdict.
 
-Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md): the article is identified by `articleEvidence`, not a Member Role, and the agreement check and DET-cell derivation live in dumspec.
+Amended by [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md): the article is identified by `articleEvidence`, not a Member Role, and the agreement check and DET-cell derivation live in dumcorpus.
 
 Amended on 2026-09-30: the `der-` part of `derselbe` and `derjenige` belongs
 to the word, not an article

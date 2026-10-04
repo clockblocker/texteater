@@ -19,8 +19,8 @@
  * `run`, `noise` and `limit-qpc` count against the current round
  * (`lab/round.ts`): `--estimate` prices a run offline and stops, a live run
  * refuses to start when its projected spend would cross the round's stop
- * line or when dumspec's prompt inputs moved since the round was pinned
- * (`--repin` accepts today's dumspec), and every run stops at the line.
+ * line or when dumcorpus's prompt inputs moved since the round was pinned
+ * (`--repin` accepts today's dumcorpus), and every run stops at the line.
  *
  * Raw runs, their outcomes and the answer cache live under
  * `.runs/segment-in-units-lab/` (gitignored). The frozen sets, each run's
@@ -325,7 +325,7 @@ function guardDirty(provenance: Provenance) {
 }
 
 /**
- * The round a command counts against and the dumspec state it reads. A
+ * The round a command counts against and the dumcorpus state it reads. A
  * live command refuses drifted prompt inputs unless `--repin`; an offline
  * one reports them.
  */
@@ -601,7 +601,7 @@ async function replayRun() {
 	const drift = recordedPin ? pinDrift(recordedPin, pin) : [];
 	if (drift.length > 0)
 		console.warn(
-			`\n*** ${runId} read dumspec at ${pinText(recordedPin as Pin)}; today's ${pinText(pin)} differs in ${drift.join(", ")}, so requests built from them miss the cache\n`,
+			`\n*** ${runId} read dumcorpus at ${pinText(recordedPin as Pin)}; today's ${pinText(pin)} differs in ${drift.join(", ")}, so requests built from them miss the cache\n`,
 		);
 	const jev = jevCache({
 		model: original.model,
@@ -703,7 +703,7 @@ async function noise() {
 	if (!values.estimate) guardDirty(provenance);
 	const drift = [
 		provenance.codeHash !== baseline.codeHash ? "code" : "",
-		provenance.dumspecHash !== baseline.dumspecHash ? "dumspec" : "",
+		provenance.dumcorpusHash !== baseline.dumcorpusHash ? "dumcorpus" : "",
 	].filter(Boolean);
 	if (drift.length > 0 && !values["allow-drift"])
 		throw Error(
@@ -1478,7 +1478,7 @@ async function ledger() {
 
 /**
  * The current round: what it has spent and has left, and its pin against
- * today's dumspec. `--repin` pins it at today's dumspec, `--open` opens a
+ * today's dumcorpus. `--repin` pins it at today's dumcorpus, `--open` opens a
  * new current round pinned at it.
  */
 async function roundCommand() {

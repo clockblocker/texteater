@@ -86,6 +86,6 @@ and implemented on [#771](https://github.com/clockblocker/texteater/issues/771).
 
 Amended on 2026-10-01: a modal carried `verbType: Mod` in its VERB Core. The
 value split no Lemma, since no other verb shares a modal's Canonical Form, so
-it only labelled what the Canonical Form already says. dumspec's list of the
+it only labelled what the Canonical Form already says. dumcorpus's list of the
 six modals says which VERBs are modals. Decided on
 [#766](https://github.com/clockblocker/texteater/issues/766).

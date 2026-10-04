@@ -13,15 +13,15 @@
  * - `split-text/de:ud-drafts`, text mode: `splitText` cuts the ud-drafts
  *   Texts into Sentences (`split-text.ts`).
  * - `resolve-grammar/de:<set>` and `resolve-grammar/de:dev:e2e`: a click's
- *   grammar against dumspec's Attestation gold (#873,
+ *   grammar against dumcorpus's Attestation gold (#873,
  *   `resolve-grammar/experiment.ts`), with its own frozen sets and cache.
- * - `resolve-reading/de:<set>`: a click's Reading against dumspec's
+ * - `resolve-reading/de:<set>`: a click's Reading against dumcorpus's
  *   Reading gold, gold's Reading present among the candidates and removed
  *   from them (#873, `resolve-reading/experiment.ts`), with its own frozen
  *   sets and cache. It shares resolve.grammar's transports, budget guard
  *   and caps.
  * - `knowledge/de:dev`, `:heldout` and `:spot-check`: `knowledge.produce`'s
- *   structural aspects against dumspec's Knowledge gold, and its text
+ *   structural aspects against dumcorpus's Knowledge gold, and its text
  *   aspects on a human spot-check sample (#887, `knowledge/experiment.ts`),
  *   with the same transports, guard and caps.
  *

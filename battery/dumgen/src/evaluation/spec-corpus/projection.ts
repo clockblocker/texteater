@@ -6,9 +6,9 @@
  */
 
 import { canonicalJson } from "common-utils";
+import { isReviewed } from "dumcorpus";
+import type * as Dumcorpus from "dumcorpus/types";
 import type * as Dumling from "dumling/types";
-import { isReviewed } from "dumspec";
-import type * as Dumspec from "dumspec/types";
 import {
 	type CaseSelection,
 	defineGoldenCaseCollection,
@@ -32,7 +32,7 @@ export type ReviewGroup = "Reviewed" | "Draft";
  * Draft.
  */
 export type CaseOrigin = {
-	readonly record: Dumspec.SpecRecordId;
+	readonly record: Dumcorpus.SpecRecordId;
 	readonly target?: number;
 	readonly status: ReviewGroup;
 };
@@ -70,11 +70,11 @@ export type Projection<
 	 * The Annotation Layer the prompt outputs. A case is Reviewed when its
 	 * record is reviewed through this layer.
 	 */
-	readonly layer: Dumspec.AnnotationLayer;
+	readonly layer: Dumcorpus.AnnotationLayer;
 	readonly inputSchema: InputSchema;
 	readonly outputSchema: OutputSchema;
 	readonly project: (
-		record: Dumspec.SpecSegmentation,
+		record: Dumcorpus.SpecSegmentation,
 	) =>
 		| readonly ProjectedCase<
 				z.input<InputSchema>,
@@ -85,18 +85,18 @@ export type Projection<
 };
 
 export type SkippedRecord = {
-	readonly record: Dumspec.SpecRecordId;
+	readonly record: Dumcorpus.SpecRecordId;
 	readonly status: ReviewGroup;
 	readonly reason: string;
 	/** The record whose case has the same input, for a duplicate. */
-	readonly sameInputAs?: Dumspec.SpecRecordId;
+	readonly sameInputAs?: Dumcorpus.SpecRecordId;
 };
 
 /** The reason a record is skipped when another record gave its input. */
 export const sameInputReason = "Same input as another record";
 
 /** The collection holding every case; its groups are the review groups. */
-export const specCollection = "dumspec";
+export const specCollection = "dumcorpus";
 
 export type ProjectedCorpus<
 	InputSchema extends z.ZodType,
@@ -104,10 +104,10 @@ export type ProjectedCorpus<
 	Facts,
 > = {
 	/** The Annotation Layer the prompt outputs, from its projection. */
-	readonly layer: Dumspec.AnnotationLayer;
+	readonly layer: Dumcorpus.AnnotationLayer;
 	/**
 	 * One case per projected record or target, in record order. Its groups
-	 * `dumspec.Reviewed` and `dumspec.Draft` split it by review group.
+	 * `dumcorpus.Reviewed` and `dumcorpus.Draft` split it by review group.
 	 */
 	readonly corpus: GoldenCorpus<InputSchema, OutputSchema>;
 	readonly reviewed: CaseSelection<InputSchema, OutputSchema>;
@@ -131,12 +131,12 @@ export type ProjectedCorpus<
 	 */
 	readonly testSet: (
 		demonstrations: CaseSelection<InputSchema, OutputSchema>,
-		alsoWithout?: Iterable<Dumspec.SpecRecordId>,
+		alsoWithout?: Iterable<Dumcorpus.SpecRecordId>,
 	) => CaseSelection<InputSchema, OutputSchema>;
 	/** The records a selection's cases come from, in selection order. */
 	readonly recordsOf: (
 		selection: CaseSelection<InputSchema, OutputSchema>,
-	) => readonly Dumspec.SpecRecordId[];
+	) => readonly Dumcorpus.SpecRecordId[];
 };
 
 /**
@@ -144,15 +144,15 @@ export type ProjectedCorpus<
  * it through the layer the prompt outputs (ADR 0037, amended 2026-09-29).
  */
 function groupOf(
-	record: Dumspec.SpecSegmentation,
-	layer: Dumspec.AnnotationLayer,
+	record: Dumcorpus.SpecSegmentation,
+	layer: Dumcorpus.AnnotationLayer,
 ): ReviewGroup {
 	return isReviewed(record, layer) ? "Reviewed" : "Draft";
 }
 
 type Entry<Input, Output, Facts> = {
 	readonly id: string;
-	readonly record: Dumspec.SpecSegmentation;
+	readonly record: Dumcorpus.SpecSegmentation;
 	readonly projected: ProjectedCase<Input, Output, Facts>;
 };
 
@@ -179,12 +179,12 @@ export function projectCorpus<
 	const skipped: SkippedRecord[] = [];
 	const entries: Entry<z.input<InputSchema>, z.input<OutputSchema>, Facts>[] =
 		[];
-	const statusOf = (record: Dumspec.SpecSegmentation) =>
+	const statusOf = (record: Dumcorpus.SpecSegmentation) =>
 		groupOf(record, projection.layer);
-	const rank = (record: Dumspec.SpecSegmentation) =>
+	const rank = (record: Dumcorpus.SpecSegmentation) =>
 		(excludedRecords.has(record.id) ? 2 : 0) +
 		(statusOf(record) === "Reviewed" ? 0 : 1);
-	const inputs = new Map<string, Dumspec.SpecRecordId>();
+	const inputs = new Map<string, Dumcorpus.SpecRecordId>();
 	for (const record of records.toSorted(
 		(left, right) => rank(left) - rank(right),
 	)) {
@@ -224,7 +224,7 @@ export function projectCorpus<
 			});
 	}
 	const order = new Map(records.map((record, index) => [record.id, index]));
-	const position = (id: Dumspec.SpecRecordId) => order.get(id) ?? 0;
+	const position = (id: Dumcorpus.SpecRecordId) => order.get(id) ?? 0;
 	entries.sort(
 		(left, right) =>
 			position(left.record.id) - position(right.record.id) ||

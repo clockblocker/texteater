@@ -159,7 +159,7 @@ function endonymIssue(
 /**
  * A complement the source's route allows. A Preposition complement names an
  * ADP Lemma of the source Language. A German one names an oblique case, and
- * dumspec checks it against the ADP Case Table (ADR 0041). A Hebrew or
+ * dumcorpus checks it against the ADP Case Table (ADR 0041). A Hebrew or
  * English one names no case (`סמך על`, `depend on`).
  */
 function parseValencyComplement<R extends Dumling.Reading>(

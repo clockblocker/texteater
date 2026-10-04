@@ -1,12 +1,12 @@
-import { findSpecRecord, loadSpecRecords } from "dumspec";
-import type * as Dumspec from "dumspec/types";
+import { findSpecRecord, loadSpecRecords } from "dumcorpus";
+import type * as Dumcorpus from "dumcorpus/types";
 
 import type { AttestedAttestation } from "./document-shapes.ts";
 
-let records: readonly Dumspec.SpecRecord[] | undefined;
+let records: readonly Dumcorpus.SpecRecord[] | undefined;
 
-/** Every dumspec Spec Record, loaded once per process. */
-export function specRecords(): readonly Dumspec.SpecRecord[] {
+/** Every dumcorpus Spec Record, loaded once per process. */
+export function specRecords(): readonly Dumcorpus.SpecRecord[] {
 	records ??= loadSpecRecords();
 	return records;
 }
@@ -17,8 +17,8 @@ export function specRecords(): readonly Dumspec.SpecRecord[] {
  * `[Der Kiefer] schmerzte`, `[i]m Wald`.
  */
 function markedSentence(
-	record: Dumspec.SpecRecord,
-	target: Dumspec.SpecTarget,
+	record: Dumcorpus.SpecRecord,
+	target: Dumcorpus.SpecTarget,
 ): string {
 	const runs: [number, number][] = [];
 	for (const index of target.memberSegmentIndices) {
@@ -43,7 +43,7 @@ function markedSentence(
 
 /** One target of a loaded Spec Record, as a page example. */
 export function exampleFor(
-	record: Dumspec.SpecRecord,
+	record: Dumcorpus.SpecRecord,
 	target: number,
 ): AttestedAttestation {
 	const chosen = record.targets[target];
@@ -58,14 +58,14 @@ export function exampleFor(
 	};
 }
 
-/** One target of a dumspec Spec Record, as a page example. */
+/** One target of a dumcorpus Spec Record, as a page example. */
 export function specExample(
-	id: Dumspec.SpecRecordId,
+	id: Dumcorpus.SpecRecordId,
 	target = 0,
 ): AttestedAttestation {
 	const record = findSpecRecord(specRecords(), id);
 	if (record === undefined) {
-		throw new Error(`No dumspec Spec Record ${id}.`);
+		throw new Error(`No dumcorpus Spec Record ${id}.`);
 	}
 	return exampleFor(record, target);
 }

@@ -1,5 +1,5 @@
 /**
- * The gold every prompt's cases come from: dumspec's Spec Records at their
+ * The gold every prompt's cases come from: dumcorpus's Spec Records at their
  * Segmentation layer, read when the eval runs, and Dumgen's sidecar beside
  * them. The sidecar holds what
  * Dumgen owns and the records do not carry: explanations, slices, and the
@@ -10,8 +10,8 @@ import {
 	loadSpecSegmentations,
 	loadSpecWorklist,
 	type SpecCheck,
-} from "dumspec";
-import type * as Dumspec from "dumspec/types";
+} from "dumcorpus";
+import type * as Dumcorpus from "dumcorpus/types";
 import { z } from "zod";
 
 const recordId = z.string().regex(/^[a-z]{2}(?:\/[a-z0-9-]+)+$/u);
@@ -49,23 +49,23 @@ const sidecarSchema = z.strictObject({
 export type Sidecar = z.infer<typeof sidecarSchema>;
 
 /**
- * A record dumspec leaves out because its Segmentation layer fails a check
+ * A record dumcorpus leaves out because its Segmentation layer fails a check
  * against the model, with the Segmentation checks it fails.
  */
 export type UnloadedRecord = {
-	readonly record: Dumspec.SpecRecordId;
+	readonly record: Dumcorpus.SpecRecordId;
 	/** The deepest layer a person has reviewed; absent for a Draft. */
-	readonly reviewDepth?: Dumspec.AnnotationLayer;
+	readonly reviewDepth?: Dumcorpus.AnnotationLayer;
 	readonly checks: readonly SpecCheck[];
 };
 
 export type Gold = {
 	/**
-	 * Every Spec Record whose Segmentation passes dumspec's checks, sorted by
+	 * Every Spec Record whose Segmentation passes dumcorpus's checks, sorted by
 	 * id, whatever its deeper layers hold.
 	 */
-	readonly records: readonly Dumspec.SpecSegmentation[];
-	/** Spec Records dumspec does not load, so no projection sees them. */
+	readonly records: readonly Dumcorpus.SpecSegmentation[];
+	/** Spec Records dumcorpus does not load, so no projection sees them. */
 	readonly unloaded: readonly UnloadedRecord[];
 	readonly sidecar: Sidecar;
 };
@@ -83,7 +83,7 @@ export function readSidecar(url: URL = sidecarUrl): Sidecar {
  * exclusion unnoticed.
  */
 export function goldOf(args: {
-	readonly records: readonly Dumspec.SpecSegmentation[];
+	readonly records: readonly Dumcorpus.SpecSegmentation[];
 	readonly unloaded?: readonly UnloadedRecord[];
 	readonly sidecar: Sidecar;
 }): Gold {
@@ -99,14 +99,14 @@ export function goldOf(args: {
 	const unknown = [...new Set(named.filter((id) => !known.has(id)))];
 	if (unknown.length > 0)
 		throw Error(
-			`The spec-corpus sidecar names records dumspec does not have: ${unknown.join(", ")}`,
+			`The spec-corpus sidecar names records dumcorpus does not have: ${unknown.join(", ")}`,
 		);
 	return { records: args.records, unloaded, sidecar: args.sidecar };
 }
 
 /**
- * Loads the Spec Records' Segmentations from dumspec and Dumgen's sidecar.
- * Reads the file system; throws when dumspec rejects a record or the sidecar
+ * Loads the Spec Records' Segmentations from dumcorpus and Dumgen's sidecar.
+ * Reads the file system; throws when dumcorpus rejects a record or the sidecar
  * names a record that does not exist.
  */
 export function loadGold(sidecar: Sidecar = readSidecar()): Gold {

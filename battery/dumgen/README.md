@@ -12,7 +12,7 @@ groups and routes them. The stages reach jev only through the host's
 `JevAsk` and read no files; `createTypeSafeAsk` is the production `JevAsk`,
 a `fetch` to the TypeSafe API with the host's key. Beside them are the
 `segment.inUnits` jev lab that configures and measures them, the
-spec-corpus evaluator that scores them against dumspec, and the evaluation
+spec-corpus evaluator that scores them against dumcorpus, and the evaluation
 CLI.
 
 ```sh

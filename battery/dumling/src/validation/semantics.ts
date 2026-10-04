@@ -226,7 +226,7 @@ export function germanNounSurfaceError(): string {
  * A German proper noun Surface marks gender only where its Lemma has none, a
  * surname or coined name, and only in the singular: the gender its owned
  * article or an agreeing adjective shows (der junge Schwarzkopf). Unlike a
- * noun's, the mark is not required here; dumspec requires it wherever the
+ * noun's, the mark is not required here; dumcorpus requires it wherever the
  * name owns an article (ADR 0040).
  */
 export function isGermanProperNounSurface(input: unknown): boolean {
@@ -283,7 +283,7 @@ export function fusedMemberError(): string {
  * article the same way (`[a, walk, in, the, park]`), but its other fixed
  * words decide its coverage too (ADR 0039), so only a shared or hidden
  * article ties it to Partial. Whether the article agrees with its Head is a
- * fact about the language, checked in dumspec (ADR 0041).
+ * fact about the language, checked in dumcorpus (ADR 0041).
  */
 export function isArticleAttestation(input: unknown): boolean {
 	const value = input as {
@@ -468,7 +468,7 @@ function namesMarkerMembers(
 /**
  * German slots also keep their case: a preposition slot's occurrence shows
  * the case the slot governs, and a bare-case slot has no marker member. Which
- * cases a preposition takes is a fact about German, checked in dumspec (ADR
+ * cases a preposition takes is a fact about German, checked in dumcorpus (ADR
  * 0041).
  */
 function isOwnedValencyEvidence(
@@ -517,7 +517,7 @@ export function caselessValencyAttestationError(): string {
  * oblique bare case its complement took (`auf dem Tisch` Dat, `um des
  * Friedens willen` Gen), marked by no member. An ADP with no case-marked
  * complement records none. Which cases the ADP takes is a fact about German,
- * checked in dumspec (ADR 0041); no table is consulted here.
+ * checked in dumcorpus (ADR 0041); no table is consulted here.
  */
 export function isGermanAdpositionAttestation(input: unknown): boolean {
 	const value = input as { valencyEvidence: ValencyEvidence[] };

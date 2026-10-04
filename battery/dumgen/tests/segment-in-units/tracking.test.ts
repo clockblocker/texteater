@@ -249,14 +249,14 @@ test("source hashes change with any file, and the git state sees only its scope"
 	expect(state.patch).not.toContain("changed");
 });
 
-test("the lab's provenance hashes its own sources and the dumspec it imports", async () => {
+test("the lab's provenance hashes its own sources and the dumcorpus it imports", async () => {
 	const provenance = await provenanceOf({
 		packageRoot,
 		repository: resolve(packageRoot, "../.."),
 		cli: "cli/segment-in-units-lab.ts",
 	});
 	expect(provenance.codeHash).toMatch(/^[0-9a-f]{64}$/u);
-	expect(provenance.dumspecHash).toMatch(/^[0-9a-f]{64}$/u);
+	expect(provenance.dumcorpusHash).toMatch(/^[0-9a-f]{64}$/u);
 	expect(Object.keys(provenance.sourceHashes)).toEqual(
 		expect.arrayContaining([
 			"cli/segment-in-units-lab.ts",
@@ -404,8 +404,8 @@ const manifestOf = (
 	dirtyFiles: [],
 	codeHash: "code",
 	sourceHashes: {},
-	dumspecHash: "dumspec",
-	dumspec: { sourceHash: "", rulesHash: "", realizationsHash: "" },
+	dumcorpusHash: "dumcorpus",
+	dumcorpus: { sourceHash: "", rulesHash: "", realizationsHash: "" },
 	promptHashes: {},
 	modelRequested: pinnedJevModel,
 	modelResolved: [pinnedJevModel],

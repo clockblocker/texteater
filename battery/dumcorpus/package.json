@@ -1,0 +1,92 @@
+{
+	"name": "dumcorpus",
+	"version": "0.1.0",
+	"description": "The Dumling spec: Spec Records of attested sentences, the classification Rules they follow, and the authored closed-class inventories.",
+	"type": "module",
+	"packageManager": "bun@1.4.2",
+	"license": "MIT",
+	"sideEffects": false,
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"keywords": [
+		"linguistics",
+		"corpus",
+		"annotation",
+		"gold-standard",
+		"german",
+		"english",
+		"hebrew",
+		"dumling"
+	],
+	"exports": {
+		".": {
+			"bun": "./src/index.ts",
+			"convex": "./src/index.ts",
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./types": {
+			"bun": "./src/types.ts",
+			"convex": "./src/types.ts",
+			"types": "./dist/types.d.ts",
+			"import": "./dist/types.js",
+			"default": "./dist/types.js"
+		},
+		"./inventories": {
+			"bun": "./src/inventories.ts",
+			"convex": "./src/inventories.ts",
+			"types": "./dist/inventories.d.ts",
+			"import": "./dist/inventories.js",
+			"default": "./dist/inventories.js"
+		},
+		"./schema/*": "./schema/*",
+		"./package.json": "./package.json"
+	},
+	"files": [
+		"dist",
+		"records",
+		"schema",
+		"README.md",
+		"LICENSE"
+	],
+	"engines": {
+		"node": "24.x"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "turbo run build:package",
+		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
+		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/inventories.ts --bundle --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
+		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
+		"check": "bun ../../tooling/check-package-types.ts",
+		"demote-broken-reviewed": "bun scripts/demote-broken-reviewed.ts",
+		"fix": "bun run --silent biome check --write .",
+		"generate": "bun codegen/generate-record-schemas.ts && bun codegen/generate-syncretisms.ts",
+		"generate:check": "bun codegen/generate-record-schemas.ts --check && bun codegen/generate-syncretisms.ts --check",
+		"knip": "bun ../../tooling/knip.ts",
+		"lint": "bun run --silent biome check .",
+		"prepack": "bun run build",
+		"stts-table": "bun scripts/stts-table.ts",
+		"test": "bun test",
+		"validate": "bun ../../tooling/validate-package.ts",
+		"worklist": "bun scripts/worklist.ts"
+	},
+	"dependencies": {
+		"dumling": "workspace:^",
+		"dumrel": "workspace:^",
+		"jsonc-parser": "^3.3.1",
+		"zod": "^4.4.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.13",
+		"@types/node": "^24.13.3",
+		"bun-types": "1.4.2",
+		"dependency-cruiser": "^18.1.0",
+		"esbuild": "^0.28.1",
+		"knip": "^6.29.0",
+		"typescript": "^7.0.2"
+	}
+}

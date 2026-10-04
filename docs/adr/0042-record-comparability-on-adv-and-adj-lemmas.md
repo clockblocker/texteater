@@ -41,25 +41,25 @@ Every state now has exactly one encoding. Dumling rejects *hier* with
 - A non-comparable ADJ is Grundform by its spelling when it has no inflection.
   An attributive form (*toten*) is not Grundform.
 
-dumspec fails a record that states `grundform` when Dumling's assessment
+dumcorpus fails a record that states `grundform` when Dumling's assessment
 returns an error. The verdict can no longer go unchecked.
 
 **Why this sits in Dumling.** [ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)
 lets a field into Dumling only if a click route or a Note's drill-down reads it,
-and sends facts about a language to dumspec. No click reads comparability.
+and sends facts about a language to dumcorpus. No click reads comparability.
 But ADR 0041 also makes Dumling the package that decides which feature values
 are well-formed, and Dumling can't decide Degree without knowing whether the
 Lemma can be compared. A fact about one Lemma that decides which values its own
 Surfaces may carry belongs on the Lemma, even if no click or drill-down reads
 it. Tables that cover a whole language, such as the ADP Case Table and the
-article paradigm, stay in dumspec.
+article paradigm, stay in dumcorpus.
 
 ## Considered Options
 
 - Read a `null` ADV or ADJ inflection as "the spelling decides", as
   `germanClosedClass` does. Rejected: *schnell* gets two encodings, and a
   comparable word that lost its Degree passes unnoticed.
-- Keep comparability in dumspec and check records against it. Rejected:
+- Keep comparability in dumcorpus and check records against it. Rejected:
   Dumling's schema would still accept *hier* with Degree and *schnell*
   without, and Grundform would still have to guess.
 - Allow a null Degree in a present inflection. Rejected: the inflection must be
@@ -77,7 +77,7 @@ article paradigm, stay in dumspec.
 - A Locution route borrows its Lexeme route's inflection and Grundform rule
   ([ADR 0039](./0039-split-phrasemes-into-locutions-and-sayings.md)). The ADV
   and ADJ Locution routes therefore take the same Core Feature.
-- Reviewed dumspec records that break are demoted to Draft and reshaped
+- Reviewed dumcorpus records that break are demoted to Draft and reshaped
   with the others.
 - Dumgen has to supply comparability. That work waits for the pipeline
   rewrite.
@@ -85,7 +85,7 @@ article paradigm, stay in dumspec.
 - Decided in [#659](https://github.com/clockblocker/texteater/issues/659) on
   [#595](https://github.com/clockblocker/texteater/issues/595).
 
-Amended on 2026-10-01: dumspec's `de/comparability-is-lexical` keeps one
+Amended on 2026-10-01: dumcorpus's `de/comparability-is-lexical` keeps one
 example and leans on this ADR for the rest: *hier*, *heute*, *tot* and
 *entzwei* are not comparable, *singt laut* marks `Pos`, *der tote Mann* is an
 attributive non-comparable ADJ, and a rare or colloquial form (*töter*,

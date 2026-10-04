@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
+import { checkPromptCitations, rules } from "dumcorpus";
 import { foldCase } from "dumling";
-import { checkPromptCitations, rules } from "dumspec";
 import { readingCases } from "../../src/evaluation/resolve-reading/cases.js";
 import {
 	generation,

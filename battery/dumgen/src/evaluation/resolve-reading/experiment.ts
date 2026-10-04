@@ -415,7 +415,7 @@ export function readingExperiment(setName: ReadingSetName) {
 				inputSchema,
 				outputSchema: readingOutputSchema,
 				collections: {
-					dumspec: defineGoldenCaseCollection({
+					dumcorpus: defineGoldenCaseCollection({
 						groups: {
 							cases: defineGoldenCaseGroup(
 								Object.fromEntries(

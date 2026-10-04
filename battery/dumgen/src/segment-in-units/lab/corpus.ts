@@ -15,7 +15,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { gunzipSync, gzipSync } from "node:zlib";
-import { rules } from "dumspec";
+import { rules } from "dumcorpus";
 import { loadGold } from "../../evaluation/spec-corpus/gold.js";
 import { projectCorpus } from "../../evaluation/spec-corpus/projection.js";
 import {
@@ -53,7 +53,7 @@ export type LabSet = {
 	readonly name: SetName;
 	readonly createdAt: string;
 	readonly gitHead: string;
-	/** Uncommitted changes under battery/dumspec/records when frozen. */
+	/** Uncommitted changes under battery/dumcorpus/records when frozen. */
 	readonly dirtyRecordFiles: number;
 	/** The `withheldRecords` of this freeze; absent in sets frozen before them. */
 	readonly withheld?: readonly string[];
@@ -138,7 +138,7 @@ export async function freezeSets(
 		throw Error(`Withheld records not in the gold: ${missing.join(", ")}`);
 	const gitHead = git(["rev-parse", "HEAD"], repository);
 	const dirtyRecordFiles = git(
-		["status", "--porcelain", "--", "battery/dumspec/records"],
+		["status", "--porcelain", "--", "battery/dumcorpus/records"],
 		repository,
 	)
 		.split("\n")

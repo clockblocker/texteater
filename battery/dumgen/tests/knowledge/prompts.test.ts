@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
+import { checkPromptCitations, loadSpecRecords, rules } from "dumcorpus";
 import { foldCase } from "dumling";
-import { checkPromptCitations, loadSpecRecords, rules } from "dumspec";
 import {
 	knowledgeCases,
 	spotCheckCases,

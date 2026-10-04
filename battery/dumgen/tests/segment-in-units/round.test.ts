@@ -36,8 +36,8 @@ const directory = await mkdtemp(join(tmpdir(), "segment-in-units-round-"));
 afterAll(() => rm(directory, { recursive: true, force: true }));
 
 const pin = (hash: string): Pin => ({
-	dumspecCommit: "0".repeat(40),
-	dumspecDirty: false,
+	dumcorpusCommit: "0".repeat(40),
+	dumcorpusDirty: false,
 	hash,
 	inputs: { inventories: hash, rules: "rules" },
 	at: "2026-10-02T00:00:00.000Z",
@@ -112,7 +112,7 @@ test("a live run refuses drifted prompt inputs unless it re-pins; an offline one
 	).toContain("re-pinned");
 });
 
-test("--repin pins the round at today's dumspec and keeps the old pin", async () => {
+test("--repin pins the round at today's dumcorpus and keeps the old pin", async () => {
 	const root = join(directory, "repin");
 	const { mkdir } = await import("node:fs/promises");
 	await mkdir(root, { recursive: true });

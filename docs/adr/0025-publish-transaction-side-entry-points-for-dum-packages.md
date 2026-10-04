@@ -4,13 +4,13 @@ status: accepted
 
 # Publish transaction-side entry points for Dum packages
 
-Dumdict exposes `dumdict/planning` and dumspec exposes `dumspec/inventories`
+Dumdict exposes `dumdict/planning` and dumcorpus exposes `dumcorpus/inventories`
 as operational entry points that load neither Effect nor promptsmith nor
 model execution. A host that runs inside a database transaction or another
 short-lived isolate imports these instead of the package roots:
 `dumdict/planning` holds a synchronous `createDumdictPlanner` that runs
 Dumdict's workflows and slice validation over a slice the host loaded
-itself, and `dumspec/inventories` holds the Authored Inventories
+itself, and `dumcorpus/inventories` holds the Authored Inventories
 with the pure selectors over them, model-free grammatical derivation
 included. Validation is Dumling's `parseUnit`, which the Dumling root exports
 without Zod. Dumgen has no transaction-side entry point: its operations call
@@ -35,7 +35,7 @@ fails when any isolate module reaches it again.
   are.
 - A Dumgen entry point for the authored selectors, beside its Effect runtime,
   was rejected in [#863](https://github.com/clockblocker/texteater/issues/863):
-  the selectors are pure functions over dumspec's data
+  the selectors are pure functions over dumcorpus's data
   ([ADR 0041](./0041-record-in-dumling-only-what-routing-and-drill-down-consume.md)),
   tf-demo's transaction and Dumgen's `resolve.grammar` share one copy of them,
   and a side entry would risk sharing a bundle chunk with the runtime.
@@ -43,11 +43,11 @@ fails when any isolate module reaches it again.
 ## Consequences
 
 - The Authored Inventories
-  ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md))
-  are the dominant weight behind `dumspec/inventories`. A compact projection
+  ([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md))
+  are the dominant weight behind `dumcorpus/inventories`. A compact projection
   for transaction-side selectors is a separate decision.
 - `tooling/dum-entrypoint-rss` inventories, benchmarks, and gates
-  `dumdict/planning` like the other entry points. dumspec's package test
-  fails when `dumspec/inventories` imports another package at runtime, and
+  `dumdict/planning` like the other entry points. dumcorpus's package test
+  fails when `dumcorpus/inventories` imports another package at runtime, and
   tf-demo's isolate test budgets the Dum package bytes each isolate module
   loads.

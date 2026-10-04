@@ -1,5 +1,11 @@
 import { canonicalJson } from "common-utils";
 import {
+	authoredReading,
+	deriveGrammaticalComponent,
+	type GrammaticalComponent,
+	selectAuthoredArticle,
+} from "dumcorpus/inventories";
+import {
 	applyDumdictKnowledgeChange,
 	type ChangePrecondition,
 	impliedChangePreconditions,
@@ -12,12 +18,6 @@ import {
 } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import {
-	authoredReading,
-	deriveGrammaticalComponent,
-	type GrammaticalComponent,
-	selectAuthoredArticle,
-} from "dumspec/inventories";
 import {
 	emojiDescriptionOf,
 	foldedCanonicalForm,

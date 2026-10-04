@@ -1,4 +1,4 @@
-import type * as Dumspec from "dumspec/types";
+import type * as Dumcorpus from "dumcorpus/types";
 import { cn, ReaderPlainSegment, ReaderSegment } from "lego";
 import { useMemo } from "react";
 import type { UnitView } from "../shared/contract";
@@ -32,9 +32,9 @@ export function Sentence({
 	onHover,
 	onSelect,
 }: {
-	segments: readonly Dumspec.Segment[];
+	segments: readonly Dumcorpus.Segment[];
 	units: readonly UnitView[];
-	noTarget: readonly Dumspec.NoTarget[];
+	noTarget: readonly Dumcorpus.NoTarget[];
 	hovered: Focus | null;
 	selected: Focus | null;
 	onHover: (focus: Focus | null) => void;

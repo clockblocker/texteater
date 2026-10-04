@@ -53,7 +53,7 @@ noun: \`Ich nehme den roten\` attests ADJ \`rot\` over \`[den, roten]\`. A noun
 Surface has no article feature: \`normalizedSurface\` is the noun's own
 letters, and \`Haus\` is the same Surface in \`das Haus\`, \`kein Haus\` and
 \`Haus\`. \`kein\`, \`mein\` and \`dieser\` are DETs of their own. A noun's header
-shows its article from the Lemma's gender; the article \`dumspec\` derives for an
+shows its article from the Lemma's gender; the article \`dumcorpus\` derives for an
 occurrence is the \`der\` or \`ein\` cell its spelling names for the Head's
 case, number and gender, and a spelling that names none (\`ein Häuser\`) fails
 there.

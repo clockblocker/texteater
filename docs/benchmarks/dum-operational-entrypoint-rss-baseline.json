@@ -326,7 +326,7 @@
 				]
 			},
 			"reachability": {
-				"externalPackages": ["dumspec", "emoji-regex"],
+				"externalPackages": ["dumcorpus", "emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [
@@ -409,7 +409,7 @@
 				]
 			},
 			"reachability": {
-				"externalPackages": ["dumspec", "emoji-regex"],
+				"externalPackages": ["dumcorpus", "emoji-regex"],
 				"heavyweightDependencies": [],
 				"schemaEntrypoints": [],
 				"workspaceEntrypoints": [

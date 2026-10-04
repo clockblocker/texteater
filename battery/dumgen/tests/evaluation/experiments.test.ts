@@ -345,7 +345,7 @@ async function evidenceWith(name: string, round: Round) {
 	return evidenceRoot;
 }
 
-test("evaluate writes a ledger line for its round, refuses a run past the stop line, and refuses drifted dumspec unless it re-pins", async () => {
+test("evaluate writes a ledger line for its round, refuses a run past the stop line, and refuses drifted dumcorpus unless it re-pins", async () => {
 	const pin = await currentPin(repository);
 	const lab = await labWithSet("cli");
 	const { jev, counter } = goldJudge();

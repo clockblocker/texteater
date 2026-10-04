@@ -823,7 +823,7 @@ test("a German or English NOUN Locution owns its article", () => {
 		},
 	])
 		expect(parseUnit(invalid).success).toBe(false);
-	// unter einem weißen Raben: Core gender lets dumspec check the article.
+	// unter einem weißen Raben: Core gender lets dumcorpus check the article.
 	const rabe = {
 		unitKind: "Attestation",
 		surface: {
@@ -1006,7 +1006,7 @@ test("valency evidence names only Case and Preposition complements, by their gov
 		expect(parseUnit(evidence(complement)).success).toBe(false);
 });
 // Which cases a preposition takes, and whether the ADP Case Table lists it at
-// all, is checked in dumspec (ADR 0041): Dumling consults no table.
+// all, is checked in dumcorpus (ADR 0041): Dumling consults no table.
 test("a governor's preposition slot passes Dumling in any oblique case, listed or not", () => {
 	const attestation = (canonicalForm: string, grammaticalCase: string) => ({
 		unitKind: "Attestation",
@@ -1078,7 +1078,7 @@ const adpAttestation = (
 	},
 });
 // Which cases an ADP takes, and whether the ADP Case Table lists it at all, is
-// checked in dumspec (ADR 0041): Dumling consults no table.
+// checked in dumcorpus (ADR 0041): Dumling consults no table.
 test("an ADP Attestation's realized case passes Dumling in any oblique case, listed or not", () => {
 	for (const [attested, canonicalForm, realizedCase] of [
 		["auf", "auf", "Dat"],
@@ -1178,7 +1178,7 @@ test("a Locution ADP Attestation records at most one bare-case slot", () => {
 			},
 		},
 	});
-	// The Case Table's Gen is dumspec's to check; Dumling takes any oblique case.
+	// The Case Table's Gen is dumcorpus's to check; Dumling takes any oblique case.
 	for (const realizedCase of ["Gen", "Dat", null])
 		expect(parseUnit(willen(realizedCase)).success).toBe(true);
 	expect(parseUnit(willen("Nom")).success).toBe(false);

@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import { rules } from "dumspec";
+import { rules } from "dumcorpus";
 import type { TypedDocDocument } from "../../../../src/lib/docs/document-shapes.ts";
 import { specRecords } from "../../../../src/lib/docs/spec-examples.ts";
 import { publicHrefForRouteId } from "../../../../src/lib/navigation.ts";

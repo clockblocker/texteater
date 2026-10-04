@@ -20,13 +20,13 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { isReviewed, loadSpecRecords } from "dumcorpus";
+import { authoredReading, closedRoute } from "dumcorpus/inventories";
+import type * as Dumcorpus from "dumcorpus/types";
 import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { isReviewed, loadSpecRecords } from "dumspec";
-import { authoredReading, closedRoute } from "dumspec/inventories";
-import type * as Dumspec from "dumspec/types";
 import type { KnowledgeSentence } from "../../knowledge/types.js";
 import { hashOf } from "../../segment-in-units/lab/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
@@ -34,7 +34,7 @@ import { readSidecar } from "../spec-corpus/gold.js";
 
 export type KnowledgeGold = {
 	readonly knowledge: Dumrel.ReadingKnowledge;
-	readonly coverage: Dumspec.KnowledgeCoverage;
+	readonly coverage: Dumcorpus.KnowledgeCoverage;
 };
 
 export type KnowledgeCase = {
@@ -70,7 +70,7 @@ export type KnowledgeSet = {
 	readonly name: KnowledgeSetName;
 	readonly createdAt: string;
 	readonly gitHead: string;
-	/** Uncommitted changes under battery/dumspec/records when frozen. */
+	/** Uncommitted changes under battery/dumcorpus/records when frozen. */
 	readonly dirtyRecordFiles: number;
 	readonly hash: string;
 	readonly cases: readonly KnowledgeCase[];
@@ -78,13 +78,13 @@ export type KnowledgeSet = {
 	readonly slips?: readonly TranslationSlip[];
 };
 
-type Target = Dumspec.SpecRecord["targets"][number];
+type Target = Dumcorpus.SpecRecord["targets"][number];
 
 /** A target's Reading, gold and Attestation as the loader gives them. */
 type LoadedTarget = Target & {
 	readonly reading?: Dumling.Reading<"de">;
 	readonly knowledge?: Dumrel.ReadingKnowledge;
-	readonly coverage?: Dumspec.KnowledgeCoverage;
+	readonly coverage?: Dumcorpus.KnowledgeCoverage;
 	readonly attestation?: Dumling.Attestation<"de">;
 };
 
@@ -92,7 +92,7 @@ const isAuthored = (reading: Dumling.Reading<"de">) =>
 	closedRoute(reading.lemma) || authoredReading(reading) !== undefined;
 
 /** The cases of one record, one per target with a Reading. */
-export function casesOf(record: Dumspec.SpecRecord): KnowledgeCase[] {
+export function casesOf(record: Dumcorpus.SpecRecord): KnowledgeCase[] {
 	const segments = record.segments.map(({ text }) => ({ text }));
 	return (record.targets as readonly LoadedTarget[]).flatMap(
 		(target, index) => {
@@ -146,7 +146,7 @@ function distinct(
 
 /** Held-out and dev from today's records. */
 export function knowledgeCases(
-	records: readonly Dumspec.SpecRecord[] = loadSpecRecords(),
+	records: readonly Dumcorpus.SpecRecord[] = loadSpecRecords(),
 	excluded: ReadonlySet<string> = new Set(
 		Object.keys(readSidecar().exclusions),
 	),
@@ -311,7 +311,7 @@ function syntheticCase(slip: SyntheticSlip): KnowledgeCase {
  * round.
  */
 export function spotCheckCases(
-	records: readonly Dumspec.SpecRecord[] = loadSpecRecords(),
+	records: readonly Dumcorpus.SpecRecord[] = loadSpecRecords(),
 	dev: readonly KnowledgeCase[] = knowledgeCases(records).dev,
 	seed = 887,
 ): { readonly cases: KnowledgeCase[]; readonly slips: TranslationSlip[] } {
@@ -397,11 +397,11 @@ const git = (args: readonly string[], cwd: string) =>
 export async function freezeKnowledgeSets(
 	root: string,
 	repository: string,
-	records: readonly Dumspec.SpecRecord[] = loadSpecRecords(),
+	records: readonly Dumcorpus.SpecRecord[] = loadSpecRecords(),
 ): Promise<KnowledgeSet[]> {
 	const gitHead = git(["rev-parse", "HEAD"], repository);
 	const dirtyRecordFiles = git(
-		["status", "--porcelain", "--", "battery/dumspec/records"],
+		["status", "--porcelain", "--", "battery/dumcorpus/records"],
 		repository,
 	)
 		.split("\n")

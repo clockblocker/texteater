@@ -58,9 +58,9 @@ type Syncretism<U extends "Lemma" | "Surface", L, F, K> = Unit<U, L, F, K> & {
 A route accepts Syncretisms only where its schema allows them. German PRON
 allows Lemma Syncretisms and Surface Syncretisms.
 
-**Dumspec generates every Syncretism, and nobody authors one.** Its source is
+**Dumcorpus generates every Syncretism, and nobody authors one.** Its source is
 the German Authored Inventory
-([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)).
+([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md)).
 A group is the PRON pillar cells that share a spelling, compared without
 letter case, and every Core Feature but gender, number and politeness. Each
 closed part of a group, two or more of its cells, gets a Syncretism; a part
@@ -81,7 +81,7 @@ A stem PRON Lemma marks its cell on its Surfaces
 Syncretisms are Surface Syncretisms. Its Surfaces that share a spelling, a
 case and a number and differ in gender alone get one: `jedem`, `keinem`,
 `manchem`, `diesem` and genitive `keines`, each Masc or Neut. A stem's
-Syncretism leaves gender alone open. Dumspec generates them from the stem
+Syncretism leaves gender alone open. Dumcorpus generates them from the stem
 spellings of the Authored Inventory.
 
 **A referent no text settles attests the Syncretism.** A pronoun attests the

@@ -1,7 +1,7 @@
 /**
  * The candidate reference of #755: the production unit stage with the
  * Saying Choice counted on whole + fragment, no maxim, and the AUX
- * inventory pinned to the one dumspec authored when the reference run was
+ * inventory pinned to the one dumcorpus authored when the reference run was
  * made (causative `lassen`, aecec098, came later and changes the
  * `candidates` request). Behind the lab's stage interfaces
  * (`lab/stages.ts`), so the attribution can trace it:
@@ -72,7 +72,7 @@ import { type Arm, type ArmOptions, askOf } from "../arm.js";
 /** The policy of the reference run, which `runFloors` reproduce. */
 export const referencePolicy = "step0+saying+closed";
 
-/** The inventory with the AUX Lemmas dumspec authored when the reference run was made. */
+/** The inventory with the AUX Lemmas dumcorpus authored when the reference run was made. */
 const referenceInventory = germanInventory({
 	auxiliaryLemmas: new Set(["sein", "haben", "werden", "bekommen"]),
 });

@@ -6,7 +6,7 @@
  *   or leaf its Knowledge Policy lacks, and the deferred
  *   `morphologicalTree`, are skipped. The split by Family stays here.
  * - A Closed Route, or an exact authored Reading, takes its Knowledge from
- *   dumspec through tf-demo, so every aspect still requested is a
+ *   dumcorpus through tf-demo, so every aspect still requested is a
  *   `CatalogMiss` and nothing is asked (ADR 0021).
  * - Every other aspect runs at once under the instance's request budget,
  *   isolated: its failure is a value, and its siblings land (#445, #446).
@@ -15,11 +15,12 @@
  *   interrupts the aspects still running.
  * - Bad input is a Defect, raised before anything is asked.
  */
+
+import { authoredReading, closedRoute } from "dumcorpus/inventories";
 import { lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { authoredReading, closedRoute } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import * as Semaphore from "effect/Semaphore";
 import type { OperationScope } from "../call.js";

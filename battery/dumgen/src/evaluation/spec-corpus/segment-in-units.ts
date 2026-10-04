@@ -3,7 +3,7 @@
  * Sentence becomes one case whose ideal output is the units its targets and
  * No Target entries assert.
  */
-import type * as Dumspec from "dumspec/types";
+import type * as Dumcorpus from "dumcorpus/types";
 import { z } from "zod";
 import type { Projection } from "./projection.js";
 
@@ -110,14 +110,14 @@ export type GoldUnitSource =
  * source of each ideal unit, in the ideal output's order.
  */
 export type SegmentInUnitsFacts = {
-	readonly coverage: Dumspec.Coverage;
+	readonly coverage: Dumcorpus.Coverage;
 	readonly sources: readonly GoldUnitSource[];
 };
 
 export const segmentInUnitsRoute = "segment-in-units/de";
 
 function segmentInUnitsInput(
-	record: Dumspec.SpecSegmentation,
+	record: Dumcorpus.SpecSegmentation,
 ): SegmentInUnitsInput {
 	return {
 		language: "de",

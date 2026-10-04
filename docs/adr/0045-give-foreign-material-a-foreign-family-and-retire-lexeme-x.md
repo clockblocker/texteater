@@ -62,7 +62,7 @@ agreeing article or determiner (`der Hotfix`). Otherwise it is Foreign: `sehr
 sus` gives Foreign `en`. Filling a slot in the sentence does not count as
 grammar, since any word can fill one. So a listed word is a Lexeme in every
 sentence, and an unlisted one can be a Lexeme in one sentence and Foreign in
-the next. dumspec states this as a Rule (ADR 0037).
+the next. dumcorpus states this as a Rule (ADR 0037).
 
 Amended on 2026-09-29: the test was grammar alone. It could never make a word
 that does not inflect a Lexeme, so interjections and indeclinable adjectives
@@ -81,7 +81,7 @@ part-of-speech list. What it held goes elsewhere:
 
 - foreign material → Foreign;
 - nonce words and gibberish (`glorpen`, `Zorp`, `quend`) and truncations
-  (`trans…`, `unver…`) → `Unresolved`, a No Target entry in dumspec;
+  (`trans…`, `unver…`) → `Unresolved`, a No Target entry in dumcorpus;
 - odd tokens → their real Kind (`3D` is an ADJ, as in `3D-Drucker`; `w00t` is
   Foreign `en`);
 - loans → their real Kind, by the dictionary-then-grammar test above;
@@ -136,7 +136,7 @@ Decided on [#729](https://github.com/clockblocker/texteater/issues/729).
   Dumgen's grammar stage still asks it for DET and PRON
   ([#687](https://github.com/clockblocker/texteater/issues/687)) and stays
   red until that stage is rewritten.
-- dumspec's X records are reshaped by these rules and stay Draft until
+- dumcorpus's X records are reshaped by these rules and stay Draft until
   reviewed.
 - Dumgen's intake still offers `Lexeme/X` and has no Foreign route. The
   segmenter rewrite fixes that ([#730](https://github.com/clockblocker/texteater/issues/730)).

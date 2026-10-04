@@ -17,9 +17,9 @@ const segment = join(src, "segment");
 const resolveDirectory = join(src, "resolve");
 const knowledgeDirectory = join(src, "knowledge");
 const allowedPackages = new Set([
-	// Reads no files (dumspec ADR 0025).
-	"dumspec/inventories",
-	"dumspec/types",
+	// Reads no files (dumcorpus ADR 0025).
+	"dumcorpus/inventories",
+	"dumcorpus/types",
 	// Dumling's operational entry: compiled validation, no files.
 	"dumling",
 	"dumling/types",
@@ -39,7 +39,7 @@ const allowedPackages = new Set([
 const typeOnlyPackages = new Set([
 	"dumling/types",
 	"dumrel/types",
-	"dumspec/types",
+	"dumcorpus/types",
 	"@typesafe-ai/sdk",
 ]);
 const forbidden = [

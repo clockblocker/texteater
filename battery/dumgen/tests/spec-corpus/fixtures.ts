@@ -1,5 +1,5 @@
+import type * as Dumcorpus from "dumcorpus/types";
 import type * as Dumling from "dumling/types";
-import type * as Dumspec from "dumspec/types";
 import type { Sidecar } from "../../src/evaluation/spec-corpus/gold.js";
 
 type TargetSpec = readonly [
@@ -8,8 +8,8 @@ type TargetSpec = readonly [
 	kind: string,
 ];
 
-/** Word, space and punctuation Segments, the way dumspec records split them. */
-export function segmentsOf(sentence: string): Dumspec.Segment[] {
+/** Word, space and punctuation Segments, the way dumcorpus records split them. */
+export function segmentsOf(sentence: string): Dumcorpus.Segment[] {
 	return [...sentence.matchAll(/[\p{L}\p{N}]+|\s+|[^\p{L}\p{N}\s]/gu)].map(
 		([text]) => ({
 			kind: /^\s+$/u.test(text)
@@ -32,10 +32,10 @@ export function specRecord(args: {
 	readonly targets: readonly TargetSpec[];
 	/** Each No Target entry's Segments. */
 	readonly noTarget?: readonly (readonly number[])[];
-	readonly coverage?: Dumspec.Coverage;
-	readonly reviewDepth?: Dumspec.AnnotationLayer;
+	readonly coverage?: Dumcorpus.Coverage;
+	readonly reviewDepth?: Dumcorpus.AnnotationLayer;
 	readonly language?: Dumling.Language;
-}): Dumspec.SpecSegmentation {
+}): Dumcorpus.SpecSegmentation {
 	const language = args.language ?? "de";
 	const reviewDepth =
 		"reviewDepth" in args ? args.reviewDepth : "Segmentation";
@@ -46,7 +46,7 @@ export function specRecord(args: {
 		segments: segmentsOf(args.sentence),
 		targets: args.targets.map(([memberSegmentIndices, family, kind]) => ({
 			memberSegmentIndices,
-			route: { language, family, kind } as Dumspec.SpecRoute,
+			route: { language, family, kind } as Dumcorpus.SpecRoute,
 		})),
 		noTarget: (args.noTarget ?? []).map((memberSegmentIndices) => ({
 			memberSegmentIndices,

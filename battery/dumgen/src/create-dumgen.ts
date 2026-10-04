@@ -59,7 +59,7 @@ export type DumgenOptions = {
 	readonly tracePayloads?: boolean;
 	/** The jev version every request names; a floating alias is refused. */
 	readonly jevModel?: string;
-	/** The German Authored Inventories the unit stage reads; dumspec's by default. */
+	/** The German Authored Inventories the unit stage reads; dumcorpus's by default. */
 	readonly inventory?: GermanInventory;
 };
 

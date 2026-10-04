@@ -7,7 +7,7 @@
  * the ruling gives that spelling, and the use implies the route (Dumgen ADR
  * 0007's closed-class rule, extended to PART as #734 allows).
  *
- * The members are encoded here, not in dumspec; #747 will author them
+ * The members are encoded here, not in dumcorpus; #747 will author them
  * there.
  */
 import type { RouteKey } from "./routes.js";

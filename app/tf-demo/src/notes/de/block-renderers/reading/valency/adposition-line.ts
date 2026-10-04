@@ -1,9 +1,9 @@
-import type * as Dumrel from "dumrel/types";
 import {
 	type GermanAdpositionCases,
 	type GermanAdpositionPosition,
 	germanAdpositionEntry,
-} from "dumspec/inventories";
+} from "dumcorpus/inventories";
+import type * as Dumrel from "dumrel/types";
 
 type AdpositionLemma = {
 	readonly family: string;
@@ -44,7 +44,7 @@ export type AdpositionLine = {
 };
 
 /**
- * The German ADP Valency Lines, rendered from dumspec's ADP Case Table
+ * The German ADP Valency Lines, rendered from dumcorpus's ADP Case Table
  * rather than a stored frame: `` auf `etw` · Akk: wohin? · Dat: wo? ``,
  * `` um `etw` willen · Gen ``. The Lemma records no position, so a Lexeme
  * ADP gets one line per position the table lists, the preposition first:

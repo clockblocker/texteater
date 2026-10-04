@@ -1,5 +1,5 @@
 /**
- * What the German unit stage reads from dumspec's Authored Inventories
+ * What the German unit stage reads from dumcorpus's Authored Inventories
  * (system ADR 0021): the AUX spellings that open an auxiliary slot, the ADP
  * Case Table that opens a preposition slot, and the DET and PRON members a
  * spelling realizes, its closed-class identity candidates (Dumgen ADR
@@ -9,7 +9,7 @@
 import {
 	authoredRealizations,
 	germanAdpositionEntry,
-} from "dumspec/inventories";
+} from "dumcorpus/inventories";
 
 /**
  * One DET or PRON identity a spelling can realize, grouped by Kind,
@@ -91,7 +91,7 @@ function identityIndex(): Map<string, IdentityCandidate[]> {
 }
 
 /**
- * The inventory dumspec authors now. `auxiliaryLemmas` keeps only the AUX
+ * The inventory dumcorpus authors now. `auxiliaryLemmas` keeps only the AUX
  * members of those Lemmas, as an experiment replaying requests made before
  * a later AUX member was authored needs.
  */
@@ -126,5 +126,5 @@ export function germanInventory(
 	};
 }
 
-/** The inventory dumspec authors now, with every AUX member. */
+/** The inventory dumcorpus authors now, with every AUX member. */
 export const authoredInventory: GermanInventory = germanInventory();

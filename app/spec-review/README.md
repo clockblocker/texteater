@@ -11,16 +11,16 @@ bun run --cwd app/spec-review dev
 
 Open <http://127.0.0.1:5186/>. Vite serves the page and proxies `/api` to the
 Bun record server on port 3186. `SPEC_REVIEW_PORT` and `SPEC_REVIEW_API_PORT`
-move them. `SPEC_REVIEW_BATCH` names the batch file, by default dumspec's
+move them. `SPEC_REVIEW_BATCH` names the batch file, by default dumcorpus's
 `batches/membership-hard.json`, and `SPEC_REVIEW_RECORDS` the directory its
-record ids are relative to, by default dumspec's `records/`. Point
+record ids are relative to, by default dumcorpus's `records/`. Point
 `SPEC_REVIEW_RECORDS` at a copy to try approvals without touching the gold.
 
-The server checks each record file on its own with dumspec's `checkRecord`,
+The server checks each record file on its own with dumcorpus's `checkRecord`,
 so one half-written file never blanks the list. Approving sets
 `"reviewDepth": "Segmentation"`, and taking it back removes a Segmentation
 depth and nothing deeper. A save edits that one property in place, formats
-the file with dumspec's biome configuration, and writes only when the result
+the file with dumcorpus's biome configuration, and writes only when the result
 parses to the intended record, passes `checkRecord` through Segmentation and
 cites only current Rules. A save sends the file hash it was based on; when
 another session has changed the file since, the server writes nothing and

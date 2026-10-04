@@ -314,14 +314,14 @@ stellen (`jM`) `etw` zur Verfügung      (jemandem) etwas zur Verfügung stellen
   Preposition complement of a governor's frame, alternatives included, is
   validated against it: `warten` `auf` + Acc and `bestehen` `auf` + Dat
   pass, `für` + Dat fails. ADR 0041 moved the
-  table and its check from Dumling to dumspec, since which cases a
+  table and its check from Dumling to dumcorpus, since which cases a
   preposition takes is a fact about the language.
 - A free ADP occurrence records the case it took as `realizedCase` in its
   `valencyEvidence`, from the judgement Grammatical Resolution already makes
   for the case. `[Wegen] dem Regen` records Dat against the preferred Gen. A
   Locution ADP records it the same way (`um des Friedens willen` Gen). An
   occurrence whose complement shows no case records none (`Köln versus
-  Berlin`). dumspec accepts a realized case that one of the adposition's
+  Berlin`). dumcorpus accepts a realized case that one of the adposition's
   positions allows. It fails an adposition the table doesn't list, naming
   it, a case none of its positions allows, naming the word and the case, and
   a governor's Preposition complement whose preposition the table lacks. A
@@ -366,7 +366,7 @@ frame, so `bedeuten` could not take a dass-clause as both its subject and its
 object. Now only Case and Preposition complements do, and an Adverbial,
 Predicative or Clause is unique within its Slot. Decided by the user on #674.
 
-Also amended on 2026-10-01: dumspec's
+Also amended on 2026-10-01: dumcorpus's
 `de/governed-preposition-joins-its-governor` keeps one example, *Auf ihn bin
 ich stolz*, and this ADR holds the ones it dropped: `aus Angst vor Hunden`
 gives `[Angst, vor]` NOUN, and `legt das Buch auf den Tisch` and `wohnt in

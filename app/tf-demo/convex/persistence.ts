@@ -1,7 +1,7 @@
 import { type Infer, type ObjectType, v } from "convex/values";
+import { authoredReading } from "dumcorpus/inventories";
 import { makeSurfaceId } from "dumdict/planning";
 import type * as Dumling from "dumling/types";
-import { authoredReading } from "dumspec/inventories";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,

@@ -8,9 +8,9 @@ export const generatedDocsDir = join(siteRoot, "src/generated/docs");
 export const generatedEntitiesDir = join(siteRoot, "src/generated/entities");
 export const publicDir = join(siteRoot, "public");
 
-const specRecordsDir = join(siteRoot, "../../battery/dumspec/records");
+const specRecordsDir = join(siteRoot, "../../battery/dumcorpus/records");
 
-/** The file of a dumspec Spec Record, whose id is its path. */
+/** The file of a dumcorpus Spec Record, whose id is its path. */
 export function specRecordPath(id: string): string {
 	return join(specRecordsDir, `${id}.json`);
 }

@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"@biomejs/biome": "2.5.13",
-		"dumspec": "workspace:^",
+		"dumcorpus": "workspace:^",
 		"lego": "workspace:^",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",

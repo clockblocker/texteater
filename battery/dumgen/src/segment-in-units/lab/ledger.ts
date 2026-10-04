@@ -36,7 +36,7 @@ export type SpendEntry = Spend & {
 	readonly round?: string;
 	/** `evaluate`: the experiment id. */
 	readonly experiment?: string;
-	/** The hash of the dumspec prompt inputs the run read (`Pin.hash`). */
+	/** The hash of the dumcorpus prompt inputs the run read (`Pin.hash`). */
 	readonly pin?: string;
 	readonly arm?: string;
 	readonly options?: Readonly<Record<string, string>>;

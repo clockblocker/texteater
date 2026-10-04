@@ -1,5 +1,5 @@
-import type { SpecIssue } from "dumspec";
-import type * as Dumspec from "dumspec/types";
+import type { SpecIssue } from "dumcorpus";
+import type * as Dumcorpus from "dumcorpus/types";
 import {
 	type BatchRow,
 	blockedReason,
@@ -29,10 +29,10 @@ import type {
 /** The fields of a record file the page shows, once its shape has passed. */
 interface RecordFile {
 	sentence: string;
-	segments: Dumspec.Segment[];
-	coverage: Dumspec.Coverage;
-	sources: Dumspec.Sources;
-	noTarget: Dumspec.NoTarget[];
+	segments: Dumcorpus.Segment[];
+	coverage: Dumcorpus.Coverage;
+	sources: Dumcorpus.Sources;
+	noTarget: Dumcorpus.NoTarget[];
 	targets: {
 		memberSegmentIndices: number[];
 		route: { family: string; kind: string };

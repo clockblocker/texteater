@@ -1,5 +1,5 @@
 /**
- * What the judge reads about units, condensed from the dumspec German Rules
+ * What the judge reads about units, condensed from the dumcorpus German Rules
  * (`de/largest-fixed-unit` onward). The wording is Dumgen's own; the Rules
  * stay the authority. Every request of the unit stage carries it in state.
  */

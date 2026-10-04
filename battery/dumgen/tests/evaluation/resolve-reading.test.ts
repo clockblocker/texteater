@@ -59,7 +59,7 @@ const sample = [
 	find((goldCase) => goldCase.rejected.length > 0, "of es gibt"),
 ];
 
-test("the cases are dumspec's Reading gold: Drafts for dev, reviewed records for held-out, with each Lemma's gold Readings as candidates", () => {
+test("the cases are dumcorpus's Reading gold: Drafts for dev, reviewed records for held-out, with each Lemma's gold Readings as candidates", () => {
 	expect(dev.length).toBeGreaterThan(1500);
 	// The 90 records reviewed through Reading, and #884's batch 3 (nine).
 	expect(new Set(heldout.map(({ record }) => record)).size).toBe(99);

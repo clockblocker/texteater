@@ -14,10 +14,10 @@
  * failure.
  */
 
+import { germanAdpositionAllows } from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
 import { allowedComplementKinds, applyKnowledgeChange } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { germanAdpositionAllows } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type {
 	GermanKnowledgeChange,

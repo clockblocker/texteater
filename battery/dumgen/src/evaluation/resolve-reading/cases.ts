@@ -19,11 +19,11 @@
  */
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { isReviewed, loadSpecRecords } from "dumcorpus";
+import { authoredFor } from "dumcorpus/inventories";
+import type * as Dumcorpus from "dumcorpus/types";
 import { lemmaIdentityKey, parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import { isReviewed, loadSpecRecords } from "dumspec";
-import { authoredFor } from "dumspec/inventories";
-import type * as Dumspec from "dumspec/types";
 import type {
 	Route,
 	SegmentedSentence,
@@ -52,7 +52,7 @@ export type ReadingCase = {
 	readonly extra: readonly string[];
 	/** Descriptions no answer may give (#694). */
 	readonly rejected: readonly string[];
-	/** Whether dumspec authors the Lemma (ADR 0021). */
+	/** Whether dumcorpus authors the Lemma (ADR 0021). */
 	readonly authored: boolean;
 	/** The Rules the record cites, for slicing. */
 	readonly rules: readonly string[];
@@ -64,7 +64,7 @@ export type ReadingSet = {
 	readonly name: ReadingSetName;
 	readonly createdAt: string;
 	readonly gitHead: string;
-	/** Uncommitted changes under battery/dumspec/records when frozen. */
+	/** Uncommitted changes under battery/dumcorpus/records when frozen. */
 	readonly dirtyRecordFiles: number;
 	readonly hash: string;
 	readonly cases: readonly ReadingCase[];
@@ -128,7 +128,7 @@ export function candidatesOf(
 	);
 }
 
-type Target = Dumspec.SpecRecord["targets"][number];
+type Target = Dumcorpus.SpecRecord["targets"][number];
 
 /** A target's Lemma and gold description, when its Reading layer has one. */
 function goldOf(target: Target):
@@ -157,12 +157,12 @@ function goldOf(target: Target):
 	};
 }
 
-const routeOf = (route: Dumspec.SpecRoute): Route =>
+const routeOf = (route: Dumcorpus.SpecRoute): Route =>
 	({ language: "de", family: route.family, kind: route.kind }) as Route;
 
 /** Every gold description of each Lemma across `records`, by its identity key. */
 export function lemmaReadingsOf(
-	records: readonly Dumspec.SpecRecord[],
+	records: readonly Dumcorpus.SpecRecord[],
 ): ReadonlyMap<string, readonly string[]> {
 	const byLemma = new Map<string, string[]>();
 	for (const record of records)
@@ -183,7 +183,7 @@ export function lemmaReadingsOf(
 
 /** The cases of one record, one per target whose Reading has a description. */
 export function casesOf(
-	record: Dumspec.SpecRecord,
+	record: Dumcorpus.SpecRecord,
 	lemmaReadings: ReadonlyMap<string, readonly string[]>,
 ): ReadingCase[] {
 	const sentence: SegmentedSentence = {
@@ -233,7 +233,7 @@ export function casesOf(
 
 /** The German records that carry the Reading layer, split by review. */
 export function readingCases(
-	records: readonly Dumspec.SpecRecord[] = loadSpecRecords(),
+	records: readonly Dumcorpus.SpecRecord[] = loadSpecRecords(),
 	excluded: ReadonlySet<string> = new Set(
 		Object.keys(readSidecar().exclusions),
 	),
@@ -269,7 +269,7 @@ export async function freezeReadingSets(
 ): Promise<ReadingSet[]> {
 	const gitHead = git(["rev-parse", "HEAD"], repository);
 	const dirtyRecordFiles = git(
-		["status", "--porcelain", "--", "battery/dumspec/records"],
+		["status", "--porcelain", "--", "battery/dumcorpus/records"],
 		repository,
 	)
 		.split("\n")

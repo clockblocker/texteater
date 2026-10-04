@@ -43,7 +43,7 @@ Amended on 2026-09-28 (#717): a split pronominal adverb, or a split `da …`
 or `wo …` with `hin` or `her`, is one target of the whole adverb, with two
 members. *Da weiß ich nichts von* gives [Da, von] ADV `davon`, and *Wo gehst
 du hin?* gives [Wo, hin] ADV `wohin`. A pronominal adverb still never joins
-the word that governs its preposition. The dumspec Rule is
+the word that governs its preposition. The dumcorpus Rule is
 `de/split-adverb-is-one-target`.
 
 Amended on 2026-10-01: the reciprocal pronominal adverbs are stated here.
@@ -70,10 +70,10 @@ Amended on 2026-10-02: German ADV carries no `pronType`, so Dem, Ind and Neg
 left it too. On an adverb the value split no Lemma. The series a learner
 meets (`da`, `wo`, `irgendwo`, `nirgendwo`; `dann`, `wann`, `irgendwann`,
 `nie`) shows in each Reading's marker (❓ 🧩 ❔ 🚫 👉), and whether an adverb
-is closed-class is a lookup by spelling in dumspec's Authored Inventory, so
+is closed-class is a lookup by spelling in dumcorpus's Authored Inventory, so
 nothing read the feature. PRON and DET keep `pronType`, where it is
 identity. The demonstrative and negative adverbs stay authored
-([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md)).
+([ADR 0021](./0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md)).
 Decided by the user on
 [#595](https://github.com/clockblocker/texteater/issues/595).
 

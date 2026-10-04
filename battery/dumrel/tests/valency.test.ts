@@ -120,9 +120,9 @@ test("a subjectless verb's frame has no Nom slot", () => {
 	).toEqual({ success: true, value: { valency } });
 });
 
-// Which cases a preposition takes is a fact about German: dumspec checks
+// Which cases a preposition takes is a fact about German: dumcorpus checks
 // frames against its ADP Case Table (ADR 0041).
-test("Dumrel leaves a preposition's case to dumspec's ADP Case Table", () => {
+test("Dumrel leaves a preposition's case to dumcorpus's ADP Case Table", () => {
 	expect(
 		parseReadingKnowledge({
 			source: wartenReading,

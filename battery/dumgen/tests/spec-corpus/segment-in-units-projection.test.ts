@@ -163,7 +163,7 @@ describe("the segment.inUnits projection", () => {
 			other.id,
 		]);
 		expect(projected.draft.ids).toEqual([qzxv.id, draft.id]);
-		expect(projected.corpus.groups.dumspec?.Reviewed?.ids).toEqual(
+		expect(projected.corpus.groups.dumcorpus?.Reviewed?.ids).toEqual(
 			projected.reviewed.ids,
 		);
 		expect(projected.excluded.ids).toEqual([excluded.id]);

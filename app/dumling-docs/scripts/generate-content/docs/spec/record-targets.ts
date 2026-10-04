@@ -1,5 +1,5 @@
-import { isReviewed } from "dumspec";
-import type * as Dumspec from "dumspec/types";
+import { isReviewed } from "dumcorpus";
+import type * as Dumcorpus from "dumcorpus/types";
 import type { AttestedAttestation } from "../../../../src/lib/docs/document-shapes.ts";
 import { exampleFor } from "../../../../src/lib/docs/spec-examples.ts";
 import {
@@ -11,12 +11,12 @@ import {
 /** One target of a Spec Record, with the page example that links it. */
 export type RecordTarget = Readonly<{
 	example: AttestedAttestation;
-	record: Dumspec.SpecRecord;
-	target: Dumspec.SpecTarget;
+	record: Dumcorpus.SpecRecord;
+	target: Dumcorpus.SpecTarget;
 }>;
 
 export function recordTargets(
-	records: readonly Dumspec.SpecRecord[],
+	records: readonly Dumcorpus.SpecRecord[],
 ): RecordTarget[] {
 	return records.flatMap((record) =>
 		record.targets.map((target, index) => ({
@@ -31,7 +31,7 @@ export function recordTargets(
  * A page shows a target's Attestation, so it counts the record as Reviewed
  * when a person has reviewed its Attestation layer.
  */
-function reviewLabel(record: Dumspec.SpecRecord): "Reviewed" | "Draft" {
+function reviewLabel(record: Dumcorpus.SpecRecord): "Reviewed" | "Draft" {
 	return isReviewed(record, "Attestation") ? "Reviewed" : "Draft";
 }
 
@@ -96,7 +96,7 @@ export function renderTargetLine(
  * A record with every target linked by its Lemma, for the records that show
  * a Rule: `"Ich bin im Wald." → [in](…) · [Wald](…)`.
  */
-export function renderRecordLine(record: Dumspec.SpecRecord): string {
+export function renderRecordLine(record: Dumcorpus.SpecRecord): string {
 	const targets = record.targets.map((target, index) => {
 		const example = exampleFor(record, index);
 		return `[${target.attestation.surface.lemma.canonicalForm} ${target.attestation.surface.lemma.kind}](${hrefForAttestedAttestation(example)})`;

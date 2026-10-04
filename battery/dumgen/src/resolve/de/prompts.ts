@@ -1,7 +1,7 @@
 /**
  * Every text the German grammar prompts send, each a paragraph that cites
- * the dumspec Rules it states at the statement hash it was last checked
- * against (ADR 0037, #695). The citation test runs dumspec's
+ * the dumcorpus Rules it states at the statement hash it was last checked
+ * against (ADR 0037, #695). The citation test runs dumcorpus's
  * `checkPromptCitations` over `grammarPromptTexts`, so a reworded Rule
  * fails until someone re-reads the paragraph and cites the new hash.
  *
@@ -9,7 +9,7 @@
  * keep every evaluation Lemma out of them. A template's `{…}` slots are
  * filled per click; the registered text is the template.
  */
-import type { CitingPrompt } from "dumspec/types";
+import type { CitingPrompt } from "dumcorpus/types";
 
 type Cite = readonly [rule: string, hash: string];
 
@@ -753,7 +753,7 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 	),
 };
 
-/** Every registered paragraph, as dumspec's citation check reads it. */
+/** Every registered paragraph, as dumcorpus's citation check reads it. */
 export function grammarPromptTexts(): readonly CitingPrompt[] {
 	return registry.map(({ name, text, cites }) => ({
 		name: `de/resolve-grammar/${name}`,

@@ -1,7 +1,7 @@
 /**
  * Grammatical Resolution of a unit on an open route: everything but the
  * closed DET and PRON Lexemes. One jev request (`grammar`) judges what
- * neither the unit nor dumspec's tables already fix: a member's Typo or
+ * neither the unit nor dumcorpus's tables already fix: a member's Typo or
  * Shorthand, the Surface's spelling, the route's Core Features, its
  * inflection, the auxiliaries' uses, the prepositions a head governs,
  * coverage. Then, side by side, a NOUN's Case question over the cells its
@@ -14,7 +14,7 @@
  * its form shows it, a VERB's subject es, an ADP's case where the ADP Case
  * Table allows one.
  */
-import { foldCase, lemmaIdentityKey } from "dumling";
+
 import {
 	type ArticleMember,
 	authoredRealizations,
@@ -24,7 +24,8 @@ import {
 	germanArticleSpellings,
 	germanParticles,
 	isGermanPluralOnlyNoun,
-} from "dumspec/inventories";
+} from "dumcorpus/inventories";
+import { foldCase, lemmaIdentityKey } from "dumling";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type * as Scope from "effect/Scope";
@@ -1488,7 +1489,7 @@ const particlesSpelled = (form: string) => [
 
 /**
  * What Luna reads before jev has answered: every member Standard unless
- * the unit or dumspec's tables already fix its orthography, the opening
+ * the unit or dumcorpus's tables already fix its orthography, the opening
  * article outside the headword, no auxiliary, no governed member, only
  * the readings code fixes, and no judged features.
  */
@@ -1675,7 +1676,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	if (first.noun && first.inflection) {
 		written = yield* writing;
 		// A noun with no singular has gender null, whatever article Luna
-		// wrote (Rule de/plural-only-noun-has-no-gender): dumspec lists the
+		// wrote (Rule de/plural-only-noun-has-no-gender): dumcorpus lists the
 		// Pluraletantum nouns Duden gives only in the plural.
 		const article =
 			written && isGermanPluralOnlyNoun(written.canonicalForm)

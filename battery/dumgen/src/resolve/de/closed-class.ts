@@ -1,6 +1,6 @@
 /**
  * The Lemma of a closed-class one-piece unit, built from the identity
- * intake stored with it (#864) and dumspec's Authored Inventory (ADR
+ * intake stored with it (#864) and dumcorpus's Authored Inventory (ADR
  * 0021): no Luna call and no identity question. The authored members of
  * that identity whose spellings match the member leave a set of cells; one
  * cell needs no question, and several get one Choice over the cells. A
@@ -10,8 +10,7 @@
  * Syncretism (jedem). An identity no authored member realizes is a Catalog
  * Miss.
  */
-import { foldCase, lemmaIdentityKey, syncretize } from "dumling";
-import type * as Dumling from "dumling/types";
+
 import {
 	type AuthoredMember,
 	type AuthoredRealization,
@@ -20,7 +19,9 @@ import {
 	referentCanLeaveOpen,
 	type StemSyncretism,
 	stemSyncretisms,
-} from "dumspec/inventories";
+} from "dumcorpus/inventories";
+import { foldCase, lemmaIdentityKey, syncretize } from "dumling";
+import type * as Dumling from "dumling/types";
 import type { ClosedClassIdentity } from "../../segment/segmented-sentence.js";
 import type { NeighbourSentences } from "../types.js";
 import { attestedMember } from "./member-spelling.js";

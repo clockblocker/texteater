@@ -12,7 +12,7 @@
  * assembly and the inventory are settings, so the reference's adopted
  * setting (#762) stays expressible for experiments. Over its membership
  * run X3's ten code rules, X5's saying-closed, D4's stranded-adverb and
- * X4's bracket-particle (#851, `code-rules.ts`), each enforcing one dumspec
+ * X4's bracket-particle (#851, `code-rules.ts`), each enforcing one dumcorpus
  * Rule: on dev X3's
  * held 44 more gold units and lost none. Then X5's Locution Choice (#851, `locution-choice.ts`) asks
  * one `locution` request about the units a sub-floor link still joins and
@@ -77,7 +77,7 @@ export type UnitSettings = {
 	readonly variantMargin?: number;
 	/**
 	 * The code rules applied over the assembled membership (#851, X3), each
-	 * enforcing one dumspec Rule. `was-fuer` also asks its Noul in `final`.
+	 * enforcing one dumcorpus Rule. `was-fuer` also asks its Noul in `final`.
 	 */
 	readonly rules: readonly CodeRule[];
 	/**

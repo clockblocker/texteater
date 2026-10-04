@@ -16,8 +16,9 @@
  *   where the members leave a gap, as gold has it (um … willen, oder
  *   Ähnliches), a final zu of a conjunctional one always after one (ohne … zu).
  */
+
+import { germanAdpositionEntry } from "dumcorpus/inventories";
 import { foldCase } from "dumling";
-import { germanAdpositionEntry } from "dumspec/inventories";
 import type { Target } from "./target.js";
 
 const fold = (text: string) => foldCase(text, "de");

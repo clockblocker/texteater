@@ -4,7 +4,7 @@
  * alone.
  *
  * - On a Closed Route a Lemma takes its authored Reading with no call, or
- *   jev's pick when it has several, and one dumspec authors no Reading of
+ *   jev's pick when it has several, and one dumcorpus authors no Reading of
  *   is a Catalog Miss (ADR 0021).
  * - On an Open Route jev judges first: it sees the Lemma's authored and
  *   stored Emoji Descriptions bare beside the marked Sentence and picks
@@ -24,9 +24,10 @@
  * Descriptions compare as Dumling parses them, so `🕰️` is `🕰`. Nothing is
  * retried, and no answer is salvaged (#889).
  */
+
+import { authoredFor, closedRoute } from "dumcorpus/inventories";
 import { parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import { authoredFor, closedRoute } from "dumspec/inventories";
 import * as Effect from "effect/Effect";
 import type { OperationScope } from "../call.js";
 import { InvalidModelOutput, type ProviderFailure } from "../errors.js";
@@ -168,7 +169,7 @@ export function parsedDescription(
 		.emojiDescription;
 }
 
-/** One option the judge sees: an Emoji Description, and whether dumspec authors it. */
+/** One option the judge sees: an Emoji Description, and whether dumcorpus authors it. */
 type Option = { readonly description: string; readonly authored: boolean };
 
 /**

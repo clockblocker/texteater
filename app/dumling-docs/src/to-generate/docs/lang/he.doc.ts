@@ -5,7 +5,7 @@ const document = defineLanguageOverlayPage({
 	order: 100,
 	title: "Hebrew",
 	body: `
-The Hebrew route and feature pages, generated from the \`dumspec\` records and
+The Hebrew route and feature pages, generated from the \`dumcorpus\` records and
 the Dumling schemas.
 `,
 });

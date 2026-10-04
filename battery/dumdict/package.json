@@ -74,7 +74,7 @@
 	"dependencies": {
 		"common-utils": "workspace:^",
 		"dumrel": "workspace:^",
-		"dumspec": "workspace:^",
+		"dumcorpus": "workspace:^",
 		"zod": "^4.4.0",
 		"effect": "4.0.0",
 		"dumling": "workspace:^",

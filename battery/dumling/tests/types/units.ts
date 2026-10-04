@@ -62,7 +62,7 @@ declare const adposition: Lemma<"de", "Lexeme", "ADP">;
 // German ADP has no Core Features (ADR 0032).
 type AdpositionCore = Lemma<"de", "Lexeme", "ADP">["coreFeatures"];
 const _adpositionCore: AdpositionCore = adposition.coreFeatures;
-// @ts-expect-error Position is no identity; dumspec's ADP Case Table lists it (ADR 0032).
+// @ts-expect-error Position is no identity; dumcorpus's ADP Case Table lists it (ADR 0032).
 const _adpType: AdpositionCore = { adpType: null };
 declare const adpositionOccurrence: Unit<"Attestation", "de", "Lexeme", "ADP">;
 // @ts-expect-error The sentence shows an adposition's position; no Attestation records it.

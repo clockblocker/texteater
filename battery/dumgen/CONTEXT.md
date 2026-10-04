@@ -97,13 +97,13 @@ _Avoid_: surrounding text, paragraph context
 
 **Authored Content**:
 Reviewed Lemmas, fixed Readings, Knowledge and semantic relation claims that
-resolution returns instead of generating them. Dumspec's Authored Inventories
+resolution returns instead of generating them. Dumcorpus's Authored Inventories
 hold the closed-class members and the selectors that find them; Dumgen judges
 only between the members a selector leaves. See [ADR 0021].
 
 **Fixed Catalog**:
 The reviewed Authored Content that bounds a Closed Route. Its members and
-which routes are Closed are authored in Dumspec, and Dumgen enforces the
+which routes are Closed are authored in Dumcorpus, and Dumgen enforces the
 closure by returning a Catalog Miss. See [ADR 0021].
 
 **Fixed Population**:
@@ -125,7 +125,7 @@ caller-supplied Reading in an Encounter. See [Dumgen ADR 0003].
 One recorded execution of a linguistic experiment, with its effective model
 settings, case outputs, failures and evaluation results.
 
-[ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
+[ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumcorpus.md
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md

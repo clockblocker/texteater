@@ -42,7 +42,7 @@ Pieces split off a contracted word are syntactic words with \`Fused\` members: \
 
 ## Attested Examples
 
-English examples are Spec Records of the \`dumspec\` package, one sentence per
+English examples are Spec Records of the \`dumcorpus\` package, one sentence per
 file under \`records/en/\`. Each target of a record generates one Markdown
 attestation; its bracketed sentence marks the target's members. The examples
 at the end of this page show \`ran\` and \`books\`.
