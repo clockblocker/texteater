@@ -29,47 +29,17 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [6],
+			"route": { "family": "Locution", "kind": "ADV" },
+			"notes": {
+				"rationale": "z.B. is one Shorthand member whose Surface is its expansion zum Beispiel, a Locution ADV (de/abbreviation-is-one-segment)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-abbreviation-zb-click-zb",
-			"memberSegmentIndices": [6],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 6,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Museum" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "öffnet" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "z.B." },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "a" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Montag" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "erst" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "um" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zehn" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADV",
-					"memberSegmentIndices": [6]
-				},
-				"explanation": "A dotted abbreviation is one Segment; its whole-unit Kind is the expansion's (ADR 0009, issue 498).",
-				"contaminationKeys": ["abbreviation:zum-beispiel"]
-			}
-		},
 		{
 			"source": "battery/dumgen/src/concrete-lang/de/sentence-analysis/source-data.json",
 			"caseId": "sentence-de-museum",

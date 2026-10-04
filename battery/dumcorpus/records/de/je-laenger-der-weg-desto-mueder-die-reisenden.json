@@ -57,45 +57,44 @@
 					"surfaceFeatures": null
 				}
 			}
-		}
-	],
-	"noTarget": [],
-	"legacy": [
+		},
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-demo-paired-je-click-laenger",
 			"memberSegmentIndices": [2],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 2,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Je" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "länger" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Weg" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "desto" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "müder" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Reisenden" },
-						{ "kind": "Punctuation", "text": "." }
-					]
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "länger is the Cmp of ADJ lang, a free word outside the je … desto anchors (de/correlator-anchors)."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "ADJ",
+						"canonicalForm": "lang",
+						"coreFeatures": { "comparable": "Yes" }
+					},
+					"normalizedSurface": "länger",
+					"spelling": { "kind": "Canonical" },
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": null,
+						"degree": "Cmp",
+						"gender": null,
+						"number": null
+					}
 				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADJ",
-					"memberSegmentIndices": [2]
-				},
-				"explanation": "IDS describes je ... desto as a proportional correlation but places the comparative expressions inside the degree phrases organized by its anchors. ADR 0009 therefore keeps the freely supplied comparative länger outside the Lexeme/CCONJ and classifies the clicked occurrence as Lexeme/ADJ. Source: https://grammis.ids-mannheim.de/systematische-grammatik/2118",
-				"contaminationKeys": ["target-lexeme:cconj:je-desto"]
+				"articleEvidence": null,
+				"valencyEvidence": [],
+				"members": [
+					{ "attested": "länger", "orthography": "Standard" }
+				],
+				"realizationCoverage": "Full"
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

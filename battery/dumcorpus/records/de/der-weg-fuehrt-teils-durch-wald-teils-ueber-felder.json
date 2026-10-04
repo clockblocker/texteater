@@ -28,45 +28,14 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-route-lexeme-adv-teils-teils-click-first",
 			"memberSegmentIndices": [6, 12],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 6,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Weg" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "führt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "teils" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "durch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Wald" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "teils" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "über" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Felder" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADV",
-					"memberSegmentIndices": [6, 12]
-				},
-				"explanation": "ADR 0009 treats both teils occurrences as separate ordered members of one multi-member Lexeme/ADV. Source: https://grammis.ids-mannheim.de/systematische-grammatik/2118",
-				"contaminationKeys": ["target-lexeme:adv:teils-teils"]
+			"route": { "family": "Locution", "kind": "ADV" },
+			"notes": {
+				"rationale": "teils … teils is a fixed correlator, one Locution ADV of its two anchors; the phrases they connect stay out (de/correlator-anchors)."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

@@ -32,49 +32,14 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-abbreviation-zum-beispiel-click-beispiel",
 			"memberSegmentIndices": [6, 7, 9],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 9,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Museum" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "öffnet" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zu" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Beispiel" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "a" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Montag" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "erst" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "um" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zehn" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADV",
-					"memberSegmentIndices": [6, 7, 9]
-				},
-				"explanation": "The written-out multiword adverb is one unit from either member.",
-				"contaminationKeys": ["abbreviation:zum-beispiel"]
+			"route": { "family": "Locution", "kind": "ADV" },
+			"notes": {
+				"rationale": "zum Beispiel written out is one Locution ADV over the fused zu and m and Beispiel."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }
