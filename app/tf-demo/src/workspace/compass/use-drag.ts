@@ -41,7 +41,6 @@ import type { DeckInteraction } from "./interaction-policy";
 import { remPx } from "./layout";
 import type { NoteMoves } from "./note-moves";
 import { findSheet, type SheetView, sheetsOf } from "./sheets";
-import type { SubjectRenderer } from "./subject";
 import { useBarHold } from "./use-bar-hold";
 import type { CompassWorkspace } from "./use-compass-workspace";
 import { useDeckSwipe } from "./use-deck-swipe";
@@ -77,8 +76,6 @@ export function useDrag<S>({
 	moves,
 	commands,
 	handles,
-	renderer,
-	log,
 	allows,
 	direction,
 	paneBoxes,
@@ -94,8 +91,6 @@ export function useDrag<S>({
 	moves: NoteMoves;
 	commands: WorkspaceCommands<S>;
 	handles: RefObject<Map<string, NoteHandle>>;
-	renderer: SubjectRenderer<S>;
-	log: (line: string) => void;
 	allows: (interaction: DeckInteraction) => boolean;
 	direction: WritingDirection;
 	paneBoxes: Readonly<Record<string, Box>>;
@@ -112,7 +107,6 @@ export function useDrag<S>({
 		useDeckMotion();
 	const { current, dispatch } = workspace;
 	const { dragRef, settlingRef, returningRef } = gesture;
-	const { label } = renderer;
 	const sign = inlineSign(direction);
 	/** Looks at a still hand again once its throw has gone stale; see `reassess`. */
 	const staleTimer = useRef<number | undefined>(undefined);
@@ -277,7 +271,6 @@ export function useDrag<S>({
 	function liftSheet(
 		sheet: SheetView<S>,
 		lift: Lift,
-		reason: string,
 		bar: HTMLElement | null,
 		firstDestination: (d: Drag<S>) => Destination | null = (d) =>
 			destinationAt$(lift.x, lift.y, d, performance.now()),
@@ -290,11 +283,6 @@ export function useDrag<S>({
 		const holder = deckHolding(before, card.id);
 		const next = dispatch({ type: "LiftSheet", sheetId: sheet.sheetId });
 		if (!next.held) return;
-		log(
-			sheet.ground
-				? `${reason}: ${label(card.subject)} lifts; Pane ${sheet.paneId} closes behind it`
-				: `${reason}: ${label(card.subject)} lifts off ${sheet.paneId}`,
-		);
 		/* the Deck it lands on is one taller than what it shows now */
 		const rem = remPx();
 		const height = holder?.deck
@@ -330,7 +318,6 @@ export function useDrag<S>({
 		if (!pane || !card || pane.covers.length || pane.line.length < 2)
 			return;
 		gesture.endReturn();
-		commands.logStepDown(pane, "Hold bar: lift the Ground");
 		dispatch({ type: "LiftSheet", sheetId: sheet.sheetId });
 		emergeFrom(card, bar);
 		startLift(
@@ -356,7 +343,6 @@ export function useDrag<S>({
 			subject: pending.make(),
 		}).held?.presentation;
 		if (!card) return;
-		log(`Drag: ${label(card.subject)} lifts as a fresh Card`);
 		swallowClick.current = true;
 		const lift = {
 			pointerId: pending.pointerId,
@@ -392,7 +378,7 @@ export function useDrag<S>({
 	});
 
 	/** The Card is in hand from here on: the drop regions read it. */
-	function takeInHand(d: Drag<S>, reason: string) {
+	function takeInHand(d: Drag<S>) {
 		if (!d.lifted && d.deckSheet !== null)
 			dispatch({
 				type: "LiftCard",
@@ -401,7 +387,6 @@ export function useDrag<S>({
 			});
 		d.phase = "held";
 		moves.settleTilt(d.h);
-		log(`${reason}: in hand`);
 		gesture.setDrag({ ...d });
 	}
 
@@ -458,7 +443,6 @@ export function useDrag<S>({
 					x: fromLink.x,
 					y: fromLink.y,
 				},
-				"Drag Heading from a link",
 				fromLink.heading,
 			);
 		}
@@ -497,9 +481,8 @@ export function useDrag<S>({
 				d.deckSheet !== null
 			) {
 				d.phase = "swiping";
-				log("Drag toward inline-start: swipe the Deck");
 				gesture.setDrag({ ...d });
-			} else takeInHand(d, "Drag");
+			} else takeInHand(d);
 		}
 		if (d.phase === "swiping") swipe.swipeDeck(d, dx, dy, event.timeStamp);
 		reassess(d, event.clientX, event.clientY, event.timeStamp);
@@ -509,7 +492,6 @@ export function useDrag<S>({
 
 	/** A loose Card let go with nothing under it: it fades where it is. */
 	function vanish(d: Drag<S>) {
-		log("Let go: the Card goes");
 		dispatch({ type: "Release" });
 		gesture.settle(
 			() => moves.fade(d.h),
@@ -517,15 +499,13 @@ export function useDrag<S>({
 		);
 	}
 	/** A lifted Sheet let go with nowhere to be: it is the Sheet again. */
-	function restore(d: Drag<S>, reason: string) {
-		log(`${reason}: ${label(d.card.subject)} is a Sheet again`);
+	function restore(d: Drag<S>) {
 		moves.resetTransforms(d.h);
 		dispatch({ type: "CancelGesture" });
 		gesture.tearDown();
 	}
 	/** A lifted Cover with no Deck to go back to: it closes, as ← would. */
-	function close(d: Drag<S>, reason: string) {
-		log(`${reason}: ${label(d.card.subject)} closes`);
+	function close(d: Drag<S>) {
 		dispatch({ type: "Release" });
 		gesture.settle(
 			() => moves.fade(d.h),
@@ -533,16 +513,16 @@ export function useDrag<S>({
 		);
 	}
 	/** A release with nothing under it, or in the Card's own Pane. */
-	function goHome(d: Drag<S>, reason = "Released in place") {
+	function goHome(d: Drag<S>) {
 		if (d.home === "slot") {
 			dispatch({ type: "Release" });
 			gesture.snapBack(d.h);
-		} else if (d.home === "restore") restore(d, reason);
-		else if (d.home === "close") close(d, reason);
+		} else if (d.home === "restore") restore(d);
+		else if (d.home === "close") close(d);
 		else vanish(d);
 	}
 	/** Whole-Deck swipe: the held Card and its Deck fly together. */
-	function sweepByDrag(d: Drag<S>, reason: string) {
+	function sweepByDrag(d: Drag<S>) {
 		if (d.deckSheet === null) return;
 		const layout = current().layout;
 		const sheet = findSheet(layout, d.deckSheet);
@@ -551,7 +531,7 @@ export function useDrag<S>({
 			const h = handles.current.get(card.id);
 			return h ? [moves.flight(h, direction)] : [];
 		});
-		commands.sweep(d.deckSheet, reason, () => Promise.all(fly));
+		commands.sweep(d.deckSheet, () => Promise.all(fly));
 	}
 	/**
 	 * The Note stays exactly where the hand left it and grows from there:
@@ -570,26 +550,15 @@ export function useDrag<S>({
 	}
 	/** Let go over `target`: do what the preview showed. */
 	function commitAt(d: Drag<S>, target: Destination | null) {
-		if (!target || target.kind === "return") {
+		if (!target || target.kind === "return" || target.kind === "home") {
 			goHome(d);
 			return;
 		}
-		if (target.kind === "home") {
-			goHome(d, "Drop in its own Pane");
-			return;
-		}
 		if (target.kind === "sheet")
-			growFromHand(d, () =>
-				commands.openCover(target.paneId, d.card, "Drop in Pane"),
-			);
+			growFromHand(d, () => commands.openCover(target.paneId));
 		else
 			growFromHand(d, () =>
-				commands.splitPane(
-					d.card,
-					target.paneId,
-					target.edge,
-					target.size,
-				),
+				commands.splitPane(target.paneId, target.edge, target.size),
 			);
 	}
 	/**
@@ -597,8 +566,7 @@ export function useDrag<S>({
 	 * not a close, so a Sheet that would close stays a Sheet.
 	 */
 	function releaseInPlace(d: Drag<S>) {
-		if (d.home === "slot") log("Released in place: stays on the Deck");
-		if (d.home === "close") restore(d, "Released in place");
+		if (d.home === "close") restore(d);
 		else goHome(d);
 	}
 
@@ -630,16 +598,15 @@ export function useDrag<S>({
 			const front =
 				cards.find((card) => card.id === sheet.deck?.frontId) ??
 				cards[0];
-			if (front?.id === d.card.id)
-				log("Tap expanded: nothing; drag ↑ to open");
-			else commands.bringToFront(sheet.sheetId, d.card);
+			if (front?.id !== d.card.id)
+				commands.bringToFront(sheet.sheetId, d.card);
 			return;
 		}
 		/* the release reads what the preview read: `projected` and
 		   `destinationAt` at this moment, so it does what was shown */
 		if (d.phase === "swiping") {
 			if (sign * projected(d, event.timeStamp, tuning).dx < -COMMIT)
-				sweepByDrag(d, "Swipe");
+				sweepByDrag(d);
 			else swipe.snapDeck(d);
 			return;
 		}
@@ -660,9 +627,8 @@ export function useDrag<S>({
 		window.clearTimeout(staleTimer.current);
 		if (root.current?.hasPointerCapture(d.pointerId))
 			root.current.releasePointerCapture(d.pointerId);
-		log("Drag cancelled");
 		if (d.lifted && d.home !== "slot") {
-			restore(d, "Cancel");
+			restore(d);
 			return;
 		}
 		const lifted = current().held !== null;
@@ -782,7 +748,7 @@ export function useDrag<S>({
 			};
 			event.preventDefault();
 			if (!isRooted(pane)) {
-				liftSheet(ground, lift, "Drag bar", bar);
+				liftSheet(ground, lift, bar);
 				return;
 			}
 			if (pane.line.length < 2) return;
@@ -820,7 +786,6 @@ export function useDrag<S>({
 					x: event.clientX,
 					y: event.clientY,
 				},
-				"Drag Heading",
 				heading,
 			);
 		},

@@ -10,24 +10,17 @@ import type { MenuItem, MenuItemView } from "@/workspace/compass/subject";
 import { useCompassWorkspace } from "@/workspace/compass/use-compass-workspace";
 import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
 import { noteFor, TEXTS, textById } from "./dummy";
-import {
-	initialWorkspace,
-	LIBRARY,
-	ROOT_PANE,
-	type Subject,
-	subjectLabel,
-} from "./model";
+import { initialWorkspace, LIBRARY, ROOT_PANE, type Subject } from "./model";
 import { FixtureNotesProvider } from "./real-note";
 import { RULES } from "./rules";
-import { ModelShell, useEventLog } from "./shared";
+import { ModelShell } from "./shared";
 import { playgroundRenderer } from "./subjects";
 
 /**
  * COMPASS — the Pane algebra (Wayfinder map texteater#473), on dummy
  * Subjects. The renderer, its gestures and its motion are tf-demo's
  * production Compass (`@/workspace/compass`); this is its proving ground:
- * the Subjects, a toolbar of switches under study, the rules, and a log
- * of every command the reader's actions send.
+ * the Subjects, a toolbar of switches under study, and the rules.
  */
 
 /** Where the workbench's stage, with no Text above its Deck, puts the Deck's top. */
@@ -67,7 +60,6 @@ function CompassStage({
 	showReader = !embedded,
 }: CompassModelProps) {
 	const workspace = useCompassWorkspace(() => initialWorkspace(initialScene));
-	const { entries, log, clear } = useEventLog();
 	/** A fresh Compass after a reset, so no gesture outlives the workspace it was on. */
 	const [run, setRun] = useState(0);
 	/**
@@ -126,7 +118,6 @@ function CompassStage({
 			linksDrag={linksDrag}
 			zonesShown={zonesVisible}
 			deckTopRem={embedded ? STAGE_DECK_TOP_REM : undefined}
-			onLog={log}
 		/>
 	);
 	if (embedded) return compass;
@@ -150,11 +141,9 @@ function CompassStage({
 	return (
 		<ModelShell
 			rules={RULES}
-			entries={entries}
 			onReset={() => {
 				workspace.reset(initialWorkspace("empty"));
 				setRun((value) => value + 1);
-				clear();
 			}}
 			toolbar={
 				<div className="flex flex-col gap-2 text-[0.8rem] text-ink">
@@ -181,13 +170,9 @@ function CompassStage({
 									kind: "Note",
 									note: noteFor("Reading", "Dämmerung"),
 								};
-								const paneId = workspace.current().activePaneId;
-								log(
-									`Open the ported Reading: ${subjectLabel(subject)} covers ${paneId}`,
-								);
 								workspace.dispatch({
 									type: "FollowLink",
-									paneId,
+									paneId: workspace.current().activePaneId,
 									subject,
 								});
 							}}
@@ -204,9 +189,6 @@ function CompassStage({
 								paneId: ROOT_PANE,
 								edge: "inline-end",
 							});
-							log(
-								`New Rooted Pane beside ${ROOT_PANE}, at its Menu`,
-							);
 						}}
 						className={link}
 					>

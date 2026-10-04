@@ -104,8 +104,6 @@ export type CompassProps<S> = {
 	zonesShown?: boolean;
 	/** How far below its Pane's top a Deck starts, for a stage with nothing above it. */
 	deckTopRem?: number;
-	/** Each command the reader's actions send, told as a line. */
-	onLog?: (line: string) => void;
 };
 
 export function Compass<S>({
@@ -137,7 +135,6 @@ function CompassRuntime<S>({
 	linksDrag = DEFAULT_HEADING_DESIGN.linksDrag,
 	zonesShown = false,
 	deckTopRem = DECK_TOP_REM,
-	onLog = ignore,
 }: Omit<CompassProps<S>, "motion" | "interactions">) {
 	const allows = useDeckInteractions();
 	const {
@@ -205,9 +202,6 @@ function CompassRuntime<S>({
 
 	const commands = useWorkspaceCommands({
 		workspace,
-		renderer,
-		menu,
-		log: onLog,
 		allows,
 		smooth: !moves.reduce,
 		deckTopOf: (paneId) => {
@@ -234,8 +228,6 @@ function CompassRuntime<S>({
 		moves,
 		commands,
 		handles,
-		renderer,
-		log: onLog,
 		allows,
 		direction,
 		paneBoxes,
@@ -388,7 +380,7 @@ function CompassRuntime<S>({
 										below !== undefined &&
 										!covered &&
 										allows("collapse"),
-									onPress: () => commands.back(pane.id, "←"),
+									onPress: () => commands.back(pane.id),
 								}
 							: null
 					}
@@ -398,7 +390,7 @@ function CompassRuntime<S>({
 							: {
 									label: "Close pane",
 									enabled: allows("collapse"),
-									onPress: () => commands.back(pane.id, "×"),
+									onPress: () => commands.back(pane.id),
 								}
 					}
 					keys={

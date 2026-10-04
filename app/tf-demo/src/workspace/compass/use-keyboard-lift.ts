@@ -166,18 +166,12 @@ export function useKeyboardLift<S>({
 				keyboard: true,
 			});
 			gesture.begin(d, null);
-			drag.takeInHand(d, "Lift by keyboard");
+			drag.takeInHand(d);
 			gesture.setDestination(first(d));
 		},
 		/** A Cover, or a Floating Ground, by its handle. */
 		liftSheet(sheet: SheetView<S>, handle: HTMLElement) {
-			drag.liftSheet(
-				sheet,
-				liftFrom(handle),
-				"Lift by keyboard",
-				handle,
-				first,
-			);
+			drag.liftSheet(sheet, liftFrom(handle), handle, first);
 		},
 		/** A Rooted Ground, by its Pane bar: no hold, the key is the decision. */
 		liftGround(sheet: SheetView<S>, handle: HTMLElement) {

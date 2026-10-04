@@ -66,7 +66,7 @@ export type SubjectView<S> = {
 export type KeyedCard<S> = DealtCard<S> & { readonly key: string };
 
 export type SubjectRenderer<S> = {
-	/** What a Subject is called: its aria-labels, the trail, and the log. */
+	/** What a Subject is called: its aria-labels and the trail. */
 	readonly label: (subject: S) => string;
 	/**
 	 * The content column a Subject lays out in as a Sheet, in rem, a rem of

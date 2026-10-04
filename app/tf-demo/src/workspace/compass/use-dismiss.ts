@@ -58,7 +58,7 @@ export function useDismiss<S>({
 	/** A Lift started under this click: the click is not a click. */
 	swallowClick: RefObject<boolean>;
 	allows: (interaction: DeckInteraction) => boolean;
-	sweep: (sheetId: string, reason: string) => void;
+	sweep: (sheetId: string) => void;
 	clearCovers: (paneId: string) => void;
 	cancelDrag: () => void;
 }) {
@@ -86,7 +86,7 @@ export function useDismiss<S>({
 			const { layout, activePaneId } = current();
 			const pane = findPane(layout, activePaneId);
 			const top = pane ? topSheetOf(pane) : null;
-			if (top?.deck && hasCards(top.sheetId)) sweep(top.sheetId, "Esc");
+			if (top?.deck && hasCards(top.sheetId)) sweep(top.sheetId);
 		};
 		window.addEventListener("keydown", onKey);
 		return () => window.removeEventListener("keydown", onKey);
@@ -181,7 +181,7 @@ export function useDismiss<S>({
 			if (!sheet?.deck || !hasCards(sheet.sheetId)) return;
 			const its = findPane(layout, sheet.paneId);
 			if (!its || topSheetOf(its).sheetId !== sheet.sheetId) return;
-			sweep(sheet.sheetId, "Click page");
+			sweep(sheet.sheetId);
 		},
 	};
 }

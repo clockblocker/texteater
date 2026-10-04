@@ -32,7 +32,7 @@ export function useDeckSwipe<S>({
 	followersOf: (d: Drag<S>) => { h: NoteHandle; distance: number }[];
 	snapBack: (h: NoteHandle) => void;
 	/** The torn-off Card is in hand, a plain drag. */
-	takeInHand: (d: Drag<S>, reason: string) => void;
+	takeInHand: (d: Drag<S>) => void;
 }) {
 	const {
 		leanFor,
@@ -89,7 +89,7 @@ export function useDeckSwipe<S>({
 			gap.y.jump(0);
 			place();
 		}
-		takeInHand(d, "Pulled off the swipe");
+		takeInHand(d);
 	}
 
 	return {
