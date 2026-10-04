@@ -53,7 +53,7 @@ based on reviewed content and available resolution behavior. It is route
 policy, not a flag on linguistic values, and it changes neither the validity
 nor the identity of a value. The closure facts are pure functions over the
 inventories, in `dumcorpus/inventories`: `closedRoute` says whether a route is
-Closed (in German, Lexeme AUX, DET, PRON and PART), and `authoredFor` returns the
+Closed (in German, Lexeme AUX, DET and PART), and `authoredFor` returns the
 authored members of a Lemma. The selectors that find an authored member
 (`authoredReading`, `selectAuthoredArticle`), grammatical navigation
 (`selectGrammaticalAlternatives`,
@@ -144,6 +144,19 @@ Route still returns a Catalog Miss for a Lemma it authors no Reading of.
 "We accept that the authored sets might not cover all possible things."
 Decided by the user on 2026-10-03
 ([#877](https://github.com/clockblocker/texteater/issues/877)).
+
+Amended on 2026-10-04: German Lexeme PRON is an Open Route. Its authored
+members, the pillar cells and stems and bare `viel` and `wenig`, are a Fixed
+Population. A spelling that realizes them still resolves to them, by the
+spelling alone or by the cell judge when several match. A PRON that no
+authored member spells, such as `Du-weißt-schon-wer`, or one the identity
+judge answers Other for, goes to Open production and is never a Catalog
+Miss. Dumgen resolves it as a stem: Core holds its pronType, and its Surface
+marks its cell
+([ADR 0044](./0044-identify-german-pronouns-by-pillar-stem-and-referent.md)).
+Its Readings follow the Open Route rule of 2026-10-03. "Under no
+circumstances should the PRON be a closed route." Decided by the user on
+2026-10-04.
 
 ## Considered Options
 

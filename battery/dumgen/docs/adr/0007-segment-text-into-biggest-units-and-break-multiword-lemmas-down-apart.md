@@ -39,8 +39,10 @@ depend on it.
 spelling realizes authored DET, PRON or AUX members, its identity is chosen
 among those candidates, never classified first and located by features
 afterwards. A spelling that lists no candidate on a Closed Route is an
-observable Catalog Miss (system ADR 0021). In the intake lab the candidate
-choice beat the route vote on closed-class Kinds
+observable Catalog Miss (system ADR 0021). German Lexeme PRON is an Open
+Route (system ADR 0021, amended 2026-10-04), so a PRON with no candidate, or
+one the identity judge answers Other for, goes to Open production. In the
+intake lab the candidate choice beat the route vote on closed-class Kinds
 ([#487](https://github.com/clockblocker/texteater/issues/487)).
 
 **A click classifies only among the unit's variants.** When the unit carries
