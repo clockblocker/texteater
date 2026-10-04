@@ -162,7 +162,7 @@ bun run evaluate --experiment split-text/de:ud-drafts --revision <rev>
   Sentences cut exactly, and those cut exactly as gold, surfaces included,
   whose unit-stage requests are gold mode's and replay its cache.
 - **Text mode** (`split-text/de:ud-drafts`): `splitText` cuts each Text of
-  `battery/dumcorpus/ud-drafts` into paragraphs and Sentences, scored by
+  `src/evaluation/ud-drafts` into paragraphs and Sentences, scored by
   sentence-boundary P/R/F1 in the Text's visible characters, so trimmed
   whitespace and joined hard wraps don't count. #738's Text Records will
   replace ud-drafts. Code splits; no model runs.

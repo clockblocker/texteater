@@ -1,7 +1,7 @@
 /**
  * Text mode of the `segment.inUnits` evaluation (#845): how `splitText`
  * cuts a Text into paragraphs and Sentences, scored by sentence boundary
- * against the paragraphs drafted in `battery/dumcorpus/ud-drafts`, until
+ * against the paragraphs drafted in `ud-drafts/` beside this file, until
  * #738's Text Records replace them.
  *
  * A boundary is the cut after a Sentence that is not its Text's last. It
@@ -62,7 +62,7 @@ type Paragraphs = {
 };
 
 const udDraftsDirectory = join(
-	dirname(fileURLToPath(import.meta.resolve("dumcorpus/package.json"))),
+	dirname(fileURLToPath(import.meta.url)),
 	"ud-drafts",
 );
 

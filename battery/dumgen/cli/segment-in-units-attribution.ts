@@ -60,8 +60,8 @@ const evidenceRoot = join(
 );
 const manifestPath = join(
 	packageRoot,
-	"..",
-	"dumcorpus",
+	"src",
+	"evaluation",
 	"ud-drafts",
 	"manifest.json",
 );
