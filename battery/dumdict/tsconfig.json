@@ -1,4 +1,9 @@
 {
 	"extends": "../../tooling/typescript/battery.json",
-	"include": ["generate-readme/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+	"include": [
+		"codegen/**/*.ts",
+		"generate-readme/**/*.ts",
+		"src/**/*.ts",
+		"tests/**/*.ts"
+	]
 }

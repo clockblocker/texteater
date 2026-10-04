@@ -4,7 +4,7 @@
 		"target": "es2023",
 		"lib": ["ES2023"],
 		"module": "esnext",
-		"types": ["node"],
+		"types": ["node", "bun-types"],
 		"skipLibCheck": true,
 
 		/* Bundler mode */
@@ -27,6 +27,7 @@
 		"playwright.config.ts",
 		"e2e/**/*.ts",
 		"playwright.live.config.ts",
-		"live-pipeline/**/*.ts"
+		"live-pipeline/**/*.ts",
+		"tooling/**/*.ts"
 	]
 }
