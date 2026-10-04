@@ -60,4 +60,6 @@ test("with gold's answers, resolve.grammar rebuilds nearly every gold Attestatio
 		exact: exact / cases.length >= 0.97,
 		misses: misses.length <= 30 ? [] : misses,
 	}).toEqual({ lemma: true, exact: true, misses: [] });
-});
+	// Over 2,000 resolutions take about a second alone, and several times
+	// that while Turbo runs other packages' gates alongside.
+}, 30_000);
