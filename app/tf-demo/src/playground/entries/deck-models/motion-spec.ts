@@ -99,24 +99,7 @@ export function motionOf(spec: Spec) {
 			} as const);
 }
 
-/* ------------------------------------------------------------- geometry */
-
-/**
- * The deck column and the rows inside a Note, in rem. The shared runtime lays
- * out in rem strings and measures boxes in pixels at the current root size.
- */
-export const CARD_WIDTH_REM = 26;
-/** The whole column: the expanded Card plus one header row per folded Card. */
-export const PILE_HEIGHT_REM = 30;
-/** The Heading row as a Card. */
-export const HEADER_REM = 2.75;
-/** The Pane bar above a Sheet: the trail and the ← or X control. */
-export const BAR_REM = 2.25;
-/**
- * A Card lifted from a Link or a Segment, or a Text lifted off its Ground,
- * rests in no Deck; this is the box it is held in.
- */
-export const LOOSE_CARD_REM = 18;
+/* ---------------------------------------------------------------- scale */
 
 /**
  * The open Card's resting scale: 5 % larger than the Cards behind it.

@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
+import { BAR_REM } from "react-resizable-panels/workspace";
 import type { NoteLink } from "./dummy";
-import { sheetColumn } from "./geometry";
 import {
 	COVER_GUTTER_REM,
 	SheetChrome,
 	useHeadingDesign,
 } from "./heading-design";
+import { sheetColumn } from "./layout";
 import type { CoverBack, Subject } from "./model";
-import { BAR_REM } from "./motion-spec";
 import { SheetTitle } from "./note-view";
 import { PortedTitle, usePortedFollow, usePortedReading } from "./real-note";
 

@@ -7,7 +7,7 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { BAR_REM } from "./motion-spec";
+import { BAR_REM } from "react-resizable-panels/workspace";
 
 /**
  * How a Cover draws its Heading. ← hangs in the Cover's left margin, × in

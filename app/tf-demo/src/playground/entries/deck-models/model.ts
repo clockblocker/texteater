@@ -71,12 +71,7 @@ type Phase = "pressed" | "swiping" | "held";
  */
 export type Fate = "open" | "rest" | "leave";
 
-export type Box = {
-	readonly left: number;
-	readonly top: number;
-	readonly width: number;
-	readonly height: number;
-};
+export type Box = Panes.Box;
 
 /** A Note's own motion values: its box, and the drag transforms on top. */
 export type NoteHandle = {

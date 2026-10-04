@@ -1,4 +1,9 @@
-import { type DropRegions, sideOf, type WritingDirection, Z } from "./geometry";
+import {
+	type DropRegions,
+	sideOf,
+	type WritingDirection,
+	Z,
+} from "react-resizable-panels/workspace";
 import type { Destination, Drag, Fate } from "./model";
 import { useDeckMotion } from "./runtime-config";
 

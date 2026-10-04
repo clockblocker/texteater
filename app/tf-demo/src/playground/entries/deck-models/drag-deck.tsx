@@ -18,16 +18,37 @@ import {
 	useState,
 } from "react";
 import {
+	BAR_REM,
+	cardHeightPx,
+	cardWidthIn,
+	coverBoxIn,
+	DEAL_GAP_PX,
+	DECK_TOP_REM,
+	deckColumnIn,
+	deckTopIn,
+	dropRegions,
 	findPane,
+	groundBoxIn,
 	groundOf,
+	HEADER_REM,
+	HYSTERESIS_PX,
 	heldHome,
+	inside,
 	isRooted,
+	LOOSE_CARD_REM,
 	openIds,
 	panesOf,
+	type Region,
+	regionAt,
 	restingCards,
+	returnBandIn,
+	sameBoxes,
+	spawnSize,
 	splitBeside,
 	updatePane,
+	type WritingDirection,
 	workspaceReducer,
+	Z,
 } from "react-resizable-panels/workspace";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { DropZones, fateOf, homeLabel } from "./drop-zones";
@@ -41,25 +62,6 @@ import {
 	textById,
 } from "./dummy";
 import {
-	cardHeightPx,
-	cardWidthIn,
-	coverBoxIn,
-	DEAL_GAP_PX,
-	deckLeftIn,
-	deckTopIn,
-	dropRegions,
-	edgeWidth,
-	groundBoxIn,
-	HYSTERESIS_PX,
-	inside,
-	RETURN_PAD_REM,
-	remPx,
-	sameBoxes,
-	spawnSize,
-	type WritingDirection,
-	Z,
-} from "./geometry";
-import {
 	coverHeadingRem,
 	DEFAULT_HEADING_DESIGN,
 	foldedAt,
@@ -72,6 +74,7 @@ import {
 	DeckInteractions,
 	useDeckInteractions,
 } from "./interaction-policy";
+import { columnRemOf, remPx } from "./layout";
 import {
 	type Box,
 	type Deck,
@@ -105,12 +108,8 @@ import {
 	type WorkspaceCommand,
 } from "./model";
 import {
-	BAR_REM,
-	HEADER_REM,
 	LEAVING,
 	LEAVING_OPACITY,
-	LOOSE_CARD_REM,
-	PILE_HEIGHT_REM,
 	rubberBand,
 	VELOCITY_SAMPLE_MS,
 } from "./motion-spec";
@@ -160,6 +159,9 @@ import { ModelShell, useEventLog } from "./shared";
  * resting Card are inert until the Card is a Sheet (#485); the Library opens
  * a Text only by tap, never by drag (#486).
  */
+
+/** Where the workbench's stage, with no Text above its Deck, puts the Deck's top. */
+const STAGE_DECK_TOP_REM = 3;
 
 /** A click on one of these is never a dismissive click. */
 const DISMISS_EXEMPT_SELECTOR = [
@@ -219,6 +221,7 @@ function CompassRuntime({
 	showReader = !embedded,
 }: Omit<CompassModelProps, "motion">) {
 	const policy = useDeckInteractions();
+	const deckTopRem = embedded ? STAGE_DECK_TOP_REM : DECK_TOP_REM;
 	/**
 	 * Issue 479, prototyped both ways behind one switch: with it on, a fast
 	 * swipe left on any Card sweeps the whole Deck; off, the left gesture
@@ -395,7 +398,7 @@ function CompassRuntime({
 			paneId: previewAt.paneId,
 			edge: previewAt.edge,
 			size: spawnSize(
-				drag.card,
+				columnRemOf(drag.card.subject),
 				restBoxes[previewAt.paneId]?.width ?? 0,
 				rem,
 			),
@@ -553,7 +556,7 @@ function CompassRuntime({
 		const sentence = element.closest<HTMLElement>("[data-sentence]");
 		const scroller = element.closest<HTMLElement>("[data-scroller]");
 		if (!frameBox || !paneBox || !sentence || !scroller) return;
-		const deckTop = frameBox.top + paneBox.top + deckTopIn(embedded);
+		const deckTop = frameBox.top + paneBox.top + deckTopIn(rem, deckTopRem);
 		const overshoot =
 			sentence.getBoundingClientRect().bottom + DEAL_GAP_PX - deckTop;
 		if (overshoot <= 0) return;
@@ -632,7 +635,11 @@ function CompassRuntime({
 		const size =
 			previewed?.paneId === paneId && previewed.edge === edge
 				? previewed.size
-				: spawnSize(card, restBoxes[paneId]?.width ?? 0, rem);
+				: spawnSize(
+						columnRemOf(card.subject),
+						restBoxes[paneId]?.width ?? 0,
+						rem,
+					);
 		const next = dispatch({ type: "Expand", paneId, edge, size });
 		const id = panesOf(next.layout).find(
 			(pane) => sheetsOf(pane)[0]?.presentation?.id === card.id,
@@ -718,28 +725,20 @@ function CompassRuntime({
 
 	/** The Deck's column in its Pane: where its Cards sit, in frame coordinates. */
 	function deckColumn(paneBox: Box): Box {
-		const width = cardWidthIn(paneBox.width, rem, OPEN_SCALE);
-		return {
-			left: paneBox.left + deckLeftIn(paneBox.width, width),
-			top: paneBox.top + deckTopIn(embedded),
-			width,
-			height: PILE_HEIGHT_REM * rem,
-		};
+		return deckColumnIn(paneBox, rem, OPEN_SCALE, deckTopRem);
 	}
 	/**
 	 * The return band: the Pane's width between its two edge regions, from
-	 * the Deck's top to `RETURN_PAD` below it.
+	 * the Deck's top to `RETURN_PAD_REM` below it.
 	 */
 	function returnZone(paneBox: Box, card: Presentation): Box {
-		const column = deckColumn(paneBox);
-		const side = edgeWidth(card, paneBox.width, rem);
-		const pad = RETURN_PAD_REM * rem;
-		return {
-			left: paneBox.left + side,
-			top: column.top,
-			width: paneBox.width - 2 * side,
-			height: column.height + pad,
-		};
+		return returnBandIn(
+			paneBox,
+			columnRemOf(card.subject),
+			rem,
+			OPEN_SCALE,
+			deckTopRem,
+		);
 	}
 	/**
 	 * Where letting go at this point, `now`, sends the Card: the one answer
@@ -776,7 +775,7 @@ function CompassRuntime({
 			!inside(
 				dropRegions(
 					holderBox,
-					d.card,
+					columnRemOf(d.card.subject),
 					rem,
 					barRemOf(
 						findPane(workspaceRef.current.layout, holder.paneId),
@@ -811,40 +810,33 @@ function CompassRuntime({
 			panes.some((pane) => !restBoxes[pane.id])
 		)
 			return null;
-		const regionsOf = (paneId: string) =>
-			dropRegions(
-				restBoxes[paneId] as Box,
-				d.card,
+		const columnRem = columnRemOf(d.card.subject);
+		const regions = panes.map((pane) => ({
+			paneId: pane.id,
+			regions: dropRegions(
+				restBoxes[pane.id] as Box,
+				columnRem,
 				rem,
-				barRemOf(findPane(workspaceRef.current.layout, paneId)),
+				barRemOf(pane),
 				direction,
-			);
+			),
+		}));
+		/* the destination the pointer was over holds it a little longer */
 		const current = destinationRef.current;
-		if (current && "paneId" in current) {
-			const regions = regionsOf(current.paneId);
-			const region =
-				current.kind === "pane"
-					? regions.edges.find((e) => e.edge === current.edge)?.box
-					: regions.cover;
-			if (
-				region &&
-				inside(region, x, y, HYSTERESIS_PX) &&
-				!inside(regions.bar, x, y)
-			)
-				return current;
-		}
-		for (const pane of panes) {
-			const regions = regionsOf(pane.id);
-			if (inside(regions.bar, x, y)) return null;
-			for (const { edge, box } of regions.edges)
-				if (inside(box, x, y))
-					return { kind: "pane", paneId: pane.id, edge };
-			if (inside(regions.cover, x, y))
-				return d.lifted && d.home !== "vanish" && pane.id === d.paneId
-					? { kind: "home", paneId: pane.id }
-					: { kind: "sheet", paneId: pane.id };
-		}
-		return null;
+		const held: Region | null =
+			current?.kind === "pane"
+				? { kind: "edge", paneId: current.paneId, edge: current.edge }
+				: current && "paneId" in current
+					? { kind: "cover", paneId: current.paneId }
+					: null;
+		const hit = regionAt(regions, x, y, held);
+		if (!hit) return null;
+		if (hit === held) return current;
+		if (hit.kind === "edge")
+			return { kind: "pane", paneId: hit.paneId, edge: hit.edge };
+		return d.lifted && d.home !== "vanish" && hit.paneId === d.paneId
+			? { kind: "home", paneId: hit.paneId }
+			: { kind: "sheet", paneId: hit.paneId };
 	}
 	function sameDestination(a: Destination | null, b: Destination | null) {
 		return JSON.stringify(a) === JSON.stringify(b);
@@ -1016,7 +1008,9 @@ function CompassRuntime({
 		const count = holder?.deck
 			? restingCards(before, holder.deck).length + 1
 			: 1;
-		const height = holder ? cardHeightPx(count) : LOOSE_CARD_REM * remPx();
+		const height = holder
+			? cardHeightPx(count, remPx())
+			: LOOSE_CARD_REM * remPx();
 		emergeFrom(card, bar);
 		startLift(
 			card,
@@ -1935,7 +1929,7 @@ function CompassRuntime({
 							paneId={pane.id}
 							regions={dropRegions(
 								box,
-								drag.card,
+								columnRemOf(drag.card.subject),
 								rem,
 								barRemOf(pane),
 								direction,
@@ -2184,7 +2178,7 @@ function CompassRuntime({
 		const cards = visibleCards(deck);
 		const count = cards.length;
 		const headerPx = HEADER_REM * rem;
-		const slotHeight = cardHeightPx(count);
+		const slotHeight = cardHeightPx(count, remPx());
 		const order = [...cards].reverse();
 		const expanded = expandedOf(deck, cards);
 		const openAt = expanded ? order.indexOf(expanded) : count - 1;

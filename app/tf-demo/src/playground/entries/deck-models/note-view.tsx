@@ -13,9 +13,9 @@ import {
 	useLayoutEffect,
 	useRef,
 } from "react";
+import { HEADER_REM } from "react-resizable-panels/workspace";
 import { BodyBlock, ContextsBlock, LinksBlock, TextBlock } from "./blocks";
 import type { NoteLink } from "./dummy";
-import { remPx, sheetColumn } from "./geometry";
 import {
 	coverHeadingRem,
 	ONE_LINE_TITLE,
@@ -24,6 +24,7 @@ import {
 	useHeadingDesign,
 } from "./heading-design";
 import { useDeckInteractions } from "./interaction-policy";
+import { remPx, sheetColumn } from "./layout";
 import {
 	type Box,
 	type CoverBack,
@@ -36,7 +37,7 @@ import {
 	subjectGloss,
 	subjectLabel,
 } from "./model";
-import { after, HEADER_REM, type motionOf } from "./motion-spec";
+import { after, type motionOf } from "./motion-spec";
 import {
 	PortedBlocks,
 	PortedTitle,
