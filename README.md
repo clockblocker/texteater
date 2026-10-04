@@ -47,6 +47,9 @@ bun run build
 bun run check:docs
 ```
 
+GitHub Actions runs the CI gates on every push to `main`; `bun run ci`
+runs the same gates locally.
+
 Cross-workspace imports use package exports. Do not reach into a sibling with a
 relative import or an undeclared package subpath.
 

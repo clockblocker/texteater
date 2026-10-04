@@ -15,6 +15,7 @@
 		"build": "bun tooling/manifest-policy.ts repository && turbo run build:package",
 		"check": "bun tooling/run-workspaces.ts check --if-present",
 		"check:docs": "bun tooling/documentation-integrity.ts",
+		"ci": "PATH=\"$PWD/node_modules/node/bin:$PATH\" bun tooling/ci.ts",
 		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" turbo run dev:package --filter=@texteater/tf-demo",
 		"fix": "bun tooling/run-workspaces.ts fix --if-present",
 		"lint": "bun tooling/run-workspaces.ts lint --if-present",

@@ -1,0 +1,67 @@
+# Reports red or green on each push to main; nothing blocks a local commit.
+# `bun run ci` runs the same gates locally (tooling/lib/ci-gates.ts).
+# No secrets and no provider calls: live pipeline runs and Playwright suites
+# stay local.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  ASTRO_TELEMETRY_DISABLED: "1"
+  TURBO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+
+      # Only Bun's install cache is kept between runs. A Turbo cache hit would
+      # restore `dist` but not the generated sources later gates read.
+      - uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - name: Install
+        id: install
+        run: bun install --frozen-lockfile
+
+      # Put the root `node` devDependency first on PATH, as the `demo` script
+      # does, so tools that shell out to Node get the version .nvmrc pins.
+      - name: Node
+        run: |
+          test "$(node_modules/node/bin/node --version)" = "v$(cat .nvmrc)"
+          echo "$PWD/node_modules/node/bin" >> "$GITHUB_PATH"
+
+      - name: build
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun tooling/ci.ts build
+
+      - name: check
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun tooling/ci.ts check
+
+      - name: validate
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun tooling/ci.ts validate
+
+      - name: dum-runtime
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: bun tooling/ci.ts dum-runtime
