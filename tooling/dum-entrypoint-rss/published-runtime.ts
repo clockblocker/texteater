@@ -81,7 +81,7 @@ export async function preparePublishedRuntime(repositoryRoot: string) {
 					await cp(join(source, file), join(dest, file), {
 						recursive: true,
 					});
-			// Dependencies installed apart, such as legacy-dumgen's Effect v3.
+			// Dependencies installed apart from the root node_modules.
 			if (existsSync(join(source, "node_modules")))
 				await symlink(
 					join(source, "node_modules"),

@@ -1,60 +1,54 @@
 # Dum operational-entrypoint RSS baseline
 
-Captured 2026-09-18T09:20:50.616Z from `b563197e57e34b20491147bfc1b68477d6a77430` with Bun 1.4.2 on darwin/arm64.
+Captured 2026-10-04T05:49:58.893Z from `8bcf7caa361ba67a8e16c929cf04422af14c75aa` with Bun 1.4.2 on darwin/arm64.
 
 Contract: the whole Dum chain must add at most 30 MiB peak RSS after Effect is loaded, using seven fresh processes and the median of within-process deltas. Isolated entrypoint measurements below are diagnostic. Raw samples are retained in the adjacent JSON artifact.
 
 ```text
-FAIL shared Dum import RSS: +37.469 MiB after Effect; ceiling 30.000 MiB
-  dumling: +2.453 MiB at this step; +2.453 MiB since Effect
-  dumrel: +0.594 MiB at this step; +3.109 MiB since Effect
-  dumdict/runtime: +1.500 MiB at this step; +4.938 MiB since Effect
-  legacy-dumgen: +32.531 MiB at this step; +37.469 MiB since Effect
+PASS shared Dum import RSS: +20.859 MiB after Effect; ceiling 30.000 MiB
+  dumling: +3.563 MiB at this step; +3.563 MiB since Effect
+  dumrel: +2.781 MiB at this step; +6.266 MiB since Effect
+  dumdict/runtime: +14.578 MiB at this step; +20.859 MiB since Effect
   Seven-process median of paired peak deltas. Local import replay; not deployed tf-demo or operation memory.
 ```
 
 Each probe runs against staged package manifests and built JavaScript, outside development TypeScript path aliases. Bun reports maxRSS in KiB; raw samples convert that value to bytes before calculating deltas.
 
-Empty-module samples: `17809408`, `17219584`, `17219584`, `17137664`, `17154048` bytes; median `17219584` bytes.
+Empty-module samples: `18350080`, `18235392`, `18300928`, `18350080`, `18317312` bytes; median `18317312` bytes.
 
 ## Canonical matrix
 
 | Entrypoint | Classification | Representative operation | Import delta (MiB) | Import + operation delta (MiB) | Reachable schema/heavy dependencies |
 | --- | --- | --- | ---: | ---: | --- |
-| `dumling` | operational | parse unit | 5.656 | 5.672 | none |
+| `dumling` | operational | parse unit | 5.516 | 5.859 | none |
 | `dumling/types` | type-only | Structural declarations, with empty JavaScript. | — | — | — |
-| `dumling/validation` | operational | validate feature bag | 1.484 | 1.828 | none |
+| `dumling/validation` | operational | validate feature bag | 1.703 | 1.922 | none |
 | `dumling/package.json` | metadata | Package metadata. | — | — | — |
 | `dumling/schema/*` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
-| `dumrel` | operational | knowledge projection | 7.031 | 14.688 | none |
+| `dumrel` | operational | knowledge projection | 7.750 | 15.656 | none |
 | `dumrel/types` | type-only | Structural declarations, with empty JavaScript. | — | — | — |
 | `dumrel/schema` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
 | `dumrel/package.json` | metadata | Package metadata. | — | — | — |
-| `dumdict` | operational | parse record | 26.281 | 26.594 | none |
+| `dumdict` | operational | parse record | 32.328 | 32.578 | none |
 | `dumdict/schema` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
-| `dumdict/runtime` | operational | parse record | 26.188 | 26.516 | none |
-| `dumdict/pending` | operational | pending identity | 5.563 | 6.094 | none |
-| `dumdict/planning` | operational | plan reading entry | 8.797 | 18.703 | none |
+| `dumdict/runtime` | operational | parse record | 32.250 | 31.969 | none |
+| `dumdict/pending` | operational | pending identity | 5.656 | 6.141 | none |
+| `dumdict/planning` | operational | plan reading entry | 25.328 | 29.531 | none |
 | `dumdict/package.json` | metadata | Package metadata. | — | — | — |
-| `dumdict/memory` | operational | session storage | 25.391 | 25.766 | none |
-| `legacy-dumgen` | operational | resolve supplied target | 58.203 | 60.375 | none |
-| `legacy-dumgen/types` | type-only | Structural declarations, with empty JavaScript. | — | — | — |
-| `legacy-dumgen/authored` | operational | select authored article | 16.766 | 16.750 | none |
-| `legacy-dumgen/validation` | operational | validate encounter | 8.891 | 9.563 | none |
-| `legacy-dumgen/schemas` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
-| `legacy-dumgen/development` | schema-authoring-exempt | Explicit schema or experiment authoring surface. | — | — | — |
-| `legacy-dumgen/package.json` | metadata | Package metadata. | — | — | — |
-| `dumling/compiled-validation` | operational | Validate through the shared rule protocol | 3.250 | 5.047 | none |
-| `dumrel/compiled-validation` | operational | Validate through the shared rule protocol | 4.188 | 6.063 | none |
-| `dumval/runtime` | operational | Validate through the shared rule protocol | 1.453 | 2.141 | none |
+| `dumdict/memory` | operational | session storage | 16.219 | 16.813 | none |
+| `dumling/validation-artifact` | development-support | Unlinked compiled validation that sibling generators link against; never loaded at application runtime. | — | — | — |
+| `dumling/compiled-validation` | operational | Validate through the shared rule protocol | 3.297 | 5.188 | none |
+| `dumrel/validation-artifact` | development-support | Unlinked compiled validation that sibling generators link against; never loaded at application runtime. | — | — | — |
+| `dumrel/compiled-validation` | operational | Validate through the shared rule protocol | 4.703 | 6.578 | none |
+| `dumval/runtime` | operational | Validate through the shared rule protocol | 1.516 | 2.172 | none |
 | `dumval/compiler` | schema-authoring-exempt | Build-time Zod compilation and rule linking. | — | — | — |
 | `dumval/package.json` | metadata | Package metadata. | — | — | — |
 
 ## Interpretation
 
-The shared import budget replaces the previous per-entrypoint 5/5.3 MiB limits. It measures Dumling → Dumrel → Dumdict runtime → LegacyDumgen after effect/Effect. Shared dependencies are counted once. This is a local package-import replay, not deployed tf-demo RSS, and excludes provider SDK, app initialization, and operations. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.
+The shared import budget replaces the previous per-entrypoint 5/5.3 MiB limits. It measures Dumling → Dumrel → Dumdict runtime after effect/Effect. Shared dependencies are counted once. This is a local package-import replay, not deployed tf-demo RSS, and excludes provider SDK, app initialization, and operations. Heavyweight and schema reachability remain a zero-tolerance rule for every operational surface.
 
-The explicit schema/model-authoring escape hatches are `dumling/schema/*`, `dumrel/schema`, `dumdict/schema`, `legacy-dumgen/schemas`, `legacy-dumgen/development`, `dumval/compiler`. They are exempt from the operational budget; any schema reachability from an operational package root remains a violation rather than gaining an exemption.
+The explicit schema/model-authoring escape hatches are `dumling/schema/*`, `dumrel/schema`, `dumdict/schema`, `dumval/compiler`. They are exempt from the operational budget; any schema reachability from an operational package root remains a violation rather than gaining an exemption.
 
 A vocabulary or settings subpath is operational runtime data, so it is measured. Type-only JavaScript and `package.json` metadata are inventoried for exhaustiveness but not benchmarked.
 

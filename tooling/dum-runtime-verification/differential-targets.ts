@@ -14,8 +14,6 @@ import { validationRegistry as units } from "../../battery/dumling/src/generated
 import { unitFixtures } from "../../battery/dumling/tests/unit-fixtures";
 import { validationRegistry as knowledge } from "../../battery/dumrel/src/generated/linked-validation";
 import { samples as knowledgeSamples } from "../../battery/dumrel/tests/compiled-schema-fixtures";
-import { canonicalDumgenValidationSchemas } from "../../battery/legacy-dumgen/codegen/validation-schemas";
-import { validationRegistry as production } from "../../battery/legacy-dumgen/src/generated/linked-validation";
 import type { DifferentialTarget } from "./differential";
 
 const operations: ValidationOperations = {
@@ -87,41 +85,6 @@ const knowledgeSchemas = Object.fromEntries(
 const dictionarySamples = Object.fromEntries(
 	Object.entries(successfulInputs()).map(([key, value]) => [key, [value]]),
 );
-const noun = unitSamples["Lemma/de/Lexeme/NOUN"]![0];
-const reading = { unitKind: "Reading", lemma: noun, emojiDescription: "🏠" };
-const sentence = {
-	id: "verification",
-	language: "de",
-	segments: [{ kind: "ResolvableText", text: "example" }],
-};
-const encounter = {
-	sentence,
-	target: { family: "Lexeme", kind: "NOUN", memberSegmentIndices: [0] },
-};
-const productionSamples: Record<string, unknown[]> = {
-	encounterSchema: [encounter],
-	lemmaSchema: [noun],
-	readingSchema: [reading],
-	attestationSchema: unitSamples["Attestation/de/Lexeme/NOUN"]!,
-	generationInput: [{ encounter, lemma: noun }],
-	comparisonInput: [{ encounter, lemma: noun, candidates: ["🏠"] }],
-	knowledgeInput: [{ encounter, reading, request: { definition: null } }],
-	emojiOutput: [{ emojiDescription: "🏠" }],
-	segmentSchema: sentence.segments,
-	segmentedSentenceSchema: [sentence],
-	segmentInputSchema: [{ sourceSentences: ["example"] }],
-	classifyInputSchema: [{ sentence, clickedSegmentIndex: 0 }],
-};
-for (const key of Object.keys(canonicalDumgenValidationSchemas))
-	if (key.startsWith("grammar/") || key.startsWith("target/"))
-		productionSamples[key] = [
-			{
-				decision: "Unresolved",
-				...(key === "target/de"
-					? { target: null, additionalMemberIndices: null }
-					: {}),
-			},
-		];
 export const DUM_DIFFERENTIAL_TARGETS = [
 	...targets("dumling", units, unitSchemas, unitSamples),
 	...targets("dumrel", knowledge, knowledgeSchemas, knowledgeSamples),
@@ -131,11 +94,5 @@ export const DUM_DIFFERENTIAL_TARGETS = [
 		canonicalDumdictValidationSchemas,
 		dictionarySamples,
 		dumdictValidationOperations,
-	),
-	...targets(
-		"dumgen",
-		production,
-		canonicalDumgenValidationSchemas,
-		productionSamples,
 	),
 ];

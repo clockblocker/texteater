@@ -23,14 +23,13 @@ export type DumEntryPoint = OperationalEntryPoint | ExemptEntryPoint;
 
 /**
  * Canonical classification of every public export from Dumling, Dumrel,
- * Dumdict, and LegacyDumgen. Tests compare this list to the package manifests so a
+ * Dumdict, and Dumval. Tests compare this list to the package manifests so a
  * new public subpath cannot silently escape the memory audit.
  */
 export const DUM_PACKAGE_PATHS = {
 	dumling: "dumling",
 	dumrel: "dumrel",
 	dumdict: "dumdict",
-	"legacy-dumgen": "legacy-dumgen",
 	dumval: "dumval",
 } as const;
 export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
@@ -153,62 +152,6 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 			id: "dumdict.session-storage",
 			description: "session storage",
 		},
-	},
-	{
-		specifier: "legacy-dumgen",
-		classification: "operational",
-		rationale:
-			"Published application runtime; must exclude schema authoring.",
-		operation: {
-			id: "dumgen.resolve-supplied-target",
-			description: "resolve supplied target",
-		},
-	},
-	{
-		specifier: "legacy-dumgen/types",
-		classification: "type-only",
-		rationale: "Structural declarations, with empty JavaScript.",
-	},
-	{
-		specifier: "legacy-dumgen/authored",
-		classification: "operational",
-		rationale:
-			"Model-free authored selection; must exclude Effect, promptsmith, and schema authoring.",
-		operation: {
-			id: "dumgen.select-authored",
-			description: "select authored article",
-		},
-	},
-	{
-		specifier: "legacy-dumgen/validation",
-		classification: "operational",
-		rationale:
-			"Encounter validation; must exclude Effect, promptsmith, and schema authoring.",
-		operation: {
-			id: "dumgen.validate-encounter",
-			description: "validate encounter",
-		},
-	},
-	{
-		specifier: "legacy-dumgen/schemas",
-		classification: "schema-authoring-exempt",
-		rationale: "Explicit schema or experiment authoring surface.",
-	},
-	{
-		specifier: "legacy-dumgen/development",
-		classification: "schema-authoring-exempt",
-		rationale: "Explicit schema or experiment authoring surface.",
-	},
-	{
-		specifier: "legacy-dumgen/testing",
-		classification: "development-support",
-		rationale:
-			"Deterministic model doubles for sibling workspaces' tests; never loaded at application runtime.",
-	},
-	{
-		specifier: "legacy-dumgen/package.json",
-		classification: "metadata",
-		rationale: "Package metadata.",
 	},
 	{
 		specifier: "dumling/validation-artifact",

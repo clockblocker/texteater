@@ -13,7 +13,6 @@ export const SHARED_RSS_IMPORTS = [
 	"dumling",
 	"dumrel",
 	"dumdict/runtime",
-	"legacy-dumgen",
 ] as const;
 const labels = ["effect/Effect", ...SHARED_RSS_IMPORTS];
 export type SharedRssSample = readonly {
