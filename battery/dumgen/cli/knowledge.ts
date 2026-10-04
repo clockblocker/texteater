@@ -7,9 +7,9 @@
  *
  * Freezes dev (the Readings of Draft records with a Reading layer),
  * held-out (the Readings of records reviewed to Knowledge depth) and the
- * spot-check set (a seeded dev sample and #545's six slips) under
- * `.runs/knowledge/sets`, with the git commit and a hash of the cases; a
- * refreeze keeps the set it replaces under its hash. Runs, their price
+ * spot-check set (a seeded dev sample and #545's six slips) into the
+ * tracked `evidence/knowledge/sets`, with the git commit and a hash of the
+ * cases; a refreeze keeps the set it replaces under its hash. Runs, their price
  * and their re-scores go through `bun run evaluate --experiment
  * knowledge/de:<set>`, `--gold-only` keeping the cases with gold and
  * `--subset <file>` a round's subset.
@@ -26,11 +26,9 @@ import { defaultRunOutputDirectory } from "../src/development.js";
 import {
 	freezeKnowledgeSets,
 	loadKnowledgeSet,
+	trackedKnowledgeSetsRoot,
 } from "../src/evaluation/knowledge/cases.js";
-import {
-	defaultKnowledgeRoot,
-	knowledgeAttempts,
-} from "../src/evaluation/knowledge/experiment.js";
+import { knowledgeAttempts } from "../src/evaluation/knowledge/experiment.js";
 import {
 	compareKnowledgeRuns,
 	knowledgeSubsetCaseIds,
@@ -43,7 +41,10 @@ const repository = resolve(import.meta.dir, "../../..");
 
 export async function runKnowledgeCli(
 	argv: readonly string[],
-	options: { readonly root?: string; readonly runDirectory?: string } = {},
+	options: {
+		readonly setsRoot?: string;
+		readonly runDirectory?: string;
+	} = {},
 ) {
 	const { positionals, values } = parseArgs({
 		args: [...argv],
@@ -76,7 +77,7 @@ export async function runKnowledgeCli(
 		if (settings.set !== "dev" || !settings.setHash || settings.subset)
 			throw Error("The subset is read from a whole dev run");
 		const set = await loadKnowledgeSet(
-			options.root ?? defaultKnowledgeRoot,
+			options.setsRoot ?? trackedKnowledgeSetsRoot,
 			"dev",
 		);
 		if (set.hash !== settings.setHash)
@@ -132,7 +133,7 @@ export async function runKnowledgeCli(
 			"Use `bun cli/knowledge.ts freeze`, `subset <baselineRunId> --out <file>` or `compare <subsetFile> <runId>`",
 		);
 	const sets = await freezeKnowledgeSets(
-		options.root ?? defaultKnowledgeRoot,
+		options.setsRoot ?? trackedKnowledgeSetsRoot,
 		repository,
 	);
 	const summary = sets.map(

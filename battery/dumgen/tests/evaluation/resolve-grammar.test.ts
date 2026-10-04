@@ -50,7 +50,7 @@ async function frozenRoot(): Promise<{
 		return found ? [found] : [];
 	});
 	const root = await mkdtemp(join(tmpdir(), "resolve-grammar-"));
-	await freezeGrammarSets(root, repository, {
+	await freezeGrammarSets(join(root, "sets"), repository, {
 		dev: cases,
 		heldout: heldout.slice(0, 1),
 	});
@@ -103,6 +103,7 @@ test("resolve.grammar's run prices itself without a call, fills its cache once, 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		estimate: true,
 	});
 	expect(estimate.run).toBeUndefined();
@@ -118,6 +119,7 @@ test("resolve.grammar's run prices itself without a call, fills its cache once, 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		jev,
 		luna,
 		beforeLive: (price) => {
@@ -156,6 +158,7 @@ test("resolve.grammar's run prices itself without a call, fills its cache once, 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		offline: true,
 	});
 	expect(counter).toEqual(calls);
@@ -177,6 +180,7 @@ test("a case whose Lemma verdict differs between repetitions is named as a flip"
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		jev,
 		luna,
 		concurrency: 1,
@@ -285,6 +289,7 @@ test("a live run stops at the first cap it would cross and names it", async () =
 			experimentId: experiment.id,
 			sourceRevision: "test",
 			root,
+			setsRoot: join(root, "sets"),
 			jev,
 			luna,
 			concurrency: 1,
@@ -325,6 +330,7 @@ test("resolve.grammar's replay scores the same whether its Canonical Forms came 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root: syncRoot,
+		setsRoot: join(syncRoot, "sets"),
 		jev: goldTransports(cases).jev,
 		luna: createOpenAILuna({
 			apiKey: "test",
@@ -336,6 +342,7 @@ test("resolve.grammar's replay scores the same whether its Canonical Forms came 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root: batchRoot,
+		setsRoot: join(batchRoot, "sets"),
 		jev: goldTransports(cases).jev,
 		lunaBatch: createOpenAILunaBatch({
 			apiKey: "test",

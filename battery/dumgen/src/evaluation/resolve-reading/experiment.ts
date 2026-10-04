@@ -16,7 +16,6 @@
  * frozen subset's cases (`subset.ts`): its manifest records the subset, and
  * its report compares each line with the baseline on the same cases.
  */
-import { existsSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as Effect from "effect/Effect";
@@ -36,6 +35,7 @@ import { defaultLunaConfiguration, type LunaAsk } from "../../luna.js";
 import type { OperationTrace } from "../../operation-trace.js";
 import { markedSentence } from "../../resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../segment/jev.js";
+import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import {
 	CachedModels,
@@ -53,7 +53,7 @@ import {
 	type ReadingArm,
 	type ReadingCase,
 	type ReadingSetName,
-	readingSetPath,
+	trackedReadingSetsRoot,
 } from "./cases.js";
 import { type ReadingAttempt, readingOracle } from "./oracle.js";
 import {
@@ -126,8 +126,10 @@ export type ReadingEvaluateArgs = {
 	readonly outputDirectory?: string;
 	readonly signal?: AbortSignal;
 	readonly concurrency?: number;
-	/** The frozen sets and the answer cache; `.runs/resolve-reading` by default. */
+	/** The answer cache; `.runs/resolve-reading` by default. */
 	readonly root?: string;
+	/** The frozen sets; the tracked ones, `evidence/resolve-reading/sets`, by default. */
+	readonly setsRoot?: string;
 	/** Only these cases, for a smoke run; all by default. */
 	readonly limit?: number;
 	/** A frozen subset's file (`subset.ts`): only its cases run. */
@@ -294,21 +296,16 @@ export function readingExperiment(setName: ReadingSetName) {
 	const id = `${readingRoute}:${setName}`;
 	return {
 		id,
-		caseCount: () => {
-			const path = readingSetPath(defaultReadingRoot, setName);
-			if (!existsSync(path)) return 0;
-			return (
-				JSON.parse(readFileSync(path, "utf8")) as { cases: unknown[] }
-			).cases.length;
-		},
+		caseCount: () => frozenSetSize(trackedReadingSetsRoot, setName),
 		metrics: readingMetrics,
 		async evaluate(args: ReadingEvaluateArgs): Promise<ReadingEvaluated> {
 			const root = args.root ?? defaultReadingRoot;
-			if (!existsSync(readingSetPath(root, setName)))
+			const setsRoot = args.setsRoot ?? trackedReadingSetsRoot;
+			if (!isFrozen(setsRoot, setName))
 				throw Error(
 					`The ${setName} set of ${readingRoute} is not frozen; run \`bun cli/resolve-reading.ts freeze\` first`,
 				);
-			const set = await loadReadingSet(root, setName);
+			const set = await loadReadingSet(setsRoot, setName);
 			const repetitions = args.repetitions ?? readingRepetitions;
 			if (
 				!Number.isInteger(repetitions) ||

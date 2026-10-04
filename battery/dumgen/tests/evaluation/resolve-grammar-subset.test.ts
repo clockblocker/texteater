@@ -223,11 +223,11 @@ test("an evaluation on a subset runs only its cases, at the asked repetitions, a
 	const { dev, heldout } = grammarCases();
 	const cases = dev.slice(0, 3);
 	const root = await mkdtemp(join(tmpdir(), "resolve-grammar-subset-"));
-	await freezeGrammarSets(root, repository, {
+	await freezeGrammarSets(join(root, "sets"), repository, {
 		dev: cases,
 		heldout: heldout.slice(0, 1),
 	});
-	const set = await loadGrammarSet(root, "dev");
+	const set = await loadGrammarSet(join(root, "sets"), "dev");
 	const [missed, guarded] = cases;
 	if (!missed || !guarded) throw Error("no cases");
 	const route = (index: number) =>
@@ -250,6 +250,7 @@ test("an evaluation on a subset runs only its cases, at the asked repetitions, a
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		subset: path,
 		repetitions: 1,
 		estimate: true,
@@ -260,6 +261,7 @@ test("an evaluation on a subset runs only its cases, at the asked repetitions, a
 			experimentId: experiment.id,
 			sourceRevision: "test",
 			root,
+			setsRoot: join(root, "sets"),
 			subset: path,
 			repetitions: 4,
 			estimate: true,
@@ -270,6 +272,7 @@ test("an evaluation on a subset runs only its cases, at the asked repetitions, a
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		subset: path,
 		repetitions: 1,
 		offline: true,

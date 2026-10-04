@@ -5,9 +5,9 @@
  *   bun cli/resolve-reading.ts subset <baselineRunId> [--seed N] [--guard N] [--out <file>]
  *
  * `freeze` freezes dev (the Draft records with the Reading layer) and
- * held-out (the records reviewed through Reading or deeper) under
- * `.runs/resolve-reading/sets`, with the git commit and a hash of the
- * cases; a refreeze keeps the set it replaces under its hash.
+ * held-out (the records reviewed through Reading or deeper) into the
+ * tracked `evidence/resolve-reading/sets`, with the git commit and a hash
+ * of the cases; a refreeze keeps the set it replaces under its hash.
  *
  * `subset` freezes a round's subset of dev from a saved whole-set baseline
  * run (`subset.ts`): the cases with an attempt that was not right, and a
@@ -24,11 +24,9 @@ import { defaultRunOutputDirectory } from "../src/development.js";
 import {
 	freezeReadingSets,
 	loadReadingSet,
+	trackedReadingSetsRoot,
 } from "../src/evaluation/resolve-reading/cases.js";
-import {
-	defaultReadingRoot,
-	readingAttempts,
-} from "../src/evaluation/resolve-reading/experiment.js";
+import { readingAttempts } from "../src/evaluation/resolve-reading/experiment.js";
 import {
 	readingSubsetCaseIds,
 	saveReadingSubset,
@@ -43,7 +41,11 @@ export const defaultReadingSubsetPath = resolve(
 
 export async function runResolveReadingCli(
 	argv: readonly string[],
-	options: { runDirectory?: string; subsetPath?: string; root?: string } = {},
+	options: {
+		runDirectory?: string;
+		subsetPath?: string;
+		setsRoot?: string;
+	} = {},
 ) {
 	const { positionals, values } = parseArgs({
 		args: [...argv],
@@ -55,7 +57,7 @@ export async function runResolveReadingCli(
 		},
 	});
 	const [command, runId] = positionals;
-	const root = options.root ?? defaultReadingRoot;
+	const root = options.setsRoot ?? trackedReadingSetsRoot;
 	if (command === "subset") {
 		if (!runId)
 			throw Error(

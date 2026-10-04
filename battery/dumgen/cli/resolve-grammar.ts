@@ -6,9 +6,9 @@
  *       [--guard-from <wholeSetRunId>] [--exclude <earlier subset>] [--out <file>]
  *
  * `freeze` freezes dev (the Draft records with the Attestation layer) and
- * held-out (the records reviewed through Attestation or deeper) under
- * `.runs/resolve-grammar/sets`, with the git commit and a hash of the
- * cases; a refreeze keeps the set it replaces under its hash.
+ * held-out (the records reviewed through Attestation or deeper) into the
+ * tracked `evidence/resolve-grammar/sets`, with the git commit and a hash
+ * of the cases; a refreeze keeps the set it replaces under its hash.
  *
  * `subset` freezes a round's subset of dev from a saved baseline run
  * (`subset.ts`): the cases that missed a line in any repetition, and a
@@ -25,11 +25,9 @@ import { defaultRunOutputDirectory } from "../src/development.js";
 import {
 	freezeGrammarSets,
 	loadGrammarSet,
+	trackedGrammarSetsRoot,
 } from "../src/evaluation/resolve-grammar/cases.js";
-import {
-	defaultGrammarRoot,
-	grammarAttempts,
-} from "../src/evaluation/resolve-grammar/experiment.js";
+import { grammarAttempts } from "../src/evaluation/resolve-grammar/experiment.js";
 import {
 	loadSubset,
 	saveSubset,
@@ -98,7 +96,7 @@ export async function runResolveGrammarCli(
 				return subsetCaseIds(earlier).guard;
 			}),
 		);
-		const set = await loadGrammarSet(defaultGrammarRoot, "dev");
+		const set = await loadGrammarSet(trackedGrammarSetsRoot, "dev");
 		if (set.hash !== settings.setHash)
 			throw Error(
 				`The baseline ran on set ${settings.setHash}, not the frozen ${set.hash}`,
@@ -139,7 +137,7 @@ export async function runResolveGrammarCli(
 		throw Error(
 			"Use `bun cli/resolve-grammar.ts freeze` or `bun cli/resolve-grammar.ts subset <baselineRunId>`",
 		);
-	const sets = await freezeGrammarSets(defaultGrammarRoot, repository);
+	const sets = await freezeGrammarSets(trackedGrammarSetsRoot, repository);
 	const summary = sets.map(
 		({ name, hash, gitHead, dirtyRecordFiles, cases }) => ({
 			name,

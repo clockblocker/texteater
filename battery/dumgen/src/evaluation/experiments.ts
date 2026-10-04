@@ -203,12 +203,18 @@ export type EvaluateArgs = {
 	readonly goldOnly?: boolean;
 	/** resolve.grammar and resolve.reading: attempts per case, 1 to 3. */
 	readonly repetitions?: number;
-	/** resolve.grammar's frozen sets and cache. */
+	/** resolve.grammar's answer cache. */
 	readonly grammarRoot?: string;
-	/** resolve.reading's frozen sets and cache. */
+	/** resolve.grammar's frozen sets; the tracked ones by default. */
+	readonly grammarSetsRoot?: string;
+	/** resolve.reading's answer cache. */
 	readonly readingRoot?: string;
-	/** knowledge.produce's frozen sets and cache. */
+	/** resolve.reading's frozen sets; the tracked ones by default. */
+	readonly readingSetsRoot?: string;
+	/** knowledge.produce's answer cache. */
 	readonly knowledgeRoot?: string;
+	/** knowledge.produce's frozen sets; the tracked ones by default. */
+	readonly knowledgeSetsRoot?: string;
 };
 
 type Evaluated = {
@@ -608,6 +614,9 @@ function resolveGrammarEntry(set: "dev" | "heldout", e2e: boolean): Experiment {
 				...(args.signal ? { signal: args.signal } : {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 				...(args.grammarRoot ? { root: args.grammarRoot } : {}),
+				...(args.grammarSetsRoot
+					? { setsRoot: args.grammarSetsRoot }
+					: {}),
 				...(args.labRoot ? { segmentLabRoot: args.labRoot } : {}),
 				...(args.setsRoot ? { segmentSetsRoot: args.setsRoot } : {}),
 				...(args.limit ? { limit: args.limit } : {}),
@@ -656,6 +665,9 @@ function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
 				...(args.signal ? { signal: args.signal } : {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 				...(args.readingRoot ? { root: args.readingRoot } : {}),
+				...(args.readingSetsRoot
+					? { setsRoot: args.readingSetsRoot }
+					: {}),
 				...(args.limit ? { limit: args.limit } : {}),
 				...(args.grammarSubset ? { subset: args.grammarSubset } : {}),
 				...(args.repetitions ? { repetitions: args.repetitions } : {}),
@@ -702,6 +714,9 @@ function knowledgeEntry(set: "dev" | "heldout" | "spot-check"): Experiment {
 				...(args.signal ? { signal: args.signal } : {}),
 				...(args.concurrency ? { concurrency: args.concurrency } : {}),
 				...(args.knowledgeRoot ? { root: args.knowledgeRoot } : {}),
+				...(args.knowledgeSetsRoot
+					? { setsRoot: args.knowledgeSetsRoot }
+					: {}),
 				...(args.limit ? { limit: args.limit } : {}),
 				...(args.goldOnly ? { goldOnly: true } : {}),
 				...(args.grammarSubset ? { subset: args.grammarSubset } : {}),

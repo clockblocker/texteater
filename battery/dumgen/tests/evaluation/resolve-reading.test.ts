@@ -88,7 +88,7 @@ test("the cases are dumspec's Reading gold: Drafts for dev, reviewed records for
 
 async function frozenRoot(): Promise<string> {
 	const root = await mkdtemp(join(tmpdir(), "resolve-reading-"));
-	await freezeReadingSets(root, repository, {
+	await freezeReadingSets(join(root, "sets"), repository, {
 		dev: sample,
 		heldout: heldout.slice(0, 1),
 	});
@@ -165,6 +165,7 @@ test("resolve.reading's run prices itself without a call, fills its cache once, 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		estimate: true,
 	});
 	expect(estimate.run).toBeUndefined();
@@ -178,6 +179,7 @@ test("resolve.reading's run prices itself without a call, fills its cache once, 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		jev,
 		luna,
 		beforeLive: (price) => {
@@ -215,6 +217,7 @@ test("resolve.reading's run prices itself without a call, fills its cache once, 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		offline: true,
 	});
 	expect(counter).toEqual(calls);
@@ -235,6 +238,7 @@ test("a judge's wrong pick is a wrong Reuse, and the attempt that flips between 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		jev,
 		luna,
 		concurrency: 1,
@@ -337,6 +341,7 @@ test("a replay scores the same whether its cache was filled synchronously or by 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root: syncRoot,
+		setsRoot: join(syncRoot, "sets"),
 		jev: goldTransports().jev,
 		luna: createOpenAILuna({
 			apiKey: "test",
@@ -352,6 +357,7 @@ test("a replay scores the same whether its cache was filled synchronously or by 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root: batchRoot,
+		setsRoot: join(batchRoot, "sets"),
 		jev: goldTransports().jev,
 		lunaBatch: createOpenAILunaBatch({
 			apiKey: "test",
@@ -384,6 +390,7 @@ test("a replay scores the same whether its cache was filled synchronously or by 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root: batchRoot,
+		setsRoot: join(batchRoot, "sets"),
 		offline: true,
 	});
 	if (!replay.run) throw Error("no replay");
@@ -437,6 +444,7 @@ test("a failed or unanswered batch line is a ProviderFailure for its request alo
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		jev: goldTransports().jev,
 		lunaBatch: createOpenAILunaBatch({
 			apiKey: "test",
@@ -478,6 +486,7 @@ test("an interrupted batch run's batch is settled by the next run, not sent agai
 			experimentId: experiment.id,
 			sourceRevision: "test",
 			root,
+			setsRoot: join(root, "sets"),
 			jev: goldTransports().jev,
 			lunaBatch: batch,
 			signal: controller.signal,
@@ -491,6 +500,7 @@ test("an interrupted batch run's batch is settled by the next run, not sent agai
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		jev: goldTransports().jev,
 		lunaBatch: batch,
 	});
@@ -555,6 +565,7 @@ test("the pricing pass prices uncached requests from measured sizes, the ledger'
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		estimate: true,
 		ledger,
 	});
@@ -574,6 +585,7 @@ test("the pricing pass prices uncached requests from measured sizes, the ledger'
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		limit: 2,
 		ledger,
 		...goldTransports(),
@@ -582,6 +594,7 @@ test("the pricing pass prices uncached requests from measured sizes, the ledger'
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		estimate: true,
 		ledger,
 	});
@@ -591,6 +604,7 @@ test("the pricing pass prices uncached requests from measured sizes, the ledger'
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		estimate: true,
 		wholeRound: true,
 		ledger,

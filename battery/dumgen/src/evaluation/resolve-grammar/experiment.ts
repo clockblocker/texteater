@@ -17,7 +17,6 @@
  * the baseline's misses and a seeded guard, its seed and case ids
  * recorded in the manifest, and its report compared with the baseline's.
  */
-import { existsSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as Effect from "effect/Effect";
@@ -42,12 +41,13 @@ import type { Unit } from "../../segment/segmented-sentence.js";
 import { askOf } from "../../segment-in-units/de/arm.js";
 import { loadSet, trackedSetsRoot } from "../../segment-in-units/lab/corpus.js";
 import { type CallRecord, Jev } from "../../segment-in-units/lab/jev.js";
+import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import {
 	type GrammarCase,
 	type GrammarSetName,
-	grammarSetPath,
 	loadGrammarSet,
+	trackedGrammarSetsRoot,
 } from "./cases.js";
 import {
 	type GrammarCaps,
@@ -114,8 +114,10 @@ export type GrammarEvaluateArgs = {
 	readonly outputDirectory?: string;
 	readonly signal?: AbortSignal;
 	readonly concurrency?: number;
-	/** The frozen sets and the answer cache; `.runs/resolve-grammar` by default. */
+	/** The answer cache; `.runs/resolve-grammar` by default. */
 	readonly root?: string;
+	/** The frozen sets; the tracked ones, `evidence/resolve-grammar/sets`, by default. */
+	readonly setsRoot?: string;
 	/** The segment.inUnits lab whose cached answers the end-to-end line replays. */
 	readonly segmentLabRoot?: string;
 	/** The segment.inUnits lab's frozen sets; the tracked ones by default. */
@@ -347,21 +349,16 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 	const id = `${grammarRoute}:${setName}${e2e ? ":e2e" : ""}`;
 	return {
 		id,
-		caseCount: () => {
-			const path = grammarSetPath(defaultGrammarRoot, setName);
-			if (!existsSync(path)) return 0;
-			return (
-				JSON.parse(readFileSync(path, "utf8")) as { cases: unknown[] }
-			).cases.length;
-		},
+		caseCount: () => frozenSetSize(trackedGrammarSetsRoot, setName),
 		metrics: grammarMetrics,
 		async evaluate(args: GrammarEvaluateArgs): Promise<GrammarEvaluated> {
 			const root = args.root ?? defaultGrammarRoot;
-			if (!existsSync(grammarSetPath(root, setName)))
+			const setsRoot = args.setsRoot ?? trackedGrammarSetsRoot;
+			if (!isFrozen(setsRoot, setName))
 				throw Error(
 					`The ${setName} set of ${grammarRoute} is not frozen; run \`bun cli/resolve-grammar.ts freeze\` first`,
 				);
-			const set = await loadGrammarSet(root, setName);
+			const set = await loadGrammarSet(setsRoot, setName);
 			const repetitions = args.repetitions ?? grammarRepetitions;
 			if (
 				!Number.isInteger(repetitions) ||

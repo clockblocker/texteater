@@ -16,7 +16,6 @@
  * hands the price to `beforeLive`, which may refuse, then fills the cache
  * under the round's caps, Luna batched or not, and runs from it.
  */
-import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as Effect from "effect/Effect";
@@ -36,6 +35,7 @@ import { defaultLunaConfiguration, type LunaAsk } from "../../luna.js";
 import type { OperationTrace } from "../../operation-trace.js";
 import { markedSentence } from "../../resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../segment/jev.js";
+import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import {
 	CachedModels,
@@ -51,9 +51,9 @@ import {
 	type KnowledgeScope,
 	type KnowledgeSet,
 	type KnowledgeSetName,
-	knowledgeSetPath,
 	loadKnowledgeSet,
 	requestOf,
+	trackedKnowledgeSetsRoot,
 } from "./cases.js";
 import { type KnowledgeAttempt, knowledgeOracle } from "./oracle.js";
 import {
@@ -163,8 +163,10 @@ export type KnowledgeEvaluateArgs = {
 	readonly outputDirectory?: string;
 	readonly signal?: AbortSignal;
 	readonly concurrency?: number;
-	/** The frozen sets and the answer cache; `.runs/knowledge` by default. */
+	/** The answer cache; `.runs/knowledge` by default. */
 	readonly root?: string;
+	/** The frozen sets; the tracked ones, `evidence/knowledge/sets`, by default. */
+	readonly setsRoot?: string;
 	/** Only the first this many cases, for a smoke run. */
 	readonly limit?: number;
 	/** Fewer repetitions than three, for a cheaper round. */
@@ -336,23 +338,18 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 	const scope = scopeOf(setName);
 	return {
 		id,
-		caseCount: () => {
-			const path = knowledgeSetPath(defaultKnowledgeRoot, setName);
-			if (!existsSync(path)) return 0;
-			return (
-				JSON.parse(readFileSync(path, "utf8")) as { cases: unknown[] }
-			).cases.length;
-		},
+		caseCount: () => frozenSetSize(trackedKnowledgeSetsRoot, setName),
 		metrics: knowledgeMetrics,
 		async evaluate(
 			args: KnowledgeEvaluateArgs,
 		): Promise<KnowledgeEvaluated> {
 			const root = args.root ?? defaultKnowledgeRoot;
-			if (!existsSync(knowledgeSetPath(root, setName)))
+			const setsRoot = args.setsRoot ?? trackedKnowledgeSetsRoot;
+			if (!isFrozen(setsRoot, setName))
 				throw Error(
 					`The ${setName} set of ${knowledgeRoute} is not frozen; run \`bun cli/knowledge.ts freeze\` first`,
 				);
-			const set = await loadKnowledgeSet(root, setName);
+			const set = await loadKnowledgeSet(setsRoot, setName);
 			const repetitions = args.repetitions ?? knowledgeRepetitions;
 			if (
 				!Number.isInteger(repetitions) ||

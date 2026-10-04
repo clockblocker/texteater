@@ -19,9 +19,7 @@
  */
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync } from "node:fs";
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
@@ -29,9 +27,9 @@ import type * as Dumrel from "dumrel/types";
 import { isReviewed, loadSpecRecords } from "dumspec";
 import { authoredReading, closedRoute } from "dumspec/inventories";
 import type * as Dumspec from "dumspec/types";
-import { stableJson } from "promptsmith";
 import type { KnowledgeSentence } from "../../knowledge/types.js";
 import { hashOf } from "../../segment-in-units/lab/jev.js";
+import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
 
 export type KnowledgeGold = {
@@ -383,14 +381,16 @@ export function requestOf(
 	) as Dumrel.KnowledgeRequestMask;
 }
 
-export const knowledgeSetPath = (root: string, name: KnowledgeSetName) =>
-	join(root, "sets", `${name}.json`);
+/** The tracked frozen sets (`frozen-sets.ts`). */
+export const trackedKnowledgeSetsRoot = fileURLToPath(
+	new URL("../../../evidence/knowledge/sets/", import.meta.url),
+);
 
 const git = (args: readonly string[], cwd: string) =>
 	execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
 /**
- * Freezes dev, held-out and the spot-check set from today's records. A
+ * Freezes into `root` dev, held-out and the spot-check set from today's records. A
  * refreeze keeps the set it replaces beside it under its hash, so a run is
  * always scored against the set it ran on.
  */
@@ -408,7 +408,6 @@ export async function freezeKnowledgeSets(
 		.filter(Boolean).length;
 	const { dev, heldout } = knowledgeCases(records);
 	const spot = spotCheckCases(records, dev);
-	await mkdir(join(root, "sets"), { recursive: true });
 	const sets: KnowledgeSet[] = [];
 	for (const [name, cases, slips] of [
 		["dev", dev, undefined],
@@ -424,32 +423,21 @@ export async function freezeKnowledgeSets(
 			cases,
 			...(slips ? { slips } : {}),
 		};
-		const path = knowledgeSetPath(root, name);
-		if (existsSync(path)) {
-			const { hash } = JSON.parse(
-				await readFile(path, "utf8"),
-			) as KnowledgeSet;
-			const archived = join(root, "sets", `${name}@${hash}.json`);
-			if (!existsSync(archived)) await copyFile(path, archived);
-		}
-		await writeFile(path, stableJson(set));
+		await storeFrozenSet(root, set);
 		sets.push(set);
 	}
 	return sets;
 }
 
-/** The frozen set `name`, or the archived set of `hash`. */
-export async function loadKnowledgeSet(
+/** The frozen set `name`, or the replaced set of `hash`. */
+export const loadKnowledgeSet = (
 	root: string,
 	name: KnowledgeSetName,
 	hash?: string,
-): Promise<KnowledgeSet> {
-	const set = JSON.parse(
-		await readFile(knowledgeSetPath(root, name), "utf8"),
-	) as KnowledgeSet;
-	if (hash === undefined || set.hash === hash) return set;
-	const archived = join(root, "sets", `${name}@${hash}.json`);
-	if (!existsSync(archived))
-		throw Error(`${name}@${hash} is neither frozen nor archived`);
-	return JSON.parse(await readFile(archived, "utf8")) as KnowledgeSet;
-}
+): Promise<KnowledgeSet> =>
+	loadFrozenSet<KnowledgeSet>(
+		root,
+		name,
+		hash,
+		"bun cli/knowledge.ts freeze",
+	);

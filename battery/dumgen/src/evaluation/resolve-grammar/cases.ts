@@ -12,13 +12,10 @@
  * end-to-end line feeds intake's own units instead.
  */
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import type * as Dumling from "dumling/types";
 import { isReviewed, loadSpecRecords } from "dumspec";
 import type * as Dumspec from "dumspec/types";
-import { stableJson } from "promptsmith";
 import type {
 	ClosedClassIdentity,
 	Route,
@@ -26,6 +23,7 @@ import type {
 	Unit,
 } from "../../segment/segmented-sentence.js";
 import { hashOf } from "../../segment-in-units/lab/jev.js";
+import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
 
 export type GrammarCase = {
@@ -126,16 +124,18 @@ export function grammarCases(
 	};
 }
 
-export const grammarSetPath = (root: string, name: GrammarSetName) =>
-	join(root, "sets", `${name}.json`);
+/** The tracked frozen sets (`frozen-sets.ts`). */
+export const trackedGrammarSetsRoot = fileURLToPath(
+	new URL("../../../evidence/resolve-grammar/sets/", import.meta.url),
+);
 
 const git = (args: readonly string[], cwd: string) =>
 	execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
 /**
- * Freezes dev and held-out from today's records. A refreeze keeps the set
- * it replaces beside it under its hash, so a run is always scored against
- * the set it ran on.
+ * Freezes dev and held-out from today's records into `root`. A refreeze
+ * keeps the set it replaces beside it under its hash, so a run is always
+ * scored against the set it ran on.
  */
 export async function freezeGrammarSets(
 	root: string,
@@ -149,7 +149,6 @@ export async function freezeGrammarSets(
 	)
 		.split("\n")
 		.filter(Boolean).length;
-	await mkdir(join(root, "sets"), { recursive: true });
 	const sets: GrammarSet[] = [];
 	for (const name of ["dev", "heldout"] as const) {
 		const set: GrammarSet = {
@@ -167,32 +166,21 @@ export async function freezeGrammarSets(
 			).slice(0, 16),
 			cases: cases[name],
 		};
-		const path = grammarSetPath(root, name);
-		if (existsSync(path)) {
-			const { hash } = JSON.parse(
-				await readFile(path, "utf8"),
-			) as GrammarSet;
-			const archived = join(root, "sets", `${name}@${hash}.json`);
-			if (!existsSync(archived)) await copyFile(path, archived);
-		}
-		await writeFile(path, stableJson(set));
+		await storeFrozenSet(root, set);
 		sets.push(set);
 	}
 	return sets;
 }
 
-/** The frozen set `name`, or the archived set of `hash`. */
-export async function loadGrammarSet(
+/** The frozen set `name`, or the replaced set of `hash`. */
+export const loadGrammarSet = (
 	root: string,
 	name: GrammarSetName,
 	hash?: string,
-): Promise<GrammarSet> {
-	const set = JSON.parse(
-		await readFile(grammarSetPath(root, name), "utf8"),
-	) as GrammarSet;
-	if (hash === undefined || set.hash === hash) return set;
-	const archived = join(root, "sets", `${name}@${hash}.json`);
-	if (!existsSync(archived))
-		throw Error(`${name}@${hash} is neither frozen nor archived`);
-	return JSON.parse(await readFile(archived, "utf8")) as GrammarSet;
-}
+): Promise<GrammarSet> =>
+	loadFrozenSet<GrammarSet>(
+		root,
+		name,
+		hash,
+		"bun cli/resolve-grammar.ts freeze",
+	);

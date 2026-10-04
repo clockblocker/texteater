@@ -1,14 +1,14 @@
 import { expect, test } from "bun:test";
-import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
+import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { stableJson } from "promptsmith";
 import { listExperiments } from "../../src/evaluation/experiments.js";
+import { storeFrozenSet } from "../../src/evaluation/frozen-sets.js";
 import {
 	type KnowledgeCase,
 	type KnowledgeSet,
 	knowledgeCases,
-	knowledgeSetPath,
 	requestOf,
 	spotCheckCases,
 } from "../../src/evaluation/knowledge/cases.js";
@@ -321,8 +321,7 @@ async function frozenRoot(): Promise<{
 		hash: "testheldout00000",
 		cases,
 	};
-	await mkdir(join(root, "sets"), { recursive: true });
-	await writeFile(knowledgeSetPath(root, "heldout"), stableJson(set));
+	await storeFrozenSet(join(root, "sets"), set);
 	return { root, cases };
 }
 
@@ -333,6 +332,7 @@ test("the harness prices a round from the oracle without a call, runs live once 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		estimate: true,
 		repetitions: 1,
 	});
@@ -403,6 +403,7 @@ test("the harness prices a round from the oracle without a call, runs live once 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		jev,
 		luna,
 		repetitions: 1,
@@ -436,6 +437,7 @@ test("the harness prices a round from the oracle without a call, runs live once 
 		experimentId: experiment.id,
 		sourceRevision: "test",
 		root,
+		setsRoot: join(root, "sets"),
 		offline: true,
 		repetitions: 1,
 	});
@@ -473,8 +475,7 @@ test("--gold-only keeps the cases with gold, and a subset keeps its missed and g
 		hash: "testdev000000000",
 		cases,
 	};
-	await mkdir(join(root, "sets"), { recursive: true });
-	await writeFile(knowledgeSetPath(root, "dev"), stableJson(set));
+	await storeFrozenSet(join(root, "sets"), set);
 	const experiment = knowledgeExperiment("dev");
 	const requests = async (options: { goldOnly?: boolean; subset?: string }) =>
 		(
@@ -482,6 +483,7 @@ test("--gold-only keeps the cases with gold, and a subset keeps its missed and g
 				experimentId: experiment.id,
 				sourceRevision: "test",
 				root,
+				setsRoot: join(root, "sets"),
 				estimate: true,
 				repetitions: 1,
 				...options,

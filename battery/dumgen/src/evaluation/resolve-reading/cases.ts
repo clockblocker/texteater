@@ -18,21 +18,19 @@
  * giving Reading, and no answer may be one of its rejected descriptions.
  */
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { lemmaIdentityKey, parseUnit, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
 import { isReviewed, loadSpecRecords } from "dumspec";
 import { authoredFor } from "dumspec/inventories";
 import type * as Dumspec from "dumspec/types";
-import { stableJson } from "promptsmith";
 import type {
 	Route,
 	SegmentedSentence,
 	Unit,
 } from "../../segment/segmented-sentence.js";
 import { hashOf } from "../../segment-in-units/lab/jev.js";
+import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
 
 /** With the gold Reading among the candidates, or removed from them. */
@@ -251,14 +249,16 @@ export function readingCases(
 	return { dev: cases(false), heldout: cases(true) };
 }
 
-export const readingSetPath = (root: string, name: ReadingSetName) =>
-	join(root, "sets", `${name}.json`);
+/** The tracked frozen sets (`frozen-sets.ts`). */
+export const trackedReadingSetsRoot = fileURLToPath(
+	new URL("../../../evidence/resolve-reading/sets/", import.meta.url),
+);
 
 const git = (args: readonly string[], cwd: string) =>
 	execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
 /**
- * Freezes dev and held-out from today's records. A refreeze keeps the set
+ * Freezes into `root` dev and held-out from today's records. A refreeze keeps the set
  * it replaces beside it under its hash, so a run is always scored against
  * the set it ran on.
  */
@@ -274,7 +274,6 @@ export async function freezeReadingSets(
 	)
 		.split("\n")
 		.filter(Boolean).length;
-	await mkdir(join(root, "sets"), { recursive: true });
 	const sets: ReadingSet[] = [];
 	for (const name of ["dev", "heldout"] as const) {
 		const set: ReadingSet = {
@@ -285,32 +284,21 @@ export async function freezeReadingSets(
 			hash: hashOf(cases[name]).slice(0, 16),
 			cases: cases[name],
 		};
-		const path = readingSetPath(root, name);
-		if (existsSync(path)) {
-			const { hash } = JSON.parse(
-				await readFile(path, "utf8"),
-			) as ReadingSet;
-			const archived = join(root, "sets", `${name}@${hash}.json`);
-			if (!existsSync(archived)) await copyFile(path, archived);
-		}
-		await writeFile(path, stableJson(set));
+		await storeFrozenSet(root, set);
 		sets.push(set);
 	}
 	return sets;
 }
 
-/** The frozen set `name`, or the archived set of `hash`. */
-export async function loadReadingSet(
+/** The frozen set `name`, or the replaced set of `hash`. */
+export const loadReadingSet = (
 	root: string,
 	name: ReadingSetName,
 	hash?: string,
-): Promise<ReadingSet> {
-	const set = JSON.parse(
-		await readFile(readingSetPath(root, name), "utf8"),
-	) as ReadingSet;
-	if (hash === undefined || set.hash === hash) return set;
-	const archived = join(root, "sets", `${name}@${hash}.json`);
-	if (!existsSync(archived))
-		throw Error(`${name}@${hash} is neither frozen nor archived`);
-	return JSON.parse(await readFile(archived, "utf8")) as ReadingSet;
-}
+): Promise<ReadingSet> =>
+	loadFrozenSet<ReadingSet>(
+		root,
+		name,
+		hash,
+		"bun cli/resolve-reading.ts freeze",
+	);
