@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "./member.js";
+import type { AuthoredMember } from "../member.js";
 import { member as reflexivity } from "./members/lexeme/pronoun/reflexive/sich-reflexivity.js";
 
 /** The German unit that explains reflexivity; no spelling realizes it. */

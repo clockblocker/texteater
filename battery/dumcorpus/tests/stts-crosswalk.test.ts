@@ -1,14 +1,14 @@
 import { describe, expect, test } from "bun:test";
-import { unitRoutes } from "../src/generated/routes.js";
-import { loadSpecRecords, loadSpecSegmentations, rules } from "../src/index.js";
 import {
 	type CrosswalkContext,
 	checkSttsCrosswalk,
 	sttsGold,
-} from "../src/stts/check-crosswalk.js";
-import { germanSttsCrosswalk } from "../src/stts/crosswalk.js";
-import { renderSttsTable } from "../src/stts/table.js";
-import { type SttsRow, sttsTags } from "../src/stts/types.js";
+} from "../src/de/stts/check-crosswalk.js";
+import { germanSttsCrosswalk } from "../src/de/stts/crosswalk.js";
+import { renderSttsTable } from "../src/de/stts/table.js";
+import { type SttsRow, sttsTags } from "../src/de/stts/types.js";
+import { unitRoutes } from "../src/generated/routes.js";
+import { loadSpecRecords, loadSpecSegmentations, rules } from "../src/index.js";
 import { readRepositoryAdrIds } from "./adr-ids.js";
 
 const context: CrosswalkContext = {

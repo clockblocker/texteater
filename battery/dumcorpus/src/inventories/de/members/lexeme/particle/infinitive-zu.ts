@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../../../member.js";
+import type { AuthoredMember } from "../../../../member.js";
 
 // Infinitive zu is a PART with partType Inf, a target apart from its
 // infinitive, written apart or infixed (Rule de/bare-infinitive-zu). Without

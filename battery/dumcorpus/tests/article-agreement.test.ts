@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import { attestationArticleAgreementIssues } from "../src/check-article-agreement.js";
+import { languageAttestationIssues } from "../src/attestation-checks.js";
 import { germanArticleCell } from "../src/index.js";
 
 type Member = { attested: string; orthography: string } & Record<
@@ -58,9 +58,9 @@ const houses = germanNoun("Haus", "Häuser", "Neut", {
 	number: "Plur",
 });
 const issues = (attestation: Dumling.Attestation) =>
-	attestationArticleAgreementIssues(attestation).map(
-		(issue) => issue.message,
-	);
+	languageAttestationIssues(attestation)
+		.filter((issue) => issue.check === "ArticleAgreement")
+		.map((issue) => issue.message);
 
 test("an owned article must name a der or ein cell for its Head", () => {
 	expect(

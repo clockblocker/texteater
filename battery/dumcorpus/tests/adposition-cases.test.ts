@@ -3,7 +3,7 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { attestationAdpositionCaseIssues } from "../src/check-adposition-cases.js";
+import { attestationAdpositionCaseIssues } from "../src/de/check-adposition-cases.js";
 import {
 	frameAdpositionCaseIssues,
 	germanAdpositionAllowedCases,
@@ -35,7 +35,7 @@ function adpAttestation(
 	canonicalForm: string,
 	realizedCase: string | null,
 	family: "Lexeme" | "Locution" = "Lexeme",
-): Dumling.Attestation {
+): Dumling.Attestation<"de"> {
 	const parsed = parseUnit({
 		unitKind: "Attestation",
 		members: [{ attested: canonicalForm, orthography: "Standard" }],
@@ -62,7 +62,7 @@ function adpAttestation(
 	});
 	if (!parsed.success || parsed.chain.unitKind !== "Attestation")
 		throw Error(`Dumling rejects ${canonicalForm} + ${realizedCase}`);
-	return parsed.chain.value;
+	return parsed.chain.value as Dumling.Attestation<"de">;
 }
 
 test("an ADP occurrence takes a case one of its positions allows", () => {
@@ -366,7 +366,7 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 	const locution = (
 		preposition: string,
 		grammaticalCase: string,
-	): Dumling.Attestation => {
+	): Dumling.Attestation<"de"> => {
 		const parsed = parseUnit({
 			unitKind: "Attestation",
 			members: [
@@ -409,7 +409,7 @@ test("a Locution governor's preposition slot is checked like a Lexeme's", () => 
 			throw Error(
 				`Dumling rejects Angst haben ${preposition} + ${grammaticalCase}`,
 			);
-		return parsed.chain.value;
+		return parsed.chain.value as Dumling.Attestation<"de">;
 	};
 	expect(attestationAdpositionCaseIssues(locution("vor", "Dat"))).toEqual([]);
 	expect(attestationAdpositionCaseIssues(locution("vor", "Gen"))).toEqual([

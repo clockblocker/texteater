@@ -1,4 +1,4 @@
-import type { OpenSplit, SplitRuling } from "./identity-splits.js";
+import type { OpenSplit, SplitRuling } from "../../worklist/identity-splits.js";
 
 const derSeries = [
 	"der",

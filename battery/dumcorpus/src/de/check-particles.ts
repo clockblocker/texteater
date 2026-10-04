@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import { germanParticleMember } from "./inventories/de/particles.js";
+import { germanParticleMember } from "../inventories/de/particles.js";
 
 /** A German PART no authored member is, at a path inside the checked Attestation. */
 export type ParticleIssue = {
@@ -14,15 +14,10 @@ export type ParticleIssue = {
  * other PART is a miss, not drift.
  */
 export function attestationParticleIssues(
-	attestation: Dumling.Attestation,
+	attestation: Dumling.Attestation<"de">,
 ): ParticleIssue[] {
 	const { lemma } = attestation.surface;
-	if (
-		lemma.language !== "de" ||
-		lemma.family !== "Lexeme" ||
-		lemma.kind !== "PART"
-	)
-		return [];
+	if (lemma.family !== "Lexeme" || lemma.kind !== "PART") return [];
 	if (germanParticleMember(lemma)) return [];
 	return [
 		{

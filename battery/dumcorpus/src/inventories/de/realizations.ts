@@ -1,8 +1,8 @@
 import type * as Dumling from "dumling/types";
+import type { AuthoredMember } from "../member.js";
 import { reviewedDeterminers } from "./determiner-paradigms.js";
 import { reflexivityUnit } from "./drill-down.js";
 import { authoredMembers } from "./inventory.js";
-import type { AuthoredMember } from "./member.js";
 import { reviewedPronouns } from "./pronoun-paradigms.js";
 import {
 	canonical,

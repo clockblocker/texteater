@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../../../member.js";
+import type { AuthoredMember } from "../../../../member.js";
 
 // nicht is a PART with polarity Neg, never an ADV, whatever it negates (Rule
 // de/nicht-is-part). Duden classes it as a Partikel; its one Reading is

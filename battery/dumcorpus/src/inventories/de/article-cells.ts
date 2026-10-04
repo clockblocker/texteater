@@ -1,5 +1,5 @@
+import type { AuthoredMember } from "../member.js";
 import { germanArticles } from "./determiner-paradigms.js";
-import type { AuthoredMember } from "./member.js";
 
 /**
  * An article as its Head's Attestation records it: an owned member, or the

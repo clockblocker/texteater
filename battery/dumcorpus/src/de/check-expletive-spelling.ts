@@ -2,7 +2,7 @@ import type * as Dumling from "dumling/types";
 import {
 	type ExpletiveMember,
 	spellsExpletiveEs,
-} from "./inventories/de/expletive-spellings.js";
+} from "../inventories/de/expletive-spellings.js";
 
 /** Expletive evidence that does not spell `es`, at a path inside the checked Attestation. */
 type ExpletiveSpellingIssue = {
@@ -19,7 +19,7 @@ type ExpletiveSpellingIssue = {
  * is not read.
  */
 export function attestationExpletiveSpellingIssues(
-	attestation: Dumling.Attestation,
+	attestation: Dumling.Attestation<"de">,
 ): ExpletiveSpellingIssue[] {
 	if (!("expletiveEvidence" in attestation)) return [];
 	const evidence = attestation.expletiveEvidence as ExpletiveMember | null;

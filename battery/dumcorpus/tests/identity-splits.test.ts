@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { rules } from "../src/index.js";
-import { uncitedRecordsByStatus } from "../src/worklist/evidence-gaps.js";
 import {
 	germanOpenSplits,
 	germanSplitRulings,
-} from "../src/worklist/identity-split-rulings.js";
+} from "../src/de/worklist/identity-split-rulings.js";
+import { rules } from "../src/index.js";
+import { uncitedRecordsByStatus } from "../src/worklist/evidence-gaps.js";
 import {
 	type IdentitySplit,
 	identitySplits,

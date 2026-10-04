@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../../../member.js";
+import type { AuthoredMember } from "../../../../member.js";
 import { modalParticleLemma } from "./modal-particles.js";
 
 // Softening mal is a modal particle of its own, PART with partType Mod, not

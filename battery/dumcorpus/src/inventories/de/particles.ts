@@ -1,4 +1,4 @@
-import type { AuthoredMember } from "./member.js";
+import type { AuthoredMember } from "../member.js";
 import { member as infinitiveZu } from "./members/lexeme/particle/infinitive-zu.js";
 import { member as softeningMal } from "./members/lexeme/particle/mal.js";
 import { modalParticles } from "./members/lexeme/particle/modal-particles.js";

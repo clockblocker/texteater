@@ -5,11 +5,11 @@
  *   bun run stts-table
  */
 
+import { sttsGold } from "../src/de/stts/check-crosswalk.js";
+import { germanSttsCrosswalk } from "../src/de/stts/crosswalk.js";
+import { renderSttsTable } from "../src/de/stts/table.js";
 import { unitRoutes } from "../src/generated/routes.js";
 import { loadSpecRecords, loadSpecSegmentations, rules } from "../src/index.js";
-import { sttsGold } from "../src/stts/check-crosswalk.js";
-import { germanSttsCrosswalk } from "../src/stts/crosswalk.js";
-import { renderSttsTable } from "../src/stts/table.js";
 import { readRepositoryAdrIds } from "../tests/adr-ids.js";
 
 const context = {

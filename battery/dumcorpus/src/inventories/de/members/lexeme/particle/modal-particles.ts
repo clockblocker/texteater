@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../../../member.js";
+import type { AuthoredMember } from "../../../../member.js";
 
 /** A modal particle's Lemma: PART with partType Mod (#734). */
 export function modalParticleLemma(canonicalForm: string) {

@@ -1,7 +1,7 @@
 import { lemmaIdentityKey, readingIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import { authoredMembers } from "./inventories/de/inventory.js";
-import type { AuthoredMember } from "./inventories/de/member.js";
+import type { AuthoredMember } from "./inventories/member.js";
+import { authoredMembers } from "./inventories/registry.js";
 
 /** A Reading the Authored Inventory does not hold, at a path inside the checked Reading. */
 export type AuthoredReadingIssue = {

@@ -1,7 +1,7 @@
 // Generated from the German Authored Inventory by
 // codegen/generate-syncretisms.ts. Run bun run generate.
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../member.js";
+import type { AuthoredMember } from "../../member.js";
 
 // PRON dem Dat Dem: gender
 const demDatDemGender = {

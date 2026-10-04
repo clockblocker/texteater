@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "./member.js";
+import type { AuthoredMember } from "../member.js";
 
 type Lemma = Dumling.Lemma<"de", "Lexeme", "ADV">;
 /**

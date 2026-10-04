@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../../../../member.js";
+import type { AuthoredMember } from "../../../../../member.js";
 
 /**
  * The reflexivity unit a reflexive drills down to (system ADR 0041), beside

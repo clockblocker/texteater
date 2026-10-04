@@ -1,4 +1,4 @@
-import type { AuthoredMember } from "../../../../member.js";
+import type { AuthoredMember } from "../../../../../member.js";
 import { referentialEs } from "../../../../pronoun-paradigms.js";
 
 const referential = referentialEs("Acc");

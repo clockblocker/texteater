@@ -1,6 +1,6 @@
 import type * as Dumling from "dumling/types";
+import type { AuthoredMember } from "../member.js";
 import { authoredMembers } from "./inventory.js";
-import type { AuthoredMember } from "./member.js";
 import { member as subjectExpletiveEs } from "./members/lexeme/pronoun/personal/es-subject-expletive.js";
 
 type ComponentKind = "DET" | "PRON";

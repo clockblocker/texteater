@@ -1,8 +1,4 @@
 export {
-	type AdpositionCaseIssue,
-	frameAdpositionCaseIssues,
-} from "./check-adposition-cases.js";
-export {
 	type AuthoredReadingIssue,
 	authoredReadingIssues,
 } from "./check-authored-readings.js";
@@ -16,20 +12,24 @@ export {
 	knowledgeCoverageIssues,
 	structuralAspects,
 } from "./check-knowledge-coverage.js";
-export {
-	attestationParticleIssues,
-	type ParticleIssue,
-} from "./check-particles.js";
-export {
-	attestationPluralOnlyIssues,
-	type PluralOnlyIssue,
-} from "./check-plural-only.js";
 export { checkRecord, type RecordCheck } from "./check-record.js";
 export { sharedReadingIssues } from "./check-shared-readings.js";
 export {
 	attestationSyncretismIssues,
 	type SyncretismIssue,
 } from "./check-syncretisms.js";
+export {
+	type AdpositionCaseIssue,
+	frameAdpositionCaseIssues,
+} from "./de/check-adposition-cases.js";
+export {
+	attestationParticleIssues,
+	type ParticleIssue,
+} from "./de/check-particles.js";
+export {
+	attestationPluralOnlyIssues,
+	type PluralOnlyIssue,
+} from "./de/check-plural-only.js";
 export { isSpecRecordId } from "./ids.js";
 export {
 	type ArticleAgreement,

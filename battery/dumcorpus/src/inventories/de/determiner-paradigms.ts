@@ -1,6 +1,6 @@
 import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
-import type { AuthoredMember } from "./member.js";
+import type { AuthoredMember } from "../member.js";
 import {
 	determinerParadigm,
 	form,

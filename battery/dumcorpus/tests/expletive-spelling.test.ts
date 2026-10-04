@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
-import { attestationExpletiveSpellingIssues } from "../src/check-expletive-spelling.js";
+import { attestationExpletiveSpellingIssues } from "../src/de/check-expletive-spelling.js";
 
 // A clitic 's is a way of writing es: Fused in Mir geht's gut, Shorthand in
 // Wenn 's morgen regnet.
@@ -45,7 +45,7 @@ const gehtEs = {
 	},
 };
 /** An Attestation as Dumling parses it; Dumling never reads the spelling. */
-function attest(input: Record<string, unknown>): Dumling.Attestation {
+function attest(input: Record<string, unknown>): Dumling.Attestation<"de"> {
 	const parsed = parseUnit({
 		unitKind: "Attestation",
 		surface: gehtEs,
@@ -55,7 +55,7 @@ function attest(input: Record<string, unknown>): Dumling.Attestation {
 	});
 	if (!parsed.success || parsed.chain.unitKind !== "Attestation")
 		throw Error(`Dumling rejects ${JSON.stringify(input)}`);
-	return parsed.chain.value;
+	return parsed.chain.value as Dumling.Attestation<"de">;
 }
 const issues = (evidence: { attested: string; orthography: string }) =>
 	attestationExpletiveSpellingIssues(

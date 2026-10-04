@@ -1,3 +1,4 @@
+import type { LanguageInventory } from "../registry.js";
 import { germanArticles, reviewedDeterminers } from "./determiner-paradigms.js";
 import { germanSyncretisms } from "./generated/syncretisms.js";
 import { member as bekommenRezipientenpassiv } from "./members/lexeme/auxiliary/bekommen-rezipientenpassiv.js";
@@ -69,3 +70,29 @@ export const sourceMembers = [
  * the Syncretisms generated from their pronoun cells (system ADR 0046).
  */
 export const authoredMembers = [...sourceMembers, ...germanSyncretisms];
+
+/**
+ * A German Lexeme AUX, DET, PRON or PART resolves only to authored members.
+ * A DET or PRON identity is chosen among the authored candidates its
+ * spelling realizes (Dumgen ADR 0007), and every German PART is authored
+ * (#734, `germanParticles`), so a Lemma there that no member matches is a
+ * Catalog Miss (system ADR 0021). PART joined on #876.
+ */
+function germanClosedRoute(route: {
+	readonly family: string;
+	readonly kind: string;
+}): boolean {
+	return (
+		route.family === "Lexeme" &&
+		(route.kind === "AUX" ||
+			route.kind === "DET" ||
+			route.kind === "PRON" ||
+			route.kind === "PART")
+	);
+}
+
+/** The German Authored Inventory, as the language-generic selectors read it. */
+export const germanInventory: LanguageInventory<"de"> = {
+	members: authoredMembers,
+	closedRoute: germanClosedRoute,
+};

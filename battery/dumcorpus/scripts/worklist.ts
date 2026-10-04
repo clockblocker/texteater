@@ -8,15 +8,15 @@
  *   bun run worklist
  */
 import { longStatements, rulesNeedingRecords } from "../src/check-rules.js";
+import {
+	germanOpenSplits,
+	germanSplitRulings,
+} from "../src/de/worklist/identity-split-rulings.js";
 import { annotationLayers, layerRank } from "../src/layers.js";
 import { loadSpecRecords, loadSpecWorklist } from "../src/load.js";
 import { rules } from "../src/rules.js";
 import { rulesAwaitingRecords } from "../src/rules-awaiting-records.js";
 import { uncitedRecordsByStatus } from "../src/worklist/evidence-gaps.js";
-import {
-	germanOpenSplits,
-	germanSplitRulings,
-} from "../src/worklist/identity-split-rulings.js";
 import {
 	formatIdentity,
 	identitySplits,

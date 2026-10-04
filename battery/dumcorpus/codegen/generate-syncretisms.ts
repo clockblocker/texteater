@@ -8,8 +8,8 @@ import {
 } from "dumling";
 import type * as Dumrel from "dumrel/types";
 import { sourceMembers } from "../src/inventories/de/inventory.js";
-import type { AuthoredMember } from "../src/inventories/de/member.js";
 import { syncretismDefinitions } from "../src/inventories/de/syncretism-definitions.js";
+import type { AuthoredMember } from "../src/inventories/member.js";
 
 // Generates the German pronoun Syncretisms (system ADR 0046) from the
 // members authored by hand into src/inventories/de/generated/syncretisms.ts,
@@ -250,7 +250,7 @@ const source = [
 	"// Generated from the German Authored Inventory by",
 	"// codegen/generate-syncretisms.ts. Run bun run generate.",
 	'import type * as Dumling from "dumling/types";',
-	'import type { AuthoredMember } from "../member.js";',
+	'import type { AuthoredMember } from "../../member.js";',
 	"",
 	...generated.map(
 		({ label, member }, index) =>

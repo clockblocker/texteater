@@ -3,7 +3,7 @@ import type * as Dumrel from "dumrel/types";
 import {
 	germanAdpositionAllowedCases,
 	germanAdpositionEntry,
-} from "./inventories/de/adposition-cases.js";
+} from "../inventories/de/adposition-cases.js";
 
 /**
  * An adposition the ADP Case Table does not list, or a case it does not
@@ -82,13 +82,11 @@ function prepositionIssue(
  * governor's Preposition evidence fails when the table doesn't list its
  * preposition or the preposition doesn't take its governed case (`für` +
  * Dat).
- * Dumling checks only the evidence's shape (ADR 0041). Hebrew and English
- * mark no case.
+ * Dumling checks only the evidence's shape (ADR 0041).
  */
 export function attestationAdpositionCaseIssues(
-	attestation: Dumling.Attestation,
+	attestation: Dumling.Attestation<"de">,
 ): AdpositionCaseIssue[] {
-	if (attestation.surface.language !== "de") return [];
 	const { lemma } = attestation.surface;
 	// A Kind never implies its Family (ADR 0039), and both ADP Families record
 	// their complement's case.

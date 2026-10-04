@@ -3,13 +3,9 @@ import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { z } from "zod";
-import { attestationAdpositionCaseIssues } from "./check-adposition-cases.js";
-import { attestationArticleAgreementIssues } from "./check-article-agreement.js";
+import { languageAttestationIssues } from "./attestation-checks.js";
 import { authoredReadingIssues } from "./check-authored-readings.js";
-import { attestationExpletiveSpellingIssues } from "./check-expletive-spelling.js";
 import { knowledgeCoverageIssues } from "./check-knowledge-coverage.js";
-import { attestationParticleIssues } from "./check-particles.js";
-import { attestationPluralOnlyIssues } from "./check-plural-only.js";
 import { attestationSyncretismIssues } from "./check-syncretisms.js";
 import { unitRoutes } from "./generated/routes.js";
 import { checkIfGrundform } from "./grundform/check-if-grundform.js";
@@ -442,33 +438,9 @@ function checkTargetLayers(
 			`${path}.attestation.surface.lemma`,
 			`The Attestation's Lemma is ${lemma.family} ${lemma.kind}, not the target's route ${segmented.route.family} ${segmented.route.kind}`,
 		);
-	for (const found of attestationAdpositionCaseIssues(attestation))
+	for (const { check, ...found } of languageAttestationIssues(attestation))
 		attestationIssue(
-			"AdpositionCase",
-			`${path}.attestation.${found.path}`,
-			found.message,
-		);
-	for (const found of attestationArticleAgreementIssues(attestation))
-		attestationIssue(
-			"ArticleAgreement",
-			`${path}.attestation.${found.path}`,
-			found.message,
-		);
-	for (const found of attestationExpletiveSpellingIssues(attestation))
-		attestationIssue(
-			"ExpletiveSpelling",
-			`${path}.attestation.${found.path}`,
-			found.message,
-		);
-	for (const found of attestationParticleIssues(attestation))
-		attestationIssue(
-			"ClosedPart",
-			`${path}.attestation.${found.path}`,
-			found.message,
-		);
-	for (const found of attestationPluralOnlyIssues(attestation))
-		attestationIssue(
-			"PluralOnly",
+			check,
 			`${path}.attestation.${found.path}`,
 			found.message,
 		);

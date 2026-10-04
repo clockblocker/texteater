@@ -1,9 +1,16 @@
 import { createHash } from "node:crypto";
-import { germanRules } from "./german-rules.js";
+import type * as Dumling from "dumling/types";
+import { germanRules } from "./de/rules.js";
 import type { Rule } from "./types.js";
 
-/** The classification Rules (ADR 0037). */
-export const rules: readonly Rule[] = [...germanRules];
+/** Each language's classification Rules (ADR 0037). A language missing here has none yet. */
+const rulesByLanguage: { readonly [L in Dumling.Language]?: readonly Rule[] } =
+	{ de: germanRules };
+
+/** The classification Rules of every language (ADR 0037). */
+export const rules: readonly Rule[] = Object.values(rulesByLanguage).flatMap(
+	(languageRules) => languageRules ?? [],
+);
 
 /**
  * The hash a Rule citation stores: the first 16 hex digits of the SHA-256 of

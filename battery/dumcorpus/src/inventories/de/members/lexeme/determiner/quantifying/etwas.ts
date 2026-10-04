@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "../../../../member.js";
+import type { AuthoredMember } from "../../../../../member.js";
 
 // etwas before a noun is DET (etwas Ruhe), standing alone PRON (Rule
 // de/pron-or-det-by-use). Like PRON etwas it does not inflect, so its

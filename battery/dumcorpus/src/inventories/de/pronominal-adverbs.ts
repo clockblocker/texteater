@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import type { AuthoredMember } from "./member.js";
+import type { AuthoredMember } from "../member.js";
 
 /**
  * One preposition that forms pronominal adverbs. `vowel` inserts the linking r

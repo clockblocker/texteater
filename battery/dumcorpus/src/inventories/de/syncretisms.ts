@@ -1,6 +1,6 @@
 import type * as Dumling from "dumling/types";
+import type { AuthoredMember } from "../member.js";
 import { germanSyncretisms } from "./generated/syncretisms.js";
-import type { AuthoredMember } from "./member.js";
 
 type Core = Readonly<Record<string, unknown>>;
 type SyncreticFields = { readonly syncretic?: readonly string[] };

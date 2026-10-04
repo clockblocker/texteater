@@ -1,5 +1,5 @@
 import type * as Dumling from "dumling/types";
-import { isGermanPluralOnlyNoun } from "./inventories/de/plural-only-nouns.js";
+import { isGermanPluralOnlyNoun } from "../inventories/de/plural-only-nouns.js";
 
 /** A plural-only noun given a gender, at a path inside the checked Attestation. */
 export type PluralOnlyIssue = {
@@ -13,11 +13,10 @@ export type PluralOnlyIssue = {
  * dumcorpus lists as Pluraletantum are checked.
  */
 export function attestationPluralOnlyIssues(
-	attestation: Dumling.Attestation,
+	attestation: Dumling.Attestation<"de">,
 ): PluralOnlyIssue[] {
 	const { lemma } = attestation.surface;
 	if (
-		lemma.language !== "de" ||
 		lemma.family !== "Lexeme" ||
 		lemma.kind !== "NOUN" ||
 		!isGermanPluralOnlyNoun(lemma.canonicalForm)
