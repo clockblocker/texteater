@@ -8,7 +8,7 @@ import type {
 	WorkspaceState,
 } from "react-resizable-panels/workspace";
 import { findPane, panesOf } from "react-resizable-panels/workspace";
-import { isWorkspaceSubject, type WorkspaceSubject } from "./sheet-workspace";
+import { isWorkspaceSubject, type WorkspaceSubject } from "./workspace-subject";
 
 /**
  * Workspace Persistence (tf-demo ADR 0003): the Panes with their Ground lines,

@@ -1,3 +1,9 @@
+/**
+ * tf-demo's workspace Subjects: a Text, with the occurrence Go to source
+ * lands on and its title, or a Note with the Presentation context that
+ * opened it. Their keys, and the guard Workspace Persistence reads them
+ * back through.
+ */
 import type { Id } from "../../convex/_generated/dataModel";
 import type {
 	AttestationNoteTarget,

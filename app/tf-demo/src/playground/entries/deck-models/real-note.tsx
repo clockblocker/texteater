@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createContext, type ReactNode, useContext, useMemo } from "react";
 import { renderFixtureNoteParts } from "@/notes";
-import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { PlaygroundSnapshot } from "../../../../tooling/playground-snapshot";
 import { playgroundNotesQuery } from "../playground-note";
 import { type DummyNote, type NoteLink, noteId, sourceOf } from "./dummy";

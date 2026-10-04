@@ -3,12 +3,12 @@ import type {
 	ResolutionNote,
 	ResolutionNoteLifecycle,
 } from "../../convex/model/resolutionSessions";
+import type { WorkspaceCardTarget } from "../workspace/workspace-controller";
 import type {
 	ReadingNotePresentationContext,
 	ResolutionStepKind,
 	WorkspaceTarget,
-} from "../workspace/sheet-workspace";
-import type { WorkspaceCardTarget } from "../workspace/workspace-controller";
+} from "../workspace/workspace-subject";
 
 export type CanonicalResolution = {
 	readonly readingId: Id<"readings">;

@@ -12,8 +12,8 @@ import {
 	useNotePart,
 	useOwnsNoteEffects,
 } from "@/workspace/note-part";
-import type { ResolutionStepTarget } from "@/workspace/sheet-workspace";
 import { useWorkspaceInteraction } from "@/workspace/workspace-controller";
+import type { ResolutionStepTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 import type { ResolutionNote } from "../../convex/model/resolutionSessions";
 import type { ResolutionTarget } from "../../shared/navigation";

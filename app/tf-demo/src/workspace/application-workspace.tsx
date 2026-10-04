@@ -24,12 +24,15 @@ import {
 	loadApplicationWorkspace,
 	saveApplicationWorkspace,
 } from "./application-workspace-persistence";
-import { type WorkspaceSubject, workspaceSubjectFor } from "./sheet-workspace";
 import {
 	WorkspaceControllerProvider,
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
 } from "./workspace-controller";
+import {
+	type WorkspaceSubject,
+	workspaceSubjectFor,
+} from "./workspace-subject";
 
 /**
  * tf-demo's workspace: the Compass over the application's Subjects, with

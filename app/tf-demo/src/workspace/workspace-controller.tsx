@@ -3,7 +3,7 @@ import { createContext, type ReactNode, useContext } from "react";
 import type {
 	NotePresentationContext,
 	WorkspaceTarget,
-} from "./sheet-workspace";
+} from "./workspace-subject";
 
 export type WorkspaceCardTarget = {
 	readonly key: string;

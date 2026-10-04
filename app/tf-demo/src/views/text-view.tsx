@@ -17,7 +17,7 @@ import { useSegmentSelection } from "@/hooks/use-segment-selection";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { NotFoundView } from "@/views/not-found-view";
 import { ReaderSentence } from "@/views/reader-sentence";
-import type { TextSubjectTarget } from "@/workspace/sheet-workspace";
+import type { TextSubjectTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 
 /**

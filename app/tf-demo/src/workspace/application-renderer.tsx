@@ -11,15 +11,15 @@ import { api } from "../../convex/_generated/api";
 import { textTitle } from "../../shared/text-title";
 import { HeadingSkeleton, type NotePart, NotePartProvider } from "./note-part";
 import {
-	type TextSubjectTarget,
-	type WorkspaceSubject,
-	workspaceSubjectFor,
-} from "./sheet-workspace";
-import {
 	type WorkspaceCardTarget,
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
 } from "./workspace-controller";
+import {
+	type TextSubjectTarget,
+	type WorkspaceSubject,
+	workspaceSubjectFor,
+} from "./workspace-subject";
 
 /**
  * How tf-demo's Subjects render in the Compass: a Text through the reader, a

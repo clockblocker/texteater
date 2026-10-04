@@ -1,6 +1,6 @@
 import { renderFixtureNote } from "@/notes";
 import { TextPresentation } from "@/views/text-view";
-import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
 
 /** The fake db, built by the Vite plugin; every playground reads the same one. */

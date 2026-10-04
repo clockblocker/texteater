@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { ReactElement } from "react";
 
 import { useAnonymousVisitorId } from "@/hooks/use-anonymous-visitor";
-import type { WorkspaceTarget } from "@/workspace/sheet-workspace";
+import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 import { registeredBlockMap } from "./renderer-registry";
 import type { NotePresentationCapabilitiesFor } from "./universal/blocks/renderer";

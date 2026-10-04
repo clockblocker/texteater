@@ -10,7 +10,7 @@ import {
 	activeAnalysisKeyOf,
 	type WorkspaceSubject,
 	workspaceSubjectKey,
-} from "@/workspace/sheet-workspace";
+} from "@/workspace/workspace-subject";
 
 /** Maps one workspace Subject to the view that presents it, as a Card or a Sheet. */
 export function renderApplicationSubject(

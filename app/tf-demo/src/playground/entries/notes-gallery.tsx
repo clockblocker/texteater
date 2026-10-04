@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "lego";
 import { type ReactNode, useMemo } from "react";
-
-import type {
-	ResolutionStepKind,
-	WorkspaceSubject,
-	WorkspaceTarget,
-} from "@/workspace/sheet-workspace";
 import {
 	type WorkspaceInteraction,
 	WorkspaceInteractionProvider,
 } from "@/workspace/workspace-controller";
+import type {
+	ResolutionStepKind,
+	WorkspaceSubject,
+	WorkspaceTarget,
+} from "@/workspace/workspace-subject";
 import type { Id } from "../../../convex/_generated/dataModel";
 import type { PlaygroundSnapshot } from "../../../tooling/playground-snapshot";
 import type { EntryRoute } from "../playground-router";

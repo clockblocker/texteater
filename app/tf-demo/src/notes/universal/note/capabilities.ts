@@ -1,7 +1,7 @@
 import type {
 	NotePresentationContext,
 	WorkspaceTarget,
-} from "@/workspace/sheet-workspace";
+} from "@/workspace/workspace-subject";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import type { KnowledgePreferences } from "../../../../shared/knowledge-preferences";
 import type { NoteDataFor } from "./data";

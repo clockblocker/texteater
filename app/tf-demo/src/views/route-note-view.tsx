@@ -196,7 +196,7 @@ function routeNoteQueryArgs(
 
 function routeNoteCapabilities(
 	follow: (
-		target: import("@/workspace/sheet-workspace").WorkspaceTarget,
+		target: import("@/workspace/workspace-subject").WorkspaceTarget,
 	) => void,
 	presentation: "Card" | "Sheet",
 	pagination: {

@@ -12,7 +12,7 @@ import {
 	loadApplicationWorkspace,
 	saveApplicationWorkspace,
 } from "../src/workspace/application-workspace-persistence";
-import type { WorkspaceSubject } from "../src/workspace/sheet-workspace";
+import type { WorkspaceSubject } from "../src/workspace/workspace-subject";
 
 const MENU_ITEMS = new Set(["library", "settings"]);
 const KEY = "tf-demo.workspace.compass.v1";
