@@ -6,7 +6,6 @@ import {
 	type ValidationOperations,
 } from "dumval/runtime";
 import { validationRegistry } from "./generated/linked-validation.js";
-import { normalizeText } from "./semantics.js";
 import type { KnowledgeChange, ReadingKnowledge } from "./types.js";
 
 type Root =
@@ -15,12 +14,7 @@ type Root =
 	| "readingKnowledge"
 	| "knowledgeSelectionInput";
 const registry: CompiledValidationRegistry = validationRegistry;
-const operations: ValidationOperations = {
-	...dumlingValidationOperations,
-	"dumrel.normalize-text": (value) => ({
-		value: normalizeText(value as string),
-	}),
-};
+const operations: ValidationOperations = dumlingValidationOperations;
 function parse<T>(root: Root, input: unknown) {
 	return parseCompiledValidation<T>(registry, root, input, operations);
 }

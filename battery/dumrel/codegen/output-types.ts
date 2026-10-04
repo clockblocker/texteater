@@ -42,10 +42,7 @@ export const dumrelOutputTypeExports = {
 	FormulaRole: "formulaRole",
 };
 
-export const dumrelTypePreservingOperations = [
-	...dumlingTypePreservingOperations,
-	"dumrel.normalize-text",
-];
+export const dumrelTypePreservingOperations = dumlingTypePreservingOperations;
 
 /** Lets a dependent package's generated types name Dumrel values instead of copying them. */
 export function dumrelOutputTypes(): ExternalOutputTypes {

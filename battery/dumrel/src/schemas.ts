@@ -5,6 +5,7 @@
  * Family subpaths are needed. Import domain values from dumling/types and
  * source-correlated Knowledge/Change types from dumrel/types.
  */
+import { normalizeForm } from "dumling";
 import { z } from "zod";
 import {
 	adpositionLemmaSchemas,
@@ -17,7 +18,6 @@ import {
 	unitShadowSchema,
 	verbLemmaSchema,
 } from "./generated/dumling-schemas.js";
-import { normalizeText } from "./semantics.js";
 import {
 	adverbialStandInValues,
 	clauseCorrelateValues,
@@ -39,7 +39,7 @@ import {
 	valencySlotStatusValues,
 } from "./vocabulary.js";
 
-const normalizedTextSchema = z.string().overwrite(normalizeText).min(1);
+const normalizedTextSchema = z.string().overwrite(normalizeForm).min(1);
 const nonEmptyStringsSchema = z.array(normalizedTextSchema).min(1);
 
 export const directSemanticRelationSchema = z.enum(

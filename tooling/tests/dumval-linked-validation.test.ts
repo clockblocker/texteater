@@ -12,12 +12,6 @@ import { encodedValidation as relations } from "../../battery/dumrel/src/generat
 import { preparePublishedRuntime } from "../dum-entrypoint-rss/published-runtime";
 import { DUM_DIFFERENTIAL_TARGETS } from "../dum-runtime-verification/differential-targets";
 
-const operations = {
-	...validationOperations,
-	"dumrel.normalize-text": (value: unknown) => ({
-		value: (value as string).trim().normalize("NFC"),
-	}),
-};
 const original = Object.fromEntries(
 	Object.entries({
 		dumling: linguistic,
@@ -47,7 +41,9 @@ test("production linked validators preserve all canonical values and exact error
 					definitions: registry.definitions,
 				},
 				input,
-				owner === "dumdict" ? dumdictValidationOperations : operations,
+				owner === "dumdict"
+					? dumdictValidationOperations
+					: validationOperations,
 			);
 			expect(observe(target.lightweight(input)), target.id).toEqual(
 				observe(reference),

@@ -8,7 +8,6 @@ import {
 	type ValidationArtifact,
 } from "dumval/runtime";
 import { encodedValidation } from "../src/generated/validation";
-import { normalizeText } from "../src/semantics";
 
 const registry = JSON.parse(encodedValidation) as {
 	roots: Record<string, ValidationArtifact["root"]>;
@@ -47,12 +46,7 @@ test("every generated root agrees with its public canonical schema, including no
 					definitions: registry.definitions,
 				},
 				input,
-				{
-					...validationOperations,
-					"dumrel.normalize-text": (value) => ({
-						value: normalizeText(value as string),
-					}),
-				},
+				validationOperations,
 			);
 			expect(
 				!(compiled instanceof ParsingError),
@@ -61,4 +55,25 @@ test("every generated root agrees with its public canonical schema, including no
 			if (canonical.success) expect(compiled).toEqual(canonical.data);
 		}
 	}
+});
+
+test("a Unit Shadow's Canonical Form normalizes as a Lemma's does", () => {
+	const shadow = {
+		language: "de",
+		family: "Locution",
+		kind: "ADP",
+		canonicalForm: " um ... willen ",
+	} as const;
+	const normalized = { ...shadow, canonicalForm: "um … willen" };
+	const compiled: unknown = parseValidationArtifact(
+		{
+			version: 1,
+			root: required(registry.roots.unitShadow, "Missing unitShadow"),
+			definitions: registry.definitions,
+		},
+		shadow,
+		validationOperations,
+	);
+	expect(schemas.unitShadowSchema.parse(shadow)).toEqual(normalized);
+	expect(compiled).toEqual(normalized);
 });

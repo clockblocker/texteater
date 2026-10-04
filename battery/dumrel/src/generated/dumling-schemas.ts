@@ -1,5 +1,6 @@
 // Generated from Dumling concrete schema exports. Run bun run generate.
 
+import { normalizeForm } from "dumling";
 import * as Route0 from "dumling/schema/de/foreign/foreign";
 import * as Route1 from "dumling/schema/de/lexeme/adjective";
 import * as Route2 from "dumling/schema/de/lexeme/adposition";
@@ -103,9 +104,8 @@ import * as Route99 from "dumling/schema/he/morpheme/tone-marking";
 import * as Route100 from "dumling/schema/he/morpheme/transfix";
 import * as Route101 from "dumling/schema/he/saying/saying";
 import { z } from "zod";
-import { normalizeText } from "../semantics.js";
 
-const normalizedTextSchema = z.string().overwrite(normalizeText).min(1);
+const normalizedTextSchema = z.string().overwrite(normalizeForm).min(1);
 export const lemmaSchema = z.union([
 	Route0.lemmaSchema,
 	Route1.lemmaSchema,

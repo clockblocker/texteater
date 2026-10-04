@@ -1,11 +1,12 @@
-import { foldCase } from "dumling";
+import { canonicalFormKey } from "dumling";
 import type * as Dumling from "dumling/types";
 
 /**
  * Structural equality keys: equal values give equal keys whatever their key
  * order, and a member holding `undefined` counts as absent. A Canonical Form
- * counts case-folded, as Lemma identity does (system ADR 0002): a Lemma,
- * Reading or Unit Shadow spelled `LOL` and one spelled `lol` give one key.
+ * counts normalized and case-folded, as Lemma identity does (system ADR
+ * 0002): a Lemma, Reading or Unit Shadow spelled `LOL` and one spelled `lol`
+ * give one key, and so do `um ... willen` and `um … willen`.
  * Keys index values inside one operation and are not a persistent ID codec.
  * Each returned function caches keys by object identity, so keep it only
  * while the values it has keyed stay unmutated.
@@ -39,8 +40,8 @@ export function compare(left: string, right: string): number {
 }
 
 /**
- * A Lemma or Unit Shadow with its Canonical Form case-folded by Dumling for
- * identity (system ADR 0002). Any other object is returned as it is.
+ * A Lemma or Unit Shadow with its Canonical Form keyed by Dumling's
+ * `canonicalFormKey` (system ADR 0002). Any other object is returned as it is.
  */
 function foldCanonicalForm(value: object): object {
 	const { canonicalForm, language } = value as {
@@ -50,7 +51,7 @@ function foldCanonicalForm(value: object): object {
 	return typeof canonicalForm === "string" && typeof language === "string"
 		? {
 				...value,
-				canonicalForm: foldCase(
+				canonicalForm: canonicalFormKey(
 					canonicalForm,
 					language as Dumling.Language,
 				),

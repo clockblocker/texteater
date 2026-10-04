@@ -13,7 +13,6 @@ import {
 } from "dumval/compiler";
 import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
 import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
-import { normalizeText } from "../../dumrel/src/semantics.js";
 import { unitSchemas } from "../src/generated/unit-schemas.js";
 import {
 	commitChangesResultSchema,
@@ -30,12 +29,6 @@ import {
 
 const operations: ZodValidationOperationRegistration[] = [
 	...dumlingOperations,
-	{
-		construct: "overwrite",
-		implementation: normalizeText,
-		name: "dumrel.normalize-text",
-		version: 1,
-	},
 	...Object.entries(dumdictNamedValidationPredicates).map(
 		([name, implementation]) => ({
 			construct: "custom" as const,

@@ -9,8 +9,7 @@
  * most three claims, the judge's most confident (`de/relations-need-a-
  * dictionary`). Candidate discovery never establishes absence.
  */
-import { foldCase } from "dumling";
-import { normalizeText } from "dumrel";
+import { foldCase, normalizeForm } from "dumling";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import type { EntryType, Question } from "promptsmith/typesafe";
@@ -186,7 +185,7 @@ export const produceRelations = (
 		const candidates = [
 			...new Map(
 				written
-					.map(normalizeText)
+					.map(normalizeForm)
 					.filter(
 						(candidate) =>
 							candidate !== "" &&

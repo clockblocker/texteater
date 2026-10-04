@@ -16,12 +16,6 @@ import { validationRegistry as knowledge } from "../../battery/dumrel/src/genera
 import { samples as knowledgeSamples } from "../../battery/dumrel/tests/compiled-schema-fixtures";
 import type { DifferentialTarget } from "./differential";
 
-const operations: ValidationOperations = {
-	...validationOperations,
-	"dumrel.normalize-text": (value) => ({
-		value: (value as string).trim().normalize("NFC"),
-	}),
-};
 function mutations(value: unknown): unknown[] {
 	const invalid: unknown[] = [
 		undefined,
@@ -43,7 +37,7 @@ function targets(
 	registry: import("dumval/runtime").CompiledValidationRegistry,
 	schemas: Record<string, z.ZodType>,
 	examples: Record<string, unknown[]>,
-	runtimeOperations = operations,
+	runtimeOperations: ValidationOperations = validationOperations,
 ): DifferentialTarget<unknown>[] {
 	return Object.entries(schemas).map(([name, canonical]) => {
 		const root = registry.roots[name];

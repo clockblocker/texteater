@@ -7,9 +7,6 @@ import {
 
 export const dumdictValidationOperations: ValidationOperations = {
 	...validationOperations,
-	"dumrel.normalize-text": (value) => ({
-		value: (value as string).trim().normalize("NFC"),
-	}),
 	...Object.fromEntries(
 		Object.entries(dumdictNamedValidationPredicates).map(
 			([name, predicate]) => [

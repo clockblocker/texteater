@@ -7,9 +7,9 @@
  * (plurality, the participle's form and meaning, the three types); code
  * derives the rest (conjugation classes from the Präteritum, ADR 0038).
  */
-import { foldCase } from "dumling";
+import { foldCase, normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
-import { germanConjugationClass, normalizeText } from "dumrel";
+import { germanConjugationClass } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import * as Effect from "effect/Effect";
 import { choice, choiceOf } from "../../segment/ask.js";
@@ -78,7 +78,7 @@ export const producePlural = (
 					(output) => {
 						const texts = textsOf("plural", output, 3);
 						if (!Array.isArray(texts)) return texts;
-						const words = texts.map(normalizeText);
+						const words = texts.map(normalizeForm);
 						return words.some((word) => !/^\S+$/u.test(word))
 							? unusable("plural", "A plural form is one word")
 							: words;
@@ -241,9 +241,9 @@ function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
 		(separablePrefix !== null && typeof separablePrefix !== "string")
 	)
 		return undefined;
-	const infinitive = normalizeText(verb).replace(/^sich\s+/u, "");
+	const infinitive = normalizeForm(verb).replace(/^sich\s+/u, "");
 	const named =
-		separablePrefix === null ? null : normalizeText(separablePrefix);
+		separablePrefix === null ? null : normalizeForm(separablePrefix);
 	// An inseparable prefix is no separable one, whatever Luna calls it.
 	const prefix =
 		named !== null && inseparablePrefixes.has(named) ? null : named;
@@ -259,8 +259,8 @@ function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
 		verb: infinitive,
 		reflexive: reflexive ?? null,
 		separablePrefix: prefix,
-		preterite: normalizeText(preterite),
-		participle: normalizeText(participleForm),
+		preterite: normalizeForm(preterite),
+		participle: normalizeForm(participleForm),
 	};
 }
 

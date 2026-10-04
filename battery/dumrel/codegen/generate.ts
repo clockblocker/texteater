@@ -46,22 +46,13 @@ import {
 	valencySlotSchema,
 	valencySlotStatusSchema,
 } from "../src/schemas.js";
-import { normalizeText } from "../src/semantics.js";
 import { formatTypeScript } from "./format-typescript.js";
 import {
 	dumrelOutputTypeExports,
 	dumrelTypePreservingOperations,
 } from "./output-types.js";
 
-const operations = [
-	...dumlingOperations,
-	{
-		construct: "overwrite",
-		implementation: normalizeText,
-		name: "dumrel.normalize-text",
-		version: 1,
-	},
-] as const;
+const operations = dumlingOperations;
 const compiled = compileZodValidationArtifacts({
 	schemas: {
 		knowledgeSettings: knowledgeSettingsSchema,

@@ -31,7 +31,6 @@ test("published operational entrypoint stays independent of Zod", async () => {
 		"germanPluralPattern",
 		"governedCaseValues",
 		"locutionTypeValues",
-		"normalizeText",
 		"parseReadingKnowledge",
 		"participleMeaningValues",
 		"projectParticipleSources",

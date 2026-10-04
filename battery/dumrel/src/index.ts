@@ -10,7 +10,6 @@ export {
 	KnowledgePolicyUnavailable,
 	selectKnowledge,
 } from "./select-knowledge.js";
-export { normalizeText } from "./semantics.js";
 export type {
 	ConjugationClass,
 	ConjugationClasses,
