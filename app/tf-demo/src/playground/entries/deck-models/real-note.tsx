@@ -8,7 +8,7 @@ import { type DummyNote, type NoteLink, noteId, sourceOf } from "./dummy";
 
 /**
  * A ported Note: a dummy Note whose `fixture` names a Note in the fake db
- * renders the real renderers instead of the dummy Blocks. Its Header Block
+ * renders the real renderers instead of the dummy Blocks. Its Heading Block
  * is lifted out of the Blocks and drawn in the deck's Heading, which is
  * the Note's handle; everything the real Note links to opens as a dummy
  * Note of the same word, so the deck's algebra is untouched.
@@ -140,7 +140,7 @@ function canonicalFormOf(note: unknown): string | null {
 	return null;
 }
 
-/** The real Reading Header, drawn in the deck's Heading. */
+/** The real Reading Heading, drawn in the deck's Heading Block. */
 export function PortedTitle({
 	note,
 	presentation,
@@ -157,7 +157,7 @@ export function PortedTitle({
 	}).heading;
 }
 
-/** Every Block but the Header, as the Notes page renders them. */
+/** Every Block but the Heading, as the Notes page renders them. */
 export function PortedBlocks({
 	note,
 	presentation,

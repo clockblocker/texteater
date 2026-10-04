@@ -8,7 +8,7 @@ import { useMotionPreference } from "@/lib/motion-preference";
  * The app-level `prefers-reduced-motion` block in `index.css` cannot reach
  * any of the deck's motion: every bit of it is Motion driving a motion
  * value, and CSS can only shorten CSS transitions and animations. The
- * `MotionConfig` around `CompassModel` covers the declarative `animate`
+ * `MotionConfig` inside `Compass` covers the declarative `animate`
  * props; this covers the rest, which is the imperative `animate()` calls —
  * `MotionConfig`'s setting is context for components, and the standalone
  * `animate()` never reads it.

@@ -146,7 +146,7 @@ export const DRAG_SPRING = spring(620, 50, true);
  * the gesture as over and tears the drag state down.
  *
  * This is a ceiling on `DRAG_SPRING`, and the reason it lives here rather
- * than in `drag-deck.tsx`: a spring softer than `DRAG_SPRING` can outlast
+ * than in the Compass runtime: a spring softer than `DRAG_SPRING` can outlast
  * it. The same timeout applies to both playgrounds.
  *
  * `DRAG_SPRING` settles at 368 ms from rest and 379 ms after a hard flick,

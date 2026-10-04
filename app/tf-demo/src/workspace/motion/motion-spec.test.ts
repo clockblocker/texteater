@@ -131,7 +131,7 @@ function undeclaredMotion(file: string, source: string): Undeclared[] {
 describe("nothing animates that the spec does not declare", () => {
 	test("the scan reaches the playground and the workspace", () => {
 		expect(MOTION_SOURCES).toContain(
-			"playground/entries/deck-models/drag-deck.tsx",
+			"workspace/compass/use-drag.ts",
 		);
 		expect(MOTION_SOURCES).toContain("workspace/motion/reduced-motion.ts");
 	});

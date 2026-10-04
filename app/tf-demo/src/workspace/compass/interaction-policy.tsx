@@ -1,9 +1,11 @@
 import { createContext, useContext } from "react";
 
 /**
- * Scenarios restrict available inputs/outcomes; the live handlers and motion
- * stay shared. `sweep` is the swipe-left Sweep of a whole Deck (issue 479);
- * `dismiss` is the Sweep by a dismissive click or Escape.
+ * The per-interaction gate. A scenario, such as one of the animation
+ * workbench's, restricts which inputs and outcomes are live; the handlers
+ * and the motion stay the same. `sweep` is the swipe toward inline-start
+ * that sweeps a whole Deck (issue 479); `dismiss` is the Sweep by a
+ * dismissive click or Escape.
  */
 export type DeckInteraction =
 	| "select"

@@ -1,5 +1,5 @@
+import type { DeckInteraction } from "@/workspace/compass/interaction-policy";
 import type { DeckMotionOverrides } from "@/workspace/motion/runtime-config";
-import type { DeckInteraction } from "../deck-models/interaction-policy";
 
 /**
  * An alternative the entry ships with, in the Version list beside the
@@ -24,7 +24,7 @@ export type Entry = {
 	readonly presets?: readonly Preset[];
 };
 
-const source = "deck-models/drag-deck.tsx";
+const source = "workspace/compass/use-drag.ts";
 const spring = ["stiffness", "damping"] as const;
 const morph = ["morphStiffness", "morphDamping"] as const;
 const release = ["commitDistance", "throwProjectionMs", "flickSpeed"] as const;

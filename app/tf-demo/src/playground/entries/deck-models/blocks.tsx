@@ -6,6 +6,8 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { useDeckInteractions } from "@/workspace/compass/interaction-policy";
+import type { Form as NoteForm } from "@/workspace/compass/subject";
 import { after, CONTEXT_PAGE } from "@/workspace/motion/motion-spec";
 import { useDeckMotion } from "@/workspace/motion/runtime-config";
 import {
@@ -17,8 +19,7 @@ import {
 	type SourceContext,
 	type TextFocus,
 } from "./dummy";
-import { useDeckInteractions } from "./interaction-policy";
-import { type NoteForm, type Subject, subjectOfLink } from "./model";
+import { type Subject, subjectOfLink } from "./model";
 
 /** A Note's Blocks and a Text's Sentences, and the Segments inside them. */
 
@@ -119,7 +120,7 @@ export function TextBlock({
 		<div
 			ref={block}
 			data-block="text"
-			className={`font-serif text-ink ${sheet ? "px-4 pt-4 text-[1.15rem] leading-[1.71rem]" : "text-[0.9rem] leading-relaxed"}`}
+			className={`font-serif text-ink ${sheet ? "pt-4 text-[1.15rem] leading-[1.71rem]" : "text-[0.9rem] leading-relaxed"}`}
 		>
 			{text.sentences.map((sentence, sentenceIndex) => {
 				const focused = focus?.sentence === sentenceIndex;
