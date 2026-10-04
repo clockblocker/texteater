@@ -3,4 +3,3 @@ node_modules
 .npm-cache
 coverage
 *.tsbuildinfo
-.laboratory/sessions/

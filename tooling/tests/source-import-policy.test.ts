@@ -325,36 +325,3 @@ test("tf-demo's server may name a Convex type but not load a Convex module, and 
 			"tf-demo-server-does-not-import-convex",
 		);
 });
-
-test("Laboratory's evaluation authoring seam does not allow model-authoring imports in the workbench", async () => {
-	const root = await temporaryRepository();
-	await addWorkspace(root, {
-		kind: "battery",
-		name: "legacy-dumgen",
-		exports: {
-			".": "./dist/index.js",
-			"./development": "./dist/development.js",
-		},
-	});
-	const lab = await addWorkspace(root, {
-		kind: "app",
-		name: "laboratory",
-		dependencies: { "legacy-dumgen": "workspace:^" },
-	});
-	await writeSource(
-		lab,
-		"src/evaluations.ts",
-		'import { x } from "legacy-dumgen/development";',
-	);
-	expect(await issuesFor(root)).toEqual([]);
-	await writeSource(
-		lab,
-		"src/workbench.ts",
-		'import { x } from "legacy-dumgen/development";',
-	);
-	expect(
-		(await issuesFor(root)).some((issue) =>
-			issue.file.endsWith("workbench.ts"),
-		),
-	).toBe(true);
-});

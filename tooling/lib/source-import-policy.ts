@@ -336,10 +336,6 @@ const buildSourceSeams = new Map<string, readonly string[]>([
 		"battery/dumrel/codegen/output-types.ts",
 		["../../dumling/codegen/output-types.js"],
 	],
-	[
-		"app/laboratory/tests/evaluations.test.ts",
-		["../../../battery/legacy-dumgen/cli/evaluate"],
-	],
 ]);
 function isExplicitAuthoringSource(
 	workspace: Workspace,
@@ -348,18 +344,11 @@ function isExplicitAuthoringSource(
 ): boolean {
 	const path = relative(workspace.dir, file).replaceAll("\\", "/");
 	if (
-		(specifier === "legacy-dumgen/development" &&
-			workspace.relativePath === "app/laboratory" &&
-			[
-				"src/evaluations.ts",
-				"src/session-log.ts",
-				"tests/evaluations.test.ts",
-			].includes(path)) ||
-		(specifier === `${workspace.manifest.name}/development` &&
-			["dumgen", "legacy-dumgen"].includes(
-				workspace.manifest.name as string,
-			) &&
-			path === "cli/evaluate.ts")
+		specifier === `${workspace.manifest.name}/development` &&
+		["dumgen", "legacy-dumgen"].includes(
+			workspace.manifest.name as string,
+		) &&
+		path === "cli/evaluate.ts"
 	)
 		return true;
 
@@ -393,8 +382,7 @@ function isExplicitAuthoringSource(
 		) ||
 		path.startsWith("src/development/") ||
 		path.startsWith("src/universal/schemas.") ||
-		path.startsWith("src/promptsmith/") ||
-		path.startsWith("src/catalog/laboratory/")
+		path.startsWith("src/promptsmith/")
 	);
 }
 

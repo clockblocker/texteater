@@ -28,11 +28,10 @@ export const governedDependencies = [
 
 /**
  * Workspaces that may pin a governed dependency apart from the rest.
- * legacy-dumgen stays on Effect v3 until #856 deletes it, and laboratory
- * with it while its fate is open (#854).
+ * legacy-dumgen stays on Effect v3 until #856 deletes it.
  */
 const governedDependencyExemptions = new Map<string, readonly string[]>([
-	["effect", ["battery/legacy-dumgen", "app/laboratory"]],
+	["effect", ["battery/legacy-dumgen"]],
 ]);
 
 const requiredWorkspaceScripts = [

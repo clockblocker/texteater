@@ -7,7 +7,6 @@ reusable modules.
 The main workspaces are:
 
 - `app/dumling-docs`: public Dumling documentation
-- `app/laboratory`: prompt-pipeline laboratory
 - `app/tf-demo`: end-to-end product probe
 - `battery/dumling`: grammatical values and operations
 - `battery/dumrel`: Knowledge and relation algebra
