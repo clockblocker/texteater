@@ -1,0 +1,11 @@
+{
+	"$schema": "https://turborepo.dev/schema.json",
+	"extends": ["//"],
+	"tasks": {
+		// Published-build tests run `bun run build`. Building first in this graph
+		// makes theirs a cache hit, not a second build racing this one.
+		"test": {
+			"dependsOn": ["transit", "build:package"]
+		}
+	}
+}

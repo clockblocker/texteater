@@ -11,6 +11,7 @@ import {
 	formatRssGateReport,
 	RSS_SHARED_BUDGET_BYTES,
 } from "../dum-runtime-verification/policy";
+import { ciGates } from "../lib/ci-gates";
 
 describe("current compiled validation", () => {
 	test("all replacement validation roots agree with canonical schemas", () => {
@@ -71,9 +72,12 @@ describe("operational RSS CI contract", () => {
 		expect(manifest.scripts["verify:dum-runtime"]).toBe(
 			"bun tooling/dum-runtime-verification/verify.ts",
 		);
-		expect(manifest.scripts.validate).toContain(
-			"tooling/dum-runtime-verification/verify.ts",
+		expect(manifest.scripts.validate).toBe(
+			"bun tooling/ci.ts validate dum-runtime",
 		);
+		expect(
+			ciGates.find((gate) => gate.name === "dum-runtime")?.args,
+		).toEqual(["bun", "tooling/dum-runtime-verification/verify.ts"]);
 	});
 
 	test("shared chain has one inclusive 30 MiB ceiling after Effect", () => {

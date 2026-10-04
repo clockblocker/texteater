@@ -33,7 +33,7 @@
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run check && bun run build:js && bun run build:types",
 		"build:js": "rm -rf dist && bun run esbuild src/index.ts --bundle --platform=browser --format=esm --packages=external --banner:js='\"use client\";' --outfile=dist/index.js",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
-		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",

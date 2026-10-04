@@ -61,7 +61,7 @@
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:check && bun run build:js && bun run build:types",
 		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/types.ts src/inventories.ts --bundle --external:dumling --external:dumrel --splitting --outdir=dist --platform=node --format=esm --packages=external --tsconfig=tsconfig.build.json",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
-		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+		"check": "bun ../../tooling/check-package-types.ts",
 		"demote-broken-reviewed": "bun scripts/demote-broken-reviewed.ts",
 		"fix": "bun run --silent biome check --write .",
 		"generate": "bun codegen/generate-record-schemas.ts && bun codegen/generate-syncretisms.ts",

@@ -1,5 +1,9 @@
 {
 	"$schema": "https://turborepo.dev/schema.json",
+	// tsgo type-checks use every core; more tasks at once starve tests that run
+	// under bun's 5 s default timeout.
+	"concurrency": "4",
+	"globalDependencies": ["biome.json", "tooling/**"],
 	"tasks": {
 		"build:package": {
 			"dependsOn": ["^build:package"],
@@ -9,6 +13,53 @@
 			"dependsOn": ["^build:package"],
 			"cache": false,
 			"persistent": true
+		},
+		"transit": {
+			"dependsOn": ["^transit"]
+		},
+		"check": {
+			"dependsOn": ["transit"],
+			"outputs": []
+		},
+		"lint": {
+			"outputs": []
+		},
+		"test": {
+			"dependsOn": ["transit"],
+			"outputs": []
+		},
+		"validate": {
+			"dependsOn": ["transit", "check", "lint", "test"],
+			"outputs": []
+		},
+		"fix": {
+			"cache": false
+		},
+		"//#check:docs": {
+			"cache": false
+		},
+		"//#check:tooling": {
+			"cache": false
+		},
+		"//#lint:tooling": {
+			"cache": false
+		},
+		// The published-runtime test builds these through Turbo; see the
+		// packages' own test tasks.
+		"//#test:tooling": {
+			"dependsOn": [
+				"dumdict#build:package",
+				"dumling#build:package",
+				"dumrel#build:package",
+				"dumval#build:package"
+			],
+			"cache": false
+		},
+		"//#validate:imports": {
+			"cache": false
+		},
+		"//#validate:manifests": {
+			"cache": false
 		}
 	}
 }

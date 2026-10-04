@@ -1,0 +1,24 @@
+{
+	"$schema": "https://turborepo.dev/schema.json",
+	"extends": ["//"],
+	"tasks": {
+		"build:package": {
+			"outputs": [
+				"dist/**",
+				".astro/**",
+				".codegen/**",
+				"public/nav.json",
+				"public/**/*.md",
+				"src/generated/**"
+			]
+		},
+		// The type-check and tests read the content and Astro types the build
+		// generates, which are gitignored.
+		"check": {
+			"dependsOn": ["transit", "build:package"]
+		},
+		"test": {
+			"dependsOn": ["transit", "build:package"]
+		}
+	}
+}

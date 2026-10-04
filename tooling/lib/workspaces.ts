@@ -59,50 +59,6 @@ export async function discoverWorkspaces(
 	);
 }
 
-export function orderWorkspacesByDependencies(
-	workspaces: Workspace[],
-): Workspace[] {
-	const byName = new Map(
-		workspaces.flatMap((workspace) =>
-			typeof workspace.manifest.name === "string"
-				? [[workspace.manifest.name, workspace] as const]
-				: [],
-		),
-	);
-	const ordered: Workspace[] = [];
-	const visiting = new Set<string>();
-	const visited = new Set<string>();
-
-	function visit(workspace: Workspace): void {
-		if (
-			visited.has(workspace.relativePath) ||
-			visiting.has(workspace.relativePath)
-		) {
-			return;
-		}
-		visiting.add(workspace.relativePath);
-		for (const field of [
-			"dependencies",
-			"devDependencies",
-			"optionalDependencies",
-			"peerDependencies",
-		]) {
-			for (const name of Object.keys(
-				stringRecord(workspace.manifest[field]),
-			)) {
-				const dependency = byName.get(name);
-				if (dependency) visit(dependency);
-			}
-		}
-		visiting.delete(workspace.relativePath);
-		visited.add(workspace.relativePath);
-		ordered.push(workspace);
-	}
-
-	for (const workspace of workspaces) visit(workspace);
-	return ordered;
-}
-
 export function stringRecord(value: unknown): Record<string, string> {
 	if (!value || typeof value !== "object" || Array.isArray(value)) return {};
 	return Object.fromEntries(

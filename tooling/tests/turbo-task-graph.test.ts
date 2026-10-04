@@ -92,3 +92,40 @@ test("a battery's build script builds its in-house dependencies first", () => {
 		"promptsmith#build:package",
 	]);
 });
+
+test("validate gates each workspace once and builds only for build-output gates", () => {
+	const graph = plan(repositoryRoot, ["validate"]);
+	const tasks = new Map(
+		graph.tasks.map((task) => [task.taskId, task.dependencies]),
+	);
+	const workspaces = [...tasks.keys()]
+		.filter((id) => id.endsWith("#validate"))
+		.map((id) => id.slice(0, -"#validate".length));
+	expect(workspaces.length).toBeGreaterThan(10);
+	for (const workspace of workspaces) {
+		expect(tasks.get(`${workspace}#validate`)).toEqual(
+			expect.arrayContaining(
+				["check", "lint", "test"].map((task) => `${workspace}#${task}`),
+			),
+		);
+	}
+
+	// Packages are read from source (#881); a build runs only where a gate
+	// reads its output.
+	const builders = [...tasks.entries()]
+		.filter(([id]) => !id.endsWith("#build:package"))
+		.filter(([, dependencies]) =>
+			dependencies.some((dependency) =>
+				dependency.endsWith("#build:package"),
+			),
+		)
+		.map(([id]) => id)
+		.toSorted();
+	expect(builders).toEqual([
+		"@dumling/docs-site#check",
+		"@dumling/docs-site#test",
+		"dumling#test",
+		"dumrel#test",
+		"dumspec#test",
+	]);
+});

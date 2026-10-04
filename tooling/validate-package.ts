@@ -1,5 +1,10 @@
+/**
+ * A package's policy stages: manifest policy, dependencies (knip) and
+ * architecture (dependency-cruiser). Turbo's `validate` task runs them after
+ * the package's `check`, `lint` and `test` tasks (turbo.json). Run outside
+ * Turbo, as `bun validate` in a package, it hands that whole graph to Turbo.
+ */
 import { join } from "node:path";
-import { biomeFormatAndAssistArgs } from "./lib/biome-validation";
 import { validateManifestPolicy } from "./lib/manifest-policy";
 import { type Command, reportFailures, runAll } from "./lib/process";
 import { conventionalArchitectureInputs } from "./lib/source-import-policy";
@@ -15,6 +20,15 @@ if (process.env.TOOLING_VALIDATE_ACTIVE === "1") {
 
 const packageDir = process.cwd();
 const repositoryRoot = await findRepositoryRoot(packageDir);
+// Turbo sets TURBO_HASH in every task it runs. Launched from a package
+// directory, Turbo scopes the run to that package.
+if (process.env.TURBO_HASH === undefined) {
+	const turbo = Bun.spawn(
+		[join(repositoryRoot, "node_modules/.bin/turbo"), "run", "validate"],
+		{ cwd: packageDir, stdio: ["inherit", "inherit", "inherit"] },
+	);
+	process.exit(await turbo.exited);
+}
 const manifest = await readJson(join(packageDir, "package.json"));
 const scripts = stringRecord(manifest.scripts);
 const tools = toolPaths(repositoryRoot);
@@ -45,22 +59,6 @@ function overrideOrDefault(stage: string, defaultArgs: string[]): Command {
 }
 
 const commands = [
-	overrideOrDefault(
-		"format",
-		biomeFormatAndAssistArgs({
-			biomePath: tools.biome,
-			scope: ".",
-		}),
-	),
-	overrideOrDefault("lint", ["bun", tools.biome, "lint", "."]),
-	overrideOrDefault("types", [
-		"bun",
-		join(repositoryRoot, "tooling/check-package-types.ts"),
-	]),
-	overrideOrDefault("test", [
-		"bun",
-		join(repositoryRoot, "tooling/run-package-tests.ts"),
-	]),
 	overrideOrDefault("dependencies", [
 		"bun",
 		tools.knip,

@@ -12,7 +12,7 @@ export async function temporaryRepository(): Promise<string> {
 		workspaces: ["app/*", "battery/*"],
 		scripts: {
 			build: "bun tooling/manifest-policy.ts repository && turbo run build:package",
-			validate: "bun tooling/validate-repository.ts",
+			validate: "bun tooling/ci.ts validate dum-runtime",
 		},
 		devDependencies: {
 			"@biomejs/biome": "2.5.13",

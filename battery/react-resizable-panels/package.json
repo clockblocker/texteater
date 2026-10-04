@@ -45,14 +45,13 @@
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run check && bun run build:js && bun run build:types",
 		"build:js": "rm -rf dist && bun run esbuild lib/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/react-resizable-panels.js && bun run esbuild lib/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --outfile=dist/react-resizable-panels.cjs && bun run esbuild workspace/index.ts --bundle --platform=browser --format=esm --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace.js && bun run esbuild workspace/index.ts --bundle --platform=browser --format=cjs --banner:js='\"use client\";' --external:react --external:react-dom --external:react/jsx-runtime --external:react-resizable-panels --outfile=dist/workspace.cjs",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json && mv dist/index.d.ts dist/react-resizable-panels.d.ts && bun ../../node_modules/typescript/bin/tsc -p tsconfig.workspace.json",
-		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
 		"test": "bun run --bun vitest run",
 		"validate": "bun ../../tooling/validate-package.ts",
-		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config ../../tooling/dependency-cruiser.package.cjs --ts-config tsconfig.json --exclude '(^|/)vitest\\.d\\.ts$' -- lib workspace",
-		"validate:test": "bun run test"
+		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config ../../tooling/dependency-cruiser.package.cjs --ts-config tsconfig.json --exclude '(^|/)vitest\\.d\\.ts$' -- lib workspace"
 	},
 	"peerDependencies": {
 		"react": "^19.2.6",

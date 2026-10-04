@@ -10,7 +10,7 @@
 	"scripts": {
 		"build": "turbo run build:package",
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run check && vite build",
-		"check": "bun ../../node_modules/typescript/bin/tsc -b",
+		"check": "bun ../../tooling/check-package-types.ts",
 		"env:sync": "sh tooling/sync-convex-env.sh",
 		"dev": "turbo run dev:package",
 		"dev:package": "sh tooling/sync-convex-env.sh; ISOLATE_MAX_USER_HEAP_SIZE=134217728 CONVEX_AGENT_MODE=anonymous convex dev --start 'vite' || { status=$?; bun tooling/report-convex-port-owner.ts 3210; exit $status; }",

@@ -60,14 +60,13 @@
 		"build:package": "bun ../../tooling/manifest-policy.ts package && bun run build:js && bun run build:types",
 		"build:js": "rm -rf dist && ../../node_modules/.bin/esbuild src/index.ts src/evaluation.ts src/storage.ts src/openai.ts src/typesafe.ts src/schemas.ts --bundle --splitting --outdir=dist --platform=node --format=esm --packages=external",
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
-		"check": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+		"check": "bun ../../tooling/check-package-types.ts",
 		"fix": "bun run --silent biome check --write .",
 		"knip": "bun ../../node_modules/knip/bin/knip.js --config ../../tooling/knip-package.ts",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
 		"test": "bun test",
-		"validate": "bun ../../tooling/validate-package.ts",
-		"validate:test": "bun run test"
+		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
 		"@typesafe-ai/sdk": "^0.6.0",
