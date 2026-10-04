@@ -860,7 +860,7 @@ const pronounsAndAdjectives: Rule[] = [
 		id: "de/adjective-stays-adj",
 		statement:
 			"An adjective used adverbially or compared stays ADJ when the same sense can stand inflected before a noun: sie singt laut gives [laut] ADJ. A use whose sense no attributive form has is another word: ganz 'quite', früh 'in the morning', lange 'for a long time' and voll 'totally' are ADV, as are degree words (de/degree-word-is-adv), and einfach and ruhig as modal particles are PART. A sentence adverb, which comments on the whole statement and mostly can answer a yes/no question alone (offenbar 'apparently', wahrscheinlich, natürlich 'of course', wirklich, eigentlich), is a non-comparable ADV.",
-		adrs: [],
+		adrs: ["ADR-0036"],
 		routes: lexeme("ADJ", "ADV"),
 		records: [
 			"de/sie-kam-lachend-herein",

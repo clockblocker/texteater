@@ -44,112 +44,21 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-participle-benchmark-16-ungeoeffnet-click-ist",
 			"memberSegmentIndices": [13],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 13,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Obwohl" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Ausstellung" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "bereits" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "morgen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "beginnt" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "versiegelte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Kiste" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "i" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hinteren" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Raum" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "noch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ungeöffnet" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [13]
-				},
-				"explanation": "ungeöffnet has an un- form the verb öffnen lacks, so it is an ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "ist is the copula VERB sein and stays apart from its predicate ungeöffnet (de/copula-stays-apart)."
 			}
 		},
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-participle-benchmark-16-ungeoeffnet-click-ungeoeffnet",
 			"memberSegmentIndices": [32],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 32,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Obwohl" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Ausstellung" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "bereits" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "morgen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "beginnt" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "versiegelte" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Kiste" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "i" },
-						{ "kind": "ResolvableText", "text": "m" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hinteren" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Raum" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "noch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ungeöffnet" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADJ",
-					"memberSegmentIndices": [32]
-				},
-				"explanation": "ungeöffnet has an un- form the verb öffnen lacks, so it is an ADJ (ADR 0033). The copula stays a separate VERB target."
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "ungeöffnet is an ADJ predicative after the copula ist, with no Participle Source: an un- adjective is no participle of any verb (de/participial-adjective, de/participle-source-verb-and-meaning)."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

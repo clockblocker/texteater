@@ -45,114 +45,21 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-participle-benchmark-19-beleidigt-click-ist",
 			"memberSegmentIndices": [11],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 11,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Obwohl" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "später" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "entschuldigte" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wegen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "öffentlichen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Kritik" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "noch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "beleidigt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "und" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ungewöhnlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "abweisend" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [11]
-				},
-				"explanation": "beleidigt 'sulking' takes sehr, coordinates with abweisend and Duden lists it as an Adjektiv, so it stays ADJ; like other emotional resulting states it is borderline and awaits a ruling (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "ist is the copula VERB sein and stays apart from its predicate beleidigt (de/copula-stays-apart)."
 			}
 		},
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-participle-benchmark-19-beleidigt-click-beleidigt",
 			"memberSegmentIndices": [27],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 27,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Obwohl" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "sich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "später" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "entschuldigte" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wegen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "der" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "öffentlichen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Kritik" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "noch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "immer" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "beleidigt" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "und" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ungewöhnlich" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "abweisend" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADJ",
-					"memberSegmentIndices": [27]
-				},
-				"explanation": "beleidigt 'sulking' takes sehr, coordinates with abweisend and Duden lists it as an Adjektiv, so it stays ADJ; like other emotional resulting states it is borderline and awaits a ruling (ADR 0033). The copula stays a separate VERB target."
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "beleidigt is an ADJ predicative after the copula ist, with Participle Source beleidigen (de/participial-adjective, de/participle-source-verb-and-meaning)."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

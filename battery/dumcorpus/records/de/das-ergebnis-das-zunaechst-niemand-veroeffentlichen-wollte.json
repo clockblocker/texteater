@@ -40,104 +40,21 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-participle-benchmark-13-bekannt-click-ist",
 			"memberSegmentIndices": [16],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 16,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Ergebnis" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zunächst" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "niemand" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "veröffentlichen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wollte" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "inzwischen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "auch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "außerhalb" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "des" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Instituts" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "bekannt" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [16]
-				},
-				"explanation": "bekannt 'known' takes un- (unbekannt) and comparison, and Duden separates it from bekennen, so it is a lexicalized ADJ (ADR 0033). The copula is the VERB sein or bleiben with its own meaning; no standalone AUX target exists and the predicate stays separate (ADR 0026)."
+			"route": { "family": "Lexeme", "kind": "VERB" },
+			"notes": {
+				"rationale": "ist is the copula VERB sein and stays apart from its predicate bekannt (de/copula-stays-apart)."
 			}
 		},
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-participle-benchmark-13-bekannt-click-bekannt",
 			"memberSegmentIndices": [28],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 28,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Ergebnis" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "das" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "zunächst" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "niemand" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "veröffentlichen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "wollte" },
-						{ "kind": "Punctuation", "text": "," },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "ist" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "inzwischen" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "auch" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "außerhalb" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "des" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Instituts" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "bekannt" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "ADJ",
-					"memberSegmentIndices": [28]
-				},
-				"explanation": "bekannt 'known' takes un- (unbekannt) and comparison, and Duden separates it from bekennen, so it is a lexicalized ADJ (ADR 0033). The copula stays a separate VERB target."
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "bekannt is an ADJ predicative after the copula ist, with Participle Source bekennen: 'known' is no sense of bekennen, and the link is kept (de/participial-adjective, de/participle-source-verb-and-meaning)."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }
