@@ -4,8 +4,8 @@ status: accepted
 
 # Give every Pane a Ground beneath its Covers
 
-Each Pane holds one Sheet Stack. Its bottom Sheet is the Ground, which the
-Pane keeps for as long as it exists; every Sheet above the Ground is a Cover.
+Each Pane holds one Sheet Stack. Its bottom Sheet is the Ground, which the Pane
+keeps for as long as it exists; every Sheet above the Ground is a Cover.
 Protection comes from position: nothing removes the Ground by covering it or by
 going back, and it leaves only when lifted on purpose. Locked Sheets are
 retired, and Library Sheet and Text Sheet with them: the Library is a Menu
@@ -16,14 +16,14 @@ deck-models playground.
 **Ground line.** The Ground's content walks a line, bottom rung first. A Rooted
 Pane's line starts at the Menu, then a Menu Item, then that item's selection:
 in tf-demo, Menu › Library › Text, where the Menu's items are the Library and
-Settings. Going back on the Ground (←) steps one rung down the line and ends
-the Deck of the rung it leaves. Once a selection is on the Ground, only going
-back or a lift changes it. Dropping a Held Card on a Pane's side edge makes a
-Floating Pane whose Ground is the dropped Note or Text, with no rung below it.
-Its bar shows X in place of ←, and X closes the Pane with its Covers and its
-Deck. A Pane's kind belongs to its line, by whether the line contains the Menu,
-and not to what the Ground shows. A Rooted Pane may be spawned empty, at its
-Menu.
+Settings. Going back on the Ground steps one rung down the line and ends the
+Deck of the rung it leaves. Once a selection is on the Ground, only going back
+or a lift changes it. Dropping a Held Card on a Pane's inline-start or
+inline-end edge makes a Floating Pane whose Ground is the dropped Note or Text,
+with no rung below it. Its bar shows X in place of the back control, and X
+closes the Pane with its Covers and its Deck. A Pane's kind belongs to its
+line, by whether the line contains the Menu, and not to what the Ground shows.
+A Rooted Pane may be spawned empty, at its Menu.
 
 **Covers.** Following a Link pushes a Cover in the same Pane. Each push is a
 fresh Presentation, even when that Note is already open here or in another
@@ -37,25 +37,33 @@ it.
 
 **Decks.** A click on a Segment, in a Text or in a Source Context inside a
 Note, deals a Deck to the Sheet it was clicked in, Ground or Cover. A Sheet
-holds at most one Deck, and a new selection in that Sheet replaces it.
-Covering a Sheet hides its Deck and going back reveals it. A Deck whose Cards
-have all been lifted away is empty but still live. A Deck ends in exactly two
-ways: its Sheet leaves (a Cover closes, or the Ground steps down its line), or
-a Sweep on its Sheet while that Sheet is on top. A Sweep is one action with
-several triggers, among them a dismissive click on the Sheet away from any
-Link or Segment, and Escape. A Deck is live while the Sheet that dealt it is in
-its stack and the Deck has not been swept or replaced since. X on a Floating
-Pane collapses its Ground Note back to its Card when that Card's Deck is live
-and closes it otherwise. Individual Cards are no longer dismissed from a Deck.
+holds at most one Deck, and a new selection in that Sheet replaces it. Covering
+a Sheet hides its Deck and going back reveals it. A Deck whose Cards have all
+been lifted away is empty but still live. A Deck ends in exactly two ways: its
+Sheet leaves (a Cover closes, or the Ground steps down its line), or a Sweep on
+its Sheet while that Sheet is on top. A Sweep is one action with three
+triggers: a dismissive click on the Sheet away from any Link or Segment,
+Escape, and a fast swipe toward inline-start on any of its Cards. A Deck is
+live while the Sheet that dealt it is in its stack and the Deck has not been
+swept or replaced since. X on a Floating Pane collapses its Ground Note back to
+its Card when that Card's Deck is live and closes it otherwise. Individual
+Cards are no longer dismissed from a Deck.
 
 **Lifting and spawning.** Dragging a Segment or a Link lifts a fresh Held Card
 from the pointer; dragging is the only way to spawn a Pane. A drop inside a
-Pane makes a Cover there, a drop on a Pane's side edge makes a Floating Pane
-beside it, and a drop back where the Card came from cancels. A Floating Ground
-lifts by a plain drag, and its Pane closes behind it. A Rooted Ground lifts by
-a press of about one second; its Pane stays and steps one rung down, so a
-lifted Text leaves the Library showing. [tf-demo ADR 0006] decides which
-element is the handle in each form.
+Pane makes a Cover there, a drop on a Pane's inline-start or inline-end edge
+makes a Floating Pane on that side, and a drop back where the Card came from
+cancels. A Floating Ground lifts by a plain drag, and its Pane closes behind
+it. A Rooted Ground lifts by a press of about one second; its Pane stays and
+steps one rung down, so a lifted Text leaves the Library showing.
+[tf-demo ADR 0006] decides which element is the handle in each form.
+
+**Direction.** Directions follow the text's inline direction, so German reads
+left to right and Hebrew right to left. The back control points toward
+inline-start: ← in left-to-right text, → in right-to-left text. The Sweep swipe
+also runs toward inline-start, leftward in German and rightward in Hebrew
+(#479). Escape and a dismissive click sweep in either direction. A Pane's side
+edges are its inline-start and inline-end edges.
 
 The Ground line does not bring back the fixed Navigation Anchor that
 [tf-demo ADR 0003] rejected. A Rooted Pane can be spawned at any time, so the
@@ -79,6 +87,8 @@ Menu stays reachable without a central Pane.
 - For Go to source: popping the Covers to the Ground and reselecting is a jump
   the stack makes nowhere else, and it needs a second rule for other Texts.
   Highlighting the Ground beneath the Covers is invisible (#484).
+- Dropping the swipe and sweeping a Deck only by dismissive click, Escape or
+  a new selection. Individual Card dismissal is gone either way (#479).
 - A Link dealing a one-Card Deck was a detour, since a Link names one Note
   (#476).
 

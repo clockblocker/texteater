@@ -62,10 +62,10 @@ steps down to the Menu. It may be spawned empty, at its Menu. Its content, the
 Rooted Ground, lifts by a long press, and the Pane steps one rung down.
 
 **Floating Pane**:
-A Pane made by an Expand on a Pane's side edge. Its Ground is the dropped
-Presentation, with no rung below, so its bar shows X in place of back.
-X closes the Pane. Its content, the Floating Ground, lifts by a plain drag,
-and the Pane closes behind it.
+A Pane made by an Expand on a Pane's inline-start or inline-end edge. Its
+Ground is the dropped Presentation, with no rung below, so its bar shows X in
+place of Back. X closes the Pane. Its content, the Floating Ground, lifts by
+a plain drag, and the Pane closes behind it.
 
 **Deck**:
 The ordered Cards dealt from one Sheet, Ground or Cover. A Sheet holds at most
@@ -96,7 +96,8 @@ Sheet.
 
 **Expand**:
 Settle a Held Card as a Sheet: as a Cover when dropped inside a Pane, or as
-the Ground of a new Floating Pane when dropped on a Pane's side edge. It keeps
+the Ground of a new Floating Pane when dropped on a Pane's inline-start or
+inline-end edge. It keeps
 its slot in the Deck that dealt it. Moving a Sheet is a Lift followed by an
 Expand.
 _Avoid_: Move
@@ -110,9 +111,15 @@ Explicitly dismiss a Presentation, or a Floating Pane with its Covers and
 Deck. Going back on a Cover with no slot in a live Deck closes it.
 
 **Sweep**:
-End the Deck of the top Sheet. It is one action with several triggers, such as
-a dismissive click on the Sheet and Escape.
+End the Deck of the top Sheet. It is one action with three triggers: a
+dismissive click on the Sheet, Escape, and a fast swipe toward inline-start on
+any of its Cards.
 _Avoid_: dismiss a Card
+
+**Back**:
+The control that goes back one step: it collapses or closes a Cover, or steps
+the Ground line down. It points toward inline-start, ← in left-to-right text
+and → in right-to-left text.
 
 **Cancel gesture**:
 Restore the workspace state recorded at the start of the active Lift.
