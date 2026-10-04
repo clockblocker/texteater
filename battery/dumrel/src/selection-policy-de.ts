@@ -193,7 +193,6 @@ const makeDeRelMap = () =>
 			Root: request(select()),
 			Suffix: request(select()),
 			Suffixoid: request(select()),
-			ToneMarking: request(select()),
 			Transfix: request(select()),
 		},
 	}) satisfies Record<string, Record<string, KnowledgeRequestMask>>;
