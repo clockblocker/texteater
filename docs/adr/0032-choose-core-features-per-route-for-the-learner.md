@@ -13,6 +13,14 @@ a triple, and a Kind name may repeat across Families
 textbook test, constant across the paradigm means lexical, is one input to
 the choice, not the rule.
 
+**A language picks from the universal sets.** Dumling's universal sets stay
+complete and language-neutral: the Kinds of each Family, Morpheme Kinds among
+them, and the Feature Pool's features and values. A language picks from each
+set only the members that apply to it and pulls in no set wholesale. No
+supported language is tonal, so none has a ToneMarking route. Root-and-pattern
+morphology is Semitic, so only Hebrew has Transfix, and English ablaut
+(`sing`, `sang`) is not one.
+
 **The Feature Pool.** Lemma Core bags and Surface inflectional bags draw from
 one catalog, the Feature Pool: Dumling's `UNIVERSAL_FEATURE_SCHEMA`, after
 UD, narrowed per language (`DE_FEATURE_SCHEMA`). The language narrows every
@@ -222,6 +230,13 @@ degree, and German's own sets of PronType, PartType, Polarity and Article
 lived only in its routes. One route set, DET's PronType, sat in the German
 catalog and still allowed Emp after DET `selber` retired. Decided by the user
 on [#926](https://github.com/clockblocker/texteater/issues/926).
+
+Amended on 2026-10-04: a language picks from each universal set only the
+members that apply to it, stated above. Before, each language's catalog
+spread the whole Feature Pool, so German-only features such as `hasSepPrefix`
+reached English and Hebrew routes. English and Hebrew also had ToneMarking
+routes, and English and German had Transfix routes. Decided by the user on
+[#772](https://github.com/clockblocker/texteater/issues/772).
 
 ## Considered Options
 
