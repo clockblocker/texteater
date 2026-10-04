@@ -1,13 +1,21 @@
 import { expect, test } from "bun:test";
-import * as dumdict from "dumdict";
-import * as dumling from "dumling";
-import * as dumrel from "dumrel";
 import type { DumdictParserInterface } from "../dumdict-parser-interface";
 
-const dictionary: DumdictParserInterface = dumdict;
-void dictionary;
-test("replacement public operations use the settled unit and Knowledge contracts", () => {
-	expect(Object.keys(dumling).sort()).toEqual([
+// A pin isn't a caller (#419): `bun run knip` counts a root's export as used
+// only when another workspace uses it. So these pins read each root through
+// `typeof import()` and a computed specifier, which knip doesn't count as a
+// use of any name.
+const conformsToParserInterface = (
+	root: typeof import("dumdict"),
+): DumdictParserInterface => root;
+void conformsToParserInterface;
+
+async function rootKeys(specifier: string): Promise<string[]> {
+	return Object.keys(await import(specifier)).sort();
+}
+
+test("replacement public operations use the settled unit and Knowledge contracts", async () => {
+	expect(await rootKeys("dumling")).toEqual([
 		"ParsingError",
 		"canonicalFormKey",
 		"foldCase",
@@ -22,7 +30,7 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"syncretismView",
 		"syncretize",
 	]);
-	expect(Object.keys(dumrel).sort()).toEqual([
+	expect(await rootKeys("dumrel")).toEqual([
 		"KnowledgePolicyUnavailable",
 		"ParsingError",
 		"allowedComplementKinds",

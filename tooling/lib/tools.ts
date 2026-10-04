@@ -3,7 +3,6 @@ import { join } from "node:path";
 export interface ToolPaths {
 	biome: string;
 	dependencyCruiser: string;
-	knip: string;
 	typescript: string;
 }
 
@@ -17,7 +16,6 @@ export function toolPaths(repositoryRoot: string): ToolPaths {
 			"bin",
 			"dependency-cruise.mjs",
 		),
-		knip: join(modules, "knip", "bin", "knip.js"),
 		typescript: join(modules, "typescript", "bin", "tsc"),
 	};
 }

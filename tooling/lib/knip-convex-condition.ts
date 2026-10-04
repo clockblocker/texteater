@@ -1,5 +1,5 @@
 /**
- * Preloaded into knip by `tooling/knip.ts`. Knip resolves package exports
+ * Imported by `tooling/lib/knip-run.ts` before knip loads. Knip resolves package exports
  * with fixed conditions (`require`, `import`, `node`, `default`), which lead
  * a workspace import to its built `dist/`. TypeScript, Bun and Convex resolve
  * the `convex` condition first (`tooling/typescript/base.json`), which points

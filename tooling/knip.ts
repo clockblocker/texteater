@@ -3,9 +3,12 @@
  * dependencies, checked against `tooling/knip-baseline.json`.
  *
  * Knip always analyzes the whole repository with `tooling/knip.config.ts`,
- * so an export another workspace imports counts as used. Bun runs a package
- * script in its package's directory: at the repository root every finding
- * counts, and inside a workspace only that workspace's findings do.
+ * so an export another workspace imports counts as used. A name a package's
+ * public entry point exports counts as used only when another workspace
+ * uses it through that entry (#419): the package's own tests, codegen and
+ * internal files don't keep it public. Bun runs a package script in its
+ * package's directory: at the repository root every finding counts, and
+ * inside a workspace only that workspace's findings do.
  *
  * A finding missing from the baseline fails the run. A baseline line knip no
  * longer reports is listed so the baseline can shrink; `--update-baseline`
@@ -16,10 +19,10 @@ import {
 	compareWithBaseline,
 	type Findings,
 	findingsOf,
-	type KnipReport,
 	scopeOf,
 	updatedBaseline,
 } from "./lib/knip";
+import { runKnip } from "./lib/knip-run";
 import { toolPaths } from "./lib/tools";
 import { discoverWorkspaces, findRepositoryRoot } from "./lib/workspaces";
 
@@ -31,37 +34,17 @@ if (args.some((arg) => arg !== "--update-baseline")) {
 }
 
 const repositoryRoot = await findRepositoryRoot(process.cwd());
-const workspacePaths = (await discoverWorkspaces(repositoryRoot)).map(
-	(workspace) => workspace.relativePath,
-);
+const workspaces = await discoverWorkspaces(repositoryRoot);
+const workspacePaths = workspaces.map((workspace) => workspace.relativePath);
 const scope = scopeOf(process.cwd(), repositoryRoot, workspacePaths);
 const baselineName = "tooling/knip-baseline.json";
 const baselinePath = join(repositoryRoot, baselineName);
 const tools = toolPaths(repositoryRoot);
 
-const knip = Bun.spawn(
-	[
-		process.execPath,
-		"--preload",
-		join(repositoryRoot, "tooling/lib/knip-convex-condition.ts"),
-		tools.knip,
-		"--config",
-		join(repositoryRoot, "tooling/knip.config.ts"),
-		"--no-config-hints",
-		"--no-progress",
-		"--reporter",
-		"json",
-	],
-	{ cwd: repositoryRoot, stderr: "inherit", stdout: "pipe" },
+const found = findingsOf(
+	await runKnip(repositoryRoot, workspaces),
+	workspacePaths,
 );
-const output = await new Response(knip.stdout).text();
-// Knip exits 1 when it reports findings and 2 when it fails.
-if ((await knip.exited) > 1) {
-	console.error(output);
-	process.exit(1);
-}
-
-const found = findingsOf(JSON.parse(output) as KnipReport, workspacePaths);
 const baseline = (await Bun.file(baselinePath).json()) as Findings;
 const label = scope ?? "the repository";
 
@@ -109,7 +92,7 @@ if (count(added) > 0) {
 	);
 	print(added, console.error);
 	console.error(
-		"Delete them, declare a real entry point in the workspace's knip.json, or, for a finding that must stay, run `bun run knip --update-baseline`.",
+		"Delete them, declare a real entry point in the workspace's knip.json, or, for a finding that must stay, run `bun run knip --update-baseline`. A finding on a package's public entry means no other workspace uses that name through it: drop it from the entry, or delete it if nothing inside uses it either.",
 	);
 	process.exit(1);
 }

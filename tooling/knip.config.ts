@@ -78,7 +78,6 @@ export default {
 				// Spawned by path.
 				"tooling/dum-entrypoint-rss/empty-module.ts",
 				"tooling/dum-entrypoint-rss/runner.ts",
-				"tooling/lib/knip-convex-condition.ts",
 			],
 			project: ["tooling/**/*.ts"],
 			ignoreDependencies: [
