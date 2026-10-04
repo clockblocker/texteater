@@ -737,7 +737,9 @@ function CompassRuntime({
 			columnRemOf(card.subject),
 			rem,
 			OPEN_SCALE,
-			deckTopRem,
+			{
+				topRem: deckTopRem,
+			},
 		);
 	}
 	/**
@@ -773,15 +775,12 @@ function CompassRuntime({
 			holder?.deck &&
 			holderBox &&
 			!inside(
-				dropRegions(
-					holderBox,
-					columnRemOf(d.card.subject),
-					rem,
-					barRemOf(
+				dropRegions(holderBox, columnRemOf(d.card.subject), rem, {
+					barRem: barRemOf(
 						findPane(workspaceRef.current.layout, holder.paneId),
 					),
 					direction,
-				).bar,
+				}).bar,
 				x,
 				y,
 			)
@@ -813,13 +812,10 @@ function CompassRuntime({
 		const columnRem = columnRemOf(d.card.subject);
 		const regions = panes.map((pane) => ({
 			paneId: pane.id,
-			regions: dropRegions(
-				restBoxes[pane.id] as Box,
-				columnRem,
-				rem,
-				barRemOf(pane),
+			regions: dropRegions(restBoxes[pane.id] as Box, columnRem, rem, {
+				barRem: barRemOf(pane),
 				direction,
-			),
+			}),
 		}));
 		/* the destination the pointer was over holds it a little longer */
 		const current = destinationRef.current;
@@ -1931,8 +1927,7 @@ function CompassRuntime({
 								box,
 								columnRemOf(drag.card.subject),
 								rem,
-								barRemOf(pane),
-								direction,
+								{ barRem: barRemOf(pane), direction },
 							)}
 							destination={destination}
 							homeLabel={homeLabel(drag)}

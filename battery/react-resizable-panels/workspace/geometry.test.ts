@@ -15,6 +15,8 @@ import {
 	HEADER_REM,
 	HYSTERESIS_PX,
 	inside,
+	isNarrow,
+	NARROW_BELOW_REM,
 	PILE_HEIGHT_REM,
 	type Region,
 	regionAt,
@@ -103,13 +105,15 @@ describe("dropRegions", () => {
 	});
 
 	test("a taller bar pushes the cover region down", () => {
-		const tall = dropRegions(PANE, CARD_WIDTH_REM, REM, 4.5);
+		const tall = dropRegions(PANE, CARD_WIDTH_REM, REM, { barRem: 4.5 });
 		expect(tall.bar.height).toBe(72);
 		expect(tall.cover.top).toBe(50 + 72);
 	});
 
 	test("in right-to-left text inline-start is on the right", () => {
-		const rtl = dropRegions(PANE, CARD_WIDTH_REM, REM, BAR_REM, "rtl");
+		const rtl = dropRegions(PANE, CARD_WIDTH_REM, REM, {
+			direction: "rtl",
+		});
 		expect(rtl.edges.map((e) => [e.edge, e.box.left])).toEqual([
 			["inline-end", 100],
 			["inline-start", 1300 - side],
@@ -121,6 +125,31 @@ describe("dropRegions", () => {
 		const scaled = dropRegions(boxAt(PANE, 1.25), CARD_WIDTH_REM, 20);
 		expect(scaled.cover).toEqual(boxAt(regions.cover, 1.25));
 		expect(scaled.bar).toEqual(boxAt(regions.bar, 1.25));
+	});
+
+	test("on a narrow screen a Pane has no edges and its cover region spans it", () => {
+		const narrow = dropRegions(PANE, CARD_WIDTH_REM, REM, { narrow: true });
+		expect(narrow.edges).toEqual([]);
+		expect(narrow.cover).toEqual({
+			left: 100,
+			top: 50 + BAR_REM * REM,
+			width: 1200,
+			height: 900 - BAR_REM * REM,
+		});
+		expect(narrow.bar).toEqual(regions.bar);
+		/* so a pointer at the very side opens a Cover rather than a Pane */
+		expect(regionAt([{ paneId: "a", regions: narrow }], 101, 400)).toEqual({
+			kind: "cover",
+			paneId: "a",
+		});
+	});
+});
+
+describe("isNarrow", () => {
+	test("a screen is narrow below the md breakpoint, at the root size given", () => {
+		expect(isNarrow(NARROW_BELOW_REM * REM - 1, REM)).toBe(true);
+		expect(isNarrow(NARROW_BELOW_REM * REM, REM)).toBe(false);
+		expect(isNarrow(800, 20)).toBe(true);
 	});
 });
 
@@ -237,6 +266,10 @@ describe("Sheet boxes", () => {
 		expect(groundBoxIn(PANE, REM, 4.5).top).toBe(50 + 72);
 	});
 
+	test("on a narrow screen a Cover fills its Pane", () => {
+		expect(coverBoxIn(PANE, REM, true)).toEqual(PANE);
+	});
+
 	test("neither collapses below nothing in a Pane too small for it", () => {
 		const tiny: Box = { left: 0, top: 0, width: 20, height: 20 };
 		expect(coverBoxIn(tiny, REM)).toMatchObject({ width: 0, height: 0 });
@@ -285,6 +318,55 @@ describe("the Deck", () => {
 		expect(cardHeightPx(0, REM)).toBe(cardHeightPx(1, REM));
 	});
 
+	test("in a shorter column the front Card is shorter, and never less than a Heading row", () => {
+		expect(cardHeightPx(4, REM, 300)).toBe(300 - 3 * HEADER_REM * REM);
+		expect(cardHeightPx(12, REM, 300)).toBe(HEADER_REM * REM);
+	});
+
+	describe("in a short Pane", () => {
+		const foot = (box: Box) => box.top + box.height;
+		const paneOf = (height: number): Box => ({ ...PANE, height });
+
+		test("it shrinks to fit below its top, keeping a rem under its foot", () => {
+			const pane = paneOf(560);
+			const column = deckColumnIn(pane, REM, OPEN_SCALE);
+			expect(column.top).toBe(50 + DECK_TOP_REM * REM);
+			expect(foot(column)).toBe(foot(pane) - REM);
+			expect(column.height).toBeLessThan(PILE_HEIGHT_REM * REM);
+		});
+
+		test("shorter still, it keeps a usable pile and moves up instead", () => {
+			const pane = paneOf(350);
+			const column = deckColumnIn(pane, REM, OPEN_SCALE);
+			expect(column.height).toBe(16 * REM);
+			expect(foot(column)).toBe(foot(pane) - REM);
+			expect(column.top).toBeLessThan(50 + DECK_TOP_REM * REM);
+		});
+
+		test("it never rises over the Pane bar, and shrinks to what is left", () => {
+			const pane = paneOf(200);
+			const column = deckColumnIn(pane, REM, OPEN_SCALE);
+			expect(column.top).toBe(50 + BAR_REM * REM);
+			expect(foot(column)).toBe(foot(pane) - REM);
+		});
+
+		test("a stage Deck, nearer its top than the bar, keeps its own top", () => {
+			const column = deckColumnIn(paneOf(900), REM, OPEN_SCALE, 1);
+			expect(column.top).toBe(50 + REM);
+		});
+
+		test("whatever the Pane, the Deck stays inside it", () => {
+			for (const height of [0, 40, 120, 300, 480, 700, 900, 2000]) {
+				const pane = paneOf(height);
+				const column = deckColumnIn(pane, REM, OPEN_SCALE);
+				expect(column.height).toBeGreaterThanOrEqual(0);
+				expect(foot(column)).toBeLessThanOrEqual(
+					Math.max(foot(pane), column.top),
+				);
+			}
+		});
+	});
+
 	test("the return band spans between the edges, from the Deck's top to below its foot", () => {
 		const side = edgeWidth(CARD_WIDTH_REM, PANE.width, REM);
 		const column = deckColumnIn(PANE, REM, OPEN_SCALE);
@@ -294,6 +376,14 @@ describe("the Deck", () => {
 			width: 1200 - 2 * side,
 			height: column.height + 3 * REM,
 		});
+	});
+
+	test("on a narrow screen the return band spans the Pane", () => {
+		const band = returnBandIn(PANE, CARD_WIDTH_REM, REM, OPEN_SCALE, {
+			narrow: true,
+		});
+		expect(band.left).toBe(100);
+		expect(band.width).toBe(1200);
 	});
 });
 

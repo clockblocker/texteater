@@ -41,6 +41,20 @@ export const LOOSE_CARD_REM = 18;
 export const DECK_TOP_REM = 12;
 /** How far the return band reaches below the Deck's Cards. */
 export const RETURN_PAD_REM = 3;
+/**
+ * The least a Deck shrinks to in a short Pane: room for a front Card's
+ * Heading and a few lines of it under the Headings of the Cards behind.
+ */
+const MIN_PILE_REM = 16;
+/** The air a Deck keeps under its foot, inside its Pane. */
+const DECK_FOOT_REM = 1;
+
+/**
+ * Below this viewport width, the `md` breakpoint, a screen is narrow: it
+ * shows one Pane and makes no splits, so a Pane has no side edges and a
+ * Cover fills it (tf-demo ADR 0008).
+ */
+export const NARROW_BELOW_REM = 48;
 
 /**
  * A Cover's box: flush with its Pane's top, over the Pane bar, and inset
@@ -77,6 +91,11 @@ export const Z = {
 	held: 40,
 } as const;
 
+/** Whether a viewport `width` px wide is a narrow screen, at the `rem` given. */
+export function isNarrow(width: number, rem: number): boolean {
+	return width < NARROW_BELOW_REM * rem;
+}
+
 /* ----------------------------------------------------------------- Deck */
 
 /**
@@ -97,9 +116,20 @@ export function cardWidthIn(
 	);
 }
 
-/** The front Card's height, in px, in a Deck of `count` Cards. */
-export function cardHeightPx(count: number, rem: number): number {
-	return (PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * rem;
+/**
+ * The front Card's height, in px, in a Deck of `count` Cards whose column
+ * is `pileHeight` px tall: what is left of it under one Heading row per
+ * Card behind, and never less than a Heading row.
+ */
+export function cardHeightPx(
+	count: number,
+	rem: number,
+	pileHeight = PILE_HEIGHT_REM * rem,
+): number {
+	return Math.max(
+		HEADER_REM * rem,
+		pileHeight - (Math.max(1, count) - 1) * HEADER_REM * rem,
+	);
 }
 
 /** The Deck's left edge inside its Pane: the Deck is centred. */
@@ -115,7 +145,12 @@ export function deckTopIn(rem: number, topRem = DECK_TOP_REM): number {
 	return topRem * rem;
 }
 
-/** The Deck's column in a Pane: where its Cards sit, in frame coordinates. */
+/**
+ * The Deck's column in a Pane: where its Cards sit, in frame coordinates.
+ * It fits its Pane. A Pane too short for the whole pile below `topRem`
+ * shrinks it, down to `MIN_PILE_REM`; one too short for that moves the
+ * Deck up, though never above the Pane bar, and shrinks it to what is left.
+ */
 export function deckColumnIn(
 	pane: Box,
 	rem: number,
@@ -123,13 +158,32 @@ export function deckColumnIn(
 	topRem = DECK_TOP_REM,
 ): Box {
 	const width = cardWidthIn(pane.width, rem, openScale);
+	const room = Math.max(0, pane.height - DECK_FOOT_REM * rem);
+	const preferred = deckTopIn(rem, topRem);
+	const highest = Math.min(topRem, BAR_REM) * rem;
+	const height = Math.max(
+		0,
+		Math.min(
+			PILE_HEIGHT_REM * rem,
+			Math.max(MIN_PILE_REM * rem, room - preferred),
+			room - highest,
+		),
+	);
 	return {
 		left: pane.left + deckLeftIn(pane.width, width),
-		top: pane.top + deckTopIn(rem, topRem),
+		top: pane.top + Math.max(highest, Math.min(preferred, room - height)),
 		width,
-		height: PILE_HEIGHT_REM * rem,
+		height,
 	};
 }
+
+/** Where a Deck is drawn: how far below its Pane's top, and on what screen. */
+export type DeckOptions = {
+	/** Moves the Deck for a renderer that has nothing above it; see `deckTopIn`. */
+	readonly topRem?: number;
+	/** A narrow screen: its Panes have no side edges. */
+	readonly narrow?: boolean;
+};
 
 /**
  * The return band over a Deck: the Pane's width between its two edge
@@ -141,10 +195,10 @@ export function returnBandIn(
 	columnRem: number,
 	rem: number,
 	openScale: number,
-	topRem = DECK_TOP_REM,
+	{ topRem = DECK_TOP_REM, narrow = false }: DeckOptions = {},
 ): Box {
 	const column = deckColumnIn(pane, rem, openScale, topRem);
-	const side = edgeWidth(columnRem, pane.width, rem);
+	const side = narrow ? 0 : edgeWidth(columnRem, pane.width, rem);
 	return {
 		left: pane.left + side,
 		top: column.top,
@@ -157,11 +211,13 @@ export function returnBandIn(
 
 /**
  * Where a Cover sits in a Pane: from the Pane's top edge, over its bar,
- * and inset from its sides and foot. A Cover carries its own bar.
+ * and inset from its sides and foot. A Cover carries its own bar. On a
+ * narrow screen it fills its Pane: what would have been a Pane of its
+ * own opens full-screen as a Cover.
  */
-export function coverBoxIn(pane: Box, rem: number): Box {
-	const insetX = SHEET_INSET_X_REM * rem;
-	const insetY = SHEET_INSET_Y_REM * rem;
+export function coverBoxIn(pane: Box, rem: number, narrow = false): Box {
+	const insetX = narrow ? 0 : SHEET_INSET_X_REM * rem;
+	const insetY = narrow ? 0 : SHEET_INSET_Y_REM * rem;
 	return {
 		left: pane.left + insetX,
 		top: pane.top,
@@ -227,6 +283,14 @@ export function edgeWidth(
 	);
 }
 
+export type DropOptions = {
+	/** The Pane bar's height; a Floating Pane's bar is its Ground's Heading. */
+	readonly barRem?: number;
+	readonly direction?: WritingDirection;
+	/** A narrow screen makes no splits: no side edges, and the cover region spans the Pane. */
+	readonly narrow?: boolean;
+};
+
 /**
  * A Pane's drop regions for a held Card whose content column is
  * `columnRem`, in frame coordinates. The inline-start edge sits on the
@@ -236,10 +300,9 @@ export function dropRegions(
 	pane: Box,
 	columnRem: number,
 	rem: number,
-	barRem = BAR_REM,
-	direction: WritingDirection = "ltr",
+	{ barRem = BAR_REM, direction = "ltr", narrow = false }: DropOptions = {},
 ): DropRegions {
-	const side = edgeWidth(columnRem, pane.width, rem);
+	const side = narrow ? 0 : edgeWidth(columnRem, pane.width, rem);
 	const bar = barRem * rem;
 	const [left, right]: readonly [Edge, Edge] =
 		direction === "rtl"
@@ -252,26 +315,28 @@ export function dropRegions(
 			width: pane.width - 2 * side,
 			height: pane.height - bar,
 		},
-		edges: [
-			{
-				edge: left,
-				box: {
-					left: pane.left,
-					top: pane.top,
-					width: side,
-					height: pane.height,
-				},
-			},
-			{
-				edge: right,
-				box: {
-					left: pane.left + pane.width - side,
-					top: pane.top,
-					width: side,
-					height: pane.height,
-				},
-			},
-		],
+		edges: narrow
+			? []
+			: [
+					{
+						edge: left,
+						box: {
+							left: pane.left,
+							top: pane.top,
+							width: side,
+							height: pane.height,
+						},
+					},
+					{
+						edge: right,
+						box: {
+							left: pane.left + pane.width - side,
+							top: pane.top,
+							width: side,
+							height: pane.height,
+						},
+					},
+				],
 		bar: {
 			left: pane.left,
 			top: pane.top,
