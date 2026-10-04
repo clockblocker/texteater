@@ -357,8 +357,10 @@ export function PresentationView<S>({
 			}}
 			onPointerDown={down}
 			/* `contain` stops the width/height spring's recalc at this Note
-			   rather than letting it walk the deck */
-			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] select-none ${ground ? "" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none active:cursor-grabbing"}`}
+			   rather than letting it walk the deck. A Card is all handle, so
+			   none of it selects; a Sheet's text does, and its Heading is the
+			   handle (a Sheet in hand is drawn as a Card) */
+			className={`${preview ? "pointer-events-none" : "pointer-events-auto"} absolute flex flex-col overflow-hidden border bg-paper [contain:layout_paint] ${ground ? "" : "rounded-[0.9rem]"} ${sheet ? "" : "cursor-grab touch-none select-none active:cursor-grabbing"}`}
 		>
 			{/* the content column: one width in every form, centred inside a
 			    Heading and a scroller that both span the Pane, so the scrollbar
