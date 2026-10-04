@@ -78,7 +78,11 @@ against it.
 The Authored Inventories are the closed-class units authored instead of
 generated, each Reading with its reviewed Knowledge. `dumcorpus/inventories`
 exports them without reading files or loading Zod, so a short-lived isolate
-can import it; the package root re-exports it.
+can import it; the package root re-exports it. Runtime code loads only this
+entry: Dumdict, tf-demo's Convex, server and browser code, and Dumgen's
+production `src`. The gold loader and the review tooling are for development
+and evaluation, and the repository's import policy rejects a runtime import
+of any other dumcorpus entry. Type-only imports are free.
 
 ```ts
 import { authoredMembers, authoredRealizations } from "dumcorpus/inventories";

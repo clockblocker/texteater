@@ -332,6 +332,35 @@ function mayLoadCodegenOnlyEntry(
 	);
 }
 
+/**
+ * The one dumcorpus entry runtime code may load: the Authored Inventories,
+ * which read no files and load no Zod (ADR 0025). The package root carries
+ * the gold loader, which reads records with `node:fs`, and the review
+ * tooling; both are for development and evaluation only. Type-only imports
+ * erase, so runtime code may still name a corpus type.
+ */
+const runtimeCorpusEntry = "dumcorpus/inventories";
+const runtimeCorpusConsumers = [
+	/^battery\/dumdict\/src\//,
+	/^app\/tf-demo\/(?:convex|server)\//,
+	/^app\/tf-demo\/src\/(?!.*\.test\.tsx?$)/,
+	// Dumgen's evaluator and jev lab still live in src until #919 moves them.
+	/^battery\/dumgen\/src\/(?!evaluation\/|segment-in-units\/|development\.ts$)/,
+];
+
+function loadsCorpusOutsideRuntimeEntry(
+	importer: string,
+	specifier: string,
+	reference: ImportReference,
+): boolean {
+	return (
+		(specifier === "dumcorpus" || specifier.startsWith("dumcorpus/")) &&
+		specifier !== runtimeCorpusEntry &&
+		!reference.typeOnly &&
+		runtimeCorpusConsumers.some((consumer) => consumer.test(importer))
+	);
+}
+
 function isExplicitAuthoringSource(
 	workspace: Workspace,
 	file: string,
@@ -554,6 +583,19 @@ export async function validateSourceImports(options: {
 						file: relative(options.repositoryRoot, file),
 						message:
 							"only code generators, scripts and tests may load a codegen-only entry",
+						specifier,
+					});
+				}
+				if (
+					loadsCorpusOutsideRuntimeEntry(
+						importer,
+						specifier,
+						reference,
+					)
+				) {
+					issues.push({
+						file: relative(options.repositoryRoot, file),
+						message: `runtime code may load only ${runtimeCorpusEntry}; the gold loader and review tooling are for development and evaluation`,
 						specifier,
 					});
 				}

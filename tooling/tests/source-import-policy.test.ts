@@ -379,3 +379,82 @@ test("only generators, scripts and tests may load dumling/codegen", async () => 
 		],
 	]);
 });
+
+test("runtime code may load only dumcorpus/inventories, and name any corpus type", async () => {
+	const root = await temporaryRepository();
+	await addWorkspace(root, {
+		exports: {
+			".": "./dist/index.js",
+			"./inventories": "./dist/inventories.js",
+			"./types": "./dist/types.js",
+		},
+		kind: "battery",
+		name: "dumcorpus",
+	});
+	const dependencies = { dumcorpus: "workspace:^" };
+	const dumdict = await addWorkspace(root, {
+		dependencies,
+		kind: "battery",
+		name: "dumdict",
+	});
+	const dumgen = await addWorkspace(root, {
+		dependencies,
+		kind: "battery",
+		name: "dumgen",
+	});
+	const tfDemo = await addWorkspace(root, {
+		dependencies,
+		kind: "app",
+		name: "@texteater/tf-demo",
+	});
+	const inventories =
+		'import { authoredFor } from "dumcorpus/inventories";\n';
+	const types = 'import type { CitingPrompt } from "dumcorpus/types";\n';
+	const gold = 'import { loadSpecRecords } from "dumcorpus";\n';
+	for (const [workspace, path] of [
+		[dumdict, "src/validation-semantics.ts"],
+		[dumgen, "src/resolve/grammar.ts"],
+		[tfDemo, "convex/persistence.ts"],
+	] as const)
+		await writeSource(workspace, path, inventories + types);
+	// Development and evaluation code may read the gold.
+	for (const [workspace, path] of [
+		[dumgen, "src/evaluation/spec-corpus/gold.ts"],
+		[dumgen, "src/segment-in-units/lab/round.ts"],
+		[dumgen, "cli/evaluate.ts"],
+		[dumgen, "tests/resolve/prompts.test.ts"],
+		[tfDemo, "src/notes/render.test.ts"],
+	] as const)
+		await writeSource(workspace, path, gold);
+	for (const [workspace, path] of [
+		[dumdict, "src/index.ts"],
+		[dumgen, "src/knowledge/produce.ts"],
+		[tfDemo, "convex/schema.ts"],
+		[tfDemo, "server/session.ts"],
+		[tfDemo, "src/notes/render.ts"],
+	] as const)
+		await writeSource(workspace, path, gold);
+	await writeSource(
+		dumgen,
+		"src/index.ts",
+		'export { rules } from "dumcorpus";\nimport "dumcorpus/types";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(
+		issues.map(({ file, specifier }) => `${file} ${specifier}`).toSorted(),
+	).toEqual([
+		"app/tf-demo/convex/schema.ts dumcorpus",
+		"app/tf-demo/server/session.ts dumcorpus",
+		"app/tf-demo/src/notes/render.ts dumcorpus",
+		"battery/dumdict/src/index.ts dumcorpus",
+		"battery/dumgen/src/index.ts dumcorpus",
+		"battery/dumgen/src/index.ts dumcorpus/types",
+		"battery/dumgen/src/knowledge/produce.ts dumcorpus",
+	]);
+	for (const issue of issues)
+		expect(issue.message).toStartWith(
+			"runtime code may load only dumcorpus/inventories",
+		);
+});
