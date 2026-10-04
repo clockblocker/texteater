@@ -33,7 +33,7 @@ In dumling, this is a core Lemma-level fact. Different inflected or cited uses o
 		{
 			heading: "Relation to polarity",
 			body: `
-\`HebExistential\` does not replace [\`Polarity\`](/u/feature/polarity/).
+\`HebExistential\` does not replace [\`Polarity\`](/u/feature/#polarity).
 
 For example, \`אין\` is modeled as a negative existential verb because that negativity is lexical to the Lemma itself, not an inflectional polarity marking added on top of some separate non-existential base verb.
 `,

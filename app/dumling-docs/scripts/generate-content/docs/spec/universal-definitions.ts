@@ -127,3 +127,22 @@ export const evidenceFieldDefinitions: Readonly<
 		title: "spelling",
 	},
 };
+
+/**
+ * Feature Pool features Dumling defines itself rather than take from
+ * Universal Dependencies, so the universal feature table gives them no UD
+ * link.
+ */
+export const dumlingOwnFeatures: ReadonlySet<string> = new Set([
+	"article",
+	"comparable",
+	"expletive",
+	"future",
+	"hasSepPrefix",
+	"lexicallyReflexive",
+	"participleForm",
+	"passive",
+	"perfect",
+	"phrasal",
+	"sourceLang",
+]);

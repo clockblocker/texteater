@@ -31,7 +31,7 @@ If \`Lemma.coreFeatures.numForm\` is absent or \`undefined\`, the Lemma has no r
 			body: `
 Use \`numForm\` when the shape of the numeral expression is a stable lexical fact of the Lemma, such as whether it is written as digits, Roman numerals, or words.
 
-\`NumForm\` often works together with [\`NumType\`](/u/feature/num-type/): for example, a Lemma can be an ordinal written as a word or a cardinal written as digits. The two features answer different questions, with \`NumType\` covering semantic subtype and \`NumForm\` covering written form.
+\`NumForm\` often works together with [\`NumType\`](/u/feature/#num-type): for example, a Lemma can be an ordinal written as a word or a cardinal written as digits. The two features answer different questions, with \`NumType\` covering semantic subtype and \`NumForm\` covering written form.
 `,
 		},
 		{

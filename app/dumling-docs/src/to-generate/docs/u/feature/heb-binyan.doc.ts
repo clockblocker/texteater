@@ -40,7 +40,7 @@ In dumling, binyan is modeled as a core Lemma-level fact rather than an inflecti
 		{
 			heading: "Relation to voice and other features",
 			body: `
-\`HebBinyan\` does not replace inflectional features such as [\`Voice\`](/u/feature/voice/), [\`Tense\`](/u/feature/tense/), or [\`VerbForm\`](/u/feature/verb-form/).
+\`HebBinyan\` does not replace inflectional features such as [\`Voice\`](/u/feature/voice/), [\`Tense\`](/u/feature/tense/), or [\`VerbForm\`](/u/feature/#verb-form).
 
 Some binyanim often correlate with voice-like behavior, but the features remain distinct. For example, a \`NIFAL\` or \`HITPAEL\` Lemma may still carry explicit surface-level \`voice\` values where the analysis needs them.
 `,

@@ -17,6 +17,7 @@ import type {
 	SchemaRoute,
 } from "./schema-routes";
 import {
+	dumlingOwnFeatures,
 	evidenceFieldDefinitions,
 	kindDefinitions,
 } from "./universal-definitions";
@@ -116,6 +117,28 @@ function featureTitle(feature: string): string {
 
 function link(text: string, routeId: string): string {
 	return `[${text}](${publicHrefForRouteId(routeId)})`;
+}
+
+/**
+ * The universal feature overview. Its table gives each feature without a
+ * hand-written universal page a row, which stands in for that page.
+ */
+const universalFeatureRouteId = "u/feature";
+
+/** The anchor of a feature's row in the universal feature table. */
+function featureRowAnchor(feature: string): string {
+	return kebab(feature);
+}
+
+/** A feature's universal definition: its own page, or its table row. */
+function universalFeatureLink(
+	feature: string,
+	handWrittenRouteIds: ReadonlySet<string>,
+): string {
+	const routeId = featurePageId("u", feature);
+	return handWrittenRouteIds.has(routeId)
+		? link(featureTitle(feature), routeId)
+		: `[${featureTitle(feature)}](${publicHrefForRouteId(universalFeatureRouteId)}#${featureRowAnchor(feature)})`;
 }
 
 function kindOrder(family: Dumling.Family, kind: Dumling.Kind): number {
@@ -473,18 +496,13 @@ function featurePage(
 	entries: readonly RecordTarget[],
 	input: SpecPagesInput,
 ): SpecPage {
-	const universalRouteId = featurePageId("u", name);
 	const values = [...new Set(uses.flatMap(({ feature }) => feature.values))];
 	const freeText = uses.some(({ feature }) => feature.freeText);
 	return {
 		description: `${languageNames[language]} ${featureTitle(name)}: the routes that allow it and its values in the records.`,
 		order: 8010,
 		routeId: featurePageId(language, name),
-		lead: `The ${languageNames[language]} feature \`${name}\`.${
-			input.handWrittenRouteIds.has(universalRouteId)
-				? ` Universal definition: ${link(featureTitle(name), universalRouteId)}.`
-				: ""
-		}`,
+		lead: `The ${languageNames[language]} feature \`${name}\`. Universal definition: ${universalFeatureLink(name, input.handWrittenRouteIds)}.`,
 		sections: [
 			[
 				"## Routes\n",
@@ -552,6 +570,54 @@ function universalEvidencePage(
 	};
 }
 
+/** `gender[psor]` is UD's `Gender-psor`. */
+function udFeatureLink(feature: string): string {
+	if (dumlingOwnFeatures.has(feature)) return "Dumling's own";
+	const name = featureTitle(feature).replace(/\[(\w+)\]/u, "-$1");
+	return `[${featureTitle(feature)}](https://universaldependencies.org/u/feat/${name}.html)`;
+}
+
+/**
+ * The universal feature overview, with a table row for every feature a
+ * route allows that has no hand-written universal page.
+ */
+function universalFeaturePage(
+	featureLanguages: ReadonlyMap<string, readonly Dumling.Language[]>,
+	handWrittenRouteIds: ReadonlySet<string>,
+): SpecPage {
+	const rows = [...featureLanguages]
+		.filter(([name]) => !handWrittenRouteIds.has(featurePageId("u", name)))
+		.toSorted(([left], [right]) => left.localeCompare(right));
+	return {
+		description:
+			"The universal features: a page for each defined feature and a table of the rest.",
+		lead: "A feature with a written universal definition has a page of its own, listed under Subpages. The table lists the other features the routes allow, with the UD definition and the language pages that show their values.",
+		order: 18000,
+		routeId: universalFeatureRouteId,
+		sections: [
+			rows.length === 0
+				? "## Features without a page\n\nEvery feature has a page."
+				: [
+						"## Features without a page\n",
+						"| Feature | UD definition | Language pages |",
+						"| --- | --- | --- |",
+						...rows.map(
+							([name, languages]) =>
+								`| <a id="${featureRowAnchor(name)}"></a>\`${featureTitle(name)}\` | ${udFeatureLink(name)} | ${languages
+									.map((language) =>
+										link(
+											languageNames[language],
+											featurePageId(language, name),
+										),
+									)
+									.join(", ")} |`,
+						),
+					].join("\n"),
+		],
+		title: "Feature",
+	};
+}
+
 function rulesPage(
 	language: Dumling.Language,
 	rules: readonly Dumspec.Rule[],
@@ -588,7 +654,8 @@ function routeTargets(
 /**
  * The spec's generated pages (ADR 0037): one per language × Family × Kind
  * route and per language feature, the universal Kind index pages, the
- * Surface and Attestation evidence pages and each language's Rules page.
+ * universal feature overview, the Surface and Attestation evidence pages and
+ * each language's Rules page.
  */
 export function buildSpecPages(input: SpecPagesInput): {
 	appendices: SpecAppendix[];
@@ -699,6 +766,9 @@ export function buildSpecPages(input: SpecPagesInput): {
 	) as EvidenceField[]) {
 		pages.push(universalEvidencePage(field, languages));
 	}
+	pages.push(
+		universalFeaturePage(featureLanguages, input.handWrittenRouteIds),
+	);
 	for (const [name, featureLanguageList] of featureLanguages) {
 		const routeId = featurePageId("u", name);
 		if (!input.handWrittenRouteIds.has(routeId)) continue;

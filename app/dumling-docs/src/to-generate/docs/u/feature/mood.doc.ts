@@ -49,7 +49,7 @@ Use \`mood\` on verbal or auxiliary surfaces when the analysis needs to record h
 		{
 			heading: "Related features",
 			body: `
-\`Mood\` is distinct from [\`Tense\`](/u/feature/tense/), which locates an event in time, and from [\`VerbForm\`](/u/feature/verb-form/), which distinguishes finite forms from infinitives, participles, gerunds, and similar categories.
+\`Mood\` is distinct from [\`Tense\`](/u/feature/tense/), which locates an event in time, and from [\`VerbForm\`](/u/feature/#verb-form), which distinguishes finite forms from infinitives, participles, gerunds, and similar categories.
 
 In practice, \`mood\` is most relevant on finite forms. Non-finite forms usually omit it.
 `,

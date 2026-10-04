@@ -48,7 +48,7 @@ The exact interpretation depends on the language. In some languages the main con
 		{
 			heading: "Related features",
 			body: `
-\`Voice\` is distinct from [\`Reflex\`](/u/feature/reflex/), which marks reflexive pronouns, and from [\`HebBinyan\`](/u/feature/heb-binyan/), which records a Hebrew verb's lexical stem class.
+\`Voice\` is distinct from [\`Reflex\`](/u/feature/#reflex), which marks reflexive pronouns, and from [\`HebBinyan\`](/u/feature/heb-binyan/), which records a Hebrew verb's lexical stem class.
 
 A language may have lexical patterns that correlate with voice, but \`voice\` itself is used when the surface analysis needs an explicit grammatical value.
 `,

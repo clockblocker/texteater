@@ -82,3 +82,35 @@ test("a universal Kind page links the language pages of its Kind", () => {
 		);
 	}
 });
+
+test("every language feature page links a universal definition that exists", () => {
+	const bodies = new Map(docs.map((doc) => [doc.routeId, doc.body]));
+	const unresolved = docs
+		.filter((doc) =>
+			/^(?:de|en|he)\/feature\/(?!attestation|surface)[^/]+$/u.test(
+				doc.routeId,
+			),
+		)
+		.flatMap((doc) => {
+			const href = doc.body.match(
+				/Universal definition: \[.*?\]\(\/(?<routeId>[^#)]+)\/(?:#(?<anchor>[^)]+))?\)/u,
+			)?.groups;
+			const target = href?.routeId && bodies.get(href.routeId);
+			const resolves =
+				target !== undefined &&
+				target !== "" &&
+				(href?.anchor === undefined ||
+					target.includes(`<a id="${href.anchor}"></a>`));
+			return resolves ? [] : [doc.routeId];
+		});
+	expect(unresolved).toEqual([]);
+});
+
+test("the universal feature table gives a row to each feature without a page", () => {
+	const overview = docs.find((doc) => doc.routeId === "u/feature");
+	expect(overview?.body).toContain(
+		'| <a id="person"></a>`Person` | [Person](https://universaldependencies.org/u/feat/Person.html) | [German](/de/feature/person/), [English](/en/feature/person/), [Hebrew](/he/feature/person/) |',
+	);
+	expect(overview?.body).not.toContain('<a id="case"></a>');
+	expect(pageRouteIds).not.toContain("u/feature/person");
+});
