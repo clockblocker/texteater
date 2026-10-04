@@ -5,7 +5,10 @@
  */
 import type * as Dumling from "dumling/types";
 
-/** The languages `segment.inUnits` segments: German only for now. */
+/**
+ * The languages Dumgen runs, each with a module in `languages.ts`: German
+ * only for now.
+ */
 export type SegmentLanguage = "de";
 
 /**

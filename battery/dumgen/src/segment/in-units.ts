@@ -2,8 +2,8 @@
  * `segment.inUnits` as a host calls it at intake (Dumgen ADR 0007): a Text
  * already split into paragraphs and Sentences goes in, and each Sentence
  * comes back as its Segments and its biggest units, each with its route or
- * `Unresolved`. German runs the Segment stage, then the unit stage with
- * production's setting (`productionUnitSettings`).
+ * `Unresolved`. The Sentences' language module runs its Segment stage,
+ * then its unit stage.
  *
  * Every jev request goes through the operation's calls, split into chunks
  * of `questionsPerRequest` questions, each naming the pinned model. The
@@ -21,13 +21,13 @@ import * as Effect from "effect/Effect";
 import * as Result from "effect/Result";
 import { callFailureOf, type OperationScope } from "../call.js";
 import { askThrough, type JevSettings } from "../jev-call.js";
-import type { AskFailure } from "./ask.js";
 import {
-	type GermanSegmentation,
-	segmentGermanSentence,
-	writtenGermanSegments,
-} from "./de/segments.js";
-import { segmentGermanUnits, type UnitSettings } from "./de/units.js";
+	type LanguageModule,
+	type LanguageModules,
+	languageModuleOf,
+	type SentenceSegmentation,
+} from "../language-module.js";
+import type { AskFailure } from "./ask.js";
 import type {
 	SegmentedSentence,
 	SegmentedText,
@@ -49,7 +49,7 @@ function failedSentence(
 	scope: OperationScope,
 	sentence: number,
 	failure: AskFailure,
-	segmentation: GermanSegmentation,
+	segmentation: SentenceSegmentation,
 ): SegmentedSentence {
 	scope.sentence({
 		sentence,
@@ -67,27 +67,25 @@ function failedSentence(
 const segmentSentence = Effect.fnUntraced(function* (
 	scope: OperationScope,
 	jev: InUnitsJev,
-	settings: UnitSettings,
+	module: LanguageModule,
 	text: string,
 	sentence: number,
 ) {
 	const ask = askThrough(scope, jev, sentence);
-	const cut = yield* Effect.result(segmentGermanSentence(text, ask));
+	const cut = yield* Effect.result(module.segment.segments(text, ask));
 	if (Result.isFailure(cut))
 		return failedSentence(
 			scope,
 			sentence,
 			cut.failure,
-			writtenGermanSegments(text),
+			module.segment.writtenSegments(text),
 		);
 	if (cut.success.unresolved.length > 0)
 		scope.event({
 			name: "UnresolvedSegments",
 			data: { sentence, segments: [...cut.success.unresolved] },
 		});
-	const units = yield* Effect.result(
-		segmentGermanUnits(cut.success, ask, settings),
-	);
+	const units = yield* Effect.result(module.segment.units(cut.success, ask));
 	if (Result.isFailure(units))
 		return failedSentence(scope, sentence, units.failure, cut.success);
 	scope.sentence({ sentence, outcome: "Segmented" });
@@ -99,16 +97,17 @@ const segmentSentence = Effect.fnUntraced(function* (
 });
 
 /**
- * The body of `segment.inUnits`. Another language than German, or a blank
+ * The body of `segment.inUnits`. A language with no module, or a blank
  * Sentence, is a Defect raised before anything is asked.
  */
 export const segmentText = Effect.fnUntraced(function* (
 	scope: OperationScope,
 	jev: InUnitsJev,
-	settings: UnitSettings,
+	modules: LanguageModules,
 	input: InUnitsInput,
 ): Effect.fn.Return<SegmentedText> {
-	if (input.language !== "de")
+	const module = languageModuleOf(modules, input.language);
+	if (module === undefined)
 		return yield* Effect.die(
 			Error(
 				`segment.inUnits segments German ("de") only, not ${JSON.stringify(input.language)}`,
@@ -129,7 +128,7 @@ export const segmentText = Effect.fnUntraced(function* (
 	const segmented = yield* Effect.forEach(
 		placed.flat(),
 		({ text, sentence }) =>
-			segmentSentence(scope, jev, settings, text, sentence),
+			segmentSentence(scope, jev, module, text, sentence),
 		{ concurrency: "unbounded" },
 	);
 	return {

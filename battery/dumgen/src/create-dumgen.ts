@@ -14,6 +14,7 @@ import type {
 	KnowledgeProduction,
 	ProduceKnowledgeInput,
 } from "./knowledge/types.js";
+import { languageModules } from "./languages.js";
 import {
 	defaultLunaConfiguration,
 	type LunaAsk,
@@ -29,7 +30,6 @@ import type {
 	ResolveReadingInput,
 } from "./resolve/types.js";
 import type { GermanInventory } from "./segment/de/inventory.js";
-import { productionUnitSettings } from "./segment/de/units.js";
 import { type InUnitsInput, segmentText } from "./segment/in-units.js";
 import { isFloatingModel, type JevAsk, pinnedJevModel } from "./segment/jev.js";
 import type { SegmentedText } from "./segment/segmented-sentence.js";
@@ -127,10 +127,7 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 		payloads: options.tracePayloads ?? false,
 		...(options.onOperation ? { onOperation: options.onOperation } : {}),
 	};
-	const settings =
-		options.inventory === undefined
-			? productionUnitSettings
-			: { ...productionUnitSettings, inventory: options.inventory };
+	const modules = languageModules(options);
 	const jev = { ask: options.jev, model };
 	const luna = {
 		ask: options.luna,
@@ -140,13 +137,13 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 		segment: {
 			inUnits: (input) =>
 				runOperation("segment.inUnits", operations, (scope) =>
-					segmentText(scope, jev, settings, input),
+					segmentText(scope, jev, modules, input),
 				),
 		},
 		resolve: {
 			grammar: (input) =>
 				runOperation("resolve.grammar", operations, (scope) =>
-					resolveGrammar(scope, { jev, luna }, input),
+					resolveGrammar(scope, { jev, luna }, modules, input),
 				),
 			reading: (input) =>
 				runOperation("resolve.reading", operations, (scope) =>
@@ -156,7 +153,7 @@ export function createDumgen(options: DumgenOptions): Dumgen {
 		knowledge: {
 			produce: (input) =>
 				runOperation("knowledge.produce", operations, (scope) =>
-					produceKnowledge(scope, { jev, luna }, input),
+					produceKnowledge(scope, { jev, luna }, modules, input),
 				),
 		},
 	};
