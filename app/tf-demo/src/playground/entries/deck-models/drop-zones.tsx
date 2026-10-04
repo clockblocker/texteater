@@ -1,4 +1,4 @@
-import { type DropRegions, Z } from "./geometry";
+import { type DropRegions, sideOf, type WritingDirection, Z } from "./geometry";
 import type { Destination, Drag, Fate } from "./model";
 import { useDeckMotion } from "./runtime-config";
 
@@ -31,6 +31,7 @@ export function DropZones({
 	destination,
 	homeLabel,
 	shown,
+	direction,
 }: {
 	paneId: string;
 	regions: DropRegions;
@@ -39,6 +40,7 @@ export function DropZones({
 	homeLabel: string;
 	/** The regions are read whether or not they are drawn; this draws them. */
 	shown: boolean;
+	direction: WritingDirection;
 }) {
 	const { ZONE_FEEDBACK_MS } = useDeckMotion();
 	const here =
@@ -57,7 +59,7 @@ export function DropZones({
 					<div
 						key={edge}
 						aria-hidden="true"
-						data-edge={edge}
+						data-edge={sideOf(edge, direction)}
 						data-active={active}
 						data-shown={shown}
 						className={zoneClass}

@@ -11,7 +11,7 @@ import {
 
 /**
  * Where a drop lands, read off the Pane: inside the rectangle a Pane on
- * the left or right would take, it spawns that Pane; in the band between
+ * either side would take, it spawns that Pane; in the band between
  * them that reaches a little past the Deck, it goes back on the Deck; on
  * the Pane bar it lands nowhere; anywhere else in the Pane it opens as a
  * Cover there. A Card lifted out of a Sheet reads that last region in
@@ -127,15 +127,23 @@ export function edgeWidth(
 	return Math.min(spawnSize(card, paneWidth, rem), paneWidth * EDGE_SHARE);
 }
 
-/** A Pane's drop regions, in frame coordinates. */
+/**
+ * A Pane's drop regions, in frame coordinates. Edges are logical: the
+ * writing direction decides which physical side each one sits on.
+ */
 export function dropRegions(
 	pane: Box,
 	card: Presentation,
 	rem: number,
 	barRem = BAR_REM,
+	direction: WritingDirection = "ltr",
 ): DropRegions {
 	const side = edgeWidth(card, pane.width, rem);
 	const bar = barRem * rem;
+	const [first, last]: readonly [Edge, Edge] =
+		direction === "rtl"
+			? ["inline-end", "inline-start"]
+			: ["inline-start", "inline-end"];
 	return {
 		cover: {
 			left: pane.left + side,
@@ -145,7 +153,7 @@ export function dropRegions(
 		},
 		edges: [
 			{
-				edge: "left",
+				edge: first,
 				box: {
 					left: pane.left,
 					top: pane.top,
@@ -154,7 +162,7 @@ export function dropRegions(
 				},
 			},
 			{
-				edge: "right",
+				edge: last,
 				box: {
 					left: pane.left + pane.width - side,
 					top: pane.top,
@@ -170,6 +178,18 @@ export function dropRegions(
 			height: bar,
 		},
 	};
+}
+
+export type WritingDirection = "ltr" | "rtl";
+
+/** The physical side a logical edge sits on, for a renderer that needs one. */
+export function sideOf(
+	edge: Edge,
+	direction: WritingDirection,
+): "left" | "right" {
+	return (edge === "inline-start") === (direction === "ltr")
+		? "left"
+		: "right";
 }
 
 export function inside(box: Box, x: number, y: number, grow = 0): boolean {

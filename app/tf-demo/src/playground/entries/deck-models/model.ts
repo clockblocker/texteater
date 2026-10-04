@@ -1,4 +1,5 @@
 import type { MotionValue } from "motion/react";
+import * as Panes from "react-resizable-panels/workspace";
 import {
 	type DummyNote,
 	type DummyText,
@@ -11,7 +12,10 @@ import {
 } from "./dummy";
 import type { HeadingControl } from "./heading-design";
 
-/** The Compass model: its types, and the pure Pane algebra over them. */
+/**
+ * The Compass model's own types: its dummy Subjects and its gestures. The
+ * Pane algebra is the battery's workspace reducer, bound here to them.
+ */
 
 export type Subject =
 	| { readonly kind: "Note"; readonly note: DummyNote }
@@ -27,61 +31,23 @@ export type Subject =
  */
 export type CoverBack = HeadingControl;
 
-/** One workspace instance of a Subject; a fresh one for every open (issue 483). */
-export type Presentation = { readonly id: number; readonly subject: Subject };
+/* The battery's Pane algebra, over the playground's dummy Subjects. */
 
-export type Deck = {
-	readonly word: string;
-	/**
-	 * Every Note dealt, in Deck rank. A Note keeps its rank in whatever form
-	 * it takes: opening as a Cover does not move it, and collapsing brings it
-	 * back to the same slot. Only a Sweep, or a new deal, changes this list.
-	 */
-	readonly cards: readonly Presentation[];
-	readonly expandedId: number | null;
-};
+export type Presentation = Panes.Presentation<Subject>;
 
-export type Rung = { readonly id: number; readonly deck: Deck | null } & (
-	| { readonly kind: "Menu" }
-	| { readonly kind: "Library" }
-	| { readonly kind: "Sheet"; readonly card: Presentation }
-);
+export type Deck = Panes.Deck<Subject>;
 
-export type Cover = {
-	readonly id: number;
-	readonly card: Presentation;
-	readonly deck: Deck | null;
-	/** The Cover a Held Card would push if dropped here: a ghost, gone when it leaves. */
-	readonly preview?: true;
-};
+export type Rung = Panes.Rung<Subject>;
 
-export type PaneNode = {
-	readonly kind: "Pane";
-	readonly id: string;
-	/** The Ground line, bottom rung first. Rooted when it starts at the Menu. */
-	readonly line: readonly Rung[];
-	readonly covers: readonly Cover[];
-	/**
-	 * The Pane a Held Card would spawn if dropped here: inserted while the
-	 * Card hovers an edge so the other Panes make room, and gone when it
-	 * leaves. Its Ground is drawn as a ghost Sheet of the Card.
-	 */
-	readonly preview?: true;
-};
+export type PaneNode = Panes.PaneNode<Subject>;
 
-type SplitNode = {
-	readonly kind: "Split";
-	readonly id: string;
-	readonly axis: "horizontal" | "vertical";
-	readonly children: readonly [LayoutNode, LayoutNode];
-	/** The child this split was made for, and the size it opened at. */
-	readonly freshId?: string;
-	readonly freshSize?: number | string;
-};
+export type LayoutNode = Panes.LayoutNode<Subject>;
 
-export type LayoutNode = PaneNode | SplitNode;
+export type Workspace = Panes.WorkspaceState<Subject>;
 
-export type Edge = "left" | "right";
+export type WorkspaceCommand = Panes.WorkspaceCommand<Subject>;
+
+export type Edge = Panes.Edge;
 
 export type Destination =
 	| { readonly kind: "return" }
@@ -125,12 +91,7 @@ export type NoteHandle = {
 };
 
 /** A Sheet a Deck can belong to: a Ground rung or a Cover, found by id. */
-export type SheetRef = {
-	readonly paneId: string;
-	readonly sheetId: number;
-	readonly card: Presentation | null;
-	readonly deck: Deck | null;
-	readonly ground: boolean;
+export type SheetRef = Panes.SheetRef<Subject> & {
 	/** A ghost: what a drop would make, not something the reader can touch. */
 	readonly preview: boolean;
 };
@@ -145,14 +106,14 @@ export type Drag = {
 	/** The Pane the gesture started in. */
 	readonly paneId: string;
 	/** The Deck the Note rests in, if it rests in one: its slot, and what a swipe sweeps. */
-	readonly deckSheet: number | null;
+	readonly deckSheet: string | null;
 	/**
 	 * Where a release with nothing under it sends the Note: back to its
 	 * slot on the Deck, back to the Sheet it was lifted out of, closed (a
 	 * Cover whose Card is on no live Deck), or away — a Card lifted from a
 	 * Link or a Segment came from nowhere.
 	 */
-	readonly home: "slot" | "restore" | "close" | "vanish";
+	readonly home: Panes.HeldHome;
 	phase: Phase;
 	/** Lifted out of a Sheet or from nowhere, rather than picked off a Deck. */
 	readonly lifted: boolean;
@@ -191,159 +152,40 @@ export type PendingLift = {
 	readonly make: () => Subject;
 };
 
-export type Checkpoint = {
-	readonly layout: LayoutNode;
-};
-
 export const ROOT_PANE = "root";
 
+/**
+ * The ghost Pane a Held Card would spawn if dropped on an edge, inserted
+ * while it hovers so the other Panes make room. Minted ids never take it.
+ */
 export const PREVIEW_PANE = "preview";
 
-/** The Sheet id every ghost wears; never a real Sheet's. */
-export const PREVIEW_SHEET = -1;
+/** The Sheet id every ghost wears, Cover or Ground; never a real Sheet's. */
+export const PREVIEW_SHEET = "preview";
 
-export function panesOf(node: LayoutNode): readonly PaneNode[] {
-	return node.kind === "Pane"
-		? [node]
-		: node.children.flatMap((child) => panesOf(child));
-}
-
-export function findPane(node: LayoutNode, id: string): PaneNode | null {
-	return panesOf(node).find((pane) => pane.id === id) ?? null;
-}
-
-/** Replaces a pane by id; `null` removes it and lets its sibling take over. */
-export function replacePane(
-	node: LayoutNode,
-	id: string,
-	next: LayoutNode | null,
-): LayoutNode | null {
-	if (node.kind === "Pane") return node.id === id ? next : node;
-	const [a, b] = node.children;
-	const nextA = replacePane(a, id, next);
-	const nextB = replacePane(b, id, next);
-	if (nextA === null) return nextB;
-	if (nextB === null) return nextA;
-	if (nextA === a && nextB === b) return node;
-	return { ...node, children: [nextA, nextB] };
-}
-
-/** Puts `fresh` beside the pane `id`, on the side the edge names, at `size`. */
-export function splitBeside(
-	node: LayoutNode,
-	id: string,
-	edge: Edge,
-	fresh: PaneNode,
-	size: number | string,
-): LayoutNode {
-	const pane = findPane(node, id);
-	if (!pane) return node;
-	const split: SplitNode = {
-		kind: "Split",
-		id: `split-${fresh.id}`,
-		axis: "horizontal",
-		children: edge === "left" ? [fresh, pane] : [pane, fresh],
-		freshId: fresh.id,
-		freshSize: size,
-	};
-	return replacePane(node, id, split) ?? node;
-}
-
-export function updatePane(
-	node: LayoutNode,
-	id: string,
-	update: (pane: PaneNode) => PaneNode,
-): LayoutNode {
-	const pane = findPane(node, id);
-	if (!pane) return node;
-	return replacePane(node, id, update(pane)) ?? node;
-}
-
-export function isRooted(pane: PaneNode): boolean {
-	return pane.line[0]?.kind === "Menu";
-}
-
-export function groundOf(pane: PaneNode): Rung {
-	const rung = pane.line.at(-1);
-	if (!rung) throw new Error(`Pane ${pane.id} has no Ground`);
-	return rung;
-}
-
-/** Every Sheet in a Pane, bottom first: the Ground, then its Covers. */
+/** Every Sheet in a Pane, bottom first, with its ghosts marked. */
 export function sheetsOf(pane: PaneNode): readonly SheetRef[] {
-	const ground = groundOf(pane);
-	return [
-		{
-			paneId: pane.id,
-			sheetId: ground.id,
-			card: ground.kind === "Sheet" ? ground.card : null,
-			deck: ground.deck,
-			ground: true,
-			preview: pane.preview === true,
-		},
-		...pane.covers.map((cover) => ({
-			paneId: pane.id,
-			sheetId: cover.id,
-			card: cover.card,
-			deck: cover.deck,
-			ground: false,
-			preview: cover.preview === true,
-		})),
-	];
-}
-
-export function topSheetOf(pane: PaneNode): SheetRef {
-	const sheets = sheetsOf(pane);
-	return sheets[sheets.length - 1] as SheetRef;
-}
-
-export function findSheet(node: LayoutNode, sheetId: number): SheetRef | null {
-	for (const pane of panesOf(node))
-		for (const sheet of sheetsOf(pane))
-			if (sheet.sheetId === sheetId) return sheet;
-	return null;
-}
-
-/** Rewrites one Sheet's Deck, wherever that Sheet is. */
-export function updateDeck(
-	node: LayoutNode,
-	sheetId: number,
-	update: (deck: Deck | null) => Deck | null,
-): LayoutNode {
-	const sheet = findSheet(node, sheetId);
-	if (!sheet) return node;
-	return updatePane(node, sheet.paneId, (pane) => ({
-		...pane,
-		line: pane.line.map((rung) =>
-			rung.id === sheetId ? { ...rung, deck: update(rung.deck) } : rung,
-		),
-		covers: pane.covers.map((cover) =>
-			cover.id === sheetId
-				? { ...cover, deck: update(cover.deck) }
-				: cover,
-		),
+	return Panes.sheetsOf(pane).map((sheet) => ({
+		...sheet,
+		preview: sheet.sheetId === PREVIEW_SHEET,
 	}));
 }
 
-/** Every Presentation that is open as a Sheet somewhere, so its Card is not on a Deck. */
-export function openIds(node: LayoutNode): ReadonlySet<number> {
-	const ids = new Set<number>();
-	for (const pane of panesOf(node))
-		for (const sheet of sheetsOf(pane))
-			if (sheet.card) ids.add(sheet.card.id);
-	return ids;
+export function topSheetOf(pane: PaneNode): SheetRef {
+	return sheetsOf(pane).at(-1) as SheetRef;
 }
 
-/**
- * The live Deck a Card still has a slot in, if any: the Sheet that dealt it
- * is still in its stack and the Deck has not been swept or replaced since.
- */
-export function deckHolding(node: LayoutNode, cardId: number): SheetRef | null {
-	for (const pane of panesOf(node))
-		for (const sheet of sheetsOf(pane))
-			if (sheet.deck?.cards.some((card) => card.id === cardId))
-				return sheet;
-	return null;
+export function findSheet(node: LayoutNode, sheetId: string): SheetRef | null {
+	const sheet = Panes.findSheet(node, sheetId);
+	return sheet ? { ...sheet, preview: sheetId === PREVIEW_SHEET } : null;
+}
+
+export function deckHolding(
+	node: LayoutNode,
+	presentationId: string,
+): SheetRef | null {
+	const sheet = Panes.deckHolding(node, presentationId);
+	return sheet ? { ...sheet, preview: false } : null;
 }
 
 export function subjectLabel(subject: Subject): string {
@@ -358,7 +200,11 @@ export function subjectGloss(subject: Subject): string | null {
 }
 
 export function rungLabel(rung: Rung): string {
-	return rung.kind === "Sheet" ? subjectLabel(rung.card.subject) : rung.kind;
+	return rung.kind === "Sheet"
+		? subjectLabel(rung.presentation.subject)
+		: rung.kind === "MenuItem"
+			? rung.item
+			: rung.kind;
 }
 
 export function subjectOfLink(link: NoteLink): Subject {
@@ -372,41 +218,46 @@ export function subjectOfLink(link: NoteLink): Subject {
  * line, Menu › Library › Text, so ← has rungs to step down; a seeded scene
  * deals a Deck for "noch", and the Sheet scene opens its first Card.
  */
-export function initialLayout(
-	scene: "empty" | "deck" | "sheet",
-	nextId: { current: number },
-	nextSheet: { current: number },
-): LayoutNode {
-	const text: Presentation = {
-		id: nextId.current++,
-		subject: { kind: "Text", text: FIRST_TEXT, focus: null },
-	};
-	const cards =
-		scene === "empty"
-			? []
-			: deckFor("noch").map((note) => ({
-					id: nextId.current++,
-					subject: { kind: "Note" as const, note },
-				}));
-	const deck: Deck | null = cards.length
-		? {
-				word: "noch",
-				cards,
-				expandedId: null,
-			}
-		: null;
-	const first = cards[0];
-	return {
-		kind: "Pane",
-		id: ROOT_PANE,
-		line: [
-			{ id: nextSheet.current++, kind: "Menu", deck: null },
-			{ id: nextSheet.current++, kind: "Library", deck: null },
-			{ id: nextSheet.current++, kind: "Sheet", card: text, deck },
-		],
-		covers:
-			scene === "sheet" && first
-				? [{ id: nextSheet.current++, card: first, deck: null }]
-				: [],
-	};
+export function initialWorkspace(scene: "empty" | "deck" | "sheet"): Workspace {
+	const reduce = (state: Workspace, ...commands: WorkspaceCommand[]) =>
+		commands.reduce(Panes.workspaceReducer<Subject>, state);
+	const atText = reduce(
+		Panes.createWorkspace<Subject>({ paneId: ROOT_PANE }),
+		{
+			type: "StepUp",
+			paneId: ROOT_PANE,
+			to: { kind: "MenuItem", item: "Library" },
+		},
+		{
+			type: "StepUp",
+			paneId: ROOT_PANE,
+			to: {
+				kind: "Sheet",
+				subject: { kind: "Text", text: FIRST_TEXT, focus: null },
+			},
+		},
+	);
+	if (scene === "empty") return atText;
+	const ground = Panes.groundOf(rootOf(atText)).id;
+	const dealt = reduce(atText, {
+		type: "Deal",
+		sheetId: ground,
+		selection: "noch",
+		cards: deckFor("noch").map((note) => ({
+			subject: { kind: "Note", note },
+		})),
+	});
+	const first = Panes.groundOf(rootOf(dealt)).deck?.cards[0];
+	if (scene === "deck" || !first) return dealt;
+	return reduce(
+		dealt,
+		{ type: "LiftCard", sheetId: ground, presentationId: first.id },
+		{ type: "Expand", paneId: ROOT_PANE },
+	);
+}
+
+function rootOf(state: Workspace): PaneNode {
+	const pane = Panes.findPane(state.layout, ROOT_PANE);
+	if (!pane) throw new Error("The root Pane is missing");
+	return pane;
 }

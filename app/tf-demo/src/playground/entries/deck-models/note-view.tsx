@@ -94,7 +94,7 @@ export function PresentationView({
 	pastCommit: boolean;
 	paneId: string;
 	/** The Sheet this is, when it is one; a Deck can belong to it. */
-	sheetId: number | null;
+	sheetId: string | null;
 	/** A Ground fills its Pane and wears no Card chrome. */
 	ground: boolean;
 	/** A Sheet under another Sheet in the same Pane. */
@@ -107,7 +107,7 @@ export function PresentationView({
 	showText: boolean;
 	/** The word this Sheet's Deck was dealt for, lit in its Segments. */
 	litWord: string | null;
-	register: (id: number, handle: NoteHandle | null) => void;
+	register: (id: string, handle: NoteHandle | null) => void;
 	/** A Cover's ←, drawn in its Heading; a Ground's is on the Pane bar. */
 	back?: CoverBack | null;
 	/** A Cover's ×, drawn in its Heading's right margin. */

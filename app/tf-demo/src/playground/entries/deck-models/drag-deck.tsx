@@ -17,6 +17,18 @@ import {
 	useRef,
 	useState,
 } from "react";
+import {
+	findPane,
+	groundOf,
+	heldHome,
+	isRooted,
+	openIds,
+	panesOf,
+	restingCards,
+	splitBeside,
+	updatePane,
+	workspaceReducer,
+} from "react-resizable-panels/workspace";
 import { useMotionPreference } from "@/lib/motion-preference";
 import { DropZones, fateOf, homeLabel } from "./drop-zones";
 import {
@@ -44,6 +56,7 @@ import {
 	remPx,
 	sameBoxes,
 	spawnSize,
+	type WritingDirection,
 	Z,
 } from "./geometry";
 import {
@@ -61,44 +74,35 @@ import {
 } from "./interaction-policy";
 import {
 	type Box,
-	type Checkpoint,
-	type Cover,
 	type Deck,
 	type Destination,
 	type Drag,
 	deckHolding,
 	type Edge,
 	type Fate,
-	findPane,
 	findSheet,
-	groundOf,
-	initialLayout,
-	isRooted,
+	initialWorkspace,
 	type LayoutNode,
 	type Lift,
 	type NoteHandle,
-	openIds,
 	type PaneNode,
 	type PendingLift,
 	type Place,
 	PREVIEW_PANE,
 	PREVIEW_SHEET,
 	type Presentation,
-	panesOf,
 	ROOT_PANE,
 	type Rung,
-	replacePane,
 	rungLabel,
 	type SheetRef,
 	type Subject,
 	sheetsOf,
-	splitBeside,
 	subjectGloss,
 	subjectLabel,
 	subjectOfLink,
 	topSheetOf,
-	updateDeck,
-	updatePane,
+	type Workspace,
+	type WorkspaceCommand,
 } from "./model";
 import {
 	BAR_REM,
@@ -278,12 +282,23 @@ function CompassRuntime({
 	   CSS or by MotionConfig. See `reduced-motion.ts`. */
 	const reduce = useDeckReducedMotion();
 	const { entries, log, clear } = useEventLog();
-	const nextId = useRef(1);
-	const nextSheet = useRef(1);
-	const nextPane = useRef(1);
-	const [layout, setLayout] = useState<LayoutNode>(() =>
-		initialLayout(initialScene, nextId, nextSheet),
+	/**
+	 * The Panes, their Decks and the Held Card, as the battery's reducer
+	 * keeps them. The ref is the truth handlers read and `dispatch` writes
+	 * at once, so a handler sees its own command's result; the state
+	 * renders it.
+	 */
+	const [workspace, setWorkspace] = useState<Workspace>(() =>
+		initialWorkspace(initialScene),
 	);
+	const workspaceRef = useRef(workspace);
+	const layout = workspace.layout;
+	function dispatch(command: WorkspaceCommand): Workspace {
+		const next = workspaceReducer(workspaceRef.current, command);
+		workspaceRef.current = next;
+		setWorkspace(next);
+		return next;
+	}
 	const [drag, setDrag] = useState<Drag | null>(null);
 	/** A Card lifted from a Link or a Segment: in no Deck, in no Sheet, in hand. */
 	const [loose, setLoose] = useState<{
@@ -317,6 +332,8 @@ function CompassRuntime({
 	);
 	const previewUpRef = useRef(false);
 	const [rem, setRem] = useState(16);
+	/** The frame's writing direction: which physical side each logical edge is on. */
+	const [direction, setDirection] = useState<WritingDirection>("ltr");
 	/**
 	 * Bumped whenever a Pane's box changes: a split, a preview, a handle
 	 * drag, the window. A Note whose box changes in the same pass is being
@@ -324,8 +341,6 @@ function CompassRuntime({
 	 */
 	const [layoutEpoch, setLayoutEpoch] = useState(0);
 	const dragRef = useRef<Drag | null>(null);
-	const layoutRef = useRef(layout);
-	layoutRef.current = layout;
 	const settlingRef = useRef(false);
 	/** `returning`, read by handlers: a returning Card can be taken back. */
 	const returningRef = useRef(false);
@@ -335,8 +350,7 @@ function CompassRuntime({
 	/** The return's own animations, so a fresh grab can take the Card back. */
 	const returnRun = useRef<{ stop: () => void }[]>([]);
 	const root = useRef<HTMLDivElement>(null);
-	const handles = useRef(new Map<number, NoteHandle>());
-	const gestureCheckpoint = useRef<Checkpoint | null>(null);
+	const handles = useRef(new Map<string, NoteHandle>());
 	const pendingLift = useRef<PendingLift | null>(null);
 	/** A link in a Cover's Heading under a pointer that has not moved yet. */
 	const pendingHeading = useRef<{
@@ -348,8 +362,6 @@ function CompassRuntime({
 	} | null>(null);
 	/** A lift started under this click: the click is not a click. */
 	const swallowClick = useRef(false);
-	/** The Pane the reader last touched: what Escape sweeps. */
-	const activePane = useRef(ROOT_PANE);
 	const pagePointer = useRef<{
 		id: number;
 		x: number;
@@ -404,9 +416,8 @@ function CompassRuntime({
 					...pane.covers,
 					{
 						id: PREVIEW_SHEET,
-						card: drag.card,
+						presentation: drag.card,
 						deck: null,
-						preview: true,
 					},
 				],
 			}));
@@ -418,20 +429,16 @@ function CompassRuntime({
 				{
 					id: PREVIEW_SHEET,
 					kind: "Sheet",
-					card: drag.card,
+					presentation: drag.card,
 					deck: null,
 				},
 			],
 			covers: [],
-			preview: true,
 		};
-		return splitBeside(
-			layout,
-			previewAt.paneId,
-			previewAt.edge,
-			fresh,
-			previewSize.current.size,
-		);
+		return splitBeside(layout, previewAt.paneId, previewAt.edge, fresh, {
+			id: `split-${PREVIEW_PANE}`,
+			size: previewSize.current.size,
+		});
 	}, [layout, drag, previewAt, coverAt]);
 	const destinationRef = useRef<Destination | null>(null);
 	destinationRef.current = destination;
@@ -439,7 +446,7 @@ function CompassRuntime({
 	const visibleCards = (deck: Deck) =>
 		deck.cards.filter((card) => !open.has(card.id));
 	const expandedOf = (deck: Deck, cards: readonly Presentation[]) =>
-		cards.find((card) => card.id === deck.expandedId) ?? cards[0] ?? null;
+		cards.find((card) => card.id === deck.frontId) ?? cards[0] ?? null;
 
 	/* --- geometry: the Panes' boxes, kept fresh --- */
 
@@ -461,6 +468,9 @@ function CompassRuntime({
 				};
 			}
 			setRem(remPx());
+			setDirection(
+				getComputedStyle(frame).direction === "rtl" ? "rtl" : "ltr",
+			);
 			setPaneBoxes((current) => {
 				const same = sameBoxes(current, next);
 				if (!same) setLayoutEpoch((epoch) => epoch + 1);
@@ -482,73 +492,51 @@ function CompassRuntime({
 
 	/* --- the Ground line --- */
 
-	function present(subject: Subject): Presentation {
-		return { id: nextId.current++, subject };
-	}
-	function stepUp(
-		paneId: string,
-		rung:
-			| { readonly kind: "Menu" }
-			| { readonly kind: "Library" }
-			| { readonly kind: "Sheet"; readonly card: Presentation },
-	) {
-		const next: Rung = { ...rung, id: nextSheet.current++, deck: null };
-		setLayout((node) =>
-			updatePane(node, paneId, (pane) => ({
-				...pane,
-				line: [...pane.line, next],
-			})),
-		);
-	}
 	function openLibrary(paneId: string) {
 		log(`Menu › Library in ${paneId}`);
-		stepUp(paneId, { kind: "Library" });
+		dispatch({
+			type: "StepUp",
+			paneId,
+			to: { kind: "MenuItem", item: "Library" },
+		});
 	}
 	function openText(paneId: string, text: DummyText) {
 		log(`Library › ${text.title} in ${paneId}: the Ground's selection`);
-		stepUp(paneId, {
-			kind: "Sheet",
-			card: present({ kind: "Text", text, focus: null }),
+		dispatch({
+			type: "StepUp",
+			paneId,
+			to: { kind: "Sheet", subject: { kind: "Text", text, focus: null } },
 		});
 	}
-	/** ← on a Ground: one rung down the line. The rung's Deck leaves with it. */
-	function stepDown(paneId: string, reason: string) {
-		const pane = findPane(layoutRef.current, paneId);
-		if (!pane || pane.covers.length || pane.line.length < 2) return;
+	/** Logs ← on a Ground, one rung down the line; the rung's Deck leaves with it. */
+	function logStepDown(pane: PaneNode, reason: string) {
 		const leaving = groundOf(pane);
 		const below = pane.line[pane.line.length - 2] as Rung;
 		log(
 			`${reason}: ${rungLabel(leaving)} › ${rungLabel(below)}${leaving.deck ? ", its Deck ends" : ""}`,
 		);
-		setLayout((node) =>
-			updatePane(node, paneId, (p) => ({
-				...p,
-				line: p.line.slice(0, -1),
-			})),
-		);
+	}
+	/** ← on a Ground: one rung down the line. The rung's Deck leaves with it. */
+	function stepDown(paneId: string, reason: string) {
+		const pane = findPane(workspaceRef.current.layout, paneId);
+		if (!pane || pane.covers.length || pane.line.length < 2) return;
+		logStepDown(pane, reason);
+		dispatch({ type: "GoBack", sheetId: groundOf(pane).id });
 	}
 	/** A Rooted Pane spawned empty, at its Menu, on purpose (issue 480). */
 	function spawnEmptyPane() {
-		const id = `pane-${(nextPane.current++).toString()}`;
-		log(`New Rooted Pane ${id} at its Menu`);
-		setLayout((node) => {
-			const pane = findPane(node, ROOT_PANE);
-			if (!pane) return node;
-			const fresh: PaneNode = {
-				kind: "Pane",
-				id,
-				line: [{ id: nextSheet.current++, kind: "Menu", deck: null }],
-				covers: [],
-			};
-			return (
-				replacePane(node, ROOT_PANE, {
-					kind: "Split",
-					id: `split-${id}`,
-					axis: "horizontal",
-					children: [pane, fresh],
-				}) ?? node
-			);
+		const before = new Set(
+			panesOf(workspaceRef.current.layout).map((pane) => pane.id),
+		);
+		const next = dispatch({
+			type: "SpawnRootedPane",
+			paneId: ROOT_PANE,
+			edge: "inline-end",
 		});
+		const id = panesOf(next.layout).find(
+			(pane) => !before.has(pane.id),
+		)?.id;
+		if (id) log(`New Rooted Pane ${id} at its Menu`);
 	}
 
 	/* --- decks --- */
@@ -578,49 +566,43 @@ function CompassRuntime({
 	/** A Segment clicked in a Sheet deals a Deck that belongs to that Sheet. */
 	function deal(
 		paneId: string,
-		sheetId: number,
+		sheetId: string,
 		word: string,
 		element: HTMLElement,
 	) {
 		if (!allows("deal")) return;
-		const pane = findPane(layoutRef.current, paneId);
+		const pane = findPane(workspaceRef.current.layout, paneId);
 		if (!pane || topSheetOf(pane).sheetId !== sheetId) return;
 		clearSentence(element, paneId);
-		const before = findSheet(layoutRef.current, sheetId)?.deck;
+		const before = findSheet(workspaceRef.current.layout, sheetId)?.deck;
 		log(
 			`Select "${cleanWord(word)}": ${before ? "replace the Deck, " : ""}deal 4`,
 		);
-		setLayout((node) =>
-			updateDeck(node, sheetId, () => ({
-				word: cleanWord(word),
-				cards: deckFor(word).map((note) =>
-					present({ kind: "Note", note }),
-				),
-				expandedId: null,
+		dispatch({
+			type: "Deal",
+			sheetId,
+			selection: cleanWord(word),
+			cards: deckFor(word).map((note) => ({
+				subject: { kind: "Note", note },
 			})),
-		);
+		});
 	}
-	function expand(sheetId: number, card: Presentation) {
+	function bringToFront(sheetId: string, card: Presentation) {
 		if (!allows("select")) return;
 		log(`Tap folded: ${subjectLabel(card.subject)} expands`);
-		setLayout((node) =>
-			updateDeck(node, sheetId, (deck) =>
-				deck ? { ...deck, expandedId: card.id } : deck,
-			),
-		);
+		dispatch({ type: "BringToFront", sheetId, presentationId: card.id });
 	}
 	/** The Deck ends: every Card still on it flies off, then it is gone. */
 	function sweep(
-		sheetId: number,
+		sheetId: string,
 		reason: string,
 		run?: () => Promise<unknown>,
 	) {
-		const sheet = findSheet(layoutRef.current, sheetId);
+		const sheet = findSheet(workspaceRef.current.layout, sheetId);
 		if (!sheet?.deck) return;
 		const cards = visibleCards(sheet.deck);
 		log(`${reason}: sweep ${cards.length.toString()}`);
-		const end = () =>
-			setLayout((node) => updateDeck(node, sheetId, () => null));
+		const end = () => dispatch({ type: "Sweep", sheetId });
 		if (run) {
 			settle(run, end);
 			return;
@@ -634,126 +616,97 @@ function CompassRuntime({
 
 	/* --- covers and panes --- */
 
+	/** A Link pushes a fresh Presentation as a Cover; Go to source is one. */
+	function followLink(paneId: string, subject: Subject, reason: string) {
+		log(`${reason}: ${subjectLabel(subject)} covers ${paneId}`);
+		dispatch({ type: "FollowLink", paneId, subject });
+	}
 	/** A Cover is a form, not a move: a dealt Card keeps its rank in its Deck. */
 	function openCover(paneId: string, card: Presentation, reason: string) {
 		log(`${reason}: ${subjectLabel(card.subject)} covers ${paneId}`);
-		setLayout((node) =>
-			updatePane(node, paneId, (pane) => ({
-				...pane,
-				covers: [
-					...pane.covers,
-					{ id: nextSheet.current++, card, deck: null },
-				],
-			})),
-		);
+		dispatch({ type: "Expand", paneId });
 	}
 	/** A Note or a Text dropped on an edge is the new Pane's Ground: a Floating Pane. */
 	function splitPane(card: Presentation, paneId: string, edge: Edge) {
-		const id = `pane-${(nextPane.current++).toString()}`;
-		log(
-			`Drop at ${edge} edge: Floating Pane ${id} with ${subjectLabel(card.subject)} as Ground`,
-		);
-		const fresh: PaneNode = {
-			kind: "Pane",
-			id,
-			line: [
-				{ id: nextSheet.current++, kind: "Sheet", card, deck: null },
-			],
-			covers: [],
-		};
 		const previewed = previewSize.current;
 		const size =
 			previewed?.paneId === paneId && previewed.edge === edge
 				? previewed.size
 				: spawnSize(card, restBoxes[paneId]?.width ?? 0, rem);
-		setLayout((node) => splitBeside(node, paneId, edge, fresh, size));
-	}
-	/** Puts a Card back in front on the Deck that still holds it, if one does. */
-	function collapseTo(node: LayoutNode, card: Presentation): LayoutNode {
-		const holder = deckHolding(node, card.id);
-		return holder
-			? updateDeck(node, holder.sheetId, (deck) =>
-					deck ? { ...deck, expandedId: card.id } : deck,
-				)
-			: node;
+		const next = dispatch({ type: "Expand", paneId, edge, size });
+		const id = panesOf(next.layout).find(
+			(pane) => sheetsOf(pane)[0]?.presentation?.id === card.id,
+		)?.id;
+		log(
+			`Drop at ${edge} edge: Floating Pane ${id ?? "?"} with ${subjectLabel(card.subject)} as Ground`,
+		);
 	}
 	/** ← on a Cover: Collapse when its Card is still on a live Deck, Close otherwise. */
-	function leaveCover(paneId: string, cover: Cover, reason: string) {
-		const holder = deckHolding(layoutRef.current, cover.card.id);
+	function leaveCover(cover: SheetRef, reason: string) {
+		const card = cover.presentation;
+		if (!card) return;
+		const holder = deckHolding(workspaceRef.current.layout, card.id);
 		log(
-			`${reason}: ${subjectLabel(cover.card.subject)} ${holder ? "collapses back to its Card" : "closes"}${cover.deck ? ", its Deck ends" : ""}`,
+			`${reason}: ${subjectLabel(card.subject)} ${holder ? "collapses back to its Card" : "closes"}${cover.deck ? ", its Deck ends" : ""}`,
 		);
-		setLayout((node) =>
-			collapseTo(
-				updatePane(node, paneId, (pane) => ({
-					...pane,
-					covers: pane.covers.filter((c) => c.id !== cover.id),
-				})),
-				cover.card,
-			),
-		);
+		dispatch({ type: "GoBack", sheetId: cover.sheetId });
 	}
 	/** X: a Floating Pane closes with its Covers and its Deck. */
 	function closePane(paneId: string, reason: string) {
-		const pane = findPane(layoutRef.current, paneId);
+		const pane = findPane(workspaceRef.current.layout, paneId);
 		if (!pane || isRooted(pane)) return;
 		const ground = groundOf(pane);
-		const card = ground.kind === "Sheet" ? ground.card : null;
-		const holder = card ? deckHolding(layoutRef.current, card.id) : null;
+		const card = ground.kind === "Sheet" ? ground.presentation : null;
+		const holder = card
+			? deckHolding(workspaceRef.current.layout, card.id)
+			: null;
 		log(
 			`${reason}: Pane ${paneId} closes${card ? `; ${subjectLabel(card.subject)} ${holder ? "collapses back to its Card" : "closes"}` : ""}`,
 		);
-		setLayout((node) => {
-			const without = replacePane(node, paneId, null) ?? node;
-			return card ? collapseTo(without, card) : without;
-		});
+		dispatch({ type: "ClosePane", paneId });
 	}
 	/** The Pane bar's control: the Ground's ←, or a Floating Pane's X. */
 	function back(paneId: string, reason: string) {
-		const pane = findPane(layoutRef.current, paneId);
+		const pane = findPane(workspaceRef.current.layout, paneId);
 		if (!pane || !allows("collapse")) return;
 		if (isRooted(pane)) {
 			if (!pane.covers.length) stepDown(paneId, reason);
 		} else closePane(paneId, reason);
 	}
 	/** A Cover bar's ←: only the top Cover's is reachable. */
-	function coverBack(paneId: string, sheetId: number) {
-		const pane = findPane(layoutRef.current, paneId);
-		const top = pane?.covers.at(-1);
-		if (!top || top.id !== sheetId || !allows("collapse")) return;
-		leaveCover(paneId, top, "←");
+	function coverBack(paneId: string, sheetId: string) {
+		const pane = findPane(workspaceRef.current.layout, paneId);
+		const top = pane ? topSheetOf(pane) : null;
+		if (
+			!top ||
+			top.ground ||
+			top.sheetId !== sheetId ||
+			!allows("collapse")
+		)
+			return;
+		leaveCover(top, "←");
 	}
 	/**
 	 * A Cover's ×: every Cover in the Pane leaves at once, each as its ←
-	 * would, and the Ground is what remains. The lowest Cover is applied
-	 * last, so if two collapse onto one Deck, the one nearest the Ground
-	 * is in front.
+	 * would, and the Ground is what remains.
 	 */
 	function clearCovers(paneId: string) {
-		const pane = findPane(layoutRef.current, paneId);
+		const pane = findPane(workspaceRef.current.layout, paneId);
 		if (!pane?.covers.length || !allows("collapse")) return;
 		log(
 			`×: ${pane.covers.length > 1 ? `${pane.covers.length.toString()} Covers leave` : "the Cover leaves"} ${paneId}; its Ground shows`,
 		);
-		setLayout((node) =>
-			[...pane.covers].reverse().reduce(
-				(next, cover) => collapseTo(next, cover.card),
-				updatePane(node, paneId, (p) => ({ ...p, covers: [] })),
-			),
-		);
+		dispatch({ type: "ClearCovers", paneId });
 	}
 	function follow(paneId: string, link: NoteLink) {
 		if (!allows("follow")) return;
-		const subject = subjectOfLink(link);
-		openCover(paneId, present(subject), `Follow ${link.label}`);
+		followLink(paneId, subjectOfLink(link), `Follow ${link.label}`);
 	}
 	function reset() {
-		nextId.current = 1;
-		nextSheet.current = 1;
-		nextPane.current = 1;
-		setLayout(initialLayout("empty", nextId, nextSheet));
+		const fresh = initialWorkspace("empty");
+		workspaceRef.current = fresh;
+		setWorkspace(fresh);
 		dragRef.current = null;
-		gestureCheckpoint.current = null;
 		pendingLift.current = null;
 		setLoose(null);
 		setDrag(null);
@@ -811,7 +764,7 @@ function CompassRuntime({
 		const holder =
 			d.deckSheet === null
 				? null
-				: findSheet(layoutRef.current, d.deckSheet);
+				: findSheet(workspaceRef.current.layout, d.deckSheet);
 		const holderBox = holder ? paneBoxes[holder.paneId] : undefined;
 		/* a Card off its Deck thrown right goes back to it, wherever it is
 		   let go: the throw says where it is headed, not where it is */
@@ -825,7 +778,10 @@ function CompassRuntime({
 					holderBox,
 					d.card,
 					rem,
-					barRemOf(findPane(layoutRef.current, holder.paneId)),
+					barRemOf(
+						findPane(workspaceRef.current.layout, holder.paneId),
+					),
+					direction,
 				).bar,
 				x,
 				y,
@@ -849,7 +805,7 @@ function CompassRuntime({
 		}
 		if (!allows("drop")) return null;
 		/* no drop until the rest boxes describe this layout */
-		const panes = panesOf(layoutRef.current);
+		const panes = panesOf(workspaceRef.current.layout);
 		if (
 			panes.length !== Object.keys(restBoxes).length ||
 			panes.some((pane) => !restBoxes[pane.id])
@@ -860,7 +816,8 @@ function CompassRuntime({
 				restBoxes[paneId] as Box,
 				d.card,
 				rem,
-				barRemOf(findPane(layoutRef.current, paneId)),
+				barRemOf(findPane(workspaceRef.current.layout, paneId)),
+				direction,
 			);
 		const current = destinationRef.current;
 		if (current && "paneId" in current) {
@@ -996,11 +953,15 @@ function CompassRuntime({
 		lift: Lift,
 		origin: Box,
 		paneId: string,
-		deckSheet: number | null,
+		deckSheet: string | null,
 		home: Drag["home"],
 	) {
 		const h = handles.current.get(card.id);
-		if (!h) return;
+		/* nothing to hold: the Lift the reducer began is called off */
+		if (!h) {
+			dispatch({ type: "CancelGesture" });
+			return;
+		}
 		capture(lift.pointerId);
 		pagePointer.current = null;
 		resetTransforms(h);
@@ -1039,33 +1000,23 @@ function CompassRuntime({
 		bar: HTMLElement | null = null,
 	) {
 		if (!allows("lift") || dragRef.current || settlingRef.current) return;
-		const card = sheet.card;
+		const card = sheet.presentation;
 		if (!card) return;
 		endReturn();
-		gestureCheckpoint.current = { layout: layoutRef.current };
-		const holder = deckHolding(layoutRef.current, card.id);
-		if (sheet.ground) {
-			log(
-				`${reason}: ${subjectLabel(card.subject)} lifts; Pane ${sheet.paneId} closes behind it`,
-			);
-			setLayout((node) => replacePane(node, sheet.paneId, null) ?? node);
-		} else {
-			log(
-				`${reason}: ${subjectLabel(card.subject)} lifts off ${sheet.paneId}`,
-			);
-			setLayout((node) =>
-				updatePane(node, sheet.paneId, (p) => ({
-					...p,
-					covers: p.covers.filter((c) => c.id !== sheet.sheetId),
-				})),
-			);
-		}
+		const before = workspaceRef.current.layout;
+		const holder = deckHolding(before, card.id);
+		const next = dispatch({ type: "LiftSheet", sheetId: sheet.sheetId });
+		if (!next.held) return;
+		log(
+			sheet.ground
+				? `${reason}: ${subjectLabel(card.subject)} lifts; Pane ${sheet.paneId} closes behind it`
+				: `${reason}: ${subjectLabel(card.subject)} lifts off ${sheet.paneId}`,
+		);
 		/* the Deck it lands on is one taller than what it shows now */
-		const count = holder?.deck ? visibleCards(holder.deck).length + 1 : 1;
+		const count = holder?.deck
+			? restingCards(before, holder.deck).length + 1
+			: 1;
 		const height = holder ? cardHeightPx(count) : LOOSE_CARD_REM * remPx();
-		if (holder) {
-			setLayout((node) => collapseTo(node, card));
-		}
 		emergeFrom(card, bar);
 		startLift(
 			card,
@@ -1073,7 +1024,7 @@ function CompassRuntime({
 			handBox(lift, sheet.paneId, height),
 			sheet.paneId,
 			holder?.sheetId ?? null,
-			holder ? "slot" : "close",
+			heldHome(next) ?? "close",
 		);
 	}
 	/**
@@ -1097,13 +1048,13 @@ function CompassRuntime({
 	/** A Rooted Ground's content, its bar held about a second: it lifts and the Pane steps down. */
 	function liftGround(sheet: SheetRef, lift: Lift, bar: HTMLElement | null) {
 		if (!allows("lift") || dragRef.current || settlingRef.current) return;
-		const pane = findPane(layoutRef.current, sheet.paneId);
-		const card = sheet.card;
+		const pane = findPane(workspaceRef.current.layout, sheet.paneId);
+		const card = sheet.presentation;
 		if (!pane || !card || pane.covers.length || pane.line.length < 2)
 			return;
 		endReturn();
-		gestureCheckpoint.current = { layout: layoutRef.current };
-		stepDown(sheet.paneId, "Hold bar: lift the Ground");
+		logStepDown(pane, "Hold bar: lift the Ground");
+		dispatch({ type: "LiftSheet", sheetId: sheet.sheetId });
 		emergeFrom(card, bar);
 		startLift(
 			card,
@@ -1147,7 +1098,7 @@ function CompassRuntime({
 		   Cover's does */
 		if (target.closest("[data-heading-title] button")) {
 			if (
-				ground?.card &&
+				ground?.presentation &&
 				!isRooted(pane) &&
 				!pane.covers.length &&
 				allows("lift") &&
@@ -1163,7 +1114,8 @@ function CompassRuntime({
 			return;
 		}
 		if (target.closest("button")) return;
-		if (!ground?.card || pane.covers.length || !allows("lift")) return;
+		if (!ground?.presentation || pane.covers.length || !allows("lift"))
+			return;
 		const lift = {
 			pointerId: event.pointerId,
 			x: event.clientX,
@@ -1233,7 +1185,12 @@ function CompassRuntime({
 		event: ReactPointerEvent<HTMLElement>,
 	) {
 		if (!allows("drag") || dragRef.current || settlingRef.current) return;
-		const card = present(pending.make());
+		const card = dispatch({
+			type: "LiftFresh",
+			paneId: pending.paneId,
+			subject: pending.make(),
+		}).held?.presentation;
+		if (!card) return;
 		log(`Drag: ${subjectLabel(card.subject)} lifts as a fresh Card`);
 		swallowClick.current = true;
 		const lift = {
@@ -1284,6 +1241,12 @@ function CompassRuntime({
 	}
 	/** The Card is in hand from here on: the drop regions read it. */
 	function takeInHand(d: Drag, reason: string) {
+		if (!d.lifted && d.deckSheet !== null)
+			dispatch({
+				type: "LiftCard",
+				sheetId: d.deckSheet,
+				presentationId: d.card.id,
+			});
 		d.phase = "held";
 		settleTransform(d.h);
 		log(`${reason}: in hand`);
@@ -1430,7 +1393,7 @@ function CompassRuntime({
 	/** Every other Card on the Deck `d`'s Card rests in, and how many ranks away it is. */
 	function followersOf(d: Drag): { h: NoteHandle; distance: number }[] {
 		if (d.deckSheet === null) return [];
-		const deck = findSheet(layoutRef.current, d.deckSheet)?.deck;
+		const deck = findSheet(workspaceRef.current.layout, d.deckSheet)?.deck;
 		if (!deck) return [];
 		const cards = visibleCards(deck);
 		const lead = cards.findIndex((card) => card.id === d.card.id);
@@ -1616,6 +1579,7 @@ function CompassRuntime({
 	/** A loose Card let go with nothing under it: it fades where it is. */
 	function vanish(d: Drag) {
 		log("Let go: the Card goes");
+		dispatch({ type: "Release" });
 		settle(
 			() => Promise.all([animate(d.h.opacity, 0, transition(FLY_FADE))]),
 			() => {},
@@ -1623,11 +1587,9 @@ function CompassRuntime({
 	}
 	/** A lifted Sheet let go with nowhere to be: it is the Sheet again. */
 	function restore(d: Drag, reason: string) {
-		const checkpoint = gestureCheckpoint.current;
-		gestureCheckpoint.current = null;
 		log(`${reason}: ${subjectLabel(d.card.subject)} is a Sheet again`);
 		resetTransforms(d.h);
-		if (checkpoint) setLayout(checkpoint.layout);
+		dispatch({ type: "CancelGesture" });
 		setLoose(null);
 		setDrag(null);
 		setDestination(null);
@@ -1636,7 +1598,7 @@ function CompassRuntime({
 	/** Whole-Deck swipe: the held Card and its Deck fly together. */
 	function sweepByDrag(d: Drag, reason: string) {
 		if (d.deckSheet === null) return;
-		const sheet = findSheet(layoutRef.current, d.deckSheet);
+		const sheet = findSheet(workspaceRef.current.layout, d.deckSheet);
 		if (!sheet?.deck) return;
 		const cards = visibleCards(sheet.deck);
 		const fly = cards.flatMap((card) => {
@@ -1659,7 +1621,6 @@ function CompassRuntime({
 		h.y.jump(0);
 		if (reduce) h.rotate.jump(0);
 		else animate(h.rotate, 0, MORPH);
-		gestureCheckpoint.current = null;
 		dragRef.current = null;
 		setDrag(null);
 		setDestination(null);
@@ -1670,8 +1631,8 @@ function CompassRuntime({
 	}
 	/** A lifted Cover with no Deck to go back to: it closes, as ← would. */
 	function close(d: Drag, reason: string) {
-		gestureCheckpoint.current = null;
 		log(`${reason}: ${subjectLabel(d.card.subject)} closes`);
+		dispatch({ type: "Release" });
 		settle(
 			() => Promise.all([animate(d.h.opacity, 0, transition(FLY_FADE))]),
 			() => {},
@@ -1679,8 +1640,10 @@ function CompassRuntime({
 	}
 	/** A release with nothing under it, or in the Card's own Pane. */
 	function goHome(d: Drag, reason = "Released in place") {
-		if (d.home === "slot") snapBack(d.h);
-		else if (d.home === "restore") restore(d, reason);
+		if (d.home === "slot") {
+			dispatch({ type: "Release" });
+			snapBack(d.h);
+		} else if (d.home === "restore") restore(d, reason);
 		else if (d.home === "close") close(d, reason);
 		else vanish(d);
 	}
@@ -1713,12 +1676,12 @@ function CompassRuntime({
 			const sheet =
 				d.deckSheet === null
 					? null
-					: findSheet(layoutRef.current, d.deckSheet);
+					: findSheet(workspaceRef.current.layout, d.deckSheet);
 			if (!sheet?.deck) return;
 			const deck = sheet.deck;
 			if (expandedOf(deck, visibleCards(deck))?.id === card.id)
 				log("Tap expanded: nothing; drag ↑ to open");
-			else expand(sheet.sheetId, card);
+			else bringToFront(sheet.sheetId, card);
 			return;
 		}
 		/* the release reads what the preview read: `projected` and
@@ -1764,11 +1727,10 @@ function CompassRuntime({
 			restore(d, "Cancel");
 			return;
 		}
-		const checkpoint = gestureCheckpoint.current;
-		gestureCheckpoint.current = null;
-		if (d.lifted && checkpoint) {
+		const lifted = workspaceRef.current.held !== null;
+		dispatch({ type: "CancelGesture" });
+		if (d.lifted && lifted) {
 			resetTransforms(d.h);
-			setLayout(checkpoint.layout);
 			setLoose(null);
 			setDrag(null);
 			setDestination(null);
@@ -1790,7 +1752,8 @@ function CompassRuntime({
 				return;
 			}
 			if (!allows("dismiss")) return;
-			const pane = findPane(layoutRef.current, activePane.current);
+			const { layout: current, activePaneId } = workspaceRef.current;
+			const pane = findPane(current, activePaneId);
 			const top = pane ? topSheetOf(pane) : null;
 			if (top?.deck && visibleCards(top.deck).length)
 				sweep(top.sheetId, "Esc");
@@ -1807,7 +1770,8 @@ function CompassRuntime({
 			"[data-deck-pane], [data-pane]",
 		);
 		const paneId = at?.dataset.deckPane ?? at?.dataset.pane;
-		if (paneId) activePane.current = paneId;
+		if (paneId && paneId !== PREVIEW_PANE)
+			dispatch({ type: "ActivatePane", paneId });
 		if (event.button !== 0) return;
 		pagePointer.current = {
 			id: event.pointerId,
@@ -1872,7 +1836,9 @@ function CompassRuntime({
 			'[data-deck-pane], [data-form="ground"]',
 		);
 		const paneId = at?.dataset.deckPane ?? at?.dataset.pane;
-		const pane = paneId ? findPane(layoutRef.current, paneId) : null;
+		const pane = paneId
+			? findPane(workspaceRef.current.layout, paneId)
+			: null;
 		if (!pane?.covers.length) return false;
 		clearCovers(pane.id);
 		return true;
@@ -1889,20 +1855,20 @@ function CompassRuntime({
 		if (clearFromGap(target)) return;
 		if (!allows("dismiss")) return;
 		if (target.closest(DISMISS_EXEMPT_SELECTOR)) return;
-		const sheetId = Number(
-			target.closest<HTMLElement>("[data-sheet-id]")?.dataset.sheetId,
-		);
+		const sheetId =
+			target.closest<HTMLElement>("[data-sheet-id]")?.dataset.sheetId;
 		const paneId =
 			target.closest<HTMLElement>("[data-deck-pane]")?.dataset.deckPane;
-		const pane = paneId ? findPane(layoutRef.current, paneId) : null;
+		const pane = paneId
+			? findPane(workspaceRef.current.layout, paneId)
+			: null;
 		const top = pane ? topSheetOf(pane) : null;
 		/* only a click on the top Sheet is a click on that Sheet */
-		const sheet =
-			Number.isFinite(sheetId) && sheetId
-				? findSheet(layoutRef.current, sheetId)
-				: top;
+		const sheet = sheetId
+			? findSheet(workspaceRef.current.layout, sheetId)
+			: top;
 		if (!sheet?.deck || !visibleCards(sheet.deck).length) return;
-		const its = findPane(layoutRef.current, sheet.paneId);
+		const its = findPane(workspaceRef.current.layout, sheet.paneId);
 		if (!its || topSheetOf(its).sheetId !== sheet.sheetId) return;
 		sweep(sheet.sheetId, "Click page");
 	}
@@ -1927,7 +1893,7 @@ function CompassRuntime({
 		);
 		return () => controls.stop();
 	}, [leaving, transition, LEAVING]);
-	const register = (id: number, handle: NoteHandle | null) => {
+	const register = (id: string, handle: NoteHandle | null) => {
 		if (handle) handles.current.set(id, handle);
 		else handles.current.delete(id);
 	};
@@ -1938,7 +1904,7 @@ function CompassRuntime({
 		if (!deck || !showZones || drag?.deckSheet !== sheet.sheetId) return [];
 		return [
 			<div
-				key={`return-${sheet.sheetId.toString()}`}
+				key={`return-${sheet.sheetId}`}
 				aria-hidden="true"
 				data-return-zone="return"
 				data-active={destination?.kind === "return"}
@@ -1972,10 +1938,12 @@ function CompassRuntime({
 								drag.card,
 								rem,
 								barRemOf(pane),
+								direction,
 							)}
 							destination={destination}
 							homeLabel={homeLabel(drag)}
 							shown={zonesVisible}
+							direction={direction}
 						/>,
 					]
 				: [];
@@ -1983,12 +1951,15 @@ function CompassRuntime({
 	}
 
 	function renderPane(pane: PaneNode): ReactNode {
+		const preview = pane.id === PREVIEW_PANE;
 		const rooted = isRooted(pane);
 		const ground = groundOf(pane);
 		const covered = pane.covers.length > 0;
 		const trail = pane.line.map((rung) => rungLabel(rung));
 		const gloss =
-			ground.kind === "Sheet" ? subjectGloss(ground.card.subject) : null;
+			ground.kind === "Sheet"
+				? subjectGloss(ground.presentation.subject)
+				: null;
 		/* the bar is a handle only while its Ground is a Sheet and uncovered */
 		const handle =
 			ground.kind === "Sheet" && !covered && allows("lift")
@@ -2028,8 +1999,8 @@ function CompassRuntime({
 						? `Rooted pane ${pane.id}`
 						: `Floating pane ${pane.id}`
 				}
-				data-preview={pane.preview}
-				className={`relative h-full min-h-0 overflow-hidden bg-paper ${pane.preview ? "pointer-events-none" : ""}`}
+				data-preview={preview || undefined}
+				className={`relative h-full min-h-0 overflow-hidden bg-paper ${preview ? "pointer-events-none" : ""}`}
 			>
 				{/* the Pane bar: Sheet chrome, owned by the Pane, and the
 				    Ground's handle. A hold fills it; see `GROUND_PRESS_MS`. */}
@@ -2056,7 +2027,7 @@ function CompassRuntime({
 					onPointerUp={stopBarHold}
 					onPointerCancel={stopBarHold}
 					onPointerLeave={stopBarHold}
-					className={`absolute inset-x-0 top-0 border-b bg-paper select-none ${covered ? "pointer-events-none z-0" : "z-20"} ${pane.preview ? "border-dashed border-link/60" : barRuled ? "border-line" : "border-transparent"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
+					className={`absolute inset-x-0 top-0 border-b bg-paper select-none ${covered ? "pointer-events-none z-0" : "z-20"} ${preview ? "border-dashed border-link/60" : barRuled ? "border-line" : "border-transparent"} ${handle === "drag" ? "cursor-grab touch-none active:cursor-grabbing" : handle === "press" ? "cursor-pointer touch-none" : ""}`}
 				>
 					{/* the hold's countdown: it fills from the inline-start
 					    edge in exactly the press time, and drains fast when
@@ -2077,7 +2048,9 @@ function CompassRuntime({
 					/>
 					<PaneBarFace
 						subject={
-							ground.kind === "Sheet" ? ground.card.subject : null
+							ground.kind === "Sheet"
+								? ground.presentation.subject
+								: null
 						}
 						titled={!rooted}
 						width={
@@ -2145,7 +2118,7 @@ function CompassRuntime({
 						items={[{ key: "library", label: "Library" }]}
 						onPick={() => openLibrary(pane.id)}
 					/>
-				) : ground.kind === "Library" ? (
+				) : ground.kind === "MenuItem" ? (
 					<GroundList
 						title="Library"
 						items={TEXTS.map((text) => ({
@@ -2167,13 +2140,15 @@ function CompassRuntime({
 			   split, and opens at its size rather than inheriting one */
 			<ResizablePanelGroup
 				key={`${node.id}:${a.id}:${b.id}`}
-				orientation={node.axis}
+				orientation={node.direction}
 			>
 				<ResizablePanel
 					id={a.id}
 					minSize={240}
 					defaultSize={
-						node.freshId === a.id ? node.freshSize : undefined
+						node.fresh?.paneId === a.id
+							? node.fresh.size
+							: undefined
 					}
 				>
 					{renderLayout(a)}
@@ -2183,7 +2158,9 @@ function CompassRuntime({
 					id={b.id}
 					minSize={240}
 					defaultSize={
-						node.freshId === b.id ? node.freshSize : undefined
+						node.fresh?.paneId === b.id
+							? node.fresh.size
+							: undefined
 					}
 				>
 					{renderLayout(b)}
@@ -2279,17 +2256,18 @@ function CompassRuntime({
 	 */
 	function renderNotes(): ReactNode {
 		const notes: ReactNode[] = [];
-		const rendered = new Set<number>();
+		const rendered = new Set<string>();
 		for (const pane of panesOf(displayLayout)) {
 			const paneBox = paneBoxes[pane.id];
 			if (!paneBox) continue;
 			const sheets = sheetsOf(pane);
 			const top = sheets[sheets.length - 1] as SheetRef;
 			sheets.forEach((sheet, index) => {
-				if (!sheet.card) return;
+				const card = sheet.presentation;
+				if (!card) return;
 				const isTop = index === sheets.length - 1;
 				const ghost = sheet.preview;
-				if (!ghost) rendered.add(sheet.card.id);
+				if (!ghost) rendered.add(card.id);
 				/* a Cover's Heading is its bar: the ← and the handle ride
 				   the Note's own box rather than sitting beside it */
 				const grabs = isTop && !ghost && allows("lift");
@@ -2297,10 +2275,10 @@ function CompassRuntime({
 					<PresentationView
 						key={
 							ghost
-								? `ghost-${pane.id}-${sheet.sheetId.toString()}`
-								: sheet.card.id
+								? `ghost-${pane.id}-${sheet.sheetId}`
+								: card.id
 						}
-						card={sheet.card}
+						card={card}
 						form="sheet"
 						place="open"
 						box={
@@ -2318,17 +2296,14 @@ function CompassRuntime({
 						covered={!isTop}
 						preview={ghost}
 						showText={showReader}
-						litWord={isTop ? (sheet.deck?.word ?? null) : null}
+						litWord={isTop ? (sheet.deck?.selection ?? null) : null}
 						epoch={layoutEpoch}
 						register={ghost ? () => {} : register}
 						back={
 							sheet.ground
 								? null
 								: {
-										label: deckHolding(
-											layout,
-											sheet.card.id,
-										)
+										label: deckHolding(layout, card.id)
 											? "Collapse back to card"
 											: "Close cover",
 										enabled:
@@ -2503,12 +2478,12 @@ function CompassRuntime({
 						<button
 							type="button"
 							onClick={() =>
-								openCover(
-									activePane.current,
-									present({
+								followLink(
+									workspaceRef.current.activePaneId,
+									{
 										kind: "Note",
 										note: noteFor("Reading", "Dämmerung"),
-									}),
+									},
 									"Open the ported Reading",
 								)
 							}
