@@ -22,9 +22,10 @@
  * line or when dumspec's prompt inputs moved since the round was pinned
  * (`--repin` accepts today's dumspec), and every run stops at the line.
  *
- * Raw runs and the answer cache live under `.runs/segment-in-units-lab/`
- * (gitignored). The frozen sets, each run's manifest, outcomes and summary,
- * and the ledger live under `evidence/segment-in-units-lab/`.
+ * Raw runs, their outcomes and the answer cache live under
+ * `.runs/segment-in-units-lab/` (gitignored). The frozen sets, each run's
+ * manifest and summary, and the ledger live under
+ * `evidence/segment-in-units-lab/`.
  */
 import { mkdir, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
@@ -163,6 +164,7 @@ const setsRoot = trackedSetsRoot;
 const evidenceRoot = join(packageRoot, "evidence", "segment-in-units-lab");
 const ledgerPath = join(evidenceRoot, "ledger.jsonl");
 const roundBook = roundsPath(evidenceRoot);
+const roots = { labRoot, evidenceRoot };
 
 const { positionals, values } = parseArgs({
 	args: Bun.argv.slice(2),
@@ -499,7 +501,7 @@ async function execute(args: {
 	};
 	await writeManifest(evidenceRoot, manifest, patch);
 	const outcomes = outcomesOf(labRun, plainCases(set.cases));
-	await writeOutcomes(evidenceRoot, runId, outcomes);
+	await writeOutcomes(labRoot, runId, outcomes);
 	const calls = labRun.cases.flatMap((caseRun) =>
 		caseRun.repetitions.flatMap((repetition) => repetition.calls),
 	);
@@ -669,10 +671,10 @@ async function replayRun() {
 async function noise() {
 	const baselineId = values.run ?? "";
 	const baseline = await readManifest(evidenceRoot, baselineId);
-	const baselineRows = await readOutcomes(evidenceRoot, baselineId);
+	const baselineRows = await readOutcomes(labRoot, baselineId);
 	if (!baseline || !baselineRows)
 		throw Error(
-			`--run ${baselineId} needs a committed manifest and outcomes; runs made before manifests cannot be rerun exactly`,
+			`--run ${baselineId} needs a committed manifest and its outcomes in .runs/; runs made before manifests cannot be rerun exactly`,
 		);
 	const provenance = await provenanceOf({ packageRoot, repository, cli });
 	if (!values.estimate) guardDirty(provenance);
@@ -1119,8 +1121,7 @@ async function compare() {
 		casesOf((await loadSet(setsRoot, setName as SetName, setHash)).cases);
 	const side = (runId: string, policy: string | undefined) =>
 		loadSide({
-			labRoot,
-			evidenceRoot,
+			...roots,
 			runId,
 			...(policy ? { policy } : {}),
 			casesOf: setCases,
@@ -1131,7 +1132,7 @@ async function compare() {
 	for (const entry of [left, right])
 		if (!entry.raw)
 			console.log(
-				`${entry.runId}: raw run missing; comparing its committed outcomes`,
+				`${entry.runId}: raw run missing; comparing its stored outcomes`,
 			);
 	const only = values.subset
 		? new Set(
@@ -1151,7 +1152,7 @@ async function compare() {
 	};
 	// ADR 0008: membership leads; the route scores follow.
 	const { paired, noise, all, buckets } = await deltaBetween(
-		evidenceRoot,
+		roots,
 		left,
 		right,
 		deltaOptions,
@@ -1175,7 +1176,7 @@ async function compare() {
 		`consistency, units whose membership flips between repetitions: left ${consistency[0]?.flips}/${consistency[0]?.base}, right ${consistency[1]?.flips}/${consistency[1]?.base}`,
 	);
 	for (const measure of ["tolerant", "strict"] as const) {
-		const delta = await deltaBetween(evidenceRoot, left, right, {
+		const delta = await deltaBetween(roots, left, right, {
 			...deltaOptions,
 			measure,
 		});
@@ -1199,7 +1200,7 @@ async function compare() {
 		);
 	else
 		console.log(
-			"grouping (#701): needs both raw runs; the committed outcomes hold no returned units",
+			"grouping (#701): needs both raw runs; the stored outcomes hold no returned units",
 		);
 	const focus = focusBetween(left, right, only);
 	if (focus) printFocusComparison(focus);
@@ -1547,19 +1548,15 @@ async function iterationRows(
 		let delta: IterationRow["delta"] = recorded ?? null;
 		if (!delta && manifest.parent) {
 			try {
-				const sides = {
-					labRoot,
-					evidenceRoot,
-				};
 				const left = await loadSide({
-					...sides,
+					...roots,
 					runId: manifest.parent,
 				});
 				const right = await loadSide({
-					...sides,
+					...roots,
 					runId: manifest.runId,
 				});
-				delta = (await deltaBetween(evidenceRoot, left, right)).all;
+				delta = (await deltaBetween(roots, left, right)).all;
 			} catch {
 				delta = null;
 			}
@@ -1585,7 +1582,7 @@ async function iterationRows(
 /**
  * One row per run with a manifest on the membership focus set's source set
  * (#761). The delta against the parent comes from the latest recorded
- * compare that carries one, else from the committed outcomes of both.
+ * compare that carries one, else from the stored outcomes of both.
  */
 async function focusIterationRows(
 	entries: Awaited<ReturnType<typeof readLedger>>,
@@ -1597,8 +1594,7 @@ async function focusIterationRows(
 	for (const manifest of await readManifests(evidenceRoot)) {
 		if (manifest.kind !== "run") continue;
 		const focus = focusOf(manifest.set);
-		const outcomes =
-			focus && (await readOutcomes(evidenceRoot, manifest.runId));
+		const outcomes = focus && (await readOutcomes(labRoot, manifest.runId));
 		if (!focus || !outcomes) continue;
 		const recorded = compares.findLast(
 			(entry) =>
@@ -1609,11 +1605,10 @@ async function focusIterationRows(
 		let delta = recorded?.focus ?? null;
 		if (!delta && manifest.parent) {
 			try {
-				const sides = { labRoot, evidenceRoot };
 				delta =
 					focusBetween(
-						await loadSide({ ...sides, runId: manifest.parent }),
-						await loadSide({ ...sides, runId: manifest.runId }),
+						await loadSide({ ...roots, runId: manifest.parent }),
+						await loadSide({ ...roots, runId: manifest.runId }),
 					)?.delta ?? null;
 			} catch {
 				delta = null;

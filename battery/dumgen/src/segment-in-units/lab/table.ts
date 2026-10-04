@@ -33,7 +33,7 @@ export type IterationRow = {
 	/** The strict unit accuracy. */
 	readonly unitAccuracy: number | null;
 	readonly jevInputTokensPerSentence: number | null;
-	/** The membership delta against the parent, from a recorded compare or the committed outcomes. */
+	/** The membership delta against the parent, from a recorded compare or the stored outcomes. */
 	readonly delta: BucketDelta | null;
 	/** A recorded compare's verdict, which wins over the derived one. */
 	readonly verdict: string | null;
@@ -104,7 +104,7 @@ export type FocusIterationRow = {
 	readonly runId: string;
 	readonly parent: string | null;
 	readonly score: FocusScore;
-	/** Against the parent, from a recorded compare or the committed outcomes; null when neither has it. */
+	/** Against the parent, from a recorded compare or the stored outcomes; null when neither has it. */
 	readonly delta: FocusDelta | null;
 };
 

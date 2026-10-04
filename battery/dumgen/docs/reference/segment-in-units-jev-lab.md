@@ -203,12 +203,16 @@ names the current one; `round` prints what it has spent and has left.
 
 ## Artifacts
 
-The frozen sets are tracked, so a fresh clone can re-score committed
-evidence and re-run any set, which spends jev tokens. An offline replay
-(`--offline`, `replay`, gold-mode parity) needs the answer cache, which
-stays local. Raw runs, promptsmith exports and the answer cache (about
-300 MB) live in `.runs/segment-in-units-lab/`, which is gitignored. Commit
-the frozen sets, each run's evidence and the ledger:
+The frozen sets are tracked, so a fresh clone can re-run any set, which
+spends jev tokens, and score a run against the gold it ran on. An offline
+replay (`--offline`, `replay`, gold-mode parity) needs the answer cache,
+and comparing past runs needs their raw runs or outcomes; all of these
+stay local. Raw runs, their outcomes, promptsmith exports and the answer
+cache (about 300 MB) live in `.runs/segment-in-units-lab/`, which is
+gitignored; a run writes its outcomes to `outcomes/<runId>.jsonl.gz`
+there, one row per (case, gold unit) with verdict letters per repetition
+per policy. Commit the frozen sets, each run's manifest and summary, and
+the ledger:
 
 ```text
 evidence/segment-in-units-lab/
@@ -219,7 +223,6 @@ evidence/segment-in-units-lab/
   runs/<runId>/
     manifest.json            provenance: see RunManifest in lab/provenance.ts
     diff.patch               only when run with --allow-dirty
-    outcomes.jsonl.gz        per (case, gold unit): verdict letters per repetition per policy
     summary.json             report of the primary reading; summary--<variant>.json for others
     noise.json               noise reruns only: flip rates per policy and bucket
   summaries/                 reports of runs made before manifests (historical)
@@ -360,8 +363,10 @@ evidence/segment-in-units-lab/
   scored on `heldout@1a69c4258c71f152`. The round was not re-pinned,
   since a re-pin would change the replayed metrics.
 - `compare` scores raw runs when `.runs/` has them and falls back to the
-  committed outcomes otherwise. Outcomes are scored against the frozen
-  gold, so `--relabel` needs the raw run.
+  runs' outcomes in `.runs/` otherwise. Outcomes are scored against the
+  frozen gold, so `--relabel` needs the raw run. A noise floor under
+  another measure than membership needs the outcomes of the baseline and
+  its rerun; without them, `noise.json` gives the membership floor.
 - `noise` reruns a baseline's exact configuration at repetition indices
   past its own, so every answer is fresh and costs a full run. The
   baseline's flip rate r per bucket then sets a floor of 1.96·√(r·n) for n
@@ -374,4 +379,4 @@ evidence/segment-in-units-lab/
   membership delta against the parent, membership flips, tolerant%,
   strict%, jev input tokens per sentence and verdict. A
   `compare --record` line supplies the delta and verdict. Without one, the
-  delta comes from the committed outcomes.
+  delta comes from the runs' outcomes in `.runs/`.

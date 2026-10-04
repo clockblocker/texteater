@@ -167,7 +167,7 @@ test("outcomes keep a verdict letter per repetition, A for a tolerated route, an
 		},
 	]);
 	expect(decodeOutcomes(encodeOutcomes(rows))).toEqual(rows);
-	// The committed outcomes reproduce the summary's membership, tolerant
+	// The stored outcomes reproduce the summary's membership, tolerant
 	// and strict rates and its membership flips.
 	const summary = summarizePolicy(labRun, cases, "p");
 	expect(summary.rates).toMatchObject({
@@ -498,7 +498,7 @@ test("noise floors count majority flips per bucket; a delta must beat them and M
 	});
 });
 
-test("compare pairs committed outcomes when the raw runs are gone, with the recorded noise floor", async () => {
+test("compare pairs stored outcomes when the raw runs are gone, with the recorded noise floor", async () => {
 	const evidenceRoot = join(directory, "evidence");
 	const labRoot = join(directory, "no-raw-runs");
 	const left = Array.from({ length: 40 }, (_, index) =>
@@ -517,25 +517,29 @@ test("compare pairs committed outcomes when the raw runs are gone, with the reco
 		manifestOf("a-noise", { kind: "noise", baseline: "a", parent: "a" }),
 		"",
 	);
-	await writeOutcomes(evidenceRoot, "a", left);
-	await writeOutcomes(evidenceRoot, "b", right);
-	await writeOutcomes(evidenceRoot, "a-noise", rerun);
+	await writeOutcomes(labRoot, "a", left);
+	await writeOutcomes(labRoot, "b", right);
+	await writeOutcomes(labRoot, "a-noise", rerun);
 	await writeNoise(evidenceRoot, {
 		baseline: "a",
 		rerun: "a-noise",
 		promptsMatch: true,
 		floors: { p: noiseFloor(left, rerun, "p") },
 	});
-	expect(await readOutcomes(evidenceRoot, "b")).toEqual(right);
+	expect(await readOutcomes(labRoot, "b")).toEqual(right);
 
 	const leftSide = await loadSide({ labRoot, evidenceRoot, runId: "a" });
 	const rightSide = await loadSide({ labRoot, evidenceRoot, runId: "b" });
 	expect(leftSide.raw).toBeUndefined();
 	expect(leftSide.policy).toBe("p");
-	const noise = await findNoise(evidenceRoot, leftSide, rightSide);
+	const noise = await findNoise(
+		{ labRoot, evidenceRoot },
+		leftSide,
+		rightSide,
+	);
 	expect(noise?.record.rerun).toBe("a-noise");
 	const { paired, all } = await deltaBetween(
-		evidenceRoot,
+		{ labRoot, evidenceRoot },
 		leftSide,
 		rightSide,
 	);
@@ -555,7 +559,7 @@ test("compare pairs committed outcomes when the raw runs are gone, with the reco
 	).rejects.toThrow("raw run");
 	await expect(
 		loadSide({ labRoot, evidenceRoot, runId: "missing" }),
-	).rejects.toThrow("no committed outcomes");
+	).rejects.toThrow("no outcomes in .runs/");
 });
 
 test("the iteration table shows each run against its parent", () => {

@@ -1,8 +1,8 @@
 /**
  * A run's per-unit outcomes: one row per (case, gold unit) with its verdict
- * in every repetition under every policy. They are small enough to commit
- * (`outcomes.jsonl.gz`), so paired comparisons and noise floors work
- * without the gitignored raw runs.
+ * in every repetition under every policy. They are much smaller than the
+ * raw run (`<lab>/outcomes/<runId>.jsonl.gz`), so paired comparisons and
+ * noise floors outlive it.
  */
 import { gunzipSync, gzipSync } from "node:zlib";
 import {

@@ -1,7 +1,8 @@
 /**
  * The committed evidence of one run, under `<evidence>/runs/<runId>/`:
- * `manifest.json`, `diff.patch` when the tree was dirty, `outcomes.jsonl.gz`,
- * `summary.json`, and for a noise rerun `noise.json`.
+ * `manifest.json`, `diff.patch` when the tree was dirty, `summary.json`,
+ * and for a noise rerun `noise.json`. Its per-unit outcomes are raw
+ * output and stay local, at `<lab>/outcomes/<runId>.jsonl.gz`.
  */
 import { existsSync } from "node:fs";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
@@ -49,21 +50,23 @@ export async function readManifests(
 	return manifests.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 }
 
+const outcomesPath = (labRoot: string, runId: string) =>
+	join(labRoot, "outcomes", `${runId}.jsonl.gz`);
+
 export async function writeOutcomes(
-	evidenceRoot: string,
+	labRoot: string,
 	runId: string,
 	rows: readonly OutcomeRow[],
 ): Promise<void> {
-	const directory = runDirectory(evidenceRoot, runId);
-	await mkdir(directory, { recursive: true });
-	await writeFile(join(directory, "outcomes.jsonl.gz"), encodeOutcomes(rows));
+	await mkdir(join(labRoot, "outcomes"), { recursive: true });
+	await writeFile(outcomesPath(labRoot, runId), encodeOutcomes(rows));
 }
 
 export async function readOutcomes(
-	evidenceRoot: string,
+	labRoot: string,
 	runId: string,
 ): Promise<OutcomeRow[] | undefined> {
-	const path = join(runDirectory(evidenceRoot, runId), "outcomes.jsonl.gz");
+	const path = outcomesPath(labRoot, runId);
 	if (!existsSync(path)) return undefined;
 	return decodeOutcomes(await readFile(path));
 }

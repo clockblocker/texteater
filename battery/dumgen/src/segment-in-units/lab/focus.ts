@@ -7,7 +7,7 @@
  * review (#739) apart. Every other unit the run scored is the guardrail: a
  * run that fixes focus units and breaks others shows it.
  *
- * Both functions read outcome rows only, so a raw run, committed outcomes
+ * Both functions read outcome rows only, so a raw run, stored outcomes
  * and a variant scored in memory (a floor sweep, #762) score alike. The
  * focus set is fixed: it is never re-derived from a later run.
  */

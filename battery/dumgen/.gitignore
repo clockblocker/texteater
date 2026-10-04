@@ -3,3 +3,6 @@ node_modules
 .npm-cache
 coverage
 *.tsbuildinfo
+
+# Raw eval output stays in .runs/; evidence/ keeps summaries, manifests and the frozen sets.
+evidence/**/outcomes.jsonl.gz
