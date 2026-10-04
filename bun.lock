@@ -255,12 +255,9 @@
       },
       "devDependencies": {
         "@biomejs/biome": "2.5.13",
-        "@playwright/test": "^1.62.1",
-        "@tailwindcss/vite": "^4",
         "@types/node": "^24.13.3",
         "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
-        "@vitejs/plugin-react": "^6",
         "bun-types": "1.4.2",
         "dependency-cruiser": "^18.1.0",
         "esbuild": "^0.28.1",
@@ -268,7 +265,6 @@
         "react": "^19.2.6",
         "react-dom": "^19.2.6",
         "typescript": "^7.0.2",
-        "vite": "^8",
       },
       "peerDependencies": {
         "react": "^19.2.6",
