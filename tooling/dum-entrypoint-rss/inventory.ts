@@ -154,6 +154,12 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 		},
 	},
 	{
+		specifier: "dumdict/testing",
+		classification: "development-support",
+		rationale:
+			"Storage conformance suite for adapter tests; imports bun:test and is never loaded at application runtime.",
+	},
+	{
 		specifier: "dumling/validation-artifact",
 		classification: "development-support",
 		rationale:

@@ -48,6 +48,11 @@
 			"convex": "./src/memory.ts",
 			"types": "./dist/memory.d.ts",
 			"import": "./dist/memory.js"
+		},
+		"./testing": {
+			"bun": "./src/testing/index.ts",
+			"convex": "./src/testing/index.ts",
+			"types": "./dist/testing/index.d.ts"
 		}
 	},
 	"files": [
