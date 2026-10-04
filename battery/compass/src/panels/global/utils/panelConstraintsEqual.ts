@@ -2,15 +2,15 @@ import type { PanelConstraints } from "../../components/panel/types";
 import { objectsEqual } from "./objectsEqual";
 
 export function panelConstraintsEqual(
-  a: PanelConstraints[],
-  b: PanelConstraints[]
+	a: PanelConstraints[],
+	b: PanelConstraints[],
 ) {
-  if (a.length !== b.length) {
-    return false;
-  }
+	if (a.length !== b.length) {
+		return false;
+	}
 
-  return a.every((current, index) => {
-    const other = b[index];
-    return other !== undefined && objectsEqual(current, other);
-  });
+	return a.every((current, index) => {
+		const other = b[index];
+		return other !== undefined && objectsEqual(current, other);
+	});
 }

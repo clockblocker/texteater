@@ -4,68 +4,68 @@ import { adjustLayoutByDelta } from "./adjustLayoutByDelta";
 import { validatePanelGroupLayout } from "./validatePanelGroupLayout";
 
 export function calculateSeparatorAriaValues({
-  layout,
-  panelConstraints,
-  panelId,
-  panelIndex
+	layout,
+	panelConstraints,
+	panelId,
+	panelIndex,
 }: {
-  layout: Layout;
-  panelConstraints: PanelConstraints[];
-  panelId: string;
-  panelIndex: number;
+	layout: Layout;
+	panelConstraints: PanelConstraints[];
+	panelId: string;
+	panelIndex: number;
 }): {
-  valueControls: string | undefined;
-  valueMax: number | undefined;
-  valueMin: number | undefined;
-  valueNow: number | undefined;
+	valueControls: string | undefined;
+	valueMax: number | undefined;
+	valueMin: number | undefined;
+	valueNow: number | undefined;
 } {
-  let valueMax: number | undefined = undefined;
-  let valueMin: number | undefined = undefined;
+	let valueMax: number | undefined;
+	let valueMin: number | undefined;
 
-  const panelSize = layout[panelId];
+	const panelSize = layout[panelId];
 
-  const constraints = panelConstraints.find(
-    (current) => current.panelId === panelId
-  );
-  if (constraints && panelSize !== undefined) {
-    const maxSize = constraints.maxSize;
-    const minSize = constraints.collapsible
-      ? constraints.collapsedSize
-      : constraints.minSize;
+	const constraints = panelConstraints.find(
+		(current) => current.panelId === panelId,
+	);
+	if (constraints && panelSize !== undefined) {
+		const maxSize = constraints.maxSize;
+		const minSize = constraints.collapsible
+			? constraints.collapsedSize
+			: constraints.minSize;
 
-    const pivotIndices = [panelIndex, panelIndex + 1];
+		const pivotIndices = [panelIndex, panelIndex + 1];
 
-    const minSizeLayout = validatePanelGroupLayout({
-      layout: adjustLayoutByDelta({
-        delta: minSize - panelSize,
-        initialLayout: layout,
-        panelConstraints,
-        pivotIndices,
-        prevLayout: layout
-      }),
-      panelConstraints
-    });
+		const minSizeLayout = validatePanelGroupLayout({
+			layout: adjustLayoutByDelta({
+				delta: minSize - panelSize,
+				initialLayout: layout,
+				panelConstraints,
+				pivotIndices,
+				prevLayout: layout,
+			}),
+			panelConstraints,
+		});
 
-    valueMin = minSizeLayout[panelId];
+		valueMin = minSizeLayout[panelId];
 
-    const maxSizeLayout = validatePanelGroupLayout({
-      layout: adjustLayoutByDelta({
-        delta: maxSize - panelSize,
-        initialLayout: layout,
-        panelConstraints,
-        pivotIndices,
-        prevLayout: layout
-      }),
-      panelConstraints
-    });
+		const maxSizeLayout = validatePanelGroupLayout({
+			layout: adjustLayoutByDelta({
+				delta: maxSize - panelSize,
+				initialLayout: layout,
+				panelConstraints,
+				pivotIndices,
+				prevLayout: layout,
+			}),
+			panelConstraints,
+		});
 
-    valueMax = maxSizeLayout[panelId];
-  }
+		valueMax = maxSizeLayout[panelId];
+	}
 
-  return {
-    valueControls: panelId,
-    valueMax,
-    valueMin,
-    valueNow: panelSize
-  };
+	return {
+		valueControls: panelId,
+		valueMax,
+		valueMin,
+		valueNow: panelSize,
+	};
 }

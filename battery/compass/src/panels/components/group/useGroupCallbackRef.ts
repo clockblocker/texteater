@@ -7,5 +7,5 @@ import type { GroupImperativeHandle } from "./types";
  * Use this hook when you need to share the ref with another component or hook.
  */
 export function useGroupCallbackRef() {
-  return useState<GroupImperativeHandle | null>(null);
+	return useState<GroupImperativeHandle | null>(null);
 }

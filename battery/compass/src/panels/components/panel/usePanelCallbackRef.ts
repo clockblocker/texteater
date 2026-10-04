@@ -7,5 +7,5 @@ import type { PanelImperativeHandle } from "./types";
  * Use this hook when you need to share the ref with another component or hook.
  */
 export function usePanelCallbackRef() {
-  return useState<PanelImperativeHandle | null>(null);
+	return useState<PanelImperativeHandle | null>(null);
 }
