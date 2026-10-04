@@ -43,7 +43,7 @@
 			"memberSegmentIndices": [4, 8, 9, 11],
 			"route": { "family": "Locution", "kind": "VERB" },
 			"notes": {
-				"rationale": "A tyrant who finally bites the grass has died: ins Gras beißen 'sterben' is an Idiom, a Locution VERB. In a fixed expression both pieces of ins are members (de/fused-word-pieces), and endlich between them is free."
+				"rationale": "A tyrant who finally bites the grass has died: ins Gras beißen 'sterben' is an Idiom, a Locution VERB. In a fixed expression both pieces of ins are members (de/fused-word-pieces), and endlich between them is free. Its synonyms are sterben (Lexeme VERB), den Löffel abgeben and das Zeitliche segnen (Locution VERB): Lexeme and Locution share one relation space (ADR 0039)."
 			}
 		},
 		{
@@ -54,64 +54,5 @@
 			}
 		}
 	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
-			"caseId": "relation-adv-07-ins-gras-beissen",
-			"memberSegmentIndices": [4, 6, 8, 9, 11],
-			"case": {
-				"input": {
-					"markedContext": "Der Tyrann <TARGET>biss endlich ins Gras</TARGET>.",
-					"reading": {
-						"lemma": {
-							"language": "de",
-							"canonicalForm": "ins Gras beißen",
-							"family": "Phraseme",
-							"kind": "Idiom",
-							"coreFeatures": {},
-							"unitKind": "Lemma"
-						},
-						"emojiDescription": "☠️",
-						"unitKind": "Reading"
-					},
-					"request": {
-						"semanticRelations": {
-							"synonym": null,
-							"nearSynonym": null,
-							"antonym": null,
-							"nearAntonym": null
-						}
-					}
-				},
-				"idealOutput": {
-					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": null,
-						"antonym": null,
-						"nearAntonym": null
-					}
-				},
-				"explanation": "Primary lexicography explains the idiom through the Lexeme sterben, but ADR-0020 forbids that cross-Family target. Without a sourced same-Family equivalent, the relation stays null.",
-				"sources": [
-					{
-						"title": "Duden: Gras",
-						"url": "https://www.duden.de/rechtschreibung/Gras",
-						"supports": "Defines the complete phrase ins Gras beißen as sterben and marks it salopp."
-					},
-					{
-						"title": "Dumrel settled Semantic Relation policy",
-						"path": "battery/dumrel/CONTEXT.md",
-						"supports": "Distinguishes exact Synonymy from non-substitutive Near Synonymy."
-					},
-					{
-						"title": "ADR-0020: Keep Semantic Relations inside one Family",
-						"path": "docs/adr/0020-keep-semantic-relations-inside-one-family.md",
-						"supports": "Keeps direct Semantic Relations inside the source Family."
-					}
-				],
-				"contaminationKeys": ["relation-de-ins-gras-beissen"]
-			}
-		}
-	]
+	"noTarget": []
 }

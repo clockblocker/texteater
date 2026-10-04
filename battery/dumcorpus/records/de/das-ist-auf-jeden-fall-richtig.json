@@ -52,7 +52,7 @@
 			"memberSegmentIndices": [4, 6, 8],
 			"route": { "family": "Locution", "kind": "ADV" },
 			"notes": {
-				"rationale": "auf jeden Fall 'in any case' is a fixed adverbial: jeden cannot be swapped for an ordinary synonym (de/fixed-member-test), and the whole acts as an adverb, so it is a Locution ADV, like auf keinen Fall (ADR 0039, amended 2026-09-27)."
+				"rationale": "auf jeden Fall 'in any case' is a fixed adverbial: jeden cannot be swapped for an ordinary synonym (de/fixed-member-test), and the whole acts as an adverb, so it is a Locution ADV, like auf keinen Fall (ADR 0039, amended 2026-09-27). Its antonym is auf keinen Fall (Locution ADV), and its synonyms definitiv and zweifellos (Lexeme ADV) and mit Sicherheit (Locution ADV): Lexeme and Locution share one relation space (ADR 0039)."
 			}
 		},
 		{
@@ -60,52 +60,5 @@
 			"route": { "family": "Lexeme", "kind": "ADJ" }
 		}
 	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
-			"caseId": "relation-adv-36-auf-jeden-fall",
-			"memberSegmentIndices": [4, 6, 8],
-			"case": {
-				"input": {
-					"markedContext": "Das ist <TARGET>auf jeden Fall</TARGET> richtig.",
-					"reading": {
-						"lemma": {
-							"language": "de",
-							"canonicalForm": "auf jeden Fall",
-							"family": "Phraseme",
-							"kind": "DiscourseFormula",
-							"coreFeatures": { "discourseFormulaRole": null },
-							"unitKind": "Lemma"
-						},
-						"emojiDescription": "✅",
-						"unitKind": "Reading"
-					},
-					"request": {
-						"semanticRelations": {
-							"synonym": null,
-							"nearSynonym": null,
-							"antonym": null,
-							"nearAntonym": null
-						}
-					}
-				},
-				"idealOutput": {
-					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": null,
-						"antonym": [
-							{
-								"canonicalForm": "auf keinen Fall",
-								"kind": "DiscourseFormula"
-							}
-						],
-						"nearAntonym": null
-					}
-				},
-				"explanation": "Auf keinen Fall is the conventional complete-phraseme opposition; the former Lexeme adverb definitiv leaves the DiscourseFormula Family inventory and is dropped by the same-Family filter.",
-				"contaminationKeys": ["relation-de-auf-jeden-fall"]
-			}
-		}
-	]
+	"noTarget": []
 }

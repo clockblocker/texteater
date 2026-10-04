@@ -21,53 +21,15 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
-			"caseId": "relation-adv-37-proverb-null",
 			"memberSegmentIndices": [5, 7, 9, 11, 12, 14],
-			"case": {
-				"input": {
-					"markedContext": "Sie sagt: <TARGET>Morgenstund hat Gold im Mund</TARGET>.",
-					"reading": {
-						"lemma": {
-							"language": "de",
-							"canonicalForm": "Morgenstund hat Gold im Mund",
-							"family": "Phraseme",
-							"kind": "Proverb",
-							"coreFeatures": {},
-							"unitKind": "Lemma"
-						},
-						"emojiDescription": "🌅",
-						"unitKind": "Reading"
-					},
-					"request": {
-						"semanticRelations": {
-							"synonym": null,
-							"nearSynonym": null,
-							"antonym": null,
-							"nearAntonym": null
-						}
-					}
-				},
-				"idealOutput": {
-					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": null,
-						"antonym": null,
-						"nearAntonym": null
-					}
-				},
-				"explanation": "Related proverbs about early action make different propositions; conservative nulls prevent a miscellaneous related-saying bucket.",
-				"contaminationKeys": ["relation-de-morgenstund"]
+			"route": { "family": "Saying", "kind": "Saying" },
+			"notes": {
+				"rationale": "Morgenstund hat Gold im Mund is a Proverb quoted after sagt, one Saying target over all its words, both pieces of im included (de/saying-needs-uptake), as in morgenstund-hat-gold-im-mund. Its Reading is 🌅💰 as there, and its near synonym the Saying Der frühe Vogel fängt den Wurm."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

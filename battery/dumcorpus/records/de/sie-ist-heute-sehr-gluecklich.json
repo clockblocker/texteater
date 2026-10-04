@@ -15,61 +15,15 @@
 	],
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
-	"sources": {
-		"adrs": [],
-		"rules": [],
-		"references": []
-	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"sources": { "adrs": [], "rules": [], "references": [] },
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
-			"caseId": "relation-adv-40-gluecklich-family",
 			"memberSegmentIndices": [8],
-			"case": {
-				"input": {
-					"markedContext": "Sie ist heute sehr <TARGET>glücklich</TARGET>.",
-					"reading": {
-						"lemma": {
-							"language": "de",
-							"canonicalForm": "glücklich",
-							"family": "Lexeme",
-							"kind": "ADJ",
-							"coreFeatures": {
-								"abbr": null,
-								"numType": null,
-								"variant": null
-							},
-							"unitKind": "Lemma"
-						},
-						"emojiDescription": "😊",
-						"unitKind": "Reading"
-					},
-					"request": {
-						"semanticRelations": {
-							"synonym": null,
-							"nearSynonym": null,
-							"antonym": null,
-							"nearAntonym": null
-						}
-					}
-				},
-				"idealOutput": {
-					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": [
-							{ "canonicalForm": "froh", "kind": "ADJ" }
-						],
-						"antonym": [
-							{ "canonicalForm": "unglücklich", "kind": "ADJ" }
-						],
-						"nearAntonym": null
-					}
-				},
-				"explanation": "Froh is distributionally narrower and unglücklich is the conventional opposite; a related phrase must be typed Phraseme.",
-				"contaminationKeys": ["relation-de-gluecklich-happy"]
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "glücklich 'happy' is the predicate after the copula, an ADJ of its own (de/copula-stays-apart), the 😄 Reading of er-wechselte-einen-gluecklichen-blick-mit-kai-und-fing-an. Its near synonym is froh and its antonym unglücklich."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }

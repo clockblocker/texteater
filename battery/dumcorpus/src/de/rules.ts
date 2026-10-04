@@ -1578,7 +1578,7 @@ const knowledge: Rule[] = [
 		id: "de/relations-need-a-dictionary",
 		statement:
 			"A Reading claims a semantic relation only where Duden, DWDS or OpenThesaurus lists it for this sense and it holds for the whole Reading: leidtun 😔 takes bedauern, not bereuen. At most three per relation. Register neither demotes nor blocks a claim (Mama, Mutter). A synonym needs a listing, not a gloss (eine Entscheidung treffen: etwas entscheiden); a hypernym an explicit Oberbegriff, not a definition's genus nor a catch-all (Mensch, Person, Gegenstand, Werk). No antonym is read off a definition's negation. A target is any German Lemma, matched by Family, Kind and case-folded Canonical Form.",
-		adrs: ["ADR-0011", "ADR-0012", "ADR-0020"],
+		adrs: ["ADR-0011", "ADR-0012", "ADR-0020", "ADR-0039"],
 		routes: [],
 		records: [
 			"de/die-mutter-passt-nicht-auf-diese-schraube",

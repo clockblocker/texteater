@@ -54,11 +54,7 @@
 			"route": { "family": "Saying", "kind": "Saying" },
 			"reading": {
 				"emojiDescription": "🛤🎯",
-				"knowledge": {
-					"sayingType": {
-						"type": "Proverb"
-					}
-				},
+				"knowledge": { "sayingType": { "type": "Proverb" } },
 				"coverage": {
 					"sayingType": "Authored",
 					"semanticRelations": {
@@ -100,47 +96,5 @@
 			}
 		}
 	],
-	"noTarget": [],
-	"legacy": [
-		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/phraseme/source-data.json",
-			"caseId": "relation-adv-34-aphorism-null",
-			"memberSegmentIndices": [5, 7, 9, 11, 13],
-			"case": {
-				"input": {
-					"markedContext": "Es gilt: <TARGET>Der Weg ist das Ziel</TARGET>.",
-					"reading": {
-						"lemma": {
-							"language": "de",
-							"canonicalForm": "Der Weg ist das Ziel",
-							"family": "Phraseme",
-							"kind": "Aphorism",
-							"coreFeatures": {},
-							"unitKind": "Lemma"
-						},
-						"emojiDescription": "🛤️",
-						"unitKind": "Reading"
-					},
-					"request": {
-						"semanticRelations": {
-							"synonym": null,
-							"nearSynonym": null,
-							"antonym": null,
-							"nearAntonym": null
-						}
-					}
-				},
-				"idealOutput": {
-					"semanticRelations": {
-						"synonym": null,
-						"nearSynonym": null,
-						"antonym": null,
-						"nearAntonym": null
-					}
-				},
-				"explanation": "No adjudicated expression preserves this aphorism's proposition and stance; the human-accepted null does not rely on dictionary silence, and thematic travel words are associations.",
-				"contaminationKeys": ["relation-de-weg-ist-ziel"]
-			}
-		}
-	]
+	"noTarget": []
 }
