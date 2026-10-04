@@ -277,13 +277,7 @@ const dumSchemaAuthoringSubpaths = new Set([
 	"schemas",
 	"development",
 ]);
-const dumPackages = new Set([
-	"dumdict",
-	"dumgen",
-	"dumling",
-	"dumrel",
-	"legacy-dumgen",
-]);
+const dumPackages = new Set(["dumdict", "dumgen", "dumling", "dumrel"]);
 
 function isDumSchemaAuthoringSpecifier(specifier: string): boolean {
 	const [packageName, subpath, ...rest] = specifier.split("/");
@@ -311,21 +305,6 @@ const buildSourceSeams = new Map<string, readonly string[]>([
 		],
 	],
 	[
-		"battery/legacy-dumgen/codegen/generate.ts",
-		[
-			"../../dumling/codegen/operations.js",
-			"../../dumling/codegen/output-types.js",
-			"../../dumling/codegen/routes.js",
-			"../../dumrel/codegen/format-typescript.js",
-			"../../dumrel/codegen/output-types.js",
-			"../../dumrel/src/semantics.js",
-		],
-	],
-	[
-		"battery/legacy-dumgen/codegen/hebrew-word-list.ts",
-		["../../dumrel/codegen/format-typescript.js"],
-	],
-	[
 		"battery/dumrel/codegen/generate.ts",
 		[
 			"../../dumling/codegen/operations.js",
@@ -345,9 +324,7 @@ function isExplicitAuthoringSource(
 	const path = relative(workspace.dir, file).replaceAll("\\", "/");
 	if (
 		specifier === `${workspace.manifest.name}/development` &&
-		["dumgen", "legacy-dumgen"].includes(
-			workspace.manifest.name as string,
-		) &&
+		workspace.manifest.name === "dumgen" &&
 		path === "cli/evaluate.ts"
 	)
 		return true;

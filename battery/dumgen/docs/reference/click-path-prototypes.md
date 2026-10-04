@@ -1,6 +1,7 @@
 # Click-path pipeline prototypes (2026-09-18)
 
-Lab code lives in `battery/legacy-dumgen/prototypes/`; commands run from `battery/legacy-dumgen`.
+The lab code lived in `battery/legacy-dumgen/prototypes/`, and its commands ran
+from `battery/legacy-dumgen`; both are in git history before #866 deleted them.
 
 Live jev experiments answering: how many System One round trips does one click
 really need, and what does folding them cost in accuracy?

@@ -89,7 +89,7 @@ test("uses role-specific #307 census exclusions", () => {
 	).toBeFalse();
 	expect(
 		isDeveloperDocumentationPath(
-			"battery/legacy-dumgen/docs/prototypes/example/runs/2026-01-01/diagnostic-report.md",
+			"battery/dumgen/docs/prototypes/example/runs/2026-01-01/diagnostic-report.md",
 		),
 	).toBeFalse();
 	expect(
@@ -148,16 +148,7 @@ test("enforces canonical developer-documentation paths", () => {
 	]);
 });
 
-test("allows only the exact retained evidence companions outside canonical paths", () => {
-	expect(
-		auditAllowedPaths([
-			"battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/README.md",
-			"battery/legacy-dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
-			"battery/legacy-dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
-			"battery/legacy-dumgen/docs/prototypes/reading-resolution-meaning-isolation/README.md",
-			"battery/legacy-dumgen/docs/research/issue-58-de-he-clickable-boundaries.md",
-		]),
-	).toEqual([]);
+test("rejects research and prototype notes outside canonical paths", () => {
 	expect(
 		auditAllowedPaths([
 			"battery/dumgen/docs/research/another-investigation.md",

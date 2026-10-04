@@ -123,82 +123,13 @@ caller-supplied Reading in an Encounter. See [Dumgen ADR 0003].
 
 **Evaluation Run**:
 One recorded execution of a linguistic experiment, with its effective model
-settings, case outputs, failures and evaluation results. See the
-[evaluation reference].
-
-### Legacy intake
-
-These terms name the intake LegacyDumgen still ships, from [Dumgen ADR 0005]
-and [Dumgen ADR 0006]. [Dumgen ADR 0007] supersedes both, and the
-segmentation rewrite removes these terms with the code. The legacy intake
-still names Phraseme Kinds, which [ADR 0039] replaced with Locution and
-Saying. The [intake-owned units reference] now holds the `segment.inUnits`
-intake's contract; the legacy contract is in its history before #850.
-
-**Sentence Analysis**:
-What the legacy intake stores beside one German Segmented Sentence: its
-Lexeme Targets and Phraseme Targets over offset-keyed Segments.
-`analyzeSentence` produces it, and hosts read it at selection time. See
-[Dumgen ADR 0006].
-_Avoid_: precomputed resolution
-
-**Lexeme Target**:
-The Segments that realize one Lexeme occurrence: its Members, exactly one of
-them the Head, with a Route Mass and, for a closed-class head, Identity
-Candidates. See [Dumgen ADR 0006].
-_Avoid_: word, token group
-
-**Phraseme Target**:
-The Lexeme Targets that are fixed lexical members of one expression, with a
-Kind Mass and a Fixedness. See [Dumgen ADR 0006].
-_Avoid_: nested target, idiom group
-
-**Kind Mass**:
-A Phraseme Target's distribution over Phraseme Kinds. The Fixedness
-establishes the expression; the Kind Mass names it. See [Dumgen ADR 0006].
-
-**Fixedness**:
-The score of how fixed a word is inside the wording around it. Only a word at
-or above the floor is a member of a Phraseme Target. See [Dumgen ADR 0006].
-_Avoid_: confidence, idiomaticity
-
-**Member**:
-One Segment inside a Lexeme Target with its Member Role. Roles stay inside
-the legacy intake, and no Attestation records them. See [Dumgen ADR 0005] and
-[ADR 0041].
-_Avoid_: role mass, Free member
-
-**Route Mass**:
-A Lexeme Target's distribution over Lexeme Kinds, Unresolved included. See
-[Dumgen ADR 0005].
-_Avoid_: route, classification
-
-**Identity Candidates**:
-A Lexeme Target's distribution over the authored members its closed-class
-head can realize. The winning candidate implies the route. See
-[Dumgen ADR 0005].
-_Avoid_: headword, per-member identity
-
-**Identity State**:
-What the Resolution Selector concludes about a Member's identity from its
-role and its target's candidates. See [Dumgen ADR 0005].
-
-**Resolution Selector**:
-The pure function that turns a Sentence Analysis's masses into resolved
-values, including the largest unit at an offset. See [Dumgen ADR 0005].
-_Avoid_: stored resolution, threshold migration
+settings, case outputs, failures and evaluation results.
 
 [ADR 0021]: ../../docs/adr/0021-close-routes-in-dumgen-and-author-closed-class-inventories-in-dumspec.md
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
-[ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
-[ADR 0041]: ../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
 [ADR 0046]: ../../docs/adr/0046-generate-a-syncretism-for-each-form-only-its-referent-resolves.md
 [Dumgen ADR 0003]: ./docs/adr/0003-split-german-knowledge-generation-by-family.md
 [Dumgen ADR 0004]: ./docs/adr/0004-make-segment-the-one-clickable-dto-produced-at-intake.md
-[Dumgen ADR 0005]: ./docs/adr/0005-intake-owns-segments-and-analysis-targets.md
-[Dumgen ADR 0006]: ./docs/adr/0006-segment-in-two-layers-lexeme-targets-and-phraseme-targets.md
 [Dumgen ADR 0007]: ./docs/adr/0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md
 [Dumgen ADR 0008]: ./docs/adr/0008-judge-segment-in-units-by-membership-before-route.md
-[evaluation reference]: ./docs/reference/evaluation.md
-[intake-owned units reference]: ./docs/reference/intake-owned-units.md

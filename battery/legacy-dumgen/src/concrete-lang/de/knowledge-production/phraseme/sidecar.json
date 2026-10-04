@@ -1,8 +1,0 @@
-{
-	"path": "knowledge-analysis/de/phraseme/prompt-source.ts",
-	"route": "knowledge-analysis/de/phraseme",
-	"demonstrationIds": [
-		"relation-demo-zeit-ist-geld"
-	],
-	"localDemonstrations": []
-}

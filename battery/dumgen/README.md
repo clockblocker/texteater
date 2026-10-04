@@ -14,8 +14,6 @@ a `fetch` to the TypeSafe API with the host's key. Beside them are the
 `segment.inUnits` jev lab that configures and measures them, the
 spec-corpus evaluator that scores them against dumspec, and the evaluation
 CLI.
-The legacy pipeline, with its own `createDumgen`, moved to
-[`legacy-dumgen`](../legacy-dumgen/README.md), where it stays frozen.
 
 ```sh
 bun run --cwd battery/dumgen evaluate --list
@@ -31,9 +29,9 @@ the record's Sentence first, and text mode scores `splitText`.
 asks jev and needs `TYPESAFE_API_KEY`, which the `evaluate` script reads from
 the repository-root `.env.local` when the shell does not export it, and the
 run counts against the lab's current round. `--estimate` prices a run and
-asks nothing. Runs go to `--output`, `DUMGEN_RUN_DIRECTORY` or the untracked
-`.runs/dumgen/`; the [evaluation reference](docs/reference/evaluation.md)
-describes them, and the
+asks nothing. Each run is a Promptsmith run (`manifest.json`, `cases.jsonl`,
+`summary.json`) in `--output`, `DUMGEN_RUN_DIRECTORY` or the untracked
+`.runs/dumgen/`. The
 [lab reference](docs/reference/segment-in-units-jev-lab.md) describes the
 modes, the lab and its rounds.
 

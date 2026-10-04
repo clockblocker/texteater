@@ -1,9 +1,0 @@
-{
-	"path": "knowledge-analysis/de/lexeme/prompt-source.ts",
-	"route": "knowledge-analysis/de/lexeme",
-	"demonstrationIds": [
-		"relation-demo-pfote-anchor",
-		"relation-demo-mieten-converse"
-	],
-	"localDemonstrations": []
-}

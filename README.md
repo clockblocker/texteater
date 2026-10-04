@@ -12,7 +12,6 @@ The main workspaces are:
 - `battery/dumrel`: Knowledge and relation algebra
 - `battery/dumdict`: dictionary workflows
 - `battery/dumgen`: German `segment.inUnits`, rebuilt from scratch (#701)
-- `battery/legacy-dumgen`: the frozen legacy Dumgen pipeline, outside the gates
 
 ## Install
 

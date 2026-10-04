@@ -65,14 +65,6 @@ const coordinationTokens = new Set([
 	"wip",
 ]);
 
-const retainedEvidenceCompanionPaths = new Set([
-	"battery/legacy-dumgen/docs/prototypes/german-relation-human-gate/README.md",
-	"battery/legacy-dumgen/docs/prototypes/german-relation-prompt-iteration-lab/README.md",
-	"battery/legacy-dumgen/docs/prototypes/knowledge-analysis-combined/README.md",
-	"battery/legacy-dumgen/docs/prototypes/reading-resolution-meaning-isolation/README.md",
-	"battery/legacy-dumgen/docs/research/issue-58-de-he-clickable-boundaries.md",
-]);
-
 function normalizeRepositoryPath(path: string): string {
 	return path.replaceAll("\\", "/").replace(/^\.\//u, "");
 }
@@ -155,7 +147,7 @@ function isProducedArtifact(path: string): boolean {
 		path.startsWith("docs/benchmarks/") ||
 		path.startsWith("battery/dumling/resources/") ||
 		path.startsWith("battery/dumgen/docs/learning/") ||
-		/^battery\/(?:legacy-)?dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
+		/^battery\/dumgen\/docs\/prototypes\/[^/]+\/runs\/[^/]+\/diagnostic-report\.md$/u.test(
 			path,
 		) ||
 		// Committed eval evidence: run reports, sweeps and review sheets.
@@ -197,7 +189,6 @@ export function isAllowedDeveloperDocumentationPath(
 ): boolean {
 	const path = normalizeRepositoryPath(candidate);
 	return (
-		retainedEvidenceCompanionPaths.has(path) ||
 		path === "README.md" ||
 		/^app\/[^/]+\/README\.md$/u.test(path) ||
 		path === "AGENTS.md" ||

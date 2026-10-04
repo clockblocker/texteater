@@ -28,14 +28,6 @@ export const governedDependencies = [
 	"effect",
 ] as const;
 
-/**
- * Workspaces that may pin a governed dependency apart from the rest.
- * legacy-dumgen stays on Effect v3 until #856 deletes it.
- */
-const governedDependencyExemptions = new Map<string, readonly string[]>([
-	["effect", ["battery/legacy-dumgen"]],
-]);
-
 const requiredWorkspaceScripts = [
 	"build",
 	"build:package",
@@ -428,11 +420,6 @@ export async function validateManifestPolicy(options: {
 			allDependencyVersions(
 				`${workspace.relativePath}/package.json`,
 				workspace.manifest,
-			).filter(
-				(entry) =>
-					!governedDependencyExemptions
-						.get(entry.name)
-						?.includes(workspace.relativePath),
 			),
 		),
 	].filter(

@@ -1,7 +1,8 @@
 # Intake-first click pipeline (2026-09-18)
 
-Lab code lives in `battery/legacy-dumgen/prototypes/intake/`; commands run
-from `battery/legacy-dumgen`. The click-path prototypes are in
+The lab code lived in `battery/legacy-dumgen/prototypes/intake/`, and its
+commands ran from `battery/legacy-dumgen`; both are in git history before
+#866 deleted them. The click-path prototypes are in
 [click-path-prototypes.md](click-path-prototypes.md).
 
 Production owns the design since 2026-09-21: `analyzeSentence` in

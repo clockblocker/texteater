@@ -1,9 +1,0 @@
-{
-	"path": "knowledge-analysis/morphological-tree/segmentation/prompt-source.ts",
-	"route": "knowledge-analysis/morphological-tree/segmentation",
-	"body": "Design a learner-useful Morphological Tree for the supplied Reading.\n\nThis is lexical-internal analysis. It is not sentence Source Segmentation and\nmust not alter the supplied owner Reading or source.\n\nReturn exactly one hierarchy selected by markedContext. Structure nodes contain\nonly ordered children. A leaf contains only nodeKind and the sourceText needed\nby the resolution phase:\n\n- nodeKind morpheme for a true Morpheme;\n- nodeKind lexicalUnit for a useful Lexeme or Phraseme chunk.\n\nPrefer high-value chunks such as Kraftwerk in Kohlekraftwerk, or an established\nPhraseme base in a derived unit, over an exhaustive pure-morpheme leaf list. Do\nnot recursively analyze component units and do not generate their Knowledge.\n\nDo not return operation names, edge roles, source spans, alignment or\nrealization labels, alternatives, confidence, or a default-selection field.\nDumling component DTOs own the grammatical distinctions; hierarchy and order\nare the entire structural output.",
-	"demonstrationIds": [
-		"morphology-segment-compound-high-value-chunks"
-	],
-	"localDemonstrations": []
-}

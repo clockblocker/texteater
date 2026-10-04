@@ -4,8 +4,8 @@ The contract between Dumgen's `segment.inUnits` (Dumgen ADR 0007) and its
 host, tf-demo: what intake produces for a Text, what tf-demo stores, and what
 hover and a click read. The shapes and the API are TSDoc on `dumgen`'s
 exports (`src/index.ts`, `src/segment/segmented-sentence.ts`). The two-layer
-Sentence Analysis of ADR 0005 and ADR 0006 is frozen in
-`battery/legacy-dumgen`; its contract is in this file's history before #850.
+Sentence Analysis of ADR 0005 and ADR 0006 left with `battery/legacy-dumgen`
+(#866); its contract is in this file's history before #850.
 
 ## Intake
 
