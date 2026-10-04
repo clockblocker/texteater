@@ -21,7 +21,15 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [0],
+			"route": { "family": "Lexeme", "kind": "ADV" },
+			"notes": {
+				"rationale": "Echt? 'really?' comments on what was just said and answers alone, so it is the sentence adverb echt, a non-comparable ADV (de/adjective-stays-adj)."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

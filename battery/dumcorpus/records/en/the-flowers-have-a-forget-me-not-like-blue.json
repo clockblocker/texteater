@@ -22,7 +22,15 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
+	"targets": [
+		{
+			"memberSegmentIndices": [8],
+			"route": { "family": "Lexeme", "kind": "ADJ" },
+			"notes": {
+				"rationale": "forget-me-not-like is one hyphenated word modifying blue: a Lexeme ADJ with a single Head (ADR 0039). No English Rule covers it yet."
+			}
+		}
+	],
 	"noTarget": [],
 	"legacy": [
 		{

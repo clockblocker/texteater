@@ -22,54 +22,14 @@
 		"rules": [],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/knowledge-production/lexeme/source-data.json",
-			"caseId": "relation-adv-38-vereinigte-staaten",
-			"memberSegmentIndices": [2, 4],
-			"case": {
-				"input": {
-					"markedContext": "Die <TARGET>Vereinigten Staaten</TARGET> liegen in Nordamerika.",
-					"reading": {
-						"lemma": {
-							"language": "de",
-							"canonicalForm": "Vereinigte Staaten",
-							"family": "Lexeme",
-							"kind": "PROPN",
-							"coreFeatures": {
-								"abbr": null,
-								"article": "Definite",
-								"gender": null
-							},
-							"unitKind": "Lemma"
-						},
-						"emojiDescription": "🇺🇸",
-						"unitKind": "Reading"
-					},
-					"request": {
-						"semanticRelations": {
-							"synonym": null,
-							"hypernym": null,
-							"holonym": null
-						}
-					}
-				},
-				"idealOutput": {
-					"semanticRelations": {
-						"synonym": null,
-						"hypernym": [
-							{ "canonicalForm": "Staat", "kind": "NOUN" }
-						],
-						"holonym": [
-							{ "canonicalForm": "Nordamerika", "kind": "PROPN" }
-						]
-					}
-				},
-				"explanation": "A fixed multi-word proper name remains one Lexeme/PROPN; it is an instance of Staat and geographically part of Nordamerika, never a Phraseme.",
-				"contaminationKeys": ["relation-de-vereinigte-staaten"]
+			"memberSegmentIndices": [0, 2, 4],
+			"route": { "family": "Lexeme", "kind": "PROPN" },
+			"notes": {
+				"rationale": "Die Vereinigten Staaten is a proper name, one Lexeme PROPN Vereinigte Staaten whatever its length (ADR 0039). It is cited with its definite article, so it has Core article Definite and owns Die (de/proper-noun-article). Its hypernym is Staat (NOUN) and its holonym Nordamerika (PROPN)."
 			}
 		}
-	]
+	],
+	"noTarget": []
 }
