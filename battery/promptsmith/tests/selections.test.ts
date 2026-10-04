@@ -16,7 +16,7 @@ function makeCorpus() {
 		inputSchema,
 		outputSchema,
 		collections: {
-			examples: defineGoldenCaseCollection(import.meta.url, {
+			examples: defineGoldenCaseCollection({
 				cases: Object.fromEntries(
 					["a", "b", "c", "d", "e"].map((id) => [
 						id,

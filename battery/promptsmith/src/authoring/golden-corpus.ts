@@ -1,5 +1,3 @@
-import { fileURLToPath } from "node:url";
-
 import { stableJson } from "../stable-json";
 import type {
 	CaseSelection,
@@ -22,7 +20,6 @@ type ParsedCaseEntry = {
 	readonly exactFingerprint: string;
 	readonly routeFingerprint?: string;
 	readonly contaminationKeys: readonly string[];
-	readonly sourcePath?: string;
 };
 
 type CorpusState = {
@@ -39,7 +36,6 @@ type GoldenCaseGroupState = {
 };
 
 type GoldenCaseCollectionState = {
-	readonly sourcePath: string;
 	readonly groups: Readonly<Record<string, GoldenCaseGroupState>>;
 	readonly cases: Readonly<Record<string, object>>;
 };
@@ -79,17 +75,14 @@ export function defineGoldenCaseGroup<
 	return group;
 }
 
-/** Defines one semantic case collection and records its source provenance. */
+/** Defines one semantic case collection from its groups and cases. */
 export function defineGoldenCaseCollection<
 	const Groups extends GoldenCaseGroupRegistry = Record<never, never>,
 	const Cases extends Readonly<Record<string, object>> = Record<never, never>,
->(
-	source: string,
-	definition: {
-		readonly groups?: Groups;
-		readonly cases: Cases;
-	},
-): GoldenCaseCollection<Groups, Cases> {
+>(definition: {
+	readonly groups?: Groups;
+	readonly cases: Cases;
+}): GoldenCaseCollection<Groups, Cases> {
 	const groups: Record<string, GoldenCaseGroupState> = {};
 	for (const [name, group] of Object.entries(definition.groups ?? {})) {
 		const state = goldenCaseGroupStates.get(group);
@@ -103,7 +96,6 @@ export function defineGoldenCaseCollection<
 
 	const collection = Object.freeze({}) as GoldenCaseCollection<Groups, Cases>;
 	goldenCaseCollectionStates.set(collection, {
-		sourcePath: source.startsWith("file:") ? fileURLToPath(source) : source,
 		groups: Object.freeze(groups),
 		cases: definition.cases,
 	});
@@ -139,7 +131,7 @@ export function defineGoldenCorpus<
 		groups: groupIds,
 	} = flattenCollections(args.collections, args.route);
 
-	for (const { id, goldenCase, sourcePath } of flattenedCases) {
+	for (const { id, goldenCase } of flattenedCases) {
 		assertNonEmpty(id, "Golden Case ID");
 		const location = `Golden Case "${id}" for route "${args.route}"`;
 		const parsedInput = args.inputSchema.safeParse(goldenCase.input);
@@ -197,7 +189,6 @@ export function defineGoldenCorpus<
 			exactFingerprint,
 			...(routeFingerprint === undefined ? {} : { routeFingerprint }),
 			contaminationKeys,
-			sourcePath,
 		});
 	}
 
@@ -351,7 +342,6 @@ function flattenCollections(
 	readonly cases: readonly {
 		readonly id: string;
 		readonly goldenCase: GoldenCase<unknown, unknown>;
-		readonly sourcePath: string;
 	}[];
 	readonly groups: Readonly<
 		Record<string, Readonly<Record<string, readonly string[]>>>
@@ -361,7 +351,6 @@ function flattenCollections(
 	const cases: {
 		id: string;
 		goldenCase: GoldenCase<unknown, unknown>;
-		sourcePath: string;
 	}[] = [];
 	const groups: Record<
 		string,
@@ -387,7 +376,7 @@ function flattenCollections(
 			const groupIds = Object.keys(group.cases);
 			collectionGroups[groupName] = Object.freeze(groupIds);
 			for (const [id, goldenCase] of Object.entries(group.cases)) {
-				addFlattenedCase(id, goldenCase, state.sourcePath, location);
+				addFlattenedCase(id, goldenCase, location);
 				collectionCaseIds.push(id);
 			}
 		}
@@ -395,7 +384,7 @@ function flattenCollections(
 
 		const location = `collection "${collectionName}"`;
 		for (const [id, goldenCase] of Object.entries(state.cases)) {
-			addFlattenedCase(id, goldenCase, state.sourcePath, location);
+			addFlattenedCase(id, goldenCase, location);
 			collectionCaseIds.push(id);
 		}
 		collectionIds[collectionName] = Object.freeze(collectionCaseIds);
@@ -410,7 +399,6 @@ function flattenCollections(
 	function addFlattenedCase(
 		id: string,
 		goldenCase: object,
-		sourcePath: string,
 		location: string,
 	): void {
 		assertNonEmpty(id, "Golden Case ID");
@@ -424,7 +412,6 @@ function flattenCollections(
 		cases.push({
 			id,
 			goldenCase: goldenCase as GoldenCase<unknown, unknown>,
-			sourcePath,
 		});
 	}
 }

@@ -20,7 +20,7 @@ function experiment() {
 		inputSchema,
 		outputSchema,
 		collections: {
-			cases: defineGoldenCaseCollection(import.meta.url, {
+			cases: defineGoldenCaseCollection({
 				cases: {
 					demo: { input: { value: 1 }, idealOutput: { value: 2 } },
 					ok: { input: { value: 2 }, idealOutput: { value: 4 } },
@@ -138,7 +138,7 @@ test("text experiments render bare examples and retain semantic results separate
 		inputSchema,
 		outputSchema: textSchema,
 		collections: {
-			cases: defineGoldenCaseCollection(import.meta.url, {
+			cases: defineGoldenCaseCollection({
 				cases: {
 					demo: { input: { value: 0 }, idealOutput: "🏠" },
 					one: { input: { value: 1 }, idealOutput: "😓" },

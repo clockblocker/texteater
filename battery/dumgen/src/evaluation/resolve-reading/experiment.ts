@@ -418,70 +418,61 @@ export function readingExperiment(setName: ReadingSetName) {
 				inputSchema,
 				outputSchema: readingOutputSchema,
 				collections: {
-					dumspec: defineGoldenCaseCollection(
-						`resolve-reading:${set.name}@${set.hash}`,
-						{
-							groups: {
-								cases: defineGoldenCaseGroup(
-									Object.fromEntries(
-										[...byId].map(
-											([caseId, { goldCase, arm }]) => [
-												caseId,
-												{
-													input: {
-														caseId: goldCase.id,
-														arm,
-														record: goldCase.record,
-														route: routeKey(
-															goldCase,
+					dumspec: defineGoldenCaseCollection({
+						groups: {
+							cases: defineGoldenCaseGroup(
+								Object.fromEntries(
+									[...byId].map(
+										([caseId, { goldCase, arm }]) => [
+											caseId,
+											{
+												input: {
+													caseId: goldCase.id,
+													arm,
+													record: goldCase.record,
+													route: routeKey(goldCase),
+													lemma: goldCase.attestation
+														.surface.lemma
+														.canonicalForm,
+													markedSentence:
+														markedSentence(
+															goldCase.sentence
+																.segments,
+															goldCase.unit
+																.segments,
 														),
-														lemma: goldCase
-															.attestation.surface
-															.lemma
-															.canonicalForm,
-														markedSentence:
-															markedSentence(
-																goldCase
-																	.sentence
-																	.segments,
-																goldCase.unit
-																	.segments,
-															),
-														ideal: goldCase.ideal,
-														candidates:
-															candidatesOf(
-																goldCase,
-																arm,
-															).length,
-														authored:
-															goldCase.authored,
-														folded:
-															goldCase.rejected
-																.length > 0,
-													} satisfies ReadingInput,
-													idealOutput:
-														arm === "present" ||
-														goldCase.authored
-															? {
-																	_tag: "Reuse" as const,
-																	emojiDescription:
-																		goldCase.ideal,
-																}
-															: {
-																	_tag: "New" as const,
-																},
-													contaminationKeys: [
-														goldCase.record,
-													],
-												},
-											],
-										),
+													ideal: goldCase.ideal,
+													candidates: candidatesOf(
+														goldCase,
+														arm,
+													).length,
+													authored: goldCase.authored,
+													folded:
+														goldCase.rejected
+															.length > 0,
+												} satisfies ReadingInput,
+												idealOutput:
+													arm === "present" ||
+													goldCase.authored
+														? {
+																_tag: "Reuse" as const,
+																emojiDescription:
+																	goldCase.ideal,
+															}
+														: {
+																_tag: "New" as const,
+															},
+												contaminationKeys: [
+													goldCase.record,
+												],
+											},
+										],
 									),
 								),
-							},
-							cases: {},
+							),
 						},
-					),
+						cases: {},
+					}),
 				},
 			});
 			const repetitionsSeen = new Map<string, number>();

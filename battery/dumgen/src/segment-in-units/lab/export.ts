@@ -43,26 +43,23 @@ export async function exportPolicy(args: {
 		inputSchema: segmentInUnitsInputSchema,
 		outputSchema: segmentInUnitsOutputSchema,
 		collections: {
-			lab: defineGoldenCaseCollection(
-				`segment-in-units-lab:${run.set}@${run.setHash}`,
-				{
-					groups: {
-						cases: defineGoldenCaseGroup(
-							Object.fromEntries(
-								selected.map(({ labCase }) => [
-									labCase.id,
-									{
-										input: labCase.input,
-										idealOutput: labCase.idealOutput,
-										contaminationKeys: [labCase.record],
-									},
-								]),
-							),
+			lab: defineGoldenCaseCollection({
+				groups: {
+					cases: defineGoldenCaseGroup(
+						Object.fromEntries(
+							selected.map(({ labCase }) => [
+								labCase.id,
+								{
+									input: labCase.input,
+									idealOutput: labCase.idealOutput,
+									contaminationKeys: [labCase.record],
+								},
+							]),
 						),
-					},
-					cases: {},
+					),
 				},
-			),
+				cases: {},
+			}),
 		},
 	});
 	const stored = new Map(

@@ -65,7 +65,7 @@ const corpus = defineGoldenCorpus({
 	inputSchema,
 	outputSchema,
 	collections: {
-		cases: defineGoldenCaseCollection(import.meta.url, {
+		cases: defineGoldenCaseCollection({
 			cases: {
 				demo: {
 					input: { value: 0 },

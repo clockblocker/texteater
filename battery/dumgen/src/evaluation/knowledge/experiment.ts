@@ -447,52 +447,45 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 				inputSchema,
 				outputSchema: knowledgeOutputSchema,
 				collections: {
-					dumspec: defineGoldenCaseCollection(
-						`knowledge:${set.name}@${set.hash}`,
-						{
-							groups: {
-								cases: defineGoldenCaseGroup(
-									Object.fromEntries(
-										cases.map((goldCase) => [
-											goldCase.id,
-											{
-												input: {
-													caseId: goldCase.id,
-													record: goldCase.record,
-													route: routeKey(goldCase),
-													lemma: goldCase.reading
-														.lemma.canonicalForm,
-													emojiDescription:
-														emojiOf(goldCase),
-													markedSentence:
-														markedSentence(
-															goldCase.sentence
-																.segments,
-															goldCase.sentence
-																.target,
-														),
-													scope,
-													gold:
-														goldCase.gold !==
-														undefined,
-													authored: goldCase.authored,
-												} satisfies KnowledgeInput,
-												idealOutput: {
-													changes: [],
-													pendingRelations: [],
-													failures: [],
-												},
-												contaminationKeys: [
-													goldCase.record,
-												],
+					dumspec: defineGoldenCaseCollection({
+						groups: {
+							cases: defineGoldenCaseGroup(
+								Object.fromEntries(
+									cases.map((goldCase) => [
+										goldCase.id,
+										{
+											input: {
+												caseId: goldCase.id,
+												record: goldCase.record,
+												route: routeKey(goldCase),
+												lemma: goldCase.reading.lemma
+													.canonicalForm,
+												emojiDescription:
+													emojiOf(goldCase),
+												markedSentence: markedSentence(
+													goldCase.sentence.segments,
+													goldCase.sentence.target,
+												),
+												scope,
+												gold:
+													goldCase.gold !== undefined,
+												authored: goldCase.authored,
+											} satisfies KnowledgeInput,
+											idealOutput: {
+												changes: [],
+												pendingRelations: [],
+												failures: [],
 											},
-										]),
-									),
+											contaminationKeys: [
+												goldCase.record,
+											],
+										},
+									]),
 								),
-							},
-							cases: {},
+							),
 						},
-					),
+						cases: {},
+					}),
 				},
 			});
 			const repetitionsSeen = new Map<string, number>();

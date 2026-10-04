@@ -270,16 +270,13 @@ export function projectCorpus<
 		inputSchema: projection.inputSchema,
 		outputSchema: projection.outputSchema,
 		collections: {
-			[specCollection]: defineGoldenCaseCollection(
-				`dumspec:records/${projection.language}`,
-				{
-					groups: {
-						Reviewed: defineGoldenCaseGroup(groups.Reviewed),
-						Draft: defineGoldenCaseGroup(groups.Draft),
-					},
-					cases: {},
+			[specCollection]: defineGoldenCaseCollection({
+				groups: {
+					Reviewed: defineGoldenCaseGroup(groups.Reviewed),
+					Draft: defineGoldenCaseGroup(groups.Draft),
 				},
-			),
+				cases: {},
+			}),
 		},
 	});
 	const casesOf = (recordIds: Iterable<string>) => {

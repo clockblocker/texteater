@@ -440,28 +440,25 @@ function segmentInUnitsExperiment<I extends z.ZodType, O extends z.ZodType>(
 				inputSchema: mode.inputSchema,
 				outputSchema: mode.outputSchema,
 				collections: {
-					lab: defineGoldenCaseCollection(
-						`segment-in-units-lab:${set.name}@${set.hash}${mode.suffix}`,
-						{
-							groups: {
-								cases: defineGoldenCaseGroup(
-									Object.fromEntries(
-										cases.map((entry) => [
-											entry.labCase.id,
-											{
-												input: entry.input,
-												idealOutput: entry.idealOutput,
-												contaminationKeys: [
-													entry.labCase.record,
-												],
-											},
-										]),
-									),
+					lab: defineGoldenCaseCollection({
+						groups: {
+							cases: defineGoldenCaseGroup(
+								Object.fromEntries(
+									cases.map((entry) => [
+										entry.labCase.id,
+										{
+											input: entry.input,
+											idealOutput: entry.idealOutput,
+											contaminationKeys: [
+												entry.labCase.record,
+											],
+										},
+									]),
 								),
-							},
-							cases: {},
+							),
 						},
-					),
+						cases: {},
+					}),
 				},
 			});
 			const configuration = {
@@ -538,7 +535,7 @@ const splitTextExperiment: Experiment = {
 			inputSchema: splitTextInputSchema,
 			outputSchema: splitTextOutputSchema,
 			collections: {
-				udDrafts: defineGoldenCaseCollection("ud-drafts", {
+				udDrafts: defineGoldenCaseCollection({
 					groups: {
 						texts: defineGoldenCaseGroup(
 							Object.fromEntries(

@@ -462,36 +462,33 @@ export function grammarExperiment(setName: GrammarSetName, e2e: boolean) {
 				inputSchema,
 				outputSchema: grammarOutputSchema,
 				collections: {
-					dumspec: defineGoldenCaseCollection(
-						`resolve-grammar:${set.name}@${set.hash}${e2e ? ":e2e" : ""}`,
-						{
-							groups: {
-								cases: defineGoldenCaseGroup(
-									Object.fromEntries(
-										cases.map((goldCase) => [
-											goldCase.id,
-											{
-												input: {
-													caseId: goldCase.id,
-													record: goldCase.record,
-													route: routeKey(goldCase),
-													rules: [...goldCase.rules],
-												} satisfies GrammarInput,
-												idealOutput: {
-													_tag: "Resolved" as const,
-													attestation: goldCase.ideal,
-												},
-												contaminationKeys: [
-													goldCase.record,
-												],
+					dumspec: defineGoldenCaseCollection({
+						groups: {
+							cases: defineGoldenCaseGroup(
+								Object.fromEntries(
+									cases.map((goldCase) => [
+										goldCase.id,
+										{
+											input: {
+												caseId: goldCase.id,
+												record: goldCase.record,
+												route: routeKey(goldCase),
+												rules: [...goldCase.rules],
+											} satisfies GrammarInput,
+											idealOutput: {
+												_tag: "Resolved" as const,
+												attestation: goldCase.ideal,
 											},
-										]),
-									),
+											contaminationKeys: [
+												goldCase.record,
+											],
+										},
+									]),
 								),
-							},
-							cases: {},
+							),
 						},
-					),
+						cases: {},
+					}),
 				},
 			});
 			const attempts = new Map<string, number>();
