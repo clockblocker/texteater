@@ -109,7 +109,7 @@ export function useDefaultLayout({
 
   const defaultLayout = defaultLayoutModern ?? defaultLayoutLegacy;
 
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearPendingTimeout = useCallback(() => {
     const timeout = timeoutRef.current;

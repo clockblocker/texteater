@@ -5,7 +5,6 @@
 		"types": ["vite/client", "bun-types"]
 	},
 	"include": [
-		"src/node-timeout.d.ts",
 		"src/notes/universal/blocks/renderer-inference.test.ts",
 		"tests/types"
 	],
