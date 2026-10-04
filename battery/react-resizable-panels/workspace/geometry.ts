@@ -1,0 +1,372 @@
+/**
+ * Where things sit in a workspace: the Deck's column, a Pane's drop
+ * regions, a Sheet's box, and which region a pointer is over.
+ *
+ * It is pure. Whatever only the page knows, the root font size and the
+ * measured Pane boxes, comes in as an argument, and so does anything that
+ * depends on what a Subject is, such as how wide its content column is.
+ * Sizes are written in rem and come out in px at the `rem` given; boxes
+ * are in the coordinates of the frame the Panes were measured in. Edges
+ * are logical: the writing direction decides which physical side each
+ * one sits on.
+ */
+
+import type { Edge } from "./model";
+
+export type Box = {
+	readonly left: number;
+	readonly top: number;
+	readonly width: number;
+	readonly height: number;
+};
+
+export type WritingDirection = "ltr" | "rtl";
+
+/* ---------------------------------------------------------------- sizes */
+
+/** A Card's width, and a Note's content column. */
+export const CARD_WIDTH_REM = 26;
+/** The whole Deck column: the front Card plus one Heading row per folded Card. */
+export const PILE_HEIGHT_REM = 30;
+/** A Card's Heading row, which is all a folded Card shows. */
+export const HEADER_REM = 2.75;
+/** The Pane bar above a Ground: the trail and the ← or X control. */
+export const BAR_REM = 2.25;
+/**
+ * A Card lifted from a Link or a Segment, or a Text lifted off its Ground,
+ * rests in no Deck; this is the height it is held at.
+ */
+export const LOOSE_CARD_REM = 18;
+/** How far below a Pane's top its Deck starts. */
+export const DECK_TOP_REM = 12;
+/** How far the return band reaches below the Deck's Cards. */
+export const RETURN_PAD_REM = 3;
+
+/**
+ * A Cover's box: flush with its Pane's top, over the Pane bar, and inset
+ * by these from the Pane's sides and foot. A Ground fills its Pane.
+ */
+const SHEET_INSET_X_REM = 1.5;
+const SHEET_INSET_Y_REM = 1.5;
+
+/** A spawned Pane never takes more than this share of the Pane it splits. */
+const SPAWN_SHARE = 0.5;
+
+/** A side region takes at most this share of its Pane, whatever it would spawn. */
+const EDGE_SHARE = 0.3;
+
+/**
+ * A destination is left only once the pointer is this far outside its
+ * region. A pointer's distance, so px whatever the root size.
+ */
+export const HYSTERESIS_PX = 12;
+
+/** The gap a clicked Sentence keeps above the Deck once the Text has moved. */
+export const DEAL_GAP_PX = 8;
+
+/** The stacking bands over the Panes, lowest first. */
+export const Z = {
+	/** A Ground; each Cover above it is one higher. */
+	sheet: 1,
+	/** The Deck's Cards, rising toward the front one. */
+	deck: 10,
+	zone: 30,
+	/** The return band, over the Deck's Pane's zones. */
+	returnZone: 35,
+	/** The Held Card, over everything until it is let go. */
+	held: 40,
+} as const;
+
+/* ----------------------------------------------------------------- Deck */
+
+/**
+ * A Card's width in a Pane `paneWidth` wide. It leaves room for the front
+ * Card's resting scale and the return band's outline.
+ */
+export function cardWidthIn(
+	paneWidth: number,
+	rem: number,
+	openScale: number,
+): number {
+	return Math.max(
+		0,
+		Math.min(
+			CARD_WIDTH_REM * rem,
+			(paneWidth - 2 * rem) / Math.max(1, openScale),
+		),
+	);
+}
+
+/** The front Card's height, in px, in a Deck of `count` Cards. */
+export function cardHeightPx(count: number, rem: number): number {
+	return (PILE_HEIGHT_REM - (Math.max(1, count) - 1) * HEADER_REM) * rem;
+}
+
+/** The Deck's left edge inside its Pane: the Deck is centred. */
+export function deckLeftIn(paneWidth: number, cardWidth: number): number {
+	return (paneWidth - cardWidth) / 2;
+}
+
+/**
+ * The Deck's top inside its Pane, in px: one place, whatever was clicked.
+ * `topRem` moves it for a renderer that has nothing above the Deck.
+ */
+export function deckTopIn(rem: number, topRem = DECK_TOP_REM): number {
+	return topRem * rem;
+}
+
+/** The Deck's column in a Pane: where its Cards sit, in frame coordinates. */
+export function deckColumnIn(
+	pane: Box,
+	rem: number,
+	openScale: number,
+	topRem = DECK_TOP_REM,
+): Box {
+	const width = cardWidthIn(pane.width, rem, openScale);
+	return {
+		left: pane.left + deckLeftIn(pane.width, width),
+		top: pane.top + deckTopIn(rem, topRem),
+		width,
+		height: PILE_HEIGHT_REM * rem,
+	};
+}
+
+/**
+ * The return band over a Deck: the Pane's width between its two edge
+ * regions, from the Deck's top to `RETURN_PAD_REM` below its column.
+ * `columnRem` is the held Card's content column, as for `edgeWidth`.
+ */
+export function returnBandIn(
+	pane: Box,
+	columnRem: number,
+	rem: number,
+	openScale: number,
+	topRem = DECK_TOP_REM,
+): Box {
+	const column = deckColumnIn(pane, rem, openScale, topRem);
+	const side = edgeWidth(columnRem, pane.width, rem);
+	return {
+		left: pane.left + side,
+		top: column.top,
+		width: pane.width - 2 * side,
+		height: column.height + RETURN_PAD_REM * rem,
+	};
+}
+
+/* --------------------------------------------------------------- Sheets */
+
+/**
+ * Where a Cover sits in a Pane: from the Pane's top edge, over its bar,
+ * and inset from its sides and foot. A Cover carries its own bar.
+ */
+export function coverBoxIn(pane: Box, rem: number): Box {
+	const insetX = SHEET_INSET_X_REM * rem;
+	const insetY = SHEET_INSET_Y_REM * rem;
+	return {
+		left: pane.left + insetX,
+		top: pane.top,
+		width: Math.max(0, pane.width - 2 * insetX),
+		height: Math.max(0, pane.height - insetY),
+	};
+}
+
+/** Where a Ground sits: the whole Pane under its bar. */
+export function groundBoxIn(pane: Box, rem: number, barRem = BAR_REM): Box {
+	const bar = barRem * rem;
+	return {
+		left: pane.left,
+		top: pane.top + bar,
+		width: pane.width,
+		height: Math.max(0, pane.height - bar),
+	};
+}
+
+/**
+ * How wide the Pane a Card spawns opens: its content column, `columnRem`,
+ * plus the Cover insets, so a Note gets the room it lays out in and no
+ * more, capped at half of the Pane it splits.
+ */
+export function spawnSize(
+	columnRem: number,
+	paneWidth: number,
+	rem: number,
+): number {
+	const natural = (columnRem + 2 * SHEET_INSET_X_REM) * rem;
+	return Math.round(Math.min(natural, paneWidth * SPAWN_SHARE));
+}
+
+/* ---------------------------------------------------------- drop regions */
+
+/**
+ * Where a drop lands, read off the Pane: inside the rectangle a Pane on
+ * either side would take, it spawns that Pane; on the Pane bar it lands
+ * nowhere; anywhere else in the Pane it opens as a Cover there. An edge
+ * region is the very rectangle a drop there produces, so the zone drawn,
+ * the preview and the Pane it becomes are one box. `dropRegions` is the
+ * one place this geometry is written; the hit test, the drawn zones and
+ * the preview all read it.
+ */
+export type DropRegions = {
+	/** Where a drop opens a Cover in this Pane: between the sides, under the bar. */
+	readonly cover: Box;
+	/** Where a drop spawns a Pane on this side: the Pane it spawns. */
+	readonly edges: readonly { readonly edge: Edge; readonly box: Box }[];
+	/** The Pane bar: chrome, never a drop. */
+	readonly bar: Box;
+};
+
+/** How wide a Pane's side regions are: the Pane it would spawn, capped at `EDGE_SHARE`. */
+export function edgeWidth(
+	columnRem: number,
+	paneWidth: number,
+	rem: number,
+): number {
+	return Math.min(
+		spawnSize(columnRem, paneWidth, rem),
+		paneWidth * EDGE_SHARE,
+	);
+}
+
+/**
+ * A Pane's drop regions for a held Card whose content column is
+ * `columnRem`, in frame coordinates. The inline-start edge sits on the
+ * left in left-to-right text and on the right in right-to-left text.
+ */
+export function dropRegions(
+	pane: Box,
+	columnRem: number,
+	rem: number,
+	barRem = BAR_REM,
+	direction: WritingDirection = "ltr",
+): DropRegions {
+	const side = edgeWidth(columnRem, pane.width, rem);
+	const bar = barRem * rem;
+	const [left, right]: readonly [Edge, Edge] =
+		direction === "rtl"
+			? ["inline-end", "inline-start"]
+			: ["inline-start", "inline-end"];
+	return {
+		cover: {
+			left: pane.left + side,
+			top: pane.top + bar,
+			width: pane.width - 2 * side,
+			height: pane.height - bar,
+		},
+		edges: [
+			{
+				edge: left,
+				box: {
+					left: pane.left,
+					top: pane.top,
+					width: side,
+					height: pane.height,
+				},
+			},
+			{
+				edge: right,
+				box: {
+					left: pane.left + pane.width - side,
+					top: pane.top,
+					width: side,
+					height: pane.height,
+				},
+			},
+		],
+		bar: {
+			left: pane.left,
+			top: pane.top,
+			width: pane.width,
+			height: bar,
+		},
+	};
+}
+
+/** The physical side a logical edge sits on, for a renderer that needs one. */
+export function sideOf(
+	edge: Edge,
+	direction: WritingDirection,
+): "left" | "right" {
+	return (edge === "inline-start") === (direction === "ltr")
+		? "left"
+		: "right";
+}
+
+/** A drop region a pointer is over: a Pane's cover region or one of its edges. */
+export type Region =
+	| { readonly kind: "cover"; readonly paneId: string }
+	| { readonly kind: "edge"; readonly paneId: string; readonly edge: Edge };
+
+/**
+ * The region under the pointer at (`x`, `y`), or `null` over a Pane bar or
+ * outside every Pane. `held` is the region the pointer was last over: it
+ * is kept, the very object, until the pointer is `HYSTERESIS_PX` outside
+ * it or on its Pane's bar, so leaving a region takes a little more than
+ * entering it did. Otherwise Panes are read in order, and in each the bar
+ * first, then the edges, then the cover region.
+ */
+export function regionAt(
+	panes: readonly {
+		readonly paneId: string;
+		readonly regions: DropRegions;
+	}[],
+	x: number,
+	y: number,
+	held: Region | null = null,
+): Region | null {
+	const heldRegions = held
+		? panes.find((pane) => pane.paneId === held.paneId)?.regions
+		: undefined;
+	if (held && heldRegions) {
+		const box =
+			held.kind === "edge"
+				? heldRegions.edges.find((e) => e.edge === held.edge)?.box
+				: heldRegions.cover;
+		if (
+			box &&
+			inside(box, x, y, HYSTERESIS_PX) &&
+			!inside(heldRegions.bar, x, y)
+		)
+			return held;
+	}
+	for (const { paneId, regions } of panes) {
+		if (inside(regions.bar, x, y)) return null;
+		for (const { edge, box } of regions.edges)
+			if (inside(box, x, y)) return { kind: "edge", paneId, edge };
+		if (inside(regions.cover, x, y)) return { kind: "cover", paneId };
+	}
+	return null;
+}
+
+/* ---------------------------------------------------------------- boxes */
+
+/** Whether (`x`, `y`) is in `box`, or within `grow` px of it. */
+export function inside(box: Box, x: number, y: number, grow = 0): boolean {
+	return (
+		x >= box.left - grow &&
+		x <= box.left + box.width + grow &&
+		y >= box.top - grow &&
+		y <= box.top + box.height + grow
+	);
+}
+
+function sameBox(a: Box | undefined, b: Box): boolean {
+	return (
+		a !== undefined &&
+		a.left === b.left &&
+		a.top === b.top &&
+		a.width === b.width &&
+		a.height === b.height
+	);
+}
+
+/** Whether two sets of measured boxes, keyed by id, are the same. */
+export function sameBoxes(
+	a: Readonly<Record<string, Box>>,
+	b: Readonly<Record<string, Box>>,
+): boolean {
+	const ids = Object.keys(b);
+	return (
+		ids.length === Object.keys(a).length &&
+		ids.every((id) => sameBox(a[id], b[id] as Box))
+	);
+}
