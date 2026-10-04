@@ -23,14 +23,11 @@ function defaultGetDOMRect(element: Element) {
   if (idString) {
     const match = idString.match(/(\d+),(\d+) (\d+)x(\d+)/);
     if (match) {
-      const [_, x, y, width, height] = match;
+      const [x, y, width, height] = match
+        .slice(1)
+        .map((value) => parseInt(value));
 
-      return new DOMRect(
-        parseInt(x),
-        parseInt(y),
-        parseInt(width),
-        parseInt(height)
-      );
+      return new DOMRect(x, y, width, height);
     }
   }
 }

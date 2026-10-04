@@ -49,9 +49,12 @@ export function validatePanelGroupLayout({
     const unsafeSize = nextLayout[index];
     assert(unsafeSize != null, `No layout data found for index ${index}`);
 
+    const constraints = panelConstraints[index];
+    assert(constraints, `No panel constraints found for index ${index}`);
+
     const safeSize = validatePanelSize({
       overrideDisabledPanels: true,
-      panelConstraints: panelConstraints[index],
+      panelConstraints: constraints,
       prevSize,
       size: unsafeSize
     });
@@ -69,10 +72,12 @@ export function validatePanelGroupLayout({
     for (let index = 0; index < panelConstraints.length; index++) {
       const prevSize = nextLayout[index];
       assert(prevSize != null, `No layout data found for index ${index}`);
+      const constraints = panelConstraints[index];
+      assert(constraints, `No panel constraints found for index ${index}`);
       const unsafeSize = prevSize + remainingSize;
       const safeSize = validatePanelSize({
         overrideDisabledPanels: true,
-        panelConstraints: panelConstraints[index],
+        panelConstraints: constraints,
         prevSize,
         size: unsafeSize
       });
@@ -92,7 +97,9 @@ export function validatePanelGroupLayout({
   const prevLayoutKeys = Object.keys(layout);
 
   return nextLayout.reduce<Layout>((accumulated, current, index) => {
-    accumulated[prevLayoutKeys[index]] = current;
+    const key = prevLayoutKeys[index];
+    assert(key != null, `No layout key found for index ${index}`);
+    accumulated[key] = current;
     return accumulated;
   }, {});
 }

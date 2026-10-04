@@ -82,9 +82,8 @@ export function onDocumentKeyDown(event: KeyboardEvent) {
       );
       assert(constraints, "Panel metadata not found");
 
-      if (constraints.collapsible) {
-        const prevSize = layout[primaryPanel.id];
-
+      const prevSize = layout[primaryPanel.id];
+      if (constraints.collapsible && prevSize !== undefined) {
         const nextSize =
           constraints.collapsedSize === prevSize
             ? (group.mutableState.expandedPanelSizes[primaryPanel.id] ??

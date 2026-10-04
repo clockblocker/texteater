@@ -6,9 +6,10 @@ export function layoutsEqual(a: Layout, b: Layout): boolean {
     return false;
   }
 
-  for (const id in a) {
+  for (const [id, size] of Object.entries(a)) {
     // Edge case: Panel id has been changed
-    if (b[id] === undefined || compareLayoutNumbers(a[id], b[id]) !== 0) {
+    const otherSize = b[id];
+    if (otherSize === undefined || compareLayoutNumbers(size, otherSize) !== 0) {
       return false;
     }
   }

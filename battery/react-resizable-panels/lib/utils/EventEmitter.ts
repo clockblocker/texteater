@@ -30,9 +30,9 @@ export class EventEmitter<Events extends EventMap> {
   emit<Type extends keyof Events>(type: Type, data: Events[Type]) {
     const listeners = this.#listenerMap[type];
     if (listeners !== undefined) {
-      if (listeners.length === 1) {
-        const listener = listeners[0];
-        listener.call(null, data);
+      const [onlyListener] = listeners;
+      if (listeners.length === 1 && onlyListener !== undefined) {
+        onlyListener.call(null, data);
       } else {
         let didThrow = false;
         let caughtError = null;
@@ -40,8 +40,7 @@ export class EventEmitter<Events extends EventMap> {
         // Clone the current listeners before calling
         // in case calling triggers listeners to be added or removed
         const clonedListeners = Array.from(listeners);
-        for (let i = 0; i < clonedListeners.length; i++) {
-          const listener = clonedListeners[i];
+        for (const listener of clonedListeners) {
           try {
             listener.call(null, data);
           } catch (error) {

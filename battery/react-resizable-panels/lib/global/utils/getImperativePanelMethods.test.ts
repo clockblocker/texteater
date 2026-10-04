@@ -58,7 +58,9 @@ describe("getImperativePanelMethods", () => {
     let removeChangeListener: (() => void) | undefined = undefined;
     let unmountGroup: (() => void) | undefined = undefined;
 
-    function init(panelConstraints: Partial<PanelConstraints>[]) {
+    function init<const Constraints extends readonly Partial<PanelConstraints>[]>(
+      panelConstraints: Constraints
+    ) {
       const bounds = new DOMRect(0, 0, 1000, 50);
       const group = mockGroup(bounds, {
         id: "group",
@@ -106,12 +108,13 @@ describe("getImperativePanelMethods", () => {
 
       return {
         group,
-        panelApis: panelConstraints.map((_, index) =>
+        // One handle per requested Panel, so tests index them like the tuple
+        panelApis: group.panels.map((panel) =>
           getImperativePanelMethods({
             groupId: group.id,
-            panelId: group.panels[index].id
+            panelId: panel.id
           })
-        )
+        ) as { [Index in keyof Constraints]: PanelImperativeHandle }
       };
     }
 

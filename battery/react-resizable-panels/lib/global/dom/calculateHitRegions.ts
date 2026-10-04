@@ -2,6 +2,7 @@ import { sortByElementOffset } from "../../components/group/sortByElementOffset"
 import type { RegisteredGroup } from "../../components/group/types";
 import type { RegisteredPanel } from "../../components/panel/types";
 import type { RegisteredSeparator } from "../../components/separator/types";
+import { assert } from "../../utils/assert";
 import { isHTMLElement } from "../../utils/isHTMLElement";
 import { findClosestRect } from "../utils/findClosestRect";
 import { isCoarsePointer } from "../utils/isCoarsePointer";
@@ -117,6 +118,7 @@ export function calculateHitRegions(group: RegisteredGroup) {
                 }
                 case 1: {
                   const separator = pendingSeparators[0];
+                  assert(separator, "Pending separator not found");
                   const closestRect = findClosestRect({
                     orientation,
                     rects: [prevRect, rect],

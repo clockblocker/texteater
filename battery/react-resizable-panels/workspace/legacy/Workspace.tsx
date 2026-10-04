@@ -137,7 +137,8 @@ export type WorkspaceProps<S> = {
 
 function minimumWidth(node: WorkspaceLayout): number {
 	if (node.kind === "Pane") return MINIMUM_SHEET_WIDTH;
-	const [first, second] = node.children.map(minimumWidth);
+	const first = minimumWidth(node.children[0]);
+	const second = minimumWidth(node.children[1]);
 	return node.axis === "horizontal"
 		? first + second + 1
 		: Math.max(first, second);

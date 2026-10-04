@@ -27,7 +27,7 @@ export function calculateSeparatorAriaValues({
   const constraints = panelConstraints.find(
     (current) => current.panelId === panelId
   );
-  if (constraints) {
+  if (constraints && panelSize !== undefined) {
     const maxSize = constraints.maxSize;
     const minSize = constraints.collapsible
       ? constraints.collapsedSize

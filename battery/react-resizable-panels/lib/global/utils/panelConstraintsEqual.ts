@@ -9,5 +9,8 @@ export function panelConstraintsEqual(
     return false;
   }
 
-  return a.every((current, index) => objectsEqual(current, b[index]));
+  return a.every((current, index) => {
+    const other = b[index];
+    return other !== undefined && objectsEqual(current, other);
+  });
 }

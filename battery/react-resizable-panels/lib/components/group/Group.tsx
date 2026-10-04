@@ -317,18 +317,20 @@ export function Group({
       derivedPanelConstraints.forEach((constraints) => {
         if (constraints.collapsible) {
           const { layout: prevLayout } = event.prev ?? {};
-          if (prevLayout) {
+          const size = layout[constraints.panelId];
+          const prevSize = prevLayout?.[constraints.panelId];
+          if (size !== undefined && prevSize !== undefined) {
             const isCollapsed = layoutNumbersEqual(
               constraints.collapsedSize,
-              layout[constraints.panelId]
+              size
             );
             const wasCollapsed = layoutNumbersEqual(
               constraints.collapsedSize,
-              prevLayout[constraints.panelId]
+              prevSize
             );
             if (isCollapsed && !wasCollapsed) {
               group.mutableState.expandedPanelSizes[constraints.panelId] =
-                prevLayout[constraints.panelId];
+                prevSize;
             }
           }
         }

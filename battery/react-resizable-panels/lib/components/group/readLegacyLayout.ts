@@ -42,23 +42,24 @@ export function readLegacyLayout({
         panelIds.length === entry.layout.length
       ) {
         const layout: Layout = {};
-        for (let index = 0; index < panelIds.length; index++) {
-          layout[panelIds[index]] = entry.layout[index];
-        }
+        panelIds.forEach((panelId, index) => {
+          layout[panelId] = entry.layout[index];
+        });
         return layout;
       }
     } else {
       // If no panel ids were provided, bailout unless the legacy object only contained a single layout
       const keys = Object.keys(maybeLegacyLayout);
-      if (keys.length === 1) {
-        const entry = maybeLegacyLayout[keys[0]];
+      const [key] = keys;
+      if (key !== undefined && keys.length === 1) {
+        const entry = maybeLegacyLayout[key];
         if (entry && Array.isArray(entry.layout)) {
-          const ids = keys[0].split(",");
+          const ids = key.split(",");
           if (ids.length === entry.layout.length) {
             const layout: Layout = {};
-            for (let index = 0; index < ids.length; index++) {
-              layout[ids[index]] = entry.layout[index];
-            }
+            ids.forEach((panelId, index) => {
+              layout[panelId] = entry.layout[index];
+            });
             return layout;
           }
         }

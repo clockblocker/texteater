@@ -147,6 +147,10 @@ export function adjustLayoutByDelta({
         );
 
         const prevSize = initialLayout[index];
+        assert(
+          prevSize != null,
+          `Previous layout not found for panel index ${index}`
+        );
 
         const { collapsible, collapsedSize, minSize } = panelConstraints;
         if (collapsible && compareLayoutNumbers(prevSize, minSize) < 0) {
@@ -211,9 +215,15 @@ export function adjustLayoutByDelta({
         `Previous layout not found for panel index ${index}`
       );
 
+      const panelConstraints = panelConstraintsArray[index];
+      assert(
+        panelConstraints,
+        `Panel constraints not found for index ${index}`
+      );
+
       const maxSafeSize = validatePanelSize({
         overrideDisabledPanels,
-        panelConstraints: panelConstraintsArray[index],
+        panelConstraints,
         prevSize,
         size: 100
       });
@@ -249,10 +259,16 @@ export function adjustLayoutByDelta({
         `Previous layout not found for panel index ${index}`
       );
 
+      const panelConstraints = panelConstraintsArray[index];
+      assert(
+        panelConstraints,
+        `Panel constraints not found for index ${index}`
+      );
+
       const unsafeSize = prevSize - deltaRemaining;
       const safeSize = validatePanelSize({
         overrideDisabledPanels,
-        panelConstraints: panelConstraintsArray[index],
+        panelConstraints,
         prevSize,
         size: unsafeSize
       });
@@ -303,10 +319,16 @@ export function adjustLayoutByDelta({
       `Previous layout not found for panel index ${pivotIndex}`
     );
 
+    const panelConstraints = panelConstraintsArray[pivotIndex];
+    assert(
+      panelConstraints,
+      `Panel constraints not found for index ${pivotIndex}`
+    );
+
     const unsafeSize = prevSize + deltaApplied;
     const safeSize = validatePanelSize({
       overrideDisabledPanels,
-      panelConstraints: panelConstraintsArray[pivotIndex],
+      panelConstraints,
       prevSize,
       size: unsafeSize
     });
@@ -327,10 +349,16 @@ export function adjustLayoutByDelta({
           `Previous layout not found for panel index ${index}`
         );
 
+        const panelConstraints = panelConstraintsArray[index];
+        assert(
+          panelConstraints,
+          `Panel constraints not found for index ${index}`
+        );
+
         const unsafeSize = prevSize + deltaRemaining;
         const safeSize = validatePanelSize({
           overrideDisabledPanels,
-          panelConstraints: panelConstraintsArray[index],
+          panelConstraints,
           prevSize,
           size: unsafeSize
         });
@@ -377,7 +405,9 @@ export function adjustLayoutByDelta({
 
   // console.log(DEBUG.join("\n"));
   return nextLayout.reduce<Layout>((accumulated, current, index) => {
-    accumulated[prevLayoutKeys[index]] = current;
+    const key = prevLayoutKeys[index];
+    assert(key != null, `Previous layout key not found for index ${index}`);
+    accumulated[key] = current;
     return accumulated;
   }, {});
 }

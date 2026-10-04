@@ -25,6 +25,23 @@ function reduce(
 	return commands.reduce(workspaceReducer<Subject>, state);
 }
 
+function member(
+	state: WorkspaceState<Subject>,
+	layerId: string,
+	index: number,
+): string {
+	const id = state.layers[layerId]?.memberIds[index];
+	if (id === undefined)
+		throw new Error(`Card Layer ${layerId} has no member ${index}`);
+	return id;
+}
+
+function presentation(state: WorkspaceState<Subject>, id: string) {
+	const found = state.presentations[id];
+	if (!found) throw new Error(`Presentation ${id} not found`);
+	return found;
+}
+
 describe("workspace algebra", () => {
 	test("exposes the Card Layer opening transition from the underlying Sheet", () => {
 		expect(selectWorkspaceStateLabel(createWorkspace(source))).toBe(
@@ -43,7 +60,8 @@ describe("workspace algebra", () => {
 			subjects: [note, anotherNote],
 		});
 		const layerId = "layer-2";
-		const [firstCard, secondCard] = opened.layers[layerId].memberIds;
+		const firstCard = member(opened, layerId, 0);
+		const secondCard = member(opened, layerId, 1);
 
 		const lifted = reduce(opened, {
 			type: "Lift",
@@ -81,7 +99,7 @@ describe("workspace algebra", () => {
 			originPresentationId: "presentation-1",
 			subjects: [note],
 		});
-		const cardId = opened.layers["layer-2"].memberIds[0];
+		const cardId = member(opened, "layer-2", 0);
 		const cardLift = reduce(opened, {
 			type: "Lift",
 			presentationId: cardId,
@@ -140,10 +158,11 @@ describe("workspace algebra", () => {
 			originPresentationId: "presentation-1",
 			subjects: [note, note],
 		});
-		const [first, second] = state.layers["layer-2"].memberIds;
+		const first = member(state, "layer-2", 0);
+		const second = member(state, "layer-2", 1);
 		expect(first).not.toBe(second);
-		expect(state.presentations[first].subject).toBe(
-			state.presentations[second].subject,
+		expect(presentation(state, first).subject).toBe(
+			presentation(state, second).subject,
 		);
 	});
 
@@ -153,7 +172,7 @@ describe("workspace algebra", () => {
 			originPresentationId: "presentation-1",
 			subjects: [note],
 		});
-		const cardId = opened.layers["layer-2"].memberIds[0];
+		const cardId = member(opened, "layer-2", 0);
 		const split = reduce(
 			opened,
 			{ type: "Lift", presentationId: cardId },
@@ -211,7 +230,8 @@ describe("workspace algebra", () => {
 			originPresentationId: "presentation-1",
 			subjects: [note, anotherNote],
 		});
-		const [right, bottom] = opened.layers["layer-2"].memberIds;
+		const right = member(opened, "layer-2", 0);
+		const bottom = member(opened, "layer-2", 1);
 		const nested = reduce(
 			opened,
 			{ type: "Lift", presentationId: right },
@@ -239,7 +259,7 @@ describe("workspace algebra", () => {
 			originPresentationId: "presentation-1",
 			subjects: [note],
 		});
-		const cardId = opened.layers["layer-2"].memberIds[0];
+		const cardId = member(opened, "layer-2", 0);
 		const lifted = reduce(opened, { type: "Lift", presentationId: cardId });
 		expect(reduce(lifted, { type: "Expand", paneId: "missing" })).toEqual(
 			opened,
@@ -252,7 +272,8 @@ describe("workspace algebra", () => {
 			originPresentationId: "presentation-1",
 			subjects: [note, anotherNote],
 		});
-		const [expandedId, cardId] = opened.layers["layer-2"].memberIds;
+		const expandedId = member(opened, "layer-2", 0);
+		const cardId = member(opened, "layer-2", 1);
 		const expanded = reduce(
 			opened,
 			{ type: "Lift", presentationId: expandedId },
@@ -263,8 +284,8 @@ describe("workspace algebra", () => {
 			layerId: "layer-2",
 		});
 		expect(closed.layers["layer-2"]).toBeUndefined();
-		expect(closed.presentations[expandedId].form).toBe("Sheet");
-		expect(closed.presentations[expandedId].layerId).toBeUndefined();
+		expect(presentation(closed, expandedId).form).toBe("Sheet");
+		expect(presentation(closed, expandedId).layerId).toBeUndefined();
 		expect(closed.presentations[cardId]).toBeUndefined();
 	});
 
@@ -278,7 +299,7 @@ describe("workspace algebra", () => {
 				subjects: [anotherNote],
 			},
 		);
-		const memberId = state.layers["layer-3"].memberIds[0];
+		const memberId = member(state, "layer-3", 0);
 		const closed = reduce(state, {
 			type: "ClosePresentation",
 			presentationId: "presentation-2",

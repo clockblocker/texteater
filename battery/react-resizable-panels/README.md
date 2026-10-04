@@ -6,7 +6,7 @@ The runtime source and unit tests in `lib/` are copied from upstream commit [`f9
 
 Build output is written to `dist/`; the package root preserves the upstream `Group`, `Panel`, `Separator`, hooks, and type exports.
 
-Biome excludes the imported `lib/` tree and copied Vitest setup so upstream style and import order remain comparable during future updates. Put locally authored extensions outside `lib/`.
+Biome excludes the imported `lib/` tree and copied Vitest setup so upstream style and import order remain comparable during future updates. Put locally authored extensions outside `lib/`. Local edits inside `lib/` only make it type-check under the repository's base compiler settings (`noUncheckedIndexedAccess`) and without Node types, because every consumer type-checks this package's source with its own settings.
 
 The local `react-resizable-panels/workspace` entry point supplies the pure Pane reducer: Panes with a Ground beneath their Covers, Decks, and the Held Card of a Lift, generic over the Subject. Applications own the renderer. Terminology lives in [CONTEXT.md](./CONTEXT.md).
 

@@ -423,17 +423,15 @@ function returnToLayer<S>(state: WorkspaceState<S>): WorkspaceState<S> {
 	const gesture = state.gesture;
 	if (!gesture) return state;
 	const presentation = state.presentations[gesture.presentationId];
-	if (
-		!presentation?.layerId ||
-		presentation.locked ||
-		!state.layers[presentation.layerId]
-	)
+	const layer = presentation?.layerId
+		? state.layers[presentation.layerId]
+		: undefined;
+	if (!presentation || presentation.locked || !layer)
 		return gesture.checkpoint;
 	const withoutSheet = removeSheet(
 		{ ...state, gesture: undefined },
 		presentation.id,
 	);
-	const layer = withoutSheet.layers[presentation.layerId];
 	const originPane = paneContaining(withoutSheet, layer.originPresentationId);
 	return {
 		...withoutSheet,
@@ -515,9 +513,9 @@ function revealSheet<S>(
 ): WorkspaceState<S> {
 	const presentation = state.presentations[presentationId];
 	if (presentation?.form !== "Sheet" || state.gesture) return state;
-	const paneId = paneContaining(state, presentationId);
-	if (!paneId) return state;
-	const pane = state.panes[paneId];
+	const pane = paneHolding(state, presentationId);
+	if (!pane) return state;
+	const paneId = pane.id;
 	const above = pane.presentationIds.slice(
 		pane.presentationIds.indexOf(presentationId) + 1,
 	);
@@ -620,12 +618,11 @@ function removeSheet<S>(
 	state: WorkspaceState<S>,
 	presentationId: string,
 ): WorkspaceState<S> {
-	const paneId = paneContaining(state, presentationId);
-	if (!paneId) return state;
-	const pane = state.panes[paneId];
+	const pane = paneHolding(state, presentationId);
+	if (!pane) return state;
 	const panes = {
 		...state.panes,
-		[paneId]: {
+		[pane.id]: {
 			...pane,
 			presentationIds: pane.presentationIds.filter(
 				(id) => id !== presentationId,
@@ -654,21 +651,30 @@ function checkpoint<S>(state: WorkspaceState<S>): WorkspaceSnapshot<S> {
 	return snapshot;
 }
 
+function paneHolding<S>(
+	state: WorkspaceState<S>,
+	presentationId: string,
+): WorkspacePane | undefined {
+	return Object.values(state.panes).find((pane) =>
+		pane.presentationIds.includes(presentationId),
+	);
+}
+
 function paneContaining<S>(
 	state: WorkspaceState<S>,
 	presentationId: string,
 ): string | undefined {
-	return Object.values(state.panes).find((pane) =>
-		pane.presentationIds.includes(presentationId),
-	)?.id;
+	return paneHolding(state, presentationId)?.id;
 }
 
 function panesIn(
 	layout: WorkspaceLayout,
 	panes: Record<string, WorkspacePane>,
 ): WorkspacePane[] {
-	if (layout.kind === "Pane")
-		return panes[layout.id] ? [panes[layout.id]] : [];
+	if (layout.kind === "Pane") {
+		const pane = panes[layout.id];
+		return pane ? [pane] : [];
+	}
 	return [
 		...panesIn(layout.children[0], panes),
 		...panesIn(layout.children[1], panes),

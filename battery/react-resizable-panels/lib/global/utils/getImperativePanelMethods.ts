@@ -108,16 +108,19 @@ export function getImperativePanelMethods({
       (isFirstPanel ||
         panels.slice(0, index).every((_panel, panelIndex) => {
           const pc = derivedPanelConstraints[panelIndex];
+          if (!pc?.collapsible) {
+            return false;
+          }
+          const size = prevLayout[pc.panelId];
           return (
-            pc?.collapsible &&
-            layoutNumbersEqual(pc.collapsedSize, prevLayout[pc.panelId])
+            size !== undefined && layoutNumbersEqual(pc.collapsedSize, size)
           );
         }));
 
     if (allPreviousCollapsed) {
       const occupiedByPrevious = panels
         .slice(0, index)
-        .reduce((total, panel) => total + prevLayout[panel.id], 0);
+        .reduce((total, panel) => total + (prevLayout[panel.id] ?? 0), 0);
       return {
         ...prevLayout,
         [panelId]: formatLayoutNumber(100 - occupiedByPrevious)
