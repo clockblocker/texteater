@@ -21,7 +21,7 @@ export function LoadingGallery() {
 					className="flex flex-wrap items-start gap-8"
 				>
 					<Stage label={`${kind} · Card`}>
-						<CardFrame tail={kind}>
+						<CardFrame>
 							<NoteSkeletonFor kind={kind} presentation="Card" />
 						</CardFrame>
 					</Stage>
