@@ -77,5 +77,5 @@ assertions passed; the full DX gate was not run for this alternative.
 
 The temporary runtime-Zod patch and runner mode were removed after recording
 the result. Retained evidence includes raw samples, source and build hashes,
-and measurement details in [the full-graph benchmark](../../battery/experiments/dum-validation/results/runtime-zod-loading.json)
-and [the isolated import probes](../../battery/experiments/dum-validation/results/runtime-zod-imports.json).
+and measurement details in [the full-graph benchmark](https://github.com/clockblocker/texteater/blob/d662fa46a1a596cc43ef8bd4763d783288379d62/battery/experiments/dum-validation/results/runtime-zod-loading.json)
+and [the isolated import probes](https://github.com/clockblocker/texteater/blob/d662fa46a1a596cc43ef8bd4763d783288379d62/battery/experiments/dum-validation/results/runtime-zod-imports.json).
