@@ -72,13 +72,11 @@ export const sourceMembers = [
 export const authoredMembers = [...sourceMembers, ...germanSyncretisms];
 
 /**
- * A German Lexeme AUX, DET or PART resolves only to authored members. A DET
- * identity is chosen among the authored candidates its spelling realizes
- * (Dumgen ADR 0007), and every German PART is authored (#734,
- * `germanParticles`), so a Lemma there that no member matches is a Catalog
- * Miss (system ADR 0021). PART joined on #876. Lexeme PRON is an Open Route
- * whose authored members are a Fixed Population: a PRON none of them
- * spells goes to Open production (system ADR 0021, amended 2026-10-04).
+ * A German Lexeme AUX, DET, PRON or PART resolves only to authored members.
+ * A DET or PRON identity is chosen among the authored candidates its
+ * spelling realizes (Dumgen ADR 0007), and every German PART is authored
+ * (#734, `germanParticles`), so a Lemma there that no member matches is a
+ * Catalog Miss (system ADR 0021). PART joined on #876.
  */
 function germanClosedRoute(route: {
 	readonly family: string;
@@ -86,7 +84,10 @@ function germanClosedRoute(route: {
 }): boolean {
 	return (
 		route.family === "Lexeme" &&
-		(route.kind === "AUX" || route.kind === "DET" || route.kind === "PART")
+		(route.kind === "AUX" ||
+			route.kind === "DET" ||
+			route.kind === "PRON" ||
+			route.kind === "PART")
 	);
 }
 

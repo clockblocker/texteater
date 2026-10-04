@@ -2,11 +2,9 @@
  * The German body of `resolve.grammar` (#859): the stored unit a click landed on
  * comes in, its Attestation goes out, or the judge's Unresolved, or a
  * Catalog Miss. A unit intake left Unresolved stays Unresolved with no
- * call (#861). A DET or PRON unit whose spelling realizes authored members
- * builds its Lemma from the identity intake stored (#864). Any other unit
- * asks jev and Luna (#862), a Lexeme PRON no authored member spells
- * included, and Luna drafts the Emoji Description `resolve.reading` may
- * need.
+ * call (#861). A closed DET or PRON unit builds its Lemma from the
+ * identity intake stored (#864); any other unit asks jev and Luna (#862),
+ * and Luna drafts the Emoji Description `resolve.reading` may need.
  * Whatever comes back is checked by Dumling before it is returned, and
  * the operation's trace says how the click came out and why.
  */
@@ -61,11 +59,10 @@ type Outcome =
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
 /**
- * A DET or PRON unit, Lexeme or Locution: the authored cells its spelling
- * realizes, and the cell question when several remain. None realized on a
- * Closed Route (Lexeme DET) is a Catalog Miss (ADR 0021). On an Open Route
- * the authored members are a Fixed Population, so a unit none realizes,
- * such as a PRON whose identity intake answered Other, is left to the open
+ * A closed DET or PRON unit, or a Locution DET or PRON an inventory
+ * authors: the authored cells its spelling realizes, and the cell
+ * question when several remain. None realized on a Closed Route is a
+ * Catalog Miss (ADR 0021); a Locution none realizes is left to the open
  * route (`undefined`).
  */
 const resolveAuthored = Effect.fnUntraced(function* (
@@ -179,11 +176,9 @@ export const resolveGermanGrammar = Effect.fnUntraced(function* (
 	const route: Route = unit.route;
 	const target = targetOf(input.sentence, unit, route);
 	const ask = askThrough(scope, models.jev);
-	// Every DET or PRON tries the authored members its spelling realizes
-	// first; on the Open Routes (Lexeme PRON, every Locution) a unit none
-	// realizes continues to the open route. A closed PART is closed on the
-	// open route: its spelling or Luna's headword must name an authored
-	// particle.
+	// A Locution DET or PRON an inventory authors resolves as authored too.
+	// A PART, closed as well, is closed on the open route: its spelling or
+	// Luna's headword must name an authored particle.
 	const authored =
 		(closedRoute(route) && route.kind !== "PART") ||
 		route.kind === "DET" ||

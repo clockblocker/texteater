@@ -298,51 +298,19 @@ test("a Closed Route's Lemma with no authored Reading is a Catalog Miss, with no
 	const luna = writes("🔐");
 	const { result, trace } = await readOnce(jev, luna, {
 		attestation: attestationOf(
-			lemmaOf("blarg", "Lexeme", "DET", { pronType: "Dem" }),
+			lemmaOf("blarg", "Lexeme", "PRON", { pronType: "Prs" }),
 		),
-		sentence: sentenceOf("Blarg Haus steht."),
-		unit: unitOf([0], "Lexeme", "DET"),
+		sentence: sentenceOf("Blarg kommt."),
+		unit: unitOf([0], "Lexeme", "PRON"),
 		candidates: [],
 	});
 	expect(result).toMatchObject({
 		_tag: "CatalogMiss",
-		route: { language: "de", family: "Lexeme", kind: "DET" },
+		route: { language: "de", family: "Lexeme", kind: "PRON" },
 	});
 	expect(trace?.resolution?.outcome).toBe("CatalogMiss");
 	expect(jev.sent).toEqual([]);
 	expect(luna.sent).toEqual([]);
-});
-
-test("Lexeme PRON is Open: a PRON Lemma dumcorpus authors no Reading of gets a New one from Luna (ADR 0021, amended 2026-10-04)", async () => {
-	const jev = fakeJev();
-	const luna = writes("🤫");
-	const { result, trace } = await readOnce(jev, luna, {
-		attestation: attestationOf(
-			lemmaOf("Du-weißt-schon-wer", "Lexeme", "PRON", {
-				case: null,
-				number: null,
-				person: null,
-				polite: null,
-				poss: null,
-				pronType: "Ind",
-				gender: null,
-			}),
-		),
-		sentence: sentenceOf("Du-weißt-schon-wer ist gegangen.", [
-			{ kind: "ResolvableText", text: "Du-weißt-schon-wer" },
-			{ kind: "Whitespace", text: " " },
-			{ kind: "ResolvableText", text: "ist" },
-			{ kind: "Whitespace", text: " " },
-			{ kind: "ResolvableText", text: "gegangen" },
-			{ kind: "Punctuation", text: "." },
-		]),
-		unit: unitOf([0], "Lexeme", "PRON"),
-		candidates: [],
-	});
-	expect(result).toEqual({ _tag: "New", emojiDescription: "🤫" });
-	expect(jev.sent).toEqual([]);
-	expect(luna.sent).toHaveLength(1);
-	expect(trace?.resolution).toEqual({ outcome: "New", reason: "Written" });
 });
 
 // A New refused as stale is judged again (ADR 0031 decision 6, #596).

@@ -181,8 +181,8 @@ export function tableOf(attempts: readonly ScoredAttempt[]) {
 /**
  * Named slices of the evaluation (#873's folded cases): the records of
  * the Rules #709 and #542 fold in, the Foreign route of #687, the
- * closed-class Lexeme DET and PRON (the slice keeps its recorded name), and
- * the out-of-bracket circumpositions of #707.
+ * closed DET and PRON routes, and the out-of-bracket circumpositions of
+ * #707.
  */
 export const grammarSlices: Readonly<
 	Record<string, (attempt: ScoredAttempt) => boolean>

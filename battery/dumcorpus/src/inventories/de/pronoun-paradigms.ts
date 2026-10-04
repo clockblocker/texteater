@@ -822,7 +822,7 @@ add(
 	);
 }
 // jeder is singular. Genitive jedes cannot stand alone, unlike eines jeden.
-// Plural jedwede/jegliche is rare but closed: an authored stem covers every
+// Plural jedwede/jegliche is rare but closed: a Closed Route member covers every
 // cell of its supported feature product (map 487, ticket 499).
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/Pron-Indef/Pron-jeder3.html?lang=de
 for (const [stem, ipa] of [
@@ -1193,7 +1193,7 @@ for (const [stem, ipa, person, polite, en, ru] of [
 // (de/was-fuer, ADR 0039; ruled on #741). Plural standalone welche, but
 // attributive bare was für. The standalone genitive is rare (echo questions
 // after a genitive verb: "Er bedarf eines Anwalts. Was für eines?") but
-// exists, so the authored stem keeps its cell.
+// exists, so the Closed Route invariant keeps it.
 // https://dict.leo.org/grammatik/deutsch/Wort/Pronomen/FRegeln-P/RelInter/Pron-was_fuer.xml?lang=de
 {
 	const t = strongPronoun("was für ein", "vas fyːɐ̯ ˈaɪ̯n");

@@ -447,153 +447,33 @@ test("an identity whose spelling names one cell asks nothing", async () => {
 	expect(jev.sent).toEqual([]);
 });
 
-test("a Lexeme DET unit without an identity, or one the inventory lacks, is a Catalog Miss", async () => {
+test("a DET or PRON unit without an identity, or one the inventory lacks, is a Catalog Miss", async () => {
 	const jev = fakeJev();
 	const none = await resolveOnce(
 		{ jev: jev.ask, luna: fakeLuna().ask },
 		{
-			sentence: sentenceOf("Blubb Haus steht."),
-			unit: unitOf([0], "Lexeme", "DET"),
+			sentence: sentenceOf("Blubb kommt."),
+			unit: unitOf([0], "Lexeme", "PRON"),
 		},
 	);
 	expect(none.result).toMatchObject({
 		_tag: "CatalogMiss",
-		route: { family: "Lexeme", kind: "DET" },
+		route: { family: "Lexeme", kind: "PRON" },
 	});
 	const unrealized = await resolveOnce(
 		{ jev: jev.ask, luna: fakeLuna().ask },
 		{
-			sentence: sentenceOf("Jedes Haus steht."),
-			unit: unitOf([0], "Lexeme", "DET", {
-				kind: "DET",
-				canonicalForm: "dieser",
-				pronType: "Dem",
+			sentence: sentenceOf("Ihm hilft keiner."),
+			unit: unitOf([0], "Lexeme", "PRON", {
+				kind: "PRON",
+				canonicalForm: "er",
+				pronType: "Prs",
 			}),
 		},
 	);
 	expect(unrealized.result._tag).toBe("CatalogMiss");
 	expect(unrealized.trace?.resolution?.outcome).toBe("CatalogMiss");
 	expect(jev.sent).toEqual([]);
-});
-
-// Lexeme PRON is an Open Route with a Fixed Population (ADR 0021, amended
-// 2026-10-04): the tf-demo click 0be4b3e2 on Du-weißt-schon-wer.
-
-/** The click's Sentence as tf-demo segments it, the hyphenated word one Segment. */
-const youKnowWho = () => {
-	const segments: Segment[] = [];
-	for (const [index, text] of [
-		"Freuen",
-		"wir",
-		"uns,",
-		"denn",
-		"Du-weißt-schon-wer",
-		"ist",
-		"endlich",
-		"von",
-		"uns",
-		"gegangen!",
-	].entries()) {
-		if (index > 0) segments.push(space);
-		const [, bare = text, mark] = /^(.*?)([,!])?$/u.exec(text) ?? [];
-		segments.push(word(bare));
-		if (mark) segments.push({ kind: "Punctuation", text: mark });
-	}
-	return sentenceOf(segments.map(({ text }) => text).join(""), segments);
-};
-
-test("a Lexeme PRON no authored member spells goes to Open production as a stem, never a Catalog Miss", async () => {
-	// Freuen0 _1 wir2 _3 uns4 ,5 _6 denn7 _8 Du-weißt-schon-wer9 …
-	const sentence = youKnowWho();
-	expect(sentence.segments[9]?.text).toBe("Du-weißt-schon-wer");
-	const jev = fakeJev({ pronType: "Ind", inflects: "No" });
-	const luna = writes("Du-weißt-schon-wer");
-	const { result, trace } = await resolveOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		{ sentence, unit: unitOf([9], "Lexeme", "PRON") },
-	);
-	const attestation = attested(result);
-	expect(attestation.surface.lemma).toMatchObject({
-		family: "Lexeme",
-		kind: "PRON",
-		canonicalForm: "Du-weißt-schon-wer",
-		coreFeatures: {
-			case: null,
-			number: null,
-			person: null,
-			polite: null,
-			poss: null,
-			pronType: "Ind",
-			gender: null,
-		},
-	});
-	expect(attestation.surface.normalizedSurface).toBe("Du-weißt-schon-wer");
-	expect(attestation.surface.inflectionalFeatures).toBeNull();
-	expect(attestation.articleEvidence).toBeNull();
-	expect(jev.stages()).toEqual(["grammar"]);
-	expect(jev.questions("grammar")).toEqual(
-		expect.arrayContaining(["pronType", "inflects", "agreement.case"]),
-	);
-	expect(luna.sent.length).toBeGreaterThan(0);
-	expect(trace?.resolution).toEqual({ outcome: "Resolved" });
-});
-
-test("an open stem PRON that inflects marks its cell on the Surface, and a stored identity it does not realize goes open too", async () => {
-	const jev = fakeJev({
-		pronType: "Prs",
-		inflects: "Yes",
-		"agreement.case": "Nom",
-		"agreement.gender": "Masc",
-		"agreement.number": "Sing",
-	});
-	const { result } = await resolveOnce(
-		{ jev: jev.ask, luna: writes("Du-weißt-schon-wer").ask },
-		{
-			sentence: youKnowWho(),
-			// The identity intake picked a candidate the spelling realizes none of.
-			unit: unitOf([9], "Lexeme", "PRON", {
-				kind: "PRON",
-				canonicalForm: "wer",
-				pronType: "Int",
-			}),
-		},
-	);
-	const attestation = attested(result);
-	expect(attestation.surface.lemma.coreFeatures).toMatchObject({
-		pronType: "Prs",
-		case: null,
-		gender: null,
-		number: null,
-	});
-	expect(attestation.surface.inflectionalFeatures).toEqual({
-		case: "Nom",
-		gender: "Masc",
-		number: "Sing",
-		"gender[psor]": null,
-		"number[psor]": null,
-	});
-});
-
-test("an authored PRON spelling in the same Sentence still resolves to its authored member, with no Luna call", async () => {
-	const jev = fakeJev();
-	const luna = fakeLuna();
-	const { result } = await resolveOnce(
-		{ jev: jev.ask, luna: luna.ask },
-		{
-			sentence: youKnowWho(),
-			unit: unitOf([2], "Lexeme", "PRON", {
-				kind: "PRON",
-				canonicalForm: "wir",
-				pronType: "Prs",
-			}),
-		},
-	);
-	expect(attested(result).surface.lemma).toMatchObject({
-		canonicalForm: "wir",
-		coreFeatures: { case: "Nom", person: "1", number: "Plur" },
-	});
-	expect(jev.sent).toEqual([]);
-	expect(luna.sent).toEqual([]);
 });
 
 // The referent decides only some pronoun forms (ADR 0044, ADR 0046).

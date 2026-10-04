@@ -512,13 +512,13 @@ test("a Closed Route or an authored Reading answers every requested aspect with 
 		knowledgeInput(
 			{
 				family: "Lexeme",
-				kind: "DET",
-				canonicalForm: "jeder",
+				kind: "PRON",
+				canonicalForm: "jemand",
 				coreFeatures: {},
 			},
 			"🧑",
-			"Da ist jeder Mann.",
-			["jeder"],
+			"Da ist jemand.",
+			["jemand"],
 			{
 				request: {
 					definition: null,
@@ -539,46 +539,6 @@ test("a Closed Route or an authored Reading answers every requested aspect with 
 		{ aspect: "definition", leaf: undefined, code: "CatalogMiss" },
 		{ aspect: "translations", leaf: "en", code: "CatalogMiss" },
 	]);
-});
-
-test("an unauthored Lexeme PRON is Open production: its Knowledge is generated, never a Catalog Miss (ADR 0021, amended 2026-10-04)", async () => {
-	const luna = knowledgeLuna({
-		definition: "Ein Name, den man nicht ausspricht.",
-		translations: ["you-know-who"],
-	});
-	const { result } = await produceOnce(
-		{ jev: knowledgeJev().ask, luna: luna.ask },
-		knowledgeInput(
-			{
-				family: "Lexeme",
-				kind: "PRON",
-				canonicalForm: "Du-weißt-schon-wer",
-				coreFeatures: {
-					case: null,
-					number: null,
-					person: null,
-					polite: null,
-					poss: null,
-					pronType: "Ind",
-					gender: null,
-				},
-			},
-			"🤫",
-			"Du-weißt-schon-wer ist gegangen.",
-			["Du-weißt-schon-wer"],
-			{ request: { definition: null, translations: { en: null } } },
-		),
-	);
-	expect(result.failures).toEqual([]);
-	expect(result.changes).toContainEqual({
-		kind: "Contribute",
-		aspect: "translations",
-		language: "en",
-		value: ["you-know-who"],
-	});
-	expect(result.changes.some(({ aspect }) => aspect === "definition")).toBe(
-		true,
-	);
 });
 
 test("aspects the route does not apply, and the deferred tree, are skipped (Dumgen ADR 0003)", async () => {

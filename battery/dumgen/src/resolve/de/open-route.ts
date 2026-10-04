@@ -1,9 +1,6 @@
 /**
- * Grammatical Resolution of a unit on an open route, PART included:
- * everything but a Lexeme AUX or DET and a DET or PRON whose spelling
- * realizes authored members. A Lexeme PRON no authored member spells
- * resolves here as a stem (system ADR 0021, amended 2026-10-04). One jev
- * request (`grammar`) judges what
+ * Grammatical Resolution of a unit on an open route: everything but the
+ * closed DET and PRON Lexemes. One jev request (`grammar`) judges what
  * neither the unit nor dumcorpus's tables already fix: a member's Typo or
  * Shorthand, the Surface's spelling, the route's Core Features, its
  * inflection, the auxiliaries' uses, the prepositions a head governs,
@@ -94,17 +91,6 @@ const genders = {
 	Neut: "Neuter",
 } as const;
 const numbers = { Sing: "Singular", Plur: "Plural" } as const;
-/** The pronoun types a German PRON Lemma may name (ADR 0044); Art is DET's. */
-const pronTypes = {
-	Dem: "Demonstrative: points to something or someone",
-	Ind: "Indefinite: someone, something or an amount left unnamed",
-	Int: "Interrogative: asks who or what",
-	Neg: "Negative: no one or nothing",
-	Prs: "Personal: stands for a person or thing the context makes known",
-	Rcp: "Reciprocal: each other",
-	Rel: "Relative: opens a relative clause",
-	Tot: "Total: all or every one",
-} as const;
 /**
  * A gender question's options are named by the article the gender takes,
  * never Neut, which jev read as a neutral fallback when unsure (#876).
@@ -129,10 +115,6 @@ function routeShape(target: Target) {
 	const adposition = (lexeme || locution) && kind === "ADP";
 	const governor =
 		verbal || adjectival || ((lexeme || locution) && kind === "NOUN");
-	// A Lexeme PRON here is one no authored member spells. The personal and
-	// der-series pillars are all authored, so it is a stem: its Core names
-	// only its pronoun type, and its Surface marks the cell (ADR 0044).
-	const pronoun = lexeme && kind === "PRON";
 	return {
 		lexeme,
 		locution,
@@ -142,9 +124,7 @@ function routeShape(target: Target) {
 		adjectival,
 		adverbial,
 		adposition,
-		pronoun,
 		agreeing:
-			pronoun ||
 			(lexeme && (kind === "NUM" || kind === "SYM")) ||
 			(locution && (kind === "DET" || kind === "NUM" || kind === "PRON")),
 		/** A head whose governed preposition is its valency evidence (ADR 0034). */
@@ -155,8 +135,7 @@ function routeShape(target: Target) {
 		 */
 		governs: governor || kind === "INTJ",
 		articleOwner:
-			(lexeme &&
-				["NOUN", "PROPN", "ADJ", "NUM", "PRON"].includes(kind)) ||
+			(lexeme && ["NOUN", "PROPN", "ADJ", "NUM"].includes(kind)) ||
 			(locution && kind === "NOUN"),
 		inflects: !(
 			family === "Saying" ||
@@ -734,10 +713,6 @@ function plan(target: Target): Plan {
 		});
 		agreementQuestions(questionnaire);
 	}
-	if (shape.pronoun)
-		questionnaire.choice("pronType", question.pronType, pronTypes, [
-			"identity",
-		]);
 	if (shape.agreeing) {
 		questionnaire.choice(
 			"inflects",
@@ -1153,16 +1128,6 @@ function readFirst(
 					: null;
 		}
 	}
-	if (shape.pronoun)
-		Object.assign(core, {
-			case: null,
-			number: null,
-			person: null,
-			polite: null,
-			poss: null,
-			pronType: answered.pick("pronType"),
-			gender: null,
-		});
 	if (shape.agreeing) {
 		const inflects = answered.pick("inflects") === "Yes";
 		if (inflects) {
@@ -1173,10 +1138,6 @@ function readFirst(
 				gender:
 					gender === "Unmarked" || number === "Plur" ? null : gender,
 				number,
-				// A stem PRON that is no possessive marks no possessor.
-				...(shape.pronoun
-					? { "gender[psor]": null, "number[psor]": null }
-					: {}),
 			};
 		} else inflection = null;
 	}

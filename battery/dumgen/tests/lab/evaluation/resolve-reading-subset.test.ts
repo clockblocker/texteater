@@ -70,7 +70,7 @@ function openCase(
 	];
 }
 
-/** A baseline: 30 passed NOUN cases, 10 passed VERB, 5 call-free DET, 3 missed. */
+/** A baseline: 30 passed NOUN cases, 10 passed VERB, 5 call-free PRON, 3 missed. */
 function baseline(): ScoredReading[] {
 	return [
 		...Array.from({ length: 30 }, (_, index) =>
@@ -83,8 +83,8 @@ function baseline(): ScoredReading[] {
 		...Array.from({ length: 5 }, (_, index) =>
 			[0, 1, 2].map((repetition) =>
 				attempt(
-					`det#${index}`,
-					"Lexeme/DET",
+					`pron#${index}`,
+					"Lexeme/PRON",
 					"present",
 					repetition,
 					"right",
@@ -134,10 +134,10 @@ test("the subset takes every case with an attempt not right, and a seeded guard 
 		"wrongReuse",
 	]);
 	expect(subset.repetitions).toBe(3);
-	// NOUN 31 and VERB 11 of 44 asked cases: 8 split 6 and 2; no call-free DET.
+	// NOUN 31 and VERB 11 of 44 asked cases: 8 split 6 and 2; no call-free PRON.
 	expect(subset.guard["Lexeme/NOUN"]).toHaveLength(6);
 	expect(subset.guard["Lexeme/VERB"]).toHaveLength(2);
-	expect(subset.guard["Lexeme/DET"]).toBeUndefined();
+	expect(subset.guard["Lexeme/PRON"]).toBeUndefined();
 	for (const id of ids.guard) expect(ids.missed).not.toContain(id);
 	// The same seed draws the same guard; another seed another.
 	expect(selectReadingSubset(options).guard).toEqual(subset.guard);

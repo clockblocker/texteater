@@ -472,11 +472,6 @@ export const question = {
 		"If the unit agrees with a noun or itself inflects here, which number does it bear?",
 		rules.core,
 	),
-	pronType: paragraph(
-		"question.pronType",
-		"Under `policy.identity`, which type of pronoun is the unit's dictionary entry?",
-		rules.core,
-	),
 	inflects: paragraph(
 		"question.inflects",
 		"Does the unit itself inflect for case, gender or number in this sentence, rather than standing invariant?",
@@ -694,12 +689,6 @@ export const routeGuidance: Readonly<Record<string, string>> = {
 		rules.rShorthand,
 		rules.drShorthand,
 		rules.wShorthand,
-	),
-	"Lexeme/PRON": paragraph(
-		"canonical.route.Lexeme/PRON",
-		"A pronoun is cited in its nominative masculine singular form, or in its nominative plural when it has no singular; an invariant one is cited as it is spelled, its hyphens and capitals kept.",
-		rules.headword,
-		rules.core,
 	),
 	"Lexeme/ADP": paragraph(
 		"canonical.route.Lexeme/ADP",
