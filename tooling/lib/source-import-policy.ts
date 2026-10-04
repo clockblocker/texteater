@@ -128,6 +128,19 @@ interface ModuleBoundary {
 
 const moduleBoundaries = new Map<string, readonly ModuleBoundary[]>([
 	[
+		"battery/dumling",
+		[
+			{
+				name: "dumling-runtime-does-not-import-codegen",
+				comment:
+					"Dumling's codegen folder, its `dumling/codegen` entry included, is for generators only (ADR 0001).",
+				from: /^battery\/dumling\/src\//,
+				to: /^battery\/dumling\/codegen\//,
+				allowTypeOnly: true,
+			},
+		],
+	],
+	[
 		"app/tf-demo",
 		[
 			{
@@ -287,34 +300,38 @@ function isDumSchemaAuthoringSpecifier(specifier: string): boolean {
 	);
 }
 
-const buildSourceSeams = new Map<string, readonly string[]>([
-	[
-		"battery/dumdict/codegen/generate-unit-schemas.ts",
-		[
-			"../../dumling/codegen/routes.js",
-			"../../dumrel/codegen/format-typescript.js",
-		],
-	],
-	[
-		"battery/dumdict/codegen/validation-artifacts.ts",
-		[
-			"../../dumling/codegen/operations.js",
-			"../../dumrel/codegen/format-typescript.js",
-			"../../dumrel/src/semantics.js",
-		],
-	],
-	[
-		"battery/dumrel/codegen/generate.ts",
-		[
-			"../../dumling/codegen/operations.js",
-			"../../dumling/codegen/output-types.js",
-		],
-	],
-	[
-		"battery/dumrel/codegen/output-types.ts",
-		["../../dumling/codegen/output-types.js"],
-	],
+/**
+ * Package entries only generators read: Dumling's route manifest and
+ * operation table (Dumling ADR 0001). Operational code may name their types
+ * but not load them.
+ */
+const codegenOnlyEntries = new Set(["dumling/codegen"]);
+const codegenFolders = new Set([
+	"codegen",
+	"generate-readme",
+	"scripts",
+	"test",
+	"tests",
 ]);
+/** Source modules outside those folders that only scripts and tests load. */
+const codegenOnlyConsumers = new Set([
+	"battery/dumspec/src/worklist/schema-values.ts",
+]);
+
+function mayLoadCodegenOnlyEntry(
+	repositoryRoot: string,
+	workspace: Workspace,
+	file: string,
+): boolean {
+	const path = relative(workspace.dir, file).replaceAll("\\", "/");
+	return (
+		codegenFolders.has(path.split("/")[0] ?? "") ||
+		codegenOnlyConsumers.has(
+			relative(repositoryRoot, file).replaceAll("\\", "/"),
+		)
+	);
+}
+
 function isExplicitAuthoringSource(
 	workspace: Workspace,
 	file: string,
@@ -499,16 +516,11 @@ export async function validateSourceImports(options: {
 						options.workspaces,
 					);
 					if (target && target.dir !== workspace.dir) {
-						if (
-							!buildSourceSeams
-								.get(relative(options.repositoryRoot, file))
-								?.includes(specifier)
-						)
-							issues.push({
-								file: relative(options.repositoryRoot, file),
-								message: `relative/filesystem import crosses into ${target.relativePath}`,
-								specifier,
-							});
+						issues.push({
+							file: relative(options.repositoryRoot, file),
+							message: `relative/filesystem import crosses into ${target.relativePath}`,
+							specifier,
+						});
 						graph
 							.get(workspace.relativePath)
 							?.add(target.relativePath);
@@ -526,6 +538,22 @@ export async function validateSourceImports(options: {
 						file: relative(options.repositoryRoot, file),
 						message:
 							"operational source cannot import schema-authoring surfaces",
+						specifier,
+					});
+				}
+				if (
+					codegenOnlyEntries.has(specifier) &&
+					!reference.typeOnly &&
+					!mayLoadCodegenOnlyEntry(
+						options.repositoryRoot,
+						workspace,
+						file,
+					)
+				) {
+					issues.push({
+						file: relative(options.repositoryRoot, file),
+						message:
+							"only code generators, scripts and tests may load a codegen-only entry",
 						specifier,
 					});
 				}

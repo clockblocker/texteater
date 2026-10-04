@@ -325,3 +325,57 @@ test("tf-demo's server may name a Convex type but not load a Convex module, and 
 			"tf-demo-server-does-not-import-convex",
 		);
 });
+
+test("only generators, scripts and tests may load dumling/codegen", async () => {
+	const root = await temporaryRepository();
+	const dumling = await addWorkspace(root, {
+		exports: {
+			".": "./dist/index.js",
+			"./codegen": "./codegen/index.ts",
+		},
+		kind: "battery",
+		name: "dumling",
+	});
+	const consumer = await addWorkspace(root, {
+		dependencies: { dumling: "workspace:^" },
+		kind: "battery",
+		name: "dumrel",
+	});
+	await writeSource(
+		dumling,
+		"codegen/index.ts",
+		"export const routes = [];\n",
+	);
+	for (const path of [
+		"codegen/generate.ts",
+		"scripts/report.ts",
+		"tests/routes.test.ts",
+	])
+		await writeSource(consumer, path, 'import "dumling/codegen";\n');
+	await writeSource(
+		consumer,
+		"src/types.ts",
+		'import type { DumlingRoute } from "dumling/codegen";\n',
+	);
+	await writeSource(consumer, "src/index.ts", 'import "dumling/codegen";\n');
+	await writeSource(
+		dumling,
+		"src/index.ts",
+		'import { routes } from "../codegen/index";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(
+		issues.map(({ file, message }) => [file, message.split(":")[0]]),
+	).toEqual([
+		[
+			"battery/dumling/src/index.ts",
+			"dumling-runtime-does-not-import-codegen",
+		],
+		[
+			"battery/dumrel/src/index.ts",
+			"only code generators, scripts and tests may load a codegen-only entry",
+		],
+	]);
+});

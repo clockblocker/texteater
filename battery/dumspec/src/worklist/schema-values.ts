@@ -1,5 +1,4 @@
-import { readdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { dumlingRoutes } from "dumling/codegen";
 import { z } from "zod";
 import { isReviewed } from "../layers.js";
 import type { AdrId, RuleId, SpecRecord } from "../types.js";
@@ -89,49 +88,29 @@ export function routeSchemaValues(
 	);
 }
 
-const dumlingSchemas = new URL(
-	"../../../dumling/src/generated/schemas/",
-	import.meta.url,
-);
-
-/** The route a Dumling Lemma schema fixes, as `<Family>/<Kind>`. */
-function routeOf(lemmaSchema: z.ZodType): string {
-	const { properties } = z.toJSONSchema(lemmaSchema, {
-		io: "input",
-		unrepresentable: "any",
-	}) as { properties?: Record<string, { const?: unknown }> };
-	return `${properties?.family?.const}/${properties?.kind?.const}`;
-}
-
 /**
  * Every Core and inflectional value each of a language's Dumling routes
- * allows, sorted by route. Reads Dumling's generated route schemas from the
- * repository, so call it from a script or test.
+ * allows, sorted by route. Reads Dumling's codegen route manifest and route
+ * schemas, so call it from a script or test.
  */
 export async function loadSchemaValues(
 	language: string,
 ): Promise<SchemaValue[]> {
-	const directory = fileURLToPath(new URL(`${language}/`, dumlingSchemas));
-	const modules = readdirSync(directory, {
-		recursive: true,
-		encoding: "utf8",
-	})
-		.filter((path) => path.endsWith(".ts"))
-		.map((path) => path.replaceAll("\\", "/").slice(0, -".ts".length))
-		.toSorted();
 	const routes = await Promise.all(
-		modules.map(async (module) => {
-			const { lemmaSchema, surfaceSchema } = (await import(
-				`dumling/schema/${language}/${module}`
-			)) as { lemmaSchema: z.ZodType; surfaceSchema: z.ZodType };
-			return routeSchemaValues(
-				routeOf(lemmaSchema),
-				z.toJSONSchema(surfaceSchema, {
-					io: "input",
-					unrepresentable: "any",
-				}) as JsonSchemaNode,
-			);
-		}),
+		dumlingRoutes
+			.filter((route) => route.language === language)
+			.map(async ({ family, kind, schemaPath }) => {
+				const { surfaceSchema } = (await import(
+					`dumling/schema/${schemaPath}`
+				)) as { surfaceSchema: z.ZodType };
+				return routeSchemaValues(
+					`${family}/${kind}`,
+					z.toJSONSchema(surfaceSchema, {
+						io: "input",
+						unrepresentable: "any",
+					}) as JsonSchemaNode,
+				);
+			}),
 	);
 	return routes
 		.flat()

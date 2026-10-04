@@ -1,4 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { formatTypeScript } from "codegen";
+import { registrations as dumlingOperations } from "dumling/codegen";
 import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
 import {
 	knowledgeChangeSchema,
@@ -11,8 +13,6 @@ import {
 	emitLinkedValidationRegistry,
 	type ZodValidationOperationRegistration,
 } from "dumval/compiler";
-import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
-import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
 import { unitSchemas } from "../src/generated/unit-schemas.js";
 import {
 	commitChangesResultSchema,

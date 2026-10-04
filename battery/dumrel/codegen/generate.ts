@@ -1,12 +1,15 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { formatTypeScript } from "codegen";
+import {
+	registrations as dumlingOperations,
+	dumlingOutputTypes,
+} from "dumling/codegen";
 import { encodedValidation as dumlingValidation } from "dumling/validation-artifact";
 import {
 	compileZodValidationArtifacts,
 	emitLinkedValidationRegistry,
 	emitValidationOutputTypes,
 } from "dumval/compiler";
-import { registrations as dumlingOperations } from "../../dumling/codegen/operations.js";
-import { dumlingOutputTypes } from "../../dumling/codegen/output-types.js";
 import {
 	conjugationClassesSchema,
 	conjugationClassSchema,
@@ -46,7 +49,6 @@ import {
 	valencySlotSchema,
 	valencySlotStatusSchema,
 } from "../src/schemas.js";
-import { formatTypeScript } from "./format-typescript.js";
 import {
 	dumrelOutputTypeExports,
 	dumrelTypePreservingOperations,

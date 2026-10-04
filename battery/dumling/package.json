@@ -66,7 +66,8 @@
 			"types": "./dist/generated/validation.d.ts",
 			"import": "./dist/generated/validation.js",
 			"default": "./dist/generated/validation.js"
-		}
+		},
+		"./codegen": "./codegen/index.ts"
 	},
 	"files": [
 		"dist",

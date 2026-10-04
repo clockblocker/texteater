@@ -1,6 +1,4 @@
-import { readdirSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dumlingRoutes } from "dumling/codegen";
 import type * as Dumling from "dumling/types";
 
 type FeatureLayer = "Core" | "Inflectional";
@@ -205,27 +203,15 @@ function routeFromModule(
 	};
 }
 
-const dumlingSchemasDir = join(
-	dirname(fileURLToPath(import.meta.resolve("dumling/package.json"))),
-	"src/generated/schemas",
-);
-
 /**
- * Every route of Dumling's concrete schemas, read from the
+ * Every route of Dumling's concrete schemas, listed by Dumling's codegen
+ * route manifest and read from the
  * `dumling/schema/<language>/<family>/<kind>` modules, which Bun resolves to
  * their source.
  */
 export async function loadSchemaRoutes(): Promise<SchemaRoute[]> {
-	const schemaPaths = readdirSync(dumlingSchemasDir, {
-		encoding: "utf8",
-		recursive: true,
-	})
-		.filter((path) => path.endsWith(".ts"))
-		.map((path) => path.replaceAll("\\", "/").slice(0, -".ts".length))
-		.toSorted();
-
 	return Promise.all(
-		schemaPaths.map(async (schemaPath) =>
+		dumlingRoutes.map(async ({ schemaPath }) =>
 			routeFromModule(
 				schemaPath,
 				(await import(

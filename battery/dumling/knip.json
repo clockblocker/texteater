@@ -7,6 +7,7 @@
 		"src/generated/validation.ts",
 		"src/generated/schemas/**/*.ts",
 		"src/schemas/concrete-language/*/*/*.ts",
+		"codegen/index.ts",
 		"codegen/operations.ts",
 		"codegen/output-types.ts",
 		"codegen/routes.ts",

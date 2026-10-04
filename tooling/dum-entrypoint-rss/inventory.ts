@@ -146,6 +146,12 @@ export const DUM_ENTRYPOINTS: readonly DumEntryPoint[] = [
 			"Unlinked compiled validation that sibling generators link against; never loaded at application runtime.",
 	},
 	{
+		specifier: "dumling/codegen",
+		classification: "development-support",
+		rationale:
+			"Codegen-only route manifest and operation table that sibling generators read; the import policy keeps runtime code from loading it.",
+	},
+	{
 		specifier: "dumling/compiled-validation",
 		classification: "operational",
 		rationale:

@@ -39,4 +39,8 @@ Codec authors import exact composable Zod schemas from concrete subpaths such
 as `dumling/schema/de/lexeme/noun`. Generated entrypoints preserve the concrete
 schema types that dynamic codegen discovery erases. Each imports one route;
 there is no runtime selector or aggregate registry. Operational imports remain
-independent of these schema entrypoints.
+independent of these schema entrypoints. Sibling generators list the routes
+from the codegen-only `dumling/codegen` entry instead: generated plain data
+naming each route's language, Family, Kind and schema subpath, beside the
+operation table they link against, which the repository import policy keeps
+operational code from loading.

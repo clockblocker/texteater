@@ -1,12 +1,11 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { loadRoutes } from "../../dumling/codegen/routes.js";
-import { formatTypeScript } from "../../dumrel/codegen/format-typescript.js";
+import { formatTypeScript } from "codegen";
+import { dumlingRoutes as routes } from "dumling/codegen";
 
-const routes = await loadRoutes();
 const imports = routes
 	.map(
 		(route, index) =>
-			`import * as R${index} from "dumling/schema/${route.modulePath.replace(/\.js$/, "")}";`,
+			`import * as R${index} from "dumling/schema/${route.schemaPath}";`,
 	)
 	.join("\n");
 const schemas = ["de", "en", "he"]

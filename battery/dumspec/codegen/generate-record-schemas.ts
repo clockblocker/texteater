@@ -1,4 +1,5 @@
-import { readdir, readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
+import { dumlingRoutes } from "dumling/codegen";
 import { readingKnowledgeSchema } from "dumrel/schema";
 import { z } from "zod";
 import {
@@ -14,10 +15,6 @@ import {
 // Text Records, so a record's `$schema` gives editors completion and
 // validation. Also emits `src/generated/routes.ts`, each language's routes,
 // which the loader checks a target's route against without its Attestation.
-const dumlingSchemas = new URL(
-	"../../dumling/src/generated/schemas/",
-	import.meta.url,
-);
 const check = process.argv.includes("--check");
 const stale: string[] = [];
 
@@ -33,38 +30,19 @@ const emit = (name: string, schema: object) =>
 		`${JSON.stringify(schema, null, "\t")}\n`,
 	);
 
-/** The Family and Kind a Dumling Lemma schema fixes. */
-function routeOf(lemmaSchema: z.ZodType): { family: string; kind: string } {
-	const { properties } = z.toJSONSchema(lemmaSchema, {
-		io: "input",
-		unrepresentable: "any",
-	}) as { properties?: Record<string, { const?: unknown }> };
-	const family = properties?.family?.const;
-	const kind = properties?.kind?.const;
-	if (typeof family !== "string" || typeof kind !== "string")
-		throw Error("A Dumling Lemma schema fixes its Family and Kind");
-	return { family, kind };
-}
-
 const routesByLanguage: Record<string, string[]> = {};
 
 for (const language of ["de", "en", "he"] as const) {
-	const routes = (
-		await readdir(new URL(`${language}/`, dumlingSchemas), {
-			recursive: true,
-		})
-	)
-		.filter((path) => path.endsWith(".ts"))
-		.map((path) => path.slice(0, -".ts".length))
-		.toSorted();
 	const schemas = await Promise.all(
-		routes.map(async (route) => ({
-			route,
-			...((await import(`dumling/schema/${language}/${route}`)) as {
-				lemmaSchema: z.ZodType;
-				attestationSchema: z.ZodType;
-			}),
-		})),
+		dumlingRoutes
+			.filter((route) => route.language === language)
+			.map(async (route) => ({
+				...route,
+				...((await import(`dumling/schema/${route.schemaPath}`)) as {
+					lemmaSchema: z.ZodType;
+					attestationSchema: z.ZodType;
+				}),
+			})),
 	);
 	const union = (members: z.ZodType[], of: string) => {
 		const [first, ...rest] = members;
@@ -72,20 +50,16 @@ for (const language of ["de", "en", "he"] as const) {
 		return rest.length === 0 ? first : z.union([first, ...rest]);
 	};
 	const routeSchemas = (from: typeof schemas) =>
-		from.map(({ lemmaSchema }) => {
-			const { family, kind } = routeOf(lemmaSchema);
-			return z.strictObject({
+		from.map(({ family, kind }) =>
+			z.strictObject({
 				family: z.literal(family),
 				kind: z.literal(kind),
-			});
-		});
+			}),
+		);
 	routesByLanguage[language] = schemas
-		.map(({ lemmaSchema }) => {
-			const { family, kind } = routeOf(lemmaSchema);
-			return `${family}/${kind}`;
-		})
+		.map(({ family, kind }) => `${family}/${kind}`)
 		.toSorted();
-	const lexemes = schemas.filter(({ route }) => route.startsWith("lexeme/"));
+	const lexemes = schemas.filter(({ family }) => family === "Lexeme");
 	const { $schema, ...body } = z.toJSONSchema(
 		recordFileSchema({
 			route: union(routeSchemas(schemas), "routes"),
@@ -107,8 +81,9 @@ for (const language of ["de", "en", "he"] as const) {
 		breakdownRecordFileSchema(
 			union(
 				schemas
-					.filter(({ route }) =>
-						/^(?:locution|saying)\//u.test(route),
+					.filter(
+						({ family }) =>
+							family === "Locution" || family === "Saying",
 					)
 					.map((schema) => schema.lemmaSchema),
 				"Locution or Saying routes",

@@ -1,5 +1,5 @@
 import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
+import { formatTypeScript } from "codegen";
 import {
 	compileZodValidationArtifacts,
 	emitInlineOutputType,
@@ -72,36 +72,22 @@ for (const entry of await readdir(concreteDirectory, { recursive: true }).catch(
 		);
 	await rm(new URL(entry, concreteDirectory));
 }
-await mkdir(directory, { recursive: true });
-for (const [name, source] of Object.entries(outputs)) {
-	const formatter = Bun.spawn(
-		[
-			fileURLToPath(
-				new URL(
-					"../../../node_modules/@biomejs/biome/bin/biome",
-					import.meta.url,
-				),
-			),
-			"check",
-			"--write",
-			"--linter-enabled=false",
-			`--stdin-file-path=${fileURLToPath(new URL(name, directory))}`,
-		],
-		{ stdin: "pipe", stdout: "pipe", stderr: "pipe" },
-	);
-	formatter.stdin.write(source);
-	formatter.stdin.end();
-	const [formatted, error, exit] = await Promise.all([
-		new Response(formatter.stdout).text(),
-		new Response(formatter.stderr).text(),
-		formatter.exited,
-	]);
-	if (exit) throw Error(error);
-	const path = new URL(name, directory);
+// The `dumling/codegen` route manifest: every route as plain data, so sibling
+// generators enumerate routes without reading this package's file tree.
+const manifest = `// Generated from Dumling's concrete-language schemas. Run bun run generate.\nexport const routes=[${routes.map((route) => JSON.stringify({ language: route.language, family: route.family, kind: route.kind, schemaPath: route.modulePath.replace(/\.js$/, "") })).join(",")}] as const;\n`;
+const emitted: [URL, string][] = [
+	...Object.entries(outputs).map(([name, source]): [URL, string] => [
+		new URL(name, directory),
+		source,
+	]),
+	[new URL("generated/routes.ts", import.meta.url), manifest],
+];
+for (const [path, source] of emitted) {
+	const formatted = await formatTypeScript(source, path);
 	if (check) {
 		if ((await readFile(path, "utf8").catch(() => "")) !== formatted)
 			throw Error(
-				`Stale generated artifact: ${name}; run bun run generate`,
+				`Stale generated artifact: ${path.pathname}; run bun run generate`,
 			);
 	} else {
 		await mkdir(new URL(".", path), { recursive: true });
