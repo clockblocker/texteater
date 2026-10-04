@@ -55,10 +55,7 @@ const commands = [
 	overrideOrDefault("lint", ["bun", tools.biome, "lint", "."]),
 	overrideOrDefault("types", [
 		"bun",
-		tools.typescript,
-		"-p",
-		"tsconfig.json",
-		"--noEmit",
+		join(repositoryRoot, "tooling/check-package-types.ts"),
 	]),
 	overrideOrDefault("test", [
 		"bun",
