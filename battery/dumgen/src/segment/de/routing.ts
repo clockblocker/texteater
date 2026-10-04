@@ -13,9 +13,10 @@
  *   `de/interjection-counts-its-words`).
  * - Closed-class identity (#734) overrides the route of a one-piece unit
  *   whose spelling it covers.
- * - A code rule may fix the route of a unit it closed: the `quantifier`
- *   rule's ein wenig, ein paar and article + bisschen are Lexeme PRON
- *   (de/quantifier-by-use), whatever the route Choice says.
+ * - A code rule may fix the route of a unit: the `quantifier` rule's ein
+ *   wenig, ein paar and article + bisschen, and a one-piece lowercase
+ *   bisschen, are Lexeme PRON (de/quantifier-by-use), whatever the route
+ *   Choice says.
  * - A one-piece DET or PRON unit keeps the authored identity the identity
  *   Choice picked, re-read for the final Kind when a Rule test flipped it
  *   (#864, `storedIdentity`).
@@ -187,13 +188,16 @@ export type Routes = {
  * route: the picked candidate when its Kind is the route's, else the most
  * probable candidate of the route's Kind in the same Choice, as when the
  * DET/PRON Rule test flipped the Kind. None for another route, for
- * `Other`, or when no candidate has the route's Kind.
+ * `Other`, or when no candidate has the route's Kind. A route a code rule
+ * fixed (`fixed`) overrides `Other` as well, so a bare bisschen the judge
+ * heard as another word still stores PRON bisschen.
  */
 export function storedIdentity(
 	pick: IdentityPick | undefined,
 	route: RouteKey,
+	fixed = false,
 ): ClosedClassIdentity | undefined {
-	if (!pick || pick.choice === "Other") return undefined;
+	if (!pick || (pick.choice === "Other" && !fixed)) return undefined;
 	const kind =
 		route === "Lexeme/DET" ? "DET" : route === "Lexeme/PRON" ? "PRON" : "";
 	if (!kind) return undefined;
@@ -484,7 +488,7 @@ export const structuralRoute =
 /** Two adjacent pieces that stay apart although both are interjections. */
 export type KeepApart = (left: Piece, right: Piece) => boolean;
 
-/** The route a code rule fixed for a group it closed; undefined for any other group. */
+/** The route a code rule fixed for a group; undefined for any other group. */
 export type FixedRoute = (group: readonly number[]) => RouteKey | undefined;
 
 /**
@@ -752,6 +756,7 @@ export function routeMembership(
 						? storedIdentity(
 								picks.get(groupKey(group)),
 								route(group),
+								fixedRoute?.(group) !== undefined,
 							)
 						: undefined;
 				return {

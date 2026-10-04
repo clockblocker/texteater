@@ -26,7 +26,11 @@
  *   Sekunden. Only lowercase paar counts; ein Paar Schuhe is the noun Paar
  *   with its article, left to the judge. Routing reads the PRON
  *   (`quantifierRoutes`), since the route Choice hears an article and its
- *   noun in such a unit.
+ *   noun in such a unit. A one-piece lowercase bisschen (or bißchen) routes
+ *   Lexeme PRON too, alone (klingt bisschen förmlich) or after a
+ *   determiner that stays its own unit (kein, dieses, sein), where the
+ *   route Choice hears a degree ADV, a DET or a NOUN; capitalized Bisschen
+ *   is left to the judge, as the noun 'small bite' may be meant.
  * - `pronoun` (de/verb-owns-its-scattered-members, de/fixed-member-test): a
  *   personal object pronoun joins a verb or Locution only as its lexical
  *   reflexive, coreferent with the subject. Its fixed-word links drop
@@ -323,6 +327,9 @@ function anchors(nomination: Nomination): Decision {
 	};
 }
 
+/** Quantity bisschen, in its spelling and its Historical spelling. */
+const quantityBisschen: ReadonlySet<string> = new Set(["bisschen", "bißchen"]);
+
 /** The two pieces of each unit the `quantifier` rule closes. */
 function quantifierPairs(
 	nomination: Nomination,
@@ -334,7 +341,7 @@ function quantifierPairs(
 		if (!before || before.clause !== piece.clause) continue;
 		const word = lower(piece);
 		if (
-			(word === "bisschen" && isArticle(before)) ||
+			(quantityBisschen.has(word) && isArticle(before)) ||
 			(word === "wenig" && lower(before) === "ein") ||
 			// Capitalized Paar is the noun 'pair' (ein Paar Schuhe).
 			(piece.text === "paar" && lower(before) === "ein")
@@ -354,16 +361,22 @@ function quantifiers(nomination: Nomination): Decision {
 }
 
 /**
- * The route of a unit the `quantifier` rule closes, and undefined for any
- * other group: Lexeme PRON in every use (de/quantifier-by-use).
+ * The route of a unit the `quantifier` rule closes, and of a one-piece
+ * lowercase bisschen or bißchen, and undefined for any other group: Lexeme
+ * PRON in every use (de/quantifier-by-use). Capitalized Bisschen may be the
+ * noun 'small bite', so the judge keeps it.
  */
 export function quantifierRoutes(
 	nomination: Nomination,
 ): (group: readonly number[]) => RouteKey | undefined {
-	const closed = new Set(
-		quantifierPairs(nomination).map((pair) => groupKey(pair)),
-	);
-	return (group) => (closed.has(groupKey(group)) ? "Lexeme/PRON" : undefined);
+	const { pieces } = nomination.sentence;
+	const fixed = new Set([
+		...quantifierPairs(nomination).map((pair) => groupKey(pair)),
+		...pieces
+			.filter((piece) => quantityBisschen.has(piece.text))
+			.map((piece) => groupKey([piece.id])),
+	]);
+	return (group) => (fixed.has(groupKey(group)) ? "Lexeme/PRON" : undefined);
 }
 
 /** Each personal object pronoun and the subject its reflexive use needs, if any. */

@@ -177,6 +177,82 @@ test("quantifier: its unit routes Lexeme PRON, though the route Choice hears a n
 	});
 });
 
+/** The units of `sentence` from `answers`, with the `quantifier` rule or none. */
+const quantifierUnits = (
+	sentence: string,
+	answers: Readonly<Record<string, Answer>>,
+	rules: readonly CodeRule[] = ["quantifier"],
+) =>
+	Effect.runPromise(
+		segmentGermanUnits(
+			{ segments: segmentsOf(sentence) },
+			fakeJudge(answers).ask,
+			{ ...productionUnitSettings, rules },
+		),
+	);
+
+const bisschenIdentity = {
+	kind: "PRON",
+	canonicalForm: "bisschen",
+	pronType: "Ind",
+} as const;
+
+test("quantifier: a lone bisschen after kein routes Lexeme PRON with its identity, though the judge heard ADV and Other", async () => {
+	// Er0 _1 hat2 _3 kein4 _5 bisschen6 _7 Geld8 .9
+	const answers = {
+		r_3: picked("Lexeme/DET"),
+		r_4: picked("Lexeme/ADV"),
+		i_4: picked("Other"),
+	};
+	const units = await quantifierUnits("Er hat kein bisschen Geld.", answers);
+	expect(units).toContainEqual({
+		segments: [6],
+		route: route("Lexeme", "PRON"),
+		identity: bisschenIdentity,
+	});
+	expect(units).toContainEqual(
+		expect.objectContaining({
+			segments: [4],
+			route: route("Lexeme", "DET"),
+		}),
+	);
+	// Without the rule, the judge's ADV stands.
+	expect(
+		await quantifierUnits("Er hat kein bisschen Geld.", answers, []),
+	).toContainEqual({ segments: [6], route: route("Lexeme", "ADV") });
+});
+
+test("quantifier: bare degree bisschen and its Historical spelling bißchen route Lexeme PRON", async () => {
+	for (const spelling of ["bisschen", "bißchen"]) {
+		// Das0 _1 klingt2 _3 bisschen4 _5 förmlich6 .7
+		const units = await quantifierUnits(
+			`Das klingt ${spelling} förmlich.`,
+			{
+				r_3: picked("Lexeme/ADV"),
+				i_3: picked("Other"),
+				r_4: picked("Lexeme/ADJ"),
+			},
+		);
+		expect(units).toContainEqual({
+			segments: [4],
+			route: route("Lexeme", "PRON"),
+			identity: bisschenIdentity,
+		});
+	}
+});
+
+test("quantifier: capitalized Bisschen keeps the judge's route, as it may be the noun", async () => {
+	// Er0 _1 gab2 _3 ihm4 _5 kein6 _7 Bisschen8 .9
+	const units = await quantifierUnits("Er gab ihm kein Bisschen.", {
+		r_4: picked("Lexeme/DET"),
+		r_5: picked("Lexeme/NOUN"),
+	});
+	expect(units).toContainEqual({
+		segments: [8],
+		route: route("Lexeme", "NOUN"),
+	});
+});
+
 test("pronoun: mir stays out of tut … leid, but a reflexive coreferent with ich keeps its links", async () => {
 	// Tut0 _1 mir2 _3 leid4 .5
 	const leid = await groups(
