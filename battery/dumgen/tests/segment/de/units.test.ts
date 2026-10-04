@@ -291,3 +291,29 @@ test("the inventory is a setting: pinning the AUX Lemmas drops causative lassen'
 	expect(await slots()).toContain("s_auxiliary_2");
 	expect(await slots(pinned)).not.toContain("s_auxiliary_2");
 });
+
+test("a hyphenated nickname is one piece with no identity Choice, and the route Choice offers it PROPN (de/coined-name-substitute-is-propn)", async () => {
+	// Freuen0 _1 wir2 _3 uns4 ,5 _6 denn7 _8 Du-weißt-schon-wer9 _10 ist11 _12 endlich13 _14 fort15 !16
+	const segments: Segment[] = [
+		...segmentsOf("Freuen wir uns, denn "),
+		{ kind: "ResolvableText", text: "Du-weißt-schon-wer" },
+		...segmentsOf(" ist endlich fort!"),
+	];
+	const judge = fakeJudge({ r_5: picked("Lexeme/PROPN") });
+	const units = await Effect.runPromise(
+		segmentGermanUnits({ segments }, judge.ask),
+	);
+	expect(units).toContainEqual({
+		segments: [9],
+		route: route("Lexeme", "PROPN"),
+	});
+	const questions = judge.requests.find(
+		({ stage }) => stage === "route",
+	)?.questions;
+	// No authored DET or PRON spells it, so no identity Choice is asked.
+	expect(questions).not.toHaveProperty("i_5");
+	const choice = questions?.r_5;
+	expect(
+		choice?.type === "choice" && choice.criteria["Lexeme/PROPN"],
+	).toContain("nickname coined for one referent");
+});

@@ -657,6 +657,16 @@ const nouns: Rule[] = [
 			"de/dipl-ing-mueller-leitet-das-projekt",
 		],
 	},
+	{
+		id: "de/coined-name-substitute-is-propn",
+		statement:
+			"A fixed name-substitute or nickname coined for one referent is a PROPN, even when it is built from a pronoun or a clause: Du-weißt-schon-wer and Er-dessen-Name-nicht-genannt-werden-darf name one person, as a name does. Written with hyphens, it is one Segment and one Lexeme PROPN, never a PRON. As a coined name it has no Core gender (de/proper-noun-article).",
+		adrs: [],
+		routes: lexeme("PROPN", "PRON"),
+		records: [
+			"de/freuen-wir-uns-denn-du-weisst-schon-wer-ist-endlich-fort",
+		],
+	},
 ];
 
 const fusedWords: Rule[] = [

@@ -59,9 +59,10 @@ const routeDescriptions: Readonly<Record<RouteKey, string>> = {
 	"Lexeme/PART":
 		"Particle: nicht, zu before an infinitive, am before a superlative when not joined, answer particles",
 	"Lexeme/PRON":
-		"Pronoun standing for a noun phrase: personal, reflexive object, relative, demonstrative, interrogative, indefinite (man, etwas)",
+		"Pronoun standing for a noun phrase: personal, reflexive object, relative, demonstrative, interrogative, indefinite (man, etwas); never a nickname built from one",
+	// Rule de/coined-name-substitute-is-propn.
 	"Lexeme/PROPN":
-		"Proper name, with the article that opens its phrase (die Schweiz, der Rhein)",
+		"Proper name, with the article that opens its phrase (die Schweiz, der Rhein), and a fixed name-substitute or nickname coined for one referent, even one built from a pronoun or a clause (Du-weißt-schon-wer)",
 	"Lexeme/SCONJ": "Subordinating conjunction (dass, weil, ob, als, wenn)",
 	"Lexeme/SYM": "Symbol such as %, €, §, +",
 	"Lexeme/VERB":

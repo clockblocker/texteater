@@ -1,0 +1,140 @@
+{
+	"$schema": "../../schema/spec-record.de.json",
+	"sentence": "Freuen wir uns, denn Du-weißt-schon-wer ist endlich fort!",
+	"segments": [
+		{
+			"kind": "ResolvableText",
+			"text": "Freuen"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "wir"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "uns"
+		},
+		{
+			"kind": "Punctuation",
+			"text": ","
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "denn"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "Du-weißt-schon-wer"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "ist"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "endlich"
+		},
+		{
+			"kind": "Whitespace",
+			"text": " "
+		},
+		{
+			"kind": "ResolvableText",
+			"text": "fort"
+		},
+		{
+			"kind": "Punctuation",
+			"text": "!"
+		}
+	],
+	"coverage": "Partial",
+	"provenance": {
+		"kind": "Authored"
+	},
+	"sources": {
+		"adrs": [],
+		"rules": [
+			{
+				"rule": "de/coined-name-substitute-is-propn",
+				"hash": "edeccfb87fe2a1e0"
+			}
+		],
+		"references": []
+	},
+	"targets": [
+		{
+			"memberSegmentIndices": [9],
+			"route": {
+				"family": "Lexeme",
+				"kind": "PROPN"
+			},
+			"reading": {
+				"emojiDescription": "🤐🧙"
+			},
+			"notes": {
+				"rationale": "Du-weißt-schon-wer is a nickname coined for one referent, so it is one Lexeme PROPN, not a PRON (de/coined-name-substitute-is-propn). As a coined name it has no Core gender, and with no owned article or agreeing adjective its Surface marks none."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"family": "Lexeme",
+						"kind": "PROPN",
+						"canonicalForm": "Du-weißt-schon-wer",
+						"coreFeatures": {
+							"article": null,
+							"gender": null
+						}
+					},
+					"normalizedSurface": "Du-weißt-schon-wer",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"surfaceFeatures": null,
+					"inflectionalFeatures": {
+						"case": "Nom",
+						"gender": null,
+						"number": "Sing"
+					}
+				},
+				"members": [
+					{
+						"attested": "Du-weißt-schon-wer",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"articleEvidence": null
+			}
+		}
+	],
+	"noTarget": []
+}
