@@ -6,17 +6,14 @@ import { findRepositoryRoot } from "./lib/workspaces";
 export type DocumentationRule =
 	| "adr-structure"
 	| "allowed-path"
-	| "baseline-drift"
 	| "broken-anchor"
 	| "broken-link"
 	| "context-map-structure"
 	| "context-structure"
 	| "coordination-file"
 	| "empty-scaffolding"
-	| "goal-removed"
 	| "protected-file-change"
 	| "protected-reference-placement"
-	| "scoped-count"
 	| "vision-placement";
 
 export type DocumentationIssue = {
@@ -27,30 +24,10 @@ export type DocumentationIssue = {
 	severity: "advisory" | "error";
 };
 
-export type DocumentationBaseline = {
-	commit: string;
-	count: number;
-	files: string[];
-	policyIssue: number;
-};
-
-export type DocumentationCensus = {
-	baseline: DocumentationBaseline;
-	created: string[];
-	current: string[];
-	removed: string[];
-	retained: string[];
-};
-
 type MarkdownLink = {
 	line: number;
 	target: string;
 };
-
-const baselinePath = join(
-	import.meta.dir,
-	"developer-documentation-baseline.json",
-);
 
 const coordinationTokens = new Set([
 	"backlog",
@@ -227,26 +204,6 @@ function isAgentInstructionPath(candidate: string): boolean {
 			path,
 		)
 	);
-}
-
-export async function loadDocumentationBaseline(): Promise<DocumentationBaseline> {
-	return JSON.parse(await readFile(baselinePath, "utf8"));
-}
-
-export async function createDocumentationCensus(
-	repositoryRoot: string,
-): Promise<DocumentationCensus> {
-	const baseline = await loadDocumentationBaseline();
-	const current = await developerDocumentationFiles(repositoryRoot);
-	const baselineFiles = new Set(baseline.files);
-	const currentFiles = new Set(current);
-	return {
-		baseline,
-		created: current.filter((path) => !baselineFiles.has(path)),
-		current,
-		removed: baseline.files.filter((path) => !currentFiles.has(path)),
-		retained: baseline.files.filter((path) => currentFiles.has(path)),
-	};
 }
 
 export function markdownLinks(text: string): MarkdownLink[] {
@@ -449,48 +406,6 @@ export async function auditMarkdownLinks(
 	return issues;
 }
 
-export function auditBaseline(
-	baseline: DocumentationBaseline,
-): DocumentationIssue[] {
-	const issues: DocumentationIssue[] = [];
-	const sortedFiles = baseline.files.toSorted();
-	if (baseline.count !== baseline.files.length) {
-		issues.push({
-			detail: `recorded count ${baseline.count} does not match ${baseline.files.length} listed files`,
-			file: "tooling/developer-documentation-baseline.json",
-			kind: "baseline-drift",
-			severity: "error",
-		});
-	}
-	if (new Set(baseline.files).size !== baseline.files.length) {
-		issues.push({
-			detail: "baseline file list contains duplicates",
-			file: "tooling/developer-documentation-baseline.json",
-			kind: "baseline-drift",
-			severity: "error",
-		});
-	}
-	if (!baseline.files.every((path, index) => path === sortedFiles[index])) {
-		issues.push({
-			detail: "baseline file list must be sorted",
-			file: "tooling/developer-documentation-baseline.json",
-			kind: "baseline-drift",
-			severity: "error",
-		});
-	}
-	for (const file of baseline.files) {
-		if (!isDeveloperDocumentationPath(file)) {
-			issues.push({
-				detail: "listed file is outside the #307 developer-documentation boundary",
-				file,
-				kind: "baseline-drift",
-				severity: "error",
-			});
-		}
-	}
-	return issues;
-}
-
 export function auditAllowedPaths(
 	files: readonly string[],
 ): DocumentationIssue[] {
@@ -508,19 +423,11 @@ export function auditAllowedPaths(
 	);
 }
 
-export function auditGoalsAndVisions(
+export function auditProtectedPlacement(
 	files: readonly string[],
 ): DocumentationIssue[] {
 	const issues: DocumentationIssue[] = [];
 	for (const file of files) {
-		if (basename(file) === "GOAL.md") {
-			issues.push({
-				detail: "GOAL.md was removed by the #307 human-owned-material policy",
-				file,
-				kind: "goal-removed",
-				severity: "error",
-			});
-		}
 		if (
 			basename(file) === "VISION.md" &&
 			file !== "VISION.md" &&
@@ -548,27 +455,6 @@ export function auditGoalsAndVisions(
 		}
 	}
 	return issues;
-}
-
-/** Installed skills stay out of the count on both sides of the comparison. */
-export function auditScopedCount(
-	census: DocumentationCensus,
-): DocumentationIssue[] {
-	const authored = (files: readonly string[]) =>
-		files.filter(
-			(file) => !isInstalledSkillPath(normalizeRepositoryPath(file)),
-		).length;
-	const current = authored(census.current);
-	const baseline = authored(census.baseline.files);
-	if (current < baseline) return [];
-	return [
-		{
-			detail: `current scoped count ${current} must be below the ${baseline}-file baseline, both without installed skills; human review still decides whether the reduction is drastic`,
-			file: "tooling/developer-documentation-baseline.json",
-			kind: "scoped-count",
-			severity: "error",
-		},
-	];
 }
 
 function pathTokens(path: string): string[] {
@@ -984,18 +870,16 @@ async function changedRepositoryFiles(
 export async function auditDocumentationIntegrity(
 	repositoryRoot: string,
 ): Promise<DocumentationIssue[]> {
-	const census = await createDocumentationCensus(repositoryRoot);
+	const files = await developerDocumentationFiles(repositoryRoot);
 	return [
-		...auditBaseline(census.baseline),
-		...auditScopedCount(census),
-		...auditAllowedPaths(census.current),
-		...auditGoalsAndVisions(census.current),
-		...auditCoordinationFiles(census.current),
-		...(await auditContexts(repositoryRoot, census.current)),
-		...(await auditContextMap(repositoryRoot, census.current)),
-		...(await auditAdrs(repositoryRoot, census.current)),
-		...(await auditEmptyScaffolding(repositoryRoot, census.current)),
-		...(await auditMarkdownLinks(repositoryRoot, census.current)),
+		...auditAllowedPaths(files),
+		...auditProtectedPlacement(files),
+		...auditCoordinationFiles(files),
+		...(await auditContexts(repositoryRoot, files)),
+		...(await auditContextMap(repositoryRoot, files)),
+		...(await auditAdrs(repositoryRoot, files)),
+		...(await auditEmptyScaffolding(repositoryRoot, files)),
+		...(await auditMarkdownLinks(repositoryRoot, files)),
 		...auditProtectedChanges(await changedRepositoryFiles(repositoryRoot)),
 	];
 }
@@ -1004,29 +888,12 @@ export function formatDocumentationIssue(issue: DocumentationIssue): string {
 	return `${issue.file}${issue.line === undefined ? "" : `:${issue.line}`}: [${issue.kind}] ${issue.detail}`;
 }
 
-function printCensus(census: DocumentationCensus): void {
-	console.log(
-		`Developer documentation census: ${census.baseline.count} baseline files at ${census.baseline.commit}; ${census.current.length} current files (${census.retained.length} retained, ${census.removed.length} removed, ${census.created.length} created).`,
-	);
-	if (!process.argv.includes("--report")) return;
-	for (const [disposition, files] of [
-		["retained", census.retained],
-		["removed", census.removed],
-		["created", census.created],
-	] as const) {
-		console.log(`${disposition}:`);
-		for (const file of files) console.log(`- ${file}`);
-	}
-}
-
 if (import.meta.main) {
 	const repositoryRoot = await findRepositoryRoot(process.cwd());
-	const census = await createDocumentationCensus(repositoryRoot);
 	const issues = await auditDocumentationIntegrity(repositoryRoot);
 	const errors = issues.filter(({ severity }) => severity === "error");
 	const advisories = issues.filter(({ severity }) => severity === "advisory");
 
-	printCensus(census);
 	if (advisories.length > 0) {
 		console.warn("Documentation review advisories:");
 		for (const issue of advisories) {

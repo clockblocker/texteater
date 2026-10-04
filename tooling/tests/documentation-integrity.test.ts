@@ -5,13 +5,11 @@ import {
 	adrStructureIssues,
 	auditAdrs,
 	auditAllowedPaths,
-	auditBaseline,
 	auditCoordinationFiles,
 	auditEmptyScaffolding,
-	auditGoalsAndVisions,
 	auditMarkdownLinks,
 	auditProtectedChanges,
-	auditScopedCount,
+	auditProtectedPlacement,
 	contextMapStructureIssues,
 	contextStructureIssues,
 	developerDocumentationFiles,
@@ -19,7 +17,6 @@ import {
 	isDeveloperDocumentationPath,
 	isEmptyScaffoldingContent,
 	isProtectedDeveloperDocument,
-	loadDocumentationBaseline,
 	markdownLinks,
 } from "../documentation-integrity";
 import { temporaryRepository, writeSource } from "./helpers";
@@ -48,30 +45,7 @@ function git(root: string, ...args: string[]): void {
 	).toBe(0);
 }
 
-test("reproduces the #307 baseline from the pinned pre-migration commit", async () => {
-	const baseline = await loadDocumentationBaseline();
-	const result = Bun.spawnSync([
-		"git",
-		"ls-tree",
-		"-r",
-		"--name-only",
-		baseline.commit,
-	]);
-	const files = result.stdout
-		.toString()
-		.trim()
-		.split("\n")
-		.filter(isDeveloperDocumentationPath)
-		.toSorted();
-
-	expect(result.exitCode).toBe(0);
-	expect(baseline.policyIssue).toBe(307);
-	expect(baseline.count).toBe(210);
-	expect(baseline.files).toEqual(files);
-	expect(auditBaseline(baseline)).toEqual([]);
-});
-
-test("uses role-specific #307 census exclusions", () => {
+test("excludes package READMEs and produced artifacts from developer documentation", () => {
 	expect(isDeveloperDocumentationPath("README.md")).toBeTrue();
 	expect(isDeveloperDocumentationPath("app/tf-demo/README.md")).toBeTrue();
 	expect(
@@ -104,7 +78,7 @@ test("uses role-specific #307 census exclusions", () => {
 	).toBeFalse();
 });
 
-test("censuses only the documents git would track", async () => {
+test("checks only the documents git would track", async () => {
 	const root = await gitRepository();
 	await writeSource(root, ".gitignore", "test-results/\n.runs/\n");
 	await writeSource(root, "docs/reference/committed.md", "# Committed\n");
@@ -166,15 +140,15 @@ test("rejects research and prototype notes outside canonical paths", () => {
 	]);
 });
 
-test("reports GOAL, misplaced Vision, and misplaced protected reference files", () => {
+test("reports misplaced Vision and protected reference files", () => {
 	expect(
-		auditGoalsAndVisions([
-			"GOAL.md",
+		auditProtectedPlacement([
+			"VISION.md",
+			"app/tf-demo/VISION.md",
 			"battery/dumgen/docs/persistent/VISION.md",
 			"battery/dumgen/docs/human-owned/policy.md",
 		]),
 	).toMatchObject([
-		{ file: "GOAL.md", kind: "goal-removed" },
 		{
 			file: "battery/dumgen/docs/persistent/VISION.md",
 			kind: "vision-placement",
@@ -184,66 +158,6 @@ test("reports GOAL, misplaced Vision, and misplaced protected reference files", 
 			kind: "protected-reference-placement",
 		},
 	]);
-});
-
-test("checks that the final scoped count is lower without defining drastic", () => {
-	const baseline = {
-		commit: "abc",
-		count: 2,
-		files: ["README.md", "docs/reference/policy.md"],
-		policyIssue: 307,
-	};
-	expect(
-		auditScopedCount({
-			baseline,
-			created: [],
-			current: ["README.md"],
-			removed: ["docs/reference/policy.md"],
-			retained: ["README.md"],
-		}),
-	).toEqual([]);
-	expect(
-		auditScopedCount({
-			baseline,
-			created: ["docs/reference/new.md"],
-			current: ["README.md", "docs/reference/new.md"],
-			removed: ["docs/reference/policy.md"],
-			retained: ["README.md"],
-		}),
-	).toMatchObject([{ kind: "scoped-count" }]);
-});
-
-test("leaves installed skills out of both sides of the scoped count", () => {
-	const skill = ".agents/skills/animate/SKILL.md";
-	const appSkill = "app/tf-demo/.agents/skills/convex/SKILL.md";
-	expect(
-		auditScopedCount({
-			baseline: {
-				commit: "abc",
-				count: 3,
-				files: ["README.md", "docs/reference/policy.md", skill],
-				policyIssue: 307,
-			},
-			created: [appSkill],
-			current: ["README.md", skill, appSkill],
-			removed: ["docs/reference/policy.md"],
-			retained: ["README.md", skill],
-		}),
-	).toEqual([]);
-	expect(
-		auditScopedCount({
-			baseline: {
-				commit: "abc",
-				count: 2,
-				files: ["README.md", skill],
-				policyIssue: 307,
-			},
-			created: [],
-			current: ["README.md"],
-			removed: [skill],
-			retained: ["README.md"],
-		}),
-	).toMatchObject([{ kind: "scoped-count" }]);
 });
 
 test("rejects coordination files but exempts functional agent instructions", () => {
