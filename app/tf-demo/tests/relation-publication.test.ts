@@ -11,6 +11,7 @@ import {
 } from "../convex/model/generatedKnowledgeContainment";
 import {
 	type RelationPublicationAuthorization,
+	type RelationPublicationRun,
 	recordCommittedRelationRun,
 	relationPublicationRunAllowed,
 } from "../convex/relationPublication";
@@ -120,7 +121,9 @@ test("only an explicitly signed, fingerprint-matched promote verdict enters the 
 
 test("request and publication use the same qualified-kind allowlist", () => {
 	const request = generationRequestFor(sourceReading, ["synonym"]);
-	expect(request.semanticRelations).toEqual({ synonym: null });
+	expect(
+		"semanticRelations" in request ? request.semanticRelations : undefined,
+	).toEqual({ synonym: null });
 	const generated = generatedKnowledgeAllowedForPublication(
 		{
 			changes: [
@@ -168,13 +171,13 @@ test("request and publication use the same qualified-kind allowlist", () => {
 });
 
 test("rollback denies a previously authorized relation run without changing its evidence", () => {
-	const run = {
+	const run: RelationPublicationRun = {
 		runNumber: 3,
 		requestedKinds: ["synonym"],
 		artifactPath: reviewedArtifact.artifactPath,
 		fingerprints: RELATION_PUBLICATION_FINGERPRINTS,
 		proposals: [],
-	} as const;
+	};
 	const authorization: RelationPublicationAuthorization = {
 		artifactPath: reviewedArtifact.artifactPath,
 		fingerprints: RELATION_PUBLICATION_FINGERPRINTS,

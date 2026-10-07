@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { parseSync, Visitor } from "oxc-parser";
+import { type Node, parseSync, Visitor } from "oxc-parser";
 
 /** tf-demo's `src`: every file in it that animates answers to the spec. */
 const SRC = new URL("../../", import.meta.url).pathname;
@@ -31,25 +31,17 @@ const MOTION_SOURCES = readdirSync(SRC, { recursive: true, encoding: "utf8" })
  * past a rule that only looked at the attribute, which is why this walks
  * into the object rather than trusting the identifier.
  */
-function isSpecTransition(node: { type: string } | null | undefined): boolean {
+function isSpecTransition(node: Node | null | undefined): boolean {
 	if (!node) return false;
 	if (node.type === "Identifier") return true;
-	const call = node as { callee?: { type: string; name?: string } };
 	if (
 		node.type === "CallExpression" &&
-		call.callee?.type === "Identifier" &&
-		(call.callee.name === "motionOf" || call.callee.name === "transition")
+		node.callee.type === "Identifier" &&
+		(node.callee.name === "motionOf" || node.callee.name === "transition")
 	)
 		return true;
 	if (node.type !== "ObjectExpression") return false;
-	const object = node as {
-		properties: {
-			type: string;
-			value?: { type: string };
-			argument?: { type: string };
-		}[];
-	};
-	return object.properties.every((property) =>
+	return node.properties.every((property) =>
 		property.type === "SpreadElement"
 			? isSpecTransition(property.argument)
 			: isSpecTransition(property.value),

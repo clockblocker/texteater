@@ -182,10 +182,8 @@ test("a stem determiner's forms stay inside its Lemma: diesem never reaches jene
 		canonicalForm: "dieser",
 		coreFeatures: {
 			case: null,
-			definite: null,
 			gender: null,
 			number: null,
-			numType: null,
 			person: null,
 			polite: null,
 			poss: null,

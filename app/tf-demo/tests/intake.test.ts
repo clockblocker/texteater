@@ -18,6 +18,22 @@ const SOURCE = "Er gibt auf. Er wohnt im Haus.\n\nJa!";
 const VERB = { language: "de", family: "Lexeme", kind: "VERB" } as const;
 const PRON = { language: "de", family: "Lexeme", kind: "PRON" } as const;
 
+/**
+ * The submission as the `persistSubmittedText` mutation takes it: intake hands
+ * readonly arrays, Convex's validator types want mutable ones, so copy them as
+ * `convex/orchestration.ts` does on the way in.
+ */
+function persistable(submission: SubmittedText) {
+	return {
+		...submission,
+		sentences: submission.sentences.map((sentence) => ({
+			...sentence,
+			segments: [...sentence.segments],
+			units: [...sentence.units],
+		})),
+	};
+}
+
 /** Intake with a fake jev and a persistence port that keeps what it was handed. */
 function intakeWith(jev: ReturnType<typeof fakeJev>) {
 	const stored: SubmittedText[] = [];
@@ -100,8 +116,9 @@ test("intake splits a Text into paragraphs and Sentences in code and hands each 
 test("stored units index into their Sentence's Segments, and the reader view gives every member its whole unit", async () => {
 	const { stored, submit } = intakeWith(fakeJev({ answers: germanAnswers }));
 	await submit();
-	const submission = stored[0];
-	if (!submission) throw new Error("Expected a submission.");
+	const handed = stored[0];
+	if (!handed) throw new Error("Expected a submission.");
+	const submission = persistable(handed);
 	const t = createTestConvex();
 	const { sentenceIds } = await t.run((ctx) =>
 		persistSubmittedText(ctx, submission),
@@ -225,7 +242,7 @@ test("a Sentence whose jev request fails is stored marked as not segmented, with
 	// Storage keeps the mark, and the reader view shows the Sentence so.
 	const t = createTestConvex();
 	const { sentenceIds } = await t.run((ctx) =>
-		persistSubmittedText(ctx, submission),
+		persistSubmittedText(ctx, persistable(submission)),
 	);
 	const view = await t.run(async (ctx) => {
 		const sentence = await ctx.db.get(sentenceIds[2] ?? ("" as never));

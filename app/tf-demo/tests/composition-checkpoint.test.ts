@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test";
+import type * as Dumling from "dumling/types";
+import type { ClickEncounter } from "../server/clickEncounter";
 import {
 	parseResolvedGrammar,
 	restoreStoredGrammar,
@@ -44,11 +46,13 @@ const checkpoint = {
 			],
 		},
 		target: { family: "Lexeme", kind: "VERB", memberSegmentIndices: [1] },
-	},
+	} satisfies ClickEncounter,
 	attestation: {
 		unitKind: "Attestation",
 		surface,
-		members: [{ attested: "regnet", orthography: "Standard" }],
+		members: [
+			{ attested: "regnet", orthography: "Standard" },
+		] satisfies Dumling.Attestation<"de">["members"],
 		realizationCoverage: "Full",
 	},
 };
@@ -83,7 +87,7 @@ test("legacy noun checkpoints discard component references but retain exact occu
 				kind: "NOUN",
 				memberSegmentIndices: [0, 1],
 			},
-		},
+		} satisfies ClickEncounter,
 		attestation: {
 			unitKind: "Attestation",
 			surface: {

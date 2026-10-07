@@ -23,6 +23,8 @@ import {
 } from "./support/convex";
 import { enableDeploymentFlags } from "./support/deploymentFlags";
 import {
+	bankenSurface,
+	bankLemma,
 	bankOccurrenceCommit,
 	bankReading,
 	commitBankOccurrence,
@@ -168,7 +170,7 @@ describe("Resolution Session", () => {
 		const canonical = {
 			readingId: committed.readingId,
 			lemmaId: expect.any(String),
-			surfaceLanguage: "de",
+			surfaceLanguage: "de" as const,
 			normalizedSurface: "Banken",
 			surfaceId: expect.any(String),
 			attestationId: committed.attestationId,
@@ -951,6 +953,8 @@ describe("Resolution Session", () => {
 			},
 		});
 		const { diagnosticId } = await session(t, "request-1");
+		if (diagnosticId === undefined)
+			throw new Error("Expected the failure's diagnostic id.");
 
 		const note = await t.query(api.resolutionSessions.getResolutionNote, {
 			requestId: "request-1",
@@ -1607,10 +1611,13 @@ describe("Resolution Session", () => {
 			throw new Error("Expected a committed occurrence.");
 		const providerRequests: string[] = [];
 		const previousFetch = globalThis.fetch;
-		globalThis.fetch = (async (url: string | URL | Request) => {
-			providerRequests.push(String(url));
-			throw new Error("No model call is expected.");
-		}) as typeof fetch;
+		globalThis.fetch = Object.assign(
+			async (url: string | URL | Request) => {
+				providerRequests.push(String(url));
+				throw new Error("No model call is expected.");
+			},
+			{ preconnect: previousFetch.preconnect },
+		);
 		try {
 			await t.action(
 				internal.orchestration.runResolutionSession,
@@ -1844,10 +1851,13 @@ describe("Resolution Session", () => {
 		const errors: string[] = [];
 		const previousFetch = globalThis.fetch;
 		const previousError = console.error;
-		globalThis.fetch = (async (url: string | URL | Request) => {
-			providerRequests.push(String(url));
-			throw new Error("No model call is expected.");
-		}) as typeof fetch;
+		globalThis.fetch = Object.assign(
+			async (url: string | URL | Request) => {
+				providerRequests.push(String(url));
+				throw new Error("No model call is expected.");
+			},
+			{ preconnect: previousFetch.preconnect },
+		);
 		console.error = (...values: unknown[]) => {
 			errors.push(values.map(String).join(" "));
 		};
@@ -2133,36 +2143,28 @@ test("a stored Grammar checkpoint is restored when a run resumes", async () => {
 });
 
 function grammaticalInput(canonicalForm = "Bank") {
+	const attestation: Dumling.Attestation<"de", "Lexeme", "NOUN"> = {
+		unitKind: "Attestation",
+		members: [{ attested: "Banken", orthography: "Standard" }],
+		realizationCoverage: "Full",
+		articleEvidence: null,
+		valencyEvidence: [],
+		surface: { ...bankenSurface, lemma: { ...bankLemma, canonicalForm } },
+	};
 	return {
 		decision: "Resolved" as const,
-		attestation: {
-			unitKind: "Attestation",
-			members: [{ attested: "Banken", orthography: "Standard" as const }],
-			realizationCoverage: "Full" as const,
-			surface: {
-				unitKind: "Surface",
-				normalizedSurface: "Banken",
-				spelling: { kind: "Canonical" as const },
-
-				lemma: {
-					canonicalForm,
-					family: "Lexeme",
-					kind: "NOUN",
-					coreFeatures: { gender: "Fem" },
-				},
-			},
-		},
+		attestation,
 		provider: { raw: "must not leak" },
 	};
 }
 
 function readingInput(emojiDescription = "🏦", canonicalForm = "Bank") {
-	return {
+	const reading: Dumling.Reading<"de", "Lexeme", "NOUN"> = {
 		unitKind: "Reading",
 		emojiDescription,
-		lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
-		plan: { raw: "must not leak" },
+		lemma: { ...bankLemma, canonicalForm },
 	};
+	return { ...reading, plan: { raw: "must not leak" } };
 }
 
 function grammarProjection(canonicalForm = "Bank") {

@@ -7,6 +7,13 @@ import {
 	NOTE_STUDY_RELATED_DATABASE,
 	NOTE_STUDY_RESOLVED_RELATIONS,
 } from "../shared/notes-study/note-study-dummy-database";
+import type { NoteStudyFixture } from "../shared/notes-study/note-study-fixture";
+
+/**
+ * Read through the shared fixture shape: the `as const` tuple only carries
+ * the optional sections each fixture happens to author.
+ */
+const FIXTURES: readonly NoteStudyFixture[] = NOTE_STUDY_FIXTURES;
 
 const routeKey = ({ family, kind }: { family: string; kind: string }) =>
 	`${family}/${kind}`;
@@ -78,13 +85,13 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("covers the studied German Unit Reading routes", () => {
-		expect(NOTE_STUDY_FIXTURES.map(routeKey).sort()).toEqual(
+		expect(FIXTURES.map(routeKey).sort()).toEqual(
 			[...STUDIED_ROUTES].sort(),
 		);
 	});
 
 	test("keeps stable presentation keys and the Dämmerung route", () => {
-		const presentationKeys = NOTE_STUDY_FIXTURES.map(
+		const presentationKeys = FIXTURES.map(
 			({ presentationKey }) => presentationKey,
 		);
 		expect(new Set(presentationKeys).size).toBe(presentationKeys.length);
@@ -96,7 +103,7 @@ describe("German note-study fixtures", () => {
 			),
 		).toBe(true);
 		expect(
-			NOTE_STUDY_FIXTURES.find(
+			FIXTURES.find(
 				({ presentationKey }) => presentationKey === "Daemmerung",
 			),
 		).toMatchObject({
@@ -109,7 +116,7 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("keeps Doch on its answer-particle Reading", () => {
-		const doch = NOTE_STUDY_FIXTURES.find(
+		const doch = FIXTURES.find(
 			({ presentationKey }) => presentationKey === "Doch",
 		);
 
@@ -137,7 +144,7 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("models the percent symbol as the Reading", () => {
-		const percent = NOTE_STUDY_FIXTURES.find(
+		const percent = FIXTURES.find(
 			({ presentationKey }) => presentationKey === "%",
 		);
 
@@ -168,7 +175,7 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("keeps Anrufen relations to defensible Lemma targets", () => {
-		const anrufen = NOTE_STUDY_FIXTURES.find(
+		const anrufen = FIXTURES.find(
 			({ presentationKey }) => presentationKey === "Anrufen",
 		);
 
@@ -196,10 +203,10 @@ describe("German note-study fixtures", () => {
 
 	test("keeps optional learning sections semantically scoped", () => {
 		const routesWith = (section: "formation" | "structure") =>
-			NOTE_STUDY_FIXTURES.filter((fixture) => fixture[section])
+			FIXTURES.filter((fixture) => fixture[section])
 				.map(routeKey)
 				.sort();
-		const routesWithForms = NOTE_STUDY_FIXTURES.filter(
+		const routesWithForms = FIXTURES.filter(
 			(fixture) => fixture.forms || fixture.formTable,
 		)
 			.map(routeKey)
@@ -221,7 +228,7 @@ describe("German note-study fixtures", () => {
 			].sort(),
 		);
 
-		for (const fixture of NOTE_STUDY_FIXTURES) {
+		for (const fixture of FIXTURES) {
 			if (fixture.family !== "Lexeme" || !fixture.formation) continue;
 			expect(fixture.formation).toHaveLength(1);
 			const formation = fixture.formation[0]
@@ -250,7 +257,7 @@ describe("German note-study fixtures", () => {
 			].sort(),
 		);
 
-		for (const fixture of NOTE_STUDY_FIXTURES) {
+		for (const fixture of FIXTURES) {
 			if (!fixture.formTable) continue;
 			for (const row of fixture.formTable.rows) {
 				expect(row.cells).toHaveLength(
@@ -261,11 +268,11 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("separates literal translations from translated explanations", () => {
-		const tomatoIdiom = NOTE_STUDY_FIXTURES.find(
+		const tomatoIdiom = FIXTURES.find(
 			({ presentationKey }) =>
 				presentationKey === "Tomaten-auf-den-Augen-haben",
 		);
-		const morningProverb = NOTE_STUDY_FIXTURES.find(
+		const morningProverb = FIXTURES.find(
 			({ presentationKey }) =>
 				presentationKey === "Morgenstund-hat-Gold-im-Mund",
 		);
@@ -291,7 +298,7 @@ describe("German note-study fixtures", () => {
 			],
 		});
 
-		for (const fixture of NOTE_STUDY_FIXTURES) {
+		for (const fixture of FIXTURES) {
 			for (const line of [
 				...fixture.translations,
 				...(fixture.translatedExplanations ?? []),
@@ -302,7 +309,7 @@ describe("German note-study fixtures", () => {
 	});
 
 	test("omits relations where the Reading Block catalog does", () => {
-		for (const fixture of NOTE_STUDY_FIXTURES) {
+		for (const fixture of FIXTURES) {
 			if (fixture.family === "Morpheme") {
 				expect(fixture.relations).toBeUndefined();
 			}

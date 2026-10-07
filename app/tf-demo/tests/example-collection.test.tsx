@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { api } from "../convex/_generated/api";
-import type { TableNames } from "../convex/_generated/dataModel";
+import type { Id, TableNames } from "../convex/_generated/dataModel";
 import schema from "../convex/schema";
 import { EXAMPLES_TEXT_TITLE } from "../shared/notes-study/example-contexts";
 import {
@@ -184,11 +184,10 @@ test("case subtitles render as headings outside selectable Segments", () => {
 		<TextPresentation
 			sentences={[
 				{
-					sentenceId: "sentences-de" as never,
+					sentenceId: "sentences-de" as Id<"sentences">,
 					position: 0,
 					language: "de",
 					stitchedText: "Deutschland liegt in Mitteleuropa.",
-					sourceText: "Deutschland liegt in Mitteleuropa.",
 					heading: "Deutschland",
 					segments: [
 						{
@@ -200,7 +199,7 @@ test("case subtitles render as headings outside selectable Segments", () => {
 					],
 				},
 			]}
-			focus={{ kind: "None" }}
+			focus={null}
 			selectedSegmentKey={null}
 			onSegmentClick={async () => {}}
 		/>,

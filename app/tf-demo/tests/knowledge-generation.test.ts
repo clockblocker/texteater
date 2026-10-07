@@ -29,6 +29,7 @@ import {
 import type {
 	KnowledgeInput,
 	KnowledgeProducer,
+	KnowledgeProduction,
 } from "../server/knowledgeProduction";
 import {
 	foldedCanonicalForm,
@@ -41,6 +42,8 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+
+type KnowledgeChange = KnowledgeProduction["changes"][number];
 
 const PRODUCTION_EVIDENCE = {
 	request: { definition: null },
@@ -483,10 +486,13 @@ test("a deployment without TF_KNOWLEDGE_PRODUCTION fails a run with the safe mes
 	const previousFlag = process.env.TF_KNOWLEDGE_PRODUCTION;
 	delete process.env.TF_KNOWLEDGE_PRODUCTION;
 	const fetched: string[] = [];
-	globalThis.fetch = (async (url) => {
-		fetched.push(String(url));
-		throw new Error("No model may be called.");
-	}) as typeof fetch;
+	globalThis.fetch = Object.assign(
+		async (url: string | URL | Request) => {
+			fetched.push(String(url));
+			throw new Error("No model may be called.");
+		},
+		{ preconnect: previousFetch.preconnect },
+	);
 	try {
 		await t.action(
 			internal.knowledgeGenerationActions.runKnowledgeGeneration,
@@ -744,21 +750,7 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 	]);
 	expect(await rows(t, "knowledgeChanges")).toEqual([]);
 
-	const request = generationRequestFor(
-		{
-			unitKind: "Reading",
-			lemma: {
-				unitKind: "Lemma",
-				language: "de",
-				family: "Lexeme",
-				kind: "NOUN",
-				canonicalForm: "Bank",
-				coreFeatures: { gender: "Fem" },
-			},
-			emojiDescription: "🏦",
-		},
-		[],
-	);
+	const request = generationRequestFor(BANK_READING, []);
 	// The Knowledge call that creates the Reading proposes its frame and names its plural.
 	expect(request).toEqual({
 		transcription: null,
@@ -768,25 +760,10 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 		plural: null,
 	});
 	expect(
-		generationRequestFor(
-			{
-				unitKind: "Reading",
-				lemma: {
-					unitKind: "Lemma",
-					language: "de",
-					family: "Lexeme",
-					kind: "NOUN",
-					canonicalForm: "Bank",
-					coreFeatures: { gender: "Fem" },
-				},
-				emojiDescription: "🏦",
-			},
-			[],
-			{
-				translationLanguages: ["ru"],
-				topUpOnly: true,
-			},
-		),
+		generationRequestFor(BANK_READING, [], {
+			translationLanguages: ["ru"],
+			topUpOnly: true,
+		}),
 	).toEqual({ translations: { ru: null } });
 	const angst = {
 		unitKind: "Reading",
@@ -1846,23 +1823,7 @@ test("Knowledge settings default enabled and persist independently per visitor",
 		await t.query(api.knowledgeSettings.get, { visitorId: "visitor-2" }),
 	).toEqual(defaults);
 
-	expect(
-		generationRequestFor(
-			{
-				unitKind: "Reading",
-				lemma: {
-					unitKind: "Lemma",
-					language: "de",
-					family: "Lexeme",
-					kind: "NOUN",
-					canonicalForm: "Bank",
-					coreFeatures: { gender: "Fem" },
-				},
-				emojiDescription: "🏦",
-			},
-			[],
-		).definition,
-	).toBeNull();
+	expect(generationRequestFor(BANK_READING, []).definition).toBeNull();
 });
 
 test.each([false, true])(
@@ -1884,27 +1845,28 @@ test.each([false, true])(
 					firstPublication.resolve();
 			},
 		);
-		const definition = {
+		const definition: KnowledgeChange = {
 			kind: "Contribute",
 			aspect: "definition",
 			value: "Ein Geldinstitut.",
-		} as const;
-		const russian = {
+		};
+		const russian: KnowledgeChange = {
 			kind: "Contribute",
 			aspect: "translations",
 			language: "ru",
 			value: ["банк"],
-		} as const;
-		const english = {
-			...russian,
+		};
+		const english: KnowledgeChange = {
+			kind: "Contribute",
+			aspect: "translations",
 			language: "en",
 			value: ["bank"],
-		} as const;
-		const transcription = {
+		};
+		const transcription: KnowledgeChange = {
 			kind: "Contribute",
 			aspect: "transcription",
 			value: "baŋk",
-		} as const;
+		};
 		const committedChanges = () =>
 			t.run((ctx) => ctx.db.query("knowledgeChanges").take(10));
 		let finished = false;

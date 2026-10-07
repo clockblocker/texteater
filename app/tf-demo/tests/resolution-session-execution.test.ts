@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
-
+import type { ResolvedGrammar } from "../server/resolutionGrammar";
 import {
 	executeResolutionSession,
 	type ResolutionSessionAdvance,
@@ -93,7 +94,7 @@ describe("Resolution Session execution", () => {
 						progress.push(
 							observer.committing({
 								readingAvailable: {
-									reading: readingInput() as never,
+									reading: readingInput(),
 									readingResolution: {
 										decision: "New",
 										emojiDescription: "🏦",
@@ -115,9 +116,13 @@ describe("Resolution Session execution", () => {
 								attestationId: "attestation-1",
 								readingId: "reading-1",
 								deduplicated: false,
-								occurrence: {},
+								occurrence: {
+									attestationId: "attestation-1",
+									grammatical: grammaticalInput(),
+									reading: readingInput(),
+								},
 							},
-						} as never;
+						};
 					}),
 				diagnostics: { info: () => {}, error: () => {} },
 			}),
@@ -231,32 +236,61 @@ describe("Resolution Session execution", () => {
 	);
 });
 
-function grammaticalInput(canonicalForm = "Bank") {
-	return {
-		decision: "Resolved" as const,
-		attestation: {
-			unitKind: "Attestation",
-			members: [{ attested: "Banken", orthography: "Standard" as const }],
-			realizationCoverage: "Full" as const,
-			surface: {
-				unitKind: "Surface",
-				normalizedSurface: "Banken",
-				spelling: { kind: "Canonical" as const },
+const bankLemma = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "NOUN",
+	canonicalForm: "Bank",
+	coreFeatures: { gender: "Fem" },
+} as const satisfies Dumling.Lemma<"de">;
 
-				lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
+function grammaticalInput(): ResolvedGrammar {
+	return {
+		decision: "Resolved",
+		language: "de",
+		encounter: {
+			sentence: {
+				id: "segmented-1",
+				language: "de",
+				segments: [
+					{ kind: "ResolvableText", text: "Die" },
+					{ kind: "Whitespace", text: " " },
+					{ kind: "ResolvableText", text: "Banken" },
+					{ kind: "Punctuation", text: "." },
+				],
+			},
+			target: {
+				family: "Lexeme",
+				kind: "NOUN",
+				memberSegmentIndices: [2],
 			},
 		},
-		provider: { raw: "must not leak" },
+		attestation: {
+			unitKind: "Attestation",
+			members: [{ attested: "Banken", orthography: "Standard" }],
+			realizationCoverage: "Full",
+			articleEvidence: null,
+			valencyEvidence: [],
+			surface: {
+				unitKind: "Surface",
+				language: "de",
+				normalizedSurface: "Banken",
+				spelling: { kind: "Canonical" },
+				surfaceFeatures: null,
+				inflectionalFeatures: {
+					case: "Nom",
+					gender: null,
+					number: "Plur",
+				},
+				lemma: bankLemma,
+			},
+		},
 	};
 }
 
-function readingInput(emojiDescription = "🏦", canonicalForm = "Bank") {
-	return {
-		unitKind: "Reading",
-		emojiDescription,
-		lemma: { canonicalForm, family: "Lexeme", kind: "NOUN" },
-		plan: { raw: "must not leak" },
-	};
+function readingInput(): Dumling.Reading<"de"> {
+	return { unitKind: "Reading", lemma: bankLemma, emojiDescription: "🏦" };
 }
 
 const generationEvent = {

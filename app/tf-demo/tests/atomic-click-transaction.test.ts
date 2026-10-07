@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { authoredFor } from "dumcorpus/inventories";
 import { makeSurfaceId } from "dumdict";
+import type * as Dumling from "dumling/types";
 import { internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
@@ -689,6 +690,8 @@ test("an exact authored Reading publishes its authored Knowledge at commit and a
 		},
 	});
 	if (!authored) throw new Error("Expected the authored ich.");
+	if (authored.lemma.family !== "Lexeme" || authored.lemma.kind !== "PRON")
+		throw new Error("Expected the authored ich to be a Lexeme PRON.");
 	const ichSurface = {
 		unitKind: "Surface",
 		language: "de",
@@ -697,7 +700,7 @@ test("an exact authored Reading publishes its authored Knowledge at commit and a
 		surfaceFeatures: null,
 		inflectionalFeatures: null,
 		lemma: authored.lemma,
-	} as const;
+	} satisfies Dumling.Surface<"de">;
 	const commit = bankOccurrenceCommit(selection, guard, "New");
 
 	const result = await t.mutation(internal.persistence.persistResolvedClick, {

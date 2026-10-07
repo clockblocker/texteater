@@ -11,6 +11,7 @@ import {
 	type ClickResolution,
 	selectUnitOnly,
 } from "../server/clickResolution";
+import { emojiDescriptionOf } from "../server/linguisticIdentity";
 import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
@@ -524,10 +525,13 @@ test("a Resolution Session run on a unit intake left Unresolved ends Unresolved 
 
 	const fetches: string[] = [];
 	const previousFetch = globalThis.fetch;
-	globalThis.fetch = (async (url: string | URL | Request) => {
-		fetches.push(String(url));
-		throw new Error("No model call is expected.");
-	}) as typeof fetch;
+	globalThis.fetch = Object.assign(
+		async (url: string | URL | Request) => {
+			fetches.push(String(url));
+			throw new Error("No model call is expected.");
+		},
+		{ preconnect: previousFetch.preconnect },
+	);
 	try {
 		await t.action(internal.orchestration.runResolutionSession, guard);
 	} finally {
@@ -780,7 +784,7 @@ test("judged again, a stale New may reuse the Reading stored since, and commits 
 			async persistResolvedClick(input) {
 				decisions.push([
 					input.readingDecision,
-					input.reading.emojiDescription,
+					emojiDescriptionOf(input.reading),
 					input.readingCandidates,
 				]);
 				commits++;

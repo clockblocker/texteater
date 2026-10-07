@@ -2,7 +2,12 @@ import { expect, test } from "bun:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 
+import type { Id } from "../convex/_generated/dataModel";
 import { SentenceList } from "../src/views/text-view";
+
+// Fixture ids stand in for Convex document ids; the renderer only compares them.
+const SENTENCE_ID = "sentence_1" as Id<"sentences">;
+const ATTESTATION_ID = "attestation_1" as Id<"attestations">;
 
 test("a revealed occurrence selects all and only its discontinuous members", () => {
 	// An arrival selects one member; the rest of the occurrence follows by attestation.
@@ -10,15 +15,14 @@ test("a revealed occurrence selects all and only its discontinuous members", () 
 		createElement(SentenceList, {
 			sentences: [
 				{
-					sentenceId: "sentence_1",
+					sentenceId: SENTENCE_ID,
 					position: 0,
 					language: "de",
 					stitchedText: "eins dazwischen vier",
-					sourceText: "eins dazwischen vier",
 					segments: [
-						segment(1, "eins", { attestationId: "attestation_1" }),
+						segment(1, "eins", { attestationId: ATTESTATION_ID }),
 						segment(2, "dazwischen"),
-						segment(4, "vier", { attestationId: "attestation_1" }),
+						segment(4, "vier", { attestationId: ATTESTATION_ID }),
 					],
 				},
 			],
@@ -38,11 +42,10 @@ test("renders visitor-filtered terminal states with distinct failure color hooks
 		createElement(SentenceList, {
 			sentences: [
 				{
-					sentenceId: "sentence_1",
+					sentenceId: SENTENCE_ID,
 					position: 0,
 					language: "de",
 					stitchedText: "active unresolved failed known",
-					sourceText: "active unresolved failed known",
 					segments: [
 						segment(0, "active", {
 							encountered: true,
@@ -57,13 +60,13 @@ test("renders visitor-filtered terminal states with distinct failure color hooks
 							resolutionState: "PermanentFailure",
 						}),
 						segment(3, "known", {
-							attestationId: "attestation_1",
+							attestationId: ATTESTATION_ID,
 							encountered: true,
 						}),
 					],
 				},
 			],
-			focus: { kind: "None" },
+			focus: null,
 			selectedSegmentKey: null,
 			onSegmentClick: async () => {},
 		}),
@@ -83,18 +86,17 @@ test("selecting one known member colors the complete occurrence", () => {
 		createElement(SentenceList, {
 			sentences: [
 				{
-					sentenceId: "sentence_1",
+					sentenceId: SENTENCE_ID,
 					position: 0,
 					language: "de",
 					stitchedText: "rufe dich an",
-					sourceText: "rufe dich an",
 					segments: [
 						segment(0, "rufe", {
-							attestationId: "attestation_1",
+							attestationId: ATTESTATION_ID,
 						}),
 						segment(1, " dich "),
 						segment(2, "an", {
-							attestationId: "attestation_1",
+							attestationId: ATTESTATION_ID,
 						}),
 					],
 				},
@@ -112,7 +114,7 @@ function segment(
 	index: number,
 	text: string,
 	overrides: Partial<{
-		attestationId: string;
+		attestationId: Id<"attestations">;
 		encountered: boolean;
 		resolutionState: "Active" | "Unresolved" | "PermanentFailure";
 	}> = {},

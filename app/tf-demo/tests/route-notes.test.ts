@@ -222,8 +222,8 @@ test("Lemma pages expose all polysemous Readings and exact-language same-form pe
 		...Array.from({ length: 51 }, () => ({
 			language: "de" as const,
 			canonicalForm: "Bank",
-			family: "Lexeme",
-			kind: "NOUN",
+			family: "Lexeme" as const,
+			kind: "NOUN" as const,
 		})),
 		{
 			language: "he",

@@ -17,6 +17,7 @@ import {
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
 import {
+	emojiDescriptionOf,
 	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey,
@@ -25,6 +26,7 @@ import {
 	createTfDemoOrchestrator,
 	type OrchestrationPersistence,
 } from "../server/linguisticOrchestration";
+import type { ResolvedGrammar } from "../server/resolutionGrammar";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
 
 beforeEach(() => {
@@ -113,7 +115,7 @@ async function insertReading(
 		const readingId = await ctx.db.insert("readings", {
 			readingKey: readingIdentityKey(reading),
 			lemmaId,
-			emojiDescription: reading.emojiDescription,
+			emojiDescription: emojiDescriptionOf(reading),
 		});
 		await ctx.db.insert("readingEntries", { readingId, record });
 		return readingId;
@@ -1352,7 +1354,7 @@ describe("tf-demo Dumdict relation storage", () => {
 		});
 		const decisions: ("New" | "Reuse")[] = [];
 		const citation = surface("gehen");
-		const grammatical = {
+		const grammatical: ResolvedGrammar = {
 			decision: "Resolved",
 			language: "de",
 			encounter: {
@@ -1377,12 +1379,11 @@ describe("tf-demo Dumdict relation storage", () => {
 				members: [{ attested: "gehen", orthography: "Standard" }],
 				realizationCoverage: "Full",
 				surface: citation,
+				expletiveEvidence: null,
+				valencyEvidence: [],
 			},
-		} as const;
+		};
 		const persistence: OrchestrationPersistence = {
-			async persistSubmittedText() {
-				throw new Error("Unexpected submission.");
-			},
 			async loadResolutionContext() {
 				return {
 					reusable: null,
@@ -1467,8 +1468,10 @@ describe("tf-demo Dumdict relation storage", () => {
 describe("Reading Note relation neighbourhood caps", () => {
 	const verb = (canonicalForm: string) =>
 		({ ...gehenLemma, canonicalForm }) as const;
-	const readingOf = (lemma: Dumling.Lemma<"de">, emojiDescription: string) =>
-		({ unitKind: "Reading", lemma, emojiDescription }) as const;
+	const readingOf = (
+		lemma: Dumling.Lemma<"de", "Lexeme", "VERB">,
+		emojiDescription: string,
+	) => ({ unitKind: "Reading", lemma, emojiDescription }) as const;
 
 	test("a target Lemma with more Readings than the cap truncates the note instead of throwing", async () => {
 		const t = createTestConvex();

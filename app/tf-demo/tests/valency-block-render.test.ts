@@ -23,8 +23,16 @@ const verb = (canonicalForm: string, hasSepPrefix: string | null): Lemma => ({
 	canonicalForm,
 	coreFeatures: { lexicallyReflexive: null, hasSepPrefix },
 });
-const adp = (canonicalForm: string) => ({
-	unitKind: "Lemma" as const,
+type GermanPreposition = Extract<
+	Extract<
+		ValencyFrame[number]["complements"][number],
+		{ readonly kind: "Preposition" }
+	>["preposition"],
+	{ readonly language: "de" }
+>;
+
+const adp = (canonicalForm: string): GermanPreposition => ({
+	unitKind: "Lemma",
 	language: "de",
 	family: "Lexeme",
 	kind: "ADP",

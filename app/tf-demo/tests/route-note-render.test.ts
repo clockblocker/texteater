@@ -3,6 +3,7 @@ import type { FunctionReturnType } from "convex/server";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import type { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import { renderNote } from "../src/notes";
 import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 
@@ -206,7 +207,7 @@ test("Surface capability objects remain accepted at the public seam", () => {
 			noteData: surface,
 			capabilities: {
 				presentation: "Card",
-				activeAnalysisKey: "surface-verb",
+				activeAnalysisKey: "surface-verb" as Id<"surfaces">,
 				follow: () => {},
 			},
 		}),
@@ -216,7 +217,7 @@ test("Surface capability objects remain accepted at the public seam", () => {
 			noteData: surface,
 			capabilities: {
 				presentation: "Sheet",
-				activeAnalysisKey: "surface-noun",
+				activeAnalysisKey: "surface-noun" as Id<"surfaces">,
 				follow: () => {},
 			},
 		}),

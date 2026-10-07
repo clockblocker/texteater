@@ -22,6 +22,7 @@ import {
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
+import { exportedArgs } from "./support/convexRuntimeExports";
 
 beforeEach(() => {
 	// Scheduled work, such as Definition Text materialization, never runs here.
@@ -293,7 +294,7 @@ describe("Shadow backfills and presentation", () => {
 			auditPendingShadowReferencesPage,
 			auditStructuralShadowReferencesPage,
 		]) {
-			expect(registered.exportArgs()).toContain("paginationOpts");
+			expect(exportedArgs(registered)).toContain("paginationOpts");
 		}
 	});
 

@@ -4,6 +4,7 @@ import {
 	DEFAULT_DE_READING_LANGUAGE_LAYOUT,
 	type ReadingBlockKind,
 	type ReadingBlockRoute,
+	type SerializedReadingBlockLayout,
 } from "../shared/reading-block-layout";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
 
@@ -49,14 +50,14 @@ function layoutRows(
 	return t.run((ctx) => ctx.db.query(table).collect());
 }
 
-const LANGUAGE_ORDER: readonly ReadingBlockKind[] = [
+const LANGUAGE_ORDER: ReadingBlockKind[] = [
 	"Definition",
 	"Relations",
 	"Translations",
 	"Valency",
 	"PersonalAnnotation",
 ];
-const LOCAL_VERB_ORDER: readonly ReadingBlockKind[] = [
+const LOCAL_VERB_ORDER: ReadingBlockKind[] = [
 	"Translations",
 	"Definition",
 	"Valency",
@@ -68,13 +69,13 @@ describe("Reading Block layout persistence", () => {
 	test("returns safe catalog defaults without materializing visitor state", async () => {
 		const t = createTestConvex();
 
-		expect(
+		expect<SerializedReadingBlockLayout>(
 			await t.query(getLanguage, {
 				visitorId: VISITOR_ID,
 				targetLanguage: "de",
 			}),
 		).toEqual(DEFAULT_DE_READING_LANGUAGE_LAYOUT);
-		expect(
+		expect<SerializedReadingBlockLayout>(
 			await t.query(getFamilyKind, {
 				visitorId: VISITOR_ID,
 				route: VERB_ROUTE,
@@ -180,7 +181,7 @@ describe("Reading Block layout persistence", () => {
 		});
 		expect(await layoutRows(t, "readingLanguageLayouts")).toEqual([]);
 		expect(await layoutRows(t, "readingFamilyKindLayouts")).toHaveLength(1);
-		expect(
+		expect<SerializedReadingBlockLayout>(
 			await t.query(getFamilyKind, {
 				visitorId: VISITOR_ID,
 				route: LOCUTION_ROUTE,
@@ -240,7 +241,7 @@ describe("Reading Block layout persistence", () => {
 			blockKind: "Relations",
 			visible: false,
 		});
-		expect(
+		expect<SerializedReadingBlockLayout>(
 			await t.query(getFamilyKind, {
 				visitorId: VISITOR_ID,
 				route: { ...VERB_ROUTE, kind: "NOT_A_KIND" },

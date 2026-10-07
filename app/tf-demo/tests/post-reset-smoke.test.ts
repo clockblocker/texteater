@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
-import { getFunctionName } from "convex/server";
+import {
+	type DefaultFunctionArgs,
+	type FunctionReference,
+	getFunctionName,
+} from "convex/server";
 import { api, internal } from "../convex/_generated/api";
-import type { Id, TableNames } from "../convex/_generated/dataModel";
+import type { Doc, Id, TableNames } from "../convex/_generated/dataModel";
 import type { ActionCtx, MutationCtx } from "../convex/_generated/server";
 import { resetDemoTableNames, STRIP_SEGMENT_BATCH } from "../convex/demoReset";
 import {
@@ -98,10 +102,10 @@ async function readingIdFor(
 	return row._id;
 }
 
-async function tableRows(
+async function tableRows<Table extends (typeof resetDemoTableNames)[number]>(
 	t: TestConvexDb,
-	table: (typeof resetDemoTableNames)[number],
-) {
+	table: Table,
+): Promise<Doc<Table>[]> {
 	return t.run((ctx) => ctx.db.query(table).collect());
 }
 
@@ -566,7 +570,10 @@ describe("tf-demo post-reset contract", () => {
 		const result = await stripTextAnalysisGraph(
 			{
 				...context,
-				runMutation: (reference: never, args: never) => {
+				runMutation: (
+					reference: FunctionReference<"mutation", "internal">,
+					args: DefaultFunctionArgs,
+				) => {
 					if (
 						getFunctionName(reference) ===
 						getFunctionName(
@@ -633,7 +640,8 @@ describe("tf-demo post-reset contract", () => {
 
 	test("the bounded reset inventory stays complete as the schema changes", async () => {
 		const schemaTableNames = Object.keys(tfDemoSchema.tables).sort();
-		expect([...resetDemoTableNames].sort()).toEqual(schemaTableNames);
+		const resetTableNames: readonly string[] = resetDemoTableNames;
+		expect([...resetTableNames].sort()).toEqual(schemaTableNames);
 
 		const t = createTestConvex();
 		const { sentenceIds } = await submitText(t, [["Banken"]]);

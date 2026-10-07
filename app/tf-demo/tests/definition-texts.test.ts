@@ -12,7 +12,10 @@ import {
 	syncDefinitionText,
 } from "../convex/model/definitionTexts";
 import { listLibraryTexts } from "../convex/texts";
-import { foldedCanonicalForm } from "../server/linguisticIdentity";
+import {
+	emojiDescriptionOf,
+	foldedCanonicalForm,
+} from "../server/linguisticIdentity";
 import { unresolvedUnits } from "../server/storedSegments";
 import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
 import { textTitle } from "../shared/text-title";
@@ -544,6 +547,12 @@ test(
 		await t.mutation(playgroundFixtures.load, {});
 		const [defined, cited] = NOTE_STUDY_DATABASE;
 		if (!defined || !cited) throw new Error("Fixtures need two units.");
+		const definition = defined.knowledge.definition;
+		if (definition === undefined)
+			throw new Error("The defined unit needs a definition.");
+		const definedEmojiDescription = emojiDescriptionOf(defined.reading);
+		if (definedEmojiDescription === undefined)
+			throw new Error("The defined unit needs an Emoji Description.");
 
 		const seeded = await t.run(async (ctx) => {
 			const readingOf = async (readingKey: string) => {
@@ -565,7 +574,8 @@ test(
 				)
 				.unique();
 			const sentenceId = definitionRow?.sentenceId;
-			if (!sentenceId) throw new Error("No Definition Text.");
+			const textId = definitionRow?.textId;
+			if (!sentenceId || !textId) throw new Error("No Definition Text.");
 			const segments = (
 				await ctx.db
 					.query("segments")
@@ -605,7 +615,7 @@ test(
 				await ctx.db.insert("visitorClicks", {
 					requestId: `request:${segment._id}`,
 					visitorId: "visitor-1",
-					textId: definitionRow.textId,
+					textId,
 					sentenceId,
 					segmentId: segment._id,
 					attestationId,
@@ -628,7 +638,7 @@ test(
 			);
 			return {
 				definedReadingId: definedReading._id,
-				definitionTextId: definitionRow.textId,
+				definitionTextId: textId,
 				citedReadingId: citedReading._id,
 				citedAttestation,
 				selfAttestation,
@@ -673,7 +683,7 @@ test(
 		expect(context?.origin).toEqual({
 			kind: "Definition",
 			readingId: seeded.definedReadingId,
-			emojiDescription: defined.reading.emojiDescription,
+			emojiDescription: definedEmojiDescription,
 			canonicalForm: defined.reading.lemma.canonicalForm,
 		});
 		// Go to source pushes the Definition Text as a Cover, like any Text.
@@ -681,7 +691,7 @@ test(
 			kind: "Text",
 			textId: seeded.definitionTextId,
 			focusAttestationId: seeded.citedAttestation,
-			title: textTitle({ sourceText: defined.knowledge.definition }),
+			title: textTitle({ sourceText: definition }),
 		});
 		expect(context?.segments.length).toBeGreaterThan(0);
 		expect(context?.memberSegmentIndices).toEqual([

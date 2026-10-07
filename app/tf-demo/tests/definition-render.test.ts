@@ -3,6 +3,7 @@ import type { FunctionReturnType } from "convex/server";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import type { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
 
@@ -17,8 +18,13 @@ type ReadingPresentationCapabilities = NonNullable<
 	>["capabilities"]
 >;
 
-const SENTENCE = {
-	sentenceId: "sentences-definition",
+type DefinitionSentence = Extract<
+	ReadingNote["definitionText"],
+	{ readonly state: "Ready" }
+>["sentence"];
+
+const SENTENCE: DefinitionSentence = {
+	sentenceId: "sentences-definition" as Id<"sentences">,
 	position: 0,
 	language: "de",
 	stitchedText: "Ein Haus ist ein Haus.",
@@ -29,7 +35,7 @@ const SENTENCE = {
 			index: 2,
 			kind: "ResolvableText",
 			text: "Haus",
-			attestationId: "attestations-1",
+			attestationId: "attestations-1" as Id<"attestations">,
 			encountered: true,
 		},
 		{ index: 3, kind: "Whitespace", text: " ", encountered: false },
@@ -40,7 +46,7 @@ const SENTENCE = {
 		{ index: 8, kind: "ResolvableText", text: "Haus", encountered: false },
 		{ index: 9, kind: "Punctuation", text: ".", encountered: false },
 	],
-} as const;
+};
 
 function render(
 	definitionText: ReadingNote["definitionText"],

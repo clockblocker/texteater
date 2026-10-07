@@ -39,9 +39,9 @@ const lines = [
 ] as const;
 for (const [family, canonicalForm, expected] of lines)
 	test(`the ADP Valency Block of ${canonicalForm} reads ${expected.join(" | ")}`, () => {
-		expect(valencyLines(renderAdposition(family, canonicalForm))).toEqual(
-			expected,
-		);
+		expect(valencyLines(renderAdposition(family, canonicalForm))).toEqual([
+			...expected,
+		]);
 	});
 
 test("an adposition the ADP Case Table does not list has no Valency Block", () => {

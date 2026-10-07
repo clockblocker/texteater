@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
+import type * as Dumling from "dumling/types";
+import type * as Dumrel from "dumrel/types";
 import { renderToStaticMarkup } from "react-dom/server";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
@@ -31,6 +33,7 @@ import {
 	submitText,
 	type TestConvexDb,
 } from "./support/convex";
+import { exportedArgs, exportedReturns } from "./support/convexRuntimeExports";
 
 beforeEach(() => {
 	// Scheduled work, such as Definition Text materialization, never runs here.
@@ -41,7 +44,7 @@ afterEach(() => {
 	jest.useRealTimers();
 });
 
-type ReadingValue = Parameters<typeof readingIdentityKey>[0];
+type ReadingValue = Dumling.Reading<"de", "Lexeme">;
 
 const bankLemma = {
 	unitKind: "Lemma",
@@ -200,7 +203,6 @@ test("projects foundational Reading and unfiltered Knowledge without display sen
 	const reading = projectReadingValue(
 		{ emojiDescription: "🏃" },
 		{
-			unitKind: "Lemma",
 			language: "de",
 			family: "Lexeme",
 			kind: "VERB",
@@ -353,7 +355,7 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 			lexicallyReflexive: null,
 		},
 	} as const;
-	const valency = [
+	const valency: Dumrel.ValencyFrame = [
 		{
 			status: "Optional",
 			complements: [
@@ -396,7 +398,13 @@ test("a stored Valency Frame reaches the Reading Note and renders its Valency Bl
 
 test("the Reading Note carries the per-Reading aspects Knowledge production writes", async () => {
 	const t = createTestConvex();
-	const cases = [
+	const cases: readonly {
+		readonly reading: ReadingValue;
+		readonly knowledge: Pick<
+			Dumrel.ReadingKnowledge,
+			"conjugationClass" | "plural" | "formulaRole"
+		>;
+	}[] = [
 		{
 			reading: {
 				unitKind: "Reading",
@@ -428,7 +436,7 @@ test("the Reading Note carries the per-Reading aspects Knowledge production writ
 			},
 			knowledge: { formulaRole: "Thanks" },
 		},
-	] as const;
+	];
 	for (const { reading: value, knowledge } of cases) {
 		const reading = await insertReading(t, value);
 		await t.run(async (ctx) => {
@@ -461,13 +469,16 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 			canonicalForm,
 			coreFeatures: { hasSepPrefix, lexicallyReflexive: null },
 		}) as const;
-	const subject = {
+	const subject: Dumrel.ValencySlot = {
 		status: "Required",
 		complements: [
 			{ kind: "Case", governedCase: "Nom", referent: "Someone" },
 		],
 	};
-	const frames = [
+	const frames: readonly {
+		readonly lemma: ReturnType<typeof verb>;
+		readonly valency: Dumrel.ValencyFrame;
+	}[] = [
 		{
 			lemma: verb("reden"),
 			valency: [
@@ -589,12 +600,12 @@ test("the Reading Note carries Slot alternatives and every German complement kin
 });
 
 test("note and text queries expose target-specific interfaces", () => {
-	const textArgs = getTextView.exportArgs();
-	const textReturns = getTextView.exportReturns();
-	const focusArgs = occurrenceFocus.exportArgs();
-	const focusReturns = occurrenceFocus.exportReturns();
-	const noteArgs = getReadingNote.exportArgs();
-	const noteReturns = getReadingNote.exportReturns();
+	const textArgs = exportedArgs(getTextView);
+	const textReturns = exportedReturns(getTextView);
+	const focusArgs = exportedArgs(occurrenceFocus);
+	const focusReturns = exportedReturns(occurrenceFocus);
+	const noteArgs = exportedArgs(getReadingNote);
+	const noteReturns = exportedReturns(getReadingNote);
 
 	expect(textArgs).toContain('"textId"');
 	expect(textArgs).not.toContain('"focusAttestationId"');
@@ -604,9 +615,9 @@ test("note and text queries expose target-specific interfaces", () => {
 	expect(noteArgs).toContain('"readingId"');
 	// Paging travels through its own query, so the body never takes a cursor.
 	expect(noteArgs).not.toContain('"contextCursor"');
-	expect(getSourceContexts.exportArgs()).toContain('"cursor"');
-	expect(getSourceContexts.exportReturns()).toContain('"sentenceSnippet"');
-	expect(getSourceContexts.exportReturns()).not.toContain(
+	expect(exportedArgs(getSourceContexts)).toContain('"cursor"');
+	expect(exportedReturns(getSourceContexts)).toContain('"sentenceSnippet"');
+	expect(exportedReturns(getSourceContexts)).not.toContain(
 		'"personalAnnotation"',
 	);
 	expect(noteArgs).toContain('"visitorId"');

@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
-
+import type { Id } from "../../../../convex/_generated/dataModel";
 import type { RegisteredBlockMap } from "../../renderer-registry";
-import type { NoteData } from "./data";
+import type { NoteDataFor } from "./data";
 import { renderUniversalNoteBody, renderUniversalNoteHeading } from "./render";
 import { resolveRenderPlan } from "./render-plan";
 
@@ -227,27 +227,41 @@ test("isolates a failing block while preserving subsequent registered blocks", (
 	expect(markup).toContain("relations survive");
 });
 
-function readingFixture(): NoteData {
+function readingFixture(): NoteDataFor<"Reading"> {
 	return {
 		kind: "Reading",
-		target: { kind: "Reading", readingId: "reading-1" },
+		target: { kind: "Reading", readingId: "reading-1" as Id<"readings"> },
 		reading: {
+			unitKind: "Reading",
+			ownerKind: "Reading",
 			ownerKey: "reading-1",
+			readingId: "reading-1" as Id<"readings">,
 			emojiDescription: "🏃",
 			lemma: {
+				unitKind: "Lemma",
+				ownerKind: "Lemma",
+				ownerKey: "lemma-1",
+				lemmaId: "lemma-1" as Id<"lemmas">,
 				language: "de",
 				family: "Lexeme",
 				kind: "NOUN",
 				canonicalForm: "laufen",
-				coreFeatures: {},
+				coreFeatures: { gender: "Neut" },
 			},
 		},
+		knowledgeState: { status: "Full", activity: "Idle" },
+		personalAnnotation: "",
 		knowledge: {},
+		knowledgeUpdatedAt: null,
+		definitionText: { state: "Absent" },
 		relations: [],
 		relationsTruncated: false,
+		grammaticalAlternatives: [],
 		pendingRelations: [],
-		sourceContexts: { page: [], isDone: true },
-	} as NoteData;
+		structuralReferences: [],
+		participleLinks: [],
+		sourceContexts: { page: [], continueCursor: "", isDone: true },
+	};
 }
 
 function readingCapabilities() {

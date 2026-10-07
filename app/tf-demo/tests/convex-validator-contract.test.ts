@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import type { GenericValidator } from "convex/values";
 import { directSemanticRelationValues } from "dumrel";
 
 const semanticRelationValues = [
@@ -45,19 +46,17 @@ import { readingNoteValidator } from "../convex/modules/notes/readingNote";
 import { routeNoteValidator } from "../convex/modules/notes/routeNotes";
 import { shadowNoteValidator } from "../convex/modules/notes/shadowNote";
 import { get as getRouteNote } from "../convex/routeNotes";
+import { exportedArgs, validatorJson } from "./support/convexRuntimeExports";
 
-function fieldType(
-	validator: { json: unknown },
-	field: string,
-): Record<string, unknown> {
-	const json = validator.json as {
-		value: Record<string, { fieldType: Record<string, unknown> }>;
+function fieldType(validator: GenericValidator, field: string): unknown {
+	const json = validatorJson(validator) as {
+		value: Record<string, { fieldType: unknown }>;
 	};
 	return json.value[field]?.fieldType ?? {};
 }
 
-function literalValues(validator: { json: unknown }): unknown[] {
-	const json = validator.json as {
+function literalValues(validator: GenericValidator): unknown[] {
+	const json = validatorJson(validator) as {
 		type?: string;
 		value?: unknown | Array<{ type?: string; value?: unknown }>;
 	};
@@ -69,8 +68,8 @@ function literalValues(validator: { json: unknown }): unknown[] {
 }
 
 /** The `kind` literal of each object branch of a union validator. */
-function objectKinds(validator: { json: unknown }): unknown[] {
-	const json = validator.json as {
+function objectKinds(validator: GenericValidator): unknown[] {
+	const json = validatorJson(validator) as {
 		type?: string;
 		value?: Array<{
 			type?: string;
@@ -85,6 +84,7 @@ function objectKinds(validator: { json: unknown }): unknown[] {
 
 test("Dumdict plans validate a discriminated change union", () => {
 	const changes = fieldType(dictionaryPlanValidator, "changes") as {
+		type?: string;
 		value?: { type?: string };
 	};
 	expect(changes.type).toBe("array");
@@ -106,9 +106,11 @@ test("Convex validators describe compact storage contracts", () => {
 		realizationCoverageValues,
 	);
 	expect(objectKinds(surfaceSpellingValidator)).toEqual(surfaceSpellingKinds);
-	expect(grundformValidator.json.type).toBe("union");
+	expect((validatorJson(grundformValidator) as { type?: string }).type).toBe(
+		"union",
+	);
 	expect(fieldType(segmentInputValidator, "kind")).toEqual(
-		segmentKindValidator.json,
+		validatorJson(segmentKindValidator),
 	);
 	expect(fieldType(segmentInputValidator, "text")).toEqual({
 		type: "string",
@@ -119,7 +121,7 @@ test("Convex validators describe compact storage contracts", () => {
 });
 
 test("Presented Dumling validators cover the exact stable presentation branches", () => {
-	const featureJson = presentedFeatureSetValidator.json as {
+	const featureJson = validatorJson(presentedFeatureSetValidator) as {
 		type: string;
 		keys: Record<string, unknown>;
 	};
@@ -136,7 +138,7 @@ test("Presented Dumling validators cover the exact stable presentation branches"
 	expect(Object.keys(projected.coreFeatures)).toEqual(["gender"]);
 
 	expect(fieldType(presentedLemmaValidator, "coreFeatures")).toEqual(
-		presentedFeatureSetValidator.json,
+		validatorJson(presentedFeatureSetValidator),
 	);
 	const surfaceFeatures = fieldType(
 		presentedSurfaceValidator,
@@ -151,18 +153,18 @@ test("Presented Dumling validators cover the exact stable presentation branches"
 	]);
 	expect(surfaceFeatures.value?.historicalStatus?.optional).not.toBe(true);
 	expect(fieldType(presentedSurfaceValidator, "lemma")).toEqual(
-		presentedLemmaValidator.json,
+		validatorJson(presentedLemmaValidator),
 	);
 	expect(
 		fieldType(presentedSurfaceValidator, "inflectionalFeatures"),
-	).toEqual(presentedFeatureSetValidator.json);
+	).toEqual(validatorJson(presentedFeatureSetValidator));
 	expect(fieldType(presentedAttestationValidator, "surface")).toEqual(
-		presentedSurfaceValidator.json,
+		validatorJson(presentedSurfaceValidator),
 	);
 });
 
 test("Note validators expose five exact kinds and keep presented entities nested", () => {
-	const routeUnion = routeNoteValidator.json as {
+	const routeUnion = validatorJson(routeNoteValidator) as {
 		type: string;
 		value: Array<{
 			type: string;
@@ -233,7 +235,7 @@ test("Note validators expose five exact kinds and keep presented entities nested
 });
 
 test("Route Note query locators retain table-specific Convex IDs", () => {
-	const args = getRouteNote.exportArgs();
+	const args = exportedArgs(getRouteNote);
 	expect(args).toContain('"attestationId"');
 	expect(args).toContain('"tableName":"attestations"');
 	expect(args).toContain('"lemmaId"');
@@ -283,7 +285,7 @@ test("operational application modules use package-owned lightweight parsers", as
 
 test("Dumdict's Convex envelope stays compact", () => {
 	expect(
-		JSON.stringify(dumdictPlannedChangeValidator.json).length,
+		JSON.stringify(validatorJson(dumdictPlannedChangeValidator)).length,
 	).toBeLessThan(10_000);
 });
 

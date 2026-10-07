@@ -3,6 +3,7 @@ import type { FunctionReturnType } from "convex/server";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import { segmentGroups } from "../src/views/reader-sentence";
 import { SentenceList } from "../src/views/text-view";
 
@@ -13,6 +14,10 @@ type Unit = NonNullable<SentenceSegmentView["unit"]>;
 
 const verb: Unit["route"] = { language: "de", family: "Lexeme", kind: "VERB" };
 const noun: Unit["route"] = { language: "de", family: "Lexeme", kind: "NOUN" };
+
+// Fixture ids stand in for Convex document ids; grouping only compares them.
+const SENTENCE_ID = "sentence_1" as Id<"sentences">;
+const PLAN_ATTESTATION_ID = "attestation_plan" as Id<"attestations">;
 
 const words = [
 	"Sie",
@@ -38,7 +43,7 @@ const units: readonly Unit[] = [
 
 /** `Sie gibt den alten Plan auf.` as intake stores it: `gibt … auf` holds `den … Plan`. */
 function sentenceSegments(
-	attested: Readonly<Record<number, string>> = {},
+	attested: Readonly<Record<number, Id<"attestations">>> = {},
 ): SentenceSegmentView[] {
 	return words.map((text, index): SentenceSegmentView => {
 		const unit = units.find(({ segments }) => segments.includes(index));
@@ -75,7 +80,7 @@ test("every member of a discontinuous unit maps to the whole unit, and nested un
 
 test("an attested Segment groups by its occurrence, and its unit keeps the rest", () => {
 	const groups = segmentGroups(
-		sentenceSegments({ 8: "attestation_plan", 6: "attestation_plan" }),
+		sentenceSegments({ 8: PLAN_ATTESTATION_ID, 6: PLAN_ATTESTATION_ID }),
 	);
 
 	expect(groups.get(6)).toEqual([6, 8]);
@@ -99,11 +104,10 @@ test("selecting one member of an unattested unit marks the whole unit selected",
 		createElement(SentenceList, {
 			sentences: [
 				{
-					sentenceId: "sentence_1",
+					sentenceId: SENTENCE_ID,
 					position: 0,
 					language: "de",
 					stitchedText: "Sie gibt den alten Plan auf.",
-					sourceText: "Sie gibt den alten Plan auf.",
 					segments: sentenceSegments(),
 				},
 			],
@@ -135,11 +139,10 @@ test("a selected unit keeps its look on the member whose click came back Unresol
 		createElement(SentenceList, {
 			sentences: [
 				{
-					sentenceId: "sentence_1",
+					sentenceId: SENTENCE_ID,
 					position: 0,
 					language: "de",
 					stitchedText: "Sie gibt den alten Plan auf.",
-					sourceText: "Sie gibt den alten Plan auf.",
 					segments,
 				},
 			],
@@ -157,11 +160,10 @@ test("a Sentence intake could not segment shows as not segmented, each word with
 		createElement(SentenceList, {
 			sentences: [
 				{
-					sentenceId: "sentence_1",
+					sentenceId: SENTENCE_ID,
 					position: 0,
 					language: "de",
 					stitchedText: "Sie gibt den alten Plan auf.",
-					sourceText: "Sie gibt den alten Plan auf.",
 					segmentationFailed: true,
 					segments: sentenceSegments().map(
 						({ unit: _unit, ...segment }) => segment,

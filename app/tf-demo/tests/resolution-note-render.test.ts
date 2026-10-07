@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import type { Id } from "../convex/_generated/dataModel";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
 import { renderNote } from "../src/notes";
 import {
@@ -226,35 +227,40 @@ test("a completed Resolution converges the deck to canonical Notes", () => {
 });
 
 test("a stored Resolution opens the same four canonical Card subjects", () => {
+	// Branded Convex ids; the deck only passes them through.
+	const readingId = "reading-1" as Id<"readings">;
+	const lemmaId = "lemma-1" as Id<"lemmas">;
+	const surfaceId = "surface-1" as Id<"surfaces">;
+	const attestationId = "attestation-1" as Id<"attestations">;
 	const canonical = {
-		readingId: "reading-1",
-		lemmaId: "lemma-1",
+		readingId,
+		lemmaId,
 		surfaceLanguage: "de" as const,
 		normalizedSurface: "Banken",
-		surfaceId: "surface-1",
-		attestationId: "attestation-1",
+		surfaceId,
+		attestationId,
 	};
 	const cards = segmentSelectionDeckCards("request-available", {
 		kind: "Available",
-		target: { kind: "Reading", readingId: "reading-1" },
+		target: { kind: "Reading", readingId },
 		canonical,
 	});
 
 	expect(cards.map(({ target }) => target)).toEqual([
-		{ kind: "Reading", readingId: "reading-1" },
-		{ kind: "Lemma", lemmaId: "lemma-1" },
+		{ kind: "Reading", readingId },
+		{ kind: "Lemma", lemmaId },
 		{ kind: "Surface", language: "de", normalizedSurface: "Banken" },
-		{ kind: "Attestation", attestationId: "attestation-1" },
+		{ kind: "Attestation", attestationId },
 	]);
 	expect(cards[2]?.presentationContext).toEqual({
-		activeAnalysisKey: "surface-1",
+		activeAnalysisKey: surfaceId,
 	});
 
 	const routeCards = segmentSelectionDeckCards("request-route", {
 		kind: "Available",
 		target: {
 			kind: "Attestation",
-			attestationId: "attestation-1",
+			attestationId,
 		},
 		canonical,
 	});
@@ -266,7 +272,7 @@ test("a stored Resolution opens the same four canonical Card subjects", () => {
 	]);
 	expect(routeCards[0]?.target).toEqual({
 		kind: "Attestation",
-		attestationId: "attestation-1",
+		attestationId,
 	});
 
 	// A repeat click joins the running session, whose requestId differs.
@@ -512,7 +518,7 @@ test("a unit selection settles on one Unit Card with no step left loading", () =
 		route: {
 			language: "de" as const,
 			family: "Lexeme" as const,
-			kind: "NOUN",
+			kind: "NOUN" as const,
 		},
 	};
 	const base = {

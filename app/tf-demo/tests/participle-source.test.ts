@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import { api, internal } from "../convex/_generated/api";
 import { RELATION_PUBLICATION_FINGERPRINTS } from "../convex/model/generatedKnowledgeContainment";
 import {
+	emojiDescriptionOf,
 	foldedCanonicalForm,
 	lemmaIdentityKey,
 	readingIdentityKey,
@@ -193,7 +194,7 @@ function storeVerb(t: TestConvexDb, reading: Dumling.Reading<"de">) {
 		const readingId = await ctx.db.insert("readings", {
 			readingKey: readingIdentityKey(reading),
 			lemmaId,
-			emojiDescription: reading.emojiDescription,
+			emojiDescription: emojiDescriptionOf(reading),
 		});
 		return { lemmaId, readingId };
 	});
