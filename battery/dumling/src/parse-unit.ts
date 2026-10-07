@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import {
 	type CompiledValidationRegistry,
 	ParsingError,
@@ -14,9 +15,7 @@ type ParseResult<T> =
 
 const registry: CompiledValidationRegistry = validationRegistry;
 function object(value: unknown): Record<string, unknown> | undefined {
-	return value !== null && typeof value === "object" && !Array.isArray(value)
-		? (value as Record<string, unknown>)
-		: undefined;
+	return isRecord(value) ? value : undefined;
 }
 function failure(
 	path: (string | number)[],
