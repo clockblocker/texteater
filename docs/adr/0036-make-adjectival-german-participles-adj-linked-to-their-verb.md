@@ -125,5 +125,9 @@ Participle Source keeps the adjective's grammar on the adjective and gives
 the learner the verb one link away. The cost is one ADJ Lemma per participle
 a learner meets as an adjective, and a Knowledge aspect a host must honor.
 
-The golden set is the `target-classification/de/high-level-whole-unit:participle-boundary`
-slice of the Canonical Classification Corpus.
+The golden cases are dumcorpus records under `battery/dumcorpus/records/de/`:
+the records listed by the Rules that cite this ADR, among them
+`de/verbal-participle`, `de/sein-perfect-or-copula`,
+`de/participial-adjective` and `de/participle-source-verb-and-meaning`, and
+the records whose `legacy` cases have ids starting
+`target-de-participle-boundary-`.
