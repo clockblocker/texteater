@@ -31,7 +31,10 @@ import {
 	backfillPendingShadowReferencesPage,
 	backfillStructuralShadowReferencesPage,
 } from "../convex/shadows";
-import { foldedCanonicalForm } from "../server/linguisticIdentity";
+import {
+	foldedCanonicalForm,
+	lemmaIdentityKey,
+} from "../server/linguisticIdentity";
 import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
 import {
@@ -142,19 +145,26 @@ function insertPendingRelation(
 	});
 }
 
+/** The German VERB Lemma `laufen`, with no separable prefix. */
+const laufen = {
+	unitKind: "Lemma",
+	language: "de",
+	family: "Lexeme",
+	kind: "VERB",
+	canonicalForm: "laufen",
+	coreFeatures: { hasSepPrefix: null, lexicallyReflexive: null },
+} as const;
+
 /** A dictionary Lemma and its Reading, owner of `readingKey`. */
 async function insertSourceReading(
 	ctx: MutationCtx,
 	readingKey = "reading-source",
 ) {
+	const { unitKind: _, ...lemma } = laufen;
 	const lemmaId = await ctx.db.insert("lemmas", {
-		lemmaKey: `lemma:${readingKey}`,
-		language: "de",
-		family: "Lexeme",
-		kind: "VERB",
-		canonicalForm: "laufen",
+		...lemma,
+		lemmaKey: lemmaIdentityKey(laufen),
 		foldedCanonicalForm: "laufen",
-		coreFeatures: {},
 	});
 	return ctx.db.insert("readings", {
 		readingKey,
@@ -486,14 +496,6 @@ describe("Shadow backfills and presentation", () => {
 		);
 		const { readingId, malformedShadowId } = await t.run(async (ctx) => {
 			const readingId = await insertSourceReading(ctx);
-			const reading = await ctx.db.get(readingId);
-			if (!reading) throw new Error("Expected the source Reading.");
-			// A Reading Note parses its Lemma, so it needs real Core Features.
-			await ctx.db.patch(reading.lemmaId, {
-				canonicalForm: "aufpassen",
-				foldedCanonicalForm: "aufpassen",
-				coreFeatures: { hasSepPrefix: "auf", lexicallyReflexive: null },
-			});
 			const noun = (await ctx.db.query("shadows").collect()).find(
 				({ kind }) => kind === "NOUN",
 			);
