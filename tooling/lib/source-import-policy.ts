@@ -435,6 +435,17 @@ function workspaceForPath(
 	);
 }
 
+/** Whether an issue involving these workspaces belongs to the scope's report. */
+function inScope(
+	scope: string | undefined,
+	...workspaces: (Workspace | undefined)[]
+): boolean {
+	return (
+		scope === undefined ||
+		workspaces.some((workspace) => workspace?.relativePath === scope)
+	);
+}
+
 function importedWorkspace(
 	specifier: string,
 	workspaces: Workspace[],
@@ -625,6 +636,7 @@ const toolingReaches: readonly {
  */
 async function validateToolingImports(options: {
 	repositoryRoot: string;
+	scope?: string;
 	workspaces: Workspace[];
 }): Promise<ImportPolicyIssue[]> {
 	const toolingDir = join(options.repositoryRoot, "tooling");
@@ -639,7 +651,7 @@ async function validateToolingImports(options: {
 			if (specifier.startsWith(".") || isAbsolute(specifier)) {
 				const resolved = resolveFile(resolve(dirname(file), specifier));
 				const target = workspaceForPath(resolved, options.workspaces);
-				if (!target) continue;
+				if (!target || !inScope(options.scope, target)) continue;
 				const targetPath = repositoryPath(resolved);
 				if (
 					!toolingReaches.some(
@@ -656,7 +668,7 @@ async function validateToolingImports(options: {
 				continue;
 			}
 			const target = importedWorkspace(specifier, options.workspaces);
-			if (!target) continue;
+			if (!target || !inScope(options.scope, target)) continue;
 			const message = exportIssue(
 				options.repositoryRoot,
 				target,
@@ -668,8 +680,15 @@ async function validateToolingImports(options: {
 	return issues;
 }
 
+/**
+ * With a `scope` (a workspace's repository-relative path), reports only the
+ * issues that touch that workspace: its own files' imports, imports into it
+ * from other workspaces or tooling, and cross-workspace cycles through it.
+ * Every workspace is still read, since edges into the scope start elsewhere.
+ */
 export async function validateSourceImports(options: {
 	repositoryRoot: string;
+	scope?: string;
 	workspaces: Workspace[];
 }): Promise<ImportPolicyIssue[]> {
 	const issues: ImportPolicyIssue[] = [];
@@ -681,6 +700,9 @@ export async function validateSourceImports(options: {
 	);
 
 	for (const workspace of options.workspaces) {
+		const report = (issue: ImportPolicyIssue, target?: Workspace): void => {
+			if (inScope(options.scope, workspace, target)) issues.push(issue);
+		};
 		const declared = declaredDependencies(workspace);
 		const boundaries = moduleBoundaries.get(workspace.relativePath) ?? [];
 		const aliases =
@@ -711,7 +733,7 @@ export async function validateSourceImports(options: {
 								reference,
 							)
 						)
-							issues.push({
+							report({
 								file: importer,
 								message: `${boundary.name}: ${boundary.comment}`,
 								specifier,
@@ -725,11 +747,14 @@ export async function validateSourceImports(options: {
 						options.workspaces,
 					);
 					if (target && target.dir !== workspace.dir) {
-						issues.push({
-							file: relative(options.repositoryRoot, file),
-							message: `relative/filesystem import crosses into ${target.relativePath}`,
-							specifier,
-						});
+						report(
+							{
+								file: relative(options.repositoryRoot, file),
+								message: `relative/filesystem import crosses into ${target.relativePath}`,
+								specifier,
+							},
+							target,
+						);
 						graph
 							.get(workspace.relativePath)
 							?.add(target.relativePath);
@@ -743,12 +768,15 @@ export async function validateSourceImports(options: {
 					isDumSchemaAuthoringSpecifier(specifier) &&
 					!isExplicitAuthoringSource(workspace, file, specifier)
 				) {
-					issues.push({
-						file: relative(options.repositoryRoot, file),
-						message:
-							"operational source cannot import schema-authoring surfaces",
-						specifier,
-					});
+					report(
+						{
+							file: relative(options.repositoryRoot, file),
+							message:
+								"operational source cannot import schema-authoring surfaces",
+							specifier,
+						},
+						target,
+					);
 				}
 				if (
 					codegenOnlyEntries.has(specifier) &&
@@ -759,12 +787,15 @@ export async function validateSourceImports(options: {
 						file,
 					)
 				) {
-					issues.push({
-						file: relative(options.repositoryRoot, file),
-						message:
-							"only code generators, scripts and tests may load a codegen-only entry",
-						specifier,
-					});
+					report(
+						{
+							file: relative(options.repositoryRoot, file),
+							message:
+								"only code generators, scripts and tests may load a codegen-only entry",
+							specifier,
+						},
+						target,
+					);
 				}
 				if (
 					loadsCorpusOutsideRuntimeEntry(
@@ -773,28 +804,37 @@ export async function validateSourceImports(options: {
 						reference,
 					)
 				) {
-					issues.push({
-						file: relative(options.repositoryRoot, file),
-						message: `runtime code may load only ${runtimeCorpusEntry}; the gold loader and review tooling are for development and evaluation`,
-						specifier,
-					});
+					report(
+						{
+							file: relative(options.repositoryRoot, file),
+							message: `runtime code may load only ${runtimeCorpusEntry}; the gold loader and review tooling are for development and evaluation`,
+							specifier,
+						},
+						target,
+					);
 				}
 				if (target.dir === workspace.dir) continue;
 				graph.get(workspace.relativePath)?.add(target.relativePath);
 				const targetName = target.manifest.name as string;
 				if (workspace.kind === "battery" && target.kind === "app") {
-					issues.push({
-						file: relative(options.repositoryRoot, file),
-						message: "batteries cannot import apps",
-						specifier,
-					});
+					report(
+						{
+							file: relative(options.repositoryRoot, file),
+							message: "batteries cannot import apps",
+							specifier,
+						},
+						target,
+					);
 				}
 				if (!declared.has(targetName)) {
-					issues.push({
-						file: relative(options.repositoryRoot, file),
-						message: `${targetName} is not declared in this package manifest`,
-						specifier,
-					});
+					report(
+						{
+							file: relative(options.repositoryRoot, file),
+							message: `${targetName} is not declared in this package manifest`,
+							specifier,
+						},
+						target,
+					);
 				}
 				const message = exportIssue(
 					options.repositoryRoot,
@@ -802,17 +842,22 @@ export async function validateSourceImports(options: {
 					requestedEntry(specifier, targetName),
 				);
 				if (message)
-					issues.push({
-						file: relative(options.repositoryRoot, file),
-						message,
-						specifier,
-					});
+					report(
+						{
+							file: relative(options.repositoryRoot, file),
+							message,
+							specifier,
+						},
+						target,
+					);
 			}
 		}
 	}
 	issues.push(...(await validateToolingImports(options)));
 
 	for (const cycle of findCycles(graph)) {
+		if (options.scope !== undefined && !cycle.includes(options.scope))
+			continue;
 		issues.push({
 			file: cycle[0] ?? ".",
 			message: `cross-workspace cycle: ${cycle.join(" -> ")}`,

@@ -72,6 +72,8 @@
 		"stts-table": "bun scripts/stts-table.ts",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository",
 		"worklist": "bun scripts/worklist.ts"
 	},
 	"dependencies": {

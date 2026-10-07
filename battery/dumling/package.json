@@ -98,7 +98,9 @@
 		"test": "bun ../../tooling/run-package-tests.ts ./tests",
 		"test:package": "bun ../../tooling/run-package-tests.ts ./tests/package.test.ts",
 		"validate:architecture": "bun ../../node_modules/dependency-cruiser/bin/dependency-cruise.mjs --config dependency-cruiser.cjs --ts-config tsconfig.json -- src",
-		"validate": "bun ../../tooling/validate-package.ts"
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
 	},
 	"dependencies": {
 		"common-utils": "workspace:^",

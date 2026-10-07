@@ -37,7 +37,9 @@
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts",
-		"validate": "bun ../../tooling/validate-package.ts"
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.13",

@@ -641,3 +641,63 @@ test("a wildcard export's source target must exist", async () => {
 		'./schema/missing.json matches dumcorpus#exports "./schema/*", but its target battery/dumcorpus/schema/missing.json does not exist',
 	]);
 });
+
+test("a scoped run reports only issues touching that workspace", async () => {
+	const root = await temporaryRepository();
+	const library = await addWorkspace(root, {
+		kind: "battery",
+		name: "library",
+	});
+	const consumer = await addWorkspace(root, {
+		dependencies: { library: "workspace:^" },
+		kind: "app",
+		name: "consumer",
+	});
+	const loner = await addWorkspace(root, { kind: "app", name: "loner" });
+	// An edge into library, from consumer.
+	await writeSource(
+		consumer,
+		"src/index.ts",
+		'import { x } from "library/src/internal";\n',
+	);
+	// An edge out of library, and a cycle through it.
+	await writeSource(library, "src/index.ts", 'import "consumer";\n');
+	// An edge between two other workspaces.
+	await writeSource(loner, "src/other.ts", 'import "consumer";\n');
+	const workspaces = await discoverWorkspaces(root);
+	const scoped = async (scope?: string) =>
+		(
+			await validateSourceImports({
+				repositoryRoot: root,
+				scope,
+				workspaces,
+			})
+		)
+			.map((issue) => `${issue.file}: ${issue.message}`)
+			.sort();
+
+	const libraryReport = await scoped("battery/library");
+	const lonerReport = await scoped("app/loner");
+	const all = await scoped();
+
+	expect(libraryReport.some((line) => line.startsWith("app/consumer/"))).toBe(
+		true,
+	);
+	expect(
+		libraryReport.some((line) =>
+			line.startsWith("battery/library/src/index.ts: batteries cannot"),
+		),
+	).toBe(true);
+	expect(
+		libraryReport.some((line) => line.includes("cross-workspace cycle")),
+	).toBe(true);
+	expect(libraryReport.some((line) => line.startsWith("app/loner/"))).toBe(
+		false,
+	);
+	expect(lonerReport).toEqual([
+		"app/loner/src/other.ts: consumer is not declared in this package manifest",
+	]);
+	expect(all).toEqual(
+		[...new Set([...libraryReport, ...lonerReport])].sort(),
+	);
+});

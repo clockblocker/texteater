@@ -23,7 +23,9 @@
 		"preview": "astro preview",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"knip": "bun ../../tooling/knip.ts",
-		"validate": "bun ../../tooling/validate-package.ts"
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
 	},
 	"dependencies": {
 		"astro": "^7.1.3",

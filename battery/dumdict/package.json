@@ -69,7 +69,9 @@
 		"prepack": "bun run generate:readme && bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"test:internal": "bun ../../tooling/run-package-tests.ts tests/internal",
-		"validate": "bun ../../tooling/validate-package.ts"
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
 	},
 	"dependencies": {
 		"common-utils": "workspace:^",

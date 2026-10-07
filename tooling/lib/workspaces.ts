@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 
 export type JsonObject = Record<string, unknown>;
 
@@ -66,4 +66,29 @@ export function stringRecord(value: unknown): Record<string, string> {
 			(entry): entry is [string, string] => typeof entry[1] === "string",
 		),
 	);
+}
+
+/**
+ * The workspace a repository-wide check run from `cwd` reports on:
+ * `undefined` at the repository root (the whole repository), otherwise the
+ * workspace containing `cwd`. Bun runs a package script in its package's
+ * directory, so a workspace's script lands here with that workspace's cwd.
+ */
+export function workspaceScope(
+	cwd: string,
+	repositoryRoot: string,
+	workspaces: Workspace[],
+): Workspace | undefined {
+	const path = relative(repositoryRoot, resolve(cwd));
+	if (path === "") return undefined;
+	const scope = workspaces.find(
+		(workspace) =>
+			path === workspace.relativePath ||
+			path.startsWith(`${workspace.relativePath}${sep}`),
+	);
+	if (!scope)
+		throw new Error(
+			`${cwd} is neither the repository root nor a workspace`,
+		);
+	return scope;
 }

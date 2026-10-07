@@ -23,7 +23,9 @@
 		"test:e2e": "playwright test",
 		"test:pipeline:live": "bun tooling/run-live-pipeline.ts",
 		"knip": "bun ../../tooling/knip.ts",
-		"validate": "bun ../../tooling/validate-package.ts"
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
 	},
 	"dependencies": {
 		"@convex-dev/rate-limiter": "^0.4.0",

@@ -153,6 +153,116 @@ test("every workspace and the root run knip through tooling/knip.ts", async () =
 	]);
 });
 
+test("every workspace and the root run the repository checks through tooling", async () => {
+	const root = await temporaryRepository();
+	const workspace = await addWorkspace(root, {
+		kind: "battery",
+		name: "unscoped",
+	});
+	const manifest = await Bun.file(join(workspace, "package.json")).json();
+	delete manifest.scripts["validate:imports"];
+	await writeJson(join(workspace, "package.json"), manifest);
+	const rootManifest = await Bun.file(join(root, "package.json")).json();
+	rootManifest.scripts["validate:manifests"] =
+		"bun tooling/manifest-policy.ts package";
+	await writeJson(join(root, "package.json"), rootManifest);
+
+	const issues = await validateManifestPolicy({
+		cwd: root,
+		mode: "repository",
+	});
+
+	expect(issues).toEqual([
+		{
+			location: "package.json",
+			message:
+				'validate:manifests must be "bun tooling/manifest-policy.ts repository"',
+		},
+		{
+			location: "battery/unscoped/package.json",
+			message:
+				'validate:imports must be "bun ../../tooling/validate-repository-architecture.ts"',
+		},
+	]);
+});
+
+test("repository policy run inside a workspace reports only what touches it", async () => {
+	const root = await temporaryRepository();
+	const rootManifest = await Bun.file(join(root, "package.json")).json();
+	rootManifest.private = false;
+	await writeJson(join(root, "package.json"), rootManifest);
+	const scoped = await addWorkspace(root, {
+		kind: "battery",
+		name: "scoped",
+	});
+	await addWorkspace(root, {
+		kind: "battery",
+		name: "dependent",
+		dependencies: { scoped: "^1.0.0" },
+	});
+	const trailing = await addWorkspace(root, {
+		kind: "battery",
+		name: "trailing",
+	});
+	const unrelated = await addWorkspace(root, {
+		kind: "battery",
+		name: "unrelated",
+	});
+	const edits: [string, (manifest: Record<string, unknown>) => void][] = [
+		// scoped is the first zod declaration (workspaces sort by path), so it
+		// sets the expectation trailing breaks.
+		[scoped, (manifest) => (manifest.devDependencies = { zod: "4.0.0" })],
+		[trailing, (manifest) => (manifest.devDependencies = { zod: "3.0.0" })],
+		[unrelated, (manifest) => (manifest.engines = { node: "22.x" })],
+	];
+	for (const [dir, edit] of edits) {
+		const manifest = await Bun.file(join(dir, "package.json")).json();
+		edit(manifest);
+		await writeJson(join(dir, "package.json"), manifest);
+	}
+
+	const scopedIssues = await validateManifestPolicy({
+		cwd: join(scoped, "src"),
+		mode: "repository",
+	});
+	const unrelatedIssues = await validateManifestPolicy({
+		cwd: unrelated,
+		mode: "repository",
+	});
+	const allIssues = await validateManifestPolicy({
+		cwd: root,
+		mode: "repository",
+	});
+
+	expect(scopedIssues).toEqual([
+		{
+			location: "battery/dependent/package.json",
+			message: "dependencies.scoped must use the workspace protocol",
+		},
+		{
+			location: "battery/trailing/package.json#devDependencies.zod",
+			message: "zod must use 4.0.0; found 3.0.0",
+		},
+	]);
+	expect(unrelatedIssues).toEqual([
+		{
+			location: "battery/unrelated/package.json",
+			message: "engines.node must be 24.x",
+		},
+	]);
+	expect(allIssues).toHaveLength(4);
+	expect(allIssues[0]).toEqual({
+		location: "package.json",
+		message: "repository root must be private",
+	});
+	await expect(
+		validateManifestPolicy({
+			cwd: join(root, "tooling"),
+			mode: "repository",
+		}),
+	).rejects.toThrow("is neither the repository root nor a workspace");
+});
+
 test("every workspace runs its tests through the shared test runner", async () => {
 	const root = await temporaryRepository();
 	const scripts = {

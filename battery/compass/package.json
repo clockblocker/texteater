@@ -38,7 +38,9 @@
 		"lint": "bun run --silent biome check .",
 		"test": "bun ../../tooling/run-package-tests.ts",
 		"knip": "bun ../../tooling/knip.ts",
-		"validate": "bun ../../tooling/validate-package.ts"
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
 	},
 	"peerDependencies": {
 		"react": "^19.2.6"

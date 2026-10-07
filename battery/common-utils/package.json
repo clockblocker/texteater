@@ -54,7 +54,9 @@
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
 		"test": "bun ../../tooling/run-package-tests.ts",
-		"validate": "bun ../../tooling/validate-package.ts"
+		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository"
 	},
 	"dependencies": {
 		"zod": "4.4.3"

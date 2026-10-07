@@ -38,6 +38,8 @@
 		"fix": "bun run --silent biome check --write .",
 		"knip": "bun ../../tooling/knip.ts",
 		"validate": "bun ../../tooling/validate-package.ts",
+		"validate:imports": "bun ../../tooling/validate-repository-architecture.ts",
+		"validate:manifests": "bun ../../tooling/manifest-policy.ts repository",
 		"evaluate": "bun --env-file=../../.env.local cli/evaluate.ts",
 		"spec-coverage": "bun cli/spec-coverage.ts",
 		"segment-in-units-lab": "bun --env-file=../../.env.local cli/segment-in-units-lab.ts",

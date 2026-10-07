@@ -8,6 +8,7 @@ import {
 	readJson,
 	stringRecord,
 	type Workspace,
+	workspaceScope,
 } from "./workspaces";
 
 export type PolicyMode = "package" | "repository";
@@ -41,6 +42,18 @@ const requiredWorkspaceScripts = [
  * test directory, may follow it.
  */
 const packageTestRunner = "bun ../../tooling/run-package-tests.ts";
+
+/**
+ * Repository-wide checks, by script name and the tooling command behind it.
+ * The root runs each over the whole repository; every workspace runs the
+ * same command, which scopes its report to that workspace (`bun run knip`
+ * in a package, for example).
+ */
+const repositoryCheckScripts = {
+	knip: "tooling/knip.ts",
+	"validate:imports": "tooling/validate-repository-architecture.ts",
+	"validate:manifests": "tooling/manifest-policy.ts repository",
+} as const;
 
 /**
  * Turbo entry points. `build` and `dev` delegate to Turbo so that every
@@ -163,12 +176,14 @@ function validateWorkspaceManifest(
 			`test must start with "${packageTestRunner}"`,
 		);
 	}
-	add(
-		issues,
-		location,
-		scripts.knip === "bun ../../tooling/knip.ts",
-		'knip must be "bun ../../tooling/knip.ts"',
-	);
+	for (const [script, command] of Object.entries(repositoryCheckScripts)) {
+		add(
+			issues,
+			location,
+			scripts[script] === `bun ../../${command}`,
+			`${script} must be "bun ../../${command}"`,
+		);
+	}
 	for (const [entry, expected] of Object.entries(turboEntryScripts)) {
 		const local = `${entry}:package`;
 		if (!scripts[entry] && !scripts[local]) continue;
@@ -231,6 +246,45 @@ function validateWorkspaceManifest(
 			typeof manifest.version === "string" &&
 				/^\d+\.\d+\.\d+([+-].+)?$/.test(manifest.version),
 			"publishable package version must be semver",
+		);
+	}
+	return issues;
+}
+
+function validateRootManifest(rootManifest: JsonObject): PolicyIssue[] {
+	const issues: PolicyIssue[] = [];
+	add(
+		issues,
+		"package.json",
+		rootManifest.private === true,
+		"repository root must be private",
+	);
+	add(
+		issues,
+		"package.json",
+		Array.isArray(rootManifest.workspaces) &&
+			rootManifest.workspaces.includes("app/*") &&
+			rootManifest.workspaces.includes("battery/*"),
+		'workspaces must include "app/*" and "battery/*"',
+	);
+	const rootScripts = stringRecord(rootManifest.scripts);
+	for (const [script, command] of Object.entries(repositoryCheckScripts)) {
+		add(
+			issues,
+			"package.json",
+			rootScripts[script] === `bun ${command}`,
+			`${script} must be "bun ${command}"`,
+		);
+	}
+	for (const script of ["build", "run"] as const) {
+		if (!rootScripts[script]) continue;
+		add(
+			issues,
+			"package.json",
+			rootScripts[script].includes(
+				"bun tooling/manifest-policy.ts repository",
+			),
+			`${script} must gate on repository-mode manifest validation`,
 		);
 	}
 	return issues;
@@ -392,41 +446,22 @@ export async function validateManifestPolicy(options: {
 	}
 
 	const workspaces = await discoverWorkspaces(repositoryRoot);
-	const issues: PolicyIssue[] = [];
-	add(
-		issues,
-		"package.json",
-		rootManifest.private === true,
-		"repository root must be private",
-	);
-	add(
-		issues,
-		"package.json",
-		Array.isArray(rootManifest.workspaces) &&
-			rootManifest.workspaces.includes("app/*") &&
-			rootManifest.workspaces.includes("battery/*"),
-		'workspaces must include "app/*" and "battery/*"',
-	);
-	const rootScripts = stringRecord(rootManifest.scripts);
-	add(
-		issues,
-		"package.json",
-		rootScripts.knip === "bun tooling/knip.ts",
-		'knip must be "bun tooling/knip.ts"',
-	);
-	for (const script of ["build", "run"] as const) {
-		if (!rootScripts[script]) continue;
-		add(
-			issues,
-			"package.json",
-			rootScripts[script].includes(
-				"bun tooling/manifest-policy.ts repository",
-			),
-			`${script} must gate on repository-mode manifest validation`,
+	// Run inside a workspace, report only what touches it: its own manifest
+	// and tsconfig, dependency edges into or out of it, and governed versions
+	// it declares or sets the expectation for.
+	const scope = workspaceScope(options.cwd, repositoryRoot, workspaces);
+	const touchesScope = (...locations: string[]): boolean =>
+		scope === undefined ||
+		locations.some((location) =>
+			location.startsWith(`${scope.relativePath}/`),
 		);
+	const issues: PolicyIssue[] = [];
+	if (scope === undefined) {
+		issues.push(...validateRootManifest(rootManifest));
 	}
 
 	for (const workspace of workspaces) {
+		if (!touchesScope(`${workspace.relativePath}/`)) continue;
 		issues.push(
 			...validateWorkspaceManifest(
 				workspace,
@@ -448,6 +483,13 @@ export async function validateManifestPolicy(options: {
 				stringRecord(workspace.manifest[field]),
 			)) {
 				const target = workspaceByName.get(name);
+				if (
+					!touchesScope(
+						`${workspace.relativePath}/`,
+						`${target?.relativePath}/`,
+					)
+				)
+					continue;
 				if (target) {
 					add(
 						issues,
@@ -485,14 +527,15 @@ export async function validateManifestPolicy(options: {
 		const declarations = governed.filter(
 			(entry) => entry.name === dependency,
 		);
-		const expected = declarations[0]?.version;
-		if (!expected) continue;
-		for (const declaration of declarations.slice(1)) {
+		const [first, ...rest] = declarations;
+		if (!first) continue;
+		for (const declaration of rest) {
+			if (!touchesScope(declaration.location, first.location)) continue;
 			add(
 				issues,
 				declaration.location,
-				declaration.version === expected,
-				`${dependency} must use ${expected}; found ${declaration.version}`,
+				declaration.version === first.version,
+				`${dependency} must use ${first.version}; found ${declaration.version}`,
 			);
 		}
 	}
