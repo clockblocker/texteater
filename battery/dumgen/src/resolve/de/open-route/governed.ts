@@ -21,7 +21,7 @@ import {
 	fold,
 	type Shape,
 	spellingOf,
-	type Values,
+	type ValencyEvidence,
 } from "./shape.js";
 
 /** A member that may be the preposition its head governs, with the cases the ADP Case Table lets it take. */
@@ -132,10 +132,10 @@ export function readGoverned(
 	shape: Shape,
 	answered: Answered,
 ): {
-	readonly governed: readonly Values[];
+	readonly governed: readonly ValencyEvidence[];
 	readonly governedPositions: readonly number[];
 } {
-	const governed: Values[] = [];
+	const governed: ValencyEvidence[] = [];
 	const governedPositions: number[] = [];
 	for (const chosen of governable) {
 		const position = chosen.member.position;
@@ -146,6 +146,10 @@ export function readGoverned(
 		const governedCase = chosen.governedCase
 			? answered.pick(chosen.governedCase)
 			: only;
+		if (governedCase === undefined)
+			throw Error(
+				`The ADP Case Table lets ${chosen.preposition} take no case`,
+			);
 		governed.push({
 			member: position,
 			complement: {

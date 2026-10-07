@@ -54,9 +54,10 @@ export function askAdposition(
 export function readAdposition(
 	adposition: AdpositionPlan,
 	answered: Answered,
-): AdpCase | "None" | undefined {
+): AdpCase | "None" {
 	const [only] = adposition.cases;
-	return adposition.realizedCase
-		? answered.pick(adposition.realizedCase)
-		: only;
+	if (adposition.realizedCase) return answered.pick(adposition.realizedCase);
+	if (only === undefined)
+		throw Error("The ADP Case Table lets the ADP take no case");
+	return only;
 }

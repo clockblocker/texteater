@@ -1,11 +1,11 @@
 /** Luna's call on a guess at jev's answers, and why the guess can miss. */
 
+import { isRecord } from "common-utils";
 import type { LunaRequest } from "../../../luna.js";
 import type { Judged } from "../canonical-form.js";
 import type { MemberOrthography } from "../member-spelling.js";
 import type { Target } from "../target.js";
 import type { OpeningArticle } from "./nominal.js";
-import type { Values } from "./shape.js";
 
 /**
  * What Luna reads before jev has answered: every member Standard unless
@@ -42,7 +42,13 @@ export function guessMisses(
 	guessed: Omit<LunaRequest, "configuration">,
 	judged: Omit<LunaRequest, "configuration">,
 ): string | undefined {
-	const { judged: _features, ...read } = judged.input as Values;
+	const read = isRecord(judged.input)
+		? Object.fromEntries(
+				Object.entries(judged.input).filter(
+					([key]) => key !== "judged",
+				),
+			)
+		: judged.input;
 	return JSON.stringify(guessed.input) === JSON.stringify(read)
 		? undefined
 		: "jev changed what Luna reads";

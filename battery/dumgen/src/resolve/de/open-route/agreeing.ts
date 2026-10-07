@@ -4,9 +4,14 @@
  * and number, which an attributive ADJ is asked too.
  */
 
+import type * as Dumling from "dumling/types";
 import { options, question } from "../prompts.js";
 import type { Answered, ChoiceOf, Questionnaire } from "../questions.js";
-import type { Values } from "./shape.js";
+
+/** An agreeing word's case, gender and number, as a NUM Lexeme's Surface takes them. */
+export type Agreement = NonNullable<
+	Dumling.Surface<"de", "Lexeme", "NUM">["inflectionalFeatures"]
+>;
 
 /** The questions of an agreeing word's case, gender and number. */
 export type AgreementQuestions = ReturnType<typeof agreementQuestions>;
@@ -36,7 +41,7 @@ export function agreementQuestions(questionnaire: Questionnaire) {
 export function readAgreement(
 	agreement: AgreementQuestions,
 	answered: Answered,
-) {
+): Agreement {
 	const number = answered.pick(agreement.number);
 	const gender = answered.pick(agreement.gender);
 	return {
@@ -67,8 +72,8 @@ export function readAgreeing(
 	agreeing: AgreeingPlan,
 	answered: Answered,
 ): {
-	readonly core: Values;
-	readonly inflection: Values | null;
+	readonly core: Record<string, never>;
+	readonly inflection: Agreement | null;
 } {
 	const inflects = answered.pick(agreeing.inflects) === "Yes";
 	return {

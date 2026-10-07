@@ -10,6 +10,7 @@ import {
 	auxiliarySurfaceFeatures,
 	germanAdpositionEntry,
 } from "dumcorpus/inventories";
+import type * as Dumling from "dumling/types";
 import {
 	particleForms,
 	reflexiveForms,
@@ -25,7 +26,28 @@ import {
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
 import { coordinators, type GovernedQuestions } from "./governed.js";
-import { fold, type Shape, spellingOf, type Values } from "./shape.js";
+import { fold, type Shape, spellingOf } from "./shape.js";
+
+/** A VERB Lexeme's Core Features; a VERB Locution has none. */
+export type VerbCore = Dumling.Lemma<"de", "Lexeme", "VERB">["coreFeatures"];
+
+/** A verbal Surface's features, Lexeme or Locution. */
+export type VerbInflection = NonNullable<
+	Dumling.Surface<"de", "Lexeme" | "Locution", "VERB">["inflectionalFeatures"]
+>;
+
+/**
+ * The voice a verbal Surface takes, with the passive that goes with it:
+ * none, a process or recipient passive, or the causative.
+ */
+type Voice = VerbInflection extends infer Features
+	? Features extends VerbInflection
+		? Pick<Features, "passive" | "voice">
+		: never
+	: never;
+
+/** The features one auxiliary use sets, as dumcorpus authors them. */
+type AuxiliaryFeatures = (typeof auxiliarySurfaceFeatures)[number]["features"];
 
 /** An authored AUX Reading's use, by Canonical Form and Emoji Description (`werden 🔄`). */
 export const auxiliaryUse = ({ lemma, reading }: AuthoredMember) =>
@@ -51,12 +73,13 @@ function auxiliaryUsesOf(member: Member): readonly string[] {
  * The Surface features an auxiliary's use makes (ADR 0022, ADR 0026), by
  * use, as dumcorpus authors them for its AUX members.
  */
-export const auxiliaryFeatures: ReadonlyMap<string, Values> = new Map(
-	auxiliarySurfaceFeatures.map(({ member, features }) => [
-		auxiliaryUse(member),
-		features,
-	]),
-);
+export const auxiliaryFeatures: ReadonlyMap<string, AuxiliaryFeatures> =
+	new Map(
+		auxiliarySurfaceFeatures.map(({ member, features }) => [
+			auxiliaryUse(member),
+			features,
+		]),
+	);
 
 /**
  * Each form a lexical reflexive takes, with the case it shows: the one case
@@ -67,16 +90,15 @@ export const reflexives: ReadonlyMap<string, "Acc" | "Dat" | undefined> =
 	new Map(
 		[...reflexiveForms].map((form) => {
 			const shown = new Set(
-				authoredRealizations.flatMap(({ member, spelled }) => {
-					const features = member.lemma.coreFeatures as Readonly<
-						Record<string, unknown>
-					>;
-					return member.lemma.kind === "PRON" &&
-						features.pronType === "Prs" &&
+				authoredRealizations.flatMap(
+					({ member: { lemma }, spelled }) =>
+						lemma.family === "Lexeme" &&
+						lemma.kind === "PRON" &&
+						lemma.coreFeatures.pronType === "Prs" &&
 						fold(spelled) === form
-						? [features.case]
-						: [];
-				}),
+							? [lemma.coreFeatures.case]
+							: [],
+				),
 			);
 			const [only] = shown;
 			return [
@@ -305,12 +327,12 @@ export function readVerbal(
 	answered: Answered,
 	cited: boolean,
 ): {
-	readonly core: Values;
-	readonly inflection: Values | null;
+	readonly core: VerbCore | Record<string, never>;
+	readonly inflection: VerbInflection | null;
 	readonly expletive: Member | undefined;
 	readonly readings: ReadonlyMap<number, string>;
 } {
-	const core: Values = {};
+	let core: VerbCore | Record<string, never> = {};
 	const readings = new Map<number, string>();
 	if (shape.lexeme) {
 		const prefix = verbal.prefix
@@ -322,7 +344,7 @@ export function readVerbal(
 					answered,
 				)
 			: "None";
-		core.hasSepPrefix =
+		const hasSepPrefix =
 			prefix === "None"
 				? null
 				: (verbal.prefixes[Number(prefix.slice(1))] ?? null);
@@ -331,17 +353,18 @@ export function readVerbal(
 		for (const member of target.members)
 			if (
 				member.spelling?.orthography === "Shorthand" &&
-				typeof core.hasSepPrefix === "string" &&
+				hasSepPrefix !== null &&
 				member.spelling.surfaces.length > 1 &&
-				member.spelling.surfaces.includes(core.hasSepPrefix)
+				member.spelling.surfaces.includes(hasSepPrefix)
 			)
-				readings.set(member.segment, core.hasSepPrefix);
+				readings.set(member.segment, hasSepPrefix);
 		const reflexive = verbal.reflexive;
-		core.lexicallyReflexive = verbal.reflexiveCase
+		const lexicallyReflexive = verbal.reflexiveCase
 			? answered.pick(verbal.reflexiveCase)
 			: reflexive
 				? (reflexives.get(fold(reflexive.text)) ?? null)
 				: null;
+		core = { hasSepPrefix, lexicallyReflexive };
 	}
 	const expletive =
 		verbal.expletive &&
@@ -360,58 +383,120 @@ export function readVerbal(
 	};
 }
 
+/**
+ * The voice an auxiliary use sets, with the passive that goes with it:
+ * none, a process or recipient passive, or the causative. A use that sets
+ * another pairing has no verbal Surface in Dumling: a bug in the table.
+ */
+function voiceOf(features: AuxiliaryFeatures): Voice | undefined {
+	const { passive, voice } = features;
+	if (voice === undefined && passive === undefined) return undefined;
+	if (voice === "Pass" && passive !== undefined) return { passive, voice };
+	if (voice === "Cau" && passive === undefined)
+		return { passive: null, voice };
+	throw Error(`An auxiliary use sets voice ${voice} with passive ${passive}`);
+}
+
+/** One composed feature: a value two uses set differently is a clash. */
+function composed<Value>(
+	was: Value | null,
+	now: Value | undefined,
+	same: (left: Value, right: Value) => boolean = Object.is,
+): Value | null {
+	if (now === undefined) return was;
+	if (was !== null && !same(was, now))
+		throw new UnresolvedAnswer("The auxiliaries' uses do not compose");
+	return now;
+}
+
 /** A verbal Surface's features, from its form questions and its auxiliaries' uses. */
 function verbalInflection(
 	verbal: VerbalPlan,
 	answered: Answered,
 	expletive: Member | undefined,
-): Values {
-	const composition: Values = {
-		perfect: null,
-		future: null,
-		passive: null,
-		voice: null,
-	};
+): VerbInflection {
+	let perfect: VerbInflection["perfect"] = null;
+	let future: VerbInflection["future"] = null;
+	let voiced: Voice | null = null;
 	for (const { uses, use: asked } of verbal.auxiliaries) {
 		const answer = answered.pick(asked);
 		if (answer === "Main") continue;
 		const use = uses[Number(answer.slice(1))];
-		for (const [feature, value] of Object.entries(
-			(use && auxiliaryFeatures.get(use)) ?? {},
-		)) {
-			if (composition[feature] !== null && composition[feature] !== value)
-				throw new UnresolvedAnswer(
-					"The auxiliaries' uses do not compose",
-				);
-			composition[feature] = value;
-		}
+		const features =
+			(use === undefined ? undefined : auxiliaryFeatures.get(use)) ?? {};
+		perfect = composed(perfect, features.perfect);
+		future = composed(future, features.future);
+		voiced = composed(
+			voiced,
+			voiceOf(features),
+			(left, right) =>
+				left.passive === right.passive && left.voice === right.voice,
+		);
 	}
+	const composition = {
+		perfect,
+		future,
+		...(voiced ?? { passive: null, voice: null }),
+	};
+	const subject = expletive ? "Subject" : null;
 	const verbForm = answered.pick(verbal.verbForm);
-	const finite = verbForm === "Fin";
-	const mood = finite ? answered.pick(verbal.mood) : null;
-	const number = finite ? answered.pick(verbal.number) : null;
-	const person = finite ? answered.pick(verbal.person) : null;
+	if (verbForm === "Inf")
+		return {
+			mood: null,
+			number: null,
+			person: null,
+			tense: null,
+			verbForm,
+			expletive: subject,
+			...composition,
+		};
+	if (verbForm === "Part")
+		return {
+			mood: null,
+			number: null,
+			person: null,
+			tense: null,
+			verbForm,
+			participleForm: answered.peek(verbal.participle) ?? null,
+			expletive: subject,
+			...composition,
+		};
+	const mood = answered.pick(verbal.mood);
+	const number = answered.pick(verbal.number);
+	const person = answered.pick(verbal.person);
 	// A subject es takes a finite verb in the 3rd person singular, never
 	// an imperative: jev's agreement against it is a clash of answers.
-	if (expletive && finite && (person !== "3" || number !== "Sing"))
+	if (expletive && (person !== "3" || number !== "Sing"))
 		throw new UnresolvedAnswer(
 			"The subject es clashes with the verb's agreement",
 		);
 	if (expletive && mood === "Imp")
 		throw new UnresolvedAnswer("The subject es clashes with an imperative");
+	if (mood === "Imp")
+		return {
+			mood,
+			number,
+			person,
+			tense: null,
+			verbForm,
+			expletive: subject,
+			...composition,
+		};
 	return {
 		mood,
 		number,
 		person,
-		tense: finite && mood !== "Imp" ? answered.pick(verbal.tense) : null,
+		tense: answered.pick(verbal.tense),
 		verbForm,
-		...(verbForm === "Part"
-			? { participleForm: answered.peek(verbal.participle) ?? null }
-			: {}),
-		expletive: expletive ? "Subject" : null,
+		expletive: subject,
 		...composition,
 	};
 }
+
+/** The VERB Core Features a headword reads, absent on a Locution. */
+type VerbCoreRead = {
+	readonly [Feature in keyof VerbCore]?: string | null;
+};
 
 /**
  * A VERB's Canonical Form as its judged Core Features require it (Rule
@@ -422,7 +507,7 @@ function verbalInflection(
  * (reinkommen is hereinkommen) or over a shorter particle that ends the
  * prefix (umkommen is herumkommen).
  */
-export function verbHeadword(form: string, core: Values): string {
+export function verbHeadword(form: string, core: VerbCoreRead): string {
 	const reflexive = /^sich\s+/u.test(form) || core.lexicallyReflexive;
 	let verb = form.replace(/^sich\s+/u, "");
 	const prefix = core.hasSepPrefix;
@@ -547,7 +632,7 @@ const shortenedFrom: Readonly<Record<string, string>> = Object.fromEntries(
  */
 export function verbGuessMisses(
 	form: string,
-	core: Values,
+	core: VerbCoreRead,
 	prefixes: readonly string[],
 ): string | undefined {
 	if (/^sich\s/u.test(form) && !core.lexicallyReflexive)

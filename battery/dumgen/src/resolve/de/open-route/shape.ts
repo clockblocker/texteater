@@ -1,21 +1,37 @@
-/** An open route's shape, and the cases and genders its questions offer. */
+/**
+ * An open route's shape, the cases and genders its questions offer, and
+ * the Attestation parts every shape shares, as Dumling's generated types
+ * give them.
+ */
 
 import { foldCase } from "dumling";
+import type * as Dumling from "dumling/types";
 import { fixedSpelling, type Member, type Target } from "../target.js";
 
-export type Values = Record<string, unknown>;
 export type AdpCase = "Acc" | "Dat" | "Gen";
+
+/** A grammatical gender, as a German NOUN's Core Features take it. */
+export type Gender = NonNullable<
+	Dumling.Lemma<"de", "Lexeme", "NOUN">["coreFeatures"]["gender"]
+>;
+
+/** One piece of valency evidence a governor or an ADP attests. */
+export type ValencyEvidence = Dumling.Attestation<
+	"de",
+	"Lexeme",
+	"VERB"
+>["valencyEvidence"][number];
 
 export const cases = ["Nom", "Acc", "Dat", "Gen"] as const;
 /**
  * A gender question's options are named by the article the gender takes,
  * never Neut, which jev read as a neutral fallback when unsure (#876).
  */
-export const genderOfArticle: Readonly<Record<string, string>> = {
-	der: "Masc",
-	die: "Fem",
-	das: "Neut",
-};
+export const genderOfArticle: ReadonlyMap<string, Gender> = new Map([
+	["der", "Masc"],
+	["die", "Fem"],
+	["das", "Neut"],
+]);
 
 /** The route's shape, as the questions and the Attestation need it. */
 export function routeShape(target: Target) {

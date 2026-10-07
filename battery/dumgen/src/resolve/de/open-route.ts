@@ -22,6 +22,7 @@ import {
 	isGermanPluralOnlyNoun,
 } from "dumcorpus/inventories";
 import { lemmaIdentityKey } from "dumling";
+import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type * as Scope from "effect/Scope";
@@ -46,6 +47,7 @@ import {
 	readAdposition,
 } from "./open-route/adposition.js";
 import {
+	type AdverbialInflection,
 	type AdverbialPlan,
 	adverbHeadword,
 	askAdverbial,
@@ -55,6 +57,7 @@ import {
 } from "./open-route/adverbial.js";
 import {
 	type AgreeingPlan,
+	type Agreement,
 	askAgreeing,
 	readAgreeing,
 } from "./open-route/agreeing.js";
@@ -64,6 +67,9 @@ import {
 	type HeadPlan,
 	readHead,
 	readTail,
+	type Spelling,
+	type SurfaceFeatures,
+	type TailCore,
 	type TailPlan,
 } from "./open-route/common.js";
 import { guessedJudgment, guessMisses } from "./open-route/luna-guess.js";
@@ -71,7 +77,7 @@ import {
 	askNominal,
 	caseQuestion,
 	type NominalPlan,
-	type NounRead,
+	type NounInflection,
 	nounCells,
 	type OpeningArticle,
 	openingArticle,
@@ -83,12 +89,13 @@ import {
 	routeShape,
 	type Shape,
 	spellingOf,
-	type Values,
+	type ValencyEvidence,
 } from "./open-route/shape.js";
 import {
 	askVerbal,
 	readVerbal,
 	type VerbalPlan,
+	type VerbInflection,
 	verbalSatellites,
 	verbGuessMisses,
 	verbHeadword,
@@ -98,7 +105,6 @@ import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
 import {
 	fixedSpelling,
 	joinMembers,
-	type Member,
 	type Target,
 	targetState,
 } from "./target.js";
@@ -107,7 +113,8 @@ import {
 export type OpenOutcome =
 	| {
 			readonly _tag: "Attestation";
-			readonly attestation: Values;
+			/** Unchecked: `parseUnit` checks it against the unit's route. */
+			readonly attestation: unknown;
 			/** The Emoji Description Luna drafted with the headword, unchecked. */
 			readonly drafted?: string;
 	  }
@@ -184,33 +191,40 @@ function plan(target: Target): Plan {
 	};
 }
 
-/** What the first request settled, and what is still open. */
-type FirstRead = {
-	readonly core: Values;
-	readonly inflection: Values | null | undefined;
-	readonly orthographies: readonly MemberOrthography[];
-	readonly spelling: Values;
-	readonly surfaceFeatures: Values | null;
-	readonly coverage: "Full" | "Partial";
-	readonly readings: ReadonlyMap<number, string>;
-	readonly governed: readonly Values[];
-	readonly governedPositions: readonly number[];
-	readonly expletive: Member | undefined;
-	readonly realizedCase: AdpCase | "None" | undefined;
-	/** The cases a NOUN's Case question still has to choose among. */
-	readonly openCases: readonly CaseOption[];
-	readonly noun?: NounRead;
-};
+/**
+ * What the block of a route's shape settles, by block: its Core Features
+ * and inflection, typed as the block's routes take them, and its extras.
+ * A shape with no block has no Core Features.
+ */
+type ShapeRead =
+	| ({ readonly block: "verbal" } & ReturnType<typeof readVerbal>)
+	| ({ readonly block: "nominal" } & ReturnType<typeof readNominal>)
+	| ({ readonly block: "adverbial" } & ReturnType<typeof readAdverbial>)
+	| ({ readonly block: "agreeing" } & ReturnType<typeof readAgreeing>)
+	| {
+			readonly block: "adposition";
+			readonly core: Record<string, never>;
+			readonly inflection: null | undefined;
+			readonly realizedCase: AdpCase | "None";
+	  }
+	| {
+			readonly block: "none";
+			readonly core: Record<string, never>;
+			readonly inflection: null | undefined;
+	  };
 
-/** What the block of a route's shape settles: its Core Features, its inflection and any extras. */
-type ShapeRead = {
-	readonly core: Values;
-	readonly inflection: Values | null | undefined;
-	readonly readings?: ReadonlyMap<number, string>;
-	readonly expletive?: Member | undefined;
-	readonly openCases?: readonly CaseOption[];
-	readonly noun?: NounRead | undefined;
-	readonly realizedCase?: AdpCase | "None" | undefined;
+/** What the first request settled, and what is still open. */
+type FirstRead = ShapeRead & {
+	/** The Core Feature the tail settled, beside the block's. */
+	readonly tailCore: TailCore;
+	readonly orthographies: readonly MemberOrthography[];
+	readonly spelling: Spelling;
+	readonly surfaceFeatures: SurfaceFeatures;
+	readonly coverage: "Full" | "Partial";
+	/** The readings the head and the block fixed. */
+	readonly readings: ReadonlyMap<number, string>;
+	readonly governed: readonly ValencyEvidence[];
+	readonly governedPositions: readonly number[];
 };
 
 /** Reads the block of the route's shape; a shape with none has no Core Features. */
@@ -222,32 +236,47 @@ function readShape(
 ): ShapeRead {
 	const { shape } = planned;
 	if (planned.verbal)
-		return readVerbal(
-			target,
-			planned.verbal,
-			shape,
-			planned.tail.governable,
-			answered,
-			cited,
-		);
+		return {
+			block: "verbal",
+			...readVerbal(
+				target,
+				planned.verbal,
+				shape,
+				planned.tail.governable,
+				answered,
+				cited,
+			),
+		};
 	if (planned.nominal)
-		return readNominal(
-			shape,
-			planned.article,
-			planned.nominal,
-			answered,
-			cited,
-		);
-	if (planned.adverbial) return readAdverbial(planned.adverbial, answered);
-	if (planned.agreeing) return readAgreeing(planned.agreeing, answered);
+		return {
+			block: "nominal",
+			...readNominal(
+				shape,
+				planned.article,
+				planned.nominal,
+				answered,
+				cited,
+			),
+		};
+	if (planned.adverbial)
+		return {
+			block: "adverbial",
+			...readAdverbial(planned.adverbial, answered),
+		};
+	if (planned.agreeing)
+		return {
+			block: "agreeing",
+			...readAgreeing(planned.agreeing, answered),
+		};
 	const inflection = shape.inflects ? null : undefined;
 	if (planned.adposition)
 		return {
+			block: "adposition",
 			core: {},
 			inflection,
 			realizedCase: readAdposition(planned.adposition, answered),
 		};
-	return { core: {}, inflection };
+	return { block: "none", core: {}, inflection };
 }
 
 /** Reads the first request's answers; an Unresolved deciding answer throws. */
@@ -264,27 +293,98 @@ function readFirst(
 		answered,
 	);
 	const read = readShape(target, planned, answered, head.cited);
+	const verbal = read.block === "verbal" ? read : undefined;
 	const tail = readTail(
 		planned.tail,
 		planned.shape,
 		answered,
-		read.expletive,
+		verbal?.expletive,
 		head.cited,
 	);
 	return {
-		core: { ...read.core, ...tail.core },
-		inflection: read.inflection,
+		...read,
+		tailCore: tail.core,
 		orthographies: head.orthographies,
 		spelling: head.spelling,
 		surfaceFeatures: head.surfaceFeatures,
 		coverage: tail.coverage,
-		readings: new Map([...head.readings, ...(read.readings ?? [])]),
+		readings: new Map([...head.readings, ...(verbal?.readings ?? [])]),
 		governed: tail.governed,
 		governedPositions: tail.governedPositions,
-		expletive: read.expletive,
-		realizedCase: read.realizedCase,
-		openCases: read.openCases ?? [],
-		...(read.noun ? { noun: read.noun } : {}),
+	};
+}
+
+/** The inflection an open route's Surface may take. */
+type OpenInflection =
+	| VerbInflection
+	| NounInflection
+	| AdverbialInflection
+	| Agreement;
+
+/** An open route's Attestation, in parts typed as Dumling's generated types give them. */
+type AttestationParts = {
+	readonly canonicalForm: string;
+	readonly coreFeatures: Dumling.Lemma<"de">["coreFeatures"];
+	readonly normalizedSurface: string;
+	readonly spelling: Spelling;
+	readonly surfaceFeatures: SurfaceFeatures;
+	/** Absent on a route that does not inflect. */
+	readonly inflectionalFeatures: OpenInflection | null | undefined;
+	readonly members: readonly Dumling.Attestation<"de">["members"][number][];
+	readonly realizationCoverage: "Full" | "Partial";
+	readonly articleEvidence?: Dumling.Attestation<
+		"de",
+		"Lexeme",
+		"NOUN"
+	>["articleEvidence"];
+	readonly expletiveEvidence?: Dumling.Attestation<
+		"de",
+		"Lexeme",
+		"VERB"
+	>["expletiveEvidence"];
+	readonly valencyEvidence?: readonly ValencyEvidence[];
+};
+
+/**
+ * The Attestation its parts make on the unit's route. TypeScript cannot
+ * tie the parts to the route's family and kind, which arrive at runtime,
+ * so the value leaves unchecked: `parseUnit` in grammar.ts checks it
+ * against the route, and one Dumling rejects is a Defect (#952).
+ */
+function attestationOn(
+	route: Target["route"],
+	parts: AttestationParts,
+): unknown {
+	const {
+		canonicalForm,
+		coreFeatures,
+		normalizedSurface,
+		spelling,
+		surfaceFeatures,
+		inflectionalFeatures,
+		...attested
+	} = parts;
+	return {
+		unitKind: "Attestation",
+		surface: {
+			unitKind: "Surface",
+			language: "de",
+			lemma: {
+				unitKind: "Lemma",
+				language: "de",
+				family: route.family,
+				kind: route.kind,
+				canonicalForm,
+				coreFeatures,
+			},
+			normalizedSurface,
+			spelling,
+			surfaceFeatures,
+			...(inflectionalFeatures === undefined
+				? {}
+				: { inflectionalFeatures }),
+		},
+		...attested,
 	};
 }
 
@@ -366,6 +466,9 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	);
 	if (first instanceof UnresolvedAnswer)
 		return { _tag: "Unresolved", reason: first.reason };
+	const verbal = first.block === "verbal" ? first : undefined;
+	const nominal = first.block === "nominal" ? first : undefined;
+	const firstCore = { ...first.core, ...first.tailCore };
 	const article = planned.article;
 	const outsideHeadword = new Set<number>([
 		...(article ? [article.member.position] : []),
@@ -374,7 +477,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const judged: Judged = {
 		orthographies: first.orthographies,
 		features: {
-			...first.core,
+			...firstCore,
 			...(first.inflection ? { inflection: first.inflection } : {}),
 		},
 		outsideHeadword,
@@ -406,7 +509,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 					return settle(() => new Answered(answered).pick(asked));
 				})
 			: Effect.succeed(undefined);
-	const caseRequest = caseRequestOver(first.openCases);
+	const caseRequest = caseRequestOver(nominal?.openCases ?? []);
 	// The guessed answer stands when jev changed nothing Luna reads;
 	// otherwise Luna writes again with jev's answers.
 	const writing: Effect.Effect<Written | undefined, AskFailure> =
@@ -419,10 +522,10 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 					else {
 						const written = yield* Fiber.join(guess);
 						missed =
-							shape.verbal && shape.lexeme
+							verbal && shape.lexeme
 								? verbGuessMisses(
 										written.canonicalForm,
-										first.core,
+										verbal.core,
 										planned.verbal?.prefixes ?? [],
 									)
 								: undefined;
@@ -437,14 +540,18 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	// A common NOUN's gender is the article Luna writes with its headword
 	// when it fits the Sentence's article; its Case is asked over the cells
 	// that gender leaves, after Luna.
-	let cells = {
-		core: first.core,
+	let cells: {
+		readonly core: Dumling.Lemma<"de">["coreFeatures"];
+		readonly inflection: OpenInflection | null | undefined;
+		readonly openCases: readonly CaseOption[];
+	} = {
+		core: firstCore,
 		inflection: first.inflection,
-		openCases: first.openCases,
+		openCases: nominal?.openCases ?? [],
 	};
 	let caseAnswer: CaseOption | UnresolvedAnswer | undefined;
 	let written: Written | undefined;
-	if (first.noun && first.inflection) {
+	if (nominal?.noun && nominal.inflection) {
 		written = yield* writing;
 		// A noun with no singular has gender null, whatever article Luna
 		// wrote (Rule de/plural-only-noun-has-no-gender): dumcorpus lists the
@@ -453,7 +560,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			written && isGermanPluralOnlyNoun(written.canonicalForm)
 				? "none"
 				: written?.article;
-		cells = nounCells(planned.article, first, article) ?? cells;
+		cells = nounCells(planned.article, nominal, article) ?? cells;
 		if (cells.openCases.length === 0)
 			return {
 				_tag: "Unresolved",
@@ -475,8 +582,8 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 				};
 	let core = cells.core;
 	let canonicalForm =
-		written && shape.verbal && shape.lexeme
-			? verbHeadword(written.canonicalForm, first.core)
+		written && verbal && shape.lexeme
+			? verbHeadword(written.canonicalForm, verbal.core)
 			: written?.canonicalForm;
 	const normalized = [
 		...(written?.members ??
@@ -542,8 +649,8 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	}
 	// A compared form of a suppletive adverb cites its positive (lieber is
 	// gern; Rules de/comparability-is-lexical, de/canonical-form-is-the-headword).
-	const degree = (first.inflection as { degree?: unknown } | null | undefined)
-		?.degree;
+	const degree =
+		first.block === "adverbial" ? first.inflection?.degree : undefined;
 	if (
 		shape.adverbial &&
 		shape.lexeme &&
@@ -565,7 +672,8 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	if (canonicalForm === undefined)
 		throw Error("No Canonical Form was written");
 	// The subject es is the authored es, whatever its position's capital.
-	if (first.expletive) normalized[first.expletive.position] = "es";
+	const expletive = verbal?.expletive;
+	if (expletive) normalized[expletive.position] = "es";
 	const normalizedSurface = shape.foreign
 		? canonicalForm
 		: joinMembers(normalized, target.glued, outsideHeadword);
@@ -590,12 +698,13 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			pieceReadings,
 		),
 	);
-	const valencyEvidence: Values[] = [...first.governed];
-	if (
-		shape.adposition &&
-		first.realizedCase &&
-		first.realizedCase !== "None"
-	) {
+	const expletiveEvidence = expletive ? members[expletive.position] : null;
+	if (expletiveEvidence === undefined)
+		throw Error("The subject es is no member of the unit");
+	const realizedCase =
+		first.block === "adposition" ? first.realizedCase : undefined;
+	const valencyEvidence: ValencyEvidence[] = [...first.governed];
+	if (shape.adposition && realizedCase && realizedCase !== "None") {
 		const table = shape.locution
 			? germanAdpositionEntry({ family: "Locution", canonicalForm })
 			: null;
@@ -603,7 +712,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			? germanAdpositionAllowedCases(table)
 			: [];
 		const realized =
-			sole !== undefined && more.length === 0 ? sole : first.realizedCase;
+			sole !== undefined && more.length === 0 ? sole : realizedCase;
 		valencyEvidence.push({
 			member: null,
 			complement: {
@@ -614,26 +723,13 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			realizedCase: realized,
 		});
 	}
-	const attestation: Values = {
-		unitKind: "Attestation",
-		surface: {
-			unitKind: "Surface",
-			language: "de",
-			lemma: {
-				unitKind: "Lemma",
-				language: "de",
-				family: target.route.family,
-				kind: target.route.kind,
-				canonicalForm,
-				coreFeatures: core,
-			},
-			normalizedSurface,
-			spelling: shape.foreign ? { kind: "Canonical" } : first.spelling,
-			surfaceFeatures: shape.foreign ? null : first.surfaceFeatures,
-			...(inflection === undefined
-				? {}
-				: { inflectionalFeatures: inflection }),
-		},
+	const attestation = attestationOn(target.route, {
+		canonicalForm,
+		coreFeatures: core,
+		normalizedSurface,
+		spelling: shape.foreign ? { kind: "Canonical" } : first.spelling,
+		surfaceFeatures: shape.foreign ? null : first.surfaceFeatures,
+		inflectionalFeatures: inflection,
 		members,
 		realizationCoverage: first.coverage,
 		// A NOUN Locution's evidence is optional: it names only an owned article.
@@ -644,15 +740,9 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 						: null,
 				}
 			: {}),
-		...(shape.verbal
-			? {
-					expletiveEvidence: first.expletive
-						? members[first.expletive.position]
-						: null,
-				}
-			: {}),
+		...(shape.verbal ? { expletiveEvidence } : {}),
 		...(shape.governor || shape.adposition ? { valencyEvidence } : {}),
-	};
+	});
 	return {
 		_tag: "Attestation",
 		attestation,

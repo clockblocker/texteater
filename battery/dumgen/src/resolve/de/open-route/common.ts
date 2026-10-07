@@ -7,6 +7,7 @@
  * governs.
  */
 
+import type * as Dumling from "dumling/types";
 import { ambiguousPieces, type MemberOrthography } from "../member-spelling.js";
 import { fill, options, question } from "../prompts.js";
 import {
@@ -23,7 +24,19 @@ import {
 	readGoverned,
 } from "./governed.js";
 import type { OpeningArticle } from "./nominal.js";
-import type { Shape, Values } from "./shape.js";
+import type { Shape, ValencyEvidence } from "./shape.js";
+
+/** A Surface's spelling: canonical, or a variant with its tags. */
+export type Spelling = Dumling.Surface<"de">["spelling"];
+
+/** A Surface's features: an archaic form's historical status. */
+export type SurfaceFeatures = Dumling.Surface<"de">["surfaceFeatures"];
+
+/** The Core Feature the tail settles: an INTJ's answer word, a Foreign word's source language. */
+export type TailCore =
+	| Dumling.Lemma<"de", "Lexeme", "INTJ">["coreFeatures"]
+	| Dumling.Lemma<"de", "Foreign", "Foreign">["coreFeatures"]
+	| Record<string, never>;
 
 /** What the head of the first request asked, and the readings code fixed. */
 export type HeadPlan = {
@@ -197,8 +210,8 @@ export function readHead(
 	answered: Answered,
 ): {
 	readonly orthographies: readonly MemberOrthography[];
-	readonly spelling: Values;
-	readonly surfaceFeatures: Values | null;
+	readonly spelling: Spelling;
+	readonly surfaceFeatures: SurfaceFeatures;
 	readonly readings: ReadonlyMap<number, string>;
 	readonly cited: boolean;
 } {
@@ -224,13 +237,13 @@ export function readHead(
 	const digits = target.members.every(
 		(member) => member.spelling || /^\d+$/u.test(member.text),
 	);
-	const spelling =
+	const spelling: Spelling =
 		target.route.kind === "NUM" && digits
 			? { kind: "Variant", variantTags: ["Licensed"] }
 			: spellingAnswer === "Canonical"
 				? { kind: "Canonical" }
 				: { kind: "Variant", variantTags: [spellingAnswer] };
-	const surfaceFeatures =
+	const surfaceFeatures: SurfaceFeatures =
 		head.archaic && answered.pick(head.archaic) === "Archaic"
 			? { historicalStatus: "Archaic" }
 			: null;
@@ -322,16 +335,16 @@ export function readTail(
 	expletive: Member | undefined,
 	cited: boolean,
 ): {
-	readonly core: Values;
+	readonly core: TailCore;
 	readonly coverage: "Full" | "Partial";
-	readonly governed: readonly Values[];
+	readonly governed: readonly ValencyEvidence[];
 	readonly governedPositions: readonly number[];
 } {
-	const core: Values = {};
-	if (tail.answer)
-		core.partType = answered.pick(tail.answer) === "Res" ? "Res" : null;
-	if (tail.sourceLanguage)
-		core.sourceLang = answered.pick(tail.sourceLanguage);
+	const core: TailCore = tail.answer
+		? { partType: answered.pick(tail.answer) === "Res" ? "Res" : null }
+		: tail.sourceLanguage
+			? { sourceLang: answered.pick(tail.sourceLanguage) }
+			: {};
 	const coverage =
 		tail.coverage && answered.pick(tail.coverage) === "Partial"
 			? "Partial"

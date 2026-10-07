@@ -10,6 +10,7 @@ import {
 	germanArticleCell,
 	germanArticleSpellings,
 } from "dumcorpus/inventories";
+import type * as Dumling from "dumling/types";
 import type { Written } from "../canonical-form.js";
 import {
 	ambiguousPieces,
@@ -26,7 +27,23 @@ import {
 	UnresolvedAnswer,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
-import { cases, genderOfArticle, type Shape, type Values } from "./shape.js";
+import { cases, type Gender, genderOfArticle, type Shape } from "./shape.js";
+
+/** A NOUN's or PROPN's Core Features. */
+export type NounCore = Dumling.Lemma<
+	"de",
+	"Lexeme" | "Locution",
+	"NOUN" | "PROPN"
+>["coreFeatures"];
+
+/** A nominal Surface's features; a NOUN Locution's have no gender. */
+export type NounInflection = NonNullable<
+	Dumling.Surface<
+		"de",
+		"Lexeme" | "Locution",
+		"NOUN" | "PROPN"
+	>["inflectionalFeatures"]
+>;
 
 /** The article that opens an article owner's unit, and the orthography it was read in. */
 export type OpeningArticle = {
@@ -212,32 +229,35 @@ export function askNominal(
 
 /** A used common NOUN's number and the gender jev saw its form show, for Luna's article. */
 export type NounRead = {
-	readonly number: string;
-	readonly shown: string | null;
+	readonly number: NonNullable<NounInflection["number"]>;
+	readonly shown: Gender | null;
 	readonly earlyCase: CaseOption | undefined;
 };
 
+/** The gender an article answer names, none for None. */
+const genderNamed = (answer: string | undefined): Gender | null =>
+	(answer !== undefined && genderOfArticle.get(answer)) || null;
+
 /** A NOUN's Core Features: a proper noun's article, and the gender. */
-function nounCore(nominal: NominalPlan, answered: Answered): Values {
-	const core: Values = {};
-	if (nominal.article)
-		core.article =
-			answered.pick(nominal.article) === "Definite" ? "Definite" : null;
-	const gender = answered.pick(nominal.gender);
-	core.gender =
-		gender === "None" ? null : (genderOfArticle[gender] ?? gender);
+function nounCore(nominal: NominalPlan, answered: Answered): NounCore {
+	const article = nominal.article
+		? answered.pick(nominal.article) === "Definite"
+			? "Definite"
+			: null
+		: undefined;
+	let gender = genderNamed(answered.pick(nominal.gender));
 	// Only a person noun made from an adjective or participle, or a noun
 	// with no singular, has no gender (Rule de/adjectival-noun-lemma);
 	// an ordinary noun shown in its plural keeps its singular's.
 	const kind = nominal.nounKind && answered.peek(nominal.nounKind);
-	if (kind === "Adjectival" || kind === "PluralOnly") core.gender = null;
-	if (kind === "Ordinary" && core.gender === null) {
-		const likeliest = answered
-			.alternatives(nominal.gender)
-			.find((option) => option in genderOfArticle);
-		if (likeliest !== undefined) core.gender = genderOfArticle[likeliest];
-	}
-	return core;
+	if (kind === "Adjectival" || kind === "PluralOnly") gender = null;
+	if (kind === "Ordinary" && gender === null)
+		gender = genderNamed(
+			answered
+				.alternatives(nominal.gender)
+				.find((option) => genderOfArticle.has(option)),
+		);
+	return article === undefined ? { gender } : { article, gender };
 }
 
 /**
@@ -251,12 +271,12 @@ export function readNominal(
 	answered: Answered,
 	cited: boolean,
 ): {
-	readonly core: Values;
-	readonly inflection: Values | null;
+	readonly core: NounCore;
+	readonly inflection: NounInflection | null;
 	readonly openCases: readonly CaseOption[];
 	readonly noun: NounRead | undefined;
 } {
-	const core = nounCore(nominal, answered);
+	let core = nounCore(nominal, answered);
 	if (cited)
 		return { core, inflection: null, openCases: [], noun: undefined };
 	let noun: NounRead | undefined;
@@ -267,13 +287,11 @@ export function readNominal(
 		!shape.locution && core.gender === null && number === "Sing"
 			? peekFormGender()
 			: undefined;
-	let formGender =
-		shown === undefined ? null : (genderOfArticle[shown] ?? shown);
+	let formGender = genderNamed(shown);
 	if (shape.lexeme && !shape.proper) {
-		const seen = peekFormGender();
 		noun = {
 			number,
-			shown: seen === undefined ? null : (genderOfArticle[seen] ?? seen),
+			shown: genderNamed(peekFormGender()),
 			earlyCase: nominal.case && answered.peek(nominal.case),
 		};
 	}
@@ -282,23 +300,23 @@ export function readNominal(
 	// article, the likeliest other gender jev weighed that does is
 	// read instead (der Tisch is never Neut).
 	const article = owned?.article;
-	const judgedGender = (formGender ?? core.gender) as string | null;
 	if (
 		article &&
 		!shape.locution &&
 		number === "Sing" &&
-		articleCases(article, number, judgedGender).length === 0
+		articleCases(article, number, formGender ?? core.gender).length === 0
 	) {
 		const onForm = core.gender === null;
 		const asked = onForm ? nominal.formGender : nominal.gender;
 		const agreeing = (asked ? answered.alternatives(asked) : [])
-			.map((option) => genderOfArticle[option])
+			.map((option) => genderOfArticle.get(option))
 			.find(
 				(option) =>
 					option !== undefined &&
 					articleCases(article, number, option).length > 0,
 			);
-		if (agreeing !== undefined && !onForm) core.gender = agreeing;
+		if (agreeing !== undefined && !onForm)
+			core = { ...core, gender: agreeing };
 		if (agreeing !== undefined && onForm) formGender = agreeing;
 	}
 	if (
@@ -309,12 +327,8 @@ export function readNominal(
 		!formGender
 	)
 		throw new UnresolvedAnswer("Unresolved formGender");
-	const inflection: Values = shape.locution
-		? { case: null, number }
-		: { case: null, gender: formGender, number };
-	const agreeing = (formGender ?? core.gender) as string | null;
 	let openCases: readonly CaseOption[] = owned
-		? articleCases(owned.article, number, agreeing)
+		? articleCases(owned.article, number, formGender ?? core.gender)
 		: [...cases, "Unmarked"];
 	// A common NOUN waits for the article Luna writes before this verdict.
 	if (openCases.length === 0 && !noun)
@@ -327,8 +341,14 @@ export function readNominal(
 			throw new UnresolvedAnswer("The Case answer fits no open cell");
 		openCases = [answer];
 	}
-	if (openCases.length === 1)
-		inflection.case = openCases[0] === "Unmarked" ? null : openCases[0];
+	const [only, ...others] = openCases;
+	const settled =
+		only !== undefined && others.length === 0 && only !== "Unmarked"
+			? only
+			: null;
+	const inflection: NounInflection = shape.locution
+		? { case: settled, number }
+		: { case: settled, gender: formGender, number };
 	return { core, inflection, openCases, noun };
 }
 
@@ -346,22 +366,21 @@ export function readNominal(
 export function nounCells(
 	owned: OpeningArticle | undefined,
 	first: {
-		readonly core: Values;
-		readonly inflection: Values | null | undefined;
-		readonly noun?: NounRead;
+		readonly core: NounCore;
+		readonly inflection: NounInflection | null;
+		readonly noun: NounRead | undefined;
 	},
 	article: Written["article"],
 ):
 	| {
-			readonly core: Values;
-			readonly inflection: Values | null | undefined;
+			readonly core: NounCore;
+			readonly inflection: NounInflection;
 			readonly openCases: readonly CaseOption[];
 	  }
 	| undefined {
 	const { noun } = first;
 	if (!noun || !article || !first.inflection) return undefined;
-	const gender =
-		article === "none" ? null : (genderOfArticle[article] ?? null);
+	const gender = genderNamed(article);
 	if (gender === (first.core.gender ?? null)) return undefined;
 	const singular = noun.number === "Sing";
 	const formGender = gender === null && singular ? noun.shown : null;

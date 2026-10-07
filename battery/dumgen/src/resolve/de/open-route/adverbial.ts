@@ -9,6 +9,7 @@ import {
 	authoredMembers,
 	germanSuppletiveComparisons,
 } from "dumcorpus/inventories";
+import type * as Dumling from "dumling/types";
 import { splitHeads } from "../../../segment/de/candidates.js";
 import type { MemberOrthography } from "../member-spelling.js";
 import { fill, options, question } from "../prompts.js";
@@ -19,7 +20,23 @@ import {
 	agreementQuestions,
 	readAgreement,
 } from "./agreeing.js";
-import { fold, type Shape, type Values } from "./shape.js";
+import { fold, type Shape } from "./shape.js";
+
+/** An ADJ's or ADV's Core Features. */
+type AdverbialCore = Dumling.Lemma<
+	"de",
+	"Lexeme" | "Locution",
+	"ADJ" | "ADV"
+>["coreFeatures"];
+
+/** An ADV's degree, or an ADJ's degree and agreement. */
+export type AdverbialInflection = NonNullable<
+	Dumling.Surface<
+		"de",
+		"Lexeme" | "Locution",
+		"ADJ" | "ADV"
+	>["inflectionalFeatures"]
+>;
 
 /** What an ADV's or ADJ's block asked. */
 export type AdverbialPlan = {
@@ -92,9 +109,12 @@ export function askAdverbial(
 export function readAdverbial(
 	adverbial: AdverbialPlan,
 	answered: Answered,
-): { readonly core: Values; readonly inflection: Values | null } {
+): {
+	readonly core: AdverbialCore;
+	readonly inflection: AdverbialInflection | null;
+} {
 	const comparable = answered.pick(adverbial.comparable) === "Yes";
-	const core: Values = { comparable: comparable ? "Yes" : null };
+	const core: AdverbialCore = { comparable: comparable ? "Yes" : null };
 	const degree = comparable ? answered.pick(adverbial.degree) : null;
 	const adjective = adverbial.attributive;
 	if (!adjective) return { core, inflection: comparable ? { degree } : null };
