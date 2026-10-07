@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { summarizeQuality } from "promptsmith/evaluation";
+import { summarizeQuality } from "../src/quality.js";
 
 test("execution success is not semantic acceptance", () => {
 	expect(

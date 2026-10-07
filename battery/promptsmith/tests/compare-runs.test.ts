@@ -1,12 +1,9 @@
 import { expect, test } from "bun:test";
-import {
-	defineGoldenCaseCollection,
-	defineGoldenCorpus,
-	diffJson,
-} from "promptsmith";
+import { defineGoldenCaseCollection, defineGoldenCorpus } from "promptsmith";
 import { runOperationExperiment } from "promptsmith/evaluation";
 import { compareRuns } from "promptsmith/storage";
 import { z } from "zod";
+import { diffJson } from "../src/json-diff.js";
 
 test("JSON diffs report paths, compare arrays by index and treat key changes as differences", () => {
 	expect(

@@ -8,9 +8,10 @@ import {
 	defineGoldenCorpus,
 	definePromptSource,
 } from "promptsmith";
-import { runExperiment, runOperationExperiment } from "promptsmith/evaluation";
+import { runOperationExperiment } from "promptsmith/evaluation";
 import { compareRuns, loadRun, saveRun } from "promptsmith/storage";
 import { z } from "zod";
+import { runExperiment } from "../src/run-experiment.js";
 
 const schema = z.strictObject({ value: z.number() });
 const corpus = defineGoldenCorpus({

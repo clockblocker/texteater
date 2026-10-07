@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { StoredRun } from "./evaluation.js";
 import { diffJson, type JsonChange } from "./json-diff.js";
+import type { StoredRun } from "./operation-evaluation.js";
 import { summarizeQuality } from "./quality.js";
 import { runManifestSchema, storedRunSchema } from "./schemas.js";
 import {
@@ -87,41 +87,8 @@ export async function loadRun(
 	return parsed;
 }
 
-/** Lists only complete, validated runs; malformed records remain visible as errors. */
-export async function listRuns(outputDirectory: string) {
-	const { readdir } = await import("node:fs/promises");
-	let entries: import("node:fs").Dirent[];
-	try {
-		entries = await readdir(outputDirectory, { withFileTypes: true });
-	} catch (error) {
-		if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
-		throw error;
-	}
-	return Promise.all(
-		entries
-			.filter((entry) => entry.isDirectory())
-			.map(async (entry) => {
-				try {
-					const run = await loadRun(outputDirectory, entry.name);
-					return {
-						runId: entry.name,
-						manifest: run.manifest,
-						summary: run.summary,
-					};
-				} catch (error) {
-					return {
-						runId: entry.name,
-						error:
-							error instanceof Error
-								? error.message
-								: String(error),
-					};
-				}
-			}),
-	);
-}
 type StoredCaseRecord = StoredRun["cases"][number];
-export type CaseComparison = {
+type CaseComparison = {
 	readonly caseId: string;
 	readonly left: StoredCaseRecord | null;
 	readonly right: StoredCaseRecord | null;

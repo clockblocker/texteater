@@ -16,10 +16,9 @@ Promptsmith ships no model transport; the consumer injects its executor.
 
 ## Repeated runs
 
-`runExperiment` and `runOperationExperiment` accept `repetitions` (default 1),
-the number of times each selected case runs. A case's repetitions run back to
-back. A run with one repetition writes exactly the record shape it always
-has.
+`runOperationExperiment` accepts `repetitions` (default 1), the number of
+times each selected case runs. A case's repetitions run back to back. A run
+with one repetition writes exactly the record shape it always has.
 
 With two or more repetitions:
 
@@ -32,9 +31,9 @@ With two or more repetitions:
   count a case as succeeded only when every repetition succeeded.
   `summary.quality` still counts one verdict per case, taken from the
   representative.
-- Each case's `stability` holds the `summarizeQuality` counts over its
-  repetitions, plus `flipped` and `distinctOutputs`. A case flips when at
-  least one repetition passed the evaluator's contract (`contractPass: true`,
+- Each case's `stability` holds the quality counts over its repetitions,
+  plus `flipped` and `distinctOutputs`. A case flips when at least one
+  repetition passed the evaluator's contract (`contractPass: true`,
   not under review) and at least one other did not. An execution failure
   counts as not passing. Interrupted repetitions are ignored, so cancelling a
   run never creates flips. `distinctOutputs` counts the different outputs
@@ -71,5 +70,4 @@ they disagree, so every flipped case is `Mixed`. This keeps one diff per case
 whichever side repeated. It also means a case that goes from `Passed` to
 `Mixed` shows up as a verdict change, while random variation between
 repetitions stays out of the field diff. Each record's `stability` and
-`repetitions` remain in the pair for anything finer. `diffJson` is exported
-from `promptsmith` for the same diff on other values.
+`repetitions` remain in the pair for anything finer.

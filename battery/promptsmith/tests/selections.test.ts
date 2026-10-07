@@ -1,12 +1,12 @@
 import { expect, test } from "bun:test";
 import {
-	assembleSystemPrompt,
 	defineExperiment,
 	defineGoldenCaseCollection,
 	defineGoldenCorpus,
 	definePromptSource,
 } from "promptsmith";
 import { z } from "zod";
+import { assembleSystemPrompt } from "../src/authoring/assemble-system-prompt.js";
 
 const inputSchema = z.strictObject({ stimulus: z.string() });
 const outputSchema = z.strictObject({ answer: z.string() });

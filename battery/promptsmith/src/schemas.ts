@@ -31,14 +31,14 @@ const qualitySchema = z.strictObject({
 	unscored: z.number().int().nonnegative(),
 });
 /** One case's agreement across its repetitions. */
-export const caseStabilitySchema = z.strictObject({
+const caseStabilitySchema = z.strictObject({
 	repetitions: z.number().int().min(2),
 	...qualitySchema.shape,
 	flipped: z.boolean(),
 	distinctOutputs: z.number().int().nonnegative(),
 });
 /** Agreement across every repeated case in a run. */
-export const runStabilitySchema = z.strictObject({
+const runStabilitySchema = z.strictObject({
 	repetitions: z.number().int().min(2),
 	flipped: z.number().int().nonnegative(),
 	varyingOutputs: z.number().int().nonnegative(),
@@ -70,7 +70,7 @@ export const caseRecordSchema = z.strictObject({
 	repetitions: z.array(caseRepetitionSchema).min(2).optional(),
 	stability: caseStabilitySchema.optional(),
 });
-export const runSummarySchema = z.strictObject({
+const runSummarySchema = z.strictObject({
 	quality: qualitySchema.optional(),
 	status: z.enum(["Completed", "Failed", "Interrupted"]),
 	finishedAt: z.string().datetime(),
