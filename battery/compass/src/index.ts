@@ -9,7 +9,6 @@ export {
 	BAR_REM,
 	CARD_WIDTH_REM,
 	cardHeightPx,
-	cardWidthIn,
 	coverBoxIn,
 	DEAL_GAP_PX,
 	DECK_TOP_REM,
