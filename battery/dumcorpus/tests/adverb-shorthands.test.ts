@@ -7,20 +7,11 @@ const authoredAdverbs = new Set(
 		.map(({ lemma }) => lemma.canonicalForm),
 );
 
-/** rum's herum is a fact, but no inventory authors herum yet. */
-const unauthoredExpansions = new Set(["herum"]);
-
-test("every adverb shorthand expands to authored ADVs, herum allowed", () => {
+test("every adverb shorthand expands to authored ADVs", () => {
 	const missing = Object.values(germanAdverbShorthands)
 		.flatMap(({ expansions }) => expansions)
-		.filter(
-			(expansion) =>
-				!authoredAdverbs.has(expansion) &&
-				!unauthoredExpansions.has(expansion),
-		);
+		.filter((expansion) => !authoredAdverbs.has(expansion));
 	expect(missing).toEqual([]);
-	for (const expansion of unauthoredExpansions)
-		expect(authoredAdverbs.has(expansion)).toBe(false);
 });
 
 test("a shorthand is no authored ADV of its own, and expands to its series", () => {

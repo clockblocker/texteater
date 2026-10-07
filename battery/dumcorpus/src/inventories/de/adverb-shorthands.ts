@@ -17,8 +17,8 @@ type GermanAdverbShorthand = {
  * member of the full word it shortens, which is the target.
  *
  * - raus, rein, rüber, runter and rauf neutralize the her-/hin- pair, ran
- *   shortens heran alone, and rum shortens herum, which no inventory
- *   authors yet (`wh-adverbs.ts`; issue 1069 decides its Readings).
+ *   shortens heran alone, and rum shortens herum, which has no hin-
+ *   partner (`wh-adverbs.ts`).
  * - dran, drauf, draus, drin, drüber, drum and drunter shorten the da(r)-
  *   forms (`pronominal-adverbs.ts`).
  */

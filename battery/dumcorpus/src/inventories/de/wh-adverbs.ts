@@ -570,7 +570,9 @@ const directionalDemonstratives: readonly OneReadingAdverb[] = [
 // or spelling of its own but the Shorthand member of the word the direction
 // picks (Rule de/r-adverb-is-her-or-hin-shorthand): no spelling table lists
 // it, and `germanAdverbShorthands` (adverb-shorthands.ts) maps it to the
-// words it may stand for. Each has its directional Reading only.
+// words it may stand for. Each has its directional Reading only. rum shortens
+// herum, which has no hin- partner and two Readings, so it is authored on its
+// own below (`circlingAdverbs`).
 // https://www.duden.de/rechtschreibung/heraus
 // https://www.duden.de/rechtschreibung/hinaus
 // https://www.duden.de/rechtschreibung/raus
@@ -681,6 +683,40 @@ const directionalAdverbs: readonly OneReadingAdverb[] = [
 	},
 ];
 
+// herum has no hin- partner (there is no hinum), and its her- does not mean
+// towards the speaker, so it is no directional pair word. A free herum has two
+// Readings: 🔄 around (Duden senses 1 and 2: circling, a side turned outwards
+// or forwards, lying round a centre) and ⌛ over (sense 6, colloquial: die
+// Woche ist rum), told apart as noch's ⏳ and ➕ are. Senses 3 to 5 are not
+// this ADV: after um, herum belongs to the Locution ADP um … herum
+// (adposition-cases.ts), and in the verbal bracket it is the particle of a
+// herum- particle verb (Rule de/bracket-particle-or-circumposition). rum is
+// its Shorthand (Rule de/r-adverb-is-her-or-hin-shorthand).
+// https://www.duden.de/rechtschreibung/herum
+// https://www.duden.de/rechtschreibung/rum
+const circlingAdverbs: readonly ManyReadingAdverb[] = [
+	{
+		text: "herum",
+		ipa: "hɛˈʁʊm",
+		readings: [
+			{
+				emoji: "🔄",
+				definition:
+					"Bezeichnet eine Bewegung im Kreis oder eine Lage rings um einen Mittelpunkt, auch, welche Seite nach außen oder vorn zeigt: im Kreis herum; links herum; Du hast den Pullover verkehrt herum an. Nicht nach „um“ (um den Platz herum) und nicht als Verbzusatz (herumlaufen). Umgangssprachlich kurz rum.",
+				en: ["around, round"],
+				ru: ["вокруг; по кругу"],
+			},
+			{
+				emoji: "⌛",
+				definition:
+					"Umgangssprachlich: vorüber, vergangen, von einer Zeitspanne, meist mit „sein“: Die Ferien sind fast wieder herum. Die Woche ist rum. Nie räumlich und nicht als Verbzusatz (die Zeit herumkriegen). Umgangssprachlich kurz rum.",
+				en: ["over, past (of a stretch of time)"],
+				ru: ["прошёл; закончился (о времени)"],
+			},
+		],
+	},
+];
+
 // The demonstratives carry no marker, as the da(r)- and hier- pronominal
 // adverbs carry none (pronominal-adverbs.ts).
 const marker: Readonly<Record<Use, string>> = {
@@ -761,7 +797,8 @@ function whAdverb(
  * demonstrative da, hier, dort, dann, damals, daher and so, the demonstrative
  * dahin, hierhin, hierher, dorthin and dorther, the directional her- and hin-
  * adverbs (heraus, hinaus, herein, hinein, herüber, hinüber, herunter,
- * hinunter, herauf, hinauf and heran), and emphatic selbst and selber. Each
+ * hinunter, herauf, hinauf and heran), herum with its around and over
+ * Readings, and emphatic selbst and selber. Each
  * Reading's marker shows its series.
  * The wo(r)- pronominal adverbs are in pronominal-adverbs.ts.
  */
@@ -778,6 +815,9 @@ export const whAdverbs: readonly AuthoredMember[] = [
 		whAdverb(adverb, "Dem", adverb),
 	),
 	...directionalAdverbs.map((adverb) => whAdverb(adverb, null, adverb)),
+	...circlingAdverbs.flatMap((adverb) =>
+		adverb.readings.map((meaning) => whAdverb(adverb, null, meaning)),
+	),
 	...emphaticAdverbs.flatMap((adverb) =>
 		adverb.readings.map((meaning) => whAdverb(adverb, null, meaning)),
 	),

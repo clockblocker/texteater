@@ -1259,6 +1259,21 @@ describe("the German authored inventory", () => {
 			).toEqual([["ADV", { comparable: null }, emoji]]);
 	});
 
+	test("authors herum as one ADV with no series marker and an around and an over Reading", () => {
+		expect(
+			authoredMembers
+				.filter(({ lemma }) => lemma.canonicalForm === "herum")
+				.map(({ lemma, reading }) => [
+					lemma.kind,
+					lemma.coreFeatures,
+					reading.emojiDescription,
+				]),
+		).toEqual([
+			["ADV", { comparable: null }, "🔄"],
+			["ADV", { comparable: null }, "⌛"],
+		]);
+	});
+
 	test("authors no colloquial r- adverb and no hinan", () => {
 		for (const text of [
 			"raus",
@@ -1267,6 +1282,7 @@ describe("the German authored inventory", () => {
 			"runter",
 			"rauf",
 			"ran",
+			"rum",
 			"hinan",
 		])
 			expect(
