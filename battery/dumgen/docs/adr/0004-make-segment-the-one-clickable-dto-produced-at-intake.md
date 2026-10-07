@@ -50,5 +50,3 @@ Stitched Text back.
   unit Partial with evidence pointing at the Fusion value.
 - Hosts that persist occurrences, today tf-demo's Attestation Membership and
   Visitor Encounters, key them by Segment index.
-- The Segment parser on the package root changes under ADR 0014's frozen
-  interface and is inventoried as a deliberate change.
