@@ -112,6 +112,10 @@ export type {
 	KnowledgeSelectionInput,
 	KnowledgeSettings,
 } from "./generated/types.js";
+export type {
+	KnowledgePolicyUnavailable,
+	KnowledgeSelection,
+} from "./select-knowledge.js";
 
 export type ReadingWithKnowledge<R extends Dumling.Reading = Dumling.Reading> =
 	{

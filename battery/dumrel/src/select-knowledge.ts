@@ -3,6 +3,7 @@ import { knowledgePolicyMask } from "./knowledge-policies.js";
 import type { KnowledgeRequestMask, KnowledgeSelectionInput } from "./types.js";
 import { parseSelectionShape } from "./validation.js";
 
+/** No Knowledge Policy covers the route. Only its type is public, so callers narrow on `_tag`, not `instanceof`. */
 class KnowledgePolicyUnavailable extends Error {
 	readonly _tag = "KnowledgePolicyUnavailable";
 	readonly route: KnowledgeSelectionInput["route"];
@@ -13,8 +14,21 @@ class KnowledgePolicyUnavailable extends Error {
 		this.route = route;
 	}
 }
+
+export type { KnowledgePolicyUnavailable };
+/** What `selectKnowledge` answers: the request mask, or why it has none. */
+export type KnowledgeSelection =
+	| { readonly success: true; readonly value: KnowledgeRequestMask }
+	| {
+			readonly success: false;
+			readonly error:
+				| ParsingError<KnowledgeSelectionInput>
+				| KnowledgePolicyUnavailable;
+	  };
 /** Omitted setting leaves are enabled. Explicit false disables; null and unknown keys fail. */
-export function selectKnowledge(input: KnowledgeSelectionInput) {
+export function selectKnowledge(
+	input: KnowledgeSelectionInput,
+): KnowledgeSelection {
 	const parsed = parseSelectionShape(input);
 	if (parsed instanceof ParsingError)
 		return { success: false, error: parsed } as const;

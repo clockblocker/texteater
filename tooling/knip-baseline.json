@@ -151,5 +151,10 @@
 		"battery/dumgen/src/segment/fusion-table.ts: types FusionComponent",
 		"battery/dumgen/tests/knowledge/support.ts: types SentJev",
 		"battery/dumgen/tests/resolve/support.ts: types Sent"
+	],
+	"battery/dumrel": [
+		"battery/dumrel/src/select-knowledge.ts: types KnowledgePolicyUnavailable",
+		"battery/dumrel/src/types.ts: types KnowledgePolicyUnavailable",
+		"battery/dumrel/src/types.ts: types KnowledgeSelection"
 	]
 }

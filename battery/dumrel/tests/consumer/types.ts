@@ -1,8 +1,10 @@
+import type { Equal, Expect } from "common-utils";
 import type * as Dumling from "dumling/types";
 import {
 	applyKnowledgeChange,
 	parseReadingKnowledge,
 	projectSemanticRelations,
+	type selectKnowledge,
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 
@@ -119,3 +121,20 @@ export type ProjectionTargetCompatible = Projection["target"] extends
 	| Dumling.Reading
 	? true
 	: false;
+
+type _SelectionIsNamed = Expect<
+	Equal<ReturnType<typeof selectKnowledge>, Dumrel.KnowledgeSelection>
+>;
+declare const selection: Dumrel.KnowledgeSelection;
+if (!selection.success) {
+	// A ParsingError carries no `_tag`, so `_tag` tells the two failures apart.
+	if ("_tag" in selection.error) {
+		const tag: "KnowledgePolicyUnavailable" = selection.error._tag;
+		const route: Dumrel.KnowledgeSelectionInput["route"] =
+			selection.error.route;
+		void [tag, route];
+	} else {
+		const name: "ParsingError" = selection.error.name;
+		void name;
+	}
+}
