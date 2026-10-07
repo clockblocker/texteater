@@ -289,7 +289,6 @@
 		"battery/dumgen/src/knowledge/de/structure.ts: exports sourceVerbLemma",
 		"battery/dumgen/src/knowledge/de/valency.ts: exports attestedSlots",
 		"battery/dumgen/src/knowledge/de/valency.ts: exports frameSchema",
-		"battery/dumgen/src/knowledge/de/valency.ts: exports governablePrepositions",
 		"battery/dumgen/src/knowledge/de/valency.ts: exports prepositionLemma",
 		"battery/dumgen/src/knowledge/de/valency.ts: exports validFrame",
 		"battery/dumgen/src/knowledge/de/valency.ts: types GermanSlot",

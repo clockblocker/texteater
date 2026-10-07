@@ -14,6 +14,7 @@
  * failure.
  */
 
+import { isRecord } from "common-utils";
 import {
 	germanAdpositionAllows,
 	germanGovernablePrepositions,
@@ -191,9 +192,6 @@ export const prepositionLemma = (
 		canonicalForm,
 		coreFeatures: {},
 	}) as Dumling.Lemma<"de", "Lexeme", "ADP">;
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-	value !== null && typeof value === "object" && !Array.isArray(value);
 
 /** A proposed complement in Dumrel's shape: a preposition becomes its ADP Lemma. */
 function complementOf(value: unknown): unknown {
