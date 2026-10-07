@@ -4,11 +4,11 @@ import type { DataModel, Doc, Id, TableNames } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 
 /**
- * The order in which a pruned Reading's or Lemma's rows are deleted, stated
- * once. Each owner's cleanup walks its phase list one item at a time, in
- * bounded batches; the cursor validators and phase order derive from these
- * lists, and `tests/post-reset-smoke.test.ts` checks the Reading list against
- * every Reading-owned table in the schema.
+ * The order in which a pruned Reading's or Lemma's rows, or a cleared
+ * Visitor's, are deleted, stated once. Each owner's cleanup walks its phase
+ * list in bounded batches; the cursor validators and phase order derive from
+ * these lists, and `tests/post-reset-smoke.test.ts` checks each list, plus its
+ * exemptions, against every table the schema says that owner owns.
  */
 
 /** The owner keys a uniform phase may look its rows up by. */
@@ -16,6 +16,7 @@ type OwnerKeys = {
 	readingKey: string;
 	readingId: Id<"readings">;
 	lemmaId: Id<"lemmas">;
+	visitorId: string;
 };
 
 type OwnerKeyName = keyof OwnerKeys;
@@ -160,7 +161,8 @@ export const READING_CLEANUP_EXEMPTIONS: Readonly<
  * anything else. The Lemma goes last, with its dictionary entry.
  */
 export const LEMMA_CLEANUP_PHASES = [
-	{ phase: "Surfaces" },
+	/** Surfaces with their owned-Surface entries. */
+	{ phase: "Surfaces", tables: ["surfaces", "ownedSurfaces"] },
 	ownedRows(
 		"IncomingSemanticEdges",
 		"lemmaId",
@@ -168,8 +170,66 @@ export const LEMMA_CLEANUP_PHASES = [
 		"targetLemmaId",
 		"by_target_lemma_id",
 	),
-	{ phase: "Lemma" },
+	/** The Lemma with its dictionary entry. */
+	{ phase: "Lemma", tables: ["dictionaryLemmas"] },
 ] as const satisfies readonly CleanupPhase[];
+
+/** Lemma-owned tables whose rows leave with something other than the sweep. */
+export const LEMMA_CLEANUP_EXEMPTIONS: Readonly<
+	Partial<Record<TableNames, string>>
+> = {
+	readings: "a Lemma with a Reading is never pruned",
+};
+
+/**
+ * Visitor clear phases, in order. Sessions go first, keeping their Segment
+ * Resolution State in step; attempts next, so a waiting attempt of another
+ * Visitor is promoted; then the Visitor's own settings, notes, layouts and
+ * clicks.
+ */
+export const VISITOR_CLEANUP_PHASES = [
+	{ phase: "ResolutionSessions", tables: ["resolutionSessions"] },
+	{
+		phase: "GenerationAttempts",
+		tables: ["knowledgeGenerationAttempts", "knowledgeProductionRuns"],
+	},
+	{ phase: "KnowledgeSettings", tables: ["knowledgeSettings"] },
+	ownedRows(
+		"PersonalAnnotations",
+		"visitorId",
+		"personalAnnotations",
+		"visitorId",
+		"by_visitor_id_and_reading_id",
+	),
+	ownedRows(
+		"ReadingLanguageLayouts",
+		"visitorId",
+		"readingLanguageLayouts",
+		"visitorId",
+		"by_visitor_id_and_target_language",
+	),
+	ownedRows(
+		"ReadingFamilyKindLayouts",
+		"visitorId",
+		"readingFamilyKindLayouts",
+		"visitorId",
+		"by_visitor_id_and_target_language_and_family_and_kind",
+	),
+	ownedRows(
+		"VisitorClicks",
+		"visitorId",
+		"visitorClicks",
+		"visitorId",
+		"by_visitor_id_and_clicked_at",
+	),
+] as const satisfies readonly CleanupPhase[];
+
+/** Visitor-owned tables whose rows leave with something other than the clear. */
+export const VISITOR_CLEANUP_EXEMPTIONS: Readonly<
+	Partial<Record<TableNames, string>>
+> = {
+	inspectionClicks: "Resolution Inspector diagnostics, cleared as a set",
+};
 
 type PhaseOf<Phases extends readonly CleanupPhase[]> = Phases[number]["phase"];
 
@@ -196,6 +256,12 @@ export const lemmaCleanupCursorValidator = v.object({
 
 export type LemmaCleanupCursor = Infer<typeof lemmaCleanupCursorValidator>;
 
+export const visitorCleanupPhaseValidator = phaseValidator(
+	VISITOR_CLEANUP_PHASES,
+);
+
+export type VisitorCleanupPhase = Infer<typeof visitorCleanupPhaseValidator>;
+
 type CleanupCursor<P extends string> = { itemIndex: number; phase: P };
 
 /** The cursor at the first phase of the first item. */
@@ -218,11 +284,19 @@ export function nextPhase<Phases extends readonly CleanupPhase[]>(
 	phases: Phases,
 	cursor: CleanupCursor<PhaseOf<Phases>>,
 ): CleanupCursor<PhaseOf<Phases>> {
-	const index = phases.findIndex(({ phase }) => phase === cursor.phase);
-	const next = phases[index + 1];
-	return next
-		? { itemIndex: cursor.itemIndex, phase: next.phase }
-		: nextItem(phases, cursor);
+	const next = phaseAfter(phases, cursor.phase);
+	return next === null
+		? nextItem(phases, cursor)
+		: { itemIndex: cursor.itemIndex, phase: next };
+}
+
+/** The phase after `phase`, or `null` after the last. */
+export function phaseAfter<Phases extends readonly CleanupPhase[]>(
+	phases: Phases,
+	phase: PhaseOf<Phases>,
+): PhaseOf<Phases> | null {
+	const index = phases.findIndex((entry) => entry.phase === phase);
+	return phases[index + 1]?.phase ?? null;
 }
 
 /** The phase entry `phase` names in `phases`. */
@@ -235,7 +309,8 @@ export function cleanupPhase<
 	return found as Extract<Phases[number], { phase: P }>;
 }
 
-function firstPhase<Phases extends readonly CleanupPhase[]>(
+/** The first phase of `phases`. */
+export function firstPhase<Phases extends readonly CleanupPhase[]>(
 	phases: Phases,
 ): PhaseOf<Phases> {
 	const first = phases[0];

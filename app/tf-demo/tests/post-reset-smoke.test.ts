@@ -16,8 +16,12 @@ import {
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import {
+	LEMMA_CLEANUP_EXEMPTIONS,
+	LEMMA_CLEANUP_PHASES,
 	READING_CLEANUP_EXEMPTIONS,
 	READING_CLEANUP_PHASES,
+	VISITOR_CLEANUP_EXEMPTIONS,
+	VISITOR_CLEANUP_PHASES,
 } from "../convex/model/ownedRowCleanup";
 import { stripTextAnalysisGraph } from "../convex/model/textAnalysisStripping";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
@@ -173,22 +177,28 @@ const readingOwnershipFields = [
 	"attemptKey",
 ];
 
-const visitorSweepExemptions: Record<string, string> = {
-	inspectionClicks: "Resolution Inspector diagnostics, cleared as a set",
-};
+/** Fields that tie a row to a Lemma. */
+const lemmaOwnershipFields = ["lemmaId", "targetLemmaId"];
 
 /** Knowledge production runs belong to their attempt's Reading and Visitor. */
 const ownedThroughAttempt = ["knowledgeProductionRuns"];
 
-/** Schema tables owned through `fields`, less the exempt ones. */
+/** An owned-Surface entry belongs to its Surface's Lemma. */
+const ownedThroughSurface = ["ownedSurfaces"];
+
+/**
+ * Schema tables owned through `fields`, or through a row in `ownedThrough`,
+ * less the exempt ones.
+ */
 function ownedTables(
 	fields: readonly string[],
 	exemptions: Readonly<Record<string, string | undefined>>,
+	ownedThrough: readonly string[],
 ): string[] {
 	return Object.entries(tfDemoSchema.tables)
 		.filter(([tableName, table]) => {
 			if (tableName in exemptions) return false;
-			if (ownedThroughAttempt.includes(tableName)) return true;
+			if (ownedThrough.includes(tableName)) return true;
 			const tableFields = Object.keys(
 				(table.validator as { fields?: Record<string, unknown> })
 					.fields ?? {},
@@ -197,6 +207,22 @@ function ownedTables(
 		})
 		.map(([tableName]) => tableName)
 		.sort();
+}
+
+/** The tables a cleanup phase list deletes from. */
+function sweptTables(
+	phases: readonly (
+		| { readonly table: string }
+		| { readonly tables?: readonly string[] }
+	)[],
+): string[] {
+	return [
+		...new Set(
+			phases.flatMap((phase) =>
+				"table" in phase ? [phase.table] : (phase.tables ?? []),
+			),
+		),
+	].sort();
 }
 
 async function existingIds(
@@ -366,7 +392,8 @@ const readingOwnedRows: Record<
 
 /**
  * One builder per Visitor-owned table, seeding `visitorId`'s rows. A new
- * Visitor-owned table needs a builder here and a phase in the Visitor clear.
+ * Visitor-owned table needs a builder here and a phase in
+ * `VISITOR_CLEANUP_PHASES`, or the clear test fails.
  */
 const visitorOwnedRows: Record<
 	string,
@@ -669,15 +696,9 @@ describe("tf-demo post-reset contract", () => {
 		const owned = ownedTables(
 			readingOwnershipFields,
 			READING_CLEANUP_EXEMPTIONS,
+			ownedThroughAttempt,
 		);
-		const swept = [
-			...new Set<string>(
-				READING_CLEANUP_PHASES.flatMap((phase) =>
-					"table" in phase ? [phase.table] : phase.tables,
-				),
-			),
-		].sort();
-		expect(swept).toEqual(owned);
+		expect(sweptTables(READING_CLEANUP_PHASES)).toEqual(owned);
 		expect(Object.keys(readingOwnedRows).sort()).toEqual(owned);
 		const seeded = await t.run(async (ctx) => {
 			const rows = { pruned: [] as string[], kept: [] as string[] };
@@ -708,6 +729,16 @@ describe("tf-demo post-reset contract", () => {
 		]);
 		expect(seeded.pruned.filter((id) => remaining.has(id))).toEqual([]);
 		expect(seeded.kept.filter((id) => !remaining.has(id))).toEqual([]);
+	});
+
+	test("the Lemma cleanup phases delete from every Lemma-owned table", () => {
+		expect(sweptTables(LEMMA_CLEANUP_PHASES)).toEqual(
+			ownedTables(
+				lemmaOwnershipFields,
+				LEMMA_CLEANUP_EXEMPTIONS,
+				ownedThroughSurface,
+			),
+		);
 	});
 
 	test("a Lemma the delete budget cannot finish waits for the next batch instead of being skipped", async () => {
@@ -769,9 +800,13 @@ describe("tf-demo post-reset contract", () => {
 		const { sentenceIds } = await submitText(t, [["Banken"]]);
 		const sentenceId = sentenceIds[0];
 		if (!sentenceId) throw new Error("Expected a stored Sentence.");
-		expect(Object.keys(visitorOwnedRows).sort()).toEqual(
-			ownedTables(["visitorId"], visitorSweepExemptions),
+		const owned = ownedTables(
+			["visitorId"],
+			VISITOR_CLEANUP_EXEMPTIONS,
+			ownedThroughAttempt,
 		);
+		expect(sweptTables(VISITOR_CLEANUP_PHASES)).toEqual(owned);
+		expect(Object.keys(visitorOwnedRows).sort()).toEqual(owned);
 		const seeded = { cleared: [] as string[], kept: [] as string[] };
 		for (const build of Object.values(visitorOwnedRows)) {
 			seeded.cleared.push(

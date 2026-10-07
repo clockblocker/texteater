@@ -16,6 +16,15 @@ import {
 } from "./_generated/server";
 import { requireAdmin } from "./deploymentFlags";
 import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
+import {
+	cleanupPhase,
+	deleteOwnedRows,
+	firstPhase,
+	phaseAfter,
+	VISITOR_CLEANUP_PHASES,
+	type VisitorCleanupPhase,
+	visitorCleanupPhaseValidator,
+} from "./model/ownedRowCleanup";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import {
 	type StripTextAnalysisResult,
@@ -158,156 +167,83 @@ export const clearSharedDataBatch = internalMutation({
 	handler: (ctx, { tableIndex }) => clearTableBatch(ctx, tableIndex),
 });
 
-const visitorResetPhaseValidator = v.union(
-	v.literal("ResolutionSessions"),
-	v.literal("GenerationAttempts"),
-	v.literal("KnowledgeSettings"),
-	v.literal("PersonalAnnotations"),
-	v.literal("ReadingLanguageLayouts"),
-	v.literal("ReadingFamilyKindLayouts"),
-	v.literal("VisitorClicks"),
-	v.literal("Done"),
-);
-
-type VisitorResetPhase =
-	| "ResolutionSessions"
-	| "GenerationAttempts"
-	| "KnowledgeSettings"
-	| "PersonalAnnotations"
-	| "ReadingLanguageLayouts"
-	| "ReadingFamilyKindLayouts"
-	| "VisitorClicks"
-	| "Done";
-
 const visitorResetResultValidator = v.object({
 	deleted: v.number(),
 	hasMore: v.boolean(),
-	nextPhase: visitorResetPhaseValidator,
+	nextPhase: v.union(v.null(), visitorCleanupPhaseValidator),
 });
 
+/**
+ * Clears one batch of `visitorId`'s rows from one phase of
+ * `VISITOR_CLEANUP_PHASES`; `nextPhase` is `null` once the last is done.
+ */
 export const clearVisitorDataBatch = internalMutation({
 	args: {
 		visitorId: v.string(),
-		phase: v.optional(visitorResetPhaseValidator),
+		phase: v.optional(visitorCleanupPhaseValidator),
 	},
 	returns: visitorResetResultValidator,
 	handler: async (ctx, { visitorId, phase: phaseValue }) => {
 		assertIdentifier(visitorId, "visitorId");
-		const phase: VisitorResetPhase = phaseValue ?? "ResolutionSessions";
+		const phase = cleanupPhase(
+			VISITOR_CLEANUP_PHASES,
+			phaseValue ?? firstPhase(VISITOR_CLEANUP_PHASES),
+		);
 		let deleted = 0;
-		let nextPhase: VisitorResetPhase;
-		switch (phase) {
-			case "ResolutionSessions": {
-				const rows = await ctx.db
-					.query("resolutionSessions")
-					.withIndex("by_visitor_id_and_updated_at", (q) =>
-						q.eq("visitorId", visitorId),
-					)
-					.take(BATCH_SIZE);
-				await deleteResolutionSessions(ctx, rows);
-				deleted = rows.length;
-				nextPhase =
-					rows.length === BATCH_SIZE
-						? "ResolutionSessions"
-						: "GenerationAttempts";
-				break;
-			}
-			case "GenerationAttempts": {
-				const attempts = await ctx.db
-					.query("knowledgeGenerationAttempts")
-					.withIndex("by_visitor_id_and_updated_at", (q) =>
-						q.eq("visitorId", visitorId),
-					)
-					.take(BATCH_SIZE);
-				const removed = await deleteKnowledgeAttempts(
-					ctx,
-					attempts,
-					BATCH_SIZE,
-				);
-				deleted = removed.deleted;
-				nextPhase =
-					removed.complete && attempts.length < BATCH_SIZE
-						? "KnowledgeSettings"
-						: "GenerationAttempts";
-				break;
-			}
-			case "KnowledgeSettings": {
-				const row = await ctx.db
-					.query("knowledgeSettings")
-					.withIndex("by_visitor_id", (q) =>
-						q.eq("visitorId", visitorId),
-					)
-					.unique();
-				if (row) {
-					await ctx.db.delete(row._id);
-					deleted = 1;
+		let phaseComplete = true;
+		if ("table" in phase) {
+			deleted = await deleteOwnedRows(ctx, phase, visitorId, BATCH_SIZE);
+			phaseComplete = deleted < BATCH_SIZE;
+		} else {
+			switch (phase.phase) {
+				case "ResolutionSessions": {
+					const rows = await ctx.db
+						.query("resolutionSessions")
+						.withIndex("by_visitor_id_and_updated_at", (q) =>
+							q.eq("visitorId", visitorId),
+						)
+						.take(BATCH_SIZE);
+					await deleteResolutionSessions(ctx, rows);
+					deleted = rows.length;
+					phaseComplete = rows.length < BATCH_SIZE;
+					break;
 				}
-				nextPhase = "PersonalAnnotations";
-				break;
+				case "GenerationAttempts": {
+					const attempts = await ctx.db
+						.query("knowledgeGenerationAttempts")
+						.withIndex("by_visitor_id_and_updated_at", (q) =>
+							q.eq("visitorId", visitorId),
+						)
+						.take(BATCH_SIZE);
+					const removed = await deleteKnowledgeAttempts(
+						ctx,
+						attempts,
+						BATCH_SIZE,
+					);
+					deleted = removed.deleted;
+					phaseComplete =
+						removed.complete && attempts.length < BATCH_SIZE;
+					break;
+				}
+				case "KnowledgeSettings": {
+					const row = await ctx.db
+						.query("knowledgeSettings")
+						.withIndex("by_visitor_id", (q) =>
+							q.eq("visitorId", visitorId),
+						)
+						.unique();
+					if (row) {
+						await ctx.db.delete(row._id);
+						deleted = 1;
+					}
+					break;
+				}
 			}
-			case "PersonalAnnotations": {
-				const rows = await ctx.db
-					.query("personalAnnotations")
-					.withIndex("by_visitor_id_and_reading_id", (q) =>
-						q.eq("visitorId", visitorId),
-					)
-					.take(BATCH_SIZE);
-				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
-				deleted = rows.length;
-				nextPhase =
-					rows.length === BATCH_SIZE
-						? "PersonalAnnotations"
-						: "ReadingLanguageLayouts";
-				break;
-			}
-			case "ReadingLanguageLayouts": {
-				const rows = await ctx.db
-					.query("readingLanguageLayouts")
-					.withIndex("by_visitor_id_and_target_language", (q) =>
-						q.eq("visitorId", visitorId),
-					)
-					.take(BATCH_SIZE);
-				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
-				deleted = rows.length;
-				nextPhase =
-					rows.length === BATCH_SIZE
-						? "ReadingLanguageLayouts"
-						: "ReadingFamilyKindLayouts";
-				break;
-			}
-			case "ReadingFamilyKindLayouts": {
-				const rows = await ctx.db
-					.query("readingFamilyKindLayouts")
-					.withIndex(
-						"by_visitor_id_and_target_language_and_family_and_kind",
-						(q) => q.eq("visitorId", visitorId),
-					)
-					.take(BATCH_SIZE);
-				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
-				deleted = rows.length;
-				nextPhase =
-					rows.length === BATCH_SIZE
-						? "ReadingFamilyKindLayouts"
-						: "VisitorClicks";
-				break;
-			}
-			case "VisitorClicks": {
-				const rows = await ctx.db
-					.query("visitorClicks")
-					.withIndex("by_visitor_id_and_clicked_at", (q) =>
-						q.eq("visitorId", visitorId),
-					)
-					.take(BATCH_SIZE);
-				await Promise.all(rows.map((row) => ctx.db.delete(row._id)));
-				deleted = rows.length;
-				nextPhase =
-					rows.length === BATCH_SIZE ? "VisitorClicks" : "Done";
-				break;
-			}
-			case "Done":
-				nextPhase = "Done";
 		}
-		return { deleted, hasMore: nextPhase !== "Done", nextPhase };
+		const nextPhase = phaseComplete
+			? phaseAfter(VISITOR_CLEANUP_PHASES, phase.phase)
+			: phase.phase;
+		return { deleted, hasMore: nextPhase !== null, nextPhase };
 	},
 });
 
@@ -464,19 +400,20 @@ export const clearVisitorData = action({
 	handler: async (ctx, { visitorId }): Promise<{ deleted: number }> => {
 		assertIdentifier(visitorId, "visitorId");
 		let deleted = 0;
-		let phase: VisitorResetPhase = "ResolutionSessions";
+		let phase: VisitorCleanupPhase | null = firstPhase(
+			VISITOR_CLEANUP_PHASES,
+		);
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 			const result: {
 				deleted: number;
-				hasMore: boolean;
-				nextPhase: VisitorResetPhase;
+				nextPhase: VisitorCleanupPhase | null;
 			} = await ctx.runMutation(
 				internal.demoReset.clearVisitorDataBatch,
 				{ visitorId, phase },
 			);
 			deleted += result.deleted;
 			phase = result.nextPhase;
-			if (!result.hasMore) return { deleted };
+			if (phase === null) return { deleted };
 		}
 		throw new Error("Visitor-data reset exceeded its batch limit.");
 	},
