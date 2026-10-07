@@ -123,8 +123,10 @@ test("stored units index into their Sentence's Segments, and the reader view giv
 	const { sentenceIds } = await t.run((ctx) =>
 		persistSubmittedText(ctx, submission),
 	);
+	const firstSentenceId = sentenceIds[0];
+	if (!firstSentenceId) throw new Error("Expected a stored first Sentence.");
 	const view = await t.run(async (ctx) => {
-		const sentence = await ctx.db.get(sentenceIds[0] ?? ("" as never));
+		const sentence = await ctx.db.get(firstSentenceId);
 		if (!sentence) throw new Error("Expected the first Sentence.");
 		return {
 			units: sentence.units,
@@ -166,8 +168,7 @@ test("stored units index into their Sentence's Segments, and the reader view giv
 	);
 	expect(retried).toMatchObject({ deduplicated: true, sentenceIds });
 	const units = await t.run(
-		async (ctx) =>
-			(await ctx.db.get(sentenceIds[0] ?? ("" as never)))?.units,
+		async (ctx) => (await ctx.db.get(firstSentenceId))?.units,
 	);
 	expect(units).toEqual(view.units);
 });
@@ -244,8 +245,10 @@ test("a Sentence whose jev request fails is stored marked as not segmented, with
 	const { sentenceIds } = await t.run((ctx) =>
 		persistSubmittedText(ctx, persistable(submission)),
 	);
+	const thirdSentenceId = sentenceIds[2];
+	if (!thirdSentenceId) throw new Error("Expected a stored third Sentence.");
 	const view = await t.run(async (ctx) => {
-		const sentence = await ctx.db.get(sentenceIds[2] ?? ("" as never));
+		const sentence = await ctx.db.get(thirdSentenceId);
 		if (!sentence) throw new Error("Expected the third Sentence.");
 		return projectSentenceView(ctx, sentence, "visitor-1");
 	});

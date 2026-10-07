@@ -145,7 +145,7 @@ function bankGrammar(sentenceId: Id<"sentences">) {
 			{
 				requestId: "grammar",
 				runToken: "grammar",
-				segmentId: "" as never,
+				segmentId: "" as Id<"segments">,
 			},
 		).occurrence.attestation,
 	};

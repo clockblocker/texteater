@@ -3,6 +3,7 @@ import type { FunctionReturnType } from "convex/server";
 import { renderToStaticMarkup } from "react-dom/server";
 
 import type { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 import { renderNote } from "../src/notes";
 import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import {
@@ -18,7 +19,7 @@ type ShadowNote = Extract<
 function noteFixture(): ShadowNote {
 	return {
 		kind: "Shadow",
-		target: { kind: "Shadow", shadowId: "shadow-1" as never },
+		target: { kind: "Shadow", shadowId: "shadow-1" as Id<"shadows"> },
 		descriptor: {
 			language: "de",
 			canonicalForm: "Bank",
@@ -28,20 +29,26 @@ function noteFixture(): ShadowNote {
 		inspection: {
 			candidates: [
 				{
-					lemmaId: "lemma-bank-a" as never,
+					lemmaId: "lemma-bank-a" as Id<"lemmas">,
 					canonicalForm: "Bank",
 					family: "Lexeme",
 					kind: "NOUN",
 					coreFeatures: [{ name: "nounClass", value: "place" }],
-					target: { kind: "Lemma", lemmaId: "lemma-bank-a" as never },
+					target: {
+						kind: "Lemma",
+						lemmaId: "lemma-bank-a" as Id<"lemmas">,
+					},
 				},
 				{
-					lemmaId: "lemma-bank-b" as never,
+					lemmaId: "lemma-bank-b" as Id<"lemmas">,
 					canonicalForm: "Bank",
 					family: "Lexeme",
 					kind: "NOUN",
 					coreFeatures: [{ name: "nounClass", value: "institution" }],
-					target: { kind: "Lemma", lemmaId: "lemma-bank-b" as never },
+					target: {
+						kind: "Lemma",
+						lemmaId: "lemma-bank-b" as Id<"lemmas">,
+					},
 				},
 			],
 		},
@@ -49,12 +56,12 @@ function noteFixture(): ShadowNote {
 			page: [
 				{
 					reading: {
-						readingId: "reading-source" as never,
+						readingId: "reading-source" as Id<"readings">,
 						canonicalForm: "laufen",
 						emojiDescription: "🏃",
 						target: {
 							kind: "Reading",
-							readingId: "reading-source" as never,
+							readingId: "reading-source" as Id<"readings">,
 						},
 					},
 					pendingRelations: [

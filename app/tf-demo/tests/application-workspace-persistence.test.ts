@@ -7,6 +7,7 @@ import {
 	type WorkspaceState,
 	workspaceReducer,
 } from "compass";
+import type { Id } from "../convex/_generated/dataModel";
 import {
 	type ApplicationWorkspaceStorage,
 	loadApplicationWorkspace,
@@ -28,7 +29,7 @@ const reading = (requestId: string): WorkspaceSubject => ({
 });
 const lemma: WorkspaceSubject = {
 	kind: "Note",
-	target: { kind: "Lemma", lemmaId: "lemma-1" as never },
+	target: { kind: "Lemma", lemmaId: "lemma-1" as Id<"lemmas"> },
 };
 
 function memoryStorage(entries: Record<string, string> = {}) {

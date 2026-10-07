@@ -156,7 +156,8 @@ test("a Sentence jev cannot segment is stored with its written words, marked as 
 		status: "Accepted",
 	});
 	const [, failed] = await sentences(t);
-	expect(failed?.stitchedText).toBe("Er wohnt im Haus.");
+	if (!failed) throw new Error("Expected a second Sentence.");
+	expect(failed.stitchedText).toBe("Er wohnt im Haus.");
 	expect(failed).toMatchObject({ units: [], segmentationFailed: true });
 	// `im` keeps its spelling: no jev answer split it.
 	expect(
@@ -165,7 +166,7 @@ test("a Sentence jev cannot segment is stored with its written words, marked as 
 				ctx.db
 					.query("segments")
 					.withIndex("by_sentence_id_and_index", (q) =>
-						q.eq("sentenceId", failed?._id ?? ("" as never)),
+						q.eq("sentenceId", failed._id),
 					)
 					.collect(),
 			)
