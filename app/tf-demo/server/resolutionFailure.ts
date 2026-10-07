@@ -163,3 +163,51 @@ function safeRetryAfterMs(value: number | undefined): number | undefined {
 function safeString(value: string | undefined): string | undefined {
 	return value && value.length <= 200 ? value : undefined;
 }
+
+export function assertSafeGenerationFailure(failure: GenerationFailure): void {
+	if (
+		!Number.isSafeInteger(failure.attempts) ||
+		failure.attempts < 0 ||
+		failure.attempts > 10
+	) {
+		throw new Error("Generation failure attempts are invalid.");
+	}
+	if (
+		failure.status !== undefined &&
+		(!Number.isSafeInteger(failure.status) ||
+			failure.status < 100 ||
+			failure.status > 599)
+	) {
+		throw new Error("Generation failure status is invalid.");
+	}
+	if (
+		failure.retryAfterMs !== undefined &&
+		(!Number.isSafeInteger(failure.retryAfterMs) ||
+			failure.retryAfterMs < 0)
+	) {
+		throw new Error("Generation failure Retry-After is invalid.");
+	}
+	for (const value of [failure.providerCode, failure.providerRequestId]) {
+		if (value !== undefined && (value.length === 0 || value.length > 200)) {
+			throw new Error("Generation failure metadata is invalid.");
+		}
+	}
+}
+
+export function publicFailureMessage(
+	phase: ResolutionRunPhase,
+	category: GenerationFailure["category"],
+): string {
+	const subject = phase === "Reading" ? "Reading generation" : "Resolution";
+	return category === "Network" ||
+		category === "RateLimited" ||
+		category === "ProviderUnavailable"
+		? `${subject} is temporarily unavailable.`
+		: `${subject} could not be completed.`;
+}
+
+export function safeFailureMessage(message: string): string {
+	return message.trim().length > 0 && message.length <= 240
+		? message
+		: "Resolution could not be completed.";
+}

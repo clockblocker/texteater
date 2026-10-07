@@ -11,6 +11,7 @@ import {
 	parseGermanAttestation,
 	parseGermanReading,
 } from "../server/operationalParsing";
+import type { ResolutionSessionGuard } from "../server/resolutionLifecycle";
 import { assertSentenceUnits } from "../server/storedSegments";
 import type { Id } from "./_generated/dataModel";
 import {
@@ -36,7 +37,6 @@ import {
 	advanceResolutionSession,
 	type CommittedOccurrence,
 	completeResolutionSession,
-	type ResolutionSessionGuard,
 	recordResolutionRunSuccess,
 	requireCommittingSession,
 	settleResolutionSession,

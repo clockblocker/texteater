@@ -1,4 +1,4 @@
-import type { ResolutionLifecycle } from "../../convex/model/resolutionSessions";
+import type { ResolutionLifecycle } from "../../server/resolutionLifecycle";
 
 const active: ResolutionLifecycle = {
 	state: "Active",

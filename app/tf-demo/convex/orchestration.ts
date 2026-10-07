@@ -50,6 +50,7 @@ import {
 	parseGermanLemma,
 	parseGermanReading,
 } from "../server/operationalParsing";
+import type { ResolutionSessionGuard } from "../server/resolutionLifecycle";
 import { executeResolutionSession } from "../server/resolutionSessionExecution";
 import { projectResolutionReading } from "../server/resolutionSessionProjection";
 import { storedUnitOf } from "../server/storedSegments";
@@ -64,7 +65,6 @@ import {
 } from "./_generated/server";
 import { inspectionEnabled } from "./deploymentFlags";
 import { inspectionFor } from "./inspectionAction";
-import type { ResolutionSessionGuard } from "./model/resolutionSessions";
 import {
 	languageValidator,
 	resolutionSessionGuardValidator,

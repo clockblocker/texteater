@@ -1,5 +1,27 @@
 import type { Infer } from "convex/values";
-import { restoreStoredGrammar } from "../../server/resolutionGrammar";
+import {
+	assertSafeGenerationFailure,
+	publicFailureMessage,
+	safeFailureMessage,
+} from "../../server/resolutionFailure";
+import {
+	assertIdentifier,
+	assertOperationalString,
+	assertResolutionProgressTransition,
+	guardMatches,
+	MAX_RESOLUTION_RUNS,
+	phaseForProgress,
+	RECOVERY_DEADLINE_MS,
+	RESOLUTION_RETENTION_MS,
+	type ResolutionFailureCode,
+	type ResolutionPhase,
+	type ResolutionProgress,
+	type ResolutionSessionGuard,
+	resolutionProgressHasReached,
+	STALE_RUN_AFTER_MS,
+	type StoredResolutionGrammar,
+	type StoredResolutionReading,
+} from "../../server/resolutionLifecycle";
 import {
 	projectResolutionGrammar,
 	projectResolutionReading,
@@ -7,21 +29,13 @@ import {
 import { internal } from "../_generated/api";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
+import { restoreGrammaticalCheckpoint } from "./grammarCheckpoint";
 import { inspectionRequested } from "./inspection";
 import { scheduleKnowledgeGeneration } from "./knowledgeScheduling";
 import { reconstructReusableAttestation } from "./resolutionLookup";
 import type {
 	readingCheckpointValidator,
-	resolutionActivityValidator,
-	resolutionFailureCodeValidator,
 	resolutionGenerationEventValidator,
-	resolutionGrammarProjectionValidator,
-	resolutionLifecycleValidator,
-	resolutionOutcomeValidator,
-	resolutionPhaseValidator,
-	resolutionProgressValidator,
-	resolutionReadingProjectionValidator,
-	resolutionSessionGuardValidator,
 	resolvedGrammaticalValidator,
 	safeGenerationFailureValidator,
 } from "./validators";
@@ -32,48 +46,10 @@ import { ensureVisitorEncounter } from "./visitorClicks";
  * claim, progress, restart, stale recovery, each Terminal outcome, and
  * deletion. Each transition keeps the Segment Resolution State (ADR-0004) in
  * step inside this module, and one scheduling path starts every run. Callers
- * ask it to move a session; nothing else writes a session row.
+ * ask it to move a session; nothing else writes a session row. The rules it
+ * applies that need no database live in `server/resolutionLifecycle.ts`.
  */
 
-export const MAX_IDENTIFIER_LENGTH = 200;
-/**
- * A run that has written nothing for this long is declared stale. It exceeds
- * Convex's 10-minute action limit, so a live run is never duplicated.
- */
-export const STALE_RUN_AFTER_MS = 11 * 60 * 1_000;
-/**
- * A crashed run is recovered until this long after its session started or a
- * learner retried it. The session stores it as `retryDeadlineAt`.
- */
-export const RECOVERY_DEADLINE_MS = 15 * 60 * 1_000;
-/**
- * The first run is declared stale after `STALE_RUN_AFTER_MS` (11 minutes) and
- * its replacement after twice that (22 minutes), past `RECOVERY_DEADLINE_MS`
- * (15 minutes). So only 2 runs fit.
- */
-export const MAX_RESOLUTION_RUNS = 2;
-/** Sessions and their runs are kept this long after their last write. */
-export const RESOLUTION_RETENTION_MS = 24 * 60 * 60 * 1_000;
-
-export type ResolutionProgress = Infer<typeof resolutionProgressValidator>;
-export type ResolutionActivity = Infer<typeof resolutionActivityValidator>;
-export type ResolutionOutcome = Infer<typeof resolutionOutcomeValidator>;
-export type ResolutionLifecycle = Infer<typeof resolutionLifecycleValidator>;
-export type ResolutionSessionGuard = Infer<
-	typeof resolutionSessionGuardValidator
->;
-/** A Grammar projection as the Session row stores it. */
-export type StoredResolutionGrammar = Infer<
-	typeof resolutionGrammarProjectionValidator
->;
-/** A Reading projection as the Session row stores it. */
-export type StoredResolutionReading = Infer<
-	typeof resolutionReadingProjectionValidator
->;
-export type ResolutionPhase = Infer<typeof resolutionPhaseValidator>;
-export type ResolutionFailureCode = Infer<
-	typeof resolutionFailureCodeValidator
->;
 type SafeGenerationFailure = Infer<typeof safeGenerationFailureValidator>;
 type ResolutionGenerationEvent = Infer<
 	typeof resolutionGenerationEventValidator
@@ -81,93 +57,11 @@ type ResolutionGenerationEvent = Infer<
 type ReadingCheckpoint = Infer<typeof readingCheckpointValidator>;
 type ResolutionSession = Doc<"resolutionSessions">;
 
-const progressPosition: Readonly<Record<ResolutionProgress, number>> = {
-	Starting: 0,
-	RouteAvailable: 1,
-	GrammarAvailable: 2,
-	ReadingAvailable: 3,
-	Committing: 4,
-};
-
-export type ResolutionLifecycleSource = {
-	readonly lifecycle: ResolutionLifecycle;
-};
-
-export function assertResolutionLifecycle(
-	value: unknown,
-): asserts value is ResolutionLifecycle {
-	if (!value || typeof value !== "object") {
-		throw new Error("Resolution lifecycle must be an object.");
-	}
-	const lifecycle = value as Record<string, unknown>;
-	if (!isResolutionProgress(lifecycle.progress)) {
-		throw new Error("Resolution lifecycle progress is invalid.");
-	}
-	if (lifecycle.state === "Active") {
-		if (
-			!isActiveResolutionActivity(lifecycle.activity) ||
-			"outcome" in lifecycle
-		) {
-			throw new Error(
-				"An active Resolution lifecycle requires an active activity and no outcome.",
-			);
-		}
-		return;
-	}
-	if (lifecycle.state !== "Terminal" || "activity" in lifecycle) {
-		throw new Error(
-			"A terminal Resolution lifecycle cannot have activity.",
-		);
-	}
-	if (
-		lifecycle.outcome !== "Complete" &&
-		lifecycle.outcome !== "Unresolved" &&
-		lifecycle.outcome !== "PermanentFailure"
-	) {
-		throw new Error("A terminal Resolution lifecycle requires an outcome.");
-	}
-	if (
-		lifecycle.outcome === "Complete" &&
-		lifecycle.progress !== "Committing"
-	) {
-		throw new Error("Complete requires Committing progress.");
-	}
-}
-
-export function assertResolutionProgressTransition(
-	current: ResolutionProgress,
-	next: ResolutionProgress,
-): void {
-	if (current === next) return;
-	if (progressPosition[next] !== progressPosition[current] + 1) {
-		throw new Error(
-			`Resolution Session progress ${next} cannot follow ${current}.`,
-		);
-	}
-}
-
-export function resolutionProgressHasReached(
-	current: ResolutionProgress,
-	target: ResolutionProgress,
-): boolean {
-	return progressPosition[current] > progressPosition[target];
-}
-
 async function findSession(ctx: QueryCtx, requestId: string) {
 	return ctx.db
 		.query("resolutionSessions")
 		.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 		.unique();
-}
-
-function guardMatches(
-	session: ResolutionSession,
-	guard: { readonly runToken: string; readonly segmentId?: Id<"segments"> },
-): boolean {
-	return (
-		session.runToken === guard.runToken &&
-		(guard.segmentId === undefined || session.segmentId === guard.segmentId)
-	);
 }
 
 async function sourceSegmentStillMatches(
@@ -526,42 +420,6 @@ export async function claimResolutionRun(
 			...(grammatical && session.readingCheckpoint
 				? { reading: session.readingCheckpoint }
 				: {}),
-		},
-	};
-}
-
-/** Decodes the stored Grammar checkpoint into the Convex transport shape. */
-function restoreGrammaticalCheckpoint(
-	session: ResolutionSession,
-): Infer<typeof resolvedGrammaticalValidator> | undefined {
-	if (!session.grammaticalCheckpoint) return undefined;
-	const restoration = restoreStoredGrammar(session.grammaticalCheckpoint);
-	if (!restoration.ok) {
-		console.warn(
-			JSON.stringify({
-				event: "StaleGrammarCheckpoint",
-				sessionId: session._id,
-				reason: restoration.reason,
-			}),
-		);
-		return undefined;
-	}
-	const restored = restoration.grammar;
-	return {
-		...restored,
-		encounter: {
-			sentence: {
-				...restored.encounter.sentence,
-				segments: restored.encounter.sentence.segments.map(
-					(segment) => ({ ...segment }),
-				),
-			},
-			target: {
-				...restored.encounter.target,
-				memberSegmentIndices: [
-					...restored.encounter.target.memberSegmentIndices,
-				],
-			},
 		},
 	};
 }
@@ -953,90 +811,4 @@ async function upsertResolutionRun(
 		startedAt: now,
 		...values,
 	});
-}
-
-function phaseForProgress(progress: ResolutionProgress): ResolutionPhase {
-	return progress === "Starting"
-		? "Route"
-		: progress === "RouteAvailable"
-			? "Grammar"
-			: progress === "GrammarAvailable"
-				? "Reading"
-				: "Commit";
-}
-
-export function assertIdentifier(value: string, name: string): void {
-	if (value.trim().length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
-		throw new Error(`${name} must contain 1 to 200 characters.`);
-	}
-}
-
-function assertOperationalString(value: string, name: string): void {
-	if (value.length === 0 || value.length > 200) {
-		throw new Error(`${name} must contain 1 to 200 characters.`);
-	}
-}
-
-function assertSafeGenerationFailure(failure: SafeGenerationFailure): void {
-	if (
-		!Number.isSafeInteger(failure.attempts) ||
-		failure.attempts < 0 ||
-		failure.attempts > 10
-	) {
-		throw new Error("Generation failure attempts are invalid.");
-	}
-	if (
-		failure.status !== undefined &&
-		(!Number.isSafeInteger(failure.status) ||
-			failure.status < 100 ||
-			failure.status > 599)
-	) {
-		throw new Error("Generation failure status is invalid.");
-	}
-	if (
-		failure.retryAfterMs !== undefined &&
-		(!Number.isSafeInteger(failure.retryAfterMs) ||
-			failure.retryAfterMs < 0)
-	) {
-		throw new Error("Generation failure Retry-After is invalid.");
-	}
-	for (const value of [failure.providerCode, failure.providerRequestId]) {
-		if (value !== undefined && (value.length === 0 || value.length > 200)) {
-			throw new Error("Generation failure metadata is invalid.");
-		}
-	}
-}
-
-function publicFailureMessage(
-	phase: ResolutionPhase,
-	category: SafeGenerationFailure["category"],
-): string {
-	const subject = phase === "Reading" ? "Reading generation" : "Resolution";
-	return category === "Network" ||
-		category === "RateLimited" ||
-		category === "ProviderUnavailable"
-		? `${subject} is temporarily unavailable.`
-		: `${subject} could not be completed.`;
-}
-
-function isResolutionProgress(value: unknown): value is ResolutionProgress {
-	return (
-		value === "Starting" ||
-		value === "RouteAvailable" ||
-		value === "GrammarAvailable" ||
-		value === "ReadingAvailable" ||
-		value === "Committing"
-	);
-}
-
-function isActiveResolutionActivity(
-	value: unknown,
-): value is Exclude<ResolutionActivity, "Terminal"> {
-	return value === "Scheduled" || value === "Running";
-}
-
-function safeFailureMessage(message: string): string {
-	return message.trim().length > 0 && message.length <= 240
-		? message
-		: "Resolution could not be completed.";
 }

@@ -1,4 +1,5 @@
 import { type Infer, v } from "convex/values";
+import { MAX_IDENTIFIER_LENGTH } from "../../../server/resolutionLifecycle";
 import type {
 	ResolutionGrammarProjection,
 	ResolutionReadingProjection,
@@ -8,7 +9,6 @@ import { textTitle } from "../../../shared/text-title";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import { loadCompleteOccurrenceMembers } from "../../model/occurrenceAttestations";
-import { MAX_IDENTIFIER_LENGTH } from "../../model/resolutionSessions";
 import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	activeResolutionActivityValidator,

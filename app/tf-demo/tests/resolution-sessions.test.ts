@@ -11,7 +11,7 @@ import {
 	MAX_RESOLUTION_RUNS,
 	RESOLUTION_RETENTION_MS,
 	STALE_RUN_AFTER_MS,
-} from "../convex/model/resolutionSessions";
+} from "../server/resolutionLifecycle";
 import {
 	projectResolutionGrammar,
 	projectResolutionReading,

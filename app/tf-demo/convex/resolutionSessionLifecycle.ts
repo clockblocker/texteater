@@ -4,6 +4,7 @@ import {
 	parseGermanLemma,
 	parseGermanReading,
 } from "../server/operationalParsing";
+import type { ResolutionSessionGuard } from "../server/resolutionLifecycle";
 import type {
 	ResolutionSessionLifecyclePort,
 	ResolutionSessionRunInput,
@@ -16,7 +17,6 @@ import {
 	resolvedGrammaticalActionResult,
 	resolvedGrammaticalCheckpoint,
 } from "./model/grammarCheckpoint";
-import type { ResolutionSessionGuard } from "./model/resolutionSessions";
 
 const OWNER = "app/tf-demo · resolutionSessions";
 
