@@ -1,56 +1,32 @@
 {
-  "source": "img/textfresser-mascot.png",
-  "canvas": "640x640, canvas coordinates",
-  "shared_radius": 168.63,
-  "ioU_vs_mascot": 0.9944,
-  "cleanliness_sample_scale": 4,
-  "detached_white_area": 0.0,
-  "fresh_area_by_role": {
-    "upper-left": 69776.7,
-    "above-head": 58482.7,
-    "upper-right": 12822.2,
-    "lower-left": 45038.0,
-    "left-of-head": 33269.7,
-    "right-of-head": 23502.2
-  },
-  "unique_area_by_role": {
-    "upper-left": 29579.2,
-    "above-head": 42061.6,
-    "upper-right": 3842.6,
-    "lower-left": 28959.6,
-    "left-of-head": 33269.7,
-    "right-of-head": 23502.2
-  },
-  "circles_by_role": {
-    "upper-left": [
-      130.92,
-      96.05,
-      168.63
-    ],
-    "above-head": [
-      429.88,
-      52.33,
-      168.63
-    ],
-    "upper-right": [
-      672.23,
-      65.71,
-      168.63
-    ],
-    "lower-left": [
-      13.22,
-      370.53,
-      168.63
-    ],
-    "left-of-head": [
-      197.84,
-      242.72,
-      168.63
-    ],
-    "right-of-head": [
-      668.47,
-      247.97,
-      168.63
-    ]
-  }
+	"source": "img/textfresser-mascot.png",
+	"canvas": "640x640, canvas coordinates",
+	"shared_radius": 168.63,
+	"ioU_vs_mascot": 0.9944,
+	"cleanliness_sample_scale": 4,
+	"detached_white_area": 0.0,
+	"fresh_area_by_role": {
+		"upper-left": 69776.7,
+		"above-head": 58482.7,
+		"upper-right": 12822.2,
+		"lower-left": 45038.0,
+		"left-of-head": 33269.7,
+		"right-of-head": 23502.2
+	},
+	"unique_area_by_role": {
+		"upper-left": 29579.2,
+		"above-head": 42061.6,
+		"upper-right": 3842.6,
+		"lower-left": 28959.6,
+		"left-of-head": 33269.7,
+		"right-of-head": 23502.2
+	},
+	"circles_by_role": {
+		"upper-left": [130.92, 96.05, 168.63],
+		"above-head": [429.88, 52.33, 168.63],
+		"upper-right": [672.23, 65.71, 168.63],
+		"lower-left": [13.22, 370.53, 168.63],
+		"left-of-head": [197.84, 242.72, 168.63],
+		"right-of-head": [668.47, 247.97, 168.63]
+	}
 }

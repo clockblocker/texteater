@@ -17,3 +17,6 @@ repos-for-refrence/
 
 .runs/
 .claude/worktrees/
+
+test-results/
+playwright-report/
