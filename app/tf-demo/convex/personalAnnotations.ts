@@ -1,10 +1,9 @@
 import { v } from "convex/values";
-
+import { assertIdentifier } from "../server/identifiers";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { mutation } from "./_generated/server";
 import { visitorError } from "./model/validators";
-import { assertVisitorId } from "./model/visitorId";
 
 const MAX_PERSONAL_ANNOTATION_LENGTH = 20_000;
 
@@ -37,7 +36,7 @@ export async function loadPersonalAnnotation(
 	visitorId: string,
 	readingId: Id<"readings">,
 ): Promise<string> {
-	assertVisitorId(visitorId);
+	assertIdentifier(visitorId, "visitorId");
 	return (
 		(await findPersonalAnnotation(ctx, visitorId, readingId))?.text ?? ""
 	);
@@ -51,7 +50,7 @@ export const update = mutation({
 	},
 	returns: v.string(),
 	handler: async (ctx, { visitorId, readingId, text }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		assertPersonalAnnotation(text);
 		if (!(await ctx.db.get(readingId))) {
 			throw new Error("Reading does not exist.");

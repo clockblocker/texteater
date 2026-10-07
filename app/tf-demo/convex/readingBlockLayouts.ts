@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-
+import { assertIdentifier } from "../server/identifiers";
 import {
 	assertReadingBlockOrder,
 	assertReadingBlockSupported,
@@ -17,7 +17,6 @@ import {
 	readingBlockLayoutValidator,
 	readingBlockRouteValidator,
 } from "./model/validators";
-import { assertVisitorId } from "./model/visitorId";
 
 type LayoutCtx = QueryCtx | MutationCtx;
 const MAX_FAMILY_KIND_LAYOUTS_PER_LANGUAGE = 128;
@@ -181,7 +180,7 @@ export const getLanguage = query({
 	args: { visitorId: v.string(), targetLanguage: v.literal("de") },
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, targetLanguage }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		return cloneLayout(
 			await loadLanguageLayout(ctx, visitorId, targetLanguage),
 		);
@@ -192,7 +191,7 @@ export const getFamilyKind = query({
 	args: { visitorId: v.string(), route: readingBlockRouteValidator },
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, route }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		const layout = await loadFamilyKindLayout(ctx, visitorId, route);
 		return cloneLayout(layout);
 	},
@@ -206,7 +205,7 @@ export const setLanguageBlockOrder = mutation({
 	},
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, targetLanguage, order }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		assertReadingBlockOrder(order);
 		const currentLanguage = await loadLanguageLayout(
 			ctx,
@@ -251,7 +250,7 @@ export const setLanguageBlockVisibility = mutation({
 	},
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, targetLanguage, blockKind, visible }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		const available = availableLanguageBlocks(targetLanguage);
 		assertReadingBlockSupported(blockKind, available);
 		const currentLanguage = await loadLanguageLayout(
@@ -302,7 +301,7 @@ export const setFamilyKindBlockOrder = mutation({
 	},
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, route, order }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		assertReadingBlockOrder(order);
 		const current = await loadFamilyKindLayout(ctx, visitorId, route);
 		const next = { order: [...order], hidden: [...current.hidden] };
@@ -320,7 +319,7 @@ export const setFamilyKindBlockVisibility = mutation({
 	},
 	returns: readingBlockLayoutValidator,
 	handler: async (ctx, { visitorId, route, blockKind, visible }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		assertReadingBlockSupported(blockKind);
 		const current = await loadFamilyKindLayout(ctx, visitorId, route);
 		const next = setBlockVisibility(current, blockKind, visible);

@@ -1,5 +1,5 @@
 import { type Infer, v } from "convex/values";
-import { MAX_IDENTIFIER_LENGTH } from "../../../server/resolutionLifecycle";
+import { MAX_IDENTIFIER_LENGTH } from "../../../server/identifiers";
 import type {
 	ResolutionGrammarProjection,
 	ResolutionReadingProjection,

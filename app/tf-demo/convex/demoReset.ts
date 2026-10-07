@@ -3,7 +3,7 @@ import {
 	paginationResultValidator,
 } from "convex/server";
 import { v } from "convex/values";
-
+import { assertIdentifier } from "../server/identifiers";
 import { internal } from "./_generated/api";
 import type { Id, TableNames } from "./_generated/dataModel";
 import {
@@ -21,7 +21,6 @@ import {
 	type StripTextAnalysisResult,
 	stripTextAnalysisGraph,
 } from "./model/textAnalysisStripping";
-import { assertVisitorId } from "./model/visitorId";
 
 const BATCH_SIZE = 400;
 /**
@@ -193,7 +192,7 @@ export const clearVisitorDataBatch = internalMutation({
 	},
 	returns: visitorResetResultValidator,
 	handler: async (ctx, { visitorId, phase: phaseValue }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		const phase: VisitorResetPhase = phaseValue ?? "ResolutionSessions";
 		let deleted = 0;
 		let nextPhase: VisitorResetPhase;
@@ -463,7 +462,7 @@ export const clearVisitorData = action({
 	args: { visitorId: v.string() },
 	returns: v.object({ deleted: v.number() }),
 	handler: async (ctx, { visitorId }): Promise<{ deleted: number }> => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		let deleted = 0;
 		let phase: VisitorResetPhase = "ResolutionSessions";
 		for (let batch = 0; batch < MAX_BATCHES; batch += 1) {

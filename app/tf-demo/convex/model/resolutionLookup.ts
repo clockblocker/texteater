@@ -1,8 +1,8 @@
+import { assertIdentifier } from "../../server/identifiers";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadOccurrenceAttestation } from "./occurrenceAttestations";
 import { loadStoredSegments } from "./storedSegments";
-import { assertVisitorId } from "./visitorId";
 
 export function assertNonEmpty(value: string, name: string): void {
 	if (value.trim().length === 0)
@@ -16,7 +16,7 @@ export function assertIndex(value: number, name: string): void {
 }
 
 export function assertVisitorInput(visitorId: string, requestId: string): void {
-	assertVisitorId(visitorId);
+	assertIdentifier(visitorId, "visitorId");
 	assertNonEmpty(requestId, "requestId");
 	if (requestId.length > 200) {
 		throw new Error("requestId is limited to 200 characters.");

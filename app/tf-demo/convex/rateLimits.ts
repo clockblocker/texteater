@@ -1,8 +1,8 @@
 import { HOUR, MINUTE, RateLimiter } from "@convex-dev/rate-limiter";
 import { v } from "convex/values";
+import { assertIdentifier } from "../server/identifiers";
 import { components } from "./_generated/api";
 import { internalMutation, type MutationCtx } from "./_generated/server";
-import { assertVisitorId } from "./model/visitorId";
 
 /**
  * Starting limits on the public entry points that start paid model work:
@@ -70,7 +70,7 @@ export const consumeTextSubmission = internalMutation({
 		v.object({ ok: v.literal(false), message: v.string() }),
 	),
 	handler: (ctx, { visitorId }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		return consumeRateLimit(ctx, "textSubmission", visitorId);
 	},
 });

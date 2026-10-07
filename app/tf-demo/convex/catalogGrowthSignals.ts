@@ -1,5 +1,6 @@
 import { canonicalJson } from "common-utils";
 import { type Infer, v } from "convex/values";
+import { assertIdentifier } from "../server/identifiers";
 import type { CatalogMissSignal } from "../server/resolutionGrammar";
 import { internalMutation, type MutationCtx } from "./_generated/server";
 import {
@@ -20,7 +21,6 @@ import {
 type CatalogMiss = CatalogMissSignal;
 type ValidatedCatalogMiss = Infer<typeof catalogMissValidator>;
 
-const MAX_IDENTIFIER_LENGTH = 200;
 const MAX_CATALOG_MISS_JSON_LENGTH = 20_000;
 
 function fnv1a64(value: string): string {
@@ -32,15 +32,9 @@ function fnv1a64(value: string): string {
 	return hash.toString(16).padStart(16, "0");
 }
 
-function assertBoundedString(value: string, label: string): void {
-	if (value.trim().length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
-		throw new Error(`${label} must contain 1 to 200 characters.`);
-	}
-}
-
 function assertBoundedMiss(miss: ValidatedCatalogMiss): void {
-	assertBoundedString(miss.route, "Catalog route");
-	assertBoundedString(miss.stage, "Catalog stage");
+	assertIdentifier(miss.route, "Catalog route");
+	assertIdentifier(miss.stage, "Catalog stage");
 	if (miss.message.length > 2000)
 		throw new Error("Catalog diagnostic is too long.");
 }
@@ -68,7 +62,7 @@ async function recordCatalogGrowthSignal(
 	requestId: string,
 ): Promise<void> {
 	assertBoundedMiss(miss);
-	assertBoundedString(requestId, "Catalog Growth Signal requestId");
+	assertIdentifier(requestId, "Catalog Growth Signal requestId");
 	const { signalKey, catalogMissJson } = catalogGrowthSignalIdentity(
 		miss as CatalogMiss,
 	);

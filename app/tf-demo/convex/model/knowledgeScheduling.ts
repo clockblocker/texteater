@@ -1,4 +1,5 @@
 import { translationLanguageValues } from "dumrel";
+import { assertIdentifier } from "../../server/identifiers";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { completeAuthoredComponentKnowledge } from "../dumdictTransaction";
@@ -12,12 +13,6 @@ import {
 	occurrenceGovernment,
 } from "./knowledgeCoverage";
 import { loadOccurrenceAttestation } from "./occurrenceAttestations";
-
-export function assertKey(value: string, name: string): void {
-	if (value.trim().length === 0 || value.length > 200) {
-		throw new Error(`${name} must contain between 1 and 200 characters.`);
-	}
-}
 
 /**
  * Demands a Knowledge attempt for whatever an occurrence's Reading still
@@ -33,8 +28,8 @@ export async function scheduleKnowledgeGeneration(
 		attestationId: Id<"attestations">;
 	},
 ): Promise<void> {
-	assertKey(input.attemptKey, "attemptKey");
-	assertKey(input.visitorId, "visitorId");
+	assertIdentifier(input.attemptKey, "attemptKey");
+	assertIdentifier(input.visitorId, "visitorId");
 	if (!ctx.scheduler) return;
 	const occurrence = await loadOccurrenceAttestation(
 		ctx,

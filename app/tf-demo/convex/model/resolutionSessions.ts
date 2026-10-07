@@ -1,11 +1,11 @@
 import type { Infer } from "convex/values";
+import { assertIdentifier } from "../../server/identifiers";
 import {
 	assertSafeGenerationFailure,
 	publicFailureMessage,
 	safeFailureMessage,
 } from "../../server/resolutionFailure";
 import {
-	assertIdentifier,
 	assertOperationalString,
 	assertResolutionProgressTransition,
 	guardMatches,

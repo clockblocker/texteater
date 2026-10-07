@@ -1,10 +1,8 @@
 import type { GenericTableInfo, OrderedQuery } from "convex/server";
 import { v } from "convex/values";
+import { assertIdentifier } from "../server/identifiers";
 import { inspectionJson } from "../server/inspectionPayload";
-import {
-	assertIdentifier,
-	RESOLUTION_RETENTION_MS,
-} from "../server/resolutionLifecycle";
+import { RESOLUTION_RETENTION_MS } from "../server/resolutionLifecycle";
 import { internal } from "./_generated/api";
 import {
 	internalMutation,

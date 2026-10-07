@@ -2,6 +2,7 @@ import { canonicalJson } from "common-utils";
 import { type Infer, v } from "convex/values";
 import type { ApplyGeneratedKnowledgeRequest } from "dumdict/planning";
 import { translationLanguageValues } from "dumrel";
+import { assertIdentifier } from "../server/identifiers";
 import {
 	answeredRelationKinds,
 	knowledgeRequestComplete,
@@ -35,10 +36,7 @@ import {
 	recordCoverageEvidence,
 } from "./model/knowledgeCoverage";
 import { recordKnowledgeProductionRun } from "./model/knowledgeProductionRuns";
-import {
-	assertKey,
-	scheduleKnowledgeGeneration,
-} from "./model/knowledgeScheduling";
+import { scheduleKnowledgeGeneration } from "./model/knowledgeScheduling";
 import { loadOccurrenceAttestation } from "./model/occurrenceAttestations";
 import { replaceAccumulatedKnowledge } from "./model/shadows";
 import {
@@ -92,7 +90,7 @@ export const ensureForReading = mutation({
 	},
 	returns: v.boolean(),
 	handler: async (ctx, { visitorId, readingId, attestationId }) => {
-		assertKey(visitorId, "visitorId");
+		assertIdentifier(visitorId, "visitorId");
 		const attestation = await ctx.db.get(attestationId);
 		if (!attestation || attestation.readingId !== readingId) return false;
 		const encounter = await ctx.db

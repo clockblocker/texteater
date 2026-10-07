@@ -1,11 +1,10 @@
 import { v } from "convex/values";
+import { assertIdentifier } from "../server/identifiers";
 import type { KnowledgePreferences } from "../shared/knowledge-preferences";
 import { DEFAULT_KNOWLEDGE_SETTINGS } from "../shared/knowledge-preferences";
-
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import { internalQuery, mutation, query } from "./_generated/server";
 import { knowledgeSettingsValidator } from "./model/validators";
-import { assertVisitorId } from "./model/visitorId";
 import {
 	loadRelationPublicationAuthorization,
 	publicationAuthorizationValidator,
@@ -25,7 +24,7 @@ export async function loadKnowledgeSettings(
 	ctx: QueryCtx | MutationCtx,
 	visitorId: string,
 ): Promise<KnowledgePreferences> {
-	assertVisitorId(visitorId);
+	assertIdentifier(visitorId, "visitorId");
 	const stored = await ctx.db
 		.query("knowledgeSettings")
 		.withIndex("by_visitor_id", (q) => q.eq("visitorId", visitorId))
@@ -61,7 +60,7 @@ export const update = mutation({
 	args: { visitorId: v.string(), settings: knowledgeSettingsValidator },
 	returns: knowledgeSettingsValidator,
 	handler: async (ctx, { visitorId, settings }) => {
-		assertVisitorId(visitorId);
+		assertIdentifier(visitorId, "visitorId");
 		const parsed = settings;
 		const existing = await ctx.db
 			.query("knowledgeSettings")

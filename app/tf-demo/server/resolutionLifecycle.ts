@@ -12,12 +12,10 @@ import type {
 
 /**
  * The Resolution Session's ctx-free rules: its lifecycle shape, the order its
- * progress moves in, its timing limits, and the bounds on the identifiers it
- * stores. The session module in `convex/model/resolutionSessions.ts` applies
+ * progress moves in, and its timing limits. The session module in `convex/model/resolutionSessions.ts` applies
  * them to rows.
  */
 
-export const MAX_IDENTIFIER_LENGTH = 200;
 /**
  * A run that has written nothing for this long is declared stale. It exceeds
  * Convex's 10-minute action limit, so a live run is never duplicated.
@@ -148,12 +146,6 @@ export function phaseForProgress(
 			: progress === "GrammarAvailable"
 				? "Reading"
 				: "Commit";
-}
-
-export function assertIdentifier(value: string, name: string): void {
-	if (value.trim().length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
-		throw new Error(`${name} must contain 1 to 200 characters.`);
-	}
 }
 
 export function assertOperationalString(value: string, name: string): void {

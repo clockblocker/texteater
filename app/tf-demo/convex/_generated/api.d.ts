@@ -48,7 +48,6 @@ import type * as model_storedSegments from "../model/storedSegments.js";
 import type * as model_textAnalysisStripping from "../model/textAnalysisStripping.js";
 import type * as model_validators from "../model/validators.js";
 import type * as model_visitorClicks from "../model/visitorClicks.js";
-import type * as model_visitorId from "../model/visitorId.js";
 import type * as modules_notes_featurePresentation from "../modules/notes/featurePresentation.js";
 import type * as modules_notes_pendingRelations from "../modules/notes/pendingRelations.js";
 import type * as modules_notes_projections from "../modules/notes/projections.js";
@@ -128,7 +127,6 @@ declare const fullApi: ApiFromModules<{
   "model/textAnalysisStripping": typeof model_textAnalysisStripping;
   "model/validators": typeof model_validators;
   "model/visitorClicks": typeof model_visitorClicks;
-  "model/visitorId": typeof model_visitorId;
   "modules/notes/featurePresentation": typeof modules_notes_featurePresentation;
   "modules/notes/pendingRelations": typeof modules_notes_pendingRelations;
   "modules/notes/projections": typeof modules_notes_projections;
