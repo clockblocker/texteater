@@ -11,7 +11,6 @@
  * a rate limit from a bad request. The request ends at its deadline or
  * when the caller's signal aborts, whichever comes first.
  */
-import type { Answers } from "./ask.js";
 import type { JevAsk, JevResponse } from "./jev.js";
 
 /** The part of `fetch` the ask uses; the runtime's global by default. */
@@ -45,6 +44,14 @@ export type TypeSafeAskOptions = {
 const messageOf = (error: unknown) =>
 	error instanceof Error ? error.message : String(error);
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+	value !== null && typeof value === "object" && !Array.isArray(value);
+
+/**
+ * The envelope of a System One answer: the model, the token counts, and an
+ * object of answers. Each answer's shape is checked against its question
+ * by the call adapter (`checkedAnswers`), which knows the questions.
+ */
 function responseOf(body: string): JevResponse {
 	let parsed: unknown;
 	try {
@@ -54,19 +61,18 @@ function responseOf(body: string): JevResponse {
 			`TypeSafe answered a body that is not JSON: ${body.slice(0, 200)}`,
 		);
 	}
-	if (parsed && typeof parsed === "object") {
-		const { model, answers, usage } = parsed as Record<string, unknown>;
-		const tokens = usage as Record<string, unknown> | null | undefined;
+	if (isRecord(parsed)) {
+		const { model, answers, usage: tokens } = parsed;
 		if (
 			typeof model === "string" &&
-			answers &&
-			typeof answers === "object" &&
-			typeof tokens?.input_tokens === "number" &&
+			isRecord(answers) &&
+			isRecord(tokens) &&
+			typeof tokens.input_tokens === "number" &&
 			typeof tokens.output_tokens === "number"
 		)
 			return {
 				model,
-				answers: answers as Answers,
+				answers,
 				usage: {
 					input_tokens: tokens.input_tokens,
 					output_tokens: tokens.output_tokens,

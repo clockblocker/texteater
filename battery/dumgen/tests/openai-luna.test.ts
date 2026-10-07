@@ -170,6 +170,30 @@ test("an incomplete response throws with its reason", async () => {
 	);
 });
 
+test("a body that is JSON but not a Responses answer throws as an unexpected body, not a TypeError", async () => {
+	const bodies = [
+		{ status: "completed", output: { content: [] } },
+		{ status: "completed", output: [{ content: "text" }] },
+		{ status: "completed", output: [{ content: [{ text: "no type" }] }] },
+		{ status: "completed", output: [], model: 5 },
+		{ output: [] },
+		[],
+	].map((body) => JSON.stringify(body));
+	for (const body of bodies) {
+		const { fetch } = fakeFetch([{ status: 200, body }]);
+		const luna = createOpenAILuna({ apiKey: "key-1", fetch });
+		const failure = await luna(request, context()).then(
+			() => undefined,
+			(error: unknown) => error,
+		);
+		expect(failure).not.toBeInstanceOf(TypeError);
+		expect(failure).toBeInstanceOf(Error);
+		expect((failure as Error).message).toBe(
+			`OpenAI answered an unexpected body: ${body}`,
+		);
+	}
+});
+
 test("the value written without its wrapper is taken when it holds the schema's required keys", async () => {
 	const { fetch } = fakeFetch([
 		{

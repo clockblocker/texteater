@@ -52,20 +52,70 @@ export type OpenAILunaOptions = {
 const messageOf = (error: unknown) =>
 	error instanceof Error ? error.message : String(error);
 
+type ResponsesContent = {
+	readonly type: string;
+	readonly text?: string;
+	readonly refusal?: string;
+};
+
 type ResponsesPayload = {
-	readonly status?: string;
-	readonly output?: readonly {
-		readonly type?: string;
-		readonly content?: readonly {
-			readonly type?: string;
-			readonly text?: string;
-			readonly refusal?: string;
-		}[];
+	readonly status: string;
+	readonly output: readonly {
+		readonly content: readonly ResponsesContent[];
 	}[];
-	readonly incomplete_details?: { readonly reason?: string } | null;
+	readonly incomplete_details?: { readonly reason?: string };
 	readonly usage?: unknown;
 	readonly model?: string;
 };
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+	value !== null && typeof value === "object" && !Array.isArray(value);
+
+const isOptionalString = (value: unknown): value is string | undefined =>
+	value === undefined || typeof value === "string";
+
+function isResponsesContent(value: unknown): value is ResponsesContent {
+	return (
+		isRecord(value) &&
+		typeof value.type === "string" &&
+		isOptionalString(value.text) &&
+		isOptionalString(value.refusal)
+	);
+}
+
+/**
+ * The Responses API body, or nothing when it is not one: a `status`, and
+ * an `output` of items whose `content` lists typed parts. A missing
+ * `output` or `content` reads as empty, as a response that did not
+ * complete has none. `usage` stays unread here; `lunaTokens` reads it
+ * defensively.
+ */
+function parseResponsesPayload(value: unknown): ResponsesPayload | undefined {
+	if (!isRecord(value)) return undefined;
+	const { status, output = [], incomplete_details, usage, model } = value;
+	if (typeof status !== "string" || !isOptionalString(model))
+		return undefined;
+	const details = incomplete_details ?? {};
+	if (!isRecord(details)) return undefined;
+	const { reason } = details;
+	if (!isOptionalString(reason)) return undefined;
+	if (!Array.isArray(output)) return undefined;
+	const items: { readonly content: readonly ResponsesContent[] }[] = [];
+	for (const item of output) {
+		if (!isRecord(item)) return undefined;
+		const { content = [] } = item;
+		if (!Array.isArray(content) || !content.every(isResponsesContent))
+			return undefined;
+		items.push({ content });
+	}
+	return {
+		status,
+		output: items,
+		...(reason === undefined ? {} : { incomplete_details: { reason } }),
+		...(usage === undefined ? {} : { usage }),
+		...(model === undefined ? {} : { model }),
+	};
+}
 
 /** The schema's required keys, which an unwrapped answer must hold. */
 function requiredOf(request: LunaRequest): readonly string[] {
@@ -161,17 +211,22 @@ function responseOf(
 	json: boolean,
 	required: readonly string[] = [],
 ): LunaResponse {
-	let payload: ResponsesPayload;
+	let decoded: unknown;
 	try {
-		payload = JSON.parse(body) as ResponsesPayload;
+		decoded = JSON.parse(body);
 	} catch {
 		throw Error(
 			`OpenAI answered a body that is not JSON: ${body.slice(0, 200)}`,
 		);
 	}
+	const payload = parseResponsesPayload(decoded);
+	if (!payload)
+		throw Error(
+			`OpenAI answered an unexpected body: ${body.slice(0, 200)}`,
+		);
 	if (payload.status !== "completed")
 		throw Error(
-			`OpenAI response ${payload.status ?? "missing status"}${
+			`OpenAI response ${payload.status}${
 				payload.incomplete_details?.reason
 					? ` (${payload.incomplete_details.reason})`
 					: ""
@@ -181,9 +236,7 @@ function responseOf(
 		model: payload.model ?? null,
 		usage: payload.usage ?? null,
 	};
-	const contents = (payload.output ?? []).flatMap(
-		(item) => item.content ?? [],
-	);
+	const contents = payload.output.flatMap((item) => item.content);
 	const refusal = contents
 		.filter((content) => content.type === "refusal")
 		.map((content) => content.refusal ?? content.text ?? "")
@@ -207,10 +260,7 @@ function responseOf(
 	} catch {
 		throw Error(`OpenAI answered output that is not JSON: ${text}`);
 	}
-	const record =
-		parsed !== null && typeof parsed === "object" && !Array.isArray(parsed)
-			? (parsed as Record<string, unknown>)
-			: undefined;
+	const record = isRecord(parsed) ? parsed : undefined;
 	if (record && "value" in record) return { output: record.value, metadata };
 	const keys = record ? Object.keys(record) : [];
 	const [only] = keys;

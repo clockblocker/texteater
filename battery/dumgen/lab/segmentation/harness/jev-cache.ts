@@ -680,14 +680,16 @@ export class JevCache {
 					latencyMs,
 					response.usage,
 				);
-			const missing = Object.keys(request.questions).filter(
-				(id) => !(id in response.answers),
+			// Only answers that fit their questions are kept in the cache.
+			const answers = checkedAnswers(
+				stage,
+				response.model,
+				Object.entries(request.questions),
+				response,
 			);
-			if (missing.length > 0)
+			if (answers instanceof Error)
 				return fail(
-					Error(
-						`jev answered without ${missing.slice(0, 3).join(", ")}`,
-					),
+					Error(answers.message),
 					"invalid answer",
 					attempt,
 					latencyMs,
@@ -705,7 +707,7 @@ export class JevCache {
 			});
 			return {
 				model: response.model,
-				answers: response.answers,
+				answers,
 				usage: {
 					input_tokens: response.usage.input_tokens,
 					output_tokens: response.usage.output_tokens,

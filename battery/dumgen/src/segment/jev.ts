@@ -6,7 +6,6 @@
  * `createTypeSafeAsk` sends them to the TypeSafe API; a test passes a fake.
  */
 import type { EntryType, Questions } from "@typesafe-ai/sdk";
-import type { Answers } from "./ask.js";
 
 /**
  * The jev version `segment.inUnits` requests unless told otherwise. The
@@ -35,7 +34,11 @@ export type JevRequest = {
 export type JevResponse = {
 	/** The jev version that answered. */
 	readonly model: string;
-	readonly answers: Answers;
+	/**
+	 * The answers by question id, unchecked: Dumgen's call adapter checks
+	 * each against its question (`checkedAnswers`) before a stage reads it.
+	 */
+	readonly answers: Readonly<Record<string, unknown>>;
 	readonly usage: {
 		readonly input_tokens: number;
 		readonly output_tokens: number;

@@ -142,3 +142,39 @@ test("an answer that is not System One's throws, and so does a blank key", async
 	).rejects.toThrow("unexpected body");
 	expect(() => createTypeSafeAsk({ apiKey: " " })).toThrow("API key");
 });
+
+test("the transport checks the envelope and passes the answers on unchecked", async () => {
+	const listed = fakeFetch([
+		{
+			status: 200,
+			body: JSON.stringify({
+				model: "jev-1.13.0",
+				answers: [],
+				usage: { input_tokens: 1, output_tokens: 1 },
+			}),
+		},
+	]);
+	await expect(
+		createTypeSafeAsk({ apiKey: "key", fetch: listed.fetch })(
+			request,
+			context(),
+		),
+	).rejects.toThrow("unexpected body");
+	// The answer's shape is the call adapter's to check, against its question.
+	const odd = { model: "jev-1.13.0", answers: { q: { type: "noul" } } };
+	const loose = fakeFetch([
+		{
+			status: 200,
+			body: JSON.stringify({
+				...odd,
+				usage: { input_tokens: 1, output_tokens: 1 },
+			}),
+		},
+	]);
+	expect(
+		await createTypeSafeAsk({ apiKey: "key", fetch: loose.fetch })(
+			request,
+			context(),
+		),
+	).toMatchObject(odd);
+});
