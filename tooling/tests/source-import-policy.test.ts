@@ -326,6 +326,98 @@ test("tf-demo's server may name a Convex type but not load a Convex module, and 
 		);
 });
 
+test("tf-demo's UI reaches the backend only through convex/_generated and shared/", async () => {
+	const { root, app } = await tfDemoFixture();
+	await writeSource(
+		app,
+		"convex/_generated/api.ts",
+		"export const api = {};\n",
+	);
+	await writeSource(app, "server/rules.ts", "export const rule = 1;\n");
+	await writeSource(app, "shared/contract.ts", "export const limit = 1;\n");
+	await writeSource(
+		app,
+		"src/views/api.tsx",
+		'import { api } from "../../convex/_generated/api";\nimport { limit } from "../../shared/contract";\n',
+	);
+	await writeSource(
+		app,
+		"src/views/model-type.tsx",
+		'import type { storedUnitValidator } from "../../convex/model/validators";\n',
+	);
+	await writeSource(
+		app,
+		"src/views/server.tsx",
+		'import { rule } from "../../server/rules";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(
+		issues.map(({ file, message }) => [file, message.split(":")[0]]).sort(),
+	).toEqual([
+		["app/tf-demo/src/views/model-type.tsx", "tf-demo-ui-reads-the-api"],
+		["app/tf-demo/src/views/server.tsx", "tf-demo-ui-reads-the-api"],
+	]);
+});
+
+test("tf-demo's shared/ imports no other tier and only names generated Convex types", async () => {
+	const { root, app } = await tfDemoFixture();
+	await writeSource(
+		app,
+		"convex/_generated/dataModel.ts",
+		"export type Id = string;\nexport const tableNames = [];\n",
+	);
+	await writeSource(app, "server/rules.ts", "export const rule = 1;\n");
+	await writeSource(app, "tooling/fixture.ts", "export const fixture = 1;\n");
+	await writeSource(app, "shared/limits.ts", "export const limit = 1;\n");
+	await writeSource(
+		app,
+		"shared/id.ts",
+		'import type { Id } from "../convex/_generated/dataModel";\nimport { limit } from "./limits";\n',
+	);
+	await writeSource(
+		app,
+		"shared/generated-value.ts",
+		'import { tableNames } from "../convex/_generated/dataModel";\n',
+	);
+	await writeSource(
+		app,
+		"shared/server.ts",
+		'import type { rule } from "../server/rules";\n',
+	);
+	await writeSource(
+		app,
+		"shared/ui.ts",
+		'import { renderNote } from "@/notes";\n',
+	);
+	await writeSource(
+		app,
+		"shared/tooling.ts",
+		'import { fixture } from "../tooling/fixture";\n',
+	);
+	await writeSource(
+		app,
+		"shared/model.ts",
+		'import type { storedUnitValidator } from "../convex/model/validators";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(
+		issues.map(({ file, message }) => [file, message.split(":")[0]]).sort(),
+	).toEqual([
+		[
+			"app/tf-demo/shared/generated-value.ts",
+			"tf-demo-shared-names-generated-types-only",
+		],
+		["app/tf-demo/shared/model.ts", "tf-demo-shared-imports-no-tier"],
+		["app/tf-demo/shared/server.ts", "tf-demo-shared-imports-no-tier"],
+		["app/tf-demo/shared/tooling.ts", "tf-demo-shared-imports-no-tier"],
+		["app/tf-demo/shared/ui.ts", "tf-demo-shared-imports-no-tier"],
+	]);
+});
+
 test("only generators, scripts and tests may load dumling/codegen", async () => {
 	const root = await temporaryRepository();
 	const dumling = await addWorkspace(root, {

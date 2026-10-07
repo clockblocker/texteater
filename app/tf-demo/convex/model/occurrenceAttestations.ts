@@ -1,4 +1,8 @@
 import {
+	germanGovernorKinds,
+	germanVerbalKinds,
+} from "../../server/germanEvidenceKinds";
+import {
 	parseGermanAttestation,
 	parseGermanReading,
 } from "../../server/operationalParsing";
@@ -6,11 +10,6 @@ import {
 	encounterSentenceOf,
 	MAX_SEGMENTS_PER_SENTENCE,
 } from "../../server/storedSegments";
-
-import {
-	germanGovernorKinds,
-	germanVerbalKinds,
-} from "../../shared/german-evidence-kinds";
 import type { TextLanguage } from "../../shared/supported-target-language";
 import type { Doc, Id } from "../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../_generated/server";

@@ -159,6 +159,28 @@ const moduleBoundaries = new Map<string, readonly ModuleBoundary[]>([
 				to: /^app\/tf-demo\/src\//,
 			},
 			{
+				name: "tf-demo-ui-reads-the-api",
+				comment:
+					"The browser reaches the backend through `convex/_generated` (the `api` object and `Id`/`Doc` types) and `shared/`; backend modules are not its contract (tf-demo ADR 0010).",
+				from: /^app\/tf-demo\/src\//,
+				to: /^app\/tf-demo\/(?:server\/|convex\/(?!_generated\/))/,
+			},
+			{
+				name: "tf-demo-shared-imports-no-tier",
+				comment:
+					"`shared/` is the browser-backend contract and depends on no other tier (tf-demo ADR 0010).",
+				from: /^app\/tf-demo\/shared\//,
+				to: /^app\/tf-demo\/(?:(?:server|src|tooling|tests)\/|convex\/(?!_generated\/))/,
+			},
+			{
+				name: "tf-demo-shared-names-generated-types-only",
+				comment:
+					"`shared/` may name a generated Convex type such as `Id`, but loads no Convex code (tf-demo ADR 0010).",
+				from: /^app\/tf-demo\/shared\//,
+				to: /^app\/tf-demo\/convex\/_generated\//,
+				allowTypeOnly: true,
+			},
+			{
 				name: "tf-demo-dumdict-storage-implementation-is-private",
 				comment:
 					"Callers must choose the action-level or transaction-local Dumdict interface; its implementation folder is private.",

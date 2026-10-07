@@ -3,6 +3,10 @@ import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import {
+	germanGovernorKinds,
+	germanVerbalKinds,
+} from "../../server/germanEvidenceKinds";
+import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
 	readingIdentityKey,
@@ -12,10 +16,6 @@ import {
 	parseGermanReading,
 	parseGermanSurface,
 } from "../../server/operationalParsing";
-import {
-	germanGovernorKinds,
-	germanVerbalKinds,
-} from "../../shared/german-evidence-kinds";
 import { NOTE_STUDY_FIXTURES } from "./fixtures/index";
 import type {
 	NoteStudyFixture,

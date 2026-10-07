@@ -1,9 +1,6 @@
 import type * as Dumling from "dumling/types";
-import {
-	germanGovernorKinds,
-	germanVerbalKinds,
-} from "../shared/german-evidence-kinds";
 import { type ClickEncounter, validateClickEncounter } from "./clickEncounter";
+import { germanGovernorKinds, germanVerbalKinds } from "./germanEvidenceKinds";
 import { parseGermanAttestation } from "./operationalParsing";
 
 /** Durable grammar checkpoint retains the exact Encounter used for generation. */
