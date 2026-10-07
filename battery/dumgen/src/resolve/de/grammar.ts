@@ -9,9 +9,8 @@
  * the operation's trace says how the click came out and why.
  */
 
-import type { AuthoredRealization } from "dumcorpus/inventories";
 import { closedRoute } from "dumcorpus/inventories";
-import { lemmaIdentityKey, parseUnit } from "dumling";
+import { isSyncretism, lemmaIdentityKey, parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import * as Effect from "effect/Effect";
 import type { OperationScope } from "../../call.js";
@@ -27,6 +26,7 @@ import {
 	type ClosedOption,
 	cellQuestion,
 	closedAttestation,
+	type MatchedRealization,
 	type OpenAnswer,
 } from "./closed-class.js";
 import { resolveOpenRoute } from "./open-route.js";
@@ -135,14 +135,13 @@ const resolveAuthored = Effect.fnUntraced(function* (
 function realizationOf(
 	chosen: ClosedOption | OpenAnswer,
 	options: readonly ClosedOption[],
-): AuthoredRealization {
+): MatchedRealization {
 	if ("realization" in chosen) return chosen.realization;
 	if ("syncretism" in chosen) return chosen.units[0].realization;
 	const units = new Set(
-		(
-			(chosen.lemma as { syncretized?: readonly Dumling.Lemma[] })
-				.syncretized ?? []
-		).map((unit) => lemmaIdentityKey(unit)),
+		(isSyncretism(chosen.lemma) ? chosen.lemma.syncretized : []).map(
+			(unit) => lemmaIdentityKey(unit),
+		),
 	);
 	const ofUnits = options.filter(({ member }) =>
 		units.has(lemmaIdentityKey(member.lemma)),

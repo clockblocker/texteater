@@ -20,7 +20,13 @@ import {
 	type StemSyncretism,
 	stemSyncretisms,
 } from "dumcorpus/inventories";
-import { foldCase, lemmaIdentityKey, syncretize } from "dumling";
+import {
+	foldCase,
+	isSyncreticUnit,
+	isSyncretism,
+	lemmaIdentityKey,
+	syncretize,
+} from "dumling";
 import type * as Dumling from "dumling/types";
 import type { ClosedClassIdentity } from "../../segment/segmented-sentence.js";
 import type { NeighbourSentences } from "../types.js";
@@ -35,19 +41,27 @@ import {
 } from "./target.js";
 
 type Core = Readonly<Record<string, unknown>>;
-type Cell = Readonly<Record<string, string | null>>;
+/** Surface feature values: a value, a feature-value set (sein-'s Masc and Neut possessor), or none. */
+type Cell = Readonly<Record<string, string | readonly string[] | null>>;
+
+/**
+ * An authored realization a member's spelling matched. A near-miss spelling
+ * comes back marked Typo (Rule de/member-orthography), which dumcorpus,
+ * authoring no typos, never writes.
+ */
+export type MatchedRealization = Omit<AuthoredRealization, "orthography"> & {
+	readonly orthography?: AuthoredRealization["orthography"] | "Typo";
+};
 
 /** One answer the cell question can give: an authored member with the spelling it matched. */
 export type ClosedOption = {
 	readonly member: AuthoredMember;
-	readonly realization: AuthoredRealization;
+	readonly realization: MatchedRealization;
 	/** The Surface cell a stem's spelling marks; none for a pillar cell. */
 	readonly cell: Cell | undefined;
 };
 
 const coreOf = (member: AuthoredMember): Core => member.lemma.coreFeatures;
-const isSyncretism = (member: AuthoredMember) =>
-	(member.lemma as { syncretic?: unknown }).syncretic !== undefined;
 
 /** Whether an authored member has the stored identity, its Canonical Form compared without case. */
 function hasIdentity(member: AuthoredMember, identity: ClosedClassIdentity) {
@@ -72,10 +86,10 @@ export function matchingRealizations(
 	identity: ClosedClassIdentity,
 	member: Member,
 	opensSentence: boolean,
-): readonly AuthoredRealization[] {
+): readonly MatchedRealization[] {
 	const ofIdentity = authoredRealizations.filter(
 		(realization) =>
-			!isSyncretism(realization.member) &&
+			!isSyncreticUnit(realization.member.lemma) &&
 			hasIdentity(realization.member, identity),
 	);
 	// A clitic's apostrophe is no part of its authored spelling: 's is s.
@@ -93,33 +107,36 @@ export function matchingRealizations(
 
 /** Edit distance with adjacent transpositions (ihc is one edit from ich). */
 function editDistance(left: string, right: string): number {
-	const rows = Array.from({ length: left.length + 1 }, (_, i) =>
-		Array.from({ length: right.length + 1 }, (_, j) =>
-			i === 0 ? j : j === 0 ? i : 0,
-		),
+	// The rows for left's prefixes one and two letters shorter.
+	let twoAgo: readonly number[] = [];
+	let above: readonly number[] = Array.from(
+		{ length: right.length + 1 },
+		(_, j) => j,
 	);
-	for (let i = 1; i <= left.length; i++)
+	for (let i = 1; i <= left.length; i++) {
+		const row = [i];
 		for (let j = 1; j <= right.length; j++) {
-			const row = rows[i] as number[];
-			const above = rows[i - 1] as number[];
 			const cost = left[i - 1] === right[j - 1] ? 0 : 1;
-			row[j] = Math.min(
+			const edited = Math.min(
 				(above[j] ?? 0) + 1,
 				(row[j - 1] ?? 0) + 1,
 				(above[j - 1] ?? 0) + cost,
 			);
-			if (
+			const transposed =
 				i > 1 &&
 				j > 1 &&
 				left[i - 1] === right[j - 2] &&
-				left[i - 2] === right[j - 1]
-			)
-				row[j] = Math.min(
-					row[j] ?? 0,
-					((rows[i - 2] as number[])[j - 2] ?? 0) + 1,
-				);
+				left[i - 2] === right[j - 1];
+			row.push(
+				transposed
+					? Math.min(edited, (twoAgo[j - 2] ?? 0) + 1)
+					: edited,
+			);
 		}
-	return (rows[left.length] as number[])[right.length] ?? 0;
+		twoAgo = above;
+		above = row;
+	}
+	return above[right.length] ?? 0;
 }
 
 /**
@@ -131,7 +148,7 @@ function editDistance(left: string, right: string): number {
 function typoRealizations(
 	ofIdentity: readonly AuthoredRealization[],
 	text: string,
-): readonly AuthoredRealization[] {
+): readonly MatchedRealization[] {
 	if (text.length < 3) return [];
 	const near = ofIdentity.filter(
 		({ spelled }) => editDistance(foldCase(spelled, "de"), text) === 1,
@@ -141,11 +158,10 @@ function typoRealizations(
 	);
 	if (spellings.size !== 1) return [];
 	return near.map(
-		(realization) =>
-			({
-				...realization,
-				orthography: "Typo",
-			}) as unknown as AuthoredRealization,
+		(realization): MatchedRealization => ({
+			...realization,
+			orthography: "Typo",
+		}),
 	);
 }
 
@@ -161,7 +177,7 @@ export function joinedRealizations(
 	const { family, kind } = target.route;
 	return authoredRealizations.filter(
 		(realization) =>
-			!isSyncretism(realization.member) &&
+			!isSyncreticUnit(realization.member.lemma) &&
 			realization.member.lemma.family === family &&
 			realization.member.lemma.kind === kind &&
 			foldCase(realization.spelled, "de") === foldCase(joined, "de"),
@@ -170,7 +186,7 @@ export function joinedRealizations(
 
 /** The distinct cells the realizations leave, each with the realization it came from. */
 export function closedOptions(
-	realizations: readonly AuthoredRealization[],
+	realizations: readonly MatchedRealization[],
 	text: string,
 ): readonly ClosedOption[] {
 	const options = new Map<string, ClosedOption>();
@@ -182,7 +198,7 @@ export function closedOptions(
 				Number((left.spelling?.kind ?? "Canonical") === "Canonical"),
 	);
 	for (const realization of ordered) {
-		const cell = realization.inflection as Cell | undefined;
+		const cell: Cell | undefined = realization.inflection;
 		const key = JSON.stringify([
 			lemmaIdentityKey(realization.member.lemma),
 			cell ?? null,
@@ -194,7 +210,11 @@ export function closedOptions(
 }
 
 /** The features only a referent tells apart (ADR 0044). */
-const referentFeatures = ["gender", "number", "polite"] as const;
+const referentFeatures: ReadonlySet<string> = new Set([
+	"gender",
+	"number",
+	"polite",
+]);
 
 /** The values two options differ in, Core and Surface cell together. */
 function differences(left: ClosedOption, right: ClosedOption): Set<string> {
@@ -225,9 +245,7 @@ export function referentDecides(options: readonly ClosedOption[]): boolean {
 			const differing = [...differences(left, right)];
 			return (
 				differing.length > 0 &&
-				differing.every((key) =>
-					(referentFeatures as readonly string[]).includes(key),
-				)
+				differing.every((key) => referentFeatures.has(key))
 			);
 		}),
 	);
@@ -245,14 +263,13 @@ export function syncretismOptions(
 			.filter(({ cell }) => cell === undefined)
 			.map(({ member }) => lemmaIdentityKey(member.lemma)),
 	);
-	return authoredMembers.filter((member) => {
-		const units = (member.lemma as { syncretized?: Dumling.Lemma[] })
-			.syncretized;
-		return (
-			isSyncretism(member) &&
-			units?.every((unit) => cells.has(lemmaIdentityKey(unit))) === true
-		);
-	});
+	return authoredMembers.filter(
+		({ lemma }) =>
+			isSyncretism(lemma) &&
+			lemma.syncretized.every((unit) =>
+				cells.has(lemmaIdentityKey(unit)),
+			),
+	);
 }
 
 /** A stem's generated Surface Syncretism (ADR 0046) and the options that are its units. */
@@ -290,11 +307,12 @@ export function stemSyncretismOptions(
 			),
 		);
 		const [first, second, ...rest] = units;
-		if (first && second && rest.every((unit) => unit !== undefined))
-			open.push({
-				syncretism,
-				units: [first, second, ...(rest as ClosedOption[])],
-			});
+		if (
+			first &&
+			second &&
+			rest.every((unit): unit is ClosedOption => unit !== undefined)
+		)
+			open.push({ syncretism, units: [first, second, ...rest] });
 	}
 	return open;
 }
@@ -359,12 +377,9 @@ export function cellQuestion(
 				? syncretism.units.map((unit) =>
 						describe(unit.member, unit.cell),
 					)
-				: (
-						(
-							syncretism.lemma as {
-								syncretized?: AuthoredMember["lemma"][];
-							}
-						).syncretized ?? []
+				: (isSyncretism(syncretism.lemma)
+						? syncretism.lemma.syncretized
+						: []
 					).map((unit) => {
 						const authored = authoredMembers.find(
 							(candidate) =>
@@ -418,10 +433,7 @@ function possessorFeatures(lemma: Dumling.Lemma): Cell {
 	const stem = lemma.canonicalForm;
 	const none = { "gender[psor]": null, "number[psor]": null };
 	if (/^sein/u.test(stem))
-		return {
-			"gender[psor]": ["Masc", "Neut"] as unknown as string,
-			"number[psor]": "Sing",
-		};
+		return { "gender[psor]": ["Masc", "Neut"], "number[psor]": "Sing" };
 	if (/^(?:mein|dein)/u.test(stem))
 		return { "gender[psor]": null, "number[psor]": "Sing" };
 	if (/^(?:unser|eu(?:e)?r)/u.test(stem))
@@ -460,13 +472,13 @@ function stemInflection(option: ClosedOption): Cell {
 export function closedAttestation(
 	target: Target,
 	answer: ClosedOption | OpenAnswer,
-	realization: AuthoredRealization,
+	realization: MatchedRealization,
 ): unknown {
 	if ("syncretism" in answer)
 		return stemSyncretismAttestation(target, answer);
 	const option = "realization" in answer ? answer : undefined;
 	const lemma = structuredClone(
-		option ? option.member.lemma : (answer as AuthoredMember).lemma,
+		"realization" in answer ? answer.member.lemma : answer.lemma,
 	);
 	const pillar = option === undefined || option.cell === undefined;
 	const one = target.members.length === 1;
@@ -518,6 +530,7 @@ function stemSyncretismAttestation(
 ): unknown {
 	const attestations = answer.units.map(
 		(unit) =>
+			// Built untyped from feature records (lane #936); parseUnit checks the result in grammar.ts.
 			closedAttestation(target, unit, unit.realization) as {
 				readonly surface: Dumling.Surface;
 			},
