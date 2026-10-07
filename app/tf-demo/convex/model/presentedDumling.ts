@@ -1,5 +1,5 @@
 import { type Infer, v } from "convex/values";
-import { checkIfGrundform } from "dumcorpus/inventories";
+import { checkIfGrundform, germanFusions } from "dumcorpus/inventories";
 import { parseUnitAs } from "../../server/operationalParsing";
 import {
 	attestationMemberValidator,
@@ -135,11 +135,31 @@ function cloneFusion(fusion: {
 	};
 }
 
+/** dumcorpus's closed German fusions (im, zum, aufs), keyed by form. */
+const closedGermanFusions = new Map(
+	germanFusions.map((entry) => [entry.form, entry] as const),
+);
+
 /**
- * The one-liner a German Fusion Block shows: the fused spelling and the
- * words it stands for, „im“ ist „in dem“.
+ * The one-liner a German Fusion Block shows. A closed fusion (im, zum) shows
+ * dumcorpus's reviewed line, which also names the case. A clitic fusion
+ * (geht's, auf'm) shows the fused spelling and the words this Sentence
+ * reads it as, „geht's“ ist „geht es“, since the reviewed clitic lines hedge
+ * between readings.
  */
-function germanFusionOneLiner(fusion: Fusion): string {
+export function germanFusionOneLiner(fusion: Fusion): string {
+	const closed = closedGermanFusions.get(
+		fusion.spelling.toLocaleLowerCase("de"),
+	);
+	if (
+		closed &&
+		closed.components.length === fusion.components.length &&
+		closed.components.every(
+			({ surface }, index) =>
+				fusion.components[index]?.surface === surface,
+		)
+	)
+		return closed.oneLiner;
 	return `„${fusion.spelling}“ ist „${fusion.components
 		.map(({ surface }) => surface)
 		.join(" ")}“.`;
