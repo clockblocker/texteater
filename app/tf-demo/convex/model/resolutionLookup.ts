@@ -4,11 +4,6 @@ import type { MutationCtx, QueryCtx } from "../_generated/server";
 import { loadOccurrenceAttestation } from "./occurrenceAttestations";
 import { loadStoredSegments } from "./storedSegments";
 
-export function assertNonEmpty(value: string, name: string): void {
-	if (value.trim().length === 0)
-		throw new Error(`${name} must not be empty.`);
-}
-
 export function assertIndex(value: number, name: string): void {
 	if (!Number.isSafeInteger(value) || value < 0) {
 		throw new Error(`${name} must be a non-negative safe integer.`);

@@ -1,6 +1,7 @@
 import { type Infer, type ObjectType, v } from "convex/values";
 import { authoredReading } from "dumcorpus/inventories";
 import { makeSurfaceId } from "dumdict/planning";
+import { assertNonEmpty } from "../server/identifiers";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -28,7 +29,6 @@ import {
 import {
 	assertIndex,
 	assertMatchingRetry,
-	assertNonEmpty,
 	assertVisitorInput,
 	requireClickableSegment,
 } from "./model/resolutionLookup";

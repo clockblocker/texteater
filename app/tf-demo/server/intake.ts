@@ -1,6 +1,7 @@
 import { type Dumgen, type SegmentedText, splitText } from "dumgen";
 import * as Effect from "effect/Effect";
 import type { TextLanguage } from "../shared/supported-target-language";
+import { assertNonEmpty } from "./identifiers";
 import { inspectionStep } from "./inspectionCapture";
 import {
 	type StoredSegmentValue,
@@ -171,10 +172,4 @@ export function createIntake(options: {
 	}
 
 	return Object.freeze({ submitText });
-}
-
-function assertNonEmpty(value: string, field: string): void {
-	if (typeof value !== "string" || value.trim().length === 0) {
-		throw new TypeError(`${field} must be a non-empty string.`);
-	}
 }

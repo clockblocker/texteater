@@ -1,4 +1,5 @@
 import type { Infer } from "convex/values";
+import { assertNonEmpty } from "../../../server/identifiers";
 import {
 	assertSentenceUnits,
 	MAX_SEGMENTS_PER_SENTENCE,
@@ -9,7 +10,7 @@ import {
 } from "../../../server/textSubmissionLimits";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { MutationCtx, QueryCtx } from "../../_generated/server";
-import { assertIndex, assertNonEmpty } from "../../model/resolutionLookup";
+import { assertIndex } from "../../model/resolutionLookup";
 import { loadStoredSegments } from "../../model/storedSegments";
 import {
 	type sentenceInputValidator,

@@ -11,6 +11,7 @@ import type {
 	NeighbourSentences,
 	ReadingResolution,
 } from "./clickResolution";
+import { assertNonEmpty } from "./identifiers";
 import { inspectionStep } from "./inspectionCapture";
 import {
 	emojiDescriptionOf,
@@ -878,10 +879,4 @@ function storedMemberIndices(
 			throw new Error("An Encounter member is not a stored Segment.");
 		return index;
 	});
-}
-
-function assertNonEmpty(value: string, field: string): void {
-	if (typeof value !== "string" || value.trim().length === 0) {
-		throw new TypeError(`${field} must be a non-empty string.`);
-	}
 }
