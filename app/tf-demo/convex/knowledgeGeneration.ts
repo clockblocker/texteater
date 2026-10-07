@@ -14,8 +14,8 @@ import type {
 } from "../server/knowledgeProduction";
 import { parseGermanReading } from "../server/operationalParsing";
 import { internalMutation, mutation } from "./_generated/server";
-import { createDumdictTransaction } from "./dumdictTransaction";
 import { loadKnowledgeSettings } from "./knowledgeSettings";
+import { createDumdictTransaction } from "./model/dumdictTransaction";
 import { generatedKnowledgeAllowedForPublication } from "./model/generatedKnowledgeContainment";
 import {
 	claimKnowledgeRun,

@@ -12,7 +12,7 @@ import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
 import { resetDemoTableNames } from "../convex/demoReset";
-import { createDumdictTransaction } from "../convex/dumdictTransaction";
+import { createDumdictTransaction } from "../convex/model/dumdictTransaction";
 import {
 	attachPendingShadowReference,
 	collectStructuralShadowReferences,

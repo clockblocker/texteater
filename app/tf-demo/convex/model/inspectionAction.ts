@@ -2,10 +2,10 @@
 import {
 	createInspectionCapture,
 	type InspectionCapture,
-} from "../server/inspectionCapture";
-import { internal } from "./_generated/api";
-import type { ActionCtx } from "./_generated/server";
-import type { CapturedInspectionStep } from "./model/inspection";
+} from "../../server/inspectionCapture";
+import { internal } from "../_generated/api";
+import type { ActionCtx } from "../_generated/server";
+import type { CapturedInspectionStep } from "./inspection";
 
 /** Keep one batch well under Convex's argument size limit; payloads are the bulk. */
 const MAX_BATCH_PAYLOAD_BYTES = 4 * 1024 * 1024;

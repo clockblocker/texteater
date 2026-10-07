@@ -6,7 +6,7 @@ import type { Id, TableNames } from "../convex/_generated/dataModel";
 import {
 	completeAuthoredComponentKnowledge,
 	materializeGrammaticalComponent,
-} from "../convex/dumdictTransaction";
+} from "../convex/model/dumdictTransaction";
 import {
 	loadGrammaticalAlternatives,
 	reviewedAlternatives,

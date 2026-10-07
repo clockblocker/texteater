@@ -25,7 +25,7 @@ import {
 	findReadingByKey,
 	findSurface,
 	storedReadingsOf,
-} from "./dumdictTransaction";
+} from "./model/dumdictTransaction";
 import {
 	assertIndex,
 	assertMatchingRetry,

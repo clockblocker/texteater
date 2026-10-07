@@ -9,7 +9,7 @@ import {
 	applyDumdictPlanInTransaction,
 	loadReadingEntryContextSlice,
 	readingEntryContextArgs,
-} from "../convex/dumdictTransaction";
+} from "../convex/model/dumdictTransaction";
 import { createTestConvex } from "./support/convex";
 
 beforeEach(() => {

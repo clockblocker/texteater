@@ -27,13 +27,13 @@ import { internalErrorDescriptor } from "../server/resolutionFailure";
 import { parseResolvedGrammar } from "../server/resolutionGrammar";
 import { internal } from "./_generated/api";
 import { type ActionCtx, env, internalAction } from "./_generated/server";
-import { inspectionFor } from "./inspectionAction";
 import type { GenerationInput } from "./knowledgeGeneration";
 import {
 	generatedKnowledgeAllowedForPublication,
 	type RelationPublicationFingerprints,
 	requestedRelationKinds,
 } from "./model/generatedKnowledgeContainment";
+import { inspectionFor } from "./model/inspectionAction";
 import { publishInRelationChunks } from "./model/relationPublicationChunks";
 
 const OWNER = "app/tf-demo · knowledgeGenerationActions";

@@ -13,7 +13,7 @@ import {
 	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
 	type ReadingEntryContextArgs,
-} from "../convex/dumdictTransaction";
+} from "../convex/model/dumdictTransaction";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import schema from "../convex/schema";
 import {

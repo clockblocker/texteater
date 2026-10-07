@@ -13,21 +13,21 @@ import {
 	type ReadingEntryContext,
 	type ReadingEntryContextLoad,
 } from "dumdict/planning";
-import type { MutationCtx } from "./_generated/server";
+import type { MutationCtx } from "../_generated/server";
 import {
 	type ReadingEntryContextArgs,
 	readingEntryContextArgs,
-} from "./dumdictStorage/contextRequest";
-import { dictionaryPlanResult } from "./dumdictStorage/dictionaryPlan";
+} from "../dumdictStorage/contextRequest";
+import { dictionaryPlanResult } from "../dumdictStorage/dictionaryPlan";
 import {
 	generatedKnowledgeContextChanges,
 	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
-} from "./dumdictStorage/queries";
-import { MAX_PLANNED_CHANGES } from "./dumdictStorage/storage";
-import { applyDumdictPlanInTransaction } from "./dumdictStorage/transaction";
-import { pendingLocatorIndexKey } from "./model/dumdictPendingIndexes";
-import type { dictionaryPlanValidator } from "./model/validators";
+} from "../dumdictStorage/queries";
+import { MAX_PLANNED_CHANGES } from "../dumdictStorage/storage";
+import { applyDumdictPlanInTransaction } from "../dumdictStorage/transaction";
+import { pendingLocatorIndexKey } from "./dumdictPendingIndexes";
+import type { dictionaryPlanValidator } from "./validators";
 
 /**
  * The transaction-local pieces a host write uses beside the workflow methods:
@@ -41,24 +41,24 @@ import type { dictionaryPlanValidator } from "./model/validators";
 export {
 	type ReadingEntryContextArgs,
 	readingEntryContextArgs,
-} from "./dumdictStorage/contextRequest";
-export { dictionaryPlanResult } from "./dumdictStorage/dictionaryPlan";
+} from "../dumdictStorage/contextRequest";
+export { dictionaryPlanResult } from "../dumdictStorage/dictionaryPlan";
 export {
 	loadCleanupRelationsSlice,
 	loadReadingEntryContextSlice,
 	storedReadingsOf,
-} from "./dumdictStorage/queries";
+} from "../dumdictStorage/queries";
 export {
 	DICTIONARY_REVISION,
 	findReadingByKey,
 	findSurface,
 	MAX_PLANNED_CHANGES,
-} from "./dumdictStorage/storage";
+} from "../dumdictStorage/storage";
 export {
 	applyDumdictPlanInTransaction,
 	completeAuthoredComponentKnowledge,
 	materializeGrammaticalComponent,
-} from "./dumdictStorage/transaction";
+} from "../dumdictStorage/transaction";
 
 export type DumdictTransactionPlan = Infer<typeof dictionaryPlanValidator>;
 

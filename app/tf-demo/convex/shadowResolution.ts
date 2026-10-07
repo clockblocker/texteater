@@ -6,7 +6,7 @@ import { type MutationCtx, mutation } from "./_generated/server";
 import {
 	createDumdictTransaction,
 	DICTIONARY_REVISION,
-} from "./dumdictTransaction";
+} from "./model/dumdictTransaction";
 import {
 	parsePendingShadowDescriptor,
 	parseStoredShadowDescriptor,

@@ -193,7 +193,7 @@ const moduleBoundaries = new Map<string, readonly ModuleBoundary[]>([
 				comment:
 					"Callers must choose the action-level or transaction-local Dumdict interface; its implementation folder is private.",
 				fromNot:
-					/^app\/tf-demo\/convex\/(?:dumdictStorage|dumdictActionStorage|dumdictTransaction)(?:\.ts|\/)/,
+					/^app\/tf-demo\/convex\/(?:dumdictStorage\/|model\/dumdictTransaction\.ts)/,
 				to: /^app\/tf-demo\/convex\/dumdictStorage\//,
 			},
 			{

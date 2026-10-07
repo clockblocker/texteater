@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { makeSurfaceId } from "dumdict";
 import { api, internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
-import { applyDumdictPlanInTransaction } from "../convex/dumdictTransaction";
+import { applyDumdictPlanInTransaction } from "../convex/model/dumdictTransaction";
 import type schema from "../convex/schema";
 import {
 	foldedCanonicalForm,

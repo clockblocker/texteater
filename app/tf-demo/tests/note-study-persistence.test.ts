@@ -8,7 +8,7 @@ import type { TableNames } from "../convex/_generated/dataModel";
 import {
 	createDumdictTransaction,
 	type DumdictTransaction,
-} from "../convex/dumdictTransaction";
+} from "../convex/model/dumdictTransaction";
 import schema from "../convex/schema";
 import {
 	NOTE_STUDY_DATABASE,

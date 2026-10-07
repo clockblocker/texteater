@@ -5,7 +5,7 @@ import type { TableNames } from "../convex/_generated/dataModel";
 import {
 	createDumdictTransaction,
 	type DumdictTransaction,
-} from "../convex/dumdictTransaction";
+} from "../convex/model/dumdictTransaction";
 import { shadowKeyFor } from "../convex/model/shadows";
 import {
 	lemmaIdentityKey,

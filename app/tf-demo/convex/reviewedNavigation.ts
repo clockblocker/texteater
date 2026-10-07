@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import { readingIdentityKey } from "../server/linguisticIdentity";
 import { parseGermanReading } from "../server/operationalParsing";
 import { type MutationCtx, mutation } from "./_generated/server";
-import { createDumdictTransaction } from "./dumdictTransaction";
+import { createDumdictTransaction } from "./model/dumdictTransaction";
 import { readingValue } from "./model/occurrenceAttestations";
 import { visitorError } from "./model/validators";
 import { reviewedAlternatives } from "./modules/notes/relations";

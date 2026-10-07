@@ -4,7 +4,7 @@ import type * as Dumling from "dumling/types";
 import { api, internal } from "../convex/_generated/api";
 import type { Doc, Id } from "../convex/_generated/dataModel";
 import crons from "../convex/crons";
-import { createDumdictTransaction } from "../convex/dumdictTransaction";
+import { createDumdictTransaction } from "../convex/model/dumdictTransaction";
 import {
 	assertResolutionLifecycle,
 	assertResolutionProgressTransition,

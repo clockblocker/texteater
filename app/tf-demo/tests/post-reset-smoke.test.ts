@@ -9,11 +9,11 @@ import type { Doc, Id, TableNames } from "../convex/_generated/dataModel";
 import type { ActionCtx, MutationCtx } from "../convex/_generated/server";
 import { STRIP_SEGMENT_BATCH } from "../convex/analysisStripping";
 import { resetDemoTableNames } from "../convex/demoReset";
+import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import {
 	createDumdictTransaction,
 	type DumdictTransaction,
-} from "../convex/dumdictTransaction";
-import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
+} from "../convex/model/dumdictTransaction";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
 import {
 	LEMMA_CLEANUP_EXEMPTIONS,

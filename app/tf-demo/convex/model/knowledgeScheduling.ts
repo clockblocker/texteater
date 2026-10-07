@@ -2,9 +2,9 @@ import { translationLanguageValues } from "dumrel";
 import { assertIdentifier } from "../../server/identifiers";
 import type { Id } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
-import { completeAuthoredComponentKnowledge } from "../dumdictTransaction";
 import { loadKnowledgeSettings } from "../knowledgeSettings";
 import { projectReadingValue } from "../modules/notes/projections";
+import { completeAuthoredComponentKnowledge } from "./dumdictTransaction";
 import { demandKnowledgeAttempt } from "./knowledgeAttempts";
 import {
 	findAccumulatedKnowledge,

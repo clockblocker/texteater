@@ -1,22 +1,22 @@
-import type { SpanHops } from "../server/inspectionCapture";
-import type { ResolutionContext } from "../server/linguisticOrchestration";
+import type { SpanHops } from "../../server/inspectionCapture";
+import type { ResolutionContext } from "../../server/linguisticOrchestration";
 import {
 	parseGermanLemma,
 	parseGermanReading,
-} from "../server/operationalParsing";
-import type { ResolutionSessionGuard } from "../server/resolutionLifecycle";
+} from "../../server/operationalParsing";
+import type { ResolutionSessionGuard } from "../../server/resolutionLifecycle";
 import type {
 	ResolutionSessionLifecyclePort,
 	ResolutionSessionRunInput,
-} from "../server/resolutionSessionExecution";
-import { projectResolutionGrammar } from "../server/resolutionSessionProjection";
-import { internal } from "./_generated/api";
-import type { Id, TableNames } from "./_generated/dataModel";
-import type { ActionCtx } from "./_generated/server";
+} from "../../server/resolutionSessionExecution";
+import { projectResolutionGrammar } from "../../server/resolutionSessionProjection";
+import { internal } from "../_generated/api";
+import type { Id, TableNames } from "../_generated/dataModel";
+import type { ActionCtx } from "../_generated/server";
 import {
 	resolvedGrammaticalActionResult,
 	resolvedGrammaticalCheckpoint,
-} from "./model/grammarCheckpoint";
+} from "./grammarCheckpoint";
 
 const OWNER = "app/tf-demo · resolutionSessions";
 

@@ -249,7 +249,7 @@ test("the persistence adapter does not load exhaustive domain schemas", async ()
 		[
 			"../convex/model/validators.ts",
 			"../convex/model/readingKnowledge.ts",
-			"../convex/dumdictTransaction.ts",
+			"../convex/model/dumdictTransaction.ts",
 			"../convex/dumdictStorage/contextRequest.ts",
 			"../convex/dumdictStorage/dictionaryPlan.ts",
 			"../convex/dumdictStorage/queries.ts",

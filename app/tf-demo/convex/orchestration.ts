@@ -64,16 +64,16 @@ import {
 	internalAction,
 } from "./_generated/server";
 import { inspectionEnabled } from "./deploymentFlags";
-import { inspectionFor } from "./inspectionAction";
+import { inspectionFor } from "./model/inspectionAction";
+import {
+	convexId,
+	createResolutionSessionLifecycle,
+} from "./model/resolutionSessionLifecycle";
 import {
 	languageValidator,
 	resolutionSessionGuardValidator,
 	visitorError,
 } from "./model/validators";
-import {
-	convexId,
-	createResolutionSessionLifecycle,
-} from "./resolutionSessionLifecycle";
 
 const submitTextResultValidator = v.union(
 	v.object({

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import type * as Dumling from "dumling/types";
 import { internal } from "../convex/_generated/api";
-import { createDumdictTransaction } from "../convex/dumdictTransaction";
+import { createDumdictTransaction } from "../convex/model/dumdictTransaction";
 import {
 	createTestConvex,
 	submitText,
