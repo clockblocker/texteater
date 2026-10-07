@@ -1,4 +1,4 @@
-# lego Context
+# lego
 
 lego owns the shared visual language of Texteater applications: the token
 palette, the theme choice, and the reusable pieces that Notes and reading text
@@ -8,9 +8,8 @@ look.
 ## Language
 
 **Token**:
-A named design value exposed to Tailwind through `lego/styles.css`, such as an
-Ink step, a Surface, a Line or a linguistic tone. Applications style with
-Tokens, never with literal colours or lengths.
+A named design value, such as an Ink step, a Surface, a Line or a linguistic
+tone. Applications style with Tokens rather than literal values.
 
 **Ink**:
 The text colour scale, from body text to the faintest legible mark.
@@ -26,21 +25,18 @@ The link colour variant for a noun or pronoun whose gender is a marked Core
 Feature.
 
 **Segment tone**:
-The colour of a reader segment by its state: unknown, known, selected,
-unresolved, failed. Selected is the word whose Cards are open; known words
-resolved earlier sit one chroma step below it.
+The colour of a reader Segment by its resolution state.
 
 **Atom**:
-A shadcn-derived primitive with no product opinion, such as `Button` or
-`Dialog`.
+A primitive with no product opinion.
 
 **Molecule**:
 An opinionated composition of Atoms and Tokens that carries the reading
-experience, such as `NoteTitle` or `ReaderSegment`.
+experience.
 
 **Density**:
 Whether a subtree has comfortable or compact room: a Sheet is comfortable, a
-Card compact. Molecules adapt to it.
+Card compact.
 _Avoid_: presentation mode, card mode
 
 **Theme**:
