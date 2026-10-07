@@ -37,6 +37,7 @@ import { markedSentence } from "../../../src/resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
+import { goldRequests } from "../request-diff.js";
 import {
 	CachedModels,
 	type GrammarCaps,
@@ -175,7 +176,7 @@ async function attempt(
 	goldCase: ReadingCase,
 	arm: ReadingArm,
 	repetition: number,
-	models: ReadingModels,
+	models: Pick<ReadingModels, "jev" | "luna">,
 ): Promise<ReadingOutput> {
 	const traces: OperationTrace[] = [];
 	const at = { goldCase, arm };
@@ -291,6 +292,31 @@ export function readingMetrics(run: OperationEvaluationRun) {
 	};
 }
 
+/**
+ * A frozen set's requests to jev and Luna (`request-diff.ts`): each case's
+ * every arm once, the judge answering and Luna writing as gold would, so
+ * the requests and outcome are fixed.
+ */
+async function readingRequests(
+	setsRoot: string,
+	setName: ReadingSetName,
+	concurrency: number,
+) {
+	const set = await loadReadingSet(setsRoot, setName);
+	return goldRequests({
+		cases: set.cases.flatMap((goldCase) =>
+			armsOf(goldCase).map((arm) => ({
+				id: attemptId(goldCase, arm),
+				at: { goldCase, arm },
+			})),
+		),
+		oracle: readingOracle,
+		attempt: ({ goldCase, arm }, models) =>
+			attempt(goldCase, arm, 0, models),
+		concurrency,
+	});
+}
+
 /** The table's entry for one set. */
 export function readingExperiment(setName: ReadingSetName) {
 	const id = `${readingRoute}:${setName}`;
@@ -298,6 +324,15 @@ export function readingExperiment(setName: ReadingSetName) {
 		id,
 		caseCount: () => frozenSetSize(trackedReadingSetsRoot, setName),
 		metrics: readingMetrics,
+		requests: (args: {
+			readonly setsRoot?: string;
+			readonly concurrency?: number;
+		}) =>
+			readingRequests(
+				args.setsRoot ?? trackedReadingSetsRoot,
+				setName,
+				args.concurrency ?? 12,
+			),
 		async evaluate(args: ReadingEvaluateArgs): Promise<ReadingEvaluated> {
 			const root = args.root ?? defaultReadingRoot;
 			const setsRoot = args.setsRoot ?? trackedReadingSetsRoot;

@@ -19,7 +19,7 @@
  */
 import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { canonicalJson, messageOf } from "common-utils";
+import { canonicalJson } from "common-utils";
 import * as Effect from "effect/Effect";
 import {
 	defineGoldenCaseCollection,
@@ -42,12 +42,7 @@ import { JevCache } from "../../segmentation/harness/jev-cache.js";
 import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
 import { groupSegments } from "../production-segmenter.js";
-import {
-	type CaseRequests,
-	type RecordedRequest,
-	type RequestRun,
-	sortedRequests,
-} from "../request-diff.js";
+import { goldRequests } from "../request-diff.js";
 import {
 	type GrammarCase,
 	type GrammarSetName,
@@ -357,66 +352,14 @@ async function grammarRequests(
 	setsRoot: string,
 	setName: GrammarSetName,
 	concurrency: number,
-): Promise<Pick<RequestRun, "answers" | "cases">> {
+) {
 	const set = await loadGrammarSet(setsRoot, setName);
-	const cases = await Effect.runPromise(
-		Effect.forEach(
-			set.cases,
-			(goldCase) =>
-				Effect.promise(async (): Promise<CaseRequests> => {
-					const requests: RecordedRequest[] = [];
-					const outcome = await attempt(goldCase, 0, {
-						jev:
-							() =>
-							async (request, { stage }) => {
-								requests.push({
-									executor: "jev",
-									stage,
-									repetition: 0,
-									state: request.state,
-									questions: request.questions,
-								});
-								return {
-									model: request.model,
-									answers: goldAnswers(
-										goldCase,
-										request.questions,
-									),
-									usage: {
-										input_tokens: 0,
-										output_tokens: 0,
-									},
-								};
-							},
-						luna:
-							() =>
-							async (request, { stage }) => {
-								requests.push({
-									executor: "luna",
-									stage,
-									repetition: 0,
-									request,
-								});
-								return {
-									output: goldWritten(
-										goldCase,
-										request.input,
-									),
-								};
-							},
-					}).catch((error: unknown) => ({
-						failure: messageOf(error),
-					}));
-					return {
-						id: goldCase.id,
-						requests: sortedRequests(requests),
-						outcomes: [{ repetition: 0, outcome }],
-					};
-				}),
-			{ concurrency: Math.max(1, concurrency) },
-		),
-	);
-	return { answers: { source: "gold" }, cases };
+	return goldRequests({
+		cases: set.cases.map((goldCase) => ({ id: goldCase.id, at: goldCase })),
+		oracle: { answers: goldAnswers, written: goldWritten },
+		attempt: (goldCase, models) => attempt(goldCase, 0, models),
+		concurrency,
+	});
 }
 
 /** The table's entry for one set and input. */

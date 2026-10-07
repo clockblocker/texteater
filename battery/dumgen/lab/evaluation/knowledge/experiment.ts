@@ -37,6 +37,7 @@ import { markedSentence } from "../../../src/resolve/reading.js";
 import { type JevAsk, pinnedJevModel } from "../../../src/segment/jev.js";
 import { frozenSetSize, isFrozen } from "../frozen-sets.js";
 import type { LunaBatch } from "../luna-batch.js";
+import { goldRequests } from "../request-diff.js";
 import {
 	CachedModels,
 	type GrammarCaps,
@@ -220,7 +221,7 @@ async function attempt(
 	goldCase: KnowledgeCase,
 	scope: KnowledgeScope,
 	repetition: number,
-	models: KnowledgeModels,
+	models: Pick<KnowledgeModels, "jev" | "luna">,
 ): Promise<KnowledgeOutput> {
 	const traces: OperationTrace[] = [];
 	const at: KnowledgeAttempt = { goldCase, scope };
@@ -332,6 +333,29 @@ export function knowledgeMetrics(run: OperationEvaluationRun) {
 		: knowledgeReport(attempts);
 }
 
+/**
+ * A frozen set's requests to jev and Luna (`request-diff.ts`): each case a
+ * run would ask once, the judges answering and Luna writing as gold would,
+ * or as its stand-ins where a case has no gold, so the requests and
+ * outcome are fixed.
+ */
+async function knowledgeRequests(
+	setsRoot: string,
+	setName: KnowledgeSetName,
+	concurrency: number,
+) {
+	const set = await loadKnowledgeSet(setsRoot, setName);
+	const scope = scopeOf(setName);
+	return goldRequests({
+		cases: set.cases
+			.filter((goldCase) => !goldCase.authored)
+			.map((goldCase) => ({ id: goldCase.id, at: { goldCase, scope } })),
+		oracle: knowledgeOracle,
+		attempt: (at, models) => attempt(at.goldCase, at.scope, 0, models),
+		concurrency,
+	});
+}
+
 /** The table's entry for one set. */
 export function knowledgeExperiment(setName: KnowledgeSetName) {
 	const id = `${knowledgeRoute}:${setName}`;
@@ -340,6 +364,15 @@ export function knowledgeExperiment(setName: KnowledgeSetName) {
 		id,
 		caseCount: () => frozenSetSize(trackedKnowledgeSetsRoot, setName),
 		metrics: knowledgeMetrics,
+		requests: (args: {
+			readonly setsRoot?: string;
+			readonly concurrency?: number;
+		}) =>
+			knowledgeRequests(
+				args.setsRoot ?? trackedKnowledgeSetsRoot,
+				setName,
+				args.concurrency ?? 12,
+			),
 		async evaluate(
 			args: KnowledgeEvaluateArgs,
 		): Promise<KnowledgeEvaluated> {

@@ -192,8 +192,9 @@ bun run evaluate --compare <beforeRequestRunId> <afterRequestRunId>
   high Noul) and once with the contrary (its last option, a low Noul), so
   a cold cache still reaches the branches behind a "no" or a later option;
   every request and outcome is tagged with its path. `resolve-grammar/de:dev`
-  and `:heldout` answer jev and Luna with gold. To compare two commits, run
-  it in a checkout of each.
+  and `:heldout`, `resolve-reading/de:*` and `knowledge/de:*` answer jev
+  and Luna with their gold oracles. To compare two commits, run it in a
+  checkout of each.
 - **Transport is recorded apart from accuracy.** Every retry and every
   request that still failed is counted by cause (an HTTP status, `no
   status`, `invalid answer`), and requests abandoned with their operation

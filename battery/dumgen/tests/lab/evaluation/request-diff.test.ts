@@ -172,3 +172,38 @@ test("resolve.grammar's request run sends jev and Luna requests at gold's answer
 		}),
 	).rejects.toThrow("has no request diff");
 });
+
+test("resolve.reading's and knowledge.produce's request runs send jev and Luna requests at gold's answers, the same each time", async () => {
+	for (const experimentId of ["resolve-reading/de:dev", "knowledge/de:dev"]) {
+		const args = { experimentId, sourceRevision: "test" };
+		const first = await experimentRequests(args);
+		expect(first.answers).toEqual({ source: "gold" });
+		expect(first.cases.length).toBeGreaterThan(0);
+		const executors = new Set(
+			first.cases.flatMap(({ requests }) =>
+				requests.map(({ executor }) => executor),
+			),
+		);
+		expect([...executors].sort()).toEqual(["jev", "luna"]);
+		expect(
+			first.cases.every(
+				({ outcomes }) =>
+					outcomes.length === 1 &&
+					!(
+						typeof outcomes[0]?.outcome === "object" &&
+						outcomes[0]?.outcome !== null &&
+						"failure" in outcomes[0].outcome
+					),
+			),
+		).toBe(true);
+		expect(await experimentRequests(args)).toEqual(first);
+	}
+	// A reading case runs once per arm, under the run's own case id.
+	const reading = await experimentRequests({
+		experimentId: "resolve-reading/de:dev",
+		sourceRevision: "test",
+	});
+	expect(
+		reading.cases.every(({ id }) => /:(present|removed)$/u.test(id)),
+	).toBe(true);
+});

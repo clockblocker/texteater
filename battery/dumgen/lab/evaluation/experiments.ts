@@ -821,6 +821,13 @@ function resolveReadingEntry(set: "dev" | "heldout"): Experiment {
 		id: experiment.id,
 		caseCount: experiment.caseCount,
 		metrics: experiment.metrics,
+		requests: (args) =>
+			experiment.requests({
+				...(args.readingSetsRoot
+					? { setsRoot: args.readingSetsRoot }
+					: {}),
+				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+			}),
 		async evaluate(args) {
 			const evaluated = await experiment.evaluate({
 				experimentId: args.experimentId,
@@ -870,6 +877,13 @@ function knowledgeEntry(set: "dev" | "heldout" | "spot-check"): Experiment {
 		id: experiment.id,
 		caseCount: experiment.caseCount,
 		metrics: experiment.metrics,
+		requests: (args) =>
+			experiment.requests({
+				...(args.knowledgeSetsRoot
+					? { setsRoot: args.knowledgeSetsRoot }
+					: {}),
+				...(args.concurrency ? { concurrency: args.concurrency } : {}),
+			}),
 		async evaluate(args) {
 			const evaluated = await experiment.evaluate({
 				experimentId: args.experimentId,
@@ -966,7 +980,10 @@ export async function experimentRequests(
 	const { requests } = experimentOf(args.experimentId);
 	if (!requests)
 		throw Error(
-			`${args.experimentId} has no request diff; segment-in-units and resolve-grammar's dev and heldout do`,
+			`${args.experimentId} has no request diff; these do: ${experiments
+				.filter((experiment) => experiment.requests)
+				.map(({ id }) => id)
+				.join(", ")}`,
 		);
 	return requests(args);
 }

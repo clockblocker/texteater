@@ -10,8 +10,9 @@
  * segment.inUnits reads the lab's cache and answers a miss twice, once
  * with the projection's stand-ins and once with their contrary, so a pure
  * refactor walks the paths real answers took and, where the cache is cold,
- * the branches behind a "no" or a later option too; resolve.grammar answers
- * with its gold. A request keeps its key and
+ * the branches behind a "no" or a later option too. resolve.grammar,
+ * resolve.reading and knowledge.produce answer with their gold oracles
+ * (`goldRequests`). A request keeps its key and
  * question order, which is part of what jev reads, so requests compare as
  * `JSON.stringify` writes them, not canonically.
  */
@@ -21,6 +22,11 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { gunzipSync, gzipSync } from "node:zlib";
 import type { JsonValue } from "@typesafe-ai/sdk";
+import { messageOf } from "common-utils";
+import * as Effect from "effect/Effect";
+import type { LunaAsk } from "../../src/luna.js";
+import type { JevAsk } from "../../src/segment/jev.js";
+import type { GoldOracle } from "./resolve-grammar/models.js";
 
 /**
  * Where a request or outcome sits: its repetition, and the answer path it
@@ -73,6 +79,87 @@ export const sortedRequests = (requests: readonly RecordedRequest[]) =>
 		.map((request) => ({ request, key: JSON.stringify(request) }))
 		.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
 		.map(({ request }) => request);
+
+/** The jev and Luna an attempt asks, per what the oracle answers for and repetition, as a port's cached models hand them out. */
+type AttemptModels<At> = {
+	readonly jev: (at: At, repetition: number) => JevAsk;
+	readonly luna: (at: At, repetition: number) => LunaAsk;
+};
+
+/**
+ * A port's requests answered by its gold oracle (resolve.grammar,
+ * resolve.reading, knowledge.produce): each case's attempt once, every
+ * jev question answered and every Luna call written as gold would, each
+ * request recorded, so the requests and the outcome are fixed.
+ */
+export async function goldRequests<At>(args: {
+	readonly cases: readonly { readonly id: string; readonly at: At }[];
+	readonly oracle: GoldOracle<At>;
+	readonly attempt: (at: At, models: AttemptModels<At>) => Promise<unknown>;
+	readonly concurrency: number;
+}): Promise<Pick<RequestRun, "answers" | "cases">> {
+	const { oracle } = args;
+	const cases = await Effect.runPromise(
+		Effect.forEach(
+			args.cases,
+			({ id, at }) =>
+				Effect.promise(async (): Promise<CaseRequests> => {
+					const requests: RecordedRequest[] = [];
+					const outcome = await args
+						.attempt(at, {
+							jev:
+								(asked, repetition) =>
+								async (request, { stage }) => {
+									requests.push({
+										executor: "jev",
+										stage,
+										repetition,
+										state: request.state,
+										questions: request.questions,
+									});
+									return {
+										model: request.model,
+										answers: oracle.answers(
+											asked,
+											request.questions,
+										),
+										usage: {
+											input_tokens: 0,
+											output_tokens: 0,
+										},
+									};
+								},
+							luna:
+								(asked, repetition) =>
+								async (request, { stage }) => {
+									requests.push({
+										executor: "luna",
+										stage,
+										repetition,
+										request,
+									});
+									return {
+										output: oracle.written(
+											asked,
+											request.input,
+										),
+									};
+								},
+						})
+						.catch((error: unknown) => ({
+							failure: messageOf(error),
+						}));
+					return {
+						id,
+						requests: sortedRequests(requests),
+						outcomes: [{ repetition: 0, outcome }],
+					};
+				}),
+			{ concurrency: Math.max(1, args.concurrency) },
+		),
+	);
+	return { answers: { source: "gold" }, cases };
+}
 
 export const newRequestRunId = () =>
 	`${new Date().toISOString().replace(/[:.]/gu, "-")}-${randomUUID().slice(0, 8)}`;
