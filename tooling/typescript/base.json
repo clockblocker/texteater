@@ -15,7 +15,7 @@
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
 		"skipLibCheck": true,
-		"strictNullChecks": true,
+		"strict": true,
 		"strictPropertyInitialization": false,
 		"target": "ESNext",
 		"verbatimModuleSyntax": true
