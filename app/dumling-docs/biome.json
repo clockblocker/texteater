@@ -2,9 +2,6 @@
 	"extends": "//",
 	"files": {
 		"includes": [
-			"!!dist",
-			"!!node_modules",
-			"!!.astro",
 			"!!.codegen",
 			"!!public/**/*.md",
 			"!!public/nav.json",

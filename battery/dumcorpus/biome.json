@@ -1,6 +1,6 @@
 {
 	"extends": "//",
 	"files": {
-		"includes": ["!!dist", "!!node_modules", "!!schema"]
+		"includes": ["!!schema"]
 	}
 }
