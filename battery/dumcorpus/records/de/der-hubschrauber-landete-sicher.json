@@ -74,7 +74,7 @@
 					},
 					{
 						"title": "Dumrel settled Semantic Relation policy",
-						"path": "battery/dumrel/GLOSSARY.md",
+						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
 						"supports": "Defines exact Synonymy; assigning that stricter project category remains human-accepted."
 					}
 				],

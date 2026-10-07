@@ -81,7 +81,7 @@
 					},
 					{
 						"title": "Dumrel settled Semantic Relation policy",
-						"path": "battery/dumrel/GLOSSARY.md",
+						"path": "battery/dumrel/docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md",
 						"supports": "Defines administrative member-to-whole direction as Holonym."
 					}
 				],
