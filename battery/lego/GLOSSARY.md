@@ -9,7 +9,7 @@ look.
 
 **Token**:
 A named design value, such as an Ink step, a Surface, a Line or a linguistic
-tone. Applications style with Tokens rather than literal values.
+tone. Applications take their colours from Tokens.
 
 **Ink**:
 The text colour scale, from body text to the faintest legible mark.
