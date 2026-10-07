@@ -36,6 +36,7 @@ import type * as model_knowledgeCoverage from "../model/knowledgeCoverage.js";
 import type * as model_knowledgeProductionRuns from "../model/knowledgeProductionRuns.js";
 import type * as model_knowledgeScheduling from "../model/knowledgeScheduling.js";
 import type * as model_occurrenceAttestations from "../model/occurrenceAttestations.js";
+import type * as model_ownedRowCleanup from "../model/ownedRowCleanup.js";
 import type * as model_presentedDumling from "../model/presentedDumling.js";
 import type * as model_readingKnowledge from "../model/readingKnowledge.js";
 import type * as model_relationPublicationChunks from "../model/relationPublicationChunks.js";
@@ -114,6 +115,7 @@ declare const fullApi: ApiFromModules<{
   "model/knowledgeProductionRuns": typeof model_knowledgeProductionRuns;
   "model/knowledgeScheduling": typeof model_knowledgeScheduling;
   "model/occurrenceAttestations": typeof model_occurrenceAttestations;
+  "model/ownedRowCleanup": typeof model_ownedRowCleanup;
   "model/presentedDumling": typeof model_presentedDumling;
   "model/readingKnowledge": typeof model_readingKnowledge;
   "model/relationPublicationChunks": typeof model_relationPublicationChunks;

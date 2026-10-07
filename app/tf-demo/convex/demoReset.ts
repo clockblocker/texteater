@@ -16,13 +16,23 @@ import {
 } from "./_generated/server";
 import { requireAdmin } from "./deploymentFlags";
 import { deleteKnowledgeAttempts } from "./model/knowledgeAttempts";
+import {
+	cleanupPhase,
+	cleanupStart,
+	deleteOwnedRows,
+	LEMMA_CLEANUP_PHASES,
+	type LemmaCleanupCursor,
+	lemmaCleanupCursorValidator,
+	nextItem,
+	nextPhase,
+	READING_CLEANUP_PHASES,
+	type ReadingCleanupCursor,
+	readingCleanupCursorValidator,
+} from "./model/ownedRowCleanup";
 import { deleteResolutionSessions } from "./model/resolutionSessions";
 import { loadStoredSegments } from "./model/storedSegments";
 import {
 	DESCRIPTOR_PAGE_SIZE,
-	type ReadingCleanupCursor,
-	type ReadingCleanupPhase,
-	readingCleanupCursorValidator,
 	type StripTextAnalysisResult,
 	stripTextAnalysisGraph,
 } from "./model/textAnalysisStripping";
@@ -569,80 +579,11 @@ export const describeReadingCleanupCandidates = internalQuery({
 	},
 });
 
-function nextReadingPhase(phase: ReadingCleanupPhase): ReadingCleanupPhase {
-	switch (phase) {
-		case "GenerationAttempts":
-			return "PendingRelations";
-		case "PendingRelations":
-			return "KnowledgeChanges";
-		case "KnowledgeChanges":
-			return "StructuralReferences";
-		case "StructuralReferences":
-			return "AccumulatedKnowledge";
-		case "AccumulatedKnowledge":
-			return "GeneratedRelationRuns";
-		case "GeneratedRelationRuns":
-			return "GeneratedRelationProposals";
-		case "GeneratedRelationProposals":
-			return "PersonalAnnotations";
-		case "PersonalAnnotations":
-			return "OutgoingSemanticEdges";
-		case "OutgoingSemanticEdges":
-			return "IncomingSemanticEdges";
-		case "IncomingSemanticEdges":
-			return "Reading";
-		case "Reading":
-			return "GenerationAttempts";
-	}
-}
-
-function takeReadingOwnedRows(
-	ctx: MutationCtx,
-	phase:
-		| "GeneratedRelationRuns"
-		| "GeneratedRelationProposals"
-		| "PersonalAnnotations"
-		| "OutgoingSemanticEdges"
-		| "IncomingSemanticEdges",
-	readingId: Id<"readings">,
-	limit: number,
-): Promise<{ _id: Id<TableNames> }[]> {
-	switch (phase) {
-		case "GeneratedRelationRuns":
-			return ctx.db
-				.query("generatedRelationRuns")
-				.withIndex("by_source_reading_id", (q) =>
-					q.eq("sourceReadingId", readingId),
-				)
-				.take(limit);
-		case "GeneratedRelationProposals":
-			return ctx.db
-				.query("generatedRelationProposals")
-				.withIndex("by_source_reading_id", (q) =>
-					q.eq("sourceReadingId", readingId),
-				)
-				.take(limit);
-		case "PersonalAnnotations":
-			return ctx.db
-				.query("personalAnnotations")
-				.withIndex("by_reading_id", (q) => q.eq("readingId", readingId))
-				.take(limit);
-		case "OutgoingSemanticEdges":
-			return ctx.db
-				.query("semanticRelationEdges")
-				.withIndex(
-					"by_source_reading_id_and_relation_and_target_lemma_id",
-					(q) => q.eq("sourceReadingId", readingId),
-				)
-				.take(limit);
-		case "IncomingSemanticEdges":
-			return ctx.db
-				.query("semanticRelationEdges")
-				.withIndex("by_target_reading_id", (q) =>
-					q.eq("targetReadingId", readingId),
-				)
-				.take(limit);
-	}
+function findReading(ctx: MutationCtx, readingKey: string) {
+	return ctx.db
+		.query("readings")
+		.withIndex("by_reading_key", (q) => q.eq("readingKey", readingKey))
+		.unique();
 }
 
 export const clearReadingDataBatch = internalMutation({
@@ -657,10 +598,8 @@ export const clearReadingDataBatch = internalMutation({
 		nextCursor: v.union(v.null(), readingCleanupCursorValidator),
 	}),
 	handler: async (ctx, { readingKeys, cursor: cursorValue }) => {
-		let cursor: ReadingCleanupCursor = cursorValue ?? {
-			itemIndex: 0,
-			phase: "GenerationAttempts",
-		};
+		let cursor: ReadingCleanupCursor =
+			cursorValue ?? cleanupStart(READING_CLEANUP_PHASES);
 		if (
 			!Number.isSafeInteger(cursor.itemIndex) ||
 			cursor.itemIndex < 0 ||
@@ -681,114 +620,60 @@ export const clearReadingDataBatch = internalMutation({
 			if (!readingKey) break;
 			const remaining = CLEANUP_DELETE_BUDGET - deleted;
 			let phaseComplete = true;
-			switch (cursor.phase) {
-				case "PendingRelations": {
-					const rows = await ctx.db
-						.query("pendingSemanticRelations")
-						.withIndex("by_source_reading_key", (q) =>
-							q.eq("sourceReadingKey", readingKey),
-						)
-						.take(remaining);
-					await Promise.all(
-						rows.map((row) => ctx.db.delete(row._id)),
+			const phase = cleanupPhase(READING_CLEANUP_PHASES, cursor.phase);
+			if ("table" in phase) {
+				const key =
+					phase.keyedBy === "readingKey"
+						? readingKey
+						: (await findReading(ctx, readingKey))?._id;
+				if (key) {
+					const removed = await deleteOwnedRows(
+						ctx,
+						phase,
+						key,
+						remaining,
 					);
-					deleted += rows.length;
-					phaseComplete = rows.length < remaining;
-					break;
+					deleted += removed;
+					phaseComplete = removed < remaining;
 				}
-				case "KnowledgeChanges": {
-					const rows = await ctx.db
-						.query("knowledgeChanges")
-						.withIndex("by_owner_reading_key", (q) =>
-							q.eq("ownerReadingKey", readingKey),
-						)
-						.take(remaining);
-					await Promise.all(
-						rows.map((row) => ctx.db.delete(row._id)),
-					);
-					deleted += rows.length;
-					phaseComplete = rows.length < remaining;
-					break;
-				}
-				case "StructuralReferences": {
-					const rows = await ctx.db
-						.query("structuralShadowReferences")
-						.withIndex("by_owner_reading_key", (q) =>
-							q.eq("ownerReadingKey", readingKey),
-						)
-						.take(remaining);
-					await Promise.all(
-						rows.map((row) => ctx.db.delete(row._id)),
-					);
-					deleted += rows.length;
-					phaseComplete = rows.length < remaining;
-					break;
-				}
-				case "AccumulatedKnowledge": {
-					const row = await ctx.db
-						.query("accumulatedKnowledge")
-						.withIndex("by_owner_reading_key", (q) =>
-							q.eq("ownerReadingKey", readingKey),
-						)
-						.unique();
-					if (row) {
-						await ctx.db.delete(row._id);
-						deleted += 1;
+			} else {
+				switch (phase.phase) {
+					case "GenerationAttempts": {
+						// Attempts are keyed by the Reading's identity key, so a
+						// leftover one would block the next Reading with this key.
+						const attempts = await ctx.db
+							.query("knowledgeGenerationAttempts")
+							.withIndex(
+								"by_owner_reading_key_and_updated_at",
+								(q) => q.eq("ownerReadingKey", readingKey),
+							)
+							.take(remaining);
+						const removed = await deleteKnowledgeAttempts(
+							ctx,
+							attempts,
+							remaining,
+						);
+						deleted += removed.deleted;
+						phaseComplete =
+							removed.complete && attempts.length < remaining;
+						break;
 					}
-					break;
-				}
-				case "GenerationAttempts": {
-					// Attempts are keyed by the Reading's identity key, so a
-					// leftover one would block the next Reading with this key.
-					const attempts = await ctx.db
-						.query("knowledgeGenerationAttempts")
-						.withIndex("by_owner_reading_key_and_updated_at", (q) =>
-							q.eq("ownerReadingKey", readingKey),
-						)
-						.take(remaining);
-					const removed = await deleteKnowledgeAttempts(
-						ctx,
-						attempts,
-						remaining,
-					);
-					deleted += removed.deleted;
-					phaseComplete =
-						removed.complete && attempts.length < remaining;
-					break;
-				}
-				case "GeneratedRelationRuns":
-				case "GeneratedRelationProposals":
-				case "PersonalAnnotations":
-				case "OutgoingSemanticEdges":
-				case "IncomingSemanticEdges": {
-					const reading = await ctx.db
-						.query("readings")
-						.withIndex("by_reading_key", (q) =>
-							q.eq("readingKey", readingKey),
-						)
-						.unique();
-					if (!reading) break;
-					const rows = await takeReadingOwnedRows(
-						ctx,
-						cursor.phase,
-						reading._id,
-						remaining,
-					);
-					await Promise.all(
-						rows.map((row) => ctx.db.delete(row._id)),
-					);
-					deleted += rows.length;
-					phaseComplete = rows.length < remaining;
-					break;
-				}
-				case "Reading": {
-					const reading = await ctx.db
-						.query("readings")
-						.withIndex("by_reading_key", (q) =>
-							q.eq("readingKey", readingKey),
-						)
-						.unique();
-					if (reading) {
+					case "AccumulatedKnowledge": {
+						const row = await ctx.db
+							.query("accumulatedKnowledge")
+							.withIndex("by_owner_reading_key", (q) =>
+								q.eq("ownerReadingKey", readingKey),
+							)
+							.unique();
+						if (row) {
+							await ctx.db.delete(row._id);
+							deleted += 1;
+						}
+						break;
+					}
+					case "Reading": {
+						const reading = await findReading(ctx, readingKey);
+						if (!reading) break;
 						const entry = await ctx.db
 							.query("readingEntries")
 							.withIndex("by_reading_id", (q) =>
@@ -806,19 +691,12 @@ export const clearReadingDataBatch = internalMutation({
 						]);
 						deleted += required;
 						deletedReadings += 1;
+						break;
 					}
-					break;
 				}
 			}
 			if (!phaseComplete) break;
-			if (cursor.phase === "Reading") {
-				cursor = {
-					itemIndex: cursor.itemIndex + 1,
-					phase: "GenerationAttempts",
-				};
-			} else {
-				cursor = { ...cursor, phase: nextReadingPhase(cursor.phase) };
-			}
+			cursor = nextPhase(READING_CLEANUP_PHASES, cursor);
 		}
 		const nextCursor =
 			cursor.itemIndex >= readingKeys.length ? null : cursor;
@@ -830,32 +708,6 @@ export const clearReadingDataBatch = internalMutation({
 		};
 	},
 });
-
-const lemmaCleanupPhaseValidator = v.union(
-	v.literal("Surfaces"),
-	v.literal("IncomingSemanticEdges"),
-	v.literal("Lemma"),
-);
-
-type LemmaCleanupPhase = "Surfaces" | "IncomingSemanticEdges" | "Lemma";
-
-type LemmaCleanupCursor = { itemIndex: number; phase: LemmaCleanupPhase };
-
-const lemmaCleanupCursorValidator = v.object({
-	itemIndex: v.number(),
-	phase: lemmaCleanupPhaseValidator,
-});
-
-function nextLemmaPhase(phase: LemmaCleanupPhase): LemmaCleanupPhase {
-	switch (phase) {
-		case "Surfaces":
-			return "IncomingSemanticEdges";
-		case "IncomingSemanticEdges":
-			return "Lemma";
-		case "Lemma":
-			return "Surfaces";
-	}
-}
 
 export const clearLemmaDataBatch = internalMutation({
 	args: {
@@ -869,10 +721,8 @@ export const clearLemmaDataBatch = internalMutation({
 		nextCursor: v.union(v.null(), lemmaCleanupCursorValidator),
 	}),
 	handler: async (ctx, { lemmaIds, cursor: cursorValue }) => {
-		let cursor: LemmaCleanupCursor = cursorValue ?? {
-			itemIndex: 0,
-			phase: "Surfaces",
-		};
+		let cursor: LemmaCleanupCursor =
+			cursorValue ?? cleanupStart(LEMMA_CLEANUP_PHASES);
 		if (
 			!Number.isSafeInteger(cursor.itemIndex) ||
 			cursor.itemIndex < 0 ||
@@ -901,108 +751,106 @@ export const clearLemmaDataBatch = internalMutation({
 						.first()
 				: null;
 			if (!lemma || reading) {
-				cursor = { itemIndex: cursor.itemIndex + 1, phase: "Surfaces" };
+				cursor = nextItem(LEMMA_CLEANUP_PHASES, cursor);
 				continue;
 			}
 			const remaining = CLEANUP_DELETE_BUDGET - deleted;
 			let phaseComplete = true;
 			let skipLemma = false;
-			switch (cursor.phase) {
-				case "Surfaces": {
-					const limit = Math.min(100, Math.floor(remaining / 2));
-					if (limit === 0) {
-						phaseComplete = false;
+			const phase = cleanupPhase(LEMMA_CLEANUP_PHASES, cursor.phase);
+			if ("table" in phase) {
+				const removed = await deleteOwnedRows(
+					ctx,
+					phase,
+					lemmaId,
+					remaining,
+				);
+				deleted += removed;
+				phaseComplete = removed < remaining;
+			} else {
+				switch (phase.phase) {
+					case "Surfaces": {
+						const limit = Math.min(100, Math.floor(remaining / 2));
+						if (limit === 0) {
+							phaseComplete = false;
+							break;
+						}
+						const surfaces = await ctx.db
+							.query("surfaces")
+							.withIndex("by_lemma_id", (q) =>
+								q.eq("lemmaId", lemmaId),
+							)
+							.take(limit);
+						const surfaceState = await Promise.all(
+							surfaces.map(async (surface) => {
+								const [attestation, entry] = await Promise.all([
+									ctx.db
+										.query("attestations")
+										.withIndex("by_surface_id", (q) =>
+											q.eq("surfaceId", surface._id),
+										)
+										.first(),
+									ctx.db
+										.query("ownedSurfaces")
+										.withIndex("by_surface_id", (q) =>
+											q.eq("surfaceId", surface._id),
+										)
+										.unique(),
+								]);
+								return { surface, attestation, entry };
+							}),
+						);
+						const protectedIndex = surfaceState.findIndex(
+							({ attestation }) => Boolean(attestation),
+						);
+						skipLemma = protectedIndex !== -1;
+						const deletable =
+							protectedIndex === -1
+								? surfaceState
+								: surfaceState.slice(0, protectedIndex);
+						await Promise.all(
+							deletable.flatMap(({ surface, entry }) => [
+								...(entry ? [ctx.db.delete(entry._id)] : []),
+								ctx.db.delete(surface._id),
+							]),
+						);
+						deleted += deletable.reduce(
+							(count, { entry }) => count + (entry ? 2 : 1),
+							0,
+						);
+						phaseComplete = !skipLemma && surfaces.length < limit;
 						break;
 					}
-					const surfaces = await ctx.db
-						.query("surfaces")
-						.withIndex("by_lemma_id", (q) =>
-							q.eq("lemmaId", lemmaId),
-						)
-						.take(limit);
-					const surfaceState = await Promise.all(
-						surfaces.map(async (surface) => {
-							const [attestation, entry] = await Promise.all([
-								ctx.db
-									.query("attestations")
-									.withIndex("by_surface_id", (q) =>
-										q.eq("surfaceId", surface._id),
-									)
-									.first(),
-								ctx.db
-									.query("ownedSurfaces")
-									.withIndex("by_surface_id", (q) =>
-										q.eq("surfaceId", surface._id),
-									)
-									.unique(),
-							]);
-							return { surface, attestation, entry };
-						}),
-					);
-					const protectedIndex = surfaceState.findIndex(
-						({ attestation }) => Boolean(attestation),
-					);
-					skipLemma = protectedIndex !== -1;
-					const deletable =
-						protectedIndex === -1
-							? surfaceState
-							: surfaceState.slice(0, protectedIndex);
-					await Promise.all(
-						deletable.flatMap(({ surface, entry }) => [
-							...(entry ? [ctx.db.delete(entry._id)] : []),
-							ctx.db.delete(surface._id),
-						]),
-					);
-					deleted += deletable.reduce(
-						(count, { entry }) => count + (entry ? 2 : 1),
-						0,
-					);
-					phaseComplete = !skipLemma && surfaces.length < limit;
-					break;
-				}
-				case "IncomingSemanticEdges": {
-					const rows = await ctx.db
-						.query("semanticRelationEdges")
-						.withIndex("by_target_lemma_id", (q) =>
-							q.eq("targetLemmaId", lemmaId),
-						)
-						.take(remaining);
-					await Promise.all(
-						rows.map((row) => ctx.db.delete(row._id)),
-					);
-					deleted += rows.length;
-					phaseComplete = rows.length < remaining;
-					break;
-				}
-				case "Lemma": {
-					const dictionaryLemma = await ctx.db
-						.query("dictionaryLemmas")
-						.withIndex("by_lemma_id", (q) =>
-							q.eq("lemmaId", lemmaId),
-						)
-						.unique();
-					const required = dictionaryLemma ? 2 : 1;
-					if (required > remaining) {
-						phaseComplete = false;
+					case "Lemma": {
+						const dictionaryLemma = await ctx.db
+							.query("dictionaryLemmas")
+							.withIndex("by_lemma_id", (q) =>
+								q.eq("lemmaId", lemmaId),
+							)
+							.unique();
+						const required = dictionaryLemma ? 2 : 1;
+						if (required > remaining) {
+							phaseComplete = false;
+							break;
+						}
+						await Promise.all([
+							...(dictionaryLemma
+								? [ctx.db.delete(dictionaryLemma._id)]
+								: []),
+							ctx.db.delete(lemmaId),
+						]);
+						deleted += required;
+						deletedLemmas += 1;
 						break;
 					}
-					await Promise.all([
-						...(dictionaryLemma
-							? [ctx.db.delete(dictionaryLemma._id)]
-							: []),
-						ctx.db.delete(lemmaId),
-					]);
-					deleted += required;
-					deletedLemmas += 1;
-					break;
 				}
 			}
-			if (skipLemma || cursor.phase === "Lemma") {
-				cursor = { itemIndex: cursor.itemIndex + 1, phase: "Surfaces" };
+			if (skipLemma) {
+				cursor = nextItem(LEMMA_CLEANUP_PHASES, cursor);
 				continue;
 			}
 			if (!phaseComplete) break;
-			cursor = { ...cursor, phase: nextLemmaPhase(cursor.phase) };
+			cursor = nextPhase(LEMMA_CLEANUP_PHASES, cursor);
 		}
 		const nextCursor = cursor.itemIndex >= lemmaIds.length ? null : cursor;
 		return {

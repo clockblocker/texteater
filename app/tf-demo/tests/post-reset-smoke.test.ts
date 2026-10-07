@@ -14,6 +14,10 @@ import {
 } from "../convex/dumdictTransaction";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import { inspectionPayloadChunks } from "../convex/model/inspection";
+import {
+	READING_CLEANUP_EXEMPTIONS,
+	READING_CLEANUP_PHASES,
+} from "../convex/model/ownedRowCleanup";
 import { stripTextAnalysisGraph } from "../convex/model/textAnalysisStripping";
 import { loadRelationProjections } from "../convex/modules/notes/relations";
 import tfDemoSchema from "../convex/schema";
@@ -168,15 +172,6 @@ const readingOwnershipFields = [
 	"attemptKey",
 ];
 
-/** Tables whose rows leave with something other than the owner sweep. */
-const readingSweepExemptions: Record<string, string> = {
-	readings: "the swept Reading itself",
-	attestations: "a Reading with an Attestation is never pruned",
-	definitionTexts: "removed with the Definition Text before pruning",
-	resolutionSessions: "removed with their Sentence",
-	visitorClicks: "a click's Reading is its Attestation's, so never pruned",
-};
-
 const visitorSweepExemptions: Record<string, string> = {
 	inspectionClicks: "Resolution Inspector diagnostics, cleared as a set",
 };
@@ -187,7 +182,7 @@ const ownedThroughAttempt = ["knowledgeProductionRuns"];
 /** Schema tables owned through `fields`, less the exempt ones. */
 function ownedTables(
 	fields: readonly string[],
-	exemptions: Record<string, string>,
+	exemptions: Readonly<Record<string, string | undefined>>,
 ): string[] {
 	return Object.entries(tfDemoSchema.tables)
 		.filter(([tableName, table]) => {
@@ -224,7 +219,7 @@ function attemptKeyFor(owner: SeededReading | string): string {
 /**
  * One builder per Reading-owned table: it seeds `owner`'s rows, pointing any
  * reference at `other`. A new Reading-owned table needs a builder here and a
- * cleanup phase in demoReset.ts, or the sweep test fails.
+ * phase in `READING_CLEANUP_PHASES`, or the sweep test fails.
  */
 const readingOwnedRows: Record<
 	string,
@@ -669,9 +664,19 @@ describe("tf-demo post-reset contract", () => {
 		const pruned = await insertReading(t, "reading-key-1");
 		const kept = await insertReading(t, "reading-key-2");
 		const bystander = await insertReading(t, "reading-key-3");
-		expect(Object.keys(readingOwnedRows).sort()).toEqual(
-			ownedTables(readingOwnershipFields, readingSweepExemptions),
+		const owned = ownedTables(
+			readingOwnershipFields,
+			READING_CLEANUP_EXEMPTIONS,
 		);
+		const swept = [
+			...new Set<string>(
+				READING_CLEANUP_PHASES.flatMap((phase) =>
+					"table" in phase ? [phase.table] : phase.tables,
+				),
+			),
+		].sort();
+		expect(swept).toEqual(owned);
+		expect(Object.keys(readingOwnedRows).sort()).toEqual(owned);
 		const seeded = await t.run(async (ctx) => {
 			const rows = { pruned: [] as string[], kept: [] as string[] };
 			for (const build of Object.values(readingOwnedRows)) {
@@ -701,6 +706,56 @@ describe("tf-demo post-reset contract", () => {
 		]);
 		expect(seeded.pruned.filter((id) => remaining.has(id))).toEqual([]);
 		expect(seeded.kept.filter((id) => !remaining.has(id))).toEqual([]);
+	});
+
+	test("a Lemma the delete budget cannot finish waits for the next batch instead of being skipped", async () => {
+		const t = createTestConvex();
+		const source = await insertReading(t, "reading-key-1");
+		const lemmaId = await t.run(async (ctx) => {
+			const id = await ctx.db.insert("lemmas", {
+				lemmaKey: "lemma:orphan",
+				language: "de",
+				family: "Lexeme",
+				kind: "VERB",
+				canonicalForm: "orphan",
+				foldedCanonicalForm: "orphan",
+				coreFeatures: {},
+			});
+			await ctx.db.insert("dictionaryLemmas", { lemmaId: id });
+			// One short of the batch's delete budget, so the Lemma and its
+			// dictionary entry no longer fit after the edges.
+			for (let edge = 0; edge < 398; edge += 1) {
+				await ctx.db.insert("semanticRelationEdges", {
+					sourceReadingId: source.readingId,
+					targetKind: "lemma",
+					targetLemmaId: id,
+					relation: "synonym",
+				});
+			}
+			return id;
+		});
+
+		const first = await t.mutation(internal.demoReset.clearLemmaDataBatch, {
+			lemmaIds: [lemmaId],
+		});
+		expect(first).toMatchObject({
+			deleted: 398,
+			deletedLemmas: 0,
+			nextCursor: { itemIndex: 0, phase: "Lemma" },
+		});
+		const second = await t.mutation(
+			internal.demoReset.clearLemmaDataBatch,
+			{
+				lemmaIds: [lemmaId],
+				...(first.nextCursor ? { cursor: first.nextCursor } : {}),
+			},
+		);
+		expect(second).toMatchObject({
+			deleted: 2,
+			deletedLemmas: 1,
+			nextCursor: null,
+		});
+		expect(await t.run((ctx) => ctx.db.get(lemmaId))).toBeNull();
 	});
 
 	test("clearing a Visitor deletes a row from every Visitor-owned table, and nothing of another Visitor", async () => {

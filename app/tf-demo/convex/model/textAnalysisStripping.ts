@@ -1,44 +1,17 @@
-import { type Infer, v } from "convex/values";
 import { internal } from "../_generated/api";
 import type { Id } from "../_generated/dataModel";
 import type { ActionCtx } from "../_generated/server";
+import {
+	cleanupStart,
+	LEMMA_CLEANUP_PHASES,
+	type LemmaCleanupCursor,
+	READING_CLEANUP_PHASES,
+	type ReadingCleanupCursor,
+} from "./ownedRowCleanup";
 
 const MAX_BATCHES = 1_000;
 /** Readings one descriptor call may describe. */
 export const DESCRIPTOR_PAGE_SIZE = 20;
-
-/**
- * Reading cleanup phases, in order. Attempts go first: once an attempt is
- * gone its in-flight publication is rejected, so it cannot write Knowledge
- * back behind a later phase.
- */
-const readingCleanupPhaseValidator = v.union(
-	v.literal("GenerationAttempts"),
-	v.literal("PendingRelations"),
-	v.literal("KnowledgeChanges"),
-	v.literal("StructuralReferences"),
-	v.literal("AccumulatedKnowledge"),
-	v.literal("GeneratedRelationRuns"),
-	v.literal("GeneratedRelationProposals"),
-	v.literal("PersonalAnnotations"),
-	v.literal("OutgoingSemanticEdges"),
-	v.literal("IncomingSemanticEdges"),
-	v.literal("Reading"),
-);
-
-export type ReadingCleanupPhase = Infer<typeof readingCleanupPhaseValidator>;
-
-export const readingCleanupCursorValidator = v.object({
-	itemIndex: v.number(),
-	phase: readingCleanupPhaseValidator,
-});
-
-export type ReadingCleanupCursor = Infer<typeof readingCleanupCursorValidator>;
-
-type LemmaCleanupCursor = {
-	itemIndex: number;
-	phase: "Surfaces" | "IncomingSemanticEdges" | "Lemma";
-};
 
 export type StripTextAnalysisResult = {
 	removed: number;
@@ -134,10 +107,9 @@ export async function stripTextAnalysisGraph(
 		}
 	}
 	let deletedReadings = 0;
-	let readingCursor: ReadingCleanupCursor = {
-		itemIndex: 0,
-		phase: "GenerationAttempts",
-	};
+	let readingCursor: ReadingCleanupCursor = cleanupStart(
+		READING_CLEANUP_PHASES,
+	);
 	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 		const result = await ctx.runMutation(
 			internal.demoReset.clearReadingDataBatch,
@@ -156,10 +128,7 @@ export async function stripTextAnalysisGraph(
 
 	const lemmaIds = [...new Set(doomed.map(({ lemmaId }) => lemmaId))];
 	let deletedLemmas = 0;
-	let lemmaCursor: LemmaCleanupCursor = {
-		itemIndex: 0,
-		phase: "Surfaces",
-	};
+	let lemmaCursor: LemmaCleanupCursor = cleanupStart(LEMMA_CLEANUP_PHASES);
 	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 		const result = await ctx.runMutation(
 			internal.demoReset.clearLemmaDataBatch,
