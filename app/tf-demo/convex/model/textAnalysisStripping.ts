@@ -45,7 +45,7 @@ export async function stripTextAnalysisGraph(
 	} = {},
 ): Promise<StrippedTextAnalysis> {
 	const candidates = await ctx.runQuery(
-		internal.demoReset.getTextAnalysisCandidates,
+		internal.analysisStripping.getTextAnalysisCandidates,
 		{ textId },
 	);
 	if (!candidates) {
@@ -60,7 +60,7 @@ export async function stripTextAnalysisGraph(
 	let fromPosition = 0;
 	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 		const result = await ctx.runMutation(
-			internal.demoReset.stripTextAnalysisGraphBatch,
+			internal.analysisStripping.stripTextAnalysisGraphBatch,
 			{ textId, fromPosition },
 		);
 		removed += result.deleted;
@@ -89,7 +89,7 @@ export async function stripTextAnalysisGraph(
 		await Promise.all(
 			descriptorPages.map((readingIds) =>
 				ctx.runQuery(
-					internal.demoReset.describeReadingCleanupCandidates,
+					internal.analysisStripping.describeReadingCleanupCandidates,
 					{ readingIds },
 				),
 			),
@@ -112,7 +112,7 @@ export async function stripTextAnalysisGraph(
 	);
 	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 		const result = await ctx.runMutation(
-			internal.demoReset.clearReadingDataBatch,
+			internal.analysisStripping.clearReadingDataBatch,
 			{ readingKeys: doomedReadingKeys, cursor: readingCursor },
 		);
 		removed += result.deleted;
@@ -131,7 +131,7 @@ export async function stripTextAnalysisGraph(
 	let lemmaCursor: LemmaCleanupCursor = cleanupStart(LEMMA_CLEANUP_PHASES);
 	for (let batch = 0; batch < MAX_BATCHES; batch += 1) {
 		const result = await ctx.runMutation(
-			internal.demoReset.clearLemmaDataBatch,
+			internal.analysisStripping.clearLemmaDataBatch,
 			{ lemmaIds, cursor: lemmaCursor },
 		);
 		removed += result.deleted;

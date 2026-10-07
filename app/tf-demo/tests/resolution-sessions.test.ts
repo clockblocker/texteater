@@ -1502,7 +1502,7 @@ describe("Resolution Session", () => {
 			const { select, segmentId, textId } = await bankenSource(stripped);
 			await startSession(stripped, select("request-1"));
 			const first = await stripped.mutation(
-				internal.demoReset.stripTextAnalysisGraphBatch,
+				internal.analysisStripping.stripTextAnalysisGraphBatch,
 				{ textId },
 			);
 			expect(first).toEqual({

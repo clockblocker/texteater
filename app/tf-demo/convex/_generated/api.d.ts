@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as analysisStripping from "../analysisStripping.js";
 import type * as catalogGrowthSignals from "../catalogGrowthSignals.js";
 import type * as crons from "../crons.js";
 import type * as definitionTextActions from "../definitionTextActions.js";
@@ -87,6 +88,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  analysisStripping: typeof analysisStripping;
   catalogGrowthSignals: typeof catalogGrowthSignals;
   crons: typeof crons;
   definitionTextActions: typeof definitionTextActions;

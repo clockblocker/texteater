@@ -785,7 +785,7 @@ describe("Shadow reset lifecycle", () => {
 
 	test("analysis stripping removes doomed references, preserves survivor activity, and visitor reset leaves Shadows", async () => {
 		const { t, activeShadowId, dormantShadowId } = await lifecycleDb();
-		await t.mutation(internal.demoReset.clearReadingDataBatch, {
+		await t.mutation(internal.analysisStripping.clearReadingDataBatch, {
 			readingKeys: ["reading-doomed"],
 		});
 		expect(await rows(t, "pendingSemanticRelations")).toEqual([]);
@@ -885,7 +885,7 @@ test("Reading deletion removes outgoing edges and preserves incoming edges until
 	);
 
 	for (let attempt = 0; attempt < 3; attempt += 1) {
-		await t.mutation(internal.demoReset.clearReadingDataBatch, {
+		await t.mutation(internal.analysisStripping.clearReadingDataBatch, {
 			readingKeys: ["reading-doomed"],
 		});
 	}
@@ -896,11 +896,11 @@ test("Reading deletion removes outgoing edges and preserves incoming edges until
 		doomedReadingId,
 	);
 
-	await t.mutation(internal.demoReset.clearLemmaDataBatch, {
+	await t.mutation(internal.analysisStripping.clearLemmaDataBatch, {
 		lemmaIds: [doomedLemmaId],
 	});
 	expect(await rows(t, "semanticRelationEdges")).toEqual([]);
-	await t.mutation(internal.demoReset.clearLemmaDataBatch, {
+	await t.mutation(internal.analysisStripping.clearLemmaDataBatch, {
 		lemmaIds: [doomedLemmaId],
 	});
 	expect((await rows(t, "lemmas")).map(({ _id }) => _id)).not.toContain(

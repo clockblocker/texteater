@@ -7,7 +7,8 @@ import {
 import { api, internal } from "../convex/_generated/api";
 import type { Doc, Id, TableNames } from "../convex/_generated/dataModel";
 import type { ActionCtx, MutationCtx } from "../convex/_generated/server";
-import { resetDemoTableNames, STRIP_SEGMENT_BATCH } from "../convex/demoReset";
+import { STRIP_SEGMENT_BATCH } from "../convex/analysisStripping";
+import { resetDemoTableNames } from "../convex/demoReset";
 import {
 	createDumdictTransaction,
 	type DumdictTransaction,
@@ -572,7 +573,8 @@ describe("tf-demo post-reset contract", () => {
 					if (
 						getFunctionName(reference) ===
 						getFunctionName(
-							internal.demoReset.stripTextAnalysisGraphBatch,
+							internal.analysisStripping
+								.stripTextAnalysisGraphBatch,
 						)
 					) {
 						batches += 1;
@@ -689,7 +691,7 @@ describe("tf-demo post-reset contract", () => {
 		let cursor: { itemIndex: number; phase: string } | null | undefined;
 		for (let batch = 0; batch < 8; batch += 1) {
 			const result = await t.mutation(
-				internal.demoReset.clearReadingDataBatch,
+				internal.analysisStripping.clearReadingDataBatch,
 				{
 					readingKeys: ["reading-key-1"],
 					...(cursor ? { cursor: cursor as never } : {}),
@@ -735,16 +737,19 @@ describe("tf-demo post-reset contract", () => {
 			return id;
 		});
 
-		const first = await t.mutation(internal.demoReset.clearLemmaDataBatch, {
-			lemmaIds: [lemmaId],
-		});
+		const first = await t.mutation(
+			internal.analysisStripping.clearLemmaDataBatch,
+			{
+				lemmaIds: [lemmaId],
+			},
+		);
 		expect(first).toMatchObject({
 			deleted: 398,
 			deletedLemmas: 0,
 			nextCursor: { itemIndex: 0, phase: "Lemma" },
 		});
 		const second = await t.mutation(
-			internal.demoReset.clearLemmaDataBatch,
+			internal.analysisStripping.clearLemmaDataBatch,
 			{
 				lemmaIds: [lemmaId],
 				...(first.nextCursor ? { cursor: first.nextCursor } : {}),
@@ -922,7 +927,7 @@ describe("tf-demo post-reset contract", () => {
 		let cursor: { itemIndex: number; phase: string } | null | undefined;
 		for (let batch = 0; batch < 4; batch += 1) {
 			const result = await t.mutation(
-				internal.demoReset.clearReadingDataBatch,
+				internal.analysisStripping.clearReadingDataBatch,
 				{
 					readingKeys: ["reading-key-1"],
 					...(cursor ? { cursor: cursor as never } : {}),
