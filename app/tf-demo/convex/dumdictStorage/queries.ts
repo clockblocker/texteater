@@ -8,7 +8,11 @@ import {
 	requireRecord,
 	requireString,
 } from "../model/readingKnowledge";
-import { pendingShadowDescriptor } from "../model/shadows";
+import {
+	parsePendingShadowDescriptor,
+	pendingShadowDescriptor,
+	warnMalformedStoredRow,
+} from "../model/shadows";
 import { readingValueValidator } from "../model/validators";
 import type { ReadingEntryContextArgs } from "./contextRequest";
 import {
@@ -263,26 +267,29 @@ export async function loadReadingEntryContextSlice(
 				);
 			const pendingRelationsMatchingProposedLemma =
 				matchingPending.flatMap((record) => {
-					try {
-						const descriptor = pendingShadowDescriptor(
-							record.record,
+					const parsed = parsePendingShadowDescriptor(record.record);
+					if (!parsed.ok) {
+						warnMalformedStoredRow(
+							"pendingSemanticRelations",
+							record._id,
+							parsed.error,
 						);
-						return descriptor.language ===
-							args.proposedLemma.language &&
-							foldedCanonicalForm(descriptor) ===
-								foldedCanonicalForm(args.proposedLemma) &&
-							descriptor.family === args.proposedLemma.family &&
-							descriptor.kind === args.proposedLemma.kind
-							? [
-									requireRecord(
-										record.record,
-										"Pending Semantic Relation record",
-									),
-								]
-							: [];
-					} catch {
 						return [];
 					}
+					const descriptor = parsed.value;
+					return descriptor.language ===
+						args.proposedLemma.language &&
+						foldedCanonicalForm(descriptor) ===
+							foldedCanonicalForm(args.proposedLemma) &&
+						descriptor.family === args.proposedLemma.family &&
+						descriptor.kind === args.proposedLemma.kind
+						? [
+								requireRecord(
+									record.record,
+									"Pending Semantic Relation record",
+								),
+							]
+						: [];
 				});
 			// A click names no relations, so it only reads a neighbourhood
 			// when pending relations resolve to its new Lemma.

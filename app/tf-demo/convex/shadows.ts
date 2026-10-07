@@ -2,20 +2,15 @@ import { paginationOptsValidator } from "convex/server";
 import { v } from "convex/values";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 
-import {
-	internalMutation,
-	internalQuery,
-	type QueryCtx,
-} from "./_generated/server";
+import { internalMutation, internalQuery } from "./_generated/server";
 import {
 	attachPendingShadowReference,
-	collectStructuralShadowReferences,
-	pendingShadowDescriptor,
+	parsePendingShadowDescriptor,
+	parseStructuralShadowReferences,
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
 	syncStructuralShadowReferences,
 } from "./model/shadows";
-import type { StructuralShadowAspect } from "./model/validators";
 
 const MAX_BACKFILL_PAGE_SIZE = 50;
 const MAX_STRUCTURAL_BACKFILL_OWNERS = 8;
@@ -61,13 +56,12 @@ export const backfillPendingShadowReferencesPage = internalMutation({
 		let changed = 0;
 		let malformed = 0;
 		for (const pending of result.page) {
-			let descriptor: ReturnType<typeof pendingShadowDescriptor>;
-			try {
-				descriptor = pendingShadowDescriptor(pending.record);
-			} catch {
+			const parsed = parsePendingShadowDescriptor(pending.record);
+			if (!parsed.ok) {
 				malformed += 1;
 				continue;
 			}
+			const descriptor = parsed.value;
 			const currentShadow = pending.shadowId
 				? await ctx.db.get(pending.shadowId)
 				: null;
@@ -118,12 +112,10 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 		}> {
 			const knowledge = result.page[index];
 			if (!knowledge) return { changed: 0, malformed: 0 };
-			let expected: ReturnType<typeof collectStructuralShadowReferences>;
-			try {
-				expected = collectStructuralShadowReferences(
-					knowledge.knowledge,
-				);
-			} catch {
+			const expected = parseStructuralShadowReferences(
+				knowledge.knowledge,
+			);
+			if (!expected.ok) {
 				const rest = await backfillOwner(index + 1);
 				return { changed: rest.changed, malformed: rest.malformed + 1 };
 			}
@@ -154,7 +146,7 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 				.join("\n");
 			const currentChanged =
 				beforeFingerprint !== afterFingerprint ||
-				before.length !== expected.length;
+				before.length !== expected.value.length;
 			const rest = await backfillOwner(index + 1);
 			return {
 				changed: rest.changed + Number(currentChanged),
@@ -172,27 +164,6 @@ export const backfillStructuralShadowReferencesPage = internalMutation({
 	},
 });
 
-async function loadExpectedStructuralReference(
-	ctx: QueryCtx,
-	ownerReadingKey: string,
-	aspect: StructuralShadowAspect,
-	path: string,
-) {
-	const accumulated = await ctx.db
-		.query("accumulatedKnowledge")
-		.withIndex("by_owner_reading_key", (q) =>
-			q.eq("ownerReadingKey", ownerReadingKey),
-		)
-		.unique();
-	if (!accumulated) return null;
-	return (
-		collectStructuralShadowReferences(accumulated.knowledge).find(
-			(reference) =>
-				reference.aspect === aspect && reference.path === path,
-		) ?? null
-	);
-}
-
 export const auditPendingShadowReferencesPage = internalQuery({
 	args: { paginationOpts: paginationOptsValidator },
 	returns: auditPageValidator,
@@ -203,24 +174,20 @@ export const auditPendingShadowReferencesPage = internalQuery({
 			.paginate(paginationOpts);
 		const audited = await Promise.all(
 			result.page.map(async (pending) => {
-				try {
-					const descriptor = pendingShadowDescriptor(pending.record);
-					if (!pending.shadowId) {
-						return "missing" as const;
-					}
-					const shadow = await ctx.db.get(pending.shadowId);
-					if (
-						!shadow ||
-						!shadowIsCompatible(shadow, descriptor) ||
-						pending.targetFoldedCanonicalForm !==
-							foldedCanonicalForm(descriptor)
-					) {
-						return "mismatched" as const;
-					}
-					return "valid" as const;
-				} catch {
-					return "malformed" as const;
+				const parsed = parsePendingShadowDescriptor(pending.record);
+				if (!parsed.ok) return "malformed" as const;
+				const descriptor = parsed.value;
+				if (!pending.shadowId) return "missing" as const;
+				const shadow = await ctx.db.get(pending.shadowId);
+				if (
+					!shadow ||
+					!shadowIsCompatible(shadow, descriptor) ||
+					pending.targetFoldedCanonicalForm !==
+						foldedCanonicalForm(descriptor)
+				) {
+					return "mismatched" as const;
 				}
+				return "valid" as const;
 			}),
 		);
 		return {
@@ -249,35 +216,44 @@ export const auditStructuralShadowReferencesPage = internalQuery({
 		let missing = 0;
 		let mismatched = 0;
 		let malformed = 0;
+		// Only an unparseable stored Knowledge counts as malformed; DB and code
+		// errors propagate.
 		for (const reference of result.page) {
-			try {
-				const [shadow, expected] = await Promise.all([
-					ctx.db.get(reference.shadowId),
-					loadExpectedStructuralReference(
-						ctx,
-						reference.ownerReadingKey,
-						reference.aspect,
-						reference.path,
-					),
-				]);
-				if (!shadow || !expected) {
-					missing += 1;
-					continue;
-				}
-				const expectedLocator = structuralShadowLocatorKey(
-					reference.ownerReadingKey,
-					reference.aspect,
-					reference.path,
-				);
-				if (
-					reference.locatorKey !== expectedLocator ||
-					!shadowIsCompatible(shadow, expected.descriptor)
-				) {
-					mismatched += 1;
-				} else valid += 1;
-			} catch {
+			const [shadow, accumulated] = await Promise.all([
+				ctx.db.get(reference.shadowId),
+				ctx.db
+					.query("accumulatedKnowledge")
+					.withIndex("by_owner_reading_key", (q) =>
+						q.eq("ownerReadingKey", reference.ownerReadingKey),
+					)
+					.unique(),
+			]);
+			const references = accumulated
+				? parseStructuralShadowReferences(accumulated.knowledge)
+				: null;
+			if (references && !references.ok) {
 				malformed += 1;
+				continue;
 			}
+			const expected = references?.value.find(
+				({ aspect, path }) =>
+					aspect === reference.aspect && path === reference.path,
+			);
+			if (!shadow || !expected) {
+				missing += 1;
+				continue;
+			}
+			const expectedLocator = structuralShadowLocatorKey(
+				reference.ownerReadingKey,
+				reference.aspect,
+				reference.path,
+			);
+			if (
+				reference.locatorKey !== expectedLocator ||
+				!shadowIsCompatible(shadow, expected.descriptor)
+			) {
+				mismatched += 1;
+			} else valid += 1;
 		}
 		return {
 			continueCursor: result.continueCursor,

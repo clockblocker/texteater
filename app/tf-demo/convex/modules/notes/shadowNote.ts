@@ -6,12 +6,13 @@ import { foldedCanonicalForm } from "../../../server/linguisticIdentity";
 import type { Doc, Id } from "../../_generated/dataModel";
 import type { QueryCtx } from "../../_generated/server";
 import {
-	collectStructuralShadowReferences,
-	descriptorFromStoredShadow,
-	pendingShadowDescriptor,
+	parsePendingShadowDescriptor,
+	parseStoredShadowDescriptor,
+	parseStructuralShadowReferences,
 	type ShadowDescriptor,
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
+	warnMalformedStoredRow,
 } from "../../model/shadows";
 import {
 	type StructuralShadowAspect,
@@ -200,14 +201,15 @@ async function loadCompatibleShadow(ctx: QueryCtx, shadowIdValue: string) {
 	if (!shadowId) return null;
 	const shadow = await ctx.db.get(shadowId);
 	if (!shadow) return null;
-	try {
-		const descriptor = descriptorFromStoredShadow(shadow);
-		return shadowIsCompatible(shadow, descriptor)
-			? { shadow, descriptor }
-			: null;
-	} catch {
+	const parsed = parseStoredShadowDescriptor(shadow);
+	if (!parsed.ok) {
+		warnMalformedStoredRow("shadows", shadow._id, parsed.error);
 		return null;
 	}
+	const descriptor = parsed.value;
+	return shadowIsCompatible(shadow, descriptor)
+		? { shadow, descriptor }
+		: null;
 }
 
 /** The Shadow Note body with the first page of its references. */
@@ -394,10 +396,13 @@ async function loadShadowReferencePage(
 		const projected = projectPendingRelations([row]);
 		const pending = projected[0];
 		const group = groups.get(row.sourceReadingKey);
-		let pendingDescriptor: ShadowDescriptor;
-		try {
-			pendingDescriptor = pendingShadowDescriptor(row.record);
-		} catch {
+		const pendingDescriptor = parsePendingShadowDescriptor(row.record);
+		if (!pendingDescriptor.ok) {
+			warnMalformedStoredRow(
+				"pendingSemanticRelations",
+				row._id,
+				pendingDescriptor.error,
+			);
 			return null;
 		}
 		if (
@@ -405,7 +410,7 @@ async function loadShadowReferencePage(
 			!pending ||
 			!group ||
 			pending.target.shadowId !== shadowId ||
-			!shadowIsCompatible(shadow, pendingDescriptor)
+			!shadowIsCompatible(shadow, pendingDescriptor.value)
 		) {
 			return null;
 		}
@@ -431,16 +436,20 @@ async function loadShadowReferencePage(
 		) {
 			return null;
 		}
-		let matchingReference: ShadowDescriptor | null;
-		try {
-			matchingReference = collectStructuralReferenceAt(
-				knowledge.knowledge,
-				row.aspect,
-				row.path,
+		const references = parseStructuralShadowReferences(knowledge.knowledge);
+		if (!references.ok) {
+			warnMalformedStoredRow(
+				"accumulatedKnowledge",
+				knowledge._id,
+				references.error,
 			);
-		} catch {
 			return null;
 		}
+		const matchingReference =
+			references.value.find(
+				({ aspect, path }) =>
+					aspect === row.aspect && path === row.path,
+			)?.descriptor ?? null;
 		if (
 			!matchingReference ||
 			!shadowIsCompatible(shadow, matchingReference)
@@ -469,18 +478,4 @@ async function loadShadowReferencePage(
 		continueCursor,
 		isDone,
 	};
-}
-
-function collectStructuralReferenceAt(
-	knowledge: unknown,
-	aspect: StructuralShadowAspect,
-	path: string,
-) {
-	const references = collectStructuralShadowReferences(knowledge);
-	return (
-		references.find(
-			(reference) =>
-				reference.aspect === aspect && reference.path === path,
-		)?.descriptor ?? null
-	);
 }

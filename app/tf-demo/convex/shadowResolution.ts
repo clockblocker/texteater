@@ -8,9 +8,10 @@ import {
 	DICTIONARY_REVISION,
 } from "./dumdictTransaction";
 import {
-	descriptorFromStoredShadow,
-	pendingShadowDescriptor,
+	parsePendingShadowDescriptor,
+	parseStoredShadowDescriptor,
 	shadowIsCompatible,
+	warnMalformedStoredRow,
 } from "./model/shadows";
 
 function locatorFromRecord(value: unknown): {
@@ -73,22 +74,33 @@ async function loadPendingSelection(
 		ctx.db.get(args.shadowId),
 	]);
 	const locator = locatorFromRecord(pending?.record);
-	try {
-		return shadow !== null &&
-			pending !== null &&
-			pending.shadowId === args.shadowId &&
-			locator !== null &&
-			locatorKey(locator) === args.locatorKey &&
-			shadowIsCompatible(
-				shadow,
-				pendingShadowDescriptor(pending.record),
-			) &&
-			shadowIsCompatible(shadow, descriptorFromStoredShadow(shadow))
-			? locator
-			: null;
-	} catch {
+	if (
+		shadow === null ||
+		pending === null ||
+		pending.shadowId !== args.shadowId ||
+		locator === null ||
+		locatorKey(locator) !== args.locatorKey
+	) {
 		return null;
 	}
+	const pendingDescriptor = parsePendingShadowDescriptor(pending.record);
+	if (!pendingDescriptor.ok) {
+		warnMalformedStoredRow(
+			"pendingSemanticRelations",
+			pending._id,
+			pendingDescriptor.error,
+		);
+		return null;
+	}
+	const shadowDescriptor = parseStoredShadowDescriptor(shadow);
+	if (!shadowDescriptor.ok) {
+		warnMalformedStoredRow("shadows", shadow._id, shadowDescriptor.error);
+		return null;
+	}
+	return shadowIsCompatible(shadow, pendingDescriptor.value) &&
+		shadowIsCompatible(shadow, shadowDescriptor.value)
+		? locator
+		: null;
 }
 
 const shadowCleanupResultValidator = v.union(

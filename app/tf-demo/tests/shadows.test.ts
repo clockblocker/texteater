@@ -1,4 +1,12 @@
-import { afterEach, beforeEach, describe, expect, jest, test } from "bun:test";
+import {
+	afterEach,
+	beforeEach,
+	describe,
+	expect,
+	jest,
+	spyOn,
+	test,
+} from "bun:test";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
@@ -9,6 +17,9 @@ import {
 	collectStructuralShadowReferences,
 	descriptorFromStoredShadow,
 	normalizeShadowDescriptor,
+	parsePendingShadowDescriptor,
+	parseStoredShadowDescriptor,
+	parseStructuralShadowReferences,
 	replaceAccumulatedKnowledge,
 	shadowIsCompatible,
 	shadowKeyFor,
@@ -22,7 +33,10 @@ import {
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 import { createPaginatedNoteLoader } from "../src/views/paginated-note-loading";
 import { createTestConvex, type TestConvexDb } from "./support/convex";
-import { exportedArgs } from "./support/convexRuntimeExports";
+import {
+	exportedArgs,
+	registeredHandler,
+} from "./support/convexRuntimeExports";
 
 beforeEach(() => {
 	// Scheduled work, such as Definition Text materialization, never runs here.
@@ -211,6 +225,43 @@ describe("Shadow descriptor and storage seam", () => {
 		]);
 	});
 
+	test("parses malformed stored values to a failure instead of throwing", () => {
+		expect(parseStoredShadowDescriptor(null)).toEqual({
+			ok: false,
+			error: "Stored Shadow must be an object.",
+		});
+		expect(
+			parsePendingShadowDescriptor({
+				pending: { target: { ...nounShadow, kind: "VERBISH" } },
+			}),
+		).toMatchObject({
+			ok: false,
+			error: expect.stringContaining(
+				"not a supported Dumling Lemma route",
+			),
+		});
+		expect(
+			parseStructuralShadowReferences(shadowTree({ family: "Lexeme" })),
+		).toMatchObject({
+			ok: false,
+			error: expect.stringContaining("exactly language"),
+		});
+		expect(parsePendingShadowDescriptor(pendingRecord())).toEqual({
+			ok: true,
+			value: normalizeShadowDescriptor(nounShadow),
+		});
+
+		const stored = {
+			shadowKey: shadowKeyFor(nounShadow),
+			...normalizeShadowDescriptor(nounShadow),
+		};
+		expect(shadowIsCompatible(null, nounShadow)).toBe(false);
+		expect(shadowIsCompatible(stored, { ...nounShadow, extra: true })).toBe(
+			false,
+		);
+		expect(shadowIsCompatible(stored, nounShadow)).toBe(true);
+	});
+
 	test("atomically replaces structural projection, keeps dormant rows, and reuses the same Shadow ID", async () => {
 		const t = createTestConvex();
 		await replaceKnowledge(t, "reading-source", structuralKnowledge());
@@ -377,6 +428,109 @@ describe("Shadow backfills and presentation", () => {
 			valid: 0,
 			mismatched: 2,
 		});
+	});
+
+	test("the structural audit counts unparseable Knowledge as malformed and lets a DB error propagate", async () => {
+		const t = createTestConvex();
+		await replaceKnowledge(t, "reading-source", structuralKnowledge());
+		const args = { paginationOpts: { cursor: null, numItems: 50 } };
+		const audit = registeredHandler(auditStructuralShadowReferencesPage);
+		const databaseFailure = new Error("Database unavailable.");
+		await expect(
+			t.run((ctx) =>
+				audit(
+					{
+						...ctx,
+						db: new Proxy(ctx.db, {
+							get(target, key) {
+								if (key === "get") {
+									return () =>
+										Promise.reject(databaseFailure);
+								}
+								const member = Reflect.get(target, key);
+								return typeof member === "function"
+									? member.bind(target)
+									: member;
+							},
+						}),
+					},
+					args,
+				),
+			),
+		).rejects.toBe(databaseFailure);
+
+		await t.run(async (ctx) => {
+			const [knowledge] = await ctx.db
+				.query("accumulatedKnowledge")
+				.collect();
+			if (!knowledge) throw new Error("Expected stored Knowledge.");
+			await ctx.db.patch(knowledge._id, {
+				knowledge: shadowTree({ family: "Lexeme" }),
+			});
+		});
+		expect(
+			await t.query(
+				internal.shadows.auditStructuralShadowReferencesPage,
+				args,
+			),
+		).toMatchObject({ valid: 0, malformed: 2 });
+	});
+
+	test("a Reading Note skips a malformed structural Shadow, keeps the rest, and logs the skip once", async () => {
+		const t = createTestConvex();
+		await replaceKnowledge(
+			t,
+			"reading-source",
+			shadowTree(nounShadow, verbShadow),
+		);
+		const { readingId, malformedShadowId } = await t.run(async (ctx) => {
+			const readingId = await insertSourceReading(ctx);
+			const reading = await ctx.db.get(readingId);
+			if (!reading) throw new Error("Expected the source Reading.");
+			// A Reading Note parses its Lemma, so it needs real Core Features.
+			await ctx.db.patch(reading.lemmaId, {
+				canonicalForm: "aufpassen",
+				foldedCanonicalForm: "aufpassen",
+				coreFeatures: { hasSepPrefix: "auf", lexicallyReflexive: null },
+			});
+			const noun = (await ctx.db.query("shadows").collect()).find(
+				({ kind }) => kind === "NOUN",
+			);
+			if (!noun) throw new Error("Expected the NOUN Shadow.");
+			// The schema admits any string; only the parser rejects a blank one.
+			await ctx.db.patch(noun._id, { canonicalForm: " " });
+			return { readingId, malformedShadowId: noun._id };
+		});
+
+		const warn = spyOn(console, "warn").mockImplementation(() => {});
+		try {
+			const note = await t.query(api.readingNotes.get, {
+				readingId,
+				visitorId: "visitor-1",
+			});
+			expect(
+				note?.structuralReferences.map(
+					({ descriptor }) => descriptor.kind,
+				),
+			).toEqual(["VERB"]);
+			const skips = warn.mock.calls.flatMap(([line]) =>
+				typeof line === "string" && line.includes("MalformedStoredRow")
+					? [JSON.parse(line)]
+					: [],
+			);
+			expect(skips).toEqual([
+				{
+					event: "MalformedStoredRow",
+					table: "shadows",
+					id: malformedShadowId,
+					reason: expect.stringContaining(
+						"canonicalForm must not be empty",
+					),
+				},
+			]);
+		} finally {
+			warn.mockRestore();
+		}
 	});
 
 	test("groups exact pending and structural references by referring Unit Reading Note and hides dormancy", async () => {

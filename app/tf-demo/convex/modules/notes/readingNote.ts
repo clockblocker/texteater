@@ -13,9 +13,10 @@ import type { QueryCtx } from "../../_generated/server";
 import { findDefinitionText } from "../../model/definitionTexts";
 import { loadCompleteOccurrenceMembers } from "../../model/occurrenceAttestations";
 import {
-	descriptorFromStoredShadow,
+	parseStoredShadowDescriptor,
 	shadowIsCompatible,
 	structuralShadowLocatorKey,
+	warnMalformedStoredRow,
 } from "../../model/shadows";
 import {
 	literalUnion,
@@ -693,23 +694,24 @@ async function loadStructuralReferencesForReading(
 		) {
 			return [];
 		}
-		try {
-			const descriptor = descriptorFromStoredShadow(shadow);
-			if (!shadowIsCompatible(shadow, descriptor)) return [];
-			return [
-				{
-					aspect: reference.aspect,
-					path: reference.path,
-					descriptor,
-					target: {
-						kind: "Shadow" as const,
-						shadowId: shadow._id,
-					},
-				},
-			];
-		} catch {
+		const parsed = parseStoredShadowDescriptor(shadow);
+		if (!parsed.ok) {
+			warnMalformedStoredRow("shadows", shadow._id, parsed.error);
 			return [];
 		}
+		const descriptor = parsed.value;
+		if (!shadowIsCompatible(shadow, descriptor)) return [];
+		return [
+			{
+				aspect: reference.aspect,
+				path: reference.path,
+				descriptor,
+				target: {
+					kind: "Shadow" as const,
+					shadowId: shadow._id,
+				},
+			},
+		];
 	});
 }
 
