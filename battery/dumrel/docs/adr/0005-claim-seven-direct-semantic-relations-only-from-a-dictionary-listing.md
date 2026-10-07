@@ -20,10 +20,11 @@ reviewers can check. Their own sense of relatedness drifts.
 - **Antonym**: the direct opposite, as a dictionary lists it, never one
   read off a definition's negation.
 - **Near Antonym**: a conventional contrast short of a direct opposite,
-  never just another member of the same set, including a converse
-  (`kaufen`: `verkaufen`) only when a dictionary lists it as Gegenteil. A
-  converse, the same event with the roles swapped, is never an Antonym,
-  and one no dictionary lists as Gegenteil gets no relation.
+  never just another member of the same set. A converse, the same event
+  with the roles swapped (`kaufen`: `verkaufen`), is a Near Antonym only
+  where Duden, DWDS or OpenThesaurus lists it as Gegenteil for this sense.
+  It is never an Antonym, and one no dictionary lists as Gegenteil gets no
+  relation.
 - **Hypernym**: a broader category that the dictionary lists as the
   Reading's Oberbegriff, stored on the narrower Reading. A definition's
   genus does not count, and neither does a catch-all such as `Person` or
@@ -51,20 +52,6 @@ three claims per relation, is the dumcorpus Rule
 `de/relations-need-a-dictionary`, together with its boundary records. Which
 relations a route requests is the Knowledge Policy ([Dumrel ADR 0001]). The
 relation space is [ADR 0020], and target modes are [ADR 0011].
-
-Amended on 2026-10-07: a regional difference, like a register one, neither
-demotes nor blocks a Synonym, stated above. Before, `Semmel`: `Brötchen` and
-`Föhre`: `Kiefer` were Near Synonyms because one word of each pair is
-regional. Two agent judges extended ruling G1 of
-[#884](https://github.com/clockblocker/texteater/issues/884) from register
-to region under the user's delegation.
-
-Amended on 2026-10-07: a converse is a Near Antonym only where Duden, DWDS
-or OpenThesaurus lists it as Gegenteil for this sense, stated above. Before,
-the imported relation cases claimed `verkaufen`, `vermieten`, `vererben` and
-`bekommen` as Near Antonyms of `kaufen`, `mieten`, `erben` and `geben` from
-the converse analysis alone, and none of the three dictionaries lists them.
-Two agent judges ruled it under the user's delegation.
 
 [ADR 0011]: ../../../../docs/adr/0011-use-reading-owned-lemma-targeted-semantic-relations.md
 [ADR 0012]: ../../../../docs/adr/0012-store-only-direct-semantic-relation-claims.md
