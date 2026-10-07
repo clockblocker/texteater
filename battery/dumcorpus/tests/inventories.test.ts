@@ -17,14 +17,17 @@ import {
 	authoredReadingIssues,
 	loadSpecRecords,
 } from "../src/index.js";
+import { spellsExpletiveEs } from "../src/inventories/de/expletive-spellings.js";
 import { syncretismDefinitions } from "../src/inventories/de/syncretism-definitions.js";
 import {
 	type AuthoredMember,
 	type AuthoredRealization,
 	authoredMembers,
 	authoredRealizations,
+	cliticEsSpellings,
 	closedVerbFormSpellings,
 	closedVerbForms,
+	closedVerbParticiples,
 	germanParticleMember,
 	germanParticles,
 	germanPluralOnlyNouns,
@@ -1338,6 +1341,27 @@ describe("the German authored inventory", () => {
 			"sollen",
 			"wollen",
 		]);
+	});
+
+	test("lists each participle of sein, haben and werden among its closed verb forms", () => {
+		expect(closedVerbParticiples).toEqual({
+			sein: ["gewesen"],
+			haben: ["gehabt"],
+			werden: ["geworden", "worden"],
+		});
+		for (const [lemma, participles] of Object.entries(
+			closedVerbParticiples,
+		))
+			for (const participle of participles)
+				expect(closedVerbForms[lemma]).toContain(participle);
+	});
+
+	test("spells a clitic es plain, typographic or with no apostrophe", () => {
+		expect([...cliticEsSpellings]).toEqual(["'s", "’s", "s"]);
+		for (const attested of cliticEsSpellings)
+			expect(
+				spellsExpletiveEs({ attested, orthography: "Shorthand" }),
+			).toBe(true);
 	});
 
 	test("authors the reflexivity unit a reflexive drills down to (system ADR 0041)", () => {

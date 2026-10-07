@@ -6,15 +6,16 @@
  * which the language-generic selectors and `authoredMembers` read.
  *
  * This entry exports the authored members and their realizations, the
- * reviewed pronoun and determiner paradigms, the closed verb forms, and the
- * reflexive drill-down. The authored members include the pronoun
+ * reviewed pronoun and determiner paradigms, the closed verb forms and their
+ * participles, the clitic spellings of es, and the reflexive drill-down.
+ * The authored members include the pronoun
  * Syncretisms generated from the pronoun cells (system ADR 0046). It also
- * exports German lookups: the ADP Case Table and its Valency Frame check, the
- * conjunction Locutions the Rules cite, the der or ein cell an article
- * derives to, the nouns with no singular, the Syncretism a classifier's
- * answer names and the stem Surface Syncretisms. Its language-generic
- * selectors find the authored member of a Lemma or Reading and tell a Closed
- * Route (system ADR 0021); its German ones step between Paradigm Cells (system ADR 0019) and derive the
+ * exports German lookups: the ADP Case Table, its governable prepositions and
+ * its Valency Frame check, the conjunction Locutions the Rules cite, the der
+ * or ein cell an article derives to, the nouns with no singular, the
+ * Syncretism a classifier's answer names and the stem Surface Syncretisms.
+ * Its language-generic selectors find the authored member of a Lemma or
+ * Reading and tell a Closed Route (system ADR 0021); its German ones step between Paradigm Cells (system ADR 0019) and derive the
  * grammatical component a Surface brings without a model. `checkIfGrundform`
  * assesses a Surface's Grundform by each language's citation conventions
  * (dumcorpus ADR 0001).
@@ -41,6 +42,7 @@ export {
 	germanAdpositionAllowedCases,
 	germanAdpositionAllows,
 	germanAdpositionEntry,
+	germanGovernablePrepositions,
 } from "./inventories/de/adposition-cases.js";
 export {
 	type ArticleAgreement,
@@ -51,6 +53,7 @@ export {
 export {
 	closedVerbFormSpellings,
 	closedVerbForms,
+	closedVerbParticiples,
 	modalVerbs,
 } from "./inventories/de/closed-verb-paradigms.js";
 export { germanConjunctionLocutions } from "./inventories/de/conjunction-locutions.js";
@@ -59,6 +62,7 @@ export {
 	reflexiveDrillDown,
 	reflexivityUnit,
 } from "./inventories/de/drill-down.js";
+export { cliticEsSpellings } from "./inventories/de/expletive-spellings.js";
 export {
 	authoredComponent,
 	deriveGrammaticalComponent,

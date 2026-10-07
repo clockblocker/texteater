@@ -143,6 +143,19 @@ export const closedVerbForms: Readonly<Record<string, readonly string[]>> = {
 };
 
 /**
+ * The past participles of sein, haben and werden, keyed by Lemma, each one
+ * of the Lemma's `closedVerbForms`. werden has two: geworden of the full
+ * verb and worden, only ever the passive's auxiliary (ist gefunden worden).
+ */
+export const closedVerbParticiples: Readonly<
+	Record<"sein" | "haben" | "werden", readonly string[]>
+> = {
+	sein: ["gewesen"],
+	haben: ["gehabt"],
+	werden: ["geworden", "worden"],
+};
+
+/**
  * The closed verb forms whose spelling is not plainly Canonical and
  * Standard, keyed by form; every other form in `closedVerbForms` is. The
  * auxiliaries' forms (ward, hätt) are spelled as their AUX realizations

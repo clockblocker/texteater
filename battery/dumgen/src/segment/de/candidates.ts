@@ -7,6 +7,12 @@
  * could cover. The judge only picks a host among a bounded window, or
  * `none`, and weighs the pairs and spans.
  */
+import {
+	type AuthoredRealization,
+	authoredRealizations,
+	cliticEsSpellings,
+} from "dumcorpus/inventories";
+import { foldApostrophes } from "../fusion-table.js";
 import type { GermanInventory } from "./inventory.js";
 import type { Piece, Sentence } from "./sentence.js";
 
@@ -34,29 +40,26 @@ export type PairCandidate = {
 	readonly name: string;
 };
 
-const articleForms = new Set([
-	"der",
-	"die",
-	"das",
-	"den",
-	"dem",
-	"des",
-	"ein",
-	"eine",
-	"einen",
-	"einem",
-	"einer",
-	"eines",
-	"'ne",
-	"'nen",
-	"'nem",
-	"'ner",
-	"ne",
-	"nen",
-]);
+const pronTypeOf = ({ member }: AuthoredRealization) =>
+	(member.lemma.coreFeatures as Readonly<Record<string, unknown>>).pronType;
 
-/** Shortened articles: `n Auto`, `nem`, `ner`. */
-const shortArticleForms = new Set(["n", "'n", "nem", "ner"]);
+/**
+ * Every spelling of der and ein: the DET `pronType: Art` realizations, the
+ * shortened ones among them (n, ne, nem, nen, ner) also with the apostrophe
+ * that may open them ('ne Frage).
+ */
+export const articleForms: ReadonlySet<string> = new Set(
+	authoredRealizations
+		.filter(
+			(realization) =>
+				realization.member.lemma.kind === "DET" &&
+				pronTypeOf(realization) === "Art",
+		)
+		.flatMap(({ spelled, orthography }) => {
+			const form = spelled.toLowerCase();
+			return orthography === "Shorthand" ? [form, `'${form}`] : [form];
+		}),
+);
 
 /** Separable verb prefixes, the her-/hin- adverbs and their r- shorthands. */
 export const particleForms = new Set(
@@ -72,16 +75,57 @@ export const moreParticleForms = new Set(
 	),
 );
 
-export const reflexiveForms = new Set([
+/** The personal pronouns that are no possessive, each with its Core Features. */
+const personalPronouns = authoredRealizations.flatMap((realization) => {
+	const { lemma } = realization.member;
+	const features = lemma.coreFeatures as Readonly<Record<string, unknown>>;
+	return lemma.kind === "PRON" &&
+		features.pronType === "Prs" &&
+		features.poss !== "Yes"
+		? [{ form: realization.spelled.toLowerCase(), features }]
+		: [];
+});
+
+/** The 1st and 2nd person object pronouns: mich, mir, uns, dich, dir, euch. */
+const objectPronouns = personalPronouns.filter(
+	({ features }) =>
+		(features.person === "1" || features.person === "2") &&
+		(features.case === "Acc" || features.case === "Dat"),
+);
+
+/** sich, and each object pronoun a lexical reflexive may take for it. */
+export const reflexiveForms: ReadonlySet<string> = new Set([
 	"sich",
-	"mich",
-	"dich",
-	"uns",
-	"euch",
-	"mir",
-	"dir",
+	...objectPronouns.map(({ form }) => form),
 ]);
-export const expletiveForms = new Set(["es", "'s", "s"]);
+
+/**
+ * Each 1st and 2nd person object pronoun and the subject its reflexive use
+ * needs: the Nom pronoun of its person and number (mir and mich ich, uns
+ * wir, dir and dich du, euch ihr).
+ */
+export const reflexiveSubject: ReadonlyMap<string, string> = new Map(
+	objectPronouns.map(({ form, features }) => {
+		const subject = personalPronouns.find(
+			(candidate) =>
+				candidate.features.case === "Nom" &&
+				candidate.features.person === features.person &&
+				candidate.features.number === features.number,
+		);
+		if (!subject) throw Error(`No subject pronoun for ${form}`);
+		return [form, subject.form];
+	}),
+);
+
+/** Expletive es in full and as a clitic: 's, typographic ’s, s of gehts. */
+export const expletiveForms: ReadonlySet<string> = new Set([
+	"es",
+	...cliticEsSpellings,
+]);
+
+/** A piece's text in lowercase, a typographic apostrophe as `'` (’ne, Geht’s). */
+export const foldedText = (piece: Piece) =>
+	foldApostrophes(piece.text.toLowerCase());
 
 const lower = (piece: Piece) => piece.text.toLowerCase();
 const window = (
@@ -100,11 +144,8 @@ const window = (
 /** A form of der or ein; a fused word's article piece (`m` of `im`) stands for its article. */
 export function isArticle(piece: Piece): boolean {
 	if (piece.fusedWord && piece.surface !== piece.text)
-		return articleForms.has(piece.surface.toLowerCase());
-	return (
-		!piece.fusedWord &&
-		(articleForms.has(lower(piece)) || shortArticleForms.has(lower(piece)))
-	);
+		return articleForms.has(foldApostrophes(piece.surface.toLowerCase()));
+	return !piece.fusedWord && articleForms.has(foldedText(piece));
 }
 
 /** Capitalized words that are no noun: pronouns and function words opening a clause. */
@@ -167,13 +208,13 @@ export function slotsOf(
 				piece,
 				hosts: window(sentence, piece, 12, 12),
 			});
-		if (reflexiveForms.has(text))
+		if (reflexiveForms.has(foldedText(piece)))
 			slots.push({
 				kind: "reflexive",
 				piece,
 				hosts: window(sentence, piece, 10, 10),
 			});
-		if (expletiveForms.has(text))
+		if (expletiveForms.has(foldedText(piece)))
 			slots.push({
 				kind: "expletive",
 				piece,

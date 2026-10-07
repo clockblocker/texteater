@@ -7,7 +7,11 @@ export type ExpletiveMember = {
 };
 
 /** A clitic `es`: `geht's`, typographic `geht’s`, or `gehts` with no apostrophe. */
-const cliticEsSpellings: ReadonlySet<string> = new Set(["'s", "’s", "s"]);
+export const cliticEsSpellings: ReadonlySet<string> = new Set([
+	"'s",
+	"’s",
+	"s",
+]);
 
 /**
  * Whether a member spells the subject expletive `es`: in full when Standard,

@@ -151,6 +151,10 @@ export function validateFusionTable(table: FusionTable): void {
 
 const apostrophes = /[’‘´`]/g;
 
+/** The text with each typographic apostrophe (’ ‘ ´ `) written as `'`, the way the tables spell clitics. */
+export const foldApostrophes = (text: string) =>
+	text.replaceAll(apostrophes, "'");
+
 /** Case-insensitive lookup of a fusion by its spelling; typographic apostrophes are normalized (`can’t`). */
 export function fusionEntry(
 	table: FusionTable,
@@ -269,7 +273,7 @@ export function cliticEntry(
 	table: FusionTable,
 	text: string,
 ): CliticEntry | undefined {
-	const normalized = text.replaceAll(apostrophes, "'");
+	const normalized = foldApostrophes(text);
 	return table.clitics.find((entry) => entry.clitic === normalized);
 }
 
@@ -297,10 +301,7 @@ export type FusedPiece = {
 };
 
 const fold = (table: FusionTable, text: string) =>
-	text
-		.normalize("NFC")
-		.replaceAll(apostrophes, "'")
-		.toLocaleLowerCase(table.language);
+	foldApostrophes(text.normalize("NFC")).toLocaleLowerCase(table.language);
 
 type SegmentText = { readonly kind: string; readonly text: string };
 
@@ -351,7 +352,7 @@ function fusedRunAt(
 	const attached = splitClitic(table, host + clitic);
 	if (
 		attached &&
-		attached.host === host.replaceAll(apostrophes, "'") &&
+		attached.host === foldApostrophes(host) &&
 		cliticEntry(table, clitic) === attached.entry
 	)
 		return {
@@ -469,7 +470,7 @@ export function splitClitic(
 	table: FusionTable,
 	word: string,
 ): { host: string; entry: CliticEntry } | undefined {
-	const normalized = word.replaceAll(apostrophes, "'");
+	const normalized = foldApostrophes(word);
 	for (const entry of table.clitics) {
 		if (entry.attachment === "Free") continue;
 		if (!normalized.endsWith(entry.clitic)) continue;

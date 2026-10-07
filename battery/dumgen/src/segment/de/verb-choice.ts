@@ -44,7 +44,11 @@
  */
 
 import type { Questions } from "@typesafe-ai/sdk";
-import { authoredRealizations, closedVerbForms } from "dumcorpus/inventories";
+import {
+	authoredRealizations,
+	closedVerbForms,
+	closedVerbParticiples,
+} from "dumcorpus/inventories";
 import * as Effect from "effect/Effect";
 import {
 	type Answers,
@@ -54,7 +58,12 @@ import {
 	choice,
 } from "../ask.js";
 import type { AssembledEdge, Membership } from "./assembly.js";
-import { reflexiveForms } from "./candidates.js";
+import {
+	expletiveForms,
+	foldedText,
+	reflexiveForms,
+	reflexiveSubject,
+} from "./candidates.js";
 import { boundPieces, type CodeRule } from "./code-rules.js";
 import { type Nomination, slotId } from "./nomination.js";
 import { argmax, partitionOf } from "./partition.js";
@@ -111,9 +120,11 @@ let bekommenForms: ReadonlySet<string> | undefined;
 const seinForms: ReadonlySet<string> = new Set(closedVerbForms.sein ?? []);
 
 /** haben and sein forms that can carry a perfect; their participles are hosts' business (`sein-chain`). */
-const perfectAuxiliaries = new Set(
+export const perfectAuxiliaries: ReadonlySet<string> = new Set(
 	[...(closedVerbForms.haben ?? []), ...(closedVerbForms.sein ?? [])].filter(
-		(form) => form !== "gehabt" && form !== "gewesen",
+		(form) =>
+			!closedVerbParticiples.haben.includes(form) &&
+			!closedVerbParticiples.sein.includes(form),
 	),
 );
 
@@ -125,16 +136,6 @@ function closedVerbForm(word: string): boolean {
 		Object.values(closedVerbForms).some((forms) => forms.includes(word))
 	);
 }
-
-/** The subject a non-sich reflexive needs in its clause (as the `pronoun` code rule reads it). */
-const reflexiveSubject: Readonly<Record<string, string>> = {
-	mir: "ich",
-	mich: "ich",
-	uns: "wir",
-	dir: "du",
-	dich: "du",
-	euch: "ihr",
-};
 
 /** The slot's most probable host other than `none`, at `floor` or above. */
 function slotHost(
@@ -205,7 +206,7 @@ export function flaggedVerbs(nomination: Nomination): VerbFlag[] {
 	for (const piece of pieces) {
 		const word = lower(piece);
 		if (
-			(word === "es" || word === "'s" || word === "s") &&
+			expletiveForms.has(foldedText(piece)) &&
 			piece.surface.toLowerCase() === "es"
 		) {
 			const host = slotHost(
@@ -221,9 +222,14 @@ export function flaggedVerbs(nomination: Nomination): VerbFlag[] {
 					host: host.id,
 				});
 		}
-		if (!reflexiveForms.has(word) || lassenClauses.has(piece.clause))
+		if (
+			!reflexiveForms.has(foldedText(piece)) ||
+			lassenClauses.has(piece.clause)
+		)
 			continue;
-		const subject = reflexiveSubject[word];
+		// The subject a non-sich reflexive needs in its clause, as the
+		// `pronoun` code rule reads it.
+		const subject = reflexiveSubject.get(word);
 		if (
 			subject &&
 			!pieces.some(

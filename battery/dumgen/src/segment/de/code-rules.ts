@@ -81,14 +81,19 @@
  *   governed preposition.
  */
 import {
+	authoredRealizations,
 	closedVerbForms,
+	closedVerbParticiples,
 	germanConjunctionLocutions,
 } from "dumcorpus/inventories";
 import type { AssembledEdge, Family, Membership } from "./assembly.js";
 import {
+	articleForms,
+	foldedText,
 	fusedSiblings,
 	isArticle,
 	nounLike,
+	reflexiveSubject,
 	wasFuerId,
 	wasFuerPairs,
 } from "./candidates.js";
@@ -327,8 +332,16 @@ function anchors(nomination: Nomination): Decision {
 	};
 }
 
-/** Quantity bisschen, in its spelling and its Historical spelling. */
-const quantityBisschen: ReadonlySet<string> = new Set(["bisschen", "bißchen"]);
+/** Quantity bisschen, in its spelling and its Historical spelling: the realizations of PRON bisschen. */
+export const quantityBisschen: ReadonlySet<string> = new Set(
+	authoredRealizations
+		.filter(
+			({ member }) =>
+				member.lemma.kind === "PRON" &&
+				member.lemma.canonicalForm === "bisschen",
+		)
+		.map(({ spelled }) => spelled),
+);
 
 /** The two pieces of each unit the `quantifier` rule closes. */
 function quantifierPairs(
@@ -379,24 +392,21 @@ export function quantifierRoutes(
 	return (group) => (fixed.has(groupKey(group)) ? "Lexeme/PRON" : undefined);
 }
 
-/** Each personal object pronoun and the subject its reflexive use needs, if any. */
-const reflexiveSubject: Readonly<Record<string, string | null>> = {
-	mir: "ich",
-	mich: "ich",
-	uns: "wir",
-	dir: "du",
-	dich: "du",
-	euch: "ihr",
-	ihm: null,
-	ihn: null,
-	ihnen: null,
-};
+/**
+ * Each personal object pronoun and the subject its reflexive use needs, if
+ * any: the reflexive ones' subjects, and the 3rd person object pronouns this
+ * rule also frees, which are never reflexive (sich is).
+ */
+export const objectPronounSubject: ReadonlyMap<string, string | null> = new Map<
+	string,
+	string | null
+>([...reflexiveSubject, ["ihm", null], ["ihn", null], ["ihnen", null]]);
 
 function pronouns(nomination: Nomination): Decision {
 	const { pieces } = nomination.sentence;
 	const free = new Set<number>();
 	for (const piece of pieces) {
-		const subject = reflexiveSubject[lower(piece)];
+		const subject = objectPronounSubject.get(foldedText(piece));
 		if (subject === undefined) continue;
 		const coreferent =
 			subject !== null &&
@@ -479,8 +489,11 @@ function bracketClauses(nomination: Nomination): Map<number, number> {
 		pieces.map((piece) => [piece.id, clauseAt[piece.segment] ?? 0]),
 	);
 }
-/** Participles whose perfect sein forms: of the passive's werden, of sein and of werden. */
-const seinParticiples = new Set(["worden", "gewesen", "geworden"]);
+/** Participles whose perfect sein forms: of sein, and of werden, the passive's worden included. */
+export const seinParticiples: ReadonlySet<string> = new Set([
+	...closedVerbParticiples.sein,
+	...closedVerbParticiples.werden,
+]);
 
 function seinChains(
 	nomination: Nomination,
@@ -530,18 +543,20 @@ function seinChains(
 	return { add };
 }
 
-const einForms = new Set([
-	"ein",
-	"eine",
-	"einen",
-	"einem",
-	"einer",
-	"eines",
-	"welche",
-	"welcher",
-	"welchen",
-	"welchem",
-	"welches",
+/** Uninflected welch (welch ein Glück), which never follows was für. */
+const uninflectedWelch = "welch";
+
+/** The ein or welcher a was für takes right after für: the forms of ein and of DET welcher. */
+export const einForms: ReadonlySet<string> = new Set([
+	...[...articleForms].filter((form) => form.startsWith("ein")),
+	...authoredRealizations
+		.filter(
+			({ member, spelled }) =>
+				member.lemma.kind === "DET" &&
+				member.lemma.canonicalForm === "welcher" &&
+				spelled !== uninflectedWelch,
+		)
+		.map(({ spelled }) => spelled.toLowerCase()),
 ]);
 
 function wasFuer(nomination: Nomination): Decision {

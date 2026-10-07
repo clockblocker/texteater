@@ -10,6 +10,7 @@ import {
 	germanAdpositionAllows,
 	germanAdpositionEntry,
 } from "../src/index.js";
+import { germanGovernablePrepositions } from "../src/inventories.js";
 
 const adposition = (canonicalForm: string) => ({
 	unitKind: "Lemma",
@@ -248,6 +249,17 @@ test("the table lists each Lexeme ADP's positions with a case set each", () => {
 	const wegen = germanAdpositionEntry(adposition("wegen"));
 	if (!wegen) throw Error("wegen unlisted");
 	expect(germanAdpositionAllowedCases(wegen)).toEqual(["Gen", "Dat"]);
+});
+
+test("every governable preposition is a Lexeme ADP with a Prep position", () => {
+	expect(germanGovernablePrepositions).toHaveLength(16);
+	for (const canonicalForm of germanGovernablePrepositions) {
+		const entry = germanAdpositionEntry(adposition(canonicalForm));
+		expect(entry?.family).toBe("Lexeme");
+		if (entry?.family !== "Lexeme")
+			throw Error(`${canonicalForm} unlisted`);
+		expect(entry.positions.Prep).toBeDefined();
+	}
 });
 
 test("laut, ab and binnen take the cases the table lists", () => {

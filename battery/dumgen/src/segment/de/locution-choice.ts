@@ -32,7 +32,7 @@
  */
 
 import type { Questions } from "@typesafe-ai/sdk";
-import { closedVerbForms } from "dumcorpus/inventories";
+import { closedVerbForms, modalVerbs } from "dumcorpus/inventories";
 import * as Effect from "effect/Effect";
 import {
 	type Answers,
@@ -47,7 +47,7 @@ import {
 	articleHosts,
 	type Membership,
 } from "./assembly.js";
-import { fusedSiblings, reflexiveForms } from "./candidates.js";
+import { foldedText, fusedSiblings, reflexiveForms } from "./candidates.js";
 import { boundPieces, type CodeRule, withCodeRules } from "./code-rules.js";
 import { type Nomination, reaskedIdiomId, slotId } from "./nomination.js";
 import { argmax, groupKey, partitionOf } from "./partition.js";
@@ -80,10 +80,9 @@ export type MergeCandidate = {
 	readonly right: readonly number[];
 };
 
-const modalForms = new Set(
-	["dürfen", "können", "mögen", "müssen", "sollen", "wollen"].flatMap(
-		(modal) => closedVerbForms[modal] ?? [],
-	),
+/** Every form of the six modal verbs. */
+export const modalForms: ReadonlySet<string> = new Set(
+	modalVerbs.flatMap((modal) => closedVerbForms[modal] ?? []),
 );
 
 /** A unit of one word the Rules keep out of any Locution the judge proposes: nicht, a modal, a non-reflexive pronoun or determiner. */
@@ -101,7 +100,7 @@ function keptApart(
 	return (
 		word === "nicht" ||
 		modalForms.has(word) ||
-		(!reflexiveForms.has(word) &&
+		(!reflexiveForms.has(foldedText(piece)) &&
 			nomination.inventory.identityCandidates(piece.text).length > 0)
 	);
 }

@@ -14,7 +14,10 @@
  * failure.
  */
 
-import { germanAdpositionAllows } from "dumcorpus/inventories";
+import {
+	germanAdpositionAllows,
+	germanGovernablePrepositions,
+} from "dumcorpus/inventories";
 import type * as Dumling from "dumling/types";
 import { allowedComplementKinds, applyKnowledgeChange } from "dumrel";
 import type * as Dumrel from "dumrel/types";
@@ -34,30 +37,10 @@ import {
 import { shared, valency } from "./prompts.js";
 
 /**
- * The German prepositions a governor can select, the list LegacyDumgen
- * reviewed (#616); a proposal or an attestation of any other is no frame
- * complement.
+ * The German prepositions a governor can select (dumcorpus's ADP Case
+ * Table); a proposal or an attestation of any other is no frame complement.
  */
-export const governablePrepositions = [
-	"an",
-	"auf",
-	"aus",
-	"bei",
-	"für",
-	"gegen",
-	"in",
-	"mit",
-	"nach",
-	"über",
-	"um",
-	"unter",
-	"von",
-	"vor",
-	"zu",
-	"zwischen",
-] as const;
-
-const governable = new Set<string>(governablePrepositions);
+const governable = new Set<string>(germanGovernablePrepositions);
 
 export const valencyPrompt = [
 	shared.reading,
@@ -105,7 +88,10 @@ const complementSchemas: Readonly<
 		type: "object",
 		properties: {
 			kind: { type: "string", enum: ["Preposition"] },
-			preposition: { type: "string", enum: governablePrepositions },
+			preposition: {
+				type: "string",
+				enum: germanGovernablePrepositions,
+			},
 			governedCase: { type: "string", enum: ["Acc", "Dat", "Gen"] },
 			referent,
 		},

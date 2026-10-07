@@ -230,6 +230,32 @@ const germanAdpositions: Readonly<Record<string, GermanAdpositionPositions>> = {
 };
 
 /**
+ * The German prepositions a governor can select, the list LegacyDumgen
+ * reviewed (#616): the only prepositions a Valency Frame may name, so a
+ * proposal or an attestation of any other is no frame complement. Each is a
+ * Lexeme ADP the table lists with a `Prep` position. The order is part of
+ * Dumgen's Knowledge request schema, so keep it.
+ */
+export const germanGovernablePrepositions = [
+	"an",
+	"auf",
+	"aus",
+	"bei",
+	"für",
+	"gegen",
+	"in",
+	"mit",
+	"nach",
+	"über",
+	"um",
+	"unter",
+	"von",
+	"vor",
+	"zu",
+	"zwischen",
+] as const;
+
+/**
  * The German Locution ADPs, keyed by Canonical Form, each with one case set:
  * the circumpositions (ADR 0039) and the complex prepositions
  * (de/complex-preposition).
