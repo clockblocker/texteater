@@ -45,18 +45,18 @@ export type BatchRequest = {
 };
 
 /** How one request of a settled batch came out. */
-export type BatchAnswer =
+type BatchAnswer =
 	| { readonly ok: true; readonly response: LunaResponse }
 	| { readonly ok: false; readonly message: string };
 
 /** A batch as OpenAI created it. */
-export type SubmittedBatch = {
+type SubmittedBatch = {
 	readonly id: string;
 	readonly inputFileId: string;
 };
 
 /** A batch that reached a final status, with every request's answer. */
-export type SettledBatch = {
+type SettledBatch = {
 	readonly id: string;
 	readonly status: string;
 	readonly answers: ReadonlyMap<string, BatchAnswer>;

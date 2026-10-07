@@ -90,7 +90,7 @@ function goldChoice(
 	return options[0] ?? "";
 }
 
-export function goldKnowledgeAnswers(
+function goldKnowledgeAnswers(
 	{ goldCase }: KnowledgeAttempt,
 	questions: Questions,
 ): Answers {

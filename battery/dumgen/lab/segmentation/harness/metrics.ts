@@ -36,7 +36,7 @@ import type { LabCase } from "./corpus.js";
 import type { CallRecord } from "./jev-cache.js";
 import type { LabRun, RepetitionRecord } from "./run.js";
 
-export type Tally = {
+type Tally = {
 	scored: number;
 	match: number;
 	wrongSegments: number;
@@ -175,14 +175,14 @@ export function scoreCase(
 	};
 }
 
-export type MembershipMiss = "split" | "merged" | "crossed";
+type MembershipMiss = "split" | "merged" | "crossed";
 
 /**
  * How a WrongSegments unit missed its gold Segment set, over scored
  * Segments: `split` into several returned units each inside it, `merged`
  * into one returned unit that holds it and more, or `crossed` otherwise.
  */
-export function membershipMiss(
+function membershipMiss(
 	labCase: LabCase,
 	check: UnitCheck,
 ): MembershipMiss | undefined {
@@ -359,7 +359,7 @@ export const isStub = (unit: Unit) =>
  * record's returned pairs that touch an asserted unit, which a Partial
  * record does decide, and `assertedPairF1` pairs it with the same recall.
  */
-export function rates(tally: Tally) {
+function rates(tally: Tally) {
 	const membership = tally.match + tally.wrongRoute;
 	const pairRecall = ratio(tally.recalledPairs, tally.goldPairs);
 	const pairPrecision = ratio(tally.fullTruePairs, tally.fullPairs);
@@ -430,7 +430,7 @@ const quantile = (values: readonly number[], q: number) => {
 };
 
 /** Latency as the judge sees it: stages run in sequence, a stage's chunks in parallel. */
-export function modeledLatency(calls: readonly CallRecord[]): number {
+function modeledLatency(calls: readonly CallRecord[]): number {
 	const stages = new Map<string, number>();
 	for (const call of calls)
 		stages.set(
@@ -821,10 +821,6 @@ export function breakdown(
 export const byGoldRoute = (_: LabCase, unit: Unit) => [keyOf(unit.route)];
 export const byRule = (labCase: LabCase) =>
 	labCase.rules.length > 0 ? labCase.rules : ["(no Rule cited)"];
-export const bySize = (_: LabCase, unit: Unit) => {
-	const size = unit.segments.length;
-	return [size === 1 ? "1 piece" : size === 2 ? "2 pieces" : "3+ pieces"];
-};
 
 /** Segment indices of a gold unit are contiguous when only non-words lie between. */
 export function contiguous(labCase: LabCase, unit: Unit): boolean {
@@ -975,28 +971,6 @@ export function calibration(
 		links: calibrate(linkPoints),
 		linkCount: linkPoints.length,
 	};
-}
-
-/** Per case, the primary verdict of each gold unit in repetition 0, for diffs. */
-export function unitVerdicts(
-	run: LabRun,
-	cases: ReadonlyMap<string, LabCase>,
-	policy: string,
-): Map<string, readonly string[]> {
-	const result = new Map<string, readonly string[]>();
-	for (const caseRun of run.cases) {
-		const labCase = cases.get(caseRun.id);
-		const repetition = caseRun.repetitions[0];
-		if (!labCase || !repetition) continue;
-		const { evaluation } = scoreCase(labCase, repetition, policy);
-		result.set(
-			caseRun.id,
-			labCase.idealOutput.units.map(
-				(_, index) => evaluation?.units[index]?.verdict ?? "Missing",
-			),
-		);
-	}
-	return result;
 }
 
 export type Confusion = {

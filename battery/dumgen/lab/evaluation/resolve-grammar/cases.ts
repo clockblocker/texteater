@@ -51,9 +51,7 @@ export type GrammarSet = {
 };
 
 /** The identity intake stores for a closed-class Lemma (#864), none for another. */
-export function identityOf(
-	lemma: Dumling.Lemma,
-): ClosedClassIdentity | undefined {
+function identityOf(lemma: Dumling.Lemma): ClosedClassIdentity | undefined {
 	if (
 		lemma.language !== "de" ||
 		lemma.family !== "Lexeme" ||
@@ -73,7 +71,7 @@ const routeOf = (route: Dumcorpus.SpecRoute): Route =>
 	({ language: "de", family: route.family, kind: route.kind }) as Route;
 
 /** The cases of one record, one per target with an Attestation. */
-export function casesOf(record: Dumcorpus.SpecRecord): GrammarCase[] {
+function casesOf(record: Dumcorpus.SpecRecord): GrammarCase[] {
 	const sentence: SegmentedSentence = {
 		text: record.segments.map(({ text }) => text).join(""),
 		segments: record.segments.map(({ kind, text, surface }) => ({

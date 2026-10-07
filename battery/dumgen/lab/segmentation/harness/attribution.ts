@@ -100,7 +100,7 @@ export type UnitAttribution = {
 };
 
 /** The 1-based piece ids of a unit's ResolvableText Segments. */
-export function piecesOf(labCase: LabCase, unit: Unit): number[] {
+function piecesOf(labCase: LabCase, unit: Unit): number[] {
 	const resolvable = labCase.input.segments.flatMap(({ kind }, index) =>
 		kind === "ResolvableText" ? [index] : [],
 	);
@@ -110,7 +110,7 @@ export function piecesOf(labCase: LabCase, unit: Unit): number[] {
 		.sort((a, b) => a - b);
 }
 
-export function bucketOf(labCase: LabCase, unit: Unit, pieces: number): Bucket {
+function bucketOf(labCase: LabCase, unit: Unit, pieces: number): Bucket {
 	if (pieces === 1) return "one piece";
 	const family = unit.route === "Unresolved" ? "Lexeme" : unit.route.family;
 	if (family === "Saying") return "Saying";

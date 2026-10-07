@@ -38,7 +38,7 @@ export type KnowledgeSubset = {
 };
 
 /** The aspects an attempt missed; a failed attempt misses `attempt`. */
-export function missedAspects(attempt: ScoredKnowledge): string[] {
+function missedAspects(attempt: ScoredKnowledge): string[] {
 	if (!attempt.evaluation) return ["attempt"];
 	return attempt.evaluation.verdicts.flatMap((verdict) =>
 		verdict.correct === false ||

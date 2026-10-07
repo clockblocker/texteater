@@ -161,7 +161,7 @@ const routeOf = (route: Dumcorpus.SpecRoute): Route =>
 	({ language: "de", family: route.family, kind: route.kind }) as Route;
 
 /** Every gold description of each Lemma across `records`, by its identity key. */
-export function lemmaReadingsOf(
+function lemmaReadingsOf(
 	records: readonly Dumcorpus.SpecRecord[],
 ): ReadonlyMap<string, readonly string[]> {
 	const byLemma = new Map<string, string[]>();
@@ -182,7 +182,7 @@ export function lemmaReadingsOf(
 }
 
 /** The cases of one record, one per target whose Reading has a description. */
-export function casesOf(
+function casesOf(
 	record: Dumcorpus.SpecRecord,
 	lemmaReadings: ReadonlyMap<string, readonly string[]>,
 ): ReadingCase[] {

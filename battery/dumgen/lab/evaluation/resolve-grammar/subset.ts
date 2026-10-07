@@ -28,7 +28,7 @@ import {
 } from "./scoring.js";
 
 /** The report lines a case is selected on, in report order. */
-export const subsetLines = [
+const subsetLines = [
 	"lemma",
 	"cell",
 	"members",
@@ -59,7 +59,7 @@ export type GrammarSubset = {
 	readonly guard: Readonly<Record<string, readonly string[]>>;
 };
 
-export type MissedCase = {
+type MissedCase = {
 	readonly route: string;
 	readonly valency: boolean;
 	readonly verdicts: readonly Verdicts[];
@@ -70,7 +70,7 @@ export type MissedCase = {
  * line, valencyEvidence too when gold records it, so a click that failed
  * and one that now resolves are counted over the same attempts.
  */
-export function verdictsOf(
+function verdictsOf(
 	evaluation: GrammarEvaluation | undefined,
 	scoresValency = false,
 ): Verdicts {
@@ -94,7 +94,7 @@ const misses = (verdicts: Verdicts) =>
 	subsetLines.some((line) => verdicts[line] === false);
 
 /** The cases with an attempt that misses a line, and the cases with none, by case id. */
-export function splitByMisses(
+function splitByMisses(
 	attempts: readonly ScoredAttempt[],
 	scoresValency: (caseId: string) => boolean = () => false,
 ): {
@@ -333,7 +333,7 @@ export function loadSubset(path: string): GrammarSubset {
 }
 
 /** How a case's Lemma verdict moved: wrong to right when its majority did. */
-export type CaseMove = {
+type CaseMove = {
 	readonly caseId: string;
 	readonly route: string;
 	/** Correct Lemma attempts out of the attempts, baseline then this run. */

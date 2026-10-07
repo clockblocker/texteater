@@ -163,7 +163,7 @@ export type ScoredAttempt = {
 const lines = ["lemma", "cell", "members", "spelling", "exact"] as const;
 
 /** The per-field table of some attempts: the headline and the field lines. */
-export function tableOf(attempts: readonly ScoredAttempt[]) {
+function tableOf(attempts: readonly ScoredAttempt[]) {
 	const scores = attempts.map(({ evaluation }) => evaluation);
 	const verdicts = (line: (typeof lines)[number]) =>
 		scores.map((evaluation) => evaluation?.[line] ?? false);
@@ -184,7 +184,7 @@ export function tableOf(attempts: readonly ScoredAttempt[]) {
  * closed DET and PRON routes, and the out-of-bracket circumpositions of
  * #707.
  */
-export const grammarSlices: Readonly<
+const grammarSlices: Readonly<
 	Record<string, (attempt: ScoredAttempt) => boolean>
 > = {
 	"adjectival nouns and attributive-only adjectives (#709)": ({ rules }) =>
@@ -206,7 +206,7 @@ export const grammarSlices: Readonly<
 };
 
 /** The cases whose headline verdict differs between repetitions. */
-export function flipsOf(attempts: readonly ScoredAttempt[]): string[] {
+function flipsOf(attempts: readonly ScoredAttempt[]): string[] {
 	const verdicts = new Map<string, Set<boolean>>();
 	for (const { caseId, evaluation } of attempts) {
 		const seen = verdicts.get(caseId) ?? new Set<boolean>();

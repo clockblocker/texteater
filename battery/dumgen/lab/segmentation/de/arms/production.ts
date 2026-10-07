@@ -143,7 +143,7 @@ export const x1Grid: Readonly<Record<string, Assembly>> = Object.fromEntries(
 );
 
 /** Membership under an assembly; without step 0, candidates v3's links with the Saying Choice. */
-export function membershipUnder(
+function membershipUnder(
 	nomination: Nomination,
 	{ floors, saying, stepZero }: Assembly,
 ): Membership {

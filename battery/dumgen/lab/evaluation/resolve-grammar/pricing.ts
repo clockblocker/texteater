@@ -19,7 +19,7 @@
 import type { LunaConfiguration } from "../../../src/luna.js";
 
 /** USD per million tokens of one Luna tier. */
-export type LunaRates = {
+type LunaRates = {
 	readonly input: number;
 	readonly cachedInput: number;
 	readonly cacheWrite: number;

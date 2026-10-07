@@ -14,7 +14,7 @@ import type { ProjectedCorpus, ReviewGroup } from "./projection.js";
 
 type Listing = Readonly<Record<string, readonly string[]>>;
 
-export type CoverageRow = {
+type CoverageRow = {
 	readonly cases: number;
 	/** Cases from Full records, which the whole Sentence is scored on. */
 	readonly fullCoverage: number;

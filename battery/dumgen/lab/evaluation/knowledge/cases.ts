@@ -32,7 +32,7 @@ import { hashOf } from "../../segmentation/harness/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
 
-export type KnowledgeGold = {
+type KnowledgeGold = {
 	readonly knowledge: Dumrel.ReadingKnowledge;
 	readonly coverage: Dumcorpus.KnowledgeCoverage;
 };
@@ -92,7 +92,7 @@ const isAuthored = (reading: Dumling.Reading<"de">) =>
 	closedRoute(reading.lemma) || authoredReading(reading) !== undefined;
 
 /** The cases of one record, one per target with a Reading. */
-export function casesOf(record: Dumcorpus.SpecRecord): KnowledgeCase[] {
+function casesOf(record: Dumcorpus.SpecRecord): KnowledgeCase[] {
 	const segments = record.segments.map(({ text }) => ({ text }));
 	return (record.targets as readonly LoadedTarget[]).flatMap(
 		(target, index) => {
@@ -127,7 +127,7 @@ export function casesOf(record: Dumcorpus.SpecRecord): KnowledgeCase[] {
 }
 
 /** A Reading's identity: one case per Reading (#884 ruling 2). */
-export const readingKeyOf = (goldCase: Pick<KnowledgeCase, "reading">) =>
+const readingKeyOf = (goldCase: Pick<KnowledgeCase, "reading">) =>
 	readingIdentityKey(goldCase.reading);
 
 /** The first case of each Reading, skipping the Readings in `taken`. */
@@ -169,7 +169,7 @@ export function knowledgeCases(
 }
 
 /** Dev Readings the spot-check samples, besides the slips. */
-export const spotCheckSampleSize = 30;
+const spotCheckSampleSize = 30;
 
 const sha = (value: string) => createHash("sha256").update(value).digest("hex");
 

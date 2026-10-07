@@ -123,7 +123,7 @@ function tally(values: readonly string[]): Record<string, number> {
 }
 
 /** The attempts whose verdict differs between repetitions, `<case>:<arm>`. */
-export function readingFlips(attempts: readonly ScoredReading[]): string[] {
+function readingFlips(attempts: readonly ScoredReading[]): string[] {
 	const seen = new Map<string, Set<boolean>>();
 	for (const { caseId, arm, evaluation } of attempts) {
 		const id = `${caseId}:${arm}`;
@@ -138,13 +138,13 @@ export function readingFlips(attempts: readonly ScoredReading[]): string[] {
 }
 
 /** How many of Luna's New texts the spot-check sample holds. */
-export const spotCheckSize = 40;
+const spotCheckSize = 40;
 
 /**
  * Luna's New texts for a human spot-check: written in a removed attempt at
  * the first repetition, a fixed pseudo-random sample by case.
  */
-export function spotCheckOf(attempts: readonly ScoredReading[]) {
+function spotCheckOf(attempts: readonly ScoredReading[]) {
 	const hash = (id: string) => createHash("sha256").update(id).digest("hex");
 	return attempts
 		.filter(

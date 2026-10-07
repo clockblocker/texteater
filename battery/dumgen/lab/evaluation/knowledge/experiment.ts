@@ -74,7 +74,7 @@ const defaultKnowledgeRoot = fileURLToPath(
 	new URL("../../../.runs/knowledge/", import.meta.url),
 );
 
-export const knowledgeRoute = "knowledge/de";
+const knowledgeRoute = "knowledge/de";
 
 /** The port's ledger, whose latest round's sizes price a run (#891). */
 const knowledgeLedgerPath = fileURLToPath(
@@ -111,7 +111,7 @@ const jevStages = [
 	"formulaRole",
 	"relationJudgment",
 ];
-export const proxyStageSizes: GrammarPrice["sizes"]["stages"] = {
+const proxyStageSizes: GrammarPrice["sizes"]["stages"] = {
 	...Object.fromEntries(
 		Object.entries(lunaOutputs).map(([stage, output]) => [
 			`luna:${stage}`,
@@ -135,10 +135,10 @@ export const proxyStageSizes: GrammarPrice["sizes"]["stages"] = {
 };
 
 /** Each case runs three times; each repetition is its own cached answer. */
-export const knowledgeRepetitions = 3;
+const knowledgeRepetitions = 3;
 
 /** The operation a run measures. 1: the first port (#887). 2: the text prompts after the first spot-check. */
-export const knowledgeOperationVersion = `${knowledgeRoute}@production-6`;
+const knowledgeOperationVersion = `${knowledgeRoute}@production-6`;
 
 export type KnowledgeEvaluateArgs = {
 	readonly experimentId: string;

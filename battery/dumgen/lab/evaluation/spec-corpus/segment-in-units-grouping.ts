@@ -19,14 +19,14 @@ export const awaitsForeignScoring = (route: Unit["route"]) =>
 	route === "Unresolved" || route.family === "Foreign";
 
 /** The Segments of a returned unit that came from one gold unit, or that no gold unit asserts. */
-export type GroupingPart = {
+type GroupingPart = {
 	readonly text: string;
 	/** The gold unit's index in the ideal output; absent for Segments no gold unit asserts. */
 	readonly unit?: number;
 };
 
 /** A returned unit that joins Segments of two or more gold units. */
-export type OverMerge = {
+type OverMerge = {
 	/** Its scored Segments. */
 	readonly segments: readonly number[];
 	readonly text: string;
@@ -35,7 +35,7 @@ export type OverMerge = {
 };
 
 /** A scored gold unit whose Segments came back in two or more returned units. */
-export type UnderMerge = {
+type UnderMerge = {
 	readonly unit: number;
 	readonly text: string;
 	/**

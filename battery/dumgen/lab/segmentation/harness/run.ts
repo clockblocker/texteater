@@ -27,7 +27,7 @@ export type RepetitionRecord = {
 	readonly error?: string;
 };
 
-export type CaseRun = {
+type CaseRun = {
 	readonly id: string;
 	readonly repetitions: readonly RepetitionRecord[];
 };

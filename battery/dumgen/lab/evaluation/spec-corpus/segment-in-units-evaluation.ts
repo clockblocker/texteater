@@ -32,7 +32,7 @@ import {
  * scored until German `segment.inUnits` routes foreign words (#730) and its
  * confidence line for `Unresolved` is set (#701).
  */
-export type UnitVerdict =
+type UnitVerdict =
 	| "Match"
 	| "WrongSegments"
 	| "WrongRoute"

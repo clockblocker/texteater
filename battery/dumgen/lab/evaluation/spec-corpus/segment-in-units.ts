@@ -31,7 +31,7 @@ const routeSchema = z.strictObject({
 	family: z.string().min(1),
 	kind: z.string().min(1),
 });
-export type Route = z.infer<typeof routeSchema>;
+type Route = z.infer<typeof routeSchema>;
 
 const sameRouteKey = (route: Route) =>
 	`${route.language}/${route.family}/${route.kind}`;

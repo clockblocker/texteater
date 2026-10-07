@@ -39,7 +39,7 @@ import { defaultRunOutputDirectory } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
 
-export async function runKnowledgeCli(
+async function runKnowledgeCli(
 	argv: readonly string[],
 	options: {
 		readonly setsRoot?: string;

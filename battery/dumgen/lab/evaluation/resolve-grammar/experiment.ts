@@ -75,9 +75,9 @@ const defaultSegmentLabRoot = fileURLToPath(
 /** The package root a subset's path in the manifest is relative to. */
 const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
 
-export const grammarRoute = "resolve-grammar/de";
+const grammarRoute = "resolve-grammar/de";
 /** Each case runs three times; each repetition is its own cached answer. */
-export const grammarRepetitions = 3;
+const grammarRepetitions = 3;
 
 export type { GrammarPrice } from "./models.js";
 

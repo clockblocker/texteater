@@ -55,7 +55,7 @@ export type SpendEntry = Spend & {
 	readonly transport?: TransportRecord;
 };
 
-export type ComparedSide = { readonly runId: string; readonly policy: string };
+type ComparedSide = { readonly runId: string; readonly policy: string };
 
 /** Paired gold units of one bucket: `gained` only the right side matches, `lost` only the left. */
 export type BucketDelta = {

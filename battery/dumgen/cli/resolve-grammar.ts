@@ -36,12 +36,12 @@ import {
 import { defaultRunOutputDirectory } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
-export const defaultSubsetPath = resolve(
+const defaultSubsetPath = resolve(
 	import.meta.dir,
 	"../evidence/resolve-grammar/round-2-subset.json",
 );
 
-export async function runResolveGrammarCli(
+async function runResolveGrammarCli(
 	argv: readonly string[],
 	options: { runDirectory?: string; subsetPath?: string } = {},
 ) {

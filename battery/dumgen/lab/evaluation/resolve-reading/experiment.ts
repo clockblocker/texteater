@@ -73,7 +73,7 @@ const defaultReadingRoot = fileURLToPath(
 	new URL("../../../.runs/resolve-reading/", import.meta.url),
 );
 
-export const readingRoute = "resolve-reading/de";
+const readingRoute = "resolve-reading/de";
 
 /** The package root a subset's path in the manifest is relative to. */
 const packageRoot = fileURLToPath(new URL("../../../", import.meta.url));
@@ -83,7 +83,7 @@ const readingLedgerPath = fileURLToPath(
 	new URL("../../../evidence/resolve-reading/ledger.jsonl", import.meta.url),
 );
 /** Each attempt runs three times; each repetition is its own cached answer. */
-export const readingRepetitions = 3;
+const readingRepetitions = 3;
 
 /**
  * The operation a run measures. 2: Luna answers the Emoji Description as
@@ -94,10 +94,10 @@ export const readingRepetitions = 3;
  * both ways instead of folding when in doubt; Luna labels modality, degree
  * and the copula of being 🟰 (#877 round 3).
  */
-export const readingOperationVersion = `${readingRoute}@production-4`;
+const readingOperationVersion = `${readingRoute}@production-4`;
 
 /** A run's projected spend, shaped as resolve.grammar's so one budget guard reads both. */
-export type ReadingPrice = GrammarPrice;
+type ReadingPrice = GrammarPrice;
 
 export type ReadingEvaluateArgs = {
 	readonly experimentId: string;

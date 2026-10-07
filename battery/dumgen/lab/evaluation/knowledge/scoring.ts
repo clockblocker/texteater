@@ -101,7 +101,7 @@ export const shadowKey = ({ family, kind, canonicalForm }: Shadow) =>
 	`${family}/${kind}/${foldCase(canonicalForm, "de")}`;
 
 /** The Knowledge an attempt's changes add up to, each change Dumrel takes applied in order. */
-export function producedKnowledge(
+function producedKnowledge(
 	reading: Dumling.Reading<"de">,
 	changes: readonly unknown[],
 ): Dumrel.ReadingKnowledge {
@@ -362,7 +362,7 @@ export type ScoredKnowledge = {
 };
 
 /** The structural aspects scored exactly. */
-export const exactAspects = [
+const exactAspects = [
 	"plural",
 	"valency",
 	"participleSource",
@@ -400,7 +400,7 @@ function recallLine(entries: readonly Entry[]): Line {
 }
 
 /** The case-aspects whose verdict differs between repetitions, `<case>:<aspect>`. */
-export function knowledgeFlips(attempts: readonly ScoredKnowledge[]): string[] {
+function knowledgeFlips(attempts: readonly ScoredKnowledge[]): string[] {
 	const seen = new Map<string, Set<string>>();
 	for (const { attempt, verdict } of entriesOf(attempts)) {
 		const verdictOf =
@@ -422,10 +422,10 @@ export function knowledgeFlips(attempts: readonly ScoredKnowledge[]): string[] {
 }
 
 /** How many extra relation claims the spot-check sample holds. */
-export const extraClaimSampleSize = 40;
+const extraClaimSampleSize = 40;
 
 /** Extra relation claims for a human spot-check: the first repetition's, a seeded sample. */
-export function extraClaimsSample(attempts: readonly ScoredKnowledge[]) {
+function extraClaimsSample(attempts: readonly ScoredKnowledge[]) {
 	return entriesOf(attempts)
 		.filter(({ attempt }) => attempt.repetition === 0)
 		.flatMap(({ attempt, verdict }) =>
@@ -605,7 +605,7 @@ function tally(values: readonly string[]): Record<string, number> {
 }
 
 /** How many text values per aspect the spot-check sample lists. */
-export const textSampleSize = 30;
+const textSampleSize = 30;
 
 /**
  * The text spot-check (#883 point 10): each text aspect's values at the

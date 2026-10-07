@@ -64,7 +64,7 @@ import {
 	syncTierOf,
 } from "./pricing.js";
 
-export type ModelMode = "offline" | "live" | "project";
+type ModelMode = "offline" | "live" | "project";
 
 /**
  * Characters per input token of a jev request (its state and questions as
@@ -72,13 +72,13 @@ export type ModelMode = "offline" | "live" | "project";
  * (5,259,599 characters, 1,827,732 input tokens). The last resort of a
  * projection, after the measured sizes.
  */
-export const jevCharsPerToken = 2.88;
+const jevCharsPerToken = 2.88;
 /**
  * Characters per token of a Luna request's prompt and input, and of its
  * output: OpenAI's tokenizers give about 3.5 for German with English JSON.
  * An estimate, the last resort of a projection.
  */
-export const lunaCharsPerToken = 3.5;
+const lunaCharsPerToken = 3.5;
 
 /** What one executor spent: fresh calls and tokens, and calls the cache answered. */
 export type ExecutorSpend = {
@@ -118,7 +118,7 @@ export type StageSize = {
 };
 
 /** One executor's tokens per fresh request in a ledger round. */
-export type RequestSize = {
+type RequestSize = {
 	readonly requests: number;
 	readonly inputTokensPerRequest: number;
 	readonly outputTokensPerRequest: number;

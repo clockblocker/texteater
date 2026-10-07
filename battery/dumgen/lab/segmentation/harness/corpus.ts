@@ -76,7 +76,7 @@ export const trackedSetsRoot = join(
 );
 
 /** Where the set `name` of `hash` is kept. */
-export function setPath(root: string, name: SetName, hash: string): string {
+function setPath(root: string, name: SetName, hash: string): string {
 	return join(root, `${name}@${hash}.json.gz`);
 }
 
@@ -117,7 +117,7 @@ export async function storeSet(root: string, set: LabSet): Promise<void> {
  * their gold, each with its reason. Unlike the sidecar's exclusions, they
  * reach only the lab.
  */
-export const withheldRecords: Readonly<Record<string, string>> = {
+const withheldRecords: Readonly<Record<string, string>> = {
 	"de/das-bisschen-geld-reicht-nicht":
 		"Row H25 of batch heldout-2026-10-02 waits for the maintainer's approval (#701).",
 };

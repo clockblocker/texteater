@@ -31,7 +31,7 @@ export type ReviewGroup = "Reviewed" | "Draft";
  * one target's, and its review group, so scores split into Reviewed and
  * Draft.
  */
-export type CaseOrigin = {
+type CaseOrigin = {
 	readonly record: Dumcorpus.SpecRecordId;
 	readonly target?: number;
 	readonly status: ReviewGroup;
@@ -43,7 +43,7 @@ export type CaseOrigin = {
  * `<record>#<target>`, otherwise the record id. `facts` is what the
  * evaluator needs and the prompt never sees.
  */
-export type ProjectedCase<Input, Output, Facts> = {
+type ProjectedCase<Input, Output, Facts> = {
 	readonly target?: number;
 	readonly input: Input;
 	readonly idealOutput: Output;
@@ -51,7 +51,7 @@ export type ProjectedCase<Input, Output, Facts> = {
 };
 
 /** Why a record gives a prompt no case: coverage, not an error. */
-export type Skip = { readonly skip: string };
+type Skip = { readonly skip: string };
 
 /**
  * What one prompt makes of a record: its cases, or the reason it has none.
@@ -84,7 +84,7 @@ export type Projection<
 		| Skip;
 };
 
-export type SkippedRecord = {
+type SkippedRecord = {
 	readonly record: Dumcorpus.SpecRecordId;
 	readonly status: ReviewGroup;
 	readonly reason: string;
@@ -96,7 +96,7 @@ export type SkippedRecord = {
 export const sameInputReason = "Same input as another record";
 
 /** The collection holding every case; its groups are the review groups. */
-export const specCollection = "dumcorpus";
+const specCollection = "dumcorpus";
 
 export type ProjectedCorpus<
 	InputSchema extends z.ZodType,

@@ -45,7 +45,7 @@ export function groupOf(unit: FocusUnit): FocusGroup {
  * (the guardrail), or a unit of a case outside the focus set, which a run
  * over all of dev also scores.
  */
-export type Scope = "focus" | "guardrail" | "otherCases";
+type Scope = "focus" | "guardrail" | "otherCases";
 
 /** Scored gold units of one scope, under one policy. */
 export type UnitTally = {
@@ -209,7 +209,7 @@ export type FocusDelta = {
 	readonly otherCases: UnitChange;
 };
 
-export type ChangedUnit = {
+type ChangedUnit = {
 	readonly case: string;
 	readonly unit: number;
 	readonly text: string;

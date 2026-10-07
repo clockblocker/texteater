@@ -34,12 +34,12 @@ import {
 import { defaultRunOutputDirectory } from "../lab/run-directory.js";
 
 const repository = resolve(import.meta.dir, "../../..");
-export const defaultReadingSubsetPath = resolve(
+const defaultReadingSubsetPath = resolve(
 	import.meta.dir,
 	"../evidence/resolve-reading/round-2-subset.json",
 );
 
-export async function runResolveReadingCli(
+async function runResolveReadingCli(
 	argv: readonly string[],
 	options: {
 		runDirectory?: string;

@@ -19,7 +19,7 @@ import type { Pin } from "./round.js";
  * harness they score with, and the CLI. Their per-file hashes make the
  * manifest's `codeHash`.
  */
-export const labSources = [
+const labSources = [
 	"src/segment",
 	"lab/segmentation",
 	"lab/evaluation/spec-corpus",
@@ -31,7 +31,7 @@ export const labSources = [
  * records are left out: a run reads the frozen set, whose hash the manifest
  * keeps, and the records change under a concurrent review.
  */
-export const dirtyScope = (cli: string) => [
+const dirtyScope = (cli: string) => [
 	"battery/dumgen/src/segment",
 	"battery/dumgen/lab/segmentation",
 	"battery/dumgen/lab/evaluation/spec-corpus",
@@ -128,7 +128,7 @@ export function gitState(
  * `rulesHash` and `realizationsHash` name the two data sets the prompts
  * quote.
  */
-export async function dumcorpusFingerprint(): Promise<{
+async function dumcorpusFingerprint(): Promise<{
 	readonly sourceHash: string;
 	readonly rulesHash: string;
 	readonly realizationsHash: string;

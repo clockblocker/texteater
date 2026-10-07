@@ -31,7 +31,7 @@ export type LinkJudgment = {
 	readonly probability: number;
 };
 
-export type ArmResult = {
+type ArmResult = {
 	/** One output per assembly policy, all from the same answers. */
 	readonly outputs: Readonly<Record<string, SegmentInUnitsOutput>>;
 	/** The policy the arm's headline numbers use. */

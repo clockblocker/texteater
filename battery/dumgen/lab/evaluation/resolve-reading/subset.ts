@@ -27,9 +27,9 @@ import type { ReadingArm } from "./cases.js";
 import type { ReadingEvaluation, ScoredReading } from "./scoring.js";
 
 /** One attempt's verdict: right, wrong, a wrong Reuse (wrong too), or failed. */
-export type ReadingVerdict = "right" | "wrong" | "wrongReuse" | "failed";
+type ReadingVerdict = "right" | "wrong" | "wrongReuse" | "failed";
 
-export type MissedReadingCase = {
+type MissedReadingCase = {
 	readonly route: string;
 	readonly authored: boolean;
 	/** The candidates each arm offers. */
@@ -55,9 +55,7 @@ export type ReadingSubset = {
 };
 
 /** An attempt's verdict from its evaluation; no evaluation is a failed click. */
-export function verdictOf(
-	evaluation: ReadingEvaluation | undefined,
-): ReadingVerdict {
+function verdictOf(evaluation: ReadingEvaluation | undefined): ReadingVerdict {
 	if (!evaluation) return "failed";
 	if (evaluation.correct) return "right";
 	return evaluation.wrongReuse ? "wrongReuse" : "wrong";
@@ -226,7 +224,7 @@ function linesOf(attempts: readonly LineAttempt[]) {
 type SubsetLine = keyof ReturnType<typeof linesOf>;
 
 /** How one case and arm moved: wrong to right when its majority did. */
-export type ReadingCaseMove = {
+type ReadingCaseMove = {
 	readonly attempt: string;
 	readonly route: string;
 	/** Right attempts out of the attempts, baseline then this run. */

@@ -54,7 +54,7 @@ export function goldReadingAnswers(
 }
 
 /** What gold writes: its own description. */
-export const goldReadingWritten = ({ goldCase }: ReadingAttempt): unknown =>
+const goldReadingWritten = ({ goldCase }: ReadingAttempt): unknown =>
 	goldCase.ideal;
 
 export const readingOracle: GoldOracle<ReadingAttempt> = {

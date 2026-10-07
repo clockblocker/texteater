@@ -67,7 +67,7 @@ export type Nomination<Evidence> = {
 	readonly evidence: Evidence;
 };
 
-export type Membership<Detail> = {
+type Membership<Detail> = {
 	readonly partition: Groups;
 	/** Every edge the resolver's partition is the union of. */
 	readonly edges: readonly Edge[];
@@ -247,5 +247,4 @@ export async function runStages<Evidence, Detail>(
 	};
 }
 
-export const edgePairs = (edges: readonly Edge[]) =>
-	edges.map((edge) => edge.pieces);
+const edgePairs = (edges: readonly Edge[]) => edges.map((edge) => edge.pieces);

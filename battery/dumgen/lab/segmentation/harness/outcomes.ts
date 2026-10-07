@@ -11,7 +11,7 @@ import {
 	type UnitCheck,
 } from "../../evaluation/spec-corpus/segment-in-units-evaluation.js";
 import type { LabCase } from "./corpus.js";
-import { bucketOf, isStub, mcnemar, policiesOf, scoreCase } from "./metrics.js";
+import { bucketOf, isStub, policiesOf, scoreCase } from "./metrics.js";
 import type { LabRun } from "./run.js";
 
 /**
@@ -20,7 +20,7 @@ import type { LabRun } from "./run.js";
  * sTub, or E when the repetition failed. Rows written before #757 read
  * every WrongRoute as R.
  */
-export type VerdictLetter = "M" | "A" | "R" | "S" | "X" | "T" | "E";
+type VerdictLetter = "M" | "A" | "R" | "S" | "X" | "T" | "E";
 
 function letterOf(check: UnitCheck): VerdictLetter {
 	switch (check.verdict) {
@@ -186,13 +186,13 @@ export function membershipFlipped(outcome: PolicyOutcome | undefined): boolean {
 	return held.some(Boolean) && held.some((entry) => !entry);
 }
 
-export type PairedUnit = {
+type PairedUnit = {
 	readonly id: string;
 	readonly text: string;
 	readonly bucket: string;
 };
 
-export type BucketTally = {
+type BucketTally = {
 	units: number;
 	left: number;
 	right: number;
@@ -303,9 +303,6 @@ export function membershipFlipsOf(
 	}
 	return { flips, base };
 }
-
-export const pairedP = (paired: Paired) =>
-	mcnemar(paired.leftOnly.length, paired.rightOnly.length);
 
 /**
  * How often a policy's units carry route variants (ADR 0008), over the
