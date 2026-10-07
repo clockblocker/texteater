@@ -1,3 +1,4 @@
+import { jest } from "bun:test";
 import { makeSurfaceId } from "dumdict";
 import { api, internal } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -46,14 +47,19 @@ export type Selection = {
 
 /**
  * Selects an unattested Segment, which starts its Resolution Session, and
- * returns the guard its run holds. Run it under fake timers so the scheduled
- * run does not fire.
+ * returns the guard its run holds. It refuses to run on real timers: there
+ * the scheduled run fires after the test ends and reaches whatever `fetch`
+ * a later test file has installed (#1061).
  */
 export async function startSession(
 	t: TestConvexDb,
 	selection: Selection,
 	options: { readonly routeNoteRequested?: boolean } = {},
 ): Promise<SessionGuard> {
+	if (!jest.isFakeTimers())
+		throw new Error(
+			"startSession needs jest.useFakeTimers(), or its scheduled run outlives the test.",
+		);
 	await t.mutation(api.resolutionSessions.selectSegment, {
 		...selection,
 		routeNoteRequested: options.routeNoteRequested ?? false,

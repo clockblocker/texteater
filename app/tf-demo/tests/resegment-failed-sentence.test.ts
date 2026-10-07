@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { afterEach, beforeEach, expect, jest, test } from "bun:test";
 import { internal } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 import { createTestConvex, submitText } from "./support/convex";
@@ -8,6 +8,16 @@ const verb = { language: "de", family: "Lexeme", kind: "VERB" } as const;
 const noun = { language: "de", family: "Lexeme", kind: "NOUN" } as const;
 const pron = { language: "de", family: "Lexeme", kind: "PRON" } as const;
 const adp = { language: "de", family: "Lexeme", kind: "ADP" } as const;
+
+// Selecting the Segment schedules its Resolution Session run; fake timers keep
+// it from firing after the test into another file's fake jev (#1061).
+beforeEach(() => {
+	jest.useFakeTimers();
+});
+
+afterEach(() => {
+	jest.useRealTimers();
+});
 
 /** `Er geht zum Arzt.` stored with `zum` whole, then marked as failed, and a click on `zum`. */
 async function failedSentence() {
