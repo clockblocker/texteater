@@ -18,13 +18,9 @@ import {
 	deleteResolutionSessions,
 	failResolutionRun,
 	findActiveVisitorSession,
-	loadCanonicalOccurrence,
-	loadResolutionNote,
-	occurrenceNoteTarget,
 	RESOLUTION_RETENTION_MS,
 	recordResolutionRunSuccess,
 	recoverStaleResolutionRun,
-	resolutionNoteValidator,
 	retryResolutionSession,
 	startResolutionSession,
 } from "./model/resolutionSessions";
@@ -42,6 +38,12 @@ import {
 	visitorError,
 } from "./model/validators";
 import { ensureVisitorEncounter } from "./model/visitorClicks";
+import {
+	loadCanonicalOccurrence,
+	loadResolutionNote,
+	occurrenceNoteTarget,
+	resolutionNoteValidator,
+} from "./modules/notes/resolutionNote";
 import { consumeRateLimit } from "./rateLimits";
 import {
 	loadResolutionContext,
