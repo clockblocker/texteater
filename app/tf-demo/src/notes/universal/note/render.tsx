@@ -38,18 +38,35 @@ export function renderUniversalNoteHeading({
 	readonly capabilities?: unknown;
 	readonly registryFor: RegistryFor;
 }): ReactElement | null {
+	const described = describeRenderableNote(noteData);
+	if (!described) return null;
+	const { coordinates, identity } = described;
+	const renderer = registryFor(coordinates)?.Heading;
+	if (!renderer) return null;
+	const context = blockContext(
+		noteData,
+		coordinates,
+		capabilities ?? defaultCapabilities(noteData),
+	);
+	return renderBlock("Heading", renderer, context, identity);
+}
+
+/**
+ * The Note's registry address and identity, or null when it has none. An
+ * unknown kind is null quietly, since the Body names it. Any other failure is
+ * a registry gap or a bug, so it is logged before the Note renders nothing.
+ */
+export function describeRenderableNote(
+	noteData: NoteData,
+): ReturnType<typeof describeNote> | null {
+	if (!isKnownKind(noteData)) return null;
 	try {
-		if (!isKnownKind(noteData)) return null;
-		const { coordinates, identity } = describeNote(noteData);
-		const renderer = registryFor(coordinates)?.Heading;
-		if (!renderer) return null;
-		const context = blockContext(
-			noteData,
-			coordinates,
-			capabilities ?? defaultCapabilities(noteData),
+		return describeNote(noteData);
+	} catch (cause) {
+		console.error(
+			`${noteData.kind} Note could not describe itself, so it renders nothing.`,
+			cause,
 		);
-		return renderBlock("Heading", renderer, context, identity);
-	} catch {
 		return null;
 	}
 }

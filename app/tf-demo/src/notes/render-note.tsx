@@ -7,11 +7,7 @@ import type { WorkspaceTarget } from "@/workspace/workspace-subject";
 import { api } from "../../convex/_generated/api";
 import { registeredBlockMap } from "./renderer-registry";
 import type { NotePresentationCapabilitiesFor } from "./universal/blocks/renderer";
-import {
-	describeNote,
-	type NoteData,
-	type NoteDataFor,
-} from "./universal/note/data";
+import type { NoteData, NoteDataFor } from "./universal/note/data";
 import { renderErrorNote } from "./universal/note/error";
 import type { NoteKind } from "./universal/note/kind";
 import {
@@ -21,6 +17,7 @@ import {
 } from "./universal/note/layout";
 import {
 	defaultCapabilities,
+	describeRenderableNote,
 	renderUniversalNoteBody,
 	renderUniversalNoteHeading,
 } from "./universal/note/render";
@@ -98,11 +95,8 @@ function defaultConfiguredLayout(noteData: NoteData): NoteBlockLayout {
 }
 
 function configuredRegistry(noteData: NoteData) {
-	try {
-		return registeredBlockMap(describeNote(noteData).coordinates);
-	} catch {
-		return null;
-	}
+	const described = describeRenderableNote(noteData);
+	return described ? registeredBlockMap(described.coordinates) : null;
 }
 
 function isReadingInput(

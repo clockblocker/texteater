@@ -814,10 +814,19 @@ export async function claimResolutionRun(
 function restoreGrammaticalCheckpoint(
 	session: ResolutionSession,
 ): Infer<typeof resolvedGrammaticalValidator> | undefined {
-	const restored = session.grammaticalCheckpoint
-		? restoreStoredGrammar(session.grammaticalCheckpoint)
-		: undefined;
-	if (!restored) return undefined;
+	if (!session.grammaticalCheckpoint) return undefined;
+	const restoration = restoreStoredGrammar(session.grammaticalCheckpoint);
+	if (!restoration.ok) {
+		console.warn(
+			JSON.stringify({
+				event: "StaleGrammarCheckpoint",
+				sessionId: session._id,
+				reason: restoration.reason,
+			}),
+		);
+		return undefined;
+	}
+	const restored = restoration.grammar;
 	return {
 		...restored,
 		encounter: {

@@ -58,18 +58,23 @@ const checkpoint = {
 };
 test("legacy verbal checkpoints default absent composition without absorbing adjacent es", () => {
 	expect(() => parseResolvedGrammar(checkpoint)).toThrow();
-	const restored = restoreStoredGrammar(checkpoint);
-	expect(restored?.encounter).toEqual(checkpoint.encounter);
-	expect(restored?.attestation.members).toEqual(
+	const restoration = restoreStoredGrammar(checkpoint);
+	if (!restoration.ok) throw new Error(restoration.reason);
+	const restored = restoration.grammar;
+	expect(restored.encounter).toEqual(checkpoint.encounter);
+	expect(restored.attestation.members).toEqual(
 		checkpoint.attestation.members,
 	);
-	expect(restored?.attestation).toHaveProperty("expletiveEvidence", null);
-	expect(restored?.attestation).toHaveProperty("valencyEvidence", []);
-	expect(restored?.attestation.surface).toHaveProperty(
+	expect(restored.attestation).toHaveProperty("expletiveEvidence", null);
+	expect(restored.attestation).toHaveProperty("valencyEvidence", []);
+	expect(restored.attestation.surface).toHaveProperty(
 		"inflectionalFeatures.expletive",
 		null,
 	);
-	expect(restored && restoreStoredGrammar(restored)).toEqual(restored);
+	expect(restoreStoredGrammar(restored)).toEqual({
+		ok: true,
+		grammar: restored,
+	});
 });
 test("legacy noun checkpoints discard component references but retain exact occurrence evidence", () => {
 	const noun = {
@@ -118,16 +123,42 @@ test("legacy noun checkpoints discard component references but retain exact occu
 		},
 	};
 	expect(() => parseResolvedGrammar(noun)).toThrow();
-	const restored = restoreStoredGrammar(noun);
-	expect(restored?.attestation.surface).not.toHaveProperty(
-		"articleReference",
-	);
-	expect(restored?.attestation).toHaveProperty(
+	const restoration = restoreStoredGrammar(noun);
+	if (!restoration.ok) throw new Error(restoration.reason);
+	const restored = restoration.grammar;
+	expect(restored.attestation.surface).not.toHaveProperty("articleReference");
+	expect(restored.attestation).toHaveProperty(
 		"articleEvidence",
 		noun.attestation.articleEvidence,
 	);
-	expect(restored?.encounter).toEqual(noun.encounter);
+	expect(restored.encounter).toEqual(noun.encounter);
+});
+test("a checkpoint whose attestation is not an object fails with a reason instead of throwing", () => {
+	expect(restoreStoredGrammar({ ...checkpoint, attestation: null })).toEqual({
+		ok: false,
+		reason: "Grammar checkpoint attestation must be an object.",
+	});
 	expect(
-		restoreStoredGrammar({ ...noun, attestation: null }),
-	).toBeUndefined();
+		restoreStoredGrammar({
+			...checkpoint,
+			attestation: { ...checkpoint.attestation, surface: null },
+		}),
+	).toEqual({
+		ok: false,
+		reason: "Grammar checkpoint surface must be an object.",
+	});
+});
+test("a checkpoint that no longer matches its Encounter fails with the parser's reason", () => {
+	expect(
+		restoreStoredGrammar({
+			...checkpoint,
+			encounter: {
+				...checkpoint.encounter,
+				target: { ...checkpoint.encounter.target, kind: "AUX" },
+			},
+		}),
+	).toEqual({
+		ok: false,
+		reason: "Grammar checkpoint does not match its Encounter.",
+	});
 });

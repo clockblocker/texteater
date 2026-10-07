@@ -54,41 +54,74 @@ export function parseResolvedGrammar(input: {
 	};
 }
 
+/**
+ * The outcome of restoring a stored Grammar checkpoint. A failure names why
+ * the checkpoint no longer parses, so the caller can report it and resume
+ * without it.
+ */
+export type StoredGrammarRestore =
+	| { readonly ok: true; readonly grammar: ResolvedGrammar }
+	| { readonly ok: false; readonly reason: string };
+
+function restoreFailure(reason: string): StoredGrammarRestore {
+	return { ok: false, reason };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 /** Resumes stored pre-cutover work without reclassifying or changing occurrence membership. */
 export function restoreStoredGrammar(input: {
 	encounter: unknown;
 	attestation: unknown;
-}): ResolvedGrammar | undefined {
+}): StoredGrammarRestore {
+	const { attestation } = input;
+	if (!isRecord(attestation))
+		return restoreFailure(
+			"Grammar checkpoint attestation must be an object.",
+		);
+	const { surface } = attestation;
+	if (!isRecord(surface))
+		return restoreFailure("Grammar checkpoint surface must be an object.");
+	const { lemma } = surface;
+	if (!isRecord(lemma))
+		return restoreFailure("Grammar checkpoint lemma must be an object.");
+	const { articleReference: _legacy, ...currentSurface } = surface;
+	const germanKind =
+		lemma.language === "de" && typeof lemma.kind === "string"
+			? lemma.kind
+			: undefined;
+	const verbal =
+		germanKind !== undefined && germanVerbalKinds.includes(germanKind);
+	const governor =
+		germanKind !== undefined && germanGovernorKinds.includes(germanKind);
+	const bag = currentSurface.inflectionalFeatures;
+	if (verbal && isRecord(bag))
+		currentSurface.inflectionalFeatures = { expletive: null, ...bag };
 	try {
-		const attestation = input.attestation as Record<string, unknown>;
-		const surface = attestation.surface as Record<string, unknown>;
-		const lemma = surface.lemma as { language: string; kind: string };
-		const { articleReference: _legacy, ...currentSurface } = surface;
-		const verbal =
-			lemma.language === "de" && germanVerbalKinds.includes(lemma.kind);
-		const governor =
-			lemma.language === "de" && germanGovernorKinds.includes(lemma.kind);
-		const bag = currentSurface.inflectionalFeatures;
-		if (verbal && bag && typeof bag === "object")
-			currentSurface.inflectionalFeatures = { expletive: null, ...bag };
-		return parseResolvedGrammar({
-			encounter: input.encounter,
-			attestation: {
-				...attestation,
-				surface: currentSurface,
-				...(verbal
-					? {
-							expletiveEvidence:
-								attestation.expletiveEvidence ?? null,
-						}
-					: {}),
-				...(governor ||
-				(lemma.language === "de" && lemma.kind === "ADP")
-					? { valencyEvidence: attestation.valencyEvidence ?? [] }
-					: {}),
-			},
-		});
-	} catch {
-		return undefined;
+		return {
+			ok: true,
+			grammar: parseResolvedGrammar({
+				encounter: input.encounter,
+				attestation: {
+					...attestation,
+					surface: currentSurface,
+					...(verbal
+						? {
+								expletiveEvidence:
+									attestation.expletiveEvidence ?? null,
+							}
+						: {}),
+					...(governor || germanKind === "ADP"
+						? { valencyEvidence: attestation.valencyEvidence ?? [] }
+						: {}),
+				},
+			}),
+		};
+	} catch (error) {
+		return restoreFailure(
+			error instanceof Error ? error.message : String(error),
+		);
 	}
 }
