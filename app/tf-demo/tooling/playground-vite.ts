@@ -1,6 +1,16 @@
 import { execFile } from "node:child_process";
+import { relative, sep } from "node:path";
 import { promisify } from "node:util";
 import type { Plugin } from "vite";
+
+/** The directories `tooling/print-playground-snapshot.ts` builds the snapshot from. */
+const snapshotSources = [
+	"convex/",
+	"server/",
+	"shared/",
+	"tests/support/",
+	"tooling/",
+];
 
 /** No fixture endpoints or payloads are included in a production build. */
 export function playgroundFixtures(): Plugin {
@@ -10,11 +20,10 @@ export function playgroundFixtures(): Plugin {
 		apply: "serve",
 		configureServer(server) {
 			server.watcher.on("change", (file) => {
-				if (
-					file.includes("notes-study") ||
-					file.includes("/convex/") ||
-					file.includes("/tooling/")
-				)
+				const path = relative(server.config.root, file)
+					.split(sep)
+					.join("/");
+				if (snapshotSources.some((source) => path.startsWith(source)))
 					snapshot = undefined;
 			});
 			server.middlewares.use(
