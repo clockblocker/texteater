@@ -189,6 +189,6 @@ does not expose a compatibility migration.
 
 For repo development:
 
-- `bun test`
+- `bun run test`
 - `bun run build`
 - `bun run generate:readme`

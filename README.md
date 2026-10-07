@@ -36,22 +36,22 @@ Each directory directly below `app/` or `battery/` owns its build, tests, and
 configuration. From that directory, run:
 
 ```sh
-bun validate
-bun test
+bun run validate
+bun run test
 bun run build
 ```
 
-`bun validate` checks formatting, imports, lint, types, tests, dependencies,
-and package boundaries. It does not change files. Use `bun fix` for automatic
-formatting and safe fixes.
+`bun run validate` checks formatting, imports, lint, types, tests,
+dependencies, and package boundaries. It does not change files. Use
+`bun run fix` for automatic formatting and safe fixes.
 
 ## Check the repository
 
 From the repository root, run:
 
 ```sh
-bun validate
-bun test
+bun run validate
+bun run test
 bun run build
 bun run check:docs
 ```

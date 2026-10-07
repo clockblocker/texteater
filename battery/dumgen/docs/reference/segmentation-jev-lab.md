@@ -73,7 +73,7 @@ it and score it against frozen gold. Results live in the lab tickets
 - Besides the production segmenter, the lab imports only the #731 harness
   (`lab/evaluation/spec-corpus/`), promptsmith and dumcorpus. Keep it that
   way. Typecheck it with `bun run check:segmentation` and test it with
-  `bun test tests/lab/segmentation`.
+  `bun run test tests/lab/segmentation`.
 - Model calls go through jev (TypeSafe) only. The lab tracks tokens only.
 
 ## Commands

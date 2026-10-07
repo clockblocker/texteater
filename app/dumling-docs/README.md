@@ -27,7 +27,7 @@ bun run generate:attestations
 bun run generate:docs
 bun run generate:docs:check
 bun run check
-bun test
+bun run test
 bun run build
 ```
 
