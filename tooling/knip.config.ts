@@ -26,6 +26,41 @@ function readJson(path: string): Record<string, unknown> {
 	return JSON.parse(readFileSync(path, "utf8")) as Record<string, unknown>;
 }
 
+// Workspaces run `bun test` through the shared runner, which knip's Bun
+// plugin can't see through. These are the plugin's test-file patterns, scoped
+// by any path the runner forwards, as the plugin scopes `bun test <path>`.
+const packageTestRunner = "bun ../../tooling/run-package-tests.ts";
+const bunTestPatterns = [
+	"**/*.{test,spec}.{js,jsx,ts,tsx}",
+	"**/*_{test,spec}.{js,jsx,ts,tsx}",
+];
+
+function runnerTestEntries(scripts: Record<string, unknown>): string[] {
+	const entries = Object.values(scripts).flatMap((script) => {
+		if (
+			typeof script !== "string" ||
+			!(
+				script === packageTestRunner ||
+				script.startsWith(`${packageTestRunner} `)
+			)
+		)
+			return [];
+		const targets = script
+			.slice(packageTestRunner.length)
+			.split(/\s+/)
+			.filter((arg) => arg !== "" && !arg.startsWith("-"));
+		if (targets.length === 0) return bunTestPatterns;
+		return targets.flatMap((target) =>
+			/[*{?]/.test(target) || /\.\w+$/.test(target)
+				? [target]
+				: bunTestPatterns.map(
+						(pattern) => `${target.replace(/\/+$/, "")}/${pattern}`,
+					),
+		);
+	});
+	return [...new Set(entries)];
+}
+
 function workspaceConfig(relativePath: string): Record<string, unknown> {
 	const dir = join(repositoryRoot, relativePath);
 	const localConfigPath = join(dir, "knip.json");
@@ -40,8 +75,12 @@ function workspaceConfig(relativePath: string): Record<string, unknown> {
 			.filter(([, version]) => String(version).startsWith("workspace:"))
 			.map(([name]) => name),
 	);
+	const testEntries = runnerTestEntries(
+		(manifest.scripts ?? {}) as Record<string, unknown>,
+	);
 	return {
 		...config,
+		...(testEntries.length > 0 ? { bun: { entry: testEntries } } : {}),
 		ignoreDependencies: [
 			...new Set([
 				...((ignoreDependencies as string[] | undefined) ?? []),
