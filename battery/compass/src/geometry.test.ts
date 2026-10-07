@@ -485,9 +485,56 @@ describe("deckSlotsIn", () => {
 
 	test("z rises toward the open Card from both sides, and the open Card is over all", () => {
 		const z = slotsOf("c").map((slot) => slot.z);
-		expect(z).toEqual([Z.deck, Z.deck + 1, Z.deck + 9, Z.deck + 1, Z.deck]);
+		expect(z).toEqual([
+			Z.deck + 7,
+			Z.deck + 8,
+			Z.deck + 9,
+			Z.deck + 8,
+			Z.deck + 7,
+		]);
 		const front = slotsOf("d").map((slot) => slot.z);
 		expect(front[1]).toBe(Math.max(...front));
+	});
+
+	describe.each([11, 25])("in a Deck of %i Cards", (count) => {
+		const many = Array.from({ length: count }, (_, index) => ({
+			id: `card-${index.toString()}`,
+			subject: index.toString(),
+		}));
+		const frontIds = [null, ...many.map((card) => card.id)];
+
+		test("every folded Card stays below the open Card and the drop zones", () => {
+			for (const frontId of frontIds) {
+				const slots = deckSlotsIn(PANE, many, frontId, REM, OPEN_SCALE);
+				const open = slots.find((slot) => slot.place === "open");
+				for (const slot of slots) {
+					expect(slot.z).toBeGreaterThanOrEqual(Z.deck);
+					expect(slot.z).toBeLessThan(Z.zone);
+					if (slot !== open)
+						expect(slot.z).toBeLessThan(open?.z ?? 0);
+				}
+			}
+		});
+
+		test("of two folded Cards that overlap, the one nearer the open Card is over", () => {
+			for (const frontId of frontIds) {
+				const slots = deckSlotsIn(PANE, many, frontId, REM, OPEN_SCALE);
+				const openAt = slots.findIndex((slot) => slot.place === "open");
+				slots.forEach((a, i) => {
+					slots.forEach((b, j) => {
+						const overlap =
+							a.box.top < b.box.top + b.box.height &&
+							b.box.top < a.box.top + a.box.height;
+						if (
+							i !== j &&
+							overlap &&
+							Math.abs(i - openAt) < Math.abs(j - openAt)
+						)
+							expect(a.z).toBeGreaterThan(b.z);
+					});
+				});
+			}
+		});
 	});
 
 	test("an empty Deck has no slots", () => {

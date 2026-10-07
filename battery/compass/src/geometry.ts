@@ -222,14 +222,20 @@ export type DeckSlot<S> = {
 	readonly z: number;
 };
 
+/** How far over `Z.deck` the open Card rests; its neighbours step down from it. */
+const OPEN_RISE = 9;
+
 /**
  * Where a Deck's resting Cards sit in a Pane, in drawing order: the last
  * in rank on top of the column, each slot one Heading row below the one
  * before, every slot as tall as the front Card. The Card `frontId` names
  * is open, or the first in rank when it names none of `cards`; the Cards
  * drawn before it are folded above it and the rest below. Their z rises
- * toward the open Card from both sides, and the open Card is over all of
- * them. A Card in hand is the renderer's to lift over the rest.
+ * toward the open Card from both sides, one step per slot, and the open
+ * Card is over all of them. Past `OPEN_RISE` slots away they all rest at
+ * `Z.deck`, which is safe: a Deck that long has slots one Heading row
+ * tall (`cardHeightPx`), so no two of them overlap. A Card in hand is the
+ * renderer's to lift over the rest.
  */
 export function deckSlotsIn<S>(
 	pane: Box,
@@ -257,13 +263,7 @@ export function deckSlotsIn<S>(
 				width: column.width,
 				height,
 			},
-			z:
-				Z.deck +
-				(place === "open"
-					? 9
-					: place === "above"
-						? index
-						: count - 1 - index),
+			z: Z.deck + Math.max(0, OPEN_RISE - Math.abs(index - openAt)),
 		};
 	});
 }
