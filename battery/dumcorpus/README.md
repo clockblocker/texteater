@@ -1,8 +1,9 @@
 # dumcorpus
 
-The golden corpus of the [Dumling](https://www.npmjs.com/package/dumling)
-spec: Spec Records of attested sentences, the classification Rules they
-follow, and the Authored Inventories of closed-class units.
+Dumcorpus connects the [Dumling](../dumling/README.md) model to real
+language: the golden corpus of Spec Records of attested sentences, the
+classification Rules they follow, and the Authored Inventories of
+closed-class units.
 
 Each record is one JSON file under `records/<language>/`, and its path without
 `.json` is its id. It holds the sentence and its Segments, and its targets.

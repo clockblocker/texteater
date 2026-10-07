@@ -1,7 +1,7 @@
 {
 	"name": "dumcorpus",
 	"version": "0.1.0",
-	"description": "The Dumling spec: Spec Records of attested sentences, the classification Rules they follow, and the authored closed-class inventories.",
+	"description": "The golden corpus, classification Rules and Authored Inventories that connect the Dumling model to real language.",
 	"type": "module",
 	"packageManager": "bun@1.4.2",
 	"license": "MIT",
