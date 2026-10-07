@@ -1,8 +1,5 @@
 {
 	"extends": "//",
-	"files": {
-		"includes": ["!src/lu/test.ts"]
-	},
 	"formatter": {
 		"includes": [
 			"**",
