@@ -12,8 +12,8 @@ import {
 	classifyResolutionFailure,
 	projectResolutionGenerationEvent,
 	type ResolutionGenerationEvent,
-	type ResolutionRunPhase,
 } from "./resolutionFailure";
+import type { ResolutionPhase } from "./resolutionLifecycle";
 
 type ResolutionCatalogMiss = Extract<
 	ResolveSegmentResult,
@@ -56,18 +56,18 @@ export type ResolutionSessionSettlement = {
 export type ResolutionSessionRunRecord =
 	| {
 			readonly kind: "Succeeded";
-			readonly phase: ResolutionRunPhase;
+			readonly phase: ResolutionPhase;
 			readonly generationEvents: readonly ResolutionGenerationEvent[];
 	  }
 	| {
 			readonly kind: "GenerationFailed";
-			readonly phase: ResolutionRunPhase;
+			readonly phase: ResolutionPhase;
 			readonly failure: GenerationFailure;
 			readonly generationEvents: readonly ResolutionGenerationEvent[];
 	  }
 	| {
 			readonly kind: "InternalFailed";
-			readonly phase: ResolutionRunPhase;
+			readonly phase: ResolutionPhase;
 			readonly diagnosticId: string;
 			readonly errorName: string;
 			readonly errorFingerprint: string;
@@ -123,7 +123,7 @@ export function executeResolutionSession({
 	diagnostics = console,
 	createDiagnosticId = () => crypto.randomUUID(),
 }: ResolutionSessionExecution) {
-	let phase: ResolutionRunPhase = "Route";
+	let phase: ResolutionPhase = "Route";
 	const generationEvents: ResolutionGenerationEvent[] = [];
 	return Effect.gen(function* () {
 		const onGenerationEvent = (event: GenerationEvent) => {

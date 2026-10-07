@@ -3,21 +3,20 @@ import type {
 	resolutionGenerationEventValidator,
 	safeGenerationFailureValidator,
 } from "../convex/model/validators";
+import { MAX_IDENTIFIER_LENGTH } from "./identifiers";
+import type { ResolutionPhase } from "./resolutionLifecycle";
+
 export type GenerationFailure = Infer<typeof safeGenerationFailureValidator>;
-export type GenerationEvent =
-	Infer<typeof resolutionGenerationEventValidator> extends infer Event
-		? Event extends unknown
-			? Omit<Event, "phase" | "requestId" | "runToken">
-			: never
-		: never;
-
-export type ResolutionRunPhase = "Route" | "Grammar" | "Reading" | "Commit";
-
-export type ResolutionGenerationEvent = GenerationEvent & {
-	readonly phase: ResolutionRunPhase;
-	readonly requestId: string;
-	readonly runToken: string;
-};
+/** A generation event as a Resolution Session stores it, tagged with its run. */
+export type ResolutionGenerationEvent = Infer<
+	typeof resolutionGenerationEventValidator
+>;
+/** A generation event as the model call reports it, before its run tags it. */
+export type GenerationEvent = ResolutionGenerationEvent extends infer Event
+	? Event extends unknown
+		? Omit<Event, "phase" | "requestId" | "runToken">
+		: never
+	: never;
 
 export type ClassifiedResolutionFailure =
 	| {
@@ -71,7 +70,7 @@ export function classifyResolutionFailure(
 export function projectResolutionGenerationEvent(
 	event: GenerationEvent,
 	context: {
-		readonly phase: ResolutionRunPhase;
+		readonly phase: ResolutionPhase;
 		readonly requestId: string;
 		readonly runToken: string;
 	},
@@ -141,61 +140,61 @@ function fnv1a(value: string): string {
 	return (hash >>> 0).toString(16).padStart(8, "0");
 }
 
+/**
+ * The bounds a stored Generation failure keeps. `safeGenerationFailure` drops
+ * (or, for attempts, zeroes) a field outside them, and
+ * `assertSafeGenerationFailure` rejects it, so a failure the classifier
+ * produced always passes the session's assertion.
+ */
+const isValidAttempts = (value: number): boolean =>
+	Number.isSafeInteger(value) && value >= 0 && value <= 10;
+const isValidStatus = (value: number): boolean =>
+	Number.isSafeInteger(value) && value >= 100 && value <= 599;
+const isValidRetryAfterMs = (value: number): boolean =>
+	Number.isSafeInteger(value) && value >= 0;
+const isValidMetadata = (value: string): boolean =>
+	value.length > 0 && value.length <= MAX_IDENTIFIER_LENGTH;
+
 function boundedAttempts(value: number): number {
-	return Number.isSafeInteger(value) && value >= 0 && value <= 10 ? value : 0;
+	return isValidAttempts(value) ? value : 0;
 }
 
 function safeStatus(value: number | undefined): number | undefined {
-	return value !== undefined &&
-		Number.isSafeInteger(value) &&
-		value >= 100 &&
-		value <= 599
-		? value
-		: undefined;
+	return value !== undefined && isValidStatus(value) ? value : undefined;
 }
 
 function safeRetryAfterMs(value: number | undefined): number | undefined {
-	return value !== undefined && Number.isSafeInteger(value) && value >= 0
+	return value !== undefined && isValidRetryAfterMs(value)
 		? value
 		: undefined;
 }
 
 function safeString(value: string | undefined): string | undefined {
-	return value && value.length <= 200 ? value : undefined;
+	return value !== undefined && isValidMetadata(value) ? value : undefined;
 }
 
 export function assertSafeGenerationFailure(failure: GenerationFailure): void {
-	if (
-		!Number.isSafeInteger(failure.attempts) ||
-		failure.attempts < 0 ||
-		failure.attempts > 10
-	) {
+	if (!isValidAttempts(failure.attempts)) {
 		throw new Error("Generation failure attempts are invalid.");
 	}
-	if (
-		failure.status !== undefined &&
-		(!Number.isSafeInteger(failure.status) ||
-			failure.status < 100 ||
-			failure.status > 599)
-	) {
+	if (failure.status !== undefined && !isValidStatus(failure.status)) {
 		throw new Error("Generation failure status is invalid.");
 	}
 	if (
 		failure.retryAfterMs !== undefined &&
-		(!Number.isSafeInteger(failure.retryAfterMs) ||
-			failure.retryAfterMs < 0)
+		!isValidRetryAfterMs(failure.retryAfterMs)
 	) {
 		throw new Error("Generation failure Retry-After is invalid.");
 	}
 	for (const value of [failure.providerCode, failure.providerRequestId]) {
-		if (value !== undefined && (value.length === 0 || value.length > 200)) {
+		if (value !== undefined && !isValidMetadata(value)) {
 			throw new Error("Generation failure metadata is invalid.");
 		}
 	}
 }
 
 export function publicFailureMessage(
-	phase: ResolutionRunPhase,
+	phase: ResolutionPhase,
 	category: GenerationFailure["category"],
 ): string {
 	const subject = phase === "Reading" ? "Reading generation" : "Resolution";

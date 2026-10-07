@@ -21,9 +21,9 @@ import { parseGermanLemma, parseGermanReading } from "./operationalParsing";
 import type {
 	GenerationEvent,
 	ResolutionGenerationEvent,
-	ResolutionRunPhase,
 } from "./resolutionFailure";
 import type { CatalogMissSignal, ResolvedGrammar } from "./resolutionGrammar";
+import type { ResolutionPhase } from "./resolutionLifecycle";
 import {
 	assertStoredSentence,
 	encounterSentenceOf,
@@ -89,7 +89,7 @@ export type CommitProgress = {
 		readonly readingResolution: ReadingResolution;
 	};
 	readonly succeeded?: {
-		readonly phase: ResolutionRunPhase;
+		readonly phase: ResolutionPhase;
 		readonly generationEvents: readonly ResolutionGenerationEvent[];
 	};
 };

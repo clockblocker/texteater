@@ -2,7 +2,9 @@ import type { Infer } from "convex/values";
 import { assertIdentifier } from "../../server/identifiers";
 import {
 	assertSafeGenerationFailure,
+	type GenerationFailure,
 	publicFailureMessage,
+	type ResolutionGenerationEvent,
 	safeFailureMessage,
 } from "../../server/resolutionFailure";
 import {
@@ -35,9 +37,7 @@ import { scheduleKnowledgeGeneration } from "./knowledgeScheduling";
 import { reconstructReusableAttestation } from "./resolutionLookup";
 import type {
 	readingCheckpointValidator,
-	resolutionGenerationEventValidator,
 	resolvedGrammaticalValidator,
-	safeGenerationFailureValidator,
 } from "./validators";
 import { ensureVisitorEncounter } from "./visitorClicks";
 
@@ -50,10 +50,6 @@ import { ensureVisitorEncounter } from "./visitorClicks";
  * applies that need no database live in `server/resolutionLifecycle.ts`.
  */
 
-type SafeGenerationFailure = Infer<typeof safeGenerationFailureValidator>;
-type ResolutionGenerationEvent = Infer<
-	typeof resolutionGenerationEventValidator
->;
 type ReadingCheckpoint = Infer<typeof readingCheckpointValidator>;
 type ResolutionSession = Doc<"resolutionSessions">;
 
@@ -549,7 +545,7 @@ export type ResolutionRunFailure =
 	| {
 			readonly kind: "Generation";
 			readonly phase: ResolutionPhase;
-			readonly failure: SafeGenerationFailure;
+			readonly failure: GenerationFailure;
 			readonly generationEvents?: readonly ResolutionGenerationEvent[];
 	  }
 	| {
@@ -762,7 +758,7 @@ export async function deleteResolutionSessions(
 type ResolutionRunUpdate = {
 	readonly phase: ResolutionPhase;
 	readonly state: "Running" | "Failed" | "Succeeded";
-	readonly failure?: SafeGenerationFailure;
+	readonly failure?: GenerationFailure;
 	readonly failureCode?: ResolutionFailureCode;
 	readonly diagnosticId?: string;
 	readonly errorName?: string;

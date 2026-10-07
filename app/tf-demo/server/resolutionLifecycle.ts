@@ -9,6 +9,7 @@ import type {
 	resolutionReadingProjectionValidator,
 	resolutionSessionGuardValidator,
 } from "../convex/model/validators";
+import { MAX_IDENTIFIER_LENGTH } from "./identifiers";
 
 /**
  * The Resolution Session's ctx-free rules: its lifecycle shape, the order its
@@ -149,8 +150,10 @@ export function phaseForProgress(
 }
 
 export function assertOperationalString(value: string, name: string): void {
-	if (value.length === 0 || value.length > 200) {
-		throw new Error(`${name} must contain 1 to 200 characters.`);
+	if (value.length === 0 || value.length > MAX_IDENTIFIER_LENGTH) {
+		throw new Error(
+			`${name} must contain 1 to ${MAX_IDENTIFIER_LENGTH} characters.`,
+		);
 	}
 }
 
