@@ -15,6 +15,8 @@ const src = resolve(import.meta.dir, "../../src");
 const lab = resolve(import.meta.dir, "../../lab");
 const segment = join(src, "segment");
 const allowedPackages = new Set([
+	// The root entry's small shared helpers: no files, no Zod.
+	"common-utils",
 	// Reads no files (dumcorpus ADR 0025).
 	"dumcorpus/inventories",
 	"dumcorpus/types",

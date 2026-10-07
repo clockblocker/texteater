@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import type {
 	Cover,
 	Deck,
@@ -208,8 +209,4 @@ function parsePresentation(
 	return typeof value.key === "string"
 		? { id: value.id, subject: value.subject, key: value.key }
 		: { id: value.id, subject: value.subject };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === "object" && value !== null && !Array.isArray(value);
 }

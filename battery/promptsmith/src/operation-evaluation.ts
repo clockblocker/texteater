@@ -1,3 +1,4 @@
+import { messageOf } from "common-utils";
 import type { z } from "zod";
 import type {
 	CaseSelection,
@@ -183,8 +184,7 @@ export async function runOperationExperiment<
 				? "Partial"
 				: "Success";
 		} catch (error) {
-			errorMessage =
-				error instanceof Error ? error.message : String(error);
+			errorMessage = messageOf(error);
 			const tag =
 				error && typeof error === "object" && "_tag" in error
 					? error._tag

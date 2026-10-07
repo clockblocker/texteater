@@ -1,3 +1,4 @@
+import { isRecord } from "common-utils";
 import { normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import {
@@ -8,7 +9,6 @@ import type { TextLanguage } from "../../shared/supported-target-language";
 import type { Id, TableNames } from "../_generated/dataModel";
 import type { MutationCtx } from "../_generated/server";
 import { syncDefinitionText } from "./definitionTexts";
-import { isRecord } from "./readingKnowledge";
 import { isLemmaRoute, type StructuralShadowAspect } from "./validators";
 
 export const MAX_STRUCTURAL_REFERENCES_PER_READING = 200;

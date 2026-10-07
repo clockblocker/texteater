@@ -1,10 +1,7 @@
+import { isRecord } from "common-utils";
 import { applyKnowledgeChange, parseReadingKnowledge } from "dumrel";
 import { parseGermanReading } from "../../server/operationalParsing";
 export type AnyRecord = Record<string, unknown>;
-
-export function isRecord(value: unknown): value is AnyRecord {
-	return value !== null && typeof value === "object" && !Array.isArray(value);
-}
 
 export function requireRecord(value: unknown, context: string): AnyRecord {
 	if (!isRecord(value)) throw new Error(`${context} must be an object.`);

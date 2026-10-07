@@ -64,6 +64,7 @@ import { execFileSync } from "node:child_process";
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { messageOf } from "common-utils";
 import { compareRuns, loadRun } from "promptsmith/storage";
 import {
 	defaultLabRoot,
@@ -610,6 +611,6 @@ async function parityOf(
 
 if (import.meta.main)
 	runEvaluationCli(process.argv.slice(2)).catch((error) => {
-		console.error(error instanceof Error ? error.message : String(error));
+		console.error(messageOf(error));
 		process.exitCode = 1;
 	});

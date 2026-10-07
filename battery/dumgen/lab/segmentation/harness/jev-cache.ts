@@ -29,7 +29,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import type { EntryType, Question, Questions } from "@typesafe-ai/sdk";
-import { canonicalJson } from "common-utils";
+import { canonicalJson, messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
 import { checkedAnswers } from "../../../src/jev-call.js";
 import type { Answer, Answers, Ask } from "../../../src/segment/ask.js";
@@ -248,9 +248,6 @@ const retryable = (error: unknown) => {
 		status >= 500
 	);
 };
-
-const messageOf = (error: unknown) =>
-	error instanceof Error ? error.message : String(error);
 
 function sleep(ms: number, signal: AbortSignal): Promise<void> {
 	return new Promise((resolve) => {

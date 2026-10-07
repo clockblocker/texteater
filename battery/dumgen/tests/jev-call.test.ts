@@ -36,7 +36,7 @@ const respond = (answers: JevResponse["answers"]): JevResponse => ({
 	usage: { input_tokens: 10, output_tokens: 3 },
 });
 
-const messageOf = (answers: JevResponse["answers"]) => {
+const rejectionOf = (answers: JevResponse["answers"]) => {
 	const checked = checkedAnswers("route", model, chunk, respond(answers));
 	expect(checked).toBeInstanceOf(InvalidModelOutput);
 	return checked instanceof InvalidModelOutput ? checked.message : "";
@@ -54,23 +54,23 @@ test("answers that fit their questions come back as the chunk's answers", () => 
 });
 
 test("a Noul answer without a finite number is InvalidModelOutput", () => {
-	expect(messageOf({ ...fitting, n: { type: "noul" } })).toBe(
+	expect(rejectionOf({ ...fitting, n: { type: "noul" } })).toBe(
 		"jev answered n with an answer that does not fit its question",
 	);
 	expect(
-		messageOf({ ...fitting, n: { type: "noul", noul: "0.8" } }),
+		rejectionOf({ ...fitting, n: { type: "noul", noul: "0.8" } }),
 	).toContain("jev answered n with an answer");
 });
 
 test("a Choice outside the question's criteria is InvalidModelOutput", () => {
 	expect(
-		messageOf({
+		rejectionOf({
 			...fitting,
 			c: { type: "choice", choice: "middle", ...weighed },
 		}),
 	).toBe("jev answered c with an answer that does not fit its question");
 	expect(
-		messageOf({
+		rejectionOf({
 			...fitting,
 			c: { type: "choice", choice: "toString", ...weighed },
 		}),
@@ -79,7 +79,7 @@ test("a Choice outside the question's criteria is InvalidModelOutput", () => {
 
 test("a Choice or score without its confidence and numeric probabilities is InvalidModelOutput, naming the first three", () => {
 	expect(
-		messageOf({
+		rejectionOf({
 			n: { type: "noul", noul: Number.NaN },
 			c: { type: "choice", choice: "left", confidence: 0.9 },
 			s: {
@@ -95,13 +95,13 @@ test("a Choice or score without its confidence and numeric probabilities is Inva
 });
 
 test("a missing, untyped or mistyped answer keeps its own message", () => {
-	expect(messageOf({ n: fitting.n, c: fitting.c })).toBe(
+	expect(rejectionOf({ n: fitting.n, c: fitting.c })).toBe(
 		"jev answered without s",
 	);
-	expect(messageOf({ ...fitting, n: 0.8 })).toBe(
+	expect(rejectionOf({ ...fitting, n: 0.8 })).toBe(
 		"jev answered n with another type than asked",
 	);
-	expect(messageOf({ ...fitting, s: fitting.n })).toBe(
+	expect(rejectionOf({ ...fitting, s: fitting.n })).toBe(
 		"jev answered s with another type than asked",
 	);
 });

@@ -7,6 +7,7 @@
  */
 
 import type { Question } from "@typesafe-ai/sdk";
+import { isRecord } from "common-utils";
 import * as Effect from "effect/Effect";
 import type { OperationScope } from "./call.js";
 import { InvalidModelOutput } from "./errors.js";
@@ -20,9 +21,6 @@ import {
 
 /** What an operation reaches jev with: the host's transport and the pinned version. */
 export type JevSettings = { readonly ask: JevAsk; readonly model: string };
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-	value !== null && typeof value === "object" && !Array.isArray(value);
 
 const isFiniteNumber = (value: unknown): value is number =>
 	typeof value === "number" && Number.isFinite(value);

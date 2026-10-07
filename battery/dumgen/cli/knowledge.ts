@@ -20,6 +20,7 @@
  */
 import { resolve } from "node:path";
 import { parseArgs } from "node:util";
+import { messageOf } from "common-utils";
 import type { OperationEvaluationRun } from "promptsmith/evaluation";
 import { loadRun } from "promptsmith/storage";
 import {
@@ -163,6 +164,6 @@ async function runKnowledgeCli(
 
 if (import.meta.main)
 	runKnowledgeCli(process.argv.slice(2)).catch((error) => {
-		console.error(error instanceof Error ? error.message : String(error));
+		console.error(messageOf(error));
 		process.exitCode = 1;
 	});

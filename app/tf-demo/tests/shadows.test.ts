@@ -7,6 +7,7 @@ import {
 	spyOn,
 	test,
 } from "bun:test";
+import { messageOf } from "common-utils";
 import { api, internal } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import type { MutationCtx } from "../convex/_generated/server";
@@ -325,7 +326,7 @@ describe("Shadow descriptor and storage seam", () => {
 				);
 				return null;
 			} catch (error) {
-				return error instanceof Error ? error.message : String(error);
+				return messageOf(error);
 			}
 		});
 		expect(failure).toContain("exactly language");

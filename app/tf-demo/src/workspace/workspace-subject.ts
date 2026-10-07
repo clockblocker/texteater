@@ -4,6 +4,7 @@
  * opened it. Their keys, and the guard Workspace Persistence reads them
  * back through.
  */
+import { isRecord } from "common-utils";
 import type { Id } from "../../convex/_generated/dataModel";
 import type {
 	AttestationNoteTarget,
@@ -241,8 +242,4 @@ export function activeAnalysisKeyOf(
 
 function isOptionalString(value: unknown): boolean {
 	return value === undefined || typeof value === "string";
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === "object" && value !== null;
 }

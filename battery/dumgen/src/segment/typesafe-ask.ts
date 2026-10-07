@@ -11,6 +11,7 @@
  * a rate limit from a bad request. The request ends at its deadline or
  * when the caller's signal aborts, whichever comes first.
  */
+import { isRecord, messageOf } from "common-utils";
 import type { JevAsk, JevResponse } from "./jev.js";
 
 /** The part of `fetch` the ask uses; the runtime's global by default. */
@@ -40,12 +41,6 @@ export type TypeSafeAskOptions = {
 	 */
 	readonly timeoutMs?: number;
 };
-
-const messageOf = (error: unknown) =>
-	error instanceof Error ? error.message : String(error);
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-	value !== null && typeof value === "object" && !Array.isArray(value);
 
 /**
  * The envelope of a System One answer: the model, the token counts, and an

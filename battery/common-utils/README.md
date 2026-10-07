@@ -1,9 +1,9 @@
 # common-utils
 
 `common-utils` holds the small TypeScript helpers several workspaces share:
-compile-time assertions for type tests, type-display helpers, `required` and
-`canonicalJson`. Two subpaths hold the compiled-validation machinery the Dum
-packages share.
+compile-time assertions for type tests, type-display helpers, `required`,
+`isRecord`, `messageOf` and `canonicalJson`. Two subpaths hold the
+compiled-validation machinery the Dum packages share.
 
 ```ts
 import { canonicalJson, type Equal, type Expect, required } from "common-utils";
@@ -21,6 +21,10 @@ canonicalJson({ b: 1, a: undefined, C: [2] }); // '{"C":[2],"b":1}'
   declarations show one object type.
 - `required` returns a present value or throws with the caller's invariant
   message.
+- `isRecord` narrows an unknown value to an object whose keys can be read: any
+  non-null object except an array.
+- `messageOf` reads a caught value's message: an `Error`'s own message, or
+  anything else as a string.
 - `canonicalJson` writes one JSON text per value, for hashes, cache keys,
   fingerprints and equality. Object keys sort by UTF-16 code unit, as RFC 8785
   sorts them, so the text is the same in every runtime; members holding

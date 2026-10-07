@@ -28,6 +28,7 @@
  * Batch API lines are sent and read exactly as these requests are.
  */
 
+import { isRecord, messageOf } from "common-utils";
 import type { LunaAsk, LunaRequest, LunaResponse } from "./luna.js";
 import type { Fetch } from "./segment/typesafe-ask.js";
 
@@ -49,9 +50,6 @@ export type OpenAILunaOptions = {
 	readonly promptCaching?: boolean;
 };
 
-const messageOf = (error: unknown) =>
-	error instanceof Error ? error.message : String(error);
-
 type ResponsesContent = {
 	readonly type: string;
 	readonly text?: string;
@@ -67,9 +65,6 @@ type ResponsesPayload = {
 	readonly usage?: unknown;
 	readonly model?: string;
 };
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-	value !== null && typeof value === "object" && !Array.isArray(value);
 
 const isOptionalString = (value: unknown): value is string | undefined =>
 	value === undefined || typeof value === "string";

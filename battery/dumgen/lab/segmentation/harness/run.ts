@@ -6,6 +6,7 @@
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { messageOf } from "common-utils";
 import * as Effect from "effect/Effect";
 import type { SegmentInUnitsOutput } from "../../evaluation/spec-corpus/segment-in-units.js";
 import type {
@@ -115,7 +116,7 @@ export async function runArm(args: {
 			return {
 				calls,
 				wallMs: performance.now() - started,
-				error: error instanceof Error ? error.message : String(error),
+				error: messageOf(error),
 			};
 		} finally {
 			done++;

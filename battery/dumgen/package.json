@@ -45,6 +45,7 @@
 	},
 	"dependencies": {
 		"@typesafe-ai/sdk": "^0.6.0",
+		"common-utils": "workspace:^",
 		"dumling": "workspace:^",
 		"dumrel": "workspace:^",
 		"dumcorpus": "workspace:^",
@@ -54,7 +55,6 @@
 		"@biomejs/biome": "2.5.13",
 		"@types/node": "^24.13.3",
 		"bun-types": "1.4.2",
-		"common-utils": "workspace:^",
 		"dependency-cruiser": "^18.1.0",
 		"esbuild": "^0.28.1",
 		"knip": "^6.29.0",

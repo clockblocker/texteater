@@ -20,6 +20,7 @@
  * synchronously does. Nothing is retried: a line that failed, or that the
  * batch never ran, comes back as a failure for its request alone.
  */
+import { messageOf } from "common-utils";
 import type { LunaRequest, LunaResponse } from "../../src/luna.js";
 import { lunaResponseOf, lunaResponsesBody } from "../../src/openai-luna.js";
 
@@ -120,9 +121,6 @@ type OutputLine = {
 		readonly message?: string;
 	} | null;
 };
-
-const messageOf = (error: unknown) =>
-	error instanceof Error ? error.message : String(error);
 
 /** The JSONL line one request becomes. */
 function batchLineOf(

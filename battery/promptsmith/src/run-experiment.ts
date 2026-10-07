@@ -1,3 +1,4 @@
+import { messageOf } from "common-utils";
 import { z } from "zod";
 import { assembleSystemPrompt } from "./authoring/assemble-system-prompt.js";
 import type {
@@ -41,10 +42,6 @@ type EvaluationExecutor = (
 		readonly signal?: AbortSignal;
 	},
 ) => Promise<{ readonly output: unknown; readonly metadata?: unknown }>;
-
-function message(error: unknown): string {
-	return error instanceof Error ? error.message : String(error);
-}
 
 /**
  * Revalidates selections before execution. Each selected case runs
@@ -123,7 +120,7 @@ export async function runExperiment<
 					? "Interrupted"
 					: "ProviderFailure",
 				durationMs: performance.now() - started,
-				error: message(error),
+				error: messageOf(error),
 			});
 		}
 		if (args.signal?.aborted)
@@ -172,7 +169,7 @@ export async function runExperiment<
 				...exchange,
 				status: "EvaluationFailure",
 				durationMs: performance.now() - started,
-				error: message(error),
+				error: messageOf(error),
 			});
 		}
 	}

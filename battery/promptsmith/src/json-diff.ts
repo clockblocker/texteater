@@ -1,3 +1,5 @@
+import { isRecord } from "common-utils";
+
 /** One differing JSON location. An absent side means the value is missing there. */
 export type JsonChange = {
 	/** `units[2].route.kind`; the empty string is the root value. */
@@ -15,10 +17,6 @@ export function diffJson(left: unknown, right: unknown): JsonChange[] {
 	const changes: JsonChange[] = [];
 	visit(left, right, "", changes);
 	return changes;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 function keyPath(path: string, key: string): string {

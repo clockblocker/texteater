@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join, posix, relative, resolve, sep } from "node:path";
 import { parseSync } from "@swc/core";
+import { messageOf } from "common-utils";
 import {
 	DUM_ENTRYPOINTS,
 	type DumEntryPoint,
@@ -290,7 +291,7 @@ export async function auditDumDeclarationReachability(
 			} catch (error) {
 				issues.push({
 					chain: current.chain,
-					detail: `cannot read or parse emitted declaration: ${error instanceof Error ? error.message : String(error)}`,
+					detail: `cannot read or parse emitted declaration: ${messageOf(error)}`,
 					entrypoint: entrypoint.specifier,
 					kind: "unresolved-declaration",
 				});

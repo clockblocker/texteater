@@ -14,6 +14,7 @@
  *   and waits until the transport settles, so every call that started has
  *   settled and been traced before its operation's trace is emitted.
  */
+import { messageOf } from "common-utils";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
@@ -79,9 +80,6 @@ export type OperationOptions = {
 	readonly payloads: boolean;
 	readonly onOperation?: (trace: OperationTrace) => void;
 };
-
-const messageOf = (error: unknown) =>
-	error instanceof Error ? error.message : String(error);
 
 /** The tag and message of a call's or a Sentence's failure. */
 export const callFailureOf = (

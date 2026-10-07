@@ -1,3 +1,4 @@
+import { isRecord, messageOf } from "common-utils";
 import type * as Dumling from "dumling/types";
 import { type ClickEncounter, validateClickEncounter } from "./clickEncounter";
 import { germanGovernorKinds, germanVerbalKinds } from "./germanEvidenceKinds";
@@ -64,10 +65,6 @@ function restoreFailure(reason: string): StoredGrammarRestore {
 	return { ok: false, reason };
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return value !== null && typeof value === "object" && !Array.isArray(value);
-}
-
 /** Resumes stored pre-cutover work without reclassifying or changing occurrence membership. */
 export function restoreStoredGrammar(input: {
 	encounter: unknown;
@@ -117,8 +114,6 @@ export function restoreStoredGrammar(input: {
 			}),
 		};
 	} catch (error) {
-		return restoreFailure(
-			error instanceof Error ? error.message : String(error),
-		);
+		return restoreFailure(messageOf(error));
 	}
 }
