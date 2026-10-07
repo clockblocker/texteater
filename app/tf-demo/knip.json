@@ -7,10 +7,19 @@
 		"live-pipeline/**/*.live.ts",
 		"playwright.live.config.ts",
 		"tooling/print-playground-snapshot.ts",
-		"tooling/resolution-inspector.ts"
+		"tooling/resolution-inspector.ts",
+		"convex/*.ts",
+		"convex/dumdictStorage/queries.ts"
 	],
+	"project": [
+		"**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}",
+		"!convex/_generated/**"
+	],
+	"convex": false,
 	"ignoreIssues": {
-		"playwright.live.config.ts": ["exports"]
+		"playwright.live.config.ts": ["exports"],
+		"convex/*.ts": ["exports"],
+		"convex/dumdictStorage/queries.ts": ["exports"]
 	},
 	"ignoreDependencies": []
 }
