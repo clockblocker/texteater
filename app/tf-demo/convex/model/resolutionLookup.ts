@@ -17,10 +17,7 @@ export function assertIndex(value: number, name: string): void {
 
 export function assertVisitorInput(visitorId: string, requestId: string): void {
 	assertIdentifier(visitorId, "visitorId");
-	assertNonEmpty(requestId, "requestId");
-	if (requestId.length > 200) {
-		throw new Error("requestId is limited to 200 characters.");
-	}
+	assertIdentifier(requestId, "requestId");
 }
 
 export async function requireClickableSegment(

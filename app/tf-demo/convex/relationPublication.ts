@@ -1,6 +1,7 @@
 import { type Infer, v } from "convex/values";
 import { derivePendingEntryId } from "dumdict/pending";
 import type * as Dumrel from "dumrel/types";
+import { MAX_IDENTIFIER_LENGTH } from "../server/identifiers";
 import { foldedCanonicalForm } from "../server/linguisticIdentity";
 
 import type { Doc } from "./_generated/dataModel";
@@ -591,7 +592,7 @@ export const recordReview = internalMutation({
 	handler: async (ctx, args) => {
 		const reviewer = args.reviewer.trim();
 		const note = args.note.trim();
-		if (reviewer.length === 0 || reviewer.length > 200)
+		if (reviewer.length === 0 || reviewer.length > MAX_IDENTIFIER_LENGTH)
 			throw new Error("A bounded reviewer identity is required.");
 		if (note.length === 0 || note.length > 2_000)
 			throw new Error("A bounded semantic review note is required.");
