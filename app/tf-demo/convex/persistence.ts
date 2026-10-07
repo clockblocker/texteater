@@ -1,7 +1,6 @@
 import { type Infer, type ObjectType, v } from "convex/values";
 import { authoredReading } from "dumcorpus/inventories";
 import { makeSurfaceId } from "dumdict/planning";
-import type * as Dumling from "dumling/types";
 import {
 	emojiDescriptionOf,
 	lemmaIdentityKey,
@@ -13,7 +12,7 @@ import {
 } from "../server/operationalParsing";
 import type { ResolutionSessionGuard } from "../server/resolutionLifecycle";
 import { assertSentenceUnits } from "../server/storedSegments";
-import type { Id } from "./_generated/dataModel";
+import type { Doc, Id } from "./_generated/dataModel";
 import {
 	internalMutation,
 	internalQuery,
@@ -469,37 +468,30 @@ export const persistResolvedClick = internalMutation({
 	},
 });
 
-/** The occurrence commit itself: the Segment's owner, the dictionary, the Attestation. */
-async function commitResolvedClick(
-	ctx: MutationCtx,
-	args: ObjectType<typeof resolvedClickCommitArgs>,
-): Promise<Infer<typeof resolvedClickCommitValidator>> {
-	assertNonEmpty(args.readingKey, "readingKey");
-	const {
-		session,
-		segment: clickedSegment,
-		existing: existingClick,
-	} = await openOccurrenceCommit(ctx, args);
-	// Segment Selection recorded the Visitor Encounter before the run, so
-	// an unresolved one is this session's own. A committed occurrence on
-	// the clicked Segment wins over this proposal (ADR-0004).
-	const committedAttestationId =
-		existingClick?.attestationId ??
-		clickedSegment.attestationMembership?.attestationId;
-	if (committedAttestationId) {
-		return reusedCommit(
-			await completeResolutionSession(
-				ctx,
-				session,
-				committedAttestationId,
-			),
-			existingClick,
-		);
-	}
-	if (
-		readingIdentityKey(args.reading as Dumling.Reading<"de">) !==
-		args.readingKey
-	) {
+/** The proposal fields a resolved click's identity and member checks read. */
+type ResolvedClickProposal = {
+	readonly readingKey: string;
+	readonly reading: { readonly lemma: unknown };
+	readonly occurrence: {
+		readonly lemmaKey: string;
+		readonly memberSegmentIndices: readonly number[];
+		readonly attestation: {
+			readonly surface: { readonly lemma: unknown };
+			readonly members: readonly unknown[];
+		};
+	};
+};
+
+type ResolvedClickArgs = ObjectType<typeof resolvedClickCommitArgs>;
+
+/**
+ * A resolved click proposal's own consistency: its Reading matches
+ * `readingKey`, its Reading and Attestation Surface share the proposed Lemma,
+ * and its member Segment indices are ordered, unique and one per attested
+ * member.
+ */
+export function assertResolvedClickProposal(args: ResolvedClickProposal): void {
+	if (readingIdentityKey(args.reading) !== args.readingKey) {
 		throw new Error(
 			"readingKey does not match the selected Reading identity.",
 		);
@@ -513,13 +505,11 @@ async function commitResolvedClick(
 			"Attestation Surface and Reading must share the proposed Lemma.",
 		);
 	}
-
 	const memberIndices = args.occurrence.memberSegmentIndices;
-	const attestedMembers = args.occurrence.attestation.members;
 	if (memberIndices.length === 0) {
 		throw new Error("An Attestation needs at least one member Segment.");
 	}
-	if (memberIndices.length !== attestedMembers.length) {
+	if (memberIndices.length !== args.occurrence.attestation.members.length) {
 		throw new Error(
 			"Attestation members must match member Segment indices.",
 		);
@@ -534,6 +524,18 @@ async function commitResolvedClick(
 		}
 		previous = index;
 	}
+}
+
+/**
+ * The member Segments the proposal names, each a ResolvableText Segment
+ * whose text is its attested letters, among them the clicked Segment.
+ */
+async function loadAttestationMembers(
+	ctx: MutationCtx,
+	args: ResolvedClickArgs,
+) {
+	const memberIndices = args.occurrence.memberSegmentIndices;
+	const attestedMembers = args.occurrence.attestation.members;
 	const queriedMembers = await Promise.all(
 		memberIndices.map((index) =>
 			ctx.db
@@ -561,6 +563,86 @@ async function commitResolvedClick(
 	if (!memberIndices.includes(args.clickedSegmentIndex)) {
 		throw new Error("The Attestation must contain the clicked Segment.");
 	}
+	return members;
+}
+
+/** Inserts the Attestation and makes each member Segment one of its members. */
+async function insertAttestation(
+	ctx: MutationCtx,
+	args: ResolvedClickArgs,
+	surfaceId: Id<"surfaces">,
+	readingId: Id<"readings">,
+	members: readonly Doc<"segments">[],
+): Promise<Id<"attestations">> {
+	const { attestation } = args.occurrence;
+	const attestationId = await ctx.db.insert("attestations", {
+		...(attestation.expletiveEvidence === undefined
+			? {}
+			: { expletiveEvidence: attestation.expletiveEvidence }),
+		...(attestation.valencyEvidence === undefined
+			? {}
+			: { valencyEvidence: attestation.valencyEvidence }),
+		...(attestation.articleEvidence === undefined
+			? {}
+			: { articleEvidence: attestation.articleEvidence }),
+		surfaceId,
+		readingId,
+		realizationCoverage: attestation.realizationCoverage,
+	});
+	await Promise.all(
+		members.map((member, memberPosition) => {
+			const attested = attestation.members[memberPosition];
+			if (!attested)
+				throw new Error("Missing Attestation member evidence.");
+			return ctx.db.patch(member._id, {
+				resolutionState: undefined,
+				attestationMembership:
+					attested.orthography === "Fused"
+						? {
+								attestationId,
+								orthography: attested.orthography,
+								fusion: attested.fusion,
+								component: attested.component,
+							}
+						: {
+								attestationId,
+								orthography: attested.orthography,
+							},
+			});
+		}),
+	);
+	return attestationId;
+}
+
+/** The occurrence commit itself: the Segment's owner, the dictionary, the Attestation. */
+async function commitResolvedClick(
+	ctx: MutationCtx,
+	args: ResolvedClickArgs,
+): Promise<Infer<typeof resolvedClickCommitValidator>> {
+	assertNonEmpty(args.readingKey, "readingKey");
+	const {
+		session,
+		segment: clickedSegment,
+		existing: existingClick,
+	} = await openOccurrenceCommit(ctx, args);
+	// Segment Selection recorded the Visitor Encounter before the run, so
+	// an unresolved one is this session's own. A committed occurrence on
+	// the clicked Segment wins over this proposal (ADR-0004).
+	const committedAttestationId =
+		existingClick?.attestationId ??
+		clickedSegment.attestationMembership?.attestationId;
+	if (committedAttestationId) {
+		return reusedCommit(
+			await completeResolutionSession(
+				ctx,
+				session,
+				committedAttestationId,
+			),
+			existingClick,
+		);
+	}
+	assertResolvedClickProposal(args);
+	const members = await loadAttestationMembers(ctx, args);
 	const conflictingAttestationIds = [
 		...new Set(
 			members.flatMap((member) =>
@@ -655,50 +737,12 @@ async function commitResolvedClick(
 		throw new Error("Attestation Surface Lemma does not match lemmaKey.");
 	}
 
-	const attestationId = await ctx.db.insert("attestations", {
-		...(args.occurrence.attestation.expletiveEvidence === undefined
-			? {}
-			: {
-					expletiveEvidence:
-						args.occurrence.attestation.expletiveEvidence,
-				}),
-		...(args.occurrence.attestation.valencyEvidence === undefined
-			? {}
-			: {
-					valencyEvidence:
-						args.occurrence.attestation.valencyEvidence,
-				}),
-		...(args.occurrence.attestation.articleEvidence === undefined
-			? {}
-			: {
-					articleEvidence:
-						args.occurrence.attestation.articleEvidence,
-				}),
-		surfaceId: surface._id,
-		readingId: reading._id,
-		realizationCoverage: args.occurrence.attestation.realizationCoverage,
-	});
-	await Promise.all(
-		members.map((member, memberPosition) => {
-			const attested = attestedMembers[memberPosition];
-			if (!attested)
-				throw new Error("Missing Attestation member evidence.");
-			return ctx.db.patch(member._id, {
-				resolutionState: undefined,
-				attestationMembership:
-					attested.orthography === "Fused"
-						? {
-								attestationId,
-								orthography: attested.orthography,
-								fusion: attested.fusion,
-								component: attested.component,
-							}
-						: {
-								attestationId,
-								orthography: attested.orthography,
-							},
-			});
-		}),
+	const attestationId = await insertAttestation(
+		ctx,
+		args,
+		surface._id,
+		reading._id,
+		members,
 	);
 	await advanceMemberEncounters(ctx, {
 		segmentIds: members.map(({ _id }) => _id),
