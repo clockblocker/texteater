@@ -4,6 +4,7 @@ import {
 	packageOwnFiles,
 	splitTypeCheckOutput,
 	typeCheckArgs,
+	uncoveredFiles,
 } from "../lib/package-types";
 
 const base = {
@@ -68,4 +69,30 @@ test("listed files are split from diagnostics and kept to the package", () => {
 	expect(packageOwnFiles(listedFiles, "/repo/app/demo")).toEqual([
 		"/repo/app/demo/src/a.ts",
 	]);
+});
+
+test("a package TypeScript file in no checked project is uncovered", () => {
+	const packageFiles = [
+		"/repo/app/demo/tests/b.test.ts",
+		"/repo/app/demo/src/a.ts",
+		"/repo/app/demo/src/view.tsx",
+		"/repo/app/demo/tooling/run.mts",
+		"/repo/app/demo/tooling/legacy.cts",
+		"/repo/app/demo/src/env.d.ts",
+		"/repo/app/demo/src/shim.d.mts",
+		"/repo/app/demo/README.md",
+		"/repo/app/demo/scripts/build.js",
+	];
+	const checkedFiles = [
+		"/repo/app/demo/src/a.ts",
+		"/repo/app/demo/tooling/run.mts",
+		"/repo/battery/lib/src/b.ts",
+	];
+
+	expect(uncoveredFiles(packageFiles, checkedFiles)).toEqual([
+		"/repo/app/demo/src/view.tsx",
+		"/repo/app/demo/tests/b.test.ts",
+		"/repo/app/demo/tooling/legacy.cts",
+	]);
+	expect(uncoveredFiles(packageFiles.slice(1, 2), checkedFiles)).toEqual([]);
 });

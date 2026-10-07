@@ -24,6 +24,7 @@
 	},
 	"include": [
 		"vite.config.ts",
+		"convex/convex.config.ts",
 		"playwright.config.ts",
 		"e2e/**/*.ts",
 		"playwright.live.config.ts",

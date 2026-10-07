@@ -77,3 +77,27 @@ export function packageOwnFiles(
 	}
 	return [...own];
 }
+
+const typeScriptFile = /\.(?:[cm]?ts|tsx)$/;
+const declarationFile = /\.d\.[cm]?ts$/;
+
+/**
+ * The package's TypeScript files that no checked project lists, sorted. Every
+ * `.ts`, `.tsx`, `.mts` and `.cts` file counts except declaration files, which
+ * a program lists only when something reaches them. There is no allowlist: a
+ * file that should go unchecked should not be TypeScript.
+ */
+export function uncoveredFiles(
+	packageFiles: string[],
+	checkedFiles: string[],
+): string[] {
+	const checked = new Set(checkedFiles);
+	return packageFiles
+		.filter(
+			(file) =>
+				typeScriptFile.test(file) &&
+				!declarationFile.test(file) &&
+				!checked.has(file),
+		)
+		.sort();
+}

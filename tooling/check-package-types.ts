@@ -1,11 +1,12 @@
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import {
 	hasProjectReferences,
 	packageOwnFiles,
 	splitTypeCheckOutput,
 	typeCheckArgs,
+	uncoveredFiles,
 } from "./lib/package-types";
 import { toolPaths } from "./lib/tools";
 import { findRepositoryRoot } from "./lib/workspaces";
@@ -39,16 +40,47 @@ const [output, exitCode] = await Promise.all([
 const { diagnostics, listedFiles } = splitTypeCheckOutput(output, existsSync);
 if (diagnostics.length > 0) console.log(diagnostics.join("\n"));
 
-const checkedFiles = packageOwnFiles(listedFiles, packageDir).length;
+const checkedFiles = packageOwnFiles(listedFiles, packageDir);
 if (exitCode !== 0) {
 	process.exitCode = exitCode;
-} else if (checkedFiles === 0) {
+} else if (checkedFiles.length === 0) {
 	console.error(
 		`${tsconfig} type-checked no files of this package. Give it "include" or "files", or "references" to projects that have them.`,
 	);
 	process.exitCode = 1;
 } else {
-	console.log(
-		`Type-checked ${checkedFiles} package files (${hasReferences ? "tsc -b" : "tsc -p"}).`,
+	const uncovered = uncoveredFiles(await packageFiles(), checkedFiles);
+	if (uncovered.length > 0) {
+		console.error(
+			[
+				`These TypeScript files of this package are in none of the projects ${tsconfig} checks. Include each in one:`,
+				...uncovered.map((file) => `  ${relative(packageDir, file)}`),
+			].join("\n"),
+		);
+		process.exitCode = 1;
+	} else {
+		console.log(
+			`Type-checked ${checkedFiles.length} package files (${hasReferences ? "tsc -b" : "tsc -p"}).`,
+		);
+	}
+}
+
+/** Tracked and untracked-but-not-ignored files under the package, as absolute paths. */
+async function packageFiles(): Promise<string[]> {
+	const git = Bun.spawn(
+		["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+		{ cwd: packageDir, stdout: "pipe", stderr: "inherit" },
 	);
+	const [listing, gitExitCode] = await Promise.all([
+		new Response(git.stdout).text(),
+		git.exited,
+	]);
+	if (gitExitCode !== 0) {
+		throw new Error(`git ls-files exited with ${gitExitCode}`);
+	}
+	return listing
+		.split("\0")
+		.filter((path) => path !== "")
+		.map((path) => join(packageDir, path))
+		.filter((file) => existsSync(file));
 }
