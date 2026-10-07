@@ -1,16 +1,20 @@
 import { expect, test } from "bun:test";
+import { authoredMembers } from "dumcorpus/inventories";
 import {
 	drShortenings,
 	rShortenings,
 } from "../../src/resolve/de/member-spelling.js";
 import {
+	auxiliaryFeatures,
+	auxiliaryUse,
 	bareWWords,
 	reflexives,
 	suppletivePositive,
 } from "../../src/resolve/de/open-route.js";
+import { auxiliaryUses } from "../../src/resolve/de/prompts.js";
 
-// Resolution's tables read from dumcorpus/inventories (#978), each pinned
-// to the hand-typed table it replaced. Only draus and drunter are new.
+// Resolution's tables read from dumcorpus/inventories (#978, #979), each
+// pinned to the hand-typed table it replaced. Only draus and drunter are new.
 
 test("the r- shorthands are the hand-typed ones", () => {
 	expect(rShortenings).toEqual({
@@ -69,5 +73,26 @@ test("a lexical reflexive shows the hand-typed case", () => {
 	});
 	expect([...reflexives.keys()].sort()).toEqual(
 		["sich", "uns", "euch", "mich", "dich", "mir", "dir"].sort(),
+	);
+});
+
+test("each auxiliary use makes the hand-typed Surface features", () => {
+	expect(Object.fromEntries(auxiliaryFeatures)).toEqual({
+		"haben 🏁": { perfect: "Yes" },
+		"sein 🏁": { perfect: "Yes" },
+		"werden 🔮": { future: "Yes" },
+		"werden 🔄": { passive: "Process", voice: "Pass" },
+		"bekommen 🎁": { passive: "Recipient", voice: "Pass" },
+		"lassen 🗣👉": { voice: "Cau" },
+	});
+});
+
+test("the AUX question's prompt text names exactly the authored AUX uses", () => {
+	// A re-emojied AUX member would otherwise drop out of the question.
+	expect(Object.keys(auxiliaryUses).sort()).toEqual(
+		authoredMembers
+			.filter(({ lemma }) => lemma.kind === "AUX")
+			.map(auxiliaryUse)
+			.sort(),
 	);
 });

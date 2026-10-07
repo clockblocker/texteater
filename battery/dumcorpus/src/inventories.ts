@@ -9,7 +9,8 @@
  * reviewed pronoun and determiner paradigms, the closed verb forms and their
  * participles, the clitic spellings of es, the separable and inseparable
  * verb prefixes, the colloquial r- and dr- adverb shorthands, the suppletive
- * comparisons, and the reflexive drill-down.
+ * comparisons, the Surface features each AUX use sets, and the reflexive
+ * drill-down.
  * The authored members include the pronoun
  * Syncretisms generated from the pronoun cells (system ADR 0046). It also
  * exports German lookups: the ADP Case Table, its governable prepositions and
@@ -56,6 +57,7 @@ export {
 	germanArticleCell,
 	germanArticleSpellings,
 } from "./inventories/de/article-cells.js";
+export { auxiliarySurfaceFeatures } from "./inventories/de/auxiliary-surface-features.js";
 export {
 	closedVerbFormSpellings,
 	closedVerbForms,

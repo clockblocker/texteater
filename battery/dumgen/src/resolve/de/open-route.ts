@@ -17,8 +17,10 @@
 
 import {
 	type ArticleMember,
+	type AuthoredMember,
 	authoredMembers,
 	authoredRealizations,
+	auxiliarySurfaceFeatures,
 	germanAdpositionAllowedCases,
 	germanAdpositionEntry,
 	germanArticleCell,
@@ -238,6 +240,10 @@ function casesBeforeAgreement(article: ArticleMember): readonly string[] {
 		: [];
 }
 
+/** An authored AUX Reading's use, by Canonical Form and Emoji Description (`werden 🔄`). */
+export const auxiliaryUse = ({ lemma, reading }: AuthoredMember) =>
+	`${lemma.canonicalForm} ${reading.emojiDescription}`;
+
 /** The authored AUX uses a member's spelling realizes, by Canonical Form and Emoji Description. */
 function auxiliaryUsesOf(member: Member): readonly string[] {
 	const spelled = fold(member.text);
@@ -249,23 +255,21 @@ function auxiliaryUsesOf(member: Member): readonly string[] {
 						realization.member.lemma.kind === "AUX" &&
 						fold(realization.spelled) === spelled,
 				)
-				.map(
-					({ member: authored }) =>
-						`${authored.lemma.canonicalForm} ${authored.reading.emojiDescription}`,
-				),
+				.map(({ member: authored }) => auxiliaryUse(authored)),
 		),
 	].filter((use) => use in auxiliaryUses);
 }
 
-/** The Surface features an auxiliary's use makes (ADR 0022, ADR 0026). */
-const auxiliaryFeatures: Readonly<Record<string, Values>> = {
-	"haben 🏁": { perfect: "Yes" },
-	"sein 🏁": { perfect: "Yes" },
-	"werden 🔮": { future: "Yes" },
-	"werden 🔄": { passive: "Process", voice: "Pass" },
-	"bekommen 🎁": { passive: "Recipient", voice: "Pass" },
-	"lassen 🗣👉": { voice: "Cau" },
-};
+/**
+ * The Surface features an auxiliary's use makes (ADR 0022, ADR 0026), by
+ * use, as dumcorpus authors them for its AUX members.
+ */
+export const auxiliaryFeatures: ReadonlyMap<string, Values> = new Map(
+	auxiliarySurfaceFeatures.map(({ member, features }) => [
+		auxiliaryUse(member),
+		features,
+	]),
+);
 
 /**
  * Each form a lexical reflexive takes, with the case it shows: the one case
@@ -898,7 +902,7 @@ function verbalInflection(
 		if (answer === "Main") continue;
 		const use = uses[Number(answer.slice(1))];
 		for (const [feature, value] of Object.entries(
-			(use && auxiliaryFeatures[use]) ?? {},
+			(use && auxiliaryFeatures.get(use)) ?? {},
 		)) {
 			if (composition[feature] !== null && composition[feature] !== value)
 				throw new UnresolvedAnswer(
