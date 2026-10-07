@@ -1199,6 +1199,37 @@ test("perfect, future and passive come from the auxiliaries' uses; a Locution VE
 	expect(jev.questions("grammar")).not.toContain("prefix");
 });
 
+test("a subject es whose verb jev answers in the plural makes the click Unresolved", async () => {
+	// Es0 _1 regnet2 .3
+	const answers = {
+		verbForm: "Fin",
+		mood: "Ind",
+		tense: "Pres",
+		person: "3",
+	};
+	const click = (number: string) =>
+		resolveOnce(
+			{
+				jev: fakeJev({ ...answers, number }).ask,
+				luna: writes("regnen").ask,
+			},
+			{
+				sentence: sentenceOf("Es regnet."),
+				unit: unitOf([0, 2], "Lexeme", "VERB"),
+			},
+		);
+	const singular = await click("Sing");
+	expect(
+		attested(singular.result).surface.inflectionalFeatures,
+	).toMatchObject({ expletive: "Subject", number: "Sing" });
+	const plural = await click("Plur");
+	expect(plural.result).toEqual({ _tag: "Unresolved" });
+	expect(plural.trace?.resolution).toEqual({
+		outcome: "Unresolved",
+		reason: "The subject es clashes with the verb's agreement",
+	});
+});
+
 // Locutions and Sayings (ADR 0039), Fused members (ADR 0035), member roles (ADR 0041).
 
 test("a Saying resolves with its coverage and fused pieces spelled as written", async () => {

@@ -202,12 +202,13 @@ export const resolveGermanGrammar = Effect.fnUntraced(function* (
 		scope.resolution({ outcome: "CatalogMiss", reason: outcome.message });
 		return { _tag: "CatalogMiss", route, message: outcome.message };
 	}
+	// Answers that clash are read as Unresolved before this point, so an
+	// Attestation Dumling rejects is Dumgen's own bug: a Defect (#952).
 	const parsed = parseUnit(outcome.attestation);
 	if (!parsed.success)
-		return yield* new InvalidModelOutput({
-			stage: "attestation",
-			message: `The answers make no valid Attestation: ${parsed.error.message}`,
-		});
+		throw Error(
+			`Dumgen built an Attestation Dumling rejects: ${parsed.error.message}`,
+		);
 	const { chain } = parsed;
 	if (
 		chain.unitKind !== "Attestation" ||

@@ -882,10 +882,20 @@ function verbalInflection(
 	const verbForm = answered.pick("verbForm");
 	const finite = verbForm === "Fin";
 	const mood = finite ? answered.pick("mood") : null;
+	const number = finite ? answered.pick("number") : null;
+	const person = finite ? answered.pick("person") : null;
+	// A subject es takes a finite verb in the 3rd person singular, never
+	// an imperative: jev's agreement against it is a clash of answers.
+	if (expletive && finite && (person !== "3" || number !== "Sing"))
+		throw new UnresolvedAnswer(
+			"The subject es clashes with the verb's agreement",
+		);
+	if (expletive && mood === "Imp")
+		throw new UnresolvedAnswer("The subject es clashes with an imperative");
 	return {
 		mood,
-		number: finite ? answered.pick("number") : null,
-		person: finite ? answered.pick("person") : null,
+		number,
+		person,
 		tense: finite && mood !== "Imp" ? answered.pick("tense") : null,
 		verbForm,
 		...(verbForm === "Part"
@@ -1156,6 +1166,14 @@ function readFirst(
 		shape.coverage && answered.pick("coverage") === "Partial"
 			? "Partial"
 			: "Full";
+	// A subject es is evidence only of a used verb, in a complete
+	// realization: jev's citation or Partial against it is a clash.
+	if (expletive && cited)
+		throw new UnresolvedAnswer("The subject es clashes with a citation");
+	if (expletive && coverage === "Partial")
+		throw new UnresolvedAnswer(
+			"The subject es clashes with a partial realization",
+		);
 	const governed: Values[] = [];
 	const governedPositions: number[] = [];
 	for (const chosen of planned.governable) {
