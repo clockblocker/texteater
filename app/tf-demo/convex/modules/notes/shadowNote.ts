@@ -240,16 +240,66 @@ export async function loadShadowNoteReferences(
 		: null;
 }
 
+type PendingReferenceRow = Pick<
+	Doc<"pendingSemanticRelations">,
+	| "_id"
+	| "locatorKey"
+	| "sourceReadingKey"
+	| "targetFoldedCanonicalForm"
+	| "shadowId"
+	| "record"
+>;
+type StructuralReferenceRow = Pick<
+	Doc<"structuralShadowReferences">,
+	"ownerReadingKey" | "locatorKey" | "aspect" | "path"
+>;
+
+/** One page of a Shadow's reference rows, from one of its two tables. */
+type ShadowReferenceRows = {
+	readonly pendingRows: readonly PendingReferenceRow[];
+	readonly structuralRows: readonly StructuralReferenceRow[];
+	readonly continueCursor: string;
+	readonly isDone: boolean;
+};
+
+/** An owner Reading's stored rows; null where a row is missing. */
+type ShadowReferenceOwner = {
+	readonly reading: Pick<Doc<"readings">, "_id" | "emojiDescription"> | null;
+	readonly lemma: Pick<Doc<"lemmas">, "family" | "canonicalForm"> | null;
+	readonly knowledge: Pick<
+		Doc<"accumulatedKnowledge">,
+		"_id" | "knowledge"
+	> | null;
+};
+
+type ShadowReferenceGroup = {
+	reading: {
+		readingId: Id<"readings">;
+		canonicalForm: string;
+		emojiDescription: string;
+		target: { kind: "Reading"; readingId: Id<"readings"> };
+	};
+	pendingRelations: {
+		locatorKey: string;
+		relation: Dumrel.SemanticRelation;
+	}[];
+	structuralReferences: { aspect: StructuralShadowAspect; path: string }[];
+};
+
+type WarnMalformedStoredRow = typeof warnMalformedStoredRow;
+
+/** The stored Shadow a page's references must fit. */
+type ShadowValue = Omit<Doc<"shadows">, "_creationTime">;
+
 /**
- * One page of the Readings that refer to the Shadow, grouped by Reading.
- * Null when the Shadow has no references or a reference no longer matches.
+ * One page of the Shadow's reference rows: its pending rows first, then its
+ * structural rows, each table paged in turn. Null when it has neither.
  */
-async function loadShadowReferencePage(
+async function readShadowReferenceRows(
 	ctx: QueryCtx,
-	shadow: Doc<"shadows">,
+	shadowId: Id<"shadows">,
 	contextCursor?: string,
-) {
-	const shadowId = shadow._id;
+): Promise<ShadowReferenceRows | null> {
 	const [firstPending, firstStructural] = await Promise.all([
 		ctx.db
 			.query("pendingSemanticRelations")
@@ -267,10 +317,6 @@ async function loadShadowReferencePage(
 		: firstPending.length > 0
 			? { kind: "pending" as const, cursor: null }
 			: { kind: "structural" as const, cursor: null };
-	let pendingRows: typeof firstPending = [];
-	let structuralRows: typeof firstStructural = [];
-	let continueCursor = "";
-	let isDone = false;
 	if (cursor.kind === "pending") {
 		const result = await ctx.db
 			.query("pendingSemanticRelations")
@@ -279,42 +325,58 @@ async function loadShadowReferencePage(
 				cursor: cursor.cursor,
 				numItems: SHADOW_REFERENCE_PAGE_SIZE,
 			});
-		pendingRows = result.page;
-		if (!result.isDone) {
-			continueCursor = shadowReferenceCursor({
-				kind: "pending",
-				cursor: result.continueCursor,
-			});
-		} else if (firstStructural.length > 0) {
-			continueCursor = shadowReferenceCursor({
-				kind: "structural",
-				cursor: null,
-			});
-		} else isDone = true;
-	} else {
-		const result = await ctx.db
-			.query("structuralShadowReferences")
-			.withIndex("by_shadow_id", (q) => q.eq("shadowId", shadowId))
-			.paginate({
-				cursor: cursor.cursor,
-				numItems: SHADOW_REFERENCE_PAGE_SIZE,
-			});
-		structuralRows = result.page;
-		isDone = result.isDone;
-		continueCursor = result.isDone
+		const continueCursor = !result.isDone
+			? shadowReferenceCursor({
+					kind: "pending",
+					cursor: result.continueCursor,
+				})
+			: firstStructural.length > 0
+				? shadowReferenceCursor({ kind: "structural", cursor: null })
+				: "";
+		return {
+			pendingRows: result.page,
+			structuralRows: [],
+			continueCursor,
+			isDone: result.isDone && firstStructural.length === 0,
+		};
+	}
+	const result = await ctx.db
+		.query("structuralShadowReferences")
+		.withIndex("by_shadow_id", (q) => q.eq("shadowId", shadowId))
+		.paginate({
+			cursor: cursor.cursor,
+			numItems: SHADOW_REFERENCE_PAGE_SIZE,
+		});
+	return {
+		pendingRows: [],
+		structuralRows: result.page,
+		continueCursor: result.isDone
 			? ""
 			: shadowReferenceCursor({
 					kind: "structural",
 					cursor: result.continueCursor,
-				});
-	}
+				}),
+		isDone: result.isDone,
+	};
+}
 
-	const ownerReadingKeys = [
+/** The Readings owning the page's rows, once each, in key order. */
+function ownerReadingKeysOf(rows: ShadowReferenceRows): string[] {
+	return [
 		...new Set([
-			...pendingRows.map(({ sourceReadingKey }) => sourceReadingKey),
-			...structuralRows.map(({ ownerReadingKey }) => ownerReadingKey),
+			...rows.pendingRows.map(({ sourceReadingKey }) => sourceReadingKey),
+			...rows.structuralRows.map(
+				({ ownerReadingKey }) => ownerReadingKey,
+			),
 		]),
 	].sort();
+}
+
+/** Each owner Reading with its Lemma and Accumulated Knowledge, by Reading key. */
+async function loadShadowReferenceOwners(
+	ctx: QueryCtx,
+	ownerReadingKeys: readonly string[],
+): Promise<Map<string, ShadowReferenceOwner>> {
 	const readings = await Promise.all(
 		ownerReadingKeys.map((ownerReadingKey) =>
 			ctx.db
@@ -342,38 +404,109 @@ async function loadShadowReferencePage(
 			),
 		),
 	]);
-
-	const ownerIndex = new Map(
+	return new Map(
 		ownerReadingKeys.map((ownerReadingKey, index) => [
 			ownerReadingKey,
-			index,
+			{
+				reading: readings[index] ?? null,
+				lemma: lemmas[index] ?? null,
+				knowledge: accumulated[index] ?? null,
+			},
 		]),
 	);
-	const groups = new Map<
-		string,
-		{
-			reading: {
-				readingId: Id<"readings">;
-				canonicalForm: string;
-				emojiDescription: string;
-				target: {
-					kind: "Reading";
-					readingId: Id<"readings">;
-				};
-			};
-			pendingRelations: {
-				locatorKey: string;
-				relation: Dumrel.SemanticRelation;
-			}[];
-			structuralReferences: {
-				aspect: StructuralShadowAspect;
-				path: string;
-			}[];
-		}
-	>();
-	for (const [index, ownerReadingKey] of ownerReadingKeys.entries()) {
-		const reading = readings[index];
-		const lemma = lemmas[index];
+}
+
+/**
+ * The pending row's relation when it projects to exactly one relation for
+ * this Shadow and its target descriptor fits the Shadow; null otherwise.
+ */
+function checkPendingRow(
+	shadow: ShadowValue,
+	row: PendingReferenceRow,
+	warn: WarnMalformedStoredRow,
+) {
+	const projected = projectPendingRelations([row]);
+	const pending = projected[0];
+	const pendingDescriptor = parsePendingShadowDescriptor(row.record);
+	if (!pendingDescriptor.ok) {
+		warn("pendingSemanticRelations", row._id, pendingDescriptor.error);
+		return null;
+	}
+	if (
+		projected.length !== 1 ||
+		!pending ||
+		pending.target.shadowId !== shadow._id ||
+		!shadowIsCompatible(shadow, pendingDescriptor.value)
+	) {
+		return null;
+	}
+	return { locatorKey: pending.locatorKey, relation: pending.relation };
+}
+
+/**
+ * Whether the structural row's locator key is its own and its owner's
+ * Knowledge still stores a reference there that fits the Shadow.
+ */
+function checkStructuralRow(
+	shadow: ShadowValue,
+	row: StructuralReferenceRow,
+	knowledge: ShadowReferenceOwner["knowledge"],
+	warn: WarnMalformedStoredRow,
+): boolean {
+	if (
+		!knowledge ||
+		row.locatorKey !==
+			structuralShadowLocatorKey(
+				row.ownerReadingKey,
+				row.aspect,
+				row.path,
+			)
+	) {
+		return false;
+	}
+	const references = parseStructuralShadowReferences(knowledge.knowledge);
+	if (!references.ok) {
+		warn("accumulatedKnowledge", knowledge._id, references.error);
+		return false;
+	}
+	const matchingReference =
+		references.value.find(
+			({ aspect, path }) => aspect === row.aspect && path === row.path,
+		)?.descriptor ?? null;
+	return (
+		matchingReference !== null &&
+		shadowIsCompatible(shadow, matchingReference)
+	);
+}
+
+function sortedGroup(group: ShadowReferenceGroup): ShadowReferenceGroup {
+	return {
+		...group,
+		pendingRelations: group.pendingRelations.sort((left, right) =>
+			left.locatorKey.localeCompare(right.locatorKey),
+		),
+		structuralReferences: group.structuralReferences.sort((left, right) =>
+			`${left.aspect}:${left.path}`.localeCompare(
+				`${right.aspect}:${right.path}`,
+			),
+		),
+	};
+}
+
+/**
+ * The page of a Shadow's references grouped by owner Reading, in Reading key
+ * order. Null when an owner Reading or its Unit Lemma is missing, or any row
+ * no longer matches the Shadow; a malformed stored row is also warned about.
+ */
+export function buildShadowReferencePage(
+	shadow: ShadowValue,
+	rows: ShadowReferenceRows,
+	owners: ReadonlyMap<string, ShadowReferenceOwner>,
+	warn: WarnMalformedStoredRow = warnMalformedStoredRow,
+) {
+	const groups = new Map<string, ShadowReferenceGroup>();
+	for (const ownerReadingKey of ownerReadingKeysOf(rows)) {
+		const { reading, lemma } = owners.get(ownerReadingKey) ?? {};
 		if (!reading || !lemma || !isUnitReadingFamily(lemma.family)) {
 			return null;
 		}
@@ -382,100 +515,47 @@ async function loadShadowReferencePage(
 				readingId: reading._id,
 				canonicalForm: lemma.canonicalForm,
 				emojiDescription: unitReadingEmojiDescription(reading),
-				target: {
-					kind: "Reading",
-					readingId: reading._id,
-				},
+				target: { kind: "Reading", readingId: reading._id },
 			},
 			pendingRelations: [],
 			structuralReferences: [],
 		});
 	}
-
-	for (const row of pendingRows) {
-		const projected = projectPendingRelations([row]);
-		const pending = projected[0];
+	for (const row of rows.pendingRows) {
+		const relation = checkPendingRow(shadow, row, warn);
 		const group = groups.get(row.sourceReadingKey);
-		const pendingDescriptor = parsePendingShadowDescriptor(row.record);
-		if (!pendingDescriptor.ok) {
-			warnMalformedStoredRow(
-				"pendingSemanticRelations",
-				row._id,
-				pendingDescriptor.error,
-			);
-			return null;
-		}
-		if (
-			projected.length !== 1 ||
-			!pending ||
-			!group ||
-			pending.target.shadowId !== shadowId ||
-			!shadowIsCompatible(shadow, pendingDescriptor.value)
-		) {
-			return null;
-		}
-		group.pendingRelations.push({
-			locatorKey: pending.locatorKey,
-			relation: pending.relation,
-		});
+		if (!relation || !group) return null;
+		group.pendingRelations.push(relation);
 	}
-
-	for (const row of structuralRows) {
+	for (const row of rows.structuralRows) {
 		const group = groups.get(row.ownerReadingKey);
-		const index = ownerIndex.get(row.ownerReadingKey);
-		const knowledge = index === undefined ? null : accumulated[index];
-		if (
-			!group ||
-			!knowledge ||
-			row.locatorKey !==
-				structuralShadowLocatorKey(
-					row.ownerReadingKey,
-					row.aspect,
-					row.path,
-				)
-		) {
+		const knowledge = owners.get(row.ownerReadingKey)?.knowledge ?? null;
+		if (!group || !checkStructuralRow(shadow, row, knowledge, warn)) {
 			return null;
 		}
-		const references = parseStructuralShadowReferences(knowledge.knowledge);
-		if (!references.ok) {
-			warnMalformedStoredRow(
-				"accumulatedKnowledge",
-				knowledge._id,
-				references.error,
-			);
-			return null;
-		}
-		const matchingReference =
-			references.value.find(
-				({ aspect, path }) =>
-					aspect === row.aspect && path === row.path,
-			)?.descriptor ?? null;
-		if (
-			!matchingReference ||
-			!shadowIsCompatible(shadow, matchingReference)
-		) {
-			return null;
-		}
-		group.structuralReferences.push({
-			aspect: row.aspect,
-			path: row.path,
-		});
+		group.structuralReferences.push({ aspect: row.aspect, path: row.path });
 	}
-
 	return {
-		page: [...groups.values()].map((group) => ({
-			...group,
-			pendingRelations: group.pendingRelations.sort((left, right) =>
-				left.locatorKey.localeCompare(right.locatorKey),
-			),
-			structuralReferences: group.structuralReferences.sort(
-				(left, right) =>
-					`${left.aspect}:${left.path}`.localeCompare(
-						`${right.aspect}:${right.path}`,
-					),
-			),
-		})),
-		continueCursor,
-		isDone,
+		page: [...groups.values()].map(sortedGroup),
+		continueCursor: rows.continueCursor,
+		isDone: rows.isDone,
 	};
+}
+
+/**
+ * One page of the Readings that refer to the Shadow, grouped by Reading.
+ * Null when the Shadow has no references or a reference no longer matches.
+ */
+async function loadShadowReferencePage(
+	ctx: QueryCtx,
+	shadow: Doc<"shadows">,
+	contextCursor?: string,
+) {
+	const rows = await readShadowReferenceRows(ctx, shadow._id, contextCursor);
+	if (!rows) return null;
+	const owners = await loadShadowReferenceOwners(
+		ctx,
+		ownerReadingKeysOf(rows),
+	);
+	return buildShadowReferencePage(shadow, rows, owners);
 }
