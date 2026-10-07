@@ -63,14 +63,22 @@ export function splitTypeCheckOutput(
 	return { diagnostics, listedFiles };
 }
 
-/** Listed files that belong to the package, outside its node_modules. */
+/**
+ * Listed files that belong to the package, outside its node_modules, as real
+ * paths. Under a symlinked directory (macOS `/tmp` is `/private/tmp`) tsc
+ * names the files it globbed from `include` by the logical `$PWD` path but
+ * resolved modules by their real path, so both sides are compared real.
+ */
 export function packageOwnFiles(
 	listedFiles: string[],
 	packageDir: string,
+	realPath: (path: string) => string,
 ): string[] {
+	const realPackageDir = realPath(packageDir);
 	const own = new Set<string>();
-	for (const file of listedFiles) {
-		const path = relative(packageDir, file);
+	for (const listedFile of listedFiles) {
+		const file = realPath(listedFile);
+		const path = relative(realPackageDir, file);
 		if (path === "" || path.startsWith("..") || isAbsolute(path)) continue;
 		if (path.split(sep).includes("node_modules")) continue;
 		own.add(file);

@@ -1,5 +1,15 @@
 import { expect, test } from "bun:test";
 import {
+	mkdirSync,
+	mkdtempSync,
+	realpathSync,
+	rmSync,
+	symlinkSync,
+	writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import {
 	hasProjectReferences,
 	packageOwnFiles,
 	splitTypeCheckOutput,
@@ -66,9 +76,55 @@ test("listed files are split from diagnostics and kept to the package", () => {
 	expect(diagnostics).toEqual([
 		"src/a.ts(1,7): error TS2322: Type 'number' is not assignable to type 'string'.",
 	]);
-	expect(packageOwnFiles(listedFiles, "/repo/app/demo")).toEqual([
-		"/repo/app/demo/src/a.ts",
-	]);
+	expect(
+		packageOwnFiles(listedFiles, "/repo/app/demo", (path) => path),
+	).toEqual(["/repo/app/demo/src/a.ts"]);
+});
+
+test("a package under a symlinked directory still owns its listed files", () => {
+	// tsc names globbed files by the logical $PWD path and resolved modules by
+	// their real path, so one listing can mix both (#1070).
+	const realRoot = realpathSync(
+		mkdtempSync(join(tmpdir(), "package-types-")),
+	);
+	const realPackage = join(realRoot, "repo/battery/demo");
+	mkdirSync(join(realPackage, "src"), { recursive: true });
+	mkdirSync(join(realPackage, "node_modules/x"), { recursive: true });
+	mkdirSync(join(realRoot, "repo/battery/lib"), { recursive: true });
+	for (const file of [
+		"repo/battery/demo/src/a.ts",
+		"repo/battery/demo/src/b.ts",
+		"repo/battery/demo/node_modules/x/index.d.ts",
+		"repo/battery/lib/c.ts",
+	]) {
+		writeFileSync(join(realRoot, file), "");
+	}
+	const linkedRoot = `${realRoot}-link`;
+	symlinkSync(realRoot, linkedRoot);
+	const linkedPackage = join(linkedRoot, "repo/battery/demo");
+
+	const listedFiles = [
+		join(linkedPackage, "src/a.ts"),
+		join(realPackage, "src/b.ts"),
+		join(linkedPackage, "node_modules/x/index.d.ts"),
+		join(realRoot, "repo/battery/lib/c.ts"),
+	];
+	const expected = [
+		join(realPackage, "src/a.ts"),
+		join(realPackage, "src/b.ts"),
+	];
+
+	try {
+		expect(
+			packageOwnFiles(listedFiles, linkedPackage, realpathSync),
+		).toEqual(expected);
+		expect(packageOwnFiles(listedFiles, realPackage, realpathSync)).toEqual(
+			expected,
+		);
+	} finally {
+		rmSync(linkedRoot);
+		rmSync(realRoot, { recursive: true });
+	}
 });
 
 test("a package TypeScript file in no checked project is uncovered", () => {

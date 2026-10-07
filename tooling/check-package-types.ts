@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 import {
@@ -11,7 +11,9 @@ import {
 import { toolPaths } from "./lib/tools";
 import { findRepositoryRoot } from "./lib/workspaces";
 
-const packageDir = process.cwd();
+// Real, so it matches the real paths packageOwnFiles returns and git ls-files
+// paths joined onto it do too.
+const packageDir = realpathSync(process.cwd());
 const repositoryRoot = await findRepositoryRoot(packageDir);
 const tsconfig = "tsconfig.json";
 const hasReferences = hasProjectReferences(
@@ -40,7 +42,7 @@ const [output, exitCode] = await Promise.all([
 const { diagnostics, listedFiles } = splitTypeCheckOutput(output, existsSync);
 if (diagnostics.length > 0) console.log(diagnostics.join("\n"));
 
-const checkedFiles = packageOwnFiles(listedFiles, packageDir);
+const checkedFiles = packageOwnFiles(listedFiles, packageDir, realpathSync);
 if (exitCode !== 0) {
 	process.exitCode = exitCode;
 } else if (checkedFiles.length === 0) {
