@@ -462,7 +462,8 @@ function publishGenerated(
 /**
  * Records a failed run with the generic learner message (the mutation
  * ignores provider text) and logs it without the error's text; DEV
- * inspection keeps the raw error.
+ * inspection keeps the raw error. A recording that fails is logged the same
+ * way and leaves the attempt Running for the stale-run watchdog.
  */
 function recordFailure(
 	{ ctx, attemptKey }: KnowledgeRun,
@@ -502,6 +503,21 @@ function recordFailure(
 					? { rejectedRelationRun }
 					: {}),
 			}),
+		).pipe(
+			Effect.catch((recordingError) =>
+				Effect.sync(() =>
+					console.error(
+						JSON.stringify({
+							event: "KnowledgeFailureRecordingFailed",
+							attemptKey,
+							runNumber: record.runNumber,
+							phase: record.phase,
+							recordingFailure:
+								internalErrorDescriptor(recordingError),
+						}),
+					),
+				),
+			),
 		);
 	});
 }

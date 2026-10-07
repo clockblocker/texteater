@@ -758,6 +758,59 @@ test("a publication rejected after production keeps the run's aspect failures in
 	]);
 });
 
+test("a failure recording that throws is logged as a structured line and leaves the run to the stale-run watchdog (#1032)", async () => {
+	const t = createTestConvex();
+	const occurrence = await seedDictionaryReading(t);
+	await insertAttempt(t, occurrence, "unrecorded", { state: "Scheduled" });
+	const logged: unknown[] = [];
+	const errors = spyOn(console, "error").mockImplementation((message) => {
+		logged.push(logEvent(message));
+	});
+	const context = actionContext(t);
+	const failingRecording = {
+		...context,
+		runMutation: (
+			reference: FunctionReference<"mutation", "internal">,
+			args: DefaultFunctionArgs,
+		) =>
+			getFunctionName(reference) ===
+			getFunctionName(internal.knowledgeGeneration.fail)
+				? Promise.reject(new Error("secret recording failure"))
+				: context.runMutation(reference, args),
+	};
+	try {
+		await expect(
+			generateWith(
+				t,
+				"unrecorded",
+				() => Effect.die(new Error("offline")),
+				failingRecording,
+			),
+		).resolves.toBeNull();
+	} finally {
+		errors.mockRestore();
+	}
+	expect(logged).toEqual([
+		expect.objectContaining({ event: "KnowledgeGenerationFailed" }),
+		{
+			event: "KnowledgeFailureRecordingFailed",
+			attemptKey: "unrecorded",
+			runNumber: 1,
+			phase: "Produce",
+			recordingFailure: {
+				errorName: "Error",
+				errorFingerprint: expect.stringMatching(/^fnv1a-/),
+			},
+		},
+	]);
+	expect(JSON.stringify(logged)).not.toContain("secret recording failure");
+	expect((await attempts(t))[0]).toMatchObject({
+		state: "Running",
+		runNumber: 1,
+	});
+	expect(await rows(t, "knowledgeProductionRuns")).toEqual([]);
+});
+
 test("an interrupted run records no failure and leaves the run to the stale-run watchdog", async () => {
 	const t = createTestConvex();
 	const occurrence = await seedDictionaryReading(t);
