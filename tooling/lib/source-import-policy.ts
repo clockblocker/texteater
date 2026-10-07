@@ -622,6 +622,11 @@ const toolingReaches: readonly {
 		reason: "Dumrel's test fixtures, the differential's inputs",
 	},
 	{
+		importer: "tooling/tests/dum-runtime-ci-gate.test.ts",
+		target: "battery/dumdict/src/generated/linked-validation.ts",
+		reason: "Dumdict's compiled registry, whose public roots each need a differential target",
+	},
+	{
 		importer: "tooling/tests/linked-validation.test.ts",
 		target: "battery/dumdict/src/generated/validation-artifacts.ts",
 		reason: "Dumdict's encoded validation artifacts, which no entry exports",
