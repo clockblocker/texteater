@@ -57,7 +57,7 @@ export async function addWorkspace(
 			"build:package":
 				"bun ../../tooling/manifest-policy.ts package && bun build src/index.ts",
 			knip: "bun ../../tooling/knip.ts",
-			test: "bun test",
+			test: "bun ../../tooling/run-package-tests.ts",
 			validate: "bun ../../tooling/validate-package.ts",
 		},
 		dependencies: options.dependencies ?? {},

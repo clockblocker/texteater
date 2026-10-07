@@ -36,6 +36,13 @@ const requiredWorkspaceScripts = [
 ] as const;
 
 /**
+ * Every workspace runs its tests through the shared runner, which gives each
+ * run the repository's default per-test timeout (#997). Arguments, such as a
+ * test directory, may follow it.
+ */
+const packageTestRunner = "bun ../../tooling/run-package-tests.ts";
+
+/**
  * Turbo entry points. `build` and `dev` delegate to Turbo so that every
  * workspace dependency is built first; the package-local work lives in the
  * `:package` script that Turbo runs.
@@ -122,6 +129,15 @@ function validateWorkspaceManifest(
 		scripts.validate === "bun ../../tooling/validate-package.ts",
 		'validate must be "bun ../../tooling/validate-package.ts"',
 	);
+	if (typeof scripts.test === "string") {
+		add(
+			issues,
+			location,
+			scripts.test === packageTestRunner ||
+				scripts.test.startsWith(`${packageTestRunner} `),
+			`test must start with "${packageTestRunner}"`,
+		);
+	}
 	add(
 		issues,
 		location,

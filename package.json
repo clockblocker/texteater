@@ -26,7 +26,7 @@
 		"lint:tooling": "biome check --config-path tooling/biome/base.json tooling",
 		"resolution_inspector": "bun app/tf-demo/tooling/resolution-inspector.ts",
 		"test": "turbo run test test:tooling --continue",
-		"test:tooling": "bun test ./tooling",
+		"test:tooling": "bun test --timeout 20000 ./tooling",
 		"validate": "bun tooling/ci.ts validate knip dum-runtime",
 		"validate:imports": "bun tooling/validate-repository-architecture.ts",
 		"validate:manifests": "bun tooling/manifest-policy.ts repository",

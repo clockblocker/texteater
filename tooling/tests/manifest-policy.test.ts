@@ -153,6 +153,34 @@ test("every workspace and the root run knip through tooling/knip.ts", async () =
 	]);
 });
 
+test("every workspace runs its tests through the shared test runner", async () => {
+	const root = await temporaryRepository();
+	const scripts = {
+		bare: "bun test",
+		lookalike: "bun ../../tooling/run-package-tests.tsx",
+		runner: "bun ../../tooling/run-package-tests.ts",
+		scoped: "bun ../../tooling/run-package-tests.ts ./tests",
+	};
+	for (const [name, script] of Object.entries(scripts)) {
+		const workspace = await addWorkspace(root, { kind: "battery", name });
+		const manifest = await Bun.file(join(workspace, "package.json")).json();
+		manifest.scripts.test = script;
+		await writeJson(join(workspace, "package.json"), manifest);
+	}
+
+	const issues = await validateManifestPolicy({
+		cwd: root,
+		mode: "repository",
+	});
+
+	const message =
+		'test must start with "bun ../../tooling/run-package-tests.ts"';
+	expect(issues).toEqual([
+		{ location: "battery/bare/package.json", message },
+		{ location: "battery/lookalike/package.json", message },
+	]);
+});
+
 test("package policy keeps a source-exporting package on the base checker options", async () => {
 	const root = await temporaryRepository();
 	await writeJson(join(root, "tooling/typescript/base.json"), {

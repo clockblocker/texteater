@@ -1,7 +1,8 @@
 {
 	"$schema": "https://turborepo.dev/schema.json",
-	// tsgo type-checks use every core; more tasks at once starve tests that run
-	// under bun's 5 s default timeout.
+	// tsgo type-checks use every core; more tasks at once starve tests. Tests
+	// run with a 20 s default timeout (tooling/run-package-tests.ts), raised
+	// from bun's 5 s after load-starved CI runs timed out (#997).
 	"concurrency": "4",
 	"globalDependencies": ["biome.json", "tooling/**"],
 	"tasks": {

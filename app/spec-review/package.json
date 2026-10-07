@@ -14,7 +14,7 @@
 		"dev:package": "bun scripts/dev.ts",
 		"fix": "bun run --silent biome check --write .",
 		"lint": "bun run --silent biome check .",
-		"test": "bun test",
+		"test": "bun ../../tooling/run-package-tests.ts",
 		"knip": "bun ../../tooling/knip.ts",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},

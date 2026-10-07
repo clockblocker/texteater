@@ -33,7 +33,7 @@
 		"build:types": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
 		"check": "bun ../../tooling/check-package-types.ts",
 		"check:segmentation": "bun ../../node_modules/typescript/bin/tsc -p tsconfig.segmentation.json --noEmit",
-		"test": "bun test",
+		"test": "bun ../../tooling/run-package-tests.ts",
 		"lint": "bun run --silent biome check .",
 		"fix": "bun run --silent biome check --write .",
 		"knip": "bun ../../tooling/knip.ts",

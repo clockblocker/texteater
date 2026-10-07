@@ -21,7 +21,7 @@
 		"lint": "bun run --silent biome check .",
 		"prebuild:package": "bun ../../tooling/manifest-policy.ts package && bun run generate:content",
 		"preview": "astro preview",
-		"test": "bun test",
+		"test": "bun ../../tooling/run-package-tests.ts",
 		"knip": "bun ../../tooling/knip.ts",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},

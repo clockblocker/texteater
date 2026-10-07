@@ -69,7 +69,7 @@
 		"knip": "bun ../../tooling/knip.ts",
 		"lint": "bun run --silent biome check .",
 		"prepack": "bun run build",
-		"test": "bun test",
+		"test": "bun ../../tooling/run-package-tests.ts",
 		"validate": "bun ../../tooling/validate-package.ts"
 	},
 	"dependencies": {
