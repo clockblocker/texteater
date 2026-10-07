@@ -84,7 +84,7 @@ function rows<
 	Table extends
 		| "resolutionRuns"
 		| "resolutionSessions"
-		| "visitorClicks"
+		| "visitorEncounters"
 		| "knowledgeGenerationAttempts"
 		| "inspectionClicks"
 		| "inspectionSteps"
@@ -200,7 +200,7 @@ describe("Resolution Session", () => {
 			},
 		});
 
-		const encounters = (await rows(t, "visitorClicks")).filter(
+		const encounters = (await rows(t, "visitorEncounters")).filter(
 			({ visitorId }) => visitorId === "visitor-1",
 		);
 		expect(encounters).toEqual([
@@ -256,7 +256,7 @@ describe("Resolution Session", () => {
 		});
 
 		expect(
-			(await rows(t, "visitorClicks")).filter(
+			(await rows(t, "visitorEncounters")).filter(
 				({ visitorId }) => visitorId === "visitor-1",
 			),
 		).toHaveLength(1);
@@ -1493,7 +1493,7 @@ describe("Resolution Session", () => {
 				},
 			}),
 		).rejects.toThrow("no longer active");
-		expect(await rows(t, "visitorClicks")).toEqual([]);
+		expect(await rows(t, "visitorEncounters")).toEqual([]);
 	});
 
 	test("strip, visitor clear, and full reset invalidate sessions before source writes", async () => {
@@ -1524,7 +1524,7 @@ describe("Resolution Session", () => {
 				visitorId: "visitor-1",
 			});
 			expect(await rows(cleared, "resolutionSessions")).toEqual([]);
-			expect(await rows(cleared, "visitorClicks")).toEqual([]);
+			expect(await rows(cleared, "visitorEncounters")).toEqual([]);
 			expect(await segmentState(cleared, segmentId)).toEqual({
 				kind: "PermanentFailure",
 			});
@@ -1706,7 +1706,7 @@ describe("Resolution Session", () => {
 				reading: { emojiDescription: "🏦", canonicalForm: "Bank" },
 			});
 			expect(converged).not.toHaveProperty("failureCode");
-			const encounter = (await rows(t, "visitorClicks")).find(
+			const encounter = (await rows(t, "visitorEncounters")).find(
 				(row) => row.visitorId === visitorId,
 			);
 			expect(encounter?.attestationId).toBe(winner.attestationId);

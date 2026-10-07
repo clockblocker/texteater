@@ -416,8 +416,8 @@ const visitorOwnedRows: Record<
 			.filter((row) => row.visitorId === visitorId)
 			.map(({ _id }) => _id);
 	},
-	visitorClicks: async (t, visitorId) =>
-		(await tableRows(t, "visitorClicks"))
+	visitorEncounters: async (t, visitorId) =>
+		(await tableRows(t, "visitorEncounters"))
 			.filter((row) => row.visitorId === visitorId)
 			.map(({ _id }) => _id),
 	knowledgeGenerationAttempts: (t, visitorId, reading) =>
@@ -575,7 +575,7 @@ describe("tf-demo post-reset contract", () => {
 						orthography: "Standard",
 					},
 				});
-				await ctx.db.insert("visitorClicks", {
+				await ctx.db.insert("visitorEncounters", {
 					requestId: `request:${segmentId}`,
 					visitorId: "visitor-1",
 					textId,
@@ -583,7 +583,7 @@ describe("tf-demo post-reset contract", () => {
 					segmentId,
 					attestationId,
 					readingId: reading.readingId,
-					clickedAt: 1,
+					encounteredAt: 1,
 				});
 			}
 		});
@@ -617,7 +617,7 @@ describe("tf-demo post-reset contract", () => {
 		// One more step finds nothing left.
 		expect(batches).toBe(Math.ceil(segmentCount / STRIP_SEGMENT_BATCH) + 1);
 		expect(await tableRows(t, "segments")).toEqual([]);
-		expect(await tableRows(t, "visitorClicks")).toEqual([]);
+		expect(await tableRows(t, "visitorEncounters")).toEqual([]);
 		expect(
 			(await tableRows(t, "attestations")).map(({ _id }) => _id),
 		).toEqual([reading.attestationId]);

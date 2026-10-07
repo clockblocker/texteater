@@ -294,9 +294,9 @@ test("persistence result validators retain table-specific Convex IDs", () => {
 		type: "id",
 		tableName: "attestations",
 	});
-	expect(fieldType(unresolvedClickCommitValidator, "clickId")).toEqual({
+	expect(fieldType(unresolvedClickCommitValidator, "encounterId")).toEqual({
 		type: "id",
-		tableName: "visitorClicks",
+		tableName: "visitorEncounters",
 	});
 });
 

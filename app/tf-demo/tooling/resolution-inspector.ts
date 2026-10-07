@@ -73,16 +73,16 @@ const requestContextExpression = (requestIdVariable: string) => `
 		.query("resolutionSessions")
 		.withIndex("by_request_id", (q) => q.eq("requestId", ${requestIdVariable}))
 		.unique();
-	const visitorClick = await ctx.db
-		.query("visitorClicks")
+	const visitorEncounter = await ctx.db
+		.query("visitorEncounters")
 		.withIndex("by_request_id", (q) => q.eq("requestId", ${requestIdVariable}))
 		.unique();
 	const runs = await ctx.db
 		.query("resolutionRuns")
 		.withIndex("by_request_id_and_run_number", (q) => q.eq("requestId", ${requestIdVariable}))
 		.collect();
-	const segmentId = session?.segmentId ?? visitorClick?.segmentId;
-	const sentenceId = session?.sentenceId ?? visitorClick?.sentenceId ?? click?.sentenceId;
+	const segmentId = session?.segmentId ?? visitorEncounter?.segmentId;
+	const sentenceId = session?.sentenceId ?? visitorEncounter?.sentenceId ?? click?.sentenceId;
 	const segment = segmentId ? await ctx.db.get(segmentId) : null;
 	const sentence = sentenceId ? await ctx.db.get(sentenceId) : null;
 `;
@@ -127,7 +127,7 @@ export function inspectResolutionStep(
 			payload,
 			ancestors,
 			children: requestSteps.filter((candidate) => candidate.parentId === step.id),
-			request: { click, session, visitorClick },
+			request: { click, session, visitorEncounter },
 			run: matchingRun,
 			segment,
 			sentence,
@@ -171,7 +171,7 @@ export function inspectResolutionRequest(
 			return { ...step, payload };
 		}));
 		return {
-			request: { click, session, visitorClick },
+			request: { click, session, visitorEncounter },
 			runs,
 			segment,
 			sentence,
@@ -197,7 +197,7 @@ export function inspectResolutionRun(
 		const runEnd = run.finishedAt ?? run.expiresAt;
 		return {
 			run,
-			request: { click, session, visitorClick },
+			request: { click, session, visitorEncounter },
 			segment,
 			sentence,
 			steps: allSteps.filter((step) => step.startedAt >= run.startedAt && step.startedAt <= runEnd),
@@ -219,17 +219,17 @@ export function inspectSegment(
 			.filter((q) => q.eq(q.field("segmentId"), segment._id))
 			.order("desc")
 			.take(50);
-		const visitorClicks = await ctx.db
-			.query("visitorClicks")
+		const visitorEncounters = await ctx.db
+			.query("visitorEncounters")
 			.withIndex("by_segment_id", (q) => q.eq("segmentId", segment._id))
 			.order("desc")
 			.take(50);
-		const requestIds = [...new Set([...sessions.map((session) => session.requestId), ...visitorClicks.map((click) => click.requestId)])];
+		const requestIds = [...new Set([...sessions.map((session) => session.requestId), ...visitorEncounters.map((encounter) => encounter.requestId)])];
 		const inspections = (await Promise.all(requestIds.map((requestId) => ctx.db
 			.query("inspectionClicks")
 			.withIndex("by_request_id", (q) => q.eq("requestId", requestId))
 			.unique()))).filter(Boolean);
-		return { segment, sentence, sessions, visitorClicks, inspections };
+		return { segment, sentence, sessions, visitorEncounters, inspections };
 	`;
 	return runReadonlyInspection(source, options);
 }

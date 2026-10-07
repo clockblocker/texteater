@@ -49,7 +49,7 @@ describe("Resolution Session execution", () => {
 							reused: true,
 							persisted: {
 								status: "Reused",
-								clickId: "click-1",
+								encounterId: "click-1",
 								attestationId: "attestation-1",
 								readingId: "reading-1",
 								deduplicated: false,
@@ -112,7 +112,7 @@ describe("Resolution Session execution", () => {
 							reused: false,
 							persisted: {
 								status: "Committed",
-								clickId: "click-1",
+								encounterId: "click-1",
 								attestationId: "attestation-1",
 								readingId: "reading-1",
 								deduplicated: false,

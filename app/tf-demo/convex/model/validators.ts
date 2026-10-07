@@ -784,13 +784,13 @@ export const reusableAttestationValidator = v.object({
 
 export const unresolvedClickCommitValidator = v.object({
 	status: v.literal("Unresolved"),
-	clickId: v.id("visitorClicks"),
+	encounterId: v.id("visitorEncounters"),
 	deduplicated: v.boolean(),
 });
 
 export const reusedResolvedClickCommitValidator = v.object({
 	status: v.literal("Reused"),
-	clickId: v.id("visitorClicks"),
+	encounterId: v.id("visitorEncounters"),
 	readingId: v.id("readings"),
 	attestationId: v.id("attestations"),
 	deduplicated: v.boolean(),
@@ -802,7 +802,7 @@ export const dictionaryPlanValidator = v.object({
 
 const committedOccurrenceValidator = v.object({
 	status: v.union(v.literal("Committed"), v.literal("Reused")),
-	clickId: v.id("visitorClicks"),
+	encounterId: v.id("visitorEncounters"),
 	readingId: v.id("readings"),
 	attestationId: v.id("attestations"),
 	deduplicated: v.boolean(),
@@ -811,7 +811,7 @@ const committedOccurrenceValidator = v.object({
 
 export const lateResolvedClickCommitValidator = v.object({
 	status: v.literal("Reused"),
-	clickId: v.id("visitorClicks"),
+	encounterId: v.id("visitorEncounters"),
 	readingId: v.id("readings"),
 	attestationId: v.id("attestations"),
 	deduplicated: v.boolean(),

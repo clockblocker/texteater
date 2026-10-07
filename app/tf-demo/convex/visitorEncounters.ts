@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 
 import { internalMutation } from "./_generated/server";
-import { advanceMemberEncounters as advance } from "./model/visitorClicks";
+import { advanceMemberEncounters as advance } from "./model/visitorEncounters";
 
 /** Continues advancing a committed occurrence's member Encounters. */
 export const advanceMemberEncounters = internalMutation({

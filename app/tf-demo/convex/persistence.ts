@@ -60,7 +60,7 @@ import {
 import {
 	advanceMemberEncounters,
 	ensureVisitorEncounter,
-} from "./model/visitorClicks";
+} from "./model/visitorEncounters";
 import {
 	findAnalyzedSubmission,
 	persistSubmittedText as persistSubmittedTextImplementation,
@@ -95,7 +95,7 @@ async function openOccurrenceCommit(
 		requireCommittingSession(ctx, args.sessionGuard, args),
 		requireClickableSegment(ctx, args.sentenceId, args.clickedSegmentIndex),
 		ctx.db
-			.query("visitorClicks")
+			.query("visitorEncounters")
 			.withIndex("by_request_id", (q) =>
 				q.eq("requestId", args.requestId),
 			)
@@ -117,7 +117,7 @@ function reusedCommit(
 ) {
 	return {
 		status: "Reused" as const,
-		clickId: committed.clickId,
+		encounterId: committed.encounterId,
 		readingId: committed.readingId,
 		attestationId: committed.attestationId,
 		deduplicated: existing?.attestationId === committed.attestationId,
@@ -362,7 +362,7 @@ export const persistUnresolvedClick = internalMutation({
 			await openOccurrenceCommit(ctx, args);
 		// Segment Selection recorded the Visitor Encounter under this
 		// requestId, so finding it is not yet a retry.
-		const clickId = existing
+		const encounterId = existing
 			? existing._id
 			: (
 					await ensureVisitorEncounter(ctx, {
@@ -372,7 +372,7 @@ export const persistUnresolvedClick = internalMutation({
 						sentenceId: sentence._id,
 						segmentId: segment._id,
 					})
-				).clickId;
+				).encounterId;
 		const settled = await settleResolutionSession(ctx, session, {
 			kind: "Unresolved",
 		});
@@ -380,7 +380,7 @@ export const persistUnresolvedClick = internalMutation({
 			? reusedCommit(settled, existing)
 			: {
 					status: "Unresolved" as const,
-					clickId,
+					encounterId,
 					deduplicated: existing !== null,
 				};
 	},
@@ -623,13 +623,13 @@ async function commitResolvedClick(
 	const {
 		session,
 		segment: clickedSegment,
-		existing: existingClick,
+		existing: existingEncounter,
 	} = await openOccurrenceCommit(ctx, args);
 	// Segment Selection recorded the Visitor Encounter before the run, so
 	// an unresolved one is this session's own. A committed occurrence on
 	// the clicked Segment wins over this proposal (ADR-0004).
 	const committedAttestationId =
-		existingClick?.attestationId ??
+		existingEncounter?.attestationId ??
 		clickedSegment.attestationMembership?.attestationId;
 	if (committedAttestationId) {
 		return reusedCommit(
@@ -638,7 +638,7 @@ async function commitResolvedClick(
 				session,
 				committedAttestationId,
 			),
-			existingClick,
+			existingEncounter,
 		);
 	}
 	assertResolvedClickProposal(args);

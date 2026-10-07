@@ -68,7 +68,7 @@ export const retry = internalMutation({
 	returns: v.null(),
 	handler: async (ctx, input) => {
 		const encounter = await ctx.db
-			.query("visitorClicks")
+			.query("visitorEncounters")
 			.withIndex("by_visitor_id_and_attestation_id", (q) =>
 				q
 					.eq("visitorId", input.visitorId)
@@ -94,7 +94,7 @@ export const ensureForReading = mutation({
 		const attestation = await ctx.db.get(attestationId);
 		if (!attestation || attestation.readingId !== readingId) return false;
 		const encounter = await ctx.db
-			.query("visitorClicks")
+			.query("visitorEncounters")
 			.withIndex("by_visitor_id_and_attestation_id", (q) =>
 				q.eq("visitorId", visitorId).eq("attestationId", attestationId),
 			)

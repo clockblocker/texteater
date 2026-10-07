@@ -157,7 +157,7 @@ function encounter(
 		const attestation = attestationId
 			? await ctx.db.get(attestationId)
 			: null;
-		return ctx.db.insert("visitorClicks", {
+		return ctx.db.insert("visitorEncounters", {
 			requestId: `click:${visitorId}:${segmentId}`,
 			visitorId,
 			textId: sentence.textId,
@@ -169,7 +169,7 @@ function encounter(
 						readingId: attestation.readingId,
 					}
 				: {}),
-			clickedAt: 1,
+			encounteredAt: 1,
 		});
 	});
 }

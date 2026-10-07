@@ -154,17 +154,19 @@ async function stripSentenceAnalysisBatch(
 	let deleted = 0;
 	const leftAttestationIds = new Set<Id<"attestations">>();
 	for (const segment of segments) {
-		const clickBudget = STRIP_DELETE_BUDGET - deleted;
-		const clicks = await ctx.db
-			.query("visitorClicks")
+		const encounterBudget = STRIP_DELETE_BUDGET - deleted;
+		const encounters = await ctx.db
+			.query("visitorEncounters")
 			.withIndex("by_segment_id_and_attestation_id", (q) =>
 				q.eq("segmentId", segment._id),
 			)
-			.take(clickBudget);
-		await Promise.all(clicks.map((click) => ctx.db.delete(click._id)));
-		deleted += clicks.length;
+			.take(encounterBudget);
+		await Promise.all(
+			encounters.map((encounter) => ctx.db.delete(encounter._id)),
+		);
+		deleted += encounters.length;
 		// A Segment goes only after its last Encounter; the rest wait a step.
-		if (clicks.length === clickBudget) break;
+		if (encounters.length === encounterBudget) break;
 		const attestationId = segment.attestationMembership?.attestationId;
 		if (attestationId) leftAttestationIds.add(attestationId);
 		await ctx.db.delete(segment._id);

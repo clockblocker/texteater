@@ -123,13 +123,13 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 			kind: "Punctuation",
 			text: ".",
 		});
-		const clickId = await ctx.db.insert("visitorClicks", {
+		const encounterId = await ctx.db.insert("visitorEncounters", {
 			visitorId: "visitor",
 			requestId: "request",
 			textId: oldTextId,
 			sentenceId,
 			segmentId,
-			clickedAt: 1,
+			encounteredAt: 1,
 		});
 		return {
 			oldTextId,
@@ -137,7 +137,7 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 			sentenceId,
 			segmentId,
 			attestationId,
-			clickId,
+			encounterId,
 		};
 	});
 
@@ -152,7 +152,7 @@ test("moving an existing one-unit example preserves target IDs and encounter his
 			text: "Deutschland",
 			attestationMembership: { attestationId: seeded.attestationId },
 		});
-		expect(await ctx.db.get(seeded.clickId)).toMatchObject({
+		expect(await ctx.db.get(seeded.encounterId)).toMatchObject({
 			textId: result.textId,
 			sentenceId: seeded.sentenceId,
 			segmentId: seeded.segmentId,

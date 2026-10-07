@@ -10,7 +10,7 @@ import {
 	storedSegmentValidator,
 	storedUnitValidator,
 } from "../../model/validators";
-import { loadEncounteredSegmentIds } from "../../model/visitorClicks";
+import { loadEncounteredSegmentIds } from "../../model/visitorEncounters";
 
 export const grammaticalGenderValidator = v.union(
 	v.literal("Fem"),

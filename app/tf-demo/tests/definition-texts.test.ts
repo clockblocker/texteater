@@ -612,7 +612,7 @@ test(
 						orthography: "Standard",
 					},
 				});
-				await ctx.db.insert("visitorClicks", {
+				await ctx.db.insert("visitorEncounters", {
 					requestId: `request:${segment._id}`,
 					visitorId: "visitor-1",
 					textId,
@@ -620,7 +620,7 @@ test(
 					segmentId: segment._id,
 					attestationId,
 					readingId,
-					clickedAt: 1,
+					encounteredAt: 1,
 				});
 				return attestationId;
 			};

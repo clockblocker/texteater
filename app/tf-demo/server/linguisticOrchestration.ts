@@ -103,13 +103,13 @@ export type ReusableAttestation = {
 
 export type UnresolvedClickCommit = {
 	readonly status: "Unresolved";
-	readonly clickId: string;
+	readonly encounterId: string;
 	readonly deduplicated: boolean;
 };
 
 export type ReusedResolvedClickCommit = {
 	readonly status: "Reused";
-	readonly clickId: string;
+	readonly encounterId: string;
 	readonly attestationId: string;
 	readonly readingId: string;
 	readonly deduplicated: boolean;
@@ -117,7 +117,7 @@ export type ReusedResolvedClickCommit = {
 
 export type LateResolvedClickCommit = {
 	readonly status: "Reused";
-	readonly clickId: string;
+	readonly encounterId: string;
 	readonly attestationId: string;
 	readonly readingId: string;
 	readonly deduplicated: boolean;
@@ -127,7 +127,7 @@ export type LateResolvedClickCommit = {
 export type ResolvedClickCommit =
 	| {
 			readonly status: "Committed" | "Reused";
-			readonly clickId: string;
+			readonly encounterId: string;
 			readonly attestationId: string;
 			readonly readingId: string;
 			readonly deduplicated: boolean;

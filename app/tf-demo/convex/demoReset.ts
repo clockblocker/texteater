@@ -72,7 +72,7 @@ export const resetDemoTableNames = [
 	"pendingSemanticRelations",
 	"shadows",
 	"attestations",
-	"visitorClicks",
+	"visitorEncounters",
 	"ownedSurfaces",
 	"readingEntries",
 	"semanticRelationEdges",

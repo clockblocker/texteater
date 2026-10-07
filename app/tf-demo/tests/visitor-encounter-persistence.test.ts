@@ -66,7 +66,7 @@ function snapshot(t: TestConvexDb, tables: readonly TableName[]) {
 }
 
 async function encountersOf(t: TestConvexDb, visitorId: string) {
-	return (await rows(t, "visitorClicks")).filter(
+	return (await rows(t, "visitorEncounters")).filter(
 		(row) => row.visitorId === visitorId,
 	);
 }
@@ -258,7 +258,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 	});
 	expect(segment?.resolutionState).toBeUndefined();
 	expect(
-		(await rows(t, "visitorClicks")).map(
+		(await rows(t, "visitorEncounters")).map(
 			({ _id, _creationTime, ...fields }) => fields,
 		),
 	).toEqual([
@@ -270,7 +270,7 @@ test("stores occurrence membership and a minimal resolved Click", async () => {
 			segmentId,
 			attestationId,
 			readingId,
-			clickedAt: expect.any(Number),
+			encounteredAt: expect.any(Number),
 		},
 	]);
 	if (!attestationId) throw new Error("Expected an Attestation.");
@@ -337,7 +337,7 @@ test("an unresolved model loser records and returns the committed winner", async
 	const [encounter] = await encountersOf(t, "visitor-3");
 	expect(result).toMatchObject({
 		status: "Reused",
-		clickId: encounter?._id,
+		encounterId: encounter?._id,
 		attestationId: winnerId,
 		// The winner's commit already advanced the loser's Encounter.
 		deduplicated: true,
@@ -385,11 +385,11 @@ test("a later selection by the same Visitor and Segment reuses the first Visitor
 	expect(encounters).toHaveLength(1);
 	expect(firstResult).toMatchObject({
 		status: "Unresolved",
-		clickId: encounters[0]?._id,
+		encounterId: encounters[0]?._id,
 	});
 	expect(secondResult).toMatchObject({
 		status: "Reused",
-		clickId: encounters[0]?._id,
+		encounterId: encounters[0]?._id,
 		attestationId: encounters[0]?.attestationId,
 	});
 	const winnerId = encounters[0]?.attestationId;

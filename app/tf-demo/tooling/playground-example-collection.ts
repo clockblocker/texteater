@@ -66,7 +66,7 @@ async function contextualize(
 	const encountersBySegment = await Promise.all(
 		removable.map((segment) =>
 			ctx.db
-				.query("visitorClicks")
+				.query("visitorEncounters")
 				.withIndex("by_segment_id_and_attestation_id", (q) =>
 					q.eq("segmentId", segment._id),
 				)
@@ -212,7 +212,7 @@ export async function consolidateExampleTexts(ctx: MutationCtx) {
 			const encountersBySegment = await Promise.all(
 				segments.map((segment) =>
 					ctx.db
-						.query("visitorClicks")
+						.query("visitorEncounters")
 						.withIndex("by_segment_id_and_attestation_id", (q) =>
 							q.eq("segmentId", segment._id),
 						)

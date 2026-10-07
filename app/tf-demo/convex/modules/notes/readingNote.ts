@@ -545,7 +545,7 @@ export async function loadSourceContextPage(
 	contextCursor?: string,
 ) {
 	const result = await ctx.db
-		.query("visitorClicks")
+		.query("visitorEncounters")
 		.withIndex("by_visitor_id_and_reading_id", (q) =>
 			q.eq("visitorId", visitorId).eq("readingId", readingId),
 		)

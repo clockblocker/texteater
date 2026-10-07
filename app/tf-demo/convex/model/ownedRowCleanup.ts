@@ -152,7 +152,8 @@ export const READING_CLEANUP_EXEMPTIONS: Readonly<
 	attestations: "a Reading with an Attestation is never pruned",
 	definitionTexts: "removed with the Definition Text before pruning",
 	resolutionSessions: "removed with their Sentence",
-	visitorClicks: "a click's Reading is its Attestation's, so never pruned",
+	visitorEncounters:
+		"an Encounter's Reading is its Attestation's, so never pruned",
 };
 
 /**
@@ -185,7 +186,7 @@ export const LEMMA_CLEANUP_EXEMPTIONS: Readonly<
  * Visitor clear phases, in order. Sessions go first, keeping their Segment
  * Resolution State in step; attempts next, so a waiting attempt of another
  * Visitor is promoted; then the Visitor's own settings, notes, layouts and
- * clicks.
+ * Encounters.
  */
 export const VISITOR_CLEANUP_PHASES = [
 	{ phase: "ResolutionSessions", tables: ["resolutionSessions"] },
@@ -216,11 +217,11 @@ export const VISITOR_CLEANUP_PHASES = [
 		"by_visitor_id_and_target_language_and_family_and_kind",
 	),
 	ownedRows(
-		"VisitorClicks",
+		"VisitorEncounters",
 		"visitorId",
-		"visitorClicks",
+		"visitorEncounters",
 		"visitorId",
-		"by_visitor_id_and_clicked_at",
+		"by_visitor_id_and_encountered_at",
 	),
 ] as const satisfies readonly CleanupPhase[];
 

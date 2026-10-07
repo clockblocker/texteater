@@ -12,7 +12,7 @@ import { ensureInlineDefinitionText } from "../convex/model/definitionTexts";
 import { pendingRecordLocatorIndexKey } from "../convex/model/dumdictPendingIndexes";
 import { requireRecord } from "../convex/model/readingKnowledge";
 import { shadowKeyFor } from "../convex/model/shadows";
-import { ensureVisitorEncounter } from "../convex/model/visitorClicks";
+import { ensureVisitorEncounter } from "../convex/model/visitorEncounters";
 import {
 	loadUnitReadingNote,
 	readingNoteValidator,

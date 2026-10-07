@@ -147,7 +147,7 @@ test("a New Reading plans and commits dictionary, occurrence membership, and Cli
 	expect(await rows(t, "readings")).toHaveLength(1);
 	expect(await rows(t, "surfaces")).toHaveLength(1);
 	expect(await rows(t, "attestations")).toHaveLength(1);
-	expect(await rows(t, "visitorClicks")).toEqual([
+	expect(await rows(t, "visitorEncounters")).toEqual([
 		expect.objectContaining({ attestationId: result.attestationId }),
 	]);
 	const [segment] = await rows(t, "segments");
@@ -178,13 +178,13 @@ test("a commit advances every Visitor's earlier Encounter of its members, so the
 	);
 	await t.run(async (ctx) => {
 		for (const [index, visitorId] of earlierVisitors.entries())
-			await ctx.db.insert("visitorClicks", {
+			await ctx.db.insert("visitorEncounters", {
 				requestId: `earlier-${index}`,
 				visitorId,
 				textId: sentence.textId,
 				sentenceId: sentence._id,
 				segmentId,
-				clickedAt: index,
+				encounteredAt: index,
 			});
 	});
 
@@ -194,7 +194,7 @@ test("a commit advances every Visitor's earlier Encounter of its members, so the
 	);
 	if (result.status !== "Committed") throw new Error("Expected a commit.");
 	const advanced = async () =>
-		(await rows(t, "visitorClicks")).filter(
+		(await rows(t, "visitorEncounters")).filter(
 			({ attestationId, readingId }) =>
 				attestationId === result.attestationId &&
 				readingId === result.readingId,
@@ -443,7 +443,9 @@ test("a reused Reading that no longer exists is reported as a dictionary conflic
 	expect(
 		(await resolutionSessionRow(t, "request-1")).lifecycle,
 	).toMatchObject({ state: "Terminal", outcome: "PermanentFailure" });
-	expect((await rows(t, "visitorClicks"))[0]?.attestationId).toBeUndefined();
+	expect(
+		(await rows(t, "visitorEncounters"))[0]?.attestationId,
+	).toBeUndefined();
 });
 
 test("a failure after the dictionary commit rolls back dictionary, occurrence, and session writes", async () => {
@@ -501,7 +503,9 @@ test("a failure after the dictionary commit rolls back dictionary, occurrence, a
 
 	expect(await snapshot(t)).toEqual(before);
 	expect(await rows(t, "attestations")).toHaveLength(1);
-	expect((await rows(t, "visitorClicks"))[0]?.attestationId).toBeUndefined();
+	expect(
+		(await rows(t, "visitorEncounters"))[0]?.attestationId,
+	).toBeUndefined();
 	expect(
 		(await resolutionSessionRow(t, "request-1")).lifecycle,
 	).toMatchObject({ state: "Active" });
@@ -562,7 +566,7 @@ test("a noun's owned article is a member of its one occurrence, and derives no D
 	expect(await rows(t, "lemmas")).toHaveLength(1);
 	expect(await rows(t, "readings")).toHaveLength(1);
 	expect(await rows(t, "attestations")).toHaveLength(1);
-	expect(await rows(t, "visitorClicks")).toHaveLength(1);
+	expect(await rows(t, "visitorEncounters")).toHaveLength(1);
 	const members = (await rows(t, "segments")).filter(({ _id }) =>
 		[segmentIds[0], segmentIds[2]].includes(_id),
 	);

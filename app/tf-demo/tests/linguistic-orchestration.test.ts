@@ -172,7 +172,7 @@ function setup(
 			};
 			return {
 				status: "Committed",
-				clickId: "click-1",
+				encounterId: "click-1",
 				attestationId: "attestation-1",
 				readingId: "reading-1",
 				deduplicated: false,
@@ -182,7 +182,7 @@ function setup(
 		async persistReusedResolvedClick() {
 			return {
 				status: "Reused",
-				clickId: "click-2",
+				encounterId: "click-2",
 				attestationId: "attestation-1",
 				readingId: "reading-1",
 				deduplicated: false,
@@ -192,7 +192,7 @@ function setup(
 			unresolved.push(input);
 			return {
 				status: "Unresolved",
-				clickId: "click-1",
+				encounterId: "click-1",
 				deduplicated: false,
 			};
 		},
@@ -330,7 +330,7 @@ test("Unresolved is durable; a late committed occurrence still wins", async () =
 			async persistUnresolvedClick() {
 				return {
 					status: "Reused",
-					clickId: "click-1",
+					encounterId: "click-1",
 					attestationId: "attestation-1",
 					readingId: "reading-1",
 					deduplicated: false,
@@ -659,7 +659,7 @@ test("a New the commit refuses as stale is judged again over the Lemma's Reading
 					return { status: "StaleReading", candidates: ["🪑"] };
 				return {
 					status: "Committed",
-					clickId: "click-1",
+					encounterId: "click-1",
 					attestationId: "attestation-1",
 					readingId: "reading-1",
 					deduplicated: false,
@@ -722,7 +722,7 @@ test("a stale New's re-judge passes its written description, not Grammar's draft
 					return { status: "StaleReading", candidates: ["🪑"] };
 				return {
 					status: "Committed",
-					clickId: "click-1",
+					encounterId: "click-1",
 					attestationId: "attestation-1",
 					readingId: "reading-1",
 					deduplicated: false,
@@ -792,7 +792,7 @@ test("judged again, a stale New may reuse the Reading stored since, and commits 
 					return { status: "StaleReading", candidates: ["🪑"] };
 				return {
 					status: "Committed",
-					clickId: "click-1",
+					encounterId: "click-1",
 					attestationId: "attestation-1",
 					readingId: "reading-1",
 					deduplicated: false,
@@ -877,7 +877,7 @@ test("a Foreign click asks no Reading: its one Reading has no Emoji Description 
 				run.writes.push(input);
 				return {
 					status: "Committed",
-					clickId: "click-1",
+					encounterId: "click-1",
 					attestationId: "attestation-1",
 					readingId: "reading-1",
 					deduplicated: false,

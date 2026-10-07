@@ -39,7 +39,7 @@ import type {
 	readingCheckpointValidator,
 	resolvedGrammaticalValidator,
 } from "./validators";
-import { ensureVisitorEncounter } from "./visitorClicks";
+import { ensureVisitorEncounter } from "./visitorEncounters";
 
 /**
  * The Resolution Session module. It owns every session transition: start,
@@ -634,7 +634,7 @@ export async function completeResolutionSession(
 	session: ResolutionSession,
 	attestationId: Id<"attestations">,
 ) {
-	const { clickId } = await ensureVisitorEncounter(ctx, {
+	const { encounterId } = await ensureVisitorEncounter(ctx, {
 		requestId: session.requestId,
 		visitorId: session.visitorId,
 		textId: session.route.textId,
@@ -670,7 +670,7 @@ export async function completeResolutionSession(
 		readingId,
 		attestationId,
 	});
-	return { clickId, readingId, attestationId, occurrence };
+	return { encounterId, readingId, attestationId, occurrence };
 }
 
 export type ResolutionSessionEnding =

@@ -1407,7 +1407,7 @@ describe("tf-demo Dumdict relation storage", () => {
 				decisions.push(input.readingDecision);
 				return {
 					status: "Committed",
-					clickId: `click-${decisions.length}`,
+					encounterId: `click-${decisions.length}`,
 					attestationId: `attestation-${decisions.length}`,
 					readingId: gehenReadingId,
 					deduplicated: false,

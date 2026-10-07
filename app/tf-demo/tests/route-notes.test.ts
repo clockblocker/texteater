@@ -538,13 +538,13 @@ test("sentence gender belongs to the visitor's encountered occurrence, including
 		[article, segments?.[2]],
 	);
 	await t.run((ctx) =>
-		ctx.db.insert("visitorClicks", {
+		ctx.db.insert("visitorEncounters", {
 			requestId: "click-1",
 			visitorId: "alice",
 			textId,
 			sentenceId,
 			segmentId: article,
-			clickedAt: 1,
+			encounteredAt: 1,
 		}),
 	);
 	const project = (visitorId: string) =>

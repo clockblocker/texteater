@@ -141,7 +141,7 @@ _Avoid_: Learner, User, account
 **Segment Selection**:
 An ephemeral Visitor command that presents a stored route or starts one
 Resolution Session. See [tf-demo ADR 0002].
-_Avoid_: Click record, Resolution
+_Avoid_: Resolution
 
 **Segment Resolution State**:
 The shared current outcome for an unattested Segment. See [tf-demo ADR 0004].
@@ -154,6 +154,7 @@ converges to the canonical Note subject.
 **Visitor Encounter**:
 The single durable association of one Visitor with one Segment after its first
 selection. See [tf-demo ADR 0002] and [tf-demo ADR 0004].
+_Avoid_: Click record, visitor click
 
 **Membership Conflict**:
 A rejected occurrence proposal that overlaps a committed Occurrence

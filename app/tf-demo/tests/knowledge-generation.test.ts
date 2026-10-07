@@ -1221,14 +1221,14 @@ test("scheduling is exact, idempotent, skips Full, and retries Failed", async ()
 	const retry = createTestConvex();
 	const retryOccurrence = await seedOccurrence(retry);
 	await retry.run((ctx) =>
-		ctx.db.insert("visitorClicks", {
+		ctx.db.insert("visitorEncounters", {
 			requestId: "click-request",
 			visitorId: "visitor-1",
 			textId: retryOccurrence.textId,
 			sentenceId: retryOccurrence.sentenceId,
 			segmentId: retryOccurrence.segmentId,
 			attestationId: retryOccurrence.attestationId,
-			clickedAt: 1,
+			encounteredAt: 1,
 		}),
 	);
 	await insertAttempt(retry, retryOccurrence, "retry-request", {
@@ -1465,14 +1465,14 @@ test("a run whose action died fails as interrupted, starts the next demand, and 
 	const t = createTestConvex();
 	const occurrence = await seedOccurrence(t);
 	await t.run((ctx) =>
-		ctx.db.insert("visitorClicks", {
+		ctx.db.insert("visitorEncounters", {
 			requestId: "click-request",
 			visitorId: "visitor-1",
 			textId: occurrence.textId,
 			sentenceId: occurrence.sentenceId,
 			segmentId: occurrence.segmentId,
 			attestationId: occurrence.attestationId,
-			clickedAt: 1,
+			encounteredAt: 1,
 		}),
 	);
 	const input = {

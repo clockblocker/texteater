@@ -232,7 +232,7 @@ for (const [article, gender, spelled, canonical] of [
 			knowledge,
 		);
 		expect(await rows(t, "attestations")).toHaveLength(0);
-		expect(await rows(t, "visitorClicks")).toHaveLength(0);
+		expect(await rows(t, "visitorEncounters")).toHaveLength(0);
 		const before = await snapshot(t);
 		await t.run((ctx) => materializeGrammaticalComponent(ctx, reference));
 		expect(await snapshot(t)).toEqual(before);

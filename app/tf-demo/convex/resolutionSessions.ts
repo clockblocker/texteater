@@ -37,7 +37,7 @@ import {
 	safeGenerationFailureValidator,
 	visitorError,
 } from "./model/validators";
-import { ensureVisitorEncounter } from "./model/visitorClicks";
+import { ensureVisitorEncounter } from "./model/visitorEncounters";
 import {
 	loadCanonicalOccurrence,
 	loadResolutionNote,

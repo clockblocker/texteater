@@ -14,13 +14,13 @@ async function findVisitorEncounter(
 		segmentId: Id<"segments">;
 	},
 ) {
-	const [click] = await ctx.db
-		.query("visitorClicks")
+	const [encounter] = await ctx.db
+		.query("visitorEncounters")
 		.withIndex("by_visitor_id_and_segment_id", (q) =>
 			q.eq("visitorId", input.visitorId).eq("segmentId", input.segmentId),
 		)
 		.take(1);
-	return click ?? null;
+	return encounter ?? null;
 }
 
 /**
@@ -36,7 +36,7 @@ export async function loadEncounteredSegmentIds(
 	},
 ) {
 	const encounters = await ctx.db
-		.query("visitorClicks")
+		.query("visitorEncounters")
 		.withIndex("by_visitor_id_and_sentence_id", (q) =>
 			q
 				.eq("visitorId", input.visitorId)
@@ -74,10 +74,10 @@ export async function ensureVisitorEncounter(
 				await encounteredOccurrence(ctx, input.attestationId),
 			);
 		}
-		return { clickId: existing._id, created: false as const };
+		return { encounterId: existing._id, created: false as const };
 	}
 
-	const clickId = await ctx.db.insert("visitorClicks", {
+	const encounterId = await ctx.db.insert("visitorEncounters", {
 		requestId: input.requestId,
 		visitorId: input.visitorId,
 		textId: input.textId,
@@ -86,9 +86,9 @@ export async function ensureVisitorEncounter(
 		...(input.attestationId
 			? await encounteredOccurrence(ctx, input.attestationId)
 			: {}),
-		clickedAt: Date.now(),
+		encounteredAt: Date.now(),
 	});
-	return { clickId, created: true as const };
+	return { encounterId, created: true as const };
 }
 
 /**
@@ -124,13 +124,15 @@ export async function advanceMemberEncounters(
 	let budget = ENCOUNTER_ADVANCE_BATCH;
 	for (const segmentId of input.segmentIds) {
 		const unadvanced = await ctx.db
-			.query("visitorClicks")
+			.query("visitorEncounters")
 			.withIndex("by_segment_id_and_attestation_id", (q) =>
 				q.eq("segmentId", segmentId).eq("attestationId", undefined),
 			)
 			.take(budget);
 		await Promise.all(
-			unadvanced.map((click) => ctx.db.patch(click._id, occurrence)),
+			unadvanced.map((encounter) =>
+				ctx.db.patch(encounter._id, occurrence),
+			),
 		);
 		budget -= unadvanced.length;
 		if (budget === 0) {
