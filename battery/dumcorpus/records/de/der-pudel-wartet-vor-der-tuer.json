@@ -76,7 +76,7 @@
 					},
 					{
 						"title": "Dumrel settled Semantic Relation policy",
-						"path": "battery/dumrel/CONTEXT.md",
+						"path": "battery/dumrel/GLOSSARY.md",
 						"supports": "Defines Hypernym as the direct narrower-to-broader relation."
 					}
 				],

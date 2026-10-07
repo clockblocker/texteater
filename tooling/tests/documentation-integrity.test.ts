@@ -100,7 +100,7 @@ test("enforces canonical developer-documentation paths", () => {
 		auditAllowedPaths([
 			"README.md",
 			"app/tf-demo/README.md",
-			"battery/dumgen/CONTEXT.md",
+			"battery/dumgen/GLOSSARY.md",
 			"docs/adr/0001-use-a-contract.md",
 			"battery/dumgen/docs/reference/prompt-contract.md",
 			"docs/runbooks/release.md",
@@ -188,28 +188,28 @@ Ordering names the concepts used to accept and fulfill an order.
 A customer's request for goods.
 _Avoid_: Transaction
 `;
-	expect(contextStructureIssues("battery/order/CONTEXT.md", valid)).toEqual(
+	expect(contextStructureIssues("battery/order/GLOSSARY.md", valid)).toEqual(
 		[],
 	);
 	expect(
 		contextStructureIssues(
-			"battery/order/CONTEXT.md",
+			"battery/order/GLOSSARY.md",
 			"# Ordering Context\n\n## Architecture\n\nImplementation detail.\n",
 		),
 	).toMatchObject([
-		{ file: "battery/order/CONTEXT.md", kind: "context-structure" },
+		{ file: "battery/order/GLOSSARY.md", kind: "context-structure" },
 	]);
 });
 
-test("enforces the installed Context Map headings", () => {
+test("enforces the installed Glossary Map headings", () => {
 	expect(
 		contextMapStructureIssues(
-			"# Context Map\n\n## Contexts\n\n- Ordering\n",
+			"# Glossary Map\n\n## Contexts\n\n- Ordering\n",
 		),
 	).toEqual([]);
 	expect(
 		contextMapStructureIssues(
-			"# Context Map\n\n## Contexts\n\n## Relationships\n",
+			"# Glossary Map\n\n## Contexts\n\n## Relationships\n",
 		),
 	).toMatchObject([{ kind: "context-map-structure" }]);
 });

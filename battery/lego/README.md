@@ -18,4 +18,4 @@ Notes and reading text their look: `NoteSection`, `NoteTitle`, `Quote`,
 theme currently reuses the dark palette; a distinct light appearance is not
 designed yet.
 
-Terminology lives in [CONTEXT.md](./CONTEXT.md).
+Terminology lives in [GLOSSARY.md](./GLOSSARY.md).

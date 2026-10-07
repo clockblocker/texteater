@@ -54,7 +54,7 @@ Grundform.
 or adjective predicate: `eine Entscheidung treffen`, `Angst haben`, `Kritik
 üben`, `geltend machen`. A weak collocation whose meaning is literal
 (`starker Raucher`, `Zähne putzen`) is ordinary Lexemes. This one definition
-replaces the three that `CONTEXT.md`, ADR 0034 and dumcorpus held.
+replaces the three that `GLOSSARY.md`, ADR 0034 and dumcorpus held.
 
 **Formulas.** A routine formula is an INTJ: a Lexeme when it is one word
 (`danke`, `Entschuldigung!`), a Locution otherwise. `Entschuldigung!` and the

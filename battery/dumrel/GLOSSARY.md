@@ -103,4 +103,4 @@ _Avoid_: discourseFormulaRole, DiscourseFormula
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
 [Dumrel ADR 0001]: ./docs/adr/0001-keep-dumrel-ownerless-and-pure.md
-[Dumcorpus Context]: ../dumcorpus/CONTEXT.md
+[Dumcorpus Context]: ../dumcorpus/GLOSSARY.md

@@ -5,8 +5,8 @@ that code, configuration, tests, command help, or GitHub does not already own.
 
 ## Placement
 
-- `CONTEXT-MAP.md` routes between domain contexts.
-- A scoped `CONTEXT.md` is a glossary and contains no implementation detail.
+- `GLOSSARY-MAP.md` routes between domain contexts.
+- A scoped `GLOSSARY.md` is a glossary and contains no implementation detail.
 - System decisions live in `docs/adr/`; scoped decisions live beside their app
   or battery in `docs/adr/`.
 - Current technical rules and contracts live in `docs/reference/`.

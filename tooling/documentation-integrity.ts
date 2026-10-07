@@ -170,9 +170,9 @@ export function isAllowedDeveloperDocumentationPath(
 		/^app\/[^/]+\/README\.md$/u.test(path) ||
 		path === "AGENTS.md" ||
 		path === "CLAUDE.md" ||
-		path === "CONTEXT-MAP.md" ||
+		path === "GLOSSARY-MAP.md" ||
 		path === "VISION.md" ||
-		/^(?:app|battery)\/[^/]+\/(?:AGENTS|CLAUDE|CONTEXT|VISION)\.md$/u.test(
+		/^(?:app|battery)\/[^/]+\/(?:AGENTS|CLAUDE|GLOSSARY|VISION)\.md$/u.test(
 			path,
 		) ||
 		isInstalledSkillPath(path) ||
@@ -570,14 +570,17 @@ export function contextStructureIssues(
 	return issues;
 }
 
+/** A Context glossary; installed skills may ship their own GLOSSARY.md. */
+function isContextPath(path: string): boolean {
+	return basename(path) === "GLOSSARY.md" && !isInstalledSkillPath(path);
+}
+
 async function auditContexts(
 	repositoryRoot: string,
 	files: readonly string[],
 ): Promise<DocumentationIssue[]> {
 	const issues: DocumentationIssue[] = [];
-	for (const file of files.filter(
-		(path) => basename(path) === "CONTEXT.md",
-	)) {
+	for (const file of files.filter(isContextPath)) {
 		issues.push(
 			...contextStructureIssues(
 				file,
@@ -589,18 +592,18 @@ async function auditContexts(
 }
 
 export function contextMapStructureIssues(text: string): DocumentationIssue[] {
-	const file = "CONTEXT-MAP.md";
+	const file = "GLOSSARY-MAP.md";
 	const headings = text.split("\n").filter((line) => /^#{1,6}\s/u.test(line));
 	if (
 		headings.length === 2 &&
-		headings[0] === "# Context Map" &&
+		headings[0] === "# Glossary Map" &&
 		headings[1] === "## Contexts"
 	) {
 		return [];
 	}
 	return [
 		{
-			detail: "Context Map headings must be # Context Map, then ## Contexts",
+			detail: "Glossary Map headings must be # Glossary Map, then ## Contexts",
 			file,
 			kind: "context-map-structure",
 			severity: "error",
@@ -612,30 +615,31 @@ async function auditContextMap(
 	repositoryRoot: string,
 	files: readonly string[],
 ): Promise<DocumentationIssue[]> {
-	if (!files.includes("CONTEXT-MAP.md")) {
+	if (!files.includes("GLOSSARY-MAP.md")) {
 		return [
 			{
-				detail: "multi-context repository requires a root CONTEXT-MAP.md",
-				file: "CONTEXT-MAP.md",
+				detail: "multi-context repository requires a root GLOSSARY-MAP.md",
+				file: "GLOSSARY-MAP.md",
 				kind: "context-map-structure",
 				severity: "error",
 			},
 		];
 	}
-	const text = await readFile(join(repositoryRoot, "CONTEXT-MAP.md"), "utf8");
+	const text = await readFile(
+		join(repositoryRoot, "GLOSSARY-MAP.md"),
+		"utf8",
+	);
 	const issues = contextMapStructureIssues(text);
 	const targets = new Set(
 		markdownLinks(text)
 			.map(({ target }) => cleanLinkTarget(target))
-			.filter((target) => target.endsWith("/CONTEXT.md"))
+			.filter((target) => target.endsWith("/GLOSSARY.md"))
 			.map((target) => normalizeRepositoryPath(target)),
 	);
-	for (const context of files.filter(
-		(path) => basename(path) === "CONTEXT.md",
-	)) {
+	for (const context of files.filter(isContextPath)) {
 		if (!targets.has(`./${context}`) && !targets.has(context)) {
 			issues.push({
-				detail: "Context is not listed in root CONTEXT-MAP.md",
+				detail: "Context is not listed in root GLOSSARY-MAP.md",
 				file: context,
 				kind: "context-map-structure",
 				severity: "error",

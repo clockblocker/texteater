@@ -2,8 +2,8 @@
 
 Before domain work:
 
-1. Read `CONTEXT-MAP.md`.
-2. Follow it to the relevant scoped `CONTEXT.md` files.
+1. Read `GLOSSARY-MAP.md`.
+2. Follow it to the relevant scoped `GLOSSARY.md` files.
 3. Read applicable system ADRs in `docs/adr/` and scoped ADRs in the owning app
    or battery.
 4. Apply `writing-for-agents` and `unslop` to every retained or rewritten

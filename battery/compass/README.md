@@ -11,7 +11,7 @@ what that renderer draws from.
   `SplitHandle`, which divide the workspace between Panes and resize them.
   lego's `Resizable*` atoms give them their look.
 
-Terminology lives in [CONTEXT.md](./CONTEXT.md).
+Terminology lives in [GLOSSARY.md](./GLOSSARY.md).
 
 `src/panels/` is forked from react-resizable-panels 4.12.3, upstream commit
 f9c42271, on 2026-09-08, and keeps its MIT [LICENSE](./LICENSE).
