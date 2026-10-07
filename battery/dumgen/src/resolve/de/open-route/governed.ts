@@ -7,12 +7,17 @@ import {
 	germanAdpositionAllowedCases,
 	germanAdpositionEntry,
 } from "dumcorpus/inventories";
-import { fill, question } from "../prompts.js";
-import type { Answered, Questionnaire } from "../questions.js";
+import { fill, options, question } from "../prompts.js";
+import {
+	type Answered,
+	type Choice,
+	type ChoiceOf,
+	optionsOf,
+	type Questionnaire,
+} from "../questions.js";
 import type { Member, Target } from "../target.js";
 import {
 	type AdpCase,
-	caseNames,
 	fold,
 	type Shape,
 	spellingOf,
@@ -20,10 +25,21 @@ import {
 } from "./shape.js";
 
 /** A member that may be the preposition its head governs, with the cases the ADP Case Table lets it take. */
-export type Governable = {
+type Governable = {
 	readonly member: Member;
 	readonly preposition: string;
 	readonly cases: readonly AdpCase[];
+};
+
+/** A member that may be its head's preposition, and the questions asked of it. */
+export type GovernedQuestions = Governable & {
+	readonly governed: ChoiceOf<typeof options.governed>;
+	/** A governor's case question, when the table lets the preposition take more than one. */
+	readonly governedCase: Choice<AdpCase> | undefined;
+	/** A governor's question of what the complement refers to. */
+	readonly governedReferent:
+		| ChoiceOf<typeof options.governedReferent>
+		| undefined;
 };
 
 function governableMembers(
@@ -73,38 +89,38 @@ export function askGoverned(
 	target: Target,
 	shape: Shape,
 	taken: ReadonlySet<number>,
-): readonly Governable[] {
+): readonly GovernedQuestions[] {
 	const governable = shape.governs ? governableMembers(target, taken) : [];
-	for (const { member, cases: allowed } of governable) {
-		questionnaire.choice(
+	return governable.map((chosen) => {
+		const { member, cases: allowed } = chosen;
+		const governed = questionnaire.choice(
 			`governed_m${member.position}`,
 			fill(question.governed, { m: member.ref }),
-			{
-				Governed: "Yes, the head selects it",
-				Free: question.governedFree,
-			},
+			options.governed,
 			["government"],
 		);
-		if (!shape.governor) continue;
-		if (allowed.length > 1)
-			questionnaire.choice(
-				`governedCase_m${member.position}`,
-				fill(question.governedCase, { m: member.ref }),
-				Object.fromEntries(
-					allowed.map((value) => [value, caseNames[value]]),
-				),
-			);
-		questionnaire.choice(
+		if (!shape.governor)
+			return {
+				...chosen,
+				governed,
+				governedCase: undefined,
+				governedReferent: undefined,
+			};
+		const governedCase =
+			allowed.length > 1
+				? questionnaire.choice(
+						`governedCase_m${member.position}`,
+						fill(question.governedCase, { m: member.ref }),
+						optionsOf(allowed, options.case),
+					)
+				: undefined;
+		const governedReferent = questionnaire.choice(
 			`governedReferent_m${member.position}`,
 			fill(question.governedReferent, { m: member.ref }),
-			{
-				Someone: "A person or people",
-				Something: "A thing, place, event, fact or idea",
-				Either: "Either: the sentence leaves it open or it names both",
-			},
+			options.governedReferent,
 		);
-	}
-	return governable;
+		return { ...chosen, governed, governedCase, governedReferent };
+	});
 }
 
 /**
@@ -112,7 +128,7 @@ export function askGoverned(
  * valency evidence for each.
  */
 export function readGoverned(
-	governable: readonly Governable[],
+	governable: readonly GovernedQuestions[],
 	shape: Shape,
 	answered: Answered,
 ): {
@@ -123,13 +139,13 @@ export function readGoverned(
 	const governedPositions: number[] = [];
 	for (const chosen of governable) {
 		const position = chosen.member.position;
-		if (answered.pick(`governed_m${position}`) !== "Governed") continue;
+		if (answered.pick(chosen.governed) !== "Governed") continue;
 		governedPositions.push(position);
 		if (!shape.governor) continue;
-		const governedCase =
-			chosen.cases.length === 1
-				? chosen.cases[0]
-				: answered.pick(`governedCase_m${position}`);
+		const [only] = chosen.cases;
+		const governedCase = chosen.governedCase
+			? answered.pick(chosen.governedCase)
+			: only;
 		governed.push({
 			member: position,
 			complement: {
@@ -144,7 +160,9 @@ export function readGoverned(
 				},
 				governedCase,
 				referent:
-					answered.peek(`governedReferent_m${position}`) ?? "Either",
+					(chosen.governedReferent &&
+						answered.peek(chosen.governedReferent)) ??
+					"Either",
 			},
 			realizedCase: governedCase,
 		});

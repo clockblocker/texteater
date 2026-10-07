@@ -1,4 +1,4 @@
-/** An open route's shape, and the case, gender and number names its questions offer. */
+/** An open route's shape, and the cases and genders its questions offer. */
 
 import { foldCase } from "dumling";
 import { fixedSpelling, type Member, type Target } from "../target.js";
@@ -7,18 +7,6 @@ export type Values = Record<string, unknown>;
 export type AdpCase = "Acc" | "Dat" | "Gen";
 
 export const cases = ["Nom", "Acc", "Dat", "Gen"] as const;
-export const caseNames = {
-	Nom: "Nominative, as a subject or a predicate noun",
-	Acc: "Accusative, as a direct object or after a preposition that takes it",
-	Dat: "Dative, as an indirect object or after a preposition that takes it",
-	Gen: "Genitive, as a possessor or after a preposition that takes it",
-} as const;
-export const genders = {
-	Masc: "Masculine",
-	Fem: "Feminine",
-	Neut: "Neuter",
-} as const;
-export const numbers = { Sing: "Singular", Plur: "Plural" } as const;
 /**
  * A gender question's options are named by the article the gender takes,
  * never Neut, which jev read as a neutral fallback when unsure (#876).

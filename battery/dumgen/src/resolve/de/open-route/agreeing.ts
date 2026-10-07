@@ -4,47 +4,75 @@
  * and number, which an attributive ADJ is asked too.
  */
 
-import { question } from "../prompts.js";
-import type { Answered, Questionnaire } from "../questions.js";
-import { caseNames, genders, numbers, type Values } from "./shape.js";
+import { options, question } from "../prompts.js";
+import type { Answered, ChoiceOf, Questionnaire } from "../questions.js";
+import type { Values } from "./shape.js";
+
+/** The questions of an agreeing word's case, gender and number. */
+export type AgreementQuestions = ReturnType<typeof agreementQuestions>;
 
 /** Asks an agreeing word's case, gender and number. */
 export function agreementQuestions(questionnaire: Questionnaire) {
-	questionnaire.choice("agreement.case", question.agreementCase, caseNames);
-	questionnaire.choice("agreement.gender", question.agreementGender, {
-		...genders,
-		Unmarked: "No gender: plural agreement",
-	});
-	questionnaire.choice("agreement.number", question.agreementNumber, numbers);
+	return {
+		case: questionnaire.choice(
+			"agreement.case",
+			question.agreementCase,
+			options.case,
+		),
+		gender: questionnaire.choice(
+			"agreement.gender",
+			question.agreementGender,
+			options.agreementGender,
+		),
+		number: questionnaire.choice(
+			"agreement.number",
+			question.agreementNumber,
+			options.number,
+		),
+	};
 }
 
 /** Reads an agreeing word's case, gender and number: a plural has no gender. */
-export function readAgreement(answered: Answered) {
-	const number = answered.pick("agreement.number");
-	const gender = answered.pick("agreement.gender");
+export function readAgreement(
+	agreement: AgreementQuestions,
+	answered: Answered,
+) {
+	const number = answered.pick(agreement.number);
+	const gender = answered.pick(agreement.gender);
 	return {
-		case: answered.pick("agreement.case"),
+		case: answered.pick(agreement.case),
 		gender: gender === "Unmarked" || number === "Plur" ? null : gender,
 		number,
 	};
 }
 
+/** What an agreeing word's block asked. */
+export type AgreeingPlan = AgreementQuestions & {
+	readonly inflects: ChoiceOf<typeof options.inflects>;
+};
+
 /** Asks whether an agreeing word inflects here, and its agreement. */
-export function askAgreeing(questionnaire: Questionnaire): void {
-	questionnaire.choice(
+export function askAgreeing(questionnaire: Questionnaire): AgreeingPlan {
+	const inflects = questionnaire.choice(
 		"inflects",
 		question.inflects,
-		{ Yes: "It inflects here", No: "Invariant here" },
+		options.inflects,
 		["inflection"],
 	);
-	agreementQuestions(questionnaire);
+	return { inflects, ...agreementQuestions(questionnaire) };
 }
 
 /** Reads an agreeing word's block: its agreement when it inflects here. */
-export function readAgreeing(answered: Answered): {
+export function readAgreeing(
+	agreeing: AgreeingPlan,
+	answered: Answered,
+): {
 	readonly core: Values;
 	readonly inflection: Values | null;
 } {
-	const inflects = answered.pick("inflects") === "Yes";
-	return { core: {}, inflection: inflects ? readAgreement(answered) : null };
+	const inflects = answered.pick(agreeing.inflects) === "Yes";
+	return {
+		core: {},
+		inflection: inflects ? readAgreement(agreeing, answered) : null,
+	};
 }

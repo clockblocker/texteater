@@ -46,21 +46,26 @@ import {
 	readAdposition,
 } from "./open-route/adposition.js";
 import {
+	type AdverbialPlan,
 	adverbHeadword,
 	askAdverbial,
 	ordinalStem,
 	readAdverbial,
 	suppletivePositive,
 } from "./open-route/adverbial.js";
-import { askAgreeing, readAgreeing } from "./open-route/agreeing.js";
+import {
+	type AgreeingPlan,
+	askAgreeing,
+	readAgreeing,
+} from "./open-route/agreeing.js";
 import {
 	askHead,
 	askTail,
 	type HeadPlan,
 	readHead,
 	readTail,
+	type TailPlan,
 } from "./open-route/common.js";
-import type { Governable } from "./open-route/governed.js";
 import { guessedJudgment, guessMisses } from "./open-route/luna-guess.js";
 import {
 	askNominal,
@@ -88,6 +93,7 @@ import {
 	verbGuessMisses,
 	verbHeadword,
 } from "./open-route/verbal.js";
+import type { CaseOption } from "./prompts.js";
 import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
 import {
 	fixedSpelling,
@@ -115,8 +121,10 @@ type Plan = HeadPlan & {
 	readonly article: OpeningArticle | undefined;
 	readonly verbal: VerbalPlan | undefined;
 	readonly nominal: NominalPlan | undefined;
+	readonly adverbial: AdverbialPlan | undefined;
+	readonly agreeing: AgreeingPlan | undefined;
 	readonly adposition: AdpositionPlan | undefined;
-	readonly governable: readonly Governable[];
+	readonly tail: TailPlan;
 };
 
 /**
@@ -152,13 +160,15 @@ function plan(target: Target): Plan {
 	const nominal = shape.nounLike
 		? askNominal(questionnaire, shape, article)
 		: undefined;
-	if (shape.adjectival || shape.adverbial)
-		askAdverbial(questionnaire, target, shape);
-	if (shape.agreeing) askAgreeing(questionnaire);
+	const adverbial =
+		shape.adjectival || shape.adverbial
+			? askAdverbial(questionnaire, target, shape)
+			: undefined;
+	const agreeing = shape.agreeing ? askAgreeing(questionnaire) : undefined;
 	const adposition = shape.adposition
 		? askAdposition(questionnaire, target, shape)
 		: undefined;
-	const governable = askTail(questionnaire, target, shape, taken);
+	const tail = askTail(questionnaire, target, shape, taken);
 	questionnaire.cite("identity");
 	return {
 		...head,
@@ -167,8 +177,10 @@ function plan(target: Target): Plan {
 		article,
 		verbal,
 		nominal,
+		adverbial,
+		agreeing,
 		adposition,
-		governable,
+		tail,
 	};
 }
 
@@ -186,7 +198,7 @@ type FirstRead = {
 	readonly expletive: Member | undefined;
 	readonly realizedCase: AdpCase | "None" | undefined;
 	/** The cases a NOUN's Case question still has to choose among. */
-	readonly openCases: readonly string[];
+	readonly openCases: readonly CaseOption[];
 	readonly noun?: NounRead;
 };
 
@@ -196,7 +208,7 @@ type ShapeRead = {
 	readonly inflection: Values | null | undefined;
 	readonly readings?: ReadonlyMap<number, string>;
 	readonly expletive?: Member | undefined;
-	readonly openCases?: readonly string[];
+	readonly openCases?: readonly CaseOption[];
 	readonly noun?: NounRead | undefined;
 	readonly realizedCase?: AdpCase | "None" | undefined;
 };
@@ -210,19 +222,24 @@ function readShape(
 ): ShapeRead {
 	const { shape } = planned;
 	if (planned.verbal)
-		return readVerbal(target, planned.verbal, shape, answered, cited);
+		return readVerbal(
+			target,
+			planned.verbal,
+			shape,
+			planned.tail.governable,
+			answered,
+			cited,
+		);
 	if (planned.nominal)
 		return readNominal(
 			shape,
 			planned.article,
 			planned.nominal,
-			planned.questionnaire,
 			answered,
 			cited,
 		);
-	if (shape.adjectival || shape.adverbial)
-		return readAdverbial(shape, answered);
-	if (shape.agreeing) return readAgreeing(answered);
+	if (planned.adverbial) return readAdverbial(planned.adverbial, answered);
+	if (planned.agreeing) return readAgreeing(planned.agreeing, answered);
 	const inflection = shape.inflects ? null : undefined;
 	if (planned.adposition)
 		return {
@@ -241,16 +258,15 @@ function readFirst(
 ): FirstRead {
 	const head = readHead(
 		target,
-		planned.questionnaire,
 		planned.article,
 		planned,
+		planned.adverbial?.indefinite,
 		answered,
 	);
 	const read = readShape(target, planned, answered, head.cited);
 	const tail = readTail(
-		target,
+		planned.tail,
 		planned.shape,
-		planned.governable,
 		answered,
 		read.expletive,
 		head.cited,
@@ -309,11 +325,13 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 	const planned = plan(target);
 	const { shape } = planned;
 	const state = targetState(target);
+	const [opening, ...rest] = target.members;
+	const lone = rest.length === 0 ? opening : undefined;
 	// A PART is authored (#734): its spelling names its member, or Luna's
 	// headword does when the member is no Standard spelling.
 	const particleSpelled =
-		target.route.kind === "PART" && target.members.length === 1
-			? particlesSpelled(spellingOf(target.members[0] as Member))
+		target.route.kind === "PART" && lone
+			? particlesSpelled(spellingOf(lone))
 			: [];
 	const hints = hintsFor(target, candidates);
 	const drafts = draftsEmojiDescription(target.route);
@@ -361,22 +379,22 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		},
 		outsideHeadword,
 		auxiliaries: new Set(
-			(planned.verbal?.auxiliaries ?? []).flatMap(({ member }) => {
-				const use = new Answered(answers).peek(
-					`aux_m${member.position}`,
-				);
-				return use === undefined || use === "Main"
-					? []
-					: [member.position];
-			}),
+			(planned.verbal?.auxiliaries ?? []).flatMap(
+				({ member, use: asked }) => {
+					const use = new Answered(answers).peek(asked);
+					return use === undefined || use === "Main"
+						? []
+						: [member.position];
+				},
+			),
 		),
 		readings: first.readings,
 	};
-	const caseRequestOver = (open: readonly string[]) =>
+	const caseRequestOver = (open: readonly CaseOption[]) =>
 		open.length > 1
 			? Effect.gen(function* () {
 					const questionnaire = new Questionnaire();
-					caseQuestion(questionnaire, open);
+					const asked = caseQuestion(questionnaire, open);
 					const answered = yield* ask({
 						stage: "case",
 						state: {
@@ -385,7 +403,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 						},
 						questions: questionnaire.questions,
 					});
-					return settle(() => new Answered(answered).pick("case"));
+					return settle(() => new Answered(answered).pick(asked));
 				})
 			: Effect.succeed(undefined);
 	const caseRequest = caseRequestOver(first.openCases);
@@ -424,7 +442,7 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		inflection: first.inflection,
 		openCases: first.openCases,
 	};
-	let caseAnswer: string | UnresolvedAnswer | undefined;
+	let caseAnswer: CaseOption | UnresolvedAnswer | undefined;
 	let written: Written | undefined;
 	if (first.noun && first.inflection) {
 		written = yield* writing;
@@ -468,9 +486,10 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 			)),
 	];
 	if (target.route.kind === "PART") {
-		const [authored, ...others] = particlesSpelled(
-			written?.canonicalForm ?? spellingOf(target.members[0] as Member),
-		);
+		const spelled =
+			written?.canonicalForm ?? (opening && spellingOf(opening));
+		const [authored, ...others] =
+			spelled === undefined ? [] : particlesSpelled(spelled);
 		if (!authored || others.length > 0)
 			return {
 				_tag: "CatalogMiss",
@@ -580,9 +599,11 @@ export const resolveOpenRoute = Effect.fnUntraced(function* (
 		const table = shape.locution
 			? germanAdpositionEntry({ family: "Locution", canonicalForm })
 			: null;
-		const allowed = table ? germanAdpositionAllowedCases(table) : [];
+		const [sole, ...more] = table
+			? germanAdpositionAllowedCases(table)
+			: [];
 		const realized =
-			allowed.length === 1 ? (allowed[0] as AdpCase) : first.realizedCase;
+			sole !== undefined && more.length === 0 ? sole : first.realizedCase;
 		valencyEvidence.push({
 			member: null,
 			complement: {

@@ -15,15 +15,17 @@ import {
 	reflexiveForms,
 } from "../../../segment/de/candidates.js";
 import { rShortenings } from "../member-spelling.js";
-import { auxiliaryUses, fill, question } from "../prompts.js";
+import { auxiliaryUses, fill, options, question } from "../prompts.js";
 import {
 	type Answered,
+	type Choice,
+	type ChoiceOf,
 	type Questionnaire,
 	UnresolvedAnswer,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
-import { coordinators } from "./governed.js";
-import { fold, numbers, type Shape, spellingOf, type Values } from "./shape.js";
+import { coordinators, type GovernedQuestions } from "./governed.js";
+import { fold, type Shape, spellingOf, type Values } from "./shape.js";
 
 /** An authored AUX Reading's use, by Canonical Form and Emoji Description (`werden 🔄`). */
 export const auxiliaryUse = ({ lemma, reading }: AuthoredMember) =>
@@ -136,22 +138,30 @@ function prefixCandidates(target: Target, skip: ReadonlySet<number>) {
 	return [...found].sort((left, right) => right.length - left.length);
 }
 
+/** An auxiliary member, and the authored AUX uses its spelling realizes. */
+type Auxiliary = { readonly member: Member; readonly uses: readonly string[] };
+
 /** A VERB unit's satellite members: its auxiliaries, lexical reflexive and subject es. */
 export type VerbalSatellites = {
-	readonly auxiliaries: readonly {
-		readonly member: Member;
-		readonly uses: readonly string[];
-	}[];
+	readonly auxiliaries: readonly Auxiliary[];
 	readonly reflexive: Member | undefined;
 	/** Every member that spells es; the subject es when there is one only. */
 	readonly expletives: readonly Member[];
 	readonly expletive: Member | undefined;
 };
 
-/** What a VERB's block asked: its satellites and the separable prefixes offered. */
-export type VerbalPlan = VerbalSatellites & {
-	readonly prefixes: readonly string[];
-};
+/** What a VERB's block asked: its satellites, the separable prefixes offered, and the questions. */
+export type VerbalPlan = Omit<VerbalSatellites, "auxiliaries"> &
+	VerbFormQuestions & {
+		/** Each auxiliary, with the question of its use. */
+		readonly auxiliaries: readonly (Auxiliary & { readonly use: Choice })[];
+		/** The case of a reflexive whose form leaves it open. */
+		readonly reflexiveCase: ChoiceOf<typeof options.reflexive> | undefined;
+		/** Whether a Locution's es is its subject es. */
+		readonly subjectEs: ChoiceOf<typeof options.expletive> | undefined;
+		readonly prefixes: readonly string[];
+		readonly prefix: Choice | undefined;
+	};
 
 /** A unit's verbal satellites, none off a VERB route. */
 export function verbalSatellites(
@@ -190,86 +200,96 @@ export function askVerbal(
 	satellites: VerbalSatellites,
 	taken: ReadonlySet<number>,
 ): VerbalPlan {
-	const { auxiliaries, reflexive, expletive } = satellites;
-	for (const { member, uses } of auxiliaries)
-		questionnaire.choice(
-			`aux_m${member.position}`,
-			fill(question.auxiliary, { m: member.ref }),
+	const { reflexive, expletive } = satellites;
+	const auxiliaries = satellites.auxiliaries.map((auxiliary) => ({
+		...auxiliary,
+		use: questionnaire.choice(
+			`aux_m${auxiliary.member.position}`,
+			fill(question.auxiliary, { m: auxiliary.member.ref }),
 			{
 				...Object.fromEntries(
-					uses.map((use, index) => [
+					auxiliary.uses.map((use, index) => [
 						`u${index}`,
 						auxiliaryUses[use] ?? use,
 					]),
 				),
-				Main: question.auxiliaryMain,
+				...options.auxiliary,
 			},
 			["verbal"],
-		);
-	if (reflexive && reflexives.get(fold(reflexive.text)) === undefined)
-		questionnaire.choice(
-			"reflexive",
-			fill(question.reflexive, { m: reflexive.ref }),
-			{ Acc: "Accusative", Dat: "Dative" },
-			["verbCore"],
-		);
-	if (expletive && shape.locution)
-		questionnaire.choice(
-			"expletive",
-			fill(question.expletive, { m: expletive.ref }),
-			{
-				Subject: "Yes: the subject es, referring to nothing",
-				None: "No: an object or a fixed word of the expression",
-			},
-		);
+		),
+	}));
+	const reflexiveCase =
+		reflexive && reflexives.get(fold(reflexive.text)) === undefined
+			? questionnaire.choice(
+					"reflexive",
+					fill(question.reflexive, { m: reflexive.ref }),
+					options.reflexive,
+					["verbCore"],
+				)
+			: undefined;
+	const subjectEs =
+		expletive && shape.locution
+			? questionnaire.choice(
+					"expletive",
+					fill(question.expletive, { m: expletive.ref }),
+					options.expletive,
+				)
+			: undefined;
 	const prefixes = shape.lexeme ? prefixCandidates(target, taken) : [];
-	if (prefixes.length > 0)
-		questionnaire.choice(
-			"prefix",
-			question.prefix,
-			{
-				...Object.fromEntries(
-					prefixes.map((prefix, index) => [`p${index}`, prefix]),
-				),
-				None: "No separable prefix: the verb's dictionary infinitive is written without any of these",
-			},
-			["verbCore"],
-		);
-	askVerbForm(questionnaire);
-	return { ...satellites, prefixes };
+	const prefix =
+		prefixes.length > 0
+			? questionnaire.choice(
+					"prefix",
+					question.prefix,
+					{
+						...Object.fromEntries(
+							prefixes.map((prefix, index) => [
+								`p${index}`,
+								prefix,
+							]),
+						),
+						...options.prefix,
+					},
+					["verbCore"],
+				)
+			: undefined;
+	return {
+		...satellites,
+		auxiliaries,
+		reflexiveCase,
+		subjectEs,
+		prefixes,
+		prefix,
+		...askVerbForm(questionnaire),
+	};
 }
 
+/** The questions of a VERB's form, and of the mood, tense, person, number and participle it may take. */
+type VerbFormQuestions = ReturnType<typeof askVerbForm>;
+
 /** Asks a VERB's form, and the mood, tense, person, number and participle it may take. */
-function askVerbForm(questionnaire: Questionnaire): void {
-	questionnaire.choice(
-		"verbForm",
-		question.verbForm,
-		{
-			Fin: "Finite: its own finite verb or auxiliary, an imperative included",
-			Inf: "An infinitive, a separate modal's finite form aside",
-			Part: "A participle, without its own finite or infinitive auxiliary",
-		},
-		["verbal"],
-	);
-	questionnaire.choice("mood", question.mood, {
-		Ind: "Indicative",
-		Sub: "Subjunctive, Konjunktiv I or II",
-		Imp: "Imperative",
-	});
-	questionnaire.choice("tense", question.tense, {
-		Pres: "Present",
-		Past: "Past",
-	});
-	questionnaire.choice("person", question.person, {
-		"1": "First person",
-		"2": "Second person",
-		"3": "Third person, formal Sie included",
-	});
-	questionnaire.choice("number", question.verbNumber, numbers);
-	questionnaire.choice("participle", question.participle, {
-		Present: "Present participle",
-		Past: "Past participle",
-	});
+function askVerbForm(questionnaire: Questionnaire) {
+	return {
+		verbForm: questionnaire.choice(
+			"verbForm",
+			question.verbForm,
+			options.verbForm,
+			["verbal"],
+		),
+		mood: questionnaire.choice("mood", question.mood, options.mood),
+		tense: questionnaire.choice("tense", question.tense, options.tense),
+		person: questionnaire.choice("person", question.person, options.person),
+		number: questionnaire.choice(
+			"number",
+			question.verbNumber,
+			options.number,
+		),
+		participle: questionnaire.choice(
+			"participle",
+			question.participle,
+			options.participle,
+		),
+	};
 }
 
 /**
@@ -281,6 +301,7 @@ export function readVerbal(
 	target: Target,
 	verbal: VerbalPlan,
 	shape: Shape,
+	governable: readonly GovernedQuestions[],
 	answered: Answered,
 	cited: boolean,
 ): {
@@ -292,8 +313,14 @@ export function readVerbal(
 	const core: Values = {};
 	const readings = new Map<number, string>();
 	if (shape.lexeme) {
-		const prefix = verbal.prefixes.length
-			? prefixAnswer(target, verbal.prefixes, answered)
+		const prefix = verbal.prefix
+			? prefixAnswer(
+					target,
+					verbal.prefixes,
+					verbal.prefix,
+					governable,
+					answered,
+				)
 			: "None";
 		core.hasSepPrefix =
 			prefix === "None"
@@ -310,14 +337,17 @@ export function readVerbal(
 			)
 				readings.set(member.segment, core.hasSepPrefix);
 		const reflexive = verbal.reflexive;
-		core.lexicallyReflexive = reflexive
-			? (reflexives.get(fold(reflexive.text)) ??
-				answered.pick("reflexive"))
-			: null;
+		core.lexicallyReflexive = verbal.reflexiveCase
+			? answered.pick(verbal.reflexiveCase)
+			: reflexive
+				? (reflexives.get(fold(reflexive.text)) ?? null)
+				: null;
 	}
 	const expletive =
 		verbal.expletive &&
-		(shape.lexeme || answered.pick("expletive") === "Subject")
+		(shape.lexeme ||
+			(verbal.subjectEs !== undefined &&
+				answered.pick(verbal.subjectEs) === "Subject"))
 			? verbal.expletive
 			: undefined;
 	return {
@@ -332,7 +362,7 @@ export function readVerbal(
 
 /** A verbal Surface's features, from its form questions and its auxiliaries' uses. */
 function verbalInflection(
-	verbal: VerbalSatellites,
+	verbal: VerbalPlan,
 	answered: Answered,
 	expletive: Member | undefined,
 ): Values {
@@ -342,8 +372,8 @@ function verbalInflection(
 		passive: null,
 		voice: null,
 	};
-	for (const { member, uses } of verbal.auxiliaries) {
-		const answer = answered.pick(`aux_m${member.position}`);
+	for (const { uses, use: asked } of verbal.auxiliaries) {
+		const answer = answered.pick(asked);
 		if (answer === "Main") continue;
 		const use = uses[Number(answer.slice(1))];
 		for (const [feature, value] of Object.entries(
@@ -356,11 +386,11 @@ function verbalInflection(
 			composition[feature] = value;
 		}
 	}
-	const verbForm = answered.pick("verbForm");
+	const verbForm = answered.pick(verbal.verbForm);
 	const finite = verbForm === "Fin";
-	const mood = finite ? answered.pick("mood") : null;
-	const number = finite ? answered.pick("number") : null;
-	const person = finite ? answered.pick("person") : null;
+	const mood = finite ? answered.pick(verbal.mood) : null;
+	const number = finite ? answered.pick(verbal.number) : null;
+	const person = finite ? answered.pick(verbal.person) : null;
 	// A subject es takes a finite verb in the 3rd person singular, never
 	// an imperative: jev's agreement against it is a clash of answers.
 	if (expletive && finite && (person !== "3" || number !== "Sing"))
@@ -373,10 +403,10 @@ function verbalInflection(
 		mood,
 		number,
 		person,
-		tense: finite && mood !== "Imp" ? answered.pick("tense") : null,
+		tense: finite && mood !== "Imp" ? answered.pick(verbal.tense) : null,
 		verbForm,
 		...(verbForm === "Part"
-			? { participleForm: answered.peek("participle") ?? null }
+			? { participleForm: answered.peek(verbal.participle) ?? null }
 			: {}),
 		expletive: expletive ? "Subject" : null,
 		...composition,
@@ -426,15 +456,17 @@ export function verbHeadword(form: string, core: Values): string {
 function prefixAnswer(
 	target: Target,
 	prefixes: readonly string[],
+	asked: Choice,
+	governable: readonly GovernedQuestions[],
 	answered: Answered,
 ): string {
 	const governed = (word: string) =>
-		target.members.some(
-			(member) =>
-				fold(spellingOf(member)) === word &&
-				answered.peek(`governed_m${member.position}`) === "Governed",
+		governable.some(
+			(chosen) =>
+				chosen.preposition === word &&
+				answered.peek(chosen.governed) === "Governed",
 		);
-	const settled = answered.peek("prefix");
+	const settled = answered.peek(asked);
 	// A preposition the verb governs is never its prefix (Rule
 	// de/verb-core-features): warten auf is warten.
 	if (settled !== undefined && settled !== "None") {
@@ -482,8 +514,10 @@ function prefixAnswer(
 			? [`p${index}`]
 			: [],
 	);
-	if (settled === "None")
-		return standing.length === 1 ? (standing[0] as string) : "None";
+	if (settled === "None") {
+		const [only, ...others] = standing;
+		return only !== undefined && others.length === 0 ? only : "None";
+	}
 	const expansions = new Set(
 		target.members.flatMap((member) =>
 			member.spelling?.orthography === "Shorthand" &&
@@ -492,11 +526,11 @@ function prefixAnswer(
 				: [],
 		),
 	);
-	const likeliest = answered.alternatives("prefix", 0).find((option) => {
+	const likeliest = answered.alternatives(asked, 0).find((option) => {
 		const prefix = prefixes[Number(option.slice(1))];
 		return prefix !== undefined && expansions.has(prefix);
 	});
-	return likeliest ?? answered.pick("prefix");
+	return likeliest ?? answered.pick(asked);
 }
 
 /** Each her- or hin- word an r- shortening stands for. */

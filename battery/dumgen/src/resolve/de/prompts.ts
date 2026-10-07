@@ -543,6 +543,145 @@ export const question = {
 	),
 } as const;
 
+// Option labels, by question, each keyed by the answer code reads; key
+// order is the order jev sees. A question whose options are built per
+// click (a member's Typo, a prefix, an auxiliary's uses, the cases a
+// table allows) labels them from these tables or adds the table's fixed
+// options to them.
+
+const caseNames = {
+	Nom: "Nominative, as a subject or a predicate noun",
+	Acc: "Accusative, as a direct object or after a preposition that takes it",
+	Dat: "Dative, as an indirect object or after a preposition that takes it",
+	Gen: "Genitive, as a possessor or after a preposition that takes it",
+} as const;
+const genderNames = {
+	Masc: "Masculine",
+	Fem: "Feminine",
+	Neut: "Neuter",
+} as const;
+
+export const options = {
+	case: caseNames,
+	nounCase: { ...caseNames, Unmarked: question.unmarkedCase },
+	number: { Sing: "Singular", Plur: "Plural" },
+	orthography: { None: question.orthographyNone },
+	spelling: {
+		Canonical: question.spellingCanonical,
+		Licensed: "Another spelling a current standard accepts",
+		Historical: "A spelling only an earlier standard accepted",
+		Regional: "A dialect or regional spelling",
+		Expressive: "Letters stretched for effect",
+	},
+	archaic: { Current: "A current form", Archaic: "An archaic form" },
+	citation: {
+		Used: "Used in the sentence, inflected as its role there needs",
+		Citation: "Only mentioned, as a dictionary entry, a name or a title",
+	},
+	auxiliary: { Main: question.auxiliaryMain },
+	reflexive: { Acc: "Accusative", Dat: "Dative" },
+	expletive: {
+		Subject: "Yes: the subject es, referring to nothing",
+		None: "No: an object or a fixed word of the expression",
+	},
+	prefix: {
+		None: "No separable prefix: the verb's dictionary infinitive is written without any of these",
+	},
+	verbForm: {
+		Fin: "Finite: its own finite verb or auxiliary, an imperative included",
+		Inf: "An infinitive, a separate modal's finite form aside",
+		Part: "A participle, without its own finite or infinitive auxiliary",
+	},
+	mood: {
+		Ind: "Indicative",
+		Sub: "Subjunctive, Konjunktiv I or II",
+		Imp: "Imperative",
+	},
+	tense: { Pres: "Present", Past: "Past" },
+	person: {
+		"1": "First person",
+		"2": "Second person",
+		"3": "Third person, formal Sie included",
+	},
+	participle: { Present: "Present participle", Past: "Past participle" },
+	properArticle: {
+		Definite: "Cited with its definite article",
+		Bare: "Cited bare",
+	},
+	properGender: {
+		der: question.properGenderMasc,
+		die: question.properGenderFem,
+		das: question.properGenderNeut,
+		None: question.properGenderNone,
+	},
+	nounGender: {
+		der: question.nounGenderMasc,
+		die: question.nounGenderFem,
+		das: question.nounGenderNeut,
+		None: question.nounGenderNone,
+	},
+	nounKind: {
+		Ordinary: question.nounKindOrdinary,
+		PluralOnly: question.nounKindPluralOnly,
+		Adjectival: question.nounKindAdjectival,
+	},
+	formGender: {
+		der: "Masculine, as der shows",
+		die: "Feminine, as die shows",
+		das: "Neuter, as das shows",
+	},
+	indefinite: {
+		Asks: question.indefiniteAsks,
+		Indefinite: question.indefiniteIrgend,
+	},
+	comparable: { Yes: question.comparableYes, No: question.comparableNo },
+	degree: {
+		Pos: "Positive, uncompared",
+		Cmp: "Comparative",
+		Sup: "Superlative, am … -sten included",
+	},
+	attributive: {
+		Yes: "It agrees with a noun",
+		No: "Predicative or adverbial, agreeing with nothing",
+	},
+	inflects: { Yes: "It inflects here", No: "Invariant here" },
+	agreementGender: {
+		...genderNames,
+		Unmarked: "No gender: plural agreement",
+	},
+	realizedCase: { None: question.realizedCaseNone },
+	answer: { Res: "An answer word", None: "Another interjection" },
+	sourceLanguage: {
+		en: "English",
+		fr: "French",
+		it: "Italian",
+		es: "Spanish",
+		la: "Latin",
+		pt: "Portuguese",
+		nl: "Dutch",
+		sv: "Swedish",
+		ru: "Russian",
+		tr: "Turkish",
+		ja: "Japanese",
+	},
+	coverage: {
+		Full: "All of its fixed wording is realized",
+		Partial: "Some fixed wording is missing or deliberately changed",
+	},
+	governed: {
+		Governed: "Yes, the head selects it",
+		Free: question.governedFree,
+	},
+	governedReferent: {
+		Someone: "A person or people",
+		Something: "A thing, place, event, fact or idea",
+		Either: "Either: the sentence leaves it open or it names both",
+	},
+} as const;
+
+/** A Case a NOUN's Case question may offer: a case, or Unmarked. */
+export type CaseOption = keyof typeof options.nounCase;
+
 /**
  * The uses an auxiliary member may have, one per authored AUX Reading,
  * keyed by its Canonical Form and Emoji Description.

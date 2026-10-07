@@ -10,6 +10,33 @@ import type { EntryType, Questions } from "@typesafe-ai/sdk";
 import { type Answers, choice, choiceOf } from "../../segment/ask.js";
 import { type PolicyName, policy, question } from "./prompts.js";
 
+declare const options: unique symbol;
+
+/**
+ * A Choice the questionnaire asked: its id, typed by the options jev may
+ * answer, Unresolved aside.
+ */
+export type Choice<Option extends string = string> = {
+	readonly id: string;
+	readonly [options]?: Option;
+};
+
+/** The handle of a Choice that offers a table's options. */
+export type ChoiceOf<Table> = Choice<keyof Table & string>;
+
+/** The options `keys` names, labelled from `labels`, in `keys`' order. */
+export function optionsOf<Option extends string>(
+	keys: readonly Option[],
+	labels: Readonly<Record<Option, string>>,
+): Partial<Record<Option, string>> {
+	const chosen: Partial<Record<Option, string>> = {};
+	for (const key of keys) chosen[key] = labels[key];
+	return chosen;
+}
+
+const idOf = (asked: Choice | string) =>
+	typeof asked === "string" ? asked : asked.id;
+
 /** Why a click came back Unresolved; caught where the click's outcome is decided. */
 export class UnresolvedAnswer extends Error {
 	readonly reason: string;
@@ -24,18 +51,22 @@ export class Questionnaire {
 	readonly questions: Questions = {};
 	readonly #policies = new Set<PolicyName>();
 
-	/** Adds a Choice with its options and Unresolved, citing `policies`. */
-	choice(
+	/**
+	 * Adds a Choice with its options and Unresolved, citing `policies`, and
+	 * returns its handle, which reads the answer as one of those options.
+	 */
+	choice<const Criteria extends Readonly<Record<string, string | null>>>(
 		id: string,
 		instructions: string,
-		criteria: Readonly<Record<string, string | null>>,
+		criteria: Criteria,
 		policies: readonly PolicyName[] = [],
-	): void {
+	): Choice<keyof Criteria & string> {
 		this.questions[id] = choice(instructions, {
 			...criteria,
 			Unresolved: question.unresolved,
 		});
 		for (const name of policies) this.#policies.add(name);
+		return { id };
 	}
 
 	cite(...policies: readonly PolicyName[]): void {
@@ -65,7 +96,10 @@ export class Answered {
 	}
 
 	/** A deciding answer: Unresolved stops the click. */
-	pick(id: string): string {
+	pick<Option extends string>(asked: Choice<Option>): Option;
+	pick(id: string): string;
+	pick(asked: Choice | string): string {
+		const id = idOf(asked);
 		const { choice: answer } = choiceOf(this.answers, id);
 		if (answer === "Unresolved")
 			throw new UnresolvedAnswer(`Unresolved ${id}`);
@@ -78,8 +112,16 @@ export class Answered {
 	 * against the answer reads on to the likeliest option the evidence
 	 * allows, instead of asking again (ADR 0023).
 	 */
-	alternatives(id: string, floor = 0.05): readonly string[] {
-		const { choice: answer, probabilities } = choiceOf(this.answers, id);
+	alternatives<Option extends string>(
+		asked: Choice<Option>,
+		floor?: number,
+	): readonly Option[];
+	alternatives(id: string, floor?: number): readonly string[];
+	alternatives(asked: Choice | string, floor = 0.05): readonly string[] {
+		const { choice: answer, probabilities } = choiceOf(
+			this.answers,
+			idOf(asked),
+		);
 		return Object.entries(probabilities)
 			.filter(
 				([option, probability]) =>
@@ -92,7 +134,10 @@ export class Answered {
 	}
 
 	/** A speculative answer, undefined when it was not asked or came back Unresolved. */
-	peek(id: string): string | undefined {
+	peek<Option extends string>(asked: Choice<Option>): Option | undefined;
+	peek(id: string): string | undefined;
+	peek(asked: Choice | string): string | undefined {
+		const id = idOf(asked);
 		if (!(id in this.answers)) return undefined;
 		const { choice: answer } = choiceOf(this.answers, id);
 		return answer === "Unresolved" ? undefined : answer;

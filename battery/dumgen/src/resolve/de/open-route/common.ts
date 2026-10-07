@@ -8,24 +8,42 @@
  */
 
 import { ambiguousPieces, type MemberOrthography } from "../member-spelling.js";
-import { fill, question } from "../prompts.js";
+import { fill, options, question } from "../prompts.js";
 import {
 	type Answered,
+	type Choice,
+	type ChoiceOf,
 	type Questionnaire,
 	UnresolvedAnswer,
 } from "../questions.js";
 import type { Member, Target } from "../target.js";
-import { askGoverned, type Governable, readGoverned } from "./governed.js";
+import {
+	askGoverned,
+	type GovernedQuestions,
+	readGoverned,
+} from "./governed.js";
 import type { OpeningArticle } from "./nominal.js";
 import type { Shape, Values } from "./shape.js";
 
 /** What the head of the first request asked, and the readings code fixed. */
 export type HeadPlan = {
-	readonly pieces: ReturnType<typeof ambiguousPieces>;
-	/** Shortened members whose word is judged, by Segment. */
-	readonly shortened: readonly Member[];
+	/** Each fused piece whose word is judged: its Segment, the words it may stand for, and its question. */
+	readonly pieces: readonly {
+		readonly segment: number;
+		readonly surfaces: readonly string[];
+		readonly reading: Choice;
+	}[];
+	/** Shortened members whose word is judged, with their questions. */
+	readonly shortened: readonly {
+		readonly member: Member;
+		readonly reading: Choice;
+	}[];
 	/** Readings code fixes: a VERB's clitic 's is its subject es. */
 	readonly presetReadings: ReadonlyMap<number, string>;
+	readonly orthography: Choice | undefined;
+	readonly spelling: ChoiceOf<typeof options.spelling> | undefined;
+	readonly archaic: ChoiceOf<typeof options.archaic> | undefined;
+	readonly citation: ChoiceOf<typeof options.citation> | undefined;
 };
 
 /**
@@ -54,15 +72,17 @@ export function askHead(
 			),
 		].filter(([segment]) => !presetReadings.has(segment)),
 	);
-	askSpelling(
+	const spelling = askSpelling(
 		questionnaire,
 		shape,
 		target.members.filter(
 			(member) => !member.spelling && member !== article?.member,
 		),
 	);
-	for (const [segment, piece] of pieces)
-		questionnaire.choice(
+	const judgedPieces = [...pieces].map(([segment, piece]) => ({
+		segment,
+		surfaces: piece.surfaces,
+		reading: questionnaire.choice(
 			`reading_s${segment}`,
 			fill(question.reading, {
 				m: target.members[piece.member]?.ref ?? "",
@@ -73,18 +93,21 @@ export function askHead(
 				piece.surfaces.map((surface, index) => [`w${index}`, surface]),
 			),
 			["fused"],
-		);
+		),
+	}));
 	// A shortened adverb the table cannot settle (raus: heraus or hinaus)
 	// is judged here; a VERB's prefix question settles its particle.
-	const shortened = shape.verbal
-		? []
-		: target.members.filter(
-				(member) =>
-					member.spelling?.orthography === "Shorthand" &&
-					member.spelling.surfaces.length > 1,
-			);
-	for (const member of shortened)
-		questionnaire.choice(
+	const shortened = (
+		shape.verbal
+			? []
+			: target.members.filter(
+					(member) =>
+						member.spelling?.orthography === "Shorthand" &&
+						member.spelling.surfaces.length > 1,
+				)
+	).map((member) => ({
+		member,
+		reading: questionnaire.choice(
 			`short_s${member.segment}`,
 			fill(question.shortened, { m: member.ref }),
 			Object.fromEntries(
@@ -94,19 +117,24 @@ export function askHead(
 				]),
 			),
 			["orthography"],
-		);
-	if (shape.citable && !article)
-		questionnaire.choice(
-			"citation",
-			question.citation,
-			{
-				Used: "Used in the sentence, inflected as its role there needs",
-				Citation:
-					"Only mentioned, as a dictionary entry, a name or a title",
-			},
-			["inflection"],
-		);
-	return { pieces, shortened, presetReadings };
+		),
+	}));
+	const citation =
+		shape.citable && !article
+			? questionnaire.choice(
+					"citation",
+					question.citation,
+					options.citation,
+					["inflection"],
+				)
+			: undefined;
+	return {
+		pieces: judgedPieces,
+		shortened,
+		presetReadings,
+		...spelling,
+		citation,
+	};
 }
 
 /** Asks the judged members' Typo or Shorthand, and the spelling and its currency. */
@@ -114,13 +142,18 @@ function askSpelling(
 	questionnaire: Questionnaire,
 	shape: Shape,
 	judgedMembers: readonly Member[],
-): void {
-	if (judgedMembers.length === 0) return;
-	questionnaire.choice(
+): Pick<HeadPlan, "orthography" | "spelling" | "archaic"> {
+	if (judgedMembers.length === 0)
+		return {
+			orthography: undefined,
+			spelling: undefined,
+			archaic: undefined,
+		};
+	const orthography = questionnaire.choice(
 		"orthography",
 		question.orthography,
 		{
-			None: question.orthographyNone,
+			...options.orthography,
 			...Object.fromEntries(
 				judgedMembers.flatMap((member) => [
 					[
@@ -136,33 +169,31 @@ function askSpelling(
 		},
 		["orthography"],
 	);
-	if (shape.foreign) return;
-	questionnaire.choice(
-		"spelling",
-		question.spelling,
-		{
-			Canonical: question.spellingCanonical,
-			Licensed: "Another spelling a current standard accepts",
-			Historical: "A spelling only an earlier standard accepted",
-			Regional: "A dialect or regional spelling",
-			Expressive: "Letters stretched for effect",
-		},
-		["orthography"],
-	);
-	questionnaire.choice(
-		"archaic",
-		question.archaic,
-		{ Current: "A current form", Archaic: "An archaic form" },
-		["orthography"],
-	);
+	if (shape.foreign)
+		return { orthography, spelling: undefined, archaic: undefined };
+	return {
+		orthography,
+		spelling: questionnaire.choice(
+			"spelling",
+			question.spelling,
+			options.spelling,
+			["orthography"],
+		),
+		archaic: questionnaire.choice(
+			"archaic",
+			question.archaic,
+			options.archaic,
+			["orthography"],
+		),
+	};
 }
 
 /** Reads the head: each member's orthography, the spelling, the readings, and a citation. */
 export function readHead(
 	target: Target,
-	questionnaire: Questionnaire,
 	article: OpeningArticle | undefined,
 	head: HeadPlan,
+	indefinite: ChoiceOf<typeof options.indefinite> | undefined,
 	answered: Answered,
 ): {
 	readonly orthographies: readonly MemberOrthography[];
@@ -171,10 +202,11 @@ export function readHead(
 	readonly readings: ReadonlyMap<number, string>;
 	readonly cited: boolean;
 } {
-	const irregular = questionnaire.questions.orthography
-		? answered.pick("orthography")
+	const irregular = head.orthography
+		? answered.pick(head.orthography)
 		: "None";
-	const indefinite = answered.peek("indefinite") === "Indefinite";
+	const shorthand =
+		indefinite !== undefined && answered.peek(indefinite) === "Indefinite";
 	const orthographies = target.members.map(
 		(member): MemberOrthography =>
 			member.spelling?.orthography ??
@@ -182,12 +214,12 @@ export function readHead(
 				? article.orthography
 				: irregular === `t${member.position}`
 					? "Typo"
-					: irregular === `s${member.position}` || indefinite
+					: irregular === `s${member.position}` || shorthand
 						? "Shorthand"
 						: "Standard"),
 	);
-	const spellingAnswer = questionnaire.questions.spelling
-		? answered.pick("spelling")
+	const spellingAnswer = head.spelling
+		? answered.pick(head.spelling)
 		: "Canonical";
 	const digits = target.members.every(
 		(member) => member.spelling || /^\d+$/u.test(member.text),
@@ -199,20 +231,21 @@ export function readHead(
 				? { kind: "Canonical" }
 				: { kind: "Variant", variantTags: [spellingAnswer] };
 	const surfaceFeatures =
-		questionnaire.questions.archaic &&
-		answered.pick("archaic") === "Archaic"
+		head.archaic && answered.pick(head.archaic) === "Archaic"
 			? { historicalStatus: "Archaic" }
 			: null;
 	const readings = new Map(head.presetReadings);
-	for (const [segment, piece] of head.pieces) {
-		const answer = answered.pick(`reading_s${segment}`);
+	for (const piece of head.pieces) {
+		const answer = answered.pick(piece.reading);
 		const reading = piece.surfaces[Number(answer.slice(1))];
 		if (reading === undefined)
-			throw new UnresolvedAnswer(`No reading of Segment ${segment}`);
-		readings.set(segment, reading);
+			throw new UnresolvedAnswer(
+				`No reading of Segment ${piece.segment}`,
+			);
+		readings.set(piece.segment, reading);
 	}
-	for (const member of head.shortened) {
-		const answer = answered.pick(`short_s${member.segment}`);
+	for (const { member, reading: asked } of head.shortened) {
+		const answer = answered.pick(asked);
 		const reading = member.spelling?.surfaces[Number(answer.slice(1))];
 		if (reading === undefined)
 			throw new UnresolvedAnswer(
@@ -221,10 +254,20 @@ export function readHead(
 		readings.set(member.segment, reading);
 	}
 	const cited =
-		questionnaire.questions.citation !== undefined &&
-		answered.pick("citation") === "Citation";
+		head.citation !== undefined &&
+		answered.pick(head.citation) === "Citation";
 	return { orthographies, spelling, surfaceFeatures, readings, cited };
 }
+
+/** What the tail of the first request asked. */
+export type TailPlan = {
+	readonly answer: ChoiceOf<typeof options.answer> | undefined;
+	readonly sourceLanguage:
+		| ChoiceOf<typeof options.sourceLanguage>
+		| undefined;
+	readonly coverage: ChoiceOf<typeof options.coverage> | undefined;
+	readonly governable: readonly GovernedQuestions[];
+};
 
 /**
  * Asks the tail of the first request, the prepositions governed among the
@@ -235,45 +278,35 @@ export function askTail(
 	target: Target,
 	shape: Shape,
 	taken: ReadonlySet<number>,
-): readonly Governable[] {
-	if (target.route.kind === "INTJ" && shape.lexeme)
-		questionnaire.choice(
-			"answer",
-			question.answer,
-			{ Res: "An answer word", None: "Another interjection" },
-			["interjection"],
-		);
-	if (shape.foreign)
-		questionnaire.choice(
-			"sourceLanguage",
-			question.sourceLanguage,
-			{
-				en: "English",
-				fr: "French",
-				it: "Italian",
-				es: "Spanish",
-				la: "Latin",
-				pt: "Portuguese",
-				nl: "Dutch",
-				sv: "Swedish",
-				ru: "Russian",
-				tr: "Turkish",
-				ja: "Japanese",
-			},
-			["foreign"],
-		);
-	if (shape.coverage)
-		questionnaire.choice(
-			"coverage",
-			question.coverage,
-			{
-				Full: "All of its fixed wording is realized",
-				Partial:
-					"Some fixed wording is missing or deliberately changed",
-			},
-			["coverage"],
-		);
-	return askGoverned(questionnaire, target, shape, taken);
+): TailPlan {
+	const answer =
+		target.route.kind === "INTJ" && shape.lexeme
+			? questionnaire.choice("answer", question.answer, options.answer, [
+					"interjection",
+				])
+			: undefined;
+	const sourceLanguage = shape.foreign
+		? questionnaire.choice(
+				"sourceLanguage",
+				question.sourceLanguage,
+				options.sourceLanguage,
+				["foreign"],
+			)
+		: undefined;
+	const coverage = shape.coverage
+		? questionnaire.choice(
+				"coverage",
+				question.coverage,
+				options.coverage,
+				["coverage"],
+			)
+		: undefined;
+	return {
+		answer,
+		sourceLanguage,
+		coverage,
+		governable: askGoverned(questionnaire, target, shape, taken),
+	};
 }
 
 /**
@@ -283,9 +316,8 @@ export function askTail(
  * is a clash.
  */
 export function readTail(
-	target: Target,
+	tail: TailPlan,
 	shape: Shape,
-	governable: readonly Governable[],
 	answered: Answered,
 	expletive: Member | undefined,
 	cited: boolean,
@@ -296,11 +328,12 @@ export function readTail(
 	readonly governedPositions: readonly number[];
 } {
 	const core: Values = {};
-	if (target.route.kind === "INTJ" && shape.lexeme)
-		core.partType = answered.pick("answer") === "Res" ? "Res" : null;
-	if (shape.foreign) core.sourceLang = answered.pick("sourceLanguage");
+	if (tail.answer)
+		core.partType = answered.pick(tail.answer) === "Res" ? "Res" : null;
+	if (tail.sourceLanguage)
+		core.sourceLang = answered.pick(tail.sourceLanguage);
 	const coverage =
-		shape.coverage && answered.pick("coverage") === "Partial"
+		tail.coverage && answered.pick(tail.coverage) === "Partial"
 			? "Partial"
 			: "Full";
 	if (expletive && cited)
@@ -309,5 +342,9 @@ export function readTail(
 		throw new UnresolvedAnswer(
 			"The subject es clashes with a partial realization",
 		);
-	return { core, coverage, ...readGoverned(governable, shape, answered) };
+	return {
+		core,
+		coverage,
+		...readGoverned(tail.governable, shape, answered),
+	};
 }

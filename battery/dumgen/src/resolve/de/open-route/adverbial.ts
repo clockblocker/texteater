@@ -11,11 +11,29 @@ import {
 } from "dumcorpus/inventories";
 import { splitHeads } from "../../../segment/de/candidates.js";
 import type { MemberOrthography } from "../member-spelling.js";
-import { fill, question } from "../prompts.js";
-import type { Answered, Questionnaire } from "../questions.js";
+import { fill, options, question } from "../prompts.js";
+import type { Answered, ChoiceOf, Questionnaire } from "../questions.js";
 import type { Target } from "../target.js";
-import { agreementQuestions, readAgreement } from "./agreeing.js";
+import {
+	type AgreementQuestions,
+	agreementQuestions,
+	readAgreement,
+} from "./agreeing.js";
 import { fold, type Shape, type Values } from "./shape.js";
+
+/** What an ADV's or ADJ's block asked. */
+export type AdverbialPlan = {
+	/** Whether a bare w-word stands for its irgend- word. */
+	readonly indefinite: ChoiceOf<typeof options.indefinite> | undefined;
+	readonly comparable: ChoiceOf<typeof options.comparable>;
+	readonly degree: ChoiceOf<typeof options.degree>;
+	/** An ADJ's: whether it is attributive, and its agreement. */
+	readonly attributive:
+		| (AgreementQuestions & {
+				readonly attributive: ChoiceOf<typeof options.attributive>;
+		  })
+		| undefined;
+};
 
 /**
  * Asks an ADV's or ADJ's block: a bare w-word's reading, comparability and
@@ -25,45 +43,46 @@ export function askAdverbial(
 	questionnaire: Questionnaire,
 	target: Target,
 	shape: Shape,
-): void {
+): AdverbialPlan {
 	// A bare w-word as an ADV asks, opens a clause or stands for its irgend-
 	// word (Rule de/bare-w-word-is-shorthand).
 	const [lone] = target.members;
-	if (
+	const indefinite =
 		shape.adverbial &&
 		shape.lexeme &&
 		target.members.length === 1 &&
 		lone &&
 		!lone.spelling &&
 		bareWWords.has(fold(lone.text))
-	)
-		questionnaire.choice(
-			"indefinite",
-			fill(question.indefinite, { m: lone.ref }),
-			{
-				Asks: question.indefiniteAsks,
-				Indefinite: question.indefiniteIrgend,
-			},
-			["orthography"],
-		);
-	questionnaire.choice(
+			? questionnaire.choice(
+					"indefinite",
+					fill(question.indefinite, { m: lone.ref }),
+					options.indefinite,
+					["orthography"],
+				)
+			: undefined;
+	const comparable = questionnaire.choice(
 		"comparable",
 		question.comparable,
-		{ Yes: question.comparableYes, No: question.comparableNo },
+		options.comparable,
 		["adjective"],
 	);
-	questionnaire.choice("degree", question.degree, {
-		Pos: "Positive, uncompared",
-		Cmp: "Comparative",
-		Sup: "Superlative, am … -sten included",
-	});
-	if (shape.adjectival) {
-		questionnaire.choice("attributive", question.attributive, {
-			Yes: "It agrees with a noun",
-			No: "Predicative or adverbial, agreeing with nothing",
-		});
-		agreementQuestions(questionnaire);
-	}
+	const degree = questionnaire.choice(
+		"degree",
+		question.degree,
+		options.degree,
+	);
+	const attributive = shape.adjectival
+		? {
+				attributive: questionnaire.choice(
+					"attributive",
+					question.attributive,
+					options.attributive,
+				),
+				...agreementQuestions(questionnaire),
+			}
+		: undefined;
+	return { indefinite, comparable, degree, attributive };
 }
 
 /**
@@ -71,16 +90,18 @@ export function askAdverbial(
  * attributive ADJ's agreement as its inflection.
  */
 export function readAdverbial(
-	shape: Shape,
+	adverbial: AdverbialPlan,
 	answered: Answered,
 ): { readonly core: Values; readonly inflection: Values | null } {
-	const comparable = answered.pick("comparable") === "Yes";
+	const comparable = answered.pick(adverbial.comparable) === "Yes";
 	const core: Values = { comparable: comparable ? "Yes" : null };
-	const degree = comparable ? answered.pick("degree") : null;
-	if (shape.adverbial)
-		return { core, inflection: comparable ? { degree } : null };
-	const attributive = answered.pick("attributive") === "Yes";
-	const agreement = attributive ? readAgreement(answered) : undefined;
+	const degree = comparable ? answered.pick(adverbial.degree) : null;
+	const adjective = adverbial.attributive;
+	if (!adjective) return { core, inflection: comparable ? { degree } : null };
+	const attributive = answered.pick(adjective.attributive) === "Yes";
+	const agreement = attributive
+		? readAgreement(adjective, answered)
+		: undefined;
 	return {
 		core,
 		inflection:
