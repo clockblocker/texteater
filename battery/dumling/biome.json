@@ -4,7 +4,11 @@
 		"includes": ["!!dist", "!!node_modules", "!!.astro", "!src/lu/test.ts"]
 	},
 	"formatter": {
-		"includes": ["**", "!src/generated/.validation-artifacts.json"]
+		"includes": [
+			"**",
+			"!src/generated/.validation-artifacts.json",
+			"!codegen/generated/src-generated.ownership.json"
+		]
 	},
 	"linter": {
 		"includes": ["**"]

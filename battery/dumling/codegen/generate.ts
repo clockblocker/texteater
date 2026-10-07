@@ -1,5 +1,5 @@
-import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
-import { formatTypeScript } from "codegen";
+import { fileURLToPath } from "node:url";
+import { defineCodegen, formatTypeScript, runCodegenCommand } from "codegen";
 import {
 	compileZodValidationArtifacts,
 	emitInlineOutputType,
@@ -58,42 +58,48 @@ const outputs = {
 		]),
 	),
 };
-const directory = new URL("../src/generated/", import.meta.url);
-const check = process.argv.includes("--check");
-const concreteDirectory = new URL("schemas/", directory);
-for (const entry of await readdir(concreteDirectory, { recursive: true }).catch(
-	() => [],
-)) {
-	if (!entry.endsWith(".ts") || Object.hasOwn(outputs, `schemas/${entry}`))
-		continue;
-	if (check)
-		throw Error(
-			`Obsolete concrete schema artifact: ${entry}; run bun run generate`,
-		);
-	await rm(new URL(entry, concreteDirectory));
-}
 // The `dumling/codegen` route manifest: every route as plain data, so sibling
 // generators enumerate routes without reading this package's file tree.
 const manifest = `// Generated from Dumling's concrete-language schemas. Run bun run generate.\nexport const routes=[${routes.map((route) => JSON.stringify({ language: route.language, family: route.family, kind: route.kind, schemaPath: route.modulePath.replace(/\.js$/, "") })).join(",")}] as const;\n`;
-const emitted: [URL, string][] = [
-	...Object.entries(outputs).map(([name, source]): [URL, string] => [
-		new URL(name, directory),
-		source,
-	]),
-	[new URL("generated/routes.ts", import.meta.url), manifest],
-];
-for (const [path, source] of emitted) {
-	const formatted = await formatTypeScript(source, path);
-	if (check) {
-		if ((await readFile(path, "utf8").catch(() => "")) !== formatted)
-			throw Error(
-				`Stale generated artifact: ${path.pathname}; run bun run generate`,
-			);
-	} else {
-		await mkdir(new URL(".", path), { recursive: true });
-		await writeFile(path, formatted);
-	}
-}
-console.log(
-	`${check ? "Verified" : "Generated"} ${Object.keys(schemas).length} unit routes from ${routes.length} feature-bag schemas`,
-);
+const roots = {
+	generated: new URL("../src/generated/", import.meta.url),
+	manifest: new URL("generated/", import.meta.url),
+};
+const emitted: { target: keyof typeof roots; path: string; source: string }[] =
+	[
+		...Object.entries(outputs).map(([path, source]) => ({
+			target: "generated" as const,
+			path,
+			source,
+		})),
+		{ target: "manifest", path: "routes.ts", source: manifest },
+	];
+const recipe = defineCodegen({
+	inputs: {},
+	outputs: {
+		generated: {
+			root: fileURLToPath(roots.generated),
+			// Ownership retires the schema module of a removed route.
+			ownership: {
+				manifest: fileURLToPath(
+					new URL("src-generated.ownership.json", roots.manifest),
+				),
+			},
+		},
+		manifest: { root: fileURLToPath(roots.manifest) },
+	},
+	build: () =>
+		Promise.all(
+			emitted.map(async ({ target, path, source }) => ({
+				id: `${target}/${path}`,
+				to: { target, path },
+				content: await formatTypeScript(
+					source,
+					new URL(path, roots[target]),
+				),
+				provenance: [],
+				meta: null,
+			})),
+		),
+});
+await runCodegenCommand(recipe, { label: "Dumling" });
