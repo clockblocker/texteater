@@ -5,12 +5,14 @@ import {
 	rShortenings,
 } from "../../src/resolve/de/member-spelling.js";
 import {
+	bareWWords,
+	suppletivePositive,
+} from "../../src/resolve/de/open-route/adverbial.js";
+import {
 	auxiliaryFeatures,
 	auxiliaryUse,
-	bareWWords,
 	reflexives,
-	suppletivePositive,
-} from "../../src/resolve/de/open-route.js";
+} from "../../src/resolve/de/open-route/verbal.js";
 import { auxiliaryUses } from "../../src/resolve/de/prompts.js";
 
 // Resolution's tables read from dumcorpus/inventories (#978, #979), each

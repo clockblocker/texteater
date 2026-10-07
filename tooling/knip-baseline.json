@@ -301,7 +301,6 @@
 		"battery/dumgen/src/resolve/de/closed-class.ts: exports stemSyncretismOptions",
 		"battery/dumgen/src/resolve/de/closed-class.ts: exports syncretismOptions",
 		"battery/dumgen/src/resolve/de/closed-class.ts: types StemOpenOption",
-		"battery/dumgen/src/resolve/de/open-route.ts: exports adverbHeadword",
 		"battery/dumgen/src/resolve/de/prompts.ts: types PromptText",
 		"battery/dumgen/src/segment/de/government-choice.ts: exports flaggedPrepositions",
 		"battery/dumgen/src/segment/de/government-choice.ts: exports governmentId",

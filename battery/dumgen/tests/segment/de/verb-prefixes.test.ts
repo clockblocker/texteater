@@ -3,7 +3,7 @@ import {
 	germanInseparablePrefixes,
 	germanSeparablePrefixes,
 } from "dumcorpus/inventories";
-import { prefixParticles } from "../../../src/resolve/de/open-route.js";
+import { prefixParticles } from "../../../src/resolve/de/open-route/verbal.js";
 import { particleForms } from "../../../src/segment/de/candidates.js";
 import { strandedTails } from "../../../src/segment/de/code-rules.js";
 import { germanInfixParticles } from "../../../src/segment/de/fusion-entries.js";

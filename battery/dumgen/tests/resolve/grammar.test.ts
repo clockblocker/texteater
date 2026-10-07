@@ -7,7 +7,7 @@ import { InvalidModelOutput, ProviderFailure } from "../../src/errors.js";
 import type { LunaAsk } from "../../src/luna.js";
 import type { OperationTrace } from "../../src/operation-trace.js";
 import { guardedHeadword } from "../../src/resolve/de/headword-guards.js";
-import { verbHeadword } from "../../src/resolve/de/open-route.js";
+import { verbHeadword } from "../../src/resolve/de/open-route/verbal.js";
 import { generation } from "../../src/resolve/de/reading-prompts.js";
 import { targetOf } from "../../src/resolve/de/target.js";
 import {

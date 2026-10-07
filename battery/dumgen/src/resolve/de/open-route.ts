@@ -16,32 +16,18 @@
  */
 
 import {
-	type ArticleMember,
-	type AuthoredMember,
-	authoredMembers,
-	authoredRealizations,
-	auxiliarySurfaceFeatures,
 	germanAdpositionAllowedCases,
 	germanAdpositionEntry,
-	germanArticleCell,
-	germanArticleSpellings,
 	germanParticles,
-	germanSuppletiveComparisons,
 	isGermanPluralOnlyNoun,
 } from "dumcorpus/inventories";
-import { foldCase, lemmaIdentityKey } from "dumling";
+import { lemmaIdentityKey } from "dumling";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import type * as Scope from "effect/Scope";
 import type { OperationScope } from "../../call.js";
-import type { LunaRequest } from "../../luna.js";
 import { askLuna, type LunaSettings } from "../../luna-call.js";
 import type { Ask, AskFailure } from "../../segment/ask.js";
-import {
-	particleForms,
-	reflexiveForms,
-	splitHeads,
-} from "../../segment/de/candidates.js";
 import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
 import {
@@ -56,9 +42,46 @@ import {
 	ambiguousPieces,
 	attestedMember,
 	type MemberOrthography,
-	rShortenings,
 } from "./member-spelling.js";
 import { numeralWord } from "./numeral.js";
+import {
+	adverbHeadword,
+	bareWWords,
+	ordinalStem,
+	suppletivePositive,
+} from "./open-route/adverbial.js";
+import { agreementQuestions } from "./open-route/agreeing.js";
+import { type Governable, governableMembers } from "./open-route/governed.js";
+import { guessedJudgment, guessMisses } from "./open-route/luna-guess.js";
+import {
+	articleCases,
+	caseQuestion,
+	casesBeforeAgreement,
+	nounCells,
+	openingArticle,
+} from "./open-route/nominal.js";
+import {
+	type AdpCase,
+	caseNames,
+	cases,
+	fold,
+	genderOfArticle,
+	numbers,
+	routeShape,
+	type Shape,
+	spellingOf,
+	type Values,
+} from "./open-route/shape.js";
+import {
+	auxiliaryUsesOf,
+	prefixAnswer,
+	prefixCandidates,
+	reflexives,
+	spellsEs,
+	verbalInflection,
+	verbGuessMisses,
+	verbHeadword,
+} from "./open-route/verbal.js";
 import { auxiliaryUses, fill, question } from "./prompts.js";
 import { Answered, Questionnaire, UnresolvedAnswer } from "./questions.js";
 import {
@@ -68,9 +91,6 @@ import {
 	type Target,
 	targetState,
 } from "./target.js";
-
-type Values = Record<string, unknown>;
-type AdpCase = "Acc" | "Dat" | "Gen";
 
 /** What an open-route click comes to before it is checked against Dumling. */
 export type OpenOutcome =
@@ -83,312 +103,8 @@ export type OpenOutcome =
 	| { readonly _tag: "Unresolved"; readonly reason: string }
 	| { readonly _tag: "CatalogMiss"; readonly message: string };
 
-const cases = ["Nom", "Acc", "Dat", "Gen"] as const;
-const caseNames = {
-	Nom: "Nominative, as a subject or a predicate noun",
-	Acc: "Accusative, as a direct object or after a preposition that takes it",
-	Dat: "Dative, as an indirect object or after a preposition that takes it",
-	Gen: "Genitive, as a possessor or after a preposition that takes it",
-} as const;
-const genders = {
-	Masc: "Masculine",
-	Fem: "Feminine",
-	Neut: "Neuter",
-} as const;
-const numbers = { Sing: "Singular", Plur: "Plural" } as const;
-/**
- * A gender question's options are named by the article the gender takes,
- * never Neut, which jev read as a neutral fallback when unsure (#876).
- */
-const genderOfArticle: Readonly<Record<string, string>> = {
-	der: "Masc",
-	die: "Fem",
-	das: "Neut",
-};
-
-/** The route's shape, as the questions and the Attestation need it. */
-function routeShape(target: Target) {
-	const { family, kind } = target.route;
-	const lexeme = family === "Lexeme";
-	const locution = family === "Locution";
-	const nounLike =
-		(lexeme && (kind === "NOUN" || kind === "PROPN")) ||
-		(locution && kind === "NOUN");
-	const verbal = (lexeme || locution) && kind === "VERB";
-	const adjectival = (lexeme || locution) && kind === "ADJ";
-	const adverbial = (lexeme || locution) && kind === "ADV";
-	const adposition = (lexeme || locution) && kind === "ADP";
-	const governor =
-		verbal || adjectival || ((lexeme || locution) && kind === "NOUN");
-	return {
-		lexeme,
-		locution,
-		nounLike,
-		proper: lexeme && kind === "PROPN",
-		verbal,
-		adjectival,
-		adverbial,
-		adposition,
-		agreeing:
-			(lexeme && (kind === "NUM" || kind === "SYM")) ||
-			(locution && (kind === "DET" || kind === "NUM" || kind === "PRON")),
-		/** A head whose governed preposition is its valency evidence (ADR 0034). */
-		governor,
-		/**
-		 * A head that may govern a preposition: a governor, or a routine
-		 * formula's head word, whose preposition only leaves its Surface.
-		 */
-		governs: governor || kind === "INTJ",
-		articleOwner:
-			(lexeme && ["NOUN", "PROPN", "ADJ", "NUM"].includes(kind)) ||
-			(locution && kind === "NOUN"),
-		inflects: !(
-			family === "Saying" ||
-			family === "Foreign" ||
-			["ADP", "CCONJ", "SCONJ", "INTJ", "PART"].includes(kind)
-		),
-		/** A route whose inflection a dictionary citation leaves empty. */
-		citable: nounLike || verbal,
-		coverage: locution || family === "Saying",
-		foreign: family === "Foreign",
-	};
-}
-type Shape = ReturnType<typeof routeShape>;
-
-const fold = (text: string) => foldCase(text, "de");
-const spellingOf = (member: Member) => fixedSpelling(member) ?? member.text;
-
-/**
- * The article that opens an article owner's unit, read through its fused
- * or shortened form (Rule de/only-der-and-ein-are-articles): a standalone
- * spelling that names no article as written may be a shortened one ('ne).
- */
-function openingArticle(
-	target: Target,
-	shape: Shape,
-):
-	| {
-			readonly member: Member;
-			readonly article: ArticleMember;
-			readonly orthography: MemberOrthography;
-	  }
-	| undefined {
-	const [first] = target.members;
-	if (!shape.articleOwner || !first || target.members.length < 2)
-		return undefined;
-	const tried = first.spelling
-		? [first.spelling.orthography]
-		: (["Standard", "Shorthand"] as const);
-	for (const orthography of tried) {
-		// A fused piece that names several words ('s: es or das) is read only
-		// once the Sentence has chosen one, so it decides no opening article.
-		if (
-			orthography === "Fused" &&
-			ambiguousPieces(target.segments, [first.segment]).size > 0
-		)
-			return undefined;
-		const article: ArticleMember = attestedMember(
-			target.segments,
-			first.segment,
-			orthography,
-			new Map(),
-		);
-		if (
-			(germanArticleSpellings(article) ?? []).length > 0 &&
-			germanArticleCell(article, {
-				case: null,
-				number: null,
-				gender: null,
-			})
-		)
-			return { member: first, article, orthography };
-	}
-	return undefined;
-}
-
-/** The cases a head's article leaves open for its number and gender. */
-function articleCases(
-	article: ArticleMember,
-	number: string | null,
-	gender: string | null,
-): readonly string[] {
-	return cases.filter(
-		(grammaticalCase) =>
-			germanArticleCell(article, {
-				case: grammaticalCase,
-				number,
-				gender: number === "Plur" ? null : gender,
-			}) !== undefined,
-	);
-}
-
-/**
- * The cases an article leaves open whatever its head's number and gender,
- * when every agreement leaves the same two or more: then the Case question
- * can ride in the first request, since the head's form narrows nothing.
- */
-function casesBeforeAgreement(article: ArticleMember): readonly string[] {
-	const sets = [
-		articleCases(article, "Sing", "Masc"),
-		articleCases(article, "Sing", "Fem"),
-		articleCases(article, "Sing", "Neut"),
-		articleCases(article, "Plur", null),
-	]
-		.filter((set) => set.length > 0)
-		.map((set) => set.join(","));
-	const [first] = sets;
-	return first && sets.every((set) => set === first) && first.includes(",")
-		? first.split(",")
-		: [];
-}
-
-/** An authored AUX Reading's use, by Canonical Form and Emoji Description (`werden 🔄`). */
-export const auxiliaryUse = ({ lemma, reading }: AuthoredMember) =>
-	`${lemma.canonicalForm} ${reading.emojiDescription}`;
-
-/** The authored AUX uses a member's spelling realizes, by Canonical Form and Emoji Description. */
-function auxiliaryUsesOf(member: Member): readonly string[] {
-	const spelled = fold(member.text);
-	return [
-		...new Set(
-			authoredRealizations
-				.filter(
-					(realization) =>
-						realization.member.lemma.kind === "AUX" &&
-						fold(realization.spelled) === spelled,
-				)
-				.map(({ member: authored }) => auxiliaryUse(authored)),
-		),
-	].filter((use) => use in auxiliaryUses);
-}
-
-/**
- * The Surface features an auxiliary's use makes (ADR 0022, ADR 0026), by
- * use, as dumcorpus authors them for its AUX members.
- */
-export const auxiliaryFeatures: ReadonlyMap<string, Values> = new Map(
-	auxiliarySurfaceFeatures.map(({ member, features }) => [
-		auxiliaryUse(member),
-		features,
-	]),
-);
-
-/**
- * Each form a lexical reflexive takes, with the case it shows: the one case
- * all its personal-pronoun realizations share (mich Acc, mir Dat), none when
- * they differ (sich, uns, euch), so jev is asked.
- */
-export const reflexives: ReadonlyMap<string, "Acc" | "Dat" | undefined> =
-	new Map(
-		[...reflexiveForms].map((form) => {
-			const shown = new Set(
-				authoredRealizations.flatMap(({ member, spelled }) => {
-					const features = member.lemma.coreFeatures as Readonly<
-						Record<string, unknown>
-					>;
-					return member.lemma.kind === "PRON" &&
-						features.pronType === "Prs" &&
-						fold(spelled) === form
-						? [features.case]
-						: [];
-				}),
-			);
-			const [only] = shown;
-			return [
-				form,
-				shown.size === 1 && (only === "Acc" || only === "Dat")
-					? only
-					: undefined,
-			];
-		}),
-	);
-
-/** Whether a member spells es, a clitic 's that may stand for it included. */
-const spellsEs = (member: Member) =>
-	fold(spellingOf(member)) === "es" ||
-	(member.spelling?.surfaces.includes("es") ?? false);
-
-/**
- * The separable prefixes a VERB unit may carry: those that open a particle
- * slot, and da and leid (daliegen, leidtun), which open none. The other
- * prefixes that open no slot (bekannt, gut, …) are not offered (#1057).
- */
-export const prefixParticles: ReadonlySet<string> = new Set([
-	...particleForms,
-	"da",
-	"leid",
-]);
-const isParticle = (word: string) => prefixParticles.has(word);
-
-/**
- * The separable prefixes a VERB unit could carry, longest first: each
- * particle member standing apart from the verb, the words a shortened one
- * stands for in its place (rein is herein or hinein, never a prefix of its
- * own: Rule de/r-adverb-is-her-or-hin-shorthand), and each particle a
- * member's word begins with. A member that is no particle, such as the
- * verb's own participle, is never offered whole.
- */
-function prefixCandidates(target: Target, skip: ReadonlySet<number>) {
-	const found = new Set<string>();
-	for (const member of target.members) {
-		if (skip.has(member.position)) continue;
-		const word = fold(spellingOf(member));
-		if (
-			target.members.length > 1 &&
-			member.spelling?.orthography === "Shorthand"
-		)
-			for (const surface of member.spelling.surfaces)
-				found.add(fold(surface));
-		else if (
-			target.members.length > 1 &&
-			/^\p{L}+$/u.test(word) &&
-			isParticle(word)
-		)
-			found.add(word);
-		for (let length = word.length - 2; length >= 2; length--) {
-			const prefix = word.slice(0, length);
-			if (isParticle(prefix)) found.add(prefix);
-		}
-	}
-	return [...found].sort((left, right) => right.length - left.length);
-}
-
-/** A member that may be the preposition its head governs, with the cases the ADP Case Table lets it take. */
-type Governable = {
-	readonly member: Member;
-	readonly preposition: string;
-	readonly cases: readonly AdpCase[];
-};
-
-function governableMembers(
-	target: Target,
-	skip: ReadonlySet<number>,
-): readonly Governable[] {
-	if (target.members.length < 2) return [];
-	return target.members.flatMap((member) => {
-		const whole =
-			member.spelling?.orthography === "Fused" &&
-			member.spelling.written !== undefined;
-		if (skip.has(member.position) || whole) return [];
-		const preposition = fold(spellingOf(member));
-		const entry = germanAdpositionEntry({
-			family: "Lexeme",
-			canonicalForm: preposition,
-		});
-		return entry
-			? [
-					{
-						member,
-						preposition,
-						cases: germanAdpositionAllowedCases(entry),
-					},
-				]
-			: [];
-	});
-}
-
 /** Everything the first request asks, and what code fixed before it. */
-type Plan = {
+export type Plan = {
 	readonly questionnaire: Questionnaire;
 	readonly shape: Shape;
 	readonly article: ReturnType<typeof openingArticle>;
@@ -409,36 +125,6 @@ type Plan = {
 	readonly earlyCases: readonly string[];
 	readonly adpositionCases: readonly AdpCase[] | undefined;
 };
-
-/** Asks an agreeing word's case, gender and number. */
-function agreementQuestions(questionnaire: Questionnaire) {
-	questionnaire.choice("agreement.case", question.agreementCase, caseNames);
-	questionnaire.choice("agreement.gender", question.agreementGender, {
-		...genders,
-		Unmarked: "No gender: plural agreement",
-	});
-	questionnaire.choice("agreement.number", question.agreementNumber, numbers);
-}
-
-/** The Case question over the cases still open. */
-function caseQuestion(
-	questionnaire: Questionnaire,
-	open: readonly string[],
-): void {
-	questionnaire.choice(
-		"case",
-		question.nounCase,
-		Object.fromEntries(
-			open.map((value) => [
-				value,
-				value === "Unmarked"
-					? question.unmarkedCase
-					: caseNames[value as keyof typeof caseNames],
-			]),
-		),
-		["inflection"],
-	);
-}
 
 function plan(target: Target): Plan {
 	const shape = routeShape(target);
@@ -865,7 +551,7 @@ function plan(target: Target): Plan {
 }
 
 /** What the first request settled, and what is still open. */
-type FirstRead = {
+export type FirstRead = {
 	readonly core: Values;
 	readonly inflection: Values | null | undefined;
 	readonly orthographies: readonly MemberOrthography[];
@@ -886,59 +572,6 @@ type FirstRead = {
 		readonly earlyCase: string | undefined;
 	};
 };
-
-/** A verbal Surface's features, from its form questions and its auxiliaries' uses. */
-function verbalInflection(
-	planned: Plan,
-	answered: Answered,
-	expletive: Member | undefined,
-): Values {
-	const composition: Values = {
-		perfect: null,
-		future: null,
-		passive: null,
-		voice: null,
-	};
-	for (const { member, uses } of planned.auxiliaries) {
-		const answer = answered.pick(`aux_m${member.position}`);
-		if (answer === "Main") continue;
-		const use = uses[Number(answer.slice(1))];
-		for (const [feature, value] of Object.entries(
-			(use && auxiliaryFeatures.get(use)) ?? {},
-		)) {
-			if (composition[feature] !== null && composition[feature] !== value)
-				throw new UnresolvedAnswer(
-					"The auxiliaries' uses do not compose",
-				);
-			composition[feature] = value;
-		}
-	}
-	const verbForm = answered.pick("verbForm");
-	const finite = verbForm === "Fin";
-	const mood = finite ? answered.pick("mood") : null;
-	const number = finite ? answered.pick("number") : null;
-	const person = finite ? answered.pick("person") : null;
-	// A subject es takes a finite verb in the 3rd person singular, never
-	// an imperative: jev's agreement against it is a clash of answers.
-	if (expletive && finite && (person !== "3" || number !== "Sing"))
-		throw new UnresolvedAnswer(
-			"The subject es clashes with the verb's agreement",
-		);
-	if (expletive && mood === "Imp")
-		throw new UnresolvedAnswer("The subject es clashes with an imperative");
-	return {
-		mood,
-		number,
-		person,
-		tense: finite && mood !== "Imp" ? answered.pick("tense") : null,
-		verbForm,
-		...(verbForm === "Part"
-			? { participleForm: answered.peek("participle") ?? null }
-			: {}),
-		expletive: expletive ? "Subject" : null,
-		...composition,
-	};
-}
 
 /** Reads the first request's answers; an Unresolved deciding answer throws. */
 function readFirst(
@@ -1266,278 +899,6 @@ function settle<T>(read: () => T): T | UnresolvedAnswer {
 }
 
 /**
- * A VERB's Canonical Form as its judged Core Features require it (Rule
- * de/verb-core-features, de/canonical-form-is-the-headword): the
- * infinitive with its separable prefix and, for a lexical reflexive, sich
- * before it. Luna's form is kept when it already has both. A prefix it
- * left out is written on, over the r- shortening Luna wrote for it
- * (reinkommen is hereinkommen) or over a shorter particle that ends the
- * prefix (umkommen is herumkommen).
- */
-export function verbHeadword(form: string, core: Values): string {
-	const reflexive = /^sich\s+/u.test(form) || core.lexicallyReflexive;
-	let verb = form.replace(/^sich\s+/u, "");
-	const prefix = core.hasSepPrefix;
-	if (typeof prefix === "string" && !fold(verb).startsWith(fold(prefix))) {
-		const folded = fold(verb);
-		const shortening = Object.entries(rShortenings).find(
-			([word, expansions]) =>
-				expansions.includes(fold(prefix)) && folded.startsWith(word),
-		)?.[0];
-		const tail = [...fold(prefix)]
-			.map((_, start) => fold(prefix).slice(start))
-			.find(
-				(ending) =>
-					ending.length >= 2 &&
-					ending.length < prefix.length &&
-					isParticle(ending) &&
-					folded.startsWith(ending),
-			);
-		verb = `${prefix}${verb.slice(shortening?.length ?? tail?.length ?? 0)}`;
-	}
-	return reflexive ? `sich ${verb}` : verb;
-}
-
-/**
- * A common NOUN's Core gender and cells from the article Luna wrote with
- * its headword (der Kran; Rules de/core-features-are-identity,
- * de/adjectival-noun-lemma, de/plural-only-noun-has-no-gender: none for a
- * person noun made from an adjective or participle or a plural-only noun).
- * Undefined keeps jev's reading,
- * which already fell back to the likeliest gender the Sentence's article
- * allows: when Luna wrote none, or a gender the singular head's owned
- * article agrees with in no case, or none for a singular form whose
- * gender jev saw no form show, or one that rules out a Case jev answered.
- */
-function nounCells(
-	planned: Plan,
-	first: FirstRead,
-	article: Written["article"],
-):
-	| {
-			readonly core: Values;
-			readonly inflection: Values | null | undefined;
-			readonly openCases: readonly string[];
-	  }
-	| undefined {
-	const { noun } = first;
-	if (!noun || !article || !first.inflection) return undefined;
-	const gender =
-		article === "none" ? null : (genderOfArticle[article] ?? null);
-	if (gender === (first.core.gender ?? null)) return undefined;
-	const singular = noun.number === "Sing";
-	const formGender = gender === null && singular ? noun.shown : null;
-	if (gender === null && singular && formGender === null) return undefined;
-	const agreeing = formGender ?? gender;
-	let openCases: readonly string[] = planned.article
-		? articleCases(planned.article.article, noun.number, agreeing)
-		: [...cases, "Unmarked"];
-	if (openCases.length === 0) return undefined;
-	if (noun.earlyCase !== undefined) {
-		if (!openCases.includes(noun.earlyCase)) return undefined;
-		openCases = [noun.earlyCase];
-	}
-	const [only] = openCases;
-	return {
-		core: { ...first.core, gender },
-		inflection: {
-			...first.inflection,
-			gender: formGender,
-			case:
-				openCases.length === 1 && only !== undefined
-					? only === "Unmarked"
-						? null
-						: only
-					: null,
-		},
-		openCases,
-	};
-}
-
-/**
- * The prefix answer. A shortened r- word in the verbal bracket is the
- * particle of its her- or hin- word's particle verb (Rule
- * de/r-adverb-is-her-or-hin-shorthand), so when jev leaves the prefix
- * Unresolved, the likelier of those two it weighed is read; None is never
- * one of them.
- */
-function prefixAnswer(
-	target: Target,
-	prefixes: readonly string[],
-	answered: Answered,
-): string {
-	const governed = (word: string) =>
-		target.members.some(
-			(member) =>
-				fold(spellingOf(member)) === word &&
-				answered.peek(`governed_m${member.position}`) === "Governed",
-		);
-	const settled = answered.peek("prefix");
-	// A preposition the verb governs is never its prefix (Rule
-	// de/verb-core-features): warten auf is warten.
-	if (settled !== undefined && settled !== "None") {
-		const prefix = prefixes[Number(settled.slice(1))];
-		return prefix !== undefined && governed(prefix) ? "None" : settled;
-	}
-	// A particle standing apart that segmentation put in the VERB unit, and
-	// that the verb does not govern, is its separable prefix: it belongs to
-	// the verb's Lemma, and only the prefix can (de/verb-core-features,
-	// de/bracket-particle-or-circumposition): tut … leid is leidtun. A
-	// preposition followed by a word has its own complement and is never
-	// the prefix (sich mit ihm zanken; de/verb-core-features).
-	const ownComplement = (member: Member) => {
-		if (
-			germanAdpositionEntry({
-				family: "Lexeme",
-				canonicalForm: fold(member.text),
-			}) === null
-		)
-			return false;
-		const next = target.segments
-			.slice(member.segment + 1)
-			.find((segment) => segment.kind !== "Whitespace");
-		// A coordinating conjunction or another preposition after it opens
-		// no complement of its own (gingen … entlang und spazierten; liefen
-		// den Fluss entlang bis zur Brücke).
-		return (
-			next?.kind === "ResolvableText" &&
-			!coordinators.has(fold(next.text)) &&
-			germanAdpositionEntry({
-				family: "Lexeme",
-				canonicalForm: fold(next.text),
-			}) === null
-		);
-	};
-	const standing = prefixes.flatMap((prefix, index) =>
-		target.members.length > 1 &&
-		target.members.some(
-			(member) =>
-				fold(spellingOf(member)) === prefix &&
-				member.spelling === undefined &&
-				!ownComplement(member),
-		) &&
-		!governed(prefix)
-			? [`p${index}`]
-			: [],
-	);
-	if (settled === "None")
-		return standing.length === 1 ? (standing[0] as string) : "None";
-	const expansions = new Set(
-		target.members.flatMap((member) =>
-			member.spelling?.orthography === "Shorthand" &&
-			member.spelling.surfaces.some((surface) => surface in shortenedFrom)
-				? member.spelling.surfaces
-				: [],
-		),
-	);
-	const likeliest = answered.alternatives("prefix", 0).find((option) => {
-		const prefix = prefixes[Number(option.slice(1))];
-		return prefix !== undefined && expansions.has(prefix);
-	});
-	return likeliest ?? answered.pick("prefix");
-}
-
-/** Each her- or hin- word an r- shortening stands for. */
-const shortenedFrom: Readonly<Record<string, string>> = Object.fromEntries(
-	Object.entries(rShortenings).flatMap(([word, expansions]) =>
-		expansions.map((expansion) => [expansion, word]),
-	),
-);
-
-/** Coordinating conjunctions, which never open a preposition's complement. */
-const coordinators = new Set([
-	"und",
-	"oder",
-	"aber",
-	"sondern",
-	"denn",
-	"sowie",
-]);
-
-/**
- * The positive of each suppletive adverb's compared forms, keyed by the
- * comparative and the superlative's last word (lieber and liebsten: gern).
- */
-export const suppletivePositive: ReadonlyMap<string, string> = new Map(
-	germanSuppletiveComparisons.flatMap(
-		({ positive, comparative, superlative }) => [
-			[comparative, positive],
-			[superlative.split(" ").at(-1) ?? superlative, positive],
-		],
-	),
-);
-
-/** An ordinal's stem without its ending, as Luna writes it bare (erst, zweit). */
-const ordinalStem =
-	/^(erst|zweit|dritt|viert|fünft|sechst|siebt|neunt|zehnt|elft|zwölft|(drei|vier|fünf|sech|sieb|acht|neun)zehnt|(zwanzig|dreißig|vierzig|fünfzig|sechzig|siebzig|achtzig|neunzig|hundert|tausend)st)$/u;
-
-/**
- * The bare w-words that may stand for an irgend- word (Rule
- * de/bare-w-word-is-shorthand): each authored ADV whose irgend- word is an
- * authored ADV too (wo, wie, wann, woher, wohin).
- */
-export const bareWWords: ReadonlySet<string> = (() => {
-	const adverbs = new Set(
-		authoredMembers.flatMap(({ lemma }) =>
-			lemma.kind === "ADV" ? [lemma.canonicalForm] : [],
-		),
-	);
-	return new Set([...adverbs].filter((word) => adverbs.has(`irgend${word}`)));
-})();
-
-/**
- * An ADV Lexeme's Canonical Form where the Rules settle it, whatever Luna
- * wrote: a da, wo or hier split from its hin, her or preposition is the
- * one word they form, with r before a vowel (da … auf is darauf; Rules
- * de/split-adverb-is-one-target, de/pronominal-adverb-stands-alone); a
- * bare w-word judged Shorthand is its irgend- word, member and headword
- * (de/bare-w-word-is-shorthand); a member the table spells as one word (a
- * dr- adverb, an r- adverb whose her- or hin- word was judged) is the
- * headword (de/dr-adverb-is-da-shorthand, de/r-adverb-is-her-or-hin-shorthand).
- */
-export function adverbHeadword(
-	target: Target,
-	orthographies: readonly MemberOrthography[],
-	spelled: readonly string[],
-):
-	| {
-			readonly canonicalForm: string;
-			readonly members: ReadonlyMap<number, string>;
-	  }
-	| undefined {
-	const words = target.members.map((member) => fold(member.text));
-	const [first, second] = words;
-	if (
-		target.members.length === 2 &&
-		first !== undefined &&
-		second !== undefined &&
-		splitHeads.has(first) &&
-		/^\p{L}+$/u.test(second) &&
-		orthographies.every((orthography) => orthography === "Standard")
-	) {
-		const joint =
-			first !== "hier" && /^[aeiouäöü]/u.test(second) ? "r" : "";
-		return {
-			canonicalForm: `${first}${joint}${second}`,
-			members: new Map(),
-		};
-	}
-	if (target.members.length !== 1 || first === undefined) return undefined;
-	const [member] = target.members;
-	if (orthographies[0] === "Shorthand" && bareWWords.has(first)) {
-		const word = `irgend${first}`;
-		return { canonicalForm: word, members: new Map([[0, word]]) };
-	}
-	const fixed =
-		member?.spelling?.orthography === "Shorthand" ? spelled[0] : undefined;
-	return fixed !== undefined &&
-		fold(fixed) !== first &&
-		/^\p{L}+$/u.test(fixed)
-		? { canonicalForm: fold(fixed), members: new Map() }
-		: undefined;
-}
-
-/**
  * The authored PART Lemmas whose Canonical Form is `form`, compared
  * without case; a Lemma's several Readings count once.
  */
@@ -1548,60 +909,6 @@ const particlesSpelled = (form: string) => [
 			.map((member) => [lemmaIdentityKey(member.lemma), member]),
 	).values(),
 ];
-
-/**
- * What Luna reads before jev has answered: every member Standard unless
- * the unit or dumcorpus's tables already fix its orthography, the opening
- * article outside the headword, no auxiliary, no governed member, only
- * the readings code fixes, and no judged features.
- */
-function guessedJudgment(target: Target, planned: Plan): Judged {
-	const { article } = planned;
-	return {
-		orthographies: target.members.map(
-			(member): MemberOrthography =>
-				member.spelling?.orthography ??
-				(member === article?.member ? article.orthography : "Standard"),
-		),
-		outsideHeadword: new Set(article ? [article.member.position] : []),
-		readings: new Map(planned.presetReadings),
-	};
-}
-
-/**
- * Why Luna's answer to the guess cannot stand once jev has judged, or
- * undefined when it can: the request jev's answers make reads otherwise,
- * judged features aside, as for a Typo or Shorthand, another fixed
- * spelling, an auxiliary or a governed member.
- */
-function guessMisses(
-	guessed: Omit<LunaRequest, "configuration">,
-	judged: Omit<LunaRequest, "configuration">,
-): string | undefined {
-	const { judged: _features, ...read } = judged.input as Values;
-	return JSON.stringify(guessed.input) === JSON.stringify(read)
-		? undefined
-		: "jev changed what Luna reads";
-}
-
-/**
- * Why a VERB's headword Luna wrote on the guess cannot stand: it carries a
- * sich or a separable prefix jev judged away, which `verbHeadword` adds
- * but never takes off.
- */
-function verbGuessMisses(
-	form: string,
-	core: Values,
-	prefixes: readonly string[],
-): string | undefined {
-	if (/^sich\s/u.test(form) && !core.lexicallyReflexive)
-		return "jev judged the verb not lexically reflexive";
-	const bare = fold(form.replace(/^sich\s+/u, ""));
-	return core.hasSepPrefix === null &&
-		prefixes.some((prefix) => bare.startsWith(fold(prefix)))
-		? "jev judged the verb without a separable prefix"
-		: undefined;
-}
 
 /**
  * Resolves a unit on an open route: the grammar request, with Luna's call

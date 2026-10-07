@@ -1,0 +1,43 @@
+/** Luna's call on a guess at jev's answers, and why the guess can miss. */
+
+import type { LunaRequest } from "../../../luna.js";
+import type { Judged } from "../canonical-form.js";
+import type { MemberOrthography } from "../member-spelling.js";
+import type { Plan } from "../open-route.js";
+import type { Target } from "../target.js";
+import type { Values } from "./shape.js";
+
+/**
+ * What Luna reads before jev has answered: every member Standard unless
+ * the unit or dumcorpus's tables already fix its orthography, the opening
+ * article outside the headword, no auxiliary, no governed member, only
+ * the readings code fixes, and no judged features.
+ */
+export function guessedJudgment(target: Target, planned: Plan): Judged {
+	const { article } = planned;
+	return {
+		orthographies: target.members.map(
+			(member): MemberOrthography =>
+				member.spelling?.orthography ??
+				(member === article?.member ? article.orthography : "Standard"),
+		),
+		outsideHeadword: new Set(article ? [article.member.position] : []),
+		readings: new Map(planned.presetReadings),
+	};
+}
+
+/**
+ * Why Luna's answer to the guess cannot stand once jev has judged, or
+ * undefined when it can: the request jev's answers make reads otherwise,
+ * judged features aside, as for a Typo or Shorthand, another fixed
+ * spelling, an auxiliary or a governed member.
+ */
+export function guessMisses(
+	guessed: Omit<LunaRequest, "configuration">,
+	judged: Omit<LunaRequest, "configuration">,
+): string | undefined {
+	const { judged: _features, ...read } = judged.input as Values;
+	return JSON.stringify(guessed.input) === JSON.stringify(read)
+		? undefined
+		: "jev changed what Luna reads";
+}
