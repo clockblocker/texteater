@@ -1,6 +1,6 @@
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { namedBlockMarkdown, runCodegen } from "codegen";
+import { namedBlockMarkdown, runCodegenCommand } from "codegen";
 
 const generatorRoot = dirname(fileURLToPath(import.meta.url));
 
@@ -23,5 +23,5 @@ export const readmeRecipe = namedBlockMarkdown({
 });
 
 if (import.meta.main) {
-	await runCodegen(readmeRecipe, { mode: "write" });
+	await runCodegenCommand(readmeRecipe, { label: "Dumdict README" });
 }

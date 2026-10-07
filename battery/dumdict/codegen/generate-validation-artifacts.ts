@@ -1,4 +1,9 @@
-import "./generate-unit-schemas.js";
+import { runCodegenCommand } from "codegen";
+import { unitSchemasRecipe } from "./generate-unit-schemas.js";
 
-const { generateValidation } = await import("./validation-artifacts.js");
-await generateValidation(process.argv.includes("--check"));
+// validation-artifacts.ts imports unit-schemas.ts, so write it first.
+await runCodegenCommand(unitSchemasRecipe, { label: "Dumdict unit schemas" });
+const { validationRecipe } = await import("./validation-artifacts.js");
+await runCodegenCommand(validationRecipe(), {
+	label: "Dumdict validation",
+});

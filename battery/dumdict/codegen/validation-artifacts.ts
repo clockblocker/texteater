@@ -1,5 +1,5 @@
-import { readFile, writeFile } from "node:fs/promises";
-import { formatTypeScript } from "codegen";
+import { fileURLToPath } from "node:url";
+import { defineCodegen, formatTypeScript } from "codegen";
 import {
 	compileZodValidationArtifacts,
 	emitLinkedValidationRegistry,
@@ -93,40 +93,39 @@ const allSchemas = {
 		]),
 	),
 };
-export async function generateValidation(check: boolean) {
-	const artifact = compileZodValidationArtifacts({
-		schemas: allSchemas,
-		operations,
+const generated = new URL("../src/generated/", import.meta.url);
+export function validationRecipe() {
+	return defineCodegen({
+		inputs: {},
+		outputs: { generated: { root: fileURLToPath(generated) } },
+		build: async () => {
+			const artifact = compileZodValidationArtifacts({
+				schemas: allSchemas,
+				operations,
+			});
+			const sources = {
+				"linked-validation.ts": emitLinkedValidationRegistry([
+					{
+						owner: "dumling",
+						registry: JSON.parse(dumlingValidation),
+					},
+					{ owner: "dumrel", registry: JSON.parse(dumrelValidation) },
+					{ owner: "dumdict", registry: artifact },
+				]),
+				"validation-artifacts.ts": `// Generated canonical Dumdict validation. Run bun run generate:validation.\nexport const encodedDumdictValidationArtifacts: string = ${JSON.stringify(JSON.stringify(artifact))};\n`,
+			};
+			return Promise.all(
+				Object.entries(sources).map(async ([name, source]) => ({
+					id: name,
+					to: { target: "generated" as const, path: name },
+					content: await formatTypeScript(
+						source,
+						new URL(name, generated),
+					),
+					provenance: [],
+					meta: null,
+				})),
+			);
+		},
 	});
-	const linkedPath = new URL(
-		"../src/generated/linked-validation.ts",
-		import.meta.url,
-	);
-	const linkedOutput = await formatTypeScript(
-		emitLinkedValidationRegistry([
-			{ owner: "dumling", registry: JSON.parse(dumlingValidation) },
-			{ owner: "dumrel", registry: JSON.parse(dumrelValidation) },
-			{ owner: "dumdict", registry: artifact },
-		]),
-		linkedPath,
-	);
-	if (check) {
-		if (
-			(await readFile(linkedPath, "utf8").catch(() => "")) !==
-			linkedOutput
-		)
-			throw Error("Stale Dumdict linked validation");
-	} else await writeFile(linkedPath, linkedOutput);
-	const path = new URL(
-		"../src/generated/validation-artifacts.ts",
-		import.meta.url,
-	);
-	const output = await formatTypeScript(
-		`// Generated canonical Dumdict validation. Run bun run generate:validation.\nexport const encodedDumdictValidationArtifacts: string = ${JSON.stringify(JSON.stringify(artifact))};\n`,
-		path,
-	);
-	if (check) {
-		if ((await readFile(path, "utf8").catch(() => "")) !== output)
-			throw Error("Stale Dumdict validation artifacts");
-	} else await writeFile(path, output);
 }
