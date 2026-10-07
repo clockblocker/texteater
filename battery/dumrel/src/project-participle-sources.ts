@@ -1,7 +1,8 @@
 import { ParsingError } from "common-utils/validation";
 import { compare, structuralKeys } from "./fingerprint.js";
+import type { ParticipleProjection } from "./generated/types.js";
 import { parseProjectionInventory } from "./projection-inventory.js";
-import type { ParticipleProjection, ReadingWithKnowledge } from "./types.js";
+import type { ReadingWithKnowledge } from "./types.js";
 
 const relationOrder = ["participleSource", "participialAdjective"];
 

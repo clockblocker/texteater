@@ -476,56 +476,7 @@ export type UnitShadow =
 			family: "Saying";
 			kind: "Saying";
 	  };
-export type LexemeUnitShadow =
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "ADP" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "ADV" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "AUX" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "CCONJ" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "DET" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "PUNCT" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "SCONJ" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "SYM" }
-	| { language: "de"; canonicalForm: string; family: "Lexeme"; kind: "VERB" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "ADP" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "ADV" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "AUX" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "CCONJ" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "DET" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "PUNCT" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "SCONJ" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "SYM" }
-	| { language: "en"; canonicalForm: string; family: "Lexeme"; kind: "VERB" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "ADJ" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "ADP" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "ADV" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "AUX" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "CCONJ" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "DET" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "INTJ" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "NOUN" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "NUM" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PART" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PRON" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PROPN" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "PUNCT" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "SCONJ" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "SYM" }
-	| { language: "he"; canonicalForm: string; family: "Lexeme"; kind: "VERB" };
-export type MorphologicalTree = {
+type MorphologicalTree = {
 	root: { nodeKind: "structure"; children: Array<MorphologicalTreeNode> };
 };
 export type MorphologicalTreeNode =
@@ -2445,7 +2396,7 @@ export type SemanticRelationProjection = {
 };
 export type GovernedCase = "Acc" | "Dat" | "Gen";
 export type ValencySlotStatus = "Required" | "Optional";
-export type ValencyReferent = "Someone" | "Something" | "Either";
+type ValencyReferent = "Someone" | "Something" | "Either";
 export type GermanValencyComplement =
 	| {
 			kind: "Case";
@@ -2544,7 +2495,7 @@ export type ValencySlot = {
 	status: ValencySlotStatus;
 	complements: Array<ValencyComplement>;
 };
-export type GovernmentRelation = "governs" | "governedBy";
+type GovernmentRelation = "governs" | "governedBy";
 export type GovernmentProjection = {
 	source:
 		| Dumling.Reading<"de", "Foreign", "Foreign">
@@ -2850,7 +2801,7 @@ export type GovernmentProjection = {
 	governedCase: GovernedCase | null;
 	provenance: "direct" | "inferred";
 };
-export type ParticipleMeaning = "Verbal" | "Drifted";
+type ParticipleMeaning = "Verbal" | "Drifted";
 export type ParticipleSource = {
 	verb:
 		| Dumling.Lemma<"de", "Lexeme", "VERB">
@@ -2858,7 +2809,6 @@ export type ParticipleSource = {
 		| Dumling.Lemma<"he", "Lexeme", "VERB">;
 	meaning: ParticipleMeaning;
 };
-export type ParticipleRelation = "participleSource" | "participialAdjective";
 export type ParticipleProjection =
 	| {
 			source:
@@ -3279,11 +3229,11 @@ export type NounPlural = Array<string> | ("NoPlural" | "PluralOnly");
 export type ConjugationClass = "Strong" | "Weak" | "Mixed";
 export type ConjugationClasses = Array<ConjugationClass>;
 export type LocutionType = "Idiom" | "Collocation";
-export type SayingType = {
+type SayingType = {
 	type: "Proverb" | "WingedWord";
 	attribution?: string | undefined;
 };
-export type FormulaRole =
+type FormulaRole =
 	| "Greeting"
 	| "Farewell"
 	| "Thanks"

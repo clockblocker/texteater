@@ -3,6 +3,7 @@ import type * as Dumling from "dumling/types";
 import { projectSemanticRelations } from "dumrel";
 import { semanticRelationProjectionSchema } from "dumrel/schema";
 import type * as Dumrel from "dumrel/types";
+import type { SemanticRelationProjection } from "../src/generated/types.js";
 import { houseLemma, prefixLemma } from "./fixtures.js";
 
 function reading(
@@ -41,13 +42,13 @@ test("a Lemma target closes only when its Lemma has exactly one Reading", () => 
 		reading: dog,
 		knowledge: { semanticRelations: { hypernym: [animal.lemma] } },
 	};
-	const direct: Dumrel.SemanticRelationProjection = {
+	const direct: SemanticRelationProjection = {
 		source: dog,
 		relation: "hypernym",
 		target: animal.lemma,
 		provenance: "direct",
 	};
-	const inverse: Dumrel.SemanticRelationProjection = {
+	const inverse: SemanticRelationProjection = {
 		source: animal,
 		relation: "hyponym",
 		target: dog.lemma,
@@ -440,7 +441,7 @@ test("a small independent reachability oracle covers every directed three-Readin
 		const expected = pairs
 			.filter(([a, b]) => reachable[a]?.[b])
 			.map(
-				([a, b]): Dumrel.SemanticRelationProjection => ({
+				([a, b]): SemanticRelationProjection => ({
 					source: readings[a],
 					relation: "synonym",
 					target: readings[b],

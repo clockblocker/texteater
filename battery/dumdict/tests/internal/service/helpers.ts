@@ -1,3 +1,4 @@
+import type * as Dumrel from "dumrel/types";
 import {
 	makeSurfaceId,
 	type ReadingEntry,
@@ -78,7 +79,7 @@ export function emojiOf(
 }
 
 export function lemmaRelations(
-	relations: import("dumrel/types").SemanticRelations | undefined,
+	relations: Dumrel.SemanticRelations | undefined,
 ) {
 	if (relations?.targetKind === "reading")
 		throw new Error("Expected Lemma target mode");

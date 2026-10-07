@@ -21,17 +21,13 @@ test("published operational entrypoint stays independent of Zod", async () => {
 	).toBe(false);
 	const module = await import(path.join(packageRoot, "dist/index.js"));
 	expect(Object.keys(module).sort()).toEqual([
-		"KnowledgePolicyUnavailable",
-		"ParsingError",
 		"allowedComplementKinds",
 		"applyKnowledgeChange",
 		"directSemanticRelationValues",
 		"formulaRoleValues",
 		"germanConjugationClass",
-		"governedCaseValues",
 		"locutionTypeValues",
 		"parseReadingKnowledge",
-		"participleMeaningValues",
 		"projectParticipleSources",
 		"projectSemanticRelations",
 		"sayingTypeValues",

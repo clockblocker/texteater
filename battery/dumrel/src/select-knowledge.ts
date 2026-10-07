@@ -3,7 +3,7 @@ import { knowledgePolicyMask } from "./knowledge-policies.js";
 import type { KnowledgeRequestMask, KnowledgeSelectionInput } from "./types.js";
 import { parseSelectionShape } from "./validation.js";
 
-export class KnowledgePolicyUnavailable extends Error {
+class KnowledgePolicyUnavailable extends Error {
 	readonly _tag = "KnowledgePolicyUnavailable";
 	readonly route: KnowledgeSelectionInput["route"];
 	constructor(route: KnowledgeSelectionInput["route"]) {

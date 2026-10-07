@@ -18689,7 +18689,7 @@ export type Attestation<
 	K extends Kind<L, F> = Kind<L, F>,
 > = Unit<"Attestation", L, F, K>;
 /** The Unit Kinds that carry features, so a route may give them Syncretisms (system ADR 0046). Reading and Attestation reach one through their Lemma or Surface. */
-export type SyncretizableUnitKind = "Lemma" | "Surface";
+type SyncretizableUnitKind = "Lemma" | "Surface";
 /** A Syncretism with its units (system ADR 0046): `syncretic` names the features its units disagree on and `syncretized` holds them. Only routes whose schema allows one have it. */
 export type Syncretism<
 	U extends SyncretizableUnitKind = SyncretizableUnitKind,

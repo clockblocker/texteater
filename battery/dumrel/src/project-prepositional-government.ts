@@ -1,7 +1,8 @@
 import { ParsingError } from "common-utils/validation";
 import { compare, structuralKeys } from "./fingerprint.js";
+import type { GovernmentProjection } from "./generated/types.js";
 import { parseProjectionInventory } from "./projection-inventory.js";
-import type { GovernmentProjection, ReadingWithKnowledge } from "./types.js";
+import type { ReadingWithKnowledge } from "./types.js";
 
 const relationOrder = ["governs", "governedBy"];
 

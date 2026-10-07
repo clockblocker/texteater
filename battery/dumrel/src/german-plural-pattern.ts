@@ -1,4 +1,4 @@
-import type { PluralPattern } from "./types.js";
+import type { PluralPattern } from "./generated/types.js";
 
 const UMLAUT: Readonly<Record<string, string>> = { a: "ä", o: "ö", u: "ü" };
 

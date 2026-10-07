@@ -9,12 +9,8 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
-import {
-	CodegenOwnershipError,
-	CodegenPlanError,
-	defineCodegen,
-	runCodegen,
-} from "../src/index.js";
+import { CodegenOwnershipError, CodegenPlanError } from "../src/errors.js";
+import { defineCodegen, runCodegen } from "../src/index.js";
 import { runCodegenWithFileSystem } from "../src/runner.js";
 import { MemoryFileSystem } from "./memory-filesystem.js";
 

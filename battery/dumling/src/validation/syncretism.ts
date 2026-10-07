@@ -1,11 +1,6 @@
+import type { Syncretism, SyncretismView } from "../generated/units.js";
 import { lemmaIdentityKey } from "../identity.js";
-import type {
-	Language,
-	Lemma,
-	Surface,
-	Syncretism,
-	SyncretismView,
-} from "../types.js";
+import type { Language, Lemma, Surface } from "../types.js";
 import { foldCase } from "./semantics.js";
 
 type Bag = Readonly<Record<string, unknown>>;

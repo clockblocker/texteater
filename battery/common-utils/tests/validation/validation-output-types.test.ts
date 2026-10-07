@@ -262,3 +262,33 @@ test("a recursive shape another artifact owns is referenced by its name", () => 
 		].join("\n"),
 	);
 });
+
+test("an unexported name still names its shape where it's used", () => {
+	const referent = z.enum(["Someone", "Something"]);
+	const slot = z.strictObject({ referent });
+	const artifact = compileZodValidationArtifacts({
+		schemas: { referent, slot },
+		operations: [],
+	});
+	expect(
+		emitValidationOutputTypes({
+			artifact,
+			exports: { Referent: "referent", Slot: "slot" },
+			unexported: ["Referent"],
+			typePreservingOperations: [],
+		}),
+	).toBe(
+		[
+			'type Referent = "Someone" | "Something";',
+			'export type Slot = {"referent": Referent;};',
+		].join("\n"),
+	);
+	expect(() =>
+		emitValidationOutputTypes({
+			artifact,
+			exports: { Slot: "slot" },
+			unexported: ["Referent"],
+			typePreservingOperations: [],
+		}),
+	).toThrow("Unexported output type Referent has no root");
+});

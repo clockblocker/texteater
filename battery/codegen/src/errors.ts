@@ -1,4 +1,4 @@
-export class CodegenError extends Error {
+class CodegenError extends Error {
 	override readonly name: string = "CodegenError";
 }
 

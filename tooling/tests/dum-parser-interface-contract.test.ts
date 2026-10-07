@@ -16,7 +16,6 @@ async function rootKeys(specifier: string): Promise<string[]> {
 
 test("replacement public operations use the settled unit and Knowledge contracts", async () => {
 	expect(await rootKeys("dumling")).toEqual([
-		"ParsingError",
 		"canonicalFormKey",
 		"foldCase",
 		"isSyncreticUnit",
@@ -31,17 +30,13 @@ test("replacement public operations use the settled unit and Knowledge contracts
 		"syncretize",
 	]);
 	expect(await rootKeys("dumrel")).toEqual([
-		"KnowledgePolicyUnavailable",
-		"ParsingError",
 		"allowedComplementKinds",
 		"applyKnowledgeChange",
 		"directSemanticRelationValues",
 		"formulaRoleValues",
 		"germanConjugationClass",
-		"governedCaseValues",
 		"locutionTypeValues",
 		"parseReadingKnowledge",
-		"participleMeaningValues",
 		"projectParticipleSources",
 		"projectSemanticRelations",
 		"sayingTypeValues",

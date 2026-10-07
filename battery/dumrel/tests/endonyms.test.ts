@@ -7,6 +7,7 @@ import {
 	selectKnowledge,
 } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import type { SemanticRelationProjection } from "../src/generated/types.js";
 import { berlinLemma, houseLemma, houseReading } from "./fixtures.js";
 
 const city = (canonicalForm: string) =>
@@ -50,13 +51,13 @@ test("a stored endonym projects the exonym onto the local name, and back", () =>
 		},
 		{ reading: bratislava, knowledge: {} },
 	];
-	const endonym: Dumrel.SemanticRelationProjection = {
+	const endonym: SemanticRelationProjection = {
 		source: pressburg,
 		relation: "endonym",
 		target: bratislava.lemma,
 		provenance: "direct",
 	};
-	const exonym: Dumrel.SemanticRelationProjection = {
+	const exonym: SemanticRelationProjection = {
 		source: bratislava,
 		relation: "exonym",
 		target: pressburg.lemma,

@@ -2,9 +2,9 @@ import { ParsingError } from "common-utils/validation";
 import type * as Dumling from "dumling/types";
 import { contextualizeChange, issue, parseSource } from "./context.js";
 import { structuralKeys } from "./fingerprint.js";
+import type { ConjugationClasses } from "./generated/types.js";
 import { parseReadingKnowledge } from "./parse-reading-knowledge.js";
 import type {
-	ConjugationClasses,
 	KnowledgeChange,
 	ReadingKnowledge,
 	SemanticRelations,

@@ -4,8 +4,13 @@ import {
 	parseCompiledValidation,
 } from "common-utils/validation";
 import { validationRegistry } from "./generated/linked-validation.js";
-import type { ParsedUnit, ParseResult, UnitRoute } from "./types.js";
+import type { ParsedUnit } from "./generated/units.js";
+import type { UnitRoute } from "./types.js";
 import { validationOperations } from "./validation/operations.js";
+
+type ParseResult<T> =
+	| { success: true; chain: T }
+	| { success: false; error: ParsingError };
 
 const registry: CompiledValidationRegistry = validationRegistry;
 function object(value: unknown): Record<string, unknown> | undefined {

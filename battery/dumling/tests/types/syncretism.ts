@@ -1,17 +1,13 @@
 import type { z } from "zod";
 import type { lemmaSchema } from "../../src/generated/schemas/de/lexeme/pronoun.js";
+import type { Syncretism, SyncretismView } from "../../src/generated/units.js";
 import {
 	isSyncreticUnit,
 	isSyncretism,
 	syncretismView,
 	syncretize,
 } from "../../src/index.js";
-import type {
-	Lemma,
-	Surface,
-	Syncretism,
-	SyncretismView,
-} from "../../src/types.js";
+import type { Lemma, Surface } from "../../src/types.js";
 
 type Pronoun = Lemma<"de", "Lexeme", "PRON">;
 type PronounSyncretism = Syncretism<"Lemma", "de", "Lexeme", "PRON">;

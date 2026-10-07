@@ -2,11 +2,10 @@ import { ParsingError } from "common-utils/validation";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { structuralKeys } from "./fingerprint.js";
+import type { ConjugationClasses, NounPlural } from "./generated/types.js";
 import { knowledgePolicyApplies } from "./knowledge-policies.js";
 import type {
-	ConjugationClasses,
 	KnowledgeChange,
-	NounPlural,
 	ParticipleSource,
 	ReadingKnowledge,
 	ValencyComplement,

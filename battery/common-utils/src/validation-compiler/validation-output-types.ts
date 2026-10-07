@@ -14,20 +14,28 @@ export type ExternalOutputTypes = {
 };
 
 /**
- * Materialize structural outputs as a consumer should read them: exported
- * schemas by their export names, shapes another package owns by that
- * package's names, and everything else inline. A recursive schema needs an
- * export name, so no generated alias ever reaches a hover.
+ * Materialize structural outputs as a consumer should read them: named
+ * schemas by their names, shapes another package owns by that package's
+ * names, and everything else inline. A recursive schema needs a name, so no
+ * generated alias ever reaches a hover. A name listed in `unexported` is
+ * declared without `export`: hovers still read it, but the module doesn't
+ * offer it.
  */
 export function emitValidationOutputTypes(options: {
 	artifact: Artifact;
 	exports: Readonly<Record<string, string>>;
+	/** Names of `exports` to declare without `export`. */
+	unexported?: readonly string[];
 	/** Operations whose output has the same structural type as their input. */
 	typePreservingOperations: readonly string[];
 	/** Consulted in order; the first owner of a shape names it. */
 	external?: readonly ExternalOutputTypes[];
 }): string {
 	const { roots } = options.artifact;
+	const unexported = new Set(options.unexported);
+	for (const name of unexported)
+		if (!Object.hasOwn(options.exports, name))
+			throw Error(`Unexported output type ${name} has no root`);
 	const exportNames = new Map<string, string>();
 	for (const [name, key] of Object.entries(options.exports)) {
 		if (!/^[A-Z][A-Za-z0-9_]*$/.test(name))
@@ -88,7 +96,7 @@ export function emitValidationOutputTypes(options: {
 			root[0] === "ref" && exportNames.get(root[1]) === name
 				? named.emitDefinition(root[1])
 				: named.emit(root);
-		return `export type ${name} = ${body};`;
+		return `${unexported.has(name) ? "" : "export "}type ${name} = ${body};`;
 	});
 	const imports = (options.external ?? [])
 		.filter((_, owner) => usedOwners.has(owner))

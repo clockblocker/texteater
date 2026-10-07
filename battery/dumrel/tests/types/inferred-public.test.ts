@@ -12,7 +12,9 @@ export type DirectSemanticRelation = Dumrel.DirectSemanticRelation;
 export type ReadingKnowledge = Dumrel.ReadingKnowledge;
 export type KnowledgeSettings = Dumrel.KnowledgeSettings;
 export type KnowledgeRequestMask = Dumrel.KnowledgeRequestMask;
-export type MorphologicalTree = Dumrel.MorphologicalTree;
+export type MorphologicalTree = NonNullable<
+	Dumrel.ReadingKnowledge["morphologicalTree"]
+>;
 export type ValencySlot = Dumrel.ValencySlot;
 export type ValencyComplement = Dumrel.ValencyComplement;
 export type KnowledgeChange = Dumrel.KnowledgeChange;

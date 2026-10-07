@@ -1,4 +1,4 @@
-export type Awaitable<T> = T | Promise<T>;
+type Awaitable<T> = T | Promise<T>;
 
 export type SourceProvenance = Readonly<{
 	kind: "source";
@@ -6,7 +6,7 @@ export type SourceProvenance = Readonly<{
 	line?: number;
 }>;
 
-export type ArtifactProvenance = Readonly<{
+type ArtifactProvenance = Readonly<{
 	kind: "artifact";
 	id: string;
 }>;
@@ -18,12 +18,12 @@ export type TextSource = Readonly<{
 	text: string;
 }>;
 
-export type TextInput = Readonly<{
+type TextInput = Readonly<{
 	kind: "text";
 	path: string;
 }>;
 
-export type TextSetInput = Readonly<{
+type TextSetInput = Readonly<{
 	kind: "text-set";
 	root: string;
 	include: readonly string[];
@@ -34,7 +34,7 @@ export type TextSetInput = Readonly<{
 export type Input = TextInput | TextSetInput;
 export type Inputs = Readonly<Record<string, Input>>;
 
-export type MaterializedInput<I extends Input> = I extends TextInput
+type MaterializedInput<I extends Input> = I extends TextInput
 	? TextSource
 	: I extends TextSetInput
 		? readonly TextSource[]
@@ -58,7 +58,7 @@ export type Output = Readonly<{
 }>;
 
 export type Outputs = Readonly<Record<string, Output>>;
-export type OutputKey<O extends Outputs> = Extract<keyof O, string>;
+type OutputKey<O extends Outputs> = Extract<keyof O, string>;
 
 type ArtifactDestination<Target extends string> = Readonly<{
 	target: Target;
@@ -123,7 +123,7 @@ export type PlannedChange = Readonly<{
 	artifactId?: string;
 }>;
 
-export type ArtifactPlan<Metadata = unknown> = Readonly<{
+type ArtifactPlan<Metadata = unknown> = Readonly<{
 	artifacts: readonly PlannedArtifact<string, Metadata>[];
 	changes: readonly PlannedChange[];
 }>;

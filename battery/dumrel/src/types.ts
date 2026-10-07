@@ -8,58 +8,39 @@ import type {
 
 export type {
 	ConjugationClass,
-	ConjugationClasses,
 	DirectSemanticRelation,
-	EnglishValencyComplement,
-	FormulaRole,
 	GermanValencyComplement,
 	GovernedCase,
-	GovernmentProjection,
-	GovernmentRelation,
-	HebrewValencyComplement,
-	LexemeUnitShadow,
 	LocutionType,
-	MorphologicalTree,
 	MorphologicalTreeNode,
-	NounPlural,
-	ParticipleMeaning,
-	ParticipleProjection,
-	ParticipleRelation,
 	ParticipleSource,
 	PendingSemanticRelation,
-	PluralPattern,
-	SayingType,
 	SemanticRelation,
-	SemanticRelationProjection,
 	TranslationLanguage,
 	UnitShadow,
 	ValencyComplement,
-	ValencyReferent,
 	ValencySlot,
 	ValencySlotStatus,
 } from "./generated/types.js";
 
 /** A Reading's governed complements in order; never empty. */
 export type ValencyFrame = NonNullable<CanonicalReadingKnowledge["valency"]>;
-export type NonEmptyStrings = [string, ...string[]];
 /**
  * The Families a Semantic Relation from this Family may reach: Lexeme and
  * Locution share one relation space, and every other Family relates only
  * within itself (ADR 0039).
  */
-export type RelationFamily<F extends Dumling.Family> = F extends
-	| "Lexeme"
-	| "Locution"
+type RelationFamily<F extends Dumling.Family> = F extends "Lexeme" | "Locution"
 	? "Lexeme" | "Locution"
 	: F;
-export type RelatedLemma<R extends Dumling.Reading> = Extract<
+type RelatedLemma<R extends Dumling.Reading> = Extract<
 	Dumling.Lemma,
 	{
 		language: R["lemma"]["language"];
 		family: RelationFamily<R["lemma"]["family"]>;
 	}
 >;
-export type RelatedReading<R extends Dumling.Reading> = Extract<
+type RelatedReading<R extends Dumling.Reading> = Extract<
 	Dumling.Reading,
 	{
 		lemma: {

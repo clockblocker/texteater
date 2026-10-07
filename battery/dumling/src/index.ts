@@ -1,4 +1,3 @@
-export { ParsingError } from "common-utils/validation";
 export {
 	canonicalFormKey,
 	lemmaIdentityKey,

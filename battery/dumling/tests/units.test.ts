@@ -5,10 +5,8 @@ import { registrations } from "../codegen/operations.js";
 import { loadRoutes } from "../codegen/routes.js";
 import { parseUnit, syncretismView, syncretize } from "../src/index.js";
 import { UnitKindSchema } from "../src/schemas/unit-parts.js";
-import {
-	operationTable,
-	validationOperations,
-} from "../src/validation/operations.js";
+import { operationTable } from "../src/validation/operation-table.js";
+import { validationOperations } from "../src/validation/operations.js";
 import { unitFixtures } from "./unit-fixtures.js";
 
 const routes = await loadRoutes();

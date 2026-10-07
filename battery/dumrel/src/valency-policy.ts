@@ -1,10 +1,9 @@
 import type * as Dumling from "dumling/types";
 import type {
 	EnglishValencyComplement,
-	GermanValencyComplement,
 	HebrewValencyComplement,
-	ValencyComplement,
-} from "./types.js";
+} from "./generated/types.js";
+import type { GermanValencyComplement, ValencyComplement } from "./types.js";
 
 type ComplementKind = ValencyComplement["kind"];
 /** Each language's complement vocabulary; a language missing here takes no frame. */

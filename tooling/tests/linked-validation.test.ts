@@ -84,10 +84,10 @@ test("providers share readonly objects and package builds reject incompatible pr
 import {validationRegistry as a} from "dumling/compiled-validation";
 import {validationRegistry as b} from "dumrel/compiled-validation";
 import {ParsingError as e} from "common-utils/validation";
-import {ParsingError as l,parseUnit} from "dumling";
-import {ParsingError as r} from "dumrel";
-if("definitions" in a||"definitions" in b||e!==l||e!==r)throw Error("Duplicated runtime or provider");
-if(!(parseUnit({}).error instanceof e))throw Error("Wrong error identity");
+import {parseUnit} from "dumling";
+import {parseReadingKnowledge} from "dumrel";
+if("definitions" in a||"definitions" in b)throw Error("Duplicated provider");
+if(!(parseUnit({}).error instanceof e)||!(parseReadingKnowledge({}).error instanceof e))throw Error("Duplicated runtime: wrong error identity");
 console.log("shared");
 `),
 		).toBe("shared");

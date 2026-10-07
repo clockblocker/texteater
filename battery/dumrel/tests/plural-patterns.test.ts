@@ -4,7 +4,7 @@ import {
 	parseReadingKnowledge,
 	selectKnowledge,
 } from "dumrel";
-import type * as Dumrel from "dumrel/types";
+import type { NounPlural, PluralPattern } from "../src/generated/types.js";
 import { germanPluralPattern } from "../src/german-plural-pattern.js";
 import { houseLemma, houseReading, wartenReading } from "./fixtures.js";
 
@@ -46,7 +46,7 @@ test("only a German NOUN Reading has a plural, each form listed once", () => {
 		["Häuser"],
 		"NoPlural",
 		"PluralOnly",
-	] satisfies Dumrel.NounPlural[])
+	] satisfies NounPlural[])
 		expect(
 			parseReadingKnowledge({
 				source: houseReading,
@@ -77,7 +77,7 @@ test("the stored forms, not a pattern, give back the plural: En covers Pizzen an
 		["Pizza", ["Pizzen", "Pizzas"], ["En", "S"]],
 		["Lehrerin", ["Lehrerinnen"], ["En"]],
 		["Visum", ["Visa"], ["Other"]],
-	] satisfies [string, Dumrel.NonEmptyStrings, Dumrel.PluralPattern[]][]) {
+	] satisfies [string, [string, ...string[]], PluralPattern[]][]) {
 		const stored = parseReadingKnowledge({
 			source: {
 				...houseReading,
@@ -125,7 +125,7 @@ test("a plural marker is atomic: Contribute conflicts, Correct replaces, Retract
 		["NoPlural", ["Häuser"]],
 		[["Häuser"], "PluralOnly"],
 		["NoPlural", "PluralOnly"],
-	] satisfies [Dumrel.NounPlural, Dumrel.NounPlural][])
+	] satisfies [NounPlural, NounPlural][])
 		expect(
 			applyKnowledgeChange({
 				source: houseReading,
