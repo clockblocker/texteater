@@ -1,7 +1,7 @@
 import { readingIdentityKey } from "dumling";
+import type { SpecRecordId, SpecTarget } from "./corpus-types.js";
 import type { SpecIssue } from "./issues.js";
 import { sameValue } from "./same-value.js";
-import type { SpecRecordId, SpecTarget } from "./types.js";
 
 /** A loaded record whose targets may carry Knowledge: a Spec or Breakdown Record. */
 type RecordWithTargets = {

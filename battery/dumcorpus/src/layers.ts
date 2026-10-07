@@ -1,4 +1,4 @@
-import type { AnnotationLayer } from "./types.js";
+import type { AnnotationLayer } from "./corpus-types.js";
 
 /** The Annotation Layers in order, each resting on the ones before it. */
 export const annotationLayers: readonly AnnotationLayer[] = [

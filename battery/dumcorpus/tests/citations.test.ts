@@ -1,16 +1,16 @@
 import { describe, expect, test } from "bun:test";
 import { checkCitations } from "../src/check-citations.js";
-import {
-	checkPromptCitations,
-	loadSpecRecords,
-	ruleStatementHash,
-} from "../src/index.js";
 import type {
 	AnnotationLayer,
 	CitingPrompt,
 	Rule,
 	SpecRecord,
-} from "../src/types.js";
+} from "../src/corpus-types.js";
+import {
+	checkPromptCitations,
+	loadSpecRecords,
+	ruleStatementHash,
+} from "../src/index.js";
 import { readRepositoryAdrIds } from "./adr-ids.js";
 
 const adrs = readRepositoryAdrIds();

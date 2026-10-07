@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import { lemmaIdentityKey, syncretismView, syncretize } from "dumling";
 import type * as Dumling from "dumling/types";
+import type { KnowledgeCoverage } from "../src/corpus-types.js";
 import { authoredMembers } from "../src/inventories.js";
 import type { SpecCheck } from "../src/issues.js";
 import { ruleStatementHash, rules } from "../src/rules.js";
-import type { KnowledgeCoverage } from "../src/types.js";
 
 // biome-ignore lint/suspicious/noExplicitAny: fixtures edit raw record JSON.
 type RecordJson = any;

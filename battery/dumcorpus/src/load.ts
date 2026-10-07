@@ -3,8 +3,6 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { checkBreakdownRecord } from "./check-breakdown.js";
 import { checkRecord, uncitedIssue } from "./check-record.js";
-import { type SpecIssue, SpecRecordError } from "./issues.js";
-import { textRecordFileSchema } from "./record-schema.js";
 import type {
 	AnnotationLayer,
 	BreakdownRecord,
@@ -13,7 +11,9 @@ import type {
 	SpecRecordId,
 	SpecSegmentation,
 	TextRecord,
-} from "./types.js";
+} from "./corpus-types.js";
+import { type SpecIssue, SpecRecordError } from "./issues.js";
+import { textRecordFileSchema } from "./record-schema.js";
 
 const recordsDirectory = fileURLToPath(new URL("../records/", import.meta.url));
 const textPrefix = "text/";

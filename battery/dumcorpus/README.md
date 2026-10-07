@@ -61,9 +61,8 @@ must cite at least one Rule in `sources.rules`.
 A Breakdown Record, under `records/breakdown/<language>/`, holds one
 Locution's or Saying's Breakdown: the Lemma, its Canonical Form as the
 sentence with Segments, and the Lexeme targets it breaks down into, which
-cover every word and never the whole Lemma. `loadBreakdownRecords` loads
-them on the same terms, and `schema/breakdown-record.<language>.json`
-completes them.
+cover every word and never the whole Lemma. They load on the same terms,
+and `schema/breakdown-record.<language>.json` completes them.
 Raw texts for intake are Text Records under `records/text/`, with the schema
 `schema/text-record.json`. `bun run worklist` prints the worklist; after a
 model change, `bun run demote-broken-reviewed` lowers the Review Depth of
@@ -79,7 +78,8 @@ against it.
 The Authored Inventories are the closed-class units authored instead of
 generated, each Reading with its reviewed Knowledge. `dumcorpus/inventories`
 exports them without reading files or loading Zod, so a short-lived isolate
-can import it; the package root re-exports it. Runtime code loads only this
+can import it; the package root re-exports only the inventory names its
+callers read. Runtime code loads only this
 entry: Dumdict, tf-demo's Convex, server and browser code, and Dumgen's
 production `src`. The gold loader and the review tooling are for development
 and evaluation, and the repository's import policy rejects a runtime import
@@ -97,13 +97,10 @@ const haben = authoredRealizations.filter(
 `authoredMembers` holds every German Lemma, Reading and Knowledge:
 the AUX Readings, the PRON and DET pillar cells and stems, the reflexivity
 unit and the pronominal adverbs. It also holds the pronoun Syncretisms that
-`bun run generate` derives from the pillar cells (system ADR 0046), and
-`syncretismFor` finds the one a classifier's answer names. `reflexiveDrillDown` gives the reflexivity
-unit for a lexically reflexive Lemma; no spelling realizes it. `authoredRealizations` lists every spelling of a DET,
-PRON or AUX member, with the cell a stem's spelling marks.
-`reviewedDeterminers` and `reviewedPronouns` pair each stem with its
-spellings, and `closedVerbForms` lists every form of sein, haben, werden and
-the modals.
+`bun run generate` derives from the pillar cells (system ADR 0046).
+`authoredRealizations` lists every spelling of a DET, PRON or AUX member,
+with the cell a stem's spelling marks, and `closedVerbForms` lists every
+form of sein, haben, werden and the modals.
 
 The selectors read the inventories without a model. `authoredReading` and
 `authoredFor` find the members of a Reading or a Lemma, and

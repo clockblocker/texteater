@@ -12,8 +12,8 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { checkBreakdownRecord } from "../src/check-breakdown.js";
 import { checkRecord } from "../src/check-record.js";
+import type { AnnotationLayer, SpecRecordId } from "../src/corpus-types.js";
 import { setReviewDepth } from "../src/review-depth.js";
-import type { AnnotationLayer, SpecRecordId } from "../src/types.js";
 
 /** One demoted record: its Review Depth before, and after or none. */
 export interface Demotion {

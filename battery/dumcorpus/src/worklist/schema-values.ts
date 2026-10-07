@@ -1,7 +1,7 @@
 import { dumlingRoutes } from "dumling/codegen";
 import { z } from "zod";
+import type { AdrId, RuleId, SpecRecord } from "../corpus-types.js";
 import { isReviewed } from "../layers.js";
-import type { AdrId, RuleId, SpecRecord } from "../types.js";
 
 /** Which bag of a Surface a value sits in: the Lemma's Core or the inflection. */
 type FeatureBag = "Core" | "Inflectional";

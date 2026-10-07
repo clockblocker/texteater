@@ -1,5 +1,5 @@
+import type { AnnotationLayer } from "../corpus-types.js";
 import { annotationLayers } from "../layers.js";
-import type { AnnotationLayer } from "../types.js";
 import type { RecordFile } from "./record-files.js";
 
 /** A record's status: its Review Depth, or Draft. */

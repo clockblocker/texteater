@@ -4,10 +4,8 @@ import { dumlingRoutes } from "dumling/codegen";
 import { surfaceSchema as determinerSurfaceSchema } from "dumling/schema/de/lexeme/determiner";
 import type * as Dumling from "dumling/types";
 import { z } from "zod";
-import {
-	checkIfGrundform,
-	GrundformAssessmentError,
-} from "../src/inventories.js";
+import { GrundformAssessmentError } from "../src/grundform/result.js";
+import { checkIfGrundform } from "../src/inventories.js";
 
 type Surface = Dumling.Surface;
 type Bag = Record<string, unknown>;

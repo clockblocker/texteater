@@ -2,11 +2,8 @@ import { expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { lemmaIdentityKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import {
-	authoredMembers,
-	authoredRealizations,
-	reflexivityUnit,
-} from "../src/inventories.js";
+import { reflexivityUnit } from "../src/inventories/de/drill-down.js";
+import { authoredMembers, authoredRealizations } from "../src/inventories.js";
 
 interface FoundLemma {
 	lemma: Dumling.Lemma;

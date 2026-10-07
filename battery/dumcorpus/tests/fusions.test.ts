@@ -1,9 +1,9 @@
 import { expect, test } from "bun:test";
+import { reviewedAbbreviationKinds } from "../src/inventories/de/fusions.js";
 import {
 	germanAbbreviations,
 	germanClitics,
 	germanFusions,
-	reviewedAbbreviationKinds,
 } from "../src/inventories.js";
 
 const surfaces = (surface: string | readonly string[]) =>

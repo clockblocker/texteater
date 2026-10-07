@@ -7,13 +7,6 @@ import { languageAttestationIssues } from "./attestation-checks.js";
 import { authoredReadingIssues } from "./check-authored-readings.js";
 import { knowledgeCoverageIssues } from "./check-knowledge-coverage.js";
 import { attestationSyncretismIssues } from "./check-syncretisms.js";
-import { unitRoutes } from "./generated/routes.js";
-import { checkIfGrundform } from "./grundform/check-if-grundform.js";
-import { specRecordIdPattern } from "./ids.js";
-import type { SpecCheck, SpecIssue } from "./issues.js";
-import { annotationLayers, layerRank } from "./layers.js";
-import { looseRouteSchema, recordFileSchema } from "./record-schema.js";
-import { sameValue } from "./same-value.js";
 import type {
 	AnnotationLayer,
 	KnowledgeCoverage,
@@ -26,7 +19,14 @@ import type {
 	SpecRoute,
 	SpecSegmentation,
 	SpecTarget,
-} from "./types.js";
+} from "./corpus-types.js";
+import { unitRoutes } from "./generated/routes.js";
+import { checkIfGrundform } from "./grundform/check-if-grundform.js";
+import { specRecordIdPattern } from "./ids.js";
+import type { SpecCheck, SpecIssue } from "./issues.js";
+import { annotationLayers, layerRank } from "./layers.js";
+import { looseRouteSchema, recordFileSchema } from "./record-schema.js";
+import { sameValue } from "./same-value.js";
 
 const fileSchema = recordFileSchema({
 	route: looseRouteSchema,

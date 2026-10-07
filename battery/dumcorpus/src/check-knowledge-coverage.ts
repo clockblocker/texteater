@@ -2,7 +2,7 @@ import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import { isAuthoredReading } from "./check-authored-readings.js";
-import type { KnowledgeCoverage } from "./types.js";
+import type { KnowledgeCoverage } from "./corpus-types.js";
 
 /**
  * The structural aspects: the Knowledge `knowledge.produce` is scored on
@@ -11,7 +11,7 @@ import type { KnowledgeCoverage } from "./types.js";
  * included. The text aspects get a spot-check instead, and the
  * morphological tree belongs to the deferred `segment.inMorphemes`.
  */
-export const structuralAspects = [
+const structuralAspects = [
 	"plural",
 	"valency",
 	"participleSource",

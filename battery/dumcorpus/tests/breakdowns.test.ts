@@ -6,9 +6,8 @@ import {
 	type BreakdownRecordCheck,
 	checkBreakdownRecord,
 } from "../src/check-breakdown.js";
-import { loadBreakdownRecords } from "../src/index.js";
 import type { SpecCheck } from "../src/issues.js";
-import { readRecords } from "../src/load.js";
+import { loadBreakdownRecords, readRecords } from "../src/load.js";
 import { ruleCitation, seedJson } from "./negative-fixtures.js";
 
 const seed = "breakdown/de/den-faden-verlieren";

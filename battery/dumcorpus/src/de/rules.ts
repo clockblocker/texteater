@@ -1,4 +1,4 @@
-import type { Rule, SpecRoute } from "../types.js";
+import type { Rule, SpecRoute } from "../corpus-types.js";
 
 const lexeme = (...kinds: SpecRoute["kind"][]): SpecRoute[] =>
 	kinds.map((kind) => ({ language: "de", family: "Lexeme", kind }));

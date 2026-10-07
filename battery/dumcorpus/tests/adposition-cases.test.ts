@@ -3,13 +3,15 @@ import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
-import { attestationAdpositionCaseIssues } from "../src/de/check-adposition-cases.js";
 import {
+	attestationAdpositionCaseIssues,
 	frameAdpositionCaseIssues,
+} from "../src/de/check-adposition-cases.js";
+import {
 	germanAdpositionAllowedCases,
 	germanAdpositionAllows,
 	germanAdpositionEntry,
-} from "../src/index.js";
+} from "../src/inventories/de/adposition-cases.js";
 import { germanGovernablePrepositions } from "../src/inventories.js";
 
 const adposition = (canonicalForm: string) => ({

@@ -1,6 +1,6 @@
 import type { AdrIds } from "./check-citations.js";
+import type { Rule, RuleId, SpecRecordId } from "./corpus-types.js";
 import { ruleIdPattern } from "./ids.js";
-import type { Rule, RuleId, SpecRecordId } from "./types.js";
 
 /**
  * The statement length past which a Rule is likely spelling out boundary

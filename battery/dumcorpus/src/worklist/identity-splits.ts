@@ -1,6 +1,11 @@
 import { canonicalFormKey } from "dumling";
 import type * as Dumling from "dumling/types";
-import type { AdrId, AnnotationLayer, RuleId, SpecRecordId } from "../types.js";
+import type {
+	AdrId,
+	AnnotationLayer,
+	RuleId,
+	SpecRecordId,
+} from "../corpus-types.js";
 import type { LemmaInFile, RecordFile } from "./record-files.js";
 
 /**

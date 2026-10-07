@@ -10,35 +10,35 @@ import {
 import type * as Dumling from "dumling/types";
 import { parseReadingKnowledge, selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
+import { authoredReadingIssues } from "../src/check-authored-readings.js";
 import { frameAdpositionCaseIssues } from "../src/de/check-adposition-cases.js";
+import { attestationParticleIssues } from "../src/de/check-particles.js";
+import { attestationPluralOnlyIssues } from "../src/de/check-plural-only.js";
+import { loadSpecRecords } from "../src/index.js";
+import { closedVerbFormSpellings } from "../src/inventories/de/closed-verb-paradigms.js";
 import {
-	attestationParticleIssues,
-	attestationPluralOnlyIssues,
-	authoredReadingIssues,
-	loadSpecRecords,
-} from "../src/index.js";
+	reflexiveDrillDown,
+	reflexivityUnit,
+} from "../src/inventories/de/drill-down.js";
 import { spellsExpletiveEs } from "../src/inventories/de/expletive-spellings.js";
+import { member as subjectExpletiveEs } from "../src/inventories/de/members/lexeme/pronoun/personal/es-subject-expletive.js";
+import { germanPluralOnlyNouns } from "../src/inventories/de/plural-only-nouns.js";
 import { syncretismDefinitions } from "../src/inventories/de/syncretism-definitions.js";
+import { syncretismFor } from "../src/inventories/de/syncretisms.js";
 import {
 	type AuthoredMember,
 	type AuthoredRealization,
 	authoredMembers,
 	authoredRealizations,
 	cliticEsSpellings,
-	closedVerbFormSpellings,
 	closedVerbForms,
 	closedVerbParticiples,
 	germanParticleMember,
 	germanParticles,
-	germanPluralOnlyNouns,
 	isGermanPluralOnlyNoun,
 	modalVerbs,
 	referentCanLeaveOpen,
-	reflexiveDrillDown,
-	reflexivityUnit,
 	stemSyncretisms,
-	subjectExpletiveEs,
-	syncretismFor,
 } from "../src/inventories.js";
 
 const name = ({ lemma, reading }: AuthoredMember) =>

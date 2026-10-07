@@ -1,6 +1,6 @@
 import type { AdrIds } from "../../check-citations.js";
+import type { Rule, SpecRecord, SpecSegmentation } from "../../corpus-types.js";
 import { isReviewed } from "../../layers.js";
-import type { Rule, SpecRecord, SpecSegmentation } from "../../types.js";
 import {
 	type SttsMapping,
 	type SttsRow,

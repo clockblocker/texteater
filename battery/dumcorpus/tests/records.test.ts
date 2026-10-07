@@ -19,19 +19,18 @@ import {
 import { demoteBrokenReviewed } from "../scripts/demote-broken-reviewed.js";
 import { checkCitations } from "../src/check-citations.js";
 import { checkRecord, type RecordCheck } from "../src/check-record.js";
+import { sharedReadingIssues } from "../src/check-shared-readings.js";
 import {
 	findSpecRecord,
 	isReviewed,
-	loadBreakdownRecords,
 	loadSpecRecords,
 	loadSpecSegmentations,
 	loadSpecWorklist,
 	rules,
-	sharedReadingIssues,
 } from "../src/index.js";
 import type { SpecIssue } from "../src/issues.js";
 import { layerRank } from "../src/layers.js";
-import { readRecords } from "../src/load.js";
+import { loadBreakdownRecords, readRecords } from "../src/load.js";
 import { knowledgeCoverageSchema } from "../src/record-schema.js";
 import { readRepositoryAdrIds } from "./adr-ids.js";
 import {

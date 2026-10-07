@@ -1,5 +1,3 @@
-import type { SpecIssue } from "./issues.js";
-import { ruleStatementHash } from "./rules.js";
 import type {
 	AdrId,
 	AnnotationLayer,
@@ -10,7 +8,9 @@ import type {
 	RuleId,
 	Sources,
 	SpecRecordId,
-} from "./types.js";
+} from "./corpus-types.js";
+import type { SpecIssue } from "./issues.js";
+import { ruleStatementHash } from "./rules.js";
 
 /**
  * The ADRs that exist. An ADR directory holds accepted decisions only, and a

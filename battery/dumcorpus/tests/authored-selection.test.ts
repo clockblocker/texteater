@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
+import { member as subjectExpletiveEs } from "../src/inventories/de/members/lexeme/pronoun/personal/es-subject-expletive.js";
 import {
 	type AuthoredMember,
 	authoredComponent,
@@ -11,7 +12,6 @@ import {
 	deriveGrammaticalComponent,
 	selectAuthoredArticle,
 	selectGrammaticalAlternatives,
-	subjectExpletiveEs,
 } from "../src/inventories.js";
 
 type Core = Readonly<Record<string, unknown>>;

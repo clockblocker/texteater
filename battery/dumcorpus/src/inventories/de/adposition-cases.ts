@@ -23,7 +23,7 @@ export type GermanAdpositionCases = {
  * Each position a Lexeme ADP takes, with that position's cases. A position
  * it doesn't list isn't allowed.
  */
-export type GermanAdpositionPositions = Readonly<
+type GermanAdpositionPositions = Readonly<
 	Partial<Record<GermanAdpositionPosition, GermanAdpositionCases>>
 >;
 

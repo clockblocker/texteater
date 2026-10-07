@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
-import type { AnnotationLayer, RuleId, SpecRecordId } from "../types.js";
+import type { AnnotationLayer, RuleId, SpecRecordId } from "../corpus-types.js";
 
 const recordsDirectory = fileURLToPath(
 	new URL("../../records/", import.meta.url),

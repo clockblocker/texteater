@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
-import { germanConjunctionLocutions, loadSpecRecords } from "../src/index.js";
+import { loadSpecRecords } from "../src/index.js";
+import { germanConjunctionLocutions } from "../src/inventories/de/conjunction-locutions.js";
 
 const listed = new Set<string>(
 	Object.values(germanConjunctionLocutions).flat(),

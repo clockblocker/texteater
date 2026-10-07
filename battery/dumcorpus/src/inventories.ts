@@ -5,21 +5,19 @@
  * such as `src/inventories/de/`, and registers in `inventories/registry.ts`,
  * which the language-generic selectors and `authoredMembers` read.
  *
- * This entry exports the authored members and their realizations, the
- * reviewed pronoun and determiner paradigms, the closed verb forms and their
- * participles, the clitic spellings of es, the separable and inseparable
- * verb prefixes, the colloquial r- and dr- adverb shorthands, the suppletive
- * comparisons, the Surface features each AUX use sets, the reviewed
- * fusions, apostrophe clitics and abbreviations, and the reflexive
- * drill-down.
- * The authored members include the pronoun
- * Syncretisms generated from the pronoun cells (system ADR 0046). It also
- * exports German lookups: the ADP Case Table, its governable prepositions and
- * its Valency Frame check, the conjunction Locutions the Rules cite, the der
- * or ein cell an article derives to, the nouns with no singular, the
- * Syncretism a classifier's answer names and the stem Surface Syncretisms.
- * Its language-generic selectors find the authored member of a Lemma or
- * Reading and tell a Closed Route (system ADR 0021); its German ones step between Paradigm Cells (system ADR 0019) and derive the
+ * This entry exports the authored members and their realizations, the closed
+ * verb forms, their participles and the modal verbs, the clitic spellings of
+ * es, the separable and inseparable verb prefixes, the colloquial r- and dr-
+ * adverb shorthands, the suppletive comparisons, the Surface features each
+ * AUX use sets, and the reviewed fusions, apostrophe clitics and
+ * abbreviations. The authored members include the pronoun Syncretisms
+ * generated from the pronoun cells (system ADR 0046). It also exports German
+ * lookups: the ADP Case Table, its governable prepositions and its Valency
+ * Frame check, the conjunction Locutions the Rules cite, the der or ein cell
+ * an article derives to, the test for nouns with no singular and the stem
+ * Surface Syncretisms. Its language-generic selectors find the authored
+ * member of a Lemma or Reading and tell a Closed Route (system ADR 0021); its
+ * German ones step between Paradigm Cells (system ADR 0019) and derive the
  * grammatical component a Surface brings without a model. `checkIfGrundform`
  * assesses a Surface's Grundform by each language's citation conventions
  * (dumcorpus ADR 0001).
@@ -27,22 +25,16 @@
  * This entry reads no files and loads neither Zod nor the other record
  * checks, so a host inside a database transaction or another short-lived
  * isolate can import it (ADR 0025). Of its dependencies it loads only
- * Dumling's runtime root, which is light in the same way. The package root
- * re-exports it.
+ * Dumling's runtime root, which is light in the same way. It exports only
+ * the names other workspaces read, and the package root re-exports only the
+ * ones its callers read.
  */
 
-export {
-	type AdpositionCaseIssue,
-	frameAdpositionCaseIssues,
-} from "./de/check-adposition-cases.js";
+export { frameAdpositionCaseIssues } from "./de/check-adposition-cases.js";
 export { checkIfGrundform } from "./grundform/check-if-grundform.js";
-export { GrundformAssessmentError } from "./grundform/result.js";
 export {
-	type GermanAdpositionCase,
 	type GermanAdpositionCases,
-	type GermanAdpositionEntry,
 	type GermanAdpositionPosition,
-	type GermanAdpositionPositions,
 	germanAdpositionAllowedCases,
 	germanAdpositionAllows,
 	germanAdpositionEntry,
@@ -53,30 +45,22 @@ export {
 	germanAdverbShorthands,
 } from "./inventories/de/adverb-shorthands.js";
 export {
-	type ArticleAgreement,
 	type ArticleMember,
 	germanArticleCell,
 	germanArticleSpellings,
 } from "./inventories/de/article-cells.js";
 export { auxiliarySurfaceFeatures } from "./inventories/de/auxiliary-surface-features.js";
 export {
-	closedVerbFormSpellings,
 	closedVerbForms,
 	closedVerbParticiples,
 	modalVerbs,
 } from "./inventories/de/closed-verb-paradigms.js";
 export { germanConjunctionLocutions } from "./inventories/de/conjunction-locutions.js";
-export { reviewedDeterminers } from "./inventories/de/determiner-paradigms.js";
-export {
-	reflexiveDrillDown,
-	reflexivityUnit,
-} from "./inventories/de/drill-down.js";
 export { cliticEsSpellings } from "./inventories/de/expletive-spellings.js";
 export {
 	germanAbbreviations,
 	germanClitics,
 	germanFusions,
-	reviewedAbbreviationKinds,
 } from "./inventories/de/fusions.js";
 export {
 	authoredComponent,
@@ -84,34 +68,21 @@ export {
 	type GrammaticalComponent,
 } from "./inventories/de/grammatical-components.js";
 export { selectGrammaticalAlternatives } from "./inventories/de/grammatical-navigation.js";
-export { member as subjectExpletiveEs } from "./inventories/de/members/lexeme/pronoun/personal/es-subject-expletive.js";
 export {
 	germanParticleMember,
 	germanParticles,
 } from "./inventories/de/particles.js";
-export {
-	germanPluralOnlyNouns,
-	isGermanPluralOnlyNoun,
-} from "./inventories/de/plural-only-nouns.js";
-export { reviewedPronouns } from "./inventories/de/pronoun-paradigms.js";
+export { isGermanPluralOnlyNoun } from "./inventories/de/plural-only-nouns.js";
 export {
 	type AuthoredRealization,
 	authoredRealizations,
-	type RealizationSpelling,
 } from "./inventories/de/realizations.js";
-export type {
-	AuthoredSpelling,
-	ReviewedMember,
-	SurfaceCell,
-} from "./inventories/de/stem-lemma.js";
 export { germanSuppletiveComparisons } from "./inventories/de/suppletive-comparison.js";
 export {
 	referentCanLeaveOpen,
 	type StemSyncretism,
-	stemSyncretismFor,
 	stemSyncretisms,
 } from "./inventories/de/surface-syncretisms.js";
-export { syncretismFor } from "./inventories/de/syncretisms.js";
 export {
 	germanInseparablePrefixes,
 	germanSeparablePrefixes,

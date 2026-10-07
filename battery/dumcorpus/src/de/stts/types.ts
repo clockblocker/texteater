@@ -1,4 +1,9 @@
-import type { AdrId, RuleId, SpecRecordId, SpecRoute } from "../../types.js";
+import type {
+	AdrId,
+	RuleId,
+	SpecRecordId,
+	SpecRoute,
+} from "../../corpus-types.js";
 
 /** The 54 tags of the Stuttgart-Tübingen Tagset, in its order. */
 export const sttsTags = [

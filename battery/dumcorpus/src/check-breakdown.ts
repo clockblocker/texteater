@@ -9,6 +9,11 @@ import {
 	settleLayers,
 	uncitedIssue,
 } from "./check-record.js";
+import type {
+	BreakdownRecord,
+	BreakdownRecordId,
+	SpecTarget,
+} from "./corpus-types.js";
 import { breakdownRecordIdPattern } from "./ids.js";
 import { layerRank } from "./layers.js";
 import {
@@ -16,11 +21,6 @@ import {
 	looseRouteSchema,
 } from "./record-schema.js";
 import { sameValue } from "./same-value.js";
-import type {
-	BreakdownRecord,
-	BreakdownRecordId,
-	SpecTarget,
-} from "./types.js";
 
 const fileSchema = breakdownRecordFileSchema(z.unknown(), {
 	route: looseRouteSchema,

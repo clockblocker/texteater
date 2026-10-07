@@ -44,7 +44,7 @@ test("a consumer on Node reads the authored inventories through their entry", as
 		const root = await import("dumcorpus");
 		console.log(JSON.stringify({
 			count: inventories.authoredMembers.length,
-			same: root.authoredMembers === inventories.authoredMembers,
+			same: root.authoredRealizations === inventories.authoredRealizations,
 		}));`,
 	]);
 	const { count, same } = JSON.parse(output);

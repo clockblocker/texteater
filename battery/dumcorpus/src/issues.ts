@@ -1,4 +1,4 @@
-import type { AnnotationLayer, SpecRecordId } from "./types.js";
+import type { AnnotationLayer, SpecRecordId } from "./corpus-types.js";
 
 export type SpecCheck =
 	| "Id"

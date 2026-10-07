@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { parseUnit } from "dumling";
 import type * as Dumling from "dumling/types";
 import { languageAttestationIssues } from "../src/attestation-checks.js";
-import { germanArticleCell } from "../src/index.js";
+import { germanArticleCell } from "../src/inventories/de/article-cells.js";
 
 type Member = { attested: string; orthography: string } & Record<
 	string,

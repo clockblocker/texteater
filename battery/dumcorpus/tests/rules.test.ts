@@ -5,9 +5,9 @@ import {
 	longStatements,
 	rulesNeedingRecords,
 } from "../src/check-rules.js";
+import type { Rule } from "../src/corpus-types.js";
 import { loadSpecRecords, rules } from "../src/index.js";
 import { rulesAwaitingRecords } from "../src/rules-awaiting-records.js";
-import type { Rule } from "../src/types.js";
 import { readRepositoryAdrIds } from "./adr-ids.js";
 
 const adrs = readRepositoryAdrIds();

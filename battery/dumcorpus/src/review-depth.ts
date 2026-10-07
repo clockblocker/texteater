@@ -1,5 +1,5 @@
 import { applyEdits, type FormattingOptions, modify } from "jsonc-parser";
-import type { AnnotationLayer } from "./types.js";
+import type { AnnotationLayer } from "./corpus-types.js";
 
 const formatting: FormattingOptions = {
 	insertSpaces: false,
