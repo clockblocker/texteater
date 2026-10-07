@@ -1,2 +1,2 @@
-export { initializeTheme, type Theme } from "./bootstrap";
+export { initializeTheme } from "./bootstrap";
 export { ThemeProvider, useTheme } from "./provider";

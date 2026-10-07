@@ -435,33 +435,5 @@
 		"battery/dumrel/src/types.ts: types SemanticRelationProjection",
 		"battery/dumrel/src/types.ts: types SemanticRelations",
 		"battery/dumrel/src/types.ts: types ValencyReferent"
-	],
-	"battery/lego": [
-		"battery/lego/src/index.ts: exports CardAction",
-		"battery/lego/src/index.ts: exports CardFooter",
-		"battery/lego/src/index.ts: exports DialogOverlay",
-		"battery/lego/src/index.ts: exports DialogPortal",
-		"battery/lego/src/index.ts: exports FieldSeparator",
-		"battery/lego/src/index.ts: exports Input",
-		"battery/lego/src/index.ts: exports Label",
-		"battery/lego/src/index.ts: exports Separator",
-		"battery/lego/src/index.ts: exports SidebarGroupAction",
-		"battery/lego/src/index.ts: exports SidebarGroupLabel",
-		"battery/lego/src/index.ts: exports SidebarHeader",
-		"battery/lego/src/index.ts: exports SidebarInput",
-		"battery/lego/src/index.ts: exports SidebarMenuAction",
-		"battery/lego/src/index.ts: exports SidebarMenuBadge",
-		"battery/lego/src/index.ts: exports SidebarMenuSkeleton",
-		"battery/lego/src/index.ts: exports SidebarMenuSub",
-		"battery/lego/src/index.ts: exports SidebarMenuSubButton",
-		"battery/lego/src/index.ts: exports SidebarMenuSubItem",
-		"battery/lego/src/index.ts: exports SidebarRail",
-		"battery/lego/src/index.ts: exports SidebarSeparator",
-		"battery/lego/src/index.ts: exports badgeVariants",
-		"battery/lego/src/index.ts: exports buttonVariants",
-		"battery/lego/src/index.ts: exports noteTitleVariants",
-		"battery/lego/src/index.ts: types Density",
-		"battery/lego/src/index.ts: types Theme",
-		"battery/lego/src/theme/index.ts: types Theme"
 	]
 }
