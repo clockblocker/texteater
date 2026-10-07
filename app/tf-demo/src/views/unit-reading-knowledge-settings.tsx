@@ -9,7 +9,7 @@ import {
 	FieldLegend,
 	FieldSet,
 } from "lego";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { visitorErrorMessage } from "@/lib/visitor-error";
 import { api } from "../../convex/_generated/api";
 import type { KnowledgePreferences } from "../../shared/knowledge-preferences";
@@ -22,25 +22,23 @@ export function KnowledgeSettingsForm({
 	initialSettings: KnowledgePreferences;
 }) {
 	const updateSettings = useMutation(api.knowledgeSettings.update);
-	const [settings, setSettings] = useState(initialSettings);
-	const [isSaving, setIsSaving] = useState(false);
+	// Only the in-flight change is local. Convex resolves a mutation's promise
+	// after the query results that reflect it have been delivered, so clearing
+	// `pending` shows the saved settings, or the unchanged ones after a failure.
+	const [pending, setPending] = useState<KnowledgePreferences | null>(null);
 	const [error, setError] = useState<string | null>(null);
-
-	useEffect(() => {
-		setSettings(initialSettings);
-	}, [initialSettings]);
+	const settings = pending ?? initialSettings;
+	const isSaving = pending !== null;
 
 	async function change(next: KnowledgePreferences) {
-		setSettings(next);
-		setIsSaving(true);
+		setPending(next);
 		setError(null);
 		try {
 			await updateSettings({ visitorId, settings: next });
 		} catch (cause) {
-			setSettings(initialSettings);
 			setError(visitorErrorMessage(cause));
 		} finally {
-			setIsSaving(false);
+			setPending(null);
 		}
 	}
 
