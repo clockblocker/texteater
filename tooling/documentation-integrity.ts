@@ -570,9 +570,8 @@ export function contextStructureIssues(
 	return issues;
 }
 
-/** A Context glossary; installed skills may ship their own GLOSSARY.md. */
 function isContextPath(path: string): boolean {
-	return basename(path) === "GLOSSARY.md" && !isInstalledSkillPath(path);
+	return basename(path) === "GLOSSARY.md";
 }
 
 async function auditContexts(
