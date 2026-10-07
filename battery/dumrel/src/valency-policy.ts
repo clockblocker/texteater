@@ -12,8 +12,22 @@ type ComplementsByLanguage = {
 	he: HebrewValencyComplement;
 	en: EnglishValencyComplement;
 };
-type RoutePolicy<Kind extends ComplementKind> = Readonly<
-	Record<string, Readonly<Record<string, readonly Kind[]>>>
+/** One language's table, keyed by its Families and Kinds, so a key that names no route fails to type-check. */
+type RoutePolicy<L extends Dumling.Language, Kind extends ComplementKind> = {
+	readonly [F in Dumling.Family<L>]?: {
+		readonly [K in Dumling.Kind<L, F>]?: readonly Kind[];
+	};
+};
+/** Every language's table, each keyed by that language's routes and holding its own complement kinds. */
+export type ValencyPolicy = {
+	readonly [L in keyof ComplementsByLanguage]: RoutePolicy<
+		L,
+		ComplementsByLanguage[L]["kind"]
+	>;
+};
+/** The table as `allowedComplementKinds` reads it at runtime. */
+type RouteLookup = Readonly<
+	Record<string, Readonly<Record<string, readonly ComplementKind[]>>>
 >;
 
 const germanVerbComplements = [
@@ -54,11 +68,7 @@ const positionOrPreposition = [
  * complements: nouns take only governed prepositions, and it has no framed
  * Locution route yet. English makes the same choices with its own complements.
  */
-const valencyPolicy: {
-	readonly [L in keyof ComplementsByLanguage]: RoutePolicy<
-		ComplementsByLanguage[L]["kind"]
-	>;
-} = {
+const valencyPolicy = {
 	de: {
 		Lexeme: {
 			VERB: germanVerbComplements,
@@ -89,14 +99,13 @@ const valencyPolicy: {
 			NOUN: ["Preposition"],
 		},
 	},
-};
+} satisfies ValencyPolicy;
 
 /** The complement kinds a Reading of this Lemma's route may hold; empty takes no frame. */
 export function allowedComplementKinds(
 	lemma: Dumling.LemmaRoute,
 ): readonly ComplementKind[] {
-	const policy: Partial<
-		Record<Dumling.Language, RoutePolicy<ComplementKind>>
-	> = valencyPolicy;
+	const policy: Partial<Record<Dumling.Language, RouteLookup>> =
+		valencyPolicy;
 	return policy[lemma.language]?.[lemma.family]?.[lemma.kind] ?? [];
 }
