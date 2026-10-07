@@ -24,7 +24,7 @@ export type FusionComponent = {
 };
 
 /** A closed fusion: one fixed spelling whose components are known. */
-export type FusionEntry = {
+type FusionEntry = {
 	readonly form: string;
 	readonly components: readonly [
 		FusionComponent,

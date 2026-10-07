@@ -9,7 +9,8 @@
  * reviewed pronoun and determiner paradigms, the closed verb forms and their
  * participles, the clitic spellings of es, the separable and inseparable
  * verb prefixes, the colloquial r- and dr- adverb shorthands, the suppletive
- * comparisons, the Surface features each AUX use sets, and the reflexive
+ * comparisons, the Surface features each AUX use sets, the reviewed
+ * fusions, apostrophe clitics and abbreviations, and the reflexive
  * drill-down.
  * The authored members include the pronoun
  * Syncretisms generated from the pronoun cells (system ADR 0046). It also
@@ -71,6 +72,12 @@ export {
 	reflexivityUnit,
 } from "./inventories/de/drill-down.js";
 export { cliticEsSpellings } from "./inventories/de/expletive-spellings.js";
+export {
+	germanAbbreviations,
+	germanClitics,
+	germanFusions,
+	reviewedAbbreviationKinds,
+} from "./inventories/de/fusions.js";
 export {
 	authoredComponent,
 	deriveGrammaticalComponent,
