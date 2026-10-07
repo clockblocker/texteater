@@ -13,6 +13,7 @@ import {
 	cliticEsSpellings,
 	germanSeparablePrefixes,
 } from "dumcorpus/inventories";
+import { numeralWords } from "../../resolve/de/numeral.js";
 import { foldApostrophes } from "../fusion-table.js";
 import type { GermanInventory } from "./inventory.js";
 import type { Piece, Sentence } from "./sentence.js";
@@ -566,11 +567,11 @@ export function oldSpellingCorrelators(sentence: Sentence): PairCandidate[] {
 	return pairs;
 }
 
-const numberWords = new Set(
-	"null eins ein eine zwei drei vier fünf sechs sieben acht neun zehn elf zwölf dreizehn vierzehn fünfzehn sechzehn siebzehn achtzehn neunzehn zwanzig dreißig vierzig fünfzig sechzig siebzig achtzig neunzig hundert tausend".split(
-		" ",
-	),
-);
+/** A number range's number words: the numeral speller's words, and eine (eine Million). */
+export const numberWords: ReadonlySet<string> = new Set([
+	...numeralWords,
+	"eine",
+]);
 
 const isNumberPiece = (piece: Piece) =>
 	/^\p{N}+([.,]\p{N}+)?$/u.test(piece.text) || numberWords.has(lower(piece));

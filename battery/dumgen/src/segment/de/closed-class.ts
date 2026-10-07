@@ -7,8 +7,10 @@
  * the ruling gives that spelling, and the use implies the route (Dumgen ADR
  * 0007's closed-class rule, extended to PART as #734 allows).
  *
- * The members are encoded here, not in dumcorpus; #747 will author them
- * there.
+ * dumcorpus authors the PART members (#747). This file holds only the
+ * ruling's routing of each spelling and the criteria the judge weighs its
+ * uses by; `tests/segment/de/kept-lists.test.ts` checks that every
+ * spelling it routes to PART is an authored member.
  */
 import type { RouteKey } from "./routes.js";
 import type { Piece } from "./sentence.js";
@@ -42,7 +44,7 @@ const answer = (example: string): Use => ({
 });
 
 /** The uses the #734 ruling gives each spelling. */
-const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
+export const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
 	ja: {
 		modal: modal("Du kennst den Weg ja"),
 		answer: answer("Kommst du? – Ja."),
@@ -224,7 +226,7 @@ const uses: Readonly<Record<string, Readonly<Record<string, Use>>>> = {
 };
 
 /** Spellings with one use only: the ruling decides them outright. */
-const fixed: Readonly<Record<string, RouteKey>> = {
+export const fixed: Readonly<Record<string, RouteKey>> = {
 	nicht: "Lexeme/PART",
 	nein: "Lexeme/INTJ",
 	sehr: "Lexeme/ADV",

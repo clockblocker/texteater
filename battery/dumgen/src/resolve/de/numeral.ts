@@ -40,6 +40,18 @@ const tens = [
 	"neunzig",
 ];
 
+/**
+ * Every word the speller builds a numeral from: the ones and tens, ein
+ * (einundzwanzig, einhundert), hundert and tausend.
+ */
+export const numeralWords: readonly string[] = [
+	...ones,
+	...tens.filter((ten) => ten !== ""),
+	"ein",
+	"hundert",
+	"tausend",
+];
+
 /** Below 100; `ein` before und and as a prefix of hundert or tausend. */
 function belowHundred(value: number, bare: boolean): string {
 	if (value < 20) return value === 1 && !bare ? "ein" : (ones[value] ?? "");
