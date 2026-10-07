@@ -2,7 +2,7 @@
 status: accepted
 ---
 
-# Make the Dumling spec own the golden corpus and classification rules
+# Make dumcorpus own the golden corpus and classification rules
 
 The public Dumling spec was mostly placeholders: 36 of 42 German entity pages
 were a bare title, English and Hebrew had no concept pages, and 200 of 259

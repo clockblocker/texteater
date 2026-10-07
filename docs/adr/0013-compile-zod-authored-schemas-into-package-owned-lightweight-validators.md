@@ -4,9 +4,10 @@ status: accepted
 
 # Compile Zod-authored schemas into package-owned lightweight validators
 
-Zod schemas are the authoring source for Dumling, Dumrel, Dumdict, and Dumgen,
-but each package compiles committed lightweight validation artifacts for its
-operational entrypoints. The shared compiler, `common-utils/validation-compiler`,
+Zod schemas are the authoring source for Dumling, Dumrel, and Dumdict, but each
+package compiles committed lightweight validation artifacts for its operational
+entrypoints. Dumgen compiles none: it validates Dumling values through Dumling's
+`parseUnit`. The shared compiler, `common-utils/validation-compiler`,
 fails on unsupported Zod behavior rather than dropping semantics or falling back
 to Zod at runtime. It reads Zod's internal schema definitions, so the
 repository pins Zod to one exact version.
@@ -16,7 +17,7 @@ Callers use typed package parsers that return the canonical value or the shared
 [Dumling ADR 0001](../../battery/dumling/docs/adr/0001-compile-unit-validation-and-consumer-types.md)
 replaced that return with `parseUnit`'s correlated `chain`. Generated rules stay with their domain owner. Dumling and Dumrel expose readonly
 provider handles through `compiled-validation` subpaths. Dumrel links to Dumling;
-Dumdict and Dumgen link to both. The compiler emits each equivalent rule
+Dumdict links to both. The compiler emits each equivalent rule
 definition once across those dependencies, preserving field order, union order,
 normalization, recursive rules and exact diagnostics. Original compiler graphs
 remain generation and differential-test inputs; operational imports use only
@@ -41,9 +42,10 @@ Generated providers are differentially checked against the canonical schemas.
 
 ## Considered Options
 
-On 2026-09-14 we tested replacing Dumgen's compiled validation registry with
-`canonicalDumgenValidationSchemas` and calling each schema's `safeParse` at
-runtime. The goal was to reuse Dumling and Dumrel schemas without duplicating
+On 2026-09-14 we tested replacing the compiled validation registry that Dumgen
+had at the time with `canonicalDumgenValidationSchemas` and calling each
+schema's `safeParse` at runtime. Dumgen has since dropped that registry, but the
+measurements still justify compiled validators over runtime Zod. The goal was to reuse Dumling and Dumrel schemas without duplicating
 compiled rules. We rejected this implementation because it increased memory
 well beyond the proposed 20 MiB incremental import budget.
 

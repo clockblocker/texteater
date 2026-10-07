@@ -164,7 +164,7 @@ _Avoid_: expletive `es` (an expletive fills no Slot), placeholder
 [ADR 0029]: ../../docs/adr/0029-keep-preposition-government-out-of-lemma-identity.md
 [ADR 0034]: ../../docs/adr/0034-store-valency-as-e-valbu-frames-on-the-reading.md
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
-[ADR 0037]: ../../docs/adr/0037-make-the-dumling-spec-own-the-golden-corpus-and-classification-rules.md
+[ADR 0037]: ../../docs/adr/0037-make-dumcorpus-own-the-golden-corpus-and-classification-rules.md
 [ADR 0038]: ../../docs/adr/0038-store-german-inflection-classes-as-reading-knowledge.md
 [ADR 0041]: ../../docs/adr/0041-record-in-dumling-only-what-routing-and-drill-down-consume.md
 [ADR 0044]: ../../docs/adr/0044-identify-german-pronouns-by-pillar-stem-and-referent.md
