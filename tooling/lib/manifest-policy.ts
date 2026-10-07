@@ -17,7 +17,7 @@ export interface PolicyIssue {
 	message: string;
 }
 
-export const governedDependencies = [
+const governedDependencies = [
 	"zod",
 	"typescript",
 	"@types/node",
@@ -64,19 +64,44 @@ const dependencyFields = [
  * exports source keeps these at the base values.
  */
 const sharedCheckerOptions = [
+	"alwaysStrict",
 	"exactOptionalPropertyTypes",
 	"noFallthroughCasesInSwitch",
 	"noImplicitAny",
 	"noImplicitOverride",
 	"noImplicitReturns",
+	"noImplicitThis",
 	"noPropertyAccessFromIndexSignature",
 	"noUncheckedIndexedAccess",
 	"strict",
 	"strictBindCallApply",
+	"strictBuiltinIteratorReturn",
 	"strictFunctionTypes",
 	"strictNullChecks",
+	"strictPropertyInitialization",
 	"useUnknownInCatchVariables",
 ] as const;
+
+/**
+ * The flags `strict` turns on. A config that leaves one of them unset gets
+ * its `strict` value.
+ */
+const strictFamily: ReadonlySet<string> = new Set([
+	"alwaysStrict",
+	"noImplicitAny",
+	"noImplicitThis",
+	"strictBindCallApply",
+	"strictBuiltinIteratorReturn",
+	"strictFunctionTypes",
+	"strictNullChecks",
+	"strictPropertyInitialization",
+	"useUnknownInCatchVariables",
+]);
+
+function effectiveOption(options: JsonObject, option: string): unknown {
+	if (option in options) return options[option];
+	return strictFamily.has(option) ? (options.strict ?? false) : undefined;
+}
 
 function add(
 	issues: PolicyIssue[],
@@ -242,7 +267,7 @@ async function validateSourceCompilerOptions(
 		add(
 			issues,
 			`${workspace.relativePath}/tsconfig.json`,
-			own[option] === base[option],
+			own[option] === effectiveOption(base, option),
 			`compilerOptions.${option} must keep the base value, because consumers type-check this package's exported source`,
 		);
 	}

@@ -226,3 +226,41 @@ test("package policy keeps a source-exporting package on the base checker option
 	]);
 	expect(builtIssues).toEqual([]);
 });
+
+test("package policy resolves an unset strict-family base flag through strict", async () => {
+	const root = await temporaryRepository();
+	await writeJson(join(root, "tooling/typescript/base.json"), {
+		compilerOptions: { strict: true },
+	});
+	const restated = await addWorkspace(root, {
+		kind: "battery",
+		name: "restated",
+		exports: { ".": { convex: "./src/index.ts" } },
+	});
+	const loosened = await addWorkspace(root, {
+		kind: "battery",
+		name: "loosened",
+		exports: { ".": { convex: "./src/index.ts" } },
+	});
+	await writeJson(join(restated, "tsconfig.json"), {
+		compilerOptions: { noImplicitThis: true, strictNullChecks: true },
+	});
+	await writeJson(join(loosened, "tsconfig.json"), {
+		compilerOptions: { alwaysStrict: false, strictNullChecks: false },
+	});
+
+	const restatedIssues = await validateManifestPolicy({
+		cwd: restated,
+		mode: "package",
+	});
+	const loosenedIssues = await validateManifestPolicy({
+		cwd: loosened,
+		mode: "package",
+	});
+
+	expect(restatedIssues).toEqual([]);
+	expect(loosenedIssues.map((issue) => issue.message)).toEqual([
+		"compilerOptions.alwaysStrict must keep the base value, because consumers type-check this package's exported source",
+		"compilerOptions.strictNullChecks must keep the base value, because consumers type-check this package's exported source",
+	]);
+});
