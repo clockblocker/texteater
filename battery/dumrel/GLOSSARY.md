@@ -9,12 +9,12 @@ Class, live in the [Dumcorpus glossary].
 ## Language
 
 **Reading Knowledge**:
-Optional linguistic content owned by one exact Reading, never by a Lemma. An
-empty value holds no authored aspects. See [ADR 0002].
+Optional linguistic content owned by one exact Reading, never by a Lemma. See
+[ADR 0002].
 
 **Knowledge Change**:
 A Contribute, Correct or Retract operation on one atomic aspect or bucket of
-Reading Knowledge. Omitting an aspect does not delete it.
+Reading Knowledge.
 
 **Knowledge Policy**:
 The mapping from a source route (language, Family, Kind) to the Knowledge
@@ -23,7 +23,6 @@ _Avoid_: applicability table, request schema
 
 **Knowledge Settings**:
 Preferences that enable or disable the aspects applicable to a source route.
-An omitted preference is enabled.
 
 **Knowledge Request Mask**:
 The aspects requested for production: those the Knowledge Policy applies to a
@@ -38,45 +37,35 @@ A direct relation proposal whose target is a Unit Shadow awaiting downstream
 matching. See [ADR 0012] and [ADR 0020].
 
 **Endonym**:
-A place's own local name, such as `Bratislava`. A PROPN Reading that names a
-place from outside stores that place's endonyms, each a PROPN Lemma of the
-Reading's language (`Pressburg`: `Bratislava`).
+A place's own local name, stored on the PROPN Reading that names the place
+from outside. See [ADR 0012].
 _Avoid_: native name, local-name field
 
 **Exonym**:
-The name speakers of a Reading's language use for a place outside their area,
-such as `Pressburg`. It is never stored: it is projected onto the local name
-from the endonym the outside name stores.
-_Avoid_: foreign name (Dumling's Foreign is the Family of foreign-language
-material), historical name (`Brüssel` is current)
+The name speakers of a Reading's language use for a place outside their area.
+It is projected from the Endonym, never stored. See [ADR 0012].
+_Avoid_: foreign name, historical name
 
 **Governed Preposition**:
 A preposition a Reading lexically selects: a Preposition complement in a Slot
-of the Reading's Valency Frame (Dumling), naming an ADP Lemma and, where its
-language marks case, the case it governs (`auf` for `warten`, `on` for
-`depend`). An adjunct the sentence happens to contain is not one, and neither
-is a free preposition inside a required place or direction (`wohnt in Bonn`).
-See [ADR 0034].
+of its Valency Frame (Dumling). See [ADR 0034].
 _Avoid_: govPrep, prepositional object, valency note
 
 **Governor**:
 The Reading whose Valency Frame holds a Governed Preposition. The
 preposition's side of the link is projected, never stored. See [ADR 0034].
-_Avoid_: governing verb (adjectives, nouns and Locutions govern too)
+_Avoid_: governing verb
 
 **Participle Source**:
-The VERB Lemma whose participle an adjective is, stored with its Participle
-Meaning in the adjective's Reading Knowledge (`gekocht`: `kochen`). It is a
-grammatical link, not a Semantic Relation, and the verb's side is projected
-from the verb's Lemma, never stored. See [ADR 0036].
+The VERB Lemma whose participle an adjective is, stored in the adjective's
+Reading Knowledge. It is a grammatical link, not a Semantic Relation. See
+[ADR 0036].
 _Avoid_: base verb, derivation relation, participle relation
 
 **Participle Meaning**:
 Whether a Reading with a Participle Source means a sense of its verb
-(Verbal) or has drifted from all of them (Drifted). It is judged per Reading,
-and a Drifted Reading is not among its verb's participial adjectives. See
-[ADR 0036].
-_Avoid_: lexicalized (lexicalized `gebildet` is still Verbal), etymology
+(Verbal) or has drifted from all of them (Drifted). See [ADR 0036].
+_Avoid_: lexicalized, etymology
 
 **Locution Type**:
 Whether a Locution's Reading is an Idiom or a Collocation (Dumling), if
@@ -84,15 +73,13 @@ either. It never splits a Lemma. See [ADR 0039].
 _Avoid_: Phraseme Kind, idiomaticity
 
 **Saying Type**:
-Whether a Saying's Reading is a Proverb or a Winged Word (Dumling), with an
-optional attribution: the author, and the work where known ("Shakespeare,
-Hamlet"). It never splits a Lemma. See [ADR 0039].
+Whether a Saying's Reading is a Proverb or a Winged Word (Dumling). It never
+splits a Lemma. See [ADR 0039].
 _Avoid_: Aphorism, provenance Kind
 
 **Formula Role**:
-What a routine formula does in conversation, such as greeting or apology,
-stored in an INTJ Reading's Knowledge. It never splits a Lemma. See
-[ADR 0039].
+What a routine formula does in conversation, stored in an INTJ Reading's
+Knowledge. It never splits a Lemma. See [ADR 0039].
 _Avoid_: discourseFormulaRole, DiscourseFormula
 
 [ADR 0002]: ../../docs/adr/0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md
