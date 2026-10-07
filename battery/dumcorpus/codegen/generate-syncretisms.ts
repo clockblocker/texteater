@@ -1,5 +1,5 @@
-import { readFile, writeFile } from "node:fs/promises";
-import { formatTypeScript } from "codegen";
+import { fileURLToPath } from "node:url";
+import { defineCodegen, formatTypeScript, runCodegenCommand } from "codegen";
 import {
 	canonicalFormKey,
 	lemmaIdentityKey,
@@ -20,11 +20,10 @@ import type { AuthoredMember } from "../src/inventories/member.js";
 // gender, number and politeness, the features only the referent settles.
 // Each closed part of a group, two or more of its cells, gets a Syncretism:
 // every cell of the group that has the part's shared values belongs to it.
-const output = new URL(
-	"../src/inventories/de/generated/syncretisms.ts",
+const generatedDirectory = new URL(
+	"../src/inventories/de/generated/",
 	import.meta.url,
 );
-const check = process.argv.includes("--check");
 
 /** The Core Features only the referent settles, in which a group's cells may differ. */
 const referentFeatures = new Set(["gender", "number", "polite"]);
@@ -271,12 +270,22 @@ const source = [
 	"",
 ].join("\n");
 
-const content = await formatTypeScript(source, output);
-if (!check) await writeFile(output, content);
-else if ((await readFile(output, "utf8").catch(() => "")) !== content)
-	throw Error(
-		`Stale generated file: ${output.pathname}; run bun run generate`,
-	);
-console.log(
-	`${check ? "Verified" : "Generated"} ${generated.length} German Syncretisms`,
-);
+const recipe = defineCodegen({
+	inputs: {},
+	outputs: { generated: { root: fileURLToPath(generatedDirectory) } },
+	build: async () => [
+		{
+			id: "syncretisms",
+			to: { target: "generated", path: "syncretisms.ts" },
+			content: await formatTypeScript(
+				source,
+				new URL("syncretisms.ts", generatedDirectory),
+			),
+			provenance: [],
+			meta: null,
+		},
+	],
+});
+await runCodegenCommand(recipe, {
+	label: `Dumcorpus German Syncretisms (${generated.length})`,
+});
