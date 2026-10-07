@@ -1,5 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { ParsingError } from "common-utils/validation";
+import { validationRegistry as units } from "dumling/compiled-validation";
+import { validationRegistry as knowledge } from "dumrel/compiled-validation";
+import { validationRegistry as dictionary } from "../../battery/dumdict/src/generated/linked-validation";
 import {
 	compareDifferentialTarget,
 	type DifferentialTarget,
@@ -13,9 +16,27 @@ import {
 } from "../dum-runtime-verification/policy";
 import { ciGates } from "../lib/ci-gates";
 
+// `internal:` roots are building blocks that public roots reference, so the
+// public roots' targets exercise them.
+const publicCompiledRootIds = Object.entries({
+	dumling: units,
+	dumrel: knowledge,
+	dumdict: dictionary,
+}).map(([packageName, registry]) =>
+	Object.keys(registry.roots)
+		.filter((name) => !name.startsWith("internal:"))
+		.map((name) => `${packageName}:${name}`),
+);
+
 describe("current compiled validation", () => {
+	test("every public compiled validation root has a differential target", () => {
+		for (const ids of publicCompiledRootIds)
+			expect(ids.length).toBeGreaterThan(0);
+		expect(DUM_DIFFERENTIAL_TARGETS.map(({ id }) => id).sort()).toEqual(
+			publicCompiledRootIds.flat().sort(),
+		);
+	});
 	test("all replacement validation roots agree with canonical schemas", () => {
-		expect(DUM_DIFFERENTIAL_TARGETS).toHaveLength(460);
 		for (const target of DUM_DIFFERENTIAL_TARGETS)
 			expect(
 				compareDifferentialTarget(target).mismatches,
