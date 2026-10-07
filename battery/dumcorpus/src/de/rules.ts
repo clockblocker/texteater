@@ -245,7 +245,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/r-adverb-is-her-or-hin-shorthand",
 		statement:
-			"A colloquial r- adverb (raus, rein, rüber, runter, rauf, ran) is the Shorthand of the her- or hin- word it shortens, never a Lemma or Variant of its own: the target is the full word, with the r- word as its member in Shorthand orthography. Movement towards the speaker or the scene's viewpoint gives the her- word, movement away the hin- word, and ran is always heran. In the verbal bracket the r- word is the particle of that word's particle verb, and the Surface spells the full particle: Komm sofort raus! gives [Komm, raus] VERB herauskommen.",
+			"A colloquial r- adverb (raus, rein, rüber, runter, rauf, ran, rum) is the Shorthand of the her- or hin- word it shortens, never a Lemma or Variant of its own: the target is the full word, with the r- word as its member in Shorthand orthography. Movement towards the speaker or the scene's viewpoint gives the her- word, movement away the hin- word; ran is always heran and rum always herum. In the verbal bracket the r- word is the particle of that word's particle verb, and the Surface spells the full particle: Komm sofort raus! gives [Komm, raus] VERB herauskommen.",
 		adrs: ["ADR-0022", "ADR-0026", "ADR-0035"],
 		routes: lexeme("ADV", "VERB"),
 		records: [
@@ -270,7 +270,7 @@ const verbs: Rule[] = [
 	{
 		id: "de/dr-adverb-is-da-shorthand",
 		statement:
-			"A colloquial dr- adverb (dran, drauf, drin, drüber, drum) is the Shorthand of the da(r)- pronominal adverb it shortens, never a Lemma or Variant of its own: the target is the full word, with the dr- word as its member in Shorthand orthography. ohne recht dran zu glauben gives [dran] ADV daran.",
+			"A colloquial dr- adverb (dran, drauf, draus, drin, drüber, drum, drunter) is the Shorthand of the da(r)- pronominal adverb it shortens, never a Lemma or Variant of its own: the target is the full word, with the dr- word as its member in Shorthand orthography. ohne recht dran zu glauben gives [dran] ADV daran.",
 		adrs: ["ADR-0029", "ADR-0035"],
 		routes: lexeme("ADV"),
 		records: [
