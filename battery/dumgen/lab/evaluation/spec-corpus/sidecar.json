@@ -1,18 +1,5 @@
 {
 	"slices": {},
 	"explanations": {},
-	"exclusions": {
-		"de/am-selben-morgen-fiel-erneut-der-strom-aus": {
-			"reason": "Whether the fused m of am selben belongs to derselbe or to the noun waits on grilling #618: the target DET derselbe [selben] may become [m, selben].",
-			"issue": 618
-		},
-		"de/er-brach-das": {
-			"reason": "Which unit the article of a cut-off noun phrase (Er brach das…) belongs to, PRON or Unresolved, waits on grilling #626.",
-			"issue": 626
-		},
-		"de/er-hat-die-tuer-geschlossen": {
-			"reason": "Whether haben + participle is always a perfect (Er hat die Tür geschlossen, imported case participle-boundary-geschlossen-verb-perfect) waits on grilling #653.",
-			"issue": 653
-		}
-	}
+	"exclusions": {}
 }

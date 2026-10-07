@@ -16,40 +16,89 @@
 	"coverage": "Partial",
 	"provenance": { "kind": "Authored" },
 	"sources": {
-		"adrs": [],
-		"rules": [],
+		"adrs": ["ADR-0022", "ADR-0026", "ADR-0036"],
+		"rules": [
+			{
+				"rule": "de/unresolved-over-repair",
+				"hash": "a5da7c01b403fde8"
+			},
+			{
+				"rule": "de/sein-perfect-or-copula",
+				"hash": "2f0a185d7f35c1e9"
+			},
+			{
+				"rule": "de/verbal-participle",
+				"hash": "8783a18791f95718"
+			},
+			{
+				"rule": "de/auxiliary-joins-the-verb-it-serves",
+				"hash": "17cec6bff2108a22"
+			}
+		],
 		"references": []
 	},
-	"targets": [],
-	"noTarget": [],
-	"legacy": [
+	"targets": [
 		{
-			"source": "battery/dumgen/src/concrete-lang/de/target-classification/source-data.json",
-			"caseId": "target-de-participle-boundary-geschlossen-verb-perfect",
 			"memberSegmentIndices": [2, 8],
-			"case": {
-				"input": {
-					"clickedSegmentIndex": 8,
-					"segments": [
-						{ "kind": "ResolvableText", "text": "Er" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "hat" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "die" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "Tür" },
-						{ "kind": "Whitespace", "text": " " },
-						{ "kind": "ResolvableText", "text": "geschlossen" },
-						{ "kind": "Punctuation", "text": "." }
-					]
-				},
-				"idealOutput": {
-					"family": "Lexeme",
-					"kind": "VERB",
-					"memberSegmentIndices": [2, 8]
-				},
-				"explanation": "VERB schließen. A haben-perfect is verbal; hat joins the verb."
+			"route": {
+				"family": "Lexeme",
+				"kind": "VERB"
+			},
+			"reading": {
+				"emojiDescription": "🔒"
+			},
+			"notes": {
+				"rationale": "Nothing in the sentence tells the event of closing from the door's closed state, so de/sein-perfect-or-copula can't decide. The exception in de/unresolved-over-repair settles it: haben with a participle that the sentence can't settle as perfect or state is grouped as the perfect, so hat … geschlossen is the perfect of schließen, one VERB target, not Unresolved (#725, ADR 0036 amended). It is a segmentation default, not a claim about German. Closing a door is Duden schließen 1 'zumachen', the 🔒 Reading."
+			},
+			"attestation": {
+				"unitKind": "Attestation",
+				"members": [
+					{
+						"attested": "hat",
+						"orthography": "Standard"
+					},
+					{
+						"attested": "geschlossen",
+						"orthography": "Standard"
+					}
+				],
+				"realizationCoverage": "Full",
+				"expletiveEvidence": null,
+				"valencyEvidence": [],
+				"surface": {
+					"unitKind": "Surface",
+					"language": "de",
+					"normalizedSurface": "hat geschlossen",
+					"spelling": {
+						"kind": "Canonical"
+					},
+					"inflectionalFeatures": {
+						"mood": "Ind",
+						"number": "Sing",
+						"person": "3",
+						"tense": "Pres",
+						"verbForm": "Fin",
+						"expletive": null,
+						"perfect": "Yes",
+						"future": null,
+						"voice": null,
+						"passive": null
+					},
+					"lemma": {
+						"unitKind": "Lemma",
+						"language": "de",
+						"canonicalForm": "schließen",
+						"family": "Lexeme",
+						"kind": "VERB",
+						"coreFeatures": {
+							"hasSepPrefix": null,
+							"lexicallyReflexive": null
+						}
+					},
+					"surfaceFeatures": null
+				}
 			}
 		}
-	]
+	],
+	"noTarget": []
 }
