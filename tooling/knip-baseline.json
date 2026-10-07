@@ -677,8 +677,7 @@
 		"battery/dumrel/src/types.ts: types SayingType",
 		"battery/dumrel/src/types.ts: types SemanticRelationProjection",
 		"battery/dumrel/src/types.ts: types SemanticRelations",
-		"battery/dumrel/src/types.ts: types ValencyReferent",
-		"battery/dumrel/src/types.ts: types ValencySlot"
+		"battery/dumrel/src/types.ts: types ValencyReferent"
 	],
 	"battery/lego": [
 		"battery/lego/src/index.ts: exports CardAction",

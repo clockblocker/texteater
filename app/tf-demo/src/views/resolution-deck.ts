@@ -11,7 +11,7 @@ import type {
 export type ResolutionNote = NonNullable<
 	FunctionReturnType<typeof api.resolutionSessions.getResolutionNote>
 >;
-export type ResolutionNoteLifecycle = ResolutionNote["lifecycle"];
+type ResolutionNoteLifecycle = ResolutionNote["lifecycle"];
 
 export type CanonicalResolution = {
 	readonly readingId: Id<"readings">;
