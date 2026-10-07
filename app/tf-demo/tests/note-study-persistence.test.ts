@@ -14,7 +14,7 @@ import {
 	NOTE_STUDY_DATABASE,
 	NOTE_STUDY_RELATED_DATABASE,
 	NOTE_STUDY_VISITOR_ID,
-} from "../shared/notes-study/note-study-dummy-database";
+} from "../tooling/notes-study/note-study-dummy-database";
 import {
 	createPlaygroundConvex,
 	PLAYGROUND_FIXTURE_TIMEOUT_MS,

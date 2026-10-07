@@ -37,7 +37,7 @@ import {
 	NOTE_STUDY_VISITOR_ID,
 	type NoteStudyDatabaseUnit,
 	storedRelation,
-} from "../shared/notes-study/note-study-dummy-database";
+} from "./notes-study/note-study-dummy-database";
 import {
 	consolidateExampleTexts,
 	proseSegments,

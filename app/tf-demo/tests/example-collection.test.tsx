@@ -3,12 +3,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { api } from "../convex/_generated/api";
 import type { Id, TableNames } from "../convex/_generated/dataModel";
 import schema from "../convex/schema";
-import { EXAMPLES_TEXT_TITLE } from "../shared/notes-study/example-contexts";
+import { TextPresentation } from "../src/views/text-view";
+import { EXAMPLES_TEXT_TITLE } from "../tooling/notes-study/example-contexts";
 import {
 	NOTE_STUDY_DATABASE,
 	NOTE_STUDY_RELATED_DATABASE,
-} from "../shared/notes-study/note-study-dummy-database";
-import { TextPresentation } from "../src/views/text-view";
+} from "../tooling/notes-study/note-study-dummy-database";
 import {
 	createPlaygroundConvex,
 	PLAYGROUND_FIXTURE_TIMEOUT_MS,

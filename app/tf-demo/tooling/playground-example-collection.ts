@@ -4,8 +4,8 @@ import {
 	EXAMPLES_SUBMISSION_KEY,
 	EXAMPLES_TEXT_TITLE,
 	exampleContext,
-} from "../shared/notes-study/example-contexts";
-import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
+} from "./notes-study/example-contexts";
+import { NOTE_STUDY_DATABASE } from "./notes-study/note-study-dummy-database";
 
 const LIMIT = 256;
 const SEGMENT_LIMIT = 512;

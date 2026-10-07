@@ -15,7 +15,7 @@ import {
 import {
 	germanGovernorKinds,
 	germanVerbalKinds,
-} from "../german-evidence-kinds";
+} from "../../shared/german-evidence-kinds";
 import { NOTE_STUDY_FIXTURES } from "./fixtures/index";
 import type {
 	NoteStudyFixture,

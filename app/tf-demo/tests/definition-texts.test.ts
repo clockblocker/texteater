@@ -17,8 +17,8 @@ import {
 	foldedCanonicalForm,
 } from "../server/linguisticIdentity";
 import { unresolvedUnits } from "../server/storedSegments";
-import { NOTE_STUDY_DATABASE } from "../shared/notes-study/note-study-dummy-database";
 import { textTitle } from "../shared/text-title";
+import { NOTE_STUDY_DATABASE } from "../tooling/notes-study/note-study-dummy-database";
 import { proseSegments } from "../tooling/playground-example-collection";
 import {
 	actionContext,

@@ -1,13 +1,13 @@
 import { describe, expect, test } from "bun:test";
-import { NOTE_STUDY_FIXTURES } from "../shared/notes-study/fixtures/index";
+import { NOTE_STUDY_FIXTURES } from "../tooling/notes-study/fixtures/index";
 import {
 	makeUrl,
 	NOTE_STUDY_DATABASE,
 	NOTE_STUDY_PENDING_RELATIONS,
 	NOTE_STUDY_RELATED_DATABASE,
 	NOTE_STUDY_RESOLVED_RELATIONS,
-} from "../shared/notes-study/note-study-dummy-database";
-import type { NoteStudyFixture } from "../shared/notes-study/note-study-fixture";
+} from "../tooling/notes-study/note-study-dummy-database";
+import type { NoteStudyFixture } from "../tooling/notes-study/note-study-fixture";
 
 /**
  * Read through the shared fixture shape: the `as const` tuple only carries
