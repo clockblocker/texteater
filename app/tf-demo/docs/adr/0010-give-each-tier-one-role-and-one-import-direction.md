@@ -9,7 +9,7 @@ local code it may import:
 
 | Tier | Role | May import (local code) |
 | --- | --- | --- |
-| `src/` | Browser UI | `shared/`, `convex/_generated/` (the `api` object and `Id`/`Doc` types) |
+| `src/` | Browser UI | `shared/`, `convex/_generated/` (the `api` object and `Id`/`Doc` types); `tooling/`, `tests/` type-only |
 | `convex/` | Convex adapter: schema, validators, function registrations, and `ctx` helpers (`convex/model/`, `convex/modules/`) | `server/`, `shared/` |
 | `server/` | ctx-free domain logic: pure rules, projections, and Effect programs for `"use node"` actions | `shared/`; `convex/` type-only |
 | `shared/` | The browser ↔ backend contract: pure types, constants and small pure functions that `src/` imports, alone or with the backend | `convex/_generated/` type-only |
@@ -22,7 +22,9 @@ its stored shape; the edge erases at build time. `shared/` may name `Id` the
 same way. The UI never imports a Convex model or `server/` module: it takes a
 backend type from the function it calls, through `api` and
 `FunctionReturnType`, so the Convex API is its whole contract with the
-backend.
+backend. The UI may name a `tooling/` or `tests/` type, as the playground
+does with `PlaygroundSnapshot`, but loads none of their code, so neither
+reaches the browser bundle.
 
 `shared/` exists for the UI. Pure code that only the backend uses lives in
 `server/`, even when both `convex/` and `server/` need it, as

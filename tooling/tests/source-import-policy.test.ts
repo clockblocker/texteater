@@ -361,6 +361,46 @@ test("tf-demo's UI reaches the backend only through convex/_generated and shared
 	]);
 });
 
+test("tf-demo's UI names tooling/ and tests/ types but loads none of their code", async () => {
+	const { root, app } = await tfDemoFixture();
+	await writeSource(
+		app,
+		"tooling/snapshot.ts",
+		"export type Snapshot = string;\nexport const snapshot = 1;\n",
+	);
+	await writeSource(app, "tests/support.ts", "export const support = 1;\n");
+	await writeSource(
+		app,
+		"src/views/snapshot-type.tsx",
+		'import type { Snapshot } from "../../tooling/snapshot";\n',
+	);
+	await writeSource(
+		app,
+		"src/views/snapshot-value.tsx",
+		'import { snapshot } from "../../tooling/snapshot";\n',
+	);
+	await writeSource(
+		app,
+		"src/views/test-support.tsx",
+		'import { support } from "../../tests/support";\n',
+	);
+
+	const issues = await issuesFor(root);
+
+	expect(
+		issues.map(({ file, message }) => [file, message.split(":")[0]]).sort(),
+	).toEqual([
+		[
+			"app/tf-demo/src/views/snapshot-value.tsx",
+			"tf-demo-ui-names-tooling-types-only",
+		],
+		[
+			"app/tf-demo/src/views/test-support.tsx",
+			"tf-demo-ui-names-tooling-types-only",
+		],
+	]);
+});
+
 test("tf-demo's shared/ imports no other tier and only names generated Convex types", async () => {
 	const { root, app } = await tfDemoFixture();
 	await writeSource(

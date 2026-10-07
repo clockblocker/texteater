@@ -166,6 +166,14 @@ const moduleBoundaries = new Map<string, readonly ModuleBoundary[]>([
 				to: /^app\/tf-demo\/(?:server\/|convex\/(?!_generated\/))/,
 			},
 			{
+				name: "tf-demo-ui-names-tooling-types-only",
+				comment:
+					"`tooling/` and `tests/` are development-only, so the browser may name their types but loads none of their code (tf-demo ADR 0010).",
+				from: /^app\/tf-demo\/src\//,
+				to: /^app\/tf-demo\/(?:tooling|tests)\//,
+				allowTypeOnly: true,
+			},
+			{
 				name: "tf-demo-shared-imports-no-tier",
 				comment:
 					"`shared/` is the browser-backend contract and depends on no other tier (tf-demo ADR 0010).",
