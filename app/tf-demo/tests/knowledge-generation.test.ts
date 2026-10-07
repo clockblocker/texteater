@@ -831,13 +831,10 @@ test("an interrupted run records no failure and leaves the run to the stale-run 
 	expect(await rows(t, "knowledgeProductionRuns")).toEqual([]);
 });
 
-test("contributions that finish while a commit is in flight are published together in the next one", async () => {
-	jest.useRealTimers();
+test("each contribution's base text is published in order, one call each", async () => {
 	const t = createTestConvex();
 	const occurrence = await seedDictionaryReading(t);
-	await insertAttempt(t, occurrence, "coalesced", { state: "Scheduled" });
-	const firstCommitStarted = Promise.withResolvers<void>();
-	const releaseFirstCommit = Promise.withResolvers<void>();
+	await insertAttempt(t, occurrence, "in-order", { state: "Scheduled" });
 	const incremental: PublishArgs["changes"][] = [];
 	const definition: KnowledgeChange = {
 		kind: "Contribute",
@@ -858,18 +855,13 @@ test("contributions that finish while a commit is in flight are published togeth
 	};
 	await generateWith(
 		t,
-		"coalesced",
+		"in-order",
 		(_input, { onContribution }) =>
-			Effect.promise(async () => {
-				const first = Effect.runPromise(onContribution([definition]));
-				await firstCommitStarted.promise;
-				const rest = [russian, english].map((change) =>
-					Effect.runPromise(onContribution([change])),
-				);
-				// Both siblings are queued behind the commit in flight.
-				await Bun.sleep(5);
-				releaseFirstCommit.resolve();
-				await Promise.all([first, ...rest]);
+			// The port's contract: one contribution at a time, each awaited.
+			Effect.gen(function* () {
+				yield* onContribution([definition]);
+				yield* onContribution([russian]);
+				yield* onContribution([english]);
 				return {
 					failures: [],
 					changes: [definition, russian, english],
@@ -877,17 +869,11 @@ test("contributions that finish while a commit is in flight are published togeth
 				};
 			}),
 		interceptPublish(t, async (args, commit) => {
-			if (!args.final) {
-				incremental.push(args.changes);
-				if (incremental.length === 1) {
-					firstCommitStarted.resolve();
-					await releaseFirstCommit.promise;
-				}
-			}
+			if (!args.final) incremental.push(args.changes);
 			return commit();
 		}),
 	);
-	expect(incremental).toEqual([[definition], [russian, english]]);
+	expect(incremental).toEqual([[definition], [russian], [english]]);
 	expect((await attempts(t))[0]).toMatchObject({ state: "Committed" });
 });
 

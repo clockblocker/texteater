@@ -6,7 +6,6 @@ import type * as Dumling from "dumling/types";
 import * as Cause from "effect/Cause";
 import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
-import * as Semaphore from "effect/Semaphore";
 import { dumgenKnowledgeProducer } from "../server/dumgenKnowledgeProducer";
 import type { generationRequestFor } from "../server/generatedKnowledgeRequest";
 import {
@@ -85,7 +84,6 @@ export const runKnowledgeGeneration = internalAction({
 		generateKnowledge(ctx, args, productionKnowledgeProducer()),
 });
 
-type KnowledgeChange = KnowledgeProduction["changes"][number];
 type ClaimedInput = Extract<GenerationInput, { kind: "Generate" }>;
 type RequestedKinds = ReturnType<typeof requestedRelationKinds>;
 type Publishable = Pick<KnowledgeProduction, "changes" | "pendingRelations">;
@@ -263,18 +261,24 @@ function publishKnowledge(
 }
 
 /**
- * Publishes each contribution's base text as it arrives, one commit at a
- * time; structural aspects reach the dictionary with the final publication
- * only. Contributions that arrive while a commit is in flight are published
- * together by the next one. A failed commit is logged and leaves the run
- * going: the final publication carries every text change, so it retries the
+ * Publishes one contribution's base text; structural aspects reach the
+ * dictionary with the final publication only. The producer hands
+ * contributions on one at a time and waits for each (`onContribution`), so
+ * commits never overlap. A failed commit is logged and leaves the run going:
+ * the final publication carries every text change, so it retries the
  * unsaved text.
  */
-function contributionPublisher(run: KnowledgeRun, plan: KnowledgePlan) {
-	const publication = Semaphore.makeUnsafe(1);
-	const pending: KnowledgeChange[] = [];
-	const commit = Effect.suspend(() => {
-		const changes = pending.splice(0);
+function publishContribution(
+	run: KnowledgeRun,
+	plan: KnowledgePlan,
+	contribution: KnowledgeProduction["changes"],
+) {
+	return Effect.suspend(() => {
+		const changes = structuredClone(
+			contribution.filter((change) =>
+				BASE_TEXT_ASPECTS.has(change.aspect),
+			),
+		);
 		if (changes.length === 0) return Effect.void;
 		return publishKnowledge(
 			run,
@@ -303,21 +307,6 @@ function contributionPublisher(run: KnowledgeRun, plan: KnowledgePlan) {
 			),
 		);
 	});
-	return {
-		contribute: (changes: KnowledgeProduction["changes"]) =>
-			Effect.suspend(() => {
-				pending.push(
-					...structuredClone(
-						changes.filter((change) =>
-							BASE_TEXT_ASPECTS.has(change.aspect),
-						),
-					),
-				);
-				return publication.withPermit(commit);
-			}),
-		/** Waits for the commit in flight, if any. */
-		settled: publication.withPermit(Effect.void),
-	};
 }
 
 function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
@@ -327,7 +316,6 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 			encounter: input.encounter,
 			attestation: input.attestation,
 		});
-		const publisher = contributionPublisher(run, plan);
 		return yield* run
 			.produce(
 				{
@@ -349,7 +337,8 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 				},
 				{
 					// Dumgen waits for each contribution's publication.
-					onContribution: publisher.contribute,
+					onContribution: (changes) =>
+						publishContribution(run, plan, changes),
 					// DEV inspection renders the calls with their payloads; the
 					// run's evidence keeps every trace without them.
 					...dumgenTracing(run.inspection, (trace) =>
@@ -364,7 +353,6 @@ function produceKnowledge(run: KnowledgeRun, plan: KnowledgePlan) {
 					"Produce Knowledge",
 					inspectionStep(OWNER, { attemptKey: run.attemptKey }),
 				),
-				Effect.ensuring(publisher.settled),
 			);
 	});
 }
