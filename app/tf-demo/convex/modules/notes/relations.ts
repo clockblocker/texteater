@@ -57,7 +57,7 @@ export type GrammaticalAlternative = {
 	readonly canonicalForm: string;
 };
 
-export type RelationProjection<
+type RelationProjection<
 	LemmaId extends string = string,
 	ReadingId extends string = string,
 > = {

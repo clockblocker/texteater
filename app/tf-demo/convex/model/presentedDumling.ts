@@ -48,7 +48,7 @@ export const presentedSurfaceValidator = v.object({
  * A Fusion one Attestation reaches (ADR 0035): the fused word, the
  * components this Attestation realizes, and the authored one-liner, if any.
  */
-export const presentedFusionValidator = v.object({
+const presentedFusionValidator = v.object({
 	...fusionValidator.fields,
 	realized: v.array(v.number()),
 	oneLiner: v.union(v.null(), v.string()),

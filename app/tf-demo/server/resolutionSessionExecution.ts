@@ -20,7 +20,7 @@ type ResolutionCatalogMiss = Extract<
 	{ catalogMiss: unknown }
 >["catalogMiss"];
 
-export type ResolutionSessionRunIdentity = {
+type ResolutionSessionRunIdentity = {
 	readonly requestId: string;
 	readonly runToken: string;
 };
@@ -82,7 +82,7 @@ export type ResolutionSessionLifecyclePort = {
 	readonly record: (record: ResolutionSessionRunRecord) => Promise<void>;
 };
 
-export type ResolutionSessionLinguisticPort = (
+type ResolutionSessionLinguisticPort = (
 	selection: ResolveSegmentInput,
 	checkpoints: ResolutionCheckpoints,
 	observer: ResolutionProgressObserver,

@@ -18,13 +18,13 @@ export const grammaticalGenderValidator = v.union(
 	v.literal("Neut"),
 );
 
-export const presentedSegmentResolutionStateValidator = v.union(
+const presentedSegmentResolutionStateValidator = v.union(
 	v.literal("Active"),
 	v.literal("Unresolved"),
 	v.literal("PermanentFailure"),
 );
 
-export const sentenceSegmentViewValidator = storedSegmentValidator.extend({
+const sentenceSegmentViewValidator = storedSegmentValidator.extend({
 	attestationId: v.optional(v.id("attestations")),
 	encountered: v.boolean(),
 	gender: v.optional(grammaticalGenderValidator),

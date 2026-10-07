@@ -40,7 +40,7 @@ export function findAccumulatedKnowledge(
 		.unique();
 }
 
-export function coveredTranslationLanguages(
+function coveredTranslationLanguages(
 	knowledge: unknown,
 ): Dumrel.TranslationLanguage[] {
 	if (!knowledge || typeof knowledge !== "object" || Array.isArray(knowledge))

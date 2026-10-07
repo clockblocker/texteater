@@ -107,7 +107,7 @@ export function assertStoredSentence(stored: {
  * them: each unit names ascending indices of ResolvableText Segments, and
  * every ResolvableText Segment belongs to exactly one unit.
  */
-export function assertStoredUnits(
+function assertStoredUnits(
 	segments: readonly Pick<StoredSegment, "kind">[],
 	units: readonly StoredUnit[],
 ): void {

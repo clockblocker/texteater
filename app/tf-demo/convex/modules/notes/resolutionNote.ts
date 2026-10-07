@@ -132,9 +132,7 @@ export type ResolutionNote = Omit<
 	grammar?: ResolutionGrammarProjection;
 	reading?: ResolutionReadingProjection;
 };
-export type ResolutionNoteLifecycle = Infer<
-	typeof resolutionNoteLifecycleValidator
->;
+type ResolutionNoteLifecycle = Infer<typeof resolutionNoteLifecycleValidator>;
 
 export async function loadResolutionNote(
 	ctx: QueryCtx,

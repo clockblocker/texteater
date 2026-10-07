@@ -3,7 +3,7 @@ import type { Answer, JevAsk, JevRequest } from "dumgen";
 type Question = JevRequest["questions"][string];
 
 /** A certain answer to a Choice. */
-export const picked = (choice: string): Answer => ({
+const picked = (choice: string): Answer => ({
 	type: "choice",
 	choice,
 	confidence: 1,

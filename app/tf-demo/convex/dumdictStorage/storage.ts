@@ -25,7 +25,7 @@ import {
 export const MAX_PLANNED_CHANGES = 50;
 export const MAX_PATCH_OPS = 50;
 export const MAX_READING_CANDIDATES = 40;
-export const MAX_CONTEXT_KEYS = 50;
+const MAX_CONTEXT_KEYS = 50;
 export const MAX_PENDING_RELATIONS_PER_SLICE = 100;
 const MAX_CLEANUP_CANDIDATE_LEMMAS = 100;
 const MAX_RELATION_NEIGHBOURHOOD_LEMMAS = 100;
@@ -176,7 +176,7 @@ export async function findReadingByKey(ctx: ServerCtx, readingKey: string) {
 	return canonical ? loadReading(ctx, canonical) : null;
 }
 
-export async function loadReading(
+async function loadReading(
 	ctx: ServerCtx,
 	canonical: Awaited<ReturnType<typeof findCanonicalReading>> & {},
 ) {
@@ -207,7 +207,7 @@ export async function loadReading(
 	};
 }
 
-export async function loadCanonicalReadingKnowledge(
+async function loadCanonicalReadingKnowledge(
 	ctx: ServerCtx,
 	readingId: Id<"readings">,
 	storedKnowledge: unknown,
@@ -293,7 +293,7 @@ export async function loadCanonicalReadingKnowledge(
  * Dictionary Lemmas a Unit Shadow with this canonical form could resolve to,
  * matched without letter case (system ADR 0002).
  */
-export async function dictionaryLemmasWithCanonicalForm(
+async function dictionaryLemmasWithCanonicalForm(
 	ctx: ServerCtx,
 	canonicalForm: string,
 ) {

@@ -158,7 +158,7 @@ export async function stripTextAnalysisGraph(
  * pruned, and their own Definition Texts are removed after it the same way,
  * one at a time, until no pruned Reading keeps one.
  */
-export async function removeDefinitionText(
+async function removeDefinitionText(
 	ctx: ActionCtx,
 	ownerReadingKey: string,
 ): Promise<void> {

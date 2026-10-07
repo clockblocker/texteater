@@ -13,6 +13,7 @@ import {
 	kindValidator,
 	knowledgeGenerationAttemptStateValidator,
 	knowledgeProductionEvidenceValidator,
+	knowledgeSettingsValidator,
 	knowledgeStatusValidator,
 	languageValidator,
 	orthographyValidator,
@@ -34,7 +35,6 @@ import {
 	safeGenerationFailureValidator,
 	segmentResolutionStateValidator,
 	storedGrammaticalCheckpointValidator,
-	storedKnowledgeSettingsValidator,
 	storedSegmentValidator,
 	storedUnitValidator,
 	structuralShadowAspectValidator,
@@ -409,7 +409,7 @@ export default defineSchema({
 
 	knowledgeSettings: defineTable({
 		visitorId: v.string(),
-		settings: storedKnowledgeSettingsValidator,
+		settings: knowledgeSettingsValidator,
 		updatedAt: v.number(),
 	}).index("by_visitor_id", ["visitorId"]),
 

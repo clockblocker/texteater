@@ -84,7 +84,7 @@ export type ResolvedClickPersistence = {
  * commit refused as stale writes the progress and keeps the record for the
  * commit that follows.
  */
-export type CommitProgress = {
+type CommitProgress = {
 	readonly readingAvailable?: {
 		readonly reading: Dumling.Reading<"de">;
 		readonly readingResolution: ReadingResolution;
@@ -285,8 +285,6 @@ export type ResolutionCheckpoints = {
 		readonly reading: Dumling.Reading<"de">;
 	};
 };
-
-export type TfDemoOrchestrator = ReturnType<typeof createTfDemoOrchestrator>;
 
 type TfDemoOrchestratorOptions = {
 	/** Grammar, then the Reading's Emoji Description; production runs `selectUnitOnly`. */

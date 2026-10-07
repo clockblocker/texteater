@@ -1,5 +1,4 @@
 export {
-	type NoteParts,
 	renderFixtureNote,
 	renderFixtureNoteParts,
 	renderNote,

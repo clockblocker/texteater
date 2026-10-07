@@ -60,7 +60,7 @@ export {
 	materializeGrammaticalComponent,
 } from "../dumdictStorage/transaction";
 
-export type DumdictTransactionPlan = Infer<typeof dictionaryPlanValidator>;
+type DumdictTransactionPlan = Infer<typeof dictionaryPlanValidator>;
 
 /** Outcome of planning and committing one dictionary workflow in the host transaction. */
 export type DumdictTransactionOutcome =
@@ -82,7 +82,7 @@ export type DumdictTransactionOutcome =
  * A plan with more changes than one commit takes. Nothing was written, so
  * the caller may split its request and send the parts.
  */
-export type DumdictOverBudget = {
+type DumdictOverBudget = {
 	readonly status: "overBudget";
 	readonly plannedChanges: number;
 };

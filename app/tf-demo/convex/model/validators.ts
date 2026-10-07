@@ -162,17 +162,6 @@ const kindValues = [
 export const familyValidator = literalUnion(familyValues);
 export const kindValidator = literalUnion(kindValues);
 
-const families = new Set<string>(familyValues);
-const kinds = new Set<string>(kindValues);
-
-export function isFamily(value: string): value is Dumling.Family {
-	return families.has(value);
-}
-
-export function isKind(value: string): value is Dumling.Kind {
-	return kinds.has(value);
-}
-
 type SameMembers<A, B> = [A] extends [B]
 	? [B] extends [A]
 		? true
@@ -324,7 +313,7 @@ export const lemmaValueValidator = v.object({
 	coreFeatures: v.any(),
 });
 
-export const surfaceValueValidator = v.object({
+const surfaceValueValidator = v.object({
 	unitKind: v.literal("Surface"),
 	language: languageValidator,
 	normalizedSurface: v.string(),
@@ -335,7 +324,7 @@ export const surfaceValueValidator = v.object({
 	lemma: lemmaValueValidator,
 });
 
-export const attestationValueValidator = v.object({
+const attestationValueValidator = v.object({
 	articleEvidence: v.optional(v.union(v.null(), articleEvidenceValidator)),
 	expletiveEvidence: v.optional(v.any()),
 	valencyEvidence: v.optional(v.any()),
@@ -349,7 +338,7 @@ export const attestationValueValidator = v.object({
  * Where a click on a stored unit routes (Dumgen ADR 0007): German, a Family
  * other than Morpheme, and one of its Kinds.
  */
-export const unitRouteValidator = v.union(
+const unitRouteValidator = v.union(
 	v.object({
 		language: v.literal("de"),
 		family: v.literal("Lexeme"),
@@ -383,7 +372,7 @@ true satisfies SameMembers<Infer<typeof unitRouteValidator>, Route>;
  * The authored DET or PRON identity intake's route judge picked for a
  * one-piece unit (#864); a click builds the unit's Lemma from it.
  */
-export const closedClassIdentityValidator = v.object({
+const closedClassIdentityValidator = v.object({
 	kind: v.union(v.literal("DET"), v.literal("PRON")),
 	canonicalForm: v.string(),
 	pronType: v.union(v.string(), v.null()),
@@ -489,8 +478,6 @@ export const knowledgeSettingsValidator = v.object({
 	}),
 });
 
-export const storedKnowledgeSettingsValidator = knowledgeSettingsValidator;
-
 export const readingBlockKindValidator = literalUnion(
 	READING_BLOCK_KIND_VALUES,
 );
@@ -542,12 +529,6 @@ export const resolutionActivityValidator = v.union(
 	v.literal("Terminal"),
 );
 
-export const resolutionOutcomeValidator = v.union(
-	v.literal("Complete"),
-	v.literal("Unresolved"),
-	v.literal("PermanentFailure"),
-);
-
 export const activeResolutionActivityValidator = v.union(
 	v.literal("Scheduled"),
 	v.literal("Running"),
@@ -576,7 +557,7 @@ export const resolutionLifecycleValidator = v.union(
 	}),
 );
 
-export const generationFailureCategoryValidator = v.union(
+const generationFailureCategoryValidator = v.union(
 	v.literal("Network"),
 	v.literal("RateLimited"),
 	v.literal("ProviderUnavailable"),
@@ -736,7 +717,7 @@ export const dumdictPlannedChangeValidator = v.union(
 	}),
 );
 
-export const encounterValidator = v.object({
+const encounterValidator = v.object({
 	sentence: v.object({
 		id: v.string(),
 		language: grammaticalLanguageValidator,
@@ -809,7 +790,7 @@ const committedOccurrenceValidator = v.object({
 	occurrence: reusableAttestationValidator,
 });
 
-export const lateResolvedClickCommitValidator = v.object({
+const lateResolvedClickCommitValidator = v.object({
 	status: v.literal("Reused"),
 	encounterId: v.id("visitorEncounters"),
 	readingId: v.id("readings"),

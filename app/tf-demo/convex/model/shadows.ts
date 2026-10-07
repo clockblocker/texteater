@@ -284,7 +284,7 @@ export function collectStructuralShadowReferences(
 	return unwrap(parseStructuralShadowReferences(knowledgeValue));
 }
 
-export async function internShadow(
+async function internShadow(
 	ctx: MutationCtx,
 	value: unknown,
 ): Promise<Id<"shadows">> {
@@ -418,9 +418,7 @@ function parseParticipleSourceVerb(
 	return parsed(source.verb as Dumling.Lemma);
 }
 
-export function participleSourceVerb(
-	knowledge: unknown,
-): Dumling.Lemma | undefined {
+function participleSourceVerb(knowledge: unknown): Dumling.Lemma | undefined {
 	return unwrap(parseParticipleSourceVerb(knowledge));
 }
 
@@ -498,21 +496,4 @@ export async function ensureAccumulatedKnowledgeStatus(
 		status: requestedStatus,
 		updatedAt: Date.now(),
 	});
-}
-
-/** Destructive reset-only seam; ordinary Knowledge writes are monotonic. */
-export async function deleteAccumulatedKnowledge(
-	ctx: MutationCtx,
-	ownerReadingKey: string,
-): Promise<boolean> {
-	await syncStructuralShadowReferences(ctx, ownerReadingKey, {});
-	const existing = await ctx.db
-		.query("accumulatedKnowledge")
-		.withIndex("by_owner_reading_key", (q) =>
-			q.eq("ownerReadingKey", ownerReadingKey),
-		)
-		.unique();
-	if (!existing) return false;
-	await ctx.db.delete(existing._id);
-	return true;
 }

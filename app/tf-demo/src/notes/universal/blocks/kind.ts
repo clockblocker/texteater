@@ -18,10 +18,10 @@ export const noteLayoutBlockKindSchema = z.enum([
 export type NoteLayoutBlockKind = z.infer<typeof noteLayoutBlockKindSchema>;
 
 /** The registry key of a route's Heading Block, pinned first. */
-export type NoteHeadingBlockKind = "Heading";
+type NoteHeadingBlockKind = "Heading";
 
 /** The registry key of a route's Source Contexts Block, pinned after the Heading. */
-export type NoteSourceContextsBlockKind = "SourceContexts";
+type NoteSourceContextsBlockKind = "SourceContexts";
 
 /** Every Block a route's registry can render: its Anchor and its laid-out Blocks. */
 export type NoteBlockKind =
