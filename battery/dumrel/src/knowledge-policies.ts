@@ -17,11 +17,9 @@ const knowledgePolicies: {
 } = { de: DE_REL_MAP };
 
 /** The aspects the Knowledge Policy applies to a source route, or undefined where no policy covers it. */
-export function knowledgePolicyMask(route: {
-	language: string;
-	family: string;
-	kind: string;
-}): KnowledgeRequestMask | undefined {
+export function knowledgePolicyMask(
+	route: Dumling.LemmaRoute,
+): KnowledgeRequestMask | undefined {
 	const policies: Readonly<Record<string, KnowledgePolicy | undefined>> =
 		knowledgePolicies;
 	const policy = Object.hasOwn(policies, route.language)
@@ -38,7 +36,7 @@ export function knowledgePolicyMask(route: {
 
 /** Whether the Knowledge Policy applies `aspect` to a Lemma's route. */
 export function knowledgePolicyApplies(
-	lemma: Pick<Dumling.Lemma, "language" | "family" | "kind">,
+	lemma: Dumling.LemmaRoute,
 	aspect: keyof KnowledgeRequestMask,
 ): boolean {
 	return knowledgePolicyMask(lemma)?.[aspect] !== undefined;

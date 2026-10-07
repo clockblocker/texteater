@@ -29,8 +29,9 @@ import type {
 
 export { ParsingError };
 
-type Parsed<T> = T | ParsingError<T>;
-export function unwrapDumdictParse<T>(parsed: Parsed<T>): T {
+/** A Dumdict parser's result: the parsed value, or the error saying why it failed. */
+export type DumdictParse<T> = T | ParsingError<T>;
+export function unwrapDumdictParse<T>(parsed: DumdictParse<T>): T {
 	if (parsed instanceof ParsingError) throw parsed;
 	return parsed;
 }
@@ -38,7 +39,7 @@ const registry: CompiledValidationRegistry = validationRegistry;
 function parseRoute<T>(
 	input: unknown,
 	key: DumdictValidationRouteKey | InternalDumdictValidationRouteKey,
-): Parsed<T> {
+): DumdictParse<T> {
 	const root = registry.roots[key];
 	if (!root)
 		return new ParsingError([
@@ -60,30 +61,34 @@ function parseRoute<T>(
 function parseDumdictRoute<Key extends DumdictValidationRouteKey>(
 	input: unknown,
 	key: Key,
-): Parsed<DumdictValidationRouteOutput<Key>> {
+): DumdictParse<DumdictValidationRouteOutput<Key>> {
 	return parseRoute(input, key);
 }
 export function parseKnowledgeChangeForDumdictRuntime(
 	input: unknown,
-): Parsed<InternalDumdictValidationRouteOutput<"internal:knowledge-change">> {
+): DumdictParse<
+	InternalDumdictValidationRouteOutput<"internal:knowledge-change">
+> {
 	return parseRoute(input, "internal:knowledge-change");
 }
 export function parsePendingSemanticRelationForDumdictRuntime(
 	input: unknown,
-): Parsed<
+): DumdictParse<
 	InternalDumdictValidationRouteOutput<"internal:pending-semantic-relation">
 > {
 	return parseRoute(input, "internal:pending-semantic-relation");
 }
 export function parseReadingKnowledgeForDumdictRuntime(
 	input: unknown,
-): Parsed<InternalDumdictValidationRouteOutput<"internal:reading-knowledge">> {
+): DumdictParse<
+	InternalDumdictValidationRouteOutput<"internal:reading-knowledge">
+> {
 	return parseRoute(input, "internal:reading-knowledge");
 }
 export function parseReadingForDumdictRuntime<L extends Dumling.Language>(
 	input: unknown,
 	language: L,
-): Parsed<Dumling.Reading<L>> {
+): DumdictParse<Dumling.Reading<L>> {
 	return parseRoute(input, `internal:reading:${language}`);
 }
 const MAX_DUMDICT_RECURSIVE_INPUT_DEPTH = 128;
@@ -261,7 +266,7 @@ function parseLanguageRoute<
 	input: unknown,
 	name: Name,
 	language: Language,
-): Parsed<LanguageParserOutput<Name, Language>> {
+): DumdictParse<LanguageParserOutput<Name, Language>> {
 	const parsed = (() => {
 		switch (language) {
 			case "de":
@@ -275,13 +280,13 @@ function parseLanguageRoute<
 	// The generated route proof binds every concrete key to its actual canonical
 	// z.output. TypeScript cannot reduce the same mapping for a generic language,
 	// so this is the sole parser-internal reconstruction of that proven relation.
-	return parsed as Parsed<LanguageParserOutput<Name, Language>>;
+	return parsed as DumdictParse<LanguageParserOutput<Name, Language>>;
 }
 
 export function parseAsChangePrecondition<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
-): Parsed<ChangePrecondition<Language>> {
+): DumdictParse<ChangePrecondition<Language>> {
 	return parseLanguageRoute(input, "parseAsChangePrecondition", language);
 }
 
@@ -289,13 +294,13 @@ export function parseAsChangePrecondition<Language extends Dumling.Language>(
 export function parseAsCommitChangesRequest<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
-): Parsed<CommitChangesRequest<Language>> {
+): DumdictParse<CommitChangesRequest<Language>> {
 	return parseLanguageRoute(input, "parseAsCommitChangesRequest", language);
 }
 
 export function parseAsCommitChangesResult(
 	input: unknown,
-): Parsed<CommitChangesResult> {
+): DumdictParse<CommitChangesResult> {
 	return parseDumdictRoute(input, "parseAsCommitChangesResult");
 }
 
@@ -303,14 +308,14 @@ export function parseAsCommitChangesResult(
 export function parseAsDumdictPlan<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
-): Parsed<DumdictPlan<Language>> {
+): DumdictParse<DumdictPlan<Language>> {
 	return parseLanguageRoute(input, "parseAsDumdictPlan", language);
 }
 
 export function parseAsLemmaRecord<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
-): Parsed<LemmaRecord<Language>> {
+): DumdictParse<LemmaRecord<Language>> {
 	return parseLanguageRoute(input, "parseAsLemmaRecord", language);
 }
 
@@ -319,7 +324,7 @@ export function parseAsPendingSemanticRelationLocator<
 >(
 	input: unknown,
 	language: Language,
-): Parsed<PendingSemanticRelationLocator<Language>> {
+): DumdictParse<PendingSemanticRelationLocator<Language>> {
 	return parseLanguageRoute(
 		input,
 		"parseAsPendingSemanticRelationLocator",
@@ -332,7 +337,7 @@ export function parseAsPendingSemanticRelationRecord<
 >(
 	input: unknown,
 	language: Language,
-): Parsed<PendingSemanticRelationRecord<Language>> {
+): DumdictParse<PendingSemanticRelationRecord<Language>> {
 	return parseLanguageRoute(
 		input,
 		"parseAsPendingSemanticRelationRecord",
@@ -344,7 +349,7 @@ export function parseAsPendingSemanticRelationRecord<
 export function parseAsPlannedChangeOp<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
-): Parsed<PlannedChangeOp<Language>> {
+): DumdictParse<PlannedChangeOp<Language>> {
 	return parseLanguageRoute(input, "parseAsPlannedChangeOp", language);
 }
 
@@ -352,7 +357,7 @@ export function parseAsPlannedChangeOp<Language extends Dumling.Language>(
 export function parseAsReadingEntry<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
-): Parsed<ReadingEntry<Language>> {
+): DumdictParse<ReadingEntry<Language>> {
 	return parseLanguageRoute(input, "parseAsReadingEntry", language);
 }
 
@@ -360,13 +365,13 @@ export function parseAsReadingEntry<Language extends Dumling.Language>(
 export function parseAsReadingPatchOp<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
-): Parsed<ReadingPatchOp<Language>> {
+): DumdictParse<ReadingPatchOp<Language>> {
 	return parseLanguageRoute(input, "parseAsReadingPatchOp", language);
 }
 
 export function parseAsSurfaceEntry<Language extends Dumling.Language>(
 	input: unknown,
 	language: Language,
-): Parsed<SurfaceEntry<Language>> {
+): DumdictParse<SurfaceEntry<Language>> {
 	return parseLanguageRoute(input, "parseAsSurfaceEntry", language);
 }

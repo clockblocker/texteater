@@ -18729,6 +18729,13 @@ export type SyncretismView<
 				: never
 			: never
 		: never;
+/** A Lemma's route: one member per route, so a value keeps its `family` and `kind` together. */
+export type LemmaRoute = {
+	[R in keyof UnitMap]: Pick<
+		UnitMap[R]["Lemma"],
+		"language" | "family" | "kind"
+	>;
+}[keyof UnitMap];
 export type UnitRoute = {
 	[R in keyof UnitMap]: Pick<
 		UnitMap[R]["Lemma"],

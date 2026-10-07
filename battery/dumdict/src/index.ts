@@ -14,6 +14,7 @@ export type {
 } from "./domain-types";
 export { makeSurfaceId } from "./dumling-id";
 export {
+	type DumdictParse,
 	ParsingError,
 	parseAsChangePrecondition,
 	parseAsCommitChangesRequest,

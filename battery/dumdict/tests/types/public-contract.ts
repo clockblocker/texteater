@@ -116,3 +116,10 @@ declare const parsedGermanLemmaRecord: ParsedGermanLemmaRecord;
 parsedGermanLemmaRecord satisfies Dumdict.LemmaRecord<"de">;
 // @ts-expect-error The language-scoped schema output retains its language.
 parsedGermanLemmaRecord satisfies Dumdict.LemmaRecord<"he">;
+
+type _ParserResultIsNamedAtTheEntry = Expect<
+	Equal<
+		ReturnType<typeof Dumdict.parseAsLemmaRecord<"de">>,
+		Dumdict.DumdictParse<Dumdict.LemmaRecord<"de">>
+	>
+>;

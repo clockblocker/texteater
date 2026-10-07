@@ -93,7 +93,7 @@ const valencyPolicy: {
 
 /** The complement kinds a Reading of this Lemma's route may hold; empty takes no frame. */
 export function allowedComplementKinds(
-	lemma: Pick<Dumling.Lemma, "language" | "family" | "kind">,
+	lemma: Dumling.LemmaRoute,
 ): readonly ComplementKind[] {
 	const policy: Partial<
 		Record<Dumling.Language, RoutePolicy<ComplementKind>>

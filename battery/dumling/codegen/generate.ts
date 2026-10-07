@@ -40,6 +40,8 @@ type SyncretizableUnitKind="Lemma"|"Surface";
 export type Syncretism<U extends SyncretizableUnitKind=SyncretizableUnitKind,L extends Language=Language,F extends Family<L>=Family<L>,K extends Kind<L,F>=Kind<L,F>>=Unit<U,L,F,K> extends infer T ? T extends {syncretic?:infer S;syncretized?:infer V} ? "syncretized" extends keyof T ? {[P in keyof T as P extends "syncretic"|"syncretized" ? never : P]:T[P]}&{syncretic:Exclude<S,undefined>;syncretized:Exclude<V,undefined>} : never : never : never;
 /** A Syncretism without its units: what a classifier answers. It keeps \`syncretic\`, so it has the Syncretism's identity (system ADR 0046). */
 export type SyncretismView<U extends SyncretizableUnitKind=SyncretizableUnitKind,L extends Language=Language,F extends Family<L>=Family<L>,K extends Kind<L,F>=Kind<L,F>>=Unit<U,L,F,K> extends infer T ? T extends {syncretic?:infer S} ? "syncretic" extends keyof T ? {[P in keyof T as P extends "syncretic"|"syncretized" ? never : P]:T[P]}&{syncretic:Exclude<S,undefined>} : never : never : never;
+/** A Lemma's route: one member per route, so a value keeps its \`family\` and \`kind\` together. */
+export type LemmaRoute={ [R in keyof UnitMap]: Pick<UnitMap[R]["Lemma"],"language"|"family"|"kind"> }[keyof UnitMap];
 export type UnitRoute={ [R in keyof UnitMap]: Pick<UnitMap[R]["Lemma"],"language"|"family"|"kind"> & {unitKind:UnitKind} }[keyof UnitMap];
 // Distributes over R without re-checking each route against UnitRoute: that
 // check relates every route to the whole union and grows cubically with routes.

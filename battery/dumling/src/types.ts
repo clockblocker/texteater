@@ -4,6 +4,7 @@ export type {
 	Kind,
 	Language,
 	Lemma,
+	LemmaRoute,
 	Reading,
 	Surface,
 	Unit,

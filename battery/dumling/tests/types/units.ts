@@ -1,6 +1,7 @@
 import { parseUnit } from "../../src/index.js";
 import type {
 	Lemma,
+	LemmaRoute,
 	Reading,
 	Surface,
 	Unit,
@@ -119,3 +120,16 @@ if (broad.success) {
 		const _exact: Noun = chain.value;
 	}
 }
+// A LemmaRoute keeps its Family and Kind together, and every Lemma has one.
+const _lemmaRoute: LemmaRoute = noun;
+const _locutionRoute: LemmaRoute = {
+	language: "de",
+	family: "Locution",
+	kind: "VERB",
+};
+// @ts-expect-error Hebrew has no Locution VERB route.
+const _wrongRoute: LemmaRoute = {
+	language: "he",
+	family: "Locution",
+	kind: "VERB",
+};

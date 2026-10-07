@@ -12,6 +12,7 @@
 		"battery/dumdict/src/index.ts: exports parseAsReadingEntry",
 		"battery/dumdict/src/index.ts: exports parseAsReadingPatchOp",
 		"battery/dumdict/src/index.ts: exports parseAsSurfaceEntry",
+		"battery/dumdict/src/index.ts: types DumdictParse",
 		"battery/dumdict/src/planning.ts: exports parseAsCommitChangesRequest",
 		"battery/dumdict/src/planning.ts: exports parseAsDumdictPlan",
 		"battery/dumdict/src/public-schema.ts: exports changePreconditionSchema",
