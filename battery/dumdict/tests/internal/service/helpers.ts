@@ -1,3 +1,4 @@
+import type * as Dumling from "dumling/types";
 import type * as Dumrel from "dumrel/types";
 import {
 	makeSurfaceId,
@@ -56,7 +57,7 @@ export const englishWalkReadingEntry = (): ReadingEntry<"en"> => {
 };
 
 /** A store whose every operation fails the test unless the test supplies it. */
-export function stubStore<L extends import("dumling/types").Language>(
+export function stubStore<L extends Dumling.Language>(
 	_language: L,
 	operations: Partial<PlannedDictionaryStore<L>>,
 ): PlannedDictionaryStore<L> {
@@ -72,9 +73,7 @@ export function stubStore<L extends import("dumling/types").Language>(
 }
 
 /** A Reading's Emoji Description; a Foreign Reading has none (ADR 0045). */
-export function emojiOf(
-	reading: import("dumling/types").Reading,
-): string | undefined {
+export function emojiOf(reading: Dumling.Reading): string | undefined {
 	return "emojiDescription" in reading ? reading.emojiDescription : undefined;
 }
 

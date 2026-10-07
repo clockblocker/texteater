@@ -13,6 +13,10 @@
  * A finding missing from the baseline fails the run. A baseline line knip no
  * longer reports is listed so the baseline can shrink; `--update-baseline`
  * rewrites the baseline for the run's scope.
+ *
+ * Knip can't see inline type queries such as `import("dumrel/types").X`, so
+ * it reports a name used only that way as unused. Write a namespace import
+ * (`import type * as Dumrel from "dumrel/types"`) instead (#1054).
  */
 import { join } from "node:path";
 import {

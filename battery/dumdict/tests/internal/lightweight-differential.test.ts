@@ -40,7 +40,7 @@ function parseRoute(route: DumdictValidationRouteKey, input: unknown): unknown {
 		excludeGlobal: Exclude<
 			DumdictValidationRouteKey,
 			"parseAsCommitChangesResult"
-		> extends `${infer Name}:${import("dumling/types").Language}`
+		> extends `${infer Name}:${Dumling.Language}`
 			? Name
 			: never,
 		language: Dumling.Language,
