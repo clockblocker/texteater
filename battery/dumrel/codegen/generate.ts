@@ -1,5 +1,5 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { formatTypeScript } from "codegen";
+import { fileURLToPath } from "node:url";
+import { defineCodegen, formatTypeScript, runCodegenCommand } from "codegen";
 import {
 	compileZodValidationArtifacts,
 	emitLinkedValidationRegistry,
@@ -112,20 +112,24 @@ const outputs = {
 	)}\n`,
 	"validation.ts": `// Generated from canonical Dumrel Zod schemas. Run bun run generate.\nexport const encodedValidation: string = ${JSON.stringify(JSON.stringify(compiled))};\n`,
 };
-const check = process.argv.includes("--check");
-for (const [name, source] of Object.entries(outputs)) {
-	const path = new URL(`../src/generated/${name}`, import.meta.url);
-	const output = await formatTypeScript(source, path);
-	if (check) {
-		if ((await readFile(path, "utf8").catch(() => "")) !== output)
-			throw Error(
-				`Stale generated Dumrel artifact: ${name}; run bun run generate`,
-			);
-	} else {
-		await mkdir(new URL(".", path), { recursive: true });
-		await writeFile(path, output);
-	}
-}
-console.log(
-	`${check ? "Verified" : "Generated"} Dumrel validation and structural types`,
-);
+const generated = new URL("../src/generated/", import.meta.url);
+const recipe = defineCodegen({
+	inputs: {},
+	outputs: { generated: { root: fileURLToPath(generated) } },
+	build: () =>
+		Promise.all(
+			Object.entries(outputs).map(async ([name, source]) => ({
+				id: name,
+				to: { target: "generated" as const, path: name },
+				content: await formatTypeScript(
+					source,
+					new URL(name, generated),
+				),
+				provenance: [],
+				meta: null,
+			})),
+		),
+});
+await runCodegenCommand(recipe, {
+	label: "Dumrel validation and structural types",
+});

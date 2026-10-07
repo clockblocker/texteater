@@ -28,6 +28,11 @@ Use `mode: "check"` to plan and report drift without changing the filesystem.
 Recipes may opt into an ownership manifest; only files listed in the previous
 manifest can become stale and be removed.
 
+A generator script can call `runCodegenCommand(readme, { label: "dumling" })`
+instead. It checks when `process.argv` contains `--check` and writes
+otherwise. On drift it lists every stale file on stderr and throws a
+`CodegenError`, so `generate:check` exits non-zero.
+
 For general generators, `defineCodegen` separates discovery, primary
 artifacts, and derived artifacts:
 

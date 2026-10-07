@@ -17,3 +17,7 @@ export class CodegenPlanError extends CodegenError {
 export class CodegenOwnershipError extends CodegenError {
 	override readonly name = "CodegenOwnershipError";
 }
+
+export class CodegenDriftError extends CodegenError {
+	override readonly name = "CodegenDriftError";
+}

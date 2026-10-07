@@ -1,3 +1,4 @@
+export { runCodegenCommand } from "./command.js";
 export {
 	CodegenConfigurationError,
 	CodegenError,

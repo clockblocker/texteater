@@ -20,6 +20,7 @@
 		"demo": "PATH=\"$PWD/node_modules/node/bin:$PATH\" turbo run dev:package --filter=@texteater/tf-demo",
 		"fix": "turbo run fix --continue",
 		"generate": "turbo run generate",
+		"generate:check": "turbo run generate:check",
 		"knip": "bun tooling/knip.ts",
 		"lint": "turbo run lint lint:tooling --continue",
 		"lint:tooling": "biome check --config-path tooling/biome/base.json tooling",
