@@ -31,8 +31,12 @@ export function useRelease<S>({
 	const { current, dispatch } = workspace;
 	const { dragRef } = gesture;
 
-	/** A loose Card let go with nothing under it: it fades where it is. */
-	function vanish(d: Drag<S>) {
+	/**
+	 * Let go with nowhere to be, for a Card whose home is away: a loose
+	 * Card vanishes, and a lifted Cover with no Deck to go back to closes,
+	 * as ← would. Either way it fades where it is.
+	 */
+	function leave(d: Drag<S>) {
 		dispatch({ type: "Release" });
 		gesture.settle(
 			() => moves.fade(d.h),
@@ -45,22 +49,13 @@ export function useRelease<S>({
 		dispatch({ type: "CancelGesture" });
 		gesture.tearDown();
 	}
-	/** A lifted Cover with no Deck to go back to: it closes, as ← would. */
-	function close(d: Drag<S>) {
-		dispatch({ type: "Release" });
-		gesture.settle(
-			() => moves.fade(d.h),
-			() => {},
-		);
-	}
 	/** A release with nothing under it, or in the Card's own Pane. */
 	function goHome(d: Drag<S>) {
 		if (d.home === "slot") {
 			dispatch({ type: "Release" });
 			gesture.snapBack(d.h);
 		} else if (d.home === "restore") restore(d);
-		else if (d.home === "close") close(d);
-		else vanish(d);
+		else leave(d);
 	}
 	/** Whole-Deck swipe: the held Card and its Deck fly together. */
 	function sweepByDrag(d: Drag<S>) {
