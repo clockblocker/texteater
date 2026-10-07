@@ -70,7 +70,7 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 ): PaginatedNoteLoader<Note> {
 	let revision = 0;
 	let loadPage = initialLoadPage;
-	let seedKey = paginationSeedKey(initialNote);
+	let seedKey = paginationOf(initialNote).seedKey(initialNote);
 	let snapshot = initialSnapshot(initialNote);
 	const listeners = new Set<() => void>();
 	const publish = (next: PaginatedNoteSnapshot<Note>) => {
@@ -86,7 +86,8 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 		},
 		refresh(note, nextLoadPage = loadPage) {
 			loadPage = nextLoadPage;
-			const nextSeedKey = paginationSeedKey(note);
+			const pagination = paginationOf(note);
+			const nextSeedKey = pagination.seedKey(note);
 			if (!sameNote(snapshot.note, note) || nextSeedKey !== seedKey) {
 				revision += 1;
 				seedKey = nextSeedKey;
@@ -95,14 +96,15 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 			}
 			publish({
 				...snapshot,
-				note: rebaseNote(snapshot.note, note),
+				note: pagination.rebase(snapshot.note, note),
 			});
 		},
 		async loadMore() {
 			if (!snapshot.hasMore || snapshot.isLoading) return;
 			const requestedRevision = revision;
 			const requestedNote = snapshot.note;
-			const cursor = continuation(requestedNote).cursor;
+			const pagination = paginationOf(requestedNote);
+			const cursor = pagination.continuation(requestedNote).cursor;
 			publish({ ...snapshot, isLoading: true, error: null });
 			try {
 				const next = await loadPage(cursor);
@@ -111,10 +113,10 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 					publish({ ...snapshot, hasMore: false });
 					return;
 				}
-				const merged = mergeNotePage(requestedNote, next);
+				const merged = pagination.merge(requestedNote, next);
 				publish({
 					note: merged,
-					hasMore: !continuation(merged).isDone,
+					hasMore: !pagination.continuation(merged).isDone,
 					isLoading: snapshot.isLoading,
 					error: null,
 				});
@@ -124,7 +126,7 @@ export function createPaginatedNoteLoader<Note extends PaginatedNote>(
 					...snapshot,
 					error: visitorErrorMessage(
 						cause,
-						defaultFailureMessage(requestedNote),
+						pagination.failureMessage,
 					),
 				});
 			} finally {
@@ -179,126 +181,65 @@ function initialSnapshot<Note extends PaginatedNote>(
 ): PaginatedNoteSnapshot<Note> {
 	return {
 		note,
-		hasMore: !continuation(note).isDone,
+		hasMore: !paginationOf(note).continuation(note).isDone,
 		isLoading: false,
 		error: null,
 	};
 }
 
-function continuation(note: PaginatedNote): {
-	readonly cursor: string;
-	readonly isDone: boolean;
-} {
-	if (note.kind === "Reading") {
-		return {
-			cursor: note.sourceContexts.continueCursor,
-			isDone: note.sourceContexts.isDone,
-		};
-	}
-	if (note.kind === "Shadow") {
-		return {
-			cursor: note.references.continueCursor,
-			isDone: note.references.isDone,
-		};
-	}
-	if (note.kind === "Surface") {
-		return {
-			cursor: note.continueCursor,
-			isDone: note.isDone,
-		};
-	}
-	return {
-		cursor: note.connections.continueCursor,
-		isDone: note.connections.isDone,
-	};
-}
-
-function sameNote(current: PaginatedNote, next: PaginatedNote): boolean {
-	if (current.kind !== next.kind) return false;
-	if (current.kind === "Reading") {
-		return (
-			next.kind === "Reading" &&
-			next.target.readingId === current.target.readingId
-		);
-	}
-	if (current.kind === "Shadow") {
-		return (
-			next.kind === "Shadow" &&
-			next.target.shadowId === current.target.shadowId
-		);
-	}
-	if (current.kind === "Surface") {
-		return (
-			next.kind === "Surface" &&
-			next.target.language === current.target.language &&
-			next.target.normalizedSurface === current.target.normalizedSurface
-		);
-	}
+function sameNote<Note extends PaginatedNote>(
+	current: Note,
+	next: Note,
+): boolean {
 	return (
-		next.kind === "Lemma" && next.target.lemmaId === current.target.lemmaId
+		current.kind === next.kind &&
+		paginationOf(current).sameTarget(current, next)
 	);
 }
 
-function paginationSeedKey(note: PaginatedNote): string {
-	if (note.kind === "Reading") {
-		return JSON.stringify([
-			note.sourceContexts.page.map(({ attestationId }) => attestationId),
-			note.sourceContexts.continueCursor,
-			note.sourceContexts.isDone,
-		]);
-	}
-	if (note.kind === "Shadow") {
-		return JSON.stringify([
-			note.references.page,
-			note.references.continueCursor,
-			note.references.isDone,
-		]);
-	}
-	if (note.kind === "Surface") {
-		return JSON.stringify([
-			note.analyses.map(({ analysisKey }) => analysisKey),
-			note.continueCursor,
-			note.isDone,
-		]);
-	}
-	return JSON.stringify([
-		note.connections,
-		note.connections.continueCursor,
-		note.connections.isDone,
-	]);
-}
+type NoteByKind = {
+	[K in PaginatedNote["kind"]]: Extract<PaginatedNote, { readonly kind: K }>;
+};
 
-function rebaseNote<Note extends PaginatedNote>(
-	current: Note,
-	latest: Note,
-): Note {
-	if (current.kind === "Reading" && latest.kind === "Reading") {
-		return { ...latest, sourceContexts: current.sourceContexts } as Note;
-	}
-	if (current.kind === "Shadow" && latest.kind === "Shadow") {
-		return { ...latest, references: current.references } as Note;
-	}
-	if (current.kind === "Surface" && latest.kind === "Surface") {
-		return {
+/** How one Note kind paginates: where its list continues and how pages merge. */
+type Pagination<Note extends PaginatedNote> = {
+	readonly continuation: (note: Note) => {
+		readonly cursor: string;
+		readonly isDone: boolean;
+	};
+	/** Whether both Notes describe the same subject. */
+	readonly sameTarget: (current: Note, next: Note) => boolean;
+	/** Changes whenever the server reseeds the first page. */
+	readonly seedKey: (note: Note) => string;
+	/** Takes the latest body while keeping the pages already loaded. */
+	readonly rebase: (current: Note, latest: Note) => Note;
+	readonly merge: (current: Note, page: NotePage<Note>) => Note;
+	readonly failureMessage: string;
+};
+
+const PAGINATION: {
+	readonly [K in keyof NoteByKind]: Pagination<NoteByKind[K]>;
+} = {
+	Reading: {
+		continuation: (note) => ({
+			cursor: note.sourceContexts.continueCursor,
+			isDone: note.sourceContexts.isDone,
+		}),
+		sameTarget: (current, next) =>
+			next.target.readingId === current.target.readingId,
+		seedKey: (note) =>
+			JSON.stringify([
+				note.sourceContexts.page.map(
+					({ attestationId }) => attestationId,
+				),
+				note.sourceContexts.continueCursor,
+				note.sourceContexts.isDone,
+			]),
+		rebase: (current, latest) => ({
 			...latest,
-			analyses: current.analyses,
-			continueCursor: current.continueCursor,
-			isDone: current.isDone,
-		} as Note;
-	}
-	if (current.kind === "Lemma" && latest.kind === "Lemma") {
-		return { ...latest, connections: current.connections } as Note;
-	}
-	throw new Error("Paginated Note refresh must describe the same subject.");
-}
-
-function mergeNotePage<Note extends PaginatedNote>(
-	current: Note,
-	pageValue: NotePage<Note>,
-): Note {
-	if (current.kind === "Reading") {
-		const next = pageValue as NotePage<AnyReadingNoteData>;
-		return {
+			sourceContexts: current.sourceContexts,
+		}),
+		merge: (current, next) => ({
 			...current,
 			sourceContexts: {
 				page: deduplicateBy(
@@ -308,11 +249,27 @@ function mergeNotePage<Note extends PaginatedNote>(
 				continueCursor: next.continueCursor,
 				isDone: next.isDone,
 			},
-		} as Note;
-	}
-	if (current.kind === "Shadow") {
-		const next = pageValue as NotePage<ShadowNoteData>;
-		return {
+		}),
+		failureMessage: "Source Contexts could not be loaded.",
+	},
+	Shadow: {
+		continuation: (note) => ({
+			cursor: note.references.continueCursor,
+			isDone: note.references.isDone,
+		}),
+		sameTarget: (current, next) =>
+			next.target.shadowId === current.target.shadowId,
+		seedKey: (note) =>
+			JSON.stringify([
+				note.references.page,
+				note.references.continueCursor,
+				note.references.isDone,
+			]),
+		rebase: (current, latest) => ({
+			...latest,
+			references: current.references,
+		}),
+		merge: (current, next) => ({
 			...current,
 			references: {
 				page: mergeReferrers([
@@ -322,11 +279,30 @@ function mergeNotePage<Note extends PaginatedNote>(
 				continueCursor: next.continueCursor,
 				isDone: next.isDone,
 			},
-		} as Note;
-	}
-	if (current.kind === "Surface") {
-		const next = pageValue as NotePage<NoteDataFor<"Surface">>;
-		return {
+		}),
+		failureMessage: "Shadow references could not be loaded.",
+	},
+	Surface: {
+		continuation: (note) => ({
+			cursor: note.continueCursor,
+			isDone: note.isDone,
+		}),
+		sameTarget: (current, next) =>
+			next.target.language === current.target.language &&
+			next.target.normalizedSurface === current.target.normalizedSurface,
+		seedKey: (note) =>
+			JSON.stringify([
+				note.analyses.map(({ analysisKey }) => analysisKey),
+				note.continueCursor,
+				note.isDone,
+			]),
+		rebase: (current, latest) => ({
+			...latest,
+			analyses: current.analyses,
+			continueCursor: current.continueCursor,
+			isDone: current.isDone,
+		}),
+		merge: (current, next) => ({
 			...current,
 			analyses: deduplicateBy(
 				[...current.analyses, ...next.analyses],
@@ -334,29 +310,59 @@ function mergeNotePage<Note extends PaginatedNote>(
 			),
 			continueCursor: next.continueCursor,
 			isDone: next.isDone,
-		} as Note;
-	}
-	const next = pageValue as NotePage<NoteDataFor<"Lemma">>;
-	const connections = (current as NoteDataFor<"Lemma">).connections;
-	return {
-		...current,
-		connections: {
-			surfaces: deduplicateBy(
-				[...connections.surfaces, ...next.surfaces],
-				(value) => value.surfaceId,
-			),
-			readings: deduplicateBy(
-				[...connections.readings, ...next.readings],
-				(value) => value.readingId,
-			),
-			sameWrittenForm: deduplicateBy(
-				[...connections.sameWrittenForm, ...next.sameWrittenForm],
-				(value) => value.lemmaId,
-			),
-			continueCursor: next.continueCursor,
-			isDone: next.isDone,
-		},
-	} as Note;
+		}),
+		failureMessage: "Surface analyses could not be loaded.",
+	},
+	Lemma: {
+		continuation: (note) => ({
+			cursor: note.connections.continueCursor,
+			isDone: note.connections.isDone,
+		}),
+		sameTarget: (current, next) =>
+			next.target.lemmaId === current.target.lemmaId,
+		seedKey: (note) =>
+			JSON.stringify([
+				note.connections,
+				note.connections.continueCursor,
+				note.connections.isDone,
+			]),
+		rebase: (current, latest) => ({
+			...latest,
+			connections: current.connections,
+		}),
+		merge: (current, next) => ({
+			...current,
+			connections: {
+				surfaces: deduplicateBy(
+					[...current.connections.surfaces, ...next.surfaces],
+					(value) => value.surfaceId,
+				),
+				readings: deduplicateBy(
+					[...current.connections.readings, ...next.readings],
+					(value) => value.readingId,
+				),
+				sameWrittenForm: deduplicateBy(
+					[
+						...current.connections.sameWrittenForm,
+						...next.sameWrittenForm,
+					],
+					(value) => value.lemmaId,
+				),
+				continueCursor: next.continueCursor,
+				isDone: next.isDone,
+			},
+		}),
+		failureMessage: "Route connections could not be loaded.",
+	},
+};
+
+function paginationOf<Note extends PaginatedNote>(
+	note: Note,
+): Pagination<Note> {
+	// TypeScript cannot relate a generic Note to the entry its own `kind`
+	// selects (correlated unions, microsoft/TypeScript#47109). Each entry is
+	// checked against its kind above, so this is the module's one cast.
+	return PAGINATION[note.kind] as unknown as Pagination<Note>;
 }
 
 function mergeReferrers(
@@ -395,14 +401,4 @@ function deduplicateBy<Value>(
 		seen.add(identity);
 		return true;
 	});
-}
-
-function defaultFailureMessage(note: PaginatedNote): string {
-	return note.kind === "Reading"
-		? "Source Contexts could not be loaded."
-		: note.kind === "Shadow"
-			? "Shadow references could not be loaded."
-			: note.kind === "Surface"
-				? "Surface analyses could not be loaded."
-				: "Route connections could not be loaded.";
 }
