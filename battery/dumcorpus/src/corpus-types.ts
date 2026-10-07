@@ -37,8 +37,11 @@ export interface Segment {
 	surface?: string;
 }
 
-/** A target's route: its language, Family and Kind. */
-export type SpecRoute = Pick<Dumling.UnitRoute, "language" | "family" | "kind">;
+/**
+ * A target's route: its language, Family and Kind, kept together so only a
+ * route Dumling has type-checks.
+ */
+export type SpecRoute = Dumling.LemmaRoute;
 
 /**
  * One target's Segmentation: the Segment each of its members is, in sentence

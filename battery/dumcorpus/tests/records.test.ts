@@ -81,7 +81,10 @@ describe("the corpus", () => {
 			for (const target of record.targets) {
 				const { language, family, kind } =
 					target.attestation.surface.lemma;
-				expect(target.route).toEqual({ language, family, kind });
+				// Widened, since destructuring the Lemma uncouples its route.
+				const route: Record<"language" | "family" | "kind", string> =
+					target.route;
+				expect(route).toEqual({ language, family, kind });
 			}
 	});
 

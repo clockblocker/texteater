@@ -1,8 +1,20 @@
+import type * as Dumling from "dumling/types";
 import type { Rule, SpecRoute } from "../corpus-types.js";
 
-const lexeme = (...kinds: SpecRoute["kind"][]): SpecRoute[] =>
+type DeRoute<F extends Dumling.Family<"de">> = Extract<
+	SpecRoute,
+	{ language: "de"; family: F }
+>;
+
+/** German Lexeme routes, one per Kind. */
+export const lexeme = (
+	...kinds: Dumling.Kind<"de", "Lexeme">[]
+): DeRoute<"Lexeme">[] =>
 	kinds.map((kind) => ({ language: "de", family: "Lexeme", kind }));
-const locution = (...kinds: SpecRoute["kind"][]): SpecRoute[] =>
+/** German Locution routes, one per Kind. */
+export const locution = (
+	...kinds: Dumling.Kind<"de", "Locution">[]
+): DeRoute<"Locution">[] =>
 	kinds.map((kind) => ({ language: "de", family: "Locution", kind }));
 const everyLocution = locution(
 	"VERB",
