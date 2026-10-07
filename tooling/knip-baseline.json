@@ -1,12 +1,4 @@
 {
-	".": [
-		"package.json: devDependencies @clockblocker/ts7-plugin-sort-import-suggestions",
-		"tooling/dum-entrypoint-rss/inventory.ts: types ExemptEntryPoint",
-		"tooling/dum-runtime-verification/differential-targets.ts: unlisted zod",
-		"tooling/dum-runtime-verification/differential.ts: types DifferentialMismatch",
-		"tooling/lib/manifest-policy.ts: exports governedDependencies",
-		"tooling/lib/process.ts: exports runCommand"
-	],
 	"app/tf-demo": [
 		"app/tf-demo/server/linguisticOrchestration.ts: types CommitProgress",
 		"app/tf-demo/server/linguisticOrchestration.ts: types TfDemoOrchestrator",

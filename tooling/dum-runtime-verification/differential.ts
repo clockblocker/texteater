@@ -18,7 +18,7 @@ export interface DifferentialTarget<Output> {
 	readonly representativeValues: readonly unknown[];
 }
 
-export interface DifferentialMismatch {
+interface DifferentialMismatch {
 	readonly index: number;
 	readonly kind:
 		| "acceptance"

@@ -8,7 +8,7 @@ export type OperationalEntryPoint = {
 	readonly specifier: string;
 };
 
-export type ExemptEntryPoint = {
+type ExemptEntryPoint = {
 	readonly classification:
 		| "development-support"
 		| "metadata"

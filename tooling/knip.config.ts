@@ -130,6 +130,9 @@ export default {
 				"node",
 				// One hoisted copy for every workspace (#868).
 				"effect",
+				// The maintainer's TS7 editor plugin. No tracked tsconfig lists it;
+				// the editor loads it from the root node_modules.
+				"@clockblocker/ts7-plugin-sort-import-suggestions",
 			],
 		},
 		...Object.fromEntries(

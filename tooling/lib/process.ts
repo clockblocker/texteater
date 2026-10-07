@@ -12,7 +12,7 @@ export interface CommandResult {
 
 export type CommandRunner = (command: Command) => Promise<number>;
 
-export async function runCommand(command: Command): Promise<number> {
+async function runCommand(command: Command): Promise<number> {
 	const child = Bun.spawn(command.args, {
 		cwd: command.cwd,
 		env: { ...process.env, ...command.env },
