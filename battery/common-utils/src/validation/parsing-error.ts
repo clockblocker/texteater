@@ -2,7 +2,7 @@ type LooseAutocomplete<T extends string> = T | (string & {});
 
 export type ParsingPath = PropertyKey[];
 
-export type InvalidTypeExpected = LooseAutocomplete<
+type InvalidTypeExpected = LooseAutocomplete<
 	| "string"
 	| "number"
 	| "int"
@@ -26,20 +26,20 @@ export type InvalidTypeExpected = LooseAutocomplete<
 	| "function"
 >;
 
-export interface ParsingIssueBase {
+interface ParsingIssueBase {
 	readonly code: string;
 	readonly path: ParsingPath;
 	readonly message: string;
 }
 
-export interface InvalidTypeIssue extends ParsingIssueBase {
+interface InvalidTypeIssue extends ParsingIssueBase {
 	readonly code: "invalid_type";
 	readonly expected: InvalidTypeExpected;
 	readonly format?: string;
 	readonly received?: string;
 }
 
-export interface TooBigIssue extends ParsingIssueBase {
+interface TooBigIssue extends ParsingIssueBase {
 	readonly code: "too_big";
 	readonly origin: string;
 	readonly maximum: number | bigint;
@@ -48,7 +48,7 @@ export interface TooBigIssue extends ParsingIssueBase {
 	readonly note?: string;
 }
 
-export interface TooSmallIssue extends ParsingIssueBase {
+interface TooSmallIssue extends ParsingIssueBase {
 	readonly code: "too_small";
 	readonly origin: string;
 	readonly minimum: number | bigint;
@@ -57,7 +57,7 @@ export interface TooSmallIssue extends ParsingIssueBase {
 	readonly note?: string;
 }
 
-export interface InvalidFormatIssue extends ParsingIssueBase {
+interface InvalidFormatIssue extends ParsingIssueBase {
 	readonly code: "invalid_format";
 	readonly origin?: string;
 	readonly format: string;
@@ -68,17 +68,17 @@ export interface InvalidFormatIssue extends ParsingIssueBase {
 	readonly includes?: string;
 }
 
-export interface NotMultipleOfIssue extends ParsingIssueBase {
+interface NotMultipleOfIssue extends ParsingIssueBase {
 	readonly code: "not_multiple_of";
 	readonly divisor: number;
 }
 
-export interface UnrecognizedKeysIssue extends ParsingIssueBase {
+interface UnrecognizedKeysIssue extends ParsingIssueBase {
 	readonly code: "unrecognized_keys";
 	readonly keys: string[];
 }
 
-export interface InvalidUnionNoMatchIssue extends ParsingIssueBase {
+interface InvalidUnionNoMatchIssue extends ParsingIssueBase {
 	readonly code: "invalid_union";
 	readonly errors: ParsingIssue[][];
 	readonly discriminator?: string;
@@ -87,7 +87,7 @@ export interface InvalidUnionNoMatchIssue extends ParsingIssueBase {
 	readonly inclusive?: true;
 }
 
-export interface InvalidUnionMultipleMatchIssue extends ParsingIssueBase {
+interface InvalidUnionMultipleMatchIssue extends ParsingIssueBase {
 	readonly code: "invalid_union";
 	readonly errors: [];
 	readonly discriminator?: string;
@@ -95,34 +95,30 @@ export interface InvalidUnionMultipleMatchIssue extends ParsingIssueBase {
 	readonly inclusive: false;
 }
 
-export type InvalidUnionIssue =
-	| InvalidUnionMultipleMatchIssue
-	| InvalidUnionNoMatchIssue;
-
-export interface InvalidKeyIssue extends ParsingIssueBase {
+interface InvalidKeyIssue extends ParsingIssueBase {
 	readonly code: "invalid_key";
 	readonly origin: "map" | "record";
 	readonly issues: ParsingIssue[];
 }
 
-export interface InvalidElementIssue extends ParsingIssueBase {
+interface InvalidElementIssue extends ParsingIssueBase {
 	readonly code: "invalid_element";
 	readonly origin: "map" | "set";
 	readonly key: unknown;
 	readonly issues: ParsingIssue[];
 }
 
-export interface InvalidValueIssue extends ParsingIssueBase {
+interface InvalidValueIssue extends ParsingIssueBase {
 	readonly code: "invalid_value";
 	readonly values: PrimitiveValue[];
 }
 
-export interface CustomIssue extends ParsingIssueBase {
+interface CustomIssue extends ParsingIssueBase {
 	readonly code: "custom";
 	readonly params?: Record<string, unknown>;
 }
 
-export type PrimitiveValue =
+type PrimitiveValue =
 	| bigint
 	| boolean
 	| null

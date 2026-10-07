@@ -1,13 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
 import {
-	type Constraint,
 	ParsingError,
 	type ParsingIssue,
 	parseValidationArtifact,
 	type ValidationArtifact,
 	type ValidationOperations,
 } from "../../src/validation";
+import type { Constraint } from "../../src/validation/validation-artifact.js";
 
 const canonicalProfileSchema = z
 	.object({

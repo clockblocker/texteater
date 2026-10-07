@@ -5,7 +5,7 @@ import {
 	type ValidationOperations,
 } from "./validation-artifact.js";
 
-export const VALIDATION_PROTOCOL_VERSION = 1;
+const VALIDATION_PROTOCOL_VERSION = 1;
 
 /** An immutable provider handle. Rule tables are private to the runtime. */
 export interface CompiledValidationRegistry<Root extends string = string> {

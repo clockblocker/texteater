@@ -14,8 +14,6 @@ type ZodValidationSemanticOperationConstruct =
 	| "contextual"
 	| "overwrite"
 	| "transform";
-export type ZodValidationOperationConstruct =
-	ZodValidationSemanticOperationConstruct;
 
 export type ZodValidationOperationRegistration =
 	| Readonly<{
@@ -75,7 +73,7 @@ export type ZodValidationArtifactRegistry<
 	version: 1;
 }>;
 
-export type CompileZodValidationArtifactsOptions<
+type CompileZodValidationArtifactsOptions<
 	Schemas extends Readonly<Record<string, z.ZodType>>,
 > = Readonly<{
 	operations: readonly ZodValidationOperationRegistration[];

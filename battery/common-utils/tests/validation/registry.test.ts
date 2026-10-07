@@ -6,7 +6,10 @@ import {
 	parseCompiledValidation,
 	parseValidationArtifact,
 } from "../../src/validation";
-import { type LinkInput, linkRegistries } from "../../src/validation-compiler";
+import {
+	type LinkInput,
+	linkRegistries,
+} from "../../src/validation-compiler/link-registries.js";
 
 const fixture = (
 	definitions: LinkInput["definitions"],

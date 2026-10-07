@@ -22,7 +22,7 @@ export type ArrayConstraintCheck =
 
 export type ArtifactPrimitive = boolean | null | number | string;
 
-export type ObjectUnknownKeyPolicy = "passthrough" | "strict" | "strip";
+type ObjectUnknownKeyPolicy = "passthrough" | "strict" | "strip";
 
 export type ValidationEffect =
 	| readonly ["array", ArrayConstraintCheck]
@@ -31,7 +31,7 @@ export type ValidationEffect =
 	| readonly ["regex", string, string]
 	| readonly ["string", StringConstraintCheck];
 
-export type ValidationOperationResult = Readonly<{
+type ValidationOperationResult = Readonly<{
 	issues?: readonly ParsingIssue[];
 	value: unknown;
 }>;
@@ -64,7 +64,7 @@ export type Constraint =
 	| readonly ["union", readonly Constraint[]]
 	| readonly ["unknown"];
 
-export type ObjectConstraintShape = Readonly<Record<string, Constraint>>;
+type ObjectConstraintShape = Readonly<Record<string, Constraint>>;
 
 export interface ValidationArtifact<Output = unknown> {
 	readonly version: 1;

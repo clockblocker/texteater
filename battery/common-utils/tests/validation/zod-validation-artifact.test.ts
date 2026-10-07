@@ -1,16 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import { z } from "zod";
 import {
-	type Constraint,
 	ParsingError,
 	parseValidationArtifact,
 	type ValidationArtifact,
 	type ValidationOperations,
 } from "../../src/validation";
-import {
-	compileZodValidationArtifacts,
-	ZodValidationCompilationError,
-} from "../../src/validation-compiler";
+import type { Constraint } from "../../src/validation/validation-artifact.js";
+import { compileZodValidationArtifacts } from "../../src/validation-compiler";
+import { ZodValidationCompilationError } from "../../src/validation-compiler/zod-validation-artifact.js";
 
 function normalizeNfc(value: string): string {
 	return value.normalize("NFC");
