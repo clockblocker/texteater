@@ -4,7 +4,6 @@ import { api, internal } from "../convex/_generated/api";
 import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import {
 	effectiveRelationPublicationPolicy,
-	GENERATED_SEMANTIC_RELATION_POLICY,
 	generatedKnowledgeAllowedForPublication,
 	RELATION_PUBLICATION_FINGERPRINTS,
 	type ReviewedRelationVerdictArtifact,
@@ -81,10 +80,6 @@ const sourceReading = {
 } as const;
 
 test("only an explicitly signed, fingerprint-matched promote verdict enters the allowlist", () => {
-	expect(GENERATED_SEMANTIC_RELATION_POLICY).toMatchObject({
-		productionRequest: "reviewedAllowlist",
-		productionPublication: "reviewedAllowlist",
-	});
 	expect(effectiveRelationPublicationPolicy()).toMatchObject({
 		qualifiedKinds: [],
 		invalidationReasons: ["missingReviewedVerdictArtifact"],

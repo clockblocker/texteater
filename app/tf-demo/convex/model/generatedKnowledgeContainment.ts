@@ -30,9 +30,7 @@ export type ReviewedRelationVerdictArtifact = Readonly<{
 
 /**
  * No generation contract is fingerprinted while Knowledge generation is
- * rebuilt (#701): its producer refuses every run. The retained #193 verdict
- * fingerprinted LegacyDumgen and could never qualify a relation kind; it left
- * with its compiler (#850). A reviewed verdict for the rebuilt pipeline must
+ * rebuilt (#701): its producer refuses every run, so a reviewed verdict must
  * bring its own fingerprints.
  */
 export const RELATION_PUBLICATION_FINGERPRINTS = Object.freeze({
@@ -46,14 +44,6 @@ export const RELATION_PUBLICATION_FINGERPRINTS = Object.freeze({
 /** No reviewed verdict qualifies the current pipeline, so no relation kind is promoted. */
 export const REVIEWED_RELATION_VERDICT: ReviewedRelationVerdictArtifact | null =
 	null;
-
-export const GENERATED_SEMANTIC_RELATION_POLICY = Object.freeze({
-	productionRequest: "reviewedAllowlist",
-	productionPublication: "reviewedAllowlist",
-	rollback: "serverSideCommitGate",
-	verdictIssue: 193,
-	publicationIssue: 194,
-} as const);
 
 export type EffectiveRelationPublicationPolicy = Readonly<{
 	artifactPath: string | null;
@@ -134,14 +124,6 @@ export function effectiveRelationPublicationPolicy(
 		),
 		invalidationReasons: [],
 	};
-}
-
-/** Remove every generated relation request while retaining base Knowledge. */
-export function withoutGeneratedSemanticRelationRequest<
-	TRequest extends { readonly semanticRelations?: unknown },
->(request: TRequest): Omit<TRequest, "semanticRelations"> {
-	const { semanticRelations: _semanticRelations, ...baseRequest } = request;
-	return baseRequest;
 }
 
 export function requestedRelationKinds(request: {

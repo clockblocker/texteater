@@ -157,9 +157,9 @@ export type GenerationInput = Infer<typeof generationInputValidator>;
 /**
  * Claims one generation run and returns everything the model run needs.
  *
- * Marking the attempt Running, loading the occurrence, and reading the
- * relation-publication authorization used to be three hops; the action pays
- * one and receives one consistent snapshot.
+ * Marks the attempt Running, loads the occurrence, and reads the
+ * relation-publication authorization, returning one consistent snapshot in
+ * one hop.
  */
 export const begin = internalMutation({
 	args: { attemptKey: v.string() },

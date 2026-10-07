@@ -14,7 +14,6 @@ import { defaultKnowledgeSettings } from "../convex/knowledgeSettings";
 import * as containment from "../convex/model/generatedKnowledgeContainment";
 import {
 	effectiveRelationPublicationPolicy,
-	GENERATED_SEMANTIC_RELATION_POLICY,
 	generatedKnowledgeAllowedForPublication,
 	RELATION_PUBLICATION_FINGERPRINTS,
 } from "../convex/model/generatedKnowledgeContainment";
@@ -985,13 +984,6 @@ test("Full is a zero-call cache hit and generation keeps the complete German bas
 });
 
 test("production publication remains empty without a reviewed verdict", () => {
-	expect(GENERATED_SEMANTIC_RELATION_POLICY).toEqual({
-		productionRequest: "reviewedAllowlist",
-		productionPublication: "reviewedAllowlist",
-		rollback: "serverSideCommitGate",
-		verdictIssue: 193,
-		publicationIssue: 194,
-	});
 	expect(effectiveRelationPublicationPolicy()).toMatchObject({
 		artifactPath: null,
 		qualifiedKinds: [],
