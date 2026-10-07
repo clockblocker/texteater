@@ -179,6 +179,7 @@ function strandedAdverbs(nomination: Nomination): Decision {
 	const { pieces } = nomination.sentence;
 	const clauseOf = bracketClauses(nomination);
 	const paired = new Set(
+		// biome-ignore lint/complexity/noFlatMapIdentity: the flatMap drops each pair's kind; .flat() would keep it
 		accepted(nomination)
 			.filter(([, , kind]) => kind === "split-adverb")
 			.flatMap(([left, right]) => [left, right]),
