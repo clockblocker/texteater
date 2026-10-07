@@ -64,11 +64,6 @@ grammar, since any word can fill one. So a listed word is a Lexeme in every
 sentence, and an unlisted one can be a Lexeme in one sentence and Foreign in
 the next. dumcorpus states this as a Rule (ADR 0037).
 
-Amended on 2026-09-29: the test was grammar alone. It could never make a word
-that does not inflect a Lexeme, so interjections and indeclinable adjectives
-came out Foreign even where Duden lists them as German (`lol`, `cringe`).
-Decided on [#729](https://github.com/clockblocker/texteater/issues/729).
-
 **A Foreign unit is one word or a lexicalized chunk.** A phrase fixed in its
 source language is one unit: `by the way`, `c'est la vie`, `off-grid`. Free
 syntax in the other language is split: `very good` is `very` and `good`, and
@@ -97,9 +92,6 @@ after *wie im Englischen* and one everywhere else. A loan (`versus`,
 `circa`), a foreign name (`New York`, `Kyjiw`) and a glyph from another
 script (`nº`, `※`, `٪`) keep their routes and lose the flag.
 
-Amended on 2026-10-01: ADR 0045 first left the feature in place, undecided.
-Decided on [#729](https://github.com/clockblocker/texteater/issues/729).
-
 ## Considered Options
 
 - **Lexeme/X at click time as well, with intake's description.** Rejected: X
@@ -115,31 +107,22 @@ Decided on [#729](https://github.com/clockblocker/texteater/issues/729).
 - **Emoji Descriptions on Foreign Readings.** Rejected: splitting senses of a
   word from another language asks for judgments the text cannot support, and
   the Translation already carries every sense.
-- **Loans by grammar alone.** Chosen first, then rejected on 2026-09-29: a
-  word that never inflects shows no grammar, so `lol` and `cringe` stayed
-  Foreign although Duden lists them.
+- **Loans by grammar alone.** Rejected: a word that never inflects shows no
+  grammar, so interjections and indeclinable adjectives such as `lol` and
+  `cringe` would come out Foreign although Duden lists them.
 - **Loans by dictionary alone.** Rejected: dictionaries lag behind usage, and
   `geyeetet` already shows that `yeeten` is German before any dictionary lists
   it.
 - **UD `foreign` on Lexeme routes, for a listed word the sentence frames as
-  foreign** (`random, wie im Englischen`). Left open at first, rejected on
-  2026-10-01: as a Core Feature it splits one dictionary word into two
-  Lemmas, and the Foreign Family already says what is foreign.
+  foreign** (`random, wie im Englischen`). Rejected: as a Core Feature it
+  splits one dictionary word into two Lemmas, and the Foreign Family already
+  says what is foreign.
 
 ## Consequences
 
-- Amends [ADR 0002](./0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md)
+- A Foreign Reading is the one exception to
+  [ADR 0002](./0002-lemma-is-grammatical-identity-and-reading-is-semantic-identity.md)
   and [ADR 0031](./0031-resolve-readings-through-the-emoji-description-alone.md):
-  a Foreign Reading has no Emoji Description, and resolution has nothing to
-  choose between.
-- The UD `foreign` feature is retired from Dumling (amended 2026-10-01).
-  Dumgen's grammar stage still asks it for DET and PRON
-  ([#687](https://github.com/clockblocker/texteater/issues/687)) and stays
-  red until that stage is rewritten.
+  it has no Emoji Description, and resolution has nothing to choose between.
 - dumcorpus's X records are reshaped by these rules and stay Draft until
   reviewed.
-- Dumgen's intake still offers `Lexeme/X` and has no Foreign route. The
-  segmenter rewrite fixes that ([#730](https://github.com/clockblocker/texteater/issues/730)).
-- Decided in [#622](https://github.com/clockblocker/texteater/issues/622) on
-  [#595](https://github.com/clockblocker/texteater/issues/595); implemented in
-  [#729](https://github.com/clockblocker/texteater/issues/729).
