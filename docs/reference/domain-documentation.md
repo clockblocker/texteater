@@ -11,7 +11,12 @@ Before domain work:
 
 A glossary gives a high-level overview of each term and links the ADR that
 holds the term's precise definition, edge cases and examples. Use its
-canonical terms and avoid the rejected synonyms it names. Record
+canonical terms and avoid the rejected synonyms it names.
+
+Keep each glossary entry to a short definition, its `_Avoid_` aliases, its
+relationships to other terms, and links to the ADRs that decide it. Concrete
+definitions, edge cases, examples and rationale belong in ADRs, or in
+Dumcorpus Rules and records; implementation detail belongs in code. Record
 implementation decisions in ADRs only when they are hard to reverse,
 surprising without context, and the result of a real trade-off. If a needed
 file does not exist, proceed; create glossaries and ADR directories only when
