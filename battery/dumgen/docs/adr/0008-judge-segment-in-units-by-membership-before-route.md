@@ -41,13 +41,12 @@ acceptable miss. Other route errors still count.
 - Gold work that only settles a route between these Kinds does not block
   `segment.inUnits` evaluation. Gold work that decides membership does.
 - A unit normally carries one route. In a borderline case it may carry a few
-  route variants, and the click picks one
-  ([ADR 0007](./0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md),
-  amended 2026-09-30). A route counts as right when gold is among the
-  variants. Evaluation also reports how often units carry variants and how
-  many, so that returning variants can't replace deciding. The closed-class
-  identity rule stands.
+  route variants, its route first, and a click resolves only that first route
+  ([ADR 0007](./0007-segment-text-into-biggest-units-and-break-multiword-lemmas-down-apart.md)).
+  A route counts as right when gold is among the variants. Evaluation also
+  reports how often units carry variants and how many, so that returning
+  variants can't replace deciding. The closed-class identity rule stands.
 
-Decided by the user on 2026-09-30 during the segmentation rewrite
-([#701](https://github.com/clockblocker/texteater/issues/701)), on the map
+This is the user's ruling on the segmentation rewrite
+([#701](https://github.com/clockblocker/texteater/issues/701)), map
 [#595](https://github.com/clockblocker/texteater/issues/595).

@@ -6,34 +6,31 @@ status: accepted
 
 A Reading's Knowledge definition becomes a Sentence the Visitor can click
 like any Sentence in a Text. tf-demo stores it as a hidden Definition Text:
-one Text row with a Definition origin, one Sentence, and its Segments, kept
-at most once per Reading behind a state row. Segment Selection, Attestation
-Membership, Visitor Encounters, and Analysis Stripping all work on it
-unchanged, and the Library never lists it. Definition segmentation trusts the
-generator's target language and skips intake; it is persisted once and never
-recomputed, because a language's segmenter may be a non-deterministic model
-call.
+one Text row with a Definition origin, one Sentence, and its Segments and
+biggest units, kept at most once per Reading behind a state row. Segment
+Selection, Attestation Membership, Visitor Encounters, and Analysis Stripping
+all work on it unchanged, and the Library never lists it.
 
-Amended 2026-10-02 ([#847](https://github.com/clockblocker/texteater/issues/847)):
-the segmenter is Dumgen's `segment.inUnits`, given the whole definition as
-one German Sentence with no `splitText`. The Definition Text stores that
-Sentence's Segments and its biggest units, as intake stores a Visitor
-Text's Sentences. A Reading in another language gets no Definition Text.
+Definition segmentation trusts the generator's target language and skips
+intake. Dumgen's `segment.inUnits` takes the whole definition as one German
+Sentence, with no `splitText`, and the Definition Text stores that Sentence's
+Segments and biggest units as intake stores a Visitor Text's Sentences. A
+Reading in another language gets no Definition Text. The segmentation is
+persisted once and never recomputed, because a language's segmenter may be a
+non-deterministic model call.
 
-Amended 2026-10-04 ([#484](https://github.com/clockblocker/texteater/issues/484)):
-a Source Context from a definition follows the rule every Source Context
-follows. Go to source pushes the Definition Text as a Cover scrolled to the
+A Source Context from a definition follows the rule every Source Context
+follows: Go to source pushes the Definition Text as a Cover scrolled to the
 Sentence with the Segment lit
 ([tf-demo ADR 0008](./0008-give-every-pane-a-ground-beneath-its-covers.md)).
-It no longer opens the defining Reading Note on its Definition block.
 
 A Corrected definition writes a new Definition Text after stripping and
 deleting the previous one, and a Retracted definition strips and deletes with
 no successor, so ADR 0001's rule that only stripping and reset end
 Attestations still holds. The defined Reading is protected from the orphan
 pruning that stripping performs, so replacing its own definition never
-deletes its Knowledge. Existing definitions receive their Texts through a
-one-off migration rather than on demand.
+deletes its Knowledge. Writing a definition schedules its Definition Text;
+nothing builds one on demand when a Note first opens.
 
 ## Considered Options
 
@@ -48,8 +45,6 @@ one-off migration rather than on demand.
 
 - The Definition block is loaded only when the definition is generated and
   segmented; a permanent segmentation failure shows the bare prose.
-- Go to source from a definition's Source Context pushes its Definition Text
-  as a Cover, like any other Text.
 - A Reading's own Definition Text is excluded from its Source Contexts.
 - Readings that lose their last source inside a stripped definition are
   pruned like any other orphan, and their own Definition Texts are removed
