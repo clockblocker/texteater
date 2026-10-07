@@ -32,18 +32,25 @@ route and the Knowledge Settings leave enabled.
 A target described by language, Family, Kind and Canonical Form, without
 choosing a Lemma's Core Features or an exact Reading. See [ADR 0011].
 
+**Semantic Relation**:
+A direct claim from one Reading to a related Lemma or Reading: Synonym, Near
+Synonym, Antonym, Near Antonym, Hypernym, Holonym or Endonym. See [ADR 0011]
+and [Dumrel ADR 0005].
+_Avoid_: Lexical Relation
+
 **Pending Semantic Relation**:
 A direct relation proposal whose target is a Unit Shadow awaiting downstream
 matching. See [ADR 0012] and [ADR 0020].
 
 **Endonym**:
 A place's own local name, stored on the PROPN Reading that names the place
-from outside. See [ADR 0012].
+from outside. See [Dumrel ADR 0005].
 _Avoid_: native name, local-name field
 
 **Exonym**:
 The name speakers of a Reading's language use for a place outside their area.
-It is projected from the Endonym, never stored. See [ADR 0012].
+It is projected from the Endonym, never stored. See [ADR 0012] and
+[Dumrel ADR 0005].
 _Avoid_: foreign name, historical name
 
 **Governed Preposition**:
@@ -90,4 +97,5 @@ _Avoid_: discourseFormulaRole, DiscourseFormula
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
 [Dumrel ADR 0001]: ./docs/adr/0001-keep-dumrel-ownerless-and-pure.md
+[Dumrel ADR 0005]: ./docs/adr/0005-claim-seven-direct-semantic-relations-only-from-a-dictionary-listing.md
 [Dumcorpus glossary]: ../dumcorpus/GLOSSARY.md
