@@ -17,7 +17,6 @@
  * Folded evaluation cases (#694): existential es gibt also offers geben's
  * giving Reading, and no answer may be one of its rejected descriptions.
  */
-import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { isReviewed, loadSpecRecords } from "dumcorpus";
 import { authoredFor } from "dumcorpus/inventories";
@@ -29,6 +28,7 @@ import type {
 	SegmentedSentence,
 	Unit,
 } from "../../../src/segment/segmented-sentence.js";
+import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
@@ -253,9 +253,6 @@ export function readingCases(
 export const trackedReadingSetsRoot = fileURLToPath(
 	new URL("../../../evidence/resolve-reading/sets/", import.meta.url),
 );
-
-const git = (args: readonly string[], cwd: string) =>
-	execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
 /**
  * Freezes into `root` dev and held-out from today's records. A refreeze keeps the set

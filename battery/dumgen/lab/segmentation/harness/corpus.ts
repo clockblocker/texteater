@@ -10,7 +10,6 @@
  * names each set's current hash. A refreeze adds its sets beside the ones
  * it replaces, so a run is always scored against the set it ran on.
  */
-import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -24,6 +23,7 @@ import {
 	type SegmentInUnitsOutput,
 	segmentInUnits,
 } from "../../evaluation/spec-corpus/segment-in-units.js";
+import { git } from "../../git.js";
 import { hashOf } from "./jev-cache.js";
 
 /** Records the German Rules name as their examples (the guide may quote them). */
@@ -60,9 +60,6 @@ export type LabSet = {
 	readonly hash: string;
 	readonly cases: readonly LabCase[];
 };
-
-const git = (args: readonly string[], cwd: string) =>
-	execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
 /** The tracked frozen sets. */
 export const trackedSetsRoot = join(

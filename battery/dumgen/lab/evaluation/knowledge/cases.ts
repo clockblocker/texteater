@@ -17,7 +17,6 @@
  *
  * The sidecar's exclusions leave every set.
  */
-import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { isReviewed, loadSpecRecords } from "dumcorpus";
@@ -28,6 +27,7 @@ import type * as Dumling from "dumling/types";
 import { selectKnowledge } from "dumrel";
 import type * as Dumrel from "dumrel/types";
 import type { KnowledgeSentence } from "../../../src/knowledge/types.js";
+import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
@@ -385,9 +385,6 @@ export function requestOf(
 export const trackedKnowledgeSetsRoot = fileURLToPath(
 	new URL("../../../evidence/knowledge/sets/", import.meta.url),
 );
-
-const git = (args: readonly string[], cwd: string) =>
-	execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
 /**
  * Freezes into `root` dev, held-out and the spot-check set from today's records. A

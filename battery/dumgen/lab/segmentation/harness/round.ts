@@ -16,7 +16,6 @@
  * refuses to start when they differ, unless it re-pins (`--repin`), and an
  * offline replay reports the difference.
  */
-import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
@@ -24,6 +23,7 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { rules } from "dumcorpus";
 import type { Answer, Answers } from "../../../src/segment/ask.js";
+import { git } from "../../git.js";
 import { hashOf, type Projection, type Projector } from "./jev-cache.js";
 import { isSpend, type LedgerEntry } from "./ledger.js";
 
@@ -185,9 +185,6 @@ async function moduleGraph(entry: string): Promise<Record<string, string>> {
 	return hashes;
 }
 
-const git = (repository: string, args: readonly string[]) =>
-	execFileSync("git", args, { cwd: repository, encoding: "utf8" }).trim();
-
 /** The dumcorpus state the requests would be built from now. */
 export async function currentPin(repository: string): Promise<Pin> {
 	const inventories = hashOf(
@@ -197,20 +194,15 @@ export async function currentPin(repository: string): Promise<Pin> {
 	);
 	const inputs = { inventories, rules: hashOf(rules) };
 	return {
-		dumcorpusCommit: git(repository, [
-			"log",
-			"-1",
-			"--format=%H",
-			"--",
-			"battery/dumcorpus/src",
-		]),
+		dumcorpusCommit: git(
+			["log", "-1", "--format=%H", "--", "battery/dumcorpus/src"],
+			repository,
+		),
 		dumcorpusDirty:
-			git(repository, [
-				"status",
-				"--porcelain",
-				"--",
-				"battery/dumcorpus/src",
-			]).length > 0,
+			git(
+				["status", "--porcelain", "--", "battery/dumcorpus/src"],
+				repository,
+			).length > 0,
 		hash: hashOf(inputs),
 		inputs,
 		at: new Date().toISOString(),

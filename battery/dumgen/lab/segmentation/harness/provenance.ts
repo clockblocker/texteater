@@ -4,12 +4,12 @@
  * `noise` write one, beside the run's outcomes and summary, under
  * `evidence/segment-in-units-lab/runs/<runId>/`.
  */
-import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { authoredRealizations, rules } from "dumcorpus";
+import { gitOutput } from "../../git.js";
 import { hashOf, type TransportRecord } from "./jev-cache.js";
 import type { Pin } from "./round.js";
 
@@ -88,12 +88,8 @@ export function gitState(
 	repository: string,
 	scope: readonly string[],
 ): GitState {
-	const git = (args: readonly string[]) =>
-		execFileSync("git", args, {
-			cwd: repository,
-			encoding: "utf8",
-			maxBuffer: 1 << 28,
-		});
+	const git = (args: readonly string[], okStatuses?: readonly number[]) =>
+		gitOutput(args, repository, okStatuses);
 	const gitHead = git(["rev-parse", "HEAD"]).trim();
 	const dirty = git(["status", "--porcelain", "--", ...scope])
 		.split("\n")
@@ -109,16 +105,10 @@ export function gitState(
 	])
 		.split("\n")
 		.filter(Boolean)
-		.map((path) => {
-			try {
-				return git(["diff", "--no-index", "--", "/dev/null", path]);
-			} catch (error) {
-				// `git diff --no-index` exits 1 when the files differ.
-				const stdout = (error as { stdout?: string }).stdout;
-				if (typeof stdout === "string") return stdout;
-				throw error;
-			}
-		});
+		// `git diff --no-index` exits 1 when the files differ.
+		.map((path) =>
+			git(["diff", "--no-index", "--", "/dev/null", path], [1]),
+		);
 	return { gitHead, dirty, patch: [tracked, ...untracked].join("") };
 }
 

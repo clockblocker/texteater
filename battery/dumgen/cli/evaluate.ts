@@ -60,7 +60,6 @@
  * `--luna-prompt-cache` asks Luna for explicit prompt caching. Production
  * clicks stay synchronous.
  */
-import { execFileSync } from "node:child_process";
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { parseArgs } from "node:util";
@@ -85,6 +84,7 @@ import type {
 } from "../lab/evaluation/resolve-grammar/models.js";
 import type { RoundCost } from "../lab/evaluation/resolve-grammar/pricing.js";
 import type { Splitter } from "../lab/evaluation/split-text.js";
+import { git } from "../lab/git.js";
 import { defaultRunOutputDirectory } from "../lab/run-directory.js";
 import { transportText } from "../lab/segmentation/harness/jev-cache.js";
 import {
@@ -395,11 +395,6 @@ export async function runEvaluationCli(
 		const { run } = evaluated;
 		if (!run) throw Error(`${values.experiment} produced no run`);
 		if (account && evaluated.spend && evaluated.set) {
-			const git = (...args: string[]) =>
-				execFileSync("git", args, {
-					cwd: repository,
-					encoding: "utf8",
-				}).trim();
 			await appendLedger(ledgerPath, {
 				runId: run.manifest.runId,
 				at: new Date().toISOString(),
@@ -412,15 +407,18 @@ export async function runEvaluationCli(
 				setHash: evaluated.set.hash,
 				cases: run.cases.length,
 				repetitions: run.manifest.repetitions ?? 1,
-				gitHead: git("rev-parse", "HEAD"),
+				gitHead: git(["rev-parse", "HEAD"], repository),
 				dirty:
 					git(
-						"status",
-						"--porcelain",
-						"--",
-						"battery/dumgen/src",
-						"battery/dumgen/cli",
-						"battery/dumcorpus/src",
+						[
+							"status",
+							"--porcelain",
+							"--",
+							"battery/dumgen/src",
+							"battery/dumgen/cli",
+							"battery/dumcorpus/src",
+						],
+						repository,
 					).length > 0,
 				model: run.manifest.configurations.judgment.model,
 				...evaluated.spend,

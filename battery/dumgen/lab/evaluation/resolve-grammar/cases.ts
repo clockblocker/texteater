@@ -11,7 +11,6 @@
  * would have stored it (#864): gold units are the headline input. The
  * end-to-end line feeds intake's own units instead.
  */
-import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { isReviewed, loadSpecRecords } from "dumcorpus";
 import type * as Dumcorpus from "dumcorpus/types";
@@ -22,6 +21,7 @@ import type {
 	SegmentedSentence,
 	Unit,
 } from "../../../src/segment/segmented-sentence.js";
+import { git } from "../../git.js";
 import { hashOf } from "../../segmentation/harness/jev-cache.js";
 import { loadFrozenSet, storeFrozenSet } from "../frozen-sets.js";
 import { readSidecar } from "../spec-corpus/gold.js";
@@ -126,9 +126,6 @@ export function grammarCases(
 export const trackedGrammarSetsRoot = fileURLToPath(
 	new URL("../../../evidence/resolve-grammar/sets/", import.meta.url),
 );
-
-const git = (args: readonly string[], cwd: string) =>
-	execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
 /**
  * Freezes dev and held-out from today's records into `root`. A refreeze
