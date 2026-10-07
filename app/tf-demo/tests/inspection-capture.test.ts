@@ -143,11 +143,14 @@ test("without the inspection Tracer, spans keep their inputs and outputs unseria
 test("steps start on the wall clock when Effect's clock drifts from it", async () => {
 	// An Effect clock three hours behind the wall clock that advances 250 ms
 	// on every reading, as a long-lived executor's drifted span clock would.
+	// The base is read once, so a wall-clock tick between two readings
+	// doesn't change the gap between them.
 	const wall = Effect.runSync(Clock.clockWith(Effect.succeed));
+	const driftedStartNanos =
+		BigInt(Date.now() - 3 * 60 * 60 * 1000) * 1_000_000n;
 	let reading = 0n;
 	const currentTimeNanosUnsafe = () =>
-		BigInt(Date.now() - 3 * 60 * 60 * 1000) * 1_000_000n +
-		250_000_000n * reading++;
+		driftedStartNanos + 250_000_000n * reading++;
 	const drifted: Clock.Clock = {
 		currentTimeMillisUnsafe: () =>
 			Number(currentTimeNanosUnsafe() / 1_000_000n),
