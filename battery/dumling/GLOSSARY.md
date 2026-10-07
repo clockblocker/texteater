@@ -2,9 +2,9 @@
 
 Dumling names the language-specific grammatical entities and foundational
 semantic values that learner text resolves to. Each entry links the ADRs that
-hold the term's precise definition, edge cases and examples. This Context's
-terms are language-neutral, and each language's classifications live in the
-[Dumcorpus Context](../dumcorpus/GLOSSARY.md).
+hold the term's precise definition, edge cases and examples. Its terms are
+language-neutral, and each language's classifications live in the
+[Dumcorpus glossary](../dumcorpus/GLOSSARY.md).
 
 ## Language
 

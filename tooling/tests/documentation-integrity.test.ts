@@ -10,10 +10,10 @@ import {
 	auditMarkdownLinks,
 	auditProtectedChanges,
 	auditProtectedPlacement,
-	contextMapStructureIssues,
-	contextStructureIssues,
 	developerDocumentationFiles,
 	formatDocumentationIssue,
+	glossaryMapStructureIssues,
+	glossaryStructureIssues,
 	isDeveloperDocumentationPath,
 	isEmptyScaffoldingContent,
 	isProtectedDeveloperDocument,
@@ -109,7 +109,7 @@ test("enforces canonical developer-documentation paths", () => {
 	).toEqual([]);
 	expect(auditAllowedPaths(["docs/research/notes.md"])).toEqual([
 		{
-			detail: "developer documentation must use an agent-instruction, Context, ADR, reference, runbook, protected Vision, or root maintainer-README path",
+			detail: "developer documentation must use an agent-instruction, glossary, ADR, reference, runbook, protected Vision, or root maintainer-README path",
 			file: "docs/research/notes.md",
 			kind: "allowed-path",
 			severity: "error",
@@ -177,7 +177,7 @@ test("rejects coordination files but exempts functional agent instructions", () 
 	).toEqual([]);
 });
 
-test("enforces the installed Context shape without judging definitions", () => {
+test("enforces the installed glossary shape without judging definitions", () => {
 	const valid = `# Ordering Context
 
 Ordering names the concepts used to accept and fulfill an order.
@@ -188,30 +188,30 @@ Ordering names the concepts used to accept and fulfill an order.
 A customer's request for goods.
 _Avoid_: Transaction
 `;
-	expect(contextStructureIssues("battery/order/GLOSSARY.md", valid)).toEqual(
+	expect(glossaryStructureIssues("battery/order/GLOSSARY.md", valid)).toEqual(
 		[],
 	);
 	expect(
-		contextStructureIssues(
+		glossaryStructureIssues(
 			"battery/order/GLOSSARY.md",
 			"# Ordering Context\n\n## Architecture\n\nImplementation detail.\n",
 		),
 	).toMatchObject([
-		{ file: "battery/order/GLOSSARY.md", kind: "context-structure" },
+		{ file: "battery/order/GLOSSARY.md", kind: "glossary-structure" },
 	]);
 });
 
 test("enforces the installed Glossary Map headings", () => {
 	expect(
-		contextMapStructureIssues(
+		glossaryMapStructureIssues(
 			"# Glossary Map\n\n## Contexts\n\n- Ordering\n",
 		),
 	).toEqual([]);
 	expect(
-		contextMapStructureIssues(
+		glossaryMapStructureIssues(
 			"# Glossary Map\n\n## Contexts\n\n## Relationships\n",
 		),
-	).toMatchObject([{ kind: "context-map-structure" }]);
+	).toMatchObject([{ kind: "glossary-map-structure" }]);
 });
 
 test("enforces the minimal ADR structure and the accepted-only status", () => {

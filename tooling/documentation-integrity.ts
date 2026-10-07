@@ -8,8 +8,8 @@ export type DocumentationRule =
 	| "allowed-path"
 	| "broken-anchor"
 	| "broken-link"
-	| "context-map-structure"
-	| "context-structure"
+	| "glossary-map-structure"
+	| "glossary-structure"
 	| "coordination-file"
 	| "empty-scaffolding"
 	| "protected-file-change"
@@ -414,7 +414,7 @@ export function auditAllowedPaths(
 			? []
 			: [
 					{
-						detail: "developer documentation must use an agent-instruction, Context, ADR, reference, runbook, protected Vision, or root maintainer-README path",
+						detail: "developer documentation must use an agent-instruction, glossary, ADR, reference, runbook, protected Vision, or root maintainer-README path",
 						file,
 						kind: "allowed-path" as const,
 						severity: "error" as const,
@@ -489,7 +489,7 @@ function lineNumber(text: string, offset: number): number {
 	return text.slice(0, offset).split("\n").length;
 }
 
-export function contextStructureIssues(
+export function glossaryStructureIssues(
 	file: string,
 	text: string,
 ): DocumentationIssue[] {
@@ -502,18 +502,18 @@ export function contextStructureIssues(
 	const firstContent = lines.findIndex((line) => line.trim().length > 0);
 	if (firstContent === -1 || !/^# [^#].+/u.test(lines[firstContent] ?? "")) {
 		issues.push({
-			detail: "Context must start with one level-one title",
+			detail: "Glossary must start with one level-one title",
 			file,
-			kind: "context-structure",
+			kind: "glossary-structure",
 			line: Math.max(firstContent + 1, 1),
 			severity: "error",
 		});
 	}
 	if (languageHeading === -1) {
 		issues.push({
-			detail: "Context must contain one ## Language section",
+			detail: "Glossary must contain one ## Language section",
 			file,
-			kind: "context-structure",
+			kind: "glossary-structure",
 			severity: "error",
 		});
 		return issues;
@@ -524,9 +524,9 @@ export function contextStructureIssues(
 		.trim();
 	if (description.length === 0) {
 		issues.push({
-			detail: "Context title must be followed by a short description",
+			detail: "Glossary title must be followed by a short description",
 			file,
-			kind: "context-structure",
+			kind: "glossary-structure",
 			line: languageHeading + 1,
 			severity: "error",
 		});
@@ -538,9 +538,9 @@ export function contextStructureIssues(
 			!/^### [^#].+/u.test(heading.line)
 		) {
 			issues.push({
-				detail: "Context may contain only its title, ## Language, and optional level-three term groups",
+				detail: "Glossary may contain only its title, ## Language, and optional level-three term groups",
 				file,
-				kind: "context-structure",
+				kind: "glossary-structure",
 				line: heading.index + 1,
 				severity: "error",
 			});
@@ -551,18 +551,18 @@ export function contextStructureIssues(
 	);
 	if (termMatches.length === 0) {
 		issues.push({
-			detail: "Context Language section must contain at least one **Term**: entry",
+			detail: "Glossary Language section must contain at least one **Term**: entry",
 			file,
-			kind: "context-structure",
+			kind: "glossary-structure",
 			line: languageHeading + 1,
 			severity: "error",
 		});
 	}
 	for (const match of text.matchAll(/^_Avoid_(?!:)/gmu)) {
 		issues.push({
-			detail: "Context alternatives must use the _Avoid_: label",
+			detail: "Glossary alternatives must use the _Avoid_: label",
 			file,
-			kind: "context-structure",
+			kind: "glossary-structure",
 			line: lineNumber(text, match.index ?? 0),
 			severity: "error",
 		});
@@ -570,18 +570,18 @@ export function contextStructureIssues(
 	return issues;
 }
 
-function isContextPath(path: string): boolean {
+function isGlossaryPath(path: string): boolean {
 	return basename(path) === "GLOSSARY.md";
 }
 
-async function auditContexts(
+async function auditGlossaries(
 	repositoryRoot: string,
 	files: readonly string[],
 ): Promise<DocumentationIssue[]> {
 	const issues: DocumentationIssue[] = [];
-	for (const file of files.filter(isContextPath)) {
+	for (const file of files.filter(isGlossaryPath)) {
 		issues.push(
-			...contextStructureIssues(
+			...glossaryStructureIssues(
 				file,
 				await readFile(join(repositoryRoot, file), "utf8"),
 			),
@@ -590,7 +590,7 @@ async function auditContexts(
 	return issues;
 }
 
-export function contextMapStructureIssues(text: string): DocumentationIssue[] {
+export function glossaryMapStructureIssues(text: string): DocumentationIssue[] {
 	const file = "GLOSSARY-MAP.md";
 	const headings = text.split("\n").filter((line) => /^#{1,6}\s/u.test(line));
 	if (
@@ -604,13 +604,13 @@ export function contextMapStructureIssues(text: string): DocumentationIssue[] {
 		{
 			detail: "Glossary Map headings must be # Glossary Map, then ## Contexts",
 			file,
-			kind: "context-map-structure",
+			kind: "glossary-map-structure",
 			severity: "error",
 		},
 	];
 }
 
-async function auditContextMap(
+async function auditGlossaryMap(
 	repositoryRoot: string,
 	files: readonly string[],
 ): Promise<DocumentationIssue[]> {
@@ -619,7 +619,7 @@ async function auditContextMap(
 			{
 				detail: "multi-context repository requires a root GLOSSARY-MAP.md",
 				file: "GLOSSARY-MAP.md",
-				kind: "context-map-structure",
+				kind: "glossary-map-structure",
 				severity: "error",
 			},
 		];
@@ -628,19 +628,19 @@ async function auditContextMap(
 		join(repositoryRoot, "GLOSSARY-MAP.md"),
 		"utf8",
 	);
-	const issues = contextMapStructureIssues(text);
+	const issues = glossaryMapStructureIssues(text);
 	const targets = new Set(
 		markdownLinks(text)
 			.map(({ target }) => cleanLinkTarget(target))
 			.filter((target) => target.endsWith("/GLOSSARY.md"))
 			.map((target) => normalizeRepositoryPath(target)),
 	);
-	for (const context of files.filter(isContextPath)) {
-		if (!targets.has(`./${context}`) && !targets.has(context)) {
+	for (const glossary of files.filter(isGlossaryPath)) {
+		if (!targets.has(`./${glossary}`) && !targets.has(glossary)) {
 			issues.push({
-				detail: "Context is not listed in root GLOSSARY-MAP.md",
-				file: context,
-				kind: "context-map-structure",
+				detail: "Glossary is not listed in root GLOSSARY-MAP.md",
+				file: glossary,
+				kind: "glossary-map-structure",
 				severity: "error",
 			});
 		}
@@ -874,8 +874,8 @@ export async function auditDocumentationIntegrity(
 		...auditAllowedPaths(files),
 		...auditProtectedPlacement(files),
 		...auditCoordinationFiles(files),
-		...(await auditContexts(repositoryRoot, files)),
-		...(await auditContextMap(repositoryRoot, files)),
+		...(await auditGlossaries(repositoryRoot, files)),
+		...(await auditGlossaryMap(repositoryRoot, files)),
 		...(await auditAdrs(repositoryRoot, files)),
 		...(await auditEmptyScaffolding(repositoryRoot, files)),
 		...(await auditMarkdownLinks(repositoryRoot, files)),

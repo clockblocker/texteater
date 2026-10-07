@@ -7,7 +7,7 @@ definition, edge cases and examples.
 
 ## Language
 
-The [Compass context](../../battery/compass/GLOSSARY.md)
+The [Compass glossary](../../battery/compass/GLOSSARY.md)
 defines Presentation, Card, Sheet, Pane, Sheet Stack, Ground, Cover, Ground
 line, Menu, Menu Item, Rooted Pane, Floating Pane, Deck, Lift, Expand,
 Collapse, Close, Sweep, and cancellation. In tf-demo a click on a Segment

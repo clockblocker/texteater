@@ -4,7 +4,7 @@ Dumrel defines identityless Knowledge and pure operations over it
 ([Dumrel ADR 0001]). Each entry links the ADRs that hold the term's precise
 definition, edge cases and examples. A language's classification terms whose
 values Knowledge stores, such as the German Plural Pattern and Conjugation
-Class, live in the [Dumcorpus Context].
+Class, live in the [Dumcorpus glossary].
 
 ## Language
 
@@ -103,4 +103,4 @@ _Avoid_: discourseFormulaRole, DiscourseFormula
 [ADR 0036]: ../../docs/adr/0036-make-adjectival-german-participles-adj-linked-to-their-verb.md
 [ADR 0039]: ../../docs/adr/0039-split-phrasemes-into-locutions-and-sayings.md
 [Dumrel ADR 0001]: ./docs/adr/0001-keep-dumrel-ownerless-and-pure.md
-[Dumcorpus Context]: ../dumcorpus/GLOSSARY.md
+[Dumcorpus glossary]: ../dumcorpus/GLOSSARY.md
