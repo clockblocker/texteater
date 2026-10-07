@@ -7,6 +7,7 @@
  * (plurality, the participle's form and meaning, the three types); code
  * derives the rest (conjugation classes from the Präteritum, ADR 0038).
  */
+import { germanInseparablePrefixes } from "dumcorpus/inventories";
 import { foldCase, normalizeForm } from "dumling";
 import type * as Dumling from "dumling/types";
 import { germanConjugationClass } from "dumrel";
@@ -201,18 +202,6 @@ type SourceDraft = {
 	readonly participle: string;
 };
 
-/** The German inseparable verb prefixes: never a `hasSepPrefix`. */
-const inseparablePrefixes = new Set([
-	"be",
-	"emp",
-	"ent",
-	"er",
-	"ge",
-	"miss",
-	"ver",
-	"zer",
-]);
-
 /**
  * Whether the adjective is the source verb's participle: the Partizip II
  * Luna wrote, or the Partizip I, which is always the infinitive and -d.
@@ -246,7 +235,7 @@ function sourceDraftOf(output: unknown): SourceDraft | null | undefined {
 		separablePrefix === null ? null : normalizeForm(separablePrefix);
 	// An inseparable prefix is no separable one, whatever Luna calls it.
 	const prefix =
-		named !== null && inseparablePrefixes.has(named) ? null : named;
+		named !== null && germanInseparablePrefixes.has(named) ? null : named;
 	if (
 		!/^\p{Ll}+$/u.test(infinitive) ||
 		(prefix !== null &&

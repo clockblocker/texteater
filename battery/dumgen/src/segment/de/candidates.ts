@@ -11,6 +11,7 @@ import {
 	type AuthoredRealization,
 	authoredRealizations,
 	cliticEsSpellings,
+	germanSeparablePrefixes,
 } from "dumcorpus/inventories";
 import { foldApostrophes } from "../fusion-table.js";
 import type { GermanInventory } from "./inventory.js";
@@ -61,17 +62,40 @@ export const articleForms: ReadonlySet<string> = new Set(
 		}),
 );
 
-/** Separable verb prefixes, the her-/hin- adverbs and their r- shorthands. */
-export const particleForms = new Set(
-	"ab an auf aus bei dabei dar durch ein empor entgegen entlang fehl fern fest fort frei gegenüber heim her herab heran herauf heraus herbei herein herüber herum herunter hervor hin hinab hinauf hinaus hinein hinüber hinunter hinweg hinzu hoch los mit nach nieder raus rein rüber runter rauf ran statt teil um vor voran voraus vorbei vorüber vorweg weg weiter wieder zu zurecht zurück zusammen zuvor über unter kennen preis bloß kaputt klar".split(
-		" ",
-	),
-);
+/**
+ * Separable prefixes that open no particle slot: the slot's recall was tuned
+ * on the lab without them. Opening a slot on one changes the judge's
+ * requests, so each waits for a lab round (#1057). Resolution still offers
+ * da and leid as a VERB's prefix (daliegen, leidtun; `prefixParticles`).
+ */
+const noSlotParticles: ReadonlySet<string> = new Set([
+	"bekannt",
+	"da",
+	"dagegen",
+	"daneben",
+	"dazwischen",
+	"gut",
+	"irre",
+	"kund",
+	"leer",
+	"leid",
+	"nahe",
+	"offen",
+	"sicher",
+	"spazieren",
+	"stand",
+	"voll",
+	"wahr",
+	"wider",
+]);
 
-/** More particles: umher, übrig, … */
-export const moreParticleForms = new Set(
-	"umher übrig fertig auseinander beiseite hinterher davon dazu dahin daher vorwärts rückwärts entzwei bereit ein".split(
-		" ",
+/**
+ * The separable prefixes that open a particle slot (ab, hinaus, raus, teil,
+ * umher, …): dumcorpus's list without `noSlotParticles`.
+ */
+export const particleForms: ReadonlySet<string> = new Set(
+	[...germanSeparablePrefixes].filter(
+		(prefix) => !noSlotParticles.has(prefix),
 	),
 );
 
@@ -191,10 +215,7 @@ export function slotsOf(
 			// `ein` is also a particle (trat … ein).
 			if (text !== "ein") continue;
 		}
-		if (
-			(particleForms.has(text) || moreParticleForms.has(text)) &&
-			!piece.fusedWord
-		)
+		if (particleForms.has(text) && !piece.fusedWord)
 			slots.push({
 				kind: "particle",
 				piece,
@@ -231,7 +252,8 @@ export function slotsOf(
 }
 
 const splitHeads = new Set(["da", "wo", "hier"]);
-const splitTails = new Set([
+/** The second words of a split pronominal or directional adverb (Da … hin, Wo … mit). */
+export const splitTails: ReadonlySet<string> = new Set([
 	"hin",
 	"her",
 	"an",

@@ -7,7 +7,8 @@
  *
  * This entry exports the authored members and their realizations, the
  * reviewed pronoun and determiner paradigms, the closed verb forms and their
- * participles, the clitic spellings of es, and the reflexive drill-down.
+ * participles, the clitic spellings of es, the separable and inseparable
+ * verb prefixes, and the reflexive drill-down.
  * The authored members include the pronoun
  * Syncretisms generated from the pronoun cells (system ADR 0046). It also
  * exports German lookups: the ADP Case Table, its governable prepositions and
@@ -96,6 +97,10 @@ export {
 	stemSyncretisms,
 } from "./inventories/de/surface-syncretisms.js";
 export { syncretismFor } from "./inventories/de/syncretisms.js";
+export {
+	germanInseparablePrefixes,
+	germanSeparablePrefixes,
+} from "./inventories/de/verb-prefixes.js";
 export type { AuthoredMember } from "./inventories/member.js";
 export { authoredMembers } from "./inventories/registry.js";
 export {

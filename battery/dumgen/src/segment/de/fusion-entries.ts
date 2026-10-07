@@ -1,3 +1,4 @@
+import { germanSeparablePrefixes } from "dumcorpus/inventories";
 import type {
 	AbbreviationEntry,
 	CliticEntry,
@@ -277,103 +278,44 @@ export const germanClitics: readonly CliticEntry[] = [
 ];
 
 /**
- * Separable verb particles that take an infinitive's infixed zu, which is a
- * piece of its own (de/fused-word-pieces): abzuspannen is ab, zu and
- * spannen. Longer particles are tried first, so hinauszulaufen is hinaus,
- * zu and laufen. `da` and `hin` are left out: dazugehören and hinzufügen
- * are particle verbs on dazu and hinzu whose zu is no infix, and their own
- * infixed forms (dazuzulernen, hinzuzufügen) are found through dazu and
- * hinzu.
+ * Separable prefixes whose infixed zu is not split off here. `da` and `hin`:
+ * dazugehören and hinzufügen are particle verbs on dazu and hinzu whose zu
+ * is no infix, and their own infixed forms (dazuzulernen, hinzuzufügen) are
+ * found through dazu and hinzu. The r- shorthands, über and the rest were
+ * left out when the list was shaped; splitting one changes segmentation, so
+ * each waits for a lab round (#1057).
+ */
+const noInfixParticles: ReadonlySet<string> = new Set([
+	"bloß",
+	"da",
+	"entzwei",
+	"hin",
+	"hinterher",
+	"kaputt",
+	"leid",
+	"ran",
+	"rauf",
+	"raus",
+	"rein",
+	"rückwärts",
+	"runter",
+	"rüber",
+	"über",
+	"übrig",
+	"umher",
+	"vorwärts",
+	"vorweg",
+]);
+
+/**
+ * Separable prefixes that take an infinitive's infixed zu, which is a piece
+ * of its own (de/fused-word-pieces): abzuspannen is ab, zu and spannen.
+ * Longer prefixes are tried first, so hinauszulaufen is hinaus, zu and
+ * laufen. dumcorpus's list without `noInfixParticles`.
  */
 export const germanInfixParticles: readonly string[] = [
-	"ab",
-	"an",
-	"auf",
-	"aus",
-	"auseinander",
-	"bei",
-	"beiseite",
-	"bekannt",
-	"bereit",
-	"dabei",
-	"dagegen",
-	"daher",
-	"dahin",
-	"daneben",
-	"dar",
-	"davon",
-	"dazu",
-	"dazwischen",
-	"durch",
-	"ein",
-	"empor",
-	"entgegen",
-	"entlang",
-	"fehl",
-	"fertig",
-	"fest",
-	"fort",
-	"fern",
-	"frei",
-	"gegenüber",
-	"gut",
-	"heim",
-	"her",
-	"herab",
-	"heran",
-	"herauf",
-	"heraus",
-	"herbei",
-	"herein",
-	"herüber",
-	"herum",
-	"herunter",
-	"hervor",
-	"hinab",
-	"hinauf",
-	"hinaus",
-	"hinein",
-	"hinüber",
-	"hinunter",
-	"hinweg",
-	"hinzu",
-	"hoch",
-	"irre",
-	"kennen",
-	"klar",
-	"kund",
-	"leer",
-	"los",
-	"mit",
-	"nach",
-	"nahe",
-	"nieder",
-	"offen",
-	"preis",
-	"sicher",
-	"spazieren",
-	"statt",
-	"stand",
-	"teil",
-	"um",
-	"unter",
-	"vor",
-	"voran",
-	"voraus",
-	"vorbei",
-	"vorüber",
-	"voll",
-	"wahr",
-	"weg",
-	"weiter",
-	"wider",
-	"wieder",
-	"zu",
-	"zurecht",
-	"zurück",
-	"zusammen",
-	"zuvor",
-];
+	...germanSeparablePrefixes,
+].filter((prefix) => !noInfixParticles.has(prefix));
 
 const abbreviation = (
 	text: string,

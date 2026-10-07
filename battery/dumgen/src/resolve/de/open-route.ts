@@ -33,10 +33,7 @@ import type { OperationScope } from "../../call.js";
 import type { LunaRequest } from "../../luna.js";
 import { askLuna, type LunaSettings } from "../../luna-call.js";
 import type { Ask, AskFailure } from "../../segment/ask.js";
-import {
-	moreParticleForms,
-	particleForms,
-} from "../../segment/de/candidates.js";
+import { particleForms } from "../../segment/de/candidates.js";
 import { draftsEmojiDescription } from "../reading.js";
 import type { LemmaCandidate } from "../types.js";
 import {
@@ -279,12 +276,17 @@ const spellsEs = (member: Member) =>
 	fold(spellingOf(member)) === "es" ||
 	(member.spelling?.surfaces.includes("es") ?? false);
 
-/** Particles of particle verbs the segmenter's lists leave out (daliegen, leidtun). */
-const verbParticles = new Set(["da", "leid"]);
-const isParticle = (word: string) =>
-	particleForms.has(word) ||
-	moreParticleForms.has(word) ||
-	verbParticles.has(word);
+/**
+ * The separable prefixes a VERB unit may carry: those that open a particle
+ * slot, and da and leid (daliegen, leidtun), which open none. The other
+ * prefixes that open no slot (bekannt, gut, …) are not offered (#1057).
+ */
+export const prefixParticles: ReadonlySet<string> = new Set([
+	...particleForms,
+	"da",
+	"leid",
+]);
+const isParticle = (word: string) => prefixParticles.has(word);
 
 /**
  * The separable prefixes a VERB unit could carry, longest first: each

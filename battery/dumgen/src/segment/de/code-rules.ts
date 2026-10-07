@@ -85,6 +85,7 @@ import {
 	closedVerbForms,
 	closedVerbParticiples,
 	germanConjunctionLocutions,
+	germanSeparablePrefixes,
 } from "dumcorpus/inventories";
 import type { AssembledEdge, Family, Membership } from "./assembly.js";
 import {
@@ -94,6 +95,7 @@ import {
 	isArticle,
 	nounLike,
 	reflexiveSubject,
+	splitTails,
 	wasFuerId,
 	wasFuerPairs,
 } from "./candidates.js";
@@ -165,16 +167,13 @@ function splitAdverbs(nomination: Nomination): Decision {
 	};
 }
 
-/** Prepositions that are never a separable particle, so one left at its clause's end is stranded. */
-const strandedTails = new Set([
-	"für",
-	"von",
-	"gegen",
-	"in",
-	"neben",
-	"hinter",
-	"zwischen",
-]);
+/**
+ * The split-adverb tails that are no separable prefix (für, von, gegen, in,
+ * neben, hinter, zwischen), so one left at its clause's end is stranded.
+ */
+export const strandedTails: ReadonlySet<string> = new Set(
+	[...splitTails].filter((tail) => !germanSeparablePrefixes.has(tail)),
+);
 
 function strandedAdverbs(nomination: Nomination): Decision {
 	const { pieces } = nomination.sentence;
